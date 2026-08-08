@@ -24,6 +24,18 @@ const migrationRegisterPath = path.join(
 const manifestPath = path.join(root, 'manifest/docs-content-pack.json');
 const checkOnly = process.argv.includes('--check');
 const repositoryRelativePrefix = 'modules/axis/';
+const copyrightHeader = `/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+`;
 
 const navigation = JSON.parse(fs.readFileSync(navigationPath, 'utf8'));
 const pages = navigation.pages;
@@ -251,7 +263,7 @@ function parseMarkdown(markdown, pageCode) {
 }
 
 function recordModule(records, description) {
-  return `'use strict';\n\n/** @description ${description} */\nmodule.exports = ${JSON.stringify(
+  return `${copyrightHeader}'use strict';\n\n/** @description ${description} */\nmodule.exports = ${JSON.stringify(
     records,
     null,
     2,
