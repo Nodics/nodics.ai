@@ -19,6 +19,14 @@
 
 const assert = require('assert');
 
+global.ENUMS = {
+    CatalogType: {
+        CONTENT: { key: 'CONTENT' },
+        PRODUCT: { key: 'PRODUCT' },
+        GENERIC: { key: 'GENERIC' }
+    }
+};
+
 global.CLASSES = {
     NodicsError: class NodicsError extends Error {
         constructor(error, message, code) {
@@ -58,6 +66,9 @@ const resolver = require('../src/service/interceptors/defaultSubCatalogsResolveI
     assert.strictEqual(catalogSchema.router.enabled, true);
     assert.strictEqual(catalogSchema.refSchema.subCatalogs.schemaName, 'catalog');
     assert.strictEqual(catalogSchema.refSchema.subCatalogs.type, 'many');
+    assert.strictEqual(catalogSchema.definition.catalogType.required, true);
+    assert.strictEqual(catalogSchema.definition.catalogType.default, 'GENERIC');
+    assert.deepStrictEqual(catalogSchema.definition.catalogType.enum, ['CONTENT', 'PRODUCT', 'GENERIC']);
     assert.deepStrictEqual(catalogSchema.definition.accessGroups.default, ['contentUserGroup', 'employeeUserGroup']);
 
     assert.strictEqual(initHeader.catalog.defaultCatalogData.options.schemaName, 'catalog');
@@ -67,11 +78,15 @@ const resolver = require('../src/service/interceptors/defaultSubCatalogsResolveI
         'defaultContentCatalog',
         'defaultProductCatalog'
     ]);
+    assert.strictEqual(initData.record0.catalogType, 'PRODUCT');
+    assert.strictEqual(initData.record1.catalogType, 'CONTENT');
 
     assert.strictEqual(sampleHeader.catalog.defaultSamplesCatalog.options.schemaName, 'catalog');
     assert.strictEqual(sampleHeader.catalog.defaultSamplesCatalog.options.dataFilePrefix, 'defaultSamplesCatalogData');
     assert.deepStrictEqual(sampleData.record0.subCatalogs, ['inProductCatalog', 'uaeProductCatalog', 'deProductCatalog']);
     assert.deepStrictEqual(sampleData.record1.subCatalogs, ['inContentCatalog', 'uaeContentCatalog', 'deContentCatalog']);
+    assert.strictEqual(sampleData.record2.catalogType, 'PRODUCT');
+    assert.strictEqual(sampleData.record5.catalogType, 'CONTENT');
 
     const request = {
         tenant: 'default',

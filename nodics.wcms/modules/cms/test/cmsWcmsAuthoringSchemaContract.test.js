@@ -103,6 +103,9 @@ assert.strictEqual(
 const navigationWorkbenchTarget = function (route) {
   return cmsNavigation.find((item) => item.route === route).workbenchTarget;
 };
+const navigationWorkbenchPresentation = function (route) {
+  return cmsNavigation.find((item) => item.route === route).workbenchPresentation;
+};
 assert.deepStrictEqual(navigationWorkbenchTarget("/content/pages"), {
   moduleName: "cms",
   schemaName: "cmsPage",
@@ -114,6 +117,23 @@ assert.deepStrictEqual(navigationWorkbenchTarget("/content/navigation"), {
 assert.deepStrictEqual(
   navigationWorkbenchTarget("/content/component-type-groups"),
   { moduleName: "cms", schemaName: "cmsComponentTypeGroup" },
+);
+assert.deepStrictEqual(navigationWorkbenchTarget("/content/catalogs"), {
+  moduleName: "catalog",
+  schemaName: "catalog",
+});
+assert.deepStrictEqual(
+  navigationWorkbenchPresentation("/content/catalogs").fixedFilters,
+  [
+    {
+      id: "content-catalog-type",
+      label: "Content catalogs",
+      field: "catalogType",
+      value: "CONTENT",
+      order: 10,
+    },
+  ],
+  "Content Catalogs navigation must stay scoped to CONTENT catalog records",
 );
 assert.deepStrictEqual(navigationWorkbenchTarget("/publishing/requests"), {
   moduleName: "publish",

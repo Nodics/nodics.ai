@@ -16,6 +16,7 @@ module.exports = {
   record0: {
     code: 'axisDocumentationContentCatalog',
     name: 'Nodics Axis Documentation Content Catalog',
+    catalogType: 'CONTENT',
     active: true,
   },
 };

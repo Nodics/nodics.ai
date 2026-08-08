@@ -56,6 +56,10 @@ module.exports = {
                 group: { id: 'content', label: 'Content and Experience', order: 200 },
                 perspectives: ['operations', 'content'], contexts: ['environment', 'tenant', 'enterprise', 'site', 'catalog'],
                 workbenchTarget: { moduleName: 'catalog', schemaName: 'catalog' },
+                workbenchPresentation: {
+                    defaultColumns: ['code', 'name', 'catalogType', 'active'],
+                    fixedFilters: [{ id: 'content-catalog-type', label: 'Content catalogs', field: 'catalogType', value: 'CONTENT', order: 10 }]
+                },
                 help: { summary: 'Manage content catalogs that organize CMS content for governed authoring, preview, and delivery.', documentationRoute: '/docs/capabilities/content-publishing/wcms-authoring-model', documentationFragment: 'content-catalogs' },
                 featureState: 'ACTIVE', requiredPermissions: ['cms.backoffice.view'] },
             { id: 'type-codes', parentId: 'cms-page-composition', label: 'Page and Component Types', route: '/content/type-codes', icon: 'cms', order: 221,

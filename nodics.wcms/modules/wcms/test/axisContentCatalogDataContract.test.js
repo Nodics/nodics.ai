@@ -64,6 +64,7 @@ axisDataSets.flat().forEach(item => {
 
 assert.strictEqual(catalog.length, 1);
 assert.strictEqual(catalog[0].code, 'axisContentCatalog');
+assert.strictEqual(catalog[0].catalogType, 'CONTENT');
 assert.deepStrictEqual(catalog[0].accessGroups, ['employeeUserGroup']);
 assert.strictEqual(sites[0].catalog, 'axisContentCatalog');
 

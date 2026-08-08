@@ -12,6 +12,13 @@ Catalog is a reusable business structure for organizing product, content, or
 domain records that need consistent lookup, hierarchy, publication, search, and
 tenant behavior.
 
+Every catalog declares a `catalogType`. The type defines the catalog's business
+usage, not its technical owner. Initial framework types are `CONTENT`,
+`PRODUCT`, and `GENERIC`. CMS/WCMS sites must use `CONTENT` catalogs. Product
+or commerce modules must use `PRODUCT` catalogs. `GENERIC` is a compatibility
+and extension fallback for older or custom catalog records until a later module
+introduces a more specific type.
+
 Framework-level catalog behavior stays generic. A customer project can
 define product-specific catalog types, attributes, pricing, inventory,
 eligibility, or rendering behavior in project/domain modules layered above
@@ -20,6 +27,7 @@ eligibility, or rendering behavior in project/domain modules layered above
 Catalog documentation identifies:
 
 - catalog schema ownership;
+- catalog type ownership and validation;
 - hierarchy or sub-catalog behavior;
 - tenant and customer visibility;
 - search/index impact;
@@ -48,6 +56,7 @@ Do not hardcode one project's product model into `nCatalog`.
 
 - generated catalog schema, service, router, and CRUD/API contracts;
 - catalog bootstrap data for default product and content catalogs;
+- `catalogType` classification for content, product, and generic catalogs;
 - sample catalog hierarchy data;
 - `subCatalogs` reference metadata;
 - access group defaults for content and employee users;

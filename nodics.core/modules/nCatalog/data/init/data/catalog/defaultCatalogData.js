@@ -21,12 +21,14 @@ module.exports = {
     record0: {
         code: "defaultProductCatalog",
         name: "defaultProductCatalog",
+        catalogType: "PRODUCT",
         accessGroups: ['userGroup'],
         active: true
     },
     record1: {
         code: "defaultContentCatalog",
         name: "defaultContentCatalog",
+        catalogType: "CONTENT",
         accessGroups: ['userGroup'],
         active: true
     }

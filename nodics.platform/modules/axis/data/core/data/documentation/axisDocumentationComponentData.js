@@ -759,7 +759,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/project-overview.md",
         "evidence": "README.md",
         "hash": "78d650cd10d471c68485a55b6099dc91b696c5998bd1a56828d244724d44ee4c",
-        "version": "0.3.26"
+        "version": "0.3.27"
       },
       "next": {
         "title": "Architecture and Repository Boundaries",
@@ -1216,7 +1216,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/architecture-and-ownership.md",
         "evidence": "docs/architecture-and-ownership.md",
         "hash": "40f4a9cba5116289fdb4ff792160175def29ae3b1d1fc3f8d1cb048fcb2323c9",
-        "version": "0.3.26"
+        "version": "0.3.27"
       },
       "previous": {
         "title": "What Is Nodics Axis?",
@@ -1579,7 +1579,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/frontend-technology-stack.md",
         "evidence": "docs/frontend-technology-stack.md",
         "hash": "c8bc5a6d39e3f6c07c0d7bdbc20c2a04ab04fbe16912932cc0385fceb1ff9e3e",
-        "version": "0.3.26"
+        "version": "0.3.27"
       },
       "previous": {
         "title": "Architecture and Repository Boundaries",
@@ -1922,7 +1922,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/design-system-and-shell.md",
         "evidence": "docs/design-system-and-shell.md",
         "hash": "2674769647011da20fa07fc70ba2334b0da0637ad4f6d293fb22a5d8b73bd839",
-        "version": "0.3.26"
+        "version": "0.3.27"
       },
       "previous": {
         "title": "Frontend Technology Stack",
@@ -2146,7 +2146,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/cms-delivery-and-renderers.md",
         "evidence": "docs/cms-delivery-and-renderers.md",
         "hash": "72a0f943f4d101f0873ab4bc31d5c96908e7b8a7ba271af5c9ba37bf26f1cd8e",
-        "version": "0.3.26"
+        "version": "0.3.27"
       },
       "previous": {
         "title": "Design System and Application Shell",
@@ -2454,7 +2454,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/documentation-content.md",
         "evidence": "docs/documentation-content.md",
         "hash": "fabadc93e050a2372aa3d8bf24a346545994b993a82bf032f72755e87687dacc",
-        "version": "0.3.26"
+        "version": "0.3.27"
       },
       "previous": {
         "title": "CMS Delivery and Renderer Integration",
@@ -2738,7 +2738,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/employee-login.md",
         "evidence": "docs/employee-login.md",
         "hash": "d9b72db88088b1157ffc6c75b091c14c6c02259cacf741fd19b669d712c0936e",
-        "version": "0.3.26"
+        "version": "0.3.27"
       },
       "previous": {
         "title": "Documentation Content in Axis",
@@ -3211,7 +3211,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/assistant-frontend.md",
         "evidence": "docs/assistant-frontend.md",
         "hash": "67bafd34ff07605036cba3e411db09c7d85d40be139e6a80f97c3ae489ec8f30",
-        "version": "0.3.26"
+        "version": "0.3.27"
       },
       "previous": {
         "title": "Employee Login, Recovery, Lock, and Dashboard",
@@ -3611,7 +3611,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/schema-workbench.md",
         "evidence": "docs/schema-workbench.md",
         "hash": "8edbf82b84624f8ac4bb07d83b21926e904e9c45db739f5a77b707466b5dda1a",
-        "version": "0.3.26"
+        "version": "0.3.27"
       },
       "previous": {
         "title": "Axis Assistant Frontend",
@@ -4099,7 +4099,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/module-health.md",
         "evidence": "docs/module-health.md",
         "hash": "fb7bd7b5017dee67587229952134b520a60b8f34f6dbcfe5c62f3dd532a720ec",
-        "version": "0.3.26"
+        "version": "0.3.27"
       },
       "previous": {
         "title": "Axis Schema Workbench",
@@ -4365,7 +4365,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/imports-and-exports.md",
         "evidence": "docs/imports-and-exports.md",
         "hash": "5a19fc9163b4834b698e5ecf427581c427481302c48a584d96f5fcfd2ab3d614",
-        "version": "0.3.26"
+        "version": "0.3.27"
       },
       "previous": {
         "title": "Module Health",
@@ -4905,7 +4905,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/media-management.md",
         "evidence": "data/core/source/documentation/pages/media-management.md",
         "hash": "bca6e0bf71531978d6a0840b62b3ed59c8eaad5dbfc9bc4b7d065ffc717148a4",
-        "version": "0.3.26"
+        "version": "0.3.27"
       },
       "previous": {
         "title": "Imports and Exports Workspace",
@@ -5139,7 +5139,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/openapi-reference.md",
         "evidence": "data/core/source/documentation/pages/openapi-reference.md",
         "hash": "0fdfc4c7e77dfbf0314247935a46823f3a125baee7f02991023d0f0bdc4d99ca",
-        "version": "0.3.26"
+        "version": "0.3.27"
       },
       "previous": {
         "title": "Media Management Workspace",
@@ -5491,7 +5491,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/feature-delivery-checklist.md",
         "evidence": "docs/feature-delivery-checklist.md",
         "hash": "d22ef8b9e5c65fb55f0dd9f4f5c04e6989402ac0fa5a16a75afbbbcfa127b420",
-        "version": "0.3.26"
+        "version": "0.3.27"
       },
       "previous": {
         "title": "Swagger and OpenAPI Reference",
@@ -5955,7 +5955,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/implementation-and-documentation-contract.md",
         "evidence": "docs/implementation-and-documentation-contract.md",
         "hash": "2ad74c2a1b479db0ff9ad381645746b801e65aa77c8171486ee53631b9387066",
-        "version": "0.3.26"
+        "version": "0.3.27"
       },
       "previous": {
         "title": "Axis Feature Delivery Checklist",

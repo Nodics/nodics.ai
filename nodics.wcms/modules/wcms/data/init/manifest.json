@@ -2,7 +2,7 @@
     "contractVersion": 1,
     "module": "wcms",
     "dataType": "init",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Web Content Management init data",
     "files": {
         "data/axis/axisCmsComponentData.js": "528fe2d69e4e44c8ddc871c8d6a69b0ccb93d1511c6f427b87ae9ad38067f1bb",
@@ -13,7 +13,7 @@
         "data/axis/axisCmsSlotData.js": "5bc2359eda777b4bb35e001f1785a892366a892558c7a4c26b8e9df3fe4833aa",
         "data/axis/axisCmsTemplateData.js": "c6b54f6c9f9d484fcd04c2c1c41df7cc2d2e5b12327e7567467ee12fceaef113",
         "data/axis/axisCmsTypeCodeData.js": "1e76e84d70e551fa9819ebf7dbf13b1dea68e56aa532a273ad089a251c6f09d9",
-        "data/axis/axisContentCatalogData.js": "860d3209675c2b2879ea1bff7b2ec9c4c028dfbcad3da3357c3a1643d6f31cd5",
+        "data/axis/axisContentCatalogData.js": "a43f064e17147dd497f3949ae3a4ffbbe616058a1b14512f53db31b7596aeb28",
         "data/components/defaultCmsComponentWorkflowActionData.js": "6edd2719cd63c73295091e9ad26b88dbbb32d7a3cb2da932803fb750f5d57b89",
         "data/components/defaultCmsComponentWorkflowChannelData.js": "b303b18697e0f804da330efa155e055e352e690a81a7d931cc226dd5fddf9113",
         "data/components/defaultCmsComponentWorkflowHeadData.js": "17c42f03cdfa25563c0b467184126f921510835a7ab669eacee15fca11f2bf9c",

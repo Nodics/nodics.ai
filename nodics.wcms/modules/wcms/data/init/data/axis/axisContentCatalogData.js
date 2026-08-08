@@ -28,6 +28,7 @@ module.exports = withWcmsOwnership({
     record0: {
         code: 'axisContentCatalog',
         name: 'Nodics Axis Content Catalog',
+        catalogType: 'CONTENT',
         accessGroups: ['employeeUserGroup'],
         active: true
     }

@@ -17,5 +17,18 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
-
+    CatalogType: {
+        _options: {
+            name: 'CatalogType',
+            separator: '|',
+            endianness: 'BE',
+            ignoreCase: false,
+            freez: false
+        },
+        definition: [
+            'CONTENT',
+            'PRODUCT',
+            'GENERIC'
+        ]
+    }
 };

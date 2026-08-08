@@ -2,10 +2,10 @@
     "contractVersion": 1,
     "module": "catalog",
     "dataType": "sample",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Catalog Framework sample data",
     "files": {
-        "data/samples/defaultSamplesCatalogData.js": "18665b42ea7a255edcf5cc827a6b33d0c7232b85063913fde87acb984d273c66",
-        "headers/samples/defaultSamplesCatalogHeader.js": "a7286376c5ab5c674ea30ea8b2d4a7fe100a7a2a34d18979086fbb1c9b2dcb71"
+        "data/samples/defaultSamplesCatalogData.js": "04f223ed8df6fac46e98b48a8abc47ee9af59174d55e4fcf79ca6557659a3d94",
+        "headers/samples/defaultSamplesCatalogHeader.js": "adb36440100e6b1fe43f8de1837ecfbb0ccf3e8a12c5f90309b1311096855032"
     }
 }

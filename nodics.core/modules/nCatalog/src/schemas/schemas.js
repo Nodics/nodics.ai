@@ -39,6 +39,20 @@ module.exports = {
                 }
             },
             definition: {
+                catalogType: {
+                    type: 'string',
+                    required: true,
+                    default: 'GENERIC',
+                    enum: [
+                        ENUMS.CatalogType.CONTENT.key,
+                        ENUMS.CatalogType.PRODUCT.key,
+                        ENUMS.CatalogType.GENERIC.key
+                    ],
+                    description: 'Business usage type for this catalog. Consumers use it to prevent content, product, documentation, or future catalog domains from being mixed accidentally.',
+                    searchOptions: {
+                        enabled: true
+                    }
+                },
                 subCatalogs: {
                     type: 'array',
                     required: false,

@@ -20,40 +20,48 @@ module.exports = {
 
     record0: {
         code: "defaultProductCatalog",
+        catalogType: "PRODUCT",
         subCatalogs: ['inProductCatalog', 'uaeProductCatalog', 'deProductCatalog']
     },
     record1: {
         code: "defaultContentCatalog",
+        catalogType: "CONTENT",
         subCatalogs: ['inContentCatalog', 'uaeContentCatalog', 'deContentCatalog']
     },
     record2: {
         code: "inProductCatalog",
         name: "inProductCatalog",
+        catalogType: "PRODUCT",
         active: true
     },
     record3: {
         code: "uaeProductCatalog",
         name: "uaeProductCatalog",
+        catalogType: "PRODUCT",
         active: true
     },
     record4: {
         code: "deProductCatalog",
         name: "deProductCatalog",
+        catalogType: "PRODUCT",
         active: true
     },
     record5: {
         code: "inContentCatalog",
         name: "inContentCatalog",
+        catalogType: "CONTENT",
         active: true
     },
     record6: {
         code: "uaeContentCatalog",
         name: "uaeContentCatalog",
+        catalogType: "CONTENT",
         active: true
     },
     record7: {
         code: "deContentCatalog",
         name: "deContentCatalog",
+        catalogType: "CONTENT",
         active: true
     }
 };

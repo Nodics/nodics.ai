@@ -16,6 +16,7 @@ module.exports = {
   "record0": {
     "code": "nodicsDocumentationContentCatalog",
     "name": "Nodics Documentation Content Catalog",
+    "catalogType": "CONTENT",
     "active": true
   }
 };
