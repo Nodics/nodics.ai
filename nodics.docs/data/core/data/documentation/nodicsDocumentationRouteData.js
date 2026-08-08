@@ -73,5 +73,41 @@ module.exports = {
     "deliveryState": "ONLINE",
     "accessMode": "AUTHENTICATED",
     "active": true
+  },
+  "record6": {
+    "code": "nodicsDocsRoutewcmsOverview",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/wcms-overview",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagewcmsOverview",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record7": {
+    "code": "nodicsDocsRoutewcmsMediaManagement",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/wcms-media-management",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagewcmsMediaManagement",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record8": {
+    "code": "nodicsDocsRoutecronOperations",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/cron-operations",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagecronOperations",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
   }
 };

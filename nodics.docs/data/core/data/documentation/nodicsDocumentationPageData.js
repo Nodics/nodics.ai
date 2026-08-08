@@ -151,5 +151,80 @@ module.exports = {
       }
     ],
     "active": true
+  },
+  "record6": {
+    "code": "nodicsDocsPagewcmsOverview",
+    "name": "WCMS content management",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentwcmsOverview",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record7": {
+    "code": "nodicsDocsPagewcmsMediaManagement",
+    "name": "Media management",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentwcmsMediaManagement",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record8": {
+    "code": "nodicsDocsPagecronOperations",
+    "name": "Cron operations",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentcronOperations",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
   }
 };

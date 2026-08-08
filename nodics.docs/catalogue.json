@@ -1,6 +1,6 @@
 {
   "contract": "nodics.documentation/v1",
-  "release": "0.2.1",
+  "release": "0.3.0",
   "documents": [
     {
       "id": "framework.what-is-nodics",
@@ -56,6 +56,33 @@
       "summary": "Durable project registration and runtime observation rules.",
       "locale": "en",
       "content": "content/nodics.platform/module-registry.md"
+    },
+    {
+      "id": "wcms.overview",
+      "functionalModule": "nodics.wcms",
+      "technicalModule": "wcms",
+      "title": "WCMS content management",
+      "summary": "How Nodics manages sites, catalogs, pages, components, routes, and delivery through the WCMS runtime.",
+      "locale": "en",
+      "content": "content/nodics.wcms/overview.md"
+    },
+    {
+      "id": "wcms.media-management",
+      "functionalModule": "nodics.wcms",
+      "technicalModule": "media",
+      "title": "Media management",
+      "summary": "Governed upload, storage policy, media metadata, source contexts, and safe frontend boundaries.",
+      "locale": "en",
+      "content": "content/nodics.wcms/media-management.md"
+    },
+    {
+      "id": "cron.operations",
+      "functionalModule": "nodics.cron",
+      "technicalModule": "cronjob",
+      "title": "Cron operations",
+      "summary": "Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety.",
+      "locale": "en",
+      "content": "content/nodics.cron/operations.md"
     }
   ]
 }
