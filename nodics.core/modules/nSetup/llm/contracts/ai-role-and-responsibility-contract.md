@@ -88,8 +88,8 @@ It must understand and preserve:
 - `nodics.ai` as the backend/framework repository root;
 - standard functional module identities such as `nodics.core`,
   `nodics.platform`, `nodics.wcms`, `nodics.cron`, and `nodics.docs`;
-- customer projects such as `nodics.kickoff` as separate backend projects that
-  can extend or compose framework capabilities;
+- customer projects as separate backend projects that can extend or compose
+  framework capabilities without forcing a specific project name;
 - `nodics.axis` as the frontend renderer/application, not the owner of
   backend-importable CMS, documentation, schema, permission, or initialization
   records;

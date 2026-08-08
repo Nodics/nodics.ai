@@ -56,15 +56,19 @@ This file gives AI agents and developers a first-pass map of important Nodics mo
 | `dataPublisher` | Data publishing capability. |
 | `cres` | Marketing/review test capability in current repo. |
 
-## Application/Test Modules
+## Customer Project Shape
 
-| Module | Responsibility |
+Customer projects are not framework module names. The names below describe the
+standard shape a customer project may use; the concrete project name can be
+different for every customer.
+
+| Project artifact | Responsibility |
 | --- | --- |
-| `kickoff` | Sample/test application project. It demonstrates application, environment, server, node, config, data, and tests. Do not hardcode it in framework logic. |
-| `kickoffModules` | Project capability group containing `kickoffCore`, `kickoffApi`, and `kickoffInt`. |
-| `envs` | Environment grouping folder under `kickoff`, not a normal startup module. |
-| `kickoffLocal` | Local environment/server-root group module. |
-| `platformServer` | Local Kickoff server that extends `nodics.platform`. |
+| `<customer-project>` | Customer backend project. It demonstrates or owns application, environment, server, node, config, data, documentation, custom modules, and tests. Do not hardcode a concrete customer project name in framework logic. |
+| `<customer-project>/modules` | Project capability group containing project-owned modules such as `<customer-project>.core`, `<customer-project>.api`, or `<customer-project>.integration` when needed. |
+| `<customer-project>/envs` | Environment grouping folder under the customer project, not a normal startup module. |
+| `<customer-project>/envs/<environment>` | Concrete environment/server-root group module. |
+| `<customer-project>/envs/<environment>/<server>` | Runnable customer server that extends a framework functional module or a customer extension module. |
 
 ## Module Documentation Rule
 

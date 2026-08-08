@@ -11,8 +11,8 @@ The repository hierarchy includes:
   `nodics.workflow`, which functionally extend Core.
 - independently versioned domain capability repositories where a capability
   does not belong to Core or an existing runtime product.
-- customer projects such as `kickoff`, which compose product runtimes and add
-  project-owned modules, environments, and servers.
+- customer projects, which compose product runtimes and add project-owned
+  modules, environments, and servers.
 - non-runtime Core packages such as `nSetup` and `nTooling`, which are present
   for governance and development but excluded from server activation.
 
@@ -44,7 +44,8 @@ framework logic must not hardcode a customer server name.
 The runtime hierarchy is metadata-driven:
 
 - the environment container such as `envs` is a `nodics.kind: "group"` package.
-- each concrete environment such as `kickoffLocal` is a `nodics.kind: "group"` package because it contains server modules.
+- each concrete environment is a `nodics.kind: "group"` package because it
+  contains server modules.
 - each runnable server under an environment is a `nodics.kind: "server"` package.
 - each runnable node under a server is a `nodics.kind: "node"` package.
 

@@ -208,9 +208,9 @@ Documentation should be beginner-friendly enough for a new business user,
 developer, or operator to follow without prior Nodics or enterprise-domain
 knowledge. Use diagrams, tables, screenshots, and examples when a concept is
 harder to understand in prose alone. The first-level Axis documentation
-navigation may show Framework, Swaggers, Nodics Axis, and project guides such
-as Nodics Kickoff, but physical content ownership remains with the framework,
-product backend module, or customer project that owns the subject.
+navigation may show Framework, Swaggers, Nodics Axis, and customer project
+guides, but physical content ownership remains with the framework, product
+backend module, or customer project that owns the subject.
 
 ## Documentation Generation and Review Contract
 
@@ -329,19 +329,18 @@ documented:
 - Axis product documentation belongs to the backend `axis` module under
   `nodics.platform`;
 - customer/project documentation belongs to the owning customer backend
-  project, for example `nodics.kickoff`;
+  project;
 - future customer module overlays may contribute their own documentation from
   the owning project module, but they must not rename the standard functional
   module identity they customize.
 
-`nodics.kickoff` is the reference customer project. Kickoff-specific setup,
-demo business flows, sample data, project modules, custom API behavior,
-customer onboarding, and project extension guidance belong in `nodics.kickoff`
-using the same `data/core/source/documentation`,
-`data/core/data/documentation`, `data/core/headers`, and
-`manifest/docs-content-pack.json` structure. Do not place Kickoff documentation
-in `nodics.docs`, the Platform `axis` module, or the `nodics.axis` frontend
-repository.
+Project-specific setup, demo business flows, sample data, project modules,
+custom API behavior, customer onboarding, and project extension guidance belong
+in the owning customer backend project using the same
+`data/core/source/documentation`, `data/core/data/documentation`,
+`data/core/headers`, and `manifest/docs-content-pack.json` structure. Do not
+place customer project documentation in `nodics.docs`, the Platform `axis`
+module, or the `nodics.axis` frontend repository.
 
 The project must declare one canonical structured documentation source outside
 generated record/header files. For module-owned import packs, that source stays

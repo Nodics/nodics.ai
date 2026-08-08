@@ -95,12 +95,13 @@ impact, assumptions, contradictions, intended files, and validation route.
 - Keep standard Nodics backend functional module groups under this repository,
   such as `nodics.core`, `nodics.platform`, `nodics.cron`, `nodics.wcms`, and
   `nodics.docs`.
-- Keep customer projects outside this repository. `nodics.kickoff` is a reference
-  customer project and must not be treated as a framework module.
+- Keep customer projects outside this repository. A reference customer project
+  may exist for demos, but no framework contract may depend on that project
+  name or require customer projects to use the same name.
 - Keep customer/project documentation in the owning customer backend project.
-  For the reference project, Kickoff-specific setup, demo flows, sample data,
-  project modules, custom API behavior, onboarding, and extension guidance
-  belong in `nodics.kickoff` using `data/core/source/documentation`,
+  Project-specific setup, demo flows, sample data, project modules, custom API
+  behavior, onboarding, and extension guidance belong in the owning customer
+  backend project using `data/core/source/documentation`,
   `data/core/data/documentation`, `data/core/headers`, and
   `manifest/docs-content-pack.json`; they do not belong in `nodics.docs`,
   `nodics.platform/modules/axis`, or `nodics.axis`.
@@ -120,8 +121,9 @@ impact, assumptions, contradictions, intended files, and validation route.
   `nodics.platform`, `nodics.cron`, `nodics.wcms`, `nodics.docs`, and so on.
 - Customer extension modules customize implementation but do not rename the
   standard functional capability.
-- Example: `nodics.kickoff.platform` may extend `nodics.platform`, but the registry
-  identity and display capability remain `nodics.platform` / `Platform`.
+- Example: `<customer-project>.platform` may extend `nodics.platform`, but the
+  registry identity and display capability remain `nodics.platform` /
+  `Platform`.
 - Register optional business capabilities at the functional module level, not
   at every internal technical module level.
 

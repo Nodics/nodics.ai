@@ -1,7 +1,7 @@
 # Customer Configuration Classification Contract
 
 Customer projects should keep only customer-owned configuration. Do not use a
-reference project such as Nodics Kickoff as a dumping ground for framework defaults.
+reference/demo customer project as a dumping ground for framework defaults.
 
 ## Classification
 
