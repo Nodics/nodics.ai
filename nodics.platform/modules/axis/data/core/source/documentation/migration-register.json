@@ -115,7 +115,7 @@
       "canonicalSource": "data/core/source/documentation/pages/design-system-and-shell.md",
       "destinationRoute": "/docs/nodics-axis/design-system",
       "disposition": "migrated",
-      "sourceHash": "a6995601b81ef6b2fe4ef2f6b123a1b4bba597a7f3c0976002284f55513a7498",
+      "sourceHash": "78a408e25eceb2c4a59dbf220d96596ac3d2f171238a1019868b4986c3a809fb",
       "wordCount": 1653,
       "headings": [
         "Implemented scope",
@@ -266,8 +266,8 @@
       "canonicalSource": "data/core/source/documentation/pages/schema-workbench.md",
       "destinationRoute": "/docs/nodics-axis/schema-workbench",
       "disposition": "migrated",
-      "sourceHash": "48db80efb1b68037c598320173c525b6c05d9aaecdfbe574c042af953947ec91",
-      "wordCount": 2717,
+      "sourceHash": "459c95070bd524e0f0568220bea7a780e683a0ee0c1ffba1ade629d8507a33bd",
+      "wordCount": 2719,
       "headings": [
         "Implemented frontend behavior",
         "Request ownership",

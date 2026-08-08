@@ -1582,7 +1582,7 @@ module.exports = {
         "module": "axis",
         "path": "modules/axis/data/core/source/documentation/pages/design-system-and-shell.md",
         "evidence": "docs/design-system-and-shell.md",
-        "hash": "a6995601b81ef6b2fe4ef2f6b123a1b4bba597a7f3c0976002284f55513a7498",
+        "hash": "78a408e25eceb2c4a59dbf220d96596ac3d2f171238a1019868b4986c3a809fb",
         "version": "0.3.22"
       },
       "previous": {
@@ -3080,7 +3080,7 @@ module.exports = {
         "module": "axis",
         "path": "modules/axis/data/core/source/documentation/pages/schema-workbench.md",
         "evidence": "docs/schema-workbench.md",
-        "hash": "48db80efb1b68037c598320173c525b6c05d9aaecdfbe574c042af953947ec91",
+        "hash": "459c95070bd524e0f0568220bea7a780e683a0ee0c1ffba1ade629d8507a33bd",
         "version": "0.3.22"
       },
       "previous": {
