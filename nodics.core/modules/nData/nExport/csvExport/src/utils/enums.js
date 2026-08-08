@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/csvExport/src/utils/enums.js
+ * @module nodics.core/modules/nData/nExport/csvExport/src/utils/enums.js
  * @description Provides shared csvExport enum definition exports.
  * @layer utils
  * @owner csvExport

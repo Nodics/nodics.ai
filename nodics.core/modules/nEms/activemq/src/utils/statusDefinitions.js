@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/activemq/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nEms/activemq/src/utils/statusDefinitions.js
  * @description Provides shared activemq status and error definition exports.
  * @layer utils
  * @owner activemq

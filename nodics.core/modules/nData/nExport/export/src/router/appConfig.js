@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/export/src/router/appConfig
+ * @module nodics.core/modules/nData/nExport/export/src/router/appConfig
  * @description Defines nExport route application metadata; export orchestration is exposed by nExport and generated-file delivery stays with media.
  * @layer router
  * @owner nExport

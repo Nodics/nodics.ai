@@ -162,8 +162,8 @@ create parallel page shells.
 
 Context identifiers are retained exactly for API requests, authorization,
 query keys, caches, and diagnostics. Axis uses the generic display-name helper
-only to turn a validated fallback code such as `startioLocal` into readable
-text such as `Startio Local`. The helper preserves common acronyms including
+only to turn a validated fallback code such as `kickoffLocal` into readable
+text such as `Kickoff Local`. The helper preserves common acronyms including
 AI, API, CMS, ID, and UI. A localized display name explicitly supplied by the
 owning backend contract takes precedence over this fallback.
 
@@ -229,7 +229,7 @@ Responsive browser acceptance also covers the 60/40 authentication split at
 desktop and tablet widths and the single-column mobile journey.
 
 The governed-navigation acceptance was also exercised against the real
-`startioLocal` `monoServer` bootstrap. The authenticated catalogue returned
+`kickoffLocal` `monoServer` bootstrap. The authenticated catalogue returned
 eleven permission-filtered destinations with module-owned groups,
 perspectives, context dimensions, and active feature state. Axis rendered the
 expected business groups, menu search, favourite controls, compact

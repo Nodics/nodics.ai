@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nbpm/src/service/procs/database/remove/defaultModelsRemoveInitializerService
+ * @module nodics.core/modules/nbpm/src/service/procs/database/remove/defaultModelsRemoveInitializerService
  * @description Implements nbpm default models remove initializer service business behavior and extension logic.
  * @layer service
  * @owner nbpm

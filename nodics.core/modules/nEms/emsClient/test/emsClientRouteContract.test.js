@@ -13,7 +13,7 @@ const { assertRouteContracts } = require('../../../nRouter/test/routerContractTe
 const routerConfig = require('../src/router/routers');
 
 /**
- * @module gFramework/nEms/emsClient/test/emsClientRouteContract.test
+ * @module nodics.core/modules/nEms/emsClient/test/emsClientRouteContract.test
  * @description Validates EMS client route metadata for publish, register, and close operations.
  * @layer test
  * @owner nEms

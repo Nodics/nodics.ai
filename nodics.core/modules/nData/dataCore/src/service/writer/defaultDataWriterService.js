@@ -23,7 +23,7 @@ const copyrightHeader = '/*\n' +
     ' */\n';
 
 /**
- * @module gFramework/nData/dataCore/src/service/writer/defaultDataWriterService
+ * @module nodics.core/modules/nData/dataCore/src/service/writer/defaultDataWriterService
  * @description Implements nData default data writer service business behavior and extension logic.
  * @layer service
  * @owner nData

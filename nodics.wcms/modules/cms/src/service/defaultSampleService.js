@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gContent/cms/src/service/defaultSampleService
+ * @module nodics.wcms/modules/cms/src/service/defaultSampleService
  * @description Implements cms default sample service business behavior and extension logic.
  * @layer service
  * @owner cms

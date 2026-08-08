@@ -1,6 +1,6 @@
 # cms AI Contracts
 
-This folder contains module-specific AI/developer contracts for `gContent/cms`.
+This folder contains module-specific AI/developer contracts for `nodics.wcms/modules/cms`.
 
 Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.
 
@@ -25,4 +25,4 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   documentation, schema/list/detail/query, and renderer metadata instead of
   hardcoding page-specific CRUD experiences.
 - Validate authoring model changes with
-  `node gContent/cms/test/cmsWcmsAuthoringSchemaContract.test.js`.
+  `node nodics.wcms/modules/cms/test/cmsWcmsAuthoringSchemaContract.test.js`.

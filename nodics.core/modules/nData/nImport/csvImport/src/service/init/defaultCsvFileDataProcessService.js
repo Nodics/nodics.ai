@@ -15,7 +15,7 @@ var sizeof = require('object-sizeof');
 
 
 /**
- * @module gFramework/nData/nImport/csvImport/src/service/init/defaultCsvFileDataProcessService
+ * @module nodics.core/modules/nData/nImport/csvImport/src/service/init/defaultCsvFileDataProcessService
  * @description Implements nData default csv file data process service business behavior and extension logic.
  * @layer service
  * @owner nData

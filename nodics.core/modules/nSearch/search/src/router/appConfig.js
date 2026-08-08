@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/router/appConfig
+ * @module nodics.core/modules/nSearch/search/src/router/appConfig
  * @description Defines nSearch route registration and HTTP exposure metadata.
  * @layer router
  * @owner nSearch

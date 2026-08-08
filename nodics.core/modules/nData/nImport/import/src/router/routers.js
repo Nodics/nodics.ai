@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/import/src/router/routers
+ * @module nodics.core/modules/nData/nImport/import/src/router/routers
  * @description Defines nData route registration and HTTP exposure metadata.
  * @layer router
  * @owner nData
@@ -141,7 +141,7 @@ module.exports = {
                 key: '/init',
                 method: 'GET',
                 controller: 'DefaultDataReleaseController',
-                operation: 'getCatalogue'
+                operation: 'getInitCatalogue'
             },
             catalogueCore: {
                 secured: true,
@@ -152,7 +152,7 @@ module.exports = {
                 key: '/core',
                 method: 'GET',
                 controller: 'DefaultDataReleaseController',
-                operation: 'getCatalogue'
+                operation: 'getCoreCatalogue'
             },
             catalogueSample: {
                 secured: true,
@@ -163,7 +163,7 @@ module.exports = {
                 key: '/sample',
                 method: 'GET',
                 controller: 'DefaultDataReleaseController',
-                operation: 'getCatalogue'
+                operation: 'getSampleCatalogue'
             },
             preflightInit: {
                 secured: true,

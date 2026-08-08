@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSystem/src/router/routers
+ * @module nodics.core/modules/nSystem/src/router/routers
  * @description Defines nSystem route registration and HTTP exposure metadata.
  * @layer router
  * @owner nSystem

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/config/properties
+ * @module nodics.platform/modules/profile/config/properties
  * @description Defines default profile configuration used during module startup and layering.
  * @layer config
  * @owner profile

@@ -11,7 +11,7 @@
 
 const _ = require('lodash');
 /**
- * @module gFramework/nbpm/src/service/procs/updated/defaultWorkflowCarrierUpdatedPipelineService
+ * @module nodics.core/modules/nbpm/src/service/procs/updated/defaultWorkflowCarrierUpdatedPipelineService
  * @description Implements nbpm default workflow carrier updated pipeline service business behavior and extension logic.
  * @layer service
  * @owner nbpm

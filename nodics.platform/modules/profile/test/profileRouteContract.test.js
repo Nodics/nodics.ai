@@ -9,7 +9,7 @@
 
  */
 
-const { assertRouteContracts } = require('../../../gFramework/nRouter/test/routerContractTestUtils');
+const { assertRouteContracts } = require('../../../nodics.core/modules/nRouter/test/routerContractTestUtils');
 const routerConfig = require('../src/router/routers');
 
 const expectedRoutes = [

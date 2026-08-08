@@ -22,16 +22,16 @@ const routers = require("../src/router/routers").backoffice;
 const statusDefinitions = require("../src/utils/statusDefinitions");
 
 const capabilities = [
-  require("../../../gCore/profile/config/properties").backofficeCapabilities
+  require("../../../nodics.platform/modules/profile/config/properties").backofficeCapabilities
     .profile,
-  require("../../../gContent/cms/config/properties").backofficeCapabilities.cms,
-  require("../../../gCore/cronjob/config/properties").backofficeCapabilities
+  require("../../../nodics.wcms/modules/cms/config/properties").backofficeCapabilities.cms,
+  require("../../../nodics.cron/modules/cronjob/config/properties").backofficeCapabilities
     .cronjob,
-  require("../../../gCore/workflow/config/properties").backofficeCapabilities
+  require("../../../nodics.workflow/config/properties").backofficeCapabilities
     .workflow,
-  require("../../../gComm/baseCommerce/pricing/config/properties").backofficeCapabilities
+  require("../../../nodics.commerce/modules/pricing/config/properties").backofficeCapabilities
     .pricing,
-  require("../../../gFramework/nMedia/config/properties").backofficeCapabilities
+  require("../../../nodics.wcms/modules/media/config/properties").backofficeCapabilities
     .media,
   require("../config/properties").backofficeCapabilities.backoffice,
 ];
@@ -303,7 +303,7 @@ assert(
         id: "child",
         label: "Child",
         parentId: "parent",
-        parentModuleName: "gComm",
+        parentModuleName: "nodics.commerce",
       },
     ],
   }),
@@ -319,7 +319,7 @@ assert.strictEqual(
 );
 assert.strictEqual(
   service.validateBackofficeMetadata({
-    navigation: [{ id: "child", label: "Child", parentModuleName: "gComm" }],
+    navigation: [{ id: "child", label: "Child", parentModuleName: "nodics.commerce" }],
   }),
   false,
   "cross-module parent references must include a parent id",
@@ -553,8 +553,8 @@ assert.strictEqual(
 let registration = {
   moduleName: "cms",
   displayName: "Content Management",
-  parentModule: "gContent",
-  canonicalIdentity: "gContent/cms",
+  parentModule: "nodics.wcms",
+  canonicalIdentity: "nodics.wcms/modules/cms",
   instanceId: "runtime-1",
   clientCallable: true,
   endpoint: "https://cms.example/nodics/cms",
@@ -564,9 +564,9 @@ let registration = {
 };
 assert(service.validateRegistration(registration));
 let contentGroupRegistration = {
-  moduleName: "gContent",
+  moduleName: "nodics.wcms",
   displayName: "Content",
-  canonicalIdentity: "gContent",
+  canonicalIdentity: "nodics.wcms",
   instanceId: "runtime-1",
   moduleKind: "group",
   clientCallable: false,

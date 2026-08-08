@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nSearch/search/src/service/provider/defaultSearchValueProviderHandlerService
+ * @module nodics.core/modules/nSearch/search/src/service/provider/defaultSearchValueProviderHandlerService
  * @description Implements nSearch default search value provider handler service business behavior and extension logic.
  * @layer service
  * @owner nSearch

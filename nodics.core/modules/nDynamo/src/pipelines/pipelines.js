@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/src/pipelines/pipelines
+ * @module nodics.core/modules/nDynamo/src/pipelines/pipelines
  * @description Defines nDynamo pipeline wiring and execution contracts.
  * @layer pipelines
  * @owner nDynamo

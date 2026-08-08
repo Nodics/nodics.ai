@@ -314,7 +314,7 @@ module.exports = {
     },
 
     /**
-     * Resolves active modules from gFramework, configured groups/modules, selected node, parents, and dependencies.
+     * Resolves active modules from nodics.core, configured groups/modules, selected node, parents, and dependencies.
      *
      * @returns {string[]} Active module names that should participate in startup.
      * @sideEffects Creates an early logger using merged base/server log configuration.

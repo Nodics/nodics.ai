@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nbpm/test/workflowLifecyclePipelineContract.test
+ * @module nodics.core/modules/nbpm/test/workflowLifecyclePipelineContract.test
  * @description Validates nbpm workflow lifecycle event wiring, interceptor-provided default events, listener dispatch, and move pipeline hook structure.
  * @layer test
  * @owner nbpm

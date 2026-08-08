@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/search/indexes
+ * @module nodics.platform/modules/profile/src/search/indexes
  * @description Documents profile indexes module behavior.
  * @layer search
  * @owner profile

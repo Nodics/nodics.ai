@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSystem/config/prescripts
+ * @module nodics.core/modules/nSystem/config/prescripts
  * @description Defines default nSystem configuration used during module startup and layering.
  * @layer config
  * @owner nSystem

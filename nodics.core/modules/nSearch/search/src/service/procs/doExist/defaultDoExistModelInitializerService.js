@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/service/procs/doExist/defaultDoExistModelInitializerService
+ * @module nodics.core/modules/nSearch/search/src/service/procs/doExist/defaultDoExistModelInitializerService
  * @description Implements nSearch default do exist model initializer service business behavior and extension logic.
  * @layer service
  * @owner nSearch

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nController/src/controller/validator/defaultValidatorController
+ * @module nodics.core/modules/nController/src/controller/validator/defaultValidatorController
  * @description Exposes request handlers for nController default validator controller operations.
  * @layer controller
  * @owner nController

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/elastic/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nSearch/elastic/src/utils/statusDefinitions.js
  * @description Provides shared elastic status and error definition exports.
  * @layer utils
  * @owner elastic

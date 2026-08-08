@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/export/src/service/DataExportService
+ * @module nodics.core/modules/nData/nExport/export/src/service/DataExportService
  * @description Implements nExport source read, transformation, rendering, and generated-media creation behavior.
  * @layer service
  * @owner nExport

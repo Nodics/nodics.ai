@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nToken/src/utils/enums
+ * @module nodics.core/modules/nToken/src/utils/enums
  * @description Provides shared nToken utility exports for enums.
  * @layer utils
  * @owner nToken

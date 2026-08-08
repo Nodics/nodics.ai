@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/mongodb/vMongodb/src/utils/utils
+ * @module nodics.core/modules/nDatabase/mongodb/vMongodb/src/utils/utils
  * @description Provides shared nDatabase utility exports for utils.
  * @layer utils
  * @owner nDatabase

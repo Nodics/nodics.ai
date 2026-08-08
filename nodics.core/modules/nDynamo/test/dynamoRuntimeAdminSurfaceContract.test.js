@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/test/dynamoRuntimeAdminSurfaceContract
+ * @module nodics.core/modules/nDynamo/test/dynamoRuntimeAdminSurfaceContract
  * @description Verifies nDynamo exposes only the intended runtime administration API surfaces and keeps activation request/log governance records internal to services.
  * @layer test
  * @owner nDynamo

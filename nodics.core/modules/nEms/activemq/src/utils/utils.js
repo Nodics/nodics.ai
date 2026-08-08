@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/activemq/src/utils/utils
+ * @module nodics.core/modules/nEms/activemq/src/utils/utils
  * @description Provides shared nEms utility exports for utils.
  * @layer utils
  * @owner nEms

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/emsClient/src/pipelines/pipelines
+ * @module nodics.core/modules/nEms/emsClient/src/pipelines/pipelines
  * @description Defines nEms pipeline wiring and execution contracts.
  * @layer pipelines
  * @owner nEms

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/cronjob/test/cronJobRuntimeContainerContract.test
+ * @module nodics.cron/modules/cronjob/test/cronJobRuntimeContainerContract.test
  * @description Validates cronjob all-job startup, node ownership, temporary failover ownership, and runtime container lifecycle behavior.
  * @layer test
  * @owner cronjob

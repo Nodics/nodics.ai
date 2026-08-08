@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nOtp/src/schemas/schemas
+ * @module nodics.core/modules/nOtp/src/schemas/schemas
  * @description Defines nOtp schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner nOtp

@@ -81,6 +81,85 @@ database-importable content. If a page, component, catalog, route, or
 documentation record is imported into WCMS, it must be shipped by the backend
 module or project that owns that content.
 
+## Runtime composition diagram
+
+```mermaid
+flowchart TD
+  Core["nodics.core<br/>mandatory framework foundation"]
+  Platform["nodics.platform<br/>profile, backoffice, axis backend data"]
+  WCMS["nodics.wcms<br/>cms, media, content delivery"]
+  Cron["nodics.cron<br/>cronjob runtime"]
+  Kickoff["nodics.kickoff<br/>customer/reference project"]
+  PlatformServer["kickoffLocal/platformServer"]
+  WcmsServer["kickoffLocal/wcmsServer"]
+  CronServer["kickoffLocal/cronServer"]
+
+  Core --> Platform
+  Core --> WCMS
+  Core --> Cron
+  Platform --> Kickoff
+  WCMS --> Kickoff
+  Cron --> Kickoff
+  Kickoff --> PlatformServer
+  Kickoff --> WcmsServer
+  Kickoff --> CronServer
+```
+
+This picture shows the concept, not a Git repository dependency tree. The
+important idea is that each server loads an effective runtime graph. A server
+does not load every module in the workspace just because the files exist. It
+loads the modules that are part of its configured extension chain.
+
+## Module hierarchy versus service precedence
+
+Two ideas are easy to mix together:
+
+| Concept | What it answers | Example |
+| --- | --- | --- |
+| Functional module hierarchy | Which capability is available? | A WCMS server has the `nodics.wcms` capability, which itself depends on Core. |
+| Service precedence | Which implementation wins at runtime? | If a customer module overrides a service after Platform loads, the later module implementation wins for that runtime. |
+
+Functional hierarchy is about capability identity. Service precedence is about
+runtime execution order. That is why a customer extension such as
+`kickoff.platform` may customize Platform behavior while the functional module
+name remains `nodics.platform` in Axis and BackOffice.
+
+## Why `extends` is the right word
+
+`extends` makes the architecture readable because a later module builds on an
+earlier module. It does not mean every file is copied. It means the later
+module participates in the same runtime composition and can add configuration,
+services, routers, schema records, import data, tests, and documentation.
+
+For example:
+
+```text
+platformServer
+  extends kickoff project modules
+    extends nodics.platform
+      extends nodics.core
+```
+
+The exact physical folders can change. A customer may keep framework source in
+one checkout and the customer project somewhere else. The contract is the
+runtime graph, not the parent directory name on one developer machine.
+
+## Documentation ownership matrix
+
+Documentation is also modular. It should not become another ungoverned bucket.
+
+| Documentation topic | Source owner | Why |
+| --- | --- | --- |
+| Framework vision, architecture, Core, Platform, WCMS, Cron | `nodics.docs` | This content explains reusable framework behavior. |
+| Axis product behavior, renderers, shell, login, schema workbench | `nodics.platform/modules/axis` | Axis backend module owns Axis-specific CMS records and product docs. |
+| Kickoff local setup and reference customization | `nodics.kickoff` | Kickoff is a customer-style project and must teach customers where project-owned content lives. |
+| Customer-specific module guides | Customer project or customer extension module | Customer data must not be hidden inside framework repositories. |
+
+When Axis displays “Framework,” “Swaggers,” “Nodics Axis,” and “Nodics
+Kickoff,” that is a frontend navigation decision. It does not mean all content
+comes from one repository. Each backend owner contributes its governed content
+pack.
+
 ## Business value
 
 This architecture helps teams customize without forking. It also supports

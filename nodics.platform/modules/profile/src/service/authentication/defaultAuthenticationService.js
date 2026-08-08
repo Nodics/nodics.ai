@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gCore/profile/src/service/authentication/defaultAuthenticationService
+ * @module nodics.platform/modules/profile/src/service/authentication/defaultAuthenticationService
  * @description Implements profile default authentication service business behavior and extension logic.
  * @layer service
  * @owner profile

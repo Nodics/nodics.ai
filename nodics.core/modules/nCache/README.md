@@ -116,4 +116,4 @@ live gate when it depends on external infrastructure.
 - Public cache guide: [How Cache Works](https://github.com/Nodics/nodics.docs)
 - Generic contract: [cache](cache/README.md)
 - Provider maturity: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)
-- Framework map: [gFramework](../README.md)
+- Framework map: [nodics.core](../README.md)

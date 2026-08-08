@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSystem/src/facade/config/defaultConfigurationFacade
+ * @module nodics.core/modules/nSystem/src/facade/config/defaultConfigurationFacade
  * @description Coordinates facade-level delegation for nSystem default configuration facade operations.
  * @layer facade
  * @owner nSystem

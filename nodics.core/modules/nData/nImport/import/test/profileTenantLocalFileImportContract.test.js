@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/import/test/profileTenantLocalFileImportContract
+ * @module nodics.core/modules/nData/nImport/import/test/profileTenantLocalFileImportContract
  * @description Validates the Profile-owned tenant sample data import use case for CSV and XLSX files with real headers.
  * @layer test
  * @owner nData
@@ -98,7 +98,7 @@ function invoke(service, methodName, request) {
 }
 
 async function prepareLocalImport() {
-    let rootPath = path.join(process.cwd(), 'gCore', 'profile', 'data', 'sample', 'tenant');
+    let rootPath = path.join(process.cwd(), 'nodics.platform', 'profile', 'data', 'sample', 'tenant');
     let request = {
         inputPath: {
             rootPath: rootPath

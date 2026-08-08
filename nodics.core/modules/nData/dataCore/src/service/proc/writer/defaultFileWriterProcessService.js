@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nData/dataCore/src/service/proc/writer/defaultFileWriterProcessService
+ * @module nodics.core/modules/nData/dataCore/src/service/proc/writer/defaultFileWriterProcessService
  * @description Implements nData default file writer process service business behavior and extension logic.
  * @layer service
  * @owner nData

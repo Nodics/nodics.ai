@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/import/src/lib/dataImportError
+ * @module nodics.core/modules/nData/nImport/import/src/lib/dataImportError
  * @description Provides reusable nData library primitives for data import error.
  * @layer lib
  * @owner nData

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nToken/src/interceptors/interceptors
+ * @module nodics.core/modules/nToken/src/interceptors/interceptors
  * @description Registers nToken interceptor wiring for pipeline extension points.
  * @layer interceptors
  * @owner nToken

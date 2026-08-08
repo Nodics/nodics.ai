@@ -13,7 +13,7 @@ const _ = require('lodash');
 const fse = require('fs-extra');
 
 /**
- * @module gFramework/nData/nImport/import/src/service/system/defaultSystemDataImportInitializerService
+ * @module nodics.core/modules/nData/nImport/import/src/service/system/defaultSystemDataImportInitializerService
  * @description Implements nData default system data import initializer service business behavior and extension logic.
  * @layer service
  * @owner nData

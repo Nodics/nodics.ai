@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEvent/src/lib/eventError
+ * @module nodics.core/modules/nEvent/src/lib/eventError
  * @description Provides reusable nEvent library primitives for event error.
  * @layer lib
  * @owner nEvent

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/facade/common
+ * @module nodics.core/modules/nSearch/search/src/facade/common
  * @description Template facade used by generated nSearch schema facades.
  * During generation, placeholders are replaced with the owning search facade,
  * service, and schema identifiers.

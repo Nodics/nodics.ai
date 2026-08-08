@@ -59,7 +59,7 @@ Framework defaults keep operational configuration, schema maintenance, and
 OpenAPI contract APIs available, while file access, data import/export, log
 mutation, test execution, and dynamic class APIs are disabled unless a
 project/environment/server/node layer enables them. Developer servers such as
-`startioLocal` may opt in through layered `config/properties.js`; production-like
+`kickoffLocal` may opt in through layered `config/properties.js`; production-like
 servers should enable only the categories required for their operational model.
 
 Runtime API documentation follows the same route-governance model. OpenAPI is
@@ -220,11 +220,11 @@ gateway policy when a deployment requires global enforcement.
 ## Verification
 
 ```bash
-node gFramework/nRouter/test/httpHardeningContract.test.js
-node gFramework/nRouter/test/routeActionAuthorization.test.js
-node gFramework/nRouter/test/controlPlaneRouteContract.test.js
-node gFramework/nRouter/test/requestPipelineResponseContract.test.js
-node gFramework/nRouter/test/openapiContractGeneration.test.js
+node nodics.core/modules/nRouter/test/httpHardeningContract.test.js
+node nodics.core/modules/nRouter/test/routeActionAuthorization.test.js
+node nodics.core/modules/nRouter/test/controlPlaneRouteContract.test.js
+node nodics.core/modules/nRouter/test/requestPipelineResponseContract.test.js
+node nodics.core/modules/nRouter/test/openapiContractGeneration.test.js
 npm run docs:openapi
 npm run quality:docs
 ```
@@ -250,4 +250,4 @@ integration tests.
 - Public API guide: [How To Create APIs](https://github.com/Nodics/nodics.docs)
 - Security guide: [How Users, Tenants, And Permissions Work](https://github.com/Nodics/nodics.docs)
 - Detailed framework: Router Framework (canonical documentation: `capability.apis-routing.technical-reference`)
-- Framework map: [gFramework](../README.md)
+- Framework map: [nodics.core](../README.md)

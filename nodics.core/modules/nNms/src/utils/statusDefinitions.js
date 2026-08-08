@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nNms/src/utils/statusDefinitions
+ * @module nodics.core/modules/nNms/src/utils/statusDefinitions
  * @description Provides shared nNms utility exports for status definitions.
  * @layer utils
  * @owner nNms

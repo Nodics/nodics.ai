@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nController/src/utils/enums.js
+ * @module nodics.core/modules/nController/src/utils/enums.js
  * @description Provides shared nController enum definition exports.
  * @layer utils
  * @owner nController

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nController/src/controller/cache/defaultCacheController
+ * @module nodics.core/modules/nController/src/controller/cache/defaultCacheController
  * @description Exposes request handlers for nController default cache controller operations.
  * @layer controller
  * @owner nController

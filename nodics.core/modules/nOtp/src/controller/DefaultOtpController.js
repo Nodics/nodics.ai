@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nOtp/src/controller/DefaultOtpController
+ * @module nodics.core/modules/nOtp/src/controller/DefaultOtpController
  * @description Exposes request handlers for nOtp default otp controller operations.
  * @layer controller
  * @owner nOtp

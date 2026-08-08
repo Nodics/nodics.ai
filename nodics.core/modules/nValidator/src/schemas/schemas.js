@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nValidator/src/schemas/schemas
+ * @module nodics.core/modules/nValidator/src/schemas/schemas
  * @description Defines nValidator schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner nValidator

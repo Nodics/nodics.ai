@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nNms/src/service/node/defaultNodeStateChangeHandlerService
+ * @module nodics.core/modules/nNms/src/service/node/defaultNodeStateChangeHandlerService
  * @description Implements nNms default node state change handler service business behavior and extension logic.
  * @layer service
  * @owner nNms

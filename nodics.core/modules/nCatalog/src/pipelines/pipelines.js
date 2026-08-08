@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCatalog/src/pipelines/pipelines
+ * @module nodics.core/modules/nCatalog/src/pipelines/pipelines
  * @description Defines nCatalog pipeline wiring and execution contracts.
  * @layer pipelines
  * @owner nCatalog

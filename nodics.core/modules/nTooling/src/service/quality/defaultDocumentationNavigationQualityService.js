@@ -147,9 +147,9 @@ function collectNavigationReport(rootDir, policy) {
     const missingRequiredEntryPoints = (policy.requiredEntryPoints || []).filter(filePath =>
         !fs.existsSync(path.join(rootDir, filePath)) || !reachable.has(filePath));
 
-    const catalogContent = fs.existsSync(path.join(rootDir, moduleCatalog)) ?
+    const catalonodics.wcms = fs.existsSync(path.join(rootDir, moduleCatalog)) ?
         fs.readFileSync(path.join(rootDir, moduleCatalog), 'utf8') : '';
-    const catalogTargets = new Set(extractLocalMarkdownLinks(catalogContent).map(link => resolveTarget(moduleCatalog, link)));
+    const catalogTargets = new Set(extractLocalMarkdownLinks(catalonodics.wcms).map(link => resolveTarget(moduleCatalog, link)));
     const missingModuleReadmes = collectPackageReadmes(rootDir).filter(readmePath => !catalogTargets.has(readmePath));
 
     return {

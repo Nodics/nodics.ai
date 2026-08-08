@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/import/src/service/defaultSampleService
+ * @module nodics.core/modules/nData/nImport/import/src/service/defaultSampleService
  * @description Implements import default sample service business behavior and extension logic.
  * @layer service
  * @owner import

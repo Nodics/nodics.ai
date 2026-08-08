@@ -15,10 +15,10 @@ const path = require('path');
 
 const repoRoot = path.resolve(__dirname, '../../../../../');
 const dataTypes = ['init', 'core', 'sample'];
-const Nodics = require(path.join(repoRoot, 'gFramework/nConfig/bin/nodics'));
-const Config = require(path.join(repoRoot, 'gFramework/nConfig/bin/config'));
-const utils = require(path.join(repoRoot, 'gFramework/nConfig/src/utils/utils'));
-const initService = require(path.join(repoRoot, 'gFramework/nConfig/src/service/DefaultFrameworkInitializerService'));
+const Nodics = require(path.join(repoRoot, 'nodics.core/modules/nConfig/bin/nodics'));
+const Config = require(path.join(repoRoot, 'nodics.core/modules/nConfig/bin/config'));
+const utils = require(path.join(repoRoot, 'nodics.core/modules/nConfig/src/utils/utils'));
+const initService = require(path.join(repoRoot, 'nodics.core/modules/nConfig/src/service/DefaultFrameworkInitializerService'));
 
 function getDefaultServerName() {
     let env = require(path.join(repoRoot, 'env.js'));
@@ -27,7 +27,7 @@ function getDefaultServerName() {
 
 function getDefaultEnvironmentName() {
     let env = require(path.join(repoRoot, 'env'));
-    return env.defaultOptions.defaultEnvironment || 'startioLocal';
+    return env.defaultOptions.defaultEnvironment || 'kickoffLocal';
 }
 
 function getDefaultServerActiveModules() {

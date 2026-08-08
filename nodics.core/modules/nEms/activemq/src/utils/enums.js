@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/activemq/src/utils/enums.js
+ * @module nodics.core/modules/nEms/activemq/src/utils/enums.js
  * @description Provides shared activemq enum definition exports.
  * @layer utils
  * @owner activemq

@@ -18,8 +18,8 @@
 const assert = require('assert');
 const properties = require('../config/properties');
 const routes = require('../src/router/routers').profile.loadDefaults;
-const policyData = require('../../../gAi/aiAssistant/data/init/data/assistant/defaultAssistantToolPolicyData');
-const localPolicyData = require('../../../startio/envs/startioLocal/monoServer/data/init/data/assistant/startioLocalAssistantToolPolicyData');
+const policyData = require('../../../nodics.assistant/modules/assistant/data/init/data/assistant/defaultAssistantToolPolicyData');
+const localPolicyData = require('../../../nodics.kickoff/envs/kickoffLocal/monoServer/data/init/data/assistant/kickoffLocalAssistantToolPolicyData');
 
 global.CONFIG = {
     get: key => key === 'enterpriseManagement' ? properties.enterpriseManagement :

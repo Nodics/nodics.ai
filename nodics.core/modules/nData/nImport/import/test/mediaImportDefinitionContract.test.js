@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/import/test/mediaImportDefinitionContract
+ * @module nodics.core/modules/nData/nImport/import/test/mediaImportDefinitionContract
  * @description Validates importDefinition-owned header generation for media-backed imports.
  * @layer test
  * @owner import

@@ -12,7 +12,7 @@
 const assert = require('assert');
 
 /**
- * @module gCore/cronjob/test/cronJobServiceLifecycleContract.test
+ * @module nodics.cron/modules/cronjob/test/cronJobServiceLifecycleContract.test
  * @description Validates cronjob service delegation to the runtime container for create, update, run, start, stop, remove, pause, and resume operations.
  * @layer test
  * @owner cronjob

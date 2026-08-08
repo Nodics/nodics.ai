@@ -16,7 +16,7 @@ const Chai = require('chai');
 const expect = Chai.expect;
 
 /**
- * @module gFramework/nEms/emsClient/test/common/commonTest
+ * @module nodics.core/modules/nEms/emsClient/test/common/commonTest
  * @description Defines nEms test fixtures or suites for module behavior validation.
  * @layer test
  * @owner nEms

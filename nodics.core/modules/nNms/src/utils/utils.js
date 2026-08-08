@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nNms/src/utils/utils
+ * @module nodics.core/modules/nNms/src/utils/utils
  * @description Provides shared nNms utility exports for utils.
  * @layer utils
  * @owner nNms

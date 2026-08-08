@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/utils/statusDefinitions
+ * @module nodics.platform/modules/profile/src/utils/statusDefinitions
  * @description Provides shared profile utility exports for status definitions.
  * @layer utils
  * @owner profile

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/dataCore/src/utils/enums.js
+ * @module nodics.core/modules/nData/dataCore/src/utils/enums.js
  * @description Provides shared dataCore enum definition exports.
  * @layer utils
  * @owner dataCore

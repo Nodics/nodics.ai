@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/service/search/defaultEnterpriseDescProviderService
+ * @module nodics.platform/modules/profile/src/service/search/defaultEnterpriseDescProviderService
  * @description Implements profile default enterprise desc provider service business behavior and extension logic.
  * @layer service
  * @owner profile

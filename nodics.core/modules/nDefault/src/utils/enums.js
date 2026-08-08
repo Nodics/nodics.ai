@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDefault/src/utils/enums.js
+ * @module nodics.core/modules/nDefault/src/utils/enums.js
  * @description Provides shared default enum definition exports.
  * @layer utils
  * @owner default

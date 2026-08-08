@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nAuth/config/postscripts
+ * @module nodics.core/modules/nAuth/config/postscripts
  * @description Defines default nAuth configuration used during module startup and layering.
  * @layer config
  * @owner nAuth

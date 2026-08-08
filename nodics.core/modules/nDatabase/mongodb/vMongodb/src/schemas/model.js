@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nDatabase/mongodb/vMongodb/src/schemas/model
+ * @module nodics.core/modules/nDatabase/mongodb/vMongodb/src/schemas/model
  * @description Defines nDatabase schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner nDatabase

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/import/src/schemas/schemas
+ * @module nodics.core/modules/nData/nImport/import/src/schemas/schemas
  * @description Defines nData schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner nData

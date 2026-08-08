@@ -28,7 +28,7 @@ function invokeClient(target, method, parameters) {
 }
 
 /**
- * @module gFramework/nSearch/elastic/src/schemas/elasticSearchModel
+ * @module nodics.core/modules/nSearch/elastic/src/schemas/elasticSearchModel
  * @description Defines nSearch schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner nSearch

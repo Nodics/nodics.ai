@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/dataCore/src/service/proc/finalizer/defaultDataFinalizerService
+ * @module nodics.core/modules/nData/dataCore/src/service/proc/finalizer/defaultDataFinalizerService
  * @description Implements nData default data finalizer service business behavior and extension logic.
  * @layer service
  * @owner nData

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/mongodb/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nDatabase/mongodb/src/utils/statusDefinitions.js
  * @description Provides shared mongodb status and error definition exports.
  * @layer utils
  * @owner mongodb

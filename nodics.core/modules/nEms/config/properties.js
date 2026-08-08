@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/config/properties
+ * @module nodics.core/modules/nEms/config/properties
  * @description Defines default nEms configuration used during module startup and layering.
  * @layer config
  * @owner nEms

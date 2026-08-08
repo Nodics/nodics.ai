@@ -12,7 +12,7 @@
 const crypto = require('crypto');
 
 /**
- * @module gCore/profile/src/service/authentication/defaultAuthenticationProviderService
+ * @module nodics.platform/modules/profile/src/service/authentication/defaultAuthenticationProviderService
  * @description Implements profile default authentication provider service business behavior and extension logic.
  * @layer service
  * @owner profile

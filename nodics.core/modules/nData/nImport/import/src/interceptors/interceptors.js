@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/import/src/interceptors/interceptors
+ * @module nodics.core/modules/nData/nImport/import/src/interceptors/interceptors
  * @description Registers nData interceptor wiring for pipeline extension points.
  * @layer interceptors
  * @owner nData

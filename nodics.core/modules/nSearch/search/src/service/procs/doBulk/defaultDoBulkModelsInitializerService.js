@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/service/procs/doBulk/defaultDoBulkModelsInitializerService
+ * @module nodics.core/modules/nSearch/search/src/service/procs/doBulk/defaultDoBulkModelsInitializerService
  * @description Implements nSearch default do bulk models initializer service business behavior and extension logic.
  * @layer service
  * @owner nSearch

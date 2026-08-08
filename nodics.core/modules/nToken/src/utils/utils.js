@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nToken/src/utils/utils
+ * @module nodics.core/modules/nToken/src/utils/utils
  * @description Provides shared nToken utility exports for utils.
  * @layer utils
  * @owner nToken

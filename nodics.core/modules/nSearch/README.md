@@ -131,11 +131,11 @@ Do not place engine endpoints, credentials, customer-specific index names, tenan
 Search behavior is covered through focused contract tests in `nSearch/search` and `nSearch/elastic`. Run:
 
 ```bash
-node gFramework/nSearch/search/test/searchRouteContract.test.js
-node gFramework/nSearch/search/test/searchServicePipelineContract.test.js
-node gFramework/nSearch/search/test/searchCachePolicyContract.test.js
-node gFramework/nSearch/elastic/test/elasticConnectionHandlerContract.test.js
-node gFramework/nSearch/elastic/test/elasticSearchModelOperationContract.test.js
+node nodics.core/modules/nSearch/search/test/searchRouteContract.test.js
+node nodics.core/modules/nSearch/search/test/searchServicePipelineContract.test.js
+node nodics.core/modules/nSearch/search/test/searchCachePolicyContract.test.js
+node nodics.core/modules/nSearch/elastic/test/elasticConnectionHandlerContract.test.js
+node nodics.core/modules/nSearch/elastic/test/elasticSearchModelOperationContract.test.js
 npm run quality:docs
 ```
 

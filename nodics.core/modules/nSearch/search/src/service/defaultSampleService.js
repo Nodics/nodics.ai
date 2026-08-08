@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/service/defaultSampleService
+ * @module nodics.core/modules/nSearch/search/src/service/defaultSampleService
  * @description Implements search default sample service business behavior and extension logic.
  * @layer service
  * @owner search

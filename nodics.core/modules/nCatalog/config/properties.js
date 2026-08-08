@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCatalog/config/properties
+ * @module nodics.core/modules/nCatalog/config/properties
  * @description Defines default nCatalog configuration used during module startup and layering.
  * @layer config
  * @owner nCatalog

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/jsImport/src/utils/enums.js
+ * @module nodics.core/modules/nData/nImport/jsImport/src/utils/enums.js
  * @description Provides shared jsImport enum definition exports.
  * @layer utils
  * @owner jsImport

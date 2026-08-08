@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nConfig/test/propertiesDeclarativeContract
+ * @module nodics.core/modules/nConfig/test/propertiesDeclarativeContract
  * @description Guards `config/properties.js` files as declarative layered configuration, not executable builders or service logic.
  */
 const assert = require('assert');

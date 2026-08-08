@@ -16,7 +16,7 @@ const Chai = require('chai');
 const expect = Chai.expect;
 
 /**
- * @module gCore/profile/test/common/profileTest
+ * @module nodics.platform/modules/profile/test/common/profileTest
  * @description Defines profile test fixtures or suites for module behavior validation.
  * @layer test
  * @owner profile

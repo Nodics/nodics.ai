@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSystem/config/properties
+ * @module nodics.core/modules/nSystem/config/properties
  * @description Defines default nSystem configuration used during module startup and layering.
  * @layer config
  * @owner nSystem

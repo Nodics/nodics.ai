@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/emsClient/src/utils/enums.js
+ * @module nodics.core/modules/nEms/emsClient/src/utils/enums.js
  * @description Provides shared emsClient enum definition exports.
  * @layer utils
  * @owner emsClient

@@ -43,6 +43,71 @@ Cron supports create or register, update, run, start, stop, pause, resume, and
 remove through secured backend operations. Manual run and scheduled execution
 must share the same tenant, permission, node, logging, and failure contracts.
 
+![Cron job lifecycle](../assets/images/cron-job-lifecycle.png "Cron lifecycle reference from the archived documentation set")
+
+```mermaid
+stateDiagram-v2
+  [*] --> Registered
+  Registered --> Active: activate
+  Active --> Due: schedule reaches due time
+  Due --> Running: node claims execution
+  Running --> Completed: success
+  Running --> Failed: error or timeout
+  Failed --> Retrying: retry policy allows
+  Retrying --> Due
+  Active --> Paused: pause
+  Paused --> Active: resume
+  Active --> Stopped: stop
+  Stopped --> Active: start
+  Registered --> Removed: remove
+  Completed --> Active: wait for next schedule
+```
+
+For beginners, the important point is that a job definition and a job run are
+not the same thing. The definition says what should happen and when. A run is
+one execution attempt with its own start time, status, logs, retries, and
+outcome. Production support usually investigates runs, but operators manage
+definitions.
+
+## Example job: nightly media cleanup
+
+A realistic first Cron job might clean expired temporary media.
+
+| Field | Example value | Why it matters |
+| --- | --- | --- |
+| Code | `media.temporary.cleanup` | Stable identity for logs, permissions, and support. |
+| Trigger | Daily at 02:00 local environment time | Runs outside peak usage. |
+| Owner module | `media` or project extension | Keeps business behavior with the module that owns the data. |
+| Idempotency | Delete only records already marked expired | Safe if the job runs twice. |
+| Timeout | 10 minutes | Prevents a stuck cleanup from occupying the scheduler forever. |
+| Retry | Two retries with backoff | Handles temporary storage/database failures without hiding persistent bugs. |
+| Audit | Count scanned, deleted, skipped, failed | Lets operators prove what happened. |
+
+The job should not accept arbitrary paths or delete files by frontend request.
+It should ask Media for expired records through a governed service and let the
+storage provider perform safe cleanup.
+
+## Registering Cron as an optional module
+
+Core, Platform, and WCMS are mandatory in the Axis reference stack. Cron is
+optional. That means Axis may discover a live Cron server and show it as
+available to register. When a user registers and activates Cron, the project
+intent is stored in the BackOffice/runtime registry. Restarting the server
+should not ask again unless the state was removed.
+
+The lifecycle is:
+
+1. Cron server starts and reports `nodics.cron` as live.
+2. BackOffice observes the runtime module catalogue.
+3. Axis shows Cron under available modules.
+4. A user registers Cron into the project.
+5. A user activates Cron.
+6. Cron-owned navigation, APIs, docs, and initialization data become visible
+   according to permissions and content import state.
+7. Deactivation hides runtime availability without forgetting registration.
+8. Deregistration removes the project registration and returns Cron to the
+   available state while the server remains live.
+
 ## Production safety
 
 Scheduled jobs are deceptively simple. A timer firing every minute is easy;

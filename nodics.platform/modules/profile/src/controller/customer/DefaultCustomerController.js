@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gCore/profile/src/controller/customer/DefaultCustomerController
+ * @module nodics.platform/modules/profile/src/controller/customer/DefaultCustomerController
  * @description Exposes request handlers for profile default customer controller operations.
  * @layer controller
  * @owner profile

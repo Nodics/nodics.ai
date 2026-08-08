@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nValidator/src/utils/enums
+ * @module nodics.core/modules/nValidator/src/utils/enums
  * @description Provides shared nValidator utility exports for enums.
  * @layer utils
  * @owner nValidator

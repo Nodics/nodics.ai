@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nPipeline/src/service/defaultSampleService
+ * @module nodics.core/modules/nPipeline/src/service/defaultSampleService
  * @description Implements pipeline default sample service business behavior and extension logic.
  * @layer service
  * @owner pipeline

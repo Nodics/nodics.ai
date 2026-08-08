@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEvent/config/properties
+ * @module nodics.core/modules/nEvent/config/properties
  * @description Defines default nEvent configuration used during module startup and layering.
  * @layer config
  * @owner nEvent

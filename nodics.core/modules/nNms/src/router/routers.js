@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nNms/src/router/routers
+ * @module nodics.core/modules/nNms/src/router/routers
  * @description Defines nNms route registration and HTTP exposure metadata.
  * @layer router
  * @owner nNms

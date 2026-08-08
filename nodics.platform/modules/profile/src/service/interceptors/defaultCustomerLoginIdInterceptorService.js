@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/service/interceptors/defaultCustomerLoginIdInterceptorService
+ * @module nodics.platform/modules/profile/src/service/interceptors/defaultCustomerLoginIdInterceptorService
  * @description Implements profile default customer login id interceptor service business behavior and extension logic.
  * @layer service
  * @owner profile

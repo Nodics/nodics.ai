@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/import/test/multiFormatDataProcessors.test
+ * @module nodics.core/modules/nData/nImport/import/test/multiFormatDataProcessors.test
  * @description Validates JavaScript, JSON, CSV, and Excel import data processors against shared import diagnostics behavior.
  * @layer test
  * @owner nData

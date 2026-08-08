@@ -116,7 +116,11 @@ function parseMarkdown(markdown, pageCode) {
         code.push(lines[index]);
         index += 1;
       }
-      blocks.push({ kind: 'code', language, text: code.join('\n') });
+      blocks.push({
+        kind: language === 'mermaid' ? 'diagram' : 'code',
+        language,
+        text: code.join('\n'),
+      });
       index += 1;
       continue;
     }

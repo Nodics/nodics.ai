@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nFacade/src/facade/log/defaultLogFacade
+ * @module nodics.core/modules/nFacade/src/facade/log/defaultLogFacade
  * @description Coordinates facade-level delegation for nFacade default log facade operations.
  * @layer facade
  * @owner nFacade

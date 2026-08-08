@@ -35,7 +35,7 @@ loader.recordArtifactContribution(serviceArtifact, {
     layer: 'service',
     sourceModule: 'catalog',
     action: 'create',
-    filePath: '/nodics/gFramework/nCatalog/src/service/DefaultCatalogService.js'
+    filePath: '/nodics/nodics.core/modules/nCatalog/src/service/DefaultCatalogService.js'
 });
 
 loader.recordArtifactContribution(serviceArtifact, {

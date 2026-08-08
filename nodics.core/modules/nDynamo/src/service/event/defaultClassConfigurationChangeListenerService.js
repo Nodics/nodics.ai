@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/src/service/event/defaultClassConfigurationChangeListenerService
+ * @module nodics.core/modules/nDynamo/src/service/event/defaultClassConfigurationChangeListenerService
  * @description Implements nDynamo default class configuration change listener service business behavior and extension logic.
  * @layer service
  * @owner nDynamo

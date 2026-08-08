@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/csvImport/config/properties
+ * @module nodics.core/modules/nData/nImport/csvImport/config/properties
  * @description Defines default nData configuration used during module startup and layering.
  * @layer config
  * @owner nData

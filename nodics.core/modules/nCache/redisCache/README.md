@@ -37,7 +37,7 @@ Because all nodes share Redis, Nodics does not need redundant peer invalidation 
 - `src/service/engine/defaultRedisCacheEngineService.js` owns Redis client creation and event subscription.
 - `src/service/cache/defaultRedisCacheService.js` owns Redis put/get/consume/flush behavior.
 - `test/cacheRedisLive.test.js` owns optional live Redis qualification.
-- The provider participates in the generic cache contract owned by `gFramework/nCache/cache`.
+- The provider participates in the generic cache contract owned by `nodics.core/modules/nCache/cache`.
 
 ## Configuration
 
@@ -99,7 +99,7 @@ never become a production connection path.
 Run:
 
 ```bash
-node gFramework/nCache/cache/test/cacheAdapterContract.test.js
+node nodics.core/modules/nCache/cache/test/cacheAdapterContract.test.js
 npm run test:suite -- --suite=cache-redis-live
 npm run quality:docs
 ```

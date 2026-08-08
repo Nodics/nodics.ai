@@ -98,7 +98,7 @@ The module owns generated schema/API/CRUD tests and focused service coverage:
 Run focused validation with:
 
 ```bash
-node gFramework/nValidator/test/validatorServiceContract.test.js
+node nodics.core/modules/nValidator/test/validatorServiceContract.test.js
 npm run test:generated
 npm run quality:docs
 ```
@@ -127,4 +127,4 @@ its model/event contract.
 - Application functionality: [How To Create Application Functionality](https://github.com/Nodics/nodics.docs)
 - Data contracts: [How To Work With Data](https://github.com/Nodics/nodics.docs)
 - Runtime governance: [nDynamo](../nDynamo/README.md)
-- Framework map: [gFramework](../README.md)
+- Framework map: [nodics.core](../README.md)

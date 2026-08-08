@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/csvImport/src/service/defaultSampleService
+ * @module nodics.core/modules/nData/nImport/csvImport/src/service/defaultSampleService
  * @description Implements csvImport default sample service business behavior and extension logic.
  * @layer service
  * @owner csvImport

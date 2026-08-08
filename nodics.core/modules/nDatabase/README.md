@@ -180,10 +180,10 @@ The group has no independent persistence runtime. Verify the generic child and
 the selected provider:
 
 ```bash
-node gFramework/nDatabase/database/test/tenantDatabaseConfigurationValidation.test.js
-node gFramework/nDatabase/database/test/schemaReadAccessPolicyService.test.js
-node gFramework/nDatabase/database/test/schemaWriteAccessPolicyService.test.js
-node gFramework/nDatabase/database/test/modelSaveInitializerPipelineContract.test.js
+node nodics.core/modules/nDatabase/database/test/tenantDatabaseConfigurationValidation.test.js
+node nodics.core/modules/nDatabase/database/test/schemaReadAccessPolicyService.test.js
+node nodics.core/modules/nDatabase/database/test/schemaWriteAccessPolicyService.test.js
+node nodics.core/modules/nDatabase/database/test/modelSaveInitializerPipelineContract.test.js
 npm run quality:docs
 npm run test:basic
 ```
@@ -205,4 +205,4 @@ tests where external infrastructure is involved.
 - Public data guide: [How To Work With Data](https://github.com/Nodics/nodics.docs)
 - Generic persistence capability: [database](database/README.md)
 - Provider maturity: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)
-- Framework map: [gFramework](../README.md)
+- Framework map: [nodics.core](../README.md)

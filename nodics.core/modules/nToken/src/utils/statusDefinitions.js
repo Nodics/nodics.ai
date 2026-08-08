@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nToken/src/utils/statusDefinitions
+ * @module nodics.core/modules/nToken/src/utils/statusDefinitions
  * @description Provides shared nToken utility exports for status definitions.
  * @layer utils
  * @owner nToken

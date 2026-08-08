@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nbpm/src/pipelines/pipelines
+ * @module nodics.core/modules/nbpm/src/pipelines/pipelines
  * @description Defines nbpm pipeline wiring and execution contracts.
  * @layer pipelines
  * @owner nbpm

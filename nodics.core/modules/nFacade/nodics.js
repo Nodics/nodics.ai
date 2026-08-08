@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nFacade/nodics
+ * @module nodics.core/modules/nFacade/nodics
  * @description Registers the nFacade module lifecycle hooks and module-level startup behavior.
  * @layer module
  * @owner nFacade

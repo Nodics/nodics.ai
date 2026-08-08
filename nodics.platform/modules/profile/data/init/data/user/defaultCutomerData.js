@@ -12,7 +12,7 @@
 const crypto = require('crypto');
 
 /**
- * @module gCore/profile/data/init/data/user/defaultCutomerData
+ * @module nodics.platform/modules/profile/data/init/data/user/defaultCutomerData
  * @description Provides profile initializer or sample data consumed by the import layer.
  * @layer data
  * @owner profile

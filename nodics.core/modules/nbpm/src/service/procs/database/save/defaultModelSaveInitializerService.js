@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nbpm/src/service/procs/database/save/defaultModelSaveInitializerService
+ * @module nodics.core/modules/nbpm/src/service/procs/database/save/defaultModelSaveInitializerService
  * @description Implements nbpm default model save initializer service business behavior and extension logic.
  * @layer service
  * @owner nbpm

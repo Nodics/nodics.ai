@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nFacade/src/facade/apikey/defaultAPIKeyFacade
+ * @module nodics.core/modules/nFacade/src/facade/apikey/defaultAPIKeyFacade
  * @description Coordinates facade-level delegation for nFacade default apikey facade operations.
  * @layer facade
  * @owner nFacade

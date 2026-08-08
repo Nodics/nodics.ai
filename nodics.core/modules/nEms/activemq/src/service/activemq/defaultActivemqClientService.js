@@ -13,7 +13,7 @@ const _ = require('lodash');
 const stompit = require('stompit');
 
 /**
- * @module gFramework/nEms/activemq/src/service/activemq/defaultActivemqClientService
+ * @module nodics.core/modules/nEms/activemq/src/service/activemq/defaultActivemqClientService
  * @description Implements nEms default activemq client service business behavior and extension logic.
  * @layer service
  * @owner nEms

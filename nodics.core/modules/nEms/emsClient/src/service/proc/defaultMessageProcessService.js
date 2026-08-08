@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nEms/emsClient/src/service/proc/defaultMessageProcessService
+ * @module nodics.core/modules/nEms/emsClient/src/service/proc/defaultMessageProcessService
  * @description Implements nEms default message process service business behavior and extension logic.
  * @layer service
  * @owner nEms

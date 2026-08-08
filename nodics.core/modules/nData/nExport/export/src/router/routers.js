@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/export/src/router/routers
+ * @module nodics.core/modules/nData/nExport/export/src/router/routers
  * @description Publishes export orchestration routes owned by nExport. Generated-file delivery remains owned by media.
  * @layer router
  * @owner nExport

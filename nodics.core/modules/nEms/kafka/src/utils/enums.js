@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/kafka/src/utils/enums.js
+ * @module nodics.core/modules/nEms/kafka/src/utils/enums.js
  * @description Provides shared kafka enum definition exports.
  * @layer utils
  * @owner kafka

@@ -71,7 +71,7 @@ global.UTILS = {
     isObject: value => value !== null && typeof value === 'object' && !Array.isArray(value)
 };
 
-const ownership = require('../../../gFramework/nDatabase/database/src/service/access/defaultRecordOwnershipPolicyService');
+const ownership = require('../../../nodics.core/modules/nDatabase/database/src/service/access/defaultRecordOwnershipPolicyService');
 const ownedSchema = { rawSchema: { ownership: { enabled: true, ownerProperty: 'ownerId', principalTypes: ['customer'], subjectGroups: ['customerUserGroup'], bypassGroups: ['adminGroup'] } } };
 
 async function validateOwnership() {
@@ -105,7 +105,7 @@ async function validateSecurityStamp() {
             findToken: (moduleName, key) => cache[key] ? Promise.resolve(cache[key]) : Promise.reject(new Error('missing'))
         }
     };
-    const stamp = require('../../../gFramework/nAuth/src/service/identity/defaultPrincipalSecurityStampService');
+    const stamp = require('../../../nodics.core/modules/nAuth/src/service/identity/defaultPrincipalSecurityStampService');
     await stamp.register('default', 'user-a', 7);
     await stamp.validate({ tenant: 'default', loginId: 'user-a', authVersion: 7, tokenType: 'access' });
     await assert.rejects(stamp.validate({ tenant: 'default', loginId: 'user-a', authVersion: 6, tokenType: 'access' }));
@@ -224,7 +224,7 @@ async function validateEffectivePartialUpdates() {
 async function validateMigration() {
     global.SERVICE = {
         DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ isSystem: true }) },
-        DefaultAPIKeyCredentialService: require('../../../gFramework/nAuth/src/service/identity/defaultAPIKeyCredentialService')
+        DefaultAPIKeyCredentialService: require('../../../nodics.core/modules/nAuth/src/service/identity/defaultAPIKeyCredentialService')
     };
     const migration = require('../src/service/identity/defaultIdentityGovernanceMigrationService');
     let governedRequest = migration.systemRequest({ tenant: 'default' }, { options: { recursive: true } });
@@ -323,7 +323,7 @@ async function validateMigration() {
 }
 
 function validateSeparationOfDuties() {
-    const service = require('../../../gFramework/nDynamo/src/service/audit/defaultRuntimeConfigurationActivationRequestService');
+    const service = require('../../../nodics.core/modules/nDynamo/src/service/audit/defaultRuntimeConfigurationActivationRequestService');
     assert.throws(() => service.createRequestModel({}, { configurationType: 'routerConfiguration' }, {}), /authenticated actor/);
     assert.throws(() => service.assertDecisionSeparation({ requestedBy: 'same-user' }, 'same-user'), /cannot approve or reject/);
     assert.throws(() => service.assertActivationSeparation({ requestedBy: 'requester', approvedBy: 'approver' }, 'requester'), /requester cannot activate/i);

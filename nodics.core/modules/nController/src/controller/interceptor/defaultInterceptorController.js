@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nController/src/controller/interceptor/defaultInterceptorController
+ * @module nodics.core/modules/nController/src/controller/interceptor/defaultInterceptorController
  * @description Exposes request handlers for nController default interceptor controller operations.
  * @layer controller
  * @owner nController

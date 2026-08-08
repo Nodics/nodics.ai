@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nNms/config/prescripts
+ * @module nodics.core/modules/nNms/config/prescripts
  * @description Defines default nNms configuration used during module startup and layering.
  * @layer config
  * @owner nNms

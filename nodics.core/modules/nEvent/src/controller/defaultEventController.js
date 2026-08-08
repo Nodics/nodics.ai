@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEvent/src/controller/defaultEventController
+ * @module nodics.core/modules/nEvent/src/controller/defaultEventController
  * @description Exposes request handlers for nEvent default event controller operations.
  * @layer controller
  * @owner nEvent

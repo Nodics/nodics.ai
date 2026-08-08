@@ -14,7 +14,7 @@ const fs = require('fs');
 const util = require('util');
 
 /**
- * @module gFramework/nData/nImport/excelImport/src/service/init/defaultExcelFileDataProcessService
+ * @module nodics.core/modules/nData/nImport/excelImport/src/service/init/defaultExcelFileDataProcessService
  * @description Implements nData default excel file data process service business behavior and extension logic.
  * @layer service
  * @owner nData

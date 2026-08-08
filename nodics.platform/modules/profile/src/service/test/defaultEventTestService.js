@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/service/test/defaultEventTestService
+ * @module nodics.platform/modules/profile/src/service/test/defaultEventTestService
  * @description Implements profile default event test service business behavior and extension logic.
  * @layer service
  * @owner profile

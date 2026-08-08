@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCache/hazelcastCache/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nCache/hazelcastCache/src/utils/statusDefinitions.js
  * @description Provides shared hazelcastCache status and error definition exports.
  * @layer utils
  * @owner hazelcastCache

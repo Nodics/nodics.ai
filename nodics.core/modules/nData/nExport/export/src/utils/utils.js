@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/export/src/utils/utils
+ * @module nodics.core/modules/nData/nExport/export/src/utils/utils
  * @description Provides shared nExport utility exports for export orchestration helpers.
  * @layer utils
  * @owner nExport

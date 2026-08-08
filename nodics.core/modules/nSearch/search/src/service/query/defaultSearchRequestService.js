@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/service/query/defaultSearchRequestService
+ * @module nodics.core/modules/nSearch/search/src/service/query/defaultSearchRequestService
  * @description Validates provider-neutral lexical, vector, and hybrid search requests.
  * @layer service
  * @owner nSearch

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/controller/enterprise/defaultEnterpriseController
+ * @module nodics.platform/modules/profile/src/controller/enterprise/defaultEnterpriseController
  * @description Exposes request handlers for profile default enterprise controller operations.
  * @layer controller
  * @owner profile

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/data/sample/tenant/headers/tenantCsvDataHeader
+ * @module nodics.platform/modules/profile/data/sample/tenant/headers/tenantCsvDataHeader
  * @description Defines the Profile-owned sample tenant CSV import header.
  * @layer data
  * @owner profile

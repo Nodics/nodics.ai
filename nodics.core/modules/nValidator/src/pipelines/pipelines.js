@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nValidator/src/pipelines/pipelines
+ * @module nodics.core/modules/nValidator/src/pipelines/pipelines
  * @description Defines nValidator pipeline wiring and execution contracts.
  * @layer pipelines
  * @owner nValidator

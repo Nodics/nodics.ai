@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gContent/cms/src/utils/enums.js
+ * @module nodics.wcms/modules/cms/src/utils/enums.js
  * @description Provides shared cms enum definition exports.
  * @layer utils
  * @owner cms

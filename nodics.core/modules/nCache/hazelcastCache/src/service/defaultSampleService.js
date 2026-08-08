@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCache/hazelcastCache/src/service/defaultSampleService
+ * @module nodics.core/modules/nCache/hazelcastCache/src/service/defaultSampleService
  * @description Implements hazelcastCache default sample service business behavior and extension logic.
  * @layer service
  * @owner hazelcastCache

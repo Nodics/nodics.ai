@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/event/listeners
+ * @module nodics.platform/modules/profile/src/event/listeners
  * @description Documents profile listeners module behavior.
  * @layer event
  * @owner profile

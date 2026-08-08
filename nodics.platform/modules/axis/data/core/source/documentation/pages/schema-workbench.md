@@ -9,7 +9,7 @@ Business-user and backend customization guidance is maintained in the Nodics
 documentation:
 
 - `gDocs/backoffice/how-schema-workbench-works.md`
-- `gFramework/nDatabase/database/README.md`
+- `nodics.core/modules/nDatabase/database/README.md`
 
 ## Implemented frontend behavior
 

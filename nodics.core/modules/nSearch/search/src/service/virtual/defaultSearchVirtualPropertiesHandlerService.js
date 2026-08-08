@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nSearch/search/src/service/virtual/defaultSearchVirtualPropertiesHandlerService
+ * @module nodics.core/modules/nSearch/search/src/service/virtual/defaultSearchVirtualPropertiesHandlerService
  * @description Implements nSearch default search virtual properties handler service business behavior and extension logic.
  * @layer service
  * @owner nSearch

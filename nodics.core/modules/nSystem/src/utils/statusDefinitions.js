@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSystem/src/utils/statusDefinitions
+ * @module nodics.core/modules/nSystem/src/utils/statusDefinitions
  * @description Provides shared nSystem utility exports for status definitions.
  * @layer utils
  * @owner nSystem

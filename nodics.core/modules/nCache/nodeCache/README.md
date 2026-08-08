@@ -33,7 +33,7 @@ The local adapter supports:
 - `src/service/engine/defaultLocalCacheEngineService.js` owns local client creation and channel activation rules.
 - `src/service/cache/defaultLocalCacheService.js` owns local put/get/consume/flush behavior.
 - `config/properties.js` is the provider-local configuration contribution point.
-- The provider participates in the generic cache contract owned by `gFramework/nCache/cache`.
+- The provider participates in the generic cache contract owned by `nodics.core/modules/nCache/cache`.
 
 ## Configuration
 
@@ -71,7 +71,7 @@ The generic cache adapter contract verifies local behavior, including TTL semant
 Run:
 
 ```bash
-node gFramework/nCache/cache/test/cacheAdapterContract.test.js
+node nodics.core/modules/nCache/cache/test/cacheAdapterContract.test.js
 npm run test:basic
 npm run quality:docs
 ```

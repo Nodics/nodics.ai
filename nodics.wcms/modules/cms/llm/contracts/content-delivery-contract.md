@@ -1,6 +1,6 @@
 # CMS Delivery AI Contract
 
-- Keep `nCatalog` generic and place CMS-domain behavior in `gContent/cms`.
+- Keep `nCatalog` generic and place CMS-domain behavior in `nodics.wcms/modules/cms`.
 - Reuse Nodics authentication, router, cache, event, publishing, workflow,
   search, and import/export authorities; do not create parallel engines.
 - Store logical renderer keys only. Reject executable paths, URLs, scripts, and

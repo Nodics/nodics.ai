@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/jsExport/src/pipelines/pipelines
+ * @module nodics.core/modules/nData/nExport/jsExport/src/pipelines/pipelines
  * @description Defines nData pipeline wiring and execution contracts.
  * @layer pipelines
  * @owner nData

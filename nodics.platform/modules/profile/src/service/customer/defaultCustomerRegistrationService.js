@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/service/customer/defaultCustomerRegistrationService
+ * @module nodics.platform/modules/profile/src/service/customer/defaultCustomerRegistrationService
  * @description Implements profile default customer registration service business behavior and extension logic.
  * @layer service
  * @owner profile

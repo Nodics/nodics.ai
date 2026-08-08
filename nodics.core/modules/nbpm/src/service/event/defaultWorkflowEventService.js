@@ -13,7 +13,7 @@ const _ = require('lodash');
 var util = require('util');
 
 /**
- * @module gFramework/nbpm/src/service/event/defaultWorkflowEventService
+ * @module nodics.core/modules/nbpm/src/service/event/defaultWorkflowEventService
  * @description Implements nbpm default workflow event service business behavior and extension logic.
  * @layer service
  * @owner nbpm

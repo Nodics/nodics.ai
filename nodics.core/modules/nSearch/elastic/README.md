@@ -72,8 +72,8 @@ If the project needs OpenSearch, Solr, or another engine with different client s
 Run focused Elastic coverage with:
 
 ```bash
-node gFramework/nSearch/elastic/test/elasticConnectionHandlerContract.test.js
-node gFramework/nSearch/elastic/test/elasticSearchModelOperationContract.test.js
+node nodics.core/modules/nSearch/elastic/test/elasticConnectionHandlerContract.test.js
+node nodics.core/modules/nSearch/elastic/test/elasticSearchModelOperationContract.test.js
 npm run quality:docs
 ```
 

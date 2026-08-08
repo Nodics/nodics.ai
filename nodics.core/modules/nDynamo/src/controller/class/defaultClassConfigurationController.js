@@ -12,7 +12,7 @@
 const requireFromString = require('require-from-string');
 
 /**
- * @module gFramework/nDynamo/src/controller/class/defaultClassConfigurationController
+ * @module nodics.core/modules/nDynamo/src/controller/class/defaultClassConfigurationController
  * @description Exposes request handlers for nDynamo default class configuration controller operations.
  * @layer controller
  * @owner nDynamo

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/export/test/dataExportCapabilityBehavior
+ * @module nodics.core/modules/nData/nExport/export/test/dataExportCapabilityBehavior
  * @description Verifies export request normalization, fail-closed default
  * behavior, export access-policy delegation, and export-safe model copy
  * handling.

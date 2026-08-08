@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCache/config/postscripts
+ * @module nodics.core/modules/nCache/config/postscripts
  * @description Defines default nCache configuration used during module startup and layering.
  * @layer config
  * @owner nCache

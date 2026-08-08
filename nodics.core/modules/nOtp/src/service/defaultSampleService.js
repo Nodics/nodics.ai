@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nOtp/src/service/defaultSampleService
+ * @module nodics.core/modules/nOtp/src/service/defaultSampleService
  * @description Implements otp default sample service business behavior and extension logic.
  * @layer service
  * @owner otp

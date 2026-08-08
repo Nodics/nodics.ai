@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/import/src/controller/import/DefaultImportController
+ * @module nodics.core/modules/nData/nImport/import/src/controller/import/DefaultImportController
  * @description Exposes request handlers for nData default import controller operations.
  * @layer controller
  * @owner nData

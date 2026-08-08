@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nOtp/config/postscripts
+ * @module nodics.core/modules/nOtp/config/postscripts
  * @description Defines default nOtp configuration used during module startup and layering.
  * @layer config
  * @owner nOtp

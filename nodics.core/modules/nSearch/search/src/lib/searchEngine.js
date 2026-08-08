@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/lib/searchEngine
+ * @module nodics.core/modules/nSearch/search/src/lib/searchEngine
  * @description Provides reusable nSearch library primitives for search engine.
  * @layer lib
  * @owner nSearch

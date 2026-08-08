@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/excelImport/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nData/nImport/excelImport/src/utils/statusDefinitions.js
  * @description Provides shared excelImport status and error definition exports.
  * @layer utils
  * @owner excelImport

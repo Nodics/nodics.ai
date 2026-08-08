@@ -12,7 +12,7 @@
 const assert = require('assert');
 
 /**
- * @module gFramework/nEms/emsClient/test/messageTenantResolution.test
+ * @module nodics.core/modules/nEms/emsClient/test/messageTenantResolution.test
  * @description Validates tenant resolution rules for consumed EMS messages, including header, restricted, fallback, and failure paths.
  * @layer test
  * @owner nEms

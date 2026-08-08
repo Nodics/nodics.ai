@@ -153,4 +153,4 @@ consumer capability's delivery and abuse policy.
 - OTP consumer: [nOtp](../nOtp/README.md)
 - Authentication boundary: [nAuth](../nAuth/README.md)
 - Public security guide: [How Users, Tenants, And Permissions Work](https://github.com/Nodics/nodics.docs)
-- Framework map: [gFramework](../README.md)
+- Framework map: [nodics.core](../README.md)

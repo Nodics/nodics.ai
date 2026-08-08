@@ -16,7 +16,7 @@ const Chai = require('chai');
 const expect = Chai.expect;
 
 /**
- * @module gFramework/nToken/test/common/commonTest
+ * @module nodics.core/modules/nToken/test/common/commonTest
  * @description Defines nToken test fixtures or suites for module behavior validation.
  * @layer test
  * @owner nToken

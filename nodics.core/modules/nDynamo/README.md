@@ -137,4 +137,4 @@ those contracts but must not become another mutation authority.
 - System control plane: [nSystem](../nSystem/README.md)
 - Configuration guide: [How Configuration Works](https://github.com/Nodics/nodics.docs)
 - Operations: [Production Operating Model](https://github.com/Nodics/nodics.docs)
-- Framework map: [gFramework](../README.md)
+- Framework map: [nodics.core](../README.md)

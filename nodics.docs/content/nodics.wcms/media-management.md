@@ -54,6 +54,61 @@ The typical lifecycle is:
 6. Other modules reference the media record instead of storing file paths.
 7. Delivery routes enforce authorization and expose only safe access details.
 
+```mermaid
+sequenceDiagram
+  participant User as Business user
+  participant Axis as Axis media page
+  participant Media as WCMS Media API
+  participant Policy as Folder and format policy
+  participant Store as Storage provider
+  participant DB as Media metadata DB
+
+  User->>Axis: Choose file and source context
+  Axis->>Media: Upload request with business context
+  Media->>Policy: Resolve allowed folder, format, size, MIME
+  Policy-->>Media: Effective upload policy
+  Media->>Store: Persist bytes through provider
+  Store-->>Media: Provider-relative storage evidence
+  Media->>DB: Save media record, checksum, status, references
+  Media-->>Axis: Safe media contract
+```
+
+The frontend never receives private storage roots or credentials. It receives a
+safe media contract: code, name, type, lifecycle state, preview or delivery
+information allowed by policy, and metadata that the user is permitted to see.
+
+## Source contexts
+
+Media source context tells the backend why a file is being used. That matters
+because a CSV import file, a CMS hero image, a PDF document, and a generated
+export should not share the same policy.
+
+| Source context | Typical file examples | Different policy needs |
+| --- | --- | --- |
+| `dataImports` | CSV, JSON, XLSX | Strict schema target, validation, short retention, no public delivery. |
+| `contentMedia` | Images, icons, documents | Editorial lifecycle, preview, reuse by components and pages. |
+| `documentationMedia` | Diagrams, screenshots, how-to images | Versioned with documentation and safe for authenticated delivery. |
+| `exports` | Generated CSV, PDF, report files | Expiry, audit evidence, download authorization. |
+| `utility` | Temporary or operational files | Narrow access, cleanup, and operational logging. |
+
+When a new module needs files, add a source context and policy instead of
+creating another upload API. That keeps scanning, retention, audit, and storage
+provider behavior consistent.
+
+## Beginner customization example
+
+Imagine a partner wants to allow PNG and JPG images for website banners, but
+not PDF files. They should not change Axis upload code. The correct path is:
+
+1. Add or override a media folder policy in a later project module.
+2. Set allowed MIME types and maximum size.
+3. Keep the same Media upload API.
+4. Let Axis rediscover allowed source contexts from backend metadata.
+5. Verify upload, preview, delivery, unauthorized access, and cleanup.
+
+This gives the business the custom behavior it wants without creating a forked
+frontend or a hidden storage convention.
+
 ## Business value
 
 Media lets business teams reuse assets across CMS, documentation, imports,

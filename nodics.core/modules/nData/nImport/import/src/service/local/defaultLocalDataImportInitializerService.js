@@ -14,7 +14,7 @@ const fse = require('fs-extra');
 const util = require('util');
 
 /**
- * @module gFramework/nData/nImport/import/src/service/local/defaultLocalDataImportInitializerService
+ * @module nodics.core/modules/nData/nImport/import/src/service/local/defaultLocalDataImportInitializerService
  * @description Implements nData default local data import initializer service business behavior and extension logic.
  * @layer service
  * @owner nData

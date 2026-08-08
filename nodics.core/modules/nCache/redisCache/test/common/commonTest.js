@@ -16,7 +16,7 @@ const Chai = require('chai');
 const expect = Chai.expect;
 
 /**
- * @module gFramework/nCache/redisCache/test/common/commonTest
+ * @module nodics.core/modules/nCache/redisCache/test/common/commonTest
  * @description Defines nCache test fixtures or suites for module behavior validation.
  * @layer test
  * @owner nCache

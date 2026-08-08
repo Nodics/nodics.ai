@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nFacade/src/utils/enums.js
+ * @module nodics.core/modules/nFacade/src/utils/enums.js
  * @description Provides shared nFacade enum definition exports.
  * @layer utils
  * @owner nFacade

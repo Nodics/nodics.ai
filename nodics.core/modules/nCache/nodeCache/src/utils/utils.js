@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCache/nodeCache/src/utils/utils
+ * @module nodics.core/modules/nCache/nodeCache/src/utils/utils
  * @description Provides shared nCache utility exports for utils.
  * @layer utils
  * @owner nCache

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nbpm/src/utils/statusDefinitions
+ * @module nodics.core/modules/nbpm/src/utils/statusDefinitions
  * @description Provides shared nbpm utility exports for status definitions.
  * @layer utils
  * @owner nbpm

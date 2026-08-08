@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/nodics
+ * @module nodics.core/modules/nEms/nodics
  * @description Registers the nEms module lifecycle hooks and module-level startup behavior.
  * @layer module
  * @owner nEms

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/csvImport/src/utils/utils
+ * @module nodics.core/modules/nData/nImport/csvImport/src/utils/utils
  * @description Provides shared nData utility exports for utils.
  * @layer utils
  * @owner nData

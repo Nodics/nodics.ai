@@ -17,7 +17,7 @@ const Chai = require('chai');
 const expect = Chai.expect;
 
 /**
- * @module gFramework/nOtp/test/env-local/envTest
+ * @module nodics.core/modules/nOtp/test/env-local/envTest
  * @description Defines nOtp test fixtures or suites for module behavior validation.
  * @layer test
  * @owner nOtp

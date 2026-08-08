@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCache/hazelcastCache/src/utils/enums.js
+ * @module nodics.core/modules/nCache/hazelcastCache/src/utils/enums.js
  * @description Provides shared hazelcastCache enum definition exports.
  * @layer utils
  * @owner hazelcastCache

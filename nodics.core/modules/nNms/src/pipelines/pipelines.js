@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nNms/src/pipelines/pipelines
+ * @module nodics.core/modules/nNms/src/pipelines/pipelines
  * @description Defines nNms pipeline wiring and execution contracts.
  * @layer pipelines
  * @owner nNms

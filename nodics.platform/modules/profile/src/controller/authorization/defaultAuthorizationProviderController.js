@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/controller/authorization/defaultAuthorizationProviderController
+ * @module nodics.platform/modules/profile/src/controller/authorization/defaultAuthorizationProviderController
  * @description Exposes request handlers for profile default authorization provider controller operations.
  * @layer controller
  * @owner profile

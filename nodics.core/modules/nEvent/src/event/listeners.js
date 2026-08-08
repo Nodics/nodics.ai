@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEvent/src/event/listeners
+ * @module nodics.core/modules/nEvent/src/event/listeners
  * @description Documents nEvent listeners module behavior.
  * @layer event
  * @owner nEvent

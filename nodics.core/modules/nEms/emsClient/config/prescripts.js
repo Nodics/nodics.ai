@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/emsClient/config/prescripts
+ * @module nodics.core/modules/nEms/emsClient/config/prescripts
  * @description Defines default nEms configuration used during module startup and layering.
  * @layer config
  * @owner nEms

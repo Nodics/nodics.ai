@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/mongodb/vMongodb/src/utils/enums.js
+ * @module nodics.core/modules/nDatabase/mongodb/vMongodb/src/utils/enums.js
  * @description Provides shared vMongodb enum definition exports.
  * @layer utils
  * @owner vMongodb

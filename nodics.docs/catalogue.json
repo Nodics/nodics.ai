@@ -1,6 +1,6 @@
 {
   "contract": "nodics.documentation/v1",
-  "release": "0.3.0",
+  "release": "0.3.2",
   "documents": [
     {
       "id": "framework.what-is-nodics",
@@ -19,7 +19,7 @@
       "title": "Modular architecture and ownership",
       "summary": "How functional modules, technical modules, runtime servers, and customer projects fit together.",
       "locale": "en",
-      "content": "content/framework/modular-architecture.md"
+      "content": "content/framework/standards/modular-architecture.md"
     },
     {
       "id": "framework.local-quick-start",

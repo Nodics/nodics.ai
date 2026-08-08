@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/export/config/properties
+ * @module nodics.core/modules/nData/nExport/export/config/properties
  * @description Defines default nExport configuration used during module startup and layering.
  * @layer config
  * @owner nExport

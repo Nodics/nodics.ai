@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/activemq/src/router/appConfig
+ * @module nodics.core/modules/nEms/activemq/src/router/appConfig
  * @description Defines nEms route registration and HTTP exposure metadata.
  * @layer router
  * @owner nEms

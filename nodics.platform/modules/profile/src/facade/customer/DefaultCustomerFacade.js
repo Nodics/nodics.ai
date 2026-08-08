@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/facade/customer/DefaultCustomerFacade
+ * @module nodics.platform/modules/profile/src/facade/customer/DefaultCustomerFacade
  * @description Coordinates facade-level delegation for profile default customer facade operations.
  * @layer facade
  * @owner profile

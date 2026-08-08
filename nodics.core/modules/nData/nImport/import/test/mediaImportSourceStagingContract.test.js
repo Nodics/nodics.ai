@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/import/test/mediaImportSourceStagingContract
+ * @module nodics.core/modules/nData/nImport/import/test/mediaImportSourceStagingContract
  * @description Validates nImport staging for media-owned import source files.
  * @layer test
  * @owner import

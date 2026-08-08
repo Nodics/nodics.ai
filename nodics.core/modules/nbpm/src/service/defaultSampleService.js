@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nbpm/src/service/defaultSampleService
+ * @module nodics.core/modules/nbpm/src/service/defaultSampleService
  * @description Implements bpm default sample service business behavior and extension logic.
  * @layer service
  * @owner bpm

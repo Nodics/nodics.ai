@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/import/src/service/external/defaultExternalModelsImportEventHandlerService
+ * @module nodics.core/modules/nData/nImport/import/src/service/external/defaultExternalModelsImportEventHandlerService
  * @description Implements nData default external models import event handler service business behavior and extension logic.
  * @layer service
  * @owner nData

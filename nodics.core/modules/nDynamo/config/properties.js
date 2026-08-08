@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/config/properties
+ * @module nodics.core/modules/nDynamo/config/properties
  * @description Defines default nDynamo configuration used during module startup and layering.
  * @layer config
  * @owner nDynamo

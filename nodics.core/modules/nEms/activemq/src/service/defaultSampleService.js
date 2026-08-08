@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/activemq/src/service/defaultSampleService
+ * @module nodics.core/modules/nEms/activemq/src/service/defaultSampleService
  * @description Implements activemq default sample service business behavior and extension logic.
  * @layer service
  * @owner activemq

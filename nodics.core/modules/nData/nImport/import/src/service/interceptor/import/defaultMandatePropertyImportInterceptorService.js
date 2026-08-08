@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/import/src/service/interceptor/import/defaultMandatePropertyImportInterceptorService
+ * @module nodics.core/modules/nData/nImport/import/src/service/interceptor/import/defaultMandatePropertyImportInterceptorService
  * @description Implements nData default mandate property import interceptor service business behavior and extension logic.
  * @layer service
  * @owner nData

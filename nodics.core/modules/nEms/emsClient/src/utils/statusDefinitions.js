@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/emsClient/src/utils/statusDefinitions
+ * @module nodics.core/modules/nEms/emsClient/src/utils/statusDefinitions
  * @description Provides shared nEms utility exports for status definitions.
  * @layer utils
  * @owner nEms

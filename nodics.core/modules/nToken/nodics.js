@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nToken/nodics
+ * @module nodics.core/modules/nToken/nodics
  * @description Registers the nToken module lifecycle hooks and module-level startup behavior.
  * @layer module
  * @owner nToken

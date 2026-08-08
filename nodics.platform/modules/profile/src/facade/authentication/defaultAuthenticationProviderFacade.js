@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/facade/authentication/defaultAuthenticationProviderFacade
+ * @module nodics.platform/modules/profile/src/facade/authentication/defaultAuthenticationProviderFacade
  * @description Coordinates facade-level delegation for profile default authentication provider facade operations.
  * @layer facade
  * @owner profile

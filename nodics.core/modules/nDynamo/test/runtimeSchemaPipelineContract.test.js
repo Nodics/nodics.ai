@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/test/runtimeSchemaPipelineContract
+ * @module nodics.core/modules/nDynamo/test/runtimeSchemaPipelineContract
  * @description Verifies runtime schema activation is pipeline-driven, tenant-aware, policy-checked, and audited for both successful and failed activation attempts.
  * @layer test
  * @owner nDynamo

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/database/vDatabase/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nDatabase/database/vDatabase/src/utils/statusDefinitions.js
  * @description Provides shared vDatabase status and error definition exports.
  * @layer utils
  * @owner vDatabase

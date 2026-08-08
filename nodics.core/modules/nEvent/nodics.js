@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEvent/nodics
+ * @module nodics.core/modules/nEvent/nodics
  * @description Registers the nEvent module lifecycle hooks and module-level startup behavior.
  * @layer module
  * @owner nEvent

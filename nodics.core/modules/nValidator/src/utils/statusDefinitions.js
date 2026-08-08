@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nValidator/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nValidator/src/utils/statusDefinitions.js
  * @description Provides shared validator status and error definition exports.
  * @layer utils
  * @owner validator

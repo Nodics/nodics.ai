@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nValidator/src/router/appConfig
+ * @module nodics.core/modules/nValidator/src/router/appConfig
  * @description Defines nValidator route registration and HTTP exposure metadata.
  * @layer router
  * @owner nValidator

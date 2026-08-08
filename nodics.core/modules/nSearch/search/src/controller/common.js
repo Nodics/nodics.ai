@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nSearch/search/src/controller/common
+ * @module nodics.core/modules/nSearch/search/src/controller/common
  * @description Template controller used by generated nSearch schema
  * controllers. During generation, placeholders are replaced with the owning
  * search controller, facade, schema, and request mapping identifiers.

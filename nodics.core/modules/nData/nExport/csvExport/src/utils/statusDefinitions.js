@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/csvExport/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nData/nExport/csvExport/src/utils/statusDefinitions.js
  * @description Provides shared csvExport status and error definition exports.
  * @layer utils
  * @owner csvExport

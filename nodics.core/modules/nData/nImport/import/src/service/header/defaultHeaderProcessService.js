@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nData/nImport/import/src/service/header/defaultHeaderProcessService
+ * @module nodics.core/modules/nData/nImport/import/src/service/header/defaultHeaderProcessService
  * @description Implements nData default header process service business behavior and extension logic.
  * @layer service
  * @owner nData

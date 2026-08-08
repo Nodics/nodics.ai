@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nEms/emsClient/src/controller/defaultEmsClientController
+ * @module nodics.core/modules/nEms/emsClient/src/controller/defaultEmsClientController
  * @description Exposes request handlers for nEms default ems client controller operations.
  * @layer controller
  * @owner nEms

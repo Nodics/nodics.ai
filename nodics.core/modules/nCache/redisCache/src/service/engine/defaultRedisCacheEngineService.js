@@ -12,7 +12,7 @@
 const redis = require("redis");
 
 /**
- * @module gFramework/nCache/redisCache/src/service/engine/defaultRedisCacheEngineService
+ * @module nodics.core/modules/nCache/redisCache/src/service/engine/defaultRedisCacheEngineService
  * @description Implements nCache default redis cache engine service business behavior and extension logic.
  * @layer service
  * @owner nCache

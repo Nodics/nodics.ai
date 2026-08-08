@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nEms/emsClient/src/service/node/defaultEmsNodeUpHandlerService
+ * @module nodics.core/modules/nEms/emsClient/src/service/node/defaultEmsNodeUpHandlerService
  * @description Implements nEms default ems node up handler service business behavior and extension logic.
  * @layer service
  * @owner nEms

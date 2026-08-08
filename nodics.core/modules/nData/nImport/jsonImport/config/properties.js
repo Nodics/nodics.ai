@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/jsonImport/config/properties
+ * @module nodics.core/modules/nData/nImport/jsonImport/config/properties
  * @description Defines default nData configuration used during module startup and layering.
  * @layer config
  * @owner nData

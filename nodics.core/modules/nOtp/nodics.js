@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nOtp/nodics
+ * @module nodics.core/modules/nOtp/nodics
  * @description Registers the nOtp module lifecycle hooks and module-level startup behavior.
  * @layer module
  * @owner nOtp

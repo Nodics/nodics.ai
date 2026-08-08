@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nbpm/nodics
+ * @module nodics.core/modules/nbpm/nodics
  * @description Registers the nbpm module lifecycle hooks and module-level startup behavior.
  * @layer module
  * @owner nbpm

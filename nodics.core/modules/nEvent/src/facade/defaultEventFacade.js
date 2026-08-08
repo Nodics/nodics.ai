@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEvent/src/facade/defaultEventFacade
+ * @module nodics.core/modules/nEvent/src/facade/defaultEventFacade
  * @description Coordinates facade-level delegation for nEvent default event facade operations.
  * @layer facade
  * @owner nEvent

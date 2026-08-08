@@ -82,11 +82,11 @@ When adding a new search engine:
 Run focused provider-neutral search coverage with:
 
 ```bash
-node gFramework/nSearch/search/test/searchRouteContract.test.js
-node gFramework/nSearch/search/test/searchServicePipelineContract.test.js
-node gFramework/nSearch/search/test/searchControllerRequestMapping.test.js
-node gFramework/nSearch/search/test/searchCachePolicyContract.test.js
-node gFramework/nSearch/search/test/indexerServiceContract.test.js
+node nodics.core/modules/nSearch/search/test/searchRouteContract.test.js
+node nodics.core/modules/nSearch/search/test/searchServicePipelineContract.test.js
+node nodics.core/modules/nSearch/search/test/searchControllerRequestMapping.test.js
+node nodics.core/modules/nSearch/search/test/searchCachePolicyContract.test.js
+node nodics.core/modules/nSearch/search/test/indexerServiceContract.test.js
 npm run quality:docs
 ```
 

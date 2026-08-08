@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nOtp/src/utils/utils
+ * @module nodics.core/modules/nOtp/src/utils/utils
  * @description Provides shared nOtp utility exports for utils.
  * @layer utils
  * @owner nOtp

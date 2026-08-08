@@ -15,7 +15,7 @@ var sizeof = require('object-sizeof');
 
 
 /**
- * @module gFramework/nData/nImport/csvImport/src/service/processor/defaultTenantImportInterceptorService
+ * @module nodics.core/modules/nData/nImport/csvImport/src/service/processor/defaultTenantImportInterceptorService
  * @description Implements nData default tenant import interceptor service business behavior and extension logic.
  * @layer service
  * @owner nData

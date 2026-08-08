@@ -14,7 +14,7 @@ const fse = require('fs-extra');
 const path = require('path');
 
 /**
- * @module gFramework/nData/nImport/import/src/service/media/defaultMediaImportDefinitionService
+ * @module nodics.core/modules/nData/nImport/import/src/service/media/defaultMediaImportDefinitionService
  * @description Resolves optional import templates or generic schema targets and materializes run-local header files for media-backed imports.
  * @layer service
  * @owner import

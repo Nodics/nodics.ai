@@ -83,11 +83,11 @@ When adding a messaging provider:
 Run:
 
 ```bash
-node gFramework/nEms/emsClient/test/emsClientServiceContract.test.js
-node gFramework/nEms/emsClient/test/emsMessageProcessContract.test.js
-node gFramework/nEms/emsClient/test/emsClientRouteContract.test.js
-node gFramework/nEms/emsClient/test/messageTenantResolution.test.js
-node gFramework/nEms/emsClient/test/activeEmsPublisher.test.js
+node nodics.core/modules/nEms/emsClient/test/emsClientServiceContract.test.js
+node nodics.core/modules/nEms/emsClient/test/emsMessageProcessContract.test.js
+node nodics.core/modules/nEms/emsClient/test/emsClientRouteContract.test.js
+node nodics.core/modules/nEms/emsClient/test/messageTenantResolution.test.js
+node nodics.core/modules/nEms/emsClient/test/activeEmsPublisher.test.js
 npm run quality:docs
 ```
 

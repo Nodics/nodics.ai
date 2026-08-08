@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEvent/src/utils/statusDefinitions
+ * @module nodics.core/modules/nEvent/src/utils/statusDefinitions
  * @description Provides shared nEvent utility exports for status definitions.
  * @layer utils
  * @owner nEvent

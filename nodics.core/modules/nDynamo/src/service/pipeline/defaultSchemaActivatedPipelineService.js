@@ -14,7 +14,7 @@ const fs = require('fs');
 const path = require('path');
 
 /**
- * @module gFramework/nDynamo/src/service/pipeline/defaultSchemaActivatedPipelineService
+ * @module nodics.core/modules/nDynamo/src/service/pipeline/defaultSchemaActivatedPipelineService
  * @description Implements nDynamo default schema activated pipeline service business behavior and extension logic.
  * @layer service
  * @owner nDynamo

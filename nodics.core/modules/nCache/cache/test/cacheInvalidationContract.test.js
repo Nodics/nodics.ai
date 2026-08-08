@@ -119,13 +119,13 @@ global.SERVICE = {
 
     const repositoryRoot = path.resolve(__dirname, '../../../..');
     [
-        'gFramework/nDatabase/database/src/service/procs/save/defaultModelSaveInitializerService.js',
-        'gFramework/nDatabase/database/src/service/procs/update/defaultModelsUpdateInitializerService.js',
-        'gFramework/nDatabase/database/src/service/procs/remove/defaultModelsRemoveInitializerService.js',
-        'gFramework/nSearch/search/src/service/procs/dosave/defaultDoSaveModelInitializerService.js',
-        'gFramework/nSearch/search/src/service/procs/doremove/defaultDoRemoveModelsInitializerService.js',
-        'gFramework/nSearch/search/src/service/procs/doremove/defaultDoRemoveModelsByQueryInitializerService.js',
-        'gFramework/nSearch/search/src/service/procs/doRemoveIndex/defaultDoRemoveIndexInitializerService.js'
+        'nodics.core/modules/nDatabase/database/src/service/procs/save/defaultModelSaveInitializerService.js',
+        'nodics.core/modules/nDatabase/database/src/service/procs/update/defaultModelsUpdateInitializerService.js',
+        'nodics.core/modules/nDatabase/database/src/service/procs/remove/defaultModelsRemoveInitializerService.js',
+        'nodics.core/modules/nSearch/search/src/service/procs/dosave/defaultDoSaveModelInitializerService.js',
+        'nodics.core/modules/nSearch/search/src/service/procs/doremove/defaultDoRemoveModelsInitializerService.js',
+        'nodics.core/modules/nSearch/search/src/service/procs/doremove/defaultDoRemoveModelsByQueryInitializerService.js',
+        'nodics.core/modules/nSearch/search/src/service/procs/doRemoveIndex/defaultDoRemoveIndexInitializerService.js'
     ].forEach(relativePath => {
         const source = fs.readFileSync(path.join(repositoryRoot, relativePath), 'utf8');
         assert(source.includes('DefaultCacheService.invalidateResource'), relativePath + ' must use governed resource invalidation');

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/export/src/service/defaultSampleService
+ * @module nodics.core/modules/nData/nExport/export/src/service/defaultSampleService
  * @description Implements export default sample service business behavior and extension logic.
  * @layer service
  * @owner export

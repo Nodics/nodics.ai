@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSystem/src/service/event/defaultConfigurationChangeListenerService
+ * @module nodics.core/modules/nSystem/src/service/event/defaultConfigurationChangeListenerService
  * @description Implements nSystem default configuration change listener service business behavior and extension logic.
  * @layer service
  * @owner nSystem

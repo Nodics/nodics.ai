@@ -15,7 +15,7 @@ const path = require('path');
 const config = require('../../../nConfig');
 
 /**
- * @module gFramework/nEms/emsClient/test/activeEmsPublisher.test
+ * @module nodics.core/modules/nEms/emsClient/test/activeEmsPublisher.test
  * @description Runs a guarded EMS publisher smoke test against the active local server configuration and configured provider.
  * @layer test
  * @owner nEms

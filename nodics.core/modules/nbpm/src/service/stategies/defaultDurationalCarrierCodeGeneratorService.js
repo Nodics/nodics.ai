@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nbpm/src/service/stategies/defaultDurationalCarrierCodeGeneratorService
+ * @module nodics.core/modules/nbpm/src/service/stategies/defaultDurationalCarrierCodeGeneratorService
  * @description Implements nbpm default durational carrier code generator service business behavior and extension logic.
  * @layer service
  * @owner nbpm

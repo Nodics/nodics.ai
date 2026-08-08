@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/service/procs/doRemoveIndex/defaultDoRemoveIndexInitializerService
+ * @module nodics.core/modules/nSearch/search/src/service/procs/doRemoveIndex/defaultDoRemoveIndexInitializerService
  * @description Implements nSearch default do remove index initializer service business behavior and extension logic.
  * @layer service
  * @owner nSearch

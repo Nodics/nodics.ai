@@ -30,22 +30,22 @@ const ownedDependencies = rootPackage.nodics.dependencyGovernance.ownedDependenc
 const modules = [
     {
         name: 'elastic',
-        path: path.join(repositoryRoot, 'gFramework/nSearch/elastic')
+        path: path.join(repositoryRoot, 'nodics.core/modules/nSearch/elastic')
     },
     {
         name: 'activemq',
-        path: path.join(repositoryRoot, 'gFramework/nEms/activemq')
+        path: path.join(repositoryRoot, 'nodics.core/modules/nEms/activemq')
     },
     {
         name: 'paymentCore',
-        path: path.join(repositoryRoot, 'gComm/payment/paymentCore')
+        path: path.join(repositoryRoot, 'nodics.commerce/modules/payment')
     }
 ];
 
 const matrix = generator.collectProviderCapabilityMaturitySummary(modules, ownedDependencies);
-const elastic = matrix.find(entry => entry.modulePath === 'gFramework/nSearch/elastic');
-const activemq = matrix.find(entry => entry.modulePath === 'gFramework/nEms/activemq');
-const payment = matrix.find(entry => entry.modulePath === 'gComm/payment/paymentCore');
+const elastic = matrix.find(entry => entry.modulePath === 'nodics.core/modules/nSearch/elastic');
+const activemq = matrix.find(entry => entry.modulePath === 'nodics.core/modules/nEms/activemq');
+const payment = matrix.find(entry => entry.modulePath === 'nodics.commerce/modules/payment');
 
 assert(elastic, 'Elasticsearch provider module must be present in the maturity matrix');
 assert.strictEqual(elastic.displayName, 'Elasticsearch');

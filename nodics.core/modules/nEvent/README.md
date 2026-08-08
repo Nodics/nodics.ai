@@ -3,12 +3,12 @@
 `nEvent` runs in-platform event listeners. It lets one capability announce that
 something happened without hardcoding every interested module into the
 publisher. Broker transport remains owned by `nEms`; persisted distribution and
-event logs remain owned by `gCore/nems`.
+event logs remain owned by `nodics.core/modules/nEms`.
 
 `nEvent` owns the framework event publishing and listener execution contract.
 
 Nodics separates framework event publishing from persisted event distribution:
-`nEvent` provides the framework event capability, while `gCore/nems` owns
+`nEvent` provides the framework event capability, while `nodics.core/modules/nEms` owns
 persisted distribution and event-log behavior.
 
 ## Ownership
@@ -110,6 +110,6 @@ chain.
 ## Continue
 
 - Broker messaging: [nEms](../nEms/README.md)
-- Persisted event distribution: [nems](../../gCore/nems/README.md)
+- Persisted event distribution: [nems](../../nodics.core/modules/nEms/README.md)
 - Public platform guide: [How Platform Capabilities Work](https://github.com/Nodics/nodics.docs)
-- Framework map: [gFramework](../README.md)
+- Framework map: [nodics.core](../README.md)

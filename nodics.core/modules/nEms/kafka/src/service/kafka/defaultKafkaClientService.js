@@ -56,7 +56,7 @@ function toMessageList(payload) {
 }
 
 /**
- * @module gFramework/nEms/kafka/src/service/kafka/defaultKafkaClientService
+ * @module nodics.core/modules/nEms/kafka/src/service/kafka/defaultKafkaClientService
  * @description Implements nEms default kafka client service business behavior and extension logic.
  * @layer service
  * @owner nEms

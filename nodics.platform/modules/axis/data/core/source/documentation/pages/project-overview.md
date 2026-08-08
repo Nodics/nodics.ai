@@ -244,6 +244,67 @@ Update, and governed Delete. The Operations workspace includes Module Health
 with permission-filtered navigation, module summaries, on-demand registered
 node details, and governed refresh. Visual designers remain future slices.
 
+## Axis startup flow
+
+```mermaid
+sequenceDiagram
+  participant Browser as Browser
+  participant Axis as nodics.axis
+  participant Platform as Platform BackOffice
+  participant WCMS as WCMS delivery
+  participant Modules as Registered modules
+
+  Browser->>Axis: Load application shell
+  Axis->>Platform: Request runtime/bootstrap contract
+  Platform-->>Axis: Required endpoints and recovery metadata
+  Browser->>Axis: Submit enterprise/login/password
+  Axis->>Platform: Authenticate employee
+  Platform-->>Axis: Auth token and employee projection
+  Axis->>Platform: Load authorized module/navigation catalogue
+  Platform-->>Axis: Functional modules, permissions, routes
+  Axis->>WCMS: Resolve CMS route when page is CMS-owned
+  WCMS-->>Axis: Page, components, slots, renderer mappings
+  Axis->>Modules: Call module APIs only through authorized clients
+```
+
+This flow is important because Axis should not guess. It does not decide that
+Cron exists because a menu item was coded. It does not decide that a component
+is safe because a TypeScript component exists. It asks the backend which
+functional modules are registered, active, live, and authorized for the user.
+
+## Backend-owned content rule
+
+Axis is a renderer. It can contain React components, route guards, query
+clients, shell behavior, typography, responsive layout, accessibility behavior,
+and tests. It should not own database-importable CMS content. Login page
+content, documentation pages, module navigation, and renderer mappings are
+backend-owned data contracts.
+
+| Content | Owner |
+| --- | --- |
+| Framework documentation | `nodics.docs` |
+| Axis product documentation and Axis shell content | `nodics.platform/modules/axis` |
+| Kickoff project documentation | `nodics.kickoff` |
+| Customer-specific documentation | The customer project or customer extension module |
+| Browser renderer implementation | `nodics.axis` |
+
+This rule protects partners. A partner can replace, theme, or extend Axis
+without losing the backend-owned records that define what the business user is
+allowed to see.
+
+## Beginner mental model
+
+Think of Axis like a governed control room. The control room has screens,
+buttons, navigation, forms, and panels. But the control room does not own the
+factory machines. Platform owns identity and module registration. WCMS owns
+content and media. Cron owns scheduled work. Other functional modules own
+their own business APIs. Axis makes those capabilities usable for employees.
+
+When Axis cannot reach BackOffice, it shows recovery mode. When it cannot
+resolve a CMS route, it shows CMS recovery. Those states are not failures of
+styling; they are intentional safety rails that stop the browser from
+inventing behavior.
+
 ## Customize and extend safely
 
 Use Axis as the reusable frontend base and place customer-specific pages,

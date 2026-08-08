@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/jsExport/config/prescripts
+ * @module nodics.core/modules/nData/nExport/jsExport/config/prescripts
  * @description Defines default nData configuration used during module startup and layering.
  * @layer config
  * @owner nData

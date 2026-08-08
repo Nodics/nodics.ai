@@ -17,7 +17,7 @@ const Chai = require('chai');
 const expect = Chai.expect;
 
 /**
- * @module gFramework/nData/nImport/excelImport/test/env-local/envTest
+ * @module nodics.core/modules/nData/nImport/excelImport/test/env-local/envTest
  * @description Defines nData test fixtures or suites for module behavior validation.
  * @layer test
  * @owner nData

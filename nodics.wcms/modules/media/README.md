@@ -32,7 +32,7 @@ project, environment, server, node, tenant, or customer layer sets an absolute
 path, that configured deployment path wins. If it sets a relative path, the
 path resolves under the active server path. If no `basePath` is configured,
 media falls back to `NODICS.getServerPath() + '/temp/media'`, for example
-`startio/envs/startioLocal/monoServer/temp/media` in local mono-server
+`nodics.kickoff/envs/kickoffLocal/monoServer/temp/media` in local mono-server
 execution. Do not create or depend on a repository-root `runtime/` directory
 for uploaded files.
 
@@ -232,7 +232,7 @@ For the local provider, root resolution works in this order:
    mono-server execution stores files under:
 
 ```text
-startio/envs/startioLocal/monoServer/temp/media
+nodics.kickoff/envs/kickoffLocal/monoServer/temp/media
 ```
 
 This fallback is intentional. Uploaded files must not be written to a Nodics

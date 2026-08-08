@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nValidator/nodics
+ * @module nodics.core/modules/nValidator/nodics
  * @description Registers the nValidator module lifecycle hooks and module-level startup behavior.
  * @layer module
  * @owner nValidator

@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nbpm/src/service/interceptors/defaultSaveWorkflow2SchemaInterceptorService
+ * @module nodics.core/modules/nbpm/src/service/interceptors/defaultSaveWorkflow2SchemaInterceptorService
  * @description Implements nbpm default save workflow2 schema interceptor service business behavior and extension logic.
  * @layer service
  * @owner nbpm

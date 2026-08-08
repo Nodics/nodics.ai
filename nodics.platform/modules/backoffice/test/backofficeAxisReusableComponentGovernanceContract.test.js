@@ -18,12 +18,12 @@
 const assert = require("assert");
 const service = require("../src/service/contract/defaultBackofficeContractService");
 
-const cmsCapability = require("../../../gContent/cms/config/properties")
+const cmsCapability = require("../../../nodics.wcms/modules/cms/config/properties")
   .backofficeCapabilities.cms;
-const mediaCapability = require("../../../gFramework/nMedia/config/properties")
+const mediaCapability = require("../../../nodics.wcms/modules/media/config/properties")
   .backofficeCapabilities.media;
 const paymentCapability =
-  require("../../../gComm/payment/paymentCore/config/properties")
+  require("../../../nodics.commerce/modules/payment/config/properties")
     .backofficeCapabilities.payment;
 const cresCapability = require("../../../gMrkty/cres/config/properties")
   .backofficeCapabilities.cres;

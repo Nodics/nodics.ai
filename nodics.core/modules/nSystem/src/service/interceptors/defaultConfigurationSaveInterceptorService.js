@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nSystem/src/service/interceptors/defaultConfigurationSaveInterceptorService
+ * @module nodics.core/modules/nSystem/src/service/interceptors/defaultConfigurationSaveInterceptorService
  * @description Implements nSystem default configuration save interceptor service business behavior and extension logic.
  * @layer service
  * @owner nSystem

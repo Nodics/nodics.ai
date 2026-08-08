@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nRouter/src/utils/enums.js
+ * @module nodics.core/modules/nRouter/src/utils/enums.js
  * @description Provides shared router enum definition exports.
  * @layer utils
  * @owner router

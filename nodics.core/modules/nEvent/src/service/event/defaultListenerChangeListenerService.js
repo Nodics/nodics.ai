@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEvent/src/service/event/defaultListenerChangeListenerService
+ * @module nodics.core/modules/nEvent/src/service/event/defaultListenerChangeListenerService
  * @description Implements nEvent default listener change listener service business behavior and extension logic.
  * @layer service
  * @owner nEvent

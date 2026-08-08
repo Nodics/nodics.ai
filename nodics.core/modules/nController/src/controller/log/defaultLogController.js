@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nController/src/controller/log/defaultLogController
+ * @module nodics.core/modules/nController/src/controller/log/defaultLogController
  * @description Exposes request handlers for nController default log controller operations.
  * @layer controller
  * @owner nController

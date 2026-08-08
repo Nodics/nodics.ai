@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nAuth/src/utils/statusDefinitions
+ * @module nodics.core/modules/nAuth/src/utils/statusDefinitions
  * @description Provides shared nAuth utility exports for status definitions.
  * @layer utils
  * @owner nAuth

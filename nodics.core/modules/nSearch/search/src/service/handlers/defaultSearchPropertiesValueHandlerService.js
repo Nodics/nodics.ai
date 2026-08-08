@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/service/handlers/defaultSearchPropertiesValueHandlerService
+ * @module nodics.core/modules/nSearch/search/src/service/handlers/defaultSearchPropertiesValueHandlerService
  * @description Implements nSearch default search properties value handler service business behavior and extension logic.
  * @layer service
  * @owner nSearch

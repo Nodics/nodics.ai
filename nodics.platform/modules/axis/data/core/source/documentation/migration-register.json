@@ -1,6 +1,6 @@
 {
   "pack": "nodics.platform.axis",
-  "version": "0.3.21",
+  "version": "0.3.22",
   "generatedAtPolicy": "deterministic-no-timestamp",
   "sources": [
     {
@@ -19,8 +19,8 @@
       "canonicalSource": "data/core/source/documentation/pages/project-overview.md",
       "destinationRoute": "/docs/nodics-axis",
       "disposition": "migrated",
-      "sourceHash": "7f9cec7da91daf8e4261e001303aa26b4fc334225cf6e0be2400c1efac5eb559",
-      "wordCount": 1496,
+      "sourceHash": "32cc2183af649a6e40725ec6f44f34d1d1f79c2d54568ca7006ddc22e97f3e36",
+      "wordCount": 1859,
       "headings": [
         "Why Axis exists",
         "Reader mindset",
@@ -32,6 +32,9 @@
         "Environment and runtime configuration",
         "Quality commands",
         "Current scope",
+        "Axis startup flow",
+        "Backend-owned content rule",
+        "Beginner mental model",
         "Customize and extend safely",
         "Common mistakes"
       ]

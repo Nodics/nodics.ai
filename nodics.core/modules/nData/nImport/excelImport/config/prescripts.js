@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/excelImport/config/prescripts
+ * @module nodics.core/modules/nData/nImport/excelImport/config/prescripts
  * @description Defines default nData configuration used during module startup and layering.
  * @layer config
  * @owner nData

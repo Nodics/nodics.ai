@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/elastic/test/elasticSearchModelOperationContract
+ * @module nodics.core/modules/nSearch/elastic/test/elasticSearchModelOperationContract
  * @description Verifies the Elastic search model implementation maps Nodics search operations to the expected engine client APIs and normalized query payloads.
  * @layer test
  * @owner nSearch/elastic

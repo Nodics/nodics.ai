@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nTest/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nTest/src/utils/statusDefinitions.js
  * @description Provides shared nTest status and error definition exports.
  * @layer utils
  * @owner nTest

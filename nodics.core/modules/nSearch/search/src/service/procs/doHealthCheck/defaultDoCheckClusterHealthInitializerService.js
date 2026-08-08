@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/service/procs/doHealthCheck/defaultDoCheckClusterHealthInitializerService
+ * @module nodics.core/modules/nSearch/search/src/service/procs/doHealthCheck/defaultDoCheckClusterHealthInitializerService
  * @description Implements nSearch default do check cluster health initializer service business behavior and extension logic.
  * @layer service
  * @owner nSearch

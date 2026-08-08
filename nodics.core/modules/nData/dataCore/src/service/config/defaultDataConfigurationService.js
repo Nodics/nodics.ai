@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nData/dataCore/src/service/config/defaultDataConfigurationService
+ * @module nodics.core/modules/nData/dataCore/src/service/config/defaultDataConfigurationService
  * @description Implements nData default data configuration service business behavior and extension logic.
  * @layer service
  * @owner nData

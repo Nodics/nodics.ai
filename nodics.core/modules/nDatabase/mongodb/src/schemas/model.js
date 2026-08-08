@@ -46,7 +46,7 @@ function mergeUpdatedSnapshot(snapshot, model) {
 }
 
 /**
- * @module gFramework/nDatabase/mongodb/src/schemas/model
+ * @module nodics.core/modules/nDatabase/mongodb/src/schemas/model
  * @description Defines nDatabase schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner nDatabase

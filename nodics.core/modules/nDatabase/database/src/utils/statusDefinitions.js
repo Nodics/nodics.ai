@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/database/src/utils/statusDefinitions
+ * @module nodics.core/modules/nDatabase/database/src/utils/statusDefinitions
  * @description Provides shared nDatabase utility exports for status definitions.
  * @layer utils
  * @owner nDatabase

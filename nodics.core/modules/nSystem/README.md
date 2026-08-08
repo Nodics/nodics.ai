@@ -149,10 +149,10 @@ behavior is covered by nDynamo's `test:runtime-overrides` suite.
 Run:
 
 ```bash
-node gFramework/nSystem/test/systemRouteContract.test.js
-node gFramework/nSystem/test/systemHealthService.test.js
-node gFramework/nSystem/test/systemApiContractService.test.js
-node gFramework/nSystem/test/systemConfigurationCapabilityBehavior.test.js
+node nodics.core/modules/nSystem/test/systemRouteContract.test.js
+node nodics.core/modules/nSystem/test/systemHealthService.test.js
+node nodics.core/modules/nSystem/test/systemApiContractService.test.js
+node nodics.core/modules/nSystem/test/systemConfigurationCapabilityBehavior.test.js
 npm run test:runtime-overrides
 npm run quality:docs
 ```

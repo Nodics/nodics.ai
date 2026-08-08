@@ -26,7 +26,7 @@ const initService = require('../src/service/DefaultFrameworkInitializerService')
 
 const repoRoot = path.resolve(__dirname, '../../../');
 
-function initializeConfiguration(defaultServer, nodeName, defaultEnvironment = 'startioLocal') {
+function initializeConfiguration(defaultServer, nodeName, defaultEnvironment = 'kickoffLocal') {
     let originalArgv = process.argv.slice();
     global.NODICS = new Nodics();
     global.CONFIG = new Config();
@@ -92,8 +92,8 @@ assert.throws(() => utils.indexModuleRecords([{
 
 assert.throws(() => discovery.resolveTopologyModule('monoServer', 'server'), /Ambiguous server/,
     'an unscoped duplicate server name must fail in non-interactive execution');
-let localConsolidated = discovery.resolveTopologyModule('monoServer', 'server', 'startioLocal');
-let devConsolidated = discovery.resolveTopologyModule('monoServer', 'server', 'startioDev');
+let localConsolidated = discovery.resolveTopologyModule('monoServer', 'server', 'kickoffLocal');
+let devConsolidated = discovery.resolveTopologyModule('monoServer', 'server', 'kickoffDev');
 assert(localConsolidated && devConsolidated);
 assert.notStrictEqual(localConsolidated.canonicalIdentity, devConsolidated.canonicalIdentity,
     'same-name servers in different environments require distinct runtime-derived canonical identities');
@@ -101,12 +101,12 @@ let promptedEnvironment;
 let interactiveDiscovery = new Nodics();
 interactiveDiscovery.init({ NODICS_HOME: repoRoot, environmentSelector: options => {
     promptedEnvironment = options.environments;
-    return 'startioDev';
+    return 'kickoffDev';
 } });
 global.NODICS = interactiveDiscovery;
 utils.loadRawModuleList(repoRoot);
-assert.strictEqual(interactiveDiscovery.resolveTopologyModule('monoServer', 'server').parent, 'startioDev');
-assert(promptedEnvironment.includes('startioLocal') && promptedEnvironment.includes('startioDev'),
+assert.strictEqual(interactiveDiscovery.resolveTopologyModule('monoServer', 'server').parent, 'kickoffDev');
+assert(promptedEnvironment.includes('kickoffLocal') && promptedEnvironment.includes('kickoffDev'),
     'interactive selection adapter must receive only discovered environment candidates');
 
 let nodeWithoutServer = new Nodics();
@@ -116,7 +116,7 @@ utils.loadRawModuleList(repoRoot);
 let originalNodeArgv = process.argv.slice();
 process.argv = process.argv.slice(0, 2).concat(['NODE=monoNode0']);
 assert.throws(() => nodeWithoutServer.initEnvironment({
-    defaultEnvironment: 'startioLocal',
+    defaultEnvironment: 'kickoffLocal',
     defaultServer: 'monoServer'
 }), /Node startup requires an explicit SERVER/,
 'node startup must not silently use the project default server');
@@ -126,21 +126,21 @@ localServers.forEach(serverName => {
     initializeConfiguration(serverName);
     assert.strictEqual(NODICS.getServerName(), serverName);
     assert.strictEqual(NODICS.getEnvironmentName(), 'envs');
-    assert.strictEqual(NODICS.getSelectedEnvironmentName(), 'startioLocal');
-    assert.strictEqual(NODICS.getServerRootName(), 'startioLocal');
-    assert(NODICS.isModuleActive('gFramework'), 'gFramework should always be active for ' + serverName);
+    assert.strictEqual(NODICS.getSelectedEnvironmentName(), 'kickoffLocal');
+    assert.strictEqual(NODICS.getServerRootName(), 'kickoffLocal');
+    assert(NODICS.isModuleActive('nodics.core'), 'nodics.core should always be active for ' + serverName);
     assert(NODICS.isModuleActive(serverName), serverName + ' module should be active');
 });
 
 initializeConfiguration('monoServer', 'monoNode0');
 assert.strictEqual(NODICS.getNodeName(), 'monoNode0');
-assert(NODICS.getServerCanonicalIdentity().endsWith('/startioLocal/monoServer'));
-assert(NODICS.getNodeCanonicalIdentity().endsWith('/startioLocal/monoServer/monoNode0'));
+assert(NODICS.getServerCanonicalIdentity().endsWith('/kickoffLocal/monoServer'));
+assert(NODICS.getNodeCanonicalIdentity().endsWith('/kickoffLocal/monoServer/monoNode0'));
 assert(NODICS.isModuleActive('monoNode0'), 'selected node module should be active');
 assert.strictEqual(NODICS.getActiveModules().filter(moduleName => moduleName === 'monoNode0').length, 1);
 assert.deepStrictEqual(initService.getSelectedRuntimeModuleNames(), [
     'envs',
-    'startioLocal',
+    'kickoffLocal',
     'monoServer',
     'monoNode0'
 ]);

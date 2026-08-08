@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nbpm/src/lib/workflowError
+ * @module nodics.core/modules/nbpm/src/lib/workflowError
  * @description Provides reusable nbpm library primitives for workflow error.
  * @layer lib
  * @owner nbpm

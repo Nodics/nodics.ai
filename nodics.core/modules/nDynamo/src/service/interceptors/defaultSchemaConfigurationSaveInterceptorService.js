@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nDynamo/src/service/interceptors/defaultSchemaConfigurationSaveInterceptorService
+ * @module nodics.core/modules/nDynamo/src/service/interceptors/defaultSchemaConfigurationSaveInterceptorService
  * @description Implements nDynamo default schema configuration save interceptor service business behavior and extension logic.
  * @layer service
  * @owner nDynamo

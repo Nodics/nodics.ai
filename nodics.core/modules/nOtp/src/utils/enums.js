@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nOtp/src/utils/enums.js
+ * @module nodics.core/modules/nOtp/src/utils/enums.js
  * @description Provides shared otp enum definition exports.
  * @layer utils
  * @owner otp

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/kafka/src/router/appConfig
+ * @module nodics.core/modules/nEms/kafka/src/router/appConfig
  * @description Defines nEms route registration and HTTP exposure metadata.
  * @layer router
  * @owner nEms

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/src/service/defaultSampleService
+ * @module nodics.core/modules/nDynamo/src/service/defaultSampleService
  * @description Implements dynamo default sample service business behavior and extension logic.
  * @layer service
  * @owner dynamo

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nPublish/src/utils/enums.js
+ * @module nodics.core/modules/nPublish/src/utils/enums.js
  * @description Provides shared publish enum definition exports.
  * @layer utils
  * @owner publish

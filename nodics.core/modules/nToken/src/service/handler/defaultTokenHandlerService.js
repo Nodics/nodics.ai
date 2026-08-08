@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nToken/src/service/handler/defaultTokenHandlerService
+ * @module nodics.core/modules/nToken/src/service/handler/defaultTokenHandlerService
  * @description Implements nToken default token handler service business behavior and extension logic.
  * @layer service
  * @owner nToken

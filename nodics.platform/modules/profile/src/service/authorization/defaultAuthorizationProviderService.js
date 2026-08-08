@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/service/authorization/defaultAuthorizationProviderService
+ * @module nodics.platform/modules/profile/src/service/authorization/defaultAuthorizationProviderService
  * @description Implements profile default authorization provider service business behavior and extension logic.
  * @layer service
  * @owner profile

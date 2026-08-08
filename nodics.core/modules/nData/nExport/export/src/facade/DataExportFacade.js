@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/export/src/facade/DataExportFacade
+ * @module nodics.core/modules/nData/nExport/export/src/facade/DataExportFacade
  * @description Coordinates facade-level delegation for nExport data export orchestration operations.
  * @layer facade
  * @owner nExport

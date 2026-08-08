@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEvent/src/pipelines/pipelines
+ * @module nodics.core/modules/nEvent/src/pipelines/pipelines
  * @description Defines nEvent pipeline wiring and execution contracts.
  * @layer pipelines
  * @owner nEvent

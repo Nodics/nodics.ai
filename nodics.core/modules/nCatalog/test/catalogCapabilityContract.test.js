@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCatalog/test/catalogCapabilityContract
+ * @module nodics.core/modules/nCatalog/test/catalogCapabilityContract
  * @description Verifies nCatalog schema metadata, import catalog data, sample hierarchy, and sub-catalog resolver behavior.
  * @layer test
  * @owner nCatalog

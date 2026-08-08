@@ -16,7 +16,7 @@ const Chai = require('chai');
 const expect = Chai.expect;
 
 /**
- * @module gFramework/nDatabase/mongodb/vMongodb/test/common/commonTest
+ * @module nodics.core/modules/nDatabase/mongodb/vMongodb/test/common/commonTest
  * @description Defines nDatabase test fixtures or suites for module behavior validation.
  * @layer test
  * @owner nDatabase

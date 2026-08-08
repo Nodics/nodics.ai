@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/search/indexes
+ * @module nodics.core/modules/nSearch/search/src/search/indexes
  * @description Documents nSearch indexes module behavior.
  * @layer search
  * @owner nSearch

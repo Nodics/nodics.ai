@@ -32,5 +32,5 @@
 Validation:
 
 ```bash
-node gExp/backoffice/test/backofficeAxisReusableComponentGovernanceContract.test.js
+node nodics.platform/backoffice/test/backofficeAxisReusableComponentGovernanceContract.test.js
 ```

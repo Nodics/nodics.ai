@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nbpm/src/schemas/schemas
+ * @module nodics.core/modules/nbpm/src/schemas/schemas
  * @description Defines nbpm schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner nbpm

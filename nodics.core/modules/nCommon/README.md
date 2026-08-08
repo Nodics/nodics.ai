@@ -125,8 +125,8 @@ trace propagation rather than moving all error meaning into `nCommon`.
 ## Verification
 
 ```bash
-node gFramework/nCommon/test/errorTraceability.test.js
-node gFramework/nCommon/test/executionLayerTraceability.test.js
+node nodics.core/modules/nCommon/test/errorTraceability.test.js
+node nodics.core/modules/nCommon/test/executionLayerTraceability.test.js
 npm run quality:docs
 npm run test:basic
 ```
@@ -145,6 +145,6 @@ regression tests when a shared contract changes.
 ## Continue
 
 - Error and trace terminology: [Nodics Glossary](https://github.com/Nodics/nodics.docs)
-- Framework map: [gFramework](../README.md)
+- Framework map: [nodics.core](../README.md)
 - Ordered execution: [nPipeline](../nPipeline/README.md)
 - Public documentation: [Nodics Documentation](https://github.com/Nodics/nodics.docs)

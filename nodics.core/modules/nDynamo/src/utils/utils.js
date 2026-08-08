@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/src/utils/utils
+ * @module nodics.core/modules/nDynamo/src/utils/utils
  * @description Provides shared nDynamo utility exports for utils.
  * @layer utils
  * @owner nDynamo

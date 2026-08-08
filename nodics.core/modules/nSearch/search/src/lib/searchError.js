@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/lib/searchError
+ * @module nodics.core/modules/nSearch/search/src/lib/searchError
  * @description Provides reusable nSearch library primitives for search error.
  * @layer lib
  * @owner nSearch

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/service/interceptors/defaultEmployeeUpdateInterceptorService
+ * @module nodics.platform/modules/profile/src/service/interceptors/defaultEmployeeUpdateInterceptorService
  * @description Implements profile default employee update interceptor service business behavior and extension logic.
  * @layer service
  * @owner profile

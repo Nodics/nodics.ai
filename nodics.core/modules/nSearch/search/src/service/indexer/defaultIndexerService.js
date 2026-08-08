@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/service/indexer/defaultIndexerService
+ * @module nodics.core/modules/nSearch/search/src/service/indexer/defaultIndexerService
  * @description Implements nSearch default indexer service business behavior and extension logic.
  * @layer service
  * @owner nSearch

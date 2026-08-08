@@ -17,7 +17,7 @@ const Chai = require('chai');
 const expect = Chai.expect;
 
 /**
- * @module gFramework/nbpm/test/env-local/envTest
+ * @module nodics.core/modules/nbpm/test/env-local/envTest
  * @description Defines nbpm test fixtures or suites for module behavior validation.
  * @layer test
  * @owner nbpm

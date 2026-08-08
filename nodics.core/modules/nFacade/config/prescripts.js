@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nFacade/config/prescripts
+ * @module nodics.core/modules/nFacade/config/prescripts
  * @description Defines default nFacade configuration used during module startup and layering.
  * @layer config
  * @owner nFacade

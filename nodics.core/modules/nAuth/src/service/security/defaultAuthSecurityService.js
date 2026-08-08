@@ -16,7 +16,7 @@ const INSECURE_SECRETS = ['nodics', 'secret', 'password', 'changeme'];
 const INSECURE_BOOTSTRAP_VALUES = ['nodics', 'admin', 'apiadmin', 'password', 'secret', 'changeme', 'change-me'];
 
 /**
- * @module gFramework/nAuth/src/service/security/defaultAuthSecurityService
+ * @module nodics.core/modules/nAuth/src/service/security/defaultAuthSecurityService
  * @description Implements nAuth token security configuration, JWT option, and payload construction behavior.
  * @layer service
  * @owner nAuth

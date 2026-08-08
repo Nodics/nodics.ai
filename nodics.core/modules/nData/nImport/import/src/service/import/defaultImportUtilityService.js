@@ -14,7 +14,7 @@ const fs = require('fs');
 const path = require('path');
 
 /**
- * @module gFramework/nData/nImport/import/src/service/import/defaultImportUtilityService
+ * @module nodics.core/modules/nData/nImport/import/src/service/import/defaultImportUtilityService
  * @description Implements nData default import utility service business behavior and extension logic.
  * @layer service
  * @owner nData

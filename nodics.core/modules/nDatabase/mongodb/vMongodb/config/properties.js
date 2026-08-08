@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/mongodb/vMongodb/config/properties
+ * @module nodics.core/modules/nDatabase/mongodb/vMongodb/config/properties
  * @description Defines default nDatabase configuration used during module startup and layering.
  * @layer config
  * @owner nDatabase

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gContent/wcms/src/utils/statusDefinitions.js
+ * @module nodics.wcms/modules/wcms/src/utils/statusDefinitions.js
  * @description Provides shared wcms status and error definition exports.
  * @layer utils
  * @owner wcms

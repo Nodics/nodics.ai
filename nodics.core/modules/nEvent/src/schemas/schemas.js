@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEvent/src/schemas/schemas
+ * @module nodics.core/modules/nEvent/src/schemas/schemas
  * @description Defines nEvent schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner nEvent

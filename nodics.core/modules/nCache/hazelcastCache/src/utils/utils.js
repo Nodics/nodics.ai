@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCache/hazelcastCache/src/utils/utils
+ * @module nodics.core/modules/nCache/hazelcastCache/src/utils/utils
  * @description Provides shared nCache utility exports for utils.
  * @layer utils
  * @owner nCache

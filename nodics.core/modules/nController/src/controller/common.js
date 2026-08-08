@@ -13,7 +13,7 @@ const _ = require('lodash');
 const ObjectId = require('mongodb').ObjectId;
 
 /**
- * @module gFramework/nController/src/controller/common
+ * @module nodics.core/modules/nController/src/controller/common
  * @description Template controller used by generated schema controllers. During
  * generation, placeholders are replaced with the owning controller, facade,
  * schema, and request mapping identifiers.

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/emsClient/config/postscripts
+ * @module nodics.core/modules/nEms/emsClient/config/postscripts
  * @description Defines default nEms configuration used during module startup and layering.
  * @layer config
  * @owner nEms

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nToken/src/schemas/schemas
+ * @module nodics.core/modules/nToken/src/schemas/schemas
  * @description Defines nToken schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner nToken

@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nbpm/src/service/procs/prepare/defaultWorkflowprocessPreparePipelineService
+ * @module nodics.core/modules/nbpm/src/service/procs/prepare/defaultWorkflowprocessPreparePipelineService
  * @description Implements nbpm default workflowprocess prepare pipeline service business behavior and extension logic.
  * @layer service
  * @owner nbpm

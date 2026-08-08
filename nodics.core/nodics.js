@@ -13,10 +13,10 @@ const config = require('./modules/nConfig');
 const util = require('util');
 
 /**
- * @module gFramework/NodicsFramework
+ * @module nodics.core/modules/NodicsFramework
  * @description Coordinates Nodics runtime initialization, layered mandatory bootstrap hooks, server startup, generators, clean, and build lifecycles for the active module hierarchy.
  * @layer module
- * @owner gFramework
+ * @owner nodics.core
  * @override Projects customize behavior through active-module metadata, configuration, scripts, services, and configured bootstrap reconcilers rather than modifying this coordinator.
  */
 module.exports = {

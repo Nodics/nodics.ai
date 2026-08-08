@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nNms/src/service/config/defaultNodeConfigurationService
+ * @module nodics.core/modules/nNms/src/service/config/defaultNodeConfigurationService
  * @description Implements nNms default node configuration service business behavior and extension logic.
  * @layer service
  * @owner nNms

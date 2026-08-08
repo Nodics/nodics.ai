@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCache/cache/src/service/defaultSampleService
+ * @module nodics.core/modules/nCache/cache/src/service/defaultSampleService
  * @description Implements cache default sample service business behavior and extension logic.
  * @layer service
  * @owner cache

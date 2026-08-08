@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nFacade/src/utils/utils
+ * @module nodics.core/modules/nFacade/src/utils/utils
  * @description Provides shared nFacade utility exports for utils.
  * @layer utils
  * @owner nFacade

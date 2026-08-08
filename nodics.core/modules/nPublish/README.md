@@ -35,7 +35,7 @@ The module now provides:
 
 CMS now supplies the first executable domain adapter and target deployment
 implementation. Additional domains remain extension work. Versioned storage remains owned by provider variants;
-workflow remains owned by `gCore/workflow`; business validation and dependency
+workflow remains owned by `nodics.workflow`; business validation and dependency
 rules remain in owning domain adapters. No business module may introduce a
 parallel publication state machine.
 
@@ -92,9 +92,9 @@ Add focused tests before this module owns executable publish behavior beyond sca
 The focused orchestration contract can be run with:
 
 ```bash
-node gFramework/nPublish/test/publicationLifecycleService.test.js
-node gFramework/nPublish/test/publicationAtomicAuditContract.test.js
-node gFramework/nPublish/test/publicationAuditReconciliationService.test.js
+node nodics.core/modules/nPublish/test/publicationLifecycleService.test.js
+node nodics.core/modules/nPublish/test/publicationAtomicAuditContract.test.js
+node nodics.core/modules/nPublish/test/publicationAuditReconciliationService.test.js
 ```
 
 ## What To Avoid

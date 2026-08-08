@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nbpm/config/postscripts
+ * @module nodics.core/modules/nbpm/config/postscripts
  * @description Defines default nbpm configuration used during module startup and layering.
  * @layer config
  * @owner nbpm

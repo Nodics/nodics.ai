@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/src/controller/router/defaultRouterConfigurationController
+ * @module nodics.core/modules/nDynamo/src/controller/router/defaultRouterConfigurationController
  * @description Exposes request handlers for nDynamo default router configuration controller operations.
  * @layer controller
  * @owner nDynamo

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/import/test/systemImportDiagnosticsValidationOnly.test
+ * @module nodics.core/modules/nData/nImport/import/test/systemImportDiagnosticsValidationOnly.test
  * @description Validates system import diagnostics behavior when data import runs in validation-only mode.
  * @layer test
  * @owner nData

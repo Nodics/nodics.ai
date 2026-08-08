@@ -12,7 +12,7 @@
 const emailValidator = require("email-validator");
 
 /**
- * @module gCore/profile/src/service/validators/defaultLoginIdAsEmailValidatorService
+ * @module nodics.platform/modules/profile/src/service/validators/defaultLoginIdAsEmailValidatorService
  * @description Implements profile default login id as email validator service business behavior and extension logic.
  * @layer service
  * @owner profile

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/service/procs/doMapping/defaultDoGetSchemaInitializerService
+ * @module nodics.core/modules/nSearch/search/src/service/procs/doMapping/defaultDoGetSchemaInitializerService
  * @description Implements nSearch default do get schema initializer service business behavior and extension logic.
  * @layer service
  * @owner nSearch

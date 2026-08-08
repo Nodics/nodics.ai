@@ -311,7 +311,7 @@ headers, mapping, source configuration, adapter or local-file trigger, and
 tests through the existing import lifecycle instead of copying these fixtures
 into framework startup data.
 
-`gCore/profile/data/sample/tenant` restores the older Profile tenant local-file
+`nodics.platform/modules/profile/data/sample/tenant` restores the older Profile tenant local-file
 import example as module-owned sample data. It uses the standard
 `headers/` and `data/` structure: CSV, XLSX, and legacy XLS headers live under
 one `headers/` folder and their files live under one `data/` folder. Each header

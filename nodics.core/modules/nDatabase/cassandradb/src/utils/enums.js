@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/cassandradb/src/utils/enums.js
+ * @module nodics.core/modules/nDatabase/cassandradb/src/utils/enums.js
  * @description Provides shared cassandradb enum definition exports.
  * @layer utils
  * @owner cassandradb

@@ -32,7 +32,7 @@ function createModuleBody(body) {
 }
 
 /**
- * @module gFramework/nDynamo/src/service/class/defaultClassConfigurationService
+ * @module nodics.core/modules/nDynamo/src/service/class/defaultClassConfigurationService
  * @description Implements nDynamo default class configuration service business behavior and extension logic.
  * @layer service
  * @owner nDynamo

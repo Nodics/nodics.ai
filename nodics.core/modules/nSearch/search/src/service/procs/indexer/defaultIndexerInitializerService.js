@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nSearch/search/src/service/procs/indexer/defaultIndexerInitializerService
+ * @module nodics.core/modules/nSearch/search/src/service/procs/indexer/defaultIndexerInitializerService
  * @description Implements nSearch default indexer initializer service business behavior and extension logic.
  * @layer service
  * @owner nSearch

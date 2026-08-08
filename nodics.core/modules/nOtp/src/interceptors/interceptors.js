@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nOtp/src/interceptors/interceptors
+ * @module nodics.core/modules/nOtp/src/interceptors/interceptors
  * @description Registers nOtp interceptor wiring for pipeline extension points.
  * @layer interceptors
  * @owner nOtp

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nbpm/src/utils/enums
+ * @module nodics.core/modules/nbpm/src/utils/enums
  * @description Provides shared nbpm utility exports for enums.
  * @layer utils
  * @owner nbpm

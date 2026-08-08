@@ -21,6 +21,12 @@ module.exports = {
         categories: {
             dataImport: {
                 enabled: true
+            },
+            dataExport: {
+                enabled: true
+            },
+            mediaManagement: {
+                enabled: true
             }
         }
     },

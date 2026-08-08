@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/dataCore/src/router/appConfig
+ * @module nodics.core/modules/nData/dataCore/src/router/appConfig
  * @description Defines nData route registration and HTTP exposure metadata.
  * @layer router
  * @owner nData

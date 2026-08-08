@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/database/vDatabase/src/utils/enums.js
+ * @module nodics.core/modules/nDatabase/database/vDatabase/src/utils/enums.js
  * @description Provides shared vDatabase enum definition exports.
  * @layer utils
  * @owner vDatabase

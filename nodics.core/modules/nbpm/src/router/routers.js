@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nbpm/src/router/routers
+ * @module nodics.core/modules/nbpm/src/router/routers
  * @description Defines nbpm route registration and HTTP exposure metadata.
  * @layer router
  * @owner nbpm

@@ -14,7 +14,7 @@ const fs = require('fs');
 var sizeof = require('object-sizeof');
 
 /**
- * @module gFramework/nData/nImport/jsonImport/src/service/init/defaultJsonFileDataProcessService
+ * @module nodics.core/modules/nData/nImport/jsonImport/src/service/init/defaultJsonFileDataProcessService
  * @description Implements nData default json file data process service business behavior and extension logic.
  * @layer service
  * @owner nData

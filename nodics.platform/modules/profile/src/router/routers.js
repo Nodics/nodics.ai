@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/router/routers
+ * @module nodics.platform/modules/profile/src/router/routers
  * @description Defines profile route registration and HTTP exposure metadata.
  * @layer router
  * @owner profile

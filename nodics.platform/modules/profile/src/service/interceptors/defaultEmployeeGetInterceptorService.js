@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/service/interceptors/defaultEmployeeGetInterceptorService
+ * @module nodics.platform/modules/profile/src/service/interceptors/defaultEmployeeGetInterceptorService
  * @description Implements profile default employee get interceptor service business behavior and extension logic.
  * @layer service
  * @owner profile

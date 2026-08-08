@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCatalog/src/interceptors/interceptors
+ * @module nodics.core/modules/nCatalog/src/interceptors/interceptors
  * @description Registers nCatalog interceptor wiring for pipeline extension points.
  * @layer interceptors
  * @owner nCatalog

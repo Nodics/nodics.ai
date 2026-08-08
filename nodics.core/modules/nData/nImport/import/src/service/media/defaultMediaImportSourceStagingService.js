@@ -15,7 +15,7 @@ const fse = require('fs-extra');
 const path = require('path');
 
 /**
- * @module gFramework/nData/nImport/import/src/service/media/defaultMediaImportSourceStagingService
+ * @module nodics.core/modules/nData/nImport/import/src/service/media/defaultMediaImportSourceStagingService
  * @description Stages media-owned import files into nImport-owned run workspaces.
  * @layer service
  * @owner import

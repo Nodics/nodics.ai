@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/src/utils/enums
+ * @module nodics.core/modules/nDynamo/src/utils/enums
  * @description Provides shared nDynamo utility exports for enums.
  * @layer utils
  * @owner nDynamo

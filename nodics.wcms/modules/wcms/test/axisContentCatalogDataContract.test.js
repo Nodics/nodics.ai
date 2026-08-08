@@ -31,6 +31,10 @@ const axisDataSets = [catalog, sites, types, renderers, slots, templates, compon
 
 assert.strictEqual(wcmsProperties.apiExposure.categories.dataImport.enabled, true,
     'WCMS must expose governed dataImport routes for documentation content-pack lifecycle');
+assert.strictEqual(wcmsProperties.apiExposure.categories.dataExport.enabled, true,
+    'WCMS must expose governed dataExport routes for content and media export lifecycle');
+assert.strictEqual(wcmsProperties.apiExposure.categories.mediaManagement.enabled, true,
+    'WCMS must expose governed mediaManagement routes because media is part of the WCMS functional module');
 assert.strictEqual(wcmsProperties.data.contentPacks.enabled, true,
     'WCMS must enable documentation content packs because CMS owns documentation routes and pages');
 assert.deepStrictEqual(wcmsProperties.data.contentPacks.packs.axisDocumentation.source, {

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/src/service/interceptors/defaultRouterConfigurationSaveInterceptorService
+ * @module nodics.core/modules/nDynamo/src/service/interceptors/defaultRouterConfigurationSaveInterceptorService
  * @description Implements nDynamo default router configuration save interceptor service business behavior and extension logic.
  * @layer service
  * @owner nDynamo

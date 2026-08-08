@@ -1,4 +1,4 @@
-# gFramework Agent Contract
+# nodics.core Agent Contract
 
 This file gives AI coding agents mandatory guidance for this Nodics module or package boundary.
 

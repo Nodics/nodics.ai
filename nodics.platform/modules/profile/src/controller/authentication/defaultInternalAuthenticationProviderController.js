@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/controller/authentication/defaultInternalAuthenticationProviderController
+ * @module nodics.platform/modules/profile/src/controller/authentication/defaultInternalAuthenticationProviderController
  * @description Exposes request handlers for profile default internal authentication provider controller operations.
  * @layer controller
  * @owner profile

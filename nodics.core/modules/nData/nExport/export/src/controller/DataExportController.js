@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/export/src/controller/DataExportController
+ * @module nodics.core/modules/nData/nExport/export/src/controller/DataExportController
  * @description Exposes request handlers for nExport data export orchestration operations.
  * @layer controller
  * @owner nExport

@@ -15,7 +15,7 @@ const fs = require('fs');
 const _ = require('lodash');
 
 /**
- * @module gFramework/nAuth/test/bootstrapCredentialEnvironmentGovernance
+ * @module nodics.core/modules/nAuth/test/bootstrapCredentialEnvironmentGovernance
  * @description Proves local bootstrap credentials, local API keys, sample
  * passwords, and local JWT/API-key secrets are accepted only by the explicit
  * local compatibility environment and cannot satisfy protected environment
@@ -47,17 +47,17 @@ function read(relativePath) {
     return fs.readFileSync(path.join(repositoryRoot, relativePath), 'utf8');
 }
 
-const localPropertiesPath = 'startio/envs/startioLocal/config/properties.js';
+const localPropertiesPath = 'nodics.kickoff/envs/kickoffLocal/config/properties.js';
 const localProperties = loadProperties(localPropertiesPath);
 const protectedEnvironmentPropertyPaths = [
-    'startio/envs/config/properties.js',
-    'startio/envs/startioDev/config/properties.js',
-    'startio/envs/startioQA/config/properties.js',
-    'startio/envs/startioPreProd/config/properties.js',
-    'startio/envs/startioProd/config/properties.js'
+    'nodics.kickoff/envs/config/properties.js',
+    'nodics.kickoff/envs/kickoffDev/config/properties.js',
+    'nodics.kickoff/envs/kickoffQA/config/properties.js',
+    'nodics.kickoff/envs/kickoffPreProd/config/properties.js',
+    'nodics.kickoff/envs/kickoffProd/config/properties.js'
 ];
 
-const protectedRuntimeNames = ['startioDev', 'startioQA', 'startioPreProd', 'startioProd'];
+const protectedRuntimeNames = ['kickoffDev', 'kickoffQA', 'kickoffPreProd', 'kickoffProd'];
 const localIdentity = localProperties.bootstrapIdentity;
 
 assert.strictEqual(authDefaults.compatibility.allowLocalBootstrapIdentity, false);

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nNms/src/schemas/schemas
+ * @module nodics.core/modules/nNms/src/schemas/schemas
  * @description Defines nNms schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner nNms

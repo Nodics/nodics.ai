@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nDynamo/src/service/pipeline/defaultSchemaUpdatedPipelineService
+ * @module nodics.core/modules/nDynamo/src/service/pipeline/defaultSchemaUpdatedPipelineService
  * @description Implements nDynamo default schema updated pipeline service business behavior and extension logic.
  * @layer service
  * @owner nDynamo

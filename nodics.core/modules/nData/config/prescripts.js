@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/config/prescripts
+ * @module nodics.core/modules/nData/config/prescripts
  * @description Defines default nData configuration used during module startup and layering.
  * @layer config
  * @owner nData

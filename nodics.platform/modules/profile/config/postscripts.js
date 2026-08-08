@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/config/postscripts
+ * @module nodics.platform/modules/profile/config/postscripts
  * @description Defines default profile configuration used during module startup and layering.
  * @layer config
  * @owner profile

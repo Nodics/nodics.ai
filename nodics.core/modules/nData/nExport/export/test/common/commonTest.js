@@ -16,7 +16,7 @@ const Chai = require('chai');
 const expect = Chai.expect;
 
 /**
- * @module gFramework/nData/nExport/export/test/common/commonTest
+ * @module nodics.core/modules/nData/nExport/export/test/common/commonTest
  * @description Defines nExport test fixtures or suites for module behavior validation.
  * @layer test
  * @owner nExport

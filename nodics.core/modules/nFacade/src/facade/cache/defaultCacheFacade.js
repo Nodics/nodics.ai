@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nFacade/src/facade/cache/defaultCacheFacade
+ * @module nodics.core/modules/nFacade/src/facade/cache/defaultCacheFacade
  * @description Coordinates facade-level delegation for nFacade default cache facade operations.
  * @layer facade
  * @owner nFacade

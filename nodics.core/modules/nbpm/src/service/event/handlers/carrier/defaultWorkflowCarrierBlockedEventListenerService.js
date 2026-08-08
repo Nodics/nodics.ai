@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nbpm/src/service/event/handlers/carrier/defaultWorkflowCarrierBlockedEventListenerService
+ * @module nodics.core/modules/nbpm/src/service/event/handlers/carrier/defaultWorkflowCarrierBlockedEventListenerService
  * @description Implements nbpm default workflow carrier blocked event listener service business behavior and extension logic.
  * @layer service
  * @owner nbpm

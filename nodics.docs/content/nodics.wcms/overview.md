@@ -41,6 +41,64 @@ or extend a frontend without losing the governed content source.
 - Publication state: the difference between authored content and content that
   is safe to deliver.
 
+## How a page becomes visible
+
+```mermaid
+flowchart TD
+  Catalog["Content catalog<br/>groups related content"]
+  Site["CMS site<br/>delivery surface"]
+  Type["Page/component types<br/>renderer contract"]
+  Template["Page template<br/>slot rules"]
+  Component["CMS components<br/>structured properties"]
+  Page["CMS page<br/>composition"]
+  Route["CMS route<br/>URL + locale + channel"]
+  Axis["Axis renderer<br/>browser presentation"]
+
+  Catalog --> Site
+  Type --> Template
+  Template --> Page
+  Component --> Page
+  Site --> Route
+  Page --> Route
+  Route --> Axis
+```
+
+A page cannot exist meaningfully without the surrounding records. A route needs
+a site. A site needs a catalog. A page needs a type and usually a template. A
+template needs slots. Components need type codes and renderer mappings. This is
+why a data pack with pages but no content catalog is incomplete. It might look
+like “some records imported,” but the content model is not healthy.
+
+## Beginner example: documentation content
+
+Nodics documentation is a good first example because it is visible in Axis and
+still follows the backend ownership rule.
+
+1. `nodics.docs` owns framework documentation markdown.
+2. Its generator converts markdown into CMS records: catalog, site, page type,
+   component type, renderer mappings, template, components, pages, and routes.
+3. WCMS imports the generated core data pack.
+4. Axis opens `/docs`, requests the route from WCMS, and renders the returned
+   page contract.
+5. If the markdown changes, the content pack version and checksum change, then
+   the environment imports the new governed release.
+
+Axis does not read markdown files from `nodics.docs`. Axis reads the backend
+delivery contract. That distinction is the heart of the modularisation work.
+
+## Required record chain
+
+| Record | Beginner explanation | Common failure if missing |
+| --- | --- | --- |
+| Catalog | The container that says this content belongs together. | Sites or pages look orphaned and governance becomes unclear. |
+| Site | The named delivery surface, such as Axis docs or a customer website. | Routes cannot resolve a delivery target. |
+| Type code | The contract that tells Axis what kind of page or component this is. | Axis cannot choose the correct renderer safely. |
+| Renderer mapping | The allowed browser renderer for a type. | Axis refuses or falls back because the backend did not authorize a renderer. |
+| Template and slots | The layout contract for where components are allowed. | Components may exist but not render in a predictable layout. |
+| Component | The structured content or properties to render. | Page loads but has no meaningful body. |
+| Page | The composition of components. | Route can resolve but there is no page to display. |
+| Route | The URL, locale, channel, and delivery state. | Direct navigation shows recovery or not-found behavior. |
+
 ## Developer model
 
 Developers should treat WCMS data like code-owned configuration until the

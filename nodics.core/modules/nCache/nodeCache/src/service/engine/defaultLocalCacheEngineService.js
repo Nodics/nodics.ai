@@ -13,7 +13,7 @@ const NodeCache = require("node-cache");
 const _ = require('lodash');
 
 /**
- * @module gFramework/nCache/nodeCache/src/service/engine/defaultLocalCacheEngineService
+ * @module nodics.core/modules/nCache/nodeCache/src/service/engine/defaultLocalCacheEngineService
  * @description Implements nCache default local cache engine service business behavior and extension logic.
  * @layer service
  * @owner nCache

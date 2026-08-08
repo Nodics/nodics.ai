@@ -29,7 +29,7 @@ const bootstrapIdentity =
   authSecurity.validateBootstrapIdentity(bootstrapConfig);
 
 /**
- * @module gCore/profile/data/init/data/user/defaultEmployeeData
+ * @module nodics.platform/modules/profile/data/init/data/user/defaultEmployeeData
  * @description Provides mandatory profile initializer employees using validated
  * bootstrap identity credentials from layered configuration.
  * @layer data

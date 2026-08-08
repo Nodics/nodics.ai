@@ -106,6 +106,77 @@ Password: adminPassword
 After login, open `http://localhost:3100/docs`. You should see Framework,
 Swaggers, Nodics Axis, and Nodics Kickoff.
 
+## What “initial data import” means
+
+The local stack does not become useful only because the servers start. The
+servers also need governed data: catalogs, Profile records, WCMS sites, Axis
+pages, documentation routes, module registry records, and sample data. Axis
+shows this through the Initialize experience.
+
+![Legacy data import process](../assets/images/data-import-process.jpg "Data import process reference from the archived documentation set")
+
+```mermaid
+sequenceDiagram
+  participant User as Developer in Axis
+  participant Axis as nodics.axis
+  participant Platform as Platform 4300
+  participant WCMS as WCMS 4310
+  participant Modules as Module data folders
+
+  User->>Axis: Open Initialize
+  Axis->>Platform: Authenticate and load BackOffice bootstrap
+  Axis->>WCMS: GET /nodics/import/v0/init
+  WCMS->>Modules: Discover init manifests in active runtime graph
+  Modules-->>WCMS: Release name, version, checksum, files
+  WCMS-->>Axis: Valid release catalogue
+  User->>Axis: Select releases and install
+  Axis->>WCMS: POST /nodics/import/v0/init/install
+  WCMS->>Modules: Read header and data files
+  WCMS-->>Axis: Import result and evidence
+```
+
+If Axis says `INVALID RELEASE`, do not ignore it. That means the manifest
+checksum does not match the current files. Run the framework manifest generator
+from `nodics.ai` before importing again:
+
+```bash
+node nodics.core/modules/nTooling/bin/generate-data-release-manifests.js
+```
+
+Then restart the affected backend server so it rediscovers the updated
+manifests. In local development the most common affected server is WCMS
+because the Initialize page reads import catalogues from port `4310`.
+
+## Fresh database test
+
+When you drop local MongoDB schemas to test from zero, use this order:
+
+1. Stop Platform, WCMS, Cron, and Axis.
+2. Drop only the local Nodics development databases you intentionally want to
+   reset.
+3. Start Platform and wait until it finishes module loading.
+4. Start WCMS and wait until it finishes module loading.
+5. Start Cron only if you want to test optional module registration.
+6. Start Axis and log in with the reference admin user.
+7. Open Initialize and import required `init`, then `core`, then `sample`
+   releases as needed.
+
+Do not drop databases in a shared or production-like environment from this
+guide. This quick start is only for local developer machines.
+
+## Manual server checklist
+
+Use this checklist if something looks wrong:
+
+| Check | Expected result |
+| --- | --- |
+| `http://localhost:4300` | Platform server is listening. |
+| `http://localhost:4310` | WCMS server is listening. |
+| `http://localhost:3100` | Axis Vite dev server is listening. |
+| Axis login | `default / admin / adminPassword` logs in. |
+| Documentation dashboard | Framework, Swaggers, Nodics Axis, and Nodics Kickoff are visible after content import. |
+| Initialize screen | Releases are grouped by selected data type and do not repeat across Init/Core/Sample. |
+
 ## Troubleshooting
 
 If Axis says the BackOffice registry is unavailable, Platform is not reachable

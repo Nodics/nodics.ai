@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/test/profileAuthenticationServiceContract
+ * @module nodics.platform/modules/profile/test/profileAuthenticationServiceContract
  * @description Verifies profile password authentication, failed-login state updates, customer/employee lookup boundaries, refresh-token creation, security-stamp registration, audit events, and API-key authentication.
  * @layer test
  * @owner profile

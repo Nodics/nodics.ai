@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/elastic/src/utils/enums.js
+ * @module nodics.core/modules/nSearch/elastic/src/utils/enums.js
  * @description Provides shared elastic enum definition exports.
  * @layer utils
  * @owner elastic

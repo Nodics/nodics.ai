@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/import/test/importRecursiveErrorPropagation
+ * @module nodics.core/modules/nData/nImport/import/test/importRecursiveErrorPropagation
  * @description Verifies recursive import processing continues after skipped
  * records and propagates aggregate recursive errors with a concrete
  * DataImportError.

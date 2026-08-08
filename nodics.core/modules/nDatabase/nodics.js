@@ -12,7 +12,7 @@
 //const conHandler = require('./bin/connectionHandler');
 
 /**
- * @module gFramework/nDatabase/nodics
+ * @module nodics.core/modules/nDatabase/nodics
  * @description Registers the nDatabase module lifecycle hooks and module-level startup behavior.
  * @layer module
  * @owner nDatabase

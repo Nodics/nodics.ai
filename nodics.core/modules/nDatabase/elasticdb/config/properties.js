@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/elasticdb/config/properties
+ * @module nodics.core/modules/nDatabase/elasticdb/config/properties
  * @description Defines default nDatabase configuration used during module startup and layering.
  * @layer config
  * @owner nDatabase

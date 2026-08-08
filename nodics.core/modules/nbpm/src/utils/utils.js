@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nbpm/src/utils/utils
+ * @module nodics.core/modules/nbpm/src/utils/utils
  * @description Provides shared nbpm utility exports for utils.
  * @layer utils
  * @owner nbpm

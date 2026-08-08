@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nFacade/src/facade/common
+ * @module nodics.core/modules/nFacade/src/facade/common
  * @description Template facade used by generated schema facades. During
  * generation, placeholders are replaced with the owning facade, service, and
  * schema identifiers.

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSystem/src/pipelines/pipelines
+ * @module nodics.core/modules/nSystem/src/pipelines/pipelines
  * @description Defines nSystem pipeline wiring and execution contracts.
  * @layer pipelines
  * @owner nSystem

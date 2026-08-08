@@ -52,8 +52,8 @@ assert.throws(() => authSecurity.validateBootstrapIdentity(configuration({})), /
 assert.throws(() => authSecurity.validateBootstrapIdentity(configuration({
     bootstrapIdentity: {
         source: 'localSample',
-        adminPassword: 'startio-local-admin-change-me',
-        servicePassword: 'startio-local-service-change-me',
+        adminPassword: 'kickoff-local-admin-change-me',
+        servicePassword: 'kickoff-local-service-change-me',
         serviceApiKey: '944515ac-bbac-51cd-ac7e-3bbbb3c81bff'
     }
 })), /Local bootstrap identity sources are disabled/);
@@ -156,7 +156,7 @@ assert.strictEqual(servicePayload.runtimeInstanceId, 'runtime-a');
 assert.deepStrictEqual(servicePayload.modules, ['module-a', 'module-b']);
 assert.ok(servicePayload.exp > servicePayload.iat);
 
-const passwordInterceptor = require(path.join(repositoryRoot, 'gCore/profile/src/service/interceptors/defaultPasswordSaveInterceptorService'));
+const passwordInterceptor = require(path.join(repositoryRoot, 'nodics.platform/modules/profile/src/service/interceptors/defaultPasswordSaveInterceptorService'));
 let hashCalls = 0;
 global.UTILS = {
     encryptPassword: function (password) {
@@ -190,7 +190,7 @@ async function validateAsyncContracts() {
         }
     };
     global.CONFIG = configuration({ attemptsToLockAccount: 5 });
-    const profileProvider = require(path.join(repositoryRoot, 'gCore/profile/src/service/authentication/defaultAuthenticationProviderService'));
+    const profileProvider = require(path.join(repositoryRoot, 'nodics.platform/modules/profile/src/service/authentication/defaultAuthenticationProviderService'));
     profileProvider.LOG = { debug: function () {}, error: function () {} };
     await profileProvider.updateFailedAuthData({ tenant: 'tenant-a', state: { attempts: 4, locked: false } });
     assert.strictEqual(persistedState.attempts, 5);
@@ -247,7 +247,7 @@ async function validateAsyncContracts() {
             return Promise.resolve(atomicSession);
         }
     };
-    const baseProvider = require(path.join(repositoryRoot, 'gFramework/nService/src/service/authentication/defaultAuthenticationProviderService'));
+    const baseProvider = require(path.join(repositoryRoot, 'nodics.core/modules/nService/src/service/authentication/defaultAuthenticationProviderService'));
     assert.strictEqual(await baseProvider.consumeToken('profile', 'single-use-token'), atomicSession);
     await assert.rejects(baseProvider.consumeToken('profile', 'single-use-token'));
 
@@ -256,8 +256,8 @@ async function validateAsyncContracts() {
         get: key => localValues.get(key),
         del: key => localValues.delete(key)
     };
-    const localCache = require(path.join(repositoryRoot, 'gFramework/nCache/nodeCache/src/service/cache/defaultLocalCacheService'));
-    global.SERVICE.DefaultCacheConfigurationService = require(path.join(repositoryRoot, 'gFramework/nCache/cache/src/service/config/defaultCacheConfigurationService'));
+    const localCache = require(path.join(repositoryRoot, 'nodics.core/modules/nCache/nodeCache/src/service/cache/defaultLocalCacheService'));
+    global.SERVICE.DefaultCacheConfigurationService = require(path.join(repositoryRoot, 'nodics.core/modules/nCache/cache/src/service/config/defaultCacheConfigurationService'));
     let localOptions = {
         key: 'refresh-token',
         channel: { channelName: 'auth', engineOptions: { options: { prefix: 'profile' } }, client: localClient }
@@ -270,7 +270,7 @@ async function validateAsyncContracts() {
         constructor(code, message) { super(message || code); this.code = code; }
     };
     global.CLASSES = { NodicsError: InternalError };
-    const internalProviderPath = path.join(repositoryRoot, 'gCore/profile/src/service/authentication/defaultInternalAuthenticationProviderService');
+    const internalProviderPath = path.join(repositoryRoot, 'nodics.platform/modules/profile/src/service/authentication/defaultInternalAuthenticationProviderService');
     delete require.cache[require.resolve(internalProviderPath)];
     const internalProvider = require(internalProviderPath);
     await assert.rejects(
@@ -304,7 +304,7 @@ async function validateAsyncContracts() {
             }
         }
     };
-    const authorizationProviderPath = path.join(repositoryRoot, 'gFramework/nService/src/service/authorization/defaultAuthorizationProviderService');
+    const authorizationProviderPath = path.join(repositoryRoot, 'nodics.core/modules/nService/src/service/authorization/defaultAuthorizationProviderService');
     delete require.cache[require.resolve(authorizationProviderPath)];
     const authorizationProvider = require(authorizationProviderPath);
     const expiredToken = jwt.sign({
@@ -368,15 +368,15 @@ function read(relativePath) {
     return fs.readFileSync(path.join(repositoryRoot, relativePath), 'utf8');
 }
 
-const coreProperties = read('gFramework/nConfig/config/properties.js');
-const authProviderSource = read('gFramework/nAuth/src/service/authentication/defaultAuthenticationProviderService.js');
-const securedPipelineSource = read('gFramework/nRouter/src/service/request/defaultSecuredRequestPipelineService.js');
-const moduleServiceSource = read('gFramework/nService/src/service/module/defaultModuleService.js');
-const profileProviderSource = read('gCore/profile/src/service/authentication/defaultAuthenticationProviderService.js');
-const apiKeyInterceptorSource = read('gCore/profile/src/service/interceptors/defaultAPIKeyInterceptorService.js');
-const employeeServiceSource = read('gCore/profile/src/service/employee/defaultEmployeeService.js');
-const cmsEmployeeData = read('gContent/cms/data/init/data/user/defaultCmsEmployeeData.js');
-const workflowEmployeeData = read('gCore/workflow/flowCore/data/init/data/user/defaultWorkflowEmployeeData.js');
+const coreProperties = read('nodics.core/modules/nConfig/config/properties.js');
+const authProviderSource = read('nodics.core/modules/nAuth/src/service/authentication/defaultAuthenticationProviderService.js');
+const securedPipelineSource = read('nodics.core/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService.js');
+const moduleServiceSource = read('nodics.core/modules/nService/src/service/module/defaultModuleService.js');
+const profileProviderSource = read('nodics.platform/modules/profile/src/service/authentication/defaultAuthenticationProviderService.js');
+const apiKeyInterceptorSource = read('nodics.platform/modules/profile/src/service/interceptors/defaultAPIKeyInterceptorService.js');
+const employeeServiceSource = read('nodics.platform/modules/profile/src/service/employee/defaultEmployeeService.js');
+const cmsEmployeeData = read('nodics.wcms/modules/cms/data/init/data/user/defaultCmsEmployeeData.js');
+const workflowEmployeeData = read('nodics.workflow/flowCore/data/init/data/user/defaultWorkflowEmployeeData.js');
 const auditService = require('../src/service/audit/defaultAuthAuditService');
 const routerProperties = require('../../nRouter/config/properties');
 assert.ok(!coreProperties.includes("jwtSecretKey: 'nodics'"));

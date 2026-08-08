@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCatalog/src/schemas/schemas
+ * @module nodics.core/modules/nCatalog/src/schemas/schemas
  * @description Defines nCatalog schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner nCatalog

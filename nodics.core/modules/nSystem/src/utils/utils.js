@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSystem/src/utils/utils
+ * @module nodics.core/modules/nSystem/src/utils/utils
  * @description Provides shared nSystem utility exports for utils.
  * @layer utils
  * @owner nSystem

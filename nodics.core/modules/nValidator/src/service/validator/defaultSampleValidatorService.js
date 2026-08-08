@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nValidator/src/service/validator/defaultSampleValidatorService
+ * @module nodics.core/modules/nValidator/src/service/validator/defaultSampleValidatorService
  * @description Implements nValidator default sample validator service business behavior and extension logic.
  * @layer service
  * @owner nValidator

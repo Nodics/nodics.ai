@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nAuth/src/pipelines/pipelines
+ * @module nodics.core/modules/nAuth/src/pipelines/pipelines
  * @description Defines nAuth pipeline wiring and execution contracts.
  * @layer pipelines
  * @owner nAuth

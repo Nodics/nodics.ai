@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/mongodb/vMongodb/src/service/defaultSampleService
+ * @module nodics.core/modules/nDatabase/mongodb/vMongodb/src/service/defaultSampleService
  * @description Implements vMongodb default sample service business behavior and extension logic.
  * @layer service
  * @owner vMongodb

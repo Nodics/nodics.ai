@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nbpm/src/service/workflow/defaultWorkflowService
+ * @module nodics.core/modules/nbpm/src/service/workflow/defaultWorkflowService
  * @description Implements nbpm default workflow service business behavior and extension logic.
  * @layer service
  * @owner nbpm

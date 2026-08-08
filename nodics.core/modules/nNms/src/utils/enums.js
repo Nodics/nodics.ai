@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nNms/src/utils/enums.js
+ * @module nodics.core/modules/nNms/src/utils/enums.js
  * @description Provides shared nms enum definition exports.
  * @layer utils
  * @owner nms

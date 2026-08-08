@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/data/init/headers/address/defaultContactsHeader
+ * @module nodics.platform/modules/profile/data/init/headers/address/defaultContactsHeader
  * @description Provides profile initializer or sample data consumed by the import layer.
  * @layer data
  * @owner profile

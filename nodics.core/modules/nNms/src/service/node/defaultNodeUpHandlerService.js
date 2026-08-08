@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nNms/src/service/node/defaultNodeUpHandlerService
+ * @module nodics.core/modules/nNms/src/service/node/defaultNodeUpHandlerService
  * @description Implements nNms default node up handler service business behavior and extension logic.
  * @layer service
  * @owner nNms

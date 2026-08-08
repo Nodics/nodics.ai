@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nToken/config/properties
+ * @module nodics.core/modules/nToken/config/properties
  * @description Defines default nToken configuration used during module startup and layering.
  * @layer config
  * @owner nToken

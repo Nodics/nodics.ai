@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nSearch/search/src/service/model/defaultSearchModelHandlerService
+ * @module nodics.core/modules/nSearch/search/src/service/model/defaultSearchModelHandlerService
  * @description Implements nSearch default search model handler service business behavior and extension logic.
  * @layer service
  * @owner nSearch

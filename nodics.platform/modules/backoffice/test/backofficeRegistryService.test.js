@@ -177,8 +177,8 @@ async function run() {
   let registration = {
     moduleName: "cms",
     displayName: "Content Management",
-    parentModule: "gContent",
-    canonicalIdentity: "gContent/cms",
+    parentModule: "nodics.wcms",
+    canonicalIdentity: "nodics.wcms/modules/cms",
     instanceId: "cms-1",
     endpoint: "http://cms:3040/nodics/cms",
     version: "1.0.0",
@@ -331,8 +331,8 @@ async function run() {
   let profileRegistration = {
     moduleName: "profile",
     displayName: "Profile and Identity",
-    parentModule: "gCore",
-    canonicalIdentity: "gCore/profile",
+    parentModule: "nodics.platform",
+    canonicalIdentity: "nodics.platform/modules/profile",
     instanceId: "profile-1",
     endpoint: "http://profile:3000/nodics/profile",
     clientCallable: true,
@@ -390,9 +390,9 @@ async function run() {
       node: "cms-node",
       registrations: [
         {
-          moduleName: "gContent",
+          moduleName: "nodics.wcms",
           displayName: "Content",
-          canonicalIdentity: "gContent",
+          canonicalIdentity: "nodics.wcms",
           instanceId: "runtime-1",
           moduleKind: "group",
           clientCallable: false,
@@ -400,8 +400,8 @@ async function run() {
         {
           moduleName: "cms",
           displayName: "Content Management",
-          parentModule: "gContent",
-          canonicalIdentity: "gContent/cms",
+          parentModule: "nodics.wcms",
+          canonicalIdentity: "nodics.wcms/modules/cms",
           instanceId: "runtime-1",
           endpoint: "http://cms/nodics/cms",
           clientCallable: true,
@@ -419,7 +419,7 @@ async function run() {
           moduleName: "workflowCore",
           displayName: "Workflow Core",
           parentModule: "workflow",
-          canonicalIdentity: "gCore/workflow/workflowCore",
+          canonicalIdentity: "nodics.workflow/workflowCore",
           instanceId: "runtime-1",
           clientCallable: false,
           capabilities: ["service"],
@@ -427,8 +427,8 @@ async function run() {
         {
           moduleName: "payment",
           displayName: "Payment",
-          parentModule: "gComm",
-          canonicalIdentity: "gComm/payment",
+          parentModule: "nodics.commerce",
+          canonicalIdentity: "nodics.commerce/modules/payment",
           instanceId: "runtime-1",
           clientCallable: false,
           capabilities: ["schema", "service"],
@@ -461,7 +461,7 @@ async function run() {
     authData: {
       tokenType: "service",
       runtimeInstanceId: "runtime-1",
-      modules: ["gContent", "cms", "workflow", "workflowCore", "payment"],
+      modules: ["nodics.wcms", "cms", "workflow", "workflowCore", "payment"],
       userGroups: ["serviceAccountUserGroup"],
     },
   });
@@ -493,8 +493,8 @@ async function run() {
     (item) => item.moduleName === "cms",
   );
   assert.strictEqual(cmsSummary.displayName, "Content Management");
-  assert.strictEqual(cmsSummary.parentModule, "gContent");
-  assert.strictEqual(cmsSummary.canonicalIdentity, "gContent/cms");
+  assert.strictEqual(cmsSummary.parentModule, "nodics.wcms");
+  assert.strictEqual(cmsSummary.canonicalIdentity, "nodics.wcms/modules/cms");
   assert.deepStrictEqual(
     service.aggregateModuleAvailability([
       {
@@ -728,7 +728,7 @@ async function run() {
   );
   let crossModuleCatalogue = service.buildCatalogue(
     {
-      gComm: [
+      nodics.commerce: [
         {
           backoffice: {
             navigation: [
@@ -745,7 +745,7 @@ async function run() {
                 id: "pricing",
                 label: "Pricing",
                 parentId: "commerce-operations",
-                parentModuleName: "gComm",
+                parentModuleName: "nodics.commerce",
               },
             ],
           },
@@ -770,7 +770,7 @@ async function run() {
                 id: "pricing",
                 label: "Pricing",
                 parentId: "commerce-operations",
-                parentModuleName: "gComm",
+                parentModuleName: "nodics.commerce",
               },
             ],
           },

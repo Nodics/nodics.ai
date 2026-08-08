@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/elastic/test/elasticConnectionHandlerContract
+ * @module nodics.core/modules/nSearch/elastic/test/elasticConnectionHandlerContract
  * @description Verifies the Elastic connection handler registers provider model definitions and reads cluster index metadata through the configured engine connection.
  * @layer test
  * @owner nSearch/elastic

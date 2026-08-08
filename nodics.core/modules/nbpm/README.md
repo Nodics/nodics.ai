@@ -72,8 +72,8 @@ Do not hardcode project-specific approval, fulfillment, enrichment, or publishin
 Run:
 
 ```bash
-node gFramework/nbpm/test/workflowLifecyclePipelineContract.test.js
-node gFramework/nbpm/test/removeWorkflowProcessBehavior.test.js
+node nodics.core/modules/nbpm/test/workflowLifecyclePipelineContract.test.js
+node nodics.core/modules/nbpm/test/removeWorkflowProcessBehavior.test.js
 npm run quality:docs
 ```
 
@@ -97,7 +97,7 @@ Avoid:
 
 ## Continue
 
-- Application workflow family: [workflow](../../gCore/workflow/README.md)
-- Runtime engine: [flowCore](../../gCore/workflow/flowCore/README.md)
-- Application data contracts: [flowSchema](../../gCore/workflow/flowSchema/README.md)
+- Application workflow family: [workflow](../../nodics.workflow/README.md)
+- Runtime engine: [flowCore](../../nodics.workflow/flowCore/README.md)
+- Application data contracts: [flowSchema](../../nodics.workflow/flowSchema/README.md)
 - Pipeline framework: [nPipeline](../nPipeline/README.md)

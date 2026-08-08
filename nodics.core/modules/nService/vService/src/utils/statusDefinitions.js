@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nService/vService/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nService/vService/src/utils/statusDefinitions.js
  * @description Provides shared vService status and error definition exports.
  * @layer utils
  * @owner vService

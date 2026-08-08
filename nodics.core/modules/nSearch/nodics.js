@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/nodics
+ * @module nodics.core/modules/nSearch/nodics
  * @description Registers the nSearch module lifecycle hooks and module-level startup behavior.
  * @layer module
  * @owner nSearch

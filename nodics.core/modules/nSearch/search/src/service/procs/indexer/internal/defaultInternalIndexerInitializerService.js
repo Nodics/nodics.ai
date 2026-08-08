@@ -14,7 +14,7 @@ var sizeof = require('object-sizeof');
 const fse = require('fs-extra');
 
 /**
- * @module gFramework/nSearch/search/src/service/procs/indexer/internal/defaultInternalIndexerInitializerService
+ * @module nodics.core/modules/nSearch/search/src/service/procs/indexer/internal/defaultInternalIndexerInitializerService
  * @description Implements nSearch default internal indexer initializer service business behavior and extension logic.
  * @layer service
  * @owner nSearch

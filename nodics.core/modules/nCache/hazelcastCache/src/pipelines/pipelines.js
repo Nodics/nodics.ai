@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCache/hazelcastCache/src/pipelines/pipelines
+ * @module nodics.core/modules/nCache/hazelcastCache/src/pipelines/pipelines
  * @description Defines nCache pipeline wiring and execution contracts.
  * @layer pipelines
  * @owner nCache

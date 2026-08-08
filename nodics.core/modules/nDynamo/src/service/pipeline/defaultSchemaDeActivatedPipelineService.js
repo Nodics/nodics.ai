@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/src/service/pipeline/defaultSchemaDeActivatedPipelineService
+ * @module nodics.core/modules/nDynamo/src/service/pipeline/defaultSchemaDeActivatedPipelineService
  * @description Implements nDynamo default schema de activated pipeline service business behavior and extension logic.
  * @layer service
  * @owner nDynamo

@@ -16,7 +16,7 @@ const Chai = require('chai');
 const expect = Chai.expect;
 
 /**
- * @module gFramework/nData/dataCore/test/common/commonTest
+ * @module nodics.core/modules/nData/dataCore/test/common/commonTest
  * @description Defines nData test fixtures or suites for module behavior validation.
  * @layer test
  * @owner nData

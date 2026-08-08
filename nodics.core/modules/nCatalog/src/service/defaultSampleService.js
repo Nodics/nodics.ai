@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCatalog/src/service/defaultSampleService
+ * @module nodics.core/modules/nCatalog/src/service/defaultSampleService
  * @description Implements catalog default sample service business behavior and extension logic.
  * @layer service
  * @owner catalog

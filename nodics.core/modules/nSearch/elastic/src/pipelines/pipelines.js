@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/elastic/src/pipelines/pipelines
+ * @module nodics.core/modules/nSearch/elastic/src/pipelines/pipelines
  * @description Defines nSearch pipeline wiring and execution contracts.
  * @layer pipelines
  * @owner nSearch

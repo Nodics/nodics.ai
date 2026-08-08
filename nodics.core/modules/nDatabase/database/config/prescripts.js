@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/database/config/prescripts
+ * @module nodics.core/modules/nDatabase/database/config/prescripts
  * @description Defines default nDatabase configuration used during module startup and layering.
  * @layer config
  * @owner nDatabase

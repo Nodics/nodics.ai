@@ -56,7 +56,7 @@ Do not hardcode cluster endpoints, credentials, topic names, group ids, or tenan
 Run focused Kafka behavior coverage with:
 
 ```bash
-node gFramework/nEms/kafka/test/kafkaPublishCapabilityBehavior.test.js
+node nodics.core/modules/nEms/kafka/test/kafkaPublishCapabilityBehavior.test.js
 npm run quality:docs
 ```
 

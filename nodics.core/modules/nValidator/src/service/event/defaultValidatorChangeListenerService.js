@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nValidator/src/service/event/defaultValidatorChangeListenerService
+ * @module nodics.core/modules/nValidator/src/service/event/defaultValidatorChangeListenerService
  * @description Implements nValidator default validator change listener service business behavior and extension logic.
  * @layer service
  * @owner nValidator

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/controller/tenant/defaultTenantController
+ * @module nodics.platform/modules/profile/src/controller/tenant/defaultTenantController
  * @description Exposes request handlers for profile default tenant controller operations.
  * @layer controller
  * @owner profile

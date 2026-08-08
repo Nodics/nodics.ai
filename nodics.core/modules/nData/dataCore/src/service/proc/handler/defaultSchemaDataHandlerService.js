@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/dataCore/src/service/proc/handler/defaultSchemaDataHandlerService
+ * @module nodics.core/modules/nData/dataCore/src/service/proc/handler/defaultSchemaDataHandlerService
  * @description Implements nData default schema data handler service business behavior and extension logic.
  * @layer service
  * @owner nData

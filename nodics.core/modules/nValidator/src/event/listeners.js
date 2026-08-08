@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nValidator/src/event/listeners
+ * @module nodics.core/modules/nValidator/src/event/listeners
  * @description Documents nValidator listeners module behavior.
  * @layer event
  * @owner nValidator

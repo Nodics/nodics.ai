@@ -21,7 +21,7 @@ const assert = require('assert');
 
 const routerDefinitions = require('../../../nRouter/src/router/routers');
 const authProperties = require('../../../nAuth/config/properties');
-const userGroupsData = require('../../../../gCore/profile/data/init/data/groups/defaultBootstrapUserGroupsData');
+const userGroupsData = require('../../../../nodics.platform/modules/profile/data/init/data/groups/defaultBootstrapUserGroupsData');
 
 const mutationRoutes = [
     routerDefinitions.common.flushCache.flushKey,

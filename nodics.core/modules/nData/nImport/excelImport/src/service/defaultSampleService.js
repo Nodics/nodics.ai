@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/excelImport/src/service/defaultSampleService
+ * @module nodics.core/modules/nData/nImport/excelImport/src/service/defaultSampleService
  * @description Implements excelImport default sample service business behavior and extension logic.
  * @layer service
  * @owner excelImport

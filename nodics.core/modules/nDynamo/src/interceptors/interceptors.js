@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/src/interceptors/interceptors
+ * @module nodics.core/modules/nDynamo/src/interceptors/interceptors
  * @description Registers nDynamo interceptor wiring for pipeline extension points.
  * @layer interceptors
  * @owner nDynamo

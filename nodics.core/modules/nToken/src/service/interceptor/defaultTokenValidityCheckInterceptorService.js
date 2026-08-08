@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nToken/src/service/interceptor/defaultTokenValidityCheckInterceptorService
+ * @module nodics.core/modules/nToken/src/service/interceptor/defaultTokenValidityCheckInterceptorService
  * @description Implements nToken default token validity check interceptor service business behavior and extension logic.
  * @layer service
  * @owner nToken

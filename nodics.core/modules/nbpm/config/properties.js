@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nbpm/config/properties
+ * @module nodics.core/modules/nbpm/config/properties
  * @description Defines default nbpm configuration used during module startup and layering.
  * @layer config
  * @owner nbpm

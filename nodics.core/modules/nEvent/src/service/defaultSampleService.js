@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEvent/src/service/defaultSampleService
+ * @module nodics.core/modules/nEvent/src/service/defaultSampleService
  * @description Implements event default sample service business behavior and extension logic.
  * @layer service
  * @owner event

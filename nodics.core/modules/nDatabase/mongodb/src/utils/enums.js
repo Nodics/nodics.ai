@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/mongodb/src/utils/enums.js
+ * @module nodics.core/modules/nDatabase/mongodb/src/utils/enums.js
  * @description Provides shared mongodb enum definition exports.
  * @layer utils
  * @owner mongodb

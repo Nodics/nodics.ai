@@ -11,7 +11,7 @@
 
 const _ = require('lodash');
 /**
- * @module gCore/profile/src/service/search/defaultEnterpriseIndexProcessorService
+ * @module nodics.platform/modules/profile/src/service/search/defaultEnterpriseIndexProcessorService
  * @description Implements profile default enterprise index processor service business behavior and extension logic.
  * @layer service
  * @owner profile

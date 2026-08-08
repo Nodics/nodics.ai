@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/service/enterprise/defaultEnterpriseService
+ * @module nodics.platform/modules/profile/src/service/enterprise/defaultEnterpriseService
  * @description Implements profile default enterprise service business behavior and extension logic.
  * @layer service
  * @owner profile

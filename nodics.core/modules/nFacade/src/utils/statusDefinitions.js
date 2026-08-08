@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nFacade/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nFacade/src/utils/statusDefinitions.js
  * @description Provides shared nFacade status and error definition exports.
  * @layer utils
  * @owner nFacade

@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nCatalog/src/service/interceptors/defaultSubCatalogsResolveInterceptorService
+ * @module nodics.core/modules/nCatalog/src/service/interceptors/defaultSubCatalogsResolveInterceptorService
  * @description Implements nCatalog default sub catalogs resolve interceptor service business behavior and extension logic.
  * @layer service
  * @owner nCatalog

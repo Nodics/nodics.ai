@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/csvExport/src/schemas/schemas
+ * @module nodics.core/modules/nData/nExport/csvExport/src/schemas/schemas
  * @description Defines nData schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner nData

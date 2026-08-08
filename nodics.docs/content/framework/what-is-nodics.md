@@ -83,6 +83,111 @@ security remain deployment responsibilities.
 The promise is more practical: Nodics gives a project a governed model for
 building and evolving enterprise software without scattering ownership.
 
+## The Nodics idea in one picture
+
+![Legacy Nodics architecture overview](../assets/images/nodics-architecture.jpg "Legacy architecture diagram retained as governed documentation evidence")
+
+```mermaid
+flowchart LR
+  Business["Business need<br/>customer, tenant, site, workflow"] --> Project["Customer project<br/>nodics.kickoff or partner project"]
+  Project --> Runtime["Runtime servers<br/>Platform, WCMS, Cron"]
+  Runtime --> Framework["Nodics framework modules<br/>Core, Platform, WCMS, Cron"]
+  Framework --> Contracts["Governed contracts<br/>APIs, schemas, routes, services, imports"]
+  Contracts --> Axis["Axis BackOffice<br/>renders authorized capability metadata"]
+  Contracts --> Apps["Customer apps and sites<br/>consume safe backend APIs"]
+```
+
+Read the diagram from left to right. A company starts with a business need.
+The customer project expresses that need without editing framework source. The
+runtime servers load the required framework capabilities. Those capabilities
+publish governed contracts. Axis and other applications consume those
+contracts instead of guessing which modules exist or which database records are
+safe to touch.
+
+## Business mindset: why Nodics can reduce cost
+
+A business usually pays for software twice. The first cost is building the
+feature. The second cost is living with it: support, upgrades, security fixes,
+new customers, new countries, new integrations, and production incidents.
+Nodics is designed to reduce the second cost by making ownership visible.
+
+| Business concern | How Nodics helps |
+| --- | --- |
+| Multiple enterprises and tenants | Capabilities are built with enterprise, tenant, permission, and runtime context in mind instead of adding it later as an afterthought. |
+| Customer-specific customization | A project can extend a framework capability in a later module layer while preserving the same functional module identity. |
+| Faster onboarding | Kickoff gives a runnable reference project so a partner can see Platform, WCMS, Cron, Axis, imports, and documentation before writing custom code. |
+| Lower upgrade risk | Framework code remains separate from customer code. Custom behavior is composed through runtime extension instead of direct framework edits. |
+| Operational confidence | Imports, checksums, module registration, API exposure, and runtime status are explicit contracts that can be tested and monitored. |
+
+For a non-technical evaluator, the key question is: “Can this platform grow
+without every customer becoming a fork?” Nodics answers that by separating
+framework authority, customer authority, runtime composition, and frontend
+rendering.
+
+## Developer mindset: how to think before coding
+
+When a developer adds a feature, the first question should not be “Where can I
+make this work fastest?” The first question should be “Who owns this behavior?”
+
+Use this simple decision path:
+
+1. If the behavior is required by every runtime, it probably belongs in Core.
+2. If it is employee identity, onboarding, authorization, or BackOffice
+   metadata, it belongs in Platform.
+3. If it is site, catalog, page, component, route, documentation content, or
+   media lifecycle, it belongs in WCMS or the backend module/project that owns
+   that content.
+4. If it is scheduled or background work, it belongs in Cron or a project
+   module loaded by Cron.
+5. If it is browser rendering only, it belongs in Axis.
+6. If it is customer-specific, it belongs in the customer project or customer
+   extension module, not inside reusable framework source.
+
+Example: changing the Axis login logo is not the same as changing employee
+authentication. The visual component can be configured through WCMS/Axis-owned
+content. The actual authentication contract stays in Platform/Profile.
+
+## DevOps mindset: why runtime boundaries matter
+
+Production teams need to answer practical questions:
+
+- Which server owns this API?
+- Which modules were loaded into this server?
+- Which release of initialization data was imported?
+- Which credentials are public configuration and which are private secrets?
+- Can we restart a server without losing module registration state?
+- Can we rebuild an environment from source-controlled module data?
+
+Nodics makes these questions first-class. Runtime servers declare what they
+extend. Data releases have manifests and checksums. Functional module
+registration is persisted. Axis discovers authorized capabilities from
+BackOffice instead of using hardcoded assumptions.
+
+For production, this means Platform, WCMS, Cron, and future functional modules
+can run together for a small deployment or separately for a larger topology.
+The contract remains the same even when the physical deployment changes.
+
+## A beginner example
+
+Suppose a partner wants a small internal portal with login, documentation,
+media upload, and one nightly cleanup job.
+
+The beginner temptation is to create one application, one database connection,
+one upload folder, and one timer. It works locally, then becomes painful when a
+second tenant, second environment, or custom customer rule arrives.
+
+With Nodics, the same solution is expressed differently:
+
+- Platform handles employee login and BackOffice capability discovery.
+- WCMS handles documentation pages, content catalogs, routes, and media.
+- Cron handles the nightly cleanup job.
+- Kickoff starts the local servers and contributes project-owned docs.
+- Axis renders what the backend says is authorized and active.
+
+Nothing in this example requires a beginner to understand every internal
+technical module on day one. They can start with the functional module picture
+and then go deeper module by module.
+
 ## Next actions
 
 - Read modular architecture to understand ownership and runtime composition.

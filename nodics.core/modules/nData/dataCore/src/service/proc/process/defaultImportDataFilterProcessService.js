@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/dataCore/src/service/proc/process/defaultImportDataFilterProcessService
+ * @module nodics.core/modules/nData/dataCore/src/service/proc/process/defaultImportDataFilterProcessService
  * @description Implements nData default import data filter process service business behavior and extension logic.
  * @layer service
  * @owner nData

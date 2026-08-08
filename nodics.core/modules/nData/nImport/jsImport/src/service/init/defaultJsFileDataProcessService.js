@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nData/nImport/jsImport/src/service/init/defaultJsFileDataProcessService
+ * @module nodics.core/modules/nData/nImport/jsImport/src/service/init/defaultJsFileDataProcessService
  * @description Implements nData default js file data process service business behavior and extension logic.
  * @layer service
  * @owner nData

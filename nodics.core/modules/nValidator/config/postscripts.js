@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nValidator/config/postscripts
+ * @module nodics.core/modules/nValidator/config/postscripts
  * @description Defines default nValidator configuration used during module startup and layering.
  * @layer config
  * @owner nValidator

@@ -103,10 +103,10 @@ both default behavior and later-module overrides.
 Run focused service coverage with:
 
 ```bash
-node gFramework/nService/test/authTokenInvalidationService.test.js
-node gFramework/nService/test/moduleRequestHeaderNormalization.test.js
-node gFramework/nService/test/moduleTransportResilience.test.js
-node gFramework/nService/test/statusDefinitionCatalog.test.js
+node nodics.core/modules/nService/test/authTokenInvalidationService.test.js
+node nodics.core/modules/nService/test/moduleRequestHeaderNormalization.test.js
+node nodics.core/modules/nService/test/moduleTransportResilience.test.js
+node nodics.core/modules/nService/test/statusDefinitionCatalog.test.js
 npm run quality:docs
 ```
 
@@ -161,4 +161,4 @@ availability.
 - Build application behavior: [How To Create Application Functionality](https://github.com/Nodics/nodics.docs)
 - Module communication and APIs: [How To Create APIs](https://github.com/Nodics/nodics.docs)
 - Service variant: [vService](vService/README.md)
-- Framework map: [gFramework](../README.md)
+- Framework map: [nodics.core](../README.md)

@@ -11,7 +11,7 @@
 
 const _ = require('lodash');
 /**
- * @module gFramework/nbpm/src/service/procs/performed/defaultWorkflowActionPerformedPipelineService
+ * @module nodics.core/modules/nbpm/src/service/procs/performed/defaultWorkflowActionPerformedPipelineService
  * @description Implements nbpm default workflow action performed pipeline service business behavior and extension logic.
  * @layer service
  * @owner nbpm

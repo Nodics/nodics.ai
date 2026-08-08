@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/data/init/headers/groups/defaultUserGroupsHeader
+ * @module nodics.platform/modules/profile/data/init/headers/groups/defaultUserGroupsHeader
  * @description Provides profile initializer or sample data consumed by the import layer.
  * @layer data
  * @owner profile

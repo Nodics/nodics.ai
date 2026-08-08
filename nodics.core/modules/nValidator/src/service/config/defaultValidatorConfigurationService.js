@@ -11,7 +11,7 @@
 
 const _ = require('lodash');
 /**
- * @module gFramework/nValidator/src/service/config/defaultValidatorConfigurationService
+ * @module nodics.core/modules/nValidator/src/service/config/defaultValidatorConfigurationService
  * @description Implements nValidator default validator configuration service business behavior and extension logic.
  * @layer service
  * @owner nValidator

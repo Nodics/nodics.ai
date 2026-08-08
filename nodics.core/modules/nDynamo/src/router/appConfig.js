@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/src/router/appConfig
+ * @module nodics.core/modules/nDynamo/src/router/appConfig
  * @description Defines nDynamo route registration and HTTP exposure metadata.
  * @layer router
  * @owner nDynamo

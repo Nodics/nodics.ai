@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/service/defaultSampleService
+ * @module nodics.platform/modules/profile/src/service/defaultSampleService
  * @description Implements profile default sample service business behavior and extension logic.
  * @layer service
  * @owner profile

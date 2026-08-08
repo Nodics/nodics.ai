@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/export/nodics
+ * @module nodics.core/modules/nData/nExport/export/nodics
  * @description Registers the nExport module lifecycle hooks and module-level startup behavior.
  * @layer module
  * @owner nExport

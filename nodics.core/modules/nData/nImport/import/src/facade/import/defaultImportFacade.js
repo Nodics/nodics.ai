@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/import/src/facade/import/defaultImportFacade
+ * @module nodics.core/modules/nData/nImport/import/src/facade/import/defaultImportFacade
  * @description Coordinates facade-level delegation for nData default import facade operations.
  * @layer facade
  * @owner nData

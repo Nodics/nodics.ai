@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nToken/src/router/routers
+ * @module nodics.core/modules/nToken/src/router/routers
  * @description Defines nToken route registration and HTTP exposure metadata.
  * @layer router
  * @owner nToken

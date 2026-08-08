@@ -24,8 +24,8 @@ Do not call this adapter from business modules. They must use `DefaultCacheServi
 ## Verification
 
 ```bash
-node gFramework/nCache/cache/test/cacheAdapterContract.test.js
-NODICS_CACHE_HAZELCAST_MEMBERS=127.0.0.1:5701 node gFramework/nCache/hazelcastCache/test/cacheHazelcastLive.test.js --require-live
+node nodics.core/modules/nCache/cache/test/cacheAdapterContract.test.js
+NODICS_CACHE_HAZELCAST_MEMBERS=127.0.0.1:5701 node nodics.core/modules/nCache/hazelcastCache/test/cacheHazelcastLive.test.js --require-live
 ```
 
 Normal tests use a contract double and skip the guarded live test when no cluster is configured. Production release validation must require a live target matching the deployed Hazelcast version, security, discovery, and topology.

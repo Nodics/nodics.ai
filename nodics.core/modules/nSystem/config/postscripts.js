@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSystem/config/postscripts
+ * @module nodics.core/modules/nSystem/config/postscripts
  * @description Defines default nSystem configuration used during module startup and layering.
  * @layer config
  * @owner nSystem

@@ -76,7 +76,7 @@ For example, a product catalog information center can manage catalogs for multip
 Run:
 
 ```bash
-node gFramework/nCatalog/test/catalogCapabilityContract.test.js
+node nodics.core/modules/nCatalog/test/catalogCapabilityContract.test.js
 npm run quality:docs
 ```
 

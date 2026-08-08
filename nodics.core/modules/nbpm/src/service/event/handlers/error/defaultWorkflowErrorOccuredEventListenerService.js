@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nbpm/src/service/event/handlers/error/defaultWorkflowErrorOccuredEventListenerService
+ * @module nodics.core/modules/nbpm/src/service/event/handlers/error/defaultWorkflowErrorOccuredEventListenerService
  * @description Implements nbpm default workflow error occured event listener service business behavior and extension logic.
  * @layer service
  * @owner nbpm

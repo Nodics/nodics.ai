@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEvent/src/utils/enums.js
+ * @module nodics.core/modules/nEvent/src/utils/enums.js
  * @description Provides shared event enum definition exports.
  * @layer utils
  * @owner event

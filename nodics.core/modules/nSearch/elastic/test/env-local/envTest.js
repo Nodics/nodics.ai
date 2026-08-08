@@ -17,7 +17,7 @@ const Chai = require('chai');
 const expect = Chai.expect;
 
 /**
- * @module gFramework/nSearch/elastic/test/env-local/envTest
+ * @module nodics.core/modules/nSearch/elastic/test/env-local/envTest
  * @description Defines nSearch test fixtures or suites for module behavior validation.
  * @layer test
  * @owner nSearch

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSystem/src/utils/enums.js
+ * @module nodics.core/modules/nSystem/src/utils/enums.js
  * @description Provides shared system enum definition exports.
  * @layer utils
  * @owner system

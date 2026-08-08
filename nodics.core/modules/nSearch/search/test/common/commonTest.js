@@ -16,7 +16,7 @@ const Chai = require('chai');
 const expect = Chai.expect;
 
 /**
- * @module gFramework/nSearch/search/test/common/commonTest
+ * @module nodics.core/modules/nSearch/search/test/common/commonTest
  * @description Defines nSearch test fixtures or suites for module behavior validation.
  * @layer test
  * @owner nSearch

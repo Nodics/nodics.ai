@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/emsClient/src/utils/utils
+ * @module nodics.core/modules/nEms/emsClient/src/utils/utils
  * @description Provides shared nEms utility exports for utils.
  * @layer utils
  * @owner nEms

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/import/src/service/diagnostics/defaultImportDiagnosticsService
+ * @module nodics.core/modules/nData/nImport/import/src/service/diagnostics/defaultImportDiagnosticsService
  * @description Implements nData default import diagnostics service business behavior and extension logic.
  * @layer service
  * @owner nData

@@ -13,7 +13,7 @@ const _ = require('lodash');
 const util = require('util');
 
 /**
- * @module gFramework/nSearch/elastic/src/service/schema/defaultElasticSearchSchemaHandlerService
+ * @module nodics.core/modules/nSearch/elastic/src/service/schema/defaultElasticSearchSchemaHandlerService
  * @description Implements nSearch default elastic search schema handler service business behavior and extension logic.
  * @layer service
  * @owner nSearch

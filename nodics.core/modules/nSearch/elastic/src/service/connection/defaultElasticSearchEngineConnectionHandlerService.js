@@ -13,7 +13,7 @@ const _ = require('lodash');
 let elasticsearch = require('@elastic/elasticsearch');
 
 /**
- * @module gFramework/nSearch/elastic/src/service/connection/defaultElasticSearchEngineConnectionHandlerService
+ * @module nodics.core/modules/nSearch/elastic/src/service/connection/defaultElasticSearchEngineConnectionHandlerService
  * @description Implements nSearch default elastic search engine connection handler service business behavior and extension logic.
  * @layer service
  * @owner nSearch

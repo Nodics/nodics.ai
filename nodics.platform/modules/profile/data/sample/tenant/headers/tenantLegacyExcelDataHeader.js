@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/data/sample/tenant/headers/tenantLegacyExcelDataHeader
+ * @module nodics.platform/modules/profile/data/sample/tenant/headers/tenantLegacyExcelDataHeader
  * @description Preserves the Profile-owned historical tenant legacy XLS import header as sample reference data.
  * @layer data
  * @owner profile

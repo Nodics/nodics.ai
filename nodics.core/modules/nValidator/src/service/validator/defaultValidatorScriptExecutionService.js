@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nValidator/src/service/validator/defaultValidatorScriptExecutionService
+ * @module nodics.core/modules/nValidator/src/service/validator/defaultValidatorScriptExecutionService
  * @description Implements nValidator default validator script execution service business behavior and extension logic.
  * @layer service
  * @owner nValidator

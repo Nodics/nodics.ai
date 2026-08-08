@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/dataCore/config/postscripts
+ * @module nodics.core/modules/nData/dataCore/config/postscripts
  * @description Defines default nData configuration used during module startup and layering.
  * @layer config
  * @owner nData

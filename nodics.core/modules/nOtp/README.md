@@ -108,7 +108,7 @@ topologies reject it.
 Run focused OTP coverage with:
 
 ```bash
-node gFramework/nOtp/test/otpCapabilityContract.test.js
+node nodics.core/modules/nOtp/test/otpCapabilityContract.test.js
 npm run test:basic
 npm run quality:docs
 ```
@@ -146,4 +146,4 @@ requests must follow the application's resend and idempotency policy.
 - Generic lifecycle: [nToken](../nToken/README.md)
 - Authentication boundary: [nAuth](../nAuth/README.md)
 - Public security guide: [How Users, Tenants, And Permissions Work](https://github.com/Nodics/nodics.docs)
-- Framework map: [gFramework](../README.md)
+- Framework map: [nodics.core](../README.md)

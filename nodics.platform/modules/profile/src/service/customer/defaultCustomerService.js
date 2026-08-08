@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/service/customer/defaultCustomerService
+ * @module nodics.platform/modules/profile/src/service/customer/defaultCustomerService
  * @description Implements profile default customer service business behavior and extension logic.
  * @layer service
  * @owner profile

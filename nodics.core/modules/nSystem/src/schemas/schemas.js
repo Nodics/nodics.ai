@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSystem/src/schemas/schemas
+ * @module nodics.core/modules/nSystem/src/schemas/schemas
  * @description Defines nSystem schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner nSystem

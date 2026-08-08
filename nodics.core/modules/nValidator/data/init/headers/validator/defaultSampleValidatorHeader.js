@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nValidator/data/init/headers/validator/defaultSampleValidatorHeader
+ * @module nodics.core/modules/nValidator/data/init/headers/validator/defaultSampleValidatorHeader
  * @description Provides nValidator initializer or sample data consumed by the import layer.
  * @layer data
  * @owner nValidator

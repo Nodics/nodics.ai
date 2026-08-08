@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nOtp/src/service/handler/defaultOtpHandlerService
+ * @module nodics.core/modules/nOtp/src/service/handler/defaultOtpHandlerService
  * @description Implements nOtp default otp handler service business behavior and extension logic.
  * @layer service
  * @owner nOtp

@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nEvent/src/service/event/defaultEventService
+ * @module nodics.core/modules/nEvent/src/service/event/defaultEventService
  * @description Implements nEvent default event service business behavior and extension logic.
  * @layer service
  * @owner nEvent

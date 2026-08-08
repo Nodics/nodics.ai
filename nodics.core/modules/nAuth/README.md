@@ -29,7 +29,7 @@ the active topology. These are related but separate gates.
 
 Change `nAuth` when the reusable JWT, API-key, security-stamp, service-token,
 identity-governance, replay, revocation, or distributed authentication-state
-contract changes. Keep login workflows and persisted people in `gCore/profile`;
+contract changes. Keep login workflows and persisted people in `nodics.platform/modules/profile`;
 keep generic token mechanics in `nToken`; keep route authorization metadata in
 the owning router module.
 
@@ -176,7 +176,7 @@ marker.
 ## Verification
 
 ```bash
-node gFramework/nAuth/test/authSecurityContract.test.js
+node nodics.core/modules/nAuth/test/authSecurityContract.test.js
 npm run test:suite -- --suite=auth-distributed
 npm run quality:docs
 ```
@@ -200,6 +200,6 @@ redaction, and shared-state behavior.
 ## Continue
 
 - Public security guide: [How Users, Tenants, And Permissions Work](https://github.com/Nodics/nodics.docs)
-- Human and service principals: [profile](../../gCore/profile/README.md)
+- Human and service principals: [profile](../../nodics.platform/modules/profile/README.md)
 - Generic token lifecycle: [nToken](../nToken/README.md)
 - HTTP authorization: [nRouter](../nRouter/README.md)

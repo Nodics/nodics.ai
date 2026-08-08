@@ -222,13 +222,13 @@ module into the workflow process.
 Server and node names are local to their validated parent topology. Their
 parentage and canonical identity come from the complete physical ancestry
 discovered by the module loader. For example, `cronServer` may exist under both
-`startioLocal` and `startioDev`; the derived canonical identities remain distinct
+`kickoffLocal` and `kickoffDev`; the derived canonical identities remain distinct
 without storing handwritten parent or canonical identifiers.
 
 Use explicit environment selection for deterministic execution:
 
 ```bash
-ENV=startioLocal SERVER=cronServer NODE=cronNode0 node -e 'require("./nodics").start()'
+ENV=kickoffLocal SERVER=cronServer NODE=cronNode0 node -e 'require("./nodics").start()'
 ```
 
 When an interactive terminal supplies only an ambiguous server name, startup
@@ -309,11 +309,11 @@ When adding configuration behavior, document:
 ## Verification
 
 ```bash
-node gFramework/nConfig/test/configurationValidation.test.js
-node gFramework/nConfig/test/layeredCustomizationContract.test.js
-node gFramework/nConfig/test/nonRuntimePackageDiscovery.test.js
-node gFramework/nConfig/test/runtimeLifecycleService.test.js
-node gFramework/nConfig/test/loggerRedactionContract.test.js
+node nodics.core/modules/nConfig/test/configurationValidation.test.js
+node nodics.core/modules/nConfig/test/layeredCustomizationContract.test.js
+node nodics.core/modules/nConfig/test/nonRuntimePackageDiscovery.test.js
+node nodics.core/modules/nConfig/test/runtimeLifecycleService.test.js
+node nodics.core/modules/nConfig/test/loggerRedactionContract.test.js
 npm run quality:docs
 ```
 
@@ -334,4 +334,4 @@ run `npm run test:basic` before release or shared-branch publication.
 - Public guide: [How Configuration Works](https://github.com/Nodics/nodics.docs)
 - Runtime structure: [How Nodics Is Organized](https://github.com/Nodics/nodics.docs)
 - Lifecycle detail: Runtime Lifecycle And Resilience Contract (canonical documentation: `capability.configuration.technical-reference`)
-- Framework map: [gFramework](../README.md)
+- Framework map: [nodics.core](../README.md)

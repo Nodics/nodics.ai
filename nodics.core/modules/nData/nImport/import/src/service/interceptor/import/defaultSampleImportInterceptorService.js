@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/import/src/service/interceptor/import/defaultSampleImportInterceptorService
+ * @module nodics.core/modules/nData/nImport/import/src/service/interceptor/import/defaultSampleImportInterceptorService
  * @description Implements nData default sample import interceptor service business behavior and extension logic.
  * @layer service
  * @owner nData

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/jsonExport/nodics
+ * @module nodics.core/modules/nData/nExport/jsonExport/nodics
  * @description Registers the nData module lifecycle hooks and module-level startup behavior.
  * @layer module
  * @owner nData

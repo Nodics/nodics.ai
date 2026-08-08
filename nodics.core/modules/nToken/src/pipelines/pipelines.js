@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nToken/src/pipelines/pipelines
+ * @module nodics.core/modules/nToken/src/pipelines/pipelines
  * @description Defines nToken pipeline wiring and execution contracts.
  * @layer pipelines
  * @owner nToken

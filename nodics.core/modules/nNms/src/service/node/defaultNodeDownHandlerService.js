@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nNms/src/service/node/defaultNodeDownHandlerService
+ * @module nodics.core/modules/nNms/src/service/node/defaultNodeDownHandlerService
  * @description Implements nNms default node down handler service business behavior and extension logic.
  * @layer service
  * @owner nNms

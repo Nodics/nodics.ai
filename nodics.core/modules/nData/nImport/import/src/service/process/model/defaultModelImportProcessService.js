@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nData/nImport/import/src/service/process/model/defaultModelImportProcessService
+ * @module nodics.core/modules/nData/nImport/import/src/service/process/model/defaultModelImportProcessService
  * @description Implements nData default model import process service business behavior and extension logic.
  * @layer service
  * @owner nData

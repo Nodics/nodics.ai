@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/import/test/importGovernanceLifecycleContract
+ * @module nodics.core/modules/nData/nImport/import/test/importGovernanceLifecycleContract
  * @description Verifies import run checksums, duplicate-run protection, retry metadata, and rollback hook reporting through existing import diagnostics/history services.
  * @layer test
  * @owner import

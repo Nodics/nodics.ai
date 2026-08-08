@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nAuth/src/utils/enums.js
+ * @module nodics.core/modules/nAuth/src/utils/enums.js
  * @description Provides shared auth enum definition exports.
  * @layer utils
  * @owner auth

@@ -18,7 +18,7 @@ const redis = require('redis');
  * @description Verifies the complete Redis cache adapter contract against the environment override or authoritative local runtime endpoint, or fails closed when neither exists.
  * @layer test
  * @owner nCache/redisCache
- * @override CI and deployment pipelines may provide NODICS_CACHE_REDIS_URL; local qualification follows startioLocal runtime configuration.
+ * @override CI and deployment pipelines may provide NODICS_CACHE_REDIS_URL; local qualification follows kickoffLocal runtime configuration.
  */
 
 class CacheError extends Error {
@@ -30,7 +30,7 @@ global.SERVICE = { DefaultCacheConfigurationService: configurationService };
 
 function configuredRedisUrl() {
     if (process.env.NODICS_CACHE_REDIS_URL) return process.env.NODICS_CACHE_REDIS_URL;
-    const properties = require(path.resolve(__dirname, '../../../../startio/envs/startioLocal/config/properties.js'));
+    const properties = require(path.resolve(__dirname, '../../../../nodics.kickoff/envs/kickoffLocal/config/properties.js'));
     return properties.cache && properties.cache.default && properties.cache.default.engines &&
         properties.cache.default.engines.redis && properties.cache.default.engines.redis.options &&
         properties.cache.default.engines.redis.options.url;

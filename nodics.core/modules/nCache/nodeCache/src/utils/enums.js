@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCache/nodeCache/src/utils/enums.js
+ * @module nodics.core/modules/nCache/nodeCache/src/utils/enums.js
  * @description Provides shared nodeCache enum definition exports.
  * @layer utils
  * @owner nodeCache

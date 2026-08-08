@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCache/nodeCache/src/schemas/schemas
+ * @module nodics.core/modules/nCache/nodeCache/src/schemas/schemas
  * @description Defines nCache schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner nCache

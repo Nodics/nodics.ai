@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nbpm/src/service/interceptors/defaultWorkflowActivityInterceptorService
+ * @module nodics.core/modules/nbpm/src/service/interceptors/defaultWorkflowActivityInterceptorService
  * @description Implements nbpm default workflow activity interceptor service business behavior and extension logic.
  * @layer service
  * @owner nbpm

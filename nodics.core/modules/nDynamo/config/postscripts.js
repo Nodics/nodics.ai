@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/config/postscripts
+ * @module nodics.core/modules/nDynamo/config/postscripts
  * @description Defines default nDynamo configuration used during module startup and layering.
  * @layer config
  * @owner nDynamo

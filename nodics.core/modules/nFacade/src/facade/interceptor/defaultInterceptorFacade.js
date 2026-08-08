@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nFacade/src/facade/interceptor/defaultInterceptorFacade
+ * @module nodics.core/modules/nFacade/src/facade/interceptor/defaultInterceptorFacade
  * @description Coordinates facade-level delegation for nFacade default interceptor facade operations.
  * @layer facade
  * @owner nFacade

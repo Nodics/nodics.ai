@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nDynamo/src/service/interceptors/defaultClassConfigurationSaveInterceptorService
+ * @module nodics.core/modules/nDynamo/src/service/interceptors/defaultClassConfigurationSaveInterceptorService
  * @description Implements nDynamo default class configuration save interceptor service business behavior and extension logic.
  * @layer service
  * @owner nDynamo

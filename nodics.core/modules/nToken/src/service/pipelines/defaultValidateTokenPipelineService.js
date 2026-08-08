@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nToken/src/service/pipelines/defaultValidateTokenPipelineService
+ * @module nodics.core/modules/nToken/src/service/pipelines/defaultValidateTokenPipelineService
  * @description Implements nToken default validate token pipeline service business behavior and extension logic.
  * @layer service
  * @owner nToken

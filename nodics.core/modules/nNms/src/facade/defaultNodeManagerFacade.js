@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nNms/src/facade/defaultNodeManagerFacade
+ * @module nodics.core/modules/nNms/src/facade/defaultNodeManagerFacade
  * @description Coordinates facade-level delegation for nNms default node manager facade operations.
  * @layer facade
  * @owner nNms

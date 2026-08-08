@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/database/vDatabase/src/service/defaultSampleService
+ * @module nodics.core/modules/nDatabase/database/vDatabase/src/service/defaultSampleService
  * @description Implements vDatabase default sample service business behavior and extension logic.
  * @layer service
  * @owner vDatabase

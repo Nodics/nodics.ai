@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nNms/src/controller/defaultNodeManagerController
+ * @module nodics.core/modules/nNms/src/controller/defaultNodeManagerController
  * @description Exposes request handlers for nNms default node manager controller operations.
  * @layer controller
  * @owner nNms

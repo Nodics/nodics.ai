@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nbpm/src/event/listeners
+ * @module nodics.core/modules/nbpm/src/event/listeners
  * @description Documents nbpm listeners module behavior.
  * @layer event
  * @owner nbpm

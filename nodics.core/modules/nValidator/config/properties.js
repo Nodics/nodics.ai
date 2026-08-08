@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nValidator/config/properties
+ * @module nodics.core/modules/nValidator/config/properties
  * @description Defines default nValidator configuration used during module startup and layering.
  * @layer config
  * @owner nValidator

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nTest/src/utils/enums.js
+ * @module nodics.core/modules/nTest/src/utils/enums.js
  * @description Provides shared nTest enum definition exports.
  * @layer utils
  * @owner nTest

@@ -16,7 +16,7 @@ const Chai = require('chai');
 const expect = Chai.expect;
 
 /**
- * @module gFramework/nCatalog/test/common/commonTest
+ * @module nodics.core/modules/nCatalog/test/common/commonTest
  * @description Defines nCatalog test fixtures or suites for module behavior validation.
  * @layer test
  * @owner nCatalog

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nAuth/src/utils/utils
+ * @module nodics.core/modules/nAuth/src/utils/utils
  * @description Provides shared nAuth utility exports for utils.
  * @layer utils
  * @owner nAuth

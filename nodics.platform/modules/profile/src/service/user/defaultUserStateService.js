@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/service/user/defaultUserStateService
+ * @module nodics.platform/modules/profile/src/service/user/defaultUserStateService
  * @description Implements profile default user state service business behavior and extension logic.
  * @layer service
  * @owner profile

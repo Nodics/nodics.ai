@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/cronjob/src/service/defaultSampleService
+ * @module nodics.cron/modules/cronjob/src/service/defaultSampleService
  * @description Implements cronjob default sample service business behavior and extension logic.
  * @layer service
  * @owner cronjob

@@ -32,14 +32,14 @@ const { parseOutput, createReport, parseArgs, resolveServerReportDir } = require
 let serverReportDir = resolveServerReportDir('monoServer');
 assert.strictEqual(serverReportDir, path.join(
     process.cwd(),
-    'startio/envs/startioLocal/monoServer/generated/test-reports'
+    'nodics.kickoff/envs/kickoffLocal/monoServer/generated/test-reports'
 ));
-assert.strictEqual(resolveServerReportDir('monoServer', 'startioDev'), path.join(
+assert.strictEqual(resolveServerReportDir('monoServer', 'kickoffDev'), path.join(
     process.cwd(),
-    'startio/envs/startioDev/monoServer/generated/test-reports'
+    'nodics.kickoff/envs/kickoffDev/monoServer/generated/test-reports'
 ));
 let parsedArgs = parseArgs(['--server=monoServer', '--', 'npm', 'test']);
-assert.strictEqual(parsedArgs.environmentName, 'startioLocal');
+assert.strictEqual(parsedArgs.environmentName, 'kickoffLocal');
 assert.strictEqual(parsedArgs.serverName, 'monoServer');
 assert.strictEqual(parsedArgs.reportDir, serverReportDir);
 assert.throws(() => parseArgs([
@@ -54,7 +54,7 @@ assert.throws(() => parseArgs([
 let output = [
     '> nodics@0.0.1 test:topology',
     '',
-    'Running gCore/profile/test/profileRouteContract.test.js',
+    'Running nodics.platform/modules/profile/test/profileRouteContract.test.js',
     'Route contract tests passed: 7',
     'Capability behavior tests passed for area profile: 3',
     'Generated tests passed: 149',

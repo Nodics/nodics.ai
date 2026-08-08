@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/src/event/listeners
+ * @module nodics.core/modules/nDynamo/src/event/listeners
  * @description Documents nDynamo listeners module behavior.
  * @layer event
  * @owner nDynamo

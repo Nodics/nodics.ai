@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCatalog/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nCatalog/src/utils/statusDefinitions.js
  * @description Provides shared catalog status and error definition exports.
  * @layer utils
  * @owner catalog

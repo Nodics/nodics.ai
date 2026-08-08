@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nConfig/src/utils/enums.js
+ * @module nodics.core/modules/nConfig/src/utils/enums.js
  * @description Provides shared config enum definition exports.
  * @layer utils
  * @owner config

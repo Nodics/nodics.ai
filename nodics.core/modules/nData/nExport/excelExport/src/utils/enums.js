@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/excelExport/src/utils/enums.js
+ * @module nodics.core/modules/nData/nExport/excelExport/src/utils/enums.js
  * @description Provides shared excelExport enum definition exports.
  * @layer utils
  * @owner excelExport

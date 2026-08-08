@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEvent/src/router/appConfig
+ * @module nodics.core/modules/nEvent/src/router/appConfig
  * @description Defines nEvent route registration and HTTP exposure metadata.
  * @layer router
  * @owner nEvent

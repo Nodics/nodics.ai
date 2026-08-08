@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSystem/src/service/event/defaultInterceptorChangeListenerService
+ * @module nodics.core/modules/nSystem/src/service/event/defaultInterceptorChangeListenerService
  * @description Implements nSystem default interceptor change listener service business behavior and extension logic.
  * @layer service
  * @owner nSystem

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSystem/nodics
+ * @module nodics.core/modules/nSystem/nodics
  * @description Registers the nSystem module lifecycle hooks and module-level startup behavior.
  * @layer module
  * @owner nSystem

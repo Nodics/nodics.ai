@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/cassandradb/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nDatabase/cassandradb/src/utils/statusDefinitions.js
  * @description Provides shared cassandradb status and error definition exports.
  * @layer utils
  * @owner cassandradb

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/service/interceptors/defaultAPIKeyInterceptorService
+ * @module nodics.platform/modules/profile/src/service/interceptors/defaultAPIKeyInterceptorService
  * @description Implements profile default apikey interceptor service business behavior and extension logic.
  * @layer service
  * @owner profile

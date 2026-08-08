@@ -37,7 +37,7 @@ Do not duplicate base MongoDB connection logic here. This module owns versioned 
 Run focused versioned MongoDB coverage with:
 
 ```bash
-node gFramework/nDatabase/mongodb/vMongodb/test/versionedModelContract.test.js
+node nodics.core/modules/nDatabase/mongodb/vMongodb/test/versionedModelContract.test.js
 npm run test:basic
 npm run quality:docs
 ```

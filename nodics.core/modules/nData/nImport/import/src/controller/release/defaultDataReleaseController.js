@@ -15,9 +15,20 @@ module.exports = {
     init: function () { return Promise.resolve(true); },
     /** Completes controller initialization. */
     postInit: function () { return Promise.resolve(true); },
-    /** Returns the authorized data-release catalogue. */
+    /** Returns the authorized data-release catalogue for a query-selected type. */
     getCatalogue: function (request, callback) {
         request.dataType = request.httpRequest && request.httpRequest.query && request.httpRequest.query.dataType;
+        return this.respond(FACADE.DefaultDataReleaseFacade.getCatalogue(request), callback);
+    },
+    /** Returns the authorized Init data-release catalogue. */
+    getInitCatalogue: function (request, callback) { return this.getTypedCatalogue(request, callback, 'init'); },
+    /** Returns the authorized Core data-release catalogue. */
+    getCoreCatalogue: function (request, callback) { return this.getTypedCatalogue(request, callback, 'core'); },
+    /** Returns the authorized Sample data-release catalogue. */
+    getSampleCatalogue: function (request, callback) { return this.getTypedCatalogue(request, callback, 'sample'); },
+    /** Normalizes a fixed route-owned catalogue type and delegates discovery. */
+    getTypedCatalogue: function (request, callback, dataType) {
+        request.dataType = dataType;
         return this.respond(FACADE.DefaultDataReleaseFacade.getCatalogue(request), callback);
     },
     /** Validates a requested immutable release plan without persistence. */

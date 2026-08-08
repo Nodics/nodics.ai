@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nImport/jsonImport/src/service/defaultSampleService
+ * @module nodics.core/modules/nData/nImport/jsonImport/src/service/defaultSampleService
  * @description Implements jsonImport default sample service business behavior and extension logic.
  * @layer service
  * @owner jsonImport

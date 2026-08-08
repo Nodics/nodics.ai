@@ -17,7 +17,7 @@ const Chai = require('chai');
 const expect = Chai.expect;
 
 /**
- * @module gFramework/nEms/activemq/test/env-local/envTest
+ * @module nodics.core/modules/nEms/activemq/test/env-local/envTest
  * @description Defines nEms test fixtures or suites for module behavior validation.
  * @layer test
  * @owner nEms

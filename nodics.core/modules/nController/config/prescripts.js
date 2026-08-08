@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nController/config/prescripts
+ * @module nodics.core/modules/nController/config/prescripts
  * @description Defines default nController configuration used during module startup and layering.
  * @layer config
  * @owner nController

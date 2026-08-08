@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/jsExport/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nData/nExport/jsExport/src/utils/statusDefinitions.js
  * @description Provides shared jsExport status and error definition exports.
  * @layer utils
  * @owner jsExport

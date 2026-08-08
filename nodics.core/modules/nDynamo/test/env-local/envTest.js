@@ -17,7 +17,7 @@ const Chai = require('chai');
 const expect = Chai.expect;
 
 /**
- * @module gFramework/nDynamo/test/env-local/envTest
+ * @module nodics.core/modules/nDynamo/test/env-local/envTest
  * @description Defines nDynamo test fixtures or suites for module behavior validation.
  * @layer test
  * @owner nDynamo

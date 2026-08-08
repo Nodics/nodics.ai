@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nOtp/src/utils/statusDefinitions
+ * @module nodics.core/modules/nOtp/src/utils/statusDefinitions
  * @description Provides shared nOtp utility exports for status definitions.
  * @layer utils
  * @owner nOtp

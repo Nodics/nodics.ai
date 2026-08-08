@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/src/service/schema/defaultSchemaConfigurationService
+ * @module nodics.core/modules/nDynamo/src/service/schema/defaultSchemaConfigurationService
  * @description Implements nDynamo default schema configuration service business behavior and extension logic.
  * @layer service
  * @owner nDynamo

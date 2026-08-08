@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCache/nodeCache/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nCache/nodeCache/src/utils/statusDefinitions.js
  * @description Provides shared nodeCache status and error definition exports.
  * @layer utils
  * @owner nodeCache

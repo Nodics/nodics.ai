@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEvent/src/utils/utils
+ * @module nodics.core/modules/nEvent/src/utils/utils
  * @description Provides shared nEvent utility exports for utils.
  * @layer utils
  * @owner nEvent

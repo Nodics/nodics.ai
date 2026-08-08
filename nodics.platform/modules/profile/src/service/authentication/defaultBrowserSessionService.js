@@ -12,7 +12,7 @@
 const crypto = require('crypto');
 
 /**
- * @module gCore/profile/src/service/authentication/defaultBrowserSessionService
+ * @module nodics.platform/modules/profile/src/service/authentication/defaultBrowserSessionService
  * @description Owns Profile browser refresh cookies, CSRF validation, rotation, and logout.
  * @layer service
  * @owner profile

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nService/vService/src/utils/enums.js
+ * @module nodics.core/modules/nService/vService/src/utils/enums.js
  * @description Provides shared vService enum definition exports.
  * @layer utils
  * @owner vService

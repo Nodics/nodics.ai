@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCatalog/config/postscripts
+ * @module nodics.core/modules/nCatalog/config/postscripts
  * @description Defines default nCatalog configuration used during module startup and layering.
  * @layer config
  * @owner nCatalog

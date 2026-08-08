@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/config/prescripts
+ * @module nodics.core/modules/nSearch/search/config/prescripts
  * @description Defines default nSearch configuration used during module startup and layering.
  * @layer config
  * @owner nSearch

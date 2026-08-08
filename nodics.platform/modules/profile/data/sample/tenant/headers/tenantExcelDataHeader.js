@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/data/sample/tenant/headers/tenantExcelDataHeader
+ * @module nodics.platform/modules/profile/data/sample/tenant/headers/tenantExcelDataHeader
  * @description Defines the Profile-owned sample tenant XLSX import header.
  * @layer data
  * @owner profile

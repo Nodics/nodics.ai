@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/excelExport/config/postscripts
+ * @module nodics.core/modules/nData/nExport/excelExport/config/postscripts
  * @description Defines default nData configuration used during module startup and layering.
  * @layer config
  * @owner nData

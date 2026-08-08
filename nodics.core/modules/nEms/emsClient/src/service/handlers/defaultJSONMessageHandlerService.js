@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/emsClient/src/service/handlers/defaultJSONMessageHandlerService
+ * @module nodics.core/modules/nEms/emsClient/src/service/handlers/defaultJSONMessageHandlerService
  * @description Implements nEms default jsonmessage handler service business behavior and extension logic.
  * @layer service
  * @owner nEms

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/elastic/src/schemas/schemas
+ * @module nodics.core/modules/nSearch/elastic/src/schemas/schemas
  * @description Defines nSearch schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner nSearch

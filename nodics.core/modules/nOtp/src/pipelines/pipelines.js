@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nOtp/src/pipelines/pipelines
+ * @module nodics.core/modules/nOtp/src/pipelines/pipelines
  * @description Defines nOtp pipeline wiring and execution contracts.
  * @layer pipelines
  * @owner nOtp

@@ -12,7 +12,7 @@
 const parser = require('xml-js');
 
 /**
- * @module gFramework/nEms/emsClient/src/service/handlers/defaultXMLMessageHandlerService
+ * @module nodics.core/modules/nEms/emsClient/src/service/handlers/defaultXMLMessageHandlerService
  * @description Implements nEms default xmlmessage handler service business behavior and extension logic.
  * @layer service
  * @owner nEms

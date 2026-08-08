@@ -16,7 +16,7 @@ const Chai = require('chai');
 const expect = Chai.expect;
 
 /**
- * @module gFramework/nbpm/test/common/commonTest
+ * @module nodics.core/modules/nbpm/test/common/commonTest
  * @description Defines nbpm test fixtures or suites for module behavior validation.
  * @layer test
  * @owner nbpm

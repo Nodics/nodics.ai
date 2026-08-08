@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/service/procs/indexer/defaultIndexerDataHandlerService
+ * @module nodics.core/modules/nSearch/search/src/service/procs/indexer/defaultIndexerDataHandlerService
  * @description Implements nSearch default indexer data handler service business behavior and extension logic.
  * @layer service
  * @owner nSearch

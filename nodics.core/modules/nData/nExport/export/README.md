@@ -95,7 +95,7 @@ Focused behavior is covered by `test/dataExportCapabilityBehavior.test.js`, whic
 Run:
 
 ```bash
-node gFramework/nData/nExport/export/test/dataExportCapabilityBehavior.test.js
+node nodics.core/modules/nData/nExport/export/test/dataExportCapabilityBehavior.test.js
 npm run test:export
 npm run quality:docs
 ```

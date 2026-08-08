@@ -101,9 +101,9 @@ MongoDB participates in the database and generated CRUD test suites. Versioned M
 Focused transaction tests:
 
 ```bash
-node gFramework/nDatabase/database/test/databaseTransactionContract.test.js
-node gFramework/nDatabase/mongodb/test/mongodbTransactionContract.test.js
-node gAi/aiProviders/test/aiMongoHierarchyRepositoryContract.test.js
+node nodics.core/modules/nDatabase/database/test/databaseTransactionContract.test.js
+node nodics.core/modules/nDatabase/mongodb/test/mongodbTransactionContract.test.js
+node nodics.assistant/modules/providers/test/aiMongoHierarchyRepositoryContract.test.js
 ```
 
 Run:

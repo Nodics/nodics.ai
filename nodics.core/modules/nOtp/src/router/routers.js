@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nOtp/src/router/routers
+ * @module nodics.core/modules/nOtp/src/router/routers
  * @description Defines nOtp route registration and HTTP exposure metadata.
  * @layer router
  * @owner nOtp

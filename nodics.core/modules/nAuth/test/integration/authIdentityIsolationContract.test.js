@@ -58,7 +58,7 @@ async function run() {
     const serviceTokenService = require('../../src/service/identity/defaultServiceTokenService');
     const authorization = require('../../../nService/src/service/authorization/defaultAuthorizationProviderService');
     const credentialService = require('../../src/service/identity/defaultAPIKeyCredentialService');
-    const employeeService = require('../../../../gCore/profile/src/service/employee/defaultEmployeeService');
+    const employeeService = require('../../../../nodics.platform/modules/profile/src/service/employee/defaultEmployeeService');
     const auditService = require('../../src/service/audit/defaultAuthAuditService');
     const securedPipeline = require('../../../nRouter/src/service/request/defaultSecuredRequestPipelineService');
 

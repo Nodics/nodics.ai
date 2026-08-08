@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/elasticdb/src/utils/enums.js
+ * @module nodics.core/modules/nDatabase/elasticdb/src/utils/enums.js
  * @description Provides shared elasticdb enum definition exports.
  * @layer utils
  * @owner elasticdb

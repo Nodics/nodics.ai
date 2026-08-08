@@ -10,10 +10,10 @@
  */
 
 /**
- * @module gContent/config/prescripts
- * @description Defines default gContent configuration used during module startup and layering.
+ * @module nodics.wcms/config/prescripts
+ * @description Defines default nodics.wcms configuration used during module startup and layering.
  * @layer config
- * @owner gContent
+ * @owner nodics.wcms
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {

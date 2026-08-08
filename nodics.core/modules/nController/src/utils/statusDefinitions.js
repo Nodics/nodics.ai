@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nController/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nController/src/utils/statusDefinitions.js
  * @description Provides shared nController status and error definition exports.
  * @layer utils
  * @owner nController

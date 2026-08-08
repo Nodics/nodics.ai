@@ -11,7 +11,7 @@
 
 const assert = require("assert");
 const _ = require("lodash");
-const authProperties = require("../../../gFramework/nAuth/config/properties");
+const authProperties = require("../../../nodics.core/modules/nAuth/config/properties");
 
 // @nodics-capability-behavior @nodics-area profile
 global.CONFIG = {
@@ -35,7 +35,7 @@ global.CONFIG = {
   },
 };
 
-const commonUtils = require("../../../gFramework/nCommon/src/utils/utils");
+const commonUtils = require("../../../nodics.core/modules/nCommon/src/utils/utils");
 global.UTILS = Object.assign({}, commonUtils, {
   isObject: function (value) {
     return value !== null && typeof value === "object" && !Array.isArray(value);

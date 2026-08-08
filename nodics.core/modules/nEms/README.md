@@ -118,11 +118,11 @@ topology must come from layered configuration or governed runtime layers.
 Run focused EMS coverage with:
 
 ```bash
-node gFramework/nEms/emsClient/test/emsClientServiceContract.test.js
-node gFramework/nEms/emsClient/test/emsMessageProcessContract.test.js
-node gFramework/nEms/emsClient/test/messageTenantResolution.test.js
-node gFramework/nEms/emsClient/test/activeEmsPublisher.test.js
-node gFramework/nEms/kafka/test/kafkaPublishCapabilityBehavior.test.js
+node nodics.core/modules/nEms/emsClient/test/emsClientServiceContract.test.js
+node nodics.core/modules/nEms/emsClient/test/emsMessageProcessContract.test.js
+node nodics.core/modules/nEms/emsClient/test/messageTenantResolution.test.js
+node nodics.core/modules/nEms/emsClient/test/activeEmsPublisher.test.js
+node nodics.core/modules/nEms/kafka/test/kafkaPublishCapabilityBehavior.test.js
 npm run quality:docs
 ```
 

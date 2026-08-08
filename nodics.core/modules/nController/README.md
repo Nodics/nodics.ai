@@ -64,7 +64,7 @@ When adding a controller:
 Run:
 
 ```bash
-node gFramework/nController/test/logControllerRequestMapping.test.js
+node nodics.core/modules/nController/test/logControllerRequestMapping.test.js
 npm run quality:docs
 ```
 

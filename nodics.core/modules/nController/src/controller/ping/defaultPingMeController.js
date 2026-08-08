@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nController/src/controller/ping/defaultPingMeController
+ * @module nodics.core/modules/nController/src/controller/ping/defaultPingMeController
  * @description Exposes request handlers for nController default ping me controller operations.
  * @layer controller
  * @owner nController

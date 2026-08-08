@@ -12,7 +12,7 @@
 const assert = require('assert');
 
 /**
- * @module gCore/cronjob/test/cronJobControllerRequestMapping.test
+ * @module nodics.cron/modules/cronjob/test/cronJobControllerRequestMapping.test
  * @description Validates cronjob controller request mapping for query-based and job-code-based lifecycle operations.
  * @layer test
  * @owner cronjob

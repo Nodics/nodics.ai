@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nAuth/nodics
+ * @module nodics.core/modules/nAuth/nodics
  * @description Registers the nAuth module lifecycle hooks and module-level startup behavior.
  * @layer module
  * @owner nAuth

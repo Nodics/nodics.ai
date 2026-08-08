@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/service/common
+ * @module nodics.core/modules/nSearch/search/src/service/common
  * @description Template service used by generated nSearch schema services.
  * During generation, placeholders are replaced with the owning search service,
  * schema, and index identifiers.

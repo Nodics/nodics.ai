@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nNms/src/event/listeners
+ * @module nodics.core/modules/nNms/src/event/listeners
  * @description Documents nNms listeners module behavior.
  * @layer event
  * @owner nNms

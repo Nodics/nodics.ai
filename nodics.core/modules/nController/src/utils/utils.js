@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nController/src/utils/utils
+ * @module nodics.core/modules/nController/src/utils/utils
  * @description Provides shared nController utility exports for utils.
  * @layer utils
  * @owner nController

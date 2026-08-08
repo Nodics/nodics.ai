@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nEms/emsClient/src/service/config/defaultEmsClientConfigurationService
+ * @module nodics.core/modules/nEms/emsClient/src/service/config/defaultEmsClientConfigurationService
  * @description Implements nEms default ems client configuration service business behavior and extension logic.
  * @layer service
  * @owner nEms

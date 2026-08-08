@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/controller/defaultSearchController
+ * @module nodics.core/modules/nSearch/search/src/controller/defaultSearchController
  * @description Exposes request handlers for nSearch default search controller operations.
  * @layer controller
  * @owner nSearch

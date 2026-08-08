@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nDynamo/src/utils/statusDefinitions.js
  * @description Provides shared dynamo status and error definition exports.
  * @layer utils
  * @owner dynamo

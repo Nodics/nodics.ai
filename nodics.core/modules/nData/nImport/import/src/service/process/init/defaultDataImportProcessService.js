@@ -13,7 +13,7 @@ const util = require('util');
 const clearRequire = require('clear-module');
 
 /**
- * @module gFramework/nData/nImport/import/src/service/process/init/defaultDataImportProcessService
+ * @module nodics.core/modules/nData/nImport/import/src/service/process/init/defaultDataImportProcessService
  * @description Implements nData default data import process service business behavior and extension logic.
  * @layer service
  * @owner nData

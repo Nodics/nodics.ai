@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/nodics
+ * @module nodics.platform/modules/profile/nodics
  * @description Registers the profile module lifecycle hooks and module-level startup behavior.
  * @layer module
  * @owner profile

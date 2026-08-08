@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/emsClient/test/emsMessageProcessContract.test
+ * @module nodics.core/modules/nEms/emsClient/test/emsMessageProcessContract.test
  * @description Validates consumed EMS message translation, tenant validation, and local versus remote event dispatch behavior.
  * @layer test
  * @owner nEms

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/service/connection/defaultSearchEngineConnectionHandlerService
+ * @module nodics.core/modules/nSearch/search/src/service/connection/defaultSearchEngineConnectionHandlerService
  * @description Implements nSearch default search engine connection handler service business behavior and extension logic.
  * @layer service
  * @owner nSearch

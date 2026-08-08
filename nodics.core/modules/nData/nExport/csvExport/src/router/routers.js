@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/csvExport/src/router/routers
+ * @module nodics.core/modules/nData/nExport/csvExport/src/router/routers
  * @description Defines nData route registration and HTTP exposure metadata.
  * @layer router
  * @owner nData

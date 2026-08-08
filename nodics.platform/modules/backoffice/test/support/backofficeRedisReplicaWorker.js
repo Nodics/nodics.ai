@@ -9,7 +9,7 @@
 
  */
 
-const liveRedisClientFactory = require('../../../../gFramework/nCache/redisCache/test/support/liveRedisClientFactory');
+const liveRedisClientFactory = require('../../../../nodics.core/modules/nCache/redisCache/test/support/liveRedisClientFactory');
 
 /**
  * @module backoffice/test/support/backofficeRedisReplicaWorker

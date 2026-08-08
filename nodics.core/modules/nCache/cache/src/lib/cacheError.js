@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCache/cache/src/lib/cacheError
+ * @module nodics.core/modules/nCache/cache/src/lib/cacheError
  * @description Provides reusable nCache library primitives for cache error.
  * @layer lib
  * @owner nCache

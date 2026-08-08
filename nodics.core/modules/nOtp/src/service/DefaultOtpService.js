@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nOtp/src/service/DefaultOtpService
+ * @module nodics.core/modules/nOtp/src/service/DefaultOtpService
  * @description Implements nOtp default otp service business behavior and extension logic.
  * @layer service
  * @owner nOtp

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/elasticdb/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nDatabase/elasticdb/src/utils/statusDefinitions.js
  * @description Provides shared elasticdb status and error definition exports.
  * @layer utils
  * @owner elasticdb

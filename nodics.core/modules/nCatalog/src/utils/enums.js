@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCatalog/src/utils/enums.js
+ * @module nodics.core/modules/nCatalog/src/utils/enums.js
  * @description Provides shared catalog enum definition exports.
  * @layer utils
  * @owner catalog

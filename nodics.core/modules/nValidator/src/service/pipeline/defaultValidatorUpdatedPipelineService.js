@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nValidator/src/service/pipeline/defaultValidatorUpdatedPipelineService
+ * @module nodics.core/modules/nValidator/src/service/pipeline/defaultValidatorUpdatedPipelineService
  * @description Implements nValidator default validator updated pipeline service business behavior and extension logic.
  * @layer service
  * @owner nValidator

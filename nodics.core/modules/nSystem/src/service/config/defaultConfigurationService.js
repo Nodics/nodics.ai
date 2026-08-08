@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nSystem/src/service/config/defaultConfigurationService
+ * @module nodics.core/modules/nSystem/src/service/config/defaultConfigurationService
  * @description Implements nSystem default configuration service business behavior and extension logic.
  * @layer service
  * @owner nSystem

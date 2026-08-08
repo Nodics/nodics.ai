@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCatalog/nodics
+ * @module nodics.core/modules/nCatalog/nodics
  * @description Registers the nCatalog module lifecycle hooks and module-level startup behavior.
  * @layer module
  * @owner nCatalog

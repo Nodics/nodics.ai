@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/database/vDatabase/nodics
+ * @module nodics.core/modules/nDatabase/database/vDatabase/nodics
  * @description Registers the nDatabase module lifecycle hooks and module-level startup behavior.
  * @layer module
  * @owner nDatabase

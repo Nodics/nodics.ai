@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nToken/src/service/DefaultTokenService
+ * @module nodics.core/modules/nToken/src/service/DefaultTokenService
  * @description Implements nToken default token service business behavior and extension logic.
  * @layer service
  * @owner nToken

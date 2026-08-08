@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/kafka/src/service/defaultSampleService
+ * @module nodics.core/modules/nEms/kafka/src/service/defaultSampleService
  * @description Implements kafka default sample service business behavior and extension logic.
  * @layer service
  * @owner kafka

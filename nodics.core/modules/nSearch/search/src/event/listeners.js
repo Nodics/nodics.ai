@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/event/listeners
+ * @module nodics.core/modules/nSearch/search/src/event/listeners
  * @description Documents nSearch listeners module behavior.
  * @layer event
  * @owner nSearch

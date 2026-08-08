@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCache/nodics
+ * @module nodics.core/modules/nCache/nodics
  * @description Registers the nCache module lifecycle hooks and module-level startup behavior.
  * @layer module
  * @owner nCache

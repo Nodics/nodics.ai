@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/service/cache/defaultCacheService
+ * @module nodics.core/modules/nSearch/search/src/service/cache/defaultCacheService
  * @description Implements nSearch default cache service business behavior and extension logic.
  * @layer service
  * @owner nSearch

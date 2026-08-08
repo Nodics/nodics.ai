@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nOtp/src/facade/DefaultOtpFacade
+ * @module nodics.core/modules/nOtp/src/facade/DefaultOtpFacade
  * @description Coordinates facade-level delegation for nOtp default otp facade operations.
  * @layer facade
  * @owner nOtp

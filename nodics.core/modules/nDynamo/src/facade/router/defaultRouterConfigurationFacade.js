@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/src/facade/router/defaultRouterConfigurationFacade
+ * @module nodics.core/modules/nDynamo/src/facade/router/defaultRouterConfigurationFacade
  * @description Coordinates facade-level delegation for nDynamo default router configuration facade operations.
  * @layer facade
  * @owner nDynamo

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/utils/statusDefinitions
+ * @module nodics.core/modules/nSearch/search/src/utils/statusDefinitions
  * @description Provides shared nSearch utility exports for status definitions.
  * @layer utils
  * @owner nSearch

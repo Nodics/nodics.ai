@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCatalog/src/utils/utils
+ * @module nodics.core/modules/nCatalog/src/utils/utils
  * @description Provides shared nCatalog utility exports for utils.
  * @layer utils
  * @owner nCatalog

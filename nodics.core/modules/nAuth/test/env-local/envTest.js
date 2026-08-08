@@ -17,7 +17,7 @@ const Chai = require('chai');
 const expect = Chai.expect;
 
 /**
- * @module gFramework/nAuth/test/env-local/envTest
+ * @module nodics.core/modules/nAuth/test/env-local/envTest
  * @description Defines nAuth test fixtures or suites for module behavior validation.
  * @layer test
  * @owner nAuth

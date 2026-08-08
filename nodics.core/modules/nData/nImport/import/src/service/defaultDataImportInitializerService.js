@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nData/nImport/import/src/service/defaultDataImportInitializerService
+ * @module nodics.core/modules/nData/nImport/import/src/service/defaultDataImportInitializerService
  * @description Implements nData default data import initializer service business behavior and extension logic.
  * @layer service
  * @owner nData

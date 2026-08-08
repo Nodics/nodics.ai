@@ -11,7 +11,7 @@
 
 const _ = require('lodash');
 /**
- * @module gFramework/nbpm/src/service/procs/move/defaultWorkflowCarrierPausedPipelineService
+ * @module nodics.core/modules/nbpm/src/service/procs/move/defaultWorkflowCarrierPausedPipelineService
  * @description Implements nbpm default workflow carrier paused pipeline service business behavior and extension logic.
  * @layer service
  * @owner nbpm

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/kafka/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nEms/kafka/src/utils/statusDefinitions.js
  * @description Provides shared kafka status and error definition exports.
  * @layer utils
  * @owner kafka

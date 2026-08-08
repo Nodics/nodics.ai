@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nNms/config/postscripts
+ * @module nodics.core/modules/nNms/config/postscripts
  * @description Defines default nNms configuration used during module startup and layering.
  * @layer config
  * @owner nNms

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCatalog/src/router/appConfig
+ * @module nodics.core/modules/nCatalog/src/router/appConfig
  * @description Defines nCatalog route registration and HTTP exposure metadata.
  * @layer router
  * @owner nCatalog

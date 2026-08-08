@@ -78,7 +78,7 @@ global.UTILS = {
 };
 
 global.CLASSES = {
-    NodicsError: require('../../../gFramework/nCommon/src/lib/nodicsError')
+    NodicsError: require('../../../nodics.core/modules/nCommon/src/lib/nodicsError')
 };
 
 const enterpriseService = require('../src/service/enterprise/defaultEnterpriseService');

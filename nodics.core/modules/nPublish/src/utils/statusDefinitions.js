@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nPublish/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nPublish/src/utils/statusDefinitions.js
  * @description Provides shared publish status and error definition exports.
  * @layer utils
  * @owner publish

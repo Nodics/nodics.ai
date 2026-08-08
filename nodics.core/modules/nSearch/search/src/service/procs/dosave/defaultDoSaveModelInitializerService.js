@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nSearch/search/src/service/procs/dosave/defaultDoSaveModelInitializerService
+ * @module nodics.core/modules/nSearch/search/src/service/procs/dosave/defaultDoSaveModelInitializerService
  * @description Implements nSearch default do save model initializer service business behavior and extension logic.
  * @layer service
  * @owner nSearch

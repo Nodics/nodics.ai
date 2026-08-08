@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/elastic/src/utils/utils
+ * @module nodics.core/modules/nSearch/elastic/src/utils/utils
  * @description Provides shared nSearch utility exports for utils.
  * @layer utils
  * @owner nSearch

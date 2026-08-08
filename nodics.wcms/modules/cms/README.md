@@ -2,7 +2,7 @@
 
 `cms` owns content-management capability behavior. It provides the module space for CMS data, schemas, routes, services, pipelines, interceptors, utilities, and tests.
 
-Use this module for reusable content structures and content lifecycle behavior. Workflow-specific content behavior belongs in `gContent/wcms`.
+Use this module for reusable content structures and content lifecycle behavior. Workflow-specific content behavior belongs in `nodics.wcms/modules/wcms`.
 
 Content definitions remain schema-driven and tenant-aware so projects can extend CMS behavior without changing shared module code.
 
@@ -190,16 +190,16 @@ CMS framework behavior.
 
 ## Focused Tests
 
-Run `node gContent/cms/test/cmsContentDeliveryContract.test.js`,
-`node gContent/cms/test/cmsStorefrontDeliveryContract.test.js`,
-`node gContent/cms/test/cmsSiteReferenceContract.test.js`, and
-`node gContent/cms/test/cmsPublicationManifestContract.test.js`, and
-`node gContent/cms/test/cmsWcmsAuthoringSchemaContract.test.js` before broader
+Run `node nodics.wcms/modules/cms/test/cmsContentDeliveryContract.test.js`,
+`node nodics.wcms/modules/cms/test/cmsStorefrontDeliveryContract.test.js`,
+`node nodics.wcms/modules/cms/test/cmsSiteReferenceContract.test.js`, and
+`node nodics.wcms/modules/cms/test/cmsPublicationManifestContract.test.js`, and
+`node nodics.wcms/modules/cms/test/cmsWcmsAuthoringSchemaContract.test.js` before broader
 generated and integration suites. CMS contract upgrades use secured
 `/migration/preview`, `/migration/apply`, and `/migration/rollback` operations.
 Preview never mutates data; apply is versioned and audited; repeat execution is
 idempotent. Routes are created only from explicit layered mappings, and primary
 identifier changes are reported for cascade review rather than renamed blindly.
 
-Run `node gContent/cms/test/cmsMigrationContract.test.js` for the migration
+Run `node nodics.wcms/modules/cms/test/cmsMigrationContract.test.js` for the migration
 change-set contract.

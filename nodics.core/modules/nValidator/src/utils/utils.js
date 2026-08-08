@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nValidator/src/utils/utils
+ * @module nodics.core/modules/nValidator/src/utils/utils
  * @description Provides shared nValidator utility exports for utils.
  * @layer utils
  * @owner nValidator

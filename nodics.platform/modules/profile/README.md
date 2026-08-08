@@ -252,8 +252,8 @@ silently recreated; those remain fail-closed governed recovery operations.
 Focused Profile identity and authorization contracts include:
 
 ```bash
-node gCore/profile/test/identityGovernanceContract.test.js
-node gCore/profile/test/principalAuthorizationScopeContract.test.js
+node nodics.platform/modules/profile/test/identityGovernanceContract.test.js
+node nodics.platform/modules/profile/test/principalAuthorizationScopeContract.test.js
 ```
 
 ## Tenant Local File Import Examples
@@ -269,14 +269,14 @@ bootstrap.
 The sample data uses the normal Nodics structure:
 
 ```text
-gCore/profile/data/sample/tenant/
+nodics.platform/modules/profile/data/sample/tenant/
   headers/
   data/
 ```
 
 The legacy `.xls` example is preserved as historical reference only; the
 validated spreadsheet path is `.xlsx`. The contract test
-`gFramework/nData/nImport/import/test/profileTenantLocalFileImportContract.test.js`
+`nodics.core/modules/nData/nImport/import/test/profileTenantLocalFileImportContract.test.js`
 proves header discovery, data-file prefix matching, file-type resolution,
 processor execution, and tenant schema dispatch metadata through the existing
 `nImport` local-import lifecycle.
@@ -285,8 +285,8 @@ processor execution, and tenant schema dispatch metadata through the existing
 
 Profile guidance covers people, NAAM-style identity management,
 authentication-facing data, authorization data, default auth token behavior,
-and password management while preserving the split between `gCore/profile`
-identity data and `gFramework/nAuth` security/token infrastructure.
+and password management while preserving the split between `nodics.platform/modules/profile`
+identity data and `nodics.core/modules/nAuth` security/token infrastructure.
 
 Profile owns people, groups, credentials, tenants, enterprises, and persisted
 identity state. `nAuth` owns framework security primitives, JWT/API-key
@@ -367,14 +367,14 @@ or deploying security-sensitive changes.
 For the enterprise-management projection specifically, run:
 
 ```text
-node gCore/profile/test/enterpriseManagementSearchContract.test.js
-node gAi/aiAssistant/test/aiAssistantGovernedReadToolContract.test.js
+node nodics.platform/modules/profile/test/enterpriseManagementSearchContract.test.js
+node nodics.assistant/modules/assistant/test/aiAssistantGovernedReadToolContract.test.js
 ```
 
 ## Continue
 
-- Core capability family: [gCore](../README.md)
-- Authentication framework: [nAuth](../../gFramework/nAuth/README.md)
-- Token lifecycle: [nToken](../../gFramework/nToken/README.md)
-- Cache and distributed state: [nCache](../../gFramework/nCache/README.md)
+- Core capability family: [nodics.platform](../README.md)
+- Authentication framework: [nAuth](../../nodics.core/modules/nAuth/README.md)
+- Token lifecycle: [nToken](../../nodics.core/modules/nToken/README.md)
+- Cache and distributed state: [nCache](../../nodics.core/modules/nCache/README.md)
 - Capability maturity: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)

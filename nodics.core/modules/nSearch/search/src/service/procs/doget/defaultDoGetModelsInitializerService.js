@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nSearch/search/src/service/procs/doget/defaultDoGetModelsInitializerService
+ * @module nodics.core/modules/nSearch/search/src/service/procs/doget/defaultDoGetModelsInitializerService
  * @description Implements nSearch default do get models initializer service business behavior and extension logic.
  * @layer service
  * @owner nSearch

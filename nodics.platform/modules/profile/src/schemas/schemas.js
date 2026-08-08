@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/schemas/schemas
+ * @module nodics.platform/modules/profile/src/schemas/schemas
  * @description Defines profile schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner profile

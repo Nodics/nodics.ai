@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/interceptors/interceptors
+ * @module nodics.platform/modules/profile/src/interceptors/interceptors
  * @description Registers profile interceptor wiring for pipeline extension points.
  * @layer interceptors
  * @owner profile

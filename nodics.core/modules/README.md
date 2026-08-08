@@ -1,14 +1,14 @@
-# gFramework
+# nodics.core
 
-`gFramework` is the reusable platform foundation underneath a Nodics
+`nodics.core` is the reusable platform foundation underneath a Nodics
 application. In plain language, it provides the common machinery for loading an
 application, exposing APIs, applying business behavior, working with data,
 running ordered processes, enforcing access, and operating the system.
 
 Application teams normally consume these capabilities through project modules.
-They should not add customer-specific behavior directly to `gFramework`.
+They should not add customer-specific behavior directly to `nodics.core`.
 
-`gFramework` composes the core Nodics capability modules and coordinates their
+`nodics.core` composes the core Nodics capability modules and coordinates their
 runtime, clean, build, and generator lifecycles. Runtime behavior comes from the
 active metadata-driven module hierarchy and layered configuration; this group
 must not contain project-specific selection logic.
@@ -49,7 +49,7 @@ README only for cross-framework coordination and capability boundaries.
 
 ## Capability Boundary
 
-`gFramework` is a group module. It should coordinate framework capability modules, not own project behavior directly.
+`nodics.core` is a group module. It should coordinate framework capability modules, not own project behavior directly.
 
 Framework modules provide default capabilities such as:
 

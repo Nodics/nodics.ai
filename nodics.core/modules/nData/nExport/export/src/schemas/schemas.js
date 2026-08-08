@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/export/src/schemas/schemas
+ * @module nodics.core/modules/nData/nExport/export/src/schemas/schemas
  * @description Defines nExport schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner nExport

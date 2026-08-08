@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/mongodb/vMongodb/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nDatabase/mongodb/vMongodb/src/utils/statusDefinitions.js
  * @description Provides shared vMongodb status and error definition exports.
  * @layer utils
  * @owner vMongodb

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/emsClient/src/facade/defaultEmsClientFacade
+ * @module nodics.core/modules/nEms/emsClient/src/facade/defaultEmsClientFacade
  * @description Coordinates facade-level delegation for nEms default ems client facade operations.
  * @layer facade
  * @owner nEms

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/utils/enums
+ * @module nodics.platform/modules/profile/src/utils/enums
  * @description Provides shared profile utility exports for enums.
  * @layer utils
  * @owner profile

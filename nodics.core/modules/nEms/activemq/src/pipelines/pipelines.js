@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/activemq/src/pipelines/pipelines
+ * @module nodics.core/modules/nEms/activemq/src/pipelines/pipelines
  * @description Defines nEms pipeline wiring and execution contracts.
  * @layer pipelines
  * @owner nEms

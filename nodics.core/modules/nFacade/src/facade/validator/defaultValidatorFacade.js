@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nFacade/src/facade/validator/defaultValidatorFacade
+ * @module nodics.core/modules/nFacade/src/facade/validator/defaultValidatorFacade
  * @description Coordinates facade-level delegation for nFacade default validator facade operations.
  * @layer facade
  * @owner nFacade

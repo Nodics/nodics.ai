@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/dataCore/src/service/defaultSampleService
+ * @module nodics.core/modules/nData/dataCore/src/service/defaultSampleService
  * @description Implements dataCore default sample service business behavior and extension logic.
  * @layer service
  * @owner dataCore

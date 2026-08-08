@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCache/redisCache/src/service/defaultSampleService
+ * @module nodics.core/modules/nCache/redisCache/src/service/defaultSampleService
  * @description Implements redisCache default sample service business behavior and extension logic.
  * @layer service
  * @owner redisCache

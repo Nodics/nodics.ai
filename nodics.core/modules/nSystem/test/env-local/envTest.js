@@ -17,7 +17,7 @@ const Chai = require('chai');
 const expect = Chai.expect;
 
 /**
- * @module gFramework/nSystem/test/env-local/envTest
+ * @module nodics.core/modules/nSystem/test/env-local/envTest
  * @description Defines nSystem test fixtures or suites for module behavior validation.
  * @layer test
  * @owner nSystem

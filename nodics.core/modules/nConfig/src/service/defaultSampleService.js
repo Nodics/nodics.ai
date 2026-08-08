@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nConfig/src/service/defaultSampleService
+ * @module nodics.core/modules/nConfig/src/service/defaultSampleService
  * @description Implements config default sample service business behavior and extension logic.
  * @layer service
  * @owner config

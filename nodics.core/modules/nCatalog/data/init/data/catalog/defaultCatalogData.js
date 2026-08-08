@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCatalog/data/init/data/catalog/defaultCatalogData
+ * @module nodics.core/modules/nCatalog/data/init/data/catalog/defaultCatalogData
  * @description Provides nCatalog initializer or sample data consumed by the import layer.
  * @layer data
  * @owner nCatalog

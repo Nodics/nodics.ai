@@ -15,14 +15,14 @@ const path = require('path');
 const merge = require('lodash/merge');
 
 /**
- * @module gFramework/nConfig/test/configurationOwnershipContract
+ * @module nodics.core/modules/nConfig/test/configurationOwnershipContract
  * @description Prevents environment, server, and node properties from becoming copied snapshots of module defaults.
  * @layer test
  * @owner nConfig
  */
 
 const root = path.resolve(__dirname, '../../..');
-const envRoot = path.join(root, 'startio/envs');
+const envRoot = path.join(root, 'nodics.kickoff/envs');
 
 function findProperties(directory, result) {
     fs.readdirSync(directory, { withFileTypes: true }).forEach(entry => {
@@ -66,46 +66,46 @@ topologySources.forEach(entry => inheritedPlaceholderPatterns.forEach(pattern =>
 }));
 
 const framework = merge({},
-    load('gFramework/nConfig/config/properties.js'),
-    load('gFramework/nRouter/config/properties.js'),
-    load('gFramework/nSearch/search/config/properties.js'),
-    load('gFramework/nEms/emsClient/config/properties.js'),
-    load('gCore/cronjob/config/properties.js'));
-const local = load('startio/envs/startioLocal/config/properties.js');
+    load('nodics.core/modules/nConfig/config/properties.js'),
+    load('nodics.core/modules/nRouter/config/properties.js'),
+    load('nodics.core/modules/nSearch/search/config/properties.js'),
+    load('nodics.core/modules/nEms/emsClient/config/properties.js'),
+    load('nodics.cron/modules/cronjob/config/properties.js'));
+const local = load('nodics.kickoff/envs/kickoffLocal/config/properties.js');
 
 const backoffice = merge({}, framework, local,
-    load('startio/envs/startioLocal/backofficeServer/config/properties.js'));
+    load('nodics.kickoff/envs/kickoffLocal/backofficeServer/config/properties.js'));
 assert.strictEqual(backoffice.log.level, 'info');
 assert.strictEqual(backoffice.cronjob.runOnStartup, false);
 assert.strictEqual(backoffice.search.default.options.enabled, false);
 assert.strictEqual(backoffice.servers.options.contextRoot, 'nodics');
 
 const deap = merge({}, framework, local,
-    load('startio/envs/startioLocal/deapServer/config/properties.js'));
+    load('nodics.kickoff/envs/kickoffLocal/deapServer/config/properties.js'));
 assert.strictEqual(deap.emsClient.logFailedMessages, false);
 assert.strictEqual(deap.search.default.options.enabled, false);
 assert.strictEqual(deap.log.level, 'debug',
     'Server-specific debug logging must remain an intentional override');
 
 const mono = merge({}, framework, local,
-    load('startio/envs/startioLocal/monoServer/config/properties.js'));
+    load('nodics.kickoff/envs/kickoffLocal/monoServer/config/properties.js'));
 assert.strictEqual(mono.cronjob.runOnStartup, false);
 assert.strictEqual(mono.search.default.options.enabled, true);
 assert.strictEqual(mono.search.default.options.engine, 'elastic');
 
 const publicationDefaults = merge({},
-    load('gContent/cms/config/properties.js'),
-    load('gComm/baseCommerce/pricing/config/properties.js'),
-    load('gComm/baseCommerce/product/config/properties.js'));
+    load('nodics.wcms/modules/cms/config/properties.js'),
+    load('nodics.commerce/modules/pricing/config/properties.js'),
+    load('nodics.commerce/modules/product/config/properties.js'));
 const staged = merge({}, publicationDefaults,
-    load('startio/envs/startioLocal/cmsStagedServer/config/properties.js'));
+    load('nodics.kickoff/envs/kickoffLocal/cmsStagedServer/config/properties.js'));
 ['cms', 'pricing', 'product'].forEach(moduleName => {
     assert.strictEqual(staged[moduleName].publication.target.timeoutMs, 30000);
     assert.strictEqual(staged[moduleName].publication.target.maxAttempts, 3);
 });
 
 const online = merge({}, publicationDefaults,
-    load('startio/envs/startioLocal/cmsOnlineServer/config/properties.js'));
+    load('nodics.kickoff/envs/kickoffLocal/cmsOnlineServer/config/properties.js'));
 ['cms', 'pricing', 'product'].forEach(moduleName => {
     assert.strictEqual(online[moduleName].publication.targetTransportProvider, null);
 });

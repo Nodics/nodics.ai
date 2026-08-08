@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCache/redisCache/src/utils/enums.js
+ * @module nodics.core/modules/nCache/redisCache/src/utils/enums.js
  * @description Provides shared redisCache enum definition exports.
  * @layer utils
  * @owner redisCache

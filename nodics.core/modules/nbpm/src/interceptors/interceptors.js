@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nbpm/src/interceptors/interceptors
+ * @module nodics.core/modules/nbpm/src/interceptors/interceptors
  * @description Registers nbpm interceptor wiring for pipeline extension points.
  * @layer interceptors
  * @owner nbpm

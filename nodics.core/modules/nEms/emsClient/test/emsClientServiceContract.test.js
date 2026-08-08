@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/emsClient/test/emsClientServiceContract.test
+ * @module nodics.core/modules/nEms/emsClient/test/emsClientServiceContract.test
  * @description Validates deterministic EMS client publish, register, close, and invalid request behavior without requiring a live broker.
  * @layer test
  * @owner nEms

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/service/procs/doremove/defaultDoRemoveModelsByQueryInitializerService
+ * @module nodics.core/modules/nSearch/search/src/service/procs/doremove/defaultDoRemoveModelsByQueryInitializerService
  * @description Implements nSearch default do remove models by query initializer service business behavior and extension logic.
  * @layer service
  * @owner nSearch

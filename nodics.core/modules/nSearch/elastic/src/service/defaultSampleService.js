@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/elastic/src/service/defaultSampleService
+ * @module nodics.core/modules/nSearch/elastic/src/service/defaultSampleService
  * @description Implements elastic default sample service business behavior and extension logic.
  * @layer service
  * @owner elastic

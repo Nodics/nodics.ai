@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nValidator/test/validatorServiceContract
+ * @module nodics.core/modules/nValidator/test/validatorServiceContract
  * @description Verifies persisted validator loading, tenant/item/trigger ordering, handler and script execution, and validator change-event refresh dispatch.
  * @layer test
  * @owner nValidator

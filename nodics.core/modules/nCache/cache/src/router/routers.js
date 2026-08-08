@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nCache/cache/src/router/routers
+ * @module nodics.core/modules/nCache/cache/src/router/routers
  * @description Defines nCache route registration and HTTP exposure metadata.
  * @layer router
  * @owner nCache

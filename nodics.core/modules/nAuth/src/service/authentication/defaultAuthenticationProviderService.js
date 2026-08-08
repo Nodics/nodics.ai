@@ -13,7 +13,7 @@ const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 
 /**
- * @module gFramework/nAuth/src/service/authentication/defaultAuthenticationProviderService
+ * @module nodics.core/modules/nAuth/src/service/authentication/defaultAuthenticationProviderService
  * @description Implements nAuth default authentication provider service business behavior and extension logic.
  * @layer service
  * @owner nAuth

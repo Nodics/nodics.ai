@@ -12,7 +12,7 @@
 const util = require('util');
 
 /**
- * @module gFramework/nData/nImport/import/src/service/process/file/defaultFileDataImportProcessService
+ * @module nodics.core/modules/nData/nImport/import/src/service/process/file/defaultFileDataImportProcessService
  * @description Implements nData default file data import process service business behavior and extension logic.
  * @layer service
  * @owner nData

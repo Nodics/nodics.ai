@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nOtp/test/otpCapabilityContract
+ * @module nodics.core/modules/nOtp/test/otpCapabilityContract
  * @description Verifies nOtp secured route metadata, controller body mapping, OTP/token service delegation, and OTP generation/expiry configuration handling.
  * @layer test
  * @owner nOtp

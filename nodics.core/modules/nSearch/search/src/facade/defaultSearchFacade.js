@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/facade/defaultSearchFacade
+ * @module nodics.core/modules/nSearch/search/src/facade/defaultSearchFacade
  * @description Coordinates facade-level delegation for nSearch default search facade operations.
  * @layer facade
  * @owner nSearch

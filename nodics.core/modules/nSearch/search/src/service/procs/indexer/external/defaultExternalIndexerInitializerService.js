@@ -14,7 +14,7 @@ const fse = require('fs-extra');
 const util = require('util');
 
 /**
- * @module gFramework/nSearch/search/src/service/procs/indexer/external/defaultExternalIndexerInitializerService
+ * @module nodics.core/modules/nSearch/search/src/service/procs/indexer/external/defaultExternalIndexerInitializerService
  * @description Implements nSearch default external indexer initializer service business behavior and extension logic.
  * @layer service
  * @owner nSearch

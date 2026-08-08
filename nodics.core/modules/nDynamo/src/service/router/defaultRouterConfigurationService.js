@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/src/service/router/defaultRouterConfigurationService
+ * @module nodics.core/modules/nDynamo/src/service/router/defaultRouterConfigurationService
  * @description Implements nDynamo default router configuration service business behavior and extension logic.
  * @layer service
  * @owner nDynamo

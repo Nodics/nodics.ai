@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nRouter/src/service/defaultSampleService
+ * @module nodics.core/modules/nRouter/src/service/defaultSampleService
  * @description Implements router default sample service business behavior and extension logic.
  * @layer service
  * @owner router

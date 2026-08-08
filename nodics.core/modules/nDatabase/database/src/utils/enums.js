@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/database/src/utils/enums.js
+ * @module nodics.core/modules/nDatabase/database/src/utils/enums.js
  * @description Provides shared database enum definition exports.
  * @layer utils
  * @owner database

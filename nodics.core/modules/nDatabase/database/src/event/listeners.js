@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/database/src/event/listeners
+ * @module nodics.core/modules/nDatabase/database/src/event/listeners
  * @description Documents nDatabase listeners module behavior.
  * @layer event
  * @owner nDatabase

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/src/service/event/defaultRouterConfigurationChangeListenerService
+ * @module nodics.core/modules/nDynamo/src/service/event/defaultRouterConfigurationChangeListenerService
  * @description Implements nDynamo default router configuration change listener service business behavior and extension logic.
  * @layer service
  * @owner nDynamo

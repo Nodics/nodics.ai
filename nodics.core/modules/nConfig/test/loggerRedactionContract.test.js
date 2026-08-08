@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nConfig/test/loggerRedactionContract
+ * @module nodics.core/modules/nConfig/test/loggerRedactionContract
  * @description Verifies that central logger serialization redacts sensitive
  * tokens, credentials, and secret-bearing fields before logs reach transports.
  * @layer test

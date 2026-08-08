@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/nodics
+ * @module nodics.core/modules/nDynamo/nodics
  * @description Registers the nDynamo module lifecycle hooks and module-level startup behavior.
  * @layer module
  * @owner nDynamo

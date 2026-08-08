@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/service/virtual/defaultEnterpriseVirtualService
+ * @module nodics.platform/modules/profile/src/service/virtual/defaultEnterpriseVirtualService
  * @description Implements profile default enterprise virtual service business behavior and extension logic.
  * @layer service
  * @owner profile

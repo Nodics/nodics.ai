@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/emsClient/src/service/defaultSampleService
+ * @module nodics.core/modules/nEms/emsClient/src/service/defaultSampleService
  * @description Implements emsClient default sample service business behavior and extension logic.
  * @layer service
  * @owner emsClient

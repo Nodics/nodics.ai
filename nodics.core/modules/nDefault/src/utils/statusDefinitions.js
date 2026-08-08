@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDefault/src/utils/statusDefinitions.js
+ * @module nodics.core/modules/nDefault/src/utils/statusDefinitions.js
  * @description Provides shared default status and error definition exports.
  * @layer utils
  * @owner default

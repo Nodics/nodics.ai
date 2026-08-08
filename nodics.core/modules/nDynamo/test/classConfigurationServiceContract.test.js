@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDynamo/test/classConfigurationServiceContract.test
+ * @module nodics.core/modules/nDynamo/test/classConfigurationServiceContract.test
  * @description Validates persisted and runtime class configuration behavior for dynamic Nodics service classes.
  * @layer test
  * @owner nDynamo

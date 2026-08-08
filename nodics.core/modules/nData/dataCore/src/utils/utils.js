@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/dataCore/src/utils/utils
+ * @module nodics.core/modules/nData/dataCore/src/utils/utils
  * @description Provides shared nData utility exports for utils.
  * @layer utils
  * @owner nData

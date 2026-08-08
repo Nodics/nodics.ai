@@ -25,6 +25,21 @@ environment, server, node, tenant, and governed runtime configuration can refine
 behavior later. A developer should place a property in the narrowest owner that
 needs it.
 
+The practical rule is: defaults travel with the owning module; overrides travel
+with the runtime. If WCMS generally owns data import, data export, media
+management, or CMS delivery, those defaults belong in the WCMS module. If
+Platform generally owns profile, BackOffice, or runtime registry exposure,
+those defaults belong in Platform. A project, environment, server, or node file
+should add only the part it intentionally changes for that boundary.
+
+Server configuration should therefore stay light. It may define ports, active
+modules, local database names, runtime identity, remote service coordinates, or
+an explicit decision to disable an inherited capability. It should not copy
+whole inherited property blocks such as `apiExposure`, provider defaults,
+import/export policy, media settings, permissions, limits, or discovery flags
+just to make the server file look complete. Copied defaults become a second
+authority and make upgrades harder.
+
 Use public browser configuration only for values safe to expose, such as Axis
 base URLs and client contract versions. Credentials, private keys, service
 tokens, database passwords, and provider secrets belong in protected backend

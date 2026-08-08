@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/database/test/schemaIndexServiceContract
+ * @module nodics.core/modules/nDatabase/database/test/schemaIndexServiceContract
  * @description Verifies schema index maintenance fans out across active tenants, master/test channels, modules, and schema-scoped model lookups.
  * @layer test
  * @owner nDatabase

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nData/nExport/export/config/postscripts
+ * @module nodics.core/modules/nData/nExport/export/config/postscripts
  * @description Defines default nExport postscript configuration used during module startup and layering.
  * @layer config
  * @owner nExport

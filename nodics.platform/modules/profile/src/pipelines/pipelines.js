@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/pipelines/pipelines
+ * @module nodics.platform/modules/profile/src/pipelines/pipelines
  * @description Defines profile pipeline wiring and execution contracts.
  * @layer pipelines
  * @owner profile

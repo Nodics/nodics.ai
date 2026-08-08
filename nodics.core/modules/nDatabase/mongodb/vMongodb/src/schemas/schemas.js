@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nDatabase/mongodb/vMongodb/src/schemas/schemas
+ * @module nodics.core/modules/nDatabase/mongodb/vMongodb/src/schemas/schemas
  * @description Defines nDatabase schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner nDatabase

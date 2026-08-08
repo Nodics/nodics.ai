@@ -12,7 +12,7 @@
 const _ = require('lodash');
 
 /**
- * @module gFramework/nbpm/src/service/handler/defaultSourceCarrierDataBuilderService
+ * @module nodics.core/modules/nbpm/src/service/handler/defaultSourceCarrierDataBuilderService
  * @description Implements nbpm default source carrier data builder service business behavior and extension logic.
  * @layer service
  * @owner nbpm

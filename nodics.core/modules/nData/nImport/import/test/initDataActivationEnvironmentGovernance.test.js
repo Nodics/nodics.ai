@@ -18,7 +18,7 @@ const _ = require('lodash');
  * @module import/test/initDataActivationEnvironmentGovernance
  * @description Verifies init/core/sample data-release activation, protected
  * environment gating, and mandatory bootstrap identity provisioning across
- * the import, auth, profile, and Startio configuration boundary.
+ * the import, auth, profile, and Kickoff configuration boundary.
  * @layer test
  * @owner import
  * @override Projects may enable additional environment-owned data releases
@@ -29,22 +29,22 @@ const _ = require('lodash');
 const repositoryRoot = path.resolve(__dirname, '../../../../../');
 const importProperties = require('../config/properties');
 const authDefaults = require('../../../../nAuth/config/properties').authSecurity;
-const localProperties = require(path.join(repositoryRoot, 'startio/envs/startioLocal/config/properties'));
+const localProperties = require(path.join(repositoryRoot, 'nodics.kickoff/envs/kickoffLocal/config/properties'));
 const protectedEnvironmentPropertyPaths = [
-    'startio/envs/config/properties.js',
-    'startio/envs/startioDev/config/properties.js',
-    'startio/envs/startioQA/config/properties.js',
-    'startio/envs/startioPreProd/config/properties.js',
-    'startio/envs/startioProd/config/properties.js'
+    'nodics.kickoff/envs/config/properties.js',
+    'nodics.kickoff/envs/kickoffDev/config/properties.js',
+    'nodics.kickoff/envs/kickoffQA/config/properties.js',
+    'nodics.kickoff/envs/kickoffPreProd/config/properties.js',
+    'nodics.kickoff/envs/kickoffProd/config/properties.js'
 ];
 const protectedEnvironmentRoots = [
-    'startio/envs',
-    'startio/envs/startioDev',
-    'startio/envs/startioQA',
-    'startio/envs/startioPreProd',
-    'startio/envs/startioProd'
+    'nodics.kickoff/envs',
+    'nodics.kickoff/envs/kickoffDev',
+    'nodics.kickoff/envs/kickoffQA',
+    'nodics.kickoff/envs/kickoffPreProd',
+    'nodics.kickoff/envs/kickoffProd'
 ];
-const profileEmployeeDataPath = path.join(repositoryRoot, 'gCore/profile/data/init/data/user/defaultEmployeeData.js');
+const profileEmployeeDataPath = path.join(repositoryRoot, 'nodics.platform/modules/profile/data/init/data/user/defaultEmployeeData.js');
 
 function loadProperties(relativePath) {
     return require(path.join(repositoryRoot, relativePath));
@@ -84,9 +84,9 @@ assert.strictEqual(localProperties.data.dataReleases.types.sample.enabled, true)
 assert.strictEqual(localProperties.data.dataReleases.types.sample.operatorExecution, true);
 assert.strictEqual(localProperties.data.contentPacks.enabled, true);
 assert.strictEqual(
-    fs.existsSync(path.join(repositoryRoot, 'startio/envs/startioLocal/data/init/manifest.json')),
+    fs.existsSync(path.join(repositoryRoot, 'nodics.kickoff/envs/kickoffLocal/data/init/manifest.json')),
     true,
-    'startioLocal may own local developer init data explicitly'
+    'kickoffLocal may own local developer init data explicitly'
 );
 
 protectedEnvironmentPropertyPaths.forEach(relativePath => {

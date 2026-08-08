@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/service/interceptors/defaultCustomerGetInterceptorService
+ * @module nodics.platform/modules/profile/src/service/interceptors/defaultCustomerGetInterceptorService
  * @description Implements profile default customer get interceptor service business behavior and extension logic.
  * @layer service
  * @owner profile

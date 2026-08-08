@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEvent/config/postscripts
+ * @module nodics.core/modules/nEvent/config/postscripts
  * @description Defines default nEvent configuration used during module startup and layering.
  * @layer config
  * @owner nEvent

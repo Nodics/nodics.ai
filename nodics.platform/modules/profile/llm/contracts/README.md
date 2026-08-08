@@ -1,6 +1,6 @@
 # profile AI Contracts
 
-This folder contains module-specific AI/developer contracts for `gCore/profile`.
+This folder contains module-specific AI/developer contracts for `nodics.platform/modules/profile`.
 
 Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.
 
@@ -61,4 +61,4 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   service in a later module. Do not create an Axis-only or capability-local
   parallel registry.
 - Validate changes with
-  `node gCore/profile/test/principalAuthorizationScopeContract.test.js`.
+  `node nodics.platform/modules/profile/test/principalAuthorizationScopeContract.test.js`.

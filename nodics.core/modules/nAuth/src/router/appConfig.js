@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nAuth/src/router/appConfig
+ * @module nodics.core/modules/nAuth/src/router/appConfig
  * @description Defines nAuth route registration and HTTP exposure metadata.
  * @layer router
  * @owner nAuth

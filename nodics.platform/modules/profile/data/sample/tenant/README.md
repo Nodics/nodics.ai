@@ -3,15 +3,15 @@
 This module-owned sample data restores the historical Profile tenant
 file-import use case that used `defaultTenantData` CSV and Excel files.
 
-It is intentionally kept under `gCore/profile/data/sample` instead of
-`gCore/profile/data/init` because tenant bootstrap data is security-sensitive.
+It is intentionally kept under `nodics.platform/modules/profile/data/sample` instead of
+`nodics.platform/modules/profile/data/init` because tenant bootstrap data is security-sensitive.
 Sample data is imported only when a user or operator intentionally chooses the
 sample import process.
 
 The folder follows the standard Nodics data-pack structure:
 
 ```text
-gCore/profile/data/sample/tenant/
+nodics.platform/modules/profile/data/sample/tenant/
   headers/
     tenantCsvDataHeader.js
     tenantExcelDataHeader.js
@@ -42,5 +42,5 @@ does not contribute a mandatory tenant import-template pattern.
 To run the examples intentionally through local import, use this root path:
 
 ```text
-gCore/profile/data/sample/tenant
+nodics.platform/modules/profile/data/sample/tenant
 ```

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nSearch/search/src/utils/enums
+ * @module nodics.core/modules/nSearch/search/src/utils/enums
  * @description Provides shared nSearch utility exports for enums.
  * @layer utils
  * @owner nSearch

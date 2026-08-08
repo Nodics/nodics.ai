@@ -24,7 +24,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const integrationConfiguration = require('../../../gFramework/nAuth/test/integration/authIntegrationTestConfiguration').load();
+const integrationConfiguration = require('../../../nodics.core/modules/nAuth/test/integration/authIntegrationTestConfiguration').load();
 
 class NodicsError extends Error {
     constructor(code, message) { super(message || code && code.message || String(code)); this.code = typeof code === 'string' ? code : code && code.code; }
@@ -124,7 +124,7 @@ function fixture() {
 function wire(repository) {
     global.SERVICE = {
         DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ isSystem: true }) },
-        DefaultAPIKeyCredentialService: require('../../../gFramework/nAuth/src/service/identity/defaultAPIKeyCredentialService'),
+        DefaultAPIKeyCredentialService: require('../../../nodics.core/modules/nAuth/src/service/identity/defaultAPIKeyCredentialService'),
         DefaultUserGroupService: repository.service('userGroups'),
         DefaultEmployeeService: repository.service('employees'),
         DefaultCustomerService: repository.service('customers'),

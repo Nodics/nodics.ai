@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nPipeline/src/utils/enums.js
+ * @module nodics.core/modules/nPipeline/src/utils/enums.js
  * @description Provides shared pipeline enum definition exports.
  * @layer utils
  * @owner pipeline

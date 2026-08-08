@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gCore/profile/src/service/interceptors/defaultPasswordSaveInterceptorService
+ * @module nodics.platform/modules/profile/src/service/interceptors/defaultPasswordSaveInterceptorService
  * @description Implements profile default password save interceptor service business behavior and extension logic.
  * @layer service
  * @owner profile

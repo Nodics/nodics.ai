@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nOtp/config/properties
+ * @module nodics.core/modules/nOtp/config/properties
  * @description Defines default nOtp configuration used during module startup and layering.
  * @layer config
  * @owner nOtp

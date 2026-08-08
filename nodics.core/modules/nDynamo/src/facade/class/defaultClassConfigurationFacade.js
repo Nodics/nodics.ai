@@ -15,7 +15,7 @@ const path = require('path');
 const RequireFromString = require('require-from-string');
 
 /**
- * @module gFramework/nDynamo/src/facade/class/defaultClassConfigurationFacade
+ * @module nodics.core/modules/nDynamo/src/facade/class/defaultClassConfigurationFacade
  * @description Coordinates facade-level delegation for nDynamo default class configuration facade operations.
  * @layer facade
  * @owner nDynamo

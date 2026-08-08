@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nEms/activemq/src/schemas/schemas
+ * @module nodics.core/modules/nEms/activemq/src/schemas/schemas
  * @description Defines nEms schema metadata, model contracts, and generated capability settings.
  * @layer schemas
  * @owner nEms

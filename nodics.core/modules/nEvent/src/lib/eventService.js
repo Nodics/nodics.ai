@@ -12,7 +12,7 @@
 const EventEmitter = require('events');
 
 /**
- * @module gFramework/nEvent/src/lib/eventService
+ * @module nodics.core/modules/nEvent/src/lib/eventService
  * @description Provides reusable nEvent library primitives for event service.
  * @layer lib
  * @owner nEvent
