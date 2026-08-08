@@ -124,7 +124,7 @@ its model/event contract.
 
 ## Continue
 
-- Application functionality: [How To Create Application Functionality](https://github.com/Nodics/nodicsdocs)
-- Data contracts: [How To Work With Data](https://github.com/Nodics/nodicsdocs)
+- Application functionality: [How To Create Application Functionality](https://github.com/Nodics/nodics.docs)
+- Data contracts: [How To Work With Data](https://github.com/Nodics/nodics.docs)
 - Runtime governance: [nDynamo](../nDynamo/README.md)
 - Framework map: [gFramework](../README.md)

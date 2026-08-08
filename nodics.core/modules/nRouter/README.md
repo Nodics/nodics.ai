@@ -247,7 +247,7 @@ integration tests.
 
 ## Continue
 
-- Public API guide: [How To Create APIs](https://github.com/Nodics/nodicsdocs)
-- Security guide: [How Users, Tenants, And Permissions Work](https://github.com/Nodics/nodicsdocs)
+- Public API guide: [How To Create APIs](https://github.com/Nodics/nodics.docs)
+- Security guide: [How Users, Tenants, And Permissions Work](https://github.com/Nodics/nodics.docs)
 - Detailed framework: Router Framework (canonical documentation: `capability.apis-routing.technical-reference`)
 - Framework map: [gFramework](../README.md)

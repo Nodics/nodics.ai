@@ -153,5 +153,5 @@ without exposing sensitive payloads.
 
 - Provider-neutral client: [emsClient](emsClient/README.md)
 - In-platform events: [nEvent](../nEvent/README.md)
-- Provider maturity: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodicsdocs)
-- Public platform guide: [How Platform Capabilities Work](https://github.com/Nodics/nodicsdocs)
+- Provider maturity: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)
+- Public platform guide: [How Platform Capabilities Work](https://github.com/Nodics/nodics.docs)

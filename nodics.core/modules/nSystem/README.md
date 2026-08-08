@@ -201,5 +201,5 @@ unbounded diagnostic endpoint.
 
 - Runtime governance: [nDynamo](../nDynamo/README.md)
 - Router exposure and authorization: [nRouter](../nRouter/README.md)
-- Run and debug: [How To Run And Debug Nodics](https://github.com/Nodics/nodicsdocs)
-- Production operations: [Production Operating Model](https://github.com/Nodics/nodicsdocs)
+- Run and debug: [How To Run And Debug Nodics](https://github.com/Nodics/nodics.docs)
+- Production operations: [Production Operating Model](https://github.com/Nodics/nodics.docs)

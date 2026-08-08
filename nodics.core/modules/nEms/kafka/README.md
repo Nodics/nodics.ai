@@ -90,5 +90,5 @@ an isolated cluster.
 
 - Provider-neutral contract: [emsClient](../emsClient/README.md)
 - Messaging family: [nEms](../README.md)
-- Maturity matrix: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodicsdocs)
+- Maturity matrix: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)
 - Event execution: [nEvent](../../nEvent/README.md)

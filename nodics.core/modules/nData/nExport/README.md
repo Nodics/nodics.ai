@@ -115,5 +115,5 @@ contracts are active.
 
 - Shared engine: [export](export/README.md)
 - Data family: [nData](../README.md)
-- Public data guide: [How To Work With Data](https://github.com/Nodics/nodicsdocs)
-- Maturity matrix: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodicsdocs)
+- Public data guide: [How To Work With Data](https://github.com/Nodics/nodics.docs)
+- Maturity matrix: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)

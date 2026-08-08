@@ -6,7 +6,7 @@ history; validation-only execution; and access-policy enforcement.
 
 It also owns disabled-by-default, versioned content-pack installation and
 updates. See Governed Content-Pack Import (canonical documentation: `capability.data-exchange.technical-reference`)
-for the local `nodicsdocs` workspace, Axis administrator journey, configuration,
+for the local `nodics.docs` workspace, Axis administrator journey, configuration,
 security, update, extension and verification contracts.
 
 ## Tenant precedence

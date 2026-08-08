@@ -95,4 +95,4 @@ Only trusted definitions from active modules may execute. Request payloads, uplo
 - Import family: [nImport](../README.md)
 - Shared engine: [import](../import/README.md)
 - Data processing: [dataCore](../../dataCore/README.md)
-- Public data guide: [How To Work With Data](https://github.com/Nodics/nodicsdocs)
+- Public data guide: [How To Work With Data](https://github.com/Nodics/nodics.docs)

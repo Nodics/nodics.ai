@@ -202,7 +202,7 @@ tests where external infrastructure is involved.
 
 ## Continue
 
-- Public data guide: [How To Work With Data](https://github.com/Nodics/nodicsdocs)
+- Public data guide: [How To Work With Data](https://github.com/Nodics/nodics.docs)
 - Generic persistence capability: [database](database/README.md)
-- Provider maturity: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodicsdocs)
+- Provider maturity: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)
 - Framework map: [gFramework](../README.md)

@@ -35,7 +35,7 @@ together. Then move to the owning module:
 | Service behavior and module-to-module communication | [nService](nService/README.md) |
 | Database capability and provider composition | [nDatabase](nDatabase/README.md) |
 | Ordered runtime execution | [nPipeline](nPipeline/README.md) |
-| All framework capabilities | [Complete Module Catalog](https://github.com/Nodics/nodicsdocs) |
+| All framework capabilities | [Complete Module Catalog](https://github.com/Nodics/nodics.docs) |
 
 ## Documentation Contract
 
@@ -125,7 +125,7 @@ npm run test:basic
 
 ## Continue
 
-- Beginner architecture: [How Nodics Is Organized](https://github.com/Nodics/nodicsdocs)
-- Build a capability: [Build Your First Nodics Capability](https://github.com/Nodics/nodicsdocs)
-- Module catalog: [Complete Module Catalog](https://github.com/Nodics/nodicsdocs)
-- Public documentation: [Nodics Documentation](https://github.com/Nodics/nodicsdocs)
+- Beginner architecture: [How Nodics Is Organized](https://github.com/Nodics/nodics.docs)
+- Build a capability: [Build Your First Nodics Capability](https://github.com/Nodics/nodics.docs)
+- Module catalog: [Complete Module Catalog](https://github.com/Nodics/nodics.docs)
+- Public documentation: [Nodics Documentation](https://github.com/Nodics/nodics.docs)

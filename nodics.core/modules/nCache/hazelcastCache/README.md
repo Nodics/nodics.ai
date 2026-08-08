@@ -34,4 +34,4 @@ Normal tests use a contract double and skip the guarded live test when no cluste
 
 - Generic cache contract: [cache](../cache/README.md)
 - Provider selection: [nCache](../README.md)
-- Public guide: [How Cache Works](https://github.com/Nodics/nodicsdocs)
+- Public guide: [How Cache Works](https://github.com/Nodics/nodics.docs)

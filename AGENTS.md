@@ -17,8 +17,8 @@ own local behavior inside each functional module group.
 - Keep frontend applications outside this repository. `nodics.axis` is the
   Axis/BackOffice frontend application and must be managed as a separate
   project/repository parallel to the framework repository.
-- Do not import behavior from legacy `nodics`, `nodicsaxis`, or `nodicsdocs`
-  except as explicitly approved reference material during migration.
+- Do not import behavior from archived legacy repositories except as explicitly
+  approved reference material during migration.
 
 ## Functional module identity
 

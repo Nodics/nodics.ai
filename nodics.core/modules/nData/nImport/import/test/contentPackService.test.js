@@ -31,7 +31,7 @@ function digest(value) {
 function createFixture() {
     let workspace = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-content-pack-'));
     let nodicsHome = path.join(workspace, 'nodics');
-    let repository = path.join(workspace, 'nodicsdocs');
+    let repository = path.join(workspace, 'nodics.docs');
     let serverPath = path.join(nodicsHome, 'server');
     let generatedFile = path.join(repository, 'data/core/headers/contentHeader.js');
     fs.mkdirSync(path.dirname(generatedFile), { recursive: true });
@@ -40,7 +40,7 @@ function createFixture() {
     fs.writeFileSync(generatedFile, 'module.exports = {};\n');
     let relativeFile = 'data/core/headers/contentHeader.js';
     let manifest = {
-        pack: 'nodicsdocs',
+        pack: 'nodics.docs',
         version: '1.0.0',
         contractVersion: 1,
         generatedHashes: {
@@ -75,10 +75,10 @@ function createHarness(fixture, enabled) {
                 packs: {
                     nodicsDocumentation: {
                         enabled: true,
-                        manifestPack: 'nodicsdocs',
+                        manifestPack: 'nodics.docs',
                         source: {
                             type: 'LOCAL_SIBLING',
-                            repositoryName: 'nodicsdocs',
+                            repositoryName: 'nodics.docs',
                             contentPath: 'data/core',
                             manifestPath: 'manifest/generated-content-pack.json'
                         },

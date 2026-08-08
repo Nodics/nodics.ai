@@ -129,6 +129,6 @@ prefix cleanup, and restart/failover using an isolated environment.
 ## Continue
 
 - Generic cache contract: [cache](../cache/README.md)
-- Release qualification: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodicsdocs)
+- Release qualification: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)
 - Authentication use: [nAuth](../../nAuth/README.md)
-- Public guide: [How Cache Works](https://github.com/Nodics/nodicsdocs)
+- Public guide: [How Cache Works](https://github.com/Nodics/nodics.docs)

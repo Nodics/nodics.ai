@@ -377,4 +377,4 @@ node gAi/aiAssistant/test/aiAssistantGovernedReadToolContract.test.js
 - Authentication framework: [nAuth](../../gFramework/nAuth/README.md)
 - Token lifecycle: [nToken](../../gFramework/nToken/README.md)
 - Cache and distributed state: [nCache](../../gFramework/nCache/README.md)
-- Capability maturity: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodicsdocs)
+- Capability maturity: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)

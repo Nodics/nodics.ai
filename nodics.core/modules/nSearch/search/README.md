@@ -118,5 +118,5 @@ content as unrestricted telemetry.
 
 - Provider selection: [nSearch](../README.md)
 - Elasticsearch adapter: [elastic](../elastic/README.md)
-- Cache policy: [How Cache Works](https://github.com/Nodics/nodicsdocs)
-- Data guide: [How To Work With Data](https://github.com/Nodics/nodicsdocs)
+- Cache policy: [How Cache Works](https://github.com/Nodics/nodics.docs)
+- Data guide: [How To Work With Data](https://github.com/Nodics/nodics.docs)

@@ -71,5 +71,5 @@ Executable transformation must come only from trusted active modules with bounde
 
 - Export family: [nExport](../README.md)
 - Shared fail-closed engine: [export](../export/README.md)
-- Maturity matrix: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodicsdocs)
-- Public data guide: [How To Work With Data](https://github.com/Nodics/nodicsdocs)
+- Maturity matrix: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)
+- Public data guide: [How To Work With Data](https://github.com/Nodics/nodics.docs)

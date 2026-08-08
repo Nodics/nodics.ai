@@ -82,5 +82,5 @@ and recovery before changing the maturity level.
 
 - Provider-neutral contract: [emsClient](../emsClient/README.md)
 - Messaging family: [nEms](../README.md)
-- Maturity matrix: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodicsdocs)
+- Maturity matrix: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)
 - Kafka guarded provider: [kafka](../kafka/README.md)

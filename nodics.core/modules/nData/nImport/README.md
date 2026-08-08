@@ -174,5 +174,5 @@ integration tests, operations, and release gates.
 
 - Shared import engine: [import](import/README.md)
 - Data processing: [dataCore](../dataCore/README.md)
-- Public data guide: [How To Work With Data](https://github.com/Nodics/nodicsdocs)
-- Provider maturity: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodicsdocs)
+- Public data guide: [How To Work With Data](https://github.com/Nodics/nodics.docs)
+- Provider maturity: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)

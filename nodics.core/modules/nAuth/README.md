@@ -45,7 +45,7 @@ Browser clients use module-specific audiences through
 `DefaultAuthSecurityService.getBrowserAudience`. Profile implements the
 optional cookie session facade, which remains disabled by default until an
 environment supplies exact credentialed-CORS origins and secure cookie policy. See
-[`nodicsdocs/security/backoffice-browser-security.md`](https://github.com/Nodics/nodicsdocs).
+[`nodics.docs/security/backoffice-browser-security.md`](https://github.com/Nodics/nodics.docs).
 
 Compatibility flags live under `authSecurity.compatibility`. They are explicit
 migration aids, not production defaults. Projects may replace the provider or
@@ -199,7 +199,7 @@ redaction, and shared-state behavior.
 
 ## Continue
 
-- Public security guide: [How Users, Tenants, And Permissions Work](https://github.com/Nodics/nodicsdocs)
+- Public security guide: [How Users, Tenants, And Permissions Work](https://github.com/Nodics/nodics.docs)
 - Human and service principals: [profile](../../gCore/profile/README.md)
 - Generic token lifecycle: [nToken](../nToken/README.md)
 - HTTP authorization: [nRouter](../nRouter/README.md)

@@ -66,10 +66,10 @@ module.exports = {
             packs: {
                 nodicsDocumentation: {
                     enabled: true,
-                    manifestPack: 'nodicsdocs',
+                    manifestPack: 'nodics.docs',
                     source: {
                         type: 'LOCAL_SIBLING',
-                        repositoryName: 'nodicsdocs',
+                        repositoryName: 'nodics.docs',
                         contentPath: 'data/core',
                         manifestPath: 'manifest/generated-content-pack.json'
                     },
@@ -88,10 +88,10 @@ module.exports = {
                 },
                 axisDocumentation: {
                     enabled: true,
-                    manifestPack: 'nodicsaxis',
+                    manifestPack: 'nodics.axis',
                     source: {
                         type: 'LOCAL_SIBLING',
-                        repositoryName: 'nodicsaxis',
+                        repositoryName: 'nodics.axis',
                         contentPath: 'data/core',
                         manifestPath: 'manifest/docs-content-pack.json'
                     },

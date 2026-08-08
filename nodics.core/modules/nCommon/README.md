@@ -144,7 +144,7 @@ regression tests when a shared contract changes.
 
 ## Continue
 
-- Error and trace terminology: [Nodics Glossary](https://github.com/Nodics/nodicsdocs)
+- Error and trace terminology: [Nodics Glossary](https://github.com/Nodics/nodics.docs)
 - Framework map: [gFramework](../README.md)
 - Ordered execution: [nPipeline](../nPipeline/README.md)
-- Public documentation: [Nodics Documentation](https://github.com/Nodics/nodicsdocs)
+- Public documentation: [Nodics Documentation](https://github.com/Nodics/nodics.docs)

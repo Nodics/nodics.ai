@@ -74,7 +74,7 @@ requireClauses('modules/nSetup/llm/nodics-principles.md', [
 requireClauses('modules/nSetup/llm/prompts/base-nodics-assistant-prompt.md', [
     'root README.md',
     'ancestor module README.md and AGENTS.md',
-    'nodicsdocs documentation',
+    'nodics.docs documentation',
     'application-developer mode',
     'Nodics framework source as',
     'immutable and already qualified',
@@ -110,7 +110,7 @@ requireClauses('modules/nSetup/llm/contracts/nodics-expert-decision-contract.md'
 requireClauses('modules/nSetup/llm/prompts/enterprise-architecture-quality-prompt.md', [
     'bounded Nodics expert council',
     'Pre-implementation study rule',
-    'nodicsdocs documentation',
+    'nodics.docs documentation',
     'Mandatory acceptance rule',
     'modules/nSetup/llm/contracts/nodics-principles.md',
     'Every new or changed extension point requires an override/customization test',
@@ -200,7 +200,7 @@ requireClauses('modules/nSetup/llm/daily-change-checklist.md', [
     '**Impact:**',
     '**Proof:**',
     '**Study:**',
-    'nodicsdocs',
+    'nodics.docs',
     'classify the artifact owner before coding',
     'understandable, diagnosable, safely changeable, and reviewable',
     'Evidence may be reused while the relevant files remain unchanged'

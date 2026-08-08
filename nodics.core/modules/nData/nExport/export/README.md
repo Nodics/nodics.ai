@@ -115,6 +115,6 @@ Avoid:
 ## Continue
 
 - Export family and completion gate: [nExport](../README.md)
-- Public data guide: [How To Work With Data](https://github.com/Nodics/nodicsdocs)
+- Public data guide: [How To Work With Data](https://github.com/Nodics/nodics.docs)
 - Data access policy: [database](../../../nDatabase/database/README.md)
-- Maturity matrix: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodicsdocs)
+- Maturity matrix: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)
