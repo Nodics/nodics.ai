@@ -314,9 +314,6 @@ module.exports = {
     dispatchImportBatch: function (request, response, options, batch) {
         let header = request.fileData.header;
         let models = batch.map(entry => entry.model);
-        if (SERVICE.DefaultImportDiagnosticsService) {
-            SERVICE.DefaultImportDiagnosticsService.increment(request, 'recordsDispatched', batch.length);
-        }
         return SERVICE.DefaultPipelineService.start('processModelImportPipeline', {
             tenant: options.tenant,
             authData: {
@@ -327,6 +324,7 @@ module.exports = {
             importRun: request.importRun
         }, {}).then(success => {
             if (SERVICE.DefaultImportDiagnosticsService) {
+                SERVICE.DefaultImportDiagnosticsService.increment(request, 'recordsDispatched', batch.length);
                 SERVICE.DefaultImportDiagnosticsService.increment(request, 'recordsSucceeded', batch.length);
             }
             this.appendImportSuccess(response, success);
@@ -384,10 +382,12 @@ module.exports = {
      */
     recordImportBatchFailure: function (request, options, batch, error) {
         let header = request.fileData.header;
+        let recordDiagnosticFailure = this.shouldRecordImportFailure(request);
         options.errors = options.errors || [];
         batch.forEach(entry => {
             let recordError = this.createRecordImportFailureError(request, header, entry, error);
-            if (SERVICE.DefaultImportDiagnosticsService) {
+            if (recordDiagnosticFailure && SERVICE.DefaultImportDiagnosticsService) {
+                SERVICE.DefaultImportDiagnosticsService.increment(request, 'recordsDispatched', 1);
                 SERVICE.DefaultImportDiagnosticsService.addFailure(request, {
                     tenant: options.tenant,
                     owningModule: header.options.owningModule,
@@ -402,6 +402,24 @@ module.exports = {
             }
             options.errors.push(recordError);
         });
+    },
+
+    /**
+     * Resolves whether a record-level failure should be written to import run
+     * diagnostics. Earlier phases are retry probes; recording them as permanent
+     * failures makes successful later phases look failed.
+     *
+     * @param {Object} request Import request containing phase metadata.
+     * @returns {boolean} True when the failure is final or fail-fast is active.
+     */
+    shouldRecordImportFailure: function (request) {
+        if (this.shouldStopImportOnFailure(request)) {
+            return true;
+        }
+        if (!request || request.phase === undefined || request.phaseLimit === undefined) {
+            return true;
+        }
+        return request.phase >= request.phaseLimit - 1;
     },
 
     /**

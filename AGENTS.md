@@ -38,6 +38,9 @@ own local behavior inside each functional module group.
 - Runtime server `extends` defines the effective boot chain for a server.
 - Service override order remains explicit through runtime load/index order and
   merge behavior. Do not confuse module availability with service precedence.
+- Treat import retry phases as operational probes. Transient phase errors may be
+  visible in logs, but recovered retries must not remain in persisted import-run
+  diagnostics.
 
 ## Documentation and LLM ownership
 

@@ -75,6 +75,19 @@ contract changes as complete.
 - [ ] Local sample credentials remain outside framework modules.
 - [ ] Runtime `temp/` files are treated as generated state, not authored config.
 
+## C1 - Fresh-start import diagnostics
+
+- [ ] After dropping `kickoffLocal`, Platform startup creates one latest
+      `ImportRunModel` with `status=COMPLETED`, `failureCount=0`, and
+      `summary.recordsFailed=0`.
+- [ ] After dropping `kickoffLocalWcms`, WCMS startup creates one latest
+      `ImportRunModel` with `status=COMPLETED`, `failureCount=0`, and
+      `summary.recordsFailed=0`.
+- [ ] Transient first-phase dependency lookup errors may appear in logs, but
+      recovered retries are not persisted as final import failures.
+- [ ] The finalized import dispatch contract test covers retry-phase failures
+      so stale diagnostics cannot return.
+
 ## E1 - Verification path
 
 - [ ] Every Phase 0 action has a verification command or manual check.

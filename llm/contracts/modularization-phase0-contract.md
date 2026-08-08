@@ -53,6 +53,14 @@ clean/build behavior, or documentation ownership.
 - Core, platform/profile, and WCMS are mandatory foundation capabilities for the
   current Axis/backoffice experience and must not be treated like optional
   business modules without an explicit architecture decision.
+- Init/import pipelines may retry finalized files across phases while dependency
+  records become available. Transient phase errors may appear in runtime logs,
+  but persisted `ImportRunModel` diagnostics must only count final-phase or
+  fail-fast record failures. A successful later phase must leave
+  `failureCount=0`, `recordsFailed=0`, and no stale row-level failures.
+- Finalized import dispatch must preserve dependency-safe behavior through the
+  retry model: unresolved references are retried until the phase limit, and only
+  unrecovered references are exposed as operational failures.
 
 ## Customer project dependency resolution
 
@@ -153,6 +161,7 @@ folders must not be accidental.
 | A6 | Decide node_modules/link/configured-root model | Install/update/generated-artifact behavior is clear |
 | B1 | Lock formatting principle | JS/JSON/config formatting is enforceable |
 | B3 | Lock module skeleton contract | Modules can be audited consistently |
+| C1 | Stabilize fresh-start import diagnostics | Clean MongoDB startup reports completed imports only when recovered retries have no final failures |
 | E1 | Create validation checklist | Every contract has a verification path |
 
 Do not begin broad code movement until these actions are documented and at

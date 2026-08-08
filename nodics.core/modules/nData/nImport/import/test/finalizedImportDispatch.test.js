@@ -396,7 +396,122 @@ function getCodes(dataModel) {
     assert.strictEqual(request.importRun.summary.recordsFailed, 2);
 
     calls = [];
+    batchImport = {
+        enabled: false,
+        size: 100
+    };
+    request.fileData.header.options.batchImport = {
+        enabled: false,
+        size: 1
+    };
+    let firstPhase = true;
+    global.SERVICE.DefaultPipelineService.start = function (pipelineName, request) {
+        calls.push({
+            pipelineName: pipelineName,
+            tenant: request.tenant,
+            model: request.dataModel
+        });
+        if (firstPhase && request.dataModel.code === 'one') {
+            return Promise.reject({
+                code: 'ERR_TEST_RETRYABLE_IMPORT',
+                message: 'Synthetic retryable import failure'
+            });
+        }
+        return Promise.resolve({
+            code: request.dataModel.code
+        });
+    };
+    request.fileData.models = {
+        record0: {
+            code: 'one'
+        },
+        record1: {
+            code: 'two'
+        }
+    };
+    request.dataFiles.finalizedData_js.processed = [];
+    request.importRun = {
+        summary: {}
+    };
+    request.phase = 0;
+    request.phaseLimit = 2;
+
+    try {
+        await processModels(request);
+        assert.fail('Expected retryable first-phase failure to retry the file');
+    } catch (error) {
+        assert.strictEqual(error.code, 'ERR_IMP_00010');
+        assert.strictEqual(error.errors.length, 1);
+        assert.strictEqual(error.errors[0].code, 'ERR_TEST_RETRYABLE_IMPORT');
+    }
+
+    assert.deepStrictEqual(calls.map(call => call.model.code), ['one', 'two']);
+    assert.deepStrictEqual(request.dataFiles.finalizedData_js.processed, ['test:record1']);
+    assert.strictEqual(request.importRun.summary.recordsDispatched, 1);
+    assert.strictEqual(request.importRun.summary.recordsSucceeded, 1);
+    assert.strictEqual(request.importRun.summary.recordsFailed || 0, 0);
+    assert.strictEqual((request.importRun.failures || []).length, 0);
+
+    firstPhase = false;
+    calls = [];
+    request.phase = 1;
+
+    await processModels(request);
+
+    assert.deepStrictEqual(calls.map(call => call.model.code), ['one']);
+    assert.deepStrictEqual(request.dataFiles.finalizedData_js.processed, ['test:record1', 'test:record0']);
+    assert.strictEqual(request.importRun.summary.recordsDispatched, 2);
+    assert.strictEqual(request.importRun.summary.recordsSucceeded, 2);
+    assert.strictEqual(request.importRun.summary.recordsSkipped, 1);
+    assert.strictEqual(request.importRun.summary.recordsFailed || 0, 0);
+    assert.strictEqual((request.importRun.failures || []).length, 0);
+
+    delete request.phase;
+    delete request.phaseLimit;
+
+    calls = [];
     stopImportOnFailure = true;
+    batchImport = {
+        enabled: true,
+        size: 2
+    };
+    request.fileData.header.options.batchImport = {
+        enabled: true,
+        size: 2
+    };
+    request.fileData.models = {
+        record0: {
+            code: 'one'
+        },
+        record1: {
+            code: 'two'
+        },
+        record2: {
+            code: 'three'
+        },
+        record3: {
+            code: 'four'
+        },
+        record4: {
+            code: 'five'
+        }
+    };
+    global.SERVICE.DefaultPipelineService.start = function (pipelineName, request) {
+        calls.push({
+            pipelineName: pipelineName,
+            tenant: request.tenant,
+            model: request.dataModel
+        });
+        if (getCodes(request.dataModel).includes('one')) {
+            return Promise.reject({
+                code: 'ERR_TEST_BATCH_IMPORT',
+                message: 'Synthetic batch import failure'
+            });
+        }
+        return Promise.resolve([].concat(request.dataModel).map(model => ({
+            code: model.code
+        })));
+    };
     request.dataFiles.finalizedData_js.processed = [];
     request.importRun = {
         summary: {}

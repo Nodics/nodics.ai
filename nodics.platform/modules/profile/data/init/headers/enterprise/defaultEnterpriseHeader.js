@@ -18,6 +18,21 @@
  */
 module.exports = {
     profile: {
+        defaultTenants: {
+            options: {
+                enabled: true,
+                schemaName: 'tenant', //put type name, if want to push data into search
+                operation: 'saveAll', //saveAll, update and saveOrUpdate, put doSave, if data needs to be pushed into serach
+                tenants: ['default'],
+                dataFilePrefix: 'defaultTenantsData'
+            },
+            query: {
+                //addresses.code: '$code'
+                code: '$code',
+                /*jobDetail.name: '$name'
+                name: 'Himkar Dwivedi'*/
+            }
+        },
         defaultEnterprise: {
             options: {
                 enabled: true,

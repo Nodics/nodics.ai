@@ -34,7 +34,7 @@ module.exports = {
             minimumClientContractVersion: 1,
             roles: ['FUNCTIONAL_CAPABILITY_PROVIDER'],
             discovery: {
-                openApiPath: '/nodics/media/v0/contract/openapi',
+                openApiPath: '/nodics/system/v0/contract/openapi/internal',
                 contractVersion: 1
             },
             requiredPermissions: ['media.storage.policy.view'],

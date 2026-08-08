@@ -19,6 +19,11 @@
 
 module.exports = {
   record0: {
+    code: "userGroup",
+    name: "userGroup",
+    active: true,
+  },
+  record1: {
     code: "adminGroup",
     name: "adminGroup",
     active: true,
@@ -40,11 +45,6 @@ module.exports = {
       "order.lifecycle.policy.read",
       "order.lifecycle.reason.read",
     ],
-  },
-  record1: {
-    code: "userGroup",
-    name: "userGroup",
-    active: true,
   },
   record2: {
     code: "employeeUserGroup",
