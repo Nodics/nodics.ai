@@ -1,0 +1,30 @@
+{
+  "contextVersion": 3,
+  "moduleName": "nTest",
+  "path": "modules/nTest",
+  "kind": "capability",
+  "runtime": {
+    "router": false,
+    "publish": false,
+    "web": false
+  },
+  "package": {
+    "index": "1.19",
+    "version": "0.0.1",
+    "description": "Nodics testing module for layered test discovery, schema/API generated tests, guarded live tests, suite reporting, topology-aware evidence, and report ownership."
+  },
+  "sourceFiles": 20,
+  "testFiles": 8,
+  "dataFiles": 0,
+  "ownedFiles": 35,
+  "sourceFingerprint": "d97536bf14e24edaddb34f3242ff30e8000115bd07d8b113cd0fe90a90936236",
+  "documentation": {
+    "documented": 29,
+    "partially-documented": 0,
+    "undocumented": 3,
+    "inventory-only": 3
+  },
+  "schemaGroups": {},
+  "schemaLoadError": null,
+  "generatedBy": "npm run llm:generate"
+}

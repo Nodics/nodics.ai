@@ -1,0 +1,39 @@
+{
+  "contextVersion": 3,
+  "moduleName": "media",
+  "path": "modules/media",
+  "kind": "capability",
+  "runtime": {
+    "router": true,
+    "publish": false,
+    "web": false
+  },
+  "package": {
+    "index": "1.27",
+    "version": "0.0.1",
+    "description": "Nodics WCMS media lifecycle capability for storage-provider-neutral assets."
+  },
+  "sourceFiles": 26,
+  "testFiles": 40,
+  "dataFiles": 0,
+  "ownedFiles": 49,
+  "sourceFingerprint": "08afa915a40828470d3ceb6b5d5068fd33d2978d36f5bc28a9bb5869d49fc69d",
+  "documentation": {
+    "documented": 45,
+    "partially-documented": 0,
+    "undocumented": 1,
+    "inventory-only": 3
+  },
+  "schemaGroups": {
+    "media": [
+      "media",
+      "mediaFolder",
+      "mediaFormat",
+      "mediaReference",
+      "mediaSet",
+      "mediaSetEntry"
+    ]
+  },
+  "schemaLoadError": null,
+  "generatedBy": "npm run llm:generate"
+}

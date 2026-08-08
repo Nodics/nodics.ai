@@ -1,0 +1,51 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+/**
+ * @module nodics.wcms/media/test/mediaBusinessOwnershipBoundary
+ * @description Ensures media owns reusable media sets while caller modules own product, CMS, import, and documentation meaning.
+ * @layer test
+ * @owner media
+ * @override Later product or CMS modules may add business assignments without moving storage authority out of media.
+ */
+
+const assert = require('assert');
+
+const schemas = require('../src/schemas/schemas').media;
+const properties = require('../config/properties').media;
+
+assert(schemas.mediaSet, 'media must expose reusable mediaSet for logical assets with variants');
+assert(schemas.mediaSetEntry, 'media must expose mediaSetEntry for concrete variants inside a media set');
+assert(schemas.mediaReference, 'media must expose generic mediaReference for caller-owned business objects');
+
+[
+    'productMediaAssignment',
+    'productGalleryImage',
+    'productPrimaryImage',
+    'cmsComponentMediaAssignment',
+    'importSourceExecution'
+].forEach(schemaName => {
+    assert(!schemas[schemaName], 'media must not own caller-specific business schema `' + schemaName + '`');
+});
+
+['original', 'thumbnail', 'small', 'medium', 'large', 'zoom', 'desktop', 'mobile', 'importFile', 'exportFile'].forEach(formatCode => {
+    assert(properties.formats[formatCode], 'media must provide generic format `' + formatCode + '`');
+});
+
+assert(properties.folders.productAssets, 'media may provide a reusable productAssets folder policy');
+assert(properties.folders.exportFiles, 'media must provide a reusable exportFiles folder policy for generated data export files');
+assert.strictEqual(properties.folders.exportFiles.access, 'PRIVATE', 'Generated export files must default to private delivery visibility');
+assert.strictEqual(schemas.mediaReference.definition.ownerModule.required, true,
+    'Generic references must preserve caller module ownership');
+assert.strictEqual(schemas.mediaReference.definition.ownerSchema.required, true,
+    'Generic references must preserve caller schema ownership');
+
+console.log('media business ownership boundary validated');

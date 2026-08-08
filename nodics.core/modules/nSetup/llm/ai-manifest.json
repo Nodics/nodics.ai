@@ -1,0 +1,24 @@
+{
+    "manifestSchemaVersion": 1,
+    "canonicalInstructionFile": "AGENTS.md",
+    "moduleInstructionFile": "AGENTS.md",
+    "humanReadmeFile": "README.md",
+    "moduleDocumentationDirectory": "docs",
+    "moduleAiDirectory": "llm",
+    "moduleAiReadmeFile": null,
+    "generatedAiContextDirectory": "llm/generated",
+    "globalAiGuidance": "modules/nSetup/llm/ai-enablement-index.md",
+    "contractsDirectory": "modules/nSetup/llm/contracts",
+    "promptsDirectory": "modules/nSetup/llm/prompts",
+    "toolBridges": [
+        "CLAUDE.md",
+        "CONVENTIONS.md",
+        ".github/copilot-instructions.md",
+        ".cursor/rules/nodics-core.mdc"
+    ],
+    "requiredPreCommitChecks": [
+        "npm run ai:validate",
+        "npm run llm:validate",
+        "npm run quality:docs"
+    ]
+}

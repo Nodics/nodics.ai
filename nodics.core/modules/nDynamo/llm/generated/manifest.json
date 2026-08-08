@@ -1,0 +1,40 @@
+{
+  "contextVersion": 3,
+  "moduleName": "dynamo",
+  "path": "modules/nDynamo",
+  "kind": "capability",
+  "runtime": {
+    "router": true,
+    "publish": false,
+    "web": false
+  },
+  "package": {
+    "index": "1.80",
+    "version": "0.0.1",
+    "description": "Runtime control-plane module for schema, router, class, pipeline, property, schema-access policy, activation, audit, rollback, and governance behavior."
+  },
+  "sourceFiles": 36,
+  "testFiles": 43,
+  "dataFiles": 0,
+  "ownedFiles": 67,
+  "sourceFingerprint": "e170e447e81fac1261490f5abd5a0937cae3f78f35686e2eead3d2bf4a8fdb0b",
+  "documentation": {
+    "documented": 44,
+    "partially-documented": 4,
+    "undocumented": 16,
+    "inventory-only": 3
+  },
+  "schemaGroups": {
+    "dynamo": [
+      "classConfiguration",
+      "configurationActivationLog",
+      "configurationActivationRequest",
+      "pipeline",
+      "routerConfiguration",
+      "schemaAccessPolicy",
+      "schemaConfiguration"
+    ]
+  },
+  "schemaLoadError": null,
+  "generatedBy": "npm run llm:generate"
+}

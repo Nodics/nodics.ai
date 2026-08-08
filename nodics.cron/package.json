@@ -1,0 +1,34 @@
+{
+  "name": "nodics.cron",
+  "version": "0.0.1",
+  "index": "80.99",
+  "private": true,
+  "description": "Nodics scheduled job runtime module group.",
+  "main": "nodics.js",
+  "requiredModules": ["cronjob"],
+  "nodics": {
+    "kind": "group",
+    "extends": ["nodics.core"],
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": ["composition", "configuration", "llm"],
+    "runtime": { "router": false, "publish": false, "web": false },
+    "displayName": "Nodics Cron",
+    "functionalModule": {
+      "identity": "nodics.cron",
+      "displayName": "Cron",
+      "type": "STANDARD",
+      "protected": false
+    }
+  },
+  "scripts": {
+    "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
+    "test:cronjob": "node modules/cronjob/test/cronJobRouteContract.test.js && node modules/cronjob/test/cronJobControllerRequestMapping.test.js && node modules/cronjob/test/cronJobServiceLifecycleContract.test.js && node modules/cronjob/test/cronJobRuntimeContainerContract.test.js && node modules/cronjob/test/cronJobEventHandlerContract.test.js",
+    "test": "npm run check:syntax && npm run test:cronjob"
+  },
+  "dependencies": {
+    "cron": "^1.8.2",
+    "lodash": "^4.17.21",
+    "nodics.core": "file:../nodics.core"
+  }
+}

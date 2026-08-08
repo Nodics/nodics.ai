@@ -1,0 +1,40 @@
+{
+  "name": "nodics.wcms",
+  "version": "0.0.1",
+  "index": "70.99",
+  "private": true,
+  "description": "Nodics web content management module group.",
+  "main": "nodics.js",
+  "requiredModules": ["media", "cms", "wcms"],
+  "nodics": {
+    "kind": "group",
+    "extends": ["nodics.core"],
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": ["composition", "configuration", "llm"],
+    "runtime": { "router": false, "publish": false, "web": false },
+    "displayName": "Nodics WCMS",
+    "functionalModule": {
+      "identity": "nodics.wcms",
+      "displayName": "WCMS",
+      "type": "STANDARD",
+      "protected": true
+    }
+  },
+  "scripts": {
+    "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
+    "test:axis-content": "node modules/wcms/test/axisContentCatalogDataContract.test.js",
+    "test:media": "node modules/media/test/mediaBusinessOwnershipBoundary.test.js && node modules/media/test/mediaContextPolicyContract.test.js && node modules/media/test/mediaDeliveryContract.test.js && node modules/media/test/mediaFolderPolicyManagementContract.test.js && node modules/media/test/mediaFormatPolicyManagementContract.test.js && node modules/media/test/mediaImportSourceResolverContract.test.js && npx mocha modules/media/test/mediaLifecycleCoordinationContract.test.js && node modules/media/test/mediaMultipartUploadBodyParserContract.test.js && node modules/media/test/mediaReferenceLookupContract.test.js && node modules/media/test/mediaRouteContract.test.js && node modules/media/test/mediaSchemaContract.test.js && node modules/media/test/mediaSchemaWorkbenchContract.test.js && node modules/media/test/mediaSetEntryManagementContract.test.js && node modules/media/test/mediaStorageProviderContract.test.js && node modules/media/test/mediaStorageProviderSummaryContract.test.js && node modules/media/test/mediaUploadContract.test.js",
+    "test:cms": "node modules/cms/test/cmsContentDeliveryContract.test.js && node modules/cms/test/cmsMigrationContract.test.js && node modules/cms/test/cmsPublicationManifestContract.test.js && node modules/cms/test/cmsSiteReferenceContract.test.js && node modules/cms/test/cmsStorefrontDeliveryContract.test.js && node modules/cms/test/cmsWcmsAuthoringSchemaContract.test.js",
+    "test:wcms": "node modules/wcms/test/wcmsPublicationWorkflowContract.test.js",
+    "test": "npm run check:syntax && npm run test:media && npm run test:axis-content && npm run test:cms && npm run test:wcms"
+  },
+  "dependencies": {
+    "busboy": "^1.6.0",
+    "lodash": "^4.17.21",
+    "nodics.core": "file:../nodics.core"
+  },
+  "devDependencies": {
+    "mocha": "^11.7.6"
+  }
+}

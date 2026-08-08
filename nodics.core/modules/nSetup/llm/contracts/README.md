@@ -1,0 +1,30 @@
+# nSetup AI Contracts
+
+This folder contains module-specific AI/developer contracts for `nSetup`.
+
+Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.
+
+## Contract Index
+
+- `nodics-principles.md`: canonical platform principles for layered
+  ownership, source-of-truth, extension-first implementation, loader-visible
+  behavior, configuration ownership, generated artifacts, security/governance,
+  and human/AI equality.
+- `developer-implementation-contract.md`: shared human-developer and AI-tool
+  implementation rules for Nodics-native development.
+- `human-maintainability-contract.md`: maintainability rules for code that
+  humans and AI tools can understand, diagnose, review, test, and safely change.
+- `nodics-expert-decision-contract.md`: AI decision rules for choosing the
+  correct Nodics layer, artifact, extension point, and proof before coding.
+- `module-structure-contract.md`: standard module, docs, and LLM folder shape.
+- `module-group-participation-contract.md`: canonical workspace, runtime-group,
+  structural-group, child-discovery, activation, and registration boundaries.
+- `integration-governance-contract.md`: ownership, configuration, security,
+  testing, and MCP exposure rules for external/provider integrations.
+- `documentation-impact-contract.md`: canonical platform-wide documentation
+  authority for impact analysis, audience and use-case coverage, detail
+  preservation, generation, migration, distributed discovery, and updates
+  required by behavior and contract changes.
+- `testing-and-release-contract.md`: testing and release expectations.
+- `customer-project-mode-contract.md`: scope rules for customer/project work on
+  top of released Nodics.

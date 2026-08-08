@@ -1,273 +1,40 @@
-# Nodics
+# Nodics AI
 
-Nodics is an enterprise application factory for building serious, modular, API-driven business platforms.
+Nodics AI is the backend/framework repository for Nodics standard functional
+module groups.
 
-It is designed for the biggest gap many startups and product teams face today: building an MVP is faster than ever, but scaling that MVP into a secure, governed, multi-team, multi-tenant product is still painfully hard.
-
-AI-assisted coding and rapid prototyping can create impressive demos quickly. That speed is valuable. The problem starts when the MVP becomes the real product and the team discovers that the codebase has no strong module boundaries, no layered architecture, no governance model, no safe customization path, weak security rules, limited test coverage, and no reliable way to evolve customer-specific behavior.
-
-Nodics bridges that gap. It lets teams move with the speed of AI-assisted product development while keeping the architecture, governance, security, testing, and extension model expected from an enterprise platform.
-
-It helps teams build fast like an MVP, but with the architecture discipline of an enterprise platform from day one. The framework provides a ready project model with APIs, data models, services, permissions, tenants, scheduled jobs, events, imports, exports, search indexing, catalog and content capabilities, runtime configuration, testing, deployment topology, documentation, and extension contracts already built into the way the application is organized.
-
-Each capability has a clear owner, a clear extension path, and a clear verification contract.
-
-## License
-
-Nodics is distributed under the Nodics Source-Available Commercial License. See
-[`LICENSE`](LICENSE) for the full terms.
-
-The short version is: Nodics may be used to build internal or
-customer-specific business applications under the license terms, but resale,
-white-labeling, multi-customer productization, hosted/managed service
-offerings, or commercial products built on Nodics require a separate Nodics
-commercial/support agreement.
-
-Nodics is source-available commercial software, not OSI-approved open-source
-software. Do not treat source access as permission to resell, host, repackage,
-or productize Nodics without the required written agreement.
-
-Nodics is designed for the new way software is built: human developers and AI tools working together. A developer can use a CLI-based AI assistant, an IDE assistant, or a conversational coding tool to ask for new functionality in natural language, while Nodics guides that implementation into the right module, configuration layer, service, route, schema, test, and documentation area.
-
-In short:
+It keeps the framework in one repository while preserving clear module
+boundaries:
 
 ```text
-Describe the business capability. Nodics gives it a governed place to live.
+nodics.ai/
+  package.json
+  AGENTS.md
+  README.md
+  nodics.core/
+  nodics.platform/
+  nodics.cron/
+  nodics.wcms/
+  nodics.docs/
+  docs/
+  llm/
 ```
 
-## Why Nodics
+Customer projects such as Nodics Kickoff live outside this repository and consume the
+framework through package dependencies and explicit runtime `extends`
+configuration.
 
-Many products fail after the MVP stage because the early application was built only to prove the idea, not to become the long-term platform.
+Frontend applications such as Axis are separate projects. Axis renders
+BackOffice and content-management experiences by consuming Platform/WCMS APIs;
+it is not a backend framework module.
 
-Common scaling problems include:
+Customer customization modules may extend framework modules without changing
+the functional module identity. For example, `nodics.kickoff.platform` can customize
+`nodics.platform`, while BackOffice and Axis still show the standard `Platform`
+capability.
 
-- Features are added wherever the first developer or AI tool finds space.
-- Business logic has no clear owner.
-- APIs, services, data access, and permissions are tightly coupled.
-- Configuration is copied across environments.
-- Customer-specific behavior is added directly into core code.
-- Security and tenant isolation are added late.
-- Generated code becomes manually edited code.
-- Tests do not cover real extension and deployment behavior.
-- The team cannot safely split the application into multiple services or nodes.
-
-Nodics turns that complexity into a controlled application structure. It helps teams build quickly without losing architectural discipline.
-
-The main rule is:
+Validate the framework repository contract:
 
 ```text
-Capabilities are stable. Implementations can change.
+npm test
 ```
-
-That means a project can customize behavior through project modules, environment configuration, server configuration, node configuration, tenant context, runtime configuration, data, or provider modules without changing released framework code for every customer need.
-
-This is especially powerful with AI-assisted development. Instead of asking an AI tool to invent a structure, the developer can ask for a capability and Nodics provides the rules that keep the implementation aligned with the platform.
-
-## The MVP-To-Scale Bridge
-
-Nodics lets teams start fast without accepting a throwaway architecture.
-
-You can use AI tools and rapid development workflows to create features quickly, but those features still land inside a scalable application model:
-
-- Modular capabilities instead of scattered code.
-- Layered customization instead of framework edits.
-- Tenant-aware behavior instead of hard-coded customer assumptions.
-- Runtime configuration with audit and rollback instead of risky production edits.
-- Built-in security, permission, validation, and diagnostics patterns.
-- Generated APIs and tests from source definitions.
-- Environment, server, and node topology for growth beyond one process.
-- Documentation and AI guidance that keep humans and tools aligned.
-
-The result is a faster MVP path with a cleaner route to production scale.
-
-## What Makes Nodics Strong
-
-Nodics is not only a runtime. It is a complete application model that knows how enterprise software should be organized, extended, tested, operated, and explained.
-
-The current framework and sample project structure includes more than one hundred package-defined modules and submodules across framework capabilities, core business capabilities, content, commerce, data processing, optional features, environments, servers, and nodes. Those modules are not just folders. They define where behavior belongs and how it can be replaced safely by a project without modifying released framework code.
-
-Nodics provides:
-
-- **Automated layered architecture:** projects, modules, environments, servers, nodes, tenants, and runtime configuration each have a defined role.
-- **Generated application artifacts:** schemas, routes, tests, OpenAPI contracts, governance reports, and AI context are generated from source definitions.
-- **Inbuilt search indexing and retrieval:** search modules define indexes, indexers, indexer logs, search routes, and provider extension points.
-- **Catalog and content capabilities:** catalog, CMS, and web CMS modules provide product/content modeling, page/component structures, renderer mappings, and content templating foundations.
-- **Import and export engines:** JavaScript, JSON, CSV, and Excel provider modules demonstrate the pattern for moving data in and out through governed import/export flows.
-- **Enterprise identity foundations:** enterprises, tenants, users, customers, employees, groups, permissions, API keys, and authentication behavior are modeled as platform capabilities.
-- **Runtime governance:** schema, router, class, pipeline, tenant property, access-policy, activation, preview, audit, cleanup, and rollback capabilities are part of the runtime control plane.
-- **Messaging, events, jobs, and workflows:** event handling, message clients, cron jobs, workflow carriers, actions, lifecycle operations, retries, pause/resume, and archive behavior are represented as first-class capabilities.
-- **Cache and provider extensibility:** cache, database, search, messaging, and data providers are modeled as replaceable modules.
-- **Testing as architecture evidence:** generated schema, CRUD, API contract, and API scenario tests make framework behavior verifiable instead of implied.
-- **AI-ready learning context:** generated LLM context and implementation contracts teach AI tools the same module, service, configuration, and extension rules expected from human developers.
-
-The repository produces governance reports, generated API contracts, generated tests, and API examples from the active application definition. Use those generated outputs when you need current counts; this README intentionally avoids copying numbers that become stale as capabilities evolve.
-
-## What You Can Build
-
-With Nodics you can build:
-
-- REST APIs and generated API contracts.
-- Business services and application modules.
-- Tenant-aware applications.
-- Runtime configuration with audit and rollback.
-- Scheduled jobs.
-- Data import and export flows.
-- Search indexing and retrieval flows.
-- Catalog, CMS, and content-template driven experiences.
-- Event and messaging integrations.
-- Cache-backed services.
-- Database provider integrations.
-- Workflow-driven business processes.
-- Generated tests, OpenAPI output, LLM context, and governance reports.
-
-You can also use AI tools more safely because Nodics gives them explicit contracts: where to code, how to extend, what to test, what to document, and what must never become a hidden source of truth.
-
-## Start Here
-
-Choose the route that best matches why you are here.
-
-### I Am Using An AI Coding Tool Or Contributing Code
-
-Start with the repository behavior contract:
-
-- [AI and contributor contract](AGENTS.md)
-- [Contributing guide](CONTRIBUTING.md)
-- [Global AI enablement pack](gSetup/llm/ai-enablement-index.md)
-
-The expected route is:
-
-```text
-root README.md
-root AGENTS.md
-CONTRIBUTING.md
-ancestor module README/AGENTS files from root to target
-nearest module README.md
-nearest module AGENTS.md
-nearest module llm/contracts, llm/examples, and llm/generated context
-relevant gSetup/llm contracts and nodicsdocs documentation
-```
-
-README files explain what a capability is, why it exists, how it is used, and
-where to learn more. AGENTS files govern how AI tools and contributors may
-change that scope. LLM contracts define exact rules, examples demonstrate
-approved patterns, and generated context reports current source-derived facts.
-
-Before implementation, an AI tool must study the applicable framework code,
-comments/JSDoc, module documentation, tests, tooling, generated context, and
-available online/offline Nodics documentation. It must act as a Nodics
-framework expert and enterprise delivery expert, not as a generic code editor.
-
-### I Am Evaluating Nodics For A Business
-
-- [Why Businesses Choose Nodics](https://github.com/Nodics/nodicsdocs)
-- [Why Businesses Can Trust Nodics](https://github.com/Nodics/nodicsdocs)
-- [Business Capabilities And Outcomes](https://github.com/Nodics/nodicsdocs)
-- [How Nodics Compares With Other Approaches](https://github.com/Nodics/nodicsdocs)
-- [Business And Technical Evaluation Checklist](https://github.com/Nodics/nodicsdocs)
-
-These pages explain business value, delivery speed, long-term operating risk,
-fit, trade-offs, and the questions to validate before adopting Nodics. They do
-not require detailed software-framework knowledge.
-
-For security evaluation, continue with the [Security Shared-Responsibility Model](https://github.com/Nodics/nodicsdocs)
-and the expert [Security Evidence Guide](https://github.com/Nodics/nodicsdocs).
-
-### I Am New To Nodics
-
-- [Nodics Documentation](https://github.com/Nodics/nodicsdocs)
-- [What Nodics Is](https://github.com/Nodics/nodicsdocs)
-- [How To Set Up Nodics](https://github.com/Nodics/nodicsdocs)
-- [Build Your First Nodics Capability](https://github.com/Nodics/nodicsdocs)
-
-### I Am Designing, Building, Or Operating An Application
-
-- [How Nodics Is Organized](https://github.com/Nodics/nodicsdocs)
-- [How Configuration Works](https://github.com/Nodics/nodicsdocs)
-- [How To Create Application Functionality](https://github.com/Nodics/nodicsdocs)
-- [How To Test Nodics Changes](https://github.com/Nodics/nodicsdocs)
-- [How To Run And Debug Nodics](https://github.com/Nodics/nodicsdocs)
-
-### I Need Exact Capability Details
-
-- [Module Documentation Index](https://github.com/Nodics/nodicsdocs)
-- [Complete Module Catalog](https://github.com/Nodics/nodicsdocs)
-- [Nodics Glossary](https://github.com/Nodics/nodicsdocs)
-- [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodicsdocs)
-
-## Common Commands
-
-Use the repository runtime contract before installing dependencies. The
-preferred release line is Node.js 24 with npm 11. Node.js 22 remains in the
-supported validation matrix, and Node.js 26 is for forward validation as it
-moves toward LTS. Do not use Node.js 25 as a release target.
-
-Install dependencies:
-
-```bash
-npm ci
-```
-
-Use `npm install` only when intentionally changing dependencies, and commit
-`package.json` and `package-lock.json` together.
-
-Build generated artifacts and documentation outputs:
-
-```bash
-npm run build
-```
-
-Start Nodics:
-
-```bash
-npm run start
-```
-
-Start with debugger support:
-
-```bash
-npm run start:debug
-```
-
-Run the main test gate:
-
-```bash
-npm run test:basic
-```
-
-Run the full test gate:
-
-```bash
-npm run test:full
-```
-
-Print the clean-checkout release gate:
-
-```bash
-npm run release:check
-```
-
-Execute it when preparing a release candidate:
-
-```bash
-npm run release:check -- --execute --full
-```
-
-## Documentation Map
-
-- Public business, user, and developer guides: [nodicsdocs](https://github.com/Nodics/nodicsdocs)
-- Module-specific guides: [Module Documentation Index](https://github.com/Nodics/nodicsdocs) and each module `README.md`
-- AI and implementation rules: [AGENTS.md](AGENTS.md) and [gSetup/llm](gSetup/llm/ai-enablement-index.md)
-- Generated API documentation: generated during build
-- Generated AI context: generated with `npm run llm:generate`
-
-## For Developers
-
-When adding or changing functionality:
-
-1. Find the capability that owns the behavior.
-2. Make the change in the owning module or project layer.
-3. Keep generated files generated from source definitions.
-4. Add or update tests.
-5. Update public and module documentation when behavior changes.
-
-Use [How To Create Application Functionality](https://github.com/Nodics/nodicsdocs) for the recommended development flow.

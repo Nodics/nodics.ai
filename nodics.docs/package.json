@@ -1,0 +1,13 @@
+{
+  "name": "@nodics/documentation-content",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Versioned documentation content for Nodics functional modules.",
+  "type": "module",
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "test": "npm run validate"
+  },
+  "files": ["catalogue.json", "content"]
+}
+

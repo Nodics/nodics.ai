@@ -1,0 +1,99 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+/**
+ * @generated
+ * @module generated/facade/DefaultEnterpriseFacade
+ * @description Generated facade for schema `enterprise` owned by module `profile`. This file is recreated by clean/build from the effective schema and common facade template.
+ * @layer facade
+ * @owner profile
+ * @schema enterprise
+ * @model EnterpriseModel
+ * @sourceTemplate /src/facade/common.js
+ * @override Do not edit generated files directly. Customize behavior by adding a later module in the hierarchy that overrides this generated artifact or its source template contract.
+ */
+module.exports = {
+    init: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+    postInit: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+    get: function (request) {
+        return SERVICE.DefaultEnterpriseService.get(request);
+    },
+    getById: function (id, tenant) {
+        return SERVICE.DefaultEnterpriseService.getById(id, tenant);
+    },
+    getByCode: function (code, tenant) {
+        return SERVICE.DefaultEnterpriseService.getByCode(code, tenant);
+    },
+    save: function (request) {
+        return SERVICE.DefaultEnterpriseService.save(request);
+    },
+    saveAll: function (request) {
+        return SERVICE.DefaultEnterpriseService.saveAll(request);
+    },
+    remove: function (request) {
+        return SERVICE.DefaultEnterpriseService.remove(request);
+    },
+    removeById: function (request) {
+        return SERVICE.DefaultEnterpriseService.remove(request);
+    },
+    removeByCode: function (request) {
+        return SERVICE.DefaultEnterpriseService.remove(request);
+    },
+    update: function (request) {
+        return SERVICE.DefaultEnterpriseService.update(request);
+    },
+    doRefresh: function (request) {
+        return SERVICE.DefaultEnterpriseService.doRefresh(request);
+    },
+    doCheckHealth: function (request) {
+        return SERVICE.DefaultEnterpriseService.doCheckHealth(request);
+    },
+    doExists: function (request) {
+        return SERVICE.DefaultEnterpriseService.doExists(request);
+    },
+    doGet: function (request) {
+        return SERVICE.DefaultEnterpriseService.doGet(request);
+    },
+    doSearch: function (request) {
+        return SERVICE.DefaultEnterpriseService.doSearch(request);
+    },
+    doSave: function (request) {
+        return SERVICE.DefaultEnterpriseService.doSave(request);
+    },
+    doBulk: function (request) {
+        return SERVICE.DefaultEnterpriseService.doBulk(request);
+    },
+    doRemove: function (request) {
+        return SERVICE.DefaultEnterpriseService.doRemove(request);
+    },
+    doRemoveByQuery: function (request) {
+        return SERVICE.DefaultEnterpriseService.doRemoveByQuery(request);
+    },
+    doGetSchema: function (request) {
+        return SERVICE.DefaultEnterpriseService.doGetSchema(request);
+    },
+    doUpdateSchema: function (request) {
+        return SERVICE.DefaultEnterpriseService.doUpdateSchema(request);
+    },
+    doRemoveIndex: function (request) {
+        return SERVICE.DefaultEnterpriseService.doRemoveIndex(request);
+    },
+    doIndexing: function (request) {
+        return SERVICE.DefaultEnterpriseService.doIndexing(request);
+    }
+};

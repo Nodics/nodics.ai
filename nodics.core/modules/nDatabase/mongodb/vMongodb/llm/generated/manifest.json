@@ -1,0 +1,30 @@
+{
+  "contextVersion": 3,
+  "moduleName": "vMongodb",
+  "path": "modules/nDatabase/mongodb/vMongodb",
+  "kind": "publish",
+  "runtime": {
+    "router": false,
+    "publish": true,
+    "web": false
+  },
+  "package": {
+    "index": "1.3.10.0",
+    "version": "0.0.1",
+    "description": "Nodics applicaion module. This module hold all configuration and business logic related to vMongodb"
+  },
+  "sourceFiles": 9,
+  "testFiles": 3,
+  "dataFiles": 0,
+  "ownedFiles": 19,
+  "sourceFingerprint": "cfdd2692720138b47cd930b85eb663d71b0409319234734b99cbbcddb8799fff",
+  "documentation": {
+    "documented": 13,
+    "partially-documented": 2,
+    "undocumented": 1,
+    "inventory-only": 3
+  },
+  "schemaGroups": {},
+  "schemaLoadError": null,
+  "generatedBy": "npm run llm:generate"
+}

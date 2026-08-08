@@ -1,0 +1,65 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+/**
+ * @module wcms/data/init/headers/axis/axisContentCatalogHeader
+ * @description Declares the governed core import contract for the initial Nodics Axis CMS composition.
+ * @layer data
+ * @owner wcms
+ * @override Project modules may replace or extend Axis content through later layered core-data contributions.
+ */
+module.exports = {
+    catalog: {
+        axisContentCatalogData: {
+            options: {
+                enabled: true,
+                schemaName: 'catalog',
+                operation: 'saveAll',
+                dataFilePrefix: 'axisContentCatalogData'
+            },
+            query: { code: '$code' }
+        }
+    },
+    cms: {
+        axisCmsSiteData: {
+            options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'axisCmsSiteData' },
+            query: { code: '$code' }
+        },
+        axisCmsTypeCodeData: {
+            options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'axisCmsTypeCodeData' },
+            query: { code: '$code' }
+        },
+        axisCmsRendererData: {
+            options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: 'axisCmsRendererData' },
+            query: { code: '$code' }
+        },
+        axisCmsSlotData: {
+            options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: 'axisCmsSlotData' },
+            query: { code: '$code' }
+        },
+        axisCmsTemplateData: {
+            options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'axisCmsTemplateData' },
+            query: { code: '$code' }
+        },
+        axisCmsComponentData: {
+            options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: 'axisCmsComponentData' },
+            query: { code: '$code' }
+        },
+        axisCmsPageData: {
+            options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: 'axisCmsPageData' },
+            query: { code: '$code' }
+        },
+        axisCmsRouteData: {
+            options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: 'axisCmsRouteData' },
+            query: { code: '$code' }
+        }
+    }
+};

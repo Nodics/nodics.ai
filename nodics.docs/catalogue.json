@@ -1,0 +1,32 @@
+{
+  "contract": "nodics.documentation/v1",
+  "release": "0.1.0",
+  "documents": [
+    {
+      "id": "core.overview",
+      "functionalModule": "nodics.core",
+      "title": "Core overview",
+      "summary": "Framework services shared by every Nodics runtime.",
+      "locale": "en",
+      "content": "content/nodics.core/overview.md"
+    },
+    {
+      "id": "platform.overview",
+      "functionalModule": "nodics.platform",
+      "title": "Platform overview",
+      "summary": "Profile and BackOffice capabilities exposed by Platform.",
+      "locale": "en",
+      "content": "content/nodics.platform/overview.md"
+    },
+    {
+      "id": "platform.module-registry",
+      "functionalModule": "nodics.platform",
+      "technicalModule": "backoffice",
+      "title": "Functional module registry",
+      "summary": "Durable project registration and runtime observation rules.",
+      "locale": "en",
+      "content": "content/nodics.platform/module-registry.md"
+    }
+  ]
+}
+

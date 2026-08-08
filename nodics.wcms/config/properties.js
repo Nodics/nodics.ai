@@ -1,0 +1,26 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+/**
+ * @module nodics.wcms/config/properties
+ * @description Defines default nodics.wcms configuration used during module startup and layering.
+ * @layer config
+ * @owner nodics.wcms
+ * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
+ */
+module.exports = {
+    wcmsStartupImport: {
+        enabled: true,
+        importInitDataOnReady: true,
+        timeoutMs: 60000,
+        source: 'nodics.wcms.runtimeReady'
+    }
+};

@@ -1,0 +1,205 @@
+# cms Module
+
+`cms` owns content-management capability behavior. It provides the module space for CMS data, schemas, routes, services, pipelines, interceptors, utilities, and tests.
+
+Use this module for reusable content structures and content lifecycle behavior. Workflow-specific content behavior belongs in `gContent/wcms`.
+
+Content definitions remain schema-driven and tenant-aware so projects can extend CMS behavior without changing shared module code.
+
+CMS owns its optional BackOffice catalogue declaration in layered `properties.js`.
+BackOffice may expose that client-safe metadata to authorized users, while CMS
+remains authoritative for content schemas, permissions, and operations.
+CMS declares its UI-composition provider role and non-executable default site,
+catalogue, page, and recovery identifiers there. BackOffice discovers CMS
+operations from the existing effective System OpenAPI contract; it does not
+copy or edit CMS schema authority.
+
+The default UI-composition identifiers are deliberately CMS-generic. Consumer
+or project modules contribute their own site, catalog, page, route, template,
+and content data instead of embedding application identity in reusable CMS.
+
+CMS also exposes `POST /references/sites/resolve` as a service-token-only,
+bounded Site reference intent. Store uses this contract when it creates a
+Store-to-Site binding in a modular deployment; co-hosted deployments use the
+same CMS authority through the generated Site service. The projection contains
+only Site code, name, and catalog code. Human login and generic CMS schema
+routes are not an alternative module-authentication path.
+
+## CMS Capability Model
+
+CMS owns reusable content structures such as sites, pages, components,
+component details, type codes, renderer mappings, schemas, routes, services,
+data, and tests.
+
+Model content as data, not hardcoded views. A project can define
+new component types, page structures, renderer mappings, sample content, or
+site-specific content through project modules and data imports.
+
+## Content Templating
+
+Content templating separates:
+
+- content records;
+- component type definitions;
+- renderer mappings;
+- page composition;
+- site/tenant visibility;
+- workflow or publish lifecycle where applicable.
+
+CMS now provides backend contracts for page routes, page templates, template
+slots, logical component types, ordered component associations, and logical
+renderer keys. Renderer keys are declarative identifiers such as
+`component.hero-banner`; executable paths, URLs, and scripts are rejected.
+The existing `cmsTypeCode` model remains the single page/component type
+authority and carries the declarative type contract; CMS does not introduce a
+parallel component-type registry.
+
+`cmsComponentDetail` is the current generic component-placement relation. It
+connects a page or component source to a component target, records ordering, and
+names the logical template or page slot. Do not add a parallel
+`cmsComponentPlacement` schema unless a later migration formally renames the
+existing contract. Likewise, `cmsSlotDefinition` remains the template slot
+authority for required/optional slots, cardinality, allowed component types,
+and component type groups until CMS deliberately introduces a separate
+template-slot relation model.
+
+WCMS-style BackOffice authoring uses the same backend-owned CMS authority. CMS
+provides `cmsComponentTypeGroup` for authoring groupings of existing
+`cmsTypeCode` component types, `cmsNavigationNode` for site-scoped navigation
+trees, `cmsRestrictionType` for declarative restriction contracts, and
+`cmsRestriction` for assigning restriction values to pages, components, slots,
+navigation nodes, or routes. These schemas are manageable through generated
+secured CRUD routes and remain non-versioned until a deployment layer opts into
+versioned CMS authoring. Customer/project modules may extend these schemas,
+initializer data, and validation services through later layers; Axis must
+discover and render them rather than hardcoding one customer WCMS model.
+
+## CMS Media Components
+
+CMS owns the meaning of a content component, not the binary media lifecycle.
+Image, image-list, image-text, banner, carousel, and similar components must
+use structured `cmsComponentMedia` records that point to media-owned
+identifiers such as `mediaCode` or `mediaSetCode`.
+
+Use `mediaCode` when the component needs one concrete media item. Use
+`mediaSetCode` when a logical asset has multiple formats, responsive variants,
+localized images, thumbnails, or fallback files. CMS owns the media association
+meaning: component code, role, slot, locale, position, alt text, and caption.
+Generic `cmsComponent.properties` stays available for loose renderer-aligned
+content such as heading, subheading, layout hints, and CTA text, but it must not
+be used as the media relationship authority.
+
+CMS must not store provider paths, local file paths, generated delivery URLs,
+S3 keys, CDN URLs, or upload metadata as the source of truth. Those belong to
+`media`. A renderer may call the media delivery endpoint with the media code
+or media set code returned in the CMS media association projection, but CMS
+must not duplicate media storage or access policy decisions.
+
+Project modules can extend the default CMS type-code `propertySchema` for
+project-specific component fields and `mediaSchema` for media-association
+expectations. Both contracts must stay declarative and client-safe: they can
+describe fields, roles, counts, and expected reference types, but they must not
+embed executable renderer code or provider-specific media storage logic.
+
+## Resolved Page Delivery
+
+CMS provides three versioned delivery routes:
+
+- `GET /nodics/cms/delivery/pages/resolve` for explicitly public Online content;
+- `GET /nodics/cms/delivery/pages/resolve/authenticated` for content requiring
+  the `cms.delivery.authenticated.read` permission;
+- `GET /nodics/cms/delivery/storefront/pages/resolve` for a page path bound to
+  an opaque, active Storefront context.
+
+Both routes require `site` and an absolute application `path`. Optional
+`locale` and `channel` values use layered CMS defaults. Resolution remains
+tenant-aware, disables generic recursive reads, batches each graph level, and
+enforces configurable depth and component-count limits. Responses expose a
+client-safe contract rather than persistence or authoring metadata.
+
+The contract includes authoritative page/component renderer keys with their
+major renderer versions, supported channels, deprecation/replacement metadata,
+and a safe page-template renderer contract. Clients must reject unknown keys,
+unsupported major versions, or unsupported channels and must never download
+renderer code from CMS.
+
+The Storefront route accepts only `path` from the browser. CMS introspects the
+opaque `x-nodics-storefront-context` handle using module service identity and
+derives tenant, enterprise, Site, locale, and channel from the `cms` audience
+projection. Caller attempts to select another Site, locale, channel, tenant,
+or enterprise are ignored. Missing, expired, wrong-audience, unavailable, or
+otherwise inactive context fails closed. CMS still owns route lookup, Online
+publication state, graph bounds, renderer projection, and delivery errors.
+
+Resolved responses use the existing Nodics router-cache authority. Page, route,
+component, and association mutations invalidate the tenant's CMS delivery
+resource through `DefaultCacheService`, including existing cross-node cache
+propagation behavior.
+
+See canonical documentation `capability.content-publishing.technical-reference` for the schema, security, extension,
+and operational contract.
+
+## Immutable Publication Manifests
+
+CMS contributes an optional immutable publication-manifest integration for
+`nPublish`. When `cms.publication.enabled` is selected, activation freezes exact
+route, page, association, component, template, and slot versions, then switches
+an optimistic Online pointer inside a separately deployed target CMS runtime.
+Staged sends an integrity-protected release through the configured authenticated
+module transport; it never writes the Online database directly. Delivery serves
+only the target manifest snapshot and rollback restores a target-deployed prior
+manifest without creating a parallel CMS lifecycle.
+
+Deployment layers explicitly select `cms.publication.runtimeRole` as `STAGED`
+or `ONLINE`. A Staged process activates publish/version variants and versioned
+CMS schema overrides. An Online process keeps `publishEnabled: false`, uses
+non-versioned schemas, and stores imported manifests in a separate database.
+
+See canonical documentation `capability.content-publishing.technical-reference` for authority, migration, extension,
+and fail-closed delivery behavior.
+
+For a beginner-friendly business journey, configuration examples,
+customization path, operations checklist, and verification commands, read
+[`nodicsdocs/content/how-to-approve-and-publish-content.md`](https://github.com/Nodics/nodicsdocs).
+
+The CMS module owns generic content contracts. Project modules own
+project-specific content types, templates, and sample/core data.
+
+## Initial Users
+
+CMS initializer data may define inactive example principals that show which
+groups own CMS work. It must not ship usable default passwords or API keys.
+Projects that need real CMS users should activate and credential those users in
+their own project/environment layer through governed identity and secret
+handling.
+
+## Extension And Governance
+
+When changing CMS behavior, document:
+
+- schema and route impact;
+- content import/export behavior;
+- tenant or site visibility;
+- renderer/type-code mapping changes;
+- workflow or publish impact;
+- generated API/test impact;
+- override path for project modules.
+
+Do not put one project website's content or renderer assumptions into reusable
+CMS framework behavior.
+
+## Focused Tests
+
+Run `node gContent/cms/test/cmsContentDeliveryContract.test.js`,
+`node gContent/cms/test/cmsStorefrontDeliveryContract.test.js`,
+`node gContent/cms/test/cmsSiteReferenceContract.test.js`, and
+`node gContent/cms/test/cmsPublicationManifestContract.test.js`, and
+`node gContent/cms/test/cmsWcmsAuthoringSchemaContract.test.js` before broader
+generated and integration suites. CMS contract upgrades use secured
+`/migration/preview`, `/migration/apply`, and `/migration/rollback` operations.
+Preview never mutates data; apply is versioned and audited; repeat execution is
+idempotent. Routes are created only from explicit layered mappings, and primary
+identifier changes are reported for cascade review rather than renamed blindly.
+
+Run `node gContent/cms/test/cmsMigrationContract.test.js` for the migration
+change-set contract.
