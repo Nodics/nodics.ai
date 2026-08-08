@@ -223,3 +223,32 @@ later module configuration. If behavior needs more than configuration, replace
 the media storage policy or provider service in a later active module while
 preserving the same safe API contract. Do not fork Axis to change storage
 rules.
+
+## Common mistakes
+
+- Letting Axis build storage keys, local paths, bucket names, or download URLs.
+- Treating a media upload as successful before backend validation, checksum,
+  metadata persistence, and lifecycle state are recorded.
+- Reusing one folder policy for imports, exports, CMS images, product images,
+  private documents, and generated artifacts.
+- Exposing absolute paths, provider credentials, signed URL secrets, or
+  storage internals in browser-visible responses.
+- Deleting media because one screen no longer references it without checking
+  backend media-reference usage.
+- Creating media records without an owning source context, format policy, and
+  delivery rule.
+
+## Verification
+
+Verify Media through policy, metadata, storage, delivery, and usage. Upload
+allowed and rejected file types, confirm backend policy owns the result, check
+that media records contain checksum and lifecycle evidence, and make sure Axis
+shows only safe metadata. Download or preview must go through the Media
+delivery contract using a media code, never a raw filesystem or provider path.
+
+For content and documentation scenarios, verify that pages and components
+reference media records or governed embedded images rather than copying assets
+into the frontend. For production scenarios, add provider failure, missing
+bytes, unauthorized download, oversized file, checksum mismatch, retention,
+backup, and restore checks. Media is acceptable only when both the happy path
+and the unsafe shortcut are proven.

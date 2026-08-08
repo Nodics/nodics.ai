@@ -121,6 +121,35 @@ The separation matters because different people care about different parts:
 | QA or tester | Use the local acceptance checklist, import lifecycle, module registry lifecycle, and route/API verification. |
 | AI contributor | Read `AGENTS.md`, then `nodics.core/modules/nSetup/llm/` before editing. Follow owner-first, customization-first, test-first contracts. |
 
+## Enterprise-platform inspiration without copying another product
+
+Nodics documentation and onboarding should feel familiar to people who have
+used mature enterprise platforms: a clear product story first, a guided quick
+start second, capability documentation third, and reference material after the
+reader knows why the platform exists. That style is intentionally inspired by
+the way large platforms teach adoption journeys, administration, extension,
+integration, release, and operations before dropping a beginner into source
+internals.
+
+Nodics does not copy another vendor's architecture or make unsupported
+comparison claims. The useful comparison is pattern-level:
+
+| Enterprise-platform pattern | Why readers expect it | Nodics expression |
+| --- | --- | --- |
+| Product landing page | A new evaluator needs to know what problem is solved before reading code. | This README explains business value, local proof, ownership, and next steps before the module inventory. |
+| Guided local demo | Developers need to see a working system before extending it. | `nodics.kickoff` composes framework servers and `nodics.axis` shows the BackOffice experience. |
+| Capability map | Architects and administrators need stable business names. | Functional modules such as Core, Platform, WCMS, Cron, and Docs are the business-readable capability layer. |
+| Extension model | Partners need upgrade-safe customization. | Customer projects and customer extension modules load after framework modules without renaming standard functional identity. |
+| Governed content and data | Operations need repeatable setup and rollback. | Importable data releases, documentation packs, checksums, catalogs, sites, pages, routes, and media records are backend-owned. |
+| Operations and lifecycle guidance | Production teams need deployable, observable runtimes. | Runtime servers, properties, health, logs, module registry, imports, and acceptance checks are documented as contracts. |
+
+This is the standard we hold the documentation to. A first-time business user
+should understand why Nodics exists. A first-time developer should understand
+what to clone, which commands to run, what success looks like, and where to
+customize. A DevOps engineer should understand which servers, properties,
+dependencies, logs, and recovery paths matter. An AI tool should understand
+which authority to read before touching code.
+
 ## Ecosystem view
 
 Nodics is not only a set of packages. It is an ecosystem contract between

@@ -221,3 +221,19 @@ At minimum, prove:
 - Bypassing backend module authority by adding frontend-only logic.
 
 Core is powerful because it is boringly consistent. Keep it that way.
+
+## Verification
+
+Core verification should always be broader than the edited file because every
+runtime server depends on Core. For documentation-only changes, regenerate the
+framework documentation pack and run the docs validator. For source or
+configuration changes, run root validation, generated LLM context generation
+and validation, documentation quality checks, focused module tests, and at
+least one runtime prepare or acceptance path through the reference customer
+project.
+
+The practical local proof is: Platform starts, WCMS starts, Cron starts when
+selected, imports validate, documentation renders, module registry state
+persists, and Axis never needs direct Core source access. If a Core change can
+only be proven by one isolated unit test, it is probably under-tested for a
+framework foundation.

@@ -411,6 +411,43 @@ Nothing in this example requires a beginner to understand every internal
 technical module on day one. They can start with the functional module picture
 and then go deeper module by module.
 
+## Common mistakes
+
+- Thinking Nodics is only a folder structure. The important contract is
+  ownership: which module owns behavior, data, APIs, documentation, and
+  runtime responsibility.
+- Treating Axis as the business authority because users see the screen there.
+  Axis renders; backend modules own operations, content data, permissions, and
+  imported records.
+- Editing framework source for a customer-specific change before checking
+  configuration, project modules, and customer extension modules.
+- Reading every technical module before running the reference product. A
+  beginner learns faster by starting the system, logging into Axis, importing
+  content, then studying owners.
+- Assuming a microservice topology means every capability must be deployed as
+  a separate process on day one. Nodics separates ownership first; deployment
+  topology can evolve.
+- Ignoring DevOps, QA, and documentation because the happy path works locally.
+  Enterprise frameworks are judged by upgrade, recovery, security, and
+  maintainability as much as by first-run speed.
+
+## Verification
+
+The introduction is proven when a new reader can connect the story to a
+running system. The minimum local proof is to configure the reference customer
+project, start Platform and WCMS, start Axis, log in as the reference admin,
+open Documentation, inspect Module Registry, and validate or install the
+available data releases. That proves the product story is not detached from
+runtime behavior.
+
+For a developer or AI contributor, the verification goes deeper: read the root
+`AGENTS.md`, identify the owning module before editing, regenerate generated
+artifacts from source definitions, run documentation and AI governance checks,
+and use the fresh local acceptance script when the change affects import,
+runtime, registry, Axis, or documentation behavior. A contribution is not
+ready if it can explain the code but cannot explain the business outcome,
+module owner, runtime graph, and acceptance evidence.
+
 ## Next actions
 
 - Read modular architecture to understand ownership and runtime composition.

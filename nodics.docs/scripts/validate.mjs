@@ -7,6 +7,10 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const catalogue = JSON.parse(await readFile(resolve(root, 'catalogue.json'), 'utf8'));
 const minimumWordCount = 500;
 const minimumSectionCount = 5;
+const requiredSectionPatterns = [
+  ['common mistakes', /^## Common mistakes\b/im],
+  ['verification', /^## Verification\b/im],
+];
 
 function countWords(body) {
   return (body.match(/\b[\w'.-]+\b/g) ?? []).length;
@@ -45,6 +49,20 @@ function assertDocumentationDepth(document, body) {
     if (!pattern.test(body)) {
       throw new Error(`Document is missing ${label}: ${document.id}`);
     }
+  }
+
+  for (const [label, pattern] of requiredSectionPatterns) {
+    if (!pattern.test(body)) {
+      throw new Error(`Document is missing required ${label} section: ${document.id}`);
+    }
+  }
+
+  if (/local-archive|legacy-repositories|nodicsaxis|old nodics repository/i.test(body)) {
+    throw new Error(`Document contains legacy migration-only references: ${document.id}`);
+  }
+
+  if (/nodics\.axis[^.\n]*(owns|owner|source)[^.\n]*(catalog|site|page|component|route|documentation data)/i.test(body)) {
+    throw new Error(`Document suggests frontend-owned backend data: ${document.id}`);
   }
 }
 

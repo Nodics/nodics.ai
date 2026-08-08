@@ -282,3 +282,19 @@ Before Cron is considered ready beyond local demo use, verify:
 - Letting Axis construct arbitrary job handler names or URLs.
 - Forgetting that Cron registration is optional project state, not process
   startup.
+
+## Verification
+
+For local verification, start the Cron runtime from the reference customer
+project and confirm that the functional module registry observes `nodics.cron`
+as an optional capability. Register it, activate it, deactivate it, and
+deregister it without refreshing the browser. After deregistration, Cron should
+return to the available list while the Cron server is still observed. Restart
+servers and confirm that durable registration state behaves as expected.
+
+For job-level verification, test both manual and scheduled execution. A
+production-ready job must prove authorization, tenant context, duplicate-run
+protection, timeout, retry, logging, downstream failure behavior, and safe
+restart. If the job performs business work, test the owning business module as
+well; Cron proves scheduling and execution governance, not the correctness of
+every domain operation it triggers.

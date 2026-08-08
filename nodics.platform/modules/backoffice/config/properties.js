@@ -63,9 +63,9 @@ module.exports = {
                         summary: 'Core Nodics architecture, module layering, configuration-first extension, lifecycle, and customization guidance.',
                         audiences: ['architect', 'developer', 'operator', 'ai-tool'],
                         coverage: {
-                            score: 85, status: 'STRONG',
-                            signals: ['Architecture model', 'Module lifecycle', 'Customization guidance', 'AI-tool standards'],
-                            gaps: ['More troubleshooting recipes', 'More customer-extension examples']
+                            score: 92, status: 'STRONG',
+                            signals: ['Architecture model', 'Module lifecycle', 'Customization guidance', 'Docs module ownership', 'AI-tool standards'],
+                            gaps: ['More domain module recipes', 'More customer-extension examples']
                         }
                     }
                 },

@@ -217,6 +217,23 @@ the system from the outside before diving into source code.
 - Relying on process memory instead of durable registration or import history.
 - Ignoring negative tests, recovery states, and rollback behavior.
 
+## Verification
+
+For a local developer or beginner operator, verify the operations model with
+the reference acceptance script before trusting manual UI observations. Start
+from a known local database state, run the framework servers through the
+customer project, then confirm Platform, WCMS, Cron where required, and Axis
+are all reachable. The acceptance evidence should show module registry state,
+documentation import status, route health, and Cron lifecycle behavior.
+
+For a shared environment, add environment-specific checks: dependency versions,
+database backup and restore evidence, secret-source validation, log retention,
+health probes, restart behavior, and rollback steps for each imported data
+release. A production change is not verified merely because the application
+started. It is verified when the owning module, runtime process, imported
+release, security boundary, and rollback evidence can all be explained by an
+operator who did not write the code.
+
 ## Next actions
 
 Before production, write an environment-specific operations runbook that lists

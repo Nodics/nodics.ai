@@ -188,3 +188,20 @@ Platform is healthy when:
 
 Platform is the governance bridge between backend capability and employee
 operation. Keep that bridge explicit, audited, and backend-owned.
+
+## Verification
+
+Verify Platform from both the API side and the Axis side. The API proof is
+that Platform starts after Core, exposes secured Profile and BackOffice
+contracts, rejects unauthorized access, and persists functional module
+registry state. The Axis proof is that a reference employee can log in, obtain
+authorized navigation, see mandatory modules, operate optional module
+lifecycle actions without manual refresh, open documentation-source products,
+and recover safely when Platform is unavailable.
+
+For documentation or data changes, regenerate the owning content packs and
+confirm Platform advertises the correct source owners: framework docs from
+`nodics.docs`, Axis product docs from the Platform Axis backend module,
+Swagger/API sources from registered runtime modules, and customer docs from
+the owning customer project. If a documentation source appears only because
+Axis hardcoded it, the Platform contract is incomplete.

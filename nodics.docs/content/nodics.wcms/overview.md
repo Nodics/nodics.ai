@@ -249,3 +249,33 @@ A WCMS change should be tested with more than one happy route:
 - Do not create pages or components without catalogs and sites.
 - Do not treat documentation content as special static frontend content just
   because Axis renders it.
+
+## Common mistakes
+
+The most common WCMS mistake is treating a visible page as a frontend asset
+instead of a backend-owned content chain. Another common mistake is importing
+pages and components without catalogs, sites, templates, slots, renderer
+mappings, and routes. That creates partial data that may look present in the
+database but cannot be delivered safely.
+
+Do not duplicate content ownership in Axis. Do not let a customer project edit
+framework documentation. Do not let framework documentation include
+customer-specific setup as if every adopter used the same project. Do not
+ignore version and checksum failures; an invalid release is the system
+protecting itself from drift.
+
+## Verification
+
+Verify WCMS by walking the complete delivery chain. A route should resolve to
+a site, catalog, page, template, slots, components, type codes, renderer
+mappings, restrictions where applicable, and safe media references. Imported
+releases should record semantic version, checksum, source owner, status, and
+history. Axis should render the delivered contract and show recovery when a
+route, renderer, or content source is missing.
+
+For documentation specifically, verify each product separately: framework
+documentation from `nodics.docs`, Axis product documentation from the Platform
+Axis backend module, Swagger/API documentation from registered runtime
+modules, and customer-project documentation from the owning customer project.
+The fact that Axis displays all of them together does not make Axis the data
+owner.

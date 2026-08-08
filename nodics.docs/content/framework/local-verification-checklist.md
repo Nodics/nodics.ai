@@ -208,3 +208,19 @@ servers have not been started yet. Read **Modular architecture and ownership**
 to understand why each runtime has a different owner. Read **Functional module
 registry** for the detailed lifecycle rules behind module registration. Read
 **Runtime and DevOps operations** before designing production topology.
+
+## Verification
+
+This page verifies itself through repeatability. A beginner should be able to
+follow the checklist after a normal local start and again after a fresh local
+database bootstrap. The expected result is the same: no manual database edits,
+no generated-file hand patches, no frontend-owned content data, and no hidden
+project-name assumptions.
+
+When this checklist is used after a documentation change, the evidence must
+include regenerated content-pack files, passing documentation validation, a
+current release version, successful import into WCMS, and rendered Axis routes.
+When it is used after a runtime or registry change, the evidence must include
+server startup, persisted registry state, immediate UI refresh after lifecycle
+operations, and safe behavior after restart. If the evidence cannot name the
+owning module for a failure, the verification is not yet useful enough.

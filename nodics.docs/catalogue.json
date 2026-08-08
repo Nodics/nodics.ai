@@ -1,6 +1,6 @@
 {
   "contract": "nodics.documentation/v1",
-  "release": "0.4.1",
+  "release": "0.4.2",
   "documents": [
     {
       "id": "framework.what-is-nodics",
@@ -110,6 +110,15 @@
       "summary": "Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety.",
       "locale": "en",
       "content": "content/nodics.cron/operations.md"
+    },
+    {
+      "id": "docs.overview",
+      "functionalModule": "nodics.docs",
+      "technicalModule": "documentation",
+      "title": "Docs overview",
+      "summary": "How Nodics framework documentation is authored, generated, validated, imported, rendered, and kept separate from Axis and customer project documentation.",
+      "locale": "en",
+      "content": "content/nodics.docs/overview.md"
     }
   ]
 }

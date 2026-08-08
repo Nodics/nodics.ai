@@ -312,5 +312,30 @@ module.exports = {
       }
     ],
     "active": true
+  },
+  "record12": {
+    "code": "nodicsDocsPagedocsOverview",
+    "name": "Docs overview",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentdocsOverview",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
   }
 };

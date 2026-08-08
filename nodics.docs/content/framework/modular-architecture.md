@@ -316,3 +316,21 @@ topology must be discussed separately.
 After this page, read the local quick start and customization guide. Those
 pages show how the architecture becomes concrete commands, files, and project
 rules.
+
+## Verification
+
+Architecture decisions must be proven in the repository, not only described in
+conversation. For every new or moved capability, verify the functional module
+owner, the technical module owner, the runtime server graph, the configuration
+layer, generated artifacts, import data, tests, and documentation source. If a
+page, component, catalog, route, or documentation record is imported into a
+database, verify that it lives in a backend-owned module or customer project
+and not in the frontend repository.
+
+For a local acceptance proof, start the reference Platform, WCMS, and optional
+Cron servers from the customer project, import the relevant data releases, and
+open Axis. The module registry should show high-level functional modules,
+documentation products should resolve from their owning content packs, and
+runtime health should reflect backend observation rather than local frontend
+assumptions. If the user-visible behavior can only be explained by reading a
+frontend file, the ownership boundary needs another review.

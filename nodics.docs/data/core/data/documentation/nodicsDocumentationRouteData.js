@@ -156,5 +156,17 @@ module.exports = {
     "deliveryState": "ONLINE",
     "accessMode": "AUTHENTICATED",
     "active": true
+  },
+  "record12": {
+    "code": "nodicsDocsRoutedocsOverview",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/docs-overview",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagedocsOverview",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
   }
 };

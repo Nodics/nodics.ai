@@ -396,6 +396,40 @@ running system.
 | Registration | Persisted project decision to accept an observed optional functional module. |
 | Activation | Persisted project decision that a registered module should be usable. |
 
+## Common mistakes
+
+- Starting Axis before Platform and then assuming the frontend is broken when
+  the BackOffice registry is unavailable.
+- Starting Platform but not WCMS, then expecting documentation and content
+  routes to render.
+- Editing generated documentation data after an `INVALID RELEASE` instead of
+  fixing Markdown source and regenerating the content pack.
+- Leaving `NODICS_FRAMEWORK_ROOT` pointed at an old checkout after moving the
+  framework repository.
+- Treating the sibling-folder layout as mandatory. It is only the easiest
+  beginner layout; the `.env` property makes the framework location portable.
+- Putting secrets into frontend or public configuration because a screen needs
+  an endpoint.
+- Skipping the import screens and expecting every catalog, site, page,
+  component, media record, and documentation route to appear automatically.
+
+## Verification
+
+The quick start is complete only when the running product proves the expected
+behavior. At minimum, verify that Platform responds on `4300`, WCMS responds
+on `4310`, Axis responds on `3100`, the reference admin can log in, the
+Documentation landing page opens, and System and Integrations shows the module
+registry. Then open Imports and Exports and confirm available releases can be
+validated and installed without checksum errors.
+
+For a stronger developer check, run the local acceptance script from the
+reference customer project after the servers are available. That script
+exercises backend startup assumptions, documentation release status, route
+health, CMS counts, Axis smoke routes, and optional Cron lifecycle behavior.
+If this fails, use the failure owner: Platform for login and registry, WCMS for
+content and documentation delivery, Cron for scheduled capability lifecycle,
+and Axis for browser rendering and state refresh.
+
 ## Next actions
 
 Once the reference stack is running, continue in this sequence:
