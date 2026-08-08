@@ -77,8 +77,8 @@ module.exports = {
             "security-reviewer",
             "ai-tool"
           ],
-          "summary": "Learn the per-project deployment model, contract authority, security boundary, documentation ownership, and verification expectations.",
-          "searchText": "Architecture and Repository Boundaries Learn the per-project deployment model, contract authority, security boundary, documentation ownership, and verification expectations. # Axis Architecture and Ownership\n\n## Decision\n\nNodics Axis is a reusable Back Office browser application deployed once for\neach Nodics-based customer project. The Axis process and the Nodics backend\nprocesses are built, started, scaled, deployed, and rolled back independently.\nOne Axis deployment must not switch between customer projects or federate\ntheir backend endpoints.\n\nThis decision keeps a clear authority boundary:\n\n- Nodics owns business rules, persistence, authentication enforcement,\n  authorization, workflows, pipelines, integrations, secrets, tenant\n  governance, runtime contracts, and module APIs.\n- Axis owns browser rendering, interaction, accessibility, responsive\n  behavior, and non-authoritative client view state.\n- Profile authenticates human users.\n- BackOffice returns the caller's authorized, browser-safe module registry and\n  compatibility metadata.\n- After bootstrap, Axis calls each authoritative module directly. BackOffice\n  does not proxy normal CMS, job, workflow, configuration, or business traffic.\n\n## Deployment model\n\n```text\nCustomer project A\n  Axis deployment A\n    -> Profile A\n    -> BackOffice A -> authorized module discovery\n    -> CMS A, Workflow A, CronJob A, and other discovered modules\n\nCustomer project B\n  Axis deployment B\n    -> Profile B\n    -> BackOffice B -> authorized module discovery\n    -> project B modules\n```\n\nAxis deployment A must never discover, select, or call project B endpoints.\nWhether a project's Nodics modules run together in `monoServer` or as\ndistributed module servers does not change the browser contract.\n\n## Contract authority\n\nAxis consumes versioned backend contracts such as OpenAPI, Profile\nauthentication, BackOffice bootstrap, permissions, schemas, and module\noperation metadata. Generated or handwritten Axis clients are consumers of\nthose contracts; they do not become contract authorities.\n\nAxis must not:\n\n- import source from the sibling Nodics checkout;\n- embed backend services or persistence;\n- reproduce authoritative validation or permission decisions;\n- execute workflows, pipelines, integrations, AI tools, or arbitrary scripts\n  in the browser;\n- store service or CronJob credentials;\n- create a second registry, schema authority, runtime loader, or endpoint\n  federation layer.\n\nClient-side validation may improve usability, but every target module must\nvalidate and authorize the request independently.\n\n## Security boundary\n\nHuman browser authentication remains separate from module-to-module and\nCronJob authentication. Axis may receive only browser-safe configuration,\nhuman-session material approved by the Profile browser-security contract, and\npermission-filtered module metadata. Passwords, access tokens, refresh tokens,\nservice credentials, and secrets must never be written to browser storage,\nURLs, logs, or telemetry.\n\nDetailed session, refresh, revocation, CORS, CSRF, CSP, and audience behavior\nwill be documented only after the corresponding backend contracts are\napproved and implemented.\n\n## Documentation ownership\n\n- This repository documents Axis installation, build, deployment, frontend\n  contribution rules, browser architecture, accessibility, and implemented UI\n  behavior.\n- The Nodics repository documents product capabilities, business-user and\n  administrator journeys, backend APIs, security enforcement, module\n  configuration, operations, and backend customization.\n- Temporary plans describe intended work only and must not be presented as\n  implemented capability.\n\n## Customize and extend safely\n\nCreate customer behavior in the customer backend project and customer\npresentation in its Axis project layer. A frontend extension may add a focused\npage, renderer, typed client, hook, and mirrored test, but it must continue to\nconsume the owning Nodics module's versioned API and permission contract.\n\nThe smallest safe extension is one new renderer file plus one typed registry\nentry for a backend-issued logical renderer key. Do not copy BackOffice\ndiscovery, create a browser module registry, move validation or workflow into\nReact, or edit reusable Nodics framework source. Prove the extension with\ncontract-version, unauthorized, malformed-payload, responsive, integration,\nand production-build tests. Rollback removes the project registry entry while\nleaving the backend authority and persisted data unchanged.\n\n## Verification expectations\n\nEvery Axis slice must identify:\n\n1. its authoritative backend owner and versioned contract;\n2. its Axis presentation and local-state responsibilities;\n3. authentication, authorization, tenant, and data-exposure boundaries;\n4. tests belonging to each repository;\n5. documentation belonging to each repository.\n\nImplementation must cover applicable positive, negative, boundary, contract,\nsecurity, responsive, accessibility, integration, recovery, and regression\nbehavior. Run `npm run verify` before release-oriented commits.\n"
+          "summary": "Learn the per-project deployment model, authority boundaries, role journeys, security model, documentation ownership, customization rules, and verification expectations.",
+          "searchText": "Architecture and Repository Boundaries Learn the per-project deployment model, authority boundaries, role journeys, security model, documentation ownership, customization rules, and verification expectations. # Axis Architecture and Ownership\n\n## Why this page matters\n\nAxis looks like a normal web application when a user opens it in the browser,\nbut it is not the authority for Nodics business behavior. It is the employee\nworkspace that lets people discover, use, and operate capabilities that are\nowned by backend modules. That difference is important for business users,\ndevelopers, operators, security reviewers, and AI tools.\n\nIf Axis becomes a second backend, every customer project becomes harder to\nsecure and harder to customize. The browser would start carrying rules that\nbelong in Profile, BackOffice, WCMS, Cron, Workflow, Commerce, or a customer\nextension module. The same validation could then exist in two places, one\nworkflow could be started from two authorities, and one permission decision\ncould be interpreted differently by the browser and the backend. Nodics avoids\nthat by keeping Axis reusable, thin, governed, and contract-driven.\n\nThink of Axis as a well-designed control room. It shows switches, screens,\nalerts, forms, and dashboards. The control room helps a human operate the\nsystem safely, but it does not become the power plant, the billing engine, the\nworkflow engine, the CMS, or the security system.\n\n## Decision\n\nNodics Axis is a reusable Back Office browser application deployed once for\neach Nodics-based customer project. The Axis process and the Nodics backend\nprocesses are built, started, scaled, deployed, and rolled back independently.\nOne Axis deployment must not switch between customer projects or federate\ntheir backend endpoints.\n\nThis decision keeps a clear authority boundary:\n\n- Nodics backend modules own business rules, persistence, authentication\n  enforcement, authorization, workflows, pipelines, integrations, secrets,\n  tenant governance, runtime contracts, and module APIs.\n- Axis owns browser rendering, interaction, accessibility, responsive behavior,\n  client-side usability, and non-authoritative view state.\n- Profile authenticates human users and owns the human identity/session\n  contract.\n- BackOffice returns the caller's authorized, browser-safe module registry,\n  navigation, capability, schema, and compatibility metadata.\n- WCMS owns governed content, sites, page routes, components, renderers,\n  templates, content catalogs, and documentation pages delivered through CMS\n  contracts.\n- After bootstrap, Axis calls each authoritative module directly. BackOffice\n  does not proxy normal CMS, job, workflow, configuration, or business traffic.\n\n## Reader journeys\n\nDifferent readers should take different value from this page:\n\n- A business user should understand that Axis gives one governed place to\n  operate many business capabilities without copying business rules into the\n  browser.\n- A developer should understand where a new page, renderer, typed API client,\n  backend route, data import, or customization belongs.\n- An architect should understand how the per-project boundary supports\n  modularity, customer overlays, separate deployments, and future functional\n  modules.\n- A security reviewer should understand that the browser receives only\n  permission-filtered, browser-safe data and never becomes a credential,\n  workflow, or persistence authority.\n- An operator should understand how Axis can be rolled back without rolling\n  back backend data, and how backend modules can scale or fail independently.\n- An AI tool should understand that it must discover the owning module before\n  writing code, tests, or documentation.\n\n## Deployment model\n\nAxis is deployed per customer project, not as one global application that can\nswitch between unrelated projects.\n\n```text\nCustomer project A\n  Axis deployment A\n    -> Profile A\n    -> BackOffice A -> authorized module discovery\n    -> WCMS A\n    -> Media A\n    -> Cron A\n    -> Workflow A\n    -> project A extensions\n\nCustomer project B\n  Axis deployment B\n    -> Profile B\n    -> BackOffice B -> authorized module discovery\n    -> WCMS B\n    -> Media B\n    -> Commerce B\n    -> project B extensions\n```\n\nAxis deployment A must never discover, select, or call project B endpoints.\nWhether a project's Nodics modules run together in one local server or as\ndistributed module servers does not change the browser contract.\n\n## Authority model diagram\n\n```mermaid\nflowchart LR\n    User[\"Employee user\"] --> Axis[\"Nodics Axis browser app\"]\n    Axis --> Profile[\"Profile module: human session\"]\n    Axis --> BackOffice[\"BackOffice module: authorized registry\"]\n    Axis --> WCMS[\"WCMS module: governed content\"]\n    Axis --> Media[\"Media module: assets and usage\"]\n    Axis --> Cron[\"Cron module: schedules and job operations\"]\n    Axis --> Other[\"Other registered modules\"]\n\n    Profile --> DB1[\"Profile persistence\"]\n    BackOffice --> DB2[\"BackOffice registry persistence\"]\n    WCMS --> DB3[\"WCMS persistence\"]\n    Media --> DB4[\"Media persistence and storage policies\"]\n    Cron --> DB5[\"Cron persistence\"]\n\n    Axis -. \"renders only\" .-> BrowserState[\"Browser-safe view state\"]\n```\n\nThe browser is allowed to hold presentation state: selected tab, expanded\nsection, search text, temporary form draft, and cached response data governed\nby frontend query rules. It is not allowed to hold authoritative rules:\npermission truth, workflow truth, catalog truth, schema truth, credential\ntruth, import truth, or runtime-health truth.\n\n## Contract authority\n\nAxis consumes versioned backend contracts such as OpenAPI, Profile\nauthentication, BackOffice bootstrap, permissions, schemas, content delivery,\nmodule operation metadata, and data import/export contracts. Generated or\nhandwritten Axis clients are consumers of those contracts; they do not become\ncontract authorities.\n\nAxis must not:\n\n- import source from the Nodics framework checkout;\n- embed backend services or persistence;\n- reproduce authoritative validation or permission decisions;\n- execute workflows, pipelines, integrations, AI tools, or arbitrary scripts in\n  the browser;\n- store service credentials, Cron credentials, database credentials, or module\n  secrets;\n- create a second registry, schema authority, runtime loader, endpoint\n  federation layer, or content ownership layer;\n- treat route text, menu labels, or display names as operational identifiers.\n\nClient-side validation may improve usability, but every target module must\nvalidate and authorize the request independently.\n\n## Business example: one project, one Axis\n\nImagine a retail partner using Nodics for employee onboarding, content\nmanagement, media governance, scheduled jobs, and future commerce operations.\nThe partner wants one employee workspace where a merchandiser can edit content,\nan administrator can configure users, and an operator can check module health.\n\nAxis solves this by discovering what the project has enabled. If the project\nhas Profile, WCMS, Media, and Cron, Axis shows the authorized pages for those\ncapabilities. If Commerce is not registered, Commerce pages are not shown. If a\nuser does not have a permission, the menu and direct route must not become a\nback door. The backend still rejects the request.\n\nThis protects business adoption because the workspace grows with the project.\nThe customer does not need a new Back Office application for every module, and\nthey do not need browser code changes to hide capabilities that are not live.\n\n## Developer example: adding a workspace\n\nWhen a developer adds a new Axis workspace, the first question is not \"which\nReact component should I write?\" The first question is \"which backend module\nowns this behavior?\"\n\nExample: a future Workflow dashboard.\n\n1. The Workflow backend module defines the runtime API, permission codes,\n   schemas, status definitions, and operation rules.\n2. BackOffice exposes browser-safe navigation and capability metadata only for\n   authorized users.\n3. Axis adds a typed Workflow client, route renderer, UI components, loading\n   states, empty states, error states, responsive behavior, and tests.\n4. Documentation is written in the backend-owned content pack of the module\n   that owns the documentation topic.\n5. Axis never decides whether a workflow may be approved, rejected, retried, or\n   cancelled. It asks Workflow and renders the result.\n\nThis sequence keeps customization safe. A customer extension can override the\nbackend Workflow behavior while the functional module identity remains\n`nodics.workflow`. Axis still presents \"Workflow\" because the customization\nextends the capability rather than creating a new product identity.\n\n## Operations example: deployment and rollback\n\nAxis can be released independently from backend modules. That is useful, but it\nalso creates a responsibility: Axis must fail safely when a backend capability\nis absent, older, newer, disabled, or temporarily unavailable.\n\nSafe behavior includes:\n\n- show recovery content when CMS content cannot be loaded;\n- show a clear unavailable state when BackOffice registry discovery fails;\n- hide or disable an action when the backend says the operation is not\n  available;\n- keep old data visible only when it is clearly marked stale;\n- never invent a successful operation after a failed request;\n- make frontend rollback possible without changing persisted backend data.\n\nFor example, if a new Axis release supports a Cron feature that the running\nCron server does not yet expose, the page should say the capability is not\navailable for this runtime. It should not guess the endpoint, construct a URL\nfrom a label, or show a fake success.\n\n## Security boundary\n\nHuman browser authentication remains separate from module-to-module and CronJob\nauthentication. Axis may receive only browser-safe configuration,\nhuman-session material approved by the Profile browser-security contract, and\npermission-filtered module metadata. Passwords, access tokens, refresh tokens,\nservice credentials, and secrets must never be written to browser storage,\nURLs, logs, screenshots, telemetry, static data files, or documentation\nexamples.\n\nAxis security work must consider:\n\n- authentication and session expiry;\n- authorization for menu discovery and direct route access;\n- enterprise and tenant isolation;\n- CSRF, CORS, CSP, and clickjacking protections;\n- request timeouts and redirect rejection;\n- safe error messages that do not leak secrets or stack traces;\n- auditability of backend operations;\n- least-privilege data projection from BackOffice and target modules.\n\nDetailed session, refresh, revocation, CORS, CSRF, CSP, and audience behavior\nmust be documented only after the corresponding backend contracts are approved\nand implemented.\n\n## Documentation ownership\n\nAxis documentation is also backend-owned content. The frontend repository owns\nrenderers and browser behavior, but it does not own importable documentation\ndata.\n\nThe ownership rule is:\n\n- framework documentation belongs to the framework documentation module;\n- Axis product documentation belongs to the backend Axis module under\n  Platform;\n- customer project documentation belongs to the customer project;\n- functional module documentation belongs to the functional module that owns\n  the behavior;\n- temporary plans are not runtime content and must not be presented as\n  implemented capability.\n\nThis keeps documentation modular. A project can install framework docs, Axis\ndocs, and project docs without mixing their ownership or forcing the frontend\nrepository to carry backend data.\n\n## Customize and extend safely\n\nCreate customer behavior in the customer backend project and customer\npresentation in its Axis project layer. A frontend extension may add a focused\npage, renderer, typed client, hook, and mirrored test, but it must continue to\nconsume the owning Nodics module's versioned API and permission contract.\n\nThe smallest safe extension is one new renderer file plus one typed registry\nentry for a backend-issued logical renderer key. Do not copy BackOffice\ndiscovery, create a browser module registry, move validation or workflow into\nReact, or edit reusable Nodics framework source. Prove the extension with\ncontract-version, unauthorized, malformed-payload, responsive, integration,\naccessibility, and production-build tests. Rollback removes the project\nregistry entry while leaving the backend authority and persisted data\nunchanged.\n\n## What AI tools must do before coding\n\nBefore changing Axis or any Axis-owned backend data, an AI tool must:\n\n1. identify the functional module that owns the behavior;\n2. identify whether the change belongs in backend framework, backend customer\n   project, frontend renderer, documentation content, or test data;\n3. inspect existing contracts and avoid creating a parallel authority;\n4. prefer configuration and extension over editing out-of-the-box framework\n   behavior;\n5. add or update documentation where a user-facing behavior, contract,\n   boundary, or operation changes;\n6. run the smallest meaningful tests first, then the broader acceptance gates\n   required by the changed surface.\n\nIf ownership is unclear, stop and clarify rather than writing code in the\nnearest convenient folder.\n\n## Verification expectations\n\nEvery Axis slice must identify:\n\n1. its authoritative backend owner and versioned contract;\n2. its Axis presentation and local-state responsibilities;\n3. authentication, authorization, tenant, and data-exposure boundaries;\n4. tests belonging to each repository;\n5. documentation belonging to each repository;\n6. local recovery behavior when the backend is absent or disabled;\n7. rollback behavior for frontend and backend releases.\n\nImplementation must cover applicable positive, negative, boundary, contract,\nsecurity, responsive, accessibility, integration, recovery, and regression\nbehavior. Run the module-specific documentation checks and the repository\nvalidation gates before release-oriented commits.\n"
         },
         {
           "code": "axis.technology-stack",
@@ -213,8 +213,8 @@ module.exports = {
             "developer",
             "security-reviewer"
           ],
-          "summary": "Monitor the sanitized BackOffice module and node readiness projection without creating a browser-side health authority.",
-          "searchText": "Module Health Monitor the sanitized BackOffice module and node readiness projection without creating a browser-side health authority. # Module Health\n\n## Purpose and ownership\n\nModule Health gives an authorized employee a responsive view of registered\nNodics modules and runtime instances. Operators can see whether Profile, CMS,\nWorkflow, BackOffice, or another capability is healthy, degraded, unavailable,\nor unknown and identify the registered environment, server, and node involved.\n\nAxis does not decide health. Nodics System owns readiness and BackOffice owns\nthe sanitized availability observation and registry projection. Axis owns only\ntyped consumption, interaction, rendering, filtering, and accessible state\npresentation.\n\nAxis displays the backend-provided package label and renders the\nloader-discovered parent/child hierarchy. It never sends a label or canonical\npath as the operational identifier; detail, refresh, query keys, and\nauthorization continue using the original module name.\n\n## Navigation and access\n\nBackOffice contributes **Module Health** under **Operations and Integration**\nthrough `backofficeCapabilities.backoffice.navigation`; Axis does not hardcode\nthe menu. It is returned only with `backoffice.registry.admin.view`.\n\nThe route is `/operations/module-health`. Employee session and screen-lock\nguards protect direct navigation. Backend authorization remains mandatory.\n\n## Frontend structure\n\n```text\nsrc/operations/moduleHealth/\n  ModuleHealthRoutePage.tsx\n  ModuleHealthTree.tsx\n  api/\n    moduleHealthClient.ts\n    moduleHealthContracts.ts\n\ntest/operations/moduleHealth/\n  api/\n    moduleHealthClient.test.ts\n```\n\nContracts reject malformed counts, identifiers, states, and freshness.\nThe client supplies the in-memory employee token, enterprise header, request\ntimeout, no-store policy, and redirect rejection. It stores no credentials and\nrejects unsafe module path segments.\n\nTanStack Query owns server state. Summary data loads once; instance details\nload only for the selected module, avoiding an unbounded request per module.\nWindow focus and explicit actions refresh data. Axis adds no health poller.\nAn on-demand **Check now** action is enabled only when the selected module has\nat least one client-callable runtime endpoint. Non-client modules still show\ntheir registration heartbeat and observed state, but Axis does not request a\nrefresh that the backend cannot perform.\n\n## Operator workflow\n\n1. Open **Operations and Integration > Module Health**.\n2. Review totals and module states.\n3. Expand or collapse module groups.\n4. Search by label, code, canonical path, environment, server, or state.\n   Matching descendants retain their ancestor chain.\n5. Select a concrete module. Its detail region expands directly beneath that\n   module so the hierarchy and runtime evidence remain visually connected.\n   Selecting the same module again collapses the detail region; selecting\n   another module moves the single expanded detail region to that module.\n6. Review each registered node's heartbeat, readiness observation, state,\n   freshness, and stable reason.\n7. Choose **Check now** for a governed immediate observation.\n\nExpired and intentionally deregistered nodes are not active instances. Axis\ndoes not infer expected cluster membership from previously observed nodes.\n\n## Responsive, accessible, and failure behavior\n\n- Summary cards wrap, while the module hierarchy and inline detail region use\n  the full available width on every breakpoint.\n- State always has text in addition to color.\n- Search is visibly labelled; rows are keyboard-operable buttons.\n- Loading uses announced progress and failures use alerts.\n- Dates use the browser locale.\n- BackOffice failure never falls back to invented health.\n- Unauthorized access remains a backend rejection.\n- Malformed responses fail closed.\n- Stale evidence is `UNKNOWN`, never healthy.\n- Refresh failure preserves the existing view and shows a bounded message.\n\n## Customize and extend safely\n\nPartners may change styling or compose presentation around typed contracts.\nThey must not call databases/providers from Axis, reproduce the registry,\ncall every module ping as a second authority, persist access tokens or raw\ndiagnostics, infer configured cluster membership, or bypass permissions.\n"
+          "summary": "Monitor backend-governed module registration and runtime health evidence without creating a browser-side health authority.",
+          "searchText": "Module Health Monitor backend-governed module registration and runtime health evidence without creating a browser-side health authority. # Module Health\n\n## Why Module Health exists\n\nModern Nodics projects are modular. A local demo may start Profile, BackOffice,\nWCMS, Media, Cron, and documentation services on one machine. A production\ntopology may run the same functional capabilities across separate servers,\nmultiple nodes, separate databases, and separate release schedules. Business\nusers should not need to understand every server process, but administrators\nand operators still need a safe way to answer a simple question:\n\n> Is the capability I need actually available for this project right now?\n\nModule Health gives an authorized employee a responsive view of registered\nNodics functional modules and observed runtime instances. It helps operators\nsee whether Profile, BackOffice, WCMS, Media, Cron, Workflow, Commerce, or\nanother capability is healthy, degraded, unavailable, stale, or unknown. It\nalso shows which environment, server, and node produced the observation.\n\nThe page is deliberately not a second monitoring product. It is the Axis view\nof backend-governed runtime evidence.\n\n## Purpose and ownership\n\nAxis does not decide health. Nodics runtime services own readiness, individual\nmodules own their own deeper diagnostic rules, and BackOffice owns the\nsanitized availability observation and registry projection that is safe for a\nbrowser.\n\nAxis owns only:\n\n- typed consumption of the BackOffice health contract;\n- rendering, filtering, searching, expanding, collapsing, and selecting rows;\n- accessible status presentation;\n- clear loading, empty, unavailable, and failure states;\n- bounded refresh behavior initiated by the user or frontend query policy.\n\nAxis displays the backend-provided package label and renders the\nloader-discovered parent/child hierarchy. It never sends a label or canonical\npath as the operational identifier. Detail, refresh, query keys, and\nauthorization continue using the original backend module name and runtime\nidentifier.\n\n## Beginner mental model\n\nThere are three different ideas that are easy to mix together:\n\n- A functional module is a business capability such as Platform, WCMS, Media,\n  Cron, Workflow, or Commerce.\n- A technical module is a smaller code module loaded inside a functional\n  module, such as Profile, BackOffice, CMS, Media, or CronJob.\n- A runtime instance is an observed server/node process that is currently\n  running or was recently seen.\n\nModule Health presents these ideas together but does not make them identical.\nA functional module can be registered even when one runtime node is down. A\nruntime can be live but not yet registered into the project. A technical module\ncan exist as part of a mandatory functional module without being separately\nregistered by a business user.\n\n## Runtime evidence flow\n\n```mermaid\nsequenceDiagram\n    participant Runtime as Runtime server\n    participant Registry as BackOffice registry\n    participant API as BackOffice health API\n    participant Axis as Axis Module Health page\n    Runtime->>Registry: report module and node observation\n    Axis->>API: request authorized module health projection\n    API->>Registry: read registered modules and observations\n    Registry-->>API: runtime evidence and permission-filtered state\n    API-->>Axis: browser-safe health summary\n    Axis-->>Axis: render tree, cards, detail, stale/failure states\n```\n\nThe browser sees only the projection returned by BackOffice. It does not call\ndatabases, inspect server processes, execute shell commands, or ping every\nmodule on its own.\n\n## Navigation and access\n\nBackOffice contributes **Module Health** under **System & Integrations**\nthrough backend-owned Axis capability metadata. Axis does not hardcode the\nmenu. The route is returned only to employees with the permission required by\nthe BackOffice registry contract.\n\nThe route is `/operations/module-health`. Employee session and screen-lock\nguards protect direct navigation. Backend authorization remains mandatory even\nwhen a browser route is manually typed.\n\n## Frontend structure\n\n```text\nsrc/operations/moduleHealth/\n  ModuleHealthRoutePage.tsx\n  ModuleHealthTree.tsx\n  api/\n    moduleHealthClient.ts\n    moduleHealthContracts.ts\n\ntest/operations/moduleHealth/\n  api/\n    moduleHealthClient.test.ts\n```\n\nContracts reject malformed counts, identifiers, states, and freshness.\nThe client supplies the in-memory employee token, enterprise header, request\ntimeout, no-store policy, and redirect rejection. It stores no credentials and\nrejects unsafe module path segments.\n\nTanStack Query owns server state. Summary data loads once; instance details\nload only for the selected module, avoiding an unbounded request per module.\nWindow focus and explicit actions refresh data. Axis adds no independent\nhealth poller.\n\nAn on-demand **Check now** action is enabled only when the selected module has\nat least one client-callable runtime endpoint. Non-client modules still show\ntheir registration heartbeat and observed state, but Axis does not request a\nrefresh that the backend cannot perform.\n\n## What an operator sees\n\nThe page should help an operator move from summary to evidence:\n\n1. Summary cards show total registered modules, available modules, degraded\n   modules, unavailable modules, and stale observations.\n2. The hierarchy shows functional modules and technical module children using\n   labels returned by the backend.\n3. Search narrows the tree by label, module code, canonical path, environment,\n   server, node, or state.\n4. Selecting a module opens one inline detail region so the evidence remains\n   visually connected to the selected row.\n5. The detail region shows observed runtime nodes, heartbeat freshness,\n   readiness state, source server, and stable reason.\n6. A governed refresh action is available only when the backend says it is safe\n   and supported.\n\nAxis should be calm in bad moments. When a module is unavailable, the user\nneeds a stable explanation and a safe next action, not a stack trace or an\ninvented fix.\n\n## State model\n\n```mermaid\nstateDiagram-v2\n    [*] --> Unknown: no current evidence\n    Unknown --> Available: fresh positive readiness\n    Unknown --> Degraded: partial capability or warning\n    Unknown --> Unavailable: explicit failure\n    Available --> Stale: heartbeat expires\n    Degraded --> Stale: heartbeat expires\n    Unavailable --> Stale: heartbeat expires\n    Stale --> Available: fresh positive readiness\n    Stale --> Degraded: fresh warning\n    Stale --> Unavailable: fresh failure\n```\n\nThe important rule is that stale evidence is not healthy evidence. If a node\nwas healthy yesterday and has not reported today, Axis must not present it as\nhealthy. The backend decides the actual freshness window; Axis renders the\nstate and explanation.\n\n## Operator workflow\n\n1. Open **System & Integrations > Module Health**.\n2. Review totals and module states.\n3. Expand or collapse module groups.\n4. Search by label, code, canonical path, environment, server, node, or state.\n   Matching descendants retain their ancestor chain.\n5. Select a concrete module. Its detail region expands directly beneath that\n   module so the hierarchy and runtime evidence remain visually connected.\n   Selecting the same module again collapses the detail region; selecting\n   another module moves the single expanded detail region to that module.\n6. Review each registered node's heartbeat, readiness observation, state,\n   freshness, and stable reason.\n7. Choose **Check now** only when the backend enables that operation.\n\nExpired and intentionally deregistered nodes are not active instances. Axis\ndoes not infer expected cluster membership from previously observed nodes.\n\n## Example incident\n\nSuppose Cron was added to a customer project. The Cron server starts and\nreports itself, but the business administrator has not registered the Cron\nfunctional module yet.\n\nExpected behavior:\n\n- Module Registry can show Cron as available to register.\n- Module Health can show the runtime observation as live evidence.\n- Cron operation pages remain hidden or unavailable until the module is\n  registered, active, and authorized.\n- Axis does not silently activate Cron because a runtime was observed.\n\nNow suppose Cron is registered and active, but the Cron server is stopped.\n\nExpected behavior:\n\n- Module Registry still shows Cron as registered because registration is\n  persisted project state.\n- Module Health shows Cron as stale, unavailable, or unknown based on backend\n  evidence.\n- Axis does not remove Cron from the registry only because the server is down.\n- A restart can restore runtime evidence without requiring registration again.\n\nThis distinction is central to the Nodics lifecycle. Registration is project\nintent; health is runtime evidence.\n\n## Responsive, accessible, and failure behavior\n\n- Summary cards wrap, while the module hierarchy and inline detail region use\n  the full available width on every breakpoint.\n- State always has text in addition to color.\n- Search is visibly labelled; rows are keyboard-operable buttons.\n- Loading uses announced progress and failures use alerts.\n- Dates use the browser locale.\n- BackOffice failure never falls back to invented health.\n- Unauthorized access remains a backend rejection.\n- Malformed responses fail closed.\n- Stale evidence is `UNKNOWN`, `STALE`, or another backend-provided non-healthy\n  state, never healthy.\n- Refresh failure preserves the existing view and shows a bounded message.\n- Clicking a row must not scroll the left navigation to the top; navigation and\n  content scrolling are independent layout concerns.\n\n## Backend authority and API contract\n\nThe backend contract must provide enough information for Axis to render safely\nwithout guessing:\n\n- stable module identifier;\n- display label;\n- functional module group;\n- technical module children;\n- registration state;\n- activation state;\n- runtime observation state;\n- environment and server identity;\n- node identity when available;\n- last observed time;\n- freshness/state reason;\n- whether a check-now operation is allowed;\n- permissions attached to the caller.\n\nAxis may rename labels for presentation only when the backend provides a\nbrowser-safe label. It must continue to send stable identifiers back to the API.\n\n## Customize and extend safely\n\nPartners may change styling or compose presentation around typed contracts.\nThey must not:\n\n- call databases or infrastructure providers from Axis;\n- reproduce the module registry;\n- ping every module as a second health authority;\n- persist access tokens or raw diagnostics;\n- infer configured cluster membership from stale observations;\n- bypass permissions;\n- show module actions before registration and activation allow them;\n- treat display labels as operational identifiers.\n\nIf a partner needs deeper module diagnostics, the correct extension path is a\nbackend endpoint owned by the functional module, browser-safe BackOffice\ncapability metadata, then an Axis renderer that consumes that endpoint.\n\n## Operational acceptance checklist\n\nBefore releasing Module Health changes, verify:\n\n1. registered healthy modules render as healthy;\n2. registered unhealthy modules render as degraded or unavailable;\n3. stale observations do not render as healthy;\n4. live but unregistered optional modules do not become operational pages;\n5. mandatory modules cannot be deregistered by the browser;\n6. unauthorized users cannot see the route or call the API;\n7. malformed responses fail closed;\n8. search preserves the visible ancestor chain;\n9. only one module detail panel is expanded at a time;\n10. check-now is disabled when backend metadata does not allow it;\n11. page refresh and route navigation preserve the authenticated workspace;\n12. left navigation and content scroll independently;\n13. production build and contract tests pass.\n\n## Common mistakes\n\n- Mistake: \"The server is running, so the module is registered.\"\n  Correction: runtime observation and project registration are separate states.\n- Mistake: \"The browser can ping the module to know health.\"\n  Correction: health evidence must come through governed backend contracts.\n- Mistake: \"A label is enough to call a module.\"\n  Correction: labels are presentation text; stable identifiers drive API calls.\n- Mistake: \"A stale healthy heartbeat is still healthy.\"\n  Correction: stale evidence is not current evidence.\n- Mistake: \"Module Health can hide backend permission errors.\"\n  Correction: Axis must render safe failure states and the backend must still\n  enforce authorization.\n"
         },
         {
           "code": "axis.imports-exports",
@@ -726,7 +726,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/project-overview.md",
         "evidence": "README.md",
         "hash": "32cc2183af649a6e40725ec6f44f34d1d1f79c2d54568ca7006ddc22e97f3e36",
-        "version": "0.3.24"
+        "version": "0.3.25"
       },
       "next": {
         "title": "Architecture and Repository Boundaries",
@@ -753,41 +753,76 @@ module.exports = {
         "security-reviewer",
         "ai-tool"
       ],
-      "summary": "Learn the per-project deployment model, contract authority, security boundary, documentation ownership, and verification expectations.",
+      "summary": "Learn the per-project deployment model, authority boundaries, role journeys, security model, documentation ownership, customization rules, and verification expectations.",
       "headings": [
         {
+          "text": "Why this page matters",
+          "anchor": "architecture-1-why-this-page-matters",
+          "level": 2
+        },
+        {
           "text": "Decision",
-          "anchor": "architecture-1-decision",
+          "anchor": "architecture-2-decision",
+          "level": 2
+        },
+        {
+          "text": "Reader journeys",
+          "anchor": "architecture-3-reader-journeys",
           "level": 2
         },
         {
           "text": "Deployment model",
-          "anchor": "architecture-2-deployment-model",
+          "anchor": "architecture-4-deployment-model",
+          "level": 2
+        },
+        {
+          "text": "Authority model diagram",
+          "anchor": "architecture-5-authority-model-diagram",
           "level": 2
         },
         {
           "text": "Contract authority",
-          "anchor": "architecture-3-contract-authority",
+          "anchor": "architecture-6-contract-authority",
+          "level": 2
+        },
+        {
+          "text": "Business example: one project, one Axis",
+          "anchor": "architecture-7-business-example-one-project-one-axis",
+          "level": 2
+        },
+        {
+          "text": "Developer example: adding a workspace",
+          "anchor": "architecture-8-developer-example-adding-a-workspace",
+          "level": 2
+        },
+        {
+          "text": "Operations example: deployment and rollback",
+          "anchor": "architecture-9-operations-example-deployment-and-rollback",
           "level": 2
         },
         {
           "text": "Security boundary",
-          "anchor": "architecture-4-security-boundary",
+          "anchor": "architecture-10-security-boundary",
           "level": 2
         },
         {
           "text": "Documentation ownership",
-          "anchor": "architecture-5-documentation-ownership",
+          "anchor": "architecture-11-documentation-ownership",
           "level": 2
         },
         {
           "text": "Customize and extend safely",
-          "anchor": "architecture-6-customize-and-extend-safely",
+          "anchor": "architecture-12-customize-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "What AI tools must do before coding",
+          "anchor": "architecture-13-what-ai-tools-must-do-before-coding",
           "level": 2
         },
         {
           "text": "Verification expectations",
-          "anchor": "architecture-7-verification-expectations",
+          "anchor": "architecture-14-verification-expectations",
           "level": 2
         }
       ],
@@ -795,8 +830,26 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Why this page matters",
+          "anchor": "architecture-1-why-this-page-matters"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis looks like a normal web application when a user opens it in the browser, but it is not the authority for Nodics business behavior. It is the employee workspace that lets people discover, use, and operate capabilities that are owned by backend modules. That difference is important for business users, developers, operators, security reviewers, and AI tools."
+        },
+        {
+          "kind": "paragraph",
+          "text": "If Axis becomes a second backend, every customer project becomes harder to secure and harder to customize. The browser would start carrying rules that belong in Profile, BackOffice, WCMS, Cron, Workflow, Commerce, or a customer extension module. The same validation could then exist in two places, one workflow could be started from two authorities, and one permission decision could be interpreted differently by the browser and the backend. Nodics avoids that by keeping Axis reusable, thin, governed, and contract-driven."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Think of Axis as a well-designed control room. It shows switches, screens, alerts, forms, and dashboards. The control room helps a human operate the system safely, but it does not become the power plant, the billing engine, the workflow engine, the CMS, or the security system."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Decision",
-          "anchor": "architecture-1-decision"
+          "anchor": "architecture-2-decision"
         },
         {
           "kind": "paragraph",
@@ -809,37 +862,78 @@ module.exports = {
         {
           "kind": "unordered-list",
           "items": [
-            "Nodics owns business rules, persistence, authentication enforcement, authorization, workflows, pipelines, integrations, secrets, tenant governance, runtime contracts, and module APIs.",
-            "Axis owns browser rendering, interaction, accessibility, responsive behavior, and non-authoritative client view state.",
-            "Profile authenticates human users.",
-            "BackOffice returns the caller's authorized, browser-safe module registry and compatibility metadata.",
+            "Nodics backend modules own business rules, persistence, authentication enforcement, authorization, workflows, pipelines, integrations, secrets, tenant governance, runtime contracts, and module APIs.",
+            "Axis owns browser rendering, interaction, accessibility, responsive behavior, client-side usability, and non-authoritative view state.",
+            "Profile authenticates human users and owns the human identity/session contract.",
+            "BackOffice returns the caller's authorized, browser-safe module registry, navigation, capability, schema, and compatibility metadata.",
+            "WCMS owns governed content, sites, page routes, components, renderers, templates, content catalogs, and documentation pages delivered through CMS contracts.",
             "After bootstrap, Axis calls each authoritative module directly. BackOffice does not proxy normal CMS, job, workflow, configuration, or business traffic."
           ]
         },
         {
           "kind": "heading",
           "level": 2,
+          "text": "Reader journeys",
+          "anchor": "architecture-3-reader-journeys"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Different readers should take different value from this page:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "A business user should understand that Axis gives one governed place to operate many business capabilities without copying business rules into the browser.",
+            "A developer should understand where a new page, renderer, typed API client, backend route, data import, or customization belongs.",
+            "An architect should understand how the per-project boundary supports modularity, customer overlays, separate deployments, and future functional modules.",
+            "A security reviewer should understand that the browser receives only permission-filtered, browser-safe data and never becomes a credential, workflow, or persistence authority.",
+            "An operator should understand how Axis can be rolled back without rolling back backend data, and how backend modules can scale or fail independently.",
+            "An AI tool should understand that it must discover the owning module before writing code, tests, or documentation."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Deployment model",
-          "anchor": "architecture-2-deployment-model"
+          "anchor": "architecture-4-deployment-model"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis is deployed per customer project, not as one global application that can switch between unrelated projects."
         },
         {
           "kind": "code",
           "language": "text",
-          "text": "Customer project A\n  Axis deployment A\n    -> Profile A\n    -> BackOffice A -> authorized module discovery\n    -> CMS A, Workflow A, CronJob A, and other discovered modules\n\nCustomer project B\n  Axis deployment B\n    -> Profile B\n    -> BackOffice B -> authorized module discovery\n    -> project B modules"
+          "text": "Customer project A\n  Axis deployment A\n    -> Profile A\n    -> BackOffice A -> authorized module discovery\n    -> WCMS A\n    -> Media A\n    -> Cron A\n    -> Workflow A\n    -> project A extensions\n\nCustomer project B\n  Axis deployment B\n    -> Profile B\n    -> BackOffice B -> authorized module discovery\n    -> WCMS B\n    -> Media B\n    -> Commerce B\n    -> project B extensions"
         },
         {
           "kind": "paragraph",
-          "text": "Axis deployment A must never discover, select, or call project B endpoints. Whether a project's Nodics modules run together in `monoServer` or as distributed module servers does not change the browser contract."
+          "text": "Axis deployment A must never discover, select, or call project B endpoints. Whether a project's Nodics modules run together in one local server or as distributed module servers does not change the browser contract."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Authority model diagram",
+          "anchor": "architecture-5-authority-model-diagram"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n    User[\"Employee user\"] --> Axis[\"Nodics Axis browser app\"]\n    Axis --> Profile[\"Profile module: human session\"]\n    Axis --> BackOffice[\"BackOffice module: authorized registry\"]\n    Axis --> WCMS[\"WCMS module: governed content\"]\n    Axis --> Media[\"Media module: assets and usage\"]\n    Axis --> Cron[\"Cron module: schedules and job operations\"]\n    Axis --> Other[\"Other registered modules\"]\n\n    Profile --> DB1[\"Profile persistence\"]\n    BackOffice --> DB2[\"BackOffice registry persistence\"]\n    WCMS --> DB3[\"WCMS persistence\"]\n    Media --> DB4[\"Media persistence and storage policies\"]\n    Cron --> DB5[\"Cron persistence\"]\n\n    Axis -. \"renders only\" .-> BrowserState[\"Browser-safe view state\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The browser is allowed to hold presentation state: selected tab, expanded section, search text, temporary form draft, and cached response data governed by frontend query rules. It is not allowed to hold authoritative rules: permission truth, workflow truth, catalog truth, schema truth, credential truth, import truth, or runtime-health truth."
         },
         {
           "kind": "heading",
           "level": 2,
           "text": "Contract authority",
-          "anchor": "architecture-3-contract-authority"
+          "anchor": "architecture-6-contract-authority"
         },
         {
           "kind": "paragraph",
-          "text": "Axis consumes versioned backend contracts such as OpenAPI, Profile authentication, BackOffice bootstrap, permissions, schemas, and module operation metadata. Generated or handwritten Axis clients are consumers of those contracts; they do not become contract authorities."
+          "text": "Axis consumes versioned backend contracts such as OpenAPI, Profile authentication, BackOffice bootstrap, permissions, schemas, content delivery, module operation metadata, and data import/export contracts. Generated or handwritten Axis clients are consumers of those contracts; they do not become contract authorities."
         },
         {
           "kind": "paragraph",
@@ -848,12 +942,13 @@ module.exports = {
         {
           "kind": "unordered-list",
           "items": [
-            "import source from the sibling Nodics checkout;",
+            "import source from the Nodics framework checkout;",
             "embed backend services or persistence;",
             "reproduce authoritative validation or permission decisions;",
             "execute workflows, pipelines, integrations, AI tools, or arbitrary scripts in the browser;",
-            "store service or CronJob credentials;",
-            "create a second registry, schema authority, runtime loader, or endpoint federation layer."
+            "store service credentials, Cron credentials, database credentials, or module secrets;",
+            "create a second registry, schema authority, runtime loader, endpoint federation layer, or content ownership layer;",
+            "treat route text, menu labels, or display names as operational identifiers."
           ]
         },
         {
@@ -863,36 +958,142 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Business example: one project, one Axis",
+          "anchor": "architecture-7-business-example-one-project-one-axis"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Imagine a retail partner using Nodics for employee onboarding, content management, media governance, scheduled jobs, and future commerce operations. The partner wants one employee workspace where a merchandiser can edit content, an administrator can configure users, and an operator can check module health."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis solves this by discovering what the project has enabled. If the project has Profile, WCMS, Media, and Cron, Axis shows the authorized pages for those capabilities. If Commerce is not registered, Commerce pages are not shown. If a user does not have a permission, the menu and direct route must not become a back door. The backend still rejects the request."
+        },
+        {
+          "kind": "paragraph",
+          "text": "This protects business adoption because the workspace grows with the project. The customer does not need a new Back Office application for every module, and they do not need browser code changes to hide capabilities that are not live."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Developer example: adding a workspace",
+          "anchor": "architecture-8-developer-example-adding-a-workspace"
+        },
+        {
+          "kind": "paragraph",
+          "text": "When a developer adds a new Axis workspace, the first question is not \"which React component should I write?\" The first question is \"which backend module owns this behavior?\""
+        },
+        {
+          "kind": "paragraph",
+          "text": "Example: a future Workflow dashboard."
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "The Workflow backend module defines the runtime API, permission codes, schemas, status definitions, and operation rules.",
+            "BackOffice exposes browser-safe navigation and capability metadata only for authorized users.",
+            "Axis adds a typed Workflow client, route renderer, UI components, loading states, empty states, error states, responsive behavior, and tests.",
+            "Documentation is written in the backend-owned content pack of the module that owns the documentation topic.",
+            "Axis never decides whether a workflow may be approved, rejected, retried, or cancelled. It asks Workflow and renders the result."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "This sequence keeps customization safe. A customer extension can override the backend Workflow behavior while the functional module identity remains `nodics.workflow`. Axis still presents \"Workflow\" because the customization extends the capability rather than creating a new product identity."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operations example: deployment and rollback",
+          "anchor": "architecture-9-operations-example-deployment-and-rollback"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis can be released independently from backend modules. That is useful, but it also creates a responsibility: Axis must fail safely when a backend capability is absent, older, newer, disabled, or temporarily unavailable."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Safe behavior includes:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "show recovery content when CMS content cannot be loaded;",
+            "show a clear unavailable state when BackOffice registry discovery fails;",
+            "hide or disable an action when the backend says the operation is not available;",
+            "keep old data visible only when it is clearly marked stale;",
+            "never invent a successful operation after a failed request;",
+            "make frontend rollback possible without changing persisted backend data."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "For example, if a new Axis release supports a Cron feature that the running Cron server does not yet expose, the page should say the capability is not available for this runtime. It should not guess the endpoint, construct a URL from a label, or show a fake success."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Security boundary",
-          "anchor": "architecture-4-security-boundary"
+          "anchor": "architecture-10-security-boundary"
         },
         {
           "kind": "paragraph",
-          "text": "Human browser authentication remains separate from module-to-module and CronJob authentication. Axis may receive only browser-safe configuration, human-session material approved by the Profile browser-security contract, and permission-filtered module metadata. Passwords, access tokens, refresh tokens, service credentials, and secrets must never be written to browser storage, URLs, logs, or telemetry."
+          "text": "Human browser authentication remains separate from module-to-module and CronJob authentication. Axis may receive only browser-safe configuration, human-session material approved by the Profile browser-security contract, and permission-filtered module metadata. Passwords, access tokens, refresh tokens, service credentials, and secrets must never be written to browser storage, URLs, logs, screenshots, telemetry, static data files, or documentation examples."
         },
         {
           "kind": "paragraph",
-          "text": "Detailed session, refresh, revocation, CORS, CSRF, CSP, and audience behavior will be documented only after the corresponding backend contracts are approved and implemented."
+          "text": "Axis security work must consider:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "authentication and session expiry;",
+            "authorization for menu discovery and direct route access;",
+            "enterprise and tenant isolation;",
+            "CSRF, CORS, CSP, and clickjacking protections;",
+            "request timeouts and redirect rejection;",
+            "safe error messages that do not leak secrets or stack traces;",
+            "auditability of backend operations;",
+            "least-privilege data projection from BackOffice and target modules."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Detailed session, refresh, revocation, CORS, CSRF, CSP, and audience behavior must be documented only after the corresponding backend contracts are approved and implemented."
         },
         {
           "kind": "heading",
           "level": 2,
           "text": "Documentation ownership",
-          "anchor": "architecture-5-documentation-ownership"
+          "anchor": "architecture-11-documentation-ownership"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis documentation is also backend-owned content. The frontend repository owns renderers and browser behavior, but it does not own importable documentation data."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The ownership rule is:"
         },
         {
           "kind": "unordered-list",
           "items": [
-            "This repository documents Axis installation, build, deployment, frontend contribution rules, browser architecture, accessibility, and implemented UI behavior.",
-            "The Nodics repository documents product capabilities, business-user and administrator journeys, backend APIs, security enforcement, module configuration, operations, and backend customization.",
-            "Temporary plans describe intended work only and must not be presented as implemented capability."
+            "framework documentation belongs to the framework documentation module;",
+            "Axis product documentation belongs to the backend Axis module under Platform;",
+            "customer project documentation belongs to the customer project;",
+            "functional module documentation belongs to the functional module that owns the behavior;",
+            "temporary plans are not runtime content and must not be presented as implemented capability."
           ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "This keeps documentation modular. A project can install framework docs, Axis docs, and project docs without mixing their ownership or forcing the frontend repository to carry backend data."
         },
         {
           "kind": "heading",
           "level": 2,
           "text": "Customize and extend safely",
-          "anchor": "architecture-6-customize-and-extend-safely"
+          "anchor": "architecture-12-customize-and-extend-safely"
         },
         {
           "kind": "paragraph",
@@ -900,13 +1101,38 @@ module.exports = {
         },
         {
           "kind": "paragraph",
-          "text": "The smallest safe extension is one new renderer file plus one typed registry entry for a backend-issued logical renderer key. Do not copy BackOffice discovery, create a browser module registry, move validation or workflow into React, or edit reusable Nodics framework source. Prove the extension with contract-version, unauthorized, malformed-payload, responsive, integration, and production-build tests. Rollback removes the project registry entry while leaving the backend authority and persisted data unchanged."
+          "text": "The smallest safe extension is one new renderer file plus one typed registry entry for a backend-issued logical renderer key. Do not copy BackOffice discovery, create a browser module registry, move validation or workflow into React, or edit reusable Nodics framework source. Prove the extension with contract-version, unauthorized, malformed-payload, responsive, integration, accessibility, and production-build tests. Rollback removes the project registry entry while leaving the backend authority and persisted data unchanged."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "What AI tools must do before coding",
+          "anchor": "architecture-13-what-ai-tools-must-do-before-coding"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Before changing Axis or any Axis-owned backend data, an AI tool must:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "identify the functional module that owns the behavior;",
+            "identify whether the change belongs in backend framework, backend customer project, frontend renderer, documentation content, or test data;",
+            "inspect existing contracts and avoid creating a parallel authority;",
+            "prefer configuration and extension over editing out-of-the-box framework behavior;",
+            "add or update documentation where a user-facing behavior, contract, boundary, or operation changes;",
+            "run the smallest meaningful tests first, then the broader acceptance gates required by the changed surface."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "If ownership is unclear, stop and clarify rather than writing code in the nearest convenient folder."
         },
         {
           "kind": "heading",
           "level": 2,
           "text": "Verification expectations",
-          "anchor": "architecture-7-verification-expectations"
+          "anchor": "architecture-14-verification-expectations"
         },
         {
           "kind": "paragraph",
@@ -919,22 +1145,24 @@ module.exports = {
             "its Axis presentation and local-state responsibilities;",
             "authentication, authorization, tenant, and data-exposure boundaries;",
             "tests belonging to each repository;",
-            "documentation belonging to each repository."
+            "documentation belonging to each repository;",
+            "local recovery behavior when the backend is absent or disabled;",
+            "rollback behavior for frontend and backend releases."
           ]
         },
         {
           "kind": "paragraph",
-          "text": "Implementation must cover applicable positive, negative, boundary, contract, security, responsive, accessibility, integration, recovery, and regression behavior. Run `npm run verify` before release-oriented commits."
+          "text": "Implementation must cover applicable positive, negative, boundary, contract, security, responsive, accessibility, integration, recovery, and regression behavior. Run the module-specific documentation checks and the repository validation gates before release-oriented commits."
         }
       ],
-      "searchText": "Architecture and Repository Boundaries Learn the per-project deployment model, contract authority, security boundary, documentation ownership, and verification expectations. # Axis Architecture and Ownership\n\n## Decision\n\nNodics Axis is a reusable Back Office browser application deployed once for\neach Nodics-based customer project. The Axis process and the Nodics backend\nprocesses are built, started, scaled, deployed, and rolled back independently.\nOne Axis deployment must not switch between customer projects or federate\ntheir backend endpoints.\n\nThis decision keeps a clear authority boundary:\n\n- Nodics owns business rules, persistence, authentication enforcement,\n  authorization, workflows, pipelines, integrations, secrets, tenant\n  governance, runtime contracts, and module APIs.\n- Axis owns browser rendering, interaction, accessibility, responsive\n  behavior, and non-authoritative client view state.\n- Profile authenticates human users.\n- BackOffice returns the caller's authorized, browser-safe module registry and\n  compatibility metadata.\n- After bootstrap, Axis calls each authoritative module directly. BackOffice\n  does not proxy normal CMS, job, workflow, configuration, or business traffic.\n\n## Deployment model\n\n```text\nCustomer project A\n  Axis deployment A\n    -> Profile A\n    -> BackOffice A -> authorized module discovery\n    -> CMS A, Workflow A, CronJob A, and other discovered modules\n\nCustomer project B\n  Axis deployment B\n    -> Profile B\n    -> BackOffice B -> authorized module discovery\n    -> project B modules\n```\n\nAxis deployment A must never discover, select, or call project B endpoints.\nWhether a project's Nodics modules run together in `monoServer` or as\ndistributed module servers does not change the browser contract.\n\n## Contract authority\n\nAxis consumes versioned backend contracts such as OpenAPI, Profile\nauthentication, BackOffice bootstrap, permissions, schemas, and module\noperation metadata. Generated or handwritten Axis clients are consumers of\nthose contracts; they do not become contract authorities.\n\nAxis must not:\n\n- import source from the sibling Nodics checkout;\n- embed backend services or persistence;\n- reproduce authoritative validation or permission decisions;\n- execute workflows, pipelines, integrations, AI tools, or arbitrary scripts\n  in the browser;\n- store service or CronJob credentials;\n- create a second registry, schema authority, runtime loader, or endpoint\n  federation layer.\n\nClient-side validation may improve usability, but every target module must\nvalidate and authorize the request independently.\n\n## Security boundary\n\nHuman browser authentication remains separate from module-to-module and\nCronJob authentication. Axis may receive only browser-safe configuration,\nhuman-session material approved by the Profile browser-security contract, and\npermission-filtered module metadata. Passwords, access tokens, refresh tokens,\nservice credentials, and secrets must never be written to browser storage,\nURLs, logs, or telemetry.\n\nDetailed session, refresh, revocation, CORS, CSRF, CSP, and audience behavior\nwill be documented only after the corresponding backend contracts are\napproved and implemented.\n\n## Documentation ownership\n\n- This repository documents Axis installation, build, deployment, frontend\n  contribution rules, browser architecture, accessibility, and implemented UI\n  behavior.\n- The Nodics repository documents product capabilities, business-user and\n  administrator journeys, backend APIs, security enforcement, module\n  configuration, operations, and backend customization.\n- Temporary plans describe intended work only and must not be presented as\n  implemented capability.\n\n## Customize and extend safely\n\nCreate customer behavior in the customer backend project and customer\npresentation in its Axis project layer. A frontend extension may add a focused\npage, renderer, typed client, hook, and mirrored test, but it must continue to\nconsume the owning Nodics module's versioned API and permission contract.\n\nThe smallest safe extension is one new renderer file plus one typed registry\nentry for a backend-issued logical renderer key. Do not copy BackOffice\ndiscovery, create a browser module registry, move validation or workflow into\nReact, or edit reusable Nodics framework source. Prove the extension with\ncontract-version, unauthorized, malformed-payload, responsive, integration,\nand production-build tests. Rollback removes the project registry entry while\nleaving the backend authority and persisted data unchanged.\n\n## Verification expectations\n\nEvery Axis slice must identify:\n\n1. its authoritative backend owner and versioned contract;\n2. its Axis presentation and local-state responsibilities;\n3. authentication, authorization, tenant, and data-exposure boundaries;\n4. tests belonging to each repository;\n5. documentation belonging to each repository.\n\nImplementation must cover applicable positive, negative, boundary, contract,\nsecurity, responsive, accessibility, integration, recovery, and regression\nbehavior. Run `npm run verify` before release-oriented commits.\n",
+      "searchText": "Architecture and Repository Boundaries Learn the per-project deployment model, authority boundaries, role journeys, security model, documentation ownership, customization rules, and verification expectations. # Axis Architecture and Ownership\n\n## Why this page matters\n\nAxis looks like a normal web application when a user opens it in the browser,\nbut it is not the authority for Nodics business behavior. It is the employee\nworkspace that lets people discover, use, and operate capabilities that are\nowned by backend modules. That difference is important for business users,\ndevelopers, operators, security reviewers, and AI tools.\n\nIf Axis becomes a second backend, every customer project becomes harder to\nsecure and harder to customize. The browser would start carrying rules that\nbelong in Profile, BackOffice, WCMS, Cron, Workflow, Commerce, or a customer\nextension module. The same validation could then exist in two places, one\nworkflow could be started from two authorities, and one permission decision\ncould be interpreted differently by the browser and the backend. Nodics avoids\nthat by keeping Axis reusable, thin, governed, and contract-driven.\n\nThink of Axis as a well-designed control room. It shows switches, screens,\nalerts, forms, and dashboards. The control room helps a human operate the\nsystem safely, but it does not become the power plant, the billing engine, the\nworkflow engine, the CMS, or the security system.\n\n## Decision\n\nNodics Axis is a reusable Back Office browser application deployed once for\neach Nodics-based customer project. The Axis process and the Nodics backend\nprocesses are built, started, scaled, deployed, and rolled back independently.\nOne Axis deployment must not switch between customer projects or federate\ntheir backend endpoints.\n\nThis decision keeps a clear authority boundary:\n\n- Nodics backend modules own business rules, persistence, authentication\n  enforcement, authorization, workflows, pipelines, integrations, secrets,\n  tenant governance, runtime contracts, and module APIs.\n- Axis owns browser rendering, interaction, accessibility, responsive behavior,\n  client-side usability, and non-authoritative view state.\n- Profile authenticates human users and owns the human identity/session\n  contract.\n- BackOffice returns the caller's authorized, browser-safe module registry,\n  navigation, capability, schema, and compatibility metadata.\n- WCMS owns governed content, sites, page routes, components, renderers,\n  templates, content catalogs, and documentation pages delivered through CMS\n  contracts.\n- After bootstrap, Axis calls each authoritative module directly. BackOffice\n  does not proxy normal CMS, job, workflow, configuration, or business traffic.\n\n## Reader journeys\n\nDifferent readers should take different value from this page:\n\n- A business user should understand that Axis gives one governed place to\n  operate many business capabilities without copying business rules into the\n  browser.\n- A developer should understand where a new page, renderer, typed API client,\n  backend route, data import, or customization belongs.\n- An architect should understand how the per-project boundary supports\n  modularity, customer overlays, separate deployments, and future functional\n  modules.\n- A security reviewer should understand that the browser receives only\n  permission-filtered, browser-safe data and never becomes a credential,\n  workflow, or persistence authority.\n- An operator should understand how Axis can be rolled back without rolling\n  back backend data, and how backend modules can scale or fail independently.\n- An AI tool should understand that it must discover the owning module before\n  writing code, tests, or documentation.\n\n## Deployment model\n\nAxis is deployed per customer project, not as one global application that can\nswitch between unrelated projects.\n\n```text\nCustomer project A\n  Axis deployment A\n    -> Profile A\n    -> BackOffice A -> authorized module discovery\n    -> WCMS A\n    -> Media A\n    -> Cron A\n    -> Workflow A\n    -> project A extensions\n\nCustomer project B\n  Axis deployment B\n    -> Profile B\n    -> BackOffice B -> authorized module discovery\n    -> WCMS B\n    -> Media B\n    -> Commerce B\n    -> project B extensions\n```\n\nAxis deployment A must never discover, select, or call project B endpoints.\nWhether a project's Nodics modules run together in one local server or as\ndistributed module servers does not change the browser contract.\n\n## Authority model diagram\n\n```mermaid\nflowchart LR\n    User[\"Employee user\"] --> Axis[\"Nodics Axis browser app\"]\n    Axis --> Profile[\"Profile module: human session\"]\n    Axis --> BackOffice[\"BackOffice module: authorized registry\"]\n    Axis --> WCMS[\"WCMS module: governed content\"]\n    Axis --> Media[\"Media module: assets and usage\"]\n    Axis --> Cron[\"Cron module: schedules and job operations\"]\n    Axis --> Other[\"Other registered modules\"]\n\n    Profile --> DB1[\"Profile persistence\"]\n    BackOffice --> DB2[\"BackOffice registry persistence\"]\n    WCMS --> DB3[\"WCMS persistence\"]\n    Media --> DB4[\"Media persistence and storage policies\"]\n    Cron --> DB5[\"Cron persistence\"]\n\n    Axis -. \"renders only\" .-> BrowserState[\"Browser-safe view state\"]\n```\n\nThe browser is allowed to hold presentation state: selected tab, expanded\nsection, search text, temporary form draft, and cached response data governed\nby frontend query rules. It is not allowed to hold authoritative rules:\npermission truth, workflow truth, catalog truth, schema truth, credential\ntruth, import truth, or runtime-health truth.\n\n## Contract authority\n\nAxis consumes versioned backend contracts such as OpenAPI, Profile\nauthentication, BackOffice bootstrap, permissions, schemas, content delivery,\nmodule operation metadata, and data import/export contracts. Generated or\nhandwritten Axis clients are consumers of those contracts; they do not become\ncontract authorities.\n\nAxis must not:\n\n- import source from the Nodics framework checkout;\n- embed backend services or persistence;\n- reproduce authoritative validation or permission decisions;\n- execute workflows, pipelines, integrations, AI tools, or arbitrary scripts in\n  the browser;\n- store service credentials, Cron credentials, database credentials, or module\n  secrets;\n- create a second registry, schema authority, runtime loader, endpoint\n  federation layer, or content ownership layer;\n- treat route text, menu labels, or display names as operational identifiers.\n\nClient-side validation may improve usability, but every target module must\nvalidate and authorize the request independently.\n\n## Business example: one project, one Axis\n\nImagine a retail partner using Nodics for employee onboarding, content\nmanagement, media governance, scheduled jobs, and future commerce operations.\nThe partner wants one employee workspace where a merchandiser can edit content,\nan administrator can configure users, and an operator can check module health.\n\nAxis solves this by discovering what the project has enabled. If the project\nhas Profile, WCMS, Media, and Cron, Axis shows the authorized pages for those\ncapabilities. If Commerce is not registered, Commerce pages are not shown. If a\nuser does not have a permission, the menu and direct route must not become a\nback door. The backend still rejects the request.\n\nThis protects business adoption because the workspace grows with the project.\nThe customer does not need a new Back Office application for every module, and\nthey do not need browser code changes to hide capabilities that are not live.\n\n## Developer example: adding a workspace\n\nWhen a developer adds a new Axis workspace, the first question is not \"which\nReact component should I write?\" The first question is \"which backend module\nowns this behavior?\"\n\nExample: a future Workflow dashboard.\n\n1. The Workflow backend module defines the runtime API, permission codes,\n   schemas, status definitions, and operation rules.\n2. BackOffice exposes browser-safe navigation and capability metadata only for\n   authorized users.\n3. Axis adds a typed Workflow client, route renderer, UI components, loading\n   states, empty states, error states, responsive behavior, and tests.\n4. Documentation is written in the backend-owned content pack of the module\n   that owns the documentation topic.\n5. Axis never decides whether a workflow may be approved, rejected, retried, or\n   cancelled. It asks Workflow and renders the result.\n\nThis sequence keeps customization safe. A customer extension can override the\nbackend Workflow behavior while the functional module identity remains\n`nodics.workflow`. Axis still presents \"Workflow\" because the customization\nextends the capability rather than creating a new product identity.\n\n## Operations example: deployment and rollback\n\nAxis can be released independently from backend modules. That is useful, but it\nalso creates a responsibility: Axis must fail safely when a backend capability\nis absent, older, newer, disabled, or temporarily unavailable.\n\nSafe behavior includes:\n\n- show recovery content when CMS content cannot be loaded;\n- show a clear unavailable state when BackOffice registry discovery fails;\n- hide or disable an action when the backend says the operation is not\n  available;\n- keep old data visible only when it is clearly marked stale;\n- never invent a successful operation after a failed request;\n- make frontend rollback possible without changing persisted backend data.\n\nFor example, if a new Axis release supports a Cron feature that the running\nCron server does not yet expose, the page should say the capability is not\navailable for this runtime. It should not guess the endpoint, construct a URL\nfrom a label, or show a fake success.\n\n## Security boundary\n\nHuman browser authentication remains separate from module-to-module and CronJob\nauthentication. Axis may receive only browser-safe configuration,\nhuman-session material approved by the Profile browser-security contract, and\npermission-filtered module metadata. Passwords, access tokens, refresh tokens,\nservice credentials, and secrets must never be written to browser storage,\nURLs, logs, screenshots, telemetry, static data files, or documentation\nexamples.\n\nAxis security work must consider:\n\n- authentication and session expiry;\n- authorization for menu discovery and direct route access;\n- enterprise and tenant isolation;\n- CSRF, CORS, CSP, and clickjacking protections;\n- request timeouts and redirect rejection;\n- safe error messages that do not leak secrets or stack traces;\n- auditability of backend operations;\n- least-privilege data projection from BackOffice and target modules.\n\nDetailed session, refresh, revocation, CORS, CSRF, CSP, and audience behavior\nmust be documented only after the corresponding backend contracts are approved\nand implemented.\n\n## Documentation ownership\n\nAxis documentation is also backend-owned content. The frontend repository owns\nrenderers and browser behavior, but it does not own importable documentation\ndata.\n\nThe ownership rule is:\n\n- framework documentation belongs to the framework documentation module;\n- Axis product documentation belongs to the backend Axis module under\n  Platform;\n- customer project documentation belongs to the customer project;\n- functional module documentation belongs to the functional module that owns\n  the behavior;\n- temporary plans are not runtime content and must not be presented as\n  implemented capability.\n\nThis keeps documentation modular. A project can install framework docs, Axis\ndocs, and project docs without mixing their ownership or forcing the frontend\nrepository to carry backend data.\n\n## Customize and extend safely\n\nCreate customer behavior in the customer backend project and customer\npresentation in its Axis project layer. A frontend extension may add a focused\npage, renderer, typed client, hook, and mirrored test, but it must continue to\nconsume the owning Nodics module's versioned API and permission contract.\n\nThe smallest safe extension is one new renderer file plus one typed registry\nentry for a backend-issued logical renderer key. Do not copy BackOffice\ndiscovery, create a browser module registry, move validation or workflow into\nReact, or edit reusable Nodics framework source. Prove the extension with\ncontract-version, unauthorized, malformed-payload, responsive, integration,\naccessibility, and production-build tests. Rollback removes the project\nregistry entry while leaving the backend authority and persisted data\nunchanged.\n\n## What AI tools must do before coding\n\nBefore changing Axis or any Axis-owned backend data, an AI tool must:\n\n1. identify the functional module that owns the behavior;\n2. identify whether the change belongs in backend framework, backend customer\n   project, frontend renderer, documentation content, or test data;\n3. inspect existing contracts and avoid creating a parallel authority;\n4. prefer configuration and extension over editing out-of-the-box framework\n   behavior;\n5. add or update documentation where a user-facing behavior, contract,\n   boundary, or operation changes;\n6. run the smallest meaningful tests first, then the broader acceptance gates\n   required by the changed surface.\n\nIf ownership is unclear, stop and clarify rather than writing code in the\nnearest convenient folder.\n\n## Verification expectations\n\nEvery Axis slice must identify:\n\n1. its authoritative backend owner and versioned contract;\n2. its Axis presentation and local-state responsibilities;\n3. authentication, authorization, tenant, and data-exposure boundaries;\n4. tests belonging to each repository;\n5. documentation belonging to each repository;\n6. local recovery behavior when the backend is absent or disabled;\n7. rollback behavior for frontend and backend releases.\n\nImplementation must cover applicable positive, negative, boundary, contract,\nsecurity, responsive, accessibility, integration, recovery, and regression\nbehavior. Run the module-specific documentation checks and the repository\nvalidation gates before release-oriented commits.\n",
       "source": {
         "repository": "nodics.platform",
         "module": "axis",
         "path": "modules/axis/data/core/source/documentation/pages/architecture-and-ownership.md",
         "evidence": "docs/architecture-and-ownership.md",
-        "hash": "f47604672729255bb987075b091a9ced856766fdb0b699f3f4f6037d3439293c",
-        "version": "0.3.24"
+        "hash": "3338a614e31b29d09916252c9ebc7b5da95416c82c3770b41bbd6446927f7caa",
+        "version": "0.3.25"
       },
       "previous": {
         "title": "What Is Nodics Axis?",
@@ -1276,7 +1504,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/frontend-technology-stack.md",
         "evidence": "docs/frontend-technology-stack.md",
         "hash": "cc6256eee8767787d59c5272e8218d429188eeadbb159154304baa409b54eb51",
-        "version": "0.3.24"
+        "version": "0.3.25"
       },
       "previous": {
         "title": "Architecture and Repository Boundaries",
@@ -1594,7 +1822,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/design-system-and-shell.md",
         "evidence": "docs/design-system-and-shell.md",
         "hash": "78a408e25eceb2c4a59dbf220d96596ac3d2f171238a1019868b4986c3a809fb",
-        "version": "0.3.24"
+        "version": "0.3.25"
       },
       "previous": {
         "title": "Frontend Technology Stack",
@@ -1778,7 +2006,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/cms-delivery-and-renderers.md",
         "evidence": "docs/cms-delivery-and-renderers.md",
         "hash": "84b2be72effcb6eca8b000a43cfcb3414ef8d0ce52861bea24ffc95dbe9c4c15",
-        "version": "0.3.24"
+        "version": "0.3.25"
       },
       "previous": {
         "title": "Design System and Application Shell",
@@ -2050,7 +2278,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/documentation-content.md",
         "evidence": "docs/documentation-content.md",
         "hash": "df2f2c73001a662658349bc6aa5e67e7a1ca1145ea4bb581f6ec6fd25d7aed21",
-        "version": "0.3.24"
+        "version": "0.3.25"
       },
       "previous": {
         "title": "CMS Delivery and Renderer Integration",
@@ -2309,7 +2537,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/employee-login.md",
         "evidence": "docs/employee-login.md",
         "hash": "9a56cf0d03f5a515653f96a48b2c35ddca7eacd5d44a9d8f0ecdf7a2898a8b10",
-        "version": "0.3.24"
+        "version": "0.3.25"
       },
       "previous": {
         "title": "Documentation Content in Axis",
@@ -2730,7 +2958,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/assistant-frontend.md",
         "evidence": "docs/assistant-frontend.md",
         "hash": "4b5f2628a6a7b3e6561fef37e68c4001f02a8385700174ffd36fb293b46b2604",
-        "version": "0.3.24"
+        "version": "0.3.25"
       },
       "previous": {
         "title": "Employee Login, Recovery, Lock, and Dashboard",
@@ -3105,7 +3333,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/schema-workbench.md",
         "evidence": "docs/schema-workbench.md",
         "hash": "459c95070bd524e0f0568220bea7a780e683a0ee0c1ffba1ade629d8507a33bd",
-        "version": "0.3.24"
+        "version": "0.3.25"
       },
       "previous": {
         "title": "Axis Assistant Frontend",
@@ -3136,36 +3364,81 @@ module.exports = {
         "developer",
         "security-reviewer"
       ],
-      "summary": "Monitor the sanitized BackOffice module and node readiness projection without creating a browser-side health authority.",
+      "summary": "Monitor backend-governed module registration and runtime health evidence without creating a browser-side health authority.",
       "headings": [
         {
+          "text": "Why Module Health exists",
+          "anchor": "module-health-1-why-module-health-exists",
+          "level": 2
+        },
+        {
           "text": "Purpose and ownership",
-          "anchor": "module-health-1-purpose-and-ownership",
+          "anchor": "module-health-2-purpose-and-ownership",
+          "level": 2
+        },
+        {
+          "text": "Beginner mental model",
+          "anchor": "module-health-3-beginner-mental-model",
+          "level": 2
+        },
+        {
+          "text": "Runtime evidence flow",
+          "anchor": "module-health-4-runtime-evidence-flow",
           "level": 2
         },
         {
           "text": "Navigation and access",
-          "anchor": "module-health-2-navigation-and-access",
+          "anchor": "module-health-5-navigation-and-access",
           "level": 2
         },
         {
           "text": "Frontend structure",
-          "anchor": "module-health-3-frontend-structure",
+          "anchor": "module-health-6-frontend-structure",
+          "level": 2
+        },
+        {
+          "text": "What an operator sees",
+          "anchor": "module-health-7-what-an-operator-sees",
+          "level": 2
+        },
+        {
+          "text": "State model",
+          "anchor": "module-health-8-state-model",
           "level": 2
         },
         {
           "text": "Operator workflow",
-          "anchor": "module-health-4-operator-workflow",
+          "anchor": "module-health-9-operator-workflow",
+          "level": 2
+        },
+        {
+          "text": "Example incident",
+          "anchor": "module-health-10-example-incident",
           "level": 2
         },
         {
           "text": "Responsive, accessible, and failure behavior",
-          "anchor": "module-health-5-responsive-accessible-and-failure-behavior",
+          "anchor": "module-health-11-responsive-accessible-and-failure-behavior",
+          "level": 2
+        },
+        {
+          "text": "Backend authority and API contract",
+          "anchor": "module-health-12-backend-authority-and-api-contract",
           "level": 2
         },
         {
           "text": "Customize and extend safely",
-          "anchor": "module-health-6-customize-and-extend-safely",
+          "anchor": "module-health-13-customize-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Operational acceptance checklist",
+          "anchor": "module-health-14-operational-acceptance-checklist",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "module-health-15-common-mistakes",
           "level": 2
         }
       ],
@@ -3173,40 +3446,109 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Why Module Health exists",
+          "anchor": "module-health-1-why-module-health-exists"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Modern Nodics projects are modular. A local demo may start Profile, BackOffice, WCMS, Media, Cron, and documentation services on one machine. A production topology may run the same functional capabilities across separate servers, multiple nodes, separate databases, and separate release schedules. Business users should not need to understand every server process, but administrators and operators still need a safe way to answer a simple question:"
+        },
+        {
+          "kind": "blockquote",
+          "text": "Is the capability I need actually available for this project right now?"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Module Health gives an authorized employee a responsive view of registered Nodics functional modules and observed runtime instances. It helps operators see whether Profile, BackOffice, WCMS, Media, Cron, Workflow, Commerce, or another capability is healthy, degraded, unavailable, stale, or unknown. It also shows which environment, server, and node produced the observation."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The page is deliberately not a second monitoring product. It is the Axis view of backend-governed runtime evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Purpose and ownership",
-          "anchor": "module-health-1-purpose-and-ownership"
+          "anchor": "module-health-2-purpose-and-ownership"
         },
         {
           "kind": "paragraph",
-          "text": "Module Health gives an authorized employee a responsive view of registered Nodics modules and runtime instances. Operators can see whether Profile, CMS, Workflow, BackOffice, or another capability is healthy, degraded, unavailable, or unknown and identify the registered environment, server, and node involved."
+          "text": "Axis does not decide health. Nodics runtime services own readiness, individual modules own their own deeper diagnostic rules, and BackOffice owns the sanitized availability observation and registry projection that is safe for a browser."
         },
         {
           "kind": "paragraph",
-          "text": "Axis does not decide health. Nodics System owns readiness and BackOffice owns the sanitized availability observation and registry projection. Axis owns only typed consumption, interaction, rendering, filtering, and accessible state presentation."
+          "text": "Axis owns only:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "typed consumption of the BackOffice health contract;",
+            "rendering, filtering, searching, expanding, collapsing, and selecting rows;",
+            "accessible status presentation;",
+            "clear loading, empty, unavailable, and failure states;",
+            "bounded refresh behavior initiated by the user or frontend query policy."
+          ]
         },
         {
           "kind": "paragraph",
-          "text": "Axis displays the backend-provided package label and renders the loader-discovered parent/child hierarchy. It never sends a label or canonical path as the operational identifier; detail, refresh, query keys, and authorization continue using the original module name."
+          "text": "Axis displays the backend-provided package label and renders the loader-discovered parent/child hierarchy. It never sends a label or canonical path as the operational identifier. Detail, refresh, query keys, and authorization continue using the original backend module name and runtime identifier."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Beginner mental model",
+          "anchor": "module-health-3-beginner-mental-model"
+        },
+        {
+          "kind": "paragraph",
+          "text": "There are three different ideas that are easy to mix together:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "A functional module is a business capability such as Platform, WCMS, Media, Cron, Workflow, or Commerce.",
+            "A technical module is a smaller code module loaded inside a functional module, such as Profile, BackOffice, CMS, Media, or CronJob.",
+            "A runtime instance is an observed server/node process that is currently running or was recently seen."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Module Health presents these ideas together but does not make them identical. A functional module can be registered even when one runtime node is down. A runtime can be live but not yet registered into the project. A technical module can exist as part of a mandatory functional module without being separately registered by a business user."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Runtime evidence flow",
+          "anchor": "module-health-4-runtime-evidence-flow"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "sequenceDiagram\n    participant Runtime as Runtime server\n    participant Registry as BackOffice registry\n    participant API as BackOffice health API\n    participant Axis as Axis Module Health page\n    Runtime->>Registry: report module and node observation\n    Axis->>API: request authorized module health projection\n    API->>Registry: read registered modules and observations\n    Registry-->>API: runtime evidence and permission-filtered state\n    API-->>Axis: browser-safe health summary\n    Axis-->>Axis: render tree, cards, detail, stale/failure states"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The browser sees only the projection returned by BackOffice. It does not call databases, inspect server processes, execute shell commands, or ping every module on its own."
         },
         {
           "kind": "heading",
           "level": 2,
           "text": "Navigation and access",
-          "anchor": "module-health-2-navigation-and-access"
+          "anchor": "module-health-5-navigation-and-access"
         },
         {
           "kind": "paragraph",
-          "text": "BackOffice contributes **Module Health** under **Operations and Integration** through `backofficeCapabilities.backoffice.navigation`; Axis does not hardcode the menu. It is returned only with `backoffice.registry.admin.view`."
+          "text": "BackOffice contributes **Module Health** under **System & Integrations** through backend-owned Axis capability metadata. Axis does not hardcode the menu. The route is returned only to employees with the permission required by the BackOffice registry contract."
         },
         {
           "kind": "paragraph",
-          "text": "The route is `/operations/module-health`. Employee session and screen-lock guards protect direct navigation. Backend authorization remains mandatory."
+          "text": "The route is `/operations/module-health`. Employee session and screen-lock guards protect direct navigation. Backend authorization remains mandatory even when a browser route is manually typed."
         },
         {
           "kind": "heading",
           "level": 2,
           "text": "Frontend structure",
-          "anchor": "module-health-3-frontend-structure"
+          "anchor": "module-health-6-frontend-structure"
         },
         {
           "kind": "code",
@@ -3219,24 +3561,68 @@ module.exports = {
         },
         {
           "kind": "paragraph",
-          "text": "TanStack Query owns server state. Summary data loads once; instance details load only for the selected module, avoiding an unbounded request per module. Window focus and explicit actions refresh data. Axis adds no health poller. An on-demand **Check now** action is enabled only when the selected module has at least one client-callable runtime endpoint. Non-client modules still show their registration heartbeat and observed state, but Axis does not request a refresh that the backend cannot perform."
+          "text": "TanStack Query owns server state. Summary data loads once; instance details load only for the selected module, avoiding an unbounded request per module. Window focus and explicit actions refresh data. Axis adds no independent health poller."
+        },
+        {
+          "kind": "paragraph",
+          "text": "An on-demand **Check now** action is enabled only when the selected module has at least one client-callable runtime endpoint. Non-client modules still show their registration heartbeat and observed state, but Axis does not request a refresh that the backend cannot perform."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "What an operator sees",
+          "anchor": "module-health-7-what-an-operator-sees"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The page should help an operator move from summary to evidence:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Summary cards show total registered modules, available modules, degraded modules, unavailable modules, and stale observations.",
+            "The hierarchy shows functional modules and technical module children using labels returned by the backend.",
+            "Search narrows the tree by label, module code, canonical path, environment, server, node, or state.",
+            "Selecting a module opens one inline detail region so the evidence remains visually connected to the selected row.",
+            "The detail region shows observed runtime nodes, heartbeat freshness, readiness state, source server, and stable reason.",
+            "A governed refresh action is available only when the backend says it is safe and supported."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis should be calm in bad moments. When a module is unavailable, the user needs a stable explanation and a safe next action, not a stack trace or an invented fix."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "State model",
+          "anchor": "module-health-8-state-model"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "stateDiagram-v2\n    [*] --> Unknown: no current evidence\n    Unknown --> Available: fresh positive readiness\n    Unknown --> Degraded: partial capability or warning\n    Unknown --> Unavailable: explicit failure\n    Available --> Stale: heartbeat expires\n    Degraded --> Stale: heartbeat expires\n    Unavailable --> Stale: heartbeat expires\n    Stale --> Available: fresh positive readiness\n    Stale --> Degraded: fresh warning\n    Stale --> Unavailable: fresh failure"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The important rule is that stale evidence is not healthy evidence. If a node was healthy yesterday and has not reported today, Axis must not present it as healthy. The backend decides the actual freshness window; Axis renders the state and explanation."
         },
         {
           "kind": "heading",
           "level": 2,
           "text": "Operator workflow",
-          "anchor": "module-health-4-operator-workflow"
+          "anchor": "module-health-9-operator-workflow"
         },
         {
           "kind": "ordered-list",
           "items": [
-            "Open **Operations and Integration > Module Health**.",
+            "Open **System & Integrations > Module Health**.",
             "Review totals and module states.",
             "Expand or collapse module groups.",
-            "Search by label, code, canonical path, environment, server, or state. Matching descendants retain their ancestor chain.",
+            "Search by label, code, canonical path, environment, server, node, or state. Matching descendants retain their ancestor chain.",
             "Select a concrete module. Its detail region expands directly beneath that module so the hierarchy and runtime evidence remain visually connected. Selecting the same module again collapses the detail region; selecting another module moves the single expanded detail region to that module.",
             "Review each registered node's heartbeat, readiness observation, state, freshness, and stable reason.",
-            "Choose **Check now** for a governed immediate observation."
+            "Choose **Check now** only when the backend enables that operation."
           ]
         },
         {
@@ -3246,8 +3632,52 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Example incident",
+          "anchor": "module-health-10-example-incident"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Suppose Cron was added to a customer project. The Cron server starts and reports itself, but the business administrator has not registered the Cron functional module yet."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Expected behavior:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Module Registry can show Cron as available to register.",
+            "Module Health can show the runtime observation as live evidence.",
+            "Cron operation pages remain hidden or unavailable until the module is registered, active, and authorized.",
+            "Axis does not silently activate Cron because a runtime was observed."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Now suppose Cron is registered and active, but the Cron server is stopped."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Expected behavior:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Module Registry still shows Cron as registered because registration is persisted project state.",
+            "Module Health shows Cron as stale, unavailable, or unknown based on backend evidence.",
+            "Axis does not remove Cron from the registry only because the server is down.",
+            "A restart can restore runtime evidence without requiring registration again."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "This distinction is central to the Nodics lifecycle. Registration is project intent; health is runtime evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Responsive, accessible, and failure behavior",
-          "anchor": "module-health-5-responsive-accessible-and-failure-behavior"
+          "anchor": "module-health-11-responsive-accessible-and-failure-behavior"
         },
         {
           "kind": "unordered-list",
@@ -3260,29 +3690,123 @@ module.exports = {
             "BackOffice failure never falls back to invented health.",
             "Unauthorized access remains a backend rejection.",
             "Malformed responses fail closed.",
-            "Stale evidence is `UNKNOWN`, never healthy.",
-            "Refresh failure preserves the existing view and shows a bounded message."
+            "Stale evidence is `UNKNOWN`, `STALE`, or another backend-provided non-healthy state, never healthy.",
+            "Refresh failure preserves the existing view and shows a bounded message.",
+            "Clicking a row must not scroll the left navigation to the top; navigation and content scrolling are independent layout concerns."
           ]
         },
         {
           "kind": "heading",
           "level": 2,
-          "text": "Customize and extend safely",
-          "anchor": "module-health-6-customize-and-extend-safely"
+          "text": "Backend authority and API contract",
+          "anchor": "module-health-12-backend-authority-and-api-contract"
         },
         {
           "kind": "paragraph",
-          "text": "Partners may change styling or compose presentation around typed contracts. They must not call databases/providers from Axis, reproduce the registry, call every module ping as a second authority, persist access tokens or raw diagnostics, infer configured cluster membership, or bypass permissions."
+          "text": "The backend contract must provide enough information for Axis to render safely without guessing:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "stable module identifier;",
+            "display label;",
+            "functional module group;",
+            "technical module children;",
+            "registration state;",
+            "activation state;",
+            "runtime observation state;",
+            "environment and server identity;",
+            "node identity when available;",
+            "last observed time;",
+            "freshness/state reason;",
+            "whether a check-now operation is allowed;",
+            "permissions attached to the caller."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis may rename labels for presentation only when the backend provides a browser-safe label. It must continue to send stable identifiers back to the API."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customize and extend safely",
+          "anchor": "module-health-13-customize-and-extend-safely"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Partners may change styling or compose presentation around typed contracts. They must not:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "call databases or infrastructure providers from Axis;",
+            "reproduce the module registry;",
+            "ping every module as a second health authority;",
+            "persist access tokens or raw diagnostics;",
+            "infer configured cluster membership from stale observations;",
+            "bypass permissions;",
+            "show module actions before registration and activation allow them;",
+            "treat display labels as operational identifiers."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "If a partner needs deeper module diagnostics, the correct extension path is a backend endpoint owned by the functional module, browser-safe BackOffice capability metadata, then an Axis renderer that consumes that endpoint."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operational acceptance checklist",
+          "anchor": "module-health-14-operational-acceptance-checklist"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Before releasing Module Health changes, verify:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "registered healthy modules render as healthy;",
+            "registered unhealthy modules render as degraded or unavailable;",
+            "stale observations do not render as healthy;",
+            "live but unregistered optional modules do not become operational pages;",
+            "mandatory modules cannot be deregistered by the browser;",
+            "unauthorized users cannot see the route or call the API;",
+            "malformed responses fail closed;",
+            "search preserves the visible ancestor chain;",
+            "only one module detail panel is expanded at a time;",
+            "check-now is disabled when backend metadata does not allow it;",
+            "page refresh and route navigation preserve the authenticated workspace;",
+            "left navigation and content scroll independently;",
+            "production build and contract tests pass."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "module-health-15-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Mistake: \"The server is running, so the module is registered.\" Correction: runtime observation and project registration are separate states.",
+            "Mistake: \"The browser can ping the module to know health.\" Correction: health evidence must come through governed backend contracts.",
+            "Mistake: \"A label is enough to call a module.\" Correction: labels are presentation text; stable identifiers drive API calls.",
+            "Mistake: \"A stale healthy heartbeat is still healthy.\" Correction: stale evidence is not current evidence.",
+            "Mistake: \"Module Health can hide backend permission errors.\" Correction: Axis must render safe failure states and the backend must still enforce authorization."
+          ]
         }
       ],
-      "searchText": "Module Health Monitor the sanitized BackOffice module and node readiness projection without creating a browser-side health authority. # Module Health\n\n## Purpose and ownership\n\nModule Health gives an authorized employee a responsive view of registered\nNodics modules and runtime instances. Operators can see whether Profile, CMS,\nWorkflow, BackOffice, or another capability is healthy, degraded, unavailable,\nor unknown and identify the registered environment, server, and node involved.\n\nAxis does not decide health. Nodics System owns readiness and BackOffice owns\nthe sanitized availability observation and registry projection. Axis owns only\ntyped consumption, interaction, rendering, filtering, and accessible state\npresentation.\n\nAxis displays the backend-provided package label and renders the\nloader-discovered parent/child hierarchy. It never sends a label or canonical\npath as the operational identifier; detail, refresh, query keys, and\nauthorization continue using the original module name.\n\n## Navigation and access\n\nBackOffice contributes **Module Health** under **Operations and Integration**\nthrough `backofficeCapabilities.backoffice.navigation`; Axis does not hardcode\nthe menu. It is returned only with `backoffice.registry.admin.view`.\n\nThe route is `/operations/module-health`. Employee session and screen-lock\nguards protect direct navigation. Backend authorization remains mandatory.\n\n## Frontend structure\n\n```text\nsrc/operations/moduleHealth/\n  ModuleHealthRoutePage.tsx\n  ModuleHealthTree.tsx\n  api/\n    moduleHealthClient.ts\n    moduleHealthContracts.ts\n\ntest/operations/moduleHealth/\n  api/\n    moduleHealthClient.test.ts\n```\n\nContracts reject malformed counts, identifiers, states, and freshness.\nThe client supplies the in-memory employee token, enterprise header, request\ntimeout, no-store policy, and redirect rejection. It stores no credentials and\nrejects unsafe module path segments.\n\nTanStack Query owns server state. Summary data loads once; instance details\nload only for the selected module, avoiding an unbounded request per module.\nWindow focus and explicit actions refresh data. Axis adds no health poller.\nAn on-demand **Check now** action is enabled only when the selected module has\nat least one client-callable runtime endpoint. Non-client modules still show\ntheir registration heartbeat and observed state, but Axis does not request a\nrefresh that the backend cannot perform.\n\n## Operator workflow\n\n1. Open **Operations and Integration > Module Health**.\n2. Review totals and module states.\n3. Expand or collapse module groups.\n4. Search by label, code, canonical path, environment, server, or state.\n   Matching descendants retain their ancestor chain.\n5. Select a concrete module. Its detail region expands directly beneath that\n   module so the hierarchy and runtime evidence remain visually connected.\n   Selecting the same module again collapses the detail region; selecting\n   another module moves the single expanded detail region to that module.\n6. Review each registered node's heartbeat, readiness observation, state,\n   freshness, and stable reason.\n7. Choose **Check now** for a governed immediate observation.\n\nExpired and intentionally deregistered nodes are not active instances. Axis\ndoes not infer expected cluster membership from previously observed nodes.\n\n## Responsive, accessible, and failure behavior\n\n- Summary cards wrap, while the module hierarchy and inline detail region use\n  the full available width on every breakpoint.\n- State always has text in addition to color.\n- Search is visibly labelled; rows are keyboard-operable buttons.\n- Loading uses announced progress and failures use alerts.\n- Dates use the browser locale.\n- BackOffice failure never falls back to invented health.\n- Unauthorized access remains a backend rejection.\n- Malformed responses fail closed.\n- Stale evidence is `UNKNOWN`, never healthy.\n- Refresh failure preserves the existing view and shows a bounded message.\n\n## Customize and extend safely\n\nPartners may change styling or compose presentation around typed contracts.\nThey must not call databases/providers from Axis, reproduce the registry,\ncall every module ping as a second authority, persist access tokens or raw\ndiagnostics, infer configured cluster membership, or bypass permissions.\n",
+      "searchText": "Module Health Monitor backend-governed module registration and runtime health evidence without creating a browser-side health authority. # Module Health\n\n## Why Module Health exists\n\nModern Nodics projects are modular. A local demo may start Profile, BackOffice,\nWCMS, Media, Cron, and documentation services on one machine. A production\ntopology may run the same functional capabilities across separate servers,\nmultiple nodes, separate databases, and separate release schedules. Business\nusers should not need to understand every server process, but administrators\nand operators still need a safe way to answer a simple question:\n\n> Is the capability I need actually available for this project right now?\n\nModule Health gives an authorized employee a responsive view of registered\nNodics functional modules and observed runtime instances. It helps operators\nsee whether Profile, BackOffice, WCMS, Media, Cron, Workflow, Commerce, or\nanother capability is healthy, degraded, unavailable, stale, or unknown. It\nalso shows which environment, server, and node produced the observation.\n\nThe page is deliberately not a second monitoring product. It is the Axis view\nof backend-governed runtime evidence.\n\n## Purpose and ownership\n\nAxis does not decide health. Nodics runtime services own readiness, individual\nmodules own their own deeper diagnostic rules, and BackOffice owns the\nsanitized availability observation and registry projection that is safe for a\nbrowser.\n\nAxis owns only:\n\n- typed consumption of the BackOffice health contract;\n- rendering, filtering, searching, expanding, collapsing, and selecting rows;\n- accessible status presentation;\n- clear loading, empty, unavailable, and failure states;\n- bounded refresh behavior initiated by the user or frontend query policy.\n\nAxis displays the backend-provided package label and renders the\nloader-discovered parent/child hierarchy. It never sends a label or canonical\npath as the operational identifier. Detail, refresh, query keys, and\nauthorization continue using the original backend module name and runtime\nidentifier.\n\n## Beginner mental model\n\nThere are three different ideas that are easy to mix together:\n\n- A functional module is a business capability such as Platform, WCMS, Media,\n  Cron, Workflow, or Commerce.\n- A technical module is a smaller code module loaded inside a functional\n  module, such as Profile, BackOffice, CMS, Media, or CronJob.\n- A runtime instance is an observed server/node process that is currently\n  running or was recently seen.\n\nModule Health presents these ideas together but does not make them identical.\nA functional module can be registered even when one runtime node is down. A\nruntime can be live but not yet registered into the project. A technical module\ncan exist as part of a mandatory functional module without being separately\nregistered by a business user.\n\n## Runtime evidence flow\n\n```mermaid\nsequenceDiagram\n    participant Runtime as Runtime server\n    participant Registry as BackOffice registry\n    participant API as BackOffice health API\n    participant Axis as Axis Module Health page\n    Runtime->>Registry: report module and node observation\n    Axis->>API: request authorized module health projection\n    API->>Registry: read registered modules and observations\n    Registry-->>API: runtime evidence and permission-filtered state\n    API-->>Axis: browser-safe health summary\n    Axis-->>Axis: render tree, cards, detail, stale/failure states\n```\n\nThe browser sees only the projection returned by BackOffice. It does not call\ndatabases, inspect server processes, execute shell commands, or ping every\nmodule on its own.\n\n## Navigation and access\n\nBackOffice contributes **Module Health** under **System & Integrations**\nthrough backend-owned Axis capability metadata. Axis does not hardcode the\nmenu. The route is returned only to employees with the permission required by\nthe BackOffice registry contract.\n\nThe route is `/operations/module-health`. Employee session and screen-lock\nguards protect direct navigation. Backend authorization remains mandatory even\nwhen a browser route is manually typed.\n\n## Frontend structure\n\n```text\nsrc/operations/moduleHealth/\n  ModuleHealthRoutePage.tsx\n  ModuleHealthTree.tsx\n  api/\n    moduleHealthClient.ts\n    moduleHealthContracts.ts\n\ntest/operations/moduleHealth/\n  api/\n    moduleHealthClient.test.ts\n```\n\nContracts reject malformed counts, identifiers, states, and freshness.\nThe client supplies the in-memory employee token, enterprise header, request\ntimeout, no-store policy, and redirect rejection. It stores no credentials and\nrejects unsafe module path segments.\n\nTanStack Query owns server state. Summary data loads once; instance details\nload only for the selected module, avoiding an unbounded request per module.\nWindow focus and explicit actions refresh data. Axis adds no independent\nhealth poller.\n\nAn on-demand **Check now** action is enabled only when the selected module has\nat least one client-callable runtime endpoint. Non-client modules still show\ntheir registration heartbeat and observed state, but Axis does not request a\nrefresh that the backend cannot perform.\n\n## What an operator sees\n\nThe page should help an operator move from summary to evidence:\n\n1. Summary cards show total registered modules, available modules, degraded\n   modules, unavailable modules, and stale observations.\n2. The hierarchy shows functional modules and technical module children using\n   labels returned by the backend.\n3. Search narrows the tree by label, module code, canonical path, environment,\n   server, node, or state.\n4. Selecting a module opens one inline detail region so the evidence remains\n   visually connected to the selected row.\n5. The detail region shows observed runtime nodes, heartbeat freshness,\n   readiness state, source server, and stable reason.\n6. A governed refresh action is available only when the backend says it is safe\n   and supported.\n\nAxis should be calm in bad moments. When a module is unavailable, the user\nneeds a stable explanation and a safe next action, not a stack trace or an\ninvented fix.\n\n## State model\n\n```mermaid\nstateDiagram-v2\n    [*] --> Unknown: no current evidence\n    Unknown --> Available: fresh positive readiness\n    Unknown --> Degraded: partial capability or warning\n    Unknown --> Unavailable: explicit failure\n    Available --> Stale: heartbeat expires\n    Degraded --> Stale: heartbeat expires\n    Unavailable --> Stale: heartbeat expires\n    Stale --> Available: fresh positive readiness\n    Stale --> Degraded: fresh warning\n    Stale --> Unavailable: fresh failure\n```\n\nThe important rule is that stale evidence is not healthy evidence. If a node\nwas healthy yesterday and has not reported today, Axis must not present it as\nhealthy. The backend decides the actual freshness window; Axis renders the\nstate and explanation.\n\n## Operator workflow\n\n1. Open **System & Integrations > Module Health**.\n2. Review totals and module states.\n3. Expand or collapse module groups.\n4. Search by label, code, canonical path, environment, server, node, or state.\n   Matching descendants retain their ancestor chain.\n5. Select a concrete module. Its detail region expands directly beneath that\n   module so the hierarchy and runtime evidence remain visually connected.\n   Selecting the same module again collapses the detail region; selecting\n   another module moves the single expanded detail region to that module.\n6. Review each registered node's heartbeat, readiness observation, state,\n   freshness, and stable reason.\n7. Choose **Check now** only when the backend enables that operation.\n\nExpired and intentionally deregistered nodes are not active instances. Axis\ndoes not infer expected cluster membership from previously observed nodes.\n\n## Example incident\n\nSuppose Cron was added to a customer project. The Cron server starts and\nreports itself, but the business administrator has not registered the Cron\nfunctional module yet.\n\nExpected behavior:\n\n- Module Registry can show Cron as available to register.\n- Module Health can show the runtime observation as live evidence.\n- Cron operation pages remain hidden or unavailable until the module is\n  registered, active, and authorized.\n- Axis does not silently activate Cron because a runtime was observed.\n\nNow suppose Cron is registered and active, but the Cron server is stopped.\n\nExpected behavior:\n\n- Module Registry still shows Cron as registered because registration is\n  persisted project state.\n- Module Health shows Cron as stale, unavailable, or unknown based on backend\n  evidence.\n- Axis does not remove Cron from the registry only because the server is down.\n- A restart can restore runtime evidence without requiring registration again.\n\nThis distinction is central to the Nodics lifecycle. Registration is project\nintent; health is runtime evidence.\n\n## Responsive, accessible, and failure behavior\n\n- Summary cards wrap, while the module hierarchy and inline detail region use\n  the full available width on every breakpoint.\n- State always has text in addition to color.\n- Search is visibly labelled; rows are keyboard-operable buttons.\n- Loading uses announced progress and failures use alerts.\n- Dates use the browser locale.\n- BackOffice failure never falls back to invented health.\n- Unauthorized access remains a backend rejection.\n- Malformed responses fail closed.\n- Stale evidence is `UNKNOWN`, `STALE`, or another backend-provided non-healthy\n  state, never healthy.\n- Refresh failure preserves the existing view and shows a bounded message.\n- Clicking a row must not scroll the left navigation to the top; navigation and\n  content scrolling are independent layout concerns.\n\n## Backend authority and API contract\n\nThe backend contract must provide enough information for Axis to render safely\nwithout guessing:\n\n- stable module identifier;\n- display label;\n- functional module group;\n- technical module children;\n- registration state;\n- activation state;\n- runtime observation state;\n- environment and server identity;\n- node identity when available;\n- last observed time;\n- freshness/state reason;\n- whether a check-now operation is allowed;\n- permissions attached to the caller.\n\nAxis may rename labels for presentation only when the backend provides a\nbrowser-safe label. It must continue to send stable identifiers back to the API.\n\n## Customize and extend safely\n\nPartners may change styling or compose presentation around typed contracts.\nThey must not:\n\n- call databases or infrastructure providers from Axis;\n- reproduce the module registry;\n- ping every module as a second health authority;\n- persist access tokens or raw diagnostics;\n- infer configured cluster membership from stale observations;\n- bypass permissions;\n- show module actions before registration and activation allow them;\n- treat display labels as operational identifiers.\n\nIf a partner needs deeper module diagnostics, the correct extension path is a\nbackend endpoint owned by the functional module, browser-safe BackOffice\ncapability metadata, then an Axis renderer that consumes that endpoint.\n\n## Operational acceptance checklist\n\nBefore releasing Module Health changes, verify:\n\n1. registered healthy modules render as healthy;\n2. registered unhealthy modules render as degraded or unavailable;\n3. stale observations do not render as healthy;\n4. live but unregistered optional modules do not become operational pages;\n5. mandatory modules cannot be deregistered by the browser;\n6. unauthorized users cannot see the route or call the API;\n7. malformed responses fail closed;\n8. search preserves the visible ancestor chain;\n9. only one module detail panel is expanded at a time;\n10. check-now is disabled when backend metadata does not allow it;\n11. page refresh and route navigation preserve the authenticated workspace;\n12. left navigation and content scroll independently;\n13. production build and contract tests pass.\n\n## Common mistakes\n\n- Mistake: \"The server is running, so the module is registered.\"\n  Correction: runtime observation and project registration are separate states.\n- Mistake: \"The browser can ping the module to know health.\"\n  Correction: health evidence must come through governed backend contracts.\n- Mistake: \"A label is enough to call a module.\"\n  Correction: labels are presentation text; stable identifiers drive API calls.\n- Mistake: \"A stale healthy heartbeat is still healthy.\"\n  Correction: stale evidence is not current evidence.\n- Mistake: \"Module Health can hide backend permission errors.\"\n  Correction: Axis must render safe failure states and the backend must still\n  enforce authorization.\n",
       "source": {
         "repository": "nodics.platform",
         "module": "axis",
         "path": "modules/axis/data/core/source/documentation/pages/module-health.md",
         "evidence": "docs/module-health.md",
-        "hash": "b94bb7b70fb2b4a7b2e8cd755b33cd564769bdf45bf2872dfa99520e6965f937",
-        "version": "0.3.24"
+        "hash": "1ba921f782da6d49ae7b3a9faffe4dfe9f158282e50d86e87673f4afc9432216",
+        "version": "0.3.25"
       },
       "previous": {
         "title": "Axis Schema Workbench",
@@ -3508,7 +4032,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/imports-and-exports.md",
         "evidence": "docs/imports-and-exports.md",
         "hash": "8e6e20e92557c3b3f0b97e7db1c50f859af97be82d9b468108dc78745e47993f",
-        "version": "0.3.24"
+        "version": "0.3.25"
       },
       "previous": {
         "title": "Module Health",
@@ -4012,7 +4536,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/media-management.md",
         "evidence": "data/core/source/documentation/pages/media-management.md",
         "hash": "198e486b7bfa138e395124d557ea83381dff3532c611bc224ef97a1ea54d3e17",
-        "version": "0.3.24"
+        "version": "0.3.25"
       },
       "previous": {
         "title": "Imports and Exports Workspace",
@@ -4328,7 +4852,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/feature-delivery-checklist.md",
         "evidence": "docs/feature-delivery-checklist.md",
         "hash": "da3160391c340399debae48e13e16e44a9ebe134f4e8510724ee502275658694",
-        "version": "0.3.24"
+        "version": "0.3.25"
       },
       "previous": {
         "title": "Media Management Workspace",
@@ -4756,7 +5280,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/implementation-and-documentation-contract.md",
         "evidence": "docs/implementation-and-documentation-contract.md",
         "hash": "4bcbc94f48b7bb34b7ee913c34eafd9b67d2ecd4f422968d353a0a2723ee23dd",
-        "version": "0.3.24"
+        "version": "0.3.25"
       },
       "previous": {
         "title": "Axis Feature Delivery Checklist",

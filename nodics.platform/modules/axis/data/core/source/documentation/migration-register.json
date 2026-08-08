@@ -1,6 +1,6 @@
 {
   "pack": "nodics.platform.axis",
-  "version": "0.3.24",
+  "version": "0.3.25",
   "generatedAtPolicy": "deterministic-no-timestamp",
   "sources": [
     {
@@ -55,15 +55,22 @@
       "canonicalSource": "data/core/source/documentation/pages/architecture-and-ownership.md",
       "destinationRoute": "/docs/nodics-axis/architecture",
       "disposition": "migrated",
-      "sourceHash": "f47604672729255bb987075b091a9ced856766fdb0b699f3f4f6037d3439293c",
-      "wordCount": 611,
+      "sourceHash": "3338a614e31b29d09916252c9ebc7b5da95416c82c3770b41bbd6446927f7caa",
+      "wordCount": 1873,
       "headings": [
+        "Why this page matters",
         "Decision",
+        "Reader journeys",
         "Deployment model",
+        "Authority model diagram",
         "Contract authority",
+        "Business example: one project, one Axis",
+        "Developer example: adding a workspace",
+        "Operations example: deployment and rollback",
         "Security boundary",
         "Documentation ownership",
         "Customize and extend safely",
+        "What AI tools must do before coding",
         "Verification expectations"
       ]
     },
@@ -297,15 +304,24 @@
       "canonicalSource": "data/core/source/documentation/pages/module-health.md",
       "destinationRoute": "/docs/nodics-axis/module-health",
       "disposition": "migrated",
-      "sourceHash": "b94bb7b70fb2b4a7b2e8cd755b33cd564769bdf45bf2872dfa99520e6965f937",
-      "wordCount": 551,
+      "sourceHash": "1ba921f782da6d49ae7b3a9faffe4dfe9f158282e50d86e87673f4afc9432216",
+      "wordCount": 1722,
       "headings": [
+        "Why Module Health exists",
         "Purpose and ownership",
+        "Beginner mental model",
+        "Runtime evidence flow",
         "Navigation and access",
         "Frontend structure",
+        "What an operator sees",
+        "State model",
         "Operator workflow",
+        "Example incident",
         "Responsive, accessible, and failure behavior",
-        "Customize and extend safely"
+        "Backend authority and API contract",
+        "Customize and extend safely",
+        "Operational acceptance checklist",
+        "Common mistakes"
       ]
     },
     {

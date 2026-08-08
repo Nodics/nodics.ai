@@ -1,6 +1,6 @@
 {
   "pack": "nodics.platform.axis",
-  "version": "0.3.24",
+  "version": "0.3.25",
   "contractVersion": 1,
   "sourceMode": "canonical-structured-source",
   "sourceAuthority": "modules/axis/data/core/source/documentation",
@@ -12,10 +12,10 @@
   "components": 15,
   "routes": 14,
   "migrationRegister": "modules/axis/data/core/source/documentation/migration-register.json",
-  "releaseChecksum": "e3e2395b94b877b695dbffb0ff0fb1e2d147c889a4b14bc3e0c526fd05883bfd",
+  "releaseChecksum": "0e42b7f116d663423b9dbe686c5a2ed61ff22bde88730b532d0a7a3647d0d756",
   "generatedHashes": {
     "modules/axis/data/core/data/documentation/axisDocumentationCatalogData.js": "1025a2244d306c4c7188dbd1d9bc940449074025a656907760590e113a37dacb",
-    "modules/axis/data/core/data/documentation/axisDocumentationComponentData.js": "4eb5eb990c4caee79ca8aa407988d73b10edc61244c4c8111376e77501a6fdc9",
+    "modules/axis/data/core/data/documentation/axisDocumentationComponentData.js": "4035799216ffe19c6fc251186be5a84c1ea54a99be34c171c5302c385da5cc61",
     "modules/axis/data/core/data/documentation/axisDocumentationPageData.js": "5439a2434f65e66e2079901324fa3a1f4125cdecea7207c2175327383e864e0b",
     "modules/axis/data/core/data/documentation/axisDocumentationRendererData.js": "070b7190f78ca9e772023e1ce89c9451b881252bc13185e6d08b8278b45854f5",
     "modules/axis/data/core/data/documentation/axisDocumentationRouteData.js": "860141f67c95b601971ee318c4627eb2b1bc11acff125bdf880573462b4b4bb3",

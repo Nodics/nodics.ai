@@ -1,6 +1,6 @@
 {
   "pack": "nodics.platform.axis",
-  "version": "0.3.24",
+  "version": "0.3.25",
   "contractVersion": 1,
   "title": "Nodics Axis",
   "pages": [
@@ -25,7 +25,7 @@
       "order": 20,
       "source": "pages/architecture-and-ownership.md",
       "evidence": "docs/architecture-and-ownership.md",
-      "summary": "Learn the per-project deployment model, contract authority, security boundary, documentation ownership, and verification expectations.",
+      "summary": "Learn the per-project deployment model, authority boundaries, role journeys, security model, documentation ownership, customization rules, and verification expectations.",
       "audience": ["architect", "developer", "security-reviewer", "ai-tool"]
     },
     {
@@ -121,7 +121,7 @@
       "order": 100,
       "source": "pages/module-health.md",
       "evidence": "docs/module-health.md",
-      "summary": "Monitor the sanitized BackOffice module and node readiness projection without creating a browser-side health authority.",
+      "summary": "Monitor backend-governed module registration and runtime health evidence without creating a browser-side health authority.",
       "audience": ["administrator", "operator", "developer", "security-reviewer"]
     },
     {
