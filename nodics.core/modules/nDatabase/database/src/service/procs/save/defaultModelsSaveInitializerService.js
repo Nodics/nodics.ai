@@ -145,7 +145,8 @@ module.exports = {
                 authData: request.authData,
                 schemaModel: request.schemaModel,
                 query: _.cloneDeep(request.originalQuery || {}),
-                model: model
+                model: model,
+                suppressRetryErrorLog: request.suppressRetryErrorLog === true
             }, {}).then(success => {
                 if (!response.success) response.success = [];
                 response.success.push(success.result);

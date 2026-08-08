@@ -502,7 +502,8 @@ module.exports = {
                 options: request.options,
                 searchOptions: request.searchOptions,
                 query: header.query,
-                models: models
+                models: models,
+                suppressRetryErrorLog: request.suppressRetryErrorLog === true
             }).then(success => {
                 if (success && success.result && success.result.length > 0) {
                     resolve(success.result);

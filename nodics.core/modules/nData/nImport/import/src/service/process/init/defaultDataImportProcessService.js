@@ -219,7 +219,8 @@ module.exports = {
                                 phaseLimit: options.phaseLimit,
                                 fileName: fileName,
                                 fileData: fileData,
-                                inputPath: request.inputPath
+                                inputPath: request.inputPath,
+                                suppressRetryErrorLog: _self.shouldSuppressRetryErrorLog(request, options)
                             }, {}).then(success => {
                                 fileObj.done = true;
                                 SERVICE.DefaultFileHandlerService.moveFile(
@@ -260,6 +261,31 @@ module.exports = {
                 reject(new CLASSES.NodicsError(error));
             }
         });
+    },
+
+    /**
+     * Resolves whether a file-level import pipeline error is an expected retry
+     * probe and should avoid error-level logging.
+     *
+     * @param {Object} request Import request with optional fail-fast policy.
+     * @param {Object} options Active retry phase state.
+     * @returns {boolean} True when the error is not from the final phase.
+     */
+    shouldSuppressRetryErrorLog: function (request, options) {
+        let headerOption = request && request.fileData && request.fileData.header &&
+            request.fileData.header.options && request.fileData.header.options.stopImportOnFailure;
+        if (headerOption === true) {
+            return false;
+        }
+        let dataConfig = typeof CONFIG !== 'undefined' && CONFIG && typeof CONFIG.get === 'function' ?
+            CONFIG.get('data') || {} : {};
+        if (dataConfig.stopImportOnFailure === true) {
+            return false;
+        }
+        if (!options || options.phase === undefined || options.phaseLimit === undefined) {
+            return false;
+        }
+        return options.phase < options.phaseLimit - 1;
     },
 
     /**

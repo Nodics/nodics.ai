@@ -226,3 +226,20 @@ npm run verify
 The suite covers registry parity, declarative article rendering, unsafe-link
 rejection, executable-block rejection, TypeScript, accessibility-oriented
 markup, linting, formatting, and production build behavior.
+
+For a running local Kickoff stack, use the live smoke script when you need
+runtime evidence in addition to static frontend verification:
+
+```bash
+AXIS_EXPECT_MODULES=1 npm run smoke:live
+AXIS_EXPECT_MODULES=1 AXIS_EXPECT_DOCUMENTATION=1 npm run smoke:live
+AXIS_EXPECT_MODULES=1 AXIS_EXPECT_DOCUMENTATION=1 AXIS_CRON_LIFECYCLE=1 npm run smoke:live
+```
+
+The first command verifies that Axis can reach Platform, authenticate the
+reference admin user, and see mandatory framework modules plus observed
+optional modules. The second also verifies that Framework, Axis, and Kickoff
+documentation packs are installed and current through WCMS. The third mutates
+the optional Cron module through register, activate, deactivate, and
+deregister, then proves Cron returns to the available list. Keep that final
+gate opt-in because it intentionally changes module lifecycle state.

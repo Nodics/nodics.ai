@@ -78,6 +78,7 @@ function runProcessModelsContract() {
     global.SERVICE.DefaultPipelineService = {
         start: function (pipelineName, saveRequest) {
             assert.strictEqual(pipelineName, 'modelSaveInitializerPipeline');
+            assert.strictEqual(saveRequest.suppressRetryErrorLog, true);
             queryObjects.push(saveRequest.query);
             saveRequest.query.filters.processedBy = saveRequest.model.code;
             if (saveRequest.model.fail) {
@@ -104,6 +105,7 @@ function runProcessModelsContract() {
                 active: true
             }
         },
+        suppressRetryErrorLog: true,
         models: originalModels
     };
     let response = {};
@@ -118,6 +120,7 @@ function runProcessModelsContract() {
                     assert.strictEqual(response.failed[0].metadata.code, 'product-002');
                     assert.strictEqual(response.failed[0].metadata.fail, true);
                     assert.strictEqual(queryObjects.length, 3);
+                    assert.strictEqual(response.success[0].code, 'product-001');
                     assert.notStrictEqual(queryObjects[0], queryObjects[1]);
                     assert.notStrictEqual(queryObjects[1], queryObjects[2]);
                     assert.strictEqual(request.query.filters.processedBy, undefined);
@@ -161,7 +164,8 @@ function runLargeBatchContract() {
     }
     let processed = 0;
     global.SERVICE.DefaultPipelineService = {
-        start: function () {
+        start: function (pipelineName, saveRequest) {
+            assert.strictEqual(saveRequest.suppressRetryErrorLog, true);
             processed++;
             return Promise.resolve({
                 result: {
@@ -174,7 +178,8 @@ function runLargeBatchContract() {
         tenant: 'electronics',
         authData: {},
         schemaModel: {},
-        originalQuery: {}
+        originalQuery: {},
+        suppressRetryErrorLog: true
     }, {}, models).then(() => {
         assert.strictEqual(processed, 1500);
         assert.strictEqual(models.length, 1500);

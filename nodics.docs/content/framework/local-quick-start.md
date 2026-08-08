@@ -149,6 +149,39 @@ because the Initialize page reads import catalogues from port `4310`.
 
 ## Fresh database test
 
+For the safest repeatable local verification, use the Kickoff acceptance
+runner from `nodics.kickoff`:
+
+```bash
+npm run acceptance:local:fresh
+```
+
+This command drops only the local reference databases:
+
+```text
+kickoffLocal
+kickoffLocalWcms
+kickoffLocalCron
+```
+
+It then starts Platform, WCMS, Cron, and Axis if they are not already running;
+waits for each server; logs in as the reference admin user; checks the module
+registry; imports and verifies Framework, Axis, and Kickoff documentation
+content packs; verifies CMS counts; opens the important Axis routes; and runs
+the live Axis smoke gates for module registry, documentation packs, and Cron
+lifecycle. The runner stops the servers it started after the checks complete;
+pass `--leave-started` if you intentionally want to keep the local stack
+running for manual inspection.
+
+The fresh runner intentionally refuses to drop databases when local Nodics
+ports are already busy. Stop Platform, WCMS, Cron, and Axis first so the test
+really proves a clean bootstrap. If you only want to verify the stack that is
+already running, use the non-destructive command:
+
+```bash
+npm run acceptance:local
+```
+
 When you drop local MongoDB schemas to test from zero, use this order:
 
 1. Stop Platform, WCMS, Cron, and Axis.
