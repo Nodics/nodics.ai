@@ -11,7 +11,25 @@ Do not audit or rerun checks across Nodics framework source unless the developer
 explicitly requests framework inspection. If mode is unstated, derive it from
 the owner of the requested change and use the smallest project-owned scope.
 
-Before editing, answer briefly:
+Before editing, answer the Nodics **what / where / how** gate. This is
+mandatory because many refactor mistakes start when an AI tool understands the
+requested outcome but writes the right idea into the wrong artifact.
+
+1. **What:** What exact capability, behavior, data, documentation, or
+   governance rule is changing? Is it an existing capability customization or
+   a genuinely new implementation?
+2. **Where:** Which repository, functional module, child module, layer, folder,
+   and file type owns it? Is the artifact metadata, properties, status
+   definitions, schema, router, controller, facade, service, provider,
+   pipeline, interceptor, event, job, data, generated source definition, test,
+   documentation, AGENTS guidance, contract, standard, playbook, template, or
+   example?
+3. **How:** How should it be expressed so Nodics can merge, load, override,
+   configure, test, document, and operate it? Which export style, property
+   namespace, status definition, generated source, test, and customization path
+   proves the implementation?
+
+Then answer briefly:
 
 1. **Owner:** Which capability, module, and layer own the change?
 2. **Reuse:** Which existing loader, registry, generator, service, pipeline, or governance path handles it?
@@ -32,6 +50,7 @@ risk, intended files, and validation route. Use
 unclear.
 
 Stop and redesign if ownership is unclear, a parallel mechanism is being added,
+the code would be placed in an arbitrary folder, the artifact type is guessed,
 or the customization path cannot be explained.
 
 During implementation:

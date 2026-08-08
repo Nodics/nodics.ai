@@ -31,7 +31,19 @@ That means:
 
 ## Before Writing Code
 
-Before changing or creating code, the AI must identify:
+Before changing or creating code, the AI must pass the Nodics **what / where /
+how** gate:
+
+- **What:** the exact capability, behavior, data, documentation, or governance
+  rule being changed, and whether this is existing-capability customization or
+  genuinely new implementation.
+- **Where:** the repository, functional module, child module, layer, folder,
+  and file type that own the change.
+- **How:** the Nodics expression mechanism: export style, property namespace,
+  status definition, source definition, generated artifact, test, documentation,
+  and later-layer customization path.
+
+Then identify:
 
 1. the business outcome;
 2. the existing capability that may already satisfy it;
@@ -47,6 +59,11 @@ If the AI cannot explain where the code belongs, it must not place the code
 arbitrarily. It must inspect the module contract, sibling modules, source
 patterns, and nSetup standards until ownership is clear. If ownership remains
 unclear, stop and report the design gap.
+
+This gate applies equally to refactoring and documentation/guidance changes.
+Moving guidance, adding a tool bridge, changing a validator, or creating an LLM
+contract still requires the AI to decide what changes, where the authority
+belongs, and how future tools will discover and apply it.
 
 ## Reuse, Customize, Then Create
 

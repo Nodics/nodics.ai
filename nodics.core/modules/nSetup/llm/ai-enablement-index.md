@@ -105,6 +105,9 @@ Load detailed files only when their subject is affected:
 35. `memory/decisions.md`
 36. `standards/module-generation-guide.md`
 37. `examples/README.md`
+38. `examples/modularization-refactor-correction-case-study.md` when refactor,
+    module movement, repository-boundary, tool-bridge, guidance-authority, or
+    ownership-correction work is involved
 
 Load `playbooks/change-gate-contract.md` only at commit, merge/release, periodic-audit, or
 explicit comprehensive-review time. Canonical rules should be referenced rather
