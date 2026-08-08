@@ -6,6 +6,12 @@ technical module. A project registers Cron when it needs scheduled jobs,
 background maintenance, retries, cleanup, synchronization, or other timed
 business processes.
 
+For a beginner, Cron is the part of Nodics that asks “what should happen
+later, repeatedly, or in the background?” A user may click a button in Axis,
+but many real enterprise actions must happen without a user staring at the
+screen: cleanup temporary media, retry failed exports, synchronize external
+systems, send reminders, rebuild projections, or close expired workflows.
+
 ## Why Cron is optional
 
 Core, Platform, and WCMS are mandatory for Axis-driven onboarding and governed
@@ -27,6 +33,12 @@ Customer jobs belong in project modules. Reusable scheduler behavior belongs
 in `nodics.cron`. If a partner needs custom scheduling behavior, they may
 create a customer extension module that loads after Cron and overrides the
 approved service contract.
+
+For developers, the important rule is that Cron should orchestrate the timing
+and execution contract, while the owning business module should own the actual
+business operation. A media cleanup job should call media-owned cleanup logic.
+A workflow reminder job should call workflow-owned reminder logic. Cron should
+not become a dumping ground for unrelated domain behavior.
 
 ## Job lifecycle
 

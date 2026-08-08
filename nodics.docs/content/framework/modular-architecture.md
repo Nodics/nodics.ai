@@ -110,6 +110,20 @@ important idea is that each server loads an effective runtime graph. A server
 does not load every module in the workspace just because the files exist. It
 loads the modules that are part of its configured extension chain.
 
+## Beginner reading path
+
+For a beginner, read the architecture in two passes. First, ignore every
+technical module and look only at the functional module chain: Core gives the
+base framework, Platform gives identity and BackOffice, WCMS gives content,
+Cron gives scheduled work, and Kickoff composes those capabilities for a local
+project. That view explains what is available.
+
+Second, look at runtime order. Runtime order explains which service
+implementation wins when more than one module contributes the same service,
+router, schema, or configuration. A beginner mistake is to assume that a parent
+folder or package dependency controls behavior. In Nodics, installed packages
+only make code reachable; the active server graph decides what is loaded.
+
 ## Module hierarchy versus service precedence
 
 Two ideas are easy to mix together:
@@ -143,6 +157,20 @@ platformServer
 The exact physical folders can change. A customer may keep framework source in
 one checkout and the customer project somewhere else. The contract is the
 runtime graph, not the parent directory name on one developer machine.
+
+## DevOps and operator view
+
+DevOps teams should treat the server graph as deployment evidence. A production
+Platform server, WCMS server, or Cron server should declare exactly which
+functional modules and customer layers are active, which ports and database
+names it uses, and which properties are inherited versus overridden. That makes
+rollback and support much safer: an operator can compare two runtime graphs
+without reading every source file.
+
+When production incidents happen, the first question is usually not “which Git
+repository changed?” It is “which runtime process loaded which module chain
+with which effective properties?” Modular architecture gives support teams a
+shared language for that investigation.
 
 ## Documentation ownership matrix
 

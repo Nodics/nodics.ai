@@ -22,6 +22,23 @@ function markdownHeadings(value) {
   });
 }
 
+function assertDocumentationDepth(source, canonical) {
+  const wordCount = markdownWordCount(canonical);
+  assert(
+    wordCount >= 500,
+    `Axis documentation page is too shallow for product documentation: ${source} has ${wordCount} words`,
+  );
+  const sectionCount = canonical.split(/\r?\n/).filter((line) => /^##\s+/.test(line)).length;
+  assert(
+    sectionCount >= 5,
+    `Axis documentation page needs clearer structure: ${source} has ${sectionCount} top-level sections`,
+  );
+  assert(
+    canonical.includes('## Customize and extend safely'),
+    `Missing customization section: ${source}`,
+  );
+}
+
 function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
@@ -117,6 +134,7 @@ for (const page of navigation.pages) {
     resolve(root, 'data/core/source/documentation', page.source),
     'utf8',
   );
+  assertDocumentationDepth(page.source, canonical);
   assert(
     markdownWordCount(canonical) >= migration.evidenceWordCount,
     `Axis canonical documentation lost detail: ${page.source}`,
@@ -143,10 +161,6 @@ for (const page of navigation.pages) {
       `modules/axis/data/core/source/documentation/${page.source}`,
     ),
     `Generated components do not contain platform axis source path: ${page.source}`,
-  );
-  assert(
-    canonical.includes('## Customize and extend safely'),
-    `Missing customization section: ${page.source}`,
   );
 }
 

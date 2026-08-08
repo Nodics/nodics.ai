@@ -5,6 +5,11 @@ configuration. A runtime server is a process that hosts an effective set of
 active modules. The module remains the capability owner; the server is the
 runtime grouping.
 
+For a beginner, DevOps in Nodics means “how does this code become a safe,
+observable process?” The answer starts with a clear server graph, narrow
+properties, predictable dependencies, releaseable content packs, and recovery
+behavior that operators can explain during an incident.
+
 ## Local topology
 
 The reference local setup uses separate servers:
@@ -17,6 +22,24 @@ The reference local setup uses separate servers:
 This split keeps module boundaries visible. It also prepares the team for a
 future topology where different capabilities may run in different processes,
 hosts, containers, or deployment units.
+
+```mermaid
+flowchart LR
+  Operator["Developer or operator"] --> Kickoff["nodics.kickoff scripts"]
+  Kickoff --> Platform["Platform server<br/>4300"]
+  Kickoff --> WCMS["WCMS server<br/>4310"]
+  Kickoff --> Cron["Cron server<br/>4320"]
+  Platform --> MongoP["kickoffLocal DB"]
+  WCMS --> MongoW["kickoffLocalWcms DB"]
+  Cron --> MongoC["kickoffLocalCron DB"]
+  Axis["nodics.axis<br/>3100"] --> Platform
+  Axis --> WCMS
+```
+
+This diagram is intentionally local and beginner-friendly. Production may use
+containers, private networks, managed databases, and separate deployment
+pipelines, but the same ownership idea remains: servers host capabilities;
+modules own behavior.
 
 ## Configuration layers
 

@@ -4,6 +4,16 @@ This guide starts the local reference stack from zero. It is written for a
 developer who is new to Nodics and wants to see the framework, BackOffice, WCMS
 documentation, and Axis working locally.
 
+For a beginner, the goal is not to understand every internal module on the
+first day. The goal is to prove that the framework can start, authenticate,
+import governed content, show documentation, and expose a safe BackOffice
+workspace before any custom business code is written.
+
+For a business evaluator, this quick start demonstrates adoption friction. If a
+new partner can clone the framework, run Kickoff, and see Platform, WCMS, Cron,
+and Axis working together, then the framework is easier to evaluate than an
+architecture that exists only on slides.
+
 ## What you will run
 
 The reference setup uses three projects:
@@ -15,6 +25,14 @@ The reference setup uses three projects:
 Kickoff starts backend servers. Axis connects to Platform, authenticates an
 employee, reads the BackOffice bootstrap contract, and renders workspaces and
 documentation from registered backend sources.
+
+## Business outcome of the quick start
+
+After this guide succeeds, the business-facing proof is simple: a customer
+project can run the framework without forking framework code, content can be
+managed through backend-owned packs, and operators can see which capabilities
+are live. That is the first adoption story Nodics must make boring and
+repeatable.
 
 ## Prerequisites
 

@@ -5,6 +5,11 @@ owner. The safest path is to reuse an existing capability, configure it, extend
 it in a later-loaded module, and create new framework behavior only when the
 existing contract truly cannot satisfy the requirement.
 
+For a beginner, customization means “where should I put my change so I can
+still upgrade the framework later?” The safest answer is usually configuration
+first, then a customer project module, then a customer extension module, and
+only then a framework change if the behavior is truly reusable for everyone.
+
 ## What this is
 
 This guide explains how a customer or partner changes Nodics behavior without
@@ -26,6 +31,26 @@ Start with the least invasive option:
 This ladder protects upgradeability. The later a customization loads, the more
 specific it is. Framework modules stay reusable; customer modules carry
 customer decisions.
+
+| Customization level | Who should use it | Beginner example | Upgrade risk |
+| --- | --- | --- | --- |
+| Axis/WCMS content | Business user or content admin | Change a heading, image, documentation page, or dashboard card. | Low, because backend content is governed and versioned. |
+| Project configuration | Developer or operator | Change a local port, database name, or feature override for one environment. | Low when the property stays narrow. |
+| Project module | Developer | Add Kickoff-specific schema fields or business services. | Medium, because tests must prove the behavior. |
+| Customer extension module | Senior developer | Override Platform behavior while keeping the Platform functional identity. | Medium to high, because service precedence must be explicit. |
+| Framework module change | Framework team | Improve Core import behavior for every project. | Shared release risk, so it needs broader validation. |
+| New functional module | Architecture owner | Add Commerce, Workflow, or another independent capability. | High if ownership is blurry. |
+
+```mermaid
+flowchart TD
+  Need["Need to change behavior or content"] --> Content{"Can Axis/WCMS governed content solve it?"}
+  Content -->|Yes| Wcms["Update backend-owned CMS data"]
+  Content -->|No| Config{"Can configuration solve it?"}
+  Config -->|Yes| Props["Add narrow project/environment/server property"]
+  Config -->|No| Project{"Is it project-specific?"}
+  Project -->|Yes| Module["Add project or customer extension module"]
+  Project -->|No| Framework["Change the owning framework module with tests"]
+```
 
 ## Backend customization
 
@@ -52,6 +77,19 @@ renders that authorized contract.
 Simple presentation changes, such as logo, copy, theme, or demo content, should
 come from backend-owned CMS or configuration where possible. Hard-coding those
 values in the frontend makes future customers harder to support.
+
+## Business and DevOps impact
+
+The business value of this discipline is lower long-term cost. A customer can
+receive framework upgrades without reapplying hidden edits. DevOps teams also
+gain a clean release story: framework packages, customer modules, environment
+properties, and imported content packs can be rolled forward or backward as
+separate operational units.
+
+For production support, every customization should answer three questions:
+which module owns it, which runtime loads it, and which test or document proves
+the intended behavior? If those answers are missing, the customization is not
+ready for a production release.
 
 ## Documentation customization
 

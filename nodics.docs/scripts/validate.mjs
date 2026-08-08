@@ -5,6 +5,48 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const catalogue = JSON.parse(await readFile(resolve(root, 'catalogue.json'), 'utf8'));
+const minimumWordCount = 500;
+const minimumSectionCount = 5;
+
+function countWords(body) {
+  return (body.match(/\b[\w'.-]+\b/g) ?? []).length;
+}
+
+function assertDocumentationDepth(document, body) {
+  const wordCount = countWords(body);
+  if (wordCount < minimumWordCount) {
+    throw new Error(
+      `Document is too shallow for beginner documentation: ${document.id} has ${wordCount} words, expected at least ${minimumWordCount}`,
+    );
+  }
+
+  const sectionCount = (body.match(/^## /gm) ?? []).length;
+  if (sectionCount < minimumSectionCount) {
+    throw new Error(
+      `Document needs more structure: ${document.id} has ${sectionCount} sections, expected at least ${minimumSectionCount}`,
+    );
+  }
+
+  const hasVisualAid =
+    body.includes('```mermaid') || /^!\[.+\]\(.+\)/m.test(body) || /^\| .+ \|$/m.test(body);
+  if (!hasVisualAid) {
+    throw new Error(
+      `Document needs at least one visual aid, table, or diagram: ${document.id}`,
+    );
+  }
+
+  const audienceChecks = [
+    ['beginner', /\bbeginners?\b/i],
+    ['business value', /\bbusiness\b/i],
+    ['developer guidance', /\bdevelopers?\b/i],
+    ['DevOps or operator guidance', /\b(devops|operator|production)\b/i],
+  ];
+  for (const [label, pattern] of audienceChecks) {
+    if (!pattern.test(body)) {
+      throw new Error(`Document is missing ${label}: ${document.id}`);
+    }
+  }
+}
 
 if (catalogue.contract !== 'nodics.documentation/v1') {
   throw new Error('Unsupported documentation contract');
@@ -41,6 +83,7 @@ for (const document of catalogue.documents) {
   if (!body.trim().startsWith('# ')) {
     throw new Error(`Document must start with one title: ${document.id}`);
   }
+  assertDocumentationDepth(document, body);
   document.sha256 = createHash('sha256').update(body).digest('hex');
 }
 
