@@ -26,6 +26,19 @@ Kickoff starts backend servers. Axis connects to Platform, authenticates an
 employee, reads the BackOffice bootstrap contract, and renders workspaces and
 documentation from registered backend sources.
 
+```mermaid
+flowchart TB
+  AI["nodics.ai<br/>framework modules"] --> Kickoff["nodics.kickoff<br/>reference customer project"]
+  Kickoff --> Platform["Platform server<br/>4300"]
+  Kickoff --> WCMS["WCMS server<br/>4310"]
+  Kickoff --> Cron["Cron server<br/>4320"]
+  Axis["nodics.axis<br/>frontend 3100"] --> Platform
+  Axis --> WCMS
+  Platform --> Registry["BackOffice registry"]
+  WCMS --> Content["CMS and documentation content"]
+  Cron --> Jobs["Cron runtime observation"]
+```
+
 ## Business outcome of the quick start
 
 After this guide succeeds, the business-facing proof is simple: a customer
@@ -124,6 +137,28 @@ Password: adminPassword
 After login, open `http://localhost:3100/docs`. You should see Framework,
 Swaggers, Nodics Axis, and Nodics Kickoff.
 
+## First-hour exploration checklist
+
+After login, do not jump straight into code. Spend a few minutes exploring the
+runtime from Axis:
+
+1. Open **Documentation** and read the Framework overview.
+2. Open **System and Integrations → Module Registry** and notice that Core,
+   Platform, and WCMS are mandatory while Cron is optional when its server is
+   observed.
+3. Open **System and Integrations → Module Health** and compare project
+   registration state with runtime evidence.
+4. Open **Imports and Exports** and review initialization, core, sample, file,
+   export, and history tabs.
+5. Open **Content and Experience** and confirm WCMS pages, components,
+   catalogs, and routes exist.
+6. Open **Media** and review the media workspace as backend-owned content and
+   metadata, not frontend-owned files.
+
+This tour gives a beginner the practical map: Profile authenticates, BackOffice
+discovers, WCMS serves content, Cron reports runtime capability, and Axis
+renders what the backend authorizes.
+
 ## What “initial data import” means
 
 The local stack does not become useful only because the servers start. The
@@ -199,6 +234,23 @@ already running, use the non-destructive command:
 ```bash
 npm run acceptance:local
 ```
+
+## Manual startup versus acceptance runner
+
+Use the manual startup when you want to learn logs and runtime behavior. Use
+the acceptance runner when you want a repeatable proof.
+
+| Need | Recommended path |
+| --- | --- |
+| First learning session | Start Platform, WCMS, Cron, and Axis manually in separate terminals. |
+| Fresh database confidence | Run `npm run acceptance:local:fresh` from Kickoff. |
+| Quick regression after documentation changes | Run `npm run acceptance:local` from Kickoff. |
+| Debugging one server | Start only the affected server and inspect its logs. |
+| UI inspection after automated setup | Run the acceptance script with `--leave-started`. |
+
+The important rule is scope. Local acceptance may reset only the configured
+Kickoff local databases. It must never delete unrelated MongoDB databases,
+workspace folders, home directories, or shared environments.
 
 When you drop local MongoDB schemas to test from zero, use this order:
 

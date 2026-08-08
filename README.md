@@ -57,6 +57,37 @@ Nodics is designed to help with:
 | Better operations | Runtime servers, module registration, data releases, checksums, public/private properties, logs, and restart behavior are treated as contracts. |
 | Partner friendliness | A partner can start from Kickoff, see the product running, then replace or extend only the parts they own. |
 
+## What to understand in the first 30 minutes
+
+If this is your first visit to the repository, do not start by reading every
+module folder. Start with the product story and then prove the system locally.
+Nodics is easiest to understand when you see the runtime compose itself.
+
+The first 30-minute learning path is:
+
+1. Understand that `nodics.ai` is the framework backend repository.
+2. Understand that `nodics.kickoff` is a reference customer project.
+3. Understand that `nodics.axis` is the BackOffice frontend.
+4. Start Platform and WCMS from Kickoff.
+5. Start Axis and log in.
+6. Open Documentation, Module Registry, and Imports and Exports.
+7. Notice that Axis renders backend-owned capabilities instead of hardcoding
+   what the project owns.
+
+```mermaid
+flowchart TD
+  Visitor["New visitor opens GitHub"] --> Story["Read what Nodics solves"]
+  Story --> Shape["Understand framework, project, frontend separation"]
+  Shape --> Kickoff["Run nodics.kickoff locally"]
+  Kickoff --> Axis["Login to nodics.axis"]
+  Axis --> Registry["Inspect Module Registry"]
+  Registry --> Docs["Read Framework, Axis, and Kickoff docs"]
+  Docs --> Custom["Make first safe customization in customer project"]
+```
+
+This order is intentional. It keeps the learning curve friendly: first why,
+then what runs, then where customization belongs.
+
 ## How Nodics is different from an ordinary project
 
 An ordinary application project often starts with one codebase and grows until
@@ -89,6 +120,38 @@ The separation matters because different people care about different parts:
 | DevOps or TechOps | Review prerequisites, runtime servers, public/private properties, ports, health, restart behavior, and data bootstrap. |
 | QA or tester | Use the local acceptance checklist, import lifecycle, module registry lifecycle, and route/API verification. |
 | AI contributor | Read `AGENTS.md`, then `nodics.core/modules/nSetup/llm/` before editing. Follow owner-first, customization-first, test-first contracts. |
+
+## Ecosystem view
+
+Nodics is not only a set of packages. It is an ecosystem contract between
+framework modules, customer projects, frontend renderers, backend data packs,
+runtime servers, and operations.
+
+```mermaid
+flowchart TB
+  Framework["nodics.ai<br/>framework backend repository"] --> Core["nodics.core<br/>runtime foundation"]
+  Framework --> Platform["nodics.platform<br/>Profile, BackOffice, Axis backend data"]
+  Framework --> WCMS["nodics.wcms<br/>CMS, WCMS, Media"]
+  Framework --> Cron["nodics.cron<br/>scheduled jobs"]
+  Framework --> Docs["nodics.docs<br/>framework documentation"]
+
+  Customer["customer project<br/>example: nodics.kickoff"] --> Runtime["environment/server runtime graph"]
+  Core --> Runtime
+  Platform --> Runtime
+  WCMS --> Runtime
+  Cron --> Runtime
+  Docs --> Runtime
+
+  Runtime --> APIs["governed APIs, schemas, imports, registry"]
+  APIs --> Axis["nodics.axis<br/>browser renderer"]
+  APIs --> Apps["customer sites, apps, integrations"]
+```
+
+The ecosystem rule is simple: the backend owns authority, the customer project
+owns project-specific composition, and Axis renders authorized browser
+experiences. Documentation follows the same rule: framework docs live in
+`nodics.docs`, Axis product docs live in the Platform Axis backend module, and
+customer docs live in the customer project.
 
 ## What you can run today
 
@@ -371,6 +434,24 @@ documentation and initialization releases, validate them, and install them.
 Framework documentation comes from `nodics.docs`; Axis documentation comes
 from `nodics.platform/modules/axis`; Kickoff documentation comes from
 `nodics.kickoff`.
+
+## What to inspect after login
+
+After the first successful login, inspect these areas in order:
+
+| Axis area | What it proves |
+| --- | --- |
+| Dashboard | Axis can authenticate and render the employee workspace shell. |
+| System and Integrations → Module Registry | Mandatory functional modules are persisted, optional modules are observed, and lifecycle actions are backend-governed. |
+| System and Integrations → Module Health | Runtime health evidence is projected by BackOffice instead of guessed by the browser. |
+| Imports and Exports | Initialization, core, sample, and documentation releases are immutable, checksum-governed, and module-owned. |
+| Content and Experience | WCMS owns sites, catalogs, pages, components, routes, and delivery metadata. |
+| Media | Media records and folders are owned by WCMS/Media, not by the frontend. |
+| Documentation | Framework, Swagger, Axis, and project documentation are separate products with separate owners. |
+
+This small tour teaches the Nodics contract better than a folder walk. The UI
+shows how runtime availability, project registration, content packs, and
+documentation ownership meet in one employee workspace.
 
 ## Validate the framework repository
 

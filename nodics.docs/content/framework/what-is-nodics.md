@@ -44,6 +44,34 @@ project can extend or configure the owner of a behavior instead of copying code
 into another place. That lowers upgrade risk, reduces duplicate authority, and
 helps teams reason about who owns what.
 
+## Executive summary for a non-technical reader
+
+Nodics is trying to solve a familiar enterprise problem: companies want fast
+delivery, but they also need security, governance, customization, operations,
+and upgradeability. Many teams get speed by building one large application.
+That feels good in the first few weeks, then becomes expensive when the second
+customer, second tenant, second deployment, or second integration arrives.
+
+Nodics takes a different approach. It gives the project a modular backend
+foundation from the start. Each capability has a named owner. Customer
+projects extend the framework instead of modifying shared framework source.
+Axis gives business users and administrators one browser workspace, but the
+browser does not become the authority for business rules. Content, media,
+imports, documentation, scheduled jobs, identity, and module lifecycle remain
+backend-governed.
+
+The business value is not only "we can build screens." The business value is
+"we can build screens, change them safely, support many customers, explain the
+system to new people, recover from mistakes, and keep upgrading the platform."
+
+```mermaid
+flowchart LR
+  Speed["Fast delivery"] --> Risk["Growth risk"]
+  Risk --> Problems["Forks, duplicated rules, hidden config, weak ownership"]
+  Problems --> Nodics["Nodics modular contracts"]
+  Nodics --> Outcome["Reusable framework + project customization + governed operations"]
+```
+
 ## Beginner mental model
 
 Imagine a company needs employee login, content management, imports, media,
@@ -58,6 +86,42 @@ scheduled work. BackOffice exposes operational metadata. Axis renders the user
 interface by consuming authorized backend contracts. A customer project, such
 as Kickoff, composes these capabilities and adds project behavior after the
 framework modules.
+
+## Developer mental model
+
+A developer should read Nodics as a set of ownership questions:
+
+1. Which functional module owns the business capability?
+2. Which technical module owns the route, schema, service, data release, or
+   renderer metadata?
+3. Is the requested behavior already configurable?
+4. If code is required, should it live in framework source or a customer
+   extension module?
+5. Which server graph must load the change?
+6. Which generated artifacts must be regenerated from source?
+7. Which tests prove default behavior and customization behavior?
+
+This is why Nodics asks developers and AI tools to avoid nearest-file editing.
+The correct file is the one owned by the correct capability, not the first file
+that happens to contain a similar word.
+
+## DevOps mental model
+
+An operator sees Nodics as a set of runtime graphs and release artifacts:
+
+- Platform handles human login, Profile, BackOffice, registry, and API
+  discovery.
+- WCMS handles sites, catalogs, pages, components, media, and documentation
+  delivery.
+- Cron handles scheduled/background execution.
+- Customer projects declare which modules and environments load.
+- Data releases are immutable and checksum-governed.
+- Public properties, private properties, environment overrides, and server
+  overrides must remain explainable.
+
+The operational benefit is traceability. When something goes wrong, the team
+can ask: which module owns it, which server loaded it, which release imported
+it, which property changed it, and which rollback path is safe?
 
 ## What teams can build
 
@@ -99,8 +163,23 @@ flowchart TD
   D --> E["Import initialization, core, sample, and documentation data"]
   E --> F["Study module ownership"]
   F --> G["Customize through project modules or configuration"]
-  G --> H["Validate with tests, API checks, and runtime evidence"]
+G --> H["Validate with tests, API checks, and runtime evidence"]
 ```
+
+## How the documentation is organized
+
+Nodics documentation is intentionally separated by ownership:
+
+| Documentation product | Owner | What belongs there |
+| --- | --- | --- |
+| Framework | `nodics.docs` | Framework concepts, module architecture, quick start, customization model, runtime operations, and standard module guidance. |
+| Nodics Axis | `nodics.platform/modules/axis` | Axis product behavior, browser architecture, UI workspaces, renderer contracts, and Axis-specific backend content. |
+| Nodics Kickoff | `nodics.kickoff` | Reference project setup, local servers, project modules, sample customization, and project acceptance. |
+| Swagger/API | Runtime modules | OpenAPI/API contracts exposed by registered backend modules. |
+
+Axis renders these products together, but their source ownership stays
+separate. This avoids a common documentation mistake where the frontend
+repository becomes a dumping ground for every page users can see.
 
 ## A day-one business scenario
 
