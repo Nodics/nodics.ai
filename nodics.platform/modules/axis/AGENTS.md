@@ -1,5 +1,12 @@
 # axis Agent Contract
 
+## Inheritance
+
+- Follow the root Nodics contract: `../../../AGENTS.md`.
+- Follow the `nodics.platform` group contract: `../../AGENTS.md`.
+- Follow global guidance from
+  `../../../nodics.core/modules/nSetup/llm/ai-enablement-index.md`.
+
 ## Capability Boundary
 
 - `axis` is the backend-owned Axis product-data module inside

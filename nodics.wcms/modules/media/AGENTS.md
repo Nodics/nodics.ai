@@ -4,9 +4,9 @@ This file gives AI coding agents mandatory guidance for the Nodics WCMS media ca
 
 ## Inheritance
 
-- Follow the repository AGENTS contract: `../../AGENTS.md`.
-- Follow the framework contract: `../AGENTS.md`.
-- Follow global AI/development guidance: `../../nSetup/llm/ai-enablement-index.md`.
+- Follow the repository AGENTS contract: `../../../AGENTS.md`.
+- Follow the framework contract: `../../AGENTS.md`.
+- Follow global AI/development guidance: `../../../nodics.core/modules/nSetup/llm/ai-enablement-index.md`.
 
 ## Ownership
 

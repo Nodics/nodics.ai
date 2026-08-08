@@ -20,6 +20,12 @@ const util = require('util');
  * @override Projects customize behavior through active-module metadata, configuration, scripts, services, and configured bootstrap reconcilers rather than modifying this coordinator.
  */
 module.exports = {
+    /**
+     * Resolves caller-supplied startup options with safe local defaults.
+     *
+     * @param {object} [options] Startup options supplied by a customer server or tooling command.
+     * @returns {object} Effective startup options with Nodics and customer homes populated.
+     */
     resolveOptions: function (options) {
         return Object.assign({
             NODICS_HOME: process.cwd(),

@@ -19,8 +19,7 @@ documentation delivery.
 
 ## First proof
 
-After core startup is proven, a new parallel Kickoff `platformServer` will
-extend `nodics.platform`. Success requires deterministic composition,
-configuration precedence, authenticated health/bootstrap APIs, failure and
-shutdown behavior, and no dependency on any pre-existing runtime at execution
-time.
+After core startup is proven, a customer project `platformServer` can extend
+`nodics.platform`. Success requires deterministic composition, configuration
+precedence, authenticated health/bootstrap APIs, failure and shutdown behavior,
+and no dependency on any pre-existing runtime at execution time.

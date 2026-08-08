@@ -1,5 +1,15 @@
 # Nodics WCMS Agent Contract
 
+## Inheritance
+
+- Follow the repository AGENTS contract: `../AGENTS.md`.
+- Follow global AI/development guidance:
+  `../nodics.core/modules/nSetup/llm/ai-enablement-index.md`.
+- If a child module has its own `AGENTS.md`, follow that file for changes
+  inside the child module.
+
+## Module Work Rules
+
 - `nodics.wcms` extends `nodics.core` directly; do not depend on `nodics.platform`
   for content schemas, publication, delivery, or authoring workflows.
 - Keep Platform BackOffice as the control plane. WCMS owns content-management

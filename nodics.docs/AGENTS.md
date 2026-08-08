@@ -1,5 +1,13 @@
 # Documentation-content contract
 
+## Inheritance
+
+- Follow the repository AGENTS contract: `../AGENTS.md`.
+- Follow global AI/development guidance:
+  `../nodics.core/modules/nSetup/llm/ai-enablement-index.md`.
+
+## Module Work Rules
+
 - This repository contains content and release validation only; it is not a runtime or frontend.
 - Every document must declare one canonical functional-module owner.
 - Technical-module identity is optional detail and never replaces functional ownership.

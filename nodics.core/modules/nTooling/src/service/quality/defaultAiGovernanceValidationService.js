@@ -31,20 +31,24 @@ const ignoredDirectories = new Set([
     'generated'
 ]);
 
+const globalGuidanceRoot = 'nodics.core/modules/nSetup/llm';
+const globalGuidanceIndex = globalGuidanceRoot + '/ai-enablement-index.md';
+const globalGuidanceManifest = globalGuidanceRoot + '/ai-manifest.json';
+
 const requiredRootFiles = [
     'AGENTS.md',
     'CLAUDE.md',
     '.github/copilot-instructions.md',
     '.cursor/rules/nodics-core.mdc',
-    'modules/nSetup/llm/ai-enablement-index.md',
-    'modules/nSetup/llm/ai-manifest.json',
-    'modules/nSetup/llm/contracts/nodics-principles.md',
-    'modules/nSetup/llm/contracts/module-structure-contract.md',
-    'modules/nSetup/llm/contracts/documentation-impact-contract.md',
-    'modules/nSetup/llm/contracts/testing-and-release-contract.md',
-    'modules/nSetup/llm/contracts/customer-project-mode-contract.md',
-    'modules/nSetup/llm/memory/README.md',
-    'modules/nSetup/llm/memory/decisions.md'
+    globalGuidanceIndex,
+    globalGuidanceManifest,
+    globalGuidanceRoot + '/contracts/nodics-principles.md',
+    globalGuidanceRoot + '/contracts/module-structure-contract.md',
+    globalGuidanceRoot + '/contracts/documentation-impact-contract.md',
+    globalGuidanceRoot + '/contracts/testing-and-release-contract.md',
+    globalGuidanceRoot + '/contracts/customer-project-mode-contract.md',
+    globalGuidanceRoot + '/memory/README.md',
+    globalGuidanceRoot + '/memory/decisions.md'
 ];
 
 /**
@@ -126,6 +130,43 @@ function readRelative(relativePath) {
 }
 
 /**
+ * Resolves AGENTS.md and global guidance references from an AGENTS.md file.
+ *
+ * @param {string} filePath AGENTS.md file path.
+ * @returns {{reference: string, resolvedPath: string}[]} Resolved references.
+ */
+function resolveAgentReferences(filePath) {
+    let content = fs.readFileSync(filePath, 'utf8');
+    return Array.from(content.matchAll(/`([^`]*(?:AGENTS\.md|nSetup\/llm\/ai-enablement-index\.md|llm\/ai-enablement-index\.md))`/g))
+        .map(match => match[1])
+        .map(reference => ({
+            reference,
+            resolvedPath: path.resolve(path.dirname(filePath), reference)
+        }));
+}
+
+/**
+ * Checks whether one AGENTS.md file can reach another required guidance file.
+ *
+ * @param {string} sourcePath Source AGENTS.md file path.
+ * @param {string} targetPath Required target path.
+ * @param {Set<string>} visited Already visited files.
+ * @returns {boolean} True when the target is reachable.
+ */
+function canReachGuidance(sourcePath, targetPath, visited = new Set()) {
+    if (sourcePath === targetPath) return true;
+    if (visited.has(sourcePath)) return false;
+    visited.add(sourcePath);
+
+    return resolveAgentReferences(sourcePath).some(resolvedReference => {
+        if (resolvedReference.resolvedPath === targetPath) return true;
+        if (!fs.existsSync(resolvedReference.resolvedPath)) return false;
+        if (path.basename(resolvedReference.resolvedPath) !== 'AGENTS.md') return false;
+        return canReachGuidance(resolvedReference.resolvedPath, targetPath, visited);
+    });
+}
+
+/**
  * Records a validation failure.
  *
  * @param {string[]} failures Mutable failure list.
@@ -149,13 +190,15 @@ function validateRootFiles(failures) {
     if (fs.existsSync(path.join(rootPath, 'llm'))) {
         fail(
             failures,
-            'Repository root must not contain a parallel llm directory; global AI guidance belongs in modules/nSetup/llm'
+            'Repository root must not contain a parallel llm directory; global AI guidance belongs in ' +
+            globalGuidanceRoot
         );
     }
     if (fs.existsSync(path.join(rootPath, 'memory'))) {
         fail(
             failures,
-            'Repository root must not contain a parallel memory directory; curated shared memory belongs in modules/nSetup/llm/memory'
+            'Repository root must not contain a parallel memory directory; curated shared memory belongs in ' +
+            globalGuidanceRoot + '/memory'
         );
     }
 
@@ -191,7 +234,7 @@ function validateRootFiles(failures) {
     });
 
     try {
-        let manifest = JSON.parse(readRelative('modules/nSetup/llm/ai-manifest.json'));
+        let manifest = JSON.parse(readRelative(globalGuidanceManifest));
         if (manifest.manifestSchemaVersion !== 1) {
             fail(failures, 'AI manifest manifestSchemaVersion must be 1');
         }
@@ -261,18 +304,12 @@ function validateReadmeCasing(failures) {
  */
 function validateAgentFiles(failures) {
     let rootAgentsPath = path.join(rootPath, 'AGENTS.md');
-    let globalGuidancePath = path.join(rootPath, 'modules', 'nSetup', 'llm', 'ai-enablement-index.md');
+    let globalGuidancePath = path.join(rootPath, globalGuidanceIndex);
     findAgentFiles().forEach(filePath => {
         if (filePath === rootAgentsPath) return;
 
         let relativePath = toRelative(filePath);
-        let content = fs.readFileSync(filePath, 'utf8');
-        let references = Array.from(content.matchAll(/`([^`]*(?:AGENTS\.md|nSetup\/llm\/ai-enablement-index\.md|llm\/ai-enablement-index\.md))`/g))
-            .map(match => match[1]);
-        let resolvedReferences = references.map(reference => ({
-            reference,
-            resolvedPath: path.resolve(path.dirname(filePath), reference)
-        }));
+        let resolvedReferences = resolveAgentReferences(filePath);
 
         resolvedReferences.forEach(resolvedReference => {
             if (!fs.existsSync(resolvedReference.resolvedPath)) {
@@ -283,11 +320,11 @@ function validateAgentFiles(failures) {
             }
         });
 
-        if (!resolvedReferences.some(resolvedReference => resolvedReference.resolvedPath === rootAgentsPath)) {
-            fail(failures, 'AGENTS.md must reference the root AI contract: ' + relativePath);
+        if (!canReachGuidance(filePath, rootAgentsPath)) {
+            fail(failures, 'AGENTS.md must reach the root AI contract through the AGENTS.md chain: ' + relativePath);
         }
-        if (!resolvedReferences.some(resolvedReference => resolvedReference.resolvedPath === globalGuidancePath)) {
-            fail(failures, 'AGENTS.md must reference global modules/nSetup/llm guidance: ' + relativePath);
+        if (!canReachGuidance(filePath, globalGuidancePath)) {
+            fail(failures, 'AGENTS.md must reach global ' + globalGuidanceRoot + ' guidance: ' + relativePath);
         }
     });
 }
@@ -320,6 +357,8 @@ module.exports = {
     validatePackageFiles,
     validateReadmeCasing,
     validateAgentFiles,
+    canReachGuidance,
+    resolveAgentReferences,
     findAgentFiles,
     findPackageDirectories
 };
