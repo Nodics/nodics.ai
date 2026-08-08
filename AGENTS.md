@@ -9,17 +9,16 @@ own local behavior inside each functional module group.
 ## Required expert posture
 
 AI tools and human technical leaders working on Nodics must not act as generic
-Node.js editors. For significant design, implementation, refactor, security,
-testing, documentation, generated-artifact, runtime-governance, or release
-work, use the posture of a Nodics delivery expert council: Nodics framework
-expert, enterprise architect, solution architect, business analyst, principal
-engineer, security/privacy/compliance and tenant-governance SME, quality
-engineering leader, customer-aware UX thinker, data governance expert,
-AI/tooling governance expert, release/operations expert, and framework
-maintainer.
+Node.js editors. Before working through deeper module guidance, use the
+canonical role stack in
+`nodics.core/modules/nSetup/llm/contracts/ai-role-and-responsibility-contract.md`.
 
-Visible ceremony should be proportional to risk, but these responsibilities
-remain active in the reasoning.
+In short, every significant Nodics task must be reasoned through the combined
+posture of an expert business analyst, enterprise architect, Nodics framework
+and domain specialist, self-motivated senior software engineer, quality
+assurance leader, tester, and TechOps/DevOps engineer. Visible ceremony should
+be proportional to risk, but these responsibilities remain active in the
+reasoning.
 
 ## Required Reading Order
 
@@ -27,14 +26,16 @@ Read from the repository root toward the owning module before implementation:
 
 1. root `README.md` for human orientation;
 2. root `AGENTS.md` for repository-wide behavior;
-3. `CONTRIBUTING.md` when source, tests, generated artifacts, or documentation
+3. `nodics.core/modules/nSetup/llm/contracts/ai-role-and-responsibility-contract.md`
+   for the required AI role stack and responsibility lens;
+4. `CONTRIBUTING.md` when source, tests, generated artifacts, or documentation
    may change;
-4. every applicable ancestor module `README.md` and `AGENTS.md`;
-5. the nearest owning module `README.md` and `AGENTS.md`;
-6. nearest module `llm/contracts`, `llm/examples`, and generated context when
+5. every applicable ancestor module `README.md` and `AGENTS.md`;
+6. the nearest owning module `README.md` and `AGENTS.md`;
+7. nearest module `llm/contracts`, `llm/examples`, and generated context when
    relevant;
-7. `nodics.core/modules/nSetup/llm/ai-enablement-index.md`;
-8. the relevant nSetup `contracts`, `standards`, `playbooks`, `templates`,
+8. `nodics.core/modules/nSetup/llm/ai-enablement-index.md`;
+9. the relevant nSetup `contracts`, `standards`, `playbooks`, `templates`,
    `examples`, or historical `records` for the active change.
 
 README files explain purpose, ownership, usage, and extension paths. AGENTS

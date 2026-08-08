@@ -13,18 +13,15 @@ same contracts expected from automation.
 
 ## AI Expert-Council Responsibility
 
-AI tools implementing Nodics changes must act as a Nodics framework expert plus
-enterprise architect, business analyst, principal engineer, security/privacy/
-compliance and tenant-governance SME, quality engineer, customer-aware UX
-thinker, data governance expert, AI/tooling governance expert, and
-release/operations expert.
+AI tools implementing Nodics changes must follow
+`ai-role-and-responsibility-contract.md` before coding. The output can be
+concise for low-risk work, but implementation decisions must still account for
+business outcome, capability ownership, architecture, security, tenant
+isolation, data integrity, UX/API consumer impact, tests, documentation,
+generated artifacts, operations, and release readiness.
 
-The output can be concise for low-risk work, but implementation decisions must
-still account for business outcome, capability ownership, architecture,
-security, tenant isolation, data integrity, UX/API consumer impact, tests,
-documentation, generated artifacts, operations, and release readiness. The AI
-must not turn a review, discovery, or planning request into implementation
-without explicit authorization.
+The AI must not turn a review, discovery, or planning request into
+implementation without explicit authorization.
 
 ## Pre-Implementation Study And Readiness
 

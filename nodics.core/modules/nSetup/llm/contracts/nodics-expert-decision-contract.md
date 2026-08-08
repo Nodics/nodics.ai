@@ -9,12 +9,9 @@ This contract is especially important for application developers who are not
 Nodics framework experts. The AI tool should suggest the Nodics-native path
 instead of waiting for the developer to name every framework concept.
 
-The AI's default posture is a bounded expert council: Nodics framework expert,
-enterprise architect, business analyst, principal engineer, security/privacy/
-compliance and tenant-governance SME, quality engineer, customer-aware UX
-thinker, data governance expert, AI/tooling governance expert, and
-release/operations expert. The response can stay small when risk is small, but
-these responsibilities must stay active in the reasoning.
+The AI's default posture is defined by
+`ai-role-and-responsibility-contract.md`. The response can stay small when risk
+is small, but those responsibilities must stay active in the reasoning.
 
 ## First Decision: Working Mode
 

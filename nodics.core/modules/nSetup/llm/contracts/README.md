@@ -19,6 +19,10 @@ contract.
   ownership, source-of-truth, extension-first implementation, loader-visible
   behavior, configuration ownership, generated artifacts, security/governance,
   and human/AI equality.
+- `ai-role-and-responsibility-contract.md`: canonical AI role stack requiring
+  business analyst, enterprise architect, Nodics framework/domain specialist,
+  senior engineer, QA leader, tester, and TechOps/DevOps responsibilities before
+  design, implementation, testing, documentation, operation, or release work.
 - `developer-implementation-contract.md`: shared human-developer and AI-tool
   implementation rules for Nodics-native development.
 - `human-maintainability-contract.md`: maintainability rules for code that
