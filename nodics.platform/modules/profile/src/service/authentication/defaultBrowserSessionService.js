@@ -181,6 +181,22 @@ module.exports = {
         });
     },
 
+    /**
+     * Converts a missing browser refresh session into a normal unauthenticated
+     * browser state. This can happen after a local/server restart when the
+     * browser still has cookies but the in-memory refresh cache is gone.
+     */
+    handleMissingRefreshSession: function (request, config, error) {
+        if (error && error.code === 'ERR_CACHE_00001') {
+            this.clear(request, config);
+            return {
+                restored: false,
+                reason: 'BROWSER_SESSION_UNAVAILABLE'
+            };
+        }
+        throw error;
+    },
+
     /** Starts a browser session after origin validation and token rotation. */
     start: function (request, tokens) {
         let config = this.config();
@@ -219,6 +235,8 @@ module.exports = {
                 authToken: tokens.authToken,
                 loginId: tokens.loginId
             };
+        }).catch(error => {
+            return this.handleMissingRefreshSession(request, config, error);
         });
     },
 

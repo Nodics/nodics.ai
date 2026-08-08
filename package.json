@@ -29,7 +29,8 @@
     "nodics.platform",
     "nodics.cron",
     "nodics.wcms",
-    "nodics.docs"
+    "nodics.docs",
+    "nodics.process"
   ],
   "scripts": {
     "validate:root": "node nodics.core/modules/nTooling/bin/nodics-tool.js validate:root",

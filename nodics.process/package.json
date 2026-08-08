@@ -1,0 +1,32 @@
+{
+  "name": "nodics.process",
+  "version": "0.0.1",
+  "index": "85.99",
+  "private": true,
+  "description": "Nodics business process and workflow functional module group.",
+  "main": "nodics.js",
+  "requiredModules": [],
+  "nodics": {
+    "kind": "group",
+    "extends": ["nodics.core"],
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": ["composition", "configuration", "llm"],
+    "runtime": { "router": false, "publish": false, "web": false },
+    "displayName": "Nodics Process",
+    "functionalModule": {
+      "identity": "nodics.process",
+      "displayName": "Process",
+      "type": "STANDARD",
+      "protected": false
+    }
+  },
+  "scripts": {
+    "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
+    "test:contract": "node test/processModuleContract.test.js",
+    "test": "npm run check:syntax && npm run test:contract"
+  },
+  "dependencies": {
+    "nodics.core": "file:../nodics.core"
+  }
+}

@@ -66,8 +66,13 @@ global.SERVICE = {
             return Promise.resolve({ loginId: 'admin', token });
         },
         rotateRefreshToken: request => {
-            assert.strictEqual(request.refreshToken, 'old-refresh');
+            assert(['old-refresh', 'missing-refresh'].includes(request.refreshToken));
             assert.strictEqual(request.entCode, 'enterprise-a');
+            if (request.refreshToken === 'missing-refresh') {
+                return Promise.reject(Object.assign(new Error('Cache miss'), {
+                    code: 'ERR_CACHE_00001'
+                }));
+            }
             return Promise.resolve({
                 authToken: 'new-access',
                 refreshToken: 'new-refresh',
@@ -157,6 +162,17 @@ function request(headers) {
     assert.strictEqual(restoredResult.authToken, 'new-access');
     assert.strictEqual(restoredResult.loginId, 'admin');
     assert(restored.responseHeaders['Set-Cookie'][0].includes('new-refresh'));
+
+    let missingRestore = request({
+        origin: 'https://axis.example.com',
+        cookie: 'refresh=missing-refresh; csrf=csrf-value',
+        'x-csrf-token': 'csrf-value'
+    });
+    missingRestore.entCode = 'enterprise-a';
+    let missingRestoreResult = await service.restore(missingRestore);
+    assert.strictEqual(missingRestoreResult.restored, false);
+    assert.strictEqual(missingRestoreResult.reason, 'BROWSER_SESSION_UNAVAILABLE');
+    assert(missingRestore.responseHeaders['Set-Cookie'].every(cookie => cookie.includes('Max-Age=0')));
 
     await assert.rejects(async () => service.restore(request({
         origin: 'https://axis.example.com',

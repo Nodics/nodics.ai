@@ -1,0 +1,87 @@
+# Process Module Contract
+
+`nodics.process` is the reusable functional module group for governed business
+process and workflow capability.
+
+## Business outcome
+
+Business users need to model, approve, publish, monitor, pause, retry, and
+retire operational flows without every domain module inventing its own process
+engine. Developers need one framework contract for definitions, instances,
+tasks, transitions, retries, events, and audit. Operators need visibility into
+running instances, stuck work, failed transitions, version drift, and safe
+rollback.
+
+## Boundary
+
+- Process owns reusable process definition, workflow definition, transition,
+  task, approval, instance, audit, retry, compensation, visual-designer
+  validation, and publication lifecycle.
+- Domain modules own domain commands and side effects. A workflow may call a
+  domain action through a governed adapter, but Process must not contain order,
+  payment, catalog, media, profile, telco, logistics, or customer-specific
+  business behavior.
+- Core owns low-level framework primitives. `nbpm` currently remains in Core
+  until migration is proven.
+- Axis owns only rendering and interaction. The visual graph shown in Axis is
+  an editor projection over process-owned definitions.
+
+## Functional module lifecycle
+
+1. Runtime observes `nodics.process` as an optional functional module.
+2. BackOffice exposes process navigation only when the module is registered,
+   active, live, and authorized.
+3. Axis renders Process and Workflow pages from the BackOffice navigation
+   contract.
+4. Create/update/delete operations call process-owned APIs only after those APIs
+   are implemented and authorized.
+5. A process definition moves through draft, validated, published, suspended,
+   deprecated, and archived states.
+6. A process instance records every transition with tenant, actor/service,
+   correlation, input/output summary, error, retry, and compensation evidence.
+
+## Minimum future API surface
+
+The process API should use `/nodics/process/v0/...` and keep domain actions
+behind adapters:
+
+- `GET /definitions`
+- `POST /definitions`
+- `GET /definitions/{code}`
+- `PATCH /definitions/{code}`
+- `POST /definitions/{code}/validate`
+- `POST /definitions/{code}/publish`
+- `POST /definitions/{code}/suspend`
+- `DELETE /definitions/{code}`
+- `GET /instances`
+- `GET /instances/{code}`
+- `POST /instances/{code}/retry`
+- `POST /instances/{code}/pause`
+- `POST /instances/{code}/resume`
+- `GET /tasks`
+- `POST /tasks/{code}/claim`
+- `POST /tasks/{code}/complete`
+- `POST /tasks/{code}/return`
+
+Delete is never a blind destructive operation. Draft definitions may be deleted.
+Published definitions should be archived or deprecated so running instance
+history remains explainable.
+
+## Customization
+
+Projects and partner modules customize Process by contributing:
+
+- additional node types;
+- validators;
+- adapter services for domain actions;
+- task assignment strategies;
+- escalation policies;
+- retry and compensation policies;
+- tenant restrictions;
+- import/sample definitions;
+- Axis renderer extensions when a genuinely new presentation primitive is
+  needed.
+
+Configuration belongs in layered properties. Stable lifecycle states, error
+codes, and process statuses belong in status definitions when runtime source is
+added.

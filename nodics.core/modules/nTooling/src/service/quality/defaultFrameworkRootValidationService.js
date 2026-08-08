@@ -29,7 +29,8 @@ const expectedFrameworkWorkspaces = [
     'nodics.platform',
     'nodics.cron',
     'nodics.wcms',
-    'nodics.docs'
+    'nodics.docs',
+    'nodics.process'
 ];
 
 const requiredRootFiles = [
