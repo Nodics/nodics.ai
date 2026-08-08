@@ -29,7 +29,7 @@ const definition = require('../src/service/registry/defaultFunctionalModuleCatal
 const service = Object.assign({}, definition);
 
 const batch = {
-    project: 'kickoff', environment: 'kickoffLocal', server: 'platformServer', node: null,
+    project: 'nodics.kickoff', environment: 'kickoffLocal', server: 'platformServer', node: null,
     registrations: [
         { moduleName: 'nodics.core', version: '0.0.1', functionalModule: {
             identity: 'nodics.core', displayName: 'Core', type: 'STANDARD', protected: true } },
@@ -43,13 +43,13 @@ const batch = {
         { moduleName: 'cms', parentModule: 'nodics.wcms' },
         { moduleName: 'media', parentModule: 'nodics.wcms' },
         { moduleName: 'wcms', parentModule: 'nodics.wcms' },
-        { moduleName: 'kickoff', parentModule: undefined },
-        { moduleName: 'kickoffCore', parentModule: 'kickoff' }
+        { moduleName: 'nodics.kickoff', parentModule: undefined },
+        { moduleName: 'kickoffCore', parentModule: 'nodics.kickoff' }
     ]
 };
 
 async function run() {
-    assert.deepStrictEqual(service.getQuery({ httpRequest: { query: { project: 'kickoff' } } }), { project: 'kickoff' });
+    assert.deepStrictEqual(service.getQuery({ httpRequest: { query: { project: 'nodics.kickoff' } } }), { project: 'nodics.kickoff' });
     assert.deepStrictEqual(service.getBody({ httpRequest: { body: { reason: 'approved' } } }), { reason: 'approved' });
     let observations = service.buildObservations(batch);
     assert.deepStrictEqual(observations.map(item => item.functionalModule), ['nodics.core', 'nodics.platform', 'nodics.wcms']);
@@ -57,7 +57,7 @@ async function run() {
     assert.deepStrictEqual(observations[1].technicalModules, ['backoffice', 'profile']);
     assert.deepStrictEqual(observations[2].technicalModules, ['cms', 'media', 'wcms']);
     assert.strictEqual(observations[2].required, true, 'WCMS is an Axis prerequisite and must be default-registered');
-    assert(!observations.some(item => item.functionalModule === 'kickoff'));
+    assert(!observations.some(item => item.functionalModule === 'nodics.kickoff'));
 
     let saved;
     let updated;
@@ -72,7 +72,7 @@ async function run() {
     assert.strictEqual(first.registrationState, 'REGISTERED');
     assert.strictEqual(first.catalogueRevision, 1);
     assert.strictEqual(first.required, true);
-    assert.strictEqual(first.code, 'kickoff::nodics.core');
+    assert.strictEqual(first.code, 'nodics.kickoff::nodics.core');
 
     existing = Object.assign({}, first, { registeredAt: new Date('2026-01-01T00:00:00Z') });
     saved = undefined;
@@ -82,15 +82,15 @@ async function run() {
     assert.strictEqual(renewed.catalogueRevision, 1, 'unchanged restart must not advance catalogue revision');
     assert.strictEqual(renewed.registeredAt.toISOString(), '2026-01-01T00:00:00.000Z');
 
-    let requiredRequest = { body: { project: 'kickoff', expectedRevision: 1, reason: 'not allowed' },
+    let requiredRequest = { body: { project: 'nodics.kickoff', expectedRevision: 1, reason: 'not allowed' },
         params: { functionalModule: 'nodics.core' }, authData: { tokenType: 'access', principalId: 'admin' } };
     await assert.rejects(() => service.deactivate(requiredRequest), /Required functional module/);
 
-    existing = Object.assign({}, first, { code: 'kickoff::nodics.workflow', functionalModule: 'nodics.workflow',
+    existing = Object.assign({}, first, { code: 'nodics.kickoff::nodics.workflow', functionalModule: 'nodics.workflow',
         displayName: 'Workflow', required: false, registrationState: 'AVAILABLE', enabled: false,
         runtimeState: 'ACTIVE', catalogueRevision: 1 });
     updated = undefined;
-    let optionalRequest = { body: { project: 'kickoff', expectedRevision: 1, reason: 'approved for project' },
+    let optionalRequest = { body: { project: 'nodics.kickoff', expectedRevision: 1, reason: 'approved for project' },
         params: { functionalModule: 'nodics.workflow' }, authData: { tokenType: 'access', principalId: 'admin' } };
     let registered = await service.register(optionalRequest);
     assert.strictEqual(registered.data.registrationState, 'REGISTERED');
