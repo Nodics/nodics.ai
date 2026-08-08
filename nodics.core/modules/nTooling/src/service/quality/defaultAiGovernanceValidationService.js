@@ -34,7 +34,6 @@ const ignoredDirectories = new Set([
 const requiredRootFiles = [
     'AGENTS.md',
     'CLAUDE.md',
-    'CONVENTIONS.md',
     '.github/copilot-instructions.md',
     '.cursor/rules/nodics-core.mdc',
     'modules/nSetup/llm/ai-enablement-index.md',
@@ -179,7 +178,6 @@ function validateRootFiles(failures) {
 
     [
         'CLAUDE.md',
-        'CONVENTIONS.md',
         '.github/copilot-instructions.md',
         '.cursor/rules/nodics-core.mdc'
     ].forEach(relativePath => {

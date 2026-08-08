@@ -1,7 +1,11 @@
 # Nodics Tool Conventions
 
-This file is a thin tool bridge. It does not replace or duplicate canonical
-Nodics guidance.
+This file is a reusable tool-bridge template. It does not replace or duplicate
+canonical Nodics guidance.
+
+When a tool or downstream project explicitly needs a `CONVENTIONS.md` bridge,
+copy this template to that tool's expected discovery location and keep it thin.
+Do not make it a second source of truth.
 
 Follow root `AGENTS.md`, then preserve root-to-leaf AGENTS.md guidance through
 the applicable root-to-module `AGENTS.md` chain.

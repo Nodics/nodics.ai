@@ -19,9 +19,11 @@
     "promptsDirectory": "modules/nSetup/llm/prompts",
     "toolBridges": [
         "CLAUDE.md",
-        "CONVENTIONS.md",
         ".github/copilot-instructions.md",
         ".cursor/rules/nodics-core.mdc"
+    ],
+    "toolBridgeTemplates": [
+        "templates/tool-bridges/CONVENTIONS.md"
     ],
     "requiredPreCommitChecks": [
         "npm run ai:validate",
