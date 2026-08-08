@@ -107,6 +107,14 @@ Nodics guidance is organized around how a developer experiences the platform:
 That perspective must stay aligned with current source code, security, runtime
 governance, and generated LLM context.
 
+## AI Coding And Customization Contract
+
+Before writing source code, developers and AI tools must follow
+`ai-coding-and-customization-contract.md`. It is the canonical coding-specific
+contract for export-friendly JavaScript, artifact placement, configuration
+ownership, status definitions, source headers, file/function documentation,
+formatting, generated artifacts, and default plus customization proof.
+
 ## Implementation Decision Order
 
 Before adding or changing behavior, identify the smallest owned layer that can

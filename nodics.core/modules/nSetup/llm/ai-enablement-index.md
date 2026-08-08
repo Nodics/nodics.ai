@@ -23,15 +23,18 @@ Always read:
 1. root `README.md`
 2. root `AGENTS.md`
 3. `contracts/ai-role-and-responsibility-contract.md`
-4. `CONTRIBUTING.md` when implementation, tests, generated artifacts, or
+4. `contracts/ai-coding-and-customization-contract.md` when source code,
+   generated artifacts, module structure, configuration, status definitions, or
+   tests may change
+5. `CONTRIBUTING.md` when implementation, tests, generated artifacts, or
    documentation may change
-5. every applicable ancestor module `README.md` and `AGENTS.md` from root to
+6. every applicable ancestor module `README.md` and `AGENTS.md` from root to
    the target
-6. nearest owning module `README.md` and `AGENTS.md`
-7. nearest module `llm/contracts` and `llm/examples` when relevant
-8. `modules/nSetup/llm/ai-enablement-index.md`
-9. `playbooks/daily-change-checklist.md`
-10. the affected module's `llm/generated/module-context.md` when available
+7. nearest owning module `README.md` and `AGENTS.md`
+8. nearest module `llm/contracts` and `llm/examples` when relevant
+9. `modules/nSetup/llm/ai-enablement-index.md`
+10. `playbooks/daily-change-checklist.md`
+11. the affected module's `llm/generated/module-context.md` when available
 
 README files explain capability purpose, usage, and extension paths. AGENTS
 files govern contributor and AI-tool behavior. `llm/contracts` specify exact
@@ -67,40 +70,41 @@ Load detailed files only when their subject is affected:
 
 1. `contracts/nodics-principles.md`
 2. `contracts/ai-role-and-responsibility-contract.md`
-3. `contracts/developer-implementation-contract.md`
-4. `contracts/human-maintainability-contract.md`
-5. `contracts/nodics-expert-decision-contract.md`
-6. `contracts/module-structure-contract.md`
-7. `contracts/module-group-participation-contract.md`
-8. `contracts/integration-governance-contract.md`
-9. `contracts/documentation-impact-contract.md`
-10. `contracts/testing-and-release-contract.md`
-11. `contracts/customer-project-mode-contract.md`
-12. `nodics-principles.md` compatibility pointer
-13. `standards/modular-architecture.md`
-14. `standards/module-catalog.md`
-15. `standards/artifact-definition-and-change-guide.md`
-16. `standards/schema-and-generation.md`
-17. `standards/tenant-model-and-runtime-isolation.md`
-18. `standards/versioned-data-and-publish-lifecycle.md`
-19. `playbooks/testing-playbook.md`
-20. `standards/module-standard.md`
-21. `standards/code-documentation-standard.md`
-22. `standards/nodics-structure-matrix.md`
-23. `playbooks/feature-process.md`
-24. `templates/documentation-page-template.md`
-25. `prompts/base-nodics-assistant-prompt.md`
-26. `prompts/enterprise-architecture-quality-prompt.md`
-27. `prompts/README.md`
-28. `prompts/review-prompt.md`
-29. `prompts/refactor-prompt.md`
-30. `prompts/testing-prompt.md`
-31. `prompts/schema-change-prompt.md`
-32. `prompts/runtime-governance-prompt.md`
-33. `memory/README.md`
-34. `memory/decisions.md`
-35. `standards/module-generation-guide.md`
-36. `examples/README.md`
+3. `contracts/ai-coding-and-customization-contract.md`
+4. `contracts/developer-implementation-contract.md`
+5. `contracts/human-maintainability-contract.md`
+6. `contracts/nodics-expert-decision-contract.md`
+7. `contracts/module-structure-contract.md`
+8. `contracts/module-group-participation-contract.md`
+9. `contracts/integration-governance-contract.md`
+10. `contracts/documentation-impact-contract.md`
+11. `contracts/testing-and-release-contract.md`
+12. `contracts/customer-project-mode-contract.md`
+13. `nodics-principles.md` compatibility pointer
+14. `standards/modular-architecture.md`
+15. `standards/module-catalog.md`
+16. `standards/artifact-definition-and-change-guide.md`
+17. `standards/schema-and-generation.md`
+18. `standards/tenant-model-and-runtime-isolation.md`
+19. `standards/versioned-data-and-publish-lifecycle.md`
+20. `playbooks/testing-playbook.md`
+21. `standards/module-standard.md`
+22. `standards/code-documentation-standard.md`
+23. `standards/nodics-structure-matrix.md`
+24. `playbooks/feature-process.md`
+25. `templates/documentation-page-template.md`
+26. `prompts/base-nodics-assistant-prompt.md`
+27. `prompts/enterprise-architecture-quality-prompt.md`
+28. `prompts/README.md`
+29. `prompts/review-prompt.md`
+30. `prompts/refactor-prompt.md`
+31. `prompts/testing-prompt.md`
+32. `prompts/schema-change-prompt.md`
+33. `prompts/runtime-governance-prompt.md`
+34. `memory/README.md`
+35. `memory/decisions.md`
+36. `standards/module-generation-guide.md`
+37. `examples/README.md`
 
 Load `playbooks/change-gate-contract.md` only at commit, merge/release, periodic-audit, or
 explicit comprehensive-review time. Canonical rules should be referenced rather

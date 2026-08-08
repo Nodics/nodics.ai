@@ -6,6 +6,8 @@ Use this file as the first LLM/developer navigation contract when working
 inside the Nodics framework repository. Module-specific `AGENTS.md` files still
 own local behavior inside each functional module group.
 
+Core rule: capabilities are sacred, implementations are negotiable.
+
 ## Required expert posture
 
 AI tools and human technical leaders working on Nodics must not act as generic
@@ -14,11 +16,11 @@ canonical role stack in
 `nodics.core/modules/nSetup/llm/contracts/ai-role-and-responsibility-contract.md`.
 
 In short, every significant Nodics task must be reasoned through the combined
-posture of an expert business analyst, enterprise architect, Nodics framework
-and domain specialist, self-motivated senior software engineer, quality
-assurance leader, tester, and TechOps/DevOps engineer. Visible ceremony should
-be proportional to risk, but these responsibilities remain active in the
-reasoning.
+posture of a Nodics delivery expert council: expert business analyst,
+enterprise architect, Nodics framework and domain specialist, self-motivated
+senior software engineer, quality assurance leader, tester, and TechOps/DevOps
+engineer. Visible ceremony should be proportional to risk, but these
+responsibilities remain active in the reasoning.
 
 ## Required Reading Order
 
@@ -28,14 +30,17 @@ Read from the repository root toward the owning module before implementation:
 2. root `AGENTS.md` for repository-wide behavior;
 3. `nodics.core/modules/nSetup/llm/contracts/ai-role-and-responsibility-contract.md`
    for the required AI role stack and responsibility lens;
-4. `CONTRIBUTING.md` when source, tests, generated artifacts, or documentation
+4. `nodics.core/modules/nSetup/llm/contracts/ai-coding-and-customization-contract.md`
+   when source code, generated artifacts, module structure, configuration,
+   status definitions, or tests may change;
+5. `CONTRIBUTING.md` when source, tests, generated artifacts, or documentation
    may change;
-5. every applicable ancestor module `README.md` and `AGENTS.md`;
-6. the nearest owning module `README.md` and `AGENTS.md`;
-7. nearest module `llm/contracts`, `llm/examples`, and generated context when
+6. every applicable ancestor module `README.md` and `AGENTS.md`;
+7. the nearest owning module `README.md` and `AGENTS.md`;
+8. nearest module `llm/contracts`, `llm/examples`, and generated context when
    relevant;
-8. `nodics.core/modules/nSetup/llm/ai-enablement-index.md`;
-9. the relevant nSetup `contracts`, `standards`, `playbooks`, `templates`,
+9. `nodics.core/modules/nSetup/llm/ai-enablement-index.md`;
+10. the relevant nSetup `contracts`, `standards`, `playbooks`, `templates`,
    `examples`, or historical `records` for the active change.
 
 README files explain purpose, ownership, usage, and extension paths. AGENTS
@@ -144,6 +149,8 @@ impact, assumptions, contradictions, intended files, and validation route.
 - Use permanent contracts and standards under `nodics.core/modules/nSetup/llm/`
   before broad source movement, runtime loader changes,
   dependency-resolution changes, or module skeleton changes.
+- Apply the documentation impact contract before creating, restructuring,
+  reducing, migrating, or generating documentation.
 - Treat `nodics.core/modules/nSetup/llm/records/phase0/` as historical
   modularization traceability. Do not add new permanent coding rules there.
 
@@ -151,6 +158,16 @@ impact, assumptions, contradictions, intended files, and validation route.
 
 - Before changing code, identify the active module boundary and nearest
   `AGENTS.md`.
+- Follow the standard module shape for every module-shaped package unless a
+  documented module contract explicitly allows an exception.
+- In customer/project module work, customize through the customer/project
+  module, environment, server, node, tenant, provider, or runtime-governance
+  layer before proposing framework source edits.
+- Before writing source code, follow
+  `nodics.core/modules/nSetup/llm/contracts/ai-coding-and-customization-contract.md`.
+  Code must be loader-visible, export-friendly, properly placed, documented,
+  formatted, configuration-first, status-definition aware, and proven through
+  default plus customization evidence where applicable.
 - Apply reuse first: reuse an existing Nodics capability, then customize or
   extend through the layered module hierarchy, and create a new capability only
   after proving existing authorities are insufficient.

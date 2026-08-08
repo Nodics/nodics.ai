@@ -23,6 +23,10 @@ contract.
   business analyst, enterprise architect, Nodics framework/domain specialist,
   senior engineer, QA leader, tester, and TechOps/DevOps responsibilities before
   design, implementation, testing, documentation, operation, or release work.
+- `ai-coding-and-customization-contract.md`: canonical AI coding rules for
+  reuse-first implementation, export-friendly JavaScript, artifact placement,
+  configuration-first behavior, status definitions, file/function
+  documentation, formatting, generated artifacts, and customization evidence.
 - `developer-implementation-contract.md`: shared human-developer and AI-tool
   implementation rules for Nodics-native development.
 - `human-maintainability-contract.md`: maintainability rules for code that
