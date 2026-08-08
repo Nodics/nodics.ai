@@ -196,6 +196,103 @@ a later layer, and only create a new implementation when the existing contract
 cannot satisfy the requirement. That avoids duplicate authority paths and makes
 future framework upgrades more realistic.
 
+## Architecture decision guide
+
+When a requirement arrives, do not begin with a file name. Begin with the
+owner. The following decision guide keeps the architecture understandable for
+business users, developers, operators, and AI tools.
+
+```mermaid
+flowchart TD
+  Requirement["New requirement"] --> Business["Is it a business capability?"]
+  Business -->|Used across projects| Framework["Framework functional module"]
+  Business -->|Customer-specific| Project["Customer project or extension module"]
+  Business -->|Browser rendering only| Axis["nodics.axis renderer"]
+  Framework --> Owner["Choose Core, Platform, WCMS, Cron, Docs, or future module"]
+  Project --> Extends["Extend framework module without renaming identity"]
+  Axis --> Backend["Confirm backend-owned contract already exists"]
+  Owner --> Technical["Place code in the owning technical module"]
+  Extends --> Runtime["Load later through runtime extends"]
+  Backend --> Renderer["Render authorized metadata only"]
+```
+
+Use these questions:
+
+1. Is the behavior reusable framework behavior or customer-specific behavior?
+2. Is it backend authority, frontend presentation, documentation content, or
+   operational topology?
+3. Which functional module owns the business capability?
+4. Which technical module owns the implementation details?
+5. Which runtime server loads the owner?
+6. Which later-loaded module may customize it?
+7. Which tests prove default behavior and customization behavior?
+
+If those answers are not clear, pause before coding. A small pause here
+prevents months of cleanup later.
+
+## Example: customer customizes Platform without renaming Platform
+
+Suppose a partner wants to customize employee onboarding rules. The business
+capability remains Platform/Profile. Axis should still display Platform, not a
+new customer-branded functional module name, because the partner is extending
+the standard capability rather than creating a separate business capability.
+
+A future customer module could load like this:
+
+```text
+nodics.core
+nodics.platform
+customer.platform
+customer project
+environment module
+server module
+```
+
+The important distinction is identity versus implementation. The functional
+module identity remains `nodics.platform`; the implementation may be extended
+or overridden by later modules according to the runtime load order. This keeps
+business navigation, registry state, documentation, and API discovery stable
+while allowing project-specific behavior.
+
+## Example: why Axis does not own documentation data
+
+Axis is the browser renderer. It can own React components, route handling,
+recovery screens, and renderer mappings in the frontend. It must not own
+backend-importable CMS sites, content catalogs, pages, components, routes, or
+documentation content records.
+
+The correct ownership is:
+
+| Content type | Owner |
+| --- | --- |
+| Framework documentation | `nodics.docs` |
+| Axis product documentation | `nodics.platform/modules/axis` |
+| Customer project documentation | customer project, such as the reference project |
+| Browser renderer code | `nodics.axis` |
+
+This is not bureaucracy. It prevents the frontend from becoming a hidden
+database seed repository. If a partner replaces Axis later, the backend-owned
+content remains valid. If a documentation pack changes, the import manifest
+and WCMS delivery contract remain the authority.
+
+## Operator example: same capability, different topology
+
+In a local demo, Platform, WCMS, Cron, MongoDB, and Axis may all run on one
+developer machine. In production, the same capabilities may be split across
+different processes, containers, nodes, or networks. The architecture must
+survive that change.
+
+| Local concern | Production concern | Stable Nodics contract |
+| --- | --- | --- |
+| One terminal starts Platform. | Multiple Platform nodes may serve BackOffice APIs. | Platform owns Profile, BackOffice, registry, and API discovery. |
+| WCMS runs on port `4310`. | WCMS may scale separately with cache/search/storage. | WCMS owns content, routes, media, and documentation delivery. |
+| Cron runs only when testing. | Cron may run on controlled scheduler nodes. | Cron owns scheduled job lifecycle and execution evidence. |
+| Axis runs through Vite. | Axis may be built and hosted separately. | Axis renders backend-owned capability contracts. |
+
+The module identity does not change just because topology changes. That is why
+runtime `extends`, service load order, registration state, and deployment
+topology must be discussed separately.
+
 ## Common mistakes
 
 - Copying Core, Platform, or WCMS source into a customer project.

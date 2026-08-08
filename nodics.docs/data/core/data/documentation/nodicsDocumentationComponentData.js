@@ -81,7 +81,7 @@ module.exports = {
             "operator"
           ],
           "summary": "How functional modules, technical modules, runtime servers, and customer projects fit together.",
-          "searchText": "Modular architecture and ownership How functional modules, technical modules, runtime servers, and customer projects fit together. # Modular architecture and ownership\n\nNodics is organized around ownership. Every meaningful behavior should have a\ncapability owner, and every runtime server should load an explicit chain of\nmodules. This is what lets a local reference project stay small while the same\nframework can later support larger distributed deployments.\n\n## What this is\n\nThe modular architecture defines how framework modules, functional module\ngroups, customer projects, environment modules, server modules, and services\nfit together. It prevents the common failure where code is placed wherever it\nfirst works and nobody can later tell which component owns the behavior.\n\n## Functional modules and technical modules\n\nA functional module is the business-facing capability identity. Examples are\n`nodics.core`, `nodics.platform`, `nodics.wcms`, and `nodics.cron`. Axis and\nBackOffice talk about these capabilities at this level because business users\ndo not need to manage every internal technical module.\n\nA technical module is an implementation unit inside a functional module group.\nFor example, Core contains many technical modules for configuration, data,\nservices, routing, validation, cache, and system behavior. Those modules are\nimportant to developers, but they should not flood the module registry user\nexperience unless a business capability genuinely needs to expose them.\n\n## Runtime server composition\n\nRepository dependencies only make code available. Runtime `extends`\nconfiguration decides what actually loads. A Platform server normally loads\nCore first, Platform second, then project and environment/server modules. A\nWCMS server loads Core, WCMS, and project modules. A Cron server loads Core,\nCron, and project modules.\n\nThe order matters because service override and merge behavior follow runtime\nload order and module indexes. Module hierarchy describes functional\navailability; service precedence describes which implementation wins at\nruntime. These are related but different concepts.\n\n## Customer projects\n\nCustomer projects live outside `nodics.ai`. The reference project is\n`nodics.kickoff`. It shows how a project can compose framework modules, provide\nlocal environment configuration, add project modules, and contribute\nproject-owned documentation without copying framework source.\n\nA future customer extension module such as `kickoff.platform` may customize\nPlatform behavior. That does not rename the functional capability. BackOffice\nand Axis should still present Platform as Platform unless the customer\nintentionally exposes a separate functional module.\n\n## Ownership boundaries\n\n- Framework source belongs in `nodics.ai`.\n- Framework documentation content belongs in `nodics.docs`.\n- Axis product documentation belongs in `nodics.platform/modules/axis`.\n- Customer documentation belongs in the owning customer project.\n- Browser renderers belong in `nodics.axis`.\n- CMS records that are imported into a database must be owned by backend\n  modules or backend projects, never the frontend repository.\n\n## Current capability map\n\nUse this map when deciding where new code, data, or documentation should live.\n\n| Capability | Repository or module owner | Runtime role | Documentation owner |\n| --- | --- | --- | --- |\n| Core framework | `nodics.ai/nodics.core` | Mandatory base for every runtime server | `nodics.docs` |\n| Platform and profile | `nodics.ai/nodics.platform` | Platform server capability for user onboarding, authentication, and registry-facing services | `nodics.docs` for framework behavior; `nodics.platform/modules/axis` for Axis product behavior |\n| Axis backend content | `nodics.ai/nodics.platform/modules/axis` | Backend-owned CMS records that allow the Axis frontend to render product documentation and shell experience | `nodics.platform/modules/axis` |\n| WCMS | `nodics.ai/nodics.wcms` | Content management runtime for sites, catalogs, pages, components, routes, and renderable content | `nodics.docs` |\n| Media | `nodics.ai/nodics.wcms/modules/media` | Governed media and asset lifecycle used by content experiences | `nodics.docs` |\n| Cron | `nodics.ai/nodics.cron` | Optional scheduled-job runtime capability | `nodics.docs` |\n| Framework documentation | `nodics.ai/nodics.docs` | Backend content pack imported into WCMS; not a UI renderer | `nodics.docs` |\n| Axis frontend | `nodics.axis` | Browser renderer for BackOffice, WCMS, docs, and module-owned capabilities | `nodics.platform/modules/axis` for product docs |\n| Kickoff reference project | `nodics.kickoff` | Customer-style project that composes framework servers locally | `nodics.kickoff` |\n\nThe key rule is simple: a frontend may render content, but it should not own\ndatabase-importable content. If a page, component, catalog, route, or\ndocumentation record is imported into WCMS, it must be shipped by the backend\nmodule or project that owns that content.\n\n## Runtime composition diagram\n\n```mermaid\nflowchart TD\n  Core[\"nodics.core<br/>mandatory framework foundation\"]\n  Platform[\"nodics.platform<br/>profile, backoffice, axis backend data\"]\n  WCMS[\"nodics.wcms<br/>cms, media, content delivery\"]\n  Cron[\"nodics.cron<br/>cronjob runtime\"]\n  Kickoff[\"nodics.kickoff<br/>customer/reference project\"]\n  PlatformServer[\"kickoffLocal/platformServer\"]\n  WcmsServer[\"kickoffLocal/wcmsServer\"]\n  CronServer[\"kickoffLocal/cronServer\"]\n\n  Core --> Platform\n  Core --> WCMS\n  Core --> Cron\n  Platform --> Kickoff\n  WCMS --> Kickoff\n  Cron --> Kickoff\n  Kickoff --> PlatformServer\n  Kickoff --> WcmsServer\n  Kickoff --> CronServer\n```\n\nThis picture shows the concept, not a Git repository dependency tree. The\nimportant idea is that each server loads an effective runtime graph. A server\ndoes not load every module in the workspace just because the files exist. It\nloads the modules that are part of its configured extension chain.\n\n## Beginner reading path\n\nFor a beginner, read the architecture in two passes. First, ignore every\ntechnical module and look only at the functional module chain: Core gives the\nbase framework, Platform gives identity and BackOffice, WCMS gives content,\nCron gives scheduled work, and Kickoff composes those capabilities for a local\nproject. That view explains what is available.\n\nSecond, look at runtime order. Runtime order explains which service\nimplementation wins when more than one module contributes the same service,\nrouter, schema, or configuration. A beginner mistake is to assume that a parent\nfolder or package dependency controls behavior. In Nodics, installed packages\nonly make code reachable; the active server graph decides what is loaded.\n\n## Module hierarchy versus service precedence\n\nTwo ideas are easy to mix together:\n\n| Concept | What it answers | Example |\n| --- | --- | --- |\n| Functional module hierarchy | Which capability is available? | A WCMS server has the `nodics.wcms` capability, which itself depends on Core. |\n| Service precedence | Which implementation wins at runtime? | If a customer module overrides a service after Platform loads, the later module implementation wins for that runtime. |\n\nFunctional hierarchy is about capability identity. Service precedence is about\nruntime execution order. That is why a customer extension such as\n`kickoff.platform` may customize Platform behavior while the functional module\nname remains `nodics.platform` in Axis and BackOffice.\n\n## Why `extends` is the right word\n\n`extends` makes the architecture readable because a later module builds on an\nearlier module. It does not mean every file is copied. It means the later\nmodule participates in the same runtime composition and can add configuration,\nservices, routers, schema records, import data, tests, and documentation.\n\nFor example:\n\n```text\nplatformServer\n  extends kickoff project modules\n    extends nodics.platform\n      extends nodics.core\n```\n\nThe exact physical folders can change. A customer may keep framework source in\none checkout and the customer project somewhere else. The contract is the\nruntime graph, not the parent directory name on one developer machine.\n\n## DevOps and operator view\n\nDevOps teams should treat the server graph as deployment evidence. A production\nPlatform server, WCMS server, or Cron server should declare exactly which\nfunctional modules and customer layers are active, which ports and database\nnames it uses, and which properties are inherited versus overridden. That makes\nrollback and support much safer: an operator can compare two runtime graphs\nwithout reading every source file.\n\nWhen production incidents happen, the first question is usually not “which Git\nrepository changed?” It is “which runtime process loaded which module chain\nwith which effective properties?” Modular architecture gives support teams a\nshared language for that investigation.\n\n## Documentation ownership matrix\n\nDocumentation is also modular. It should not become another ungoverned bucket.\n\n| Documentation topic | Source owner | Why |\n| --- | --- | --- |\n| Framework vision, architecture, Core, Platform, WCMS, Cron | `nodics.docs` | This content explains reusable framework behavior. |\n| Axis product behavior, renderers, shell, login, schema workbench | `nodics.platform/modules/axis` | Axis backend module owns Axis-specific CMS records and product docs. |\n| Kickoff local setup and reference customization | `nodics.kickoff` | Kickoff is a customer-style project and must teach customers where project-owned content lives. |\n| Customer-specific module guides | Customer project or customer extension module | Customer data must not be hidden inside framework repositories. |\n\nWhen Axis displays “Framework,” “Swaggers,” “Nodics Axis,” and “Nodics\nKickoff,” that is a frontend navigation decision. It does not mean all content\ncomes from one repository. Each backend owner contributes its governed content\npack.\n\n## Business value\n\nThis architecture helps teams customize without forking. It also supports\nclearer cost control: teams can reuse a capability, configure it, extend it in\na later layer, and only create a new implementation when the existing contract\ncannot satisfy the requirement. That avoids duplicate authority paths and makes\nfuture framework upgrades more realistic.\n\n## Common mistakes\n\n- Copying Core, Platform, or WCMS source into a customer project.\n- Treating a server as the owner of a capability.\n- Exposing every technical module as a business registry item.\n- Putting CMS import data into `nodics.axis`.\n- Renaming a standard functional module because a customer customizes it.\n\n## Next actions\n\nAfter this page, read the local quick start and customization guide. Those\npages show how the architecture becomes concrete commands, files, and project\nrules.\n"
+          "searchText": "Modular architecture and ownership How functional modules, technical modules, runtime servers, and customer projects fit together. # Modular architecture and ownership\n\nNodics is organized around ownership. Every meaningful behavior should have a\ncapability owner, and every runtime server should load an explicit chain of\nmodules. This is what lets a local reference project stay small while the same\nframework can later support larger distributed deployments.\n\n## What this is\n\nThe modular architecture defines how framework modules, functional module\ngroups, customer projects, environment modules, server modules, and services\nfit together. It prevents the common failure where code is placed wherever it\nfirst works and nobody can later tell which component owns the behavior.\n\n## Functional modules and technical modules\n\nA functional module is the business-facing capability identity. Examples are\n`nodics.core`, `nodics.platform`, `nodics.wcms`, and `nodics.cron`. Axis and\nBackOffice talk about these capabilities at this level because business users\ndo not need to manage every internal technical module.\n\nA technical module is an implementation unit inside a functional module group.\nFor example, Core contains many technical modules for configuration, data,\nservices, routing, validation, cache, and system behavior. Those modules are\nimportant to developers, but they should not flood the module registry user\nexperience unless a business capability genuinely needs to expose them.\n\n## Runtime server composition\n\nRepository dependencies only make code available. Runtime `extends`\nconfiguration decides what actually loads. A Platform server normally loads\nCore first, Platform second, then project and environment/server modules. A\nWCMS server loads Core, WCMS, and project modules. A Cron server loads Core,\nCron, and project modules.\n\nThe order matters because service override and merge behavior follow runtime\nload order and module indexes. Module hierarchy describes functional\navailability; service precedence describes which implementation wins at\nruntime. These are related but different concepts.\n\n## Customer projects\n\nCustomer projects live outside `nodics.ai`. The reference project is\n`nodics.kickoff`. It shows how a project can compose framework modules, provide\nlocal environment configuration, add project modules, and contribute\nproject-owned documentation without copying framework source.\n\nA future customer extension module such as `kickoff.platform` may customize\nPlatform behavior. That does not rename the functional capability. BackOffice\nand Axis should still present Platform as Platform unless the customer\nintentionally exposes a separate functional module.\n\n## Ownership boundaries\n\n- Framework source belongs in `nodics.ai`.\n- Framework documentation content belongs in `nodics.docs`.\n- Axis product documentation belongs in `nodics.platform/modules/axis`.\n- Customer documentation belongs in the owning customer project.\n- Browser renderers belong in `nodics.axis`.\n- CMS records that are imported into a database must be owned by backend\n  modules or backend projects, never the frontend repository.\n\n## Current capability map\n\nUse this map when deciding where new code, data, or documentation should live.\n\n| Capability | Repository or module owner | Runtime role | Documentation owner |\n| --- | --- | --- | --- |\n| Core framework | `nodics.ai/nodics.core` | Mandatory base for every runtime server | `nodics.docs` |\n| Platform and profile | `nodics.ai/nodics.platform` | Platform server capability for user onboarding, authentication, and registry-facing services | `nodics.docs` for framework behavior; `nodics.platform/modules/axis` for Axis product behavior |\n| Axis backend content | `nodics.ai/nodics.platform/modules/axis` | Backend-owned CMS records that allow the Axis frontend to render product documentation and shell experience | `nodics.platform/modules/axis` |\n| WCMS | `nodics.ai/nodics.wcms` | Content management runtime for sites, catalogs, pages, components, routes, and renderable content | `nodics.docs` |\n| Media | `nodics.ai/nodics.wcms/modules/media` | Governed media and asset lifecycle used by content experiences | `nodics.docs` |\n| Cron | `nodics.ai/nodics.cron` | Optional scheduled-job runtime capability | `nodics.docs` |\n| Framework documentation | `nodics.ai/nodics.docs` | Backend content pack imported into WCMS; not a UI renderer | `nodics.docs` |\n| Axis frontend | `nodics.axis` | Browser renderer for BackOffice, WCMS, docs, and module-owned capabilities | `nodics.platform/modules/axis` for product docs |\n| Kickoff reference project | `nodics.kickoff` | Customer-style project that composes framework servers locally | `nodics.kickoff` |\n\nThe key rule is simple: a frontend may render content, but it should not own\ndatabase-importable content. If a page, component, catalog, route, or\ndocumentation record is imported into WCMS, it must be shipped by the backend\nmodule or project that owns that content.\n\n## Runtime composition diagram\n\n```mermaid\nflowchart TD\n  Core[\"nodics.core<br/>mandatory framework foundation\"]\n  Platform[\"nodics.platform<br/>profile, backoffice, axis backend data\"]\n  WCMS[\"nodics.wcms<br/>cms, media, content delivery\"]\n  Cron[\"nodics.cron<br/>cronjob runtime\"]\n  Kickoff[\"nodics.kickoff<br/>customer/reference project\"]\n  PlatformServer[\"kickoffLocal/platformServer\"]\n  WcmsServer[\"kickoffLocal/wcmsServer\"]\n  CronServer[\"kickoffLocal/cronServer\"]\n\n  Core --> Platform\n  Core --> WCMS\n  Core --> Cron\n  Platform --> Kickoff\n  WCMS --> Kickoff\n  Cron --> Kickoff\n  Kickoff --> PlatformServer\n  Kickoff --> WcmsServer\n  Kickoff --> CronServer\n```\n\nThis picture shows the concept, not a Git repository dependency tree. The\nimportant idea is that each server loads an effective runtime graph. A server\ndoes not load every module in the workspace just because the files exist. It\nloads the modules that are part of its configured extension chain.\n\n## Beginner reading path\n\nFor a beginner, read the architecture in two passes. First, ignore every\ntechnical module and look only at the functional module chain: Core gives the\nbase framework, Platform gives identity and BackOffice, WCMS gives content,\nCron gives scheduled work, and Kickoff composes those capabilities for a local\nproject. That view explains what is available.\n\nSecond, look at runtime order. Runtime order explains which service\nimplementation wins when more than one module contributes the same service,\nrouter, schema, or configuration. A beginner mistake is to assume that a parent\nfolder or package dependency controls behavior. In Nodics, installed packages\nonly make code reachable; the active server graph decides what is loaded.\n\n## Module hierarchy versus service precedence\n\nTwo ideas are easy to mix together:\n\n| Concept | What it answers | Example |\n| --- | --- | --- |\n| Functional module hierarchy | Which capability is available? | A WCMS server has the `nodics.wcms` capability, which itself depends on Core. |\n| Service precedence | Which implementation wins at runtime? | If a customer module overrides a service after Platform loads, the later module implementation wins for that runtime. |\n\nFunctional hierarchy is about capability identity. Service precedence is about\nruntime execution order. That is why a customer extension such as\n`kickoff.platform` may customize Platform behavior while the functional module\nname remains `nodics.platform` in Axis and BackOffice.\n\n## Why `extends` is the right word\n\n`extends` makes the architecture readable because a later module builds on an\nearlier module. It does not mean every file is copied. It means the later\nmodule participates in the same runtime composition and can add configuration,\nservices, routers, schema records, import data, tests, and documentation.\n\nFor example:\n\n```text\nplatformServer\n  extends kickoff project modules\n    extends nodics.platform\n      extends nodics.core\n```\n\nThe exact physical folders can change. A customer may keep framework source in\none checkout and the customer project somewhere else. The contract is the\nruntime graph, not the parent directory name on one developer machine.\n\n## DevOps and operator view\n\nDevOps teams should treat the server graph as deployment evidence. A production\nPlatform server, WCMS server, or Cron server should declare exactly which\nfunctional modules and customer layers are active, which ports and database\nnames it uses, and which properties are inherited versus overridden. That makes\nrollback and support much safer: an operator can compare two runtime graphs\nwithout reading every source file.\n\nWhen production incidents happen, the first question is usually not “which Git\nrepository changed?” It is “which runtime process loaded which module chain\nwith which effective properties?” Modular architecture gives support teams a\nshared language for that investigation.\n\n## Documentation ownership matrix\n\nDocumentation is also modular. It should not become another ungoverned bucket.\n\n| Documentation topic | Source owner | Why |\n| --- | --- | --- |\n| Framework vision, architecture, Core, Platform, WCMS, Cron | `nodics.docs` | This content explains reusable framework behavior. |\n| Axis product behavior, renderers, shell, login, schema workbench | `nodics.platform/modules/axis` | Axis backend module owns Axis-specific CMS records and product docs. |\n| Kickoff local setup and reference customization | `nodics.kickoff` | Kickoff is a customer-style project and must teach customers where project-owned content lives. |\n| Customer-specific module guides | Customer project or customer extension module | Customer data must not be hidden inside framework repositories. |\n\nWhen Axis displays “Framework,” “Swaggers,” “Nodics Axis,” and “Nodics\nKickoff,” that is a frontend navigation decision. It does not mean all content\ncomes from one repository. Each backend owner contributes its governed content\npack.\n\n## Business value\n\nThis architecture helps teams customize without forking. It also supports\nclearer cost control: teams can reuse a capability, configure it, extend it in\na later layer, and only create a new implementation when the existing contract\ncannot satisfy the requirement. That avoids duplicate authority paths and makes\nfuture framework upgrades more realistic.\n\n## Architecture decision guide\n\nWhen a requirement arrives, do not begin with a file name. Begin with the\nowner. The following decision guide keeps the architecture understandable for\nbusiness users, developers, operators, and AI tools.\n\n```mermaid\nflowchart TD\n  Requirement[\"New requirement\"] --> Business[\"Is it a business capability?\"]\n  Business -->|Used across projects| Framework[\"Framework functional module\"]\n  Business -->|Customer-specific| Project[\"Customer project or extension module\"]\n  Business -->|Browser rendering only| Axis[\"nodics.axis renderer\"]\n  Framework --> Owner[\"Choose Core, Platform, WCMS, Cron, Docs, or future module\"]\n  Project --> Extends[\"Extend framework module without renaming identity\"]\n  Axis --> Backend[\"Confirm backend-owned contract already exists\"]\n  Owner --> Technical[\"Place code in the owning technical module\"]\n  Extends --> Runtime[\"Load later through runtime extends\"]\n  Backend --> Renderer[\"Render authorized metadata only\"]\n```\n\nUse these questions:\n\n1. Is the behavior reusable framework behavior or customer-specific behavior?\n2. Is it backend authority, frontend presentation, documentation content, or\n   operational topology?\n3. Which functional module owns the business capability?\n4. Which technical module owns the implementation details?\n5. Which runtime server loads the owner?\n6. Which later-loaded module may customize it?\n7. Which tests prove default behavior and customization behavior?\n\nIf those answers are not clear, pause before coding. A small pause here\nprevents months of cleanup later.\n\n## Example: customer customizes Platform without renaming Platform\n\nSuppose a partner wants to customize employee onboarding rules. The business\ncapability remains Platform/Profile. Axis should still display Platform, not a\nnew customer-branded functional module name, because the partner is extending\nthe standard capability rather than creating a separate business capability.\n\nA future customer module could load like this:\n\n```text\nnodics.core\nnodics.platform\ncustomer.platform\ncustomer project\nenvironment module\nserver module\n```\n\nThe important distinction is identity versus implementation. The functional\nmodule identity remains `nodics.platform`; the implementation may be extended\nor overridden by later modules according to the runtime load order. This keeps\nbusiness navigation, registry state, documentation, and API discovery stable\nwhile allowing project-specific behavior.\n\n## Example: why Axis does not own documentation data\n\nAxis is the browser renderer. It can own React components, route handling,\nrecovery screens, and renderer mappings in the frontend. It must not own\nbackend-importable CMS sites, content catalogs, pages, components, routes, or\ndocumentation content records.\n\nThe correct ownership is:\n\n| Content type | Owner |\n| --- | --- |\n| Framework documentation | `nodics.docs` |\n| Axis product documentation | `nodics.platform/modules/axis` |\n| Customer project documentation | customer project, such as the reference project |\n| Browser renderer code | `nodics.axis` |\n\nThis is not bureaucracy. It prevents the frontend from becoming a hidden\ndatabase seed repository. If a partner replaces Axis later, the backend-owned\ncontent remains valid. If a documentation pack changes, the import manifest\nand WCMS delivery contract remain the authority.\n\n## Operator example: same capability, different topology\n\nIn a local demo, Platform, WCMS, Cron, MongoDB, and Axis may all run on one\ndeveloper machine. In production, the same capabilities may be split across\ndifferent processes, containers, nodes, or networks. The architecture must\nsurvive that change.\n\n| Local concern | Production concern | Stable Nodics contract |\n| --- | --- | --- |\n| One terminal starts Platform. | Multiple Platform nodes may serve BackOffice APIs. | Platform owns Profile, BackOffice, registry, and API discovery. |\n| WCMS runs on port `4310`. | WCMS may scale separately with cache/search/storage. | WCMS owns content, routes, media, and documentation delivery. |\n| Cron runs only when testing. | Cron may run on controlled scheduler nodes. | Cron owns scheduled job lifecycle and execution evidence. |\n| Axis runs through Vite. | Axis may be built and hosted separately. | Axis renders backend-owned capability contracts. |\n\nThe module identity does not change just because topology changes. That is why\nruntime `extends`, service load order, registration state, and deployment\ntopology must be discussed separately.\n\n## Common mistakes\n\n- Copying Core, Platform, or WCMS source into a customer project.\n- Treating a server as the owner of a capability.\n- Exposing every technical module as a business registry item.\n- Putting CMS import data into `nodics.axis`.\n- Renaming a standard functional module because a customer customizes it.\n\n## Next actions\n\nAfter this page, read the local quick start and customization guide. Those\npages show how the architecture becomes concrete commands, files, and project\nrules.\n"
         },
         {
           "code": "framework.local-quick-start",
@@ -97,7 +97,7 @@ module.exports = {
             "operator"
           ],
           "summary": "Beginner-friendly steps to configure the framework, start local servers, log in to Axis, and open documentation.",
-          "searchText": "Local quick start with Kickoff and Axis Beginner-friendly steps to configure the framework, start local servers, log in to Axis, and open documentation. # Local quick start with Kickoff and Axis\n\nThis guide starts the local reference stack from zero. It is written for a\ndeveloper who is new to Nodics and wants to see the framework, BackOffice, WCMS\ndocumentation, and Axis working locally.\n\nFor a beginner, the goal is not to understand every internal module on the\nfirst day. The goal is to prove that the framework can start, authenticate,\nimport governed content, show documentation, and expose a safe BackOffice\nworkspace before any custom business code is written.\n\nFor a business evaluator, this quick start demonstrates adoption friction. If a\nnew partner can clone the framework, run Kickoff, and see Platform, WCMS, Cron,\nand Axis working together, then the framework is easier to evaluate than an\narchitecture that exists only on slides.\n\n## What you will run\n\nThe reference setup uses three projects:\n\n- `nodics.ai` contains framework backend modules.\n- `nodics.kickoff` is the reference customer project and local server owner.\n- `nodics.axis` is the BackOffice frontend.\n\nKickoff starts backend servers. Axis connects to Platform, authenticates an\nemployee, reads the BackOffice bootstrap contract, and renders workspaces and\ndocumentation from registered backend sources.\n\n## Business outcome of the quick start\n\nAfter this guide succeeds, the business-facing proof is simple: a customer\nproject can run the framework without forking framework code, content can be\nmanaged through backend-owned packs, and operators can see which capabilities\nare live. That is the first adoption story Nodics must make boring and\nrepeatable.\n\n## Prerequisites\n\nInstall Node.js and npm versions compatible with the repositories. Start\nMongoDB before starting the backend. Elasticsearch and Redis may be needed when\ntheir providers are enabled by configuration; disabled providers may produce\ninformational logs and are not a failure in the reference setup.\n\n## Step 1: configure Kickoff\n\nOpen `nodics.kickoff`:\n\n```bash\ncd ../nodics.kickoff\ncp .env.example .env\n```\n\nEdit `.env`:\n\n```bash\nNODICS_FRAMEWORK_ROOT=../nodics.ai\n```\n\nThis tells Kickoff where the framework checkout lives. The path may be\nabsolute or relative to the Kickoff project root.\n\nGenerate local framework links and install:\n\n```bash\nnpm run configure:framework\nnpm install\n```\n\nThe configure step creates local links under `.nodics/framework`. That folder\nis machine-local and must not be committed.\n\n## Step 2: start backend servers\n\nUse separate terminals from `nodics.kickoff`.\n\nStart Platform:\n\n```bash\nnpm run start:platform\n```\n\nPlatform provides employee authentication, Profile, BackOffice bootstrap,\nruntime module registry, documentation-source registry, and Platform APIs.\nLocal HTTP port: `http://localhost:4300`.\n\nStart WCMS:\n\n```bash\nnpm run start:wcms\n```\n\nWCMS owns CMS sites, content catalogs, pages, components, routes, media, and\ndocumentation content-pack delivery. Local HTTP port:\n`http://localhost:4310`.\n\nStart Cron when scheduled work is needed:\n\n```bash\nnpm run start:cron\n```\n\n## Step 3: start Axis\n\nOpen `nodics.axis`:\n\n```bash\ncd ../nodics.axis\nnpm install\nnpm run dev\n```\n\nOpen `http://localhost:3100`.\n\n## Step 4: log in\n\nUse the reference employee:\n\n```text\nEnterprise: default\nUsername: admin\nPassword: adminPassword\n```\n\nAfter login, open `http://localhost:3100/docs`. You should see Framework,\nSwaggers, Nodics Axis, and Nodics Kickoff.\n\n## What “initial data import” means\n\nThe local stack does not become useful only because the servers start. The\nservers also need governed data: catalogs, Profile records, WCMS sites, Axis\npages, documentation routes, module registry records, and sample data. Axis\nshows this through the Initialize experience.\n\n![Legacy data import process](../assets/images/data-import-process.jpg \"Data import process reference from the archived documentation set\")\n\n```mermaid\nsequenceDiagram\n  participant User as Developer in Axis\n  participant Axis as nodics.axis\n  participant Platform as Platform 4300\n  participant WCMS as WCMS 4310\n  participant Modules as Module data folders\n\n  User->>Axis: Open Initialize\n  Axis->>Platform: Authenticate and load BackOffice bootstrap\n  Axis->>WCMS: GET /nodics/import/v0/init\n  WCMS->>Modules: Discover init manifests in active runtime graph\n  Modules-->>WCMS: Release name, version, checksum, files\n  WCMS-->>Axis: Valid release catalogue\n  User->>Axis: Select releases and install\n  Axis->>WCMS: POST /nodics/import/v0/init/install\n  WCMS->>Modules: Read header and data files\n  WCMS-->>Axis: Import result and evidence\n```\n\nIf Axis says `INVALID RELEASE`, do not ignore it. That means the manifest\nchecksum does not match the current files. Run the framework manifest generator\nfrom `nodics.ai` before importing again:\n\n```bash\nnode nodics.core/modules/nTooling/bin/generate-data-release-manifests.js\n```\n\nThen restart the affected backend server so it rediscovers the updated\nmanifests. In local development the most common affected server is WCMS\nbecause the Initialize page reads import catalogues from port `4310`.\n\n## Fresh database test\n\nFor the safest repeatable local verification, use the Kickoff acceptance\nrunner from `nodics.kickoff`:\n\n```bash\nnpm run acceptance:local:fresh\n```\n\nThis command drops only the local reference databases:\n\n```text\nkickoffLocal\nkickoffLocalWcms\nkickoffLocalCron\n```\n\nIt then starts Platform, WCMS, Cron, and Axis if they are not already running;\nwaits for each server; logs in as the reference admin user; checks the module\nregistry; imports and verifies Framework, Axis, and Kickoff documentation\ncontent packs; verifies CMS counts; opens the important Axis routes; and runs\nthe live Axis smoke gates for module registry, documentation packs, and Cron\nlifecycle. The runner stops the servers it started after the checks complete;\npass `--leave-started` if you intentionally want to keep the local stack\nrunning for manual inspection.\n\nThe fresh runner intentionally refuses to drop databases when local Nodics\nports are already busy. Stop Platform, WCMS, Cron, and Axis first so the test\nreally proves a clean bootstrap. If you only want to verify the stack that is\nalready running, use the non-destructive command:\n\n```bash\nnpm run acceptance:local\n```\n\nWhen you drop local MongoDB schemas to test from zero, use this order:\n\n1. Stop Platform, WCMS, Cron, and Axis.\n2. Drop only the local Nodics development databases you intentionally want to\n   reset.\n3. Start Platform and wait until it finishes module loading.\n4. Start WCMS and wait until it finishes module loading.\n5. Start Cron only if you want to test optional module registration.\n6. Start Axis and log in with the reference admin user.\n7. Open Initialize and import required `init`, then `core`, then `sample`\n   releases as needed.\n\nDo not drop databases in a shared or production-like environment from this\nguide. This quick start is only for local developer machines.\n\n## Manual server checklist\n\nUse this checklist if something looks wrong:\n\n| Check | Expected result |\n| --- | --- |\n| `http://localhost:4300` | Platform server is listening. |\n| `http://localhost:4310` | WCMS server is listening. |\n| `http://localhost:3100` | Axis Vite dev server is listening. |\n| Axis login | `default / admin / adminPassword` logs in. |\n| Documentation dashboard | Framework, Swaggers, Nodics Axis, and Nodics Kickoff are visible after content import. |\n| Initialize screen | Releases are grouped by selected data type and do not repeat across Init/Core/Sample. |\n\n## Troubleshooting\n\nIf Axis says the BackOffice registry is unavailable, Platform is not reachable\nor still starting. Check the Platform terminal and confirm port `4300`.\n\nIf CMS documentation is unavailable, WCMS is not reachable, the content pack\nhas not been imported, or the imported version is stale. Check port `4310` and\nthe content-pack import status.\n\nIf npm cannot resolve framework packages, rerun `npm run configure:framework`\nafter checking `NODICS_FRAMEWORK_ROOT`.\n\n## Next actions\n\nOnce the reference stack is running, read the customization guide before\nchanging code. Use Axis customization for presentation and project modules for\nbackend behavior.\n"
+          "searchText": "Local quick start with Kickoff and Axis Beginner-friendly steps to configure the framework, start local servers, log in to Axis, and open documentation. # Local quick start with Kickoff and Axis\n\nThis guide starts the local reference stack from zero. It is written for a\ndeveloper who is new to Nodics and wants to see the framework, BackOffice, WCMS\ndocumentation, and Axis working locally.\n\nFor a beginner, the goal is not to understand every internal module on the\nfirst day. The goal is to prove that the framework can start, authenticate,\nimport governed content, show documentation, and expose a safe BackOffice\nworkspace before any custom business code is written.\n\nFor a business evaluator, this quick start demonstrates adoption friction. If a\nnew partner can clone the framework, run Kickoff, and see Platform, WCMS, Cron,\nand Axis working together, then the framework is easier to evaluate than an\narchitecture that exists only on slides.\n\n## What you will run\n\nThe reference setup uses three projects:\n\n- `nodics.ai` contains framework backend modules.\n- `nodics.kickoff` is the reference customer project and local server owner.\n- `nodics.axis` is the BackOffice frontend.\n\nKickoff starts backend servers. Axis connects to Platform, authenticates an\nemployee, reads the BackOffice bootstrap contract, and renders workspaces and\ndocumentation from registered backend sources.\n\n## Business outcome of the quick start\n\nAfter this guide succeeds, the business-facing proof is simple: a customer\nproject can run the framework without forking framework code, content can be\nmanaged through backend-owned packs, and operators can see which capabilities\nare live. That is the first adoption story Nodics must make boring and\nrepeatable.\n\n## Prerequisites\n\nInstall Node.js and npm versions compatible with the repositories. Start\nMongoDB before starting the backend. Elasticsearch and Redis may be needed when\ntheir providers are enabled by configuration; disabled providers may produce\ninformational logs and are not a failure in the reference setup.\n\n## Step 1: configure Kickoff\n\nOpen `nodics.kickoff`:\n\n```bash\ncd ../nodics.kickoff\ncp .env.example .env\n```\n\nEdit `.env`:\n\n```bash\nNODICS_FRAMEWORK_ROOT=../nodics.ai\n```\n\nThis tells Kickoff where the framework checkout lives. The path may be\nabsolute or relative to the Kickoff project root.\n\nGenerate local framework links and install:\n\n```bash\nnpm run configure:framework\nnpm install\n```\n\nThe configure step creates local links under `.nodics/framework`. That folder\nis machine-local and must not be committed.\n\n## Step 2: start backend servers\n\nUse separate terminals from `nodics.kickoff`.\n\nStart Platform:\n\n```bash\nnpm run start:platform\n```\n\nPlatform provides employee authentication, Profile, BackOffice bootstrap,\nruntime module registry, documentation-source registry, and Platform APIs.\nLocal HTTP port: `http://localhost:4300`.\n\nStart WCMS:\n\n```bash\nnpm run start:wcms\n```\n\nWCMS owns CMS sites, content catalogs, pages, components, routes, media, and\ndocumentation content-pack delivery. Local HTTP port:\n`http://localhost:4310`.\n\nStart Cron when scheduled work is needed:\n\n```bash\nnpm run start:cron\n```\n\n## Step 3: start Axis\n\nOpen `nodics.axis`:\n\n```bash\ncd ../nodics.axis\nnpm install\nnpm run dev\n```\n\nOpen `http://localhost:3100`.\n\n## Step 4: log in\n\nUse the reference employee:\n\n```text\nEnterprise: default\nUsername: admin\nPassword: adminPassword\n```\n\nAfter login, open `http://localhost:3100/docs`. You should see Framework,\nSwaggers, Nodics Axis, and Nodics Kickoff.\n\n## What “initial data import” means\n\nThe local stack does not become useful only because the servers start. The\nservers also need governed data: catalogs, Profile records, WCMS sites, Axis\npages, documentation routes, module registry records, and sample data. Axis\nshows this through the Initialize experience.\n\n![Legacy data import process](../assets/images/data-import-process.jpg \"Data import process reference from the archived documentation set\")\n\n```mermaid\nsequenceDiagram\n  participant User as Developer in Axis\n  participant Axis as nodics.axis\n  participant Platform as Platform 4300\n  participant WCMS as WCMS 4310\n  participant Modules as Module data folders\n\n  User->>Axis: Open Initialize\n  Axis->>Platform: Authenticate and load BackOffice bootstrap\n  Axis->>WCMS: GET /nodics/import/v0/init\n  WCMS->>Modules: Discover init manifests in active runtime graph\n  Modules-->>WCMS: Release name, version, checksum, files\n  WCMS-->>Axis: Valid release catalogue\n  User->>Axis: Select releases and install\n  Axis->>WCMS: POST /nodics/import/v0/init/install\n  WCMS->>Modules: Read header and data files\n  WCMS-->>Axis: Import result and evidence\n```\n\nIf Axis says `INVALID RELEASE`, do not ignore it. That means the manifest\nchecksum does not match the current files. Run the framework manifest generator\nfrom `nodics.ai` before importing again:\n\n```bash\nnode nodics.core/modules/nTooling/bin/generate-data-release-manifests.js\n```\n\nThen restart the affected backend server so it rediscovers the updated\nmanifests. In local development the most common affected server is WCMS\nbecause the Initialize page reads import catalogues from port `4310`.\n\n## Fresh database test\n\nFor the safest repeatable local verification, use the Kickoff acceptance\nrunner from `nodics.kickoff`:\n\n```bash\nnpm run acceptance:local:fresh\n```\n\nThis command drops only the local reference databases:\n\n```text\nkickoffLocal\nkickoffLocalWcms\nkickoffLocalCron\n```\n\nIt then starts Platform, WCMS, Cron, and Axis if they are not already running;\nwaits for each server; logs in as the reference admin user; checks the module\nregistry; imports and verifies Framework, Axis, and Kickoff documentation\ncontent packs; verifies CMS counts; opens the important Axis routes; and runs\nthe live Axis smoke gates for module registry, documentation packs, and Cron\nlifecycle. The runner stops the servers it started after the checks complete;\npass `--leave-started` if you intentionally want to keep the local stack\nrunning for manual inspection.\n\nThe fresh runner intentionally refuses to drop databases when local Nodics\nports are already busy. Stop Platform, WCMS, Cron, and Axis first so the test\nreally proves a clean bootstrap. If you only want to verify the stack that is\nalready running, use the non-destructive command:\n\n```bash\nnpm run acceptance:local\n```\n\nWhen you drop local MongoDB schemas to test from zero, use this order:\n\n1. Stop Platform, WCMS, Cron, and Axis.\n2. Drop only the local Nodics development databases you intentionally want to\n   reset.\n3. Start Platform and wait until it finishes module loading.\n4. Start WCMS and wait until it finishes module loading.\n5. Start Cron only if you want to test optional module registration.\n6. Start Axis and log in with the reference admin user.\n7. Open Initialize and import required `init`, then `core`, then `sample`\n   releases as needed.\n\nDo not drop databases in a shared or production-like environment from this\nguide. This quick start is only for local developer machines.\n\n## Manual server checklist\n\nUse this checklist if something looks wrong:\n\n| Check | Expected result |\n| --- | --- |\n| `http://localhost:4300` | Platform server is listening. |\n| `http://localhost:4310` | WCMS server is listening. |\n| `http://localhost:3100` | Axis Vite dev server is listening. |\n| Axis login | `default / admin / adminPassword` logs in. |\n| Documentation dashboard | Framework, Swaggers, Nodics Axis, and Nodics Kickoff are visible after content import. |\n| Initialize screen | Releases are grouped by selected data type and do not repeat across Init/Core/Sample. |\n\n## Troubleshooting\n\nIf Axis says the BackOffice registry is unavailable, Platform is not reachable\nor still starting. Check the Platform terminal and confirm port `4300`.\n\nIf CMS documentation is unavailable, WCMS is not reachable, the content pack\nhas not been imported, or the imported version is stale. Check port `4310` and\nthe content-pack import status.\n\nIf npm cannot resolve framework packages, rerun `npm run configure:framework`\nafter checking `NODICS_FRAMEWORK_ROOT`.\n\n## What success looks like for each reader\n\nThe quick start is successful only when different readers can see their own\nevidence, not merely when terminal processes stay open.\n\n| Reader | Evidence they should see | Why it matters |\n| --- | --- | --- |\n| Business evaluator | Axis opens, login succeeds, dashboards and documentation are visible. | Proves the framework is not only an architecture idea; it has a runnable business workspace. |\n| Developer | Platform, WCMS, and Cron start from Kickoff without editing framework source. | Proves customer projects compose the framework through configuration and dependencies. |\n| Architect | Module Registry shows mandatory and optional functional modules at the correct level. | Proves business capability identity is separated from internal technical modules. |\n| Operator | Ports, runtime logs, import releases, and module lifecycle states are observable. | Proves the stack can be diagnosed without guessing from frontend behavior. |\n| QA engineer | Fresh acceptance can recreate the local system from empty databases. | Proves the demo is repeatable and not dependent on accidental local state. |\n\nIf one reader's evidence is missing, the quick start is not complete. For\nexample, a developer may see servers running, but a business evaluator still\ncannot evaluate Nodics if Axis documentation is missing. Likewise, Axis may\nopen, but an operator cannot trust the bootstrap if content packs show checksum\nerrors or stale releases.\n\n## First guided walkthrough after login\n\nAfter login, use this short walkthrough before changing any code:\n\n1. Open **Dashboard** and confirm Axis is in the authenticated workspace, not\n   the static recovery screen.\n2. Open **System and Integrations > Module Registry** and confirm Core,\n   Platform, and WCMS are mandatory active capabilities.\n3. If Cron is running, register and activate Cron, then deactivate and\n   deregister it to understand the optional module lifecycle.\n4. Open **System and Integrations > Imports and Exports** and review\n   initialization, core, sample, file import, export, and history tabs.\n5. Import missing documentation packs if a fresh database was used.\n6. Open **Content and Experience > Content** to see the content dashboard.\n7. Open **Content and Experience > Media** to see governed media operations.\n8. Open **Documentation > Nodics Documentation** and read Framework, Swaggers,\n   Nodics Axis, and Nodics Kickoff.\n\nThis walkthrough intentionally uses Axis screens first. A beginner should see\nthe framework's behavior before reading internal files. Once the user sees the\nrunning product, repository structure becomes easier to understand.\n\n```mermaid\nflowchart TD\n  Login[\"Login to Axis\"] --> Registry[\"Module Registry\"]\n  Registry --> Imports[\"Imports and Exports\"]\n  Imports --> Content[\"Content dashboard\"]\n  Content --> Media[\"Media operations\"]\n  Media --> Docs[\"Documentation\"]\n  Docs --> Code[\"Only then inspect source ownership\"]\n```\n\n## First safe customization exercise\n\nThe first customization should be intentionally small. Do not begin by editing\nCore, Platform, WCMS, or Axis source. A good beginner exercise is to change\nproject-owned documentation or demo content in the customer project, regenerate\nthe project documentation pack, import it through Axis, and verify the updated\npage.\n\nThe learning outcome is important:\n\n- the source content lives in the owner project;\n- generated data lives under the owner project's generated data folder;\n- the manifest checksum changes with the content;\n- WCMS imports the release;\n- Axis renders the result from backend delivery contracts;\n- no frontend renderer or framework source file is edited.\n\nThat small exercise teaches the full Nodics pattern: owner first, generated\ndata second, import through governance, render through Axis, verify through the\nrunning system.\n\n## Beginner glossary\n\n| Term | Plain-language meaning |\n| --- | --- |\n| Framework repository | Reusable Nodics backend capabilities, currently `nodics.ai`. |\n| Customer project | The adopting project that composes and customizes the framework, such as the reference project. |\n| Functional module | Business-facing capability group such as Platform, WCMS, Cron, or Docs. |\n| Technical module | Internal implementation unit under a functional module group. |\n| Runtime server | A process that loads a configured module graph and exposes APIs or background behavior. |\n| Axis | Browser BackOffice renderer that discovers backend capabilities. |\n| Content pack | Versioned backend-owned data release imported into WCMS. |\n| Manifest checksum | Integrity evidence proving the release files match the manifest. |\n| Registration | Persisted project decision to accept an observed optional functional module. |\n| Activation | Persisted project decision that a registered module should be usable. |\n\n## Next actions\n\nOnce the reference stack is running, read the customization guide before\nchanging code. Use Axis customization for presentation and project modules for\nbackend behavior.\n"
         },
         {
           "code": "framework.customization-guide",
@@ -113,7 +113,7 @@ module.exports = {
             "operator"
           ],
           "summary": "How customer projects customize Nodics safely without forking framework authority.",
-          "searchText": "Customization and extension guide How customer projects customize Nodics safely without forking framework authority. # Customization and extension guide\n\nNodics is built for customization, but customization must happen in the right\nowner. The safest path is to reuse an existing capability, configure it, extend\nit in a later-loaded module, and create new framework behavior only when the\nexisting contract truly cannot satisfy the requirement.\n\nFor a beginner, customization means “where should I put my change so I can\nstill upgrade the framework later?” The safest answer is usually configuration\nfirst, then a customer project module, then a customer extension module, and\nonly then a framework change if the behavior is truly reusable for everyone.\n\n## What this is\n\nThis guide explains how a customer or partner changes Nodics behavior without\nturning a customer project into a fork of the framework. It applies to backend\ncustomization, Axis presentation customization, and documentation ownership.\n\n## The customization ladder\n\nStart with the least invasive option:\n\n1. Use existing behavior.\n2. Change configuration in the correct project, environment, server, node, or\n   tenant scope.\n3. Add customer project modules under the customer project.\n4. Add a customer extension module that extends a framework functional module.\n5. Create a new implementation only when the existing capability contract is\n   missing or incorrect.\n\nThis ladder protects upgradeability. The later a customization loads, the more\nspecific it is. Framework modules stay reusable; customer modules carry\ncustomer decisions.\n\n| Customization level | Who should use it | Beginner example | Upgrade risk |\n| --- | --- | --- | --- |\n| Axis/WCMS content | Business user or content admin | Change a heading, image, documentation page, or dashboard card. | Low, because backend content is governed and versioned. |\n| Project configuration | Developer or operator | Change a local port, database name, or feature override for one environment. | Low when the property stays narrow. |\n| Project module | Developer | Add Kickoff-specific schema fields or business services. | Medium, because tests must prove the behavior. |\n| Customer extension module | Senior developer | Override Platform behavior while keeping the Platform functional identity. | Medium to high, because service precedence must be explicit. |\n| Framework module change | Framework team | Improve Core import behavior for every project. | Shared release risk, so it needs broader validation. |\n| New functional module | Architecture owner | Add Commerce, Workflow, or another independent capability. | High if ownership is blurry. |\n\n```mermaid\nflowchart TD\n  Need[\"Need to change behavior or content\"] --> Content{\"Can Axis/WCMS governed content solve it?\"}\n  Content -->|Yes| Wcms[\"Update backend-owned CMS data\"]\n  Content -->|No| Config{\"Can configuration solve it?\"}\n  Config -->|Yes| Props[\"Add narrow project/environment/server property\"]\n  Config -->|No| Project{\"Is it project-specific?\"}\n  Project -->|Yes| Module[\"Add project or customer extension module\"]\n  Project -->|No| Framework[\"Change the owning framework module with tests\"]\n```\n\n## The role an AI tool or developer must play\n\nNodics is too broad for a narrow “make the code pass” mindset. A developer or\nAI assistant working on Nodics must deliberately switch through several\nperspectives before changing files. This is not ceremony; it is how the\nframework avoids accidental shortcuts that work for one screen and break the\necosystem.\n\n| Role | Question to ask before coding | Example |\n| --- | --- | --- |\n| Business analyst | What problem is the user, operator, partner, or business evaluator trying to solve? | If the request is “register Cron,” explain the lifecycle and what business capability becomes available, not only the button click. |\n| Enterprise architect | Which module, runtime, tenant, security boundary, and release unit owns this behavior? | Module registration is Platform/BackOffice state; Axis renders it; Cron only reports its runtime availability. |\n| Nodics framework expert | Is this Core, Platform, WCMS, Cron, Axis renderer, customer project, or customer overlay work? | A documentation content pack belongs in the backend owner, not in the frontend repository. |\n| Domain expert | Could this pattern apply to commerce, telco, logistics, content, workflow, or another domain without becoming domain-locked? | A media picker should be reusable for product media, CMS media, and future workflow attachments. |\n| Principal engineer | Can configuration or extension solve this before new framework code is written? | Prefer a server property, content component property, or customer module overlay before editing a framework default. |\n| QA and tester | What small failure will a user notice after the happy path succeeds? | Register/activate/deactivate buttons must refresh state immediately without forcing login or page reload. |\n| TechOps/DevOps reviewer | How will this run, restart, roll back, and be diagnosed in local and production topology? | A fresh bootstrap script must drop only named local databases and refuse to run if unrelated servers occupy the expected ports. |\n\nIf these roles point to different answers, document the trade-off before\nimplementation. For example, a browser-only workaround may be fast, but if the\nreal authority is a backend registry, the correct fix belongs in the backend\ncontract or typed client flow.\n\n## Coding principles that protect customization\n\nNodics code should be written so future customer projects can extend it without\ncopying framework files. Use these rules as the practical checklist:\n\n1. Prefer configuration first. If behavior can be changed through properties,\n   feature metadata, content component properties, server/environment deltas, or\n   tenant configuration, do that before changing code.\n2. Put files in the owner that matches the behavior. Error/status definitions\n   belong in status-definition files, API exposure belongs in owning module\n   properties, runtime topology belongs in server configuration, and renderer\n   code belongs in Axis.\n3. Keep JavaScript export-friendly. Prefer small exported functions, services,\n   and configuration objects over sealed inline behavior, so a later customer\n   module can override or compose the behavior through Nodics loading.\n4. Document the file and exported behavior. A future AI tool may read only the\n   nearest file and `AGENTS.md`, so ownership, override path, side effects, and\n   test expectations must be visible.\n5. Treat generated data as output. If CMS documentation, import manifests, or\n   generated records are wrong, fix the source and regenerate; do not hand-edit\n   generated projections.\n6. Keep public and private configuration separate. Browser-visible values,\n   runtime coordinates, secret references, and actual secrets have different\n   owners and different storage rules.\n7. Test both the owner and the integration. A service override needs focused\n   tests; a runtime graph change needs startup/acceptance tests; a frontend\n   state change needs UI or smoke coverage.\n\n## Backend customization\n\nBackend behavior belongs in the backend project or module that owns the\nbusiness rule. In Kickoff, project modules live under `modules/`, while\nenvironment and server composition live under `envs/`.\n\nA future module such as `kickoff.platform` may extend `nodics.platform` to\ncustomize Platform services. The runtime server can load the customer extension\nafter Platform. Service precedence then follows the normal module merge and\nindex order. Axis should still display the functional capability as Platform,\nbecause the customer extension changes implementation, not the business-facing\nidentity.\n\n## Axis customization\n\nAxis is the browser application. It owns renderers, interaction behavior,\nlayout, accessibility, and static recovery. It must not own imported CMS data,\nbackend schemas, permissions, or business rules. If a customer needs a new\nBackOffice page, the backend should expose the authorized navigation,\ncapability metadata, API contract, and CMS content where applicable. Axis then\nrenders that authorized contract.\n\nSimple presentation changes, such as logo, copy, theme, or demo content, should\ncome from backend-owned CMS or configuration where possible. Hard-coding those\nvalues in the frontend makes future customers harder to support.\n\n## Business and DevOps impact\n\nThe business value of this discipline is lower long-term cost. A customer can\nreceive framework upgrades without reapplying hidden edits. DevOps teams also\ngain a clean release story: framework packages, customer modules, environment\nproperties, and imported content packs can be rolled forward or backward as\nseparate operational units.\n\nFor production support, every customization should answer three questions:\nwhich module owns it, which runtime loads it, and which test or document proves\nthe intended behavior? If those answers are missing, the customization is not\nready for a production release.\n\n## Documentation customization\n\nDocumentation follows the owner of the thing being explained:\n\n- framework guidance goes to `nodics.docs`;\n- Axis product guidance goes to `nodics.platform/modules/axis`;\n- project guidance goes to the owning customer project, such as\n  `nodics.kickoff`;\n- generated content records stay under `data/core/data/documentation`;\n- manifests stay under `manifest/docs-content-pack.json`.\n\nDo not put customer project documentation into `nodics.docs`, and do not put\nimportable documentation records into `nodics.axis`.\n\n## Common mistakes\n\n- Editing framework source for one customer.\n- Adding business authorization in the browser.\n- Creating a second module registry or endpoint list in Axis.\n- Moving generated CMS data into a frontend repository.\n- Changing a functional module display name because an implementation was\n  customized.\n- Skipping tests after service override changes.\n\n## Verification\n\nEvery customization should prove success and failure behavior. For backend\nchanges, run the owning module tests and any affected runtime smoke test. For\nAxis changes, run typecheck and focused UI tests. For documentation changes,\nregenerate the owning content pack, validate checksums, import through WCMS,\nand verify the route in Axis.\n"
+          "searchText": "Customization and extension guide How customer projects customize Nodics safely without forking framework authority. # Customization and extension guide\n\nNodics is built for customization, but customization must happen in the right\nowner. The safest path is to reuse an existing capability, configure it, extend\nit in a later-loaded module, and create new framework behavior only when the\nexisting contract truly cannot satisfy the requirement.\n\nFor a beginner, customization means “where should I put my change so I can\nstill upgrade the framework later?” The safest answer is usually configuration\nfirst, then a customer project module, then a customer extension module, and\nonly then a framework change if the behavior is truly reusable for everyone.\n\n## What this is\n\nThis guide explains how a customer or partner changes Nodics behavior without\nturning a customer project into a fork of the framework. It applies to backend\ncustomization, Axis presentation customization, and documentation ownership.\n\n## The customization ladder\n\nStart with the least invasive option:\n\n1. Use existing behavior.\n2. Change configuration in the correct project, environment, server, node, or\n   tenant scope.\n3. Add customer project modules under the customer project.\n4. Add a customer extension module that extends a framework functional module.\n5. Create a new implementation only when the existing capability contract is\n   missing or incorrect.\n\nThis ladder protects upgradeability. The later a customization loads, the more\nspecific it is. Framework modules stay reusable; customer modules carry\ncustomer decisions.\n\n| Customization level | Who should use it | Beginner example | Upgrade risk |\n| --- | --- | --- | --- |\n| Axis/WCMS content | Business user or content admin | Change a heading, image, documentation page, or dashboard card. | Low, because backend content is governed and versioned. |\n| Project configuration | Developer or operator | Change a local port, database name, or feature override for one environment. | Low when the property stays narrow. |\n| Project module | Developer | Add Kickoff-specific schema fields or business services. | Medium, because tests must prove the behavior. |\n| Customer extension module | Senior developer | Override Platform behavior while keeping the Platform functional identity. | Medium to high, because service precedence must be explicit. |\n| Framework module change | Framework team | Improve Core import behavior for every project. | Shared release risk, so it needs broader validation. |\n| New functional module | Architecture owner | Add Commerce, Workflow, or another independent capability. | High if ownership is blurry. |\n\n```mermaid\nflowchart TD\n  Need[\"Need to change behavior or content\"] --> Content{\"Can Axis/WCMS governed content solve it?\"}\n  Content -->|Yes| Wcms[\"Update backend-owned CMS data\"]\n  Content -->|No| Config{\"Can configuration solve it?\"}\n  Config -->|Yes| Props[\"Add narrow project/environment/server property\"]\n  Config -->|No| Project{\"Is it project-specific?\"}\n  Project -->|Yes| Module[\"Add project or customer extension module\"]\n  Project -->|No| Framework[\"Change the owning framework module with tests\"]\n```\n\n## The role an AI tool or developer must play\n\nNodics is too broad for a narrow “make the code pass” mindset. A developer or\nAI assistant working on Nodics must deliberately switch through several\nperspectives before changing files. This is not ceremony; it is how the\nframework avoids accidental shortcuts that work for one screen and break the\necosystem.\n\n| Role | Question to ask before coding | Example |\n| --- | --- | --- |\n| Business analyst | What problem is the user, operator, partner, or business evaluator trying to solve? | If the request is “register Cron,” explain the lifecycle and what business capability becomes available, not only the button click. |\n| Enterprise architect | Which module, runtime, tenant, security boundary, and release unit owns this behavior? | Module registration is Platform/BackOffice state; Axis renders it; Cron only reports its runtime availability. |\n| Nodics framework expert | Is this Core, Platform, WCMS, Cron, Axis renderer, customer project, or customer overlay work? | A documentation content pack belongs in the backend owner, not in the frontend repository. |\n| Domain expert | Could this pattern apply to commerce, telco, logistics, content, workflow, or another domain without becoming domain-locked? | A media picker should be reusable for product media, CMS media, and future workflow attachments. |\n| Principal engineer | Can configuration or extension solve this before new framework code is written? | Prefer a server property, content component property, or customer module overlay before editing a framework default. |\n| QA and tester | What small failure will a user notice after the happy path succeeds? | Register/activate/deactivate buttons must refresh state immediately without forcing login or page reload. |\n| TechOps/DevOps reviewer | How will this run, restart, roll back, and be diagnosed in local and production topology? | A fresh bootstrap script must drop only named local databases and refuse to run if unrelated servers occupy the expected ports. |\n\nIf these roles point to different answers, document the trade-off before\nimplementation. For example, a browser-only workaround may be fast, but if the\nreal authority is a backend registry, the correct fix belongs in the backend\ncontract or typed client flow.\n\n## Coding principles that protect customization\n\nNodics code should be written so future customer projects can extend it without\ncopying framework files. Use these rules as the practical checklist:\n\n1. Prefer configuration first. If behavior can be changed through properties,\n   feature metadata, content component properties, server/environment deltas, or\n   tenant configuration, do that before changing code.\n2. Put files in the owner that matches the behavior. Error/status definitions\n   belong in status-definition files, API exposure belongs in owning module\n   properties, runtime topology belongs in server configuration, and renderer\n   code belongs in Axis.\n3. Keep JavaScript export-friendly. Prefer small exported functions, services,\n   and configuration objects over sealed inline behavior, so a later customer\n   module can override or compose the behavior through Nodics loading.\n4. Document the file and exported behavior. A future AI tool may read only the\n   nearest file and `AGENTS.md`, so ownership, override path, side effects, and\n   test expectations must be visible.\n5. Treat generated data as output. If CMS documentation, import manifests, or\n   generated records are wrong, fix the source and regenerate; do not hand-edit\n   generated projections.\n6. Keep public and private configuration separate. Browser-visible values,\n   runtime coordinates, secret references, and actual secrets have different\n   owners and different storage rules.\n7. Test both the owner and the integration. A service override needs focused\n   tests; a runtime graph change needs startup/acceptance tests; a frontend\n   state change needs UI or smoke coverage.\n\n## Backend customization\n\nBackend behavior belongs in the backend project or module that owns the\nbusiness rule. In Kickoff, project modules live under `modules/`, while\nenvironment and server composition live under `envs/`.\n\nA future module such as `kickoff.platform` may extend `nodics.platform` to\ncustomize Platform services. The runtime server can load the customer extension\nafter Platform. Service precedence then follows the normal module merge and\nindex order. Axis should still display the functional capability as Platform,\nbecause the customer extension changes implementation, not the business-facing\nidentity.\n\n## Axis customization\n\nAxis is the browser application. It owns renderers, interaction behavior,\nlayout, accessibility, and static recovery. It must not own imported CMS data,\nbackend schemas, permissions, or business rules. If a customer needs a new\nBackOffice page, the backend should expose the authorized navigation,\ncapability metadata, API contract, and CMS content where applicable. Axis then\nrenders that authorized contract.\n\nSimple presentation changes, such as logo, copy, theme, or demo content, should\ncome from backend-owned CMS or configuration where possible. Hard-coding those\nvalues in the frontend makes future customers harder to support.\n\n## Choosing the right customization mechanism\n\nUse the smallest mechanism that honestly solves the requirement. This keeps\ncustomization cheap, testable, and upgrade-friendly.\n\n| Requirement | Preferred mechanism | Why |\n| --- | --- | --- |\n| Change a label, image, logo, or help text | Backend-owned CMS content or configuration | Business-facing content should not require a frontend fork. |\n| Change a runtime value per environment | Environment/server/node property override | Keeps the framework default reusable and the local deployment explicit. |\n| Add a customer data seed | Customer project data pack | Data belongs to the project that owns it and can be imported through governance. |\n| Add a new API behavior for a customer | Customer project module or customer extension module | Keeps customer code later in the runtime graph. |\n| Change a framework service algorithm | Later-loaded service override with tests | Preserves the functional module identity while replacing implementation. |\n| Add a reusable capability for many projects | New or existing framework functional module | Avoids hiding reusable platform behavior inside one customer project. |\n| Add a browser-only interaction | `nodics.axis` renderer change | UI behavior belongs in Axis only when backend authority already exists. |\n\nIf the preferred mechanism feels too small, prove why. A service override may\nbe needed, but it should not be the first answer when a property or data pack\nis enough.\n\n```mermaid\nflowchart TD\n  Need[\"Customization need\"] --> Config[\"Can config/content solve it?\"]\n  Config -->|Yes| UseConfig[\"Use property, CMS, or data pack\"]\n  Config -->|No| Project[\"Is it customer-specific?\"]\n  Project -->|Yes| Later[\"Use project or customer extension module\"]\n  Project -->|No| Reusable[\"Is it reusable framework behavior?\"]\n  Reusable -->|Yes| Framework[\"Implement in owning framework module\"]\n  Reusable -->|No| Reconsider[\"Re-check ownership and requirement\"]\n  Later --> Test[\"Add default, override, and regression tests\"]\n  Framework --> Test\n  UseConfig --> Validate[\"Validate runtime result\"]\n```\n\n## Worked example: changing a demo company identity\n\nSuppose a partner wants the local demo to show its own company name, logo, and\nwelcome message. The wrong path is editing Axis React code or framework\nProfile services. The correct path depends on what is being changed:\n\n1. If it is presentation content, put it in the owning WCMS or project content\n   pack.\n2. If it is an environment default, place the override in the customer\n   environment/server configuration.\n3. If it is project documentation, update the customer project documentation\n   source and regenerate the customer docs pack.\n4. Import the generated pack through Axis Imports and Exports.\n5. Verify Axis renders the new values from backend delivery contracts.\n\nThe business sees a custom experience. The developer avoids a fork. The\noperator can rebuild the environment from source-controlled project data.\n\n## Worked example: overriding a service safely\n\nSuppose a customer needs a different employee onboarding rule than the\nstandard Platform behavior. That is not a reason to rename Platform or copy\nthe entire module. The safer model is:\n\n1. Identify the Platform service that owns the rule.\n2. Confirm the extension point is intended to be overridden.\n3. Create a later-loaded customer module that extends Platform behavior.\n4. Export the replacement or composed service in the expected loader-visible\n   style.\n5. Keep status/error definitions in the correct status-definition file, not in\n   a random properties file.\n6. Add tests for the default rule, custom rule, rejected request, tenant\n   boundary, authorization boundary, and regression risk.\n7. Document the custom behavior in the customer project, not in reusable\n   framework documentation unless the extension point itself changed.\n\nThe module registry should still show Platform. The customization changes\nimplementation, not the business-facing functional identity.\n\n## Business and DevOps impact\n\nThe business value of this discipline is lower long-term cost. A customer can\nreceive framework upgrades without reapplying hidden edits. DevOps teams also\ngain a clean release story: framework packages, customer modules, environment\nproperties, and imported content packs can be rolled forward or backward as\nseparate operational units.\n\nFor production support, every customization should answer three questions:\nwhich module owns it, which runtime loads it, and which test or document proves\nthe intended behavior? If those answers are missing, the customization is not\nready for a production release.\n\n## Documentation customization\n\nDocumentation follows the owner of the thing being explained:\n\n- framework guidance goes to `nodics.docs`;\n- Axis product guidance goes to `nodics.platform/modules/axis`;\n- project guidance goes to the owning customer project, such as\n  `nodics.kickoff`;\n- generated content records stay under `data/core/data/documentation`;\n- manifests stay under `manifest/docs-content-pack.json`.\n\nDo not put customer project documentation into `nodics.docs`, and do not put\nimportable documentation records into `nodics.axis`.\n\n## Common mistakes\n\n- Editing framework source for one customer.\n- Adding business authorization in the browser.\n- Creating a second module registry or endpoint list in Axis.\n- Moving generated CMS data into a frontend repository.\n- Changing a functional module display name because an implementation was\n  customized.\n- Skipping tests after service override changes.\n\n## Verification\n\nEvery customization should prove success and failure behavior. For backend\nchanges, run the owning module tests and any affected runtime smoke test. For\nAxis changes, run typecheck and focused UI tests. For documentation changes,\nregenerate the owning content pack, validate checksums, import through WCMS,\nand verify the route in Axis.\n\n## Customization acceptance checklist\n\nBefore accepting a customization, answer each question:\n\n| Question | Acceptable answer |\n| --- | --- |\n| Who owns the behavior? | A named framework module, customer module, project, or frontend renderer. |\n| Is framework source edited? | Only if the behavior is reusable framework behavior and the owner module was confirmed. |\n| Is there a configuration-first option? | Yes, it was used or explicitly rejected with evidence. |\n| Is functional identity preserved? | Yes; customer extensions do not rename standard capabilities. |\n| Are private values protected? | Secrets are not placed in frontend code, generated docs, or public properties. |\n| Are generated files regenerated from source? | Yes; generated CMS data and manifests match source content. |\n| Are tests proportional to risk? | Happy path, negative, boundary, authorization, tenant, runtime, and regression checks exist where applicable. |\n| Is documentation updated in the owner? | Yes; no second authority was created. |\n\nIf the checklist cannot be completed, the customization may still be a useful\nprototype, but it is not production-ready Nodics behavior.\n"
         },
         {
           "code": "framework.devops-runtime",
@@ -129,7 +129,7 @@ module.exports = {
             "operator"
           ],
           "summary": "Runtime topology, dependencies, public and private properties, deployment, monitoring, and recovery guidance.",
-          "searchText": "Runtime and DevOps operations Runtime topology, dependencies, public and private properties, deployment, monitoring, and recovery guidance. # Runtime and DevOps operations\n\nNodics runtime operations are based on explicit server composition and layered\nconfiguration. A runtime server is a process that hosts an effective set of\nactive modules. The module remains the capability owner; the server is the\nruntime grouping.\n\nFor a beginner, DevOps in Nodics means “how does this code become a safe,\nobservable process?” The answer starts with a clear server graph, narrow\nproperties, predictable dependencies, releaseable content packs, and recovery\nbehavior that operators can explain during an incident.\n\n## Local topology\n\nThe reference local setup uses separate servers:\n\n- Platform on `http://localhost:4300`;\n- WCMS on `http://localhost:4310`;\n- Cron when scheduled behavior is needed;\n- Axis on `http://localhost:3100`.\n\nThis split keeps module boundaries visible. It also prepares the team for a\nfuture topology where different capabilities may run in different processes,\nhosts, containers, or deployment units.\n\n```mermaid\nflowchart LR\n  Operator[\"Developer or operator\"] --> Kickoff[\"nodics.kickoff scripts\"]\n  Kickoff --> Platform[\"Platform server<br/>4300\"]\n  Kickoff --> WCMS[\"WCMS server<br/>4310\"]\n  Kickoff --> Cron[\"Cron server<br/>4320\"]\n  Platform --> MongoP[\"kickoffLocal DB\"]\n  WCMS --> MongoW[\"kickoffLocalWcms DB\"]\n  Cron --> MongoC[\"kickoffLocalCron DB\"]\n  Axis[\"nodics.axis<br/>3100\"] --> Platform\n  Axis --> WCMS\n```\n\nThis diagram is intentionally local and beginner-friendly. Production may use\ncontainers, private networks, managed databases, and separate deployment\npipelines, but the same ownership idea remains: servers host capabilities;\nmodules own behavior.\n\n## Configuration layers\n\nNodics configuration is layered. Framework defaults come first. Project,\nenvironment, server, node, tenant, and governed runtime configuration can refine\nbehavior later. A developer should place a property in the narrowest owner that\nneeds it.\n\nThe practical rule is: defaults travel with the owning module; overrides travel\nwith the runtime. If WCMS generally owns data import, data export, media\nmanagement, or CMS delivery, those defaults belong in the WCMS module. If\nPlatform generally owns profile, BackOffice, or runtime registry exposure,\nthose defaults belong in Platform. A project, environment, server, or node file\nshould add only the part it intentionally changes for that boundary.\n\nServer configuration should therefore stay light. It may define ports, active\nmodules, local database names, runtime identity, remote service coordinates, or\nan explicit decision to disable an inherited capability. It should not copy\nwhole inherited property blocks such as `apiExposure`, provider defaults,\nimport/export policy, media settings, permissions, limits, or discovery flags\njust to make the server file look complete. Copied defaults become a second\nauthority and make upgrades harder.\n\nUse public browser configuration only for values safe to expose, such as Axis\nbase URLs and client contract versions. Credentials, private keys, service\ntokens, database passwords, and provider secrets belong in protected backend\nconfiguration or deployment secret management.\n\n## Dependencies\n\nMongoDB is the primary local runtime dependency for persisted records.\nElasticsearch is used when search-backed capabilities are enabled. Redis is\nused when Redis-backed cache or session behavior is enabled. Enterprise\nmessaging, external storage, AI providers, or other integrations may be\noptional depending on active modules and configuration.\n\nDisabled providers should fail closed or log that they are disabled. A disabled\noptional provider is not the same as a broken mandatory provider.\n\n## Deployment mindset\n\nStart simple locally. Keep capability ownership correct. Then distribute only\nwhen scale, resilience, security, or team ownership requires it. The runtime\ntopology can change without moving business ownership out of the owning module.\n\nFor production, define:\n\n- which servers run which functional modules;\n- where public and private properties are sourced;\n- how credentials are injected and rotated;\n- how logs, health, audit events, and runtime diagnostics are collected;\n- how content packs, generated artifacts, and database migrations are released;\n- how rollback works for code, configuration, and imported content.\n\n## Monitoring and recovery\n\nPlatform exposes registry and BackOffice projections for active modules. WCMS\nowns content-pack delivery and CMS route resolution. Cron owns scheduled work.\nAxis should show recovery states when these backends are unavailable instead of\ninventing another control plane.\n\nWhen something fails, identify the owner first:\n\n- login or BackOffice bootstrap: Platform/Profile/BackOffice;\n- CMS page delivery or documentation content: WCMS/CMS/content-pack owner;\n- scheduled job execution: Cron;\n- frontend rendering or shell interaction: Axis;\n- customer-specific behavior: customer project module.\n\n## Common mistakes\n\n- Treating environment or server modules as business capability owners.\n- Putting secrets into frontend `.env` files.\n- Deploying generated content without a version change.\n- Relying on process memory instead of durable registration or import history.\n- Ignoring negative tests, recovery states, and rollback behavior.\n\n## Next actions\n\nBefore production, write an environment-specific operations runbook that lists\nserver topology, dependency versions, secrets strategy, health checks,\nmonitoring, backup, restore, content-pack import process, and rollback steps.\n"
+          "searchText": "Runtime and DevOps operations Runtime topology, dependencies, public and private properties, deployment, monitoring, and recovery guidance. # Runtime and DevOps operations\n\nNodics runtime operations are based on explicit server composition and layered\nconfiguration. A runtime server is a process that hosts an effective set of\nactive modules. The module remains the capability owner; the server is the\nruntime grouping.\n\nFor a beginner, DevOps in Nodics means “how does this code become a safe,\nobservable process?” The answer starts with a clear server graph, narrow\nproperties, predictable dependencies, releaseable content packs, and recovery\nbehavior that operators can explain during an incident.\n\n## Local topology\n\nThe reference local setup uses separate servers:\n\n- Platform on `http://localhost:4300`;\n- WCMS on `http://localhost:4310`;\n- Cron when scheduled behavior is needed;\n- Axis on `http://localhost:3100`.\n\nThis split keeps module boundaries visible. It also prepares the team for a\nfuture topology where different capabilities may run in different processes,\nhosts, containers, or deployment units.\n\n```mermaid\nflowchart LR\n  Operator[\"Developer or operator\"] --> Kickoff[\"nodics.kickoff scripts\"]\n  Kickoff --> Platform[\"Platform server<br/>4300\"]\n  Kickoff --> WCMS[\"WCMS server<br/>4310\"]\n  Kickoff --> Cron[\"Cron server<br/>4320\"]\n  Platform --> MongoP[\"kickoffLocal DB\"]\n  WCMS --> MongoW[\"kickoffLocalWcms DB\"]\n  Cron --> MongoC[\"kickoffLocalCron DB\"]\n  Axis[\"nodics.axis<br/>3100\"] --> Platform\n  Axis --> WCMS\n```\n\nThis diagram is intentionally local and beginner-friendly. Production may use\ncontainers, private networks, managed databases, and separate deployment\npipelines, but the same ownership idea remains: servers host capabilities;\nmodules own behavior.\n\n## Configuration layers\n\nNodics configuration is layered. Framework defaults come first. Project,\nenvironment, server, node, tenant, and governed runtime configuration can refine\nbehavior later. A developer should place a property in the narrowest owner that\nneeds it.\n\nThe practical rule is: defaults travel with the owning module; overrides travel\nwith the runtime. If WCMS generally owns data import, data export, media\nmanagement, or CMS delivery, those defaults belong in the WCMS module. If\nPlatform generally owns profile, BackOffice, or runtime registry exposure,\nthose defaults belong in Platform. A project, environment, server, or node file\nshould add only the part it intentionally changes for that boundary.\n\nServer configuration should therefore stay light. It may define ports, active\nmodules, local database names, runtime identity, remote service coordinates, or\nan explicit decision to disable an inherited capability. It should not copy\nwhole inherited property blocks such as `apiExposure`, provider defaults,\nimport/export policy, media settings, permissions, limits, or discovery flags\njust to make the server file look complete. Copied defaults become a second\nauthority and make upgrades harder.\n\nUse public browser configuration only for values safe to expose, such as Axis\nbase URLs and client contract versions. Credentials, private keys, service\ntokens, database passwords, and provider secrets belong in protected backend\nconfiguration or deployment secret management.\n\n## Public versus private properties\n\nNodics configuration must be explicit about visibility. A property being\nneeded by a screen does not automatically make it safe for the browser.\n\n| Property type | Example | Owner | Browser visible? |\n| --- | --- | --- | --- |\n| Framework default | default API category enablement | owning framework module | only if intentionally exposed |\n| Project default | reference enterprise display name | customer project | sometimes |\n| Environment override | local database name, local host/port | environment/server module | usually no |\n| Private secret | database password, token signing secret, storage credential | secret store or private runtime property | never |\n| Public frontend config | Platform base URL, WCMS base URL | Axis deployment config | yes, but not secret |\n| Generated state | import manifest checksum, generated docs data | owning module/project generator | imported through backend |\n\nThe safe rule is simple: if exposure would help an attacker, it is private. If\nAxis needs to display a value, expose a sanitized backend contract instead of\npassing the private property through the frontend.\n\n## Dependencies\n\nMongoDB is the primary local runtime dependency for persisted records.\nElasticsearch is used when search-backed capabilities are enabled. Redis is\nused when Redis-backed cache or session behavior is enabled. Enterprise\nmessaging, external storage, AI providers, or other integrations may be\noptional depending on active modules and configuration.\n\nDisabled providers should fail closed or log that they are disabled. A disabled\noptional provider is not the same as a broken mandatory provider.\n\n## Deployment mindset\n\nStart simple locally. Keep capability ownership correct. Then distribute only\nwhen scale, resilience, security, or team ownership requires it. The runtime\ntopology can change without moving business ownership out of the owning module.\n\nFor production, define:\n\n- which servers run which functional modules;\n- where public and private properties are sourced;\n- how credentials are injected and rotated;\n- how logs, health, audit events, and runtime diagnostics are collected;\n- how content packs, generated artifacts, and database migrations are released;\n- how rollback works for code, configuration, and imported content.\n\n## Local-to-production evolution\n\nThe first Nodics deployment should be understandable before it is distributed.\nLocal development proves ownership and behavior. Production topology then\nseparates runtime processes only for a reason: scale, resilience, security,\nteam ownership, data locality, or operational control.\n\n```mermaid\nflowchart LR\n  Local[\"Local developer machine<br/>Platform + WCMS + Cron + Axis\"] --> Shared[\"Shared test environment<br/>separate DBs and controlled imports\"]\n  Shared --> PreProd[\"Pre-production<br/>production-like properties and providers\"]\n  PreProd --> Prod[\"Production<br/>monitored, backed up, secured, scalable\"]\n```\n\nThe important rule is that deployment shape changes should not move business\nownership. Platform remains Platform whether it runs locally or across several\nnodes. WCMS remains WCMS whether media storage is local or cloud-backed. Cron\nremains Cron whether one scheduler node or multiple controlled nodes execute\njobs.\n\n## Release and rollback model\n\nA Nodics release is not only source code. A real release may include:\n\n- framework package versions;\n- customer project code;\n- environment/server property changes;\n- generated import manifests;\n- initialization, core, sample, and documentation data releases;\n- Axis frontend build;\n- database migration or data repair scripts;\n- provider configuration changes;\n- operational runbook updates.\n\nRollback must name which layer is rolling back. Rolling back Axis does not\nroll back imported WCMS content. Rolling back a content pack does not roll back\nframework source. Rolling back a server property may require process restart.\nThis separation is a strength only when operators can see and control each\nlayer.\n\n## Monitoring and recovery\n\nPlatform exposes registry and BackOffice projections for active modules. WCMS\nowns content-pack delivery and CMS route resolution. Cron owns scheduled work.\nAxis should show recovery states when these backends are unavailable instead of\ninventing another control plane.\n\nWhen something fails, identify the owner first:\n\n- login or BackOffice bootstrap: Platform/Profile/BackOffice;\n- CMS page delivery or documentation content: WCMS/CMS/content-pack owner;\n- scheduled job execution: Cron;\n- frontend rendering or shell interaction: Axis;\n- customer-specific behavior: customer project module.\n\n## Operational acceptance checklist\n\nBefore calling an environment healthy, verify:\n\n| Area | Acceptance evidence |\n| --- | --- |\n| Process health | Platform, WCMS, Cron where required, and Axis are reachable on expected ports. |\n| Runtime graph | Each server logs or exposes the effective module graph it loaded. |\n| Module registry | Mandatory modules are active; optional modules match project intent. |\n| Data imports | Required releases validate, install, and record import history. |\n| Documentation | Framework, Axis, API, and customer documentation routes render through WCMS. |\n| Authentication | Reference or environment-specific employee login works through Platform. |\n| Authorization | Unauthorized calls fail closed and do not leak private data. |\n| Configuration | Public and private properties are sourced from the correct layer. |\n| Observability | Logs include correlation, enterprise, tenant where applicable, module, and safe status evidence. |\n| Recovery | Restarting servers preserves durable registry and imported content state. |\n\nThis checklist is intentionally practical. It lets a support engineer prove\nthe system from the outside before diving into source code.\n\n## Common incident examples\n\n| Symptom | First owner to inspect | Likely next check |\n| --- | --- | --- |\n| Axis shows BackOffice registry unavailable | Platform/BackOffice | Is port `4300` reachable and did Platform finish startup? |\n| Documentation route shows recovery | WCMS/content pack owner | Is port `4310` reachable and was the docs pack imported? |\n| Module disappeared after register | Platform registry API and Axis refresh state | Did the operation response update persisted state and frontend cache? |\n| Cron is registered but unavailable | Cron runtime observation | Is the Cron server running and reporting `nodics.cron`? |\n| Import release is invalid | Content-pack manifest owner | Were source files changed without regenerating manifests? |\n| Media upload exposes path-like data | WCMS Media | Is the API returning storage internals instead of safe contracts? |\n\n## Common mistakes\n\n- Treating environment or server modules as business capability owners.\n- Putting secrets into frontend `.env` files.\n- Deploying generated content without a version change.\n- Relying on process memory instead of durable registration or import history.\n- Ignoring negative tests, recovery states, and rollback behavior.\n\n## Next actions\n\nBefore production, write an environment-specific operations runbook that lists\nserver topology, dependency versions, secrets strategy, health checks,\nmonitoring, backup, restore, content-pack import process, and rollback steps.\n"
         },
         {
           "code": "platform.module-registry",
@@ -145,7 +145,7 @@ module.exports = {
             "operator"
           ],
           "summary": "Durable project registration and runtime observation rules.",
-          "searchText": "Functional module registry Durable project registration and runtime observation rules. # Functional module registry\n\nThe functional module registry is the Platform/BackOffice contract that tells\nAxis which high-level Nodics capabilities are known, registered, active, and\nsafe to show to business users. It is intentionally focused on functional\nmodules such as `nodics.core`, `nodics.platform`, `nodics.wcms`, and\n`nodics.cron`, not every small technical module inside those groups.\n\nFor a beginner, the registry is like the application control panel. It does\nnot download code and it does not hot-load a server process. It records the\nproject decision that a live capability is allowed to participate in the\nproject. Runtime servers still need to start with the right module graph.\n\n## Why the registry exists\n\nWithout a registry, Axis would have to guess from menus, routes, package names,\nor server responses which modules are safe for a project. That creates messy\nbehavior: a link may appear before the backend is ready, an operator may repeat\nthe same setup after every restart, or a customer may see technical modules\nthat only developers understand.\n\nThe registry separates two different facts:\n\n- runtime observation: a server is currently running and has reported a\n  capability;\n- project registration: the project has durably accepted that capability.\n\nRestarting a server renews its runtime observation. It should not ask the\noperator to register the same module again.\n\n## Lifecycle states\n\nOptional functional modules move through a small lifecycle. The current Axis\nmodule registry page follows this model.\n\n```mermaid\nstateDiagram-v2\n  [*] --> Available: runtime observes optional module\n  Available --> RegisteredInactive: register\n  RegisteredInactive --> RegisteredActive: activate\n  RegisteredActive --> RegisteredInactive: deactivate\n  RegisteredInactive --> Available: deregister\n  RegisteredActive --> Available: deactivate then deregister\n```\n\n| State | Beginner meaning | Axis action |\n| --- | --- | --- |\n| Available | A live server has reported the module, but the project has not accepted it. | Show Register. |\n| Registered inactive | The project accepted the module but has not enabled it for use. | Show Activate or Deregister. |\n| Registered active | The module is accepted and enabled. | Show Deactivate. |\n| Deregistered | The project removed its durable acceptance while the runtime may still observe it. | Move back to Available. |\n\nCore, Platform, and WCMS are mandatory for the local Axis journey. They should\nnot be treated like optional modules that a business user can deregister from\nthe same screen. Cron is optional, so it can be observed, registered,\nactivated, deactivated, and deregistered.\n\n## Business value\n\nFor business users, the registry reduces confusion. Axis can show “Platform,”\n“WCMS,” or “Cron” as understandable capabilities instead of exposing dozens of\ntechnical internals such as validators, routers, cache providers, import\nprocessors, or individual schema modules.\n\nFor a partner, this also protects adoption cost. A project can start with the\nmandatory capabilities, then add optional capabilities when there is a business\nreason. The decision is recorded in the database, so the project does not need\nmanual reconfiguration after every restart.\n\n## Developer model\n\nDevelopers should not confuse registry state with code availability. Package\ndependencies and repository checkout decide which source is available.\nEnvironment/server `extends` configuration decides which modules load in a\nruntime. The registry records project authorization for a functional module\nthat the runtime has already observed.\n\nThat means a module can be visible as available only after a server starts and\nreports it. If the Cron server is not running, Platform cannot honestly present\nCron as a live optional capability. If Cron is running but deregistered, Axis\nshould show it under available modules with the Register action.\n\n## DevOps and operator model\n\nOperators should monitor both sides of the contract. A registered module that\nhas no live runtime observation may indicate a stopped server, network issue,\nor broken health path. A live runtime observation for an unregistered optional\nmodule means the server is up, but the project has not accepted the capability.\n\nIn production, audit events should capture who registered, activated,\ndeactivated, or deregistered a module. Those actions affect what Axis exposes\nand what business users can operate, so they should be treated as governed\nadministrative changes.\n\n## What the registry must not do\n\nThe registry must not become a package manager. It should not clone\nrepositories, rewrite server `extends`, or silently enable server categories.\nIt also must not expose every technical module as a business toggle. Technical\nmodule loading remains a framework/runtime concern; functional module lifecycle\nis the BackOffice-facing control.\n\n## Verification checklist\n\n- Start Platform, WCMS, and Cron from a fresh database.\n- Confirm Core, Platform, and WCMS are registered and active by default.\n- Confirm Cron appears as available when its runtime is live.\n- Register Cron and verify it moves to registered inactive or active according\n  to the operation response.\n- Activate, deactivate, and deregister Cron without refreshing the browser.\n- Confirm deregistered Cron returns to available while the Cron server remains\n  observed.\n- Restart servers and confirm durable registration state is preserved.\n\n## Common mistakes\n\n- Treating `nodics.kickoff` as a functional module just because it starts\n  servers.\n- Renaming Platform to a customer name when a customer extension only\n  customizes Platform behavior.\n- Showing technical modules as first-class registry cards for business users.\n- Assuming deregistration stops a process. It changes project state; process\n  lifecycle is still an operator/runtime concern.\n"
+          "searchText": "Functional module registry Durable project registration and runtime observation rules. # Functional module registry\n\nThe functional module registry is the Platform/BackOffice contract that tells\nAxis which high-level Nodics capabilities are known, registered, active, and\nsafe to show to business users. It is intentionally focused on functional\nmodules such as `nodics.core`, `nodics.platform`, `nodics.wcms`, and\n`nodics.cron`, not every small technical module inside those groups.\n\nFor a beginner, the registry is like the application control panel. It does\nnot download code and it does not hot-load a server process. It records the\nproject decision that a live capability is allowed to participate in the\nproject. Runtime servers still need to start with the right module graph.\n\n## Why the registry exists\n\nWithout a registry, Axis would have to guess from menus, routes, package names,\nor server responses which modules are safe for a project. That creates messy\nbehavior: a link may appear before the backend is ready, an operator may repeat\nthe same setup after every restart, or a customer may see technical modules\nthat only developers understand.\n\nThe registry separates two different facts:\n\n- runtime observation: a server is currently running and has reported a\n  capability;\n- project registration: the project has durably accepted that capability.\n\nRestarting a server renews its runtime observation. It should not ask the\noperator to register the same module again.\n\n## Lifecycle states\n\nOptional functional modules move through a small lifecycle. The current Axis\nmodule registry page follows this model.\n\n```mermaid\nstateDiagram-v2\n  [*] --> Available: runtime observes optional module\n  Available --> RegisteredInactive: register\n  RegisteredInactive --> RegisteredActive: activate\n  RegisteredActive --> RegisteredInactive: deactivate\n  RegisteredInactive --> Available: deregister\n  RegisteredActive --> Available: deactivate then deregister\n```\n\n| State | Beginner meaning | Axis action |\n| --- | --- | --- |\n| Available | A live server has reported the module, but the project has not accepted it. | Show Register. |\n| Registered inactive | The project accepted the module but has not enabled it for use. | Show Activate or Deregister. |\n| Registered active | The module is accepted and enabled. | Show Deactivate. |\n| Deregistered | The project removed its durable acceptance while the runtime may still observe it. | Move back to Available. |\n\nCore, Platform, and WCMS are mandatory for the local Axis journey. They should\nnot be treated like optional modules that a business user can deregister from\nthe same screen. Cron is optional, so it can be observed, registered,\nactivated, deactivated, and deregistered.\n\n## Mandatory versus optional modules\n\nThe registry should stay business-readable. A business user should not need to\nunderstand every technical module that helped Core or WCMS start.\n\n| Module type | Example | User lifecycle |\n| --- | --- | --- |\n| Mandatory foundation | Core, Platform, WCMS | Installed and active by runtime contract; not deregisterable from Axis. |\n| Optional functional capability | Cron | Register, activate, deactivate, deregister. |\n| Technical module | `cronjob`, `media`, `profile` internals | Not shown as separate business registry cards unless exposed by an owning functional module. |\n| Customer extension | future customer Platform extension | Customizes the standard identity; does not create a new displayed Platform name by default. |\n\nMandatory does not mean “hardcoded in Axis.” It means the current reference\nBackOffice experience depends on those capabilities. Axis still discovers the\neffective state from backend contracts, but it should not offer destructive\nbusiness actions that would remove the foundation required for login, registry\nvisibility, and WCMS-backed presentation.\n\n## Business value\n\nFor business users, the registry reduces confusion. Axis can show “Platform,”\n“WCMS,” or “Cron” as understandable capabilities instead of exposing dozens of\ntechnical internals such as validators, routers, cache providers, import\nprocessors, or individual schema modules.\n\nFor a partner, this also protects adoption cost. A project can start with the\nmandatory capabilities, then add optional capabilities when there is a business\nreason. The decision is recorded in the database, so the project does not need\nmanual reconfiguration after every restart.\n\n## Business example: deciding to enable Cron\n\nA small customer may start with login, content, media, and documentation only.\nAfter a few weeks, the business asks for nightly cleanup of temporary media and\nscheduled export retries. Cron becomes useful. The project team starts a Cron\nruntime, Axis sees `nodics.cron` as available, and an authorized administrator\nregisters and activates it.\n\nThe business decision is visible and reversible:\n\n1. Before registration, Cron is observed but not accepted by the project.\n2. After registration, the project remembers that Cron is part of its accepted\n   capability set.\n3. After activation, Cron-owned operations can become available according to\n   permissions and data import state.\n4. Deactivation pauses the capability without forgetting the registration.\n5. Deregistration removes project intent while the runtime may still be\n   technically live.\n\nThat lifecycle is safer than silently enabling features because a server\nhappened to start.\n\n## Developer model\n\nDevelopers should not confuse registry state with code availability. Package\ndependencies and repository checkout decide which source is available.\nEnvironment/server `extends` configuration decides which modules load in a\nruntime. The registry records project authorization for a functional module\nthat the runtime has already observed.\n\nThat means a module can be visible as available only after a server starts and\nreports it. If the Cron server is not running, Platform cannot honestly present\nCron as a live optional capability. If Cron is running but deregistered, Axis\nshould show it under available modules with the Register action.\n\n## API and UI contract expectations\n\nThe registry API must give Axis enough information to render without guessing:\n\n- functional module code and display name;\n- mandatory or optional classification;\n- observed runtime servers;\n- current registration state;\n- current activation state;\n- active technical modules for explanation, not as primary business toggles;\n- available actions for the current user and state;\n- last observation and catalogue revision;\n- safe status or error messages.\n\nAxis should update its local state immediately after register, activate,\ndeactivate, or deregister operations. A browser refresh must not be required\nto reveal the next valid action. If an operation fails, Axis should retain the\nprevious known state and show the backend error.\n\n## DevOps and operator model\n\nOperators should monitor both sides of the contract. A registered module that\nhas no live runtime observation may indicate a stopped server, network issue,\nor broken health path. A live runtime observation for an unregistered optional\nmodule means the server is up, but the project has not accepted the capability.\n\nIn production, audit events should capture who registered, activated,\ndeactivated, or deregistered a module. Those actions affect what Axis exposes\nand what business users can operate, so they should be treated as governed\nadministrative changes.\n\n## What the registry must not do\n\nThe registry must not become a package manager. It should not clone\nrepositories, rewrite server `extends`, or silently enable server categories.\nIt also must not expose every technical module as a business toggle. Technical\nmodule loading remains a framework/runtime concern; functional module lifecycle\nis the BackOffice-facing control.\n\n## Verification checklist\n\n- Start Platform, WCMS, and Cron from a fresh database.\n- Confirm Core, Platform, and WCMS are registered and active by default.\n- Confirm Cron appears as available when its runtime is live.\n- Register Cron and verify it moves to registered inactive or active according\n  to the operation response.\n- Activate, deactivate, and deregister Cron without refreshing the browser.\n- Confirm deregistered Cron returns to available while the Cron server remains\n  observed.\n- Restart servers and confirm durable registration state is preserved.\n\n## Acceptance scenarios\n\n| Scenario | Expected result |\n| --- | --- |\n| Fresh database with Platform and WCMS only | Core, Platform, and WCMS are active; Cron is not shown as live. |\n| Cron server starts | Cron appears as available optional module. |\n| User registers Cron | Cron moves out of available list and shows the next valid state without page refresh. |\n| User activates Cron | Cron shows active and exposes active-state actions without page refresh. |\n| User deactivates Cron | Cron remains registered but inactive. |\n| User deregisters Cron | Cron returns to available if the runtime is still observed. |\n| Servers restart | Mandatory state and registered optional state persist from database. |\n| Cron server stops | Registered state remains, but runtime observation should show unavailable or stale according to the API contract. |\n\n## Common mistakes\n\n- Treating `nodics.kickoff` as a functional module just because it starts\n  servers.\n- Renaming Platform to a customer name when a customer extension only\n  customizes Platform behavior.\n- Showing technical modules as first-class registry cards for business users.\n- Assuming deregistration stops a process. It changes project state; process\n  lifecycle is still an operator/runtime concern.\n"
         },
         {
           "code": "wcms.overview",
@@ -161,7 +161,7 @@ module.exports = {
             "operator"
           ],
           "summary": "How Nodics manages sites, catalogs, pages, components, routes, and delivery through the WCMS runtime.",
-          "searchText": "WCMS content management How Nodics manages sites, catalogs, pages, components, routes, and delivery through the WCMS runtime. # WCMS content management\n\nWCMS is the Nodics functional module for governed web content. It owns the\nbackend records that describe sites, content catalogs, page types, templates,\nslots, pages, components, navigation, routes, restrictions, publication, and\ndelivery. A frontend such as Nodics Axis renders the resolved contract, but the\nbackend decides which content exists and when it is active.\n\n## Problem it solves\n\nMost enterprise applications eventually need content that changes faster than\ncode releases. Login pages, documentation, dashboards, banners, help text,\nnavigation, and site experiences should be governed without asking developers\nto rebuild the frontend every time copy or composition changes. WCMS gives\nNodics a backend-owned content model that can be imported, versioned, searched,\npublished, and delivered safely.\n\n## Core ownership rule\n\nIf a CMS record is imported into a database, it belongs to a backend module or\nbackend project. `nodics.axis` may provide renderers, but it must not own\ndatabase-importable site, page, component, catalog, or route data. Framework\ndocumentation belongs in `nodics.docs`, Axis product documentation belongs in\n`nodics.platform/modules/axis`, and customer project documentation belongs in\nthe customer project.\n\nThis rule keeps runtime ownership clear. It also allows a partner to replace\nor extend a frontend without losing the governed content source.\n\n## What WCMS manages\n\n- Sites: named delivery surfaces such as Axis documentation or a storefront.\n- Content catalogs: governed containers that group pages and components.\n- Page and component types: contracts that describe what kind of record is\n  being rendered.\n- Templates and slots: layout-level rules for where components can appear.\n- Pages and components: authored content and structured properties.\n- Routes: URL, locale, channel, site, and page mappings.\n- Navigation nodes: menu structures and discovery metadata.\n- Restrictions: access and delivery constraints around content.\n- Publication state: the difference between authored content and content that\n  is safe to deliver.\n\n## How a page becomes visible\n\n```mermaid\nflowchart TD\n  Catalog[\"Content catalog<br/>groups related content\"]\n  Site[\"CMS site<br/>delivery surface\"]\n  Type[\"Page/component types<br/>renderer contract\"]\n  Template[\"Page template<br/>slot rules\"]\n  Component[\"CMS components<br/>structured properties\"]\n  Page[\"CMS page<br/>composition\"]\n  Route[\"CMS route<br/>URL + locale + channel\"]\n  Axis[\"Axis renderer<br/>browser presentation\"]\n\n  Catalog --> Site\n  Type --> Template\n  Template --> Page\n  Component --> Page\n  Site --> Route\n  Page --> Route\n  Route --> Axis\n```\n\nA page cannot exist meaningfully without the surrounding records. A route needs\na site. A site needs a catalog. A page needs a type and usually a template. A\ntemplate needs slots. Components need type codes and renderer mappings. This is\nwhy a data pack with pages but no content catalog is incomplete. It might look\nlike “some records imported,” but the content model is not healthy.\n\n## Beginner example: documentation content\n\nNodics documentation is a good first example because it is visible in Axis and\nstill follows the backend ownership rule.\n\n1. `nodics.docs` owns framework documentation markdown.\n2. Its generator converts markdown into CMS records: catalog, site, page type,\n   component type, renderer mappings, template, components, pages, and routes.\n3. WCMS imports the generated core data pack.\n4. Axis opens `/docs`, requests the route from WCMS, and renders the returned\n   page contract.\n5. If the markdown changes, the content pack version and checksum change, then\n   the environment imports the new governed release.\n\nAxis does not read markdown files from `nodics.docs`. Axis reads the backend\ndelivery contract. That distinction is the heart of the modularisation work.\n\n## Required record chain\n\n| Record | Beginner explanation | Common failure if missing |\n| --- | --- | --- |\n| Catalog | The container that says this content belongs together. | Sites or pages look orphaned and governance becomes unclear. |\n| Site | The named delivery surface, such as Axis docs or a customer website. | Routes cannot resolve a delivery target. |\n| Type code | The contract that tells Axis what kind of page or component this is. | Axis cannot choose the correct renderer safely. |\n| Renderer mapping | The allowed browser renderer for a type. | Axis refuses or falls back because the backend did not authorize a renderer. |\n| Template and slots | The layout contract for where components are allowed. | Components may exist but not render in a predictable layout. |\n| Component | The structured content or properties to render. | Page loads but has no meaningful body. |\n| Page | The composition of components. | Route can resolve but there is no page to display. |\n| Route | The URL, locale, channel, and delivery state. | Direct navigation shows recovery or not-found behavior. |\n\n## Developer model\n\nDevelopers should treat WCMS data like code-owned configuration until the\nbusiness explicitly moves a capability into operator-managed authoring. A\nmodule ships source documentation or content definitions, generates importable\nrecords, and exposes the pack through the governed import system. The generated\nrecords are then loaded into WCMS. Runtime delivery reads the database records,\nnot the frontend repository.\n\nWhen a project needs custom content, place the source and generated pack in the\nowning project, such as `nodics.kickoff`. Do not modify framework packs to add\ncustomer-specific pages.\n\n## Business model\n\nWCMS reduces release friction. Business users can work with governed content\nsurfaces while developers preserve reusable module boundaries. A partner can\nrun many customer-facing websites, internal applications, and documentation\nexperiences through the same content foundation while still keeping project\nownership clean.\n\n## DevOps model\n\nWCMS should be deployed as a runtime server when content delivery or content\nmanagement is required. Axis depends on Platform for identity and on WCMS for\ngoverned presentation content. Local Kickoff normally starts Platform, WCMS,\nCron where needed, and Axis as the frontend renderer.\n\nProduction deployments should define backup, migration, publication, cache,\nsearch, media storage, and import history policies. Content packs should have\nsemantic releases, checksums, and repeatable import behavior so an environment\ncan be rebuilt from source-controlled module data.\n\n## What not to do\n\n- Do not put WCMS import data in `nodics.axis`.\n- Do not create a second content registry in the frontend.\n- Do not hardcode page availability in Axis when WCMS can deliver it.\n- Do not let a route imply ownership; route ownership comes from the backend\n  module or project that owns the pack.\n- Do not let generated records drift from their source catalogue.\n"
+          "searchText": "WCMS content management How Nodics manages sites, catalogs, pages, components, routes, and delivery through the WCMS runtime. # WCMS content management\n\nWCMS is the Nodics functional module for governed web content. It owns the\nbackend records that describe sites, content catalogs, page types, templates,\nslots, pages, components, navigation, routes, restrictions, publication, and\ndelivery. A frontend such as Nodics Axis renders the resolved contract, but the\nbackend decides which content exists and when it is active.\n\n## Problem it solves\n\nMost enterprise applications eventually need content that changes faster than\ncode releases. Login pages, documentation, dashboards, banners, help text,\nnavigation, and site experiences should be governed without asking developers\nto rebuild the frontend every time copy or composition changes. WCMS gives\nNodics a backend-owned content model that can be imported, versioned, searched,\npublished, and delivered safely.\n\n## Core ownership rule\n\nIf a CMS record is imported into a database, it belongs to a backend module or\nbackend project. `nodics.axis` may provide renderers, but it must not own\ndatabase-importable site, page, component, catalog, or route data. Framework\ndocumentation belongs in `nodics.docs`, Axis product documentation belongs in\n`nodics.platform/modules/axis`, and customer project documentation belongs in\nthe customer project.\n\nThis rule keeps runtime ownership clear. It also allows a partner to replace\nor extend a frontend without losing the governed content source.\n\n## What WCMS manages\n\n- Sites: named delivery surfaces such as Axis documentation or a storefront.\n- Content catalogs: governed containers that group pages and components.\n- Page and component types: contracts that describe what kind of record is\n  being rendered.\n- Templates and slots: layout-level rules for where components can appear.\n- Pages and components: authored content and structured properties.\n- Routes: URL, locale, channel, site, and page mappings.\n- Navigation nodes: menu structures and discovery metadata.\n- Restrictions: access and delivery constraints around content.\n- Publication state: the difference between authored content and content that\n  is safe to deliver.\n\n## How a page becomes visible\n\n```mermaid\nflowchart TD\n  Catalog[\"Content catalog<br/>groups related content\"]\n  Site[\"CMS site<br/>delivery surface\"]\n  Type[\"Page/component types<br/>renderer contract\"]\n  Template[\"Page template<br/>slot rules\"]\n  Component[\"CMS components<br/>structured properties\"]\n  Page[\"CMS page<br/>composition\"]\n  Route[\"CMS route<br/>URL + locale + channel\"]\n  Axis[\"Axis renderer<br/>browser presentation\"]\n\n  Catalog --> Site\n  Type --> Template\n  Template --> Page\n  Component --> Page\n  Site --> Route\n  Page --> Route\n  Route --> Axis\n```\n\nA page cannot exist meaningfully without the surrounding records. A route needs\na site. A site needs a catalog. A page needs a type and usually a template. A\ntemplate needs slots. Components need type codes and renderer mappings. This is\nwhy a data pack with pages but no content catalog is incomplete. It might look\nlike “some records imported,” but the content model is not healthy.\n\n## Beginner example: documentation content\n\nNodics documentation is a good first example because it is visible in Axis and\nstill follows the backend ownership rule.\n\n1. `nodics.docs` owns framework documentation markdown.\n2. Its generator converts markdown into CMS records: catalog, site, page type,\n   component type, renderer mappings, template, components, pages, and routes.\n3. WCMS imports the generated core data pack.\n4. Axis opens `/docs`, requests the route from WCMS, and renders the returned\n   page contract.\n5. If the markdown changes, the content pack version and checksum change, then\n   the environment imports the new governed release.\n\nAxis does not read markdown files from `nodics.docs`. Axis reads the backend\ndelivery contract. That distinction is the heart of the modularisation work.\n\n## Required record chain\n\n| Record | Beginner explanation | Common failure if missing |\n| --- | --- | --- |\n| Catalog | The container that says this content belongs together. | Sites or pages look orphaned and governance becomes unclear. |\n| Site | The named delivery surface, such as Axis docs or a customer website. | Routes cannot resolve a delivery target. |\n| Type code | The contract that tells Axis what kind of page or component this is. | Axis cannot choose the correct renderer safely. |\n| Renderer mapping | The allowed browser renderer for a type. | Axis refuses or falls back because the backend did not authorize a renderer. |\n| Template and slots | The layout contract for where components are allowed. | Components may exist but not render in a predictable layout. |\n| Component | The structured content or properties to render. | Page loads but has no meaningful body. |\n| Page | The composition of components. | Route can resolve but there is no page to display. |\n| Route | The URL, locale, channel, and delivery state. | Direct navigation shows recovery or not-found behavior. |\n\n## Developer model\n\nDevelopers should treat WCMS data like code-owned configuration until the\nbusiness explicitly moves a capability into operator-managed authoring. A\nmodule ships source documentation or content definitions, generates importable\nrecords, and exposes the pack through the governed import system. The generated\nrecords are then loaded into WCMS. Runtime delivery reads the database records,\nnot the frontend repository.\n\nWhen a project needs custom content, place the source and generated pack in the\nowning project, such as `nodics.kickoff`. Do not modify framework packs to add\ncustomer-specific pages.\n\n## Business model\n\nWCMS reduces release friction. Business users can work with governed content\nsurfaces while developers preserve reusable module boundaries. A partner can\nrun many customer-facing websites, internal applications, and documentation\nexperiences through the same content foundation while still keeping project\nownership clean.\n\n## Business journey: from content idea to visible page\n\nA business user usually does not think in terms of catalogs, routes, renderer\nmappings, and templates. They think: “I need a page that explains this\ncapability, uses the right brand, appears in the right navigation, and can be\nchanged safely later.” WCMS turns that business need into governed records.\n\n```mermaid\nflowchart TD\n  Idea[\"Business content idea\"] --> Owner[\"Identify owning module or project\"]\n  Owner --> Source[\"Write source content or data definition\"]\n  Source --> Generate[\"Generate CMS records and manifest\"]\n  Generate --> Import[\"Import through WCMS\"]\n  Import --> Route[\"Resolve route for site, locale, channel\"]\n  Route --> Render[\"Axis or site renderer displays page\"]\n  Render --> Govern[\"Audit, version, and update through owner\"]\n```\n\nThis is why WCMS is a framework capability instead of a frontend folder. The\npage must be visible to users, but the authority for what the page means, who\nowns it, how it is versioned, and how it is imported belongs to the backend\nmodule or project.\n\n## Example: three documentation sites\n\nThe reference Axis documentation navigation may show Framework, Swaggers,\nNodics Axis, and a customer project guide. That visible navigation is a user\nexperience decision. The backend data ownership is separate:\n\n| Visible documentation area | Backend owner | Content purpose |\n| --- | --- | --- |\n| Framework | `nodics.docs` | Reusable Nodics framework concepts, quick start, architecture, customization, operations, module guides. |\n| Swaggers | BackOffice/API discovery | Runtime API reference grouped by registered backend capability. |\n| Nodics Axis | `nodics.platform/modules/axis` | Axis product behavior, renderer contracts, shell behavior, schema workbench, documentation rendering. |\n| Customer project | customer project | Project setup, local demo behavior, project data, custom modules, customer-specific examples. |\n\nNo documentation area should store importable CMS data in `nodics.axis`.\nAxis may render all of these areas, but it does not own the content records.\n\n## Developer journey: adding a module-owned page\n\nWhen a developer adds documentation or content for a functional module, the\nsafe process is:\n\n1. Confirm the backend owner of the subject.\n2. Add or update source content under that owner.\n3. Regenerate generated CMS data and manifests with the owner-provided script.\n4. Run content-pack validation.\n5. Start WCMS and import through Axis or an approved backend import API.\n6. Open the route in Axis or the target site.\n7. Verify navigation, page body, renderer mapping, authorization, and route\n   recovery behavior.\n\nHand-editing generated CMS records may seem faster, but it breaks release\nintegrity. If generated output is wrong, fix the source or generator.\n\n## DevOps model\n\nWCMS should be deployed as a runtime server when content delivery or content\nmanagement is required. Axis depends on Platform for identity and on WCMS for\ngoverned presentation content. Local Kickoff normally starts Platform, WCMS,\nCron where needed, and Axis as the frontend renderer.\n\nProduction deployments should define backup, migration, publication, cache,\nsearch, media storage, and import history policies. Content packs should have\nsemantic releases, checksums, and repeatable import behavior so an environment\ncan be rebuilt from source-controlled module data.\n\n## Operations checklist\n\n| Check | Expected evidence |\n| --- | --- |\n| WCMS process | Server starts and exposes content/import APIs on the configured port. |\n| Content catalogs | Every site has an owning catalog; pages are not orphaned. |\n| Routes | Each visible URL resolves to a page for site, locale, and channel. |\n| Renderer mappings | Axis receives only renderer types the backend has authorized. |\n| Import history | Content-pack install records include version, checksum, status, and outcome. |\n| Media | Components reference media records, not private storage paths. |\n| Recovery | Missing route, missing renderer, unauthorized access, and stale content fail safely. |\n| Backup | Database, media storage, and generated release evidence can be restored together. |\n\nWCMS incidents should be investigated by record chain. Start with the route,\nthen page, template, components, renderer mapping, site, catalog, and import\nhistory. That is usually faster than searching the frontend first.\n\n## What not to do\n\n- Do not put WCMS import data in `nodics.axis`.\n- Do not create a second content registry in the frontend.\n- Do not hardcode page availability in Axis when WCMS can deliver it.\n- Do not let a route imply ownership; route ownership comes from the backend\n  module or project that owns the pack.\n- Do not let generated records drift from their source catalogue.\n- Do not create pages or components without catalogs and sites.\n- Do not treat documentation content as special static frontend content just\n  because Axis renders it.\n"
         },
         {
           "code": "wcms.media-management",
@@ -177,7 +177,7 @@ module.exports = {
             "operator"
           ],
           "summary": "Governed upload, storage policy, media metadata, source contexts, and safe frontend boundaries.",
-          "searchText": "Media management Governed upload, storage policy, media metadata, source contexts, and safe frontend boundaries. # Media management\n\nMedia is the Nodics capability for governed files and assets. It lives inside\n`nodics.wcms` because content experiences need images, documents, imports,\nexports, and downloadable files, but the binary lifecycle must remain a backend\ncontract rather than a browser convention.\n\n## Problem it solves\n\nWithout a media module, each application starts inventing its own file paths,\nfolder rules, validation, and download behavior. That quickly becomes risky:\nfrontends may leak storage locations, imports may accept unsafe files, and\nbusiness modules may duplicate asset records. Media creates one governed place\nfor upload policy, metadata, storage-provider resolution, source context, and\ndelivery safety.\n\n## Core concepts\n\n- Media record: metadata for a governed file or external asset.\n- Folder policy: which purpose, path prefix, file types, size limits, access\n  mode, and retention rules apply.\n- Format policy: original, preview, responsive, import, export, document, or\n  custom format vocabulary.\n- Storage provider: the backend implementation that stores bytes locally, on\n  NAS, S3, Azure Blob, GCP Storage, CDN-backed storage, or a custom provider.\n- Source context: a safe backend projection that tells Axis which upload and\n  selection choices are valid for data imports, content media, product media,\n  utility media, and generated exports.\n\n## Frontend boundary\n\nAxis may display upload controls, folder choices, media records, and selection\ndialogs. It must not decide absolute paths, bucket names, storage keys,\ncredentials, signed URLs, retention behavior, or provider details. Axis sends\nthe intended source context and allowed business target; Media resolves the\neffective upload policy and storage behavior.\n\nThis is especially important for partners. A customer can remap storage from\nlocal development folders to cloud storage without changing Axis renderers or\nbusiness modules.\n\n## Upload and delivery lifecycle\n\nThe typical lifecycle is:\n\n1. A user or module selects a source context, such as `contentMedia` or\n   `dataImports`.\n2. Media resolves the effective folder and format policy from layered Nodics\n   configuration.\n3. The upload validates extension, MIME type, size, access mode, and target\n   schema expectations.\n4. The provider writes bytes and returns safe provider-relative metadata.\n5. Media persists the record, checksum, lifecycle state, and reference data.\n6. Other modules reference the media record instead of storing file paths.\n7. Delivery routes enforce authorization and expose only safe access details.\n\n```mermaid\nsequenceDiagram\n  participant User as Business user\n  participant Axis as Axis media page\n  participant Media as WCMS Media API\n  participant Policy as Folder and format policy\n  participant Store as Storage provider\n  participant DB as Media metadata DB\n\n  User->>Axis: Choose file and source context\n  Axis->>Media: Upload request with business context\n  Media->>Policy: Resolve allowed folder, format, size, MIME\n  Policy-->>Media: Effective upload policy\n  Media->>Store: Persist bytes through provider\n  Store-->>Media: Provider-relative storage evidence\n  Media->>DB: Save media record, checksum, status, references\n  Media-->>Axis: Safe media contract\n```\n\nThe frontend never receives private storage roots or credentials. It receives a\nsafe media contract: code, name, type, lifecycle state, preview or delivery\ninformation allowed by policy, and metadata that the user is permitted to see.\n\n## Source contexts\n\nMedia source context tells the backend why a file is being used. That matters\nbecause a CSV import file, a CMS hero image, a PDF document, and a generated\nexport should not share the same policy.\n\n| Source context | Typical file examples | Different policy needs |\n| --- | --- | --- |\n| `dataImports` | CSV, JSON, XLSX | Strict schema target, validation, short retention, no public delivery. |\n| `contentMedia` | Images, icons, documents | Editorial lifecycle, preview, reuse by components and pages. |\n| `documentationMedia` | Diagrams, screenshots, how-to images | Versioned with documentation and safe for authenticated delivery. |\n| `exports` | Generated CSV, PDF, report files | Expiry, audit evidence, download authorization. |\n| `utility` | Temporary or operational files | Narrow access, cleanup, and operational logging. |\n\nWhen a new module needs files, add a source context and policy instead of\ncreating another upload API. That keeps scanning, retention, audit, and storage\nprovider behavior consistent.\n\n## Beginner customization example\n\nImagine a partner wants to allow PNG and JPG images for website banners, but\nnot PDF files. They should not change Axis upload code. The correct path is:\n\n1. Add or override a media folder policy in a later project module.\n2. Set allowed MIME types and maximum size.\n3. Keep the same Media upload API.\n4. Let Axis rediscover allowed source contexts from backend metadata.\n5. Verify upload, preview, delivery, unauthorized access, and cleanup.\n\nThis gives the business the custom behavior it wants without creating a forked\nfrontend or a hidden storage convention.\n\n## Business value\n\nMedia lets business teams reuse assets across CMS, documentation, imports,\nexports, product experiences, and future websites without losing governance.\nIt also keeps operating cost flexible: local storage can support a developer\nmachine, while production can move to cloud or CDN-backed storage under the\nsame module contract.\n\n## DevOps considerations\n\nProduction storage should be explicit. Define provider roots, backup,\nretention, size limits, virus scanning or approval workflows where required,\ndownload authorization, cache headers, and lifecycle cleanup. Never rely on a\nrepository folder as production storage. Development defaults may write under\nserver temp paths, but those paths are disposable and environment-specific.\n\n## Customization model\n\nCustomer projects may add or override media folder and format policy through\nlater module configuration. If behavior needs more than configuration, replace\nthe media storage policy or provider service in a later active module while\npreserving the same safe API contract. Do not fork Axis to change storage\nrules.\n"
+          "searchText": "Media management Governed upload, storage policy, media metadata, source contexts, and safe frontend boundaries. # Media management\n\nMedia is the Nodics capability for governed files and assets. It lives inside\n`nodics.wcms` because content experiences need images, documents, imports,\nexports, and downloadable files, but the binary lifecycle must remain a backend\ncontract rather than a browser convention.\n\n## Problem it solves\n\nWithout a media module, each application starts inventing its own file paths,\nfolder rules, validation, and download behavior. That quickly becomes risky:\nfrontends may leak storage locations, imports may accept unsafe files, and\nbusiness modules may duplicate asset records. Media creates one governed place\nfor upload policy, metadata, storage-provider resolution, source context, and\ndelivery safety.\n\n## Core concepts\n\n- Media record: metadata for a governed file or external asset.\n- Folder policy: which purpose, path prefix, file types, size limits, access\n  mode, and retention rules apply.\n- Format policy: original, preview, responsive, import, export, document, or\n  custom format vocabulary.\n- Storage provider: the backend implementation that stores bytes locally, on\n  NAS, S3, Azure Blob, GCP Storage, CDN-backed storage, or a custom provider.\n- Source context: a safe backend projection that tells Axis which upload and\n  selection choices are valid for data imports, content media, product media,\n  utility media, and generated exports.\n\n## Frontend boundary\n\nAxis may display upload controls, folder choices, media records, and selection\ndialogs. It must not decide absolute paths, bucket names, storage keys,\ncredentials, signed URLs, retention behavior, or provider details. Axis sends\nthe intended source context and allowed business target; Media resolves the\neffective upload policy and storage behavior.\n\nThis is especially important for partners. A customer can remap storage from\nlocal development folders to cloud storage without changing Axis renderers or\nbusiness modules.\n\n## Upload and delivery lifecycle\n\nThe typical lifecycle is:\n\n1. A user or module selects a source context, such as `contentMedia` or\n   `dataImports`.\n2. Media resolves the effective folder and format policy from layered Nodics\n   configuration.\n3. The upload validates extension, MIME type, size, access mode, and target\n   schema expectations.\n4. The provider writes bytes and returns safe provider-relative metadata.\n5. Media persists the record, checksum, lifecycle state, and reference data.\n6. Other modules reference the media record instead of storing file paths.\n7. Delivery routes enforce authorization and expose only safe access details.\n\n```mermaid\nsequenceDiagram\n  participant User as Business user\n  participant Axis as Axis media page\n  participant Media as WCMS Media API\n  participant Policy as Folder and format policy\n  participant Store as Storage provider\n  participant DB as Media metadata DB\n\n  User->>Axis: Choose file and source context\n  Axis->>Media: Upload request with business context\n  Media->>Policy: Resolve allowed folder, format, size, MIME\n  Policy-->>Media: Effective upload policy\n  Media->>Store: Persist bytes through provider\n  Store-->>Media: Provider-relative storage evidence\n  Media->>DB: Save media record, checksum, status, references\n  Media-->>Axis: Safe media contract\n```\n\nThe frontend never receives private storage roots or credentials. It receives a\nsafe media contract: code, name, type, lifecycle state, preview or delivery\ninformation allowed by policy, and metadata that the user is permitted to see.\n\n## Source contexts\n\nMedia source context tells the backend why a file is being used. That matters\nbecause a CSV import file, a CMS hero image, a PDF document, and a generated\nexport should not share the same policy.\n\n| Source context | Typical file examples | Different policy needs |\n| --- | --- | --- |\n| `dataImports` | CSV, JSON, XLSX | Strict schema target, validation, short retention, no public delivery. |\n| `contentMedia` | Images, icons, documents | Editorial lifecycle, preview, reuse by components and pages. |\n| `documentationMedia` | Diagrams, screenshots, how-to images | Versioned with documentation and safe for authenticated delivery. |\n| `exports` | Generated CSV, PDF, report files | Expiry, audit evidence, download authorization. |\n| `utility` | Temporary or operational files | Narrow access, cleanup, and operational logging. |\n\nWhen a new module needs files, add a source context and policy instead of\ncreating another upload API. That keeps scanning, retention, audit, and storage\nprovider behavior consistent.\n\n## Media ownership across modules\n\nMedia is a shared governed capability, but shared does not mean ownerless.\nOther modules reference media records; they do not invent storage authority.\n\n| Consumer | What it may do | What it must not do |\n| --- | --- | --- |\n| WCMS pages/components | Reference media records for images, documents, or downloads. | Store private paths or credentials in component data. |\n| Documentation | Reference screenshots, diagrams, and help images as governed media. | Copy images into every frontend or leave broken Markdown as visible text. |\n| Imports and exports | Upload import files or expose generated export files through source context. | Bypass validation or retention policy. |\n| Product or commerce modules | Associate media records with product or business entities. | Own the binary lifecycle unless explicitly implemented as a media provider. |\n| Axis | Render upload/select/manage screens from backend contracts. | Decide storage paths, buckets, signed URLs, virus scan rules, or retention. |\n\nThe goal is simple: a business module can say “this record uses this media,”\nbut Media decides how the file is governed.\n\n## Business journey: adding a website banner\n\nImagine a business user needs a new homepage banner image.\n\n1. Axis opens the Media page and asks the backend for valid source contexts.\n2. The user chooses a content-media context and selects an image.\n3. Media validates type, size, folder policy, and access mode.\n4. The storage provider saves bytes and returns safe storage evidence.\n5. Media creates or updates the media record.\n6. A WCMS component references the media record.\n7. The page renders through WCMS/Axis or a customer site renderer.\n\nAt no point should the business user or frontend type a filesystem path,\nbucket name, or private URL. That information belongs to the backend provider\ncontract.\n\n## Developer journey: adding a new media use case\n\nWhen a new module needs files, the developer should add a source context or\npolicy before creating new upload code. A good implementation explains:\n\n- which module needs the media;\n- whether files are user-uploaded, generated, imported, or externally\n  referenced;\n- allowed extensions and MIME types;\n- maximum size and retention;\n- public, authenticated, private, or temporary delivery mode;\n- audit and cleanup requirements;\n- whether previews, thumbnails, or transformations are required;\n- which tests prove rejected files and unauthorized access fail safely.\n\nIf the use case needs a different storage backend, implement or configure a\nprovider behind Media rather than exposing storage rules to each consumer.\n\n## Beginner customization example\n\nImagine a partner wants to allow PNG and JPG images for website banners, but\nnot PDF files. They should not change Axis upload code. The correct path is:\n\n1. Add or override a media folder policy in a later project module.\n2. Set allowed MIME types and maximum size.\n3. Keep the same Media upload API.\n4. Let Axis rediscover allowed source contexts from backend metadata.\n5. Verify upload, preview, delivery, unauthorized access, and cleanup.\n\nThis gives the business the custom behavior it wants without creating a forked\nfrontend or a hidden storage convention.\n\n## Business value\n\nMedia lets business teams reuse assets across CMS, documentation, imports,\nexports, product experiences, and future websites without losing governance.\nIt also keeps operating cost flexible: local storage can support a developer\nmachine, while production can move to cloud or CDN-backed storage under the\nsame module contract.\n\n## DevOps considerations\n\nProduction storage should be explicit. Define provider roots, backup,\nretention, size limits, virus scanning or approval workflows where required,\ndownload authorization, cache headers, and lifecycle cleanup. Never rely on a\nrepository folder as production storage. Development defaults may write under\nserver temp paths, but those paths are disposable and environment-specific.\n\n## Operational acceptance checklist\n\n| Area | Acceptance evidence |\n| --- | --- |\n| Upload policy | Allowed and rejected MIME types, extensions, and sizes behave as configured. |\n| Storage provider | Provider returns safe relative evidence and does not leak private roots. |\n| Metadata | Media record includes code, filename, format, size, checksum, lifecycle state, source context, and references. |\n| Authorization | Unauthorized upload, view, update, and download attempts fail closed. |\n| Retention | Temporary and generated files have cleanup policy and audit evidence. |\n| Delivery | Public or authenticated delivery matches the media access mode. |\n| Reuse | WCMS/documentation/business modules reference media by record, not storage path. |\n| Recovery | Missing bytes, stale records, provider failure, and checksum mismatch have safe error behavior. |\n\nMedia failures often look like frontend problems because users see them in\nAxis, but most root causes are backend policy, provider, or metadata issues.\nStart investigation at the media record and source context.\n\n## Customization model\n\nCustomer projects may add or override media folder and format policy through\nlater module configuration. If behavior needs more than configuration, replace\nthe media storage policy or provider service in a later active module while\npreserving the same safe API contract. Do not fork Axis to change storage\nrules.\n"
         },
         {
           "code": "cron.operations",
@@ -193,7 +193,7 @@ module.exports = {
             "operator"
           ],
           "summary": "Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety.",
-          "searchText": "Cron operations Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety. # Cron operations\n\nCron is the Nodics optional functional module for scheduled and manually\ntriggered backend work. It extends Core and contributes the `cronjob`\ntechnical module. A project registers Cron when it needs scheduled jobs,\nbackground maintenance, retries, cleanup, synchronization, or other timed\nbusiness processes.\n\nFor a beginner, Cron is the part of Nodics that asks “what should happen\nlater, repeatedly, or in the background?” A user may click a button in Axis,\nbut many real enterprise actions must happen without a user staring at the\nscreen: cleanup temporary media, retry failed exports, synchronize external\nsystems, send reminders, rebuild projections, or close expired workflows.\n\n## Why Cron is optional\n\nCore, Platform, and WCMS are mandatory for Axis-driven onboarding and governed\ncontent. Cron is different. Many deployments do not need scheduled work on day\none, so Cron should appear in the module registry as an optional functional\nmodule when a cron runtime is live. Registering or activating Cron persists\nproject intent; restarting servers should not ask the same registration\nquestion again.\n\n## Ownership model\n\nCron owns scheduler mechanics, lifecycle routes, persisted job definitions,\nruntime containers, execution state, logging, events, and failure handling.\nThe server hosts Cron, but the server is not the functional owner. Node\nplacement fields decide where a job may run; they do not create another module\nidentity.\n\nCustomer jobs belong in project modules. Reusable scheduler behavior belongs\nin `nodics.cron`. If a partner needs custom scheduling behavior, they may\ncreate a customer extension module that loads after Cron and overrides the\napproved service contract.\n\nFor developers, the important rule is that Cron should orchestrate the timing\nand execution contract, while the owning business module should own the actual\nbusiness operation. A media cleanup job should call media-owned cleanup logic.\nA workflow reminder job should call workflow-owned reminder logic. Cron should\nnot become a dumping ground for unrelated domain behavior.\n\n## Job lifecycle\n\nA job definition normally describes:\n\n- job code and active state;\n- schedule, start, optional end, and trigger type;\n- handler or target module operation;\n- tenant, enterprise, and node placement;\n- retry, timeout, priority, and overlap expectations;\n- last execution status and safe operational evidence.\n\nCron supports create or register, update, run, start, stop, pause, resume, and\nremove through secured backend operations. Manual run and scheduled execution\nmust share the same tenant, permission, node, logging, and failure contracts.\n\n![Cron job lifecycle](../assets/images/cron-job-lifecycle.png \"Cron lifecycle reference from the archived documentation set\")\n\n```mermaid\nstateDiagram-v2\n  [*] --> Registered\n  Registered --> Active: activate\n  Active --> Due: schedule reaches due time\n  Due --> Running: node claims execution\n  Running --> Completed: success\n  Running --> Failed: error or timeout\n  Failed --> Retrying: retry policy allows\n  Retrying --> Due\n  Active --> Paused: pause\n  Paused --> Active: resume\n  Active --> Stopped: stop\n  Stopped --> Active: start\n  Registered --> Removed: remove\n  Completed --> Active: wait for next schedule\n```\n\nFor beginners, the important point is that a job definition and a job run are\nnot the same thing. The definition says what should happen and when. A run is\none execution attempt with its own start time, status, logs, retries, and\noutcome. Production support usually investigates runs, but operators manage\ndefinitions.\n\n## Example job: nightly media cleanup\n\nA realistic first Cron job might clean expired temporary media.\n\n| Field | Example value | Why it matters |\n| --- | --- | --- |\n| Code | `media.temporary.cleanup` | Stable identity for logs, permissions, and support. |\n| Trigger | Daily at 02:00 local environment time | Runs outside peak usage. |\n| Owner module | `media` or project extension | Keeps business behavior with the module that owns the data. |\n| Idempotency | Delete only records already marked expired | Safe if the job runs twice. |\n| Timeout | 10 minutes | Prevents a stuck cleanup from occupying the scheduler forever. |\n| Retry | Two retries with backoff | Handles temporary storage/database failures without hiding persistent bugs. |\n| Audit | Count scanned, deleted, skipped, failed | Lets operators prove what happened. |\n\nThe job should not accept arbitrary paths or delete files by frontend request.\nIt should ask Media for expired records through a governed service and let the\nstorage provider perform safe cleanup.\n\n## Registering Cron as an optional module\n\nCore, Platform, and WCMS are mandatory in the Axis reference stack. Cron is\noptional. That means Axis may discover a live Cron server and show it as\navailable to register. When a user registers and activates Cron, the project\nintent is stored in the BackOffice/runtime registry. Restarting the server\nshould not ask again unless the state was removed.\n\nThe lifecycle is:\n\n1. Cron server starts and reports `nodics.cron` as live.\n2. BackOffice observes the runtime module catalogue.\n3. Axis shows Cron under available modules.\n4. A user registers Cron into the project.\n5. A user activates Cron.\n6. Cron-owned navigation, APIs, docs, and initialization data become visible\n   according to permissions and content import state.\n7. Deactivation hides runtime availability without forgetting registration.\n8. Deregistration removes the project registration and returns Cron to the\n   available state while the server remains live.\n\n## Production safety\n\nScheduled jobs are deceptively simple. A timer firing every minute is easy;\nmaking it safe in production is the real work. Jobs that change external state\nmust define idempotency keys, duplicate-run policy, timeout behavior, retry\nsafety, compensation or reconciliation steps, and alerting.\n\nMulti-node deployments must treat scheduler memory as disposable. Persisted\njob definitions are authoritative; in-memory schedules are rebuilt from\nruntime state. Node failover can help, but it is not a universal exactly-once\nguarantee. Network partitions, process termination, downstream timeouts, and\nuncertain completion must be handled by the job contract.\n\n## Security model\n\nCron lifecycle routes require authentication and authorization. A human may\nauthorize a Cron operation, but the job itself must use governed internal\nservice-token flow when calling another module. Do not accept arbitrary URLs,\nservice names, credentials, executable code, or node identifiers from\nuntrusted request data.\n\n## DevOps model\n\nOperations teams should monitor scheduler readiness, active job count, due\njobs, started jobs, completed jobs, failed jobs, skipped jobs, schedule delay,\nduration, retry count, overlap denial, temporary ownership, node handoff, and\ndownstream latency. Logs should carry tenant, enterprise, job code, trigger\ntype, assigned node, attempt, correlation identity, and safe outcome.\n\nBefore production use, every real job should have tests for schedule boundary,\nmanual run, unauthorized access, cross-tenant access, duplicate execution,\ntimeout, retry, partial failure, restart, drain, node loss, node return,\ndownstream recovery, idempotency, and reconciliation.\n\n## Axis and BackOffice view\n\nAxis should show Cron as a functional module, not as every internal technical\nschema. Once registered and active, Cron-owned navigation and workbench\ncapabilities can appear through BackOffice and WCMS data just like other module\ncapabilities. Axis remains the renderer; Cron remains the runtime authority.\n"
+          "searchText": "Cron operations Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety. # Cron operations\n\nCron is the Nodics optional functional module for scheduled and manually\ntriggered backend work. It extends Core and contributes the `cronjob`\ntechnical module. A project registers Cron when it needs scheduled jobs,\nbackground maintenance, retries, cleanup, synchronization, or other timed\nbusiness processes.\n\nFor a beginner, Cron is the part of Nodics that asks “what should happen\nlater, repeatedly, or in the background?” A user may click a button in Axis,\nbut many real enterprise actions must happen without a user staring at the\nscreen: cleanup temporary media, retry failed exports, synchronize external\nsystems, send reminders, rebuild projections, or close expired workflows.\n\n## Why Cron is optional\n\nCore, Platform, and WCMS are mandatory for Axis-driven onboarding and governed\ncontent. Cron is different. Many deployments do not need scheduled work on day\none, so Cron should appear in the module registry as an optional functional\nmodule when a cron runtime is live. Registering or activating Cron persists\nproject intent; restarting servers should not ask the same registration\nquestion again.\n\n## Ownership model\n\nCron owns scheduler mechanics, lifecycle routes, persisted job definitions,\nruntime containers, execution state, logging, events, and failure handling.\nThe server hosts Cron, but the server is not the functional owner. Node\nplacement fields decide where a job may run; they do not create another module\nidentity.\n\nCustomer jobs belong in project modules. Reusable scheduler behavior belongs\nin `nodics.cron`. If a partner needs custom scheduling behavior, they may\ncreate a customer extension module that loads after Cron and overrides the\napproved service contract.\n\nFor developers, the important rule is that Cron should orchestrate the timing\nand execution contract, while the owning business module should own the actual\nbusiness operation. A media cleanup job should call media-owned cleanup logic.\nA workflow reminder job should call workflow-owned reminder logic. Cron should\nnot become a dumping ground for unrelated domain behavior.\n\n## Job lifecycle\n\nA job definition normally describes:\n\n- job code and active state;\n- schedule, start, optional end, and trigger type;\n- handler or target module operation;\n- tenant, enterprise, and node placement;\n- retry, timeout, priority, and overlap expectations;\n- last execution status and safe operational evidence.\n\nCron supports create or register, update, run, start, stop, pause, resume, and\nremove through secured backend operations. Manual run and scheduled execution\nmust share the same tenant, permission, node, logging, and failure contracts.\n\n![Cron job lifecycle](../assets/images/cron-job-lifecycle.png \"Cron lifecycle reference from the archived documentation set\")\n\n```mermaid\nstateDiagram-v2\n  [*] --> Registered\n  Registered --> Active: activate\n  Active --> Due: schedule reaches due time\n  Due --> Running: node claims execution\n  Running --> Completed: success\n  Running --> Failed: error or timeout\n  Failed --> Retrying: retry policy allows\n  Retrying --> Due\n  Active --> Paused: pause\n  Paused --> Active: resume\n  Active --> Stopped: stop\n  Stopped --> Active: start\n  Registered --> Removed: remove\n  Completed --> Active: wait for next schedule\n```\n\nFor beginners, the important point is that a job definition and a job run are\nnot the same thing. The definition says what should happen and when. A run is\none execution attempt with its own start time, status, logs, retries, and\noutcome. Production support usually investigates runs, but operators manage\ndefinitions.\n\n## Example job: nightly media cleanup\n\nA realistic first Cron job might clean expired temporary media.\n\n| Field | Example value | Why it matters |\n| --- | --- | --- |\n| Code | `media.temporary.cleanup` | Stable identity for logs, permissions, and support. |\n| Trigger | Daily at 02:00 local environment time | Runs outside peak usage. |\n| Owner module | `media` or project extension | Keeps business behavior with the module that owns the data. |\n| Idempotency | Delete only records already marked expired | Safe if the job runs twice. |\n| Timeout | 10 minutes | Prevents a stuck cleanup from occupying the scheduler forever. |\n| Retry | Two retries with backoff | Handles temporary storage/database failures without hiding persistent bugs. |\n| Audit | Count scanned, deleted, skipped, failed | Lets operators prove what happened. |\n\nThe job should not accept arbitrary paths or delete files by frontend request.\nIt should ask Media for expired records through a governed service and let the\nstorage provider perform safe cleanup.\n\n## Business journey: why scheduled work needs governance\n\nScheduled work often starts innocently: “run this cleanup every night.” In a\nreal enterprise system, the same job may touch many tenants, delete data,\nretry external calls, create reports, or send notifications. That makes Cron a\nbusiness-risk capability, not only a timer.\n\n| Business need | Cron responsibility | Owning business module responsibility |\n| --- | --- | --- |\n| Nightly media cleanup | Schedule, claim, execute, retry, log. | Media decides which records are expired and safe to delete. |\n| Export retry | Run retry window and record attempts. | Import/export module decides retry eligibility and file semantics. |\n| Reminder emails | Schedule and throttle execution. | Workflow or notification module owns message content and recipient rules. |\n| Projection rebuild | Run controlled background task. | Owning data module owns rebuild logic and consistency rules. |\n\nCron should make the work happen at the right time with safe operational\nevidence. It should not absorb every domain rule just because the work happens\nin the background.\n\n## Developer journey: adding a project cron job\n\nWhen a project adds a scheduled job, follow this sequence:\n\n1. Identify the business module that owns the actual operation.\n2. Expose a safe service method in that module.\n3. Add the job definition in the project or owning module data/configuration.\n4. Configure schedule, tenant/enterprise scope, node placement, timeout,\n   retry, overlap, and audit expectations.\n5. Register or import the job through governed data flow.\n6. Test manual run and scheduled execution with the same security and tenant\n   context.\n7. Verify restart behavior by stopping and starting the Cron server.\n8. Document support steps, alert thresholds, and reconciliation behavior.\n\nDo not pass executable code, raw URLs, filesystem paths, or untrusted handler\nnames through job records. Job definitions should point to known backend\ncontracts.\n\n## Registering Cron as an optional module\n\nCore, Platform, and WCMS are mandatory in the Axis reference stack. Cron is\noptional. That means Axis may discover a live Cron server and show it as\navailable to register. When a user registers and activates Cron, the project\nintent is stored in the BackOffice/runtime registry. Restarting the server\nshould not ask again unless the state was removed.\n\nThe lifecycle is:\n\n1. Cron server starts and reports `nodics.cron` as live.\n2. BackOffice observes the runtime module catalogue.\n3. Axis shows Cron under available modules.\n4. A user registers Cron into the project.\n5. A user activates Cron.\n6. Cron-owned navigation, APIs, docs, and initialization data become visible\n   according to permissions and content import state.\n7. Deactivation hides runtime availability without forgetting registration.\n8. Deregistration removes the project registration and returns Cron to the\n   available state while the server remains live.\n\n## Production safety\n\nScheduled jobs are deceptively simple. A timer firing every minute is easy;\nmaking it safe in production is the real work. Jobs that change external state\nmust define idempotency keys, duplicate-run policy, timeout behavior, retry\nsafety, compensation or reconciliation steps, and alerting.\n\nMulti-node deployments must treat scheduler memory as disposable. Persisted\njob definitions are authoritative; in-memory schedules are rebuilt from\nruntime state. Node failover can help, but it is not a universal exactly-once\nguarantee. Network partitions, process termination, downstream timeouts, and\nuncertain completion must be handled by the job contract.\n\n## Execution safety model\n\n```mermaid\nflowchart TD\n  Due[\"Job becomes due\"] --> Claim[\"Runtime node attempts claim\"]\n  Claim -->|Claim denied| Skip[\"Skip with safe reason\"]\n  Claim -->|Claim accepted| Execute[\"Execute handler\"]\n  Execute --> Success[\"Record success evidence\"]\n  Execute --> Failure[\"Record failure evidence\"]\n  Failure --> Retry{\"Retry allowed?\"}\n  Retry -->|Yes| Backoff[\"Schedule retry with backoff\"]\n  Retry -->|No| Alert[\"Leave failed state and alert\"]\n  Backoff --> Due\n```\n\nThe claim step matters in multi-node environments. Without it, two nodes may\nrun the same job. Even with a claim, job handlers should still be idempotent\nbecause distributed systems can fail after a side effect but before a status\nupdate is recorded.\n\n## Operations runbook outline\n\nEvery production cron capability should have a small runbook:\n\n| Runbook area | Required detail |\n| --- | --- |\n| Job purpose | What business outcome the job supports. |\n| Owner | Functional module or project that owns the business operation. |\n| Schedule | Frequency, timezone, blackout windows, and manual run policy. |\n| Data scope | Tenant, enterprise, site, catalog, or environment boundaries. |\n| Idempotency | What makes repeat execution safe. |\n| Retry | Retry count, backoff, retryable errors, non-retryable errors. |\n| Timeout | Maximum duration and stuck-run recovery. |\n| Observability | Logs, metrics, alerts, dashboards, and correlation fields. |\n| Recovery | Re-run, skip, reconcile, or compensate instructions. |\n| Release impact | What happens during deploy, rollback, or schema/content migration. |\n\n## Security model\n\nCron lifecycle routes require authentication and authorization. A human may\nauthorize a Cron operation, but the job itself must use governed internal\nservice-token flow when calling another module. Do not accept arbitrary URLs,\nservice names, credentials, executable code, or node identifiers from\nuntrusted request data.\n\n## DevOps model\n\nOperations teams should monitor scheduler readiness, active job count, due\njobs, started jobs, completed jobs, failed jobs, skipped jobs, schedule delay,\nduration, retry count, overlap denial, temporary ownership, node handoff, and\ndownstream latency. Logs should carry tenant, enterprise, job code, trigger\ntype, assigned node, attempt, correlation identity, and safe outcome.\n\nBefore production use, every real job should have tests for schedule boundary,\nmanual run, unauthorized access, cross-tenant access, duplicate execution,\ntimeout, retry, partial failure, restart, drain, node loss, node return,\ndownstream recovery, idempotency, and reconciliation.\n\n## Axis and BackOffice view\n\nAxis should show Cron as a functional module, not as every internal technical\nschema. Once registered and active, Cron-owned navigation and workbench\ncapabilities can appear through BackOffice and WCMS data just like other module\ncapabilities. Axis remains the renderer; Cron remains the runtime authority.\n\n## Acceptance checklist\n\nBefore Cron is considered ready beyond local demo use, verify:\n\n- Cron appears in the functional module registry only when the runtime is\n  observed.\n- Register, activate, deactivate, and deregister operations persist and update\n  Axis without manual refresh.\n- Job definitions are persisted and rebuilt after runtime restart.\n- Manual run and scheduled run share the same authorization, tenant, logging,\n  and failure contracts.\n- Duplicate execution is prevented or made harmless through idempotency.\n- Failed runs produce useful diagnostics without exposing secrets.\n- Node loss, restart, timeout, retry, and downstream failure behavior are\n  tested.\n- Business handlers remain in the owning business module.\n"
         }
       ]
     },
@@ -866,13 +866,33 @@ module.exports = {
           "level": 2
         },
         {
+          "text": "Architecture decision guide",
+          "anchor": "frameworkModularArchitecture-14-architecture-decision-guide",
+          "level": 2
+        },
+        {
+          "text": "Example: customer customizes Platform without renaming Platform",
+          "anchor": "frameworkModularArchitecture-15-example-customer-customizes-platform-without-renaming-platform",
+          "level": 2
+        },
+        {
+          "text": "Example: why Axis does not own documentation data",
+          "anchor": "frameworkModularArchitecture-16-example-why-axis-does-not-own-documentation-data",
+          "level": 2
+        },
+        {
+          "text": "Operator example: same capability, different topology",
+          "anchor": "frameworkModularArchitecture-17-operator-example-same-capability-different-topology",
+          "level": 2
+        },
+        {
           "text": "Common mistakes",
-          "anchor": "frameworkModularArchitecture-14-common-mistakes",
+          "anchor": "frameworkModularArchitecture-18-common-mistakes",
           "level": 2
         },
         {
           "text": "Next actions",
-          "anchor": "frameworkModularArchitecture-15-next-actions",
+          "anchor": "frameworkModularArchitecture-19-next-actions",
           "level": 2
         }
       ],
@@ -1186,8 +1206,153 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Architecture decision guide",
+          "anchor": "frameworkModularArchitecture-14-architecture-decision-guide"
+        },
+        {
+          "kind": "paragraph",
+          "text": "When a requirement arrives, do not begin with a file name. Begin with the owner. The following decision guide keeps the architecture understandable for business users, developers, operators, and AI tools."
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart TD\n  Requirement[\"New requirement\"] --> Business[\"Is it a business capability?\"]\n  Business -->|Used across projects| Framework[\"Framework functional module\"]\n  Business -->|Customer-specific| Project[\"Customer project or extension module\"]\n  Business -->|Browser rendering only| Axis[\"nodics.axis renderer\"]\n  Framework --> Owner[\"Choose Core, Platform, WCMS, Cron, Docs, or future module\"]\n  Project --> Extends[\"Extend framework module without renaming identity\"]\n  Axis --> Backend[\"Confirm backend-owned contract already exists\"]\n  Owner --> Technical[\"Place code in the owning technical module\"]\n  Extends --> Runtime[\"Load later through runtime extends\"]\n  Backend --> Renderer[\"Render authorized metadata only\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Use these questions:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Is the behavior reusable framework behavior or customer-specific behavior?",
+            "Is it backend authority, frontend presentation, documentation content, or operational topology?",
+            "Which functional module owns the business capability?",
+            "Which technical module owns the implementation details?",
+            "Which runtime server loads the owner?",
+            "Which later-loaded module may customize it?",
+            "Which tests prove default behavior and customization behavior?"
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "If those answers are not clear, pause before coding. A small pause here prevents months of cleanup later."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Example: customer customizes Platform without renaming Platform",
+          "anchor": "frameworkModularArchitecture-15-example-customer-customizes-platform-without-renaming-platform"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Suppose a partner wants to customize employee onboarding rules. The business capability remains Platform/Profile. Axis should still display Platform, not a new customer-branded functional module name, because the partner is extending the standard capability rather than creating a separate business capability."
+        },
+        {
+          "kind": "paragraph",
+          "text": "A future customer module could load like this:"
+        },
+        {
+          "kind": "code",
+          "language": "text",
+          "text": "nodics.core\nnodics.platform\ncustomer.platform\ncustomer project\nenvironment module\nserver module"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The important distinction is identity versus implementation. The functional module identity remains `nodics.platform`; the implementation may be extended or overridden by later modules according to the runtime load order. This keeps business navigation, registry state, documentation, and API discovery stable while allowing project-specific behavior."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Example: why Axis does not own documentation data",
+          "anchor": "frameworkModularArchitecture-16-example-why-axis-does-not-own-documentation-data"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis is the browser renderer. It can own React components, route handling, recovery screens, and renderer mappings in the frontend. It must not own backend-importable CMS sites, content catalogs, pages, components, routes, or documentation content records."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The correct ownership is:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Content type",
+            "Owner"
+          ],
+          "rows": [
+            [
+              "Framework documentation",
+              "`nodics.docs`"
+            ],
+            [
+              "Axis product documentation",
+              "`nodics.platform/modules/axis`"
+            ],
+            [
+              "Customer project documentation",
+              "customer project, such as the reference project"
+            ],
+            [
+              "Browser renderer code",
+              "`nodics.axis`"
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "This is not bureaucracy. It prevents the frontend from becoming a hidden database seed repository. If a partner replaces Axis later, the backend-owned content remains valid. If a documentation pack changes, the import manifest and WCMS delivery contract remain the authority."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operator example: same capability, different topology",
+          "anchor": "frameworkModularArchitecture-17-operator-example-same-capability-different-topology"
+        },
+        {
+          "kind": "paragraph",
+          "text": "In a local demo, Platform, WCMS, Cron, MongoDB, and Axis may all run on one developer machine. In production, the same capabilities may be split across different processes, containers, nodes, or networks. The architecture must survive that change."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Local concern",
+            "Production concern",
+            "Stable Nodics contract"
+          ],
+          "rows": [
+            [
+              "One terminal starts Platform.",
+              "Multiple Platform nodes may serve BackOffice APIs.",
+              "Platform owns Profile, BackOffice, registry, and API discovery."
+            ],
+            [
+              "WCMS runs on port `4310`.",
+              "WCMS may scale separately with cache/search/storage.",
+              "WCMS owns content, routes, media, and documentation delivery."
+            ],
+            [
+              "Cron runs only when testing.",
+              "Cron may run on controlled scheduler nodes.",
+              "Cron owns scheduled job lifecycle and execution evidence."
+            ],
+            [
+              "Axis runs through Vite.",
+              "Axis may be built and hosted separately.",
+              "Axis renders backend-owned capability contracts."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "The module identity does not change just because topology changes. That is why runtime `extends`, service load order, registration state, and deployment topology must be discussed separately."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Common mistakes",
-          "anchor": "frameworkModularArchitecture-14-common-mistakes"
+          "anchor": "frameworkModularArchitecture-18-common-mistakes"
         },
         {
           "kind": "unordered-list",
@@ -1203,14 +1368,14 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Next actions",
-          "anchor": "frameworkModularArchitecture-15-next-actions"
+          "anchor": "frameworkModularArchitecture-19-next-actions"
         },
         {
           "kind": "paragraph",
           "text": "After this page, read the local quick start and customization guide. Those pages show how the architecture becomes concrete commands, files, and project rules."
         }
       ],
-      "searchText": "Modular architecture and ownership How functional modules, technical modules, runtime servers, and customer projects fit together. # Modular architecture and ownership\n\nNodics is organized around ownership. Every meaningful behavior should have a\ncapability owner, and every runtime server should load an explicit chain of\nmodules. This is what lets a local reference project stay small while the same\nframework can later support larger distributed deployments.\n\n## What this is\n\nThe modular architecture defines how framework modules, functional module\ngroups, customer projects, environment modules, server modules, and services\nfit together. It prevents the common failure where code is placed wherever it\nfirst works and nobody can later tell which component owns the behavior.\n\n## Functional modules and technical modules\n\nA functional module is the business-facing capability identity. Examples are\n`nodics.core`, `nodics.platform`, `nodics.wcms`, and `nodics.cron`. Axis and\nBackOffice talk about these capabilities at this level because business users\ndo not need to manage every internal technical module.\n\nA technical module is an implementation unit inside a functional module group.\nFor example, Core contains many technical modules for configuration, data,\nservices, routing, validation, cache, and system behavior. Those modules are\nimportant to developers, but they should not flood the module registry user\nexperience unless a business capability genuinely needs to expose them.\n\n## Runtime server composition\n\nRepository dependencies only make code available. Runtime `extends`\nconfiguration decides what actually loads. A Platform server normally loads\nCore first, Platform second, then project and environment/server modules. A\nWCMS server loads Core, WCMS, and project modules. A Cron server loads Core,\nCron, and project modules.\n\nThe order matters because service override and merge behavior follow runtime\nload order and module indexes. Module hierarchy describes functional\navailability; service precedence describes which implementation wins at\nruntime. These are related but different concepts.\n\n## Customer projects\n\nCustomer projects live outside `nodics.ai`. The reference project is\n`nodics.kickoff`. It shows how a project can compose framework modules, provide\nlocal environment configuration, add project modules, and contribute\nproject-owned documentation without copying framework source.\n\nA future customer extension module such as `kickoff.platform` may customize\nPlatform behavior. That does not rename the functional capability. BackOffice\nand Axis should still present Platform as Platform unless the customer\nintentionally exposes a separate functional module.\n\n## Ownership boundaries\n\n- Framework source belongs in `nodics.ai`.\n- Framework documentation content belongs in `nodics.docs`.\n- Axis product documentation belongs in `nodics.platform/modules/axis`.\n- Customer documentation belongs in the owning customer project.\n- Browser renderers belong in `nodics.axis`.\n- CMS records that are imported into a database must be owned by backend\n  modules or backend projects, never the frontend repository.\n\n## Current capability map\n\nUse this map when deciding where new code, data, or documentation should live.\n\n| Capability | Repository or module owner | Runtime role | Documentation owner |\n| --- | --- | --- | --- |\n| Core framework | `nodics.ai/nodics.core` | Mandatory base for every runtime server | `nodics.docs` |\n| Platform and profile | `nodics.ai/nodics.platform` | Platform server capability for user onboarding, authentication, and registry-facing services | `nodics.docs` for framework behavior; `nodics.platform/modules/axis` for Axis product behavior |\n| Axis backend content | `nodics.ai/nodics.platform/modules/axis` | Backend-owned CMS records that allow the Axis frontend to render product documentation and shell experience | `nodics.platform/modules/axis` |\n| WCMS | `nodics.ai/nodics.wcms` | Content management runtime for sites, catalogs, pages, components, routes, and renderable content | `nodics.docs` |\n| Media | `nodics.ai/nodics.wcms/modules/media` | Governed media and asset lifecycle used by content experiences | `nodics.docs` |\n| Cron | `nodics.ai/nodics.cron` | Optional scheduled-job runtime capability | `nodics.docs` |\n| Framework documentation | `nodics.ai/nodics.docs` | Backend content pack imported into WCMS; not a UI renderer | `nodics.docs` |\n| Axis frontend | `nodics.axis` | Browser renderer for BackOffice, WCMS, docs, and module-owned capabilities | `nodics.platform/modules/axis` for product docs |\n| Kickoff reference project | `nodics.kickoff` | Customer-style project that composes framework servers locally | `nodics.kickoff` |\n\nThe key rule is simple: a frontend may render content, but it should not own\ndatabase-importable content. If a page, component, catalog, route, or\ndocumentation record is imported into WCMS, it must be shipped by the backend\nmodule or project that owns that content.\n\n## Runtime composition diagram\n\n```mermaid\nflowchart TD\n  Core[\"nodics.core<br/>mandatory framework foundation\"]\n  Platform[\"nodics.platform<br/>profile, backoffice, axis backend data\"]\n  WCMS[\"nodics.wcms<br/>cms, media, content delivery\"]\n  Cron[\"nodics.cron<br/>cronjob runtime\"]\n  Kickoff[\"nodics.kickoff<br/>customer/reference project\"]\n  PlatformServer[\"kickoffLocal/platformServer\"]\n  WcmsServer[\"kickoffLocal/wcmsServer\"]\n  CronServer[\"kickoffLocal/cronServer\"]\n\n  Core --> Platform\n  Core --> WCMS\n  Core --> Cron\n  Platform --> Kickoff\n  WCMS --> Kickoff\n  Cron --> Kickoff\n  Kickoff --> PlatformServer\n  Kickoff --> WcmsServer\n  Kickoff --> CronServer\n```\n\nThis picture shows the concept, not a Git repository dependency tree. The\nimportant idea is that each server loads an effective runtime graph. A server\ndoes not load every module in the workspace just because the files exist. It\nloads the modules that are part of its configured extension chain.\n\n## Beginner reading path\n\nFor a beginner, read the architecture in two passes. First, ignore every\ntechnical module and look only at the functional module chain: Core gives the\nbase framework, Platform gives identity and BackOffice, WCMS gives content,\nCron gives scheduled work, and Kickoff composes those capabilities for a local\nproject. That view explains what is available.\n\nSecond, look at runtime order. Runtime order explains which service\nimplementation wins when more than one module contributes the same service,\nrouter, schema, or configuration. A beginner mistake is to assume that a parent\nfolder or package dependency controls behavior. In Nodics, installed packages\nonly make code reachable; the active server graph decides what is loaded.\n\n## Module hierarchy versus service precedence\n\nTwo ideas are easy to mix together:\n\n| Concept | What it answers | Example |\n| --- | --- | --- |\n| Functional module hierarchy | Which capability is available? | A WCMS server has the `nodics.wcms` capability, which itself depends on Core. |\n| Service precedence | Which implementation wins at runtime? | If a customer module overrides a service after Platform loads, the later module implementation wins for that runtime. |\n\nFunctional hierarchy is about capability identity. Service precedence is about\nruntime execution order. That is why a customer extension such as\n`kickoff.platform` may customize Platform behavior while the functional module\nname remains `nodics.platform` in Axis and BackOffice.\n\n## Why `extends` is the right word\n\n`extends` makes the architecture readable because a later module builds on an\nearlier module. It does not mean every file is copied. It means the later\nmodule participates in the same runtime composition and can add configuration,\nservices, routers, schema records, import data, tests, and documentation.\n\nFor example:\n\n```text\nplatformServer\n  extends kickoff project modules\n    extends nodics.platform\n      extends nodics.core\n```\n\nThe exact physical folders can change. A customer may keep framework source in\none checkout and the customer project somewhere else. The contract is the\nruntime graph, not the parent directory name on one developer machine.\n\n## DevOps and operator view\n\nDevOps teams should treat the server graph as deployment evidence. A production\nPlatform server, WCMS server, or Cron server should declare exactly which\nfunctional modules and customer layers are active, which ports and database\nnames it uses, and which properties are inherited versus overridden. That makes\nrollback and support much safer: an operator can compare two runtime graphs\nwithout reading every source file.\n\nWhen production incidents happen, the first question is usually not “which Git\nrepository changed?” It is “which runtime process loaded which module chain\nwith which effective properties?” Modular architecture gives support teams a\nshared language for that investigation.\n\n## Documentation ownership matrix\n\nDocumentation is also modular. It should not become another ungoverned bucket.\n\n| Documentation topic | Source owner | Why |\n| --- | --- | --- |\n| Framework vision, architecture, Core, Platform, WCMS, Cron | `nodics.docs` | This content explains reusable framework behavior. |\n| Axis product behavior, renderers, shell, login, schema workbench | `nodics.platform/modules/axis` | Axis backend module owns Axis-specific CMS records and product docs. |\n| Kickoff local setup and reference customization | `nodics.kickoff` | Kickoff is a customer-style project and must teach customers where project-owned content lives. |\n| Customer-specific module guides | Customer project or customer extension module | Customer data must not be hidden inside framework repositories. |\n\nWhen Axis displays “Framework,” “Swaggers,” “Nodics Axis,” and “Nodics\nKickoff,” that is a frontend navigation decision. It does not mean all content\ncomes from one repository. Each backend owner contributes its governed content\npack.\n\n## Business value\n\nThis architecture helps teams customize without forking. It also supports\nclearer cost control: teams can reuse a capability, configure it, extend it in\na later layer, and only create a new implementation when the existing contract\ncannot satisfy the requirement. That avoids duplicate authority paths and makes\nfuture framework upgrades more realistic.\n\n## Common mistakes\n\n- Copying Core, Platform, or WCMS source into a customer project.\n- Treating a server as the owner of a capability.\n- Exposing every technical module as a business registry item.\n- Putting CMS import data into `nodics.axis`.\n- Renaming a standard functional module because a customer customizes it.\n\n## Next actions\n\nAfter this page, read the local quick start and customization guide. Those\npages show how the architecture becomes concrete commands, files, and project\nrules.\n",
+      "searchText": "Modular architecture and ownership How functional modules, technical modules, runtime servers, and customer projects fit together. # Modular architecture and ownership\n\nNodics is organized around ownership. Every meaningful behavior should have a\ncapability owner, and every runtime server should load an explicit chain of\nmodules. This is what lets a local reference project stay small while the same\nframework can later support larger distributed deployments.\n\n## What this is\n\nThe modular architecture defines how framework modules, functional module\ngroups, customer projects, environment modules, server modules, and services\nfit together. It prevents the common failure where code is placed wherever it\nfirst works and nobody can later tell which component owns the behavior.\n\n## Functional modules and technical modules\n\nA functional module is the business-facing capability identity. Examples are\n`nodics.core`, `nodics.platform`, `nodics.wcms`, and `nodics.cron`. Axis and\nBackOffice talk about these capabilities at this level because business users\ndo not need to manage every internal technical module.\n\nA technical module is an implementation unit inside a functional module group.\nFor example, Core contains many technical modules for configuration, data,\nservices, routing, validation, cache, and system behavior. Those modules are\nimportant to developers, but they should not flood the module registry user\nexperience unless a business capability genuinely needs to expose them.\n\n## Runtime server composition\n\nRepository dependencies only make code available. Runtime `extends`\nconfiguration decides what actually loads. A Platform server normally loads\nCore first, Platform second, then project and environment/server modules. A\nWCMS server loads Core, WCMS, and project modules. A Cron server loads Core,\nCron, and project modules.\n\nThe order matters because service override and merge behavior follow runtime\nload order and module indexes. Module hierarchy describes functional\navailability; service precedence describes which implementation wins at\nruntime. These are related but different concepts.\n\n## Customer projects\n\nCustomer projects live outside `nodics.ai`. The reference project is\n`nodics.kickoff`. It shows how a project can compose framework modules, provide\nlocal environment configuration, add project modules, and contribute\nproject-owned documentation without copying framework source.\n\nA future customer extension module such as `kickoff.platform` may customize\nPlatform behavior. That does not rename the functional capability. BackOffice\nand Axis should still present Platform as Platform unless the customer\nintentionally exposes a separate functional module.\n\n## Ownership boundaries\n\n- Framework source belongs in `nodics.ai`.\n- Framework documentation content belongs in `nodics.docs`.\n- Axis product documentation belongs in `nodics.platform/modules/axis`.\n- Customer documentation belongs in the owning customer project.\n- Browser renderers belong in `nodics.axis`.\n- CMS records that are imported into a database must be owned by backend\n  modules or backend projects, never the frontend repository.\n\n## Current capability map\n\nUse this map when deciding where new code, data, or documentation should live.\n\n| Capability | Repository or module owner | Runtime role | Documentation owner |\n| --- | --- | --- | --- |\n| Core framework | `nodics.ai/nodics.core` | Mandatory base for every runtime server | `nodics.docs` |\n| Platform and profile | `nodics.ai/nodics.platform` | Platform server capability for user onboarding, authentication, and registry-facing services | `nodics.docs` for framework behavior; `nodics.platform/modules/axis` for Axis product behavior |\n| Axis backend content | `nodics.ai/nodics.platform/modules/axis` | Backend-owned CMS records that allow the Axis frontend to render product documentation and shell experience | `nodics.platform/modules/axis` |\n| WCMS | `nodics.ai/nodics.wcms` | Content management runtime for sites, catalogs, pages, components, routes, and renderable content | `nodics.docs` |\n| Media | `nodics.ai/nodics.wcms/modules/media` | Governed media and asset lifecycle used by content experiences | `nodics.docs` |\n| Cron | `nodics.ai/nodics.cron` | Optional scheduled-job runtime capability | `nodics.docs` |\n| Framework documentation | `nodics.ai/nodics.docs` | Backend content pack imported into WCMS; not a UI renderer | `nodics.docs` |\n| Axis frontend | `nodics.axis` | Browser renderer for BackOffice, WCMS, docs, and module-owned capabilities | `nodics.platform/modules/axis` for product docs |\n| Kickoff reference project | `nodics.kickoff` | Customer-style project that composes framework servers locally | `nodics.kickoff` |\n\nThe key rule is simple: a frontend may render content, but it should not own\ndatabase-importable content. If a page, component, catalog, route, or\ndocumentation record is imported into WCMS, it must be shipped by the backend\nmodule or project that owns that content.\n\n## Runtime composition diagram\n\n```mermaid\nflowchart TD\n  Core[\"nodics.core<br/>mandatory framework foundation\"]\n  Platform[\"nodics.platform<br/>profile, backoffice, axis backend data\"]\n  WCMS[\"nodics.wcms<br/>cms, media, content delivery\"]\n  Cron[\"nodics.cron<br/>cronjob runtime\"]\n  Kickoff[\"nodics.kickoff<br/>customer/reference project\"]\n  PlatformServer[\"kickoffLocal/platformServer\"]\n  WcmsServer[\"kickoffLocal/wcmsServer\"]\n  CronServer[\"kickoffLocal/cronServer\"]\n\n  Core --> Platform\n  Core --> WCMS\n  Core --> Cron\n  Platform --> Kickoff\n  WCMS --> Kickoff\n  Cron --> Kickoff\n  Kickoff --> PlatformServer\n  Kickoff --> WcmsServer\n  Kickoff --> CronServer\n```\n\nThis picture shows the concept, not a Git repository dependency tree. The\nimportant idea is that each server loads an effective runtime graph. A server\ndoes not load every module in the workspace just because the files exist. It\nloads the modules that are part of its configured extension chain.\n\n## Beginner reading path\n\nFor a beginner, read the architecture in two passes. First, ignore every\ntechnical module and look only at the functional module chain: Core gives the\nbase framework, Platform gives identity and BackOffice, WCMS gives content,\nCron gives scheduled work, and Kickoff composes those capabilities for a local\nproject. That view explains what is available.\n\nSecond, look at runtime order. Runtime order explains which service\nimplementation wins when more than one module contributes the same service,\nrouter, schema, or configuration. A beginner mistake is to assume that a parent\nfolder or package dependency controls behavior. In Nodics, installed packages\nonly make code reachable; the active server graph decides what is loaded.\n\n## Module hierarchy versus service precedence\n\nTwo ideas are easy to mix together:\n\n| Concept | What it answers | Example |\n| --- | --- | --- |\n| Functional module hierarchy | Which capability is available? | A WCMS server has the `nodics.wcms` capability, which itself depends on Core. |\n| Service precedence | Which implementation wins at runtime? | If a customer module overrides a service after Platform loads, the later module implementation wins for that runtime. |\n\nFunctional hierarchy is about capability identity. Service precedence is about\nruntime execution order. That is why a customer extension such as\n`kickoff.platform` may customize Platform behavior while the functional module\nname remains `nodics.platform` in Axis and BackOffice.\n\n## Why `extends` is the right word\n\n`extends` makes the architecture readable because a later module builds on an\nearlier module. It does not mean every file is copied. It means the later\nmodule participates in the same runtime composition and can add configuration,\nservices, routers, schema records, import data, tests, and documentation.\n\nFor example:\n\n```text\nplatformServer\n  extends kickoff project modules\n    extends nodics.platform\n      extends nodics.core\n```\n\nThe exact physical folders can change. A customer may keep framework source in\none checkout and the customer project somewhere else. The contract is the\nruntime graph, not the parent directory name on one developer machine.\n\n## DevOps and operator view\n\nDevOps teams should treat the server graph as deployment evidence. A production\nPlatform server, WCMS server, or Cron server should declare exactly which\nfunctional modules and customer layers are active, which ports and database\nnames it uses, and which properties are inherited versus overridden. That makes\nrollback and support much safer: an operator can compare two runtime graphs\nwithout reading every source file.\n\nWhen production incidents happen, the first question is usually not “which Git\nrepository changed?” It is “which runtime process loaded which module chain\nwith which effective properties?” Modular architecture gives support teams a\nshared language for that investigation.\n\n## Documentation ownership matrix\n\nDocumentation is also modular. It should not become another ungoverned bucket.\n\n| Documentation topic | Source owner | Why |\n| --- | --- | --- |\n| Framework vision, architecture, Core, Platform, WCMS, Cron | `nodics.docs` | This content explains reusable framework behavior. |\n| Axis product behavior, renderers, shell, login, schema workbench | `nodics.platform/modules/axis` | Axis backend module owns Axis-specific CMS records and product docs. |\n| Kickoff local setup and reference customization | `nodics.kickoff` | Kickoff is a customer-style project and must teach customers where project-owned content lives. |\n| Customer-specific module guides | Customer project or customer extension module | Customer data must not be hidden inside framework repositories. |\n\nWhen Axis displays “Framework,” “Swaggers,” “Nodics Axis,” and “Nodics\nKickoff,” that is a frontend navigation decision. It does not mean all content\ncomes from one repository. Each backend owner contributes its governed content\npack.\n\n## Business value\n\nThis architecture helps teams customize without forking. It also supports\nclearer cost control: teams can reuse a capability, configure it, extend it in\na later layer, and only create a new implementation when the existing contract\ncannot satisfy the requirement. That avoids duplicate authority paths and makes\nfuture framework upgrades more realistic.\n\n## Architecture decision guide\n\nWhen a requirement arrives, do not begin with a file name. Begin with the\nowner. The following decision guide keeps the architecture understandable for\nbusiness users, developers, operators, and AI tools.\n\n```mermaid\nflowchart TD\n  Requirement[\"New requirement\"] --> Business[\"Is it a business capability?\"]\n  Business -->|Used across projects| Framework[\"Framework functional module\"]\n  Business -->|Customer-specific| Project[\"Customer project or extension module\"]\n  Business -->|Browser rendering only| Axis[\"nodics.axis renderer\"]\n  Framework --> Owner[\"Choose Core, Platform, WCMS, Cron, Docs, or future module\"]\n  Project --> Extends[\"Extend framework module without renaming identity\"]\n  Axis --> Backend[\"Confirm backend-owned contract already exists\"]\n  Owner --> Technical[\"Place code in the owning technical module\"]\n  Extends --> Runtime[\"Load later through runtime extends\"]\n  Backend --> Renderer[\"Render authorized metadata only\"]\n```\n\nUse these questions:\n\n1. Is the behavior reusable framework behavior or customer-specific behavior?\n2. Is it backend authority, frontend presentation, documentation content, or\n   operational topology?\n3. Which functional module owns the business capability?\n4. Which technical module owns the implementation details?\n5. Which runtime server loads the owner?\n6. Which later-loaded module may customize it?\n7. Which tests prove default behavior and customization behavior?\n\nIf those answers are not clear, pause before coding. A small pause here\nprevents months of cleanup later.\n\n## Example: customer customizes Platform without renaming Platform\n\nSuppose a partner wants to customize employee onboarding rules. The business\ncapability remains Platform/Profile. Axis should still display Platform, not a\nnew customer-branded functional module name, because the partner is extending\nthe standard capability rather than creating a separate business capability.\n\nA future customer module could load like this:\n\n```text\nnodics.core\nnodics.platform\ncustomer.platform\ncustomer project\nenvironment module\nserver module\n```\n\nThe important distinction is identity versus implementation. The functional\nmodule identity remains `nodics.platform`; the implementation may be extended\nor overridden by later modules according to the runtime load order. This keeps\nbusiness navigation, registry state, documentation, and API discovery stable\nwhile allowing project-specific behavior.\n\n## Example: why Axis does not own documentation data\n\nAxis is the browser renderer. It can own React components, route handling,\nrecovery screens, and renderer mappings in the frontend. It must not own\nbackend-importable CMS sites, content catalogs, pages, components, routes, or\ndocumentation content records.\n\nThe correct ownership is:\n\n| Content type | Owner |\n| --- | --- |\n| Framework documentation | `nodics.docs` |\n| Axis product documentation | `nodics.platform/modules/axis` |\n| Customer project documentation | customer project, such as the reference project |\n| Browser renderer code | `nodics.axis` |\n\nThis is not bureaucracy. It prevents the frontend from becoming a hidden\ndatabase seed repository. If a partner replaces Axis later, the backend-owned\ncontent remains valid. If a documentation pack changes, the import manifest\nand WCMS delivery contract remain the authority.\n\n## Operator example: same capability, different topology\n\nIn a local demo, Platform, WCMS, Cron, MongoDB, and Axis may all run on one\ndeveloper machine. In production, the same capabilities may be split across\ndifferent processes, containers, nodes, or networks. The architecture must\nsurvive that change.\n\n| Local concern | Production concern | Stable Nodics contract |\n| --- | --- | --- |\n| One terminal starts Platform. | Multiple Platform nodes may serve BackOffice APIs. | Platform owns Profile, BackOffice, registry, and API discovery. |\n| WCMS runs on port `4310`. | WCMS may scale separately with cache/search/storage. | WCMS owns content, routes, media, and documentation delivery. |\n| Cron runs only when testing. | Cron may run on controlled scheduler nodes. | Cron owns scheduled job lifecycle and execution evidence. |\n| Axis runs through Vite. | Axis may be built and hosted separately. | Axis renders backend-owned capability contracts. |\n\nThe module identity does not change just because topology changes. That is why\nruntime `extends`, service load order, registration state, and deployment\ntopology must be discussed separately.\n\n## Common mistakes\n\n- Copying Core, Platform, or WCMS source into a customer project.\n- Treating a server as the owner of a capability.\n- Exposing every technical module as a business registry item.\n- Putting CMS import data into `nodics.axis`.\n- Renaming a standard functional module because a customer customizes it.\n\n## Next actions\n\nAfter this page, read the local quick start and customization guide. Those\npages show how the architecture becomes concrete commands, files, and project\nrules.\n",
       "previous": {
         "title": "What is Nodics?",
         "route": "/docs/framework"
@@ -1224,8 +1389,8 @@ module.exports = {
         "functionalModule": "nodics.core",
         "technicalModule": "nSetup",
         "path": "content/framework/modular-architecture.md",
-        "wordCount": 1451,
-        "checksum": "b6aeb4d30400ac2142768c77295937bde1f783f2ccc249ab7f7cb37104ba21b3"
+        "wordCount": 2038,
+        "checksum": "89bf31ebfd5b7b8cd7f4b6fa1ba6ba9acd8af2d8bab919c3afafb8c7b2cb5f12"
       }
     },
     "active": true
@@ -1304,8 +1469,28 @@ module.exports = {
           "level": 2
         },
         {
+          "text": "What success looks like for each reader",
+          "anchor": "frameworkLocalQuickStart-12-what-success-looks-like-for-each-reader",
+          "level": 2
+        },
+        {
+          "text": "First guided walkthrough after login",
+          "anchor": "frameworkLocalQuickStart-13-first-guided-walkthrough-after-login",
+          "level": 2
+        },
+        {
+          "text": "First safe customization exercise",
+          "anchor": "frameworkLocalQuickStart-14-first-safe-customization-exercise",
+          "level": 2
+        },
+        {
+          "text": "Beginner glossary",
+          "anchor": "frameworkLocalQuickStart-15-beginner-glossary",
+          "level": 2
+        },
+        {
           "text": "Next actions",
-          "anchor": "frameworkLocalQuickStart-12-next-actions",
+          "anchor": "frameworkLocalQuickStart-16-next-actions",
           "level": 2
         }
       ],
@@ -1643,15 +1828,180 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "What success looks like for each reader",
+          "anchor": "frameworkLocalQuickStart-12-what-success-looks-like-for-each-reader"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The quick start is successful only when different readers can see their own evidence, not merely when terminal processes stay open."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Reader",
+            "Evidence they should see",
+            "Why it matters"
+          ],
+          "rows": [
+            [
+              "Business evaluator",
+              "Axis opens, login succeeds, dashboards and documentation are visible.",
+              "Proves the framework is not only an architecture idea; it has a runnable business workspace."
+            ],
+            [
+              "Developer",
+              "Platform, WCMS, and Cron start from Kickoff without editing framework source.",
+              "Proves customer projects compose the framework through configuration and dependencies."
+            ],
+            [
+              "Architect",
+              "Module Registry shows mandatory and optional functional modules at the correct level.",
+              "Proves business capability identity is separated from internal technical modules."
+            ],
+            [
+              "Operator",
+              "Ports, runtime logs, import releases, and module lifecycle states are observable.",
+              "Proves the stack can be diagnosed without guessing from frontend behavior."
+            ],
+            [
+              "QA engineer",
+              "Fresh acceptance can recreate the local system from empty databases.",
+              "Proves the demo is repeatable and not dependent on accidental local state."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "If one reader's evidence is missing, the quick start is not complete. For example, a developer may see servers running, but a business evaluator still cannot evaluate Nodics if Axis documentation is missing. Likewise, Axis may open, but an operator cannot trust the bootstrap if content packs show checksum errors or stale releases."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "First guided walkthrough after login",
+          "anchor": "frameworkLocalQuickStart-13-first-guided-walkthrough-after-login"
+        },
+        {
+          "kind": "paragraph",
+          "text": "After login, use this short walkthrough before changing any code:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Open **Dashboard** and confirm Axis is in the authenticated workspace, not the static recovery screen.",
+            "Open **System and Integrations > Module Registry** and confirm Core, Platform, and WCMS are mandatory active capabilities.",
+            "If Cron is running, register and activate Cron, then deactivate and deregister it to understand the optional module lifecycle.",
+            "Open **System and Integrations > Imports and Exports** and review initialization, core, sample, file import, export, and history tabs.",
+            "Import missing documentation packs if a fresh database was used.",
+            "Open **Content and Experience > Content** to see the content dashboard.",
+            "Open **Content and Experience > Media** to see governed media operations.",
+            "Open **Documentation > Nodics Documentation** and read Framework, Swaggers, Nodics Axis, and Nodics Kickoff."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "This walkthrough intentionally uses Axis screens first. A beginner should see the framework's behavior before reading internal files. Once the user sees the running product, repository structure becomes easier to understand."
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart TD\n  Login[\"Login to Axis\"] --> Registry[\"Module Registry\"]\n  Registry --> Imports[\"Imports and Exports\"]\n  Imports --> Content[\"Content dashboard\"]\n  Content --> Media[\"Media operations\"]\n  Media --> Docs[\"Documentation\"]\n  Docs --> Code[\"Only then inspect source ownership\"]"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "First safe customization exercise",
+          "anchor": "frameworkLocalQuickStart-14-first-safe-customization-exercise"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The first customization should be intentionally small. Do not begin by editing Core, Platform, WCMS, or Axis source. A good beginner exercise is to change project-owned documentation or demo content in the customer project, regenerate the project documentation pack, import it through Axis, and verify the updated page."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The learning outcome is important:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "the source content lives in the owner project;",
+            "generated data lives under the owner project's generated data folder;",
+            "the manifest checksum changes with the content;",
+            "WCMS imports the release;",
+            "Axis renders the result from backend delivery contracts;",
+            "no frontend renderer or framework source file is edited."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "That small exercise teaches the full Nodics pattern: owner first, generated data second, import through governance, render through Axis, verify through the running system."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Beginner glossary",
+          "anchor": "frameworkLocalQuickStart-15-beginner-glossary"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Term",
+            "Plain-language meaning"
+          ],
+          "rows": [
+            [
+              "Framework repository",
+              "Reusable Nodics backend capabilities, currently `nodics.ai`."
+            ],
+            [
+              "Customer project",
+              "The adopting project that composes and customizes the framework, such as the reference project."
+            ],
+            [
+              "Functional module",
+              "Business-facing capability group such as Platform, WCMS, Cron, or Docs."
+            ],
+            [
+              "Technical module",
+              "Internal implementation unit under a functional module group."
+            ],
+            [
+              "Runtime server",
+              "A process that loads a configured module graph and exposes APIs or background behavior."
+            ],
+            [
+              "Axis",
+              "Browser BackOffice renderer that discovers backend capabilities."
+            ],
+            [
+              "Content pack",
+              "Versioned backend-owned data release imported into WCMS."
+            ],
+            [
+              "Manifest checksum",
+              "Integrity evidence proving the release files match the manifest."
+            ],
+            [
+              "Registration",
+              "Persisted project decision to accept an observed optional functional module."
+            ],
+            [
+              "Activation",
+              "Persisted project decision that a registered module should be usable."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Next actions",
-          "anchor": "frameworkLocalQuickStart-12-next-actions"
+          "anchor": "frameworkLocalQuickStart-16-next-actions"
         },
         {
           "kind": "paragraph",
           "text": "Once the reference stack is running, read the customization guide before changing code. Use Axis customization for presentation and project modules for backend behavior."
         }
       ],
-      "searchText": "Local quick start with Kickoff and Axis Beginner-friendly steps to configure the framework, start local servers, log in to Axis, and open documentation. # Local quick start with Kickoff and Axis\n\nThis guide starts the local reference stack from zero. It is written for a\ndeveloper who is new to Nodics and wants to see the framework, BackOffice, WCMS\ndocumentation, and Axis working locally.\n\nFor a beginner, the goal is not to understand every internal module on the\nfirst day. The goal is to prove that the framework can start, authenticate,\nimport governed content, show documentation, and expose a safe BackOffice\nworkspace before any custom business code is written.\n\nFor a business evaluator, this quick start demonstrates adoption friction. If a\nnew partner can clone the framework, run Kickoff, and see Platform, WCMS, Cron,\nand Axis working together, then the framework is easier to evaluate than an\narchitecture that exists only on slides.\n\n## What you will run\n\nThe reference setup uses three projects:\n\n- `nodics.ai` contains framework backend modules.\n- `nodics.kickoff` is the reference customer project and local server owner.\n- `nodics.axis` is the BackOffice frontend.\n\nKickoff starts backend servers. Axis connects to Platform, authenticates an\nemployee, reads the BackOffice bootstrap contract, and renders workspaces and\ndocumentation from registered backend sources.\n\n## Business outcome of the quick start\n\nAfter this guide succeeds, the business-facing proof is simple: a customer\nproject can run the framework without forking framework code, content can be\nmanaged through backend-owned packs, and operators can see which capabilities\nare live. That is the first adoption story Nodics must make boring and\nrepeatable.\n\n## Prerequisites\n\nInstall Node.js and npm versions compatible with the repositories. Start\nMongoDB before starting the backend. Elasticsearch and Redis may be needed when\ntheir providers are enabled by configuration; disabled providers may produce\ninformational logs and are not a failure in the reference setup.\n\n## Step 1: configure Kickoff\n\nOpen `nodics.kickoff`:\n\n```bash\ncd ../nodics.kickoff\ncp .env.example .env\n```\n\nEdit `.env`:\n\n```bash\nNODICS_FRAMEWORK_ROOT=../nodics.ai\n```\n\nThis tells Kickoff where the framework checkout lives. The path may be\nabsolute or relative to the Kickoff project root.\n\nGenerate local framework links and install:\n\n```bash\nnpm run configure:framework\nnpm install\n```\n\nThe configure step creates local links under `.nodics/framework`. That folder\nis machine-local and must not be committed.\n\n## Step 2: start backend servers\n\nUse separate terminals from `nodics.kickoff`.\n\nStart Platform:\n\n```bash\nnpm run start:platform\n```\n\nPlatform provides employee authentication, Profile, BackOffice bootstrap,\nruntime module registry, documentation-source registry, and Platform APIs.\nLocal HTTP port: `http://localhost:4300`.\n\nStart WCMS:\n\n```bash\nnpm run start:wcms\n```\n\nWCMS owns CMS sites, content catalogs, pages, components, routes, media, and\ndocumentation content-pack delivery. Local HTTP port:\n`http://localhost:4310`.\n\nStart Cron when scheduled work is needed:\n\n```bash\nnpm run start:cron\n```\n\n## Step 3: start Axis\n\nOpen `nodics.axis`:\n\n```bash\ncd ../nodics.axis\nnpm install\nnpm run dev\n```\n\nOpen `http://localhost:3100`.\n\n## Step 4: log in\n\nUse the reference employee:\n\n```text\nEnterprise: default\nUsername: admin\nPassword: adminPassword\n```\n\nAfter login, open `http://localhost:3100/docs`. You should see Framework,\nSwaggers, Nodics Axis, and Nodics Kickoff.\n\n## What “initial data import” means\n\nThe local stack does not become useful only because the servers start. The\nservers also need governed data: catalogs, Profile records, WCMS sites, Axis\npages, documentation routes, module registry records, and sample data. Axis\nshows this through the Initialize experience.\n\n![Legacy data import process](../assets/images/data-import-process.jpg \"Data import process reference from the archived documentation set\")\n\n```mermaid\nsequenceDiagram\n  participant User as Developer in Axis\n  participant Axis as nodics.axis\n  participant Platform as Platform 4300\n  participant WCMS as WCMS 4310\n  participant Modules as Module data folders\n\n  User->>Axis: Open Initialize\n  Axis->>Platform: Authenticate and load BackOffice bootstrap\n  Axis->>WCMS: GET /nodics/import/v0/init\n  WCMS->>Modules: Discover init manifests in active runtime graph\n  Modules-->>WCMS: Release name, version, checksum, files\n  WCMS-->>Axis: Valid release catalogue\n  User->>Axis: Select releases and install\n  Axis->>WCMS: POST /nodics/import/v0/init/install\n  WCMS->>Modules: Read header and data files\n  WCMS-->>Axis: Import result and evidence\n```\n\nIf Axis says `INVALID RELEASE`, do not ignore it. That means the manifest\nchecksum does not match the current files. Run the framework manifest generator\nfrom `nodics.ai` before importing again:\n\n```bash\nnode nodics.core/modules/nTooling/bin/generate-data-release-manifests.js\n```\n\nThen restart the affected backend server so it rediscovers the updated\nmanifests. In local development the most common affected server is WCMS\nbecause the Initialize page reads import catalogues from port `4310`.\n\n## Fresh database test\n\nFor the safest repeatable local verification, use the Kickoff acceptance\nrunner from `nodics.kickoff`:\n\n```bash\nnpm run acceptance:local:fresh\n```\n\nThis command drops only the local reference databases:\n\n```text\nkickoffLocal\nkickoffLocalWcms\nkickoffLocalCron\n```\n\nIt then starts Platform, WCMS, Cron, and Axis if they are not already running;\nwaits for each server; logs in as the reference admin user; checks the module\nregistry; imports and verifies Framework, Axis, and Kickoff documentation\ncontent packs; verifies CMS counts; opens the important Axis routes; and runs\nthe live Axis smoke gates for module registry, documentation packs, and Cron\nlifecycle. The runner stops the servers it started after the checks complete;\npass `--leave-started` if you intentionally want to keep the local stack\nrunning for manual inspection.\n\nThe fresh runner intentionally refuses to drop databases when local Nodics\nports are already busy. Stop Platform, WCMS, Cron, and Axis first so the test\nreally proves a clean bootstrap. If you only want to verify the stack that is\nalready running, use the non-destructive command:\n\n```bash\nnpm run acceptance:local\n```\n\nWhen you drop local MongoDB schemas to test from zero, use this order:\n\n1. Stop Platform, WCMS, Cron, and Axis.\n2. Drop only the local Nodics development databases you intentionally want to\n   reset.\n3. Start Platform and wait until it finishes module loading.\n4. Start WCMS and wait until it finishes module loading.\n5. Start Cron only if you want to test optional module registration.\n6. Start Axis and log in with the reference admin user.\n7. Open Initialize and import required `init`, then `core`, then `sample`\n   releases as needed.\n\nDo not drop databases in a shared or production-like environment from this\nguide. This quick start is only for local developer machines.\n\n## Manual server checklist\n\nUse this checklist if something looks wrong:\n\n| Check | Expected result |\n| --- | --- |\n| `http://localhost:4300` | Platform server is listening. |\n| `http://localhost:4310` | WCMS server is listening. |\n| `http://localhost:3100` | Axis Vite dev server is listening. |\n| Axis login | `default / admin / adminPassword` logs in. |\n| Documentation dashboard | Framework, Swaggers, Nodics Axis, and Nodics Kickoff are visible after content import. |\n| Initialize screen | Releases are grouped by selected data type and do not repeat across Init/Core/Sample. |\n\n## Troubleshooting\n\nIf Axis says the BackOffice registry is unavailable, Platform is not reachable\nor still starting. Check the Platform terminal and confirm port `4300`.\n\nIf CMS documentation is unavailable, WCMS is not reachable, the content pack\nhas not been imported, or the imported version is stale. Check port `4310` and\nthe content-pack import status.\n\nIf npm cannot resolve framework packages, rerun `npm run configure:framework`\nafter checking `NODICS_FRAMEWORK_ROOT`.\n\n## Next actions\n\nOnce the reference stack is running, read the customization guide before\nchanging code. Use Axis customization for presentation and project modules for\nbackend behavior.\n",
+      "searchText": "Local quick start with Kickoff and Axis Beginner-friendly steps to configure the framework, start local servers, log in to Axis, and open documentation. # Local quick start with Kickoff and Axis\n\nThis guide starts the local reference stack from zero. It is written for a\ndeveloper who is new to Nodics and wants to see the framework, BackOffice, WCMS\ndocumentation, and Axis working locally.\n\nFor a beginner, the goal is not to understand every internal module on the\nfirst day. The goal is to prove that the framework can start, authenticate,\nimport governed content, show documentation, and expose a safe BackOffice\nworkspace before any custom business code is written.\n\nFor a business evaluator, this quick start demonstrates adoption friction. If a\nnew partner can clone the framework, run Kickoff, and see Platform, WCMS, Cron,\nand Axis working together, then the framework is easier to evaluate than an\narchitecture that exists only on slides.\n\n## What you will run\n\nThe reference setup uses three projects:\n\n- `nodics.ai` contains framework backend modules.\n- `nodics.kickoff` is the reference customer project and local server owner.\n- `nodics.axis` is the BackOffice frontend.\n\nKickoff starts backend servers. Axis connects to Platform, authenticates an\nemployee, reads the BackOffice bootstrap contract, and renders workspaces and\ndocumentation from registered backend sources.\n\n## Business outcome of the quick start\n\nAfter this guide succeeds, the business-facing proof is simple: a customer\nproject can run the framework without forking framework code, content can be\nmanaged through backend-owned packs, and operators can see which capabilities\nare live. That is the first adoption story Nodics must make boring and\nrepeatable.\n\n## Prerequisites\n\nInstall Node.js and npm versions compatible with the repositories. Start\nMongoDB before starting the backend. Elasticsearch and Redis may be needed when\ntheir providers are enabled by configuration; disabled providers may produce\ninformational logs and are not a failure in the reference setup.\n\n## Step 1: configure Kickoff\n\nOpen `nodics.kickoff`:\n\n```bash\ncd ../nodics.kickoff\ncp .env.example .env\n```\n\nEdit `.env`:\n\n```bash\nNODICS_FRAMEWORK_ROOT=../nodics.ai\n```\n\nThis tells Kickoff where the framework checkout lives. The path may be\nabsolute or relative to the Kickoff project root.\n\nGenerate local framework links and install:\n\n```bash\nnpm run configure:framework\nnpm install\n```\n\nThe configure step creates local links under `.nodics/framework`. That folder\nis machine-local and must not be committed.\n\n## Step 2: start backend servers\n\nUse separate terminals from `nodics.kickoff`.\n\nStart Platform:\n\n```bash\nnpm run start:platform\n```\n\nPlatform provides employee authentication, Profile, BackOffice bootstrap,\nruntime module registry, documentation-source registry, and Platform APIs.\nLocal HTTP port: `http://localhost:4300`.\n\nStart WCMS:\n\n```bash\nnpm run start:wcms\n```\n\nWCMS owns CMS sites, content catalogs, pages, components, routes, media, and\ndocumentation content-pack delivery. Local HTTP port:\n`http://localhost:4310`.\n\nStart Cron when scheduled work is needed:\n\n```bash\nnpm run start:cron\n```\n\n## Step 3: start Axis\n\nOpen `nodics.axis`:\n\n```bash\ncd ../nodics.axis\nnpm install\nnpm run dev\n```\n\nOpen `http://localhost:3100`.\n\n## Step 4: log in\n\nUse the reference employee:\n\n```text\nEnterprise: default\nUsername: admin\nPassword: adminPassword\n```\n\nAfter login, open `http://localhost:3100/docs`. You should see Framework,\nSwaggers, Nodics Axis, and Nodics Kickoff.\n\n## What “initial data import” means\n\nThe local stack does not become useful only because the servers start. The\nservers also need governed data: catalogs, Profile records, WCMS sites, Axis\npages, documentation routes, module registry records, and sample data. Axis\nshows this through the Initialize experience.\n\n![Legacy data import process](../assets/images/data-import-process.jpg \"Data import process reference from the archived documentation set\")\n\n```mermaid\nsequenceDiagram\n  participant User as Developer in Axis\n  participant Axis as nodics.axis\n  participant Platform as Platform 4300\n  participant WCMS as WCMS 4310\n  participant Modules as Module data folders\n\n  User->>Axis: Open Initialize\n  Axis->>Platform: Authenticate and load BackOffice bootstrap\n  Axis->>WCMS: GET /nodics/import/v0/init\n  WCMS->>Modules: Discover init manifests in active runtime graph\n  Modules-->>WCMS: Release name, version, checksum, files\n  WCMS-->>Axis: Valid release catalogue\n  User->>Axis: Select releases and install\n  Axis->>WCMS: POST /nodics/import/v0/init/install\n  WCMS->>Modules: Read header and data files\n  WCMS-->>Axis: Import result and evidence\n```\n\nIf Axis says `INVALID RELEASE`, do not ignore it. That means the manifest\nchecksum does not match the current files. Run the framework manifest generator\nfrom `nodics.ai` before importing again:\n\n```bash\nnode nodics.core/modules/nTooling/bin/generate-data-release-manifests.js\n```\n\nThen restart the affected backend server so it rediscovers the updated\nmanifests. In local development the most common affected server is WCMS\nbecause the Initialize page reads import catalogues from port `4310`.\n\n## Fresh database test\n\nFor the safest repeatable local verification, use the Kickoff acceptance\nrunner from `nodics.kickoff`:\n\n```bash\nnpm run acceptance:local:fresh\n```\n\nThis command drops only the local reference databases:\n\n```text\nkickoffLocal\nkickoffLocalWcms\nkickoffLocalCron\n```\n\nIt then starts Platform, WCMS, Cron, and Axis if they are not already running;\nwaits for each server; logs in as the reference admin user; checks the module\nregistry; imports and verifies Framework, Axis, and Kickoff documentation\ncontent packs; verifies CMS counts; opens the important Axis routes; and runs\nthe live Axis smoke gates for module registry, documentation packs, and Cron\nlifecycle. The runner stops the servers it started after the checks complete;\npass `--leave-started` if you intentionally want to keep the local stack\nrunning for manual inspection.\n\nThe fresh runner intentionally refuses to drop databases when local Nodics\nports are already busy. Stop Platform, WCMS, Cron, and Axis first so the test\nreally proves a clean bootstrap. If you only want to verify the stack that is\nalready running, use the non-destructive command:\n\n```bash\nnpm run acceptance:local\n```\n\nWhen you drop local MongoDB schemas to test from zero, use this order:\n\n1. Stop Platform, WCMS, Cron, and Axis.\n2. Drop only the local Nodics development databases you intentionally want to\n   reset.\n3. Start Platform and wait until it finishes module loading.\n4. Start WCMS and wait until it finishes module loading.\n5. Start Cron only if you want to test optional module registration.\n6. Start Axis and log in with the reference admin user.\n7. Open Initialize and import required `init`, then `core`, then `sample`\n   releases as needed.\n\nDo not drop databases in a shared or production-like environment from this\nguide. This quick start is only for local developer machines.\n\n## Manual server checklist\n\nUse this checklist if something looks wrong:\n\n| Check | Expected result |\n| --- | --- |\n| `http://localhost:4300` | Platform server is listening. |\n| `http://localhost:4310` | WCMS server is listening. |\n| `http://localhost:3100` | Axis Vite dev server is listening. |\n| Axis login | `default / admin / adminPassword` logs in. |\n| Documentation dashboard | Framework, Swaggers, Nodics Axis, and Nodics Kickoff are visible after content import. |\n| Initialize screen | Releases are grouped by selected data type and do not repeat across Init/Core/Sample. |\n\n## Troubleshooting\n\nIf Axis says the BackOffice registry is unavailable, Platform is not reachable\nor still starting. Check the Platform terminal and confirm port `4300`.\n\nIf CMS documentation is unavailable, WCMS is not reachable, the content pack\nhas not been imported, or the imported version is stale. Check port `4310` and\nthe content-pack import status.\n\nIf npm cannot resolve framework packages, rerun `npm run configure:framework`\nafter checking `NODICS_FRAMEWORK_ROOT`.\n\n## What success looks like for each reader\n\nThe quick start is successful only when different readers can see their own\nevidence, not merely when terminal processes stay open.\n\n| Reader | Evidence they should see | Why it matters |\n| --- | --- | --- |\n| Business evaluator | Axis opens, login succeeds, dashboards and documentation are visible. | Proves the framework is not only an architecture idea; it has a runnable business workspace. |\n| Developer | Platform, WCMS, and Cron start from Kickoff without editing framework source. | Proves customer projects compose the framework through configuration and dependencies. |\n| Architect | Module Registry shows mandatory and optional functional modules at the correct level. | Proves business capability identity is separated from internal technical modules. |\n| Operator | Ports, runtime logs, import releases, and module lifecycle states are observable. | Proves the stack can be diagnosed without guessing from frontend behavior. |\n| QA engineer | Fresh acceptance can recreate the local system from empty databases. | Proves the demo is repeatable and not dependent on accidental local state. |\n\nIf one reader's evidence is missing, the quick start is not complete. For\nexample, a developer may see servers running, but a business evaluator still\ncannot evaluate Nodics if Axis documentation is missing. Likewise, Axis may\nopen, but an operator cannot trust the bootstrap if content packs show checksum\nerrors or stale releases.\n\n## First guided walkthrough after login\n\nAfter login, use this short walkthrough before changing any code:\n\n1. Open **Dashboard** and confirm Axis is in the authenticated workspace, not\n   the static recovery screen.\n2. Open **System and Integrations > Module Registry** and confirm Core,\n   Platform, and WCMS are mandatory active capabilities.\n3. If Cron is running, register and activate Cron, then deactivate and\n   deregister it to understand the optional module lifecycle.\n4. Open **System and Integrations > Imports and Exports** and review\n   initialization, core, sample, file import, export, and history tabs.\n5. Import missing documentation packs if a fresh database was used.\n6. Open **Content and Experience > Content** to see the content dashboard.\n7. Open **Content and Experience > Media** to see governed media operations.\n8. Open **Documentation > Nodics Documentation** and read Framework, Swaggers,\n   Nodics Axis, and Nodics Kickoff.\n\nThis walkthrough intentionally uses Axis screens first. A beginner should see\nthe framework's behavior before reading internal files. Once the user sees the\nrunning product, repository structure becomes easier to understand.\n\n```mermaid\nflowchart TD\n  Login[\"Login to Axis\"] --> Registry[\"Module Registry\"]\n  Registry --> Imports[\"Imports and Exports\"]\n  Imports --> Content[\"Content dashboard\"]\n  Content --> Media[\"Media operations\"]\n  Media --> Docs[\"Documentation\"]\n  Docs --> Code[\"Only then inspect source ownership\"]\n```\n\n## First safe customization exercise\n\nThe first customization should be intentionally small. Do not begin by editing\nCore, Platform, WCMS, or Axis source. A good beginner exercise is to change\nproject-owned documentation or demo content in the customer project, regenerate\nthe project documentation pack, import it through Axis, and verify the updated\npage.\n\nThe learning outcome is important:\n\n- the source content lives in the owner project;\n- generated data lives under the owner project's generated data folder;\n- the manifest checksum changes with the content;\n- WCMS imports the release;\n- Axis renders the result from backend delivery contracts;\n- no frontend renderer or framework source file is edited.\n\nThat small exercise teaches the full Nodics pattern: owner first, generated\ndata second, import through governance, render through Axis, verify through the\nrunning system.\n\n## Beginner glossary\n\n| Term | Plain-language meaning |\n| --- | --- |\n| Framework repository | Reusable Nodics backend capabilities, currently `nodics.ai`. |\n| Customer project | The adopting project that composes and customizes the framework, such as the reference project. |\n| Functional module | Business-facing capability group such as Platform, WCMS, Cron, or Docs. |\n| Technical module | Internal implementation unit under a functional module group. |\n| Runtime server | A process that loads a configured module graph and exposes APIs or background behavior. |\n| Axis | Browser BackOffice renderer that discovers backend capabilities. |\n| Content pack | Versioned backend-owned data release imported into WCMS. |\n| Manifest checksum | Integrity evidence proving the release files match the manifest. |\n| Registration | Persisted project decision to accept an observed optional functional module. |\n| Activation | Persisted project decision that a registered module should be usable. |\n\n## Next actions\n\nOnce the reference stack is running, read the customization guide before\nchanging code. Use Axis customization for presentation and project modules for\nbackend behavior.\n",
       "previous": {
         "title": "Modular architecture and ownership",
         "route": "/docs/framework/framework-modular-architecture"
@@ -1665,8 +2015,8 @@ module.exports = {
         "functionalModule": "nodics.core",
         "technicalModule": "nSetup",
         "path": "content/framework/local-quick-start.md",
-        "wordCount": 1168,
-        "checksum": "99126a73f322dbc77316d8c0f824cd6e9e482ca2f73729ff66bafc300ff49fab"
+        "wordCount": 1818,
+        "checksum": "a6ca26c4784a6fa223dd6b14491378892f16872b5ec818fc5d421487cb41ab7a"
       }
     },
     "active": true
@@ -1720,23 +2070,43 @@ module.exports = {
           "level": 2
         },
         {
+          "text": "Choosing the right customization mechanism",
+          "anchor": "frameworkCustomizationGuide-7-choosing-the-right-customization-mechanism",
+          "level": 2
+        },
+        {
+          "text": "Worked example: changing a demo company identity",
+          "anchor": "frameworkCustomizationGuide-8-worked-example-changing-a-demo-company-identity",
+          "level": 2
+        },
+        {
+          "text": "Worked example: overriding a service safely",
+          "anchor": "frameworkCustomizationGuide-9-worked-example-overriding-a-service-safely",
+          "level": 2
+        },
+        {
           "text": "Business and DevOps impact",
-          "anchor": "frameworkCustomizationGuide-7-business-and-devops-impact",
+          "anchor": "frameworkCustomizationGuide-10-business-and-devops-impact",
           "level": 2
         },
         {
           "text": "Documentation customization",
-          "anchor": "frameworkCustomizationGuide-8-documentation-customization",
+          "anchor": "frameworkCustomizationGuide-11-documentation-customization",
           "level": 2
         },
         {
           "text": "Common mistakes",
-          "anchor": "frameworkCustomizationGuide-9-common-mistakes",
+          "anchor": "frameworkCustomizationGuide-12-common-mistakes",
           "level": 2
         },
         {
           "text": "Verification",
-          "anchor": "frameworkCustomizationGuide-10-verification",
+          "anchor": "frameworkCustomizationGuide-13-verification",
+          "level": 2
+        },
+        {
+          "text": "Customization acceptance checklist",
+          "anchor": "frameworkCustomizationGuide-14-customization-acceptance-checklist",
           "level": 2
         }
       ],
@@ -1947,8 +2317,122 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Choosing the right customization mechanism",
+          "anchor": "frameworkCustomizationGuide-7-choosing-the-right-customization-mechanism"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Use the smallest mechanism that honestly solves the requirement. This keeps customization cheap, testable, and upgrade-friendly."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Requirement",
+            "Preferred mechanism",
+            "Why"
+          ],
+          "rows": [
+            [
+              "Change a label, image, logo, or help text",
+              "Backend-owned CMS content or configuration",
+              "Business-facing content should not require a frontend fork."
+            ],
+            [
+              "Change a runtime value per environment",
+              "Environment/server/node property override",
+              "Keeps the framework default reusable and the local deployment explicit."
+            ],
+            [
+              "Add a customer data seed",
+              "Customer project data pack",
+              "Data belongs to the project that owns it and can be imported through governance."
+            ],
+            [
+              "Add a new API behavior for a customer",
+              "Customer project module or customer extension module",
+              "Keeps customer code later in the runtime graph."
+            ],
+            [
+              "Change a framework service algorithm",
+              "Later-loaded service override with tests",
+              "Preserves the functional module identity while replacing implementation."
+            ],
+            [
+              "Add a reusable capability for many projects",
+              "New or existing framework functional module",
+              "Avoids hiding reusable platform behavior inside one customer project."
+            ],
+            [
+              "Add a browser-only interaction",
+              "`nodics.axis` renderer change",
+              "UI behavior belongs in Axis only when backend authority already exists."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "If the preferred mechanism feels too small, prove why. A service override may be needed, but it should not be the first answer when a property or data pack is enough."
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart TD\n  Need[\"Customization need\"] --> Config[\"Can config/content solve it?\"]\n  Config -->|Yes| UseConfig[\"Use property, CMS, or data pack\"]\n  Config -->|No| Project[\"Is it customer-specific?\"]\n  Project -->|Yes| Later[\"Use project or customer extension module\"]\n  Project -->|No| Reusable[\"Is it reusable framework behavior?\"]\n  Reusable -->|Yes| Framework[\"Implement in owning framework module\"]\n  Reusable -->|No| Reconsider[\"Re-check ownership and requirement\"]\n  Later --> Test[\"Add default, override, and regression tests\"]\n  Framework --> Test\n  UseConfig --> Validate[\"Validate runtime result\"]"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Worked example: changing a demo company identity",
+          "anchor": "frameworkCustomizationGuide-8-worked-example-changing-a-demo-company-identity"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Suppose a partner wants the local demo to show its own company name, logo, and welcome message. The wrong path is editing Axis React code or framework Profile services. The correct path depends on what is being changed:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "If it is presentation content, put it in the owning WCMS or project content pack.",
+            "If it is an environment default, place the override in the customer environment/server configuration.",
+            "If it is project documentation, update the customer project documentation source and regenerate the customer docs pack.",
+            "Import the generated pack through Axis Imports and Exports.",
+            "Verify Axis renders the new values from backend delivery contracts."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business sees a custom experience. The developer avoids a fork. The operator can rebuild the environment from source-controlled project data."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Worked example: overriding a service safely",
+          "anchor": "frameworkCustomizationGuide-9-worked-example-overriding-a-service-safely"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Suppose a customer needs a different employee onboarding rule than the standard Platform behavior. That is not a reason to rename Platform or copy the entire module. The safer model is:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Identify the Platform service that owns the rule.",
+            "Confirm the extension point is intended to be overridden.",
+            "Create a later-loaded customer module that extends Platform behavior.",
+            "Export the replacement or composed service in the expected loader-visible style.",
+            "Keep status/error definitions in the correct status-definition file, not in a random properties file.",
+            "Add tests for the default rule, custom rule, rejected request, tenant boundary, authorization boundary, and regression risk.",
+            "Document the custom behavior in the customer project, not in reusable framework documentation unless the extension point itself changed."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "The module registry should still show Platform. The customization changes implementation, not the business-facing functional identity."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Business and DevOps impact",
-          "anchor": "frameworkCustomizationGuide-7-business-and-devops-impact"
+          "anchor": "frameworkCustomizationGuide-10-business-and-devops-impact"
         },
         {
           "kind": "paragraph",
@@ -1962,7 +2446,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Documentation customization",
-          "anchor": "frameworkCustomizationGuide-8-documentation-customization"
+          "anchor": "frameworkCustomizationGuide-11-documentation-customization"
         },
         {
           "kind": "paragraph",
@@ -1986,7 +2470,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Common mistakes",
-          "anchor": "frameworkCustomizationGuide-9-common-mistakes"
+          "anchor": "frameworkCustomizationGuide-12-common-mistakes"
         },
         {
           "kind": "unordered-list",
@@ -2003,14 +2487,69 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Verification",
-          "anchor": "frameworkCustomizationGuide-10-verification"
+          "anchor": "frameworkCustomizationGuide-13-verification"
         },
         {
           "kind": "paragraph",
           "text": "Every customization should prove success and failure behavior. For backend changes, run the owning module tests and any affected runtime smoke test. For Axis changes, run typecheck and focused UI tests. For documentation changes, regenerate the owning content pack, validate checksums, import through WCMS, and verify the route in Axis."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization acceptance checklist",
+          "anchor": "frameworkCustomizationGuide-14-customization-acceptance-checklist"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Before accepting a customization, answer each question:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Question",
+            "Acceptable answer"
+          ],
+          "rows": [
+            [
+              "Who owns the behavior?",
+              "A named framework module, customer module, project, or frontend renderer."
+            ],
+            [
+              "Is framework source edited?",
+              "Only if the behavior is reusable framework behavior and the owner module was confirmed."
+            ],
+            [
+              "Is there a configuration-first option?",
+              "Yes, it was used or explicitly rejected with evidence."
+            ],
+            [
+              "Is functional identity preserved?",
+              "Yes; customer extensions do not rename standard capabilities."
+            ],
+            [
+              "Are private values protected?",
+              "Secrets are not placed in frontend code, generated docs, or public properties."
+            ],
+            [
+              "Are generated files regenerated from source?",
+              "Yes; generated CMS data and manifests match source content."
+            ],
+            [
+              "Are tests proportional to risk?",
+              "Happy path, negative, boundary, authorization, tenant, runtime, and regression checks exist where applicable."
+            ],
+            [
+              "Is documentation updated in the owner?",
+              "Yes; no second authority was created."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "If the checklist cannot be completed, the customization may still be a useful prototype, but it is not production-ready Nodics behavior."
         }
       ],
-      "searchText": "Customization and extension guide How customer projects customize Nodics safely without forking framework authority. # Customization and extension guide\n\nNodics is built for customization, but customization must happen in the right\nowner. The safest path is to reuse an existing capability, configure it, extend\nit in a later-loaded module, and create new framework behavior only when the\nexisting contract truly cannot satisfy the requirement.\n\nFor a beginner, customization means “where should I put my change so I can\nstill upgrade the framework later?” The safest answer is usually configuration\nfirst, then a customer project module, then a customer extension module, and\nonly then a framework change if the behavior is truly reusable for everyone.\n\n## What this is\n\nThis guide explains how a customer or partner changes Nodics behavior without\nturning a customer project into a fork of the framework. It applies to backend\ncustomization, Axis presentation customization, and documentation ownership.\n\n## The customization ladder\n\nStart with the least invasive option:\n\n1. Use existing behavior.\n2. Change configuration in the correct project, environment, server, node, or\n   tenant scope.\n3. Add customer project modules under the customer project.\n4. Add a customer extension module that extends a framework functional module.\n5. Create a new implementation only when the existing capability contract is\n   missing or incorrect.\n\nThis ladder protects upgradeability. The later a customization loads, the more\nspecific it is. Framework modules stay reusable; customer modules carry\ncustomer decisions.\n\n| Customization level | Who should use it | Beginner example | Upgrade risk |\n| --- | --- | --- | --- |\n| Axis/WCMS content | Business user or content admin | Change a heading, image, documentation page, or dashboard card. | Low, because backend content is governed and versioned. |\n| Project configuration | Developer or operator | Change a local port, database name, or feature override for one environment. | Low when the property stays narrow. |\n| Project module | Developer | Add Kickoff-specific schema fields or business services. | Medium, because tests must prove the behavior. |\n| Customer extension module | Senior developer | Override Platform behavior while keeping the Platform functional identity. | Medium to high, because service precedence must be explicit. |\n| Framework module change | Framework team | Improve Core import behavior for every project. | Shared release risk, so it needs broader validation. |\n| New functional module | Architecture owner | Add Commerce, Workflow, or another independent capability. | High if ownership is blurry. |\n\n```mermaid\nflowchart TD\n  Need[\"Need to change behavior or content\"] --> Content{\"Can Axis/WCMS governed content solve it?\"}\n  Content -->|Yes| Wcms[\"Update backend-owned CMS data\"]\n  Content -->|No| Config{\"Can configuration solve it?\"}\n  Config -->|Yes| Props[\"Add narrow project/environment/server property\"]\n  Config -->|No| Project{\"Is it project-specific?\"}\n  Project -->|Yes| Module[\"Add project or customer extension module\"]\n  Project -->|No| Framework[\"Change the owning framework module with tests\"]\n```\n\n## The role an AI tool or developer must play\n\nNodics is too broad for a narrow “make the code pass” mindset. A developer or\nAI assistant working on Nodics must deliberately switch through several\nperspectives before changing files. This is not ceremony; it is how the\nframework avoids accidental shortcuts that work for one screen and break the\necosystem.\n\n| Role | Question to ask before coding | Example |\n| --- | --- | --- |\n| Business analyst | What problem is the user, operator, partner, or business evaluator trying to solve? | If the request is “register Cron,” explain the lifecycle and what business capability becomes available, not only the button click. |\n| Enterprise architect | Which module, runtime, tenant, security boundary, and release unit owns this behavior? | Module registration is Platform/BackOffice state; Axis renders it; Cron only reports its runtime availability. |\n| Nodics framework expert | Is this Core, Platform, WCMS, Cron, Axis renderer, customer project, or customer overlay work? | A documentation content pack belongs in the backend owner, not in the frontend repository. |\n| Domain expert | Could this pattern apply to commerce, telco, logistics, content, workflow, or another domain without becoming domain-locked? | A media picker should be reusable for product media, CMS media, and future workflow attachments. |\n| Principal engineer | Can configuration or extension solve this before new framework code is written? | Prefer a server property, content component property, or customer module overlay before editing a framework default. |\n| QA and tester | What small failure will a user notice after the happy path succeeds? | Register/activate/deactivate buttons must refresh state immediately without forcing login or page reload. |\n| TechOps/DevOps reviewer | How will this run, restart, roll back, and be diagnosed in local and production topology? | A fresh bootstrap script must drop only named local databases and refuse to run if unrelated servers occupy the expected ports. |\n\nIf these roles point to different answers, document the trade-off before\nimplementation. For example, a browser-only workaround may be fast, but if the\nreal authority is a backend registry, the correct fix belongs in the backend\ncontract or typed client flow.\n\n## Coding principles that protect customization\n\nNodics code should be written so future customer projects can extend it without\ncopying framework files. Use these rules as the practical checklist:\n\n1. Prefer configuration first. If behavior can be changed through properties,\n   feature metadata, content component properties, server/environment deltas, or\n   tenant configuration, do that before changing code.\n2. Put files in the owner that matches the behavior. Error/status definitions\n   belong in status-definition files, API exposure belongs in owning module\n   properties, runtime topology belongs in server configuration, and renderer\n   code belongs in Axis.\n3. Keep JavaScript export-friendly. Prefer small exported functions, services,\n   and configuration objects over sealed inline behavior, so a later customer\n   module can override or compose the behavior through Nodics loading.\n4. Document the file and exported behavior. A future AI tool may read only the\n   nearest file and `AGENTS.md`, so ownership, override path, side effects, and\n   test expectations must be visible.\n5. Treat generated data as output. If CMS documentation, import manifests, or\n   generated records are wrong, fix the source and regenerate; do not hand-edit\n   generated projections.\n6. Keep public and private configuration separate. Browser-visible values,\n   runtime coordinates, secret references, and actual secrets have different\n   owners and different storage rules.\n7. Test both the owner and the integration. A service override needs focused\n   tests; a runtime graph change needs startup/acceptance tests; a frontend\n   state change needs UI or smoke coverage.\n\n## Backend customization\n\nBackend behavior belongs in the backend project or module that owns the\nbusiness rule. In Kickoff, project modules live under `modules/`, while\nenvironment and server composition live under `envs/`.\n\nA future module such as `kickoff.platform` may extend `nodics.platform` to\ncustomize Platform services. The runtime server can load the customer extension\nafter Platform. Service precedence then follows the normal module merge and\nindex order. Axis should still display the functional capability as Platform,\nbecause the customer extension changes implementation, not the business-facing\nidentity.\n\n## Axis customization\n\nAxis is the browser application. It owns renderers, interaction behavior,\nlayout, accessibility, and static recovery. It must not own imported CMS data,\nbackend schemas, permissions, or business rules. If a customer needs a new\nBackOffice page, the backend should expose the authorized navigation,\ncapability metadata, API contract, and CMS content where applicable. Axis then\nrenders that authorized contract.\n\nSimple presentation changes, such as logo, copy, theme, or demo content, should\ncome from backend-owned CMS or configuration where possible. Hard-coding those\nvalues in the frontend makes future customers harder to support.\n\n## Business and DevOps impact\n\nThe business value of this discipline is lower long-term cost. A customer can\nreceive framework upgrades without reapplying hidden edits. DevOps teams also\ngain a clean release story: framework packages, customer modules, environment\nproperties, and imported content packs can be rolled forward or backward as\nseparate operational units.\n\nFor production support, every customization should answer three questions:\nwhich module owns it, which runtime loads it, and which test or document proves\nthe intended behavior? If those answers are missing, the customization is not\nready for a production release.\n\n## Documentation customization\n\nDocumentation follows the owner of the thing being explained:\n\n- framework guidance goes to `nodics.docs`;\n- Axis product guidance goes to `nodics.platform/modules/axis`;\n- project guidance goes to the owning customer project, such as\n  `nodics.kickoff`;\n- generated content records stay under `data/core/data/documentation`;\n- manifests stay under `manifest/docs-content-pack.json`.\n\nDo not put customer project documentation into `nodics.docs`, and do not put\nimportable documentation records into `nodics.axis`.\n\n## Common mistakes\n\n- Editing framework source for one customer.\n- Adding business authorization in the browser.\n- Creating a second module registry or endpoint list in Axis.\n- Moving generated CMS data into a frontend repository.\n- Changing a functional module display name because an implementation was\n  customized.\n- Skipping tests after service override changes.\n\n## Verification\n\nEvery customization should prove success and failure behavior. For backend\nchanges, run the owning module tests and any affected runtime smoke test. For\nAxis changes, run typecheck and focused UI tests. For documentation changes,\nregenerate the owning content pack, validate checksums, import through WCMS,\nand verify the route in Axis.\n",
+      "searchText": "Customization and extension guide How customer projects customize Nodics safely without forking framework authority. # Customization and extension guide\n\nNodics is built for customization, but customization must happen in the right\nowner. The safest path is to reuse an existing capability, configure it, extend\nit in a later-loaded module, and create new framework behavior only when the\nexisting contract truly cannot satisfy the requirement.\n\nFor a beginner, customization means “where should I put my change so I can\nstill upgrade the framework later?” The safest answer is usually configuration\nfirst, then a customer project module, then a customer extension module, and\nonly then a framework change if the behavior is truly reusable for everyone.\n\n## What this is\n\nThis guide explains how a customer or partner changes Nodics behavior without\nturning a customer project into a fork of the framework. It applies to backend\ncustomization, Axis presentation customization, and documentation ownership.\n\n## The customization ladder\n\nStart with the least invasive option:\n\n1. Use existing behavior.\n2. Change configuration in the correct project, environment, server, node, or\n   tenant scope.\n3. Add customer project modules under the customer project.\n4. Add a customer extension module that extends a framework functional module.\n5. Create a new implementation only when the existing capability contract is\n   missing or incorrect.\n\nThis ladder protects upgradeability. The later a customization loads, the more\nspecific it is. Framework modules stay reusable; customer modules carry\ncustomer decisions.\n\n| Customization level | Who should use it | Beginner example | Upgrade risk |\n| --- | --- | --- | --- |\n| Axis/WCMS content | Business user or content admin | Change a heading, image, documentation page, or dashboard card. | Low, because backend content is governed and versioned. |\n| Project configuration | Developer or operator | Change a local port, database name, or feature override for one environment. | Low when the property stays narrow. |\n| Project module | Developer | Add Kickoff-specific schema fields or business services. | Medium, because tests must prove the behavior. |\n| Customer extension module | Senior developer | Override Platform behavior while keeping the Platform functional identity. | Medium to high, because service precedence must be explicit. |\n| Framework module change | Framework team | Improve Core import behavior for every project. | Shared release risk, so it needs broader validation. |\n| New functional module | Architecture owner | Add Commerce, Workflow, or another independent capability. | High if ownership is blurry. |\n\n```mermaid\nflowchart TD\n  Need[\"Need to change behavior or content\"] --> Content{\"Can Axis/WCMS governed content solve it?\"}\n  Content -->|Yes| Wcms[\"Update backend-owned CMS data\"]\n  Content -->|No| Config{\"Can configuration solve it?\"}\n  Config -->|Yes| Props[\"Add narrow project/environment/server property\"]\n  Config -->|No| Project{\"Is it project-specific?\"}\n  Project -->|Yes| Module[\"Add project or customer extension module\"]\n  Project -->|No| Framework[\"Change the owning framework module with tests\"]\n```\n\n## The role an AI tool or developer must play\n\nNodics is too broad for a narrow “make the code pass” mindset. A developer or\nAI assistant working on Nodics must deliberately switch through several\nperspectives before changing files. This is not ceremony; it is how the\nframework avoids accidental shortcuts that work for one screen and break the\necosystem.\n\n| Role | Question to ask before coding | Example |\n| --- | --- | --- |\n| Business analyst | What problem is the user, operator, partner, or business evaluator trying to solve? | If the request is “register Cron,” explain the lifecycle and what business capability becomes available, not only the button click. |\n| Enterprise architect | Which module, runtime, tenant, security boundary, and release unit owns this behavior? | Module registration is Platform/BackOffice state; Axis renders it; Cron only reports its runtime availability. |\n| Nodics framework expert | Is this Core, Platform, WCMS, Cron, Axis renderer, customer project, or customer overlay work? | A documentation content pack belongs in the backend owner, not in the frontend repository. |\n| Domain expert | Could this pattern apply to commerce, telco, logistics, content, workflow, or another domain without becoming domain-locked? | A media picker should be reusable for product media, CMS media, and future workflow attachments. |\n| Principal engineer | Can configuration or extension solve this before new framework code is written? | Prefer a server property, content component property, or customer module overlay before editing a framework default. |\n| QA and tester | What small failure will a user notice after the happy path succeeds? | Register/activate/deactivate buttons must refresh state immediately without forcing login or page reload. |\n| TechOps/DevOps reviewer | How will this run, restart, roll back, and be diagnosed in local and production topology? | A fresh bootstrap script must drop only named local databases and refuse to run if unrelated servers occupy the expected ports. |\n\nIf these roles point to different answers, document the trade-off before\nimplementation. For example, a browser-only workaround may be fast, but if the\nreal authority is a backend registry, the correct fix belongs in the backend\ncontract or typed client flow.\n\n## Coding principles that protect customization\n\nNodics code should be written so future customer projects can extend it without\ncopying framework files. Use these rules as the practical checklist:\n\n1. Prefer configuration first. If behavior can be changed through properties,\n   feature metadata, content component properties, server/environment deltas, or\n   tenant configuration, do that before changing code.\n2. Put files in the owner that matches the behavior. Error/status definitions\n   belong in status-definition files, API exposure belongs in owning module\n   properties, runtime topology belongs in server configuration, and renderer\n   code belongs in Axis.\n3. Keep JavaScript export-friendly. Prefer small exported functions, services,\n   and configuration objects over sealed inline behavior, so a later customer\n   module can override or compose the behavior through Nodics loading.\n4. Document the file and exported behavior. A future AI tool may read only the\n   nearest file and `AGENTS.md`, so ownership, override path, side effects, and\n   test expectations must be visible.\n5. Treat generated data as output. If CMS documentation, import manifests, or\n   generated records are wrong, fix the source and regenerate; do not hand-edit\n   generated projections.\n6. Keep public and private configuration separate. Browser-visible values,\n   runtime coordinates, secret references, and actual secrets have different\n   owners and different storage rules.\n7. Test both the owner and the integration. A service override needs focused\n   tests; a runtime graph change needs startup/acceptance tests; a frontend\n   state change needs UI or smoke coverage.\n\n## Backend customization\n\nBackend behavior belongs in the backend project or module that owns the\nbusiness rule. In Kickoff, project modules live under `modules/`, while\nenvironment and server composition live under `envs/`.\n\nA future module such as `kickoff.platform` may extend `nodics.platform` to\ncustomize Platform services. The runtime server can load the customer extension\nafter Platform. Service precedence then follows the normal module merge and\nindex order. Axis should still display the functional capability as Platform,\nbecause the customer extension changes implementation, not the business-facing\nidentity.\n\n## Axis customization\n\nAxis is the browser application. It owns renderers, interaction behavior,\nlayout, accessibility, and static recovery. It must not own imported CMS data,\nbackend schemas, permissions, or business rules. If a customer needs a new\nBackOffice page, the backend should expose the authorized navigation,\ncapability metadata, API contract, and CMS content where applicable. Axis then\nrenders that authorized contract.\n\nSimple presentation changes, such as logo, copy, theme, or demo content, should\ncome from backend-owned CMS or configuration where possible. Hard-coding those\nvalues in the frontend makes future customers harder to support.\n\n## Choosing the right customization mechanism\n\nUse the smallest mechanism that honestly solves the requirement. This keeps\ncustomization cheap, testable, and upgrade-friendly.\n\n| Requirement | Preferred mechanism | Why |\n| --- | --- | --- |\n| Change a label, image, logo, or help text | Backend-owned CMS content or configuration | Business-facing content should not require a frontend fork. |\n| Change a runtime value per environment | Environment/server/node property override | Keeps the framework default reusable and the local deployment explicit. |\n| Add a customer data seed | Customer project data pack | Data belongs to the project that owns it and can be imported through governance. |\n| Add a new API behavior for a customer | Customer project module or customer extension module | Keeps customer code later in the runtime graph. |\n| Change a framework service algorithm | Later-loaded service override with tests | Preserves the functional module identity while replacing implementation. |\n| Add a reusable capability for many projects | New or existing framework functional module | Avoids hiding reusable platform behavior inside one customer project. |\n| Add a browser-only interaction | `nodics.axis` renderer change | UI behavior belongs in Axis only when backend authority already exists. |\n\nIf the preferred mechanism feels too small, prove why. A service override may\nbe needed, but it should not be the first answer when a property or data pack\nis enough.\n\n```mermaid\nflowchart TD\n  Need[\"Customization need\"] --> Config[\"Can config/content solve it?\"]\n  Config -->|Yes| UseConfig[\"Use property, CMS, or data pack\"]\n  Config -->|No| Project[\"Is it customer-specific?\"]\n  Project -->|Yes| Later[\"Use project or customer extension module\"]\n  Project -->|No| Reusable[\"Is it reusable framework behavior?\"]\n  Reusable -->|Yes| Framework[\"Implement in owning framework module\"]\n  Reusable -->|No| Reconsider[\"Re-check ownership and requirement\"]\n  Later --> Test[\"Add default, override, and regression tests\"]\n  Framework --> Test\n  UseConfig --> Validate[\"Validate runtime result\"]\n```\n\n## Worked example: changing a demo company identity\n\nSuppose a partner wants the local demo to show its own company name, logo, and\nwelcome message. The wrong path is editing Axis React code or framework\nProfile services. The correct path depends on what is being changed:\n\n1. If it is presentation content, put it in the owning WCMS or project content\n   pack.\n2. If it is an environment default, place the override in the customer\n   environment/server configuration.\n3. If it is project documentation, update the customer project documentation\n   source and regenerate the customer docs pack.\n4. Import the generated pack through Axis Imports and Exports.\n5. Verify Axis renders the new values from backend delivery contracts.\n\nThe business sees a custom experience. The developer avoids a fork. The\noperator can rebuild the environment from source-controlled project data.\n\n## Worked example: overriding a service safely\n\nSuppose a customer needs a different employee onboarding rule than the\nstandard Platform behavior. That is not a reason to rename Platform or copy\nthe entire module. The safer model is:\n\n1. Identify the Platform service that owns the rule.\n2. Confirm the extension point is intended to be overridden.\n3. Create a later-loaded customer module that extends Platform behavior.\n4. Export the replacement or composed service in the expected loader-visible\n   style.\n5. Keep status/error definitions in the correct status-definition file, not in\n   a random properties file.\n6. Add tests for the default rule, custom rule, rejected request, tenant\n   boundary, authorization boundary, and regression risk.\n7. Document the custom behavior in the customer project, not in reusable\n   framework documentation unless the extension point itself changed.\n\nThe module registry should still show Platform. The customization changes\nimplementation, not the business-facing functional identity.\n\n## Business and DevOps impact\n\nThe business value of this discipline is lower long-term cost. A customer can\nreceive framework upgrades without reapplying hidden edits. DevOps teams also\ngain a clean release story: framework packages, customer modules, environment\nproperties, and imported content packs can be rolled forward or backward as\nseparate operational units.\n\nFor production support, every customization should answer three questions:\nwhich module owns it, which runtime loads it, and which test or document proves\nthe intended behavior? If those answers are missing, the customization is not\nready for a production release.\n\n## Documentation customization\n\nDocumentation follows the owner of the thing being explained:\n\n- framework guidance goes to `nodics.docs`;\n- Axis product guidance goes to `nodics.platform/modules/axis`;\n- project guidance goes to the owning customer project, such as\n  `nodics.kickoff`;\n- generated content records stay under `data/core/data/documentation`;\n- manifests stay under `manifest/docs-content-pack.json`.\n\nDo not put customer project documentation into `nodics.docs`, and do not put\nimportable documentation records into `nodics.axis`.\n\n## Common mistakes\n\n- Editing framework source for one customer.\n- Adding business authorization in the browser.\n- Creating a second module registry or endpoint list in Axis.\n- Moving generated CMS data into a frontend repository.\n- Changing a functional module display name because an implementation was\n  customized.\n- Skipping tests after service override changes.\n\n## Verification\n\nEvery customization should prove success and failure behavior. For backend\nchanges, run the owning module tests and any affected runtime smoke test. For\nAxis changes, run typecheck and focused UI tests. For documentation changes,\nregenerate the owning content pack, validate checksums, import through WCMS,\nand verify the route in Axis.\n\n## Customization acceptance checklist\n\nBefore accepting a customization, answer each question:\n\n| Question | Acceptable answer |\n| --- | --- |\n| Who owns the behavior? | A named framework module, customer module, project, or frontend renderer. |\n| Is framework source edited? | Only if the behavior is reusable framework behavior and the owner module was confirmed. |\n| Is there a configuration-first option? | Yes, it was used or explicitly rejected with evidence. |\n| Is functional identity preserved? | Yes; customer extensions do not rename standard capabilities. |\n| Are private values protected? | Secrets are not placed in frontend code, generated docs, or public properties. |\n| Are generated files regenerated from source? | Yes; generated CMS data and manifests match source content. |\n| Are tests proportional to risk? | Happy path, negative, boundary, authorization, tenant, runtime, and regression checks exist where applicable. |\n| Is documentation updated in the owner? | Yes; no second authority was created. |\n\nIf the checklist cannot be completed, the customization may still be a useful\nprototype, but it is not production-ready Nodics behavior.\n",
       "previous": {
         "title": "Local quick start with Kickoff and Axis",
         "route": "/docs/framework/framework-local-quick-start"
@@ -2024,8 +2563,8 @@ module.exports = {
         "functionalModule": "nodics.core",
         "technicalModule": "nSetup",
         "path": "content/framework/customization-guide.md",
-        "wordCount": 1429,
-        "checksum": "763a14b18b2a671441dc6facd5229b2900d48088f98c022df7c19a6e1ecdeea3"
+        "wordCount": 2144,
+        "checksum": "b3a0cbad2662257835374a32d4bc72ad3a377871976cdf4c2329339140842f1a"
       }
     },
     "active": true
@@ -2059,28 +2598,53 @@ module.exports = {
           "level": 2
         },
         {
+          "text": "Public versus private properties",
+          "anchor": "frameworkDevopsRuntime-3-public-versus-private-properties",
+          "level": 2
+        },
+        {
           "text": "Dependencies",
-          "anchor": "frameworkDevopsRuntime-3-dependencies",
+          "anchor": "frameworkDevopsRuntime-4-dependencies",
           "level": 2
         },
         {
           "text": "Deployment mindset",
-          "anchor": "frameworkDevopsRuntime-4-deployment-mindset",
+          "anchor": "frameworkDevopsRuntime-5-deployment-mindset",
+          "level": 2
+        },
+        {
+          "text": "Local-to-production evolution",
+          "anchor": "frameworkDevopsRuntime-6-local-to-production-evolution",
+          "level": 2
+        },
+        {
+          "text": "Release and rollback model",
+          "anchor": "frameworkDevopsRuntime-7-release-and-rollback-model",
           "level": 2
         },
         {
           "text": "Monitoring and recovery",
-          "anchor": "frameworkDevopsRuntime-5-monitoring-and-recovery",
+          "anchor": "frameworkDevopsRuntime-8-monitoring-and-recovery",
+          "level": 2
+        },
+        {
+          "text": "Operational acceptance checklist",
+          "anchor": "frameworkDevopsRuntime-9-operational-acceptance-checklist",
+          "level": 2
+        },
+        {
+          "text": "Common incident examples",
+          "anchor": "frameworkDevopsRuntime-10-common-incident-examples",
           "level": 2
         },
         {
           "text": "Common mistakes",
-          "anchor": "frameworkDevopsRuntime-6-common-mistakes",
+          "anchor": "frameworkDevopsRuntime-11-common-mistakes",
           "level": 2
         },
         {
           "text": "Next actions",
-          "anchor": "frameworkDevopsRuntime-7-next-actions",
+          "anchor": "frameworkDevopsRuntime-12-next-actions",
           "level": 2
         }
       ],
@@ -2150,8 +2714,69 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Public versus private properties",
+          "anchor": "frameworkDevopsRuntime-3-public-versus-private-properties"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Nodics configuration must be explicit about visibility. A property being needed by a screen does not automatically make it safe for the browser."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Property type",
+            "Example",
+            "Owner",
+            "Browser visible?"
+          ],
+          "rows": [
+            [
+              "Framework default",
+              "default API category enablement",
+              "owning framework module",
+              "only if intentionally exposed"
+            ],
+            [
+              "Project default",
+              "reference enterprise display name",
+              "customer project",
+              "sometimes"
+            ],
+            [
+              "Environment override",
+              "local database name, local host/port",
+              "environment/server module",
+              "usually no"
+            ],
+            [
+              "Private secret",
+              "database password, token signing secret, storage credential",
+              "secret store or private runtime property",
+              "never"
+            ],
+            [
+              "Public frontend config",
+              "Platform base URL, WCMS base URL",
+              "Axis deployment config",
+              "yes, but not secret"
+            ],
+            [
+              "Generated state",
+              "import manifest checksum, generated docs data",
+              "owning module/project generator",
+              "imported through backend"
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "The safe rule is simple: if exposure would help an attacker, it is private. If Axis needs to display a value, expose a sanitized backend contract instead of passing the private property through the frontend."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Dependencies",
-          "anchor": "frameworkDevopsRuntime-3-dependencies"
+          "anchor": "frameworkDevopsRuntime-4-dependencies"
         },
         {
           "kind": "paragraph",
@@ -2165,7 +2790,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Deployment mindset",
-          "anchor": "frameworkDevopsRuntime-4-deployment-mindset"
+          "anchor": "frameworkDevopsRuntime-5-deployment-mindset"
         },
         {
           "kind": "paragraph",
@@ -2189,8 +2814,55 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Local-to-production evolution",
+          "anchor": "frameworkDevopsRuntime-6-local-to-production-evolution"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The first Nodics deployment should be understandable before it is distributed. Local development proves ownership and behavior. Production topology then separates runtime processes only for a reason: scale, resilience, security, team ownership, data locality, or operational control."
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Local[\"Local developer machine<br/>Platform + WCMS + Cron + Axis\"] --> Shared[\"Shared test environment<br/>separate DBs and controlled imports\"]\n  Shared --> PreProd[\"Pre-production<br/>production-like properties and providers\"]\n  PreProd --> Prod[\"Production<br/>monitored, backed up, secured, scalable\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The important rule is that deployment shape changes should not move business ownership. Platform remains Platform whether it runs locally or across several nodes. WCMS remains WCMS whether media storage is local or cloud-backed. Cron remains Cron whether one scheduler node or multiple controlled nodes execute jobs."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Release and rollback model",
+          "anchor": "frameworkDevopsRuntime-7-release-and-rollback-model"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A Nodics release is not only source code. A real release may include:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "framework package versions;",
+            "customer project code;",
+            "environment/server property changes;",
+            "generated import manifests;",
+            "initialization, core, sample, and documentation data releases;",
+            "Axis frontend build;",
+            "database migration or data repair scripts;",
+            "provider configuration changes;",
+            "operational runbook updates."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Rollback must name which layer is rolling back. Rolling back Axis does not roll back imported WCMS content. Rolling back a content pack does not roll back framework source. Rolling back a server property may require process restart. This separation is a strength only when operators can see and control each layer."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Monitoring and recovery",
-          "anchor": "frameworkDevopsRuntime-5-monitoring-and-recovery"
+          "anchor": "frameworkDevopsRuntime-8-monitoring-and-recovery"
         },
         {
           "kind": "paragraph",
@@ -2213,8 +2885,117 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Operational acceptance checklist",
+          "anchor": "frameworkDevopsRuntime-9-operational-acceptance-checklist"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Before calling an environment healthy, verify:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Acceptance evidence"
+          ],
+          "rows": [
+            [
+              "Process health",
+              "Platform, WCMS, Cron where required, and Axis are reachable on expected ports."
+            ],
+            [
+              "Runtime graph",
+              "Each server logs or exposes the effective module graph it loaded."
+            ],
+            [
+              "Module registry",
+              "Mandatory modules are active; optional modules match project intent."
+            ],
+            [
+              "Data imports",
+              "Required releases validate, install, and record import history."
+            ],
+            [
+              "Documentation",
+              "Framework, Axis, API, and customer documentation routes render through WCMS."
+            ],
+            [
+              "Authentication",
+              "Reference or environment-specific employee login works through Platform."
+            ],
+            [
+              "Authorization",
+              "Unauthorized calls fail closed and do not leak private data."
+            ],
+            [
+              "Configuration",
+              "Public and private properties are sourced from the correct layer."
+            ],
+            [
+              "Observability",
+              "Logs include correlation, enterprise, tenant where applicable, module, and safe status evidence."
+            ],
+            [
+              "Recovery",
+              "Restarting servers preserves durable registry and imported content state."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "This checklist is intentionally practical. It lets a support engineer prove the system from the outside before diving into source code."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common incident examples",
+          "anchor": "frameworkDevopsRuntime-10-common-incident-examples"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Symptom",
+            "First owner to inspect",
+            "Likely next check"
+          ],
+          "rows": [
+            [
+              "Axis shows BackOffice registry unavailable",
+              "Platform/BackOffice",
+              "Is port `4300` reachable and did Platform finish startup?"
+            ],
+            [
+              "Documentation route shows recovery",
+              "WCMS/content pack owner",
+              "Is port `4310` reachable and was the docs pack imported?"
+            ],
+            [
+              "Module disappeared after register",
+              "Platform registry API and Axis refresh state",
+              "Did the operation response update persisted state and frontend cache?"
+            ],
+            [
+              "Cron is registered but unavailable",
+              "Cron runtime observation",
+              "Is the Cron server running and reporting `nodics.cron`?"
+            ],
+            [
+              "Import release is invalid",
+              "Content-pack manifest owner",
+              "Were source files changed without regenerating manifests?"
+            ],
+            [
+              "Media upload exposes path-like data",
+              "WCMS Media",
+              "Is the API returning storage internals instead of safe contracts?"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Common mistakes",
-          "anchor": "frameworkDevopsRuntime-6-common-mistakes"
+          "anchor": "frameworkDevopsRuntime-11-common-mistakes"
         },
         {
           "kind": "unordered-list",
@@ -2230,14 +3011,14 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Next actions",
-          "anchor": "frameworkDevopsRuntime-7-next-actions"
+          "anchor": "frameworkDevopsRuntime-12-next-actions"
         },
         {
           "kind": "paragraph",
           "text": "Before production, write an environment-specific operations runbook that lists server topology, dependency versions, secrets strategy, health checks, monitoring, backup, restore, content-pack import process, and rollback steps."
         }
       ],
-      "searchText": "Runtime and DevOps operations Runtime topology, dependencies, public and private properties, deployment, monitoring, and recovery guidance. # Runtime and DevOps operations\n\nNodics runtime operations are based on explicit server composition and layered\nconfiguration. A runtime server is a process that hosts an effective set of\nactive modules. The module remains the capability owner; the server is the\nruntime grouping.\n\nFor a beginner, DevOps in Nodics means “how does this code become a safe,\nobservable process?” The answer starts with a clear server graph, narrow\nproperties, predictable dependencies, releaseable content packs, and recovery\nbehavior that operators can explain during an incident.\n\n## Local topology\n\nThe reference local setup uses separate servers:\n\n- Platform on `http://localhost:4300`;\n- WCMS on `http://localhost:4310`;\n- Cron when scheduled behavior is needed;\n- Axis on `http://localhost:3100`.\n\nThis split keeps module boundaries visible. It also prepares the team for a\nfuture topology where different capabilities may run in different processes,\nhosts, containers, or deployment units.\n\n```mermaid\nflowchart LR\n  Operator[\"Developer or operator\"] --> Kickoff[\"nodics.kickoff scripts\"]\n  Kickoff --> Platform[\"Platform server<br/>4300\"]\n  Kickoff --> WCMS[\"WCMS server<br/>4310\"]\n  Kickoff --> Cron[\"Cron server<br/>4320\"]\n  Platform --> MongoP[\"kickoffLocal DB\"]\n  WCMS --> MongoW[\"kickoffLocalWcms DB\"]\n  Cron --> MongoC[\"kickoffLocalCron DB\"]\n  Axis[\"nodics.axis<br/>3100\"] --> Platform\n  Axis --> WCMS\n```\n\nThis diagram is intentionally local and beginner-friendly. Production may use\ncontainers, private networks, managed databases, and separate deployment\npipelines, but the same ownership idea remains: servers host capabilities;\nmodules own behavior.\n\n## Configuration layers\n\nNodics configuration is layered. Framework defaults come first. Project,\nenvironment, server, node, tenant, and governed runtime configuration can refine\nbehavior later. A developer should place a property in the narrowest owner that\nneeds it.\n\nThe practical rule is: defaults travel with the owning module; overrides travel\nwith the runtime. If WCMS generally owns data import, data export, media\nmanagement, or CMS delivery, those defaults belong in the WCMS module. If\nPlatform generally owns profile, BackOffice, or runtime registry exposure,\nthose defaults belong in Platform. A project, environment, server, or node file\nshould add only the part it intentionally changes for that boundary.\n\nServer configuration should therefore stay light. It may define ports, active\nmodules, local database names, runtime identity, remote service coordinates, or\nan explicit decision to disable an inherited capability. It should not copy\nwhole inherited property blocks such as `apiExposure`, provider defaults,\nimport/export policy, media settings, permissions, limits, or discovery flags\njust to make the server file look complete. Copied defaults become a second\nauthority and make upgrades harder.\n\nUse public browser configuration only for values safe to expose, such as Axis\nbase URLs and client contract versions. Credentials, private keys, service\ntokens, database passwords, and provider secrets belong in protected backend\nconfiguration or deployment secret management.\n\n## Dependencies\n\nMongoDB is the primary local runtime dependency for persisted records.\nElasticsearch is used when search-backed capabilities are enabled. Redis is\nused when Redis-backed cache or session behavior is enabled. Enterprise\nmessaging, external storage, AI providers, or other integrations may be\noptional depending on active modules and configuration.\n\nDisabled providers should fail closed or log that they are disabled. A disabled\noptional provider is not the same as a broken mandatory provider.\n\n## Deployment mindset\n\nStart simple locally. Keep capability ownership correct. Then distribute only\nwhen scale, resilience, security, or team ownership requires it. The runtime\ntopology can change without moving business ownership out of the owning module.\n\nFor production, define:\n\n- which servers run which functional modules;\n- where public and private properties are sourced;\n- how credentials are injected and rotated;\n- how logs, health, audit events, and runtime diagnostics are collected;\n- how content packs, generated artifacts, and database migrations are released;\n- how rollback works for code, configuration, and imported content.\n\n## Monitoring and recovery\n\nPlatform exposes registry and BackOffice projections for active modules. WCMS\nowns content-pack delivery and CMS route resolution. Cron owns scheduled work.\nAxis should show recovery states when these backends are unavailable instead of\ninventing another control plane.\n\nWhen something fails, identify the owner first:\n\n- login or BackOffice bootstrap: Platform/Profile/BackOffice;\n- CMS page delivery or documentation content: WCMS/CMS/content-pack owner;\n- scheduled job execution: Cron;\n- frontend rendering or shell interaction: Axis;\n- customer-specific behavior: customer project module.\n\n## Common mistakes\n\n- Treating environment or server modules as business capability owners.\n- Putting secrets into frontend `.env` files.\n- Deploying generated content without a version change.\n- Relying on process memory instead of durable registration or import history.\n- Ignoring negative tests, recovery states, and rollback behavior.\n\n## Next actions\n\nBefore production, write an environment-specific operations runbook that lists\nserver topology, dependency versions, secrets strategy, health checks,\nmonitoring, backup, restore, content-pack import process, and rollback steps.\n",
+      "searchText": "Runtime and DevOps operations Runtime topology, dependencies, public and private properties, deployment, monitoring, and recovery guidance. # Runtime and DevOps operations\n\nNodics runtime operations are based on explicit server composition and layered\nconfiguration. A runtime server is a process that hosts an effective set of\nactive modules. The module remains the capability owner; the server is the\nruntime grouping.\n\nFor a beginner, DevOps in Nodics means “how does this code become a safe,\nobservable process?” The answer starts with a clear server graph, narrow\nproperties, predictable dependencies, releaseable content packs, and recovery\nbehavior that operators can explain during an incident.\n\n## Local topology\n\nThe reference local setup uses separate servers:\n\n- Platform on `http://localhost:4300`;\n- WCMS on `http://localhost:4310`;\n- Cron when scheduled behavior is needed;\n- Axis on `http://localhost:3100`.\n\nThis split keeps module boundaries visible. It also prepares the team for a\nfuture topology where different capabilities may run in different processes,\nhosts, containers, or deployment units.\n\n```mermaid\nflowchart LR\n  Operator[\"Developer or operator\"] --> Kickoff[\"nodics.kickoff scripts\"]\n  Kickoff --> Platform[\"Platform server<br/>4300\"]\n  Kickoff --> WCMS[\"WCMS server<br/>4310\"]\n  Kickoff --> Cron[\"Cron server<br/>4320\"]\n  Platform --> MongoP[\"kickoffLocal DB\"]\n  WCMS --> MongoW[\"kickoffLocalWcms DB\"]\n  Cron --> MongoC[\"kickoffLocalCron DB\"]\n  Axis[\"nodics.axis<br/>3100\"] --> Platform\n  Axis --> WCMS\n```\n\nThis diagram is intentionally local and beginner-friendly. Production may use\ncontainers, private networks, managed databases, and separate deployment\npipelines, but the same ownership idea remains: servers host capabilities;\nmodules own behavior.\n\n## Configuration layers\n\nNodics configuration is layered. Framework defaults come first. Project,\nenvironment, server, node, tenant, and governed runtime configuration can refine\nbehavior later. A developer should place a property in the narrowest owner that\nneeds it.\n\nThe practical rule is: defaults travel with the owning module; overrides travel\nwith the runtime. If WCMS generally owns data import, data export, media\nmanagement, or CMS delivery, those defaults belong in the WCMS module. If\nPlatform generally owns profile, BackOffice, or runtime registry exposure,\nthose defaults belong in Platform. A project, environment, server, or node file\nshould add only the part it intentionally changes for that boundary.\n\nServer configuration should therefore stay light. It may define ports, active\nmodules, local database names, runtime identity, remote service coordinates, or\nan explicit decision to disable an inherited capability. It should not copy\nwhole inherited property blocks such as `apiExposure`, provider defaults,\nimport/export policy, media settings, permissions, limits, or discovery flags\njust to make the server file look complete. Copied defaults become a second\nauthority and make upgrades harder.\n\nUse public browser configuration only for values safe to expose, such as Axis\nbase URLs and client contract versions. Credentials, private keys, service\ntokens, database passwords, and provider secrets belong in protected backend\nconfiguration or deployment secret management.\n\n## Public versus private properties\n\nNodics configuration must be explicit about visibility. A property being\nneeded by a screen does not automatically make it safe for the browser.\n\n| Property type | Example | Owner | Browser visible? |\n| --- | --- | --- | --- |\n| Framework default | default API category enablement | owning framework module | only if intentionally exposed |\n| Project default | reference enterprise display name | customer project | sometimes |\n| Environment override | local database name, local host/port | environment/server module | usually no |\n| Private secret | database password, token signing secret, storage credential | secret store or private runtime property | never |\n| Public frontend config | Platform base URL, WCMS base URL | Axis deployment config | yes, but not secret |\n| Generated state | import manifest checksum, generated docs data | owning module/project generator | imported through backend |\n\nThe safe rule is simple: if exposure would help an attacker, it is private. If\nAxis needs to display a value, expose a sanitized backend contract instead of\npassing the private property through the frontend.\n\n## Dependencies\n\nMongoDB is the primary local runtime dependency for persisted records.\nElasticsearch is used when search-backed capabilities are enabled. Redis is\nused when Redis-backed cache or session behavior is enabled. Enterprise\nmessaging, external storage, AI providers, or other integrations may be\noptional depending on active modules and configuration.\n\nDisabled providers should fail closed or log that they are disabled. A disabled\noptional provider is not the same as a broken mandatory provider.\n\n## Deployment mindset\n\nStart simple locally. Keep capability ownership correct. Then distribute only\nwhen scale, resilience, security, or team ownership requires it. The runtime\ntopology can change without moving business ownership out of the owning module.\n\nFor production, define:\n\n- which servers run which functional modules;\n- where public and private properties are sourced;\n- how credentials are injected and rotated;\n- how logs, health, audit events, and runtime diagnostics are collected;\n- how content packs, generated artifacts, and database migrations are released;\n- how rollback works for code, configuration, and imported content.\n\n## Local-to-production evolution\n\nThe first Nodics deployment should be understandable before it is distributed.\nLocal development proves ownership and behavior. Production topology then\nseparates runtime processes only for a reason: scale, resilience, security,\nteam ownership, data locality, or operational control.\n\n```mermaid\nflowchart LR\n  Local[\"Local developer machine<br/>Platform + WCMS + Cron + Axis\"] --> Shared[\"Shared test environment<br/>separate DBs and controlled imports\"]\n  Shared --> PreProd[\"Pre-production<br/>production-like properties and providers\"]\n  PreProd --> Prod[\"Production<br/>monitored, backed up, secured, scalable\"]\n```\n\nThe important rule is that deployment shape changes should not move business\nownership. Platform remains Platform whether it runs locally or across several\nnodes. WCMS remains WCMS whether media storage is local or cloud-backed. Cron\nremains Cron whether one scheduler node or multiple controlled nodes execute\njobs.\n\n## Release and rollback model\n\nA Nodics release is not only source code. A real release may include:\n\n- framework package versions;\n- customer project code;\n- environment/server property changes;\n- generated import manifests;\n- initialization, core, sample, and documentation data releases;\n- Axis frontend build;\n- database migration or data repair scripts;\n- provider configuration changes;\n- operational runbook updates.\n\nRollback must name which layer is rolling back. Rolling back Axis does not\nroll back imported WCMS content. Rolling back a content pack does not roll back\nframework source. Rolling back a server property may require process restart.\nThis separation is a strength only when operators can see and control each\nlayer.\n\n## Monitoring and recovery\n\nPlatform exposes registry and BackOffice projections for active modules. WCMS\nowns content-pack delivery and CMS route resolution. Cron owns scheduled work.\nAxis should show recovery states when these backends are unavailable instead of\ninventing another control plane.\n\nWhen something fails, identify the owner first:\n\n- login or BackOffice bootstrap: Platform/Profile/BackOffice;\n- CMS page delivery or documentation content: WCMS/CMS/content-pack owner;\n- scheduled job execution: Cron;\n- frontend rendering or shell interaction: Axis;\n- customer-specific behavior: customer project module.\n\n## Operational acceptance checklist\n\nBefore calling an environment healthy, verify:\n\n| Area | Acceptance evidence |\n| --- | --- |\n| Process health | Platform, WCMS, Cron where required, and Axis are reachable on expected ports. |\n| Runtime graph | Each server logs or exposes the effective module graph it loaded. |\n| Module registry | Mandatory modules are active; optional modules match project intent. |\n| Data imports | Required releases validate, install, and record import history. |\n| Documentation | Framework, Axis, API, and customer documentation routes render through WCMS. |\n| Authentication | Reference or environment-specific employee login works through Platform. |\n| Authorization | Unauthorized calls fail closed and do not leak private data. |\n| Configuration | Public and private properties are sourced from the correct layer. |\n| Observability | Logs include correlation, enterprise, tenant where applicable, module, and safe status evidence. |\n| Recovery | Restarting servers preserves durable registry and imported content state. |\n\nThis checklist is intentionally practical. It lets a support engineer prove\nthe system from the outside before diving into source code.\n\n## Common incident examples\n\n| Symptom | First owner to inspect | Likely next check |\n| --- | --- | --- |\n| Axis shows BackOffice registry unavailable | Platform/BackOffice | Is port `4300` reachable and did Platform finish startup? |\n| Documentation route shows recovery | WCMS/content pack owner | Is port `4310` reachable and was the docs pack imported? |\n| Module disappeared after register | Platform registry API and Axis refresh state | Did the operation response update persisted state and frontend cache? |\n| Cron is registered but unavailable | Cron runtime observation | Is the Cron server running and reporting `nodics.cron`? |\n| Import release is invalid | Content-pack manifest owner | Were source files changed without regenerating manifests? |\n| Media upload exposes path-like data | WCMS Media | Is the API returning storage internals instead of safe contracts? |\n\n## Common mistakes\n\n- Treating environment or server modules as business capability owners.\n- Putting secrets into frontend `.env` files.\n- Deploying generated content without a version change.\n- Relying on process memory instead of durable registration or import history.\n- Ignoring negative tests, recovery states, and rollback behavior.\n\n## Next actions\n\nBefore production, write an environment-specific operations runbook that lists\nserver topology, dependency versions, secrets strategy, health checks,\nmonitoring, backup, restore, content-pack import process, and rollback steps.\n",
       "previous": {
         "title": "Customization and extension guide",
         "route": "/docs/framework/framework-customization-guide"
@@ -2251,8 +3032,8 @@ module.exports = {
         "functionalModule": "nodics.core",
         "technicalModule": "nSetup",
         "path": "content/framework/devops-runtime.md",
-        "wordCount": 741,
-        "checksum": "6c113359c33f6e1b3c145847d90cc06df8880127864df442ec14463910c5929b"
+        "wordCount": 1380,
+        "checksum": "795366cde05f5c992d836e2b82c1a75b75aab7ea4b08f354612e4f1bfee8e5a5"
       }
     },
     "active": true
@@ -2286,33 +3067,53 @@ module.exports = {
           "level": 2
         },
         {
+          "text": "Mandatory versus optional modules",
+          "anchor": "platformModuleRegistry-3-mandatory-versus-optional-modules",
+          "level": 2
+        },
+        {
           "text": "Business value",
-          "anchor": "platformModuleRegistry-3-business-value",
+          "anchor": "platformModuleRegistry-4-business-value",
+          "level": 2
+        },
+        {
+          "text": "Business example: deciding to enable Cron",
+          "anchor": "platformModuleRegistry-5-business-example-deciding-to-enable-cron",
           "level": 2
         },
         {
           "text": "Developer model",
-          "anchor": "platformModuleRegistry-4-developer-model",
+          "anchor": "platformModuleRegistry-6-developer-model",
+          "level": 2
+        },
+        {
+          "text": "API and UI contract expectations",
+          "anchor": "platformModuleRegistry-7-api-and-ui-contract-expectations",
           "level": 2
         },
         {
           "text": "DevOps and operator model",
-          "anchor": "platformModuleRegistry-5-devops-and-operator-model",
+          "anchor": "platformModuleRegistry-8-devops-and-operator-model",
           "level": 2
         },
         {
           "text": "What the registry must not do",
-          "anchor": "platformModuleRegistry-6-what-the-registry-must-not-do",
+          "anchor": "platformModuleRegistry-9-what-the-registry-must-not-do",
           "level": 2
         },
         {
           "text": "Verification checklist",
-          "anchor": "platformModuleRegistry-7-verification-checklist",
+          "anchor": "platformModuleRegistry-10-verification-checklist",
+          "level": 2
+        },
+        {
+          "text": "Acceptance scenarios",
+          "anchor": "platformModuleRegistry-11-acceptance-scenarios",
           "level": 2
         },
         {
           "text": "Common mistakes",
-          "anchor": "platformModuleRegistry-8-common-mistakes",
+          "anchor": "platformModuleRegistry-12-common-mistakes",
           "level": 2
         }
       ],
@@ -2402,8 +3203,52 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Mandatory versus optional modules",
+          "anchor": "platformModuleRegistry-3-mandatory-versus-optional-modules"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The registry should stay business-readable. A business user should not need to understand every technical module that helped Core or WCMS start."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Module type",
+            "Example",
+            "User lifecycle"
+          ],
+          "rows": [
+            [
+              "Mandatory foundation",
+              "Core, Platform, WCMS",
+              "Installed and active by runtime contract; not deregisterable from Axis."
+            ],
+            [
+              "Optional functional capability",
+              "Cron",
+              "Register, activate, deactivate, deregister."
+            ],
+            [
+              "Technical module",
+              "`cronjob`, `media`, `profile` internals",
+              "Not shown as separate business registry cards unless exposed by an owning functional module."
+            ],
+            [
+              "Customer extension",
+              "future customer Platform extension",
+              "Customizes the standard identity; does not create a new displayed Platform name by default."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Mandatory does not mean “hardcoded in Axis.” It means the current reference BackOffice experience depends on those capabilities. Axis still discovers the effective state from backend contracts, but it should not offer destructive business actions that would remove the foundation required for login, registry visibility, and WCMS-backed presentation."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Business value",
-          "anchor": "platformModuleRegistry-3-business-value"
+          "anchor": "platformModuleRegistry-4-business-value"
         },
         {
           "kind": "paragraph",
@@ -2416,8 +3261,36 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Business example: deciding to enable Cron",
+          "anchor": "platformModuleRegistry-5-business-example-deciding-to-enable-cron"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A small customer may start with login, content, media, and documentation only. After a few weeks, the business asks for nightly cleanup of temporary media and scheduled export retries. Cron becomes useful. The project team starts a Cron runtime, Axis sees `nodics.cron` as available, and an authorized administrator registers and activates it."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business decision is visible and reversible:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Before registration, Cron is observed but not accepted by the project.",
+            "After registration, the project remembers that Cron is part of its accepted capability set.",
+            "After activation, Cron-owned operations can become available according to permissions and data import state.",
+            "Deactivation pauses the capability without forgetting the registration.",
+            "Deregistration removes project intent while the runtime may still be technically live."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "That lifecycle is safer than silently enabling features because a server happened to start."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Developer model",
-          "anchor": "platformModuleRegistry-4-developer-model"
+          "anchor": "platformModuleRegistry-6-developer-model"
         },
         {
           "kind": "paragraph",
@@ -2430,8 +3303,36 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "API and UI contract expectations",
+          "anchor": "platformModuleRegistry-7-api-and-ui-contract-expectations"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The registry API must give Axis enough information to render without guessing:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "functional module code and display name;",
+            "mandatory or optional classification;",
+            "observed runtime servers;",
+            "current registration state;",
+            "current activation state;",
+            "active technical modules for explanation, not as primary business toggles;",
+            "available actions for the current user and state;",
+            "last observation and catalogue revision;",
+            "safe status or error messages."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis should update its local state immediately after register, activate, deactivate, or deregister operations. A browser refresh must not be required to reveal the next valid action. If an operation fails, Axis should retain the previous known state and show the backend error."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "DevOps and operator model",
-          "anchor": "platformModuleRegistry-5-devops-and-operator-model"
+          "anchor": "platformModuleRegistry-8-devops-and-operator-model"
         },
         {
           "kind": "paragraph",
@@ -2445,7 +3346,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "What the registry must not do",
-          "anchor": "platformModuleRegistry-6-what-the-registry-must-not-do"
+          "anchor": "platformModuleRegistry-9-what-the-registry-must-not-do"
         },
         {
           "kind": "paragraph",
@@ -2455,7 +3356,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Verification checklist",
-          "anchor": "platformModuleRegistry-7-verification-checklist"
+          "anchor": "platformModuleRegistry-10-verification-checklist"
         },
         {
           "kind": "unordered-list",
@@ -2472,8 +3373,55 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Acceptance scenarios",
+          "anchor": "platformModuleRegistry-11-acceptance-scenarios"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Scenario",
+            "Expected result"
+          ],
+          "rows": [
+            [
+              "Fresh database with Platform and WCMS only",
+              "Core, Platform, and WCMS are active; Cron is not shown as live."
+            ],
+            [
+              "Cron server starts",
+              "Cron appears as available optional module."
+            ],
+            [
+              "User registers Cron",
+              "Cron moves out of available list and shows the next valid state without page refresh."
+            ],
+            [
+              "User activates Cron",
+              "Cron shows active and exposes active-state actions without page refresh."
+            ],
+            [
+              "User deactivates Cron",
+              "Cron remains registered but inactive."
+            ],
+            [
+              "User deregisters Cron",
+              "Cron returns to available if the runtime is still observed."
+            ],
+            [
+              "Servers restart",
+              "Mandatory state and registered optional state persist from database."
+            ],
+            [
+              "Cron server stops",
+              "Registered state remains, but runtime observation should show unavailable or stale according to the API contract."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Common mistakes",
-          "anchor": "platformModuleRegistry-8-common-mistakes"
+          "anchor": "platformModuleRegistry-12-common-mistakes"
         },
         {
           "kind": "unordered-list",
@@ -2485,7 +3433,7 @@ module.exports = {
           ]
         }
       ],
-      "searchText": "Functional module registry Durable project registration and runtime observation rules. # Functional module registry\n\nThe functional module registry is the Platform/BackOffice contract that tells\nAxis which high-level Nodics capabilities are known, registered, active, and\nsafe to show to business users. It is intentionally focused on functional\nmodules such as `nodics.core`, `nodics.platform`, `nodics.wcms`, and\n`nodics.cron`, not every small technical module inside those groups.\n\nFor a beginner, the registry is like the application control panel. It does\nnot download code and it does not hot-load a server process. It records the\nproject decision that a live capability is allowed to participate in the\nproject. Runtime servers still need to start with the right module graph.\n\n## Why the registry exists\n\nWithout a registry, Axis would have to guess from menus, routes, package names,\nor server responses which modules are safe for a project. That creates messy\nbehavior: a link may appear before the backend is ready, an operator may repeat\nthe same setup after every restart, or a customer may see technical modules\nthat only developers understand.\n\nThe registry separates two different facts:\n\n- runtime observation: a server is currently running and has reported a\n  capability;\n- project registration: the project has durably accepted that capability.\n\nRestarting a server renews its runtime observation. It should not ask the\noperator to register the same module again.\n\n## Lifecycle states\n\nOptional functional modules move through a small lifecycle. The current Axis\nmodule registry page follows this model.\n\n```mermaid\nstateDiagram-v2\n  [*] --> Available: runtime observes optional module\n  Available --> RegisteredInactive: register\n  RegisteredInactive --> RegisteredActive: activate\n  RegisteredActive --> RegisteredInactive: deactivate\n  RegisteredInactive --> Available: deregister\n  RegisteredActive --> Available: deactivate then deregister\n```\n\n| State | Beginner meaning | Axis action |\n| --- | --- | --- |\n| Available | A live server has reported the module, but the project has not accepted it. | Show Register. |\n| Registered inactive | The project accepted the module but has not enabled it for use. | Show Activate or Deregister. |\n| Registered active | The module is accepted and enabled. | Show Deactivate. |\n| Deregistered | The project removed its durable acceptance while the runtime may still observe it. | Move back to Available. |\n\nCore, Platform, and WCMS are mandatory for the local Axis journey. They should\nnot be treated like optional modules that a business user can deregister from\nthe same screen. Cron is optional, so it can be observed, registered,\nactivated, deactivated, and deregistered.\n\n## Business value\n\nFor business users, the registry reduces confusion. Axis can show “Platform,”\n“WCMS,” or “Cron” as understandable capabilities instead of exposing dozens of\ntechnical internals such as validators, routers, cache providers, import\nprocessors, or individual schema modules.\n\nFor a partner, this also protects adoption cost. A project can start with the\nmandatory capabilities, then add optional capabilities when there is a business\nreason. The decision is recorded in the database, so the project does not need\nmanual reconfiguration after every restart.\n\n## Developer model\n\nDevelopers should not confuse registry state with code availability. Package\ndependencies and repository checkout decide which source is available.\nEnvironment/server `extends` configuration decides which modules load in a\nruntime. The registry records project authorization for a functional module\nthat the runtime has already observed.\n\nThat means a module can be visible as available only after a server starts and\nreports it. If the Cron server is not running, Platform cannot honestly present\nCron as a live optional capability. If Cron is running but deregistered, Axis\nshould show it under available modules with the Register action.\n\n## DevOps and operator model\n\nOperators should monitor both sides of the contract. A registered module that\nhas no live runtime observation may indicate a stopped server, network issue,\nor broken health path. A live runtime observation for an unregistered optional\nmodule means the server is up, but the project has not accepted the capability.\n\nIn production, audit events should capture who registered, activated,\ndeactivated, or deregistered a module. Those actions affect what Axis exposes\nand what business users can operate, so they should be treated as governed\nadministrative changes.\n\n## What the registry must not do\n\nThe registry must not become a package manager. It should not clone\nrepositories, rewrite server `extends`, or silently enable server categories.\nIt also must not expose every technical module as a business toggle. Technical\nmodule loading remains a framework/runtime concern; functional module lifecycle\nis the BackOffice-facing control.\n\n## Verification checklist\n\n- Start Platform, WCMS, and Cron from a fresh database.\n- Confirm Core, Platform, and WCMS are registered and active by default.\n- Confirm Cron appears as available when its runtime is live.\n- Register Cron and verify it moves to registered inactive or active according\n  to the operation response.\n- Activate, deactivate, and deregister Cron without refreshing the browser.\n- Confirm deregistered Cron returns to available while the Cron server remains\n  observed.\n- Restart servers and confirm durable registration state is preserved.\n\n## Common mistakes\n\n- Treating `nodics.kickoff` as a functional module just because it starts\n  servers.\n- Renaming Platform to a customer name when a customer extension only\n  customizes Platform behavior.\n- Showing technical modules as first-class registry cards for business users.\n- Assuming deregistration stops a process. It changes project state; process\n  lifecycle is still an operator/runtime concern.\n",
+      "searchText": "Functional module registry Durable project registration and runtime observation rules. # Functional module registry\n\nThe functional module registry is the Platform/BackOffice contract that tells\nAxis which high-level Nodics capabilities are known, registered, active, and\nsafe to show to business users. It is intentionally focused on functional\nmodules such as `nodics.core`, `nodics.platform`, `nodics.wcms`, and\n`nodics.cron`, not every small technical module inside those groups.\n\nFor a beginner, the registry is like the application control panel. It does\nnot download code and it does not hot-load a server process. It records the\nproject decision that a live capability is allowed to participate in the\nproject. Runtime servers still need to start with the right module graph.\n\n## Why the registry exists\n\nWithout a registry, Axis would have to guess from menus, routes, package names,\nor server responses which modules are safe for a project. That creates messy\nbehavior: a link may appear before the backend is ready, an operator may repeat\nthe same setup after every restart, or a customer may see technical modules\nthat only developers understand.\n\nThe registry separates two different facts:\n\n- runtime observation: a server is currently running and has reported a\n  capability;\n- project registration: the project has durably accepted that capability.\n\nRestarting a server renews its runtime observation. It should not ask the\noperator to register the same module again.\n\n## Lifecycle states\n\nOptional functional modules move through a small lifecycle. The current Axis\nmodule registry page follows this model.\n\n```mermaid\nstateDiagram-v2\n  [*] --> Available: runtime observes optional module\n  Available --> RegisteredInactive: register\n  RegisteredInactive --> RegisteredActive: activate\n  RegisteredActive --> RegisteredInactive: deactivate\n  RegisteredInactive --> Available: deregister\n  RegisteredActive --> Available: deactivate then deregister\n```\n\n| State | Beginner meaning | Axis action |\n| --- | --- | --- |\n| Available | A live server has reported the module, but the project has not accepted it. | Show Register. |\n| Registered inactive | The project accepted the module but has not enabled it for use. | Show Activate or Deregister. |\n| Registered active | The module is accepted and enabled. | Show Deactivate. |\n| Deregistered | The project removed its durable acceptance while the runtime may still observe it. | Move back to Available. |\n\nCore, Platform, and WCMS are mandatory for the local Axis journey. They should\nnot be treated like optional modules that a business user can deregister from\nthe same screen. Cron is optional, so it can be observed, registered,\nactivated, deactivated, and deregistered.\n\n## Mandatory versus optional modules\n\nThe registry should stay business-readable. A business user should not need to\nunderstand every technical module that helped Core or WCMS start.\n\n| Module type | Example | User lifecycle |\n| --- | --- | --- |\n| Mandatory foundation | Core, Platform, WCMS | Installed and active by runtime contract; not deregisterable from Axis. |\n| Optional functional capability | Cron | Register, activate, deactivate, deregister. |\n| Technical module | `cronjob`, `media`, `profile` internals | Not shown as separate business registry cards unless exposed by an owning functional module. |\n| Customer extension | future customer Platform extension | Customizes the standard identity; does not create a new displayed Platform name by default. |\n\nMandatory does not mean “hardcoded in Axis.” It means the current reference\nBackOffice experience depends on those capabilities. Axis still discovers the\neffective state from backend contracts, but it should not offer destructive\nbusiness actions that would remove the foundation required for login, registry\nvisibility, and WCMS-backed presentation.\n\n## Business value\n\nFor business users, the registry reduces confusion. Axis can show “Platform,”\n“WCMS,” or “Cron” as understandable capabilities instead of exposing dozens of\ntechnical internals such as validators, routers, cache providers, import\nprocessors, or individual schema modules.\n\nFor a partner, this also protects adoption cost. A project can start with the\nmandatory capabilities, then add optional capabilities when there is a business\nreason. The decision is recorded in the database, so the project does not need\nmanual reconfiguration after every restart.\n\n## Business example: deciding to enable Cron\n\nA small customer may start with login, content, media, and documentation only.\nAfter a few weeks, the business asks for nightly cleanup of temporary media and\nscheduled export retries. Cron becomes useful. The project team starts a Cron\nruntime, Axis sees `nodics.cron` as available, and an authorized administrator\nregisters and activates it.\n\nThe business decision is visible and reversible:\n\n1. Before registration, Cron is observed but not accepted by the project.\n2. After registration, the project remembers that Cron is part of its accepted\n   capability set.\n3. After activation, Cron-owned operations can become available according to\n   permissions and data import state.\n4. Deactivation pauses the capability without forgetting the registration.\n5. Deregistration removes project intent while the runtime may still be\n   technically live.\n\nThat lifecycle is safer than silently enabling features because a server\nhappened to start.\n\n## Developer model\n\nDevelopers should not confuse registry state with code availability. Package\ndependencies and repository checkout decide which source is available.\nEnvironment/server `extends` configuration decides which modules load in a\nruntime. The registry records project authorization for a functional module\nthat the runtime has already observed.\n\nThat means a module can be visible as available only after a server starts and\nreports it. If the Cron server is not running, Platform cannot honestly present\nCron as a live optional capability. If Cron is running but deregistered, Axis\nshould show it under available modules with the Register action.\n\n## API and UI contract expectations\n\nThe registry API must give Axis enough information to render without guessing:\n\n- functional module code and display name;\n- mandatory or optional classification;\n- observed runtime servers;\n- current registration state;\n- current activation state;\n- active technical modules for explanation, not as primary business toggles;\n- available actions for the current user and state;\n- last observation and catalogue revision;\n- safe status or error messages.\n\nAxis should update its local state immediately after register, activate,\ndeactivate, or deregister operations. A browser refresh must not be required\nto reveal the next valid action. If an operation fails, Axis should retain the\nprevious known state and show the backend error.\n\n## DevOps and operator model\n\nOperators should monitor both sides of the contract. A registered module that\nhas no live runtime observation may indicate a stopped server, network issue,\nor broken health path. A live runtime observation for an unregistered optional\nmodule means the server is up, but the project has not accepted the capability.\n\nIn production, audit events should capture who registered, activated,\ndeactivated, or deregistered a module. Those actions affect what Axis exposes\nand what business users can operate, so they should be treated as governed\nadministrative changes.\n\n## What the registry must not do\n\nThe registry must not become a package manager. It should not clone\nrepositories, rewrite server `extends`, or silently enable server categories.\nIt also must not expose every technical module as a business toggle. Technical\nmodule loading remains a framework/runtime concern; functional module lifecycle\nis the BackOffice-facing control.\n\n## Verification checklist\n\n- Start Platform, WCMS, and Cron from a fresh database.\n- Confirm Core, Platform, and WCMS are registered and active by default.\n- Confirm Cron appears as available when its runtime is live.\n- Register Cron and verify it moves to registered inactive or active according\n  to the operation response.\n- Activate, deactivate, and deregister Cron without refreshing the browser.\n- Confirm deregistered Cron returns to available while the Cron server remains\n  observed.\n- Restart servers and confirm durable registration state is preserved.\n\n## Acceptance scenarios\n\n| Scenario | Expected result |\n| --- | --- |\n| Fresh database with Platform and WCMS only | Core, Platform, and WCMS are active; Cron is not shown as live. |\n| Cron server starts | Cron appears as available optional module. |\n| User registers Cron | Cron moves out of available list and shows the next valid state without page refresh. |\n| User activates Cron | Cron shows active and exposes active-state actions without page refresh. |\n| User deactivates Cron | Cron remains registered but inactive. |\n| User deregisters Cron | Cron returns to available if the runtime is still observed. |\n| Servers restart | Mandatory state and registered optional state persist from database. |\n| Cron server stops | Registered state remains, but runtime observation should show unavailable or stale according to the API contract. |\n\n## Common mistakes\n\n- Treating `nodics.kickoff` as a functional module just because it starts\n  servers.\n- Renaming Platform to a customer name when a customer extension only\n  customizes Platform behavior.\n- Showing technical modules as first-class registry cards for business users.\n- Assuming deregistration stops a process. It changes project state; process\n  lifecycle is still an operator/runtime concern.\n",
       "previous": {
         "title": "Runtime and DevOps operations",
         "route": "/docs/framework/framework-devops-runtime"
@@ -2499,8 +3447,8 @@ module.exports = {
         "functionalModule": "nodics.platform",
         "technicalModule": "backoffice",
         "path": "content/nodics.platform/module-registry.md",
-        "wordCount": 823,
-        "checksum": "602ae53f88c5e43c9dce3a1ec3829b951aa21bc3f831ff53c354f13cbee23659"
+        "wordCount": 1331,
+        "checksum": "f15f4c17693e3334393c34ac5bdef4cb34acb29d9e8be15852219207f66dbe02"
       }
     },
     "active": true
@@ -2564,13 +3512,33 @@ module.exports = {
           "level": 2
         },
         {
+          "text": "Business journey: from content idea to visible page",
+          "anchor": "wcmsOverview-9-business-journey-from-content-idea-to-visible-page",
+          "level": 2
+        },
+        {
+          "text": "Example: three documentation sites",
+          "anchor": "wcmsOverview-10-example-three-documentation-sites",
+          "level": 2
+        },
+        {
+          "text": "Developer journey: adding a module-owned page",
+          "anchor": "wcmsOverview-11-developer-journey-adding-a-module-owned-page",
+          "level": 2
+        },
+        {
           "text": "DevOps model",
-          "anchor": "wcmsOverview-9-devops-model",
+          "anchor": "wcmsOverview-12-devops-model",
+          "level": 2
+        },
+        {
+          "text": "Operations checklist",
+          "anchor": "wcmsOverview-13-operations-checklist",
           "level": 2
         },
         {
           "text": "What not to do",
-          "anchor": "wcmsOverview-10-what-not-to-do",
+          "anchor": "wcmsOverview-14-what-not-to-do",
           "level": 2
         }
       ],
@@ -2745,8 +3713,97 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Business journey: from content idea to visible page",
+          "anchor": "wcmsOverview-9-business-journey-from-content-idea-to-visible-page"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A business user usually does not think in terms of catalogs, routes, renderer mappings, and templates. They think: “I need a page that explains this capability, uses the right brand, appears in the right navigation, and can be changed safely later.” WCMS turns that business need into governed records."
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart TD\n  Idea[\"Business content idea\"] --> Owner[\"Identify owning module or project\"]\n  Owner --> Source[\"Write source content or data definition\"]\n  Source --> Generate[\"Generate CMS records and manifest\"]\n  Generate --> Import[\"Import through WCMS\"]\n  Import --> Route[\"Resolve route for site, locale, channel\"]\n  Route --> Render[\"Axis or site renderer displays page\"]\n  Render --> Govern[\"Audit, version, and update through owner\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "This is why WCMS is a framework capability instead of a frontend folder. The page must be visible to users, but the authority for what the page means, who owns it, how it is versioned, and how it is imported belongs to the backend module or project."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Example: three documentation sites",
+          "anchor": "wcmsOverview-10-example-three-documentation-sites"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The reference Axis documentation navigation may show Framework, Swaggers, Nodics Axis, and a customer project guide. That visible navigation is a user experience decision. The backend data ownership is separate:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Visible documentation area",
+            "Backend owner",
+            "Content purpose"
+          ],
+          "rows": [
+            [
+              "Framework",
+              "`nodics.docs`",
+              "Reusable Nodics framework concepts, quick start, architecture, customization, operations, module guides."
+            ],
+            [
+              "Swaggers",
+              "BackOffice/API discovery",
+              "Runtime API reference grouped by registered backend capability."
+            ],
+            [
+              "Nodics Axis",
+              "`nodics.platform/modules/axis`",
+              "Axis product behavior, renderer contracts, shell behavior, schema workbench, documentation rendering."
+            ],
+            [
+              "Customer project",
+              "customer project",
+              "Project setup, local demo behavior, project data, custom modules, customer-specific examples."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "No documentation area should store importable CMS data in `nodics.axis`. Axis may render all of these areas, but it does not own the content records."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Developer journey: adding a module-owned page",
+          "anchor": "wcmsOverview-11-developer-journey-adding-a-module-owned-page"
+        },
+        {
+          "kind": "paragraph",
+          "text": "When a developer adds documentation or content for a functional module, the safe process is:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Confirm the backend owner of the subject.",
+            "Add or update source content under that owner.",
+            "Regenerate generated CMS data and manifests with the owner-provided script.",
+            "Run content-pack validation.",
+            "Start WCMS and import through Axis or an approved backend import API.",
+            "Open the route in Axis or the target site.",
+            "Verify navigation, page body, renderer mapping, authorization, and route recovery behavior."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Hand-editing generated CMS records may seem faster, but it breaks release integrity. If generated output is wrong, fix the source or generator."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "DevOps model",
-          "anchor": "wcmsOverview-9-devops-model"
+          "anchor": "wcmsOverview-12-devops-model"
         },
         {
           "kind": "paragraph",
@@ -2759,8 +3816,59 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Operations checklist",
+          "anchor": "wcmsOverview-13-operations-checklist"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Check",
+            "Expected evidence"
+          ],
+          "rows": [
+            [
+              "WCMS process",
+              "Server starts and exposes content/import APIs on the configured port."
+            ],
+            [
+              "Content catalogs",
+              "Every site has an owning catalog; pages are not orphaned."
+            ],
+            [
+              "Routes",
+              "Each visible URL resolves to a page for site, locale, and channel."
+            ],
+            [
+              "Renderer mappings",
+              "Axis receives only renderer types the backend has authorized."
+            ],
+            [
+              "Import history",
+              "Content-pack install records include version, checksum, status, and outcome."
+            ],
+            [
+              "Media",
+              "Components reference media records, not private storage paths."
+            ],
+            [
+              "Recovery",
+              "Missing route, missing renderer, unauthorized access, and stale content fail safely."
+            ],
+            [
+              "Backup",
+              "Database, media storage, and generated release evidence can be restored together."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "WCMS incidents should be investigated by record chain. Start with the route, then page, template, components, renderer mapping, site, catalog, and import history. That is usually faster than searching the frontend first."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "What not to do",
-          "anchor": "wcmsOverview-10-what-not-to-do"
+          "anchor": "wcmsOverview-14-what-not-to-do"
         },
         {
           "kind": "unordered-list",
@@ -2769,11 +3877,13 @@ module.exports = {
             "Do not create a second content registry in the frontend.",
             "Do not hardcode page availability in Axis when WCMS can deliver it.",
             "Do not let a route imply ownership; route ownership comes from the backend module or project that owns the pack.",
-            "Do not let generated records drift from their source catalogue."
+            "Do not let generated records drift from their source catalogue.",
+            "Do not create pages or components without catalogs and sites.",
+            "Do not treat documentation content as special static frontend content just because Axis renders it."
           ]
         }
       ],
-      "searchText": "WCMS content management How Nodics manages sites, catalogs, pages, components, routes, and delivery through the WCMS runtime. # WCMS content management\n\nWCMS is the Nodics functional module for governed web content. It owns the\nbackend records that describe sites, content catalogs, page types, templates,\nslots, pages, components, navigation, routes, restrictions, publication, and\ndelivery. A frontend such as Nodics Axis renders the resolved contract, but the\nbackend decides which content exists and when it is active.\n\n## Problem it solves\n\nMost enterprise applications eventually need content that changes faster than\ncode releases. Login pages, documentation, dashboards, banners, help text,\nnavigation, and site experiences should be governed without asking developers\nto rebuild the frontend every time copy or composition changes. WCMS gives\nNodics a backend-owned content model that can be imported, versioned, searched,\npublished, and delivered safely.\n\n## Core ownership rule\n\nIf a CMS record is imported into a database, it belongs to a backend module or\nbackend project. `nodics.axis` may provide renderers, but it must not own\ndatabase-importable site, page, component, catalog, or route data. Framework\ndocumentation belongs in `nodics.docs`, Axis product documentation belongs in\n`nodics.platform/modules/axis`, and customer project documentation belongs in\nthe customer project.\n\nThis rule keeps runtime ownership clear. It also allows a partner to replace\nor extend a frontend without losing the governed content source.\n\n## What WCMS manages\n\n- Sites: named delivery surfaces such as Axis documentation or a storefront.\n- Content catalogs: governed containers that group pages and components.\n- Page and component types: contracts that describe what kind of record is\n  being rendered.\n- Templates and slots: layout-level rules for where components can appear.\n- Pages and components: authored content and structured properties.\n- Routes: URL, locale, channel, site, and page mappings.\n- Navigation nodes: menu structures and discovery metadata.\n- Restrictions: access and delivery constraints around content.\n- Publication state: the difference between authored content and content that\n  is safe to deliver.\n\n## How a page becomes visible\n\n```mermaid\nflowchart TD\n  Catalog[\"Content catalog<br/>groups related content\"]\n  Site[\"CMS site<br/>delivery surface\"]\n  Type[\"Page/component types<br/>renderer contract\"]\n  Template[\"Page template<br/>slot rules\"]\n  Component[\"CMS components<br/>structured properties\"]\n  Page[\"CMS page<br/>composition\"]\n  Route[\"CMS route<br/>URL + locale + channel\"]\n  Axis[\"Axis renderer<br/>browser presentation\"]\n\n  Catalog --> Site\n  Type --> Template\n  Template --> Page\n  Component --> Page\n  Site --> Route\n  Page --> Route\n  Route --> Axis\n```\n\nA page cannot exist meaningfully without the surrounding records. A route needs\na site. A site needs a catalog. A page needs a type and usually a template. A\ntemplate needs slots. Components need type codes and renderer mappings. This is\nwhy a data pack with pages but no content catalog is incomplete. It might look\nlike “some records imported,” but the content model is not healthy.\n\n## Beginner example: documentation content\n\nNodics documentation is a good first example because it is visible in Axis and\nstill follows the backend ownership rule.\n\n1. `nodics.docs` owns framework documentation markdown.\n2. Its generator converts markdown into CMS records: catalog, site, page type,\n   component type, renderer mappings, template, components, pages, and routes.\n3. WCMS imports the generated core data pack.\n4. Axis opens `/docs`, requests the route from WCMS, and renders the returned\n   page contract.\n5. If the markdown changes, the content pack version and checksum change, then\n   the environment imports the new governed release.\n\nAxis does not read markdown files from `nodics.docs`. Axis reads the backend\ndelivery contract. That distinction is the heart of the modularisation work.\n\n## Required record chain\n\n| Record | Beginner explanation | Common failure if missing |\n| --- | --- | --- |\n| Catalog | The container that says this content belongs together. | Sites or pages look orphaned and governance becomes unclear. |\n| Site | The named delivery surface, such as Axis docs or a customer website. | Routes cannot resolve a delivery target. |\n| Type code | The contract that tells Axis what kind of page or component this is. | Axis cannot choose the correct renderer safely. |\n| Renderer mapping | The allowed browser renderer for a type. | Axis refuses or falls back because the backend did not authorize a renderer. |\n| Template and slots | The layout contract for where components are allowed. | Components may exist but not render in a predictable layout. |\n| Component | The structured content or properties to render. | Page loads but has no meaningful body. |\n| Page | The composition of components. | Route can resolve but there is no page to display. |\n| Route | The URL, locale, channel, and delivery state. | Direct navigation shows recovery or not-found behavior. |\n\n## Developer model\n\nDevelopers should treat WCMS data like code-owned configuration until the\nbusiness explicitly moves a capability into operator-managed authoring. A\nmodule ships source documentation or content definitions, generates importable\nrecords, and exposes the pack through the governed import system. The generated\nrecords are then loaded into WCMS. Runtime delivery reads the database records,\nnot the frontend repository.\n\nWhen a project needs custom content, place the source and generated pack in the\nowning project, such as `nodics.kickoff`. Do not modify framework packs to add\ncustomer-specific pages.\n\n## Business model\n\nWCMS reduces release friction. Business users can work with governed content\nsurfaces while developers preserve reusable module boundaries. A partner can\nrun many customer-facing websites, internal applications, and documentation\nexperiences through the same content foundation while still keeping project\nownership clean.\n\n## DevOps model\n\nWCMS should be deployed as a runtime server when content delivery or content\nmanagement is required. Axis depends on Platform for identity and on WCMS for\ngoverned presentation content. Local Kickoff normally starts Platform, WCMS,\nCron where needed, and Axis as the frontend renderer.\n\nProduction deployments should define backup, migration, publication, cache,\nsearch, media storage, and import history policies. Content packs should have\nsemantic releases, checksums, and repeatable import behavior so an environment\ncan be rebuilt from source-controlled module data.\n\n## What not to do\n\n- Do not put WCMS import data in `nodics.axis`.\n- Do not create a second content registry in the frontend.\n- Do not hardcode page availability in Axis when WCMS can deliver it.\n- Do not let a route imply ownership; route ownership comes from the backend\n  module or project that owns the pack.\n- Do not let generated records drift from their source catalogue.\n",
+      "searchText": "WCMS content management How Nodics manages sites, catalogs, pages, components, routes, and delivery through the WCMS runtime. # WCMS content management\n\nWCMS is the Nodics functional module for governed web content. It owns the\nbackend records that describe sites, content catalogs, page types, templates,\nslots, pages, components, navigation, routes, restrictions, publication, and\ndelivery. A frontend such as Nodics Axis renders the resolved contract, but the\nbackend decides which content exists and when it is active.\n\n## Problem it solves\n\nMost enterprise applications eventually need content that changes faster than\ncode releases. Login pages, documentation, dashboards, banners, help text,\nnavigation, and site experiences should be governed without asking developers\nto rebuild the frontend every time copy or composition changes. WCMS gives\nNodics a backend-owned content model that can be imported, versioned, searched,\npublished, and delivered safely.\n\n## Core ownership rule\n\nIf a CMS record is imported into a database, it belongs to a backend module or\nbackend project. `nodics.axis` may provide renderers, but it must not own\ndatabase-importable site, page, component, catalog, or route data. Framework\ndocumentation belongs in `nodics.docs`, Axis product documentation belongs in\n`nodics.platform/modules/axis`, and customer project documentation belongs in\nthe customer project.\n\nThis rule keeps runtime ownership clear. It also allows a partner to replace\nor extend a frontend without losing the governed content source.\n\n## What WCMS manages\n\n- Sites: named delivery surfaces such as Axis documentation or a storefront.\n- Content catalogs: governed containers that group pages and components.\n- Page and component types: contracts that describe what kind of record is\n  being rendered.\n- Templates and slots: layout-level rules for where components can appear.\n- Pages and components: authored content and structured properties.\n- Routes: URL, locale, channel, site, and page mappings.\n- Navigation nodes: menu structures and discovery metadata.\n- Restrictions: access and delivery constraints around content.\n- Publication state: the difference between authored content and content that\n  is safe to deliver.\n\n## How a page becomes visible\n\n```mermaid\nflowchart TD\n  Catalog[\"Content catalog<br/>groups related content\"]\n  Site[\"CMS site<br/>delivery surface\"]\n  Type[\"Page/component types<br/>renderer contract\"]\n  Template[\"Page template<br/>slot rules\"]\n  Component[\"CMS components<br/>structured properties\"]\n  Page[\"CMS page<br/>composition\"]\n  Route[\"CMS route<br/>URL + locale + channel\"]\n  Axis[\"Axis renderer<br/>browser presentation\"]\n\n  Catalog --> Site\n  Type --> Template\n  Template --> Page\n  Component --> Page\n  Site --> Route\n  Page --> Route\n  Route --> Axis\n```\n\nA page cannot exist meaningfully without the surrounding records. A route needs\na site. A site needs a catalog. A page needs a type and usually a template. A\ntemplate needs slots. Components need type codes and renderer mappings. This is\nwhy a data pack with pages but no content catalog is incomplete. It might look\nlike “some records imported,” but the content model is not healthy.\n\n## Beginner example: documentation content\n\nNodics documentation is a good first example because it is visible in Axis and\nstill follows the backend ownership rule.\n\n1. `nodics.docs` owns framework documentation markdown.\n2. Its generator converts markdown into CMS records: catalog, site, page type,\n   component type, renderer mappings, template, components, pages, and routes.\n3. WCMS imports the generated core data pack.\n4. Axis opens `/docs`, requests the route from WCMS, and renders the returned\n   page contract.\n5. If the markdown changes, the content pack version and checksum change, then\n   the environment imports the new governed release.\n\nAxis does not read markdown files from `nodics.docs`. Axis reads the backend\ndelivery contract. That distinction is the heart of the modularisation work.\n\n## Required record chain\n\n| Record | Beginner explanation | Common failure if missing |\n| --- | --- | --- |\n| Catalog | The container that says this content belongs together. | Sites or pages look orphaned and governance becomes unclear. |\n| Site | The named delivery surface, such as Axis docs or a customer website. | Routes cannot resolve a delivery target. |\n| Type code | The contract that tells Axis what kind of page or component this is. | Axis cannot choose the correct renderer safely. |\n| Renderer mapping | The allowed browser renderer for a type. | Axis refuses or falls back because the backend did not authorize a renderer. |\n| Template and slots | The layout contract for where components are allowed. | Components may exist but not render in a predictable layout. |\n| Component | The structured content or properties to render. | Page loads but has no meaningful body. |\n| Page | The composition of components. | Route can resolve but there is no page to display. |\n| Route | The URL, locale, channel, and delivery state. | Direct navigation shows recovery or not-found behavior. |\n\n## Developer model\n\nDevelopers should treat WCMS data like code-owned configuration until the\nbusiness explicitly moves a capability into operator-managed authoring. A\nmodule ships source documentation or content definitions, generates importable\nrecords, and exposes the pack through the governed import system. The generated\nrecords are then loaded into WCMS. Runtime delivery reads the database records,\nnot the frontend repository.\n\nWhen a project needs custom content, place the source and generated pack in the\nowning project, such as `nodics.kickoff`. Do not modify framework packs to add\ncustomer-specific pages.\n\n## Business model\n\nWCMS reduces release friction. Business users can work with governed content\nsurfaces while developers preserve reusable module boundaries. A partner can\nrun many customer-facing websites, internal applications, and documentation\nexperiences through the same content foundation while still keeping project\nownership clean.\n\n## Business journey: from content idea to visible page\n\nA business user usually does not think in terms of catalogs, routes, renderer\nmappings, and templates. They think: “I need a page that explains this\ncapability, uses the right brand, appears in the right navigation, and can be\nchanged safely later.” WCMS turns that business need into governed records.\n\n```mermaid\nflowchart TD\n  Idea[\"Business content idea\"] --> Owner[\"Identify owning module or project\"]\n  Owner --> Source[\"Write source content or data definition\"]\n  Source --> Generate[\"Generate CMS records and manifest\"]\n  Generate --> Import[\"Import through WCMS\"]\n  Import --> Route[\"Resolve route for site, locale, channel\"]\n  Route --> Render[\"Axis or site renderer displays page\"]\n  Render --> Govern[\"Audit, version, and update through owner\"]\n```\n\nThis is why WCMS is a framework capability instead of a frontend folder. The\npage must be visible to users, but the authority for what the page means, who\nowns it, how it is versioned, and how it is imported belongs to the backend\nmodule or project.\n\n## Example: three documentation sites\n\nThe reference Axis documentation navigation may show Framework, Swaggers,\nNodics Axis, and a customer project guide. That visible navigation is a user\nexperience decision. The backend data ownership is separate:\n\n| Visible documentation area | Backend owner | Content purpose |\n| --- | --- | --- |\n| Framework | `nodics.docs` | Reusable Nodics framework concepts, quick start, architecture, customization, operations, module guides. |\n| Swaggers | BackOffice/API discovery | Runtime API reference grouped by registered backend capability. |\n| Nodics Axis | `nodics.platform/modules/axis` | Axis product behavior, renderer contracts, shell behavior, schema workbench, documentation rendering. |\n| Customer project | customer project | Project setup, local demo behavior, project data, custom modules, customer-specific examples. |\n\nNo documentation area should store importable CMS data in `nodics.axis`.\nAxis may render all of these areas, but it does not own the content records.\n\n## Developer journey: adding a module-owned page\n\nWhen a developer adds documentation or content for a functional module, the\nsafe process is:\n\n1. Confirm the backend owner of the subject.\n2. Add or update source content under that owner.\n3. Regenerate generated CMS data and manifests with the owner-provided script.\n4. Run content-pack validation.\n5. Start WCMS and import through Axis or an approved backend import API.\n6. Open the route in Axis or the target site.\n7. Verify navigation, page body, renderer mapping, authorization, and route\n   recovery behavior.\n\nHand-editing generated CMS records may seem faster, but it breaks release\nintegrity. If generated output is wrong, fix the source or generator.\n\n## DevOps model\n\nWCMS should be deployed as a runtime server when content delivery or content\nmanagement is required. Axis depends on Platform for identity and on WCMS for\ngoverned presentation content. Local Kickoff normally starts Platform, WCMS,\nCron where needed, and Axis as the frontend renderer.\n\nProduction deployments should define backup, migration, publication, cache,\nsearch, media storage, and import history policies. Content packs should have\nsemantic releases, checksums, and repeatable import behavior so an environment\ncan be rebuilt from source-controlled module data.\n\n## Operations checklist\n\n| Check | Expected evidence |\n| --- | --- |\n| WCMS process | Server starts and exposes content/import APIs on the configured port. |\n| Content catalogs | Every site has an owning catalog; pages are not orphaned. |\n| Routes | Each visible URL resolves to a page for site, locale, and channel. |\n| Renderer mappings | Axis receives only renderer types the backend has authorized. |\n| Import history | Content-pack install records include version, checksum, status, and outcome. |\n| Media | Components reference media records, not private storage paths. |\n| Recovery | Missing route, missing renderer, unauthorized access, and stale content fail safely. |\n| Backup | Database, media storage, and generated release evidence can be restored together. |\n\nWCMS incidents should be investigated by record chain. Start with the route,\nthen page, template, components, renderer mapping, site, catalog, and import\nhistory. That is usually faster than searching the frontend first.\n\n## What not to do\n\n- Do not put WCMS import data in `nodics.axis`.\n- Do not create a second content registry in the frontend.\n- Do not hardcode page availability in Axis when WCMS can deliver it.\n- Do not let a route imply ownership; route ownership comes from the backend\n  module or project that owns the pack.\n- Do not let generated records drift from their source catalogue.\n- Do not create pages or components without catalogs and sites.\n- Do not treat documentation content as special static frontend content just\n  because Axis renders it.\n",
       "previous": {
         "title": "Functional module registry",
         "route": "/docs/framework/platform-module-registry"
@@ -2787,8 +3897,8 @@ module.exports = {
         "functionalModule": "nodics.wcms",
         "technicalModule": "wcms",
         "path": "content/nodics.wcms/overview.md",
-        "wordCount": 985,
-        "checksum": "11f3fd60f2522ae8fa982af3dccba2d678c3e77c76527c90cf3323ae350da244"
+        "wordCount": 1536,
+        "checksum": "c19924a44bdcf35d78ca7dd7b3a59879854bef0f320f1d98fdb46a025705b748"
       }
     },
     "active": true
@@ -2837,23 +3947,43 @@ module.exports = {
           "level": 2
         },
         {
+          "text": "Media ownership across modules",
+          "anchor": "wcmsMediaManagement-6-media-ownership-across-modules",
+          "level": 2
+        },
+        {
+          "text": "Business journey: adding a website banner",
+          "anchor": "wcmsMediaManagement-7-business-journey-adding-a-website-banner",
+          "level": 2
+        },
+        {
+          "text": "Developer journey: adding a new media use case",
+          "anchor": "wcmsMediaManagement-8-developer-journey-adding-a-new-media-use-case",
+          "level": 2
+        },
+        {
           "text": "Beginner customization example",
-          "anchor": "wcmsMediaManagement-6-beginner-customization-example",
+          "anchor": "wcmsMediaManagement-9-beginner-customization-example",
           "level": 2
         },
         {
           "text": "Business value",
-          "anchor": "wcmsMediaManagement-7-business-value",
+          "anchor": "wcmsMediaManagement-10-business-value",
           "level": 2
         },
         {
           "text": "DevOps considerations",
-          "anchor": "wcmsMediaManagement-8-devops-considerations",
+          "anchor": "wcmsMediaManagement-11-devops-considerations",
+          "level": 2
+        },
+        {
+          "text": "Operational acceptance checklist",
+          "anchor": "wcmsMediaManagement-12-operational-acceptance-checklist",
           "level": 2
         },
         {
           "text": "Customization model",
-          "anchor": "wcmsMediaManagement-9-customization-model",
+          "anchor": "wcmsMediaManagement-13-customization-model",
           "level": 2
         }
       ],
@@ -2985,8 +4115,110 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Media ownership across modules",
+          "anchor": "wcmsMediaManagement-6-media-ownership-across-modules"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Media is a shared governed capability, but shared does not mean ownerless. Other modules reference media records; they do not invent storage authority."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Consumer",
+            "What it may do",
+            "What it must not do"
+          ],
+          "rows": [
+            [
+              "WCMS pages/components",
+              "Reference media records for images, documents, or downloads.",
+              "Store private paths or credentials in component data."
+            ],
+            [
+              "Documentation",
+              "Reference screenshots, diagrams, and help images as governed media.",
+              "Copy images into every frontend or leave broken Markdown as visible text."
+            ],
+            [
+              "Imports and exports",
+              "Upload import files or expose generated export files through source context.",
+              "Bypass validation or retention policy."
+            ],
+            [
+              "Product or commerce modules",
+              "Associate media records with product or business entities.",
+              "Own the binary lifecycle unless explicitly implemented as a media provider."
+            ],
+            [
+              "Axis",
+              "Render upload/select/manage screens from backend contracts.",
+              "Decide storage paths, buckets, signed URLs, virus scan rules, or retention."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "The goal is simple: a business module can say “this record uses this media,” but Media decides how the file is governed."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Business journey: adding a website banner",
+          "anchor": "wcmsMediaManagement-7-business-journey-adding-a-website-banner"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Imagine a business user needs a new homepage banner image."
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Axis opens the Media page and asks the backend for valid source contexts.",
+            "The user chooses a content-media context and selects an image.",
+            "Media validates type, size, folder policy, and access mode.",
+            "The storage provider saves bytes and returns safe storage evidence.",
+            "Media creates or updates the media record.",
+            "A WCMS component references the media record.",
+            "The page renders through WCMS/Axis or a customer site renderer."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "At no point should the business user or frontend type a filesystem path, bucket name, or private URL. That information belongs to the backend provider contract."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Developer journey: adding a new media use case",
+          "anchor": "wcmsMediaManagement-8-developer-journey-adding-a-new-media-use-case"
+        },
+        {
+          "kind": "paragraph",
+          "text": "When a new module needs files, the developer should add a source context or policy before creating new upload code. A good implementation explains:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "which module needs the media;",
+            "whether files are user-uploaded, generated, imported, or externally referenced;",
+            "allowed extensions and MIME types;",
+            "maximum size and retention;",
+            "public, authenticated, private, or temporary delivery mode;",
+            "audit and cleanup requirements;",
+            "whether previews, thumbnails, or transformations are required;",
+            "which tests prove rejected files and unauthorized access fail safely."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "If the use case needs a different storage backend, implement or configure a provider behind Media rather than exposing storage rules to each consumer."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Beginner customization example",
-          "anchor": "wcmsMediaManagement-6-beginner-customization-example"
+          "anchor": "wcmsMediaManagement-9-beginner-customization-example"
         },
         {
           "kind": "paragraph",
@@ -3010,7 +4242,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Business value",
-          "anchor": "wcmsMediaManagement-7-business-value"
+          "anchor": "wcmsMediaManagement-10-business-value"
         },
         {
           "kind": "paragraph",
@@ -3020,7 +4252,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "DevOps considerations",
-          "anchor": "wcmsMediaManagement-8-devops-considerations"
+          "anchor": "wcmsMediaManagement-11-devops-considerations"
         },
         {
           "kind": "paragraph",
@@ -3029,15 +4261,66 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Operational acceptance checklist",
+          "anchor": "wcmsMediaManagement-12-operational-acceptance-checklist"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Acceptance evidence"
+          ],
+          "rows": [
+            [
+              "Upload policy",
+              "Allowed and rejected MIME types, extensions, and sizes behave as configured."
+            ],
+            [
+              "Storage provider",
+              "Provider returns safe relative evidence and does not leak private roots."
+            ],
+            [
+              "Metadata",
+              "Media record includes code, filename, format, size, checksum, lifecycle state, source context, and references."
+            ],
+            [
+              "Authorization",
+              "Unauthorized upload, view, update, and download attempts fail closed."
+            ],
+            [
+              "Retention",
+              "Temporary and generated files have cleanup policy and audit evidence."
+            ],
+            [
+              "Delivery",
+              "Public or authenticated delivery matches the media access mode."
+            ],
+            [
+              "Reuse",
+              "WCMS/documentation/business modules reference media by record, not storage path."
+            ],
+            [
+              "Recovery",
+              "Missing bytes, stale records, provider failure, and checksum mismatch have safe error behavior."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Media failures often look like frontend problems because users see them in Axis, but most root causes are backend policy, provider, or metadata issues. Start investigation at the media record and source context."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Customization model",
-          "anchor": "wcmsMediaManagement-9-customization-model"
+          "anchor": "wcmsMediaManagement-13-customization-model"
         },
         {
           "kind": "paragraph",
           "text": "Customer projects may add or override media folder and format policy through later module configuration. If behavior needs more than configuration, replace the media storage policy or provider service in a later active module while preserving the same safe API contract. Do not fork Axis to change storage rules."
         }
       ],
-      "searchText": "Media management Governed upload, storage policy, media metadata, source contexts, and safe frontend boundaries. # Media management\n\nMedia is the Nodics capability for governed files and assets. It lives inside\n`nodics.wcms` because content experiences need images, documents, imports,\nexports, and downloadable files, but the binary lifecycle must remain a backend\ncontract rather than a browser convention.\n\n## Problem it solves\n\nWithout a media module, each application starts inventing its own file paths,\nfolder rules, validation, and download behavior. That quickly becomes risky:\nfrontends may leak storage locations, imports may accept unsafe files, and\nbusiness modules may duplicate asset records. Media creates one governed place\nfor upload policy, metadata, storage-provider resolution, source context, and\ndelivery safety.\n\n## Core concepts\n\n- Media record: metadata for a governed file or external asset.\n- Folder policy: which purpose, path prefix, file types, size limits, access\n  mode, and retention rules apply.\n- Format policy: original, preview, responsive, import, export, document, or\n  custom format vocabulary.\n- Storage provider: the backend implementation that stores bytes locally, on\n  NAS, S3, Azure Blob, GCP Storage, CDN-backed storage, or a custom provider.\n- Source context: a safe backend projection that tells Axis which upload and\n  selection choices are valid for data imports, content media, product media,\n  utility media, and generated exports.\n\n## Frontend boundary\n\nAxis may display upload controls, folder choices, media records, and selection\ndialogs. It must not decide absolute paths, bucket names, storage keys,\ncredentials, signed URLs, retention behavior, or provider details. Axis sends\nthe intended source context and allowed business target; Media resolves the\neffective upload policy and storage behavior.\n\nThis is especially important for partners. A customer can remap storage from\nlocal development folders to cloud storage without changing Axis renderers or\nbusiness modules.\n\n## Upload and delivery lifecycle\n\nThe typical lifecycle is:\n\n1. A user or module selects a source context, such as `contentMedia` or\n   `dataImports`.\n2. Media resolves the effective folder and format policy from layered Nodics\n   configuration.\n3. The upload validates extension, MIME type, size, access mode, and target\n   schema expectations.\n4. The provider writes bytes and returns safe provider-relative metadata.\n5. Media persists the record, checksum, lifecycle state, and reference data.\n6. Other modules reference the media record instead of storing file paths.\n7. Delivery routes enforce authorization and expose only safe access details.\n\n```mermaid\nsequenceDiagram\n  participant User as Business user\n  participant Axis as Axis media page\n  participant Media as WCMS Media API\n  participant Policy as Folder and format policy\n  participant Store as Storage provider\n  participant DB as Media metadata DB\n\n  User->>Axis: Choose file and source context\n  Axis->>Media: Upload request with business context\n  Media->>Policy: Resolve allowed folder, format, size, MIME\n  Policy-->>Media: Effective upload policy\n  Media->>Store: Persist bytes through provider\n  Store-->>Media: Provider-relative storage evidence\n  Media->>DB: Save media record, checksum, status, references\n  Media-->>Axis: Safe media contract\n```\n\nThe frontend never receives private storage roots or credentials. It receives a\nsafe media contract: code, name, type, lifecycle state, preview or delivery\ninformation allowed by policy, and metadata that the user is permitted to see.\n\n## Source contexts\n\nMedia source context tells the backend why a file is being used. That matters\nbecause a CSV import file, a CMS hero image, a PDF document, and a generated\nexport should not share the same policy.\n\n| Source context | Typical file examples | Different policy needs |\n| --- | --- | --- |\n| `dataImports` | CSV, JSON, XLSX | Strict schema target, validation, short retention, no public delivery. |\n| `contentMedia` | Images, icons, documents | Editorial lifecycle, preview, reuse by components and pages. |\n| `documentationMedia` | Diagrams, screenshots, how-to images | Versioned with documentation and safe for authenticated delivery. |\n| `exports` | Generated CSV, PDF, report files | Expiry, audit evidence, download authorization. |\n| `utility` | Temporary or operational files | Narrow access, cleanup, and operational logging. |\n\nWhen a new module needs files, add a source context and policy instead of\ncreating another upload API. That keeps scanning, retention, audit, and storage\nprovider behavior consistent.\n\n## Beginner customization example\n\nImagine a partner wants to allow PNG and JPG images for website banners, but\nnot PDF files. They should not change Axis upload code. The correct path is:\n\n1. Add or override a media folder policy in a later project module.\n2. Set allowed MIME types and maximum size.\n3. Keep the same Media upload API.\n4. Let Axis rediscover allowed source contexts from backend metadata.\n5. Verify upload, preview, delivery, unauthorized access, and cleanup.\n\nThis gives the business the custom behavior it wants without creating a forked\nfrontend or a hidden storage convention.\n\n## Business value\n\nMedia lets business teams reuse assets across CMS, documentation, imports,\nexports, product experiences, and future websites without losing governance.\nIt also keeps operating cost flexible: local storage can support a developer\nmachine, while production can move to cloud or CDN-backed storage under the\nsame module contract.\n\n## DevOps considerations\n\nProduction storage should be explicit. Define provider roots, backup,\nretention, size limits, virus scanning or approval workflows where required,\ndownload authorization, cache headers, and lifecycle cleanup. Never rely on a\nrepository folder as production storage. Development defaults may write under\nserver temp paths, but those paths are disposable and environment-specific.\n\n## Customization model\n\nCustomer projects may add or override media folder and format policy through\nlater module configuration. If behavior needs more than configuration, replace\nthe media storage policy or provider service in a later active module while\npreserving the same safe API contract. Do not fork Axis to change storage\nrules.\n",
+      "searchText": "Media management Governed upload, storage policy, media metadata, source contexts, and safe frontend boundaries. # Media management\n\nMedia is the Nodics capability for governed files and assets. It lives inside\n`nodics.wcms` because content experiences need images, documents, imports,\nexports, and downloadable files, but the binary lifecycle must remain a backend\ncontract rather than a browser convention.\n\n## Problem it solves\n\nWithout a media module, each application starts inventing its own file paths,\nfolder rules, validation, and download behavior. That quickly becomes risky:\nfrontends may leak storage locations, imports may accept unsafe files, and\nbusiness modules may duplicate asset records. Media creates one governed place\nfor upload policy, metadata, storage-provider resolution, source context, and\ndelivery safety.\n\n## Core concepts\n\n- Media record: metadata for a governed file or external asset.\n- Folder policy: which purpose, path prefix, file types, size limits, access\n  mode, and retention rules apply.\n- Format policy: original, preview, responsive, import, export, document, or\n  custom format vocabulary.\n- Storage provider: the backend implementation that stores bytes locally, on\n  NAS, S3, Azure Blob, GCP Storage, CDN-backed storage, or a custom provider.\n- Source context: a safe backend projection that tells Axis which upload and\n  selection choices are valid for data imports, content media, product media,\n  utility media, and generated exports.\n\n## Frontend boundary\n\nAxis may display upload controls, folder choices, media records, and selection\ndialogs. It must not decide absolute paths, bucket names, storage keys,\ncredentials, signed URLs, retention behavior, or provider details. Axis sends\nthe intended source context and allowed business target; Media resolves the\neffective upload policy and storage behavior.\n\nThis is especially important for partners. A customer can remap storage from\nlocal development folders to cloud storage without changing Axis renderers or\nbusiness modules.\n\n## Upload and delivery lifecycle\n\nThe typical lifecycle is:\n\n1. A user or module selects a source context, such as `contentMedia` or\n   `dataImports`.\n2. Media resolves the effective folder and format policy from layered Nodics\n   configuration.\n3. The upload validates extension, MIME type, size, access mode, and target\n   schema expectations.\n4. The provider writes bytes and returns safe provider-relative metadata.\n5. Media persists the record, checksum, lifecycle state, and reference data.\n6. Other modules reference the media record instead of storing file paths.\n7. Delivery routes enforce authorization and expose only safe access details.\n\n```mermaid\nsequenceDiagram\n  participant User as Business user\n  participant Axis as Axis media page\n  participant Media as WCMS Media API\n  participant Policy as Folder and format policy\n  participant Store as Storage provider\n  participant DB as Media metadata DB\n\n  User->>Axis: Choose file and source context\n  Axis->>Media: Upload request with business context\n  Media->>Policy: Resolve allowed folder, format, size, MIME\n  Policy-->>Media: Effective upload policy\n  Media->>Store: Persist bytes through provider\n  Store-->>Media: Provider-relative storage evidence\n  Media->>DB: Save media record, checksum, status, references\n  Media-->>Axis: Safe media contract\n```\n\nThe frontend never receives private storage roots or credentials. It receives a\nsafe media contract: code, name, type, lifecycle state, preview or delivery\ninformation allowed by policy, and metadata that the user is permitted to see.\n\n## Source contexts\n\nMedia source context tells the backend why a file is being used. That matters\nbecause a CSV import file, a CMS hero image, a PDF document, and a generated\nexport should not share the same policy.\n\n| Source context | Typical file examples | Different policy needs |\n| --- | --- | --- |\n| `dataImports` | CSV, JSON, XLSX | Strict schema target, validation, short retention, no public delivery. |\n| `contentMedia` | Images, icons, documents | Editorial lifecycle, preview, reuse by components and pages. |\n| `documentationMedia` | Diagrams, screenshots, how-to images | Versioned with documentation and safe for authenticated delivery. |\n| `exports` | Generated CSV, PDF, report files | Expiry, audit evidence, download authorization. |\n| `utility` | Temporary or operational files | Narrow access, cleanup, and operational logging. |\n\nWhen a new module needs files, add a source context and policy instead of\ncreating another upload API. That keeps scanning, retention, audit, and storage\nprovider behavior consistent.\n\n## Media ownership across modules\n\nMedia is a shared governed capability, but shared does not mean ownerless.\nOther modules reference media records; they do not invent storage authority.\n\n| Consumer | What it may do | What it must not do |\n| --- | --- | --- |\n| WCMS pages/components | Reference media records for images, documents, or downloads. | Store private paths or credentials in component data. |\n| Documentation | Reference screenshots, diagrams, and help images as governed media. | Copy images into every frontend or leave broken Markdown as visible text. |\n| Imports and exports | Upload import files or expose generated export files through source context. | Bypass validation or retention policy. |\n| Product or commerce modules | Associate media records with product or business entities. | Own the binary lifecycle unless explicitly implemented as a media provider. |\n| Axis | Render upload/select/manage screens from backend contracts. | Decide storage paths, buckets, signed URLs, virus scan rules, or retention. |\n\nThe goal is simple: a business module can say “this record uses this media,”\nbut Media decides how the file is governed.\n\n## Business journey: adding a website banner\n\nImagine a business user needs a new homepage banner image.\n\n1. Axis opens the Media page and asks the backend for valid source contexts.\n2. The user chooses a content-media context and selects an image.\n3. Media validates type, size, folder policy, and access mode.\n4. The storage provider saves bytes and returns safe storage evidence.\n5. Media creates or updates the media record.\n6. A WCMS component references the media record.\n7. The page renders through WCMS/Axis or a customer site renderer.\n\nAt no point should the business user or frontend type a filesystem path,\nbucket name, or private URL. That information belongs to the backend provider\ncontract.\n\n## Developer journey: adding a new media use case\n\nWhen a new module needs files, the developer should add a source context or\npolicy before creating new upload code. A good implementation explains:\n\n- which module needs the media;\n- whether files are user-uploaded, generated, imported, or externally\n  referenced;\n- allowed extensions and MIME types;\n- maximum size and retention;\n- public, authenticated, private, or temporary delivery mode;\n- audit and cleanup requirements;\n- whether previews, thumbnails, or transformations are required;\n- which tests prove rejected files and unauthorized access fail safely.\n\nIf the use case needs a different storage backend, implement or configure a\nprovider behind Media rather than exposing storage rules to each consumer.\n\n## Beginner customization example\n\nImagine a partner wants to allow PNG and JPG images for website banners, but\nnot PDF files. They should not change Axis upload code. The correct path is:\n\n1. Add or override a media folder policy in a later project module.\n2. Set allowed MIME types and maximum size.\n3. Keep the same Media upload API.\n4. Let Axis rediscover allowed source contexts from backend metadata.\n5. Verify upload, preview, delivery, unauthorized access, and cleanup.\n\nThis gives the business the custom behavior it wants without creating a forked\nfrontend or a hidden storage convention.\n\n## Business value\n\nMedia lets business teams reuse assets across CMS, documentation, imports,\nexports, product experiences, and future websites without losing governance.\nIt also keeps operating cost flexible: local storage can support a developer\nmachine, while production can move to cloud or CDN-backed storage under the\nsame module contract.\n\n## DevOps considerations\n\nProduction storage should be explicit. Define provider roots, backup,\nretention, size limits, virus scanning or approval workflows where required,\ndownload authorization, cache headers, and lifecycle cleanup. Never rely on a\nrepository folder as production storage. Development defaults may write under\nserver temp paths, but those paths are disposable and environment-specific.\n\n## Operational acceptance checklist\n\n| Area | Acceptance evidence |\n| --- | --- |\n| Upload policy | Allowed and rejected MIME types, extensions, and sizes behave as configured. |\n| Storage provider | Provider returns safe relative evidence and does not leak private roots. |\n| Metadata | Media record includes code, filename, format, size, checksum, lifecycle state, source context, and references. |\n| Authorization | Unauthorized upload, view, update, and download attempts fail closed. |\n| Retention | Temporary and generated files have cleanup policy and audit evidence. |\n| Delivery | Public or authenticated delivery matches the media access mode. |\n| Reuse | WCMS/documentation/business modules reference media by record, not storage path. |\n| Recovery | Missing bytes, stale records, provider failure, and checksum mismatch have safe error behavior. |\n\nMedia failures often look like frontend problems because users see them in\nAxis, but most root causes are backend policy, provider, or metadata issues.\nStart investigation at the media record and source context.\n\n## Customization model\n\nCustomer projects may add or override media folder and format policy through\nlater module configuration. If behavior needs more than configuration, replace\nthe media storage policy or provider service in a later active module while\npreserving the same safe API contract. Do not fork Axis to change storage\nrules.\n",
       "previous": {
         "title": "WCMS content management",
         "route": "/docs/framework/wcms-overview"
@@ -3051,8 +4334,8 @@ module.exports = {
         "functionalModule": "nodics.wcms",
         "technicalModule": "media",
         "path": "content/nodics.wcms/media-management.md",
-        "wordCount": 865,
-        "checksum": "44b6419f8a99721da70ef76233aa5cf09d54ddc57135c11397e25bf1b6a7d138"
+        "wordCount": 1387,
+        "checksum": "70990e8664c7a9312d6c7f7bb84a2c54a644af963d95e54647915dd24145e478"
       }
     },
     "active": true
@@ -3096,28 +4379,53 @@ module.exports = {
           "level": 2
         },
         {
+          "text": "Business journey: why scheduled work needs governance",
+          "anchor": "cronOperations-5-business-journey-why-scheduled-work-needs-governance",
+          "level": 2
+        },
+        {
+          "text": "Developer journey: adding a project cron job",
+          "anchor": "cronOperations-6-developer-journey-adding-a-project-cron-job",
+          "level": 2
+        },
+        {
           "text": "Registering Cron as an optional module",
-          "anchor": "cronOperations-5-registering-cron-as-an-optional-module",
+          "anchor": "cronOperations-7-registering-cron-as-an-optional-module",
           "level": 2
         },
         {
           "text": "Production safety",
-          "anchor": "cronOperations-6-production-safety",
+          "anchor": "cronOperations-8-production-safety",
+          "level": 2
+        },
+        {
+          "text": "Execution safety model",
+          "anchor": "cronOperations-9-execution-safety-model",
+          "level": 2
+        },
+        {
+          "text": "Operations runbook outline",
+          "anchor": "cronOperations-10-operations-runbook-outline",
           "level": 2
         },
         {
           "text": "Security model",
-          "anchor": "cronOperations-7-security-model",
+          "anchor": "cronOperations-11-security-model",
           "level": 2
         },
         {
           "text": "DevOps model",
-          "anchor": "cronOperations-8-devops-model",
+          "anchor": "cronOperations-12-devops-model",
           "level": 2
         },
         {
           "text": "Axis and BackOffice view",
-          "anchor": "cronOperations-9-axis-and-backoffice-view",
+          "anchor": "cronOperations-13-axis-and-backoffice-view",
+          "level": 2
+        },
+        {
+          "text": "Acceptance checklist",
+          "anchor": "cronOperations-14-acceptance-checklist",
           "level": 2
         }
       ],
@@ -3260,8 +4568,79 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Business journey: why scheduled work needs governance",
+          "anchor": "cronOperations-5-business-journey-why-scheduled-work-needs-governance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Scheduled work often starts innocently: “run this cleanup every night.” In a real enterprise system, the same job may touch many tenants, delete data, retry external calls, create reports, or send notifications. That makes Cron a business-risk capability, not only a timer."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Business need",
+            "Cron responsibility",
+            "Owning business module responsibility"
+          ],
+          "rows": [
+            [
+              "Nightly media cleanup",
+              "Schedule, claim, execute, retry, log.",
+              "Media decides which records are expired and safe to delete."
+            ],
+            [
+              "Export retry",
+              "Run retry window and record attempts.",
+              "Import/export module decides retry eligibility and file semantics."
+            ],
+            [
+              "Reminder emails",
+              "Schedule and throttle execution.",
+              "Workflow or notification module owns message content and recipient rules."
+            ],
+            [
+              "Projection rebuild",
+              "Run controlled background task.",
+              "Owning data module owns rebuild logic and consistency rules."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Cron should make the work happen at the right time with safe operational evidence. It should not absorb every domain rule just because the work happens in the background."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Developer journey: adding a project cron job",
+          "anchor": "cronOperations-6-developer-journey-adding-a-project-cron-job"
+        },
+        {
+          "kind": "paragraph",
+          "text": "When a project adds a scheduled job, follow this sequence:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Identify the business module that owns the actual operation.",
+            "Expose a safe service method in that module.",
+            "Add the job definition in the project or owning module data/configuration.",
+            "Configure schedule, tenant/enterprise scope, node placement, timeout, retry, overlap, and audit expectations.",
+            "Register or import the job through governed data flow.",
+            "Test manual run and scheduled execution with the same security and tenant context.",
+            "Verify restart behavior by stopping and starting the Cron server.",
+            "Document support steps, alert thresholds, and reconciliation behavior."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Do not pass executable code, raw URLs, filesystem paths, or untrusted handler names through job records. Job definitions should point to known backend contracts."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Registering Cron as an optional module",
-          "anchor": "cronOperations-5-registering-cron-as-an-optional-module"
+          "anchor": "cronOperations-7-registering-cron-as-an-optional-module"
         },
         {
           "kind": "paragraph",
@@ -3288,7 +4667,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Production safety",
-          "anchor": "cronOperations-6-production-safety"
+          "anchor": "cronOperations-8-production-safety"
         },
         {
           "kind": "paragraph",
@@ -3301,8 +4680,82 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Execution safety model",
+          "anchor": "cronOperations-9-execution-safety-model"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart TD\n  Due[\"Job becomes due\"] --> Claim[\"Runtime node attempts claim\"]\n  Claim -->|Claim denied| Skip[\"Skip with safe reason\"]\n  Claim -->|Claim accepted| Execute[\"Execute handler\"]\n  Execute --> Success[\"Record success evidence\"]\n  Execute --> Failure[\"Record failure evidence\"]\n  Failure --> Retry{\"Retry allowed?\"}\n  Retry -->|Yes| Backoff[\"Schedule retry with backoff\"]\n  Retry -->|No| Alert[\"Leave failed state and alert\"]\n  Backoff --> Due"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The claim step matters in multi-node environments. Without it, two nodes may run the same job. Even with a claim, job handlers should still be idempotent because distributed systems can fail after a side effect but before a status update is recorded."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operations runbook outline",
+          "anchor": "cronOperations-10-operations-runbook-outline"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Every production cron capability should have a small runbook:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Runbook area",
+            "Required detail"
+          ],
+          "rows": [
+            [
+              "Job purpose",
+              "What business outcome the job supports."
+            ],
+            [
+              "Owner",
+              "Functional module or project that owns the business operation."
+            ],
+            [
+              "Schedule",
+              "Frequency, timezone, blackout windows, and manual run policy."
+            ],
+            [
+              "Data scope",
+              "Tenant, enterprise, site, catalog, or environment boundaries."
+            ],
+            [
+              "Idempotency",
+              "What makes repeat execution safe."
+            ],
+            [
+              "Retry",
+              "Retry count, backoff, retryable errors, non-retryable errors."
+            ],
+            [
+              "Timeout",
+              "Maximum duration and stuck-run recovery."
+            ],
+            [
+              "Observability",
+              "Logs, metrics, alerts, dashboards, and correlation fields."
+            ],
+            [
+              "Recovery",
+              "Re-run, skip, reconcile, or compensate instructions."
+            ],
+            [
+              "Release impact",
+              "What happens during deploy, rollback, or schema/content migration."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Security model",
-          "anchor": "cronOperations-7-security-model"
+          "anchor": "cronOperations-11-security-model"
         },
         {
           "kind": "paragraph",
@@ -3312,7 +4765,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "DevOps model",
-          "anchor": "cronOperations-8-devops-model"
+          "anchor": "cronOperations-12-devops-model"
         },
         {
           "kind": "paragraph",
@@ -3326,14 +4779,37 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Axis and BackOffice view",
-          "anchor": "cronOperations-9-axis-and-backoffice-view"
+          "anchor": "cronOperations-13-axis-and-backoffice-view"
         },
         {
           "kind": "paragraph",
           "text": "Axis should show Cron as a functional module, not as every internal technical schema. Once registered and active, Cron-owned navigation and workbench capabilities can appear through BackOffice and WCMS data just like other module capabilities. Axis remains the renderer; Cron remains the runtime authority."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Acceptance checklist",
+          "anchor": "cronOperations-14-acceptance-checklist"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Before Cron is considered ready beyond local demo use, verify:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Cron appears in the functional module registry only when the runtime is observed.",
+            "Register, activate, deactivate, and deregister operations persist and update Axis without manual refresh.",
+            "Job definitions are persisted and rebuilt after runtime restart.",
+            "Manual run and scheduled run share the same authorization, tenant, logging, and failure contracts.",
+            "Duplicate execution is prevented or made harmless through idempotency.",
+            "Failed runs produce useful diagnostics without exposing secrets.",
+            "Node loss, restart, timeout, retry, and downstream failure behavior are tested.",
+            "Business handlers remain in the owning business module."
+          ]
         }
       ],
-      "searchText": "Cron operations Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety. # Cron operations\n\nCron is the Nodics optional functional module for scheduled and manually\ntriggered backend work. It extends Core and contributes the `cronjob`\ntechnical module. A project registers Cron when it needs scheduled jobs,\nbackground maintenance, retries, cleanup, synchronization, or other timed\nbusiness processes.\n\nFor a beginner, Cron is the part of Nodics that asks “what should happen\nlater, repeatedly, or in the background?” A user may click a button in Axis,\nbut many real enterprise actions must happen without a user staring at the\nscreen: cleanup temporary media, retry failed exports, synchronize external\nsystems, send reminders, rebuild projections, or close expired workflows.\n\n## Why Cron is optional\n\nCore, Platform, and WCMS are mandatory for Axis-driven onboarding and governed\ncontent. Cron is different. Many deployments do not need scheduled work on day\none, so Cron should appear in the module registry as an optional functional\nmodule when a cron runtime is live. Registering or activating Cron persists\nproject intent; restarting servers should not ask the same registration\nquestion again.\n\n## Ownership model\n\nCron owns scheduler mechanics, lifecycle routes, persisted job definitions,\nruntime containers, execution state, logging, events, and failure handling.\nThe server hosts Cron, but the server is not the functional owner. Node\nplacement fields decide where a job may run; they do not create another module\nidentity.\n\nCustomer jobs belong in project modules. Reusable scheduler behavior belongs\nin `nodics.cron`. If a partner needs custom scheduling behavior, they may\ncreate a customer extension module that loads after Cron and overrides the\napproved service contract.\n\nFor developers, the important rule is that Cron should orchestrate the timing\nand execution contract, while the owning business module should own the actual\nbusiness operation. A media cleanup job should call media-owned cleanup logic.\nA workflow reminder job should call workflow-owned reminder logic. Cron should\nnot become a dumping ground for unrelated domain behavior.\n\n## Job lifecycle\n\nA job definition normally describes:\n\n- job code and active state;\n- schedule, start, optional end, and trigger type;\n- handler or target module operation;\n- tenant, enterprise, and node placement;\n- retry, timeout, priority, and overlap expectations;\n- last execution status and safe operational evidence.\n\nCron supports create or register, update, run, start, stop, pause, resume, and\nremove through secured backend operations. Manual run and scheduled execution\nmust share the same tenant, permission, node, logging, and failure contracts.\n\n![Cron job lifecycle](../assets/images/cron-job-lifecycle.png \"Cron lifecycle reference from the archived documentation set\")\n\n```mermaid\nstateDiagram-v2\n  [*] --> Registered\n  Registered --> Active: activate\n  Active --> Due: schedule reaches due time\n  Due --> Running: node claims execution\n  Running --> Completed: success\n  Running --> Failed: error or timeout\n  Failed --> Retrying: retry policy allows\n  Retrying --> Due\n  Active --> Paused: pause\n  Paused --> Active: resume\n  Active --> Stopped: stop\n  Stopped --> Active: start\n  Registered --> Removed: remove\n  Completed --> Active: wait for next schedule\n```\n\nFor beginners, the important point is that a job definition and a job run are\nnot the same thing. The definition says what should happen and when. A run is\none execution attempt with its own start time, status, logs, retries, and\noutcome. Production support usually investigates runs, but operators manage\ndefinitions.\n\n## Example job: nightly media cleanup\n\nA realistic first Cron job might clean expired temporary media.\n\n| Field | Example value | Why it matters |\n| --- | --- | --- |\n| Code | `media.temporary.cleanup` | Stable identity for logs, permissions, and support. |\n| Trigger | Daily at 02:00 local environment time | Runs outside peak usage. |\n| Owner module | `media` or project extension | Keeps business behavior with the module that owns the data. |\n| Idempotency | Delete only records already marked expired | Safe if the job runs twice. |\n| Timeout | 10 minutes | Prevents a stuck cleanup from occupying the scheduler forever. |\n| Retry | Two retries with backoff | Handles temporary storage/database failures without hiding persistent bugs. |\n| Audit | Count scanned, deleted, skipped, failed | Lets operators prove what happened. |\n\nThe job should not accept arbitrary paths or delete files by frontend request.\nIt should ask Media for expired records through a governed service and let the\nstorage provider perform safe cleanup.\n\n## Registering Cron as an optional module\n\nCore, Platform, and WCMS are mandatory in the Axis reference stack. Cron is\noptional. That means Axis may discover a live Cron server and show it as\navailable to register. When a user registers and activates Cron, the project\nintent is stored in the BackOffice/runtime registry. Restarting the server\nshould not ask again unless the state was removed.\n\nThe lifecycle is:\n\n1. Cron server starts and reports `nodics.cron` as live.\n2. BackOffice observes the runtime module catalogue.\n3. Axis shows Cron under available modules.\n4. A user registers Cron into the project.\n5. A user activates Cron.\n6. Cron-owned navigation, APIs, docs, and initialization data become visible\n   according to permissions and content import state.\n7. Deactivation hides runtime availability without forgetting registration.\n8. Deregistration removes the project registration and returns Cron to the\n   available state while the server remains live.\n\n## Production safety\n\nScheduled jobs are deceptively simple. A timer firing every minute is easy;\nmaking it safe in production is the real work. Jobs that change external state\nmust define idempotency keys, duplicate-run policy, timeout behavior, retry\nsafety, compensation or reconciliation steps, and alerting.\n\nMulti-node deployments must treat scheduler memory as disposable. Persisted\njob definitions are authoritative; in-memory schedules are rebuilt from\nruntime state. Node failover can help, but it is not a universal exactly-once\nguarantee. Network partitions, process termination, downstream timeouts, and\nuncertain completion must be handled by the job contract.\n\n## Security model\n\nCron lifecycle routes require authentication and authorization. A human may\nauthorize a Cron operation, but the job itself must use governed internal\nservice-token flow when calling another module. Do not accept arbitrary URLs,\nservice names, credentials, executable code, or node identifiers from\nuntrusted request data.\n\n## DevOps model\n\nOperations teams should monitor scheduler readiness, active job count, due\njobs, started jobs, completed jobs, failed jobs, skipped jobs, schedule delay,\nduration, retry count, overlap denial, temporary ownership, node handoff, and\ndownstream latency. Logs should carry tenant, enterprise, job code, trigger\ntype, assigned node, attempt, correlation identity, and safe outcome.\n\nBefore production use, every real job should have tests for schedule boundary,\nmanual run, unauthorized access, cross-tenant access, duplicate execution,\ntimeout, retry, partial failure, restart, drain, node loss, node return,\ndownstream recovery, idempotency, and reconciliation.\n\n## Axis and BackOffice view\n\nAxis should show Cron as a functional module, not as every internal technical\nschema. Once registered and active, Cron-owned navigation and workbench\ncapabilities can appear through BackOffice and WCMS data just like other module\ncapabilities. Axis remains the renderer; Cron remains the runtime authority.\n",
+      "searchText": "Cron operations Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety. # Cron operations\n\nCron is the Nodics optional functional module for scheduled and manually\ntriggered backend work. It extends Core and contributes the `cronjob`\ntechnical module. A project registers Cron when it needs scheduled jobs,\nbackground maintenance, retries, cleanup, synchronization, or other timed\nbusiness processes.\n\nFor a beginner, Cron is the part of Nodics that asks “what should happen\nlater, repeatedly, or in the background?” A user may click a button in Axis,\nbut many real enterprise actions must happen without a user staring at the\nscreen: cleanup temporary media, retry failed exports, synchronize external\nsystems, send reminders, rebuild projections, or close expired workflows.\n\n## Why Cron is optional\n\nCore, Platform, and WCMS are mandatory for Axis-driven onboarding and governed\ncontent. Cron is different. Many deployments do not need scheduled work on day\none, so Cron should appear in the module registry as an optional functional\nmodule when a cron runtime is live. Registering or activating Cron persists\nproject intent; restarting servers should not ask the same registration\nquestion again.\n\n## Ownership model\n\nCron owns scheduler mechanics, lifecycle routes, persisted job definitions,\nruntime containers, execution state, logging, events, and failure handling.\nThe server hosts Cron, but the server is not the functional owner. Node\nplacement fields decide where a job may run; they do not create another module\nidentity.\n\nCustomer jobs belong in project modules. Reusable scheduler behavior belongs\nin `nodics.cron`. If a partner needs custom scheduling behavior, they may\ncreate a customer extension module that loads after Cron and overrides the\napproved service contract.\n\nFor developers, the important rule is that Cron should orchestrate the timing\nand execution contract, while the owning business module should own the actual\nbusiness operation. A media cleanup job should call media-owned cleanup logic.\nA workflow reminder job should call workflow-owned reminder logic. Cron should\nnot become a dumping ground for unrelated domain behavior.\n\n## Job lifecycle\n\nA job definition normally describes:\n\n- job code and active state;\n- schedule, start, optional end, and trigger type;\n- handler or target module operation;\n- tenant, enterprise, and node placement;\n- retry, timeout, priority, and overlap expectations;\n- last execution status and safe operational evidence.\n\nCron supports create or register, update, run, start, stop, pause, resume, and\nremove through secured backend operations. Manual run and scheduled execution\nmust share the same tenant, permission, node, logging, and failure contracts.\n\n![Cron job lifecycle](../assets/images/cron-job-lifecycle.png \"Cron lifecycle reference from the archived documentation set\")\n\n```mermaid\nstateDiagram-v2\n  [*] --> Registered\n  Registered --> Active: activate\n  Active --> Due: schedule reaches due time\n  Due --> Running: node claims execution\n  Running --> Completed: success\n  Running --> Failed: error or timeout\n  Failed --> Retrying: retry policy allows\n  Retrying --> Due\n  Active --> Paused: pause\n  Paused --> Active: resume\n  Active --> Stopped: stop\n  Stopped --> Active: start\n  Registered --> Removed: remove\n  Completed --> Active: wait for next schedule\n```\n\nFor beginners, the important point is that a job definition and a job run are\nnot the same thing. The definition says what should happen and when. A run is\none execution attempt with its own start time, status, logs, retries, and\noutcome. Production support usually investigates runs, but operators manage\ndefinitions.\n\n## Example job: nightly media cleanup\n\nA realistic first Cron job might clean expired temporary media.\n\n| Field | Example value | Why it matters |\n| --- | --- | --- |\n| Code | `media.temporary.cleanup` | Stable identity for logs, permissions, and support. |\n| Trigger | Daily at 02:00 local environment time | Runs outside peak usage. |\n| Owner module | `media` or project extension | Keeps business behavior with the module that owns the data. |\n| Idempotency | Delete only records already marked expired | Safe if the job runs twice. |\n| Timeout | 10 minutes | Prevents a stuck cleanup from occupying the scheduler forever. |\n| Retry | Two retries with backoff | Handles temporary storage/database failures without hiding persistent bugs. |\n| Audit | Count scanned, deleted, skipped, failed | Lets operators prove what happened. |\n\nThe job should not accept arbitrary paths or delete files by frontend request.\nIt should ask Media for expired records through a governed service and let the\nstorage provider perform safe cleanup.\n\n## Business journey: why scheduled work needs governance\n\nScheduled work often starts innocently: “run this cleanup every night.” In a\nreal enterprise system, the same job may touch many tenants, delete data,\nretry external calls, create reports, or send notifications. That makes Cron a\nbusiness-risk capability, not only a timer.\n\n| Business need | Cron responsibility | Owning business module responsibility |\n| --- | --- | --- |\n| Nightly media cleanup | Schedule, claim, execute, retry, log. | Media decides which records are expired and safe to delete. |\n| Export retry | Run retry window and record attempts. | Import/export module decides retry eligibility and file semantics. |\n| Reminder emails | Schedule and throttle execution. | Workflow or notification module owns message content and recipient rules. |\n| Projection rebuild | Run controlled background task. | Owning data module owns rebuild logic and consistency rules. |\n\nCron should make the work happen at the right time with safe operational\nevidence. It should not absorb every domain rule just because the work happens\nin the background.\n\n## Developer journey: adding a project cron job\n\nWhen a project adds a scheduled job, follow this sequence:\n\n1. Identify the business module that owns the actual operation.\n2. Expose a safe service method in that module.\n3. Add the job definition in the project or owning module data/configuration.\n4. Configure schedule, tenant/enterprise scope, node placement, timeout,\n   retry, overlap, and audit expectations.\n5. Register or import the job through governed data flow.\n6. Test manual run and scheduled execution with the same security and tenant\n   context.\n7. Verify restart behavior by stopping and starting the Cron server.\n8. Document support steps, alert thresholds, and reconciliation behavior.\n\nDo not pass executable code, raw URLs, filesystem paths, or untrusted handler\nnames through job records. Job definitions should point to known backend\ncontracts.\n\n## Registering Cron as an optional module\n\nCore, Platform, and WCMS are mandatory in the Axis reference stack. Cron is\noptional. That means Axis may discover a live Cron server and show it as\navailable to register. When a user registers and activates Cron, the project\nintent is stored in the BackOffice/runtime registry. Restarting the server\nshould not ask again unless the state was removed.\n\nThe lifecycle is:\n\n1. Cron server starts and reports `nodics.cron` as live.\n2. BackOffice observes the runtime module catalogue.\n3. Axis shows Cron under available modules.\n4. A user registers Cron into the project.\n5. A user activates Cron.\n6. Cron-owned navigation, APIs, docs, and initialization data become visible\n   according to permissions and content import state.\n7. Deactivation hides runtime availability without forgetting registration.\n8. Deregistration removes the project registration and returns Cron to the\n   available state while the server remains live.\n\n## Production safety\n\nScheduled jobs are deceptively simple. A timer firing every minute is easy;\nmaking it safe in production is the real work. Jobs that change external state\nmust define idempotency keys, duplicate-run policy, timeout behavior, retry\nsafety, compensation or reconciliation steps, and alerting.\n\nMulti-node deployments must treat scheduler memory as disposable. Persisted\njob definitions are authoritative; in-memory schedules are rebuilt from\nruntime state. Node failover can help, but it is not a universal exactly-once\nguarantee. Network partitions, process termination, downstream timeouts, and\nuncertain completion must be handled by the job contract.\n\n## Execution safety model\n\n```mermaid\nflowchart TD\n  Due[\"Job becomes due\"] --> Claim[\"Runtime node attempts claim\"]\n  Claim -->|Claim denied| Skip[\"Skip with safe reason\"]\n  Claim -->|Claim accepted| Execute[\"Execute handler\"]\n  Execute --> Success[\"Record success evidence\"]\n  Execute --> Failure[\"Record failure evidence\"]\n  Failure --> Retry{\"Retry allowed?\"}\n  Retry -->|Yes| Backoff[\"Schedule retry with backoff\"]\n  Retry -->|No| Alert[\"Leave failed state and alert\"]\n  Backoff --> Due\n```\n\nThe claim step matters in multi-node environments. Without it, two nodes may\nrun the same job. Even with a claim, job handlers should still be idempotent\nbecause distributed systems can fail after a side effect but before a status\nupdate is recorded.\n\n## Operations runbook outline\n\nEvery production cron capability should have a small runbook:\n\n| Runbook area | Required detail |\n| --- | --- |\n| Job purpose | What business outcome the job supports. |\n| Owner | Functional module or project that owns the business operation. |\n| Schedule | Frequency, timezone, blackout windows, and manual run policy. |\n| Data scope | Tenant, enterprise, site, catalog, or environment boundaries. |\n| Idempotency | What makes repeat execution safe. |\n| Retry | Retry count, backoff, retryable errors, non-retryable errors. |\n| Timeout | Maximum duration and stuck-run recovery. |\n| Observability | Logs, metrics, alerts, dashboards, and correlation fields. |\n| Recovery | Re-run, skip, reconcile, or compensate instructions. |\n| Release impact | What happens during deploy, rollback, or schema/content migration. |\n\n## Security model\n\nCron lifecycle routes require authentication and authorization. A human may\nauthorize a Cron operation, but the job itself must use governed internal\nservice-token flow when calling another module. Do not accept arbitrary URLs,\nservice names, credentials, executable code, or node identifiers from\nuntrusted request data.\n\n## DevOps model\n\nOperations teams should monitor scheduler readiness, active job count, due\njobs, started jobs, completed jobs, failed jobs, skipped jobs, schedule delay,\nduration, retry count, overlap denial, temporary ownership, node handoff, and\ndownstream latency. Logs should carry tenant, enterprise, job code, trigger\ntype, assigned node, attempt, correlation identity, and safe outcome.\n\nBefore production use, every real job should have tests for schedule boundary,\nmanual run, unauthorized access, cross-tenant access, duplicate execution,\ntimeout, retry, partial failure, restart, drain, node loss, node return,\ndownstream recovery, idempotency, and reconciliation.\n\n## Axis and BackOffice view\n\nAxis should show Cron as a functional module, not as every internal technical\nschema. Once registered and active, Cron-owned navigation and workbench\ncapabilities can appear through BackOffice and WCMS data just like other module\ncapabilities. Axis remains the renderer; Cron remains the runtime authority.\n\n## Acceptance checklist\n\nBefore Cron is considered ready beyond local demo use, verify:\n\n- Cron appears in the functional module registry only when the runtime is\n  observed.\n- Register, activate, deactivate, and deregister operations persist and update\n  Axis without manual refresh.\n- Job definitions are persisted and rebuilt after runtime restart.\n- Manual run and scheduled run share the same authorization, tenant, logging,\n  and failure contracts.\n- Duplicate execution is prevented or made harmless through idempotency.\n- Failed runs produce useful diagnostics without exposing secrets.\n- Node loss, restart, timeout, retry, and downstream failure behavior are\n  tested.\n- Business handlers remain in the owning business module.\n",
       "previous": {
         "title": "Media management",
         "route": "/docs/framework/wcms-media-management"
@@ -3344,8 +4820,8 @@ module.exports = {
         "functionalModule": "nodics.cron",
         "technicalModule": "cronjob",
         "path": "content/nodics.cron/operations.md",
-        "wordCount": 1067,
-        "checksum": "f3493fe5aade4b88bcfc1eb36cd1c118195f099d5671ebbf80288fb0f8bdff7b"
+        "wordCount": 1647,
+        "checksum": "8efef6050aeb5da299a511e48449029fa8bc3188f16ccadc237f180e3f501f32"
       }
     },
     "active": true

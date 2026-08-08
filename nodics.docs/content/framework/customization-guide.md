@@ -129,6 +129,78 @@ Simple presentation changes, such as logo, copy, theme, or demo content, should
 come from backend-owned CMS or configuration where possible. Hard-coding those
 values in the frontend makes future customers harder to support.
 
+## Choosing the right customization mechanism
+
+Use the smallest mechanism that honestly solves the requirement. This keeps
+customization cheap, testable, and upgrade-friendly.
+
+| Requirement | Preferred mechanism | Why |
+| --- | --- | --- |
+| Change a label, image, logo, or help text | Backend-owned CMS content or configuration | Business-facing content should not require a frontend fork. |
+| Change a runtime value per environment | Environment/server/node property override | Keeps the framework default reusable and the local deployment explicit. |
+| Add a customer data seed | Customer project data pack | Data belongs to the project that owns it and can be imported through governance. |
+| Add a new API behavior for a customer | Customer project module or customer extension module | Keeps customer code later in the runtime graph. |
+| Change a framework service algorithm | Later-loaded service override with tests | Preserves the functional module identity while replacing implementation. |
+| Add a reusable capability for many projects | New or existing framework functional module | Avoids hiding reusable platform behavior inside one customer project. |
+| Add a browser-only interaction | `nodics.axis` renderer change | UI behavior belongs in Axis only when backend authority already exists. |
+
+If the preferred mechanism feels too small, prove why. A service override may
+be needed, but it should not be the first answer when a property or data pack
+is enough.
+
+```mermaid
+flowchart TD
+  Need["Customization need"] --> Config["Can config/content solve it?"]
+  Config -->|Yes| UseConfig["Use property, CMS, or data pack"]
+  Config -->|No| Project["Is it customer-specific?"]
+  Project -->|Yes| Later["Use project or customer extension module"]
+  Project -->|No| Reusable["Is it reusable framework behavior?"]
+  Reusable -->|Yes| Framework["Implement in owning framework module"]
+  Reusable -->|No| Reconsider["Re-check ownership and requirement"]
+  Later --> Test["Add default, override, and regression tests"]
+  Framework --> Test
+  UseConfig --> Validate["Validate runtime result"]
+```
+
+## Worked example: changing a demo company identity
+
+Suppose a partner wants the local demo to show its own company name, logo, and
+welcome message. The wrong path is editing Axis React code or framework
+Profile services. The correct path depends on what is being changed:
+
+1. If it is presentation content, put it in the owning WCMS or project content
+   pack.
+2. If it is an environment default, place the override in the customer
+   environment/server configuration.
+3. If it is project documentation, update the customer project documentation
+   source and regenerate the customer docs pack.
+4. Import the generated pack through Axis Imports and Exports.
+5. Verify Axis renders the new values from backend delivery contracts.
+
+The business sees a custom experience. The developer avoids a fork. The
+operator can rebuild the environment from source-controlled project data.
+
+## Worked example: overriding a service safely
+
+Suppose a customer needs a different employee onboarding rule than the
+standard Platform behavior. That is not a reason to rename Platform or copy
+the entire module. The safer model is:
+
+1. Identify the Platform service that owns the rule.
+2. Confirm the extension point is intended to be overridden.
+3. Create a later-loaded customer module that extends Platform behavior.
+4. Export the replacement or composed service in the expected loader-visible
+   style.
+5. Keep status/error definitions in the correct status-definition file, not in
+   a random properties file.
+6. Add tests for the default rule, custom rule, rejected request, tenant
+   boundary, authorization boundary, and regression risk.
+7. Document the custom behavior in the customer project, not in reusable
+   framework documentation unless the extension point itself changed.
+
+The module registry should still show Platform. The customization changes
+implementation, not the business-facing functional identity.
+
 ## Business and DevOps impact
 
 The business value of this discipline is lower long-term cost. A customer can
@@ -173,3 +245,21 @@ changes, run the owning module tests and any affected runtime smoke test. For
 Axis changes, run typecheck and focused UI tests. For documentation changes,
 regenerate the owning content pack, validate checksums, import through WCMS,
 and verify the route in Axis.
+
+## Customization acceptance checklist
+
+Before accepting a customization, answer each question:
+
+| Question | Acceptable answer |
+| --- | --- |
+| Who owns the behavior? | A named framework module, customer module, project, or frontend renderer. |
+| Is framework source edited? | Only if the behavior is reusable framework behavior and the owner module was confirmed. |
+| Is there a configuration-first option? | Yes, it was used or explicitly rejected with evidence. |
+| Is functional identity preserved? | Yes; customer extensions do not rename standard capabilities. |
+| Are private values protected? | Secrets are not placed in frontend code, generated docs, or public properties. |
+| Are generated files regenerated from source? | Yes; generated CMS data and manifests match source content. |
+| Are tests proportional to risk? | Happy path, negative, boundary, authorization, tenant, runtime, and regression checks exist where applicable. |
+| Is documentation updated in the owner? | Yes; no second authority was created. |
+
+If the checklist cannot be completed, the customization may still be a useful
+prototype, but it is not production-ready Nodics behavior.

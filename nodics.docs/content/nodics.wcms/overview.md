@@ -120,6 +120,62 @@ run many customer-facing websites, internal applications, and documentation
 experiences through the same content foundation while still keeping project
 ownership clean.
 
+## Business journey: from content idea to visible page
+
+A business user usually does not think in terms of catalogs, routes, renderer
+mappings, and templates. They think: “I need a page that explains this
+capability, uses the right brand, appears in the right navigation, and can be
+changed safely later.” WCMS turns that business need into governed records.
+
+```mermaid
+flowchart TD
+  Idea["Business content idea"] --> Owner["Identify owning module or project"]
+  Owner --> Source["Write source content or data definition"]
+  Source --> Generate["Generate CMS records and manifest"]
+  Generate --> Import["Import through WCMS"]
+  Import --> Route["Resolve route for site, locale, channel"]
+  Route --> Render["Axis or site renderer displays page"]
+  Render --> Govern["Audit, version, and update through owner"]
+```
+
+This is why WCMS is a framework capability instead of a frontend folder. The
+page must be visible to users, but the authority for what the page means, who
+owns it, how it is versioned, and how it is imported belongs to the backend
+module or project.
+
+## Example: three documentation sites
+
+The reference Axis documentation navigation may show Framework, Swaggers,
+Nodics Axis, and a customer project guide. That visible navigation is a user
+experience decision. The backend data ownership is separate:
+
+| Visible documentation area | Backend owner | Content purpose |
+| --- | --- | --- |
+| Framework | `nodics.docs` | Reusable Nodics framework concepts, quick start, architecture, customization, operations, module guides. |
+| Swaggers | BackOffice/API discovery | Runtime API reference grouped by registered backend capability. |
+| Nodics Axis | `nodics.platform/modules/axis` | Axis product behavior, renderer contracts, shell behavior, schema workbench, documentation rendering. |
+| Customer project | customer project | Project setup, local demo behavior, project data, custom modules, customer-specific examples. |
+
+No documentation area should store importable CMS data in `nodics.axis`.
+Axis may render all of these areas, but it does not own the content records.
+
+## Developer journey: adding a module-owned page
+
+When a developer adds documentation or content for a functional module, the
+safe process is:
+
+1. Confirm the backend owner of the subject.
+2. Add or update source content under that owner.
+3. Regenerate generated CMS data and manifests with the owner-provided script.
+4. Run content-pack validation.
+5. Start WCMS and import through Axis or an approved backend import API.
+6. Open the route in Axis or the target site.
+7. Verify navigation, page body, renderer mapping, authorization, and route
+   recovery behavior.
+
+Hand-editing generated CMS records may seem faster, but it breaks release
+integrity. If generated output is wrong, fix the source or generator.
+
 ## DevOps model
 
 WCMS should be deployed as a runtime server when content delivery or content
@@ -132,6 +188,23 @@ search, media storage, and import history policies. Content packs should have
 semantic releases, checksums, and repeatable import behavior so an environment
 can be rebuilt from source-controlled module data.
 
+## Operations checklist
+
+| Check | Expected evidence |
+| --- | --- |
+| WCMS process | Server starts and exposes content/import APIs on the configured port. |
+| Content catalogs | Every site has an owning catalog; pages are not orphaned. |
+| Routes | Each visible URL resolves to a page for site, locale, and channel. |
+| Renderer mappings | Axis receives only renderer types the backend has authorized. |
+| Import history | Content-pack install records include version, checksum, status, and outcome. |
+| Media | Components reference media records, not private storage paths. |
+| Recovery | Missing route, missing renderer, unauthorized access, and stale content fail safely. |
+| Backup | Database, media storage, and generated release evidence can be restored together. |
+
+WCMS incidents should be investigated by record chain. Start with the route,
+then page, template, components, renderer mapping, site, catalog, and import
+history. That is usually faster than searching the frontend first.
+
 ## What not to do
 
 - Do not put WCMS import data in `nodics.axis`.
@@ -140,3 +213,6 @@ can be rebuilt from source-controlled module data.
 - Do not let a route imply ownership; route ownership comes from the backend
   module or project that owns the pack.
 - Do not let generated records drift from their source catalogue.
+- Do not create pages or components without catalogs and sites.
+- Do not treat documentation content as special static frontend content just
+  because Axis renders it.

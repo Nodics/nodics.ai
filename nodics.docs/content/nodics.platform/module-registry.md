@@ -55,6 +55,24 @@ not be treated like optional modules that a business user can deregister from
 the same screen. Cron is optional, so it can be observed, registered,
 activated, deactivated, and deregistered.
 
+## Mandatory versus optional modules
+
+The registry should stay business-readable. A business user should not need to
+understand every technical module that helped Core or WCMS start.
+
+| Module type | Example | User lifecycle |
+| --- | --- | --- |
+| Mandatory foundation | Core, Platform, WCMS | Installed and active by runtime contract; not deregisterable from Axis. |
+| Optional functional capability | Cron | Register, activate, deactivate, deregister. |
+| Technical module | `cronjob`, `media`, `profile` internals | Not shown as separate business registry cards unless exposed by an owning functional module. |
+| Customer extension | future customer Platform extension | Customizes the standard identity; does not create a new displayed Platform name by default. |
+
+Mandatory does not mean “hardcoded in Axis.” It means the current reference
+BackOffice experience depends on those capabilities. Axis still discovers the
+effective state from backend contracts, but it should not offer destructive
+business actions that would remove the foundation required for login, registry
+visibility, and WCMS-backed presentation.
+
 ## Business value
 
 For business users, the registry reduces confusion. Axis can show “Platform,”
@@ -66,6 +84,28 @@ For a partner, this also protects adoption cost. A project can start with the
 mandatory capabilities, then add optional capabilities when there is a business
 reason. The decision is recorded in the database, so the project does not need
 manual reconfiguration after every restart.
+
+## Business example: deciding to enable Cron
+
+A small customer may start with login, content, media, and documentation only.
+After a few weeks, the business asks for nightly cleanup of temporary media and
+scheduled export retries. Cron becomes useful. The project team starts a Cron
+runtime, Axis sees `nodics.cron` as available, and an authorized administrator
+registers and activates it.
+
+The business decision is visible and reversible:
+
+1. Before registration, Cron is observed but not accepted by the project.
+2. After registration, the project remembers that Cron is part of its accepted
+   capability set.
+3. After activation, Cron-owned operations can become available according to
+   permissions and data import state.
+4. Deactivation pauses the capability without forgetting the registration.
+5. Deregistration removes project intent while the runtime may still be
+   technically live.
+
+That lifecycle is safer than silently enabling features because a server
+happened to start.
 
 ## Developer model
 
@@ -79,6 +119,25 @@ That means a module can be visible as available only after a server starts and
 reports it. If the Cron server is not running, Platform cannot honestly present
 Cron as a live optional capability. If Cron is running but deregistered, Axis
 should show it under available modules with the Register action.
+
+## API and UI contract expectations
+
+The registry API must give Axis enough information to render without guessing:
+
+- functional module code and display name;
+- mandatory or optional classification;
+- observed runtime servers;
+- current registration state;
+- current activation state;
+- active technical modules for explanation, not as primary business toggles;
+- available actions for the current user and state;
+- last observation and catalogue revision;
+- safe status or error messages.
+
+Axis should update its local state immediately after register, activate,
+deactivate, or deregister operations. A browser refresh must not be required
+to reveal the next valid action. If an operation fails, Axis should retain the
+previous known state and show the backend error.
 
 ## DevOps and operator model
 
@@ -111,6 +170,19 @@ is the BackOffice-facing control.
 - Confirm deregistered Cron returns to available while the Cron server remains
   observed.
 - Restart servers and confirm durable registration state is preserved.
+
+## Acceptance scenarios
+
+| Scenario | Expected result |
+| --- | --- |
+| Fresh database with Platform and WCMS only | Core, Platform, and WCMS are active; Cron is not shown as live. |
+| Cron server starts | Cron appears as available optional module. |
+| User registers Cron | Cron moves out of available list and shows the next valid state without page refresh. |
+| User activates Cron | Cron shows active and exposes active-state actions without page refresh. |
+| User deactivates Cron | Cron remains registered but inactive. |
+| User deregisters Cron | Cron returns to available if the runtime is still observed. |
+| Servers restart | Mandatory state and registered optional state persist from database. |
+| Cron server stops | Registered state remains, but runtime observation should show unavailable or stale according to the API contract. |
 
 ## Common mistakes
 

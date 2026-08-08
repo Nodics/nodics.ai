@@ -68,6 +68,24 @@ base URLs and client contract versions. Credentials, private keys, service
 tokens, database passwords, and provider secrets belong in protected backend
 configuration or deployment secret management.
 
+## Public versus private properties
+
+Nodics configuration must be explicit about visibility. A property being
+needed by a screen does not automatically make it safe for the browser.
+
+| Property type | Example | Owner | Browser visible? |
+| --- | --- | --- | --- |
+| Framework default | default API category enablement | owning framework module | only if intentionally exposed |
+| Project default | reference enterprise display name | customer project | sometimes |
+| Environment override | local database name, local host/port | environment/server module | usually no |
+| Private secret | database password, token signing secret, storage credential | secret store or private runtime property | never |
+| Public frontend config | Platform base URL, WCMS base URL | Axis deployment config | yes, but not secret |
+| Generated state | import manifest checksum, generated docs data | owning module/project generator | imported through backend |
+
+The safe rule is simple: if exposure would help an attacker, it is private. If
+Axis needs to display a value, expose a sanitized backend contract instead of
+passing the private property through the frontend.
+
 ## Dependencies
 
 MongoDB is the primary local runtime dependency for persisted records.
@@ -94,6 +112,46 @@ For production, define:
 - how content packs, generated artifacts, and database migrations are released;
 - how rollback works for code, configuration, and imported content.
 
+## Local-to-production evolution
+
+The first Nodics deployment should be understandable before it is distributed.
+Local development proves ownership and behavior. Production topology then
+separates runtime processes only for a reason: scale, resilience, security,
+team ownership, data locality, or operational control.
+
+```mermaid
+flowchart LR
+  Local["Local developer machine<br/>Platform + WCMS + Cron + Axis"] --> Shared["Shared test environment<br/>separate DBs and controlled imports"]
+  Shared --> PreProd["Pre-production<br/>production-like properties and providers"]
+  PreProd --> Prod["Production<br/>monitored, backed up, secured, scalable"]
+```
+
+The important rule is that deployment shape changes should not move business
+ownership. Platform remains Platform whether it runs locally or across several
+nodes. WCMS remains WCMS whether media storage is local or cloud-backed. Cron
+remains Cron whether one scheduler node or multiple controlled nodes execute
+jobs.
+
+## Release and rollback model
+
+A Nodics release is not only source code. A real release may include:
+
+- framework package versions;
+- customer project code;
+- environment/server property changes;
+- generated import manifests;
+- initialization, core, sample, and documentation data releases;
+- Axis frontend build;
+- database migration or data repair scripts;
+- provider configuration changes;
+- operational runbook updates.
+
+Rollback must name which layer is rolling back. Rolling back Axis does not
+roll back imported WCMS content. Rolling back a content pack does not roll back
+framework source. Rolling back a server property may require process restart.
+This separation is a strength only when operators can see and control each
+layer.
+
 ## Monitoring and recovery
 
 Platform exposes registry and BackOffice projections for active modules. WCMS
@@ -108,6 +166,37 @@ When something fails, identify the owner first:
 - scheduled job execution: Cron;
 - frontend rendering or shell interaction: Axis;
 - customer-specific behavior: customer project module.
+
+## Operational acceptance checklist
+
+Before calling an environment healthy, verify:
+
+| Area | Acceptance evidence |
+| --- | --- |
+| Process health | Platform, WCMS, Cron where required, and Axis are reachable on expected ports. |
+| Runtime graph | Each server logs or exposes the effective module graph it loaded. |
+| Module registry | Mandatory modules are active; optional modules match project intent. |
+| Data imports | Required releases validate, install, and record import history. |
+| Documentation | Framework, Axis, API, and customer documentation routes render through WCMS. |
+| Authentication | Reference or environment-specific employee login works through Platform. |
+| Authorization | Unauthorized calls fail closed and do not leak private data. |
+| Configuration | Public and private properties are sourced from the correct layer. |
+| Observability | Logs include correlation, enterprise, tenant where applicable, module, and safe status evidence. |
+| Recovery | Restarting servers preserves durable registry and imported content state. |
+
+This checklist is intentionally practical. It lets a support engineer prove
+the system from the outside before diving into source code.
+
+## Common incident examples
+
+| Symptom | First owner to inspect | Likely next check |
+| --- | --- | --- |
+| Axis shows BackOffice registry unavailable | Platform/BackOffice | Is port `4300` reachable and did Platform finish startup? |
+| Documentation route shows recovery | WCMS/content pack owner | Is port `4310` reachable and was the docs pack imported? |
+| Module disappeared after register | Platform registry API and Axis refresh state | Did the operation response update persisted state and frontend cache? |
+| Cron is registered but unavailable | Cron runtime observation | Is the Cron server running and reporting `nodics.cron`? |
+| Import release is invalid | Content-pack manifest owner | Were source files changed without regenerating manifests? |
+| Media upload exposes path-like data | WCMS Media | Is the API returning storage internals instead of safe contracts? |
 
 ## Common mistakes
 

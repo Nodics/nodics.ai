@@ -99,6 +99,43 @@ The job should not accept arbitrary paths or delete files by frontend request.
 It should ask Media for expired records through a governed service and let the
 storage provider perform safe cleanup.
 
+## Business journey: why scheduled work needs governance
+
+Scheduled work often starts innocently: “run this cleanup every night.” In a
+real enterprise system, the same job may touch many tenants, delete data,
+retry external calls, create reports, or send notifications. That makes Cron a
+business-risk capability, not only a timer.
+
+| Business need | Cron responsibility | Owning business module responsibility |
+| --- | --- | --- |
+| Nightly media cleanup | Schedule, claim, execute, retry, log. | Media decides which records are expired and safe to delete. |
+| Export retry | Run retry window and record attempts. | Import/export module decides retry eligibility and file semantics. |
+| Reminder emails | Schedule and throttle execution. | Workflow or notification module owns message content and recipient rules. |
+| Projection rebuild | Run controlled background task. | Owning data module owns rebuild logic and consistency rules. |
+
+Cron should make the work happen at the right time with safe operational
+evidence. It should not absorb every domain rule just because the work happens
+in the background.
+
+## Developer journey: adding a project cron job
+
+When a project adds a scheduled job, follow this sequence:
+
+1. Identify the business module that owns the actual operation.
+2. Expose a safe service method in that module.
+3. Add the job definition in the project or owning module data/configuration.
+4. Configure schedule, tenant/enterprise scope, node placement, timeout,
+   retry, overlap, and audit expectations.
+5. Register or import the job through governed data flow.
+6. Test manual run and scheduled execution with the same security and tenant
+   context.
+7. Verify restart behavior by stopping and starting the Cron server.
+8. Document support steps, alert thresholds, and reconciliation behavior.
+
+Do not pass executable code, raw URLs, filesystem paths, or untrusted handler
+names through job records. Job definitions should point to known backend
+contracts.
+
 ## Registering Cron as an optional module
 
 Core, Platform, and WCMS are mandatory in the Axis reference stack. Cron is
@@ -133,6 +170,43 @@ runtime state. Node failover can help, but it is not a universal exactly-once
 guarantee. Network partitions, process termination, downstream timeouts, and
 uncertain completion must be handled by the job contract.
 
+## Execution safety model
+
+```mermaid
+flowchart TD
+  Due["Job becomes due"] --> Claim["Runtime node attempts claim"]
+  Claim -->|Claim denied| Skip["Skip with safe reason"]
+  Claim -->|Claim accepted| Execute["Execute handler"]
+  Execute --> Success["Record success evidence"]
+  Execute --> Failure["Record failure evidence"]
+  Failure --> Retry{"Retry allowed?"}
+  Retry -->|Yes| Backoff["Schedule retry with backoff"]
+  Retry -->|No| Alert["Leave failed state and alert"]
+  Backoff --> Due
+```
+
+The claim step matters in multi-node environments. Without it, two nodes may
+run the same job. Even with a claim, job handlers should still be idempotent
+because distributed systems can fail after a side effect but before a status
+update is recorded.
+
+## Operations runbook outline
+
+Every production cron capability should have a small runbook:
+
+| Runbook area | Required detail |
+| --- | --- |
+| Job purpose | What business outcome the job supports. |
+| Owner | Functional module or project that owns the business operation. |
+| Schedule | Frequency, timezone, blackout windows, and manual run policy. |
+| Data scope | Tenant, enterprise, site, catalog, or environment boundaries. |
+| Idempotency | What makes repeat execution safe. |
+| Retry | Retry count, backoff, retryable errors, non-retryable errors. |
+| Timeout | Maximum duration and stuck-run recovery. |
+| Observability | Logs, metrics, alerts, dashboards, and correlation fields. |
+| Recovery | Re-run, skip, reconcile, or compensate instructions. |
+| Release impact | What happens during deploy, rollback, or schema/content migration. |
+
 ## Security model
 
 Cron lifecycle routes require authentication and authorization. A human may
@@ -160,3 +234,20 @@ Axis should show Cron as a functional module, not as every internal technical
 schema. Once registered and active, Cron-owned navigation and workbench
 capabilities can appear through BackOffice and WCMS data just like other module
 capabilities. Axis remains the renderer; Cron remains the runtime authority.
+
+## Acceptance checklist
+
+Before Cron is considered ready beyond local demo use, verify:
+
+- Cron appears in the functional module registry only when the runtime is
+  observed.
+- Register, activate, deactivate, and deregister operations persist and update
+  Axis without manual refresh.
+- Job definitions are persisted and rebuilt after runtime restart.
+- Manual run and scheduled run share the same authorization, tenant, logging,
+  and failure contracts.
+- Duplicate execution is prevented or made harmless through idempotency.
+- Failed runs produce useful diagnostics without exposing secrets.
+- Node loss, restart, timeout, retry, and downstream failure behavior are
+  tested.
+- Business handlers remain in the owning business module.

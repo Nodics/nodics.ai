@@ -240,6 +240,93 @@ the content-pack import status.
 If npm cannot resolve framework packages, rerun `npm run configure:framework`
 after checking `NODICS_FRAMEWORK_ROOT`.
 
+## What success looks like for each reader
+
+The quick start is successful only when different readers can see their own
+evidence, not merely when terminal processes stay open.
+
+| Reader | Evidence they should see | Why it matters |
+| --- | --- | --- |
+| Business evaluator | Axis opens, login succeeds, dashboards and documentation are visible. | Proves the framework is not only an architecture idea; it has a runnable business workspace. |
+| Developer | Platform, WCMS, and Cron start from Kickoff without editing framework source. | Proves customer projects compose the framework through configuration and dependencies. |
+| Architect | Module Registry shows mandatory and optional functional modules at the correct level. | Proves business capability identity is separated from internal technical modules. |
+| Operator | Ports, runtime logs, import releases, and module lifecycle states are observable. | Proves the stack can be diagnosed without guessing from frontend behavior. |
+| QA engineer | Fresh acceptance can recreate the local system from empty databases. | Proves the demo is repeatable and not dependent on accidental local state. |
+
+If one reader's evidence is missing, the quick start is not complete. For
+example, a developer may see servers running, but a business evaluator still
+cannot evaluate Nodics if Axis documentation is missing. Likewise, Axis may
+open, but an operator cannot trust the bootstrap if content packs show checksum
+errors or stale releases.
+
+## First guided walkthrough after login
+
+After login, use this short walkthrough before changing any code:
+
+1. Open **Dashboard** and confirm Axis is in the authenticated workspace, not
+   the static recovery screen.
+2. Open **System and Integrations > Module Registry** and confirm Core,
+   Platform, and WCMS are mandatory active capabilities.
+3. If Cron is running, register and activate Cron, then deactivate and
+   deregister it to understand the optional module lifecycle.
+4. Open **System and Integrations > Imports and Exports** and review
+   initialization, core, sample, file import, export, and history tabs.
+5. Import missing documentation packs if a fresh database was used.
+6. Open **Content and Experience > Content** to see the content dashboard.
+7. Open **Content and Experience > Media** to see governed media operations.
+8. Open **Documentation > Nodics Documentation** and read Framework, Swaggers,
+   Nodics Axis, and Nodics Kickoff.
+
+This walkthrough intentionally uses Axis screens first. A beginner should see
+the framework's behavior before reading internal files. Once the user sees the
+running product, repository structure becomes easier to understand.
+
+```mermaid
+flowchart TD
+  Login["Login to Axis"] --> Registry["Module Registry"]
+  Registry --> Imports["Imports and Exports"]
+  Imports --> Content["Content dashboard"]
+  Content --> Media["Media operations"]
+  Media --> Docs["Documentation"]
+  Docs --> Code["Only then inspect source ownership"]
+```
+
+## First safe customization exercise
+
+The first customization should be intentionally small. Do not begin by editing
+Core, Platform, WCMS, or Axis source. A good beginner exercise is to change
+project-owned documentation or demo content in the customer project, regenerate
+the project documentation pack, import it through Axis, and verify the updated
+page.
+
+The learning outcome is important:
+
+- the source content lives in the owner project;
+- generated data lives under the owner project's generated data folder;
+- the manifest checksum changes with the content;
+- WCMS imports the release;
+- Axis renders the result from backend delivery contracts;
+- no frontend renderer or framework source file is edited.
+
+That small exercise teaches the full Nodics pattern: owner first, generated
+data second, import through governance, render through Axis, verify through the
+running system.
+
+## Beginner glossary
+
+| Term | Plain-language meaning |
+| --- | --- |
+| Framework repository | Reusable Nodics backend capabilities, currently `nodics.ai`. |
+| Customer project | The adopting project that composes and customizes the framework, such as the reference project. |
+| Functional module | Business-facing capability group such as Platform, WCMS, Cron, or Docs. |
+| Technical module | Internal implementation unit under a functional module group. |
+| Runtime server | A process that loads a configured module graph and exposes APIs or background behavior. |
+| Axis | Browser BackOffice renderer that discovers backend capabilities. |
+| Content pack | Versioned backend-owned data release imported into WCMS. |
+| Manifest checksum | Integrity evidence proving the release files match the manifest. |
+| Registration | Persisted project decision to accept an observed optional functional module. |
+| Activation | Persisted project decision that a registered module should be usable. |
+
 ## Next actions
 
 Once the reference stack is running, read the customization guide before

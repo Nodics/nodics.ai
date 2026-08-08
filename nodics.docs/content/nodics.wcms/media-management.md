@@ -95,6 +95,56 @@ When a new module needs files, add a source context and policy instead of
 creating another upload API. That keeps scanning, retention, audit, and storage
 provider behavior consistent.
 
+## Media ownership across modules
+
+Media is a shared governed capability, but shared does not mean ownerless.
+Other modules reference media records; they do not invent storage authority.
+
+| Consumer | What it may do | What it must not do |
+| --- | --- | --- |
+| WCMS pages/components | Reference media records for images, documents, or downloads. | Store private paths or credentials in component data. |
+| Documentation | Reference screenshots, diagrams, and help images as governed media. | Copy images into every frontend or leave broken Markdown as visible text. |
+| Imports and exports | Upload import files or expose generated export files through source context. | Bypass validation or retention policy. |
+| Product or commerce modules | Associate media records with product or business entities. | Own the binary lifecycle unless explicitly implemented as a media provider. |
+| Axis | Render upload/select/manage screens from backend contracts. | Decide storage paths, buckets, signed URLs, virus scan rules, or retention. |
+
+The goal is simple: a business module can say “this record uses this media,”
+but Media decides how the file is governed.
+
+## Business journey: adding a website banner
+
+Imagine a business user needs a new homepage banner image.
+
+1. Axis opens the Media page and asks the backend for valid source contexts.
+2. The user chooses a content-media context and selects an image.
+3. Media validates type, size, folder policy, and access mode.
+4. The storage provider saves bytes and returns safe storage evidence.
+5. Media creates or updates the media record.
+6. A WCMS component references the media record.
+7. The page renders through WCMS/Axis or a customer site renderer.
+
+At no point should the business user or frontend type a filesystem path,
+bucket name, or private URL. That information belongs to the backend provider
+contract.
+
+## Developer journey: adding a new media use case
+
+When a new module needs files, the developer should add a source context or
+policy before creating new upload code. A good implementation explains:
+
+- which module needs the media;
+- whether files are user-uploaded, generated, imported, or externally
+  referenced;
+- allowed extensions and MIME types;
+- maximum size and retention;
+- public, authenticated, private, or temporary delivery mode;
+- audit and cleanup requirements;
+- whether previews, thumbnails, or transformations are required;
+- which tests prove rejected files and unauthorized access fail safely.
+
+If the use case needs a different storage backend, implement or configure a
+provider behind Media rather than exposing storage rules to each consumer.
+
 ## Beginner customization example
 
 Imagine a partner wants to allow PNG and JPG images for website banners, but
@@ -124,6 +174,23 @@ retention, size limits, virus scanning or approval workflows where required,
 download authorization, cache headers, and lifecycle cleanup. Never rely on a
 repository folder as production storage. Development defaults may write under
 server temp paths, but those paths are disposable and environment-specific.
+
+## Operational acceptance checklist
+
+| Area | Acceptance evidence |
+| --- | --- |
+| Upload policy | Allowed and rejected MIME types, extensions, and sizes behave as configured. |
+| Storage provider | Provider returns safe relative evidence and does not leak private roots. |
+| Metadata | Media record includes code, filename, format, size, checksum, lifecycle state, source context, and references. |
+| Authorization | Unauthorized upload, view, update, and download attempts fail closed. |
+| Retention | Temporary and generated files have cleanup policy and audit evidence. |
+| Delivery | Public or authenticated delivery matches the media access mode. |
+| Reuse | WCMS/documentation/business modules reference media by record, not storage path. |
+| Recovery | Missing bytes, stale records, provider failure, and checksum mismatch have safe error behavior. |
+
+Media failures often look like frontend problems because users see them in
+Axis, but most root causes are backend policy, provider, or metadata issues.
+Start investigation at the media record and source context.
 
 ## Customization model
 
