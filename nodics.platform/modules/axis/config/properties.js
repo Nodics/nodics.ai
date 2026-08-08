@@ -37,7 +37,7 @@ module.exports = {
                     order: 300,
                     connectionModule: 'cms',
                     site: 'axisDocumentationSite',
-                    catalog: 'axisDocumentationContentCatalog',
+                    catalog: 'documentationContentCatalog',
                     defaultPage: '/docs/nodics-axis',
                     packCode: 'axisDocumentation',
                     dashboard: {

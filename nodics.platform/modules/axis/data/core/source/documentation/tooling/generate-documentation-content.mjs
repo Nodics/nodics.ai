@@ -514,7 +514,6 @@ await writeOrCheck(
 );
 
 const generatedFiles = [
-  'data/core/data/documentation/axisDocumentationCatalogData.js',
   'data/core/data/documentation/axisDocumentationComponentData.js',
   'data/core/data/documentation/axisDocumentationPageData.js',
   'data/core/data/documentation/axisDocumentationRendererData.js',

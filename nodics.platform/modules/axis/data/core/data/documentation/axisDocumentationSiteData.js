@@ -11,12 +11,12 @@
 
 'use strict';
 
-/** @description CMS Site binding the Nodics Axis documentation catalog to its route namespace. */
+/** @description CMS Site binding Nodics Axis documentation to the shared documentation content catalog. */
 module.exports = {
   record0: {
     code: 'axisDocumentationSite',
     name: 'Nodics Axis Documentation',
-    catalog: 'axisDocumentationContentCatalog',
+    catalog: 'documentationContentCatalog',
     active: true,
   },
 };

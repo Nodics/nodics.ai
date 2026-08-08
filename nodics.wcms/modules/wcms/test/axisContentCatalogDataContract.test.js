@@ -62,10 +62,13 @@ axisDataSets.flat().forEach(item => {
     assert.strictEqual(item.activationMode, 'RUNTIME_MODULE_ACTIVE', item.code + ' must require runtime module activation');
 });
 
-assert.strictEqual(catalog.length, 1);
+assert.strictEqual(catalog.length, 2);
 assert.strictEqual(catalog[0].code, 'axisContentCatalog');
 assert.strictEqual(catalog[0].catalogType, 'CONTENT');
 assert.deepStrictEqual(catalog[0].accessGroups, ['employeeUserGroup']);
+assert.strictEqual(catalog[1].code, 'documentationContentCatalog');
+assert.strictEqual(catalog[1].catalogType, 'CONTENT');
+assert.deepStrictEqual(catalog[1].accessGroups, ['employeeUserGroup']);
 assert.strictEqual(sites[0].catalog, 'axisContentCatalog');
 
 const typeByCode = new Map(types.map(item => [item.code, item]));

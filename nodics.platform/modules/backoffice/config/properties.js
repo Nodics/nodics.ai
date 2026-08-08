@@ -56,7 +56,7 @@ module.exports = {
             documentation: [
                 {
                     id: 'framework', label: 'Framework', type: 'CMS', route: '/docs/framework', order: 100,
-                    connectionModule: 'cms', site: 'nodicsDocumentationSite', catalog: 'nodicsDocumentationContentCatalog',
+                    connectionModule: 'cms', site: 'nodicsDocumentationSite', catalog: 'documentationContentCatalog',
                     defaultPage: '/docs/framework', packCode: 'nodicsDocumentation',
                     dashboard: {
                         kind: 'Framework guide', icon: 'content',

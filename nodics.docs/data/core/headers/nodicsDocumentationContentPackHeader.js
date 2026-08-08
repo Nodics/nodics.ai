@@ -13,9 +13,6 @@
 
 /** @description Nodics core-import header for framework documentation. */
 module.exports = {
-  catalog: {
-    nodicsDocumentationCatalogData: { options: { enabled: true, schemaName: 'catalog', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationCatalogData' }, query: { code: '$code' } },
-  },
   cms: {
     nodicsDocumentationSiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSiteData' }, query: { code: '$code' } },
     nodicsDocumentationTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTypeCodeData' }, query: { code: '$code' } },

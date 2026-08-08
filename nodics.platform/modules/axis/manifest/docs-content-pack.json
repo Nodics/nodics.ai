@@ -1,6 +1,6 @@
 {
   "pack": "nodics.platform.axis",
-  "version": "0.3.27",
+  "version": "0.3.28",
   "contractVersion": 1,
   "sourceMode": "canonical-structured-source",
   "sourceAuthority": "modules/axis/data/core/source/documentation",
@@ -12,17 +12,16 @@
   "components": 16,
   "routes": 15,
   "migrationRegister": "modules/axis/data/core/source/documentation/migration-register.json",
-  "releaseChecksum": "5b3079889b1859b1dfd60368ef01dda0c62321bbabc05b58f283e127bae63a13",
+  "releaseChecksum": "4ef9d49b113925631c58861ab78f4483946463b67d0060d04f60a8184c30a0f8",
   "generatedHashes": {
-    "modules/axis/data/core/data/documentation/axisDocumentationCatalogData.js": "3c8a2050759ddc689e444a38c8e72fc09540dcf3073bebc92726daffe38136bc",
-    "modules/axis/data/core/data/documentation/axisDocumentationComponentData.js": "38c14571f85d9b42838099f1212d3ee4b2c8f66429f8462241d34666fd920b75",
+    "modules/axis/data/core/data/documentation/axisDocumentationComponentData.js": "dcaace355d0ae8ad7a694b27b4d26392503b21ed138f3ce2994bfa13022653b7",
     "modules/axis/data/core/data/documentation/axisDocumentationPageData.js": "5847246eee4cd28bd67478ed4fbb8e10a1552e9a00554a416b036e3c45aab506",
     "modules/axis/data/core/data/documentation/axisDocumentationRendererData.js": "070b7190f78ca9e772023e1ce89c9451b881252bc13185e6d08b8278b45854f5",
     "modules/axis/data/core/data/documentation/axisDocumentationRouteData.js": "cd8a6af35eb9cac9c2d3ccb6ac56641ab8bdeb4bef62563485c0435a024f62bb",
-    "modules/axis/data/core/data/documentation/axisDocumentationSiteData.js": "3d0a30c43e06fe4aec94a74d300bbb2ca935984fdd26aa07abcf868bb14a920f",
+    "modules/axis/data/core/data/documentation/axisDocumentationSiteData.js": "91b8c928ef77bf1708ee7732fb40034607c2a49970ea8b012647e3f2ba880120",
     "modules/axis/data/core/data/documentation/axisDocumentationSlotData.js": "f53ac3815485ce7299fea900cf462fb0d539098ab1790462580d443bc7f2f46f",
     "modules/axis/data/core/data/documentation/axisDocumentationTemplateData.js": "c784486b09b4ed167fc9e1004b81dcad37e3ddd4e0afdfc94699736d11c91fb7",
     "modules/axis/data/core/data/documentation/axisDocumentationTypeCodeData.js": "7ca9c4183acc1f291b6b21301e461a75dd2eef2a09d1e195c9b1a97c1d250a3d",
-    "modules/axis/data/core/headers/axisDocumentationContentPackHeader.js": "c7ee6e4cc77b667cb0baa4fc1725f31d566dc3171b78072a25268043870c1e14"
+    "modules/axis/data/core/headers/axisDocumentationContentPackHeader.js": "7033f9df950b06a78692db42b74dc635fc528799c8d391b22fbdf60954678937"
   }
 }

@@ -11,7 +11,7 @@
 
 /**
  * @module wcms/data/init/data/axis/axisContentCatalogData
- * @description Defines the employee-only Nodics Axis content catalog.
+ * @description Defines employee-only Axis and shared documentation content catalogs.
  * @layer data
  * @owner wcms
  */
@@ -28,6 +28,13 @@ module.exports = withWcmsOwnership({
     record0: {
         code: 'axisContentCatalog',
         name: 'Nodics Axis Content Catalog',
+        catalogType: 'CONTENT',
+        accessGroups: ['employeeUserGroup'],
+        active: true
+    },
+    record1: {
+        code: 'documentationContentCatalog',
+        name: 'Nodics Documentation Content Catalog',
         catalogType: 'CONTENT',
         accessGroups: ['employeeUserGroup'],
         active: true

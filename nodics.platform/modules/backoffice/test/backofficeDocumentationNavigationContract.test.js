@@ -81,8 +81,8 @@ assert(sources.every(source => source.connectionModule),
 assert.strictEqual(sources.find(source => source.id === 'nodics-axis').packCode, 'axisDocumentation');
 assert.strictEqual(sources.find(source => source.id === 'framework').site, 'nodicsDocumentationSite',
     'Framework documentation must resolve through the nodics.docs-owned CMS site');
-assert.strictEqual(sources.find(source => source.id === 'framework').catalog, 'nodicsDocumentationContentCatalog',
-    'Framework documentation must resolve through the nodics.docs-owned content catalog');
+assert.strictEqual(sources.find(source => source.id === 'framework').catalog, 'documentationContentCatalog',
+    'Framework documentation must resolve through the shared documentation content catalog');
 assert.strictEqual(sources.find(source => source.id === 'framework').defaultPage, '/docs/framework',
     'Framework documentation must default to the generated framework landing route');
 assert.strictEqual(sources.find(source => source.id === 'nodics-axis').site, 'axisDocumentationSite',

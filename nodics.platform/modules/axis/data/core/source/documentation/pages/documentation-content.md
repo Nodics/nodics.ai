@@ -15,10 +15,13 @@ Axis does not hardcode product tabs or maintain another registry.
   documentation source from the owning customer backend project and supplies
   import-ready data from that same project repository.
 
-Each CMS documentation product has a separate Site/catalog pair. CMS resolves
-the Site to its catalog, so Axis never adds a second catalog-routing authority.
-Nodics CMS remains runtime content and route authority; nImport remains the
-only content-pack installation and update authority.
+Each CMS documentation product has a separate Site because each product owns
+its own route namespace and navigation surface. Those documentation Sites share
+the WCMS-owned `documentationContentCatalog` when they follow the same
+documentation governance lifecycle. CMS resolves the Site to that shared
+catalog, so Axis never adds a second catalog-routing authority. Nodics CMS
+remains runtime content and route authority; nImport remains the only
+content-pack installation and update authority.
 
 ## Employee Journey
 
@@ -106,7 +109,7 @@ Axis documentation data is directly importable and committed in
 `nodics.platform/modules/axis` under `data/core`. Its immutable release
 manifest is `manifest/docs-content-pack.json`. The manifest pack identity is
 `nodics.platform.axis`; the configured nImport pack code is `axisDocumentation`; and its
-CMS binding is `axisDocumentationSite` → `axisDocumentationContentCatalog`.
+CMS binding is `axisDocumentationSite` → `documentationContentCatalog`.
 
 The pack explains project purpose, architecture and repository boundaries,
 supported setup, page/template/component/renderer organization, backend

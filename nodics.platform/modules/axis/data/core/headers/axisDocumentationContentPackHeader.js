@@ -13,17 +13,6 @@
 
 /** @description Nodics core-import header for the Nodics Axis documentation content pack. */
 module.exports = {
-  catalog: {
-    axisDocumentationCatalogData: {
-      options: {
-        enabled: true,
-        schemaName: 'catalog',
-        operation: 'saveAll',
-        dataFilePrefix: 'axisDocumentationCatalogData',
-      },
-      query: { code: '$code' },
-    },
-  },
   cms: {
     axisDocumentationSiteData: {
       options: {
