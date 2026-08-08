@@ -1,6 +1,6 @@
 {
   "contract": "nodics.documentation/v1",
-  "release": "0.3.7",
+  "release": "0.3.8",
   "documents": [
     {
       "id": "framework.what-is-nodics",

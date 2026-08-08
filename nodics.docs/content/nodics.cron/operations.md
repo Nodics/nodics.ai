@@ -157,6 +157,23 @@ The lifecycle is:
 8. Deregistration removes the project registration and returns Cron to the
    available state while the server remains live.
 
+```mermaid
+sequenceDiagram
+  participant Cron as Cron server
+  participant BackOffice as BackOffice registry
+  participant Axis as Axis module registry
+  Cron->>BackOffice: report nodics.cron runtime observation
+  Axis->>BackOffice: request authorized module registry
+  BackOffice-->>Axis: nodics.cron available
+  Axis->>BackOffice: register nodics.cron
+  BackOffice-->>Axis: registered state
+  Axis->>BackOffice: activate nodics.cron
+  BackOffice-->>Axis: active state
+```
+
+The server observation starts the conversation. Registration and activation
+record project intent. The two should not be collapsed into one hidden action.
+
 ## Production safety
 
 Scheduled jobs are deceptively simple. A timer firing every minute is easy;
@@ -251,3 +268,15 @@ Before Cron is considered ready beyond local demo use, verify:
 - Node loss, restart, timeout, retry, and downstream failure behavior are
   tested.
 - Business handlers remain in the owning business module.
+
+## Common mistakes
+
+- Putting domain cleanup or workflow logic directly inside Cron instead of the
+  owning business module.
+- Treating an in-memory schedule as the authority instead of persisted job
+  definitions.
+- Assuming one node means production will never run duplicate work.
+- Running jobs without idempotency, timeout, retry, and audit decisions.
+- Letting Axis construct arbitrary job handler names or URLs.
+- Forgetting that Cron registration is optional project state, not process
+  startup.

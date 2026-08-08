@@ -120,6 +120,19 @@ reports it. If the Cron server is not running, Platform cannot honestly present
 Cron as a live optional capability. If Cron is running but deregistered, Axis
 should show it under available modules with the Register action.
 
+```mermaid
+flowchart LR
+  Dependency["Package dependency<br/>code exists"] --> ServerGraph["Server extends graph<br/>runtime loads"]
+  ServerGraph --> Observation["Runtime observation<br/>module is live"]
+  Observation --> Registration["Project registration<br/>module is accepted"]
+  Registration --> Activation["Activation<br/>module is usable"]
+  Activation --> Axis["Axis visibility<br/>authorized UI appears"]
+```
+
+Each step answers a different question. Code existing on disk does not mean a
+server loaded it. A server loading it does not mean the project accepted it. A
+project accepting it does not mean a user has permission to operate it.
+
 ## API and UI contract expectations
 
 The registry API must give Axis enough information to render without guessing:
@@ -158,6 +171,22 @@ repositories, rewrite server `extends`, or silently enable server categories.
 It also must not expose every technical module as a business toggle. Technical
 module loading remains a framework/runtime concern; functional module lifecycle
 is the BackOffice-facing control.
+
+## Security and audit expectations
+
+Functional-module lifecycle operations change what employees can see and use,
+so they are administrative actions. A production-ready registry should record:
+
+- who performed the operation;
+- enterprise and tenant context;
+- previous state and next state;
+- runtime evidence used during the decision;
+- timestamp and correlation identity;
+- safe failure reason when an operation is rejected.
+
+Axis should display the resulting state, but the backend must remain the audit
+authority. Browser state alone is not evidence that a module was registered,
+activated, deactivated, or deregistered.
 
 ## Verification checklist
 

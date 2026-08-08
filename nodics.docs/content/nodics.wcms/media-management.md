@@ -27,6 +27,16 @@ delivery safety.
   selection choices are valid for data imports, content media, product media,
   utility media, and generated exports.
 
+```mermaid
+flowchart LR
+  Source["Source context"] --> Policy["Folder and format policy"]
+  Policy --> Upload["Upload validation"]
+  Upload --> Provider["Storage provider"]
+  Provider --> Record["Media metadata record"]
+  Record --> Reference["WCMS/module references"]
+  Record --> Delivery["Safe delivery contract"]
+```
+
 ## Frontend boundary
 
 Axis may display upload controls, folder choices, media records, and selection
@@ -174,6 +184,20 @@ retention, size limits, virus scanning or approval workflows where required,
 download authorization, cache headers, and lifecycle cleanup. Never rely on a
 repository folder as production storage. Development defaults may write under
 server temp paths, but those paths are disposable and environment-specific.
+
+## Failure and recovery examples
+
+| Failure | Safe behavior |
+| --- | --- |
+| File exceeds policy | Reject before storage and show a business-safe reason. |
+| MIME type is not allowed | Reject using backend policy, not frontend-only validation. |
+| Storage provider is unavailable | Keep metadata unchanged and return a bounded failure. |
+| Bytes missing for an existing record | Show unavailable media state and preserve audit evidence. |
+| Unauthorized download | Fail closed without leaking storage path or provider details. |
+| Checksum mismatch | Block delivery or mark the record for operator review. |
+
+These failures should feel understandable in Axis, but the decision belongs to
+Media and its provider contracts.
 
 ## Operational acceptance checklist
 

@@ -112,6 +112,26 @@ When a project needs custom content, place the source and generated pack in the
 owning project, such as `nodics.kickoff`. Do not modify framework packs to add
 customer-specific pages.
 
+## Content-pack release model
+
+WCMS data releases are immutable. If the source content changes, the generated
+records and checksum change, so the release version must change too. This
+protects operators from installing two different sets of content under the
+same trusted version.
+
+```mermaid
+flowchart TD
+  Source["Source Markdown or data definitions"] --> Generate["Generator creates CMS records"]
+  Generate --> Manifest["Manifest hashes generated files"]
+  Manifest --> Validate["Validator checks release integrity"]
+  Validate --> Import["WCMS imports immutable release"]
+  Import --> Deliver["Routes deliver CMS page contracts"]
+```
+
+If import says a release is invalid, treat that as useful protection. Fix the
+source, generator, version, or manifest rather than bypassing checksum
+validation.
+
 ## Business model
 
 WCMS reduces release friction. Business users can work with governed content
@@ -204,6 +224,19 @@ can be rebuilt from source-controlled module data.
 WCMS incidents should be investigated by record chain. Start with the route,
 then page, template, components, renderer mapping, site, catalog, and import
 history. That is usually faster than searching the frontend first.
+
+## QA scenarios
+
+A WCMS change should be tested with more than one happy route:
+
+1. page route resolves for the expected site, locale, and channel;
+2. missing route shows recovery rather than broken layout;
+3. missing renderer mapping fails safely;
+4. content pack validates before import;
+5. same version with changed checksum is rejected;
+6. project documentation imports separately from framework and Axis docs;
+7. generated files are recreated from source without manual drift;
+8. Axis renders the delivered contract without direct filesystem access.
 
 ## What not to do
 
