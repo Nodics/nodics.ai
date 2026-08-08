@@ -157,3 +157,28 @@ production-build tests.
 A checklist that records only the shipped OOTB behavior is incomplete. If no
 safe extension point exists, record that limitation explicitly rather than
 suggesting that a framework file should be edited.
+
+## Common mistakes
+
+- Starting with implementation before identifying the business problem,
+  owning functional module, technical module, runtime graph, security boundary,
+  and documentation owner.
+- Placing a file in the nearest folder because the page compiles. Nodics
+  changes must land where ownership says they belong.
+- Adding a browser workaround for an unavailable backend contract. Surface a
+  safe recovery state and fix or define the backend contract.
+- Calling a feature complete after the happy-path UI works. Completion also
+  needs permission, malformed data, unavailable backend, accessibility,
+  responsive, rollback, documentation, and generated-data evidence.
+- Hardcoding a customer, project, server, or documentation product name where
+  the contract should be reusable.
+
+## Verification
+
+For every feature, capture evidence in this order: ownership decision,
+contract/API or data source, implementation file map, focused tests,
+documentation source, generated data if applicable, local browser behavior,
+regression gate, and rollback note. If one of these is intentionally not
+applicable, say why. The goal is not more ceremony; it is to make the next
+developer or AI tool understand what changed without reopening the whole
+architecture discussion.

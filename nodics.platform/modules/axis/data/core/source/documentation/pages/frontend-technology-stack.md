@@ -174,3 +174,15 @@ npm run verify
 
 The verification gate checks formatting, linting, strict TypeScript,
 unit/component tests, and the production build.
+
+## Common mistakes
+
+- Adding a package because it solves one screen, without checking existing
+  Axis primitives, bundle impact, security posture, license, and upgrade path.
+- Turning React local state into a second backend cache or business authority.
+- Building runtime configuration into compiled code when the value should come
+  from environment, module properties, or backend bootstrap.
+- Disabling TypeScript strictness or validation to accept uncertain backend
+  data.
+- Creating frontend-only mocks that drift from the backend contract instead of
+  sharing typed client boundaries and contract fixtures.

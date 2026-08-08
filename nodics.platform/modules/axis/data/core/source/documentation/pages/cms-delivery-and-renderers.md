@@ -96,3 +96,33 @@ memory and are cleared locally before logout revocation is sent to Profile.
 The forgot-password page is presentation-ready, but submission remains disabled
 until Profile owns an approved employee-recovery API. Axis does not simulate
 recovery or create a second identity workflow.
+
+For example, a CMS page may declare logical renderer
+`axis.component.media-management-workspace`. Axis can map that key to a
+compiled React renderer after validation. The CMS record cannot send JavaScript
+that Axis executes, and the renderer still calls nMedia or WCMS contracts for
+authoritative data.
+
+## Common mistakes
+
+- Putting page, component, catalog, route, or documentation import data in the
+  frontend repository. Axis renders CMS contracts; backend modules or customer
+  projects own importable content.
+- Using CMS content as executable code. CMS can describe layout, copy,
+  component properties, logical renderer keys, and safe links, but it must not
+  ship scripts that Axis executes.
+- Rendering an unknown logical component as a best-effort widget. Unknown or
+  unauthorized renderers must fail safely with useful recovery information.
+- Assuming public CMS delivery means authenticated BackOffice data is public.
+  Login pages can be public; protected workspace content still requires
+  Profile and BackOffice authorization.
+- Creating one-off page components when an existing renderer contract can be
+  extended with backend-owned properties.
+
+## Verification
+
+CMS delivery is verified when Axis can load public login pages, authenticate
+through Profile, bootstrap secured navigation, render authorized CMS routes,
+reject unknown renderers, reject unsafe links or executable content, survive
+missing CMS data through recovery mode, and pass type, component,
+accessibility, responsive, and production-build checks.

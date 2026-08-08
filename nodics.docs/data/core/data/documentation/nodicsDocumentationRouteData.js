@@ -86,6 +86,18 @@ module.exports = {
     "active": true
   },
   "record6": {
+    "code": "nodicsDocsRouteframeworkFutureModuleDocumentationPattern",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/framework-future-module-documentation-pattern",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPageframeworkFutureModuleDocumentationPattern",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record7": {
     "code": "nodicsDocsRoutecoreOverview",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/core-overview",
@@ -97,7 +109,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record7": {
+  "record8": {
     "code": "nodicsDocsRouteplatformOverview",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/platform-overview",
@@ -109,7 +121,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record8": {
+  "record9": {
     "code": "nodicsDocsRouteplatformModuleRegistry",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/platform-module-registry",
@@ -121,7 +133,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record9": {
+  "record10": {
     "code": "nodicsDocsRoutewcmsOverview",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/wcms-overview",
@@ -133,7 +145,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record10": {
+  "record11": {
     "code": "nodicsDocsRoutewcmsMediaManagement",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/wcms-media-management",
@@ -145,7 +157,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record11": {
+  "record12": {
     "code": "nodicsDocsRoutecronOperations",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/cron-operations",
@@ -157,7 +169,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record12": {
+  "record13": {
     "code": "nodicsDocsRoutedocsOverview",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/docs-overview",

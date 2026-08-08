@@ -243,3 +243,29 @@ documentation packs are installed and current through WCMS. The third mutates
 the optional Cron module through register, activate, deactivate, and
 deregister, then proves Cron returns to the available list. Keep that final
 gate opt-in because it intentionally changes module lifecycle state.
+
+## Common mistakes
+
+- Using the Axis frontend repository as a documentation data package. Axis
+  product documentation belongs to the backend Axis module under Platform;
+  framework documentation belongs to `nodics.docs`; customer documentation
+  belongs to the customer project.
+- Importing Markdown directly from a browser route. Documentation must travel
+  through generated backend-owned WCMS data releases with manifest checksums.
+- Mixing Framework, Axis, Swagger, and customer guides into one catalogue
+  without ownership metadata. Separate products make upgrades and customer
+  overlays easier to reason about.
+- Treating generated data as hand-authored source. Edit canonical Markdown and
+  navigation metadata, then regenerate the content pack.
+- Writing documentation only for developers. Axis documentation must explain
+  business value, operator behavior, developer contracts, and safe extension.
+
+## Verification
+
+Documentation work is complete only when canonical source pages, navigation,
+migration register, generated WCMS records, generated release manifest, and
+database-import evidence agree. Validate the pack, install it into a fresh
+local database, open `/docs`, `/docs/framework`, `/docs/nodics-axis`, and
+customer documentation routes, and confirm each product appears under the
+Documentation navigation group with current status and readable beginner-level
+content.

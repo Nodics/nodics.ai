@@ -290,3 +290,42 @@ separately verifies rendering, digest/revision approval, execution controls,
 malformed-event rejection, accessibility, and responsive behavior. A live
 browser journey remains intentionally deferred until provider credentials and
 usage credit are configured.
+
+For example, if an employee asks the Assistant to create an enterprise and
+omits the description, Axis should render the backend clarification request.
+It should not invent the missing description, call Profile directly, or mark
+the enterprise as created until the backend has persisted confirmation and
+execution evidence.
+
+## Common mistakes
+
+- Letting Axis parse free text into business records. Assistant planning,
+  clarification, mutation proposals, confirmation, and execution are governed
+  backend responsibilities.
+- Showing a streamed proposal as executed work. Until backend confirmation and
+  execution evidence exists, Axis must present the result as a draft or
+  pending action.
+- Storing prompts, responses, tokens, or approval secrets in browser storage.
+  Axis may keep transient UI state, but durable records and audit evidence
+  belong to the backend.
+- Hiding provider errors because the chat UI still looks responsive. A useful
+  Assistant experience explains whether the failure came from policy,
+  provider configuration, network, authorization, or backend execution.
+- Adding a custom Assistant shortcut without a capability contract. Shortcuts
+  need ownership, permission, contract version, safe fallback, and tests.
+
+## Verification
+
+Verify Assistant changes through both static and behavioral evidence:
+
+1. run formatting, linting, TypeScript, component tests, and production build;
+2. exercise streamed messages, malformed events, reconnect boundaries, and
+   cancelled or failed conversations;
+3. prove proposals require backend confirmation before mutation;
+4. test unauthorized users, missing capability contracts, and disabled
+   provider configuration;
+5. verify keyboard, screen-reader labels, mobile layout, and busy states;
+6. confirm no browser storage contains prompts, secrets, tokens, or approval
+   material;
+7. run live provider acceptance only when credentials and usage credit are
+   intentionally configured.

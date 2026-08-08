@@ -37,6 +37,28 @@ function assertDocumentationDepth(source, canonical) {
     canonical.includes('## Customize and extend safely'),
     `Missing customization section: ${source}`,
   );
+  assert(
+    canonical.includes('## Common mistakes'),
+    `Missing common-mistakes section: ${source}`,
+  );
+  assert(
+    canonical.includes('## Verification'),
+    `Missing verification section: ${source}`,
+  );
+  assert(
+    /\bexample\b/i.test(canonical),
+    `Missing practical example language: ${source}`,
+  );
+  const forbiddenPatterns = [
+    /local-archive/i,
+    /legacy-repositories/i,
+    /nodicsaxis/i,
+    /old nodics repository/i,
+    /Axis frontend repository as (?:the )?(?:source|owner) of backend data/i,
+  ];
+  for (const pattern of forbiddenPatterns) {
+    assert(!pattern.test(canonical), `Forbidden legacy or ownership wording: ${source}`);
+  }
 }
 
 function assert(condition, message) {

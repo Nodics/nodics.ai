@@ -1,0 +1,167 @@
+# Future module documentation pattern
+
+Nodics will grow beyond Core, Platform, WCMS, Media, Cron, Docs, Axis backend
+data, and the current reference customer project. Future functional modules may
+include Workflow, Commerce, Search, Event Management, Integration Management,
+Publishing, AI orchestration, Logistics, Telco, Finance, Education, or other
+industry capabilities. This page defines how to document those modules before,
+during, and after implementation without creating false authority.
+
+The rule is direct: documentation may describe a planned capability, a design
+contract, or a partially implemented slice, but it must say which state it is
+in. A reader should never confuse a concept page with production-ready
+runtime behavior.
+
+## Why this matters
+
+For business users, future-module documentation explains product direction and
+business value. It should answer: what problem does this capability solve, why
+would an enterprise adopt it, how does it reduce operating cost or delivery
+risk, and how does it fit with multi-enterprise, multi-tenant, modular Nodics?
+
+For developers, future-module documentation prevents rushed placement. It
+should answer: which functional module owns the capability, which technical
+modules may be needed, which APIs and schemas are authoritative, what can be
+customized through configuration, and what must remain backend-owned.
+
+For operators, future-module documentation explains runtime impact. It should
+answer: which server will run it, what dependencies are mandatory or optional,
+what properties are public or private, what health evidence exists, how data is
+initialized, and how rollback works.
+
+## Documentation maturity levels
+
+Use a clear maturity label whenever a module area is not fully complete:
+
+| Level | Meaning | Allowed content |
+| --- | --- | --- |
+| Concept | Business problem and direction are known, but implementation has not started. | Business value, personas, examples, target boundaries, open questions. |
+| Design contract | Ownership, APIs, schemas, or runtime behavior are being defined. | Architecture diagrams, data ownership, security model, proposed endpoints, acceptance criteria. |
+| Partial implementation | Some slices exist, but the module is not production-complete. | Implemented scope, missing scope, feature flags, known gaps, safe rollback. |
+| Operational | Runtime behavior, data release, tests, docs, and acceptance are current. | Full user guide, developer guide, DevOps guide, customization guide, verification evidence. |
+
+The maturity label belongs near the top of the page. If a page mixes future
+direction and implemented behavior, split the sections clearly.
+
+## Required page structure
+
+Every future module page should include:
+
+1. **Business problem** — who needs the module and what pain it removes.
+2. **Business value** — faster delivery, lower customization cost, reduced
+   risk, better governance, scalability, or customer experience.
+3. **Beginner mental model** — a simple analogy or walkthrough.
+4. **Functional module ownership** — standard module identity and whether a
+   customer extension may customize it.
+5. **Technical module ownership** — where services, routes, schemas,
+   migrations, data, docs, and tests belong.
+6. **Runtime topology** — which server starts it and how it extends Core or
+   another standard module.
+7. **Security and governance** — authentication, authorization, tenant,
+   audit, data exposure, and secret boundaries.
+8. **Customization model** — configuration first, extension modules second,
+   framework-source change only when the capability itself changes.
+9. **Examples** — at least one business example and one developer or operator
+   example.
+10. **Common mistakes** — things future developers and AI tools must avoid.
+11. **Verification** — tests, generated data checks, local acceptance, and
+   runtime proof.
+
+## Example: documenting a future Workflow module
+
+A Workflow page should not begin with API endpoints. It should begin with the
+business problem: enterprises need governed approval, task routing, escalation,
+return-to-sender, audit, and cross-module process visibility. Then it should
+explain why a Workflow module is better than every module inventing its own
+approval table.
+
+The developer section would say that `nodics.workflow` owns workflow
+definitions, states, transitions, assignments, SLA metadata, process history,
+and Workflow APIs. A Commerce return flow may start a workflow, but Commerce
+does not own the generic workflow engine. Axis may render assigned work,
+approvals, returned work, and process detail only when BackOffice reports the
+Workflow capability as active and authorized.
+
+The operator section would explain whether Workflow runs inside a Platform
+server, a dedicated workflow server, or both. It would define scheduler
+dependency if escalations use Cron, event dependency if transitions publish
+events, and data-import dependency if starter definitions are loaded from a
+release.
+
+## Example: documenting a future Commerce module
+
+A Commerce page should explain business outcomes: product catalog, pricing,
+cart, checkout, order lifecycle, returns, refunds, promotions, inventory, and
+customer experience. It should also explain boundaries. Product media belongs
+to Media/nMedia for storage and lifecycle, while Commerce owns the business
+relationship between a product and selected media. Refund decisions belong to
+Commerce or order lifecycle ownership, not Catalog alone.
+
+For developers, this prevents a classic mistake: adding refund actions to a
+Catalog page because the word “product” appears there. The page must show the
+actual domain owner and the runtime module that provides the operation.
+
+## Diagrams and visual guidance
+
+Use diagrams whenever a concept has multiple owners or ordered steps. Prefer
+small diagrams that show real authority:
+
+```mermaid
+flowchart LR
+  Idea["New capability idea"] --> Business["Business problem and value"]
+  Business --> Owner["Choose functional module owner"]
+  Owner --> Technical["Choose technical module and folder"]
+  Technical --> Runtime["Define runtime/server graph"]
+  Runtime --> Data["Define APIs, schemas, data, docs"]
+  Data --> Verify["Define tests and acceptance"]
+```
+
+Images may be reused from the approved framework documentation assets when
+they explain the exact concept. Do not add decorative images that make the page
+look richer without teaching the reader something.
+
+## Customize and extend safely
+
+Future module documentation must describe customization before implementation
+details. Partners should understand how to change behavior without forking the
+standard framework source:
+
+- use module properties for defaults and policies;
+- use customer project environment/server configuration for deployment
+  topology and local overrides;
+- use customer extension modules to override or add services, routes,
+  renderers, and data when the customer needs a project-specific behavior;
+- keep standard functional module identity stable when a customer extension
+  customizes the standard capability;
+- avoid exposing every technical module as a business registry item.
+
+For example, a customer may later create a project-specific Platform extension
+that changes user onboarding behavior. Axis should still show Platform unless
+the customer intentionally creates a new business capability. This keeps the
+business model understandable while preserving runtime customization.
+
+## Common mistakes
+
+- Writing a future page as if all APIs already exist.
+- Hiding missing implementation behind marketing language.
+- Putting customer-specific behavior into a standard framework module.
+- Creating a frontend page before the backend capability contract exists.
+- Documenting code placement with a project-specific name where the contract
+  should work for any customer project.
+- Forgetting operator concerns such as deployment topology, properties,
+  secrets, data import, health, rollback, and observability.
+- Skipping examples because the module is still conceptual. Future pages need
+  examples even more, because they guide implementation.
+
+## Verification
+
+A future-module documentation page is accepted when it clearly states maturity,
+business problem, owner, runtime graph, security boundary, customization model,
+examples, common mistakes, and verification expectations. If implementation
+does not exist yet, the page must say so. If a partial implementation exists,
+the page must list the implemented slice, missing slice, tests that currently
+pass, and acceptance evidence still required before calling it operational.
+
+Before importing documentation, run the docs generator and validator. Before
+claiming runtime readiness, run the module tests and the local fresh-bootstrap
+acceptance checklist for the executing server graph.

@@ -121,6 +121,12 @@ The separation matters because different people care about different parts:
 | QA or tester | Use the local acceptance checklist, import lifecycle, module registry lifecycle, and route/API verification. |
 | AI contributor | Read `AGENTS.md`, then `nodics.core/modules/nSetup/llm/` before editing. Follow owner-first, customization-first, test-first contracts. |
 
+When a capability is planned but not yet fully implemented, document it through
+the framework documentation page **Future module documentation pattern**. That
+page explains how to describe Concept, Design Contract, Partial
+Implementation, and Operational maturity without pretending a future module is
+already production-ready.
+
 ## Enterprise-platform inspiration without copying another product
 
 Nodics documentation and onboarding should feel familiar to people who have

@@ -223,3 +223,24 @@ A feature is complete only when:
 - [Architecture And Ownership](architecture-and-ownership.md)
 - [CMS Delivery And Renderers](cms-delivery-and-renderers.md)
 - [Axis README](../README.md)
+
+## Common mistakes
+
+- Treating documentation as a final polish task. In Nodics, documentation is
+  part of the contract because Axis, BackOffice, generated content packs, and
+  future AI tools depend on clear ownership instructions.
+- Writing code without first deciding whether the behavior belongs to
+  framework source, a backend module, the Axis frontend, or a customer project.
+- Moving generated data by hand instead of changing canonical source and
+  running the generator.
+- Introducing a second source of truth for route labels, registry lifecycle,
+  documentation products, API categories, or module health.
+- Using example project names in reusable contracts where the same rule must
+  work for any customer project.
+
+## Verification
+
+Contract changes are accepted when the source file, generated artifact,
+validator, runtime behavior, and user-facing documentation all tell the same
+story. Run the focused package test first, then the wider Platform, Axis, docs,
+LLM, and fresh-bootstrap checks that match the changed ownership surface.

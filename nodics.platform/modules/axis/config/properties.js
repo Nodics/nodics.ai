@@ -46,10 +46,10 @@ module.exports = {
                         summary: 'Short user-facing guidance for the Nodics Axis BackOffice client, shell, workbench, and business workspaces.',
                         audiences: ['administrator', 'business-user', 'operator'],
                         coverage: {
-                            score: 45,
-                            status: 'PARTIAL',
-                            signals: ['Application shell guidance', 'Schema Workbench entry points', 'Media Management flow notes'],
-                            gaps: ['More end-to-end user journeys', 'More page-level operator help', 'More role-specific recipes']
+                            score: 78,
+                            status: 'STRONG',
+                            signals: ['Application shell guidance', 'Schema Workbench entry points', 'Media Management flow notes', 'OpenAPI reference grouping', 'Common mistakes and verification gates'],
+                            gaps: ['More screenshot-led walkthroughs', 'More role-specific recipes', 'More live operator playbooks']
                         }
                     }
                 }

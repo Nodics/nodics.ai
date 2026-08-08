@@ -305,3 +305,20 @@ Implementation must cover applicable positive, negative, boundary, contract,
 security, responsive, accessibility, integration, recovery, and regression
 behavior. Run the module-specific documentation checks and the repository
 validation gates before release-oriented commits.
+
+## Common mistakes
+
+- Treating `nodics.axis` as a backend data owner. Axis is a frontend renderer;
+  importable CMS records, documentation records, registry data, permissions,
+  and API contracts are owned by backend modules or customer projects.
+- Adding a route because the page looks useful, without proving the owning
+  module is registered, active, and authorized for the current identity.
+- Naming customer overlays as new functional modules when they only customize
+  the standard capability. A customer Platform extension still presents as
+  Platform unless the business intentionally creates a separate capability.
+- Fixing a frontend gap by bypassing Profile, BackOffice, WCMS, or nMedia.
+  Axis can improve presentation, validation, empty states, and guided flows,
+  but backend modules remain the authority for business mutation.
+- Documenting only the happy path. Architecture documentation must explain
+  failure, rollback, security, and ownership because those are the areas that
+  become expensive when the product grows.

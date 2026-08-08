@@ -295,3 +295,14 @@ Before releasing Module Health changes, verify:
 - Mistake: "Module Health can hide backend permission errors."
   Correction: Axis must render safe failure states and the backend must still
   enforce authorization.
+
+## Verification
+
+Module Health changes must prove the complete lifecycle: mandatory modules are
+visible and protected, optional modules move from available to registered to
+active and back, deregistered live modules return to the available list without
+manual refresh, unavailable modules render safe degraded states, and all
+actions refresh the page model without losing the authenticated route. Include
+negative coverage for unauthorized users, malformed backend projections, stale
+heartbeats, disabled check actions, search filtering, independent left-nav and
+content scrolling, and production build behavior.

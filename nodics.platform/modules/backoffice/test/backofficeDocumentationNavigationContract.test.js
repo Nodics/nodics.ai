@@ -89,8 +89,8 @@ assert.strictEqual(sources.find(source => source.id === 'nodics-axis').site, 'ax
     'Axis product documentation must resolve through the Platform axis module CMS site');
 assert(sources.every(source => source.dashboard && source.dashboard.summary),
     'every documentation source must provide dashboard summary metadata');
-assert.deepStrictEqual(sources.map(source => source.dashboard.coverage.score), [92, 100, 45]);
-assert.deepStrictEqual(sources.map(source => source.dashboard.coverage.status), ['STRONG', 'REFERENCE', 'PARTIAL']);
+assert.deepStrictEqual(sources.map(source => source.dashboard.coverage.score), [92, 100, 78]);
+assert.deepStrictEqual(sources.map(source => source.dashboard.coverage.status), ['STRONG', 'REFERENCE', 'STRONG']);
 assert(sources.find(source => source.id === 'framework').dashboard.coverage.signals.includes('Docs module ownership'),
     'Framework documentation metadata must advertise the Docs module ownership page');
 assert(sources.every(source => Array.isArray(source.dashboard.coverage.gaps)),

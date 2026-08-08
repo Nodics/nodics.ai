@@ -166,3 +166,21 @@ to Profile, HttpOnly refresh restoration, CSRF transport, secured bootstrap
 bearer use, protected-route preservation after remount, invalid-session
 fallback, CMS authentication pages, inactivity boundaries, activity deadline
 reset, protected routing, and logout revocation.
+
+For example, a wrong password should produce a low-disclosure failure message.
+Axis should not reveal whether the enterprise code, employee login, role, or
+permission exists. Profile owns the authentication decision, and Axis owns only
+the safe presentation and retry flow.
+
+## Common mistakes
+
+- Treating Axis login as a standalone identity service. Axis presents the login
+  journey; Profile owns authentication, session restoration, revocation,
+  account policy, and recovery contracts.
+- Persisting access tokens, passwords, refresh tokens, CSRF material, or
+  employee profile details in browser storage.
+- Revealing whether an enterprise, employee account, or permission exists
+  through detailed pre-authentication errors.
+- Allowing customer-user authentication into the employee BackOffice workspace.
+- Making forgot-password look operational before the backend employee-recovery
+  API exists and is approved.

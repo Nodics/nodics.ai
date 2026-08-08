@@ -333,3 +333,14 @@ without mutating Nodics-owned persisted contracts.
   authenticated bootstrap and backend response contracts.
 - Do not embed backend Swagger UI in an iframe; open it as a separate page and
   render the read-only OpenAPI reference inside Axis.
+
+## Verification
+
+The Axis product is healthy when a beginner can start from the login page,
+authenticate through Profile, land in the governed workspace shell, discover
+backend-authorized navigation, open Documentation, see Framework, Swagger,
+Axis, and customer documentation products, use System and Integrations,
+Content, Media, Imports and Exports, Module Registry, and Schema Workbench
+without browser-owned authority, and recover clearly when a backend capability
+is unavailable. Developers should also run the package verification gate and
+confirm no importable backend data lives in the frontend repository.

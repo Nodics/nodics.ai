@@ -164,6 +164,31 @@ module.exports = {
     "active": true
   },
   "record6": {
+    "code": "nodicsDocsPageframeworkFutureModuleDocumentationPattern",
+    "name": "Future module documentation pattern",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentframeworkFutureModuleDocumentationPattern",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record7": {
     "code": "nodicsDocsPagecoreOverview",
     "name": "Core overview",
     "cmsSite": [
@@ -188,7 +213,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record7": {
+  "record8": {
     "code": "nodicsDocsPageplatformOverview",
     "name": "Platform overview",
     "cmsSite": [
@@ -213,7 +238,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record8": {
+  "record9": {
     "code": "nodicsDocsPageplatformModuleRegistry",
     "name": "Functional module registry",
     "cmsSite": [
@@ -238,7 +263,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record9": {
+  "record10": {
     "code": "nodicsDocsPagewcmsOverview",
     "name": "WCMS content management",
     "cmsSite": [
@@ -263,7 +288,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record10": {
+  "record11": {
     "code": "nodicsDocsPagewcmsMediaManagement",
     "name": "Media management",
     "cmsSite": [
@@ -288,7 +313,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record11": {
+  "record12": {
     "code": "nodicsDocsPagecronOperations",
     "name": "Cron operations",
     "cmsSite": [
@@ -313,7 +338,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record12": {
+  "record13": {
     "code": "nodicsDocsPagedocsOverview",
     "name": "Docs overview",
     "cmsSite": [

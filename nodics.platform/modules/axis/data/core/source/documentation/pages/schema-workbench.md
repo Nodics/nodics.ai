@@ -347,3 +347,22 @@ raw-query rejection, advertised Create/Update/Delete visibility, readable
 Enterprise relationship labels, and `code - description` Tenant choices. The
 journey is read-only: it opens forms and selectors but does not submit a
 business-data mutation.
+
+For example, if the Enterprise schema exposes Tenant as a related record, Axis
+may render a governed selector using backend-provided labels and allowed
+queries. It should not guess the relationship route, display framework-managed
+fields as editable, or submit a nested create unless the backend contract
+allows that operation.
+
+## Common mistakes
+
+- Treating Schema Workbench as a database browser. It is a governed BackOffice
+  projection of authorized schemas, allowed operations, fields, filters,
+  relationships, and lifecycle actions.
+- Inferring create, update, delete, or relationship behavior from frontend
+  naming conventions instead of backend-declared metadata.
+- Displaying framework-managed fields as editable inputs.
+- Letting related-record selection create duplicates, cycles, or hidden
+  partial state when users change their mind.
+- Exposing raw query text, internal schema names, diagnostic context, or
+  backend stack traces to business users.

@@ -1,6 +1,6 @@
 {
   "pack": "nodics.docs",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "contractVersion": 1,
   "sourceMode": "catalogue-markdown-source",
   "sourceAuthority": "catalogue.json",
@@ -8,10 +8,10 @@
     "nodicsDocumentationSite"
   ],
   "accessMode": "AUTHENTICATED",
-  "pages": 13,
-  "components": 14,
-  "routes": 13,
-  "releaseChecksum": "801daace55350affe0d5b6d7dd418d4cd3adc483ef4121fb729ded944fdecf8e",
+  "pages": 14,
+  "components": 15,
+  "routes": 14,
+  "releaseChecksum": "637e7f2a8734d912a72c45471d9d4cd230de84e15062be00b4d4b19ed693d801",
   "generatedHashes": {
     "data/core/data/documentation/nodicsDocumentationCatalogData.js": "fcfea7e5b29a2eefec2d550827c766a8d9bad1c0977955367bbe6ae5234777d7",
     "data/core/data/documentation/nodicsDocumentationSiteData.js": "7ec310fe9858807c015bb046d47aa8568cf7866b6215ae31c113f97d51cbd262",
@@ -19,9 +19,9 @@
     "data/core/data/documentation/nodicsDocumentationRendererData.js": "91d17435c7a768141ae19f8b0713fb62f1dca996bed98ac1e2af82990ca9f09c",
     "data/core/data/documentation/nodicsDocumentationSlotData.js": "d4f874d520dae6b0256daf3e75cdd4f9e1e8e151729ce6f4122803a99011d6e2",
     "data/core/data/documentation/nodicsDocumentationTemplateData.js": "b163637dce87cb76596dfd1968a48c8e38061ec7e633d67b16e79a9e412d1045",
-    "data/core/data/documentation/nodicsDocumentationComponentData.js": "db2371cacaeb6ab09dd56336a0777fb357ac68de831bd11b7c263817607edb7f",
-    "data/core/data/documentation/nodicsDocumentationPageData.js": "8972067d65132c448e860b5de397124b41932526625a3ddc7e9b9b77a8449b3f",
-    "data/core/data/documentation/nodicsDocumentationRouteData.js": "0771dbb72ff80b4b46578030e3351dc0981242a1d5fd76ca47b24702224c6b8d",
+    "data/core/data/documentation/nodicsDocumentationComponentData.js": "b21e142ddc32ce25de4ce8dda5de0c2d373e0f9f8baa278fae8c840e08204408",
+    "data/core/data/documentation/nodicsDocumentationPageData.js": "9ec1db2d69785332c2b2f5abfa9739fe11fe5f3d5cdcd13c21934d777927cec4",
+    "data/core/data/documentation/nodicsDocumentationRouteData.js": "ae742c5e897e58c038201365df41214200d989a6ed3adc5e3e6d41e225e598cf",
     "data/core/headers/nodicsDocumentationContentPackHeader.js": "e4722b89dff31d2eab4f3fddc981edc3c63f2072a8e52f260ab6d7de46588813"
   }
 }

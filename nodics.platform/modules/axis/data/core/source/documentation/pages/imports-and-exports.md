@@ -213,3 +213,31 @@ media/system connections, upload failure, validation failure, stale validated
 media, checksum and compatibility rejection, execution retry, history
 projection, narrow and keyboard use, backend unavailability, and removal of the
 project presentation extension.
+
+For example, if an initialization release shows an invalid checksum, Axis must
+not provide a “force install” shortcut. The source release should be repaired,
+the manifest regenerated, and the backend validation re-run before the install
+action becomes available.
+
+## Common mistakes
+
+- Letting Axis scan folders, inspect server paths, parse release files, or
+  decide installation status locally.
+- Treating checksum failure as a warning. Invalid releases must be repaired at
+  source before validation or installation.
+- Combining initialization, core, sample, file import, export, and history
+  rules into one action button. Each tab has a different safety boundary.
+- Enabling exports before the backend export contract, media delivery contract,
+  permissions, retention, and audit behavior are active.
+- Retrying an install without idempotency, manifest identity, and run-history
+  evidence.
+
+## Verification
+
+Verify the workspace by loading each tab from backend catalogue data, checking
+zero-state and unavailable-category behavior, validating a current release,
+rejecting an invalid checksum, installing only selected valid releases,
+uploading through nMedia-backed file-import flow when enabled, reading history,
+and confirming unauthorized identities cannot see or execute governed data
+operations. Browser tests must also cover disabled buttons, refresh after
+operation, narrow layout, keyboard focus, and recovery from backend failure.

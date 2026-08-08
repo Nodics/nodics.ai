@@ -1,6 +1,6 @@
 {
   "contract": "nodics.documentation/v1",
-  "release": "0.4.2",
+  "release": "0.4.3",
   "documents": [
     {
       "id": "framework.what-is-nodics",
@@ -56,6 +56,15 @@
       "summary": "Runtime topology, dependencies, public and private properties, deployment, monitoring, and recovery guidance.",
       "locale": "en",
       "content": "content/framework/devops-runtime.md"
+    },
+    {
+      "id": "framework.future-module-documentation-pattern",
+      "functionalModule": "nodics.docs",
+      "technicalModule": "documentation",
+      "title": "Future module documentation pattern",
+      "summary": "How to document planned, partially implemented, and future functional modules without creating false runtime authority.",
+      "locale": "en",
+      "content": "content/framework/future-module-documentation-pattern.md"
     },
     {
       "id": "core.overview",

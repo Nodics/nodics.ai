@@ -314,6 +314,31 @@ module.exports = {
     "active": true
   },
   "record12": {
+    "code": "axisDocsPageopenapireference",
+    "name": "Swagger and OpenAPI Reference",
+    "cmsSite": [
+      "axisDocumentationSite"
+    ],
+    "typeCode": "axisDocumentationArticlePageType",
+    "template": "axisDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "axisDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "axisDocsComponentopenapireference",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record13": {
     "code": "axisDocsPagefeaturedelivery",
     "name": "Axis Feature Delivery Checklist",
     "cmsSite": [
@@ -338,7 +363,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record13": {
+  "record14": {
     "code": "axisDocsPageimplementationcontract",
     "name": "Axis Implementation and Documentation Contract",
     "cmsSite": [

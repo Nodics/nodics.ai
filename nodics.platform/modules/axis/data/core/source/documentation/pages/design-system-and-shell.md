@@ -243,3 +243,22 @@ readable forms, tables, documentation, and operational cards across desktop,
 tablet, and mobile WebView surfaces. If a future project needs denser screens,
 it must introduce that behavior as a governed design-system change with
 accessibility and responsive acceptance, not as an ad hoc shell preference.
+
+For example, a future customer may want a denser order-monitoring screen for a
+wallboard. That should become a project-owned view or an approved
+design-system density extension with accessibility and responsive tests. It
+should not quietly shrink labels, buttons, and forms across the reusable Axis
+shell.
+
+## Common mistakes
+
+- Styling a new page with local colors, spacing, or typography instead of the
+  Axis design tokens and shared primitives.
+- Adding a second shell, router, navigation store, notification system, or
+  modal stack for one feature.
+- Letting content scrolling move the left navigation, or letting menu clicks
+  reset the navigation position when the user is working deep in a group.
+- Treating favorite, recent, search, or theme preferences as authorization
+  evidence. They are local presentation preferences only.
+- Shipping desktop-only interactions for business screens that will also be
+  used on tablets, narrow browser panes, and embedded enterprise WebViews.

@@ -523,3 +523,27 @@ When adding a Media Management feature, verify:
     backend-owned.
 17. Positive, negative, boundary, permission, contract, integration, and
     regression tests cover the new behavior.
+
+## Common mistakes
+
+- Naming the feature “assets” in one place and “media” in another. The
+  current functional language is Media, owned by WCMS/nMedia.
+- Uploading directly to browser-selected storage providers. Axis sends files
+  and metadata to authorized backend contracts; storage policy remains backend
+  owned.
+- Showing absolute filesystem paths, bucket names, credentials, signed URL
+  secrets, or provider internals in operator cards.
+- Mutating CMS, Product, import, export, or partner-owner records from Media
+  Management just because a media item is referenced there.
+- Creating separate `/media-management` route families after standardizing the
+  URL space around `/media`.
+
+## Verification
+
+Media work is accepted when `/media`, `/media/items`, `/media/folders`, and
+related Media navigation routes load through backend-owned CMS/navigation data;
+schema discovery and API category enablement come from module defaults or
+narrow server overrides; upload, search, retire, restore, download, source
+filters, pagination, storage summaries, and missing-permission states are
+covered; and no frontend code exposes storage secrets or creates a second
+media lifecycle authority.

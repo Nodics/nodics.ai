@@ -148,13 +148,29 @@ module.exports = {
           "searchText": "Runtime and DevOps operations Runtime topology, dependencies, public and private properties, deployment, monitoring, and recovery guidance. # Runtime and DevOps operations\n\nNodics runtime operations are based on explicit server composition and layered\nconfiguration. A runtime server is a process that hosts an effective set of\nactive modules. The module remains the capability owner; the server is the\nruntime grouping.\n\nFor a beginner, DevOps in Nodics means “how does this code become a safe,\nobservable process?” The answer starts with a clear server graph, narrow\nproperties, predictable dependencies, releaseable content packs, and recovery\nbehavior that operators can explain during an incident.\n\n## Local topology\n\nThe reference local setup uses separate servers:\n\n- Platform on `http://localhost:4300`;\n- WCMS on `http://localhost:4310`;\n- Cron when scheduled behavior is needed;\n- Axis on `http://localhost:3100`.\n\nThis split keeps module boundaries visible. It also prepares the team for a\nfuture topology where different capabilities may run in different processes,\nhosts, containers, or deployment units.\n\n```mermaid\nflowchart LR\n  Operator[\"Developer or operator\"] --> Kickoff[\"nodics.kickoff scripts\"]\n  Kickoff --> Platform[\"Platform server<br/>4300\"]\n  Kickoff --> WCMS[\"WCMS server<br/>4310\"]\n  Kickoff --> Cron[\"Cron server<br/>4320\"]\n  Platform --> MongoP[\"kickoffLocal DB\"]\n  WCMS --> MongoW[\"kickoffLocalWcms DB\"]\n  Cron --> MongoC[\"kickoffLocalCron DB\"]\n  Axis[\"nodics.axis<br/>3100\"] --> Platform\n  Axis --> WCMS\n```\n\nThis diagram is intentionally local and beginner-friendly. Production may use\ncontainers, private networks, managed databases, and separate deployment\npipelines, but the same ownership idea remains: servers host capabilities;\nmodules own behavior.\n\n## Configuration layers\n\nNodics configuration is layered. Framework defaults come first. Project,\nenvironment, server, node, tenant, and governed runtime configuration can refine\nbehavior later. A developer should place a property in the narrowest owner that\nneeds it.\n\nThe practical rule is: defaults travel with the owning module; overrides travel\nwith the runtime. If WCMS generally owns data import, data export, media\nmanagement, or CMS delivery, those defaults belong in the WCMS module. If\nPlatform generally owns profile, BackOffice, or runtime registry exposure,\nthose defaults belong in Platform. A project, environment, server, or node file\nshould add only the part it intentionally changes for that boundary.\n\nServer configuration should therefore stay light. It may define ports, active\nmodules, local database names, runtime identity, remote service coordinates, or\nan explicit decision to disable an inherited capability. It should not copy\nwhole inherited property blocks such as `apiExposure`, provider defaults,\nimport/export policy, media settings, permissions, limits, or discovery flags\njust to make the server file look complete. Copied defaults become a second\nauthority and make upgrades harder.\n\nUse public browser configuration only for values safe to expose, such as Axis\nbase URLs and client contract versions. Credentials, private keys, service\ntokens, database passwords, and provider secrets belong in protected backend\nconfiguration or deployment secret management.\n\n## Public versus private properties\n\nNodics configuration must be explicit about visibility. A property being\nneeded by a screen does not automatically make it safe for the browser.\n\n| Property type | Example | Owner | Browser visible? |\n| --- | --- | --- | --- |\n| Framework default | default API category enablement | owning framework module | only if intentionally exposed |\n| Project default | reference enterprise display name | customer project | sometimes |\n| Environment override | local database name, local host/port | environment/server module | usually no |\n| Private secret | database password, token signing secret, storage credential | secret store or private runtime property | never |\n| Public frontend config | Platform base URL, WCMS base URL | Axis deployment config | yes, but not secret |\n| Generated state | import manifest checksum, generated docs data | owning module/project generator | imported through backend |\n\nThe safe rule is simple: if exposure would help an attacker, it is private. If\nAxis needs to display a value, expose a sanitized backend contract instead of\npassing the private property through the frontend.\n\n## Dependencies\n\nMongoDB is the primary local runtime dependency for persisted records.\nElasticsearch is used when search-backed capabilities are enabled. Redis is\nused when Redis-backed cache or session behavior is enabled. Enterprise\nmessaging, external storage, AI providers, or other integrations may be\noptional depending on active modules and configuration.\n\nDisabled providers should fail closed or log that they are disabled. A disabled\noptional provider is not the same as a broken mandatory provider.\n\n## Deployment mindset\n\nStart simple locally. Keep capability ownership correct. Then distribute only\nwhen scale, resilience, security, or team ownership requires it. The runtime\ntopology can change without moving business ownership out of the owning module.\n\nFor production, define:\n\n- which servers run which functional modules;\n- where public and private properties are sourced;\n- how credentials are injected and rotated;\n- how logs, health, audit events, and runtime diagnostics are collected;\n- how content packs, generated artifacts, and database migrations are released;\n- how rollback works for code, configuration, and imported content.\n\n## Local-to-production evolution\n\nThe first Nodics deployment should be understandable before it is distributed.\nLocal development proves ownership and behavior. Production topology then\nseparates runtime processes only for a reason: scale, resilience, security,\nteam ownership, data locality, or operational control.\n\n![Cloud deployment process](../assets/images/cloud-deployment-process.jpg \"Cloud deployment topology reference from the archived documentation set\")\n\n```mermaid\nflowchart LR\n  Local[\"Local developer machine<br/>Platform + WCMS + Cron + Axis\"] --> Shared[\"Shared test environment<br/>separate DBs and controlled imports\"]\n  Shared --> PreProd[\"Pre-production<br/>production-like properties and providers\"]\n  PreProd --> Prod[\"Production<br/>monitored, backed up, secured, scalable\"]\n```\n\nThe important rule is that deployment shape changes should not move business\nownership. Platform remains Platform whether it runs locally or across several\nnodes. WCMS remains WCMS whether media storage is local or cloud-backed. Cron\nremains Cron whether one scheduler node or multiple controlled nodes execute\njobs.\n\n## Release and rollback model\n\nA Nodics release is not only source code. A real release may include:\n\n- framework package versions;\n- customer project code;\n- environment/server property changes;\n- generated import manifests;\n- initialization, core, sample, and documentation data releases;\n- Axis frontend build;\n- database migration or data repair scripts;\n- provider configuration changes;\n- operational runbook updates.\n\nRollback must name which layer is rolling back. Rolling back Axis does not\nroll back imported WCMS content. Rolling back a content pack does not roll back\nframework source. Rolling back a server property may require process restart.\nThis separation is a strength only when operators can see and control each\nlayer.\n\n## Monitoring and recovery\n\nPlatform exposes registry and BackOffice projections for active modules. WCMS\nowns content-pack delivery and CMS route resolution. Cron owns scheduled work.\nAxis should show recovery states when these backends are unavailable instead of\ninventing another control plane.\n\nWhen something fails, identify the owner first:\n\n- login or BackOffice bootstrap: Platform/Profile/BackOffice;\n- CMS page delivery or documentation content: WCMS/CMS/content-pack owner;\n- scheduled job execution: Cron;\n- frontend rendering or shell interaction: Axis;\n- customer-specific behavior: customer project module.\n\n![Log management system](../assets/images/log-management-system.jpg \"Logging and output routing reference from the archived documentation set\")\n\nLogs are operational evidence, not only developer debugging text. A production\ntopology should make it possible to connect a user request, module action,\nscheduled job, import, export, and storage/provider call with a shared\ncorrelation story. Console output may be enough during local development, but\nshared environments need retained logs, safe rotation, searchability, and\nsecurity-aware redaction.\n\n## Operational acceptance checklist\n\nBefore calling an environment healthy, verify:\n\n| Area | Acceptance evidence |\n| --- | --- |\n| Process health | Platform, WCMS, Cron where required, and Axis are reachable on expected ports. |\n| Runtime graph | Each server logs or exposes the effective module graph it loaded. |\n| Module registry | Mandatory modules are active; optional modules match project intent. |\n| Data imports | Required releases validate, install, and record import history. |\n| Documentation | Framework, Axis, API, and customer documentation routes render through WCMS. |\n| Authentication | Reference or environment-specific employee login works through Platform. |\n| Authorization | Unauthorized calls fail closed and do not leak private data. |\n| Configuration | Public and private properties are sourced from the correct layer. |\n| Observability | Logs include correlation, enterprise, tenant where applicable, module, and safe status evidence. |\n| Recovery | Restarting servers preserves durable registry and imported content state. |\n\nThis checklist is intentionally practical. It lets a support engineer prove\nthe system from the outside before diving into source code.\n\n## Common incident examples\n\n| Symptom | First owner to inspect | Likely next check |\n| --- | --- | --- |\n| Axis shows BackOffice registry unavailable | Platform/BackOffice | Is port `4300` reachable and did Platform finish startup? |\n| Documentation route shows recovery | WCMS/content pack owner | Is port `4310` reachable and was the docs pack imported? |\n| Module disappeared after register | Platform registry API and Axis refresh state | Did the operation response update persisted state and frontend cache? |\n| Cron is registered but unavailable | Cron runtime observation | Is the Cron server running and reporting `nodics.cron`? |\n| Import release is invalid | Content-pack manifest owner | Were source files changed without regenerating manifests? |\n| Media upload exposes path-like data | WCMS Media | Is the API returning storage internals instead of safe contracts? |\n\n## Common mistakes\n\n- Treating environment or server modules as business capability owners.\n- Putting secrets into frontend `.env` files.\n- Deploying generated content without a version change.\n- Relying on process memory instead of durable registration or import history.\n- Ignoring negative tests, recovery states, and rollback behavior.\n\n## Verification\n\nFor a local developer or beginner operator, verify the operations model with\nthe reference acceptance script before trusting manual UI observations. Start\nfrom a known local database state, run the framework servers through the\ncustomer project, then confirm Platform, WCMS, Cron where required, and Axis\nare all reachable. The acceptance evidence should show module registry state,\ndocumentation import status, route health, and Cron lifecycle behavior.\n\nFor a shared environment, add environment-specific checks: dependency versions,\ndatabase backup and restore evidence, secret-source validation, log retention,\nhealth probes, restart behavior, and rollback steps for each imported data\nrelease. A production change is not verified merely because the application\nstarted. It is verified when the owning module, runtime process, imported\nrelease, security boundary, and rollback evidence can all be explained by an\noperator who did not write the code.\n\n## Next actions\n\nBefore production, write an environment-specific operations runbook that lists\nserver topology, dependency versions, secrets strategy, health checks,\nmonitoring, backup, restore, content-pack import process, and rollback steps.\n"
         },
         {
+          "code": "framework.future-module-documentation-pattern",
+          "title": "Future module documentation pattern",
+          "route": "/docs/framework/framework-future-module-documentation-pattern",
+          "section": "nodics-docs",
+          "sectionTitle": "Nodics docs",
+          "sectionOrder": 10,
+          "order": 70,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "How to document planned, partially implemented, and future functional modules without creating false runtime authority.",
+          "searchText": "Future module documentation pattern How to document planned, partially implemented, and future functional modules without creating false runtime authority. # Future module documentation pattern\n\nNodics will grow beyond Core, Platform, WCMS, Media, Cron, Docs, Axis backend\ndata, and the current reference customer project. Future functional modules may\ninclude Workflow, Commerce, Search, Event Management, Integration Management,\nPublishing, AI orchestration, Logistics, Telco, Finance, Education, or other\nindustry capabilities. This page defines how to document those modules before,\nduring, and after implementation without creating false authority.\n\nThe rule is direct: documentation may describe a planned capability, a design\ncontract, or a partially implemented slice, but it must say which state it is\nin. A reader should never confuse a concept page with production-ready\nruntime behavior.\n\n## Why this matters\n\nFor business users, future-module documentation explains product direction and\nbusiness value. It should answer: what problem does this capability solve, why\nwould an enterprise adopt it, how does it reduce operating cost or delivery\nrisk, and how does it fit with multi-enterprise, multi-tenant, modular Nodics?\n\nFor developers, future-module documentation prevents rushed placement. It\nshould answer: which functional module owns the capability, which technical\nmodules may be needed, which APIs and schemas are authoritative, what can be\ncustomized through configuration, and what must remain backend-owned.\n\nFor operators, future-module documentation explains runtime impact. It should\nanswer: which server will run it, what dependencies are mandatory or optional,\nwhat properties are public or private, what health evidence exists, how data is\ninitialized, and how rollback works.\n\n## Documentation maturity levels\n\nUse a clear maturity label whenever a module area is not fully complete:\n\n| Level | Meaning | Allowed content |\n| --- | --- | --- |\n| Concept | Business problem and direction are known, but implementation has not started. | Business value, personas, examples, target boundaries, open questions. |\n| Design contract | Ownership, APIs, schemas, or runtime behavior are being defined. | Architecture diagrams, data ownership, security model, proposed endpoints, acceptance criteria. |\n| Partial implementation | Some slices exist, but the module is not production-complete. | Implemented scope, missing scope, feature flags, known gaps, safe rollback. |\n| Operational | Runtime behavior, data release, tests, docs, and acceptance are current. | Full user guide, developer guide, DevOps guide, customization guide, verification evidence. |\n\nThe maturity label belongs near the top of the page. If a page mixes future\ndirection and implemented behavior, split the sections clearly.\n\n## Required page structure\n\nEvery future module page should include:\n\n1. **Business problem** — who needs the module and what pain it removes.\n2. **Business value** — faster delivery, lower customization cost, reduced\n   risk, better governance, scalability, or customer experience.\n3. **Beginner mental model** — a simple analogy or walkthrough.\n4. **Functional module ownership** — standard module identity and whether a\n   customer extension may customize it.\n5. **Technical module ownership** — where services, routes, schemas,\n   migrations, data, docs, and tests belong.\n6. **Runtime topology** — which server starts it and how it extends Core or\n   another standard module.\n7. **Security and governance** — authentication, authorization, tenant,\n   audit, data exposure, and secret boundaries.\n8. **Customization model** — configuration first, extension modules second,\n   framework-source change only when the capability itself changes.\n9. **Examples** — at least one business example and one developer or operator\n   example.\n10. **Common mistakes** — things future developers and AI tools must avoid.\n11. **Verification** — tests, generated data checks, local acceptance, and\n   runtime proof.\n\n## Example: documenting a future Workflow module\n\nA Workflow page should not begin with API endpoints. It should begin with the\nbusiness problem: enterprises need governed approval, task routing, escalation,\nreturn-to-sender, audit, and cross-module process visibility. Then it should\nexplain why a Workflow module is better than every module inventing its own\napproval table.\n\nThe developer section would say that `nodics.workflow` owns workflow\ndefinitions, states, transitions, assignments, SLA metadata, process history,\nand Workflow APIs. A Commerce return flow may start a workflow, but Commerce\ndoes not own the generic workflow engine. Axis may render assigned work,\napprovals, returned work, and process detail only when BackOffice reports the\nWorkflow capability as active and authorized.\n\nThe operator section would explain whether Workflow runs inside a Platform\nserver, a dedicated workflow server, or both. It would define scheduler\ndependency if escalations use Cron, event dependency if transitions publish\nevents, and data-import dependency if starter definitions are loaded from a\nrelease.\n\n## Example: documenting a future Commerce module\n\nA Commerce page should explain business outcomes: product catalog, pricing,\ncart, checkout, order lifecycle, returns, refunds, promotions, inventory, and\ncustomer experience. It should also explain boundaries. Product media belongs\nto Media/nMedia for storage and lifecycle, while Commerce owns the business\nrelationship between a product and selected media. Refund decisions belong to\nCommerce or order lifecycle ownership, not Catalog alone.\n\nFor developers, this prevents a classic mistake: adding refund actions to a\nCatalog page because the word “product” appears there. The page must show the\nactual domain owner and the runtime module that provides the operation.\n\n## Diagrams and visual guidance\n\nUse diagrams whenever a concept has multiple owners or ordered steps. Prefer\nsmall diagrams that show real authority:\n\n```mermaid\nflowchart LR\n  Idea[\"New capability idea\"] --> Business[\"Business problem and value\"]\n  Business --> Owner[\"Choose functional module owner\"]\n  Owner --> Technical[\"Choose technical module and folder\"]\n  Technical --> Runtime[\"Define runtime/server graph\"]\n  Runtime --> Data[\"Define APIs, schemas, data, docs\"]\n  Data --> Verify[\"Define tests and acceptance\"]\n```\n\nImages may be reused from the approved framework documentation assets when\nthey explain the exact concept. Do not add decorative images that make the page\nlook richer without teaching the reader something.\n\n## Customize and extend safely\n\nFuture module documentation must describe customization before implementation\ndetails. Partners should understand how to change behavior without forking the\nstandard framework source:\n\n- use module properties for defaults and policies;\n- use customer project environment/server configuration for deployment\n  topology and local overrides;\n- use customer extension modules to override or add services, routes,\n  renderers, and data when the customer needs a project-specific behavior;\n- keep standard functional module identity stable when a customer extension\n  customizes the standard capability;\n- avoid exposing every technical module as a business registry item.\n\nFor example, a customer may later create a project-specific Platform extension\nthat changes user onboarding behavior. Axis should still show Platform unless\nthe customer intentionally creates a new business capability. This keeps the\nbusiness model understandable while preserving runtime customization.\n\n## Common mistakes\n\n- Writing a future page as if all APIs already exist.\n- Hiding missing implementation behind marketing language.\n- Putting customer-specific behavior into a standard framework module.\n- Creating a frontend page before the backend capability contract exists.\n- Documenting code placement with a project-specific name where the contract\n  should work for any customer project.\n- Forgetting operator concerns such as deployment topology, properties,\n  secrets, data import, health, rollback, and observability.\n- Skipping examples because the module is still conceptual. Future pages need\n  examples even more, because they guide implementation.\n\n## Verification\n\nA future-module documentation page is accepted when it clearly states maturity,\nbusiness problem, owner, runtime graph, security boundary, customization model,\nexamples, common mistakes, and verification expectations. If implementation\ndoes not exist yet, the page must say so. If a partial implementation exists,\nthe page must list the implemented slice, missing slice, tests that currently\npass, and acceptance evidence still required before calling it operational.\n\nBefore importing documentation, run the docs generator and validator. Before\nclaiming runtime readiness, run the module tests and the local fresh-bootstrap\nacceptance checklist for the executing server graph.\n"
+        },
+        {
           "code": "core.overview",
           "title": "Core overview",
           "route": "/docs/framework/core-overview",
           "section": "nodics-core",
           "sectionTitle": "Nodics core",
           "sectionOrder": 20,
-          "order": 70,
+          "order": 80,
           "audience": [
             "architect",
             "developer",
@@ -170,7 +186,7 @@ module.exports = {
           "section": "nodics-platform",
           "sectionTitle": "Nodics platform",
           "sectionOrder": 30,
-          "order": 80,
+          "order": 90,
           "audience": [
             "architect",
             "developer",
@@ -186,7 +202,7 @@ module.exports = {
           "section": "nodics-platform",
           "sectionTitle": "Nodics platform",
           "sectionOrder": 30,
-          "order": 90,
+          "order": 100,
           "audience": [
             "architect",
             "developer",
@@ -202,7 +218,7 @@ module.exports = {
           "section": "nodics-wcms",
           "sectionTitle": "Nodics wcms",
           "sectionOrder": 40,
-          "order": 100,
+          "order": 110,
           "audience": [
             "architect",
             "developer",
@@ -218,7 +234,7 @@ module.exports = {
           "section": "nodics-wcms",
           "sectionTitle": "Nodics wcms",
           "sectionOrder": 40,
-          "order": 110,
+          "order": 120,
           "audience": [
             "architect",
             "developer",
@@ -234,7 +250,7 @@ module.exports = {
           "section": "nodics-cron",
           "sectionTitle": "Nodics cron",
           "sectionOrder": 50,
-          "order": 120,
+          "order": 130,
           "audience": [
             "architect",
             "developer",
@@ -250,7 +266,7 @@ module.exports = {
           "section": "nodics-docs",
           "sectionTitle": "Nodics docs",
           "sectionOrder": 10,
-          "order": 130,
+          "order": 140,
           "audience": [
             "architect",
             "developer",
@@ -3975,8 +3991,8 @@ module.exports = {
         "route": "/docs/framework/framework-customization-guide"
       },
       "next": {
-        "title": "Core overview",
-        "route": "/docs/framework/core-overview"
+        "title": "Future module documentation pattern",
+        "route": "/docs/framework/framework-future-module-documentation-pattern"
       },
       "source": {
         "repository": "nodics.docs",
@@ -3990,6 +4006,295 @@ module.exports = {
     "active": true
   },
   "record7": {
+    "code": "nodicsDocsComponentframeworkFutureModuleDocumentationPattern",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "framework.future-module-documentation-pattern",
+      "title": "Future module documentation pattern",
+      "route": "/docs/framework/framework-future-module-documentation-pattern",
+      "section": "nodics-docs",
+      "sectionTitle": "Nodics docs",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "How to document planned, partially implemented, and future functional modules without creating false runtime authority.",
+      "headings": [
+        {
+          "text": "Why this matters",
+          "anchor": "frameworkFutureModuleDocumentationPattern-1-why-this-matters",
+          "level": 2
+        },
+        {
+          "text": "Documentation maturity levels",
+          "anchor": "frameworkFutureModuleDocumentationPattern-2-documentation-maturity-levels",
+          "level": 2
+        },
+        {
+          "text": "Required page structure",
+          "anchor": "frameworkFutureModuleDocumentationPattern-3-required-page-structure",
+          "level": 2
+        },
+        {
+          "text": "Example: documenting a future Workflow module",
+          "anchor": "frameworkFutureModuleDocumentationPattern-4-example-documenting-a-future-workflow-module",
+          "level": 2
+        },
+        {
+          "text": "Example: documenting a future Commerce module",
+          "anchor": "frameworkFutureModuleDocumentationPattern-5-example-documenting-a-future-commerce-module",
+          "level": 2
+        },
+        {
+          "text": "Diagrams and visual guidance",
+          "anchor": "frameworkFutureModuleDocumentationPattern-6-diagrams-and-visual-guidance",
+          "level": 2
+        },
+        {
+          "text": "Customize and extend safely",
+          "anchor": "frameworkFutureModuleDocumentationPattern-7-customize-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "frameworkFutureModuleDocumentationPattern-8-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "frameworkFutureModuleDocumentationPattern-9-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Nodics will grow beyond Core, Platform, WCMS, Media, Cron, Docs, Axis backend data, and the current reference customer project. Future functional modules may include Workflow, Commerce, Search, Event Management, Integration Management, Publishing, AI orchestration, Logistics, Telco, Finance, Education, or other industry capabilities. This page defines how to document those modules before, during, and after implementation without creating false authority."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The rule is direct: documentation may describe a planned capability, a design contract, or a partially implemented slice, but it must say which state it is in. A reader should never confuse a concept page with production-ready runtime behavior."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Why this matters",
+          "anchor": "frameworkFutureModuleDocumentationPattern-1-why-this-matters"
+        },
+        {
+          "kind": "paragraph",
+          "text": "For business users, future-module documentation explains product direction and business value. It should answer: what problem does this capability solve, why would an enterprise adopt it, how does it reduce operating cost or delivery risk, and how does it fit with multi-enterprise, multi-tenant, modular Nodics?"
+        },
+        {
+          "kind": "paragraph",
+          "text": "For developers, future-module documentation prevents rushed placement. It should answer: which functional module owns the capability, which technical modules may be needed, which APIs and schemas are authoritative, what can be customized through configuration, and what must remain backend-owned."
+        },
+        {
+          "kind": "paragraph",
+          "text": "For operators, future-module documentation explains runtime impact. It should answer: which server will run it, what dependencies are mandatory or optional, what properties are public or private, what health evidence exists, how data is initialized, and how rollback works."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Documentation maturity levels",
+          "anchor": "frameworkFutureModuleDocumentationPattern-2-documentation-maturity-levels"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Use a clear maturity label whenever a module area is not fully complete:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Level",
+            "Meaning",
+            "Allowed content"
+          ],
+          "rows": [
+            [
+              "Concept",
+              "Business problem and direction are known, but implementation has not started.",
+              "Business value, personas, examples, target boundaries, open questions."
+            ],
+            [
+              "Design contract",
+              "Ownership, APIs, schemas, or runtime behavior are being defined.",
+              "Architecture diagrams, data ownership, security model, proposed endpoints, acceptance criteria."
+            ],
+            [
+              "Partial implementation",
+              "Some slices exist, but the module is not production-complete.",
+              "Implemented scope, missing scope, feature flags, known gaps, safe rollback."
+            ],
+            [
+              "Operational",
+              "Runtime behavior, data release, tests, docs, and acceptance are current.",
+              "Full user guide, developer guide, DevOps guide, customization guide, verification evidence."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "The maturity label belongs near the top of the page. If a page mixes future direction and implemented behavior, split the sections clearly."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Required page structure",
+          "anchor": "frameworkFutureModuleDocumentationPattern-3-required-page-structure"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Every future module page should include:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "**Business problem** — who needs the module and what pain it removes.",
+            "**Business value** — faster delivery, lower customization cost, reduced risk, better governance, scalability, or customer experience.",
+            "**Beginner mental model** — a simple analogy or walkthrough.",
+            "**Functional module ownership** — standard module identity and whether a customer extension may customize it.",
+            "**Technical module ownership** — where services, routes, schemas, migrations, data, docs, and tests belong.",
+            "**Runtime topology** — which server starts it and how it extends Core or another standard module.",
+            "**Security and governance** — authentication, authorization, tenant, audit, data exposure, and secret boundaries.",
+            "**Customization model** — configuration first, extension modules second, framework-source change only when the capability itself changes.",
+            "**Examples** — at least one business example and one developer or operator example.",
+            "**Common mistakes** — things future developers and AI tools must avoid.",
+            "**Verification** — tests, generated data checks, local acceptance, and runtime proof."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Example: documenting a future Workflow module",
+          "anchor": "frameworkFutureModuleDocumentationPattern-4-example-documenting-a-future-workflow-module"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A Workflow page should not begin with API endpoints. It should begin with the business problem: enterprises need governed approval, task routing, escalation, return-to-sender, audit, and cross-module process visibility. Then it should explain why a Workflow module is better than every module inventing its own approval table."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The developer section would say that `nodics.workflow` owns workflow definitions, states, transitions, assignments, SLA metadata, process history, and Workflow APIs. A Commerce return flow may start a workflow, but Commerce does not own the generic workflow engine. Axis may render assigned work, approvals, returned work, and process detail only when BackOffice reports the Workflow capability as active and authorized."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The operator section would explain whether Workflow runs inside a Platform server, a dedicated workflow server, or both. It would define scheduler dependency if escalations use Cron, event dependency if transitions publish events, and data-import dependency if starter definitions are loaded from a release."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Example: documenting a future Commerce module",
+          "anchor": "frameworkFutureModuleDocumentationPattern-5-example-documenting-a-future-commerce-module"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A Commerce page should explain business outcomes: product catalog, pricing, cart, checkout, order lifecycle, returns, refunds, promotions, inventory, and customer experience. It should also explain boundaries. Product media belongs to Media/nMedia for storage and lifecycle, while Commerce owns the business relationship between a product and selected media. Refund decisions belong to Commerce or order lifecycle ownership, not Catalog alone."
+        },
+        {
+          "kind": "paragraph",
+          "text": "For developers, this prevents a classic mistake: adding refund actions to a Catalog page because the word “product” appears there. The page must show the actual domain owner and the runtime module that provides the operation."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Diagrams and visual guidance",
+          "anchor": "frameworkFutureModuleDocumentationPattern-6-diagrams-and-visual-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Use diagrams whenever a concept has multiple owners or ordered steps. Prefer small diagrams that show real authority:"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Idea[\"New capability idea\"] --> Business[\"Business problem and value\"]\n  Business --> Owner[\"Choose functional module owner\"]\n  Owner --> Technical[\"Choose technical module and folder\"]\n  Technical --> Runtime[\"Define runtime/server graph\"]\n  Runtime --> Data[\"Define APIs, schemas, data, docs\"]\n  Data --> Verify[\"Define tests and acceptance\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Images may be reused from the approved framework documentation assets when they explain the exact concept. Do not add decorative images that make the page look richer without teaching the reader something."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customize and extend safely",
+          "anchor": "frameworkFutureModuleDocumentationPattern-7-customize-and-extend-safely"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Future module documentation must describe customization before implementation details. Partners should understand how to change behavior without forking the standard framework source:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "use module properties for defaults and policies;",
+            "use customer project environment/server configuration for deployment topology and local overrides;",
+            "use customer extension modules to override or add services, routes, renderers, and data when the customer needs a project-specific behavior;",
+            "keep standard functional module identity stable when a customer extension customizes the standard capability;",
+            "avoid exposing every technical module as a business registry item."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "For example, a customer may later create a project-specific Platform extension that changes user onboarding behavior. Axis should still show Platform unless the customer intentionally creates a new business capability. This keeps the business model understandable while preserving runtime customization."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "frameworkFutureModuleDocumentationPattern-8-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Writing a future page as if all APIs already exist.",
+            "Hiding missing implementation behind marketing language.",
+            "Putting customer-specific behavior into a standard framework module.",
+            "Creating a frontend page before the backend capability contract exists.",
+            "Documenting code placement with a project-specific name where the contract should work for any customer project.",
+            "Forgetting operator concerns such as deployment topology, properties, secrets, data import, health, rollback, and observability.",
+            "Skipping examples because the module is still conceptual. Future pages need examples even more, because they guide implementation."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "frameworkFutureModuleDocumentationPattern-9-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A future-module documentation page is accepted when it clearly states maturity, business problem, owner, runtime graph, security boundary, customization model, examples, common mistakes, and verification expectations. If implementation does not exist yet, the page must say so. If a partial implementation exists, the page must list the implemented slice, missing slice, tests that currently pass, and acceptance evidence still required before calling it operational."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Before importing documentation, run the docs generator and validator. Before claiming runtime readiness, run the module tests and the local fresh-bootstrap acceptance checklist for the executing server graph."
+        }
+      ],
+      "searchText": "Future module documentation pattern How to document planned, partially implemented, and future functional modules without creating false runtime authority. # Future module documentation pattern\n\nNodics will grow beyond Core, Platform, WCMS, Media, Cron, Docs, Axis backend\ndata, and the current reference customer project. Future functional modules may\ninclude Workflow, Commerce, Search, Event Management, Integration Management,\nPublishing, AI orchestration, Logistics, Telco, Finance, Education, or other\nindustry capabilities. This page defines how to document those modules before,\nduring, and after implementation without creating false authority.\n\nThe rule is direct: documentation may describe a planned capability, a design\ncontract, or a partially implemented slice, but it must say which state it is\nin. A reader should never confuse a concept page with production-ready\nruntime behavior.\n\n## Why this matters\n\nFor business users, future-module documentation explains product direction and\nbusiness value. It should answer: what problem does this capability solve, why\nwould an enterprise adopt it, how does it reduce operating cost or delivery\nrisk, and how does it fit with multi-enterprise, multi-tenant, modular Nodics?\n\nFor developers, future-module documentation prevents rushed placement. It\nshould answer: which functional module owns the capability, which technical\nmodules may be needed, which APIs and schemas are authoritative, what can be\ncustomized through configuration, and what must remain backend-owned.\n\nFor operators, future-module documentation explains runtime impact. It should\nanswer: which server will run it, what dependencies are mandatory or optional,\nwhat properties are public or private, what health evidence exists, how data is\ninitialized, and how rollback works.\n\n## Documentation maturity levels\n\nUse a clear maturity label whenever a module area is not fully complete:\n\n| Level | Meaning | Allowed content |\n| --- | --- | --- |\n| Concept | Business problem and direction are known, but implementation has not started. | Business value, personas, examples, target boundaries, open questions. |\n| Design contract | Ownership, APIs, schemas, or runtime behavior are being defined. | Architecture diagrams, data ownership, security model, proposed endpoints, acceptance criteria. |\n| Partial implementation | Some slices exist, but the module is not production-complete. | Implemented scope, missing scope, feature flags, known gaps, safe rollback. |\n| Operational | Runtime behavior, data release, tests, docs, and acceptance are current. | Full user guide, developer guide, DevOps guide, customization guide, verification evidence. |\n\nThe maturity label belongs near the top of the page. If a page mixes future\ndirection and implemented behavior, split the sections clearly.\n\n## Required page structure\n\nEvery future module page should include:\n\n1. **Business problem** — who needs the module and what pain it removes.\n2. **Business value** — faster delivery, lower customization cost, reduced\n   risk, better governance, scalability, or customer experience.\n3. **Beginner mental model** — a simple analogy or walkthrough.\n4. **Functional module ownership** — standard module identity and whether a\n   customer extension may customize it.\n5. **Technical module ownership** — where services, routes, schemas,\n   migrations, data, docs, and tests belong.\n6. **Runtime topology** — which server starts it and how it extends Core or\n   another standard module.\n7. **Security and governance** — authentication, authorization, tenant,\n   audit, data exposure, and secret boundaries.\n8. **Customization model** — configuration first, extension modules second,\n   framework-source change only when the capability itself changes.\n9. **Examples** — at least one business example and one developer or operator\n   example.\n10. **Common mistakes** — things future developers and AI tools must avoid.\n11. **Verification** — tests, generated data checks, local acceptance, and\n   runtime proof.\n\n## Example: documenting a future Workflow module\n\nA Workflow page should not begin with API endpoints. It should begin with the\nbusiness problem: enterprises need governed approval, task routing, escalation,\nreturn-to-sender, audit, and cross-module process visibility. Then it should\nexplain why a Workflow module is better than every module inventing its own\napproval table.\n\nThe developer section would say that `nodics.workflow` owns workflow\ndefinitions, states, transitions, assignments, SLA metadata, process history,\nand Workflow APIs. A Commerce return flow may start a workflow, but Commerce\ndoes not own the generic workflow engine. Axis may render assigned work,\napprovals, returned work, and process detail only when BackOffice reports the\nWorkflow capability as active and authorized.\n\nThe operator section would explain whether Workflow runs inside a Platform\nserver, a dedicated workflow server, or both. It would define scheduler\ndependency if escalations use Cron, event dependency if transitions publish\nevents, and data-import dependency if starter definitions are loaded from a\nrelease.\n\n## Example: documenting a future Commerce module\n\nA Commerce page should explain business outcomes: product catalog, pricing,\ncart, checkout, order lifecycle, returns, refunds, promotions, inventory, and\ncustomer experience. It should also explain boundaries. Product media belongs\nto Media/nMedia for storage and lifecycle, while Commerce owns the business\nrelationship between a product and selected media. Refund decisions belong to\nCommerce or order lifecycle ownership, not Catalog alone.\n\nFor developers, this prevents a classic mistake: adding refund actions to a\nCatalog page because the word “product” appears there. The page must show the\nactual domain owner and the runtime module that provides the operation.\n\n## Diagrams and visual guidance\n\nUse diagrams whenever a concept has multiple owners or ordered steps. Prefer\nsmall diagrams that show real authority:\n\n```mermaid\nflowchart LR\n  Idea[\"New capability idea\"] --> Business[\"Business problem and value\"]\n  Business --> Owner[\"Choose functional module owner\"]\n  Owner --> Technical[\"Choose technical module and folder\"]\n  Technical --> Runtime[\"Define runtime/server graph\"]\n  Runtime --> Data[\"Define APIs, schemas, data, docs\"]\n  Data --> Verify[\"Define tests and acceptance\"]\n```\n\nImages may be reused from the approved framework documentation assets when\nthey explain the exact concept. Do not add decorative images that make the page\nlook richer without teaching the reader something.\n\n## Customize and extend safely\n\nFuture module documentation must describe customization before implementation\ndetails. Partners should understand how to change behavior without forking the\nstandard framework source:\n\n- use module properties for defaults and policies;\n- use customer project environment/server configuration for deployment\n  topology and local overrides;\n- use customer extension modules to override or add services, routes,\n  renderers, and data when the customer needs a project-specific behavior;\n- keep standard functional module identity stable when a customer extension\n  customizes the standard capability;\n- avoid exposing every technical module as a business registry item.\n\nFor example, a customer may later create a project-specific Platform extension\nthat changes user onboarding behavior. Axis should still show Platform unless\nthe customer intentionally creates a new business capability. This keeps the\nbusiness model understandable while preserving runtime customization.\n\n## Common mistakes\n\n- Writing a future page as if all APIs already exist.\n- Hiding missing implementation behind marketing language.\n- Putting customer-specific behavior into a standard framework module.\n- Creating a frontend page before the backend capability contract exists.\n- Documenting code placement with a project-specific name where the contract\n  should work for any customer project.\n- Forgetting operator concerns such as deployment topology, properties,\n  secrets, data import, health, rollback, and observability.\n- Skipping examples because the module is still conceptual. Future pages need\n  examples even more, because they guide implementation.\n\n## Verification\n\nA future-module documentation page is accepted when it clearly states maturity,\nbusiness problem, owner, runtime graph, security boundary, customization model,\nexamples, common mistakes, and verification expectations. If implementation\ndoes not exist yet, the page must say so. If a partial implementation exists,\nthe page must list the implemented slice, missing slice, tests that currently\npass, and acceptance evidence still required before calling it operational.\n\nBefore importing documentation, run the docs generator and validator. Before\nclaiming runtime readiness, run the module tests and the local fresh-bootstrap\nacceptance checklist for the executing server graph.\n",
+      "previous": {
+        "title": "Runtime and DevOps operations",
+        "route": "/docs/framework/framework-devops-runtime"
+      },
+      "next": {
+        "title": "Core overview",
+        "route": "/docs/framework/core-overview"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.docs",
+        "technicalModule": "documentation",
+        "path": "content/framework/future-module-documentation-pattern.md",
+        "wordCount": 1174,
+        "checksum": "9c3029d2dc15e1ef28fa3a35e6739fef087fd1350bb8e842fe8073ae069c901a"
+      }
+    },
+    "active": true
+  },
+  "record8": {
     "code": "nodicsDocsComponentcoreOverview",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -4434,8 +4739,8 @@ module.exports = {
       ],
       "searchText": "Core overview Beginner, developer, and operations guide to the Core runtime foundation, request path, cache, events, configuration, and quality rules. # Core overview\n\n`nodics.core` is the foundation every Nodics runtime loads before any higher\nfunctional module such as Platform, WCMS, Cron, Workflow, or Commerce. It is\nnot a business screen and it is not a customer project. It is the reusable\nruntime framework that gives every server the same language for modules,\nconfiguration, routing, services, schemas, data releases, imports, tests,\nsecurity hooks, and operational contracts.\n\nFor a beginner, Core is the engine room. Most business users will not open a\nCore page in Axis every day, but every business capability depends on it being\npredictable. If Core is messy, every module above it becomes harder to secure,\ncustomize, test, and operate.\n\n## Business purpose\n\nCore reduces the cost of building enterprise applications by solving repeated\ntechnical problems once. A project should not reinvent module loading, layered\nconfiguration, API exposure, database model registration, import validation,\nservice discovery, logging, or test scaffolding for every new capability.\n\nThe business value is indirect but powerful:\n\n| Business concern | Core contribution |\n| --- | --- |\n| Faster delivery | New modules start from a known runtime shape instead of a blank server. |\n| Safer customization | Customer behavior can load later without editing framework source. |\n| Upgradeability | Shared contracts stay in one foundation and are tested consistently. |\n| Operations | Startup, logs, imports, schemas, routers, and validation follow repeatable rules. |\n| Governance | APIs, data releases, generated artifacts, and module ownership are explicit. |\n\nCore is what lets a partner trust that Platform, WCMS, Cron, and future modules\nare not unrelated applications glued together by convention.\n\n## Beginner mental model\n\nImagine building several business products: a content platform, a scheduled\njob engine, a commerce application, and a documentation portal. Without a\nframework, each product might invent its own config files, service structure,\ndatabase connection, routing style, error shape, and tests. That makes the\nwhole ecosystem difficult to learn.\n\nCore gives them a shared base:\n\n```mermaid\nflowchart TB\n  Core[\"nodics.core<br/>runtime foundation\"] --> Config[\"Configuration layers\"]\n  Core --> Loader[\"Module loader and lifecycle\"]\n  Core --> Routing[\"Routers and API exposure\"]\n  Core --> Services[\"Services, facades, controllers\"]\n  Core --> Data[\"Schemas, imports, exports, generated data\"]\n  Core --> Security[\"Auth, validation, tokens, guards\"]\n  Core --> Quality[\"Testing and tooling\"]\n\n  Config --> Platform[\"nodics.platform\"]\n  Loader --> WCMS[\"nodics.wcms\"]\n  Routing --> Cron[\"nodics.cron\"]\n  Services --> Future[\"future functional modules\"]\n```\n\nEvery higher module builds on this foundation. A module can extend another\nmodule, but it should not bypass Core contracts.\n\n## What Core owns\n\nCore owns framework-level technical capabilities, including:\n\n- module discovery and runtime loading;\n- configuration precedence and property merging;\n- common utilities and status/error definition patterns;\n- database connection and model registration contracts;\n- routing and API category exposure;\n- controller, facade, service, and pipeline conventions;\n- authentication, token, validation, and security infrastructure hooks;\n- import/export and data release mechanics;\n- event, cache, search, test, and tooling foundations;\n- generated LLM context and quality governance through nSetup/nTooling.\n\nCore does not own customer business rules. If a customer needs special\nbehavior, the first question is whether the behavior belongs in a customer\nproject module, a later-loaded extension of an existing functional module, or a\nnew functional module. Do not put customer behavior into Core just because\nCore is loaded everywhere.\n\n## Runtime loading model\n\nCore always loads before higher functional modules. The exact server graph is\ndefined by the customer project and server configuration.\n\n![Request process design](../assets/images/request-process-design.jpg \"Request processing reference from the archived documentation set\")\n\n```mermaid\nflowchart LR\n  Package[\"Package dependency<br/>code is available\"] --> Extends[\"Server/module extends<br/>code is selected\"]\n  Extends --> Index[\"Module index/load order<br/>merge precedence\"]\n  Index --> Runtime[\"Running server<br/>effective services, routes, data\"]\n```\n\nThese are different concepts:\n\n- package dependency makes code available to npm;\n- module `extends` describes functional inheritance;\n- server `extends` describes the effective boot graph;\n- index/load order decides which services and configuration win during merge;\n- BackOffice registration decides which functional capability is accepted and\n  active for business use.\n\nConfusing these concepts is one of the fastest ways to create hidden bugs.\n\n## Request processing model\n\nEvery API should feel boringly consistent to a developer, tester, and operator.\nThe request enters through Express, passes through Nodics routing and request\nprocessing, reaches the owning controller/facade/service layer, and only then\ntouches persistence, cache, search, events, or provider integrations through\napproved contracts.\n\n![Request processor flow](../assets/images/request-processor-flow.jpg \"Request processor flow reference from the archived documentation set\")\n\nThis flow is why Nodics discourages shortcuts. A validation rule, permission\ncheck, tenant resolution, error response, cache lookup, or persistence call\nshould live in the layer that owns that responsibility. If a feature works only\nbecause one route manually skipped the shared request path, it will become a\nsecurity and regression risk later.\n\n## Cache, search, events, and logging\n\nCore also supplies reusable infrastructure seams. These seams are intentionally\nmodule-owned so a customer project can change the provider or policy without\nrewriting business APIs.\n\n![API cache flow](../assets/images/api-cache-flow.jpg \"API cache flow reference from the archived documentation set\")\n\n![Item cache flow](../assets/images/item-cache-flow.jpg \"Item cache flow reference from the archived documentation set\")\n\n![Search cache flow](../assets/images/search-cache-flow.jpg \"Search cache flow reference from the archived documentation set\")\n\n![Event handler process](../assets/images/event-handler-process.jpg \"Event handler process reference from the archived documentation set\")\n\n![EMS producer system](../assets/images/ems-producer-system.jpg \"EMS producer reference from the archived documentation set\")\n\n![EMS consumer system](../assets/images/ems-consumer-system.jpg \"EMS consumer reference from the archived documentation set\")\n\nFor example, a module may cache API responses, individual models, or search\nresults, but the route should not hardcode a specific cache backend. A module\nmay publish or consume events, but it should do that through nEvent/nEms\ncontracts rather than calling a message broker directly from random business\ncode. Logs should carry enough context to explain which module, tenant,\nrequest, job, import, or event caused the action.\n\n## Configuration-first rule\n\nCore supports layered configuration so projects can change behavior without\nediting framework source. Defaults should live in the module that owns the\nbehavior. Project, environment, server, node, tenant, provider, and persisted\nconfiguration layers may override or narrow those defaults.\n\nThe rule is not \"everything goes in properties.\" The rule is \"put each setting\nwhere its authority belongs.\"\n\n| Need | Correct direction |\n| --- | --- |\n| Framework-wide default | Owning framework module configuration. |\n| Project-specific default | Customer project configuration. |\n| Local server port/database | Environment/server configuration. |\n| Secret or machine-specific path | Private local/environment configuration, never committed casually. |\n| Status, lifecycle, error code | Owning status-definition contract, not random properties. |\n| Generated import checksum | Generated manifest from source data, not manual editing. |\n\n## Developer workflow\n\nWhen changing Core or a module that depends on Core, use this sequence:\n\n1. Identify the owning functional module and technical module.\n2. Read the nearest `AGENTS.md`, README, and relevant contracts.\n3. Check whether existing configuration or extension seams solve the need.\n4. Write export-friendly, documented JavaScript in the correct folder.\n5. Keep generated artifacts generated from source.\n6. Add focused tests for default behavior and customization behavior.\n7. Run quality, docs, AI, LLM, module, and acceptance checks appropriate to the\n   changed surface.\n\nThis sequence protects future custom modules. A partner should be able to\noverride a service, replace a provider, or adjust configuration without\npatching framework source.\n\n## Axis visibility\n\nCore is a mandatory functional module in the current Axis-backed reference\nstack, but Axis should not expose every Core technical module as a separate\nbusiness registry card. Core appears as a high-level foundation. Internal\ntechnical modules remain developer details unless an owning functional module\nexposes a browser-safe capability.\n\nAxis uses Core indirectly through Platform, BackOffice, WCMS, Cron, and other\nmodule APIs. The browser must not import Core source, execute Core services,\nor become a second runtime loader.\n\n## DevOps and QA checks\n\nCore changes deserve broad verification because every runtime depends on them.\nAt minimum, prove:\n\n- Platform starts with Core loaded first;\n- WCMS starts and can import content packs;\n- Cron starts when selected by the runtime graph;\n- generated data manifests validate;\n- module LLM context generation and validation still pass;\n- API category exposure remains intentional;\n- configuration precedence logs remain explainable;\n- fresh local acceptance can rebuild from empty local databases;\n- no generated files drift from their source definitions.\n\n## Common mistakes\n\n- Putting customer-specific behavior into Core because every server loads it.\n- Treating package dependency order as service override order.\n- Hiding lifecycle states or error codes in unrelated properties.\n- Editing generated data instead of fixing source definitions or generators.\n- Exposing every technical module as a business capability in Axis.\n- Bypassing backend module authority by adding frontend-only logic.\n\nCore is powerful because it is boringly consistent. Keep it that way.\n\n## Verification\n\nCore verification should always be broader than the edited file because every\nruntime server depends on Core. For documentation-only changes, regenerate the\nframework documentation pack and run the docs validator. For source or\nconfiguration changes, run root validation, generated LLM context generation\nand validation, documentation quality checks, focused module tests, and at\nleast one runtime prepare or acceptance path through the reference customer\nproject.\n\nThe practical local proof is: Platform starts, WCMS starts, Cron starts when\nselected, imports validate, documentation renders, module registry state\npersists, and Axis never needs direct Core source access. If a Core change can\nonly be proven by one isolated unit test, it is probably under-tested for a\nframework foundation.\n",
       "previous": {
-        "title": "Runtime and DevOps operations",
-        "route": "/docs/framework/framework-devops-runtime"
+        "title": "Future module documentation pattern",
+        "route": "/docs/framework/framework-future-module-documentation-pattern"
       },
       "next": {
         "title": "Platform overview",
@@ -4452,7 +4757,7 @@ module.exports = {
     },
     "active": true
   },
-  "record8": {
+  "record9": {
     "code": "nodicsDocsComponentplatformOverview",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -4873,7 +5178,7 @@ module.exports = {
     },
     "active": true
   },
-  "record9": {
+  "record10": {
     "code": "nodicsDocsComponentplatformModuleRegistry",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -5327,7 +5632,7 @@ module.exports = {
     },
     "active": true
   },
-  "record10": {
+  "record11": {
     "code": "nodicsDocsComponentwcmsOverview",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -5867,7 +6172,7 @@ module.exports = {
     },
     "active": true
   },
-  "record11": {
+  "record12": {
     "code": "nodicsDocsComponentwcmsMediaManagement",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -6398,7 +6703,7 @@ module.exports = {
     },
     "active": true
   },
-  "record12": {
+  "record13": {
     "code": "nodicsDocsComponentcronOperations",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -6943,7 +7248,7 @@ module.exports = {
     },
     "active": true
   },
-  "record13": {
+  "record14": {
     "code": "nodicsDocsComponentdocsOverview",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",

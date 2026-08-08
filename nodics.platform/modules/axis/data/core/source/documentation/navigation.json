@@ -1,6 +1,6 @@
 {
   "pack": "nodics.platform.axis",
-  "version": "0.3.25",
+  "version": "0.3.26",
   "contractVersion": 1,
   "title": "Nodics Axis",
   "pages": [
@@ -147,6 +147,18 @@
       "evidence": "data/core/source/documentation/pages/media-management.md",
       "summary": "Understand the governed Media Management navigation, route shell, backend ownership, storage and delivery boundaries, and upcoming capability slices.",
       "audience": ["administrator", "operator", "developer", "business-user"]
+    },
+    {
+      "code": "openapi-reference",
+      "title": "Swagger and OpenAPI Reference",
+      "route": "/docs/nodics-axis/openapi-reference",
+      "section": "Axis Capabilities",
+      "sectionOrder": 30,
+      "order": 118,
+      "source": "pages/openapi-reference.md",
+      "evidence": "data/core/source/documentation/pages/openapi-reference.md",
+      "summary": "Explain how Axis presents backend-owned Swagger and OpenAPI contracts grouped by registered runtime, functional module, and authorized API category.",
+      "audience": ["developer", "operator", "administrator", "integration", "ai-tool"]
     },
     {
       "code": "feature-delivery",

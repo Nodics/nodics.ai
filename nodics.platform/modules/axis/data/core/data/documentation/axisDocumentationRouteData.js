@@ -158,6 +158,18 @@ module.exports = {
     "active": true
   },
   "record12": {
+    "code": "axisDocsRouteopenapireference",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/openapi-reference",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPageopenapireference",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record13": {
     "code": "axisDocsRoutefeaturedelivery",
     "site": "axisDocumentationSite",
     "path": "/docs/nodics-axis/feature-delivery",
@@ -169,7 +181,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record13": {
+  "record14": {
     "code": "axisDocsRouteimplementationcontract",
     "site": "axisDocumentationSite",
     "path": "/docs/nodics-axis/implementation-contract",
