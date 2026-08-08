@@ -14,12 +14,12 @@
 /** @description Generated Nodics framework documentation routes. */
 module.exports = {
   "record0": {
-    "code": "nodicsDocsRoutecoreOverview",
+    "code": "nodicsDocsRouteframeworkOverview",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework",
     "locale": "en",
     "channel": "web",
-    "page": "nodicsDocsPagecoreOverview",
+    "page": "nodicsDocsPageframeworkOverview",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
     "accessMode": "AUTHENTICATED",
@@ -50,6 +50,18 @@ module.exports = {
     "active": true
   },
   "record3": {
+    "code": "nodicsDocsRouteframeworkLocalVerificationChecklist",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/framework-local-verification-checklist",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPageframeworkLocalVerificationChecklist",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record4": {
     "code": "nodicsDocsRouteframeworkCustomizationGuide",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-customization-guide",
@@ -61,7 +73,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record4": {
+  "record5": {
     "code": "nodicsDocsRouteframeworkDevopsRuntime",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-devops-runtime",
@@ -73,7 +85,31 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record5": {
+  "record6": {
+    "code": "nodicsDocsRoutecoreOverview",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/core-overview",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagecoreOverview",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record7": {
+    "code": "nodicsDocsRouteplatformOverview",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/platform-overview",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPageplatformOverview",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record8": {
     "code": "nodicsDocsRouteplatformModuleRegistry",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/platform-module-registry",
@@ -85,7 +121,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record6": {
+  "record9": {
     "code": "nodicsDocsRoutewcmsOverview",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/wcms-overview",
@@ -97,7 +133,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record7": {
+  "record10": {
     "code": "nodicsDocsRoutewcmsMediaManagement",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/wcms-media-management",
@@ -109,7 +145,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record8": {
+  "record11": {
     "code": "nodicsDocsRoutecronOperations",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/cron-operations",

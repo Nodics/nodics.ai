@@ -14,7 +14,7 @@
 /** @description Generated Nodics framework documentation pages. */
 module.exports = {
   "record0": {
-    "code": "nodicsDocsPagecoreOverview",
+    "code": "nodicsDocsPageframeworkOverview",
     "name": "What is Nodics?",
     "cmsSite": [
       "nodicsDocumentationSite"
@@ -30,7 +30,7 @@ module.exports = {
         "active": true
       },
       {
-        "target": "nodicsDocsComponentcoreOverview",
+        "target": "nodicsDocsComponentframeworkOverview",
         "slot": "article",
         "index": 10,
         "active": true
@@ -89,6 +89,31 @@ module.exports = {
     "active": true
   },
   "record3": {
+    "code": "nodicsDocsPageframeworkLocalVerificationChecklist",
+    "name": "Local verification and acceptance checklist",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentframeworkLocalVerificationChecklist",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record4": {
     "code": "nodicsDocsPageframeworkCustomizationGuide",
     "name": "Customization and extension guide",
     "cmsSite": [
@@ -113,7 +138,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record4": {
+  "record5": {
     "code": "nodicsDocsPageframeworkDevopsRuntime",
     "name": "Runtime and DevOps operations",
     "cmsSite": [
@@ -138,7 +163,57 @@ module.exports = {
     ],
     "active": true
   },
-  "record5": {
+  "record6": {
+    "code": "nodicsDocsPagecoreOverview",
+    "name": "Core overview",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentcoreOverview",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record7": {
+    "code": "nodicsDocsPageplatformOverview",
+    "name": "Platform overview",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentplatformOverview",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record8": {
     "code": "nodicsDocsPageplatformModuleRegistry",
     "name": "Functional module registry",
     "cmsSite": [
@@ -163,7 +238,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record6": {
+  "record9": {
     "code": "nodicsDocsPagewcmsOverview",
     "name": "WCMS content management",
     "cmsSite": [
@@ -188,7 +263,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record7": {
+  "record10": {
     "code": "nodicsDocsPagewcmsMediaManagement",
     "name": "Media management",
     "cmsSite": [
@@ -213,7 +288,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record8": {
+  "record11": {
     "code": "nodicsDocsPagecronOperations",
     "name": "Cron operations",
     "cmsSite": [

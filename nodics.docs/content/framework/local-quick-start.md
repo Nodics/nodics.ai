@@ -398,6 +398,21 @@ running system.
 
 ## Next actions
 
-Once the reference stack is running, read the customization guide before
-changing code. Use Axis customization for presentation and project modules for
-backend behavior.
+Once the reference stack is running, continue in this sequence:
+
+1. Run the local verification and acceptance checklist so the stack is proven,
+   not only started.
+2. Read the modular architecture page to understand ownership boundaries.
+3. Read the Core and Platform overviews to understand the foundation and
+   employee-facing backend contracts.
+4. Review the functional module registry to understand mandatory and optional
+   capability lifecycle.
+5. Review WCMS, Media, and Cron based on the capability you want to explore.
+6. Read the customization guide before changing code.
+7. Make the first customization in the owning customer project or backend
+   content pack instead of editing framework source.
+
+This order keeps the first day practical: see the system, verify it, learn the
+owners, then customize safely. If a beginner starts with random source files,
+Nodics looks like folders. If they start with the running product and the
+verification checklist, Nodics looks like an ecosystem.

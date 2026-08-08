@@ -1,10 +1,10 @@
 {
   "contract": "nodics.documentation/v1",
-  "release": "0.3.9",
+  "release": "0.4.1",
   "documents": [
     {
       "id": "framework.what-is-nodics",
-      "recordCode": "core.overview",
+      "recordCode": "framework.overview",
       "functionalModule": "nodics.docs",
       "technicalModule": "documentation",
       "title": "What is Nodics?",
@@ -31,6 +31,15 @@
       "content": "content/framework/local-quick-start.md"
     },
     {
+      "id": "framework.local-verification-checklist",
+      "functionalModule": "nodics.core",
+      "technicalModule": "nSetup",
+      "title": "Local verification and acceptance checklist",
+      "summary": "How to prove the local framework, customer-project servers, Axis, documentation, registry, imports, WCMS, and Cron are healthy.",
+      "locale": "en",
+      "content": "content/framework/local-verification-checklist.md"
+    },
+    {
       "id": "framework.customization-guide",
       "functionalModule": "nodics.core",
       "technicalModule": "nSetup",
@@ -47,6 +56,24 @@
       "summary": "Runtime topology, dependencies, public and private properties, deployment, monitoring, and recovery guidance.",
       "locale": "en",
       "content": "content/framework/devops-runtime.md"
+    },
+    {
+      "id": "core.overview",
+      "functionalModule": "nodics.core",
+      "technicalModule": "nSetup",
+      "title": "Core overview",
+      "summary": "Beginner, developer, and operations guide to the Core runtime foundation, request path, cache, events, configuration, and quality rules.",
+      "locale": "en",
+      "content": "content/nodics.core/overview.md"
+    },
+    {
+      "id": "platform.overview",
+      "functionalModule": "nodics.platform",
+      "technicalModule": "profile",
+      "title": "Platform overview",
+      "summary": "How Platform, Profile, BackOffice, authentication, authorization, Axis backend content, and module governance fit together.",
+      "locale": "en",
+      "content": "content/nodics.platform/overview.md"
     },
     {
       "id": "platform.module-registry",
