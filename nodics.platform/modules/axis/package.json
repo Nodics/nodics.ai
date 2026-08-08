@@ -1,0 +1,34 @@
+{
+  "name": "axis",
+  "index": "60.25",
+  "description": "Backend-owned Axis product data, CMS composition, documentation content, and BackOffice capability metadata.",
+  "main": "nodics.js",
+  "version": "0.0.1",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "nodics": {
+    "kind": "capability",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "data",
+      "documentation",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    },
+    "displayName": "Nodics Axis Data"
+  },
+  "scripts": {
+    "docs:generate": "node data/core/source/documentation/tooling/generate-documentation-content.mjs",
+    "docs:check": "node data/core/source/documentation/tooling/generate-documentation-content.mjs --check",
+    "validate": "node scripts/validate-axis-content-pack.mjs",
+    "test": "npm run docs:check && npm run validate"
+  },
+  "dependencies": {}
+}

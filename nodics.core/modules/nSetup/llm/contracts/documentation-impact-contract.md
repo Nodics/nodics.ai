@@ -156,6 +156,62 @@ Minimum word and section counts are lower-bound defect detectors only. They do
 not prove accuracy, usefulness, audience completeness, evidence coverage, or
 source preservation.
 
+## Documentation Quality Rubric
+
+Every public or CMS-importable documentation pack must be useful to three
+reader mindsets. A page may emphasize one mindset, but the complete pack for a
+framework module, product module, or customer project must cover all three.
+
+1. Business and adoption mindset:
+   - explain the business problem and why the capability exists;
+   - describe the outcomes, cost/risk reduction, scalability, governance,
+     multi-enterprise or multi-tenant value, customization value, and adoption
+     path;
+   - compare the Nodics approach with common project failure modes such as
+     scattered code, hard-coded customer behavior, late security, and
+     throwaway MVP architecture;
+   - state limitations honestly so evaluation remains credible.
+2. Developer and implementation mindset:
+   - explain concepts with beginner-level language before internal terms;
+   - show where source files, configuration, schemas, services, routes,
+     generated artifacts, tests, and extension points live;
+   - provide step-by-step examples for local setup, adding a module, extending
+     a module, overriding a service through load order, and validating the
+     change;
+   - call out common mistakes, unsafe shortcuts, and required verification.
+3. DevOps and production mindset:
+   - explain runtime topology, server composition, environment/server/node
+     configuration, public versus private properties, dependency choices,
+     deployment flow, release lifecycle, health, logs, monitoring, backup,
+     recovery, scaling, and rollback;
+   - distinguish mandatory prerequisites from optional providers;
+   - describe how local consolidated execution can evolve into distributed
+     runtime processes without changing capability ownership.
+
+A major documentation page should normally include these sections or their
+equivalents:
+
+- what this is;
+- why it exists;
+- what problem it solves;
+- who uses it;
+- how it works conceptually;
+- how to use it step by step;
+- how to customize or extend it safely;
+- configuration and runtime notes;
+- code or command examples;
+- operations, security, and troubleshooting notes;
+- limitations and common mistakes;
+- related modules, pages, or next actions.
+
+Documentation should be beginner-friendly enough for a new business user,
+developer, or operator to follow without prior Nodics or enterprise-domain
+knowledge. Use diagrams, tables, screenshots, and examples when a concept is
+harder to understand in prose alone. The first-level Axis documentation
+navigation may show Framework, Swaggers, Nodics Axis, and project guides such
+as Nodics Kickoff, but physical content ownership remains with the framework,
+product backend module, or customer project that owns the subject.
+
 ## Documentation Generation and Review Contract
 
 Before creating or changing canonical public documentation:
@@ -250,6 +306,8 @@ release shape:
 project/
   data/
     core/
+      source/
+        documentation/
       headers/
       data/
         documentation/
@@ -264,11 +322,36 @@ deterministic, and directly consumable by the existing Nodics content-pack and
 `nImport` contracts. The project repository owns its source-controlled
 documentation release; CMS is the runtime projection.
 
+Documentation ownership follows the backend owner of the thing being
+documented:
+
+- framework-level Nodics documentation belongs to `nodics.docs`;
+- Axis product documentation belongs to the backend `axis` module under
+  `nodics.platform`;
+- customer/project documentation belongs to the owning customer backend
+  project, for example `nodics.kickoff`;
+- future customer module overlays may contribute their own documentation from
+  the owning project module, but they must not rename the standard functional
+  module identity they customize.
+
+`nodics.kickoff` is the reference customer project. Kickoff-specific setup,
+demo business flows, sample data, project modules, custom API behavior,
+customer onboarding, and project extension guidance belong in `nodics.kickoff`
+using the same `data/core/source/documentation`,
+`data/core/data/documentation`, `data/core/headers`, and
+`manifest/docs-content-pack.json` structure. Do not place Kickoff documentation
+in `nodics.docs`, the Platform `axis` module, or the `nodics.axis` frontend
+repository.
+
 The project must declare one canonical structured documentation source outside
-generated `data/core`. Content should be split into independently navigable
-pages at the level users search, learn, operate, troubleshoot, customize, and
-verify a capability. One coarse project overview or one summary page per module
-does not satisfy the contract when richer implemented feature guidance exists.
+generated record/header files. For module-owned import packs, that source stays
+inside the standard module data ownership tree, for example
+`data/core/source/documentation`, while generated records stay under
+`data/core/data/...` and `data/core/headers/...`. Content should be split into
+independently navigable pages at the level users search, learn, operate,
+troubleshoot, customize, and verify a capability. One coarse project overview
+or one summary page per module does not satisfy the contract when richer
+implemented feature guidance exists.
 
 Frontend startup may discover documentation-pack status and present authorized
 Import or Update actions. A frontend must never read sibling files, write CMS

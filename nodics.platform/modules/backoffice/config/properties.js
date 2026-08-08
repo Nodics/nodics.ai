@@ -56,8 +56,8 @@ module.exports = {
             documentation: [
                 {
                     id: 'framework', label: 'Framework', type: 'CMS', route: '/docs/framework', order: 100,
-                    connectionModule: 'cms', site: 'axisCmsSite', catalog: 'nodicsDocumentationContentCatalog',
-                    defaultPage: '/docs', packCode: 'nodicsDocumentation',
+                    connectionModule: 'cms', site: 'nodicsDocumentationSite', catalog: 'nodicsDocumentationContentCatalog',
+                    defaultPage: '/docs/framework', packCode: 'nodicsDocumentation',
                     dashboard: {
                         kind: 'Framework guide', icon: 'content',
                         summary: 'Core Nodics architecture, module layering, configuration-first extension, lifecycle, and customization guidance.',
@@ -81,21 +81,6 @@ module.exports = {
                             score: 100, status: 'REFERENCE',
                             signals: ['Generated from backend contracts', 'Module API discovery', 'Swagger UI access'],
                             gaps: ['Narrative examples belong in framework capability docs']
-                        }
-                    }
-                },
-                {
-                    id: 'nodics-axis', label: 'Nodics Axis', type: 'CMS', route: '/docs/nodics-axis', order: 300,
-                    connectionModule: 'cms', site: 'axisDocumentationSite', catalog: 'axisDocumentationContentCatalog',
-                    defaultPage: '/docs/nodics-axis', packCode: 'axisDocumentation',
-                    dashboard: {
-                        kind: 'Application guide', icon: 'schema',
-                        summary: 'Short user-facing guidance for the Nodics Axis BackOffice client, shell, workbench, and business workspaces.',
-                        audiences: ['administrator', 'business-user', 'operator'],
-                        coverage: {
-                            score: 45, status: 'PARTIAL',
-                            signals: ['Application shell guidance', 'Schema Workbench entry points', 'Media Management flow notes'],
-                            gaps: ['More end-to-end user journeys', 'More page-level operator help', 'More role-specific recipes']
                         }
                     }
                 }
@@ -141,11 +126,6 @@ module.exports = {
                     featureState: 'ACTIVE' },
                 { id: 'documentation-swaggers', parentId: 'documentation', label: 'Swaggers',
                     route: '/docs/swaggers', icon: 'reference', order: 120,
-                    group: { id: 'documentation', label: 'Documentation', order: 650 },
-                    perspectives: ['operations'], contexts: ['environment', 'tenant', 'enterprise'],
-                    featureState: 'ACTIVE' },
-                { id: 'documentation-nodics-axis', parentId: 'documentation', label: 'Nodics Axis',
-                    route: '/docs/nodics-axis', icon: 'content', order: 130,
                     group: { id: 'documentation', label: 'Documentation', order: 650 },
                     perspectives: ['operations'], contexts: ['environment', 'tenant', 'enterprise'],
                     featureState: 'ACTIVE' },

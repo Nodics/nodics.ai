@@ -88,12 +88,12 @@ module.exports = {
                 },
                 axisDocumentation: {
                     enabled: true,
-                    manifestPack: 'nodics.axis',
+                    manifestPack: 'nodics.platform.axis',
                     source: {
                         type: 'LOCAL_SIBLING',
-                        repositoryName: 'nodics.axis',
-                        contentPath: 'data/core',
-                        manifestPath: 'manifest/docs-content-pack.json'
+                        repositoryName: 'nodics.platform',
+                        contentPath: 'modules/axis/data/core',
+                        manifestPath: 'modules/axis/manifest/docs-content-pack.json'
                     },
                     updatePolicy: {
                         allowDowngrade: false,

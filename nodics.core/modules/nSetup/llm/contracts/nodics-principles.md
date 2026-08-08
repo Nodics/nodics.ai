@@ -157,6 +157,24 @@ Before changing behavior, identify the smallest layer that can own the change:
 Framework code changes only when the framework capability itself is
 missing, incorrect, insecure, ungoverned, or impossible to extend cleanly.
 
+## Backend Data Ownership
+
+Any record that is imported into a Nodics backend database must be owned by a
+backend module, backend functional module group, customer backend module, or
+backend content repository. Frontend repositories must not own importable
+catalog, Site, page, component, route, renderer-mapping, documentation, schema,
+configuration, permission, or initialization data.
+
+Axis and other frontends may own executable renderers, typed clients,
+interaction behavior, accessibility, static recovery screens, and
+non-authoritative browser state. They consume CMS and BackOffice contracts; they
+do not package CMS records for persistence.
+
+Documentation content that must become CMS records belongs to `nodics.docs` or
+the owning backend/customer documentation-content package. WCMS owns the CMS
+engine and default runtime content. Axis owns only the browser renderers that
+display CMS-delivered documentation and presentation contracts.
+
 ## Module-Centric Runtime Principle
 
 Modules are the unit of capability ownership, lifecycle contribution,

@@ -199,12 +199,20 @@ assert.strictEqual(document.components.schemas.sample_item.properties.tags.items
 assert.strictEqual(document.components.schemas.sample_item.properties.code.minLength, 2);
 assert.strictEqual(document.paths['/nodics/sample/v0/item'].put.requestBody.content['application/json'].schema.$ref, '#/components/schemas/sample_item');
 assert.strictEqual(document.paths['/nodics/sample/v0/item/all'].put.requestBody.content['application/json'].schema.type, 'array');
+assert.strictEqual(document.paths['/nodics/sample/v0/item'].put['x-nodics'].source, 'schema-generated');
+assert.strictEqual(document.paths['/nodics/sample/v0/item'].put['x-nodics'].moduleName, 'sample');
+assert.strictEqual(document.paths['/nodics/sample/v0/item'].put['x-nodics'].schemaName, 'item');
+assert.strictEqual(document.paths['/nodics/sample/v0/item'].put['x-nodics'].schemaComponentName, 'sample_item');
 
 const configured = document.paths['/nodics/sample/v0/contract'].post;
 assert.strictEqual(configured.operationId, 'sample_contracts_contract');
 assert.strictEqual(document.paths['/nodics/sample/v0/secondary-contract'].post.operationId,
     'sample_secondarycontracts_contract');
 assert(configured.parameters.some(parameter => parameter.name === 'dryRun' && parameter.in === 'query'));
+assert.strictEqual(configured['x-nodics'].source, 'module-router');
+assert.strictEqual(configured['x-nodics'].moduleName, 'sample');
+assert.strictEqual(configured['x-nodics'].routerGroup, 'contracts');
+assert.strictEqual(configured['x-nodics'].routerName, 'contract');
 assert.strictEqual(configured['x-nodics'].permission, 'sample.contract.view');
 assert.strictEqual(configured['x-nodics'].permissionConfig, 'sample.contract.routePermission');
 assert.deepStrictEqual(configured['x-nodics'].authTokenTypes, ['service']);
@@ -215,6 +223,9 @@ assert.strictEqual(document.paths['/nodics/sample/v0/health/live'].get.security,
 assert.strictEqual(document.paths['/nodics/sample/v0/contract/openapi'].get['x-nodics'].publicAccess, true);
 assert.strictEqual(document.paths['/nodics/sample/v0/contract/openapi'].get.security, undefined);
 assert(document.paths['/nodics/sample/v0/administration/reconcile'].post);
+assert.strictEqual(document.paths['/nodics/sample/v0/administration/reconcile'].post['x-nodics'].source, 'common-router');
+assert.strictEqual(document.paths['/nodics/sample/v0/administration/reconcile'].post['x-nodics'].moduleName, 'sample');
+assert.strictEqual(document.paths['/nodics/sample/v0/administration/reconcile'].post['x-nodics'].routerGroup, 'targetedAdministration');
 assert(!document.paths['/nodics/other/v0/administration/reconcile']);
 
 const bodyless = generator.createOperation({

@@ -14,9 +14,20 @@ own local behavior inside each functional module group.
   `nodics.docs`.
 - Keep customer projects outside this repository. `nodics.kickoff` is a reference
   customer project and must not be treated as a framework module.
+- Keep customer/project documentation in the owning customer backend project.
+  For the reference project, Kickoff-specific setup, demo flows, sample data,
+  project modules, custom API behavior, onboarding, and extension guidance
+  belong in `nodics.kickoff` using `data/core/source/documentation`,
+  `data/core/data/documentation`, `data/core/headers`, and
+  `manifest/docs-content-pack.json`; they do not belong in `nodics.docs`,
+  `nodics.platform/modules/axis`, or `nodics.axis`.
 - Keep frontend applications outside this repository. `nodics.axis` is the
   Axis/BackOffice frontend application and must be managed as a separate
   project/repository parallel to the framework repository.
+- Keep backend-importable data in backend-owned modules or content packages.
+  CMS catalog, Site, page, component, route, renderer-mapping, and documentation
+  records that are imported into a database must not live in `nodics.axis`.
+  Axis owns executable browser renderers and static recovery behavior only.
 - Do not import behavior from archived legacy repositories except as explicitly
   approved reference material during migration.
 

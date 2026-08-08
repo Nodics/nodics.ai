@@ -1,22 +1,52 @@
 {
   "contract": "nodics.documentation/v1",
-  "release": "0.1.0",
+  "release": "0.2.1",
   "documents": [
     {
-      "id": "core.overview",
-      "functionalModule": "nodics.core",
-      "title": "Core overview",
-      "summary": "Framework services shared by every Nodics runtime.",
+      "id": "framework.what-is-nodics",
+      "recordCode": "core.overview",
+      "functionalModule": "nodics.docs",
+      "technicalModule": "documentation",
+      "title": "What is Nodics?",
+      "summary": "Business, beginner, and adoption-oriented introduction to the Nodics enterprise framework.",
       "locale": "en",
-      "content": "content/nodics.core/overview.md"
+      "content": "content/framework/what-is-nodics.md"
     },
     {
-      "id": "platform.overview",
-      "functionalModule": "nodics.platform",
-      "title": "Platform overview",
-      "summary": "Profile and BackOffice capabilities exposed by Platform.",
+      "id": "framework.modular-architecture",
+      "functionalModule": "nodics.core",
+      "technicalModule": "nSetup",
+      "title": "Modular architecture and ownership",
+      "summary": "How functional modules, technical modules, runtime servers, and customer projects fit together.",
       "locale": "en",
-      "content": "content/nodics.platform/overview.md"
+      "content": "content/framework/modular-architecture.md"
+    },
+    {
+      "id": "framework.local-quick-start",
+      "functionalModule": "nodics.core",
+      "technicalModule": "nSetup",
+      "title": "Local quick start with Kickoff and Axis",
+      "summary": "Beginner-friendly steps to configure the framework, start local servers, log in to Axis, and open documentation.",
+      "locale": "en",
+      "content": "content/framework/local-quick-start.md"
+    },
+    {
+      "id": "framework.customization-guide",
+      "functionalModule": "nodics.core",
+      "technicalModule": "nSetup",
+      "title": "Customization and extension guide",
+      "summary": "How customer projects customize Nodics safely without forking framework authority.",
+      "locale": "en",
+      "content": "content/framework/customization-guide.md"
+    },
+    {
+      "id": "framework.devops-runtime",
+      "functionalModule": "nodics.core",
+      "technicalModule": "nSetup",
+      "title": "Runtime and DevOps operations",
+      "summary": "Runtime topology, dependencies, public and private properties, deployment, monitoring, and recovery guidance.",
+      "locale": "en",
+      "content": "content/framework/devops-runtime.md"
     },
     {
       "id": "platform.module-registry",
@@ -29,4 +59,3 @@
     }
   ]
 }
-

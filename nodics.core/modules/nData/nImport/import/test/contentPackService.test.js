@@ -104,7 +104,8 @@ function createHarness(fixture, enabled) {
     };
     global.NODICS = {
         getNodicsHome: () => fixture.nodicsHome,
-        getServerPath: () => fixture.serverPath
+        getServerPath: () => fixture.serverPath,
+        getNodicsEnv: () => fixture.repository
     };
     global.CLASSES = {
         DataImportError: class DataImportError extends Error {
@@ -167,6 +168,11 @@ function createHarness(fixture, enabled) {
         });
         assert.strictEqual(initial.data.state, 'NOT_INSTALLED');
         assert.deepStrictEqual(initial.data.allowedOperations, ['IMPORT']);
+        assert.strictEqual(
+            harness.service.resolveRepositoryPath({ type: 'LOCAL_PROJECT' }),
+            fixture.repository,
+            'project-owned content packs must resolve from the active customer project'
+        );
 
         let imported = await harness.service.importPack({
             packCode: 'nodicsDocumentation',

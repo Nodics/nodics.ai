@@ -5,7 +5,7 @@
   "private": true,
   "description": "Nodics platform module group.",
   "main": "nodics.js",
-  "requiredModules": ["profile", "backoffice"],
+  "requiredModules": ["profile", "backoffice", "axis"],
   "nodics": {
     "kind": "group",
     "extends": ["nodics.core"],
@@ -23,8 +23,10 @@
   },
   "scripts": {
     "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
+    "test:axis": "npm --prefix modules/axis test",
+    "test:documentation": "node modules/backoffice/test/backofficeDocumentationNavigationContract.test.js",
     "test:functional-catalogue": "node modules/backoffice/test/functionalModuleCatalogueService.test.js",
-    "test": "npm run check:syntax && npm run test:functional-catalogue"
+    "test": "npm run check:syntax && npm run test:axis && npm run test:documentation && npm run test:functional-catalogue"
   },
   "dependencies": {
     "email-validator": "^2.0.4",

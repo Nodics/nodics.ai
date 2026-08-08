@@ -15,3 +15,6 @@ validate the contract version, content hashes, functional owners, and document
 IDs before persisting a new catalogue revision. Axis reads the imported
 Platform projection and never reads this repository or raw Markdown paths.
 
+This package is for framework documentation. Axis product documentation belongs
+to `nodics.platform/modules/axis`; customer/project documentation belongs to the
+owning customer or project documentation package.

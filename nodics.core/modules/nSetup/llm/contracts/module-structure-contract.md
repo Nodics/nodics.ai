@@ -37,6 +37,13 @@ for startup/bootstrap data, `data/core` for core/reference imports, and
 `data/sample` for demo/sample imports. Do not create empty `data/` folders on
 project roots or pure group modules.
 
+Canonical source files used to generate importable data must stay inside the
+same data ownership tree, for example `data/core/source/...`, while generated
+records remain under the matching `data/core/data/...` and
+`data/core/headers/...` paths. Do not add module-root source folders such as
+`content/` for import-pack authoring unless a documented loader/generator
+contract explicitly introduces that folder as a new standard.
+
 `llm/contracts/` and `llm/examples/` are maintained source folders, not
 generated output. AI tools and developers must update them when functionality
 changes the module contract or recommended customization pattern.

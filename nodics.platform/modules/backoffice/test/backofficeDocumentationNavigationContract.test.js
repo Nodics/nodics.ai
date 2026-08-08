@@ -11,12 +11,21 @@
 
 const assert = require('assert');
 
-const properties = require('../config/properties');
+const platformProperties = require('../../../config/properties');
+const backofficeProperties = require('../config/properties');
+const axisProperties = require('../../axis/config/properties');
+const apiContracts = require('../src/schemas/apiContracts');
 
-const navigation = properties.backofficeCapabilities.backoffice.navigation;
+const backofficeNavigation = backofficeProperties.backofficeCapabilities.backoffice.navigation;
+const axisNavigation = axisProperties.backofficeCapabilities.axis.navigation;
+const navigation = backofficeNavigation.concat(axisNavigation).sort((left, right) =>
+    (left.order || 0) - (right.order || 0));
 const documentation = navigation.find(item => item.id === 'documentation');
 const documentationLinks = navigation.filter(item => item.parentId === 'documentation');
-const sources = properties.backofficeCapabilities.backoffice.documentation;
+const sources = backofficeProperties.backofficeCapabilities.backoffice.documentation
+    .concat(axisProperties.backofficeCapabilities.axis.documentation)
+    .sort((left, right) => left.order - right.order);
+const allowedBackofficeRoles = new Set(apiContracts.moduleRole.enum);
 
 assert(documentation, 'BackOffice must contribute the documentation navigation entry');
 assert.strictEqual(documentation.label, 'Nodics Documentation');
@@ -39,6 +48,11 @@ assert.deepStrictEqual(documentationLinks.map(item => item.route), [
     '/docs/swaggers',
     '/docs/nodics-axis'
 ]);
+assert.strictEqual(
+    axisNavigation.find(item => item.id === 'documentation-nodics-axis').parentModuleName,
+    'backoffice',
+    'Axis documentation navigation must mark its BackOffice-owned external parent'
+);
 assert(documentationLinks.every(item => item.group.id === 'documentation'),
     'documentation child links must remain grouped under the documentation navigation area');
 assert(documentationLinks.every(item => item.contexts.join('|') === 'environment|tenant|enterprise'),
@@ -46,9 +60,33 @@ assert(documentationLinks.every(item => item.contexts.join('|') === 'environment
 assert(documentationLinks.every(item => item.featureState === 'ACTIVE'),
     'documentation child links must be active direct destinations');
 assert.deepStrictEqual(sources.map(source => source.id), ['framework', 'swaggers', 'nodics-axis']);
+assert.deepStrictEqual(
+    backofficeProperties.backofficeCapabilities.backoffice.documentation.map(source => source.id),
+    ['framework', 'swaggers'],
+    'BackOffice must not own Axis product documentation content'
+);
+assert.deepStrictEqual(
+    axisProperties.backofficeCapabilities.axis.documentation.map(source => source.id),
+    ['nodics-axis'],
+    'Platform axis module must own Axis product documentation content'
+);
+assert(axisProperties.backofficeCapabilities.axis.roles.every(role => allowedBackofficeRoles.has(role)),
+    'Platform axis module must use BackOffice provider roles accepted by runtime registration');
+assert(axisProperties.backofficeCapabilities.axis.roles.includes('UI_COMPOSITION_PROVIDER'),
+    'Platform axis module contributes UI composition and documentation metadata');
+assert.strictEqual(platformProperties.apiExposure.categories.dataImport.enabled, true,
+    'Platform keeps dataImport available for governed platform initialization APIs');
 assert(sources.every(source => source.connectionModule),
     'every documentation source must resolve its runtime through the BackOffice registry');
 assert.strictEqual(sources.find(source => source.id === 'nodics-axis').packCode, 'axisDocumentation');
+assert.strictEqual(sources.find(source => source.id === 'framework').site, 'nodicsDocumentationSite',
+    'Framework documentation must resolve through the nodics.docs-owned CMS site');
+assert.strictEqual(sources.find(source => source.id === 'framework').catalog, 'nodicsDocumentationContentCatalog',
+    'Framework documentation must resolve through the nodics.docs-owned content catalog');
+assert.strictEqual(sources.find(source => source.id === 'framework').defaultPage, '/docs/framework',
+    'Framework documentation must default to the generated framework landing route');
+assert.strictEqual(sources.find(source => source.id === 'nodics-axis').site, 'axisDocumentationSite',
+    'Axis product documentation must resolve through the Platform axis module CMS site');
 assert(sources.every(source => source.dashboard && source.dashboard.summary),
     'every documentation source must provide dashboard summary metadata');
 assert.deepStrictEqual(sources.map(source => source.dashboard.coverage.score), [85, 100, 45]);

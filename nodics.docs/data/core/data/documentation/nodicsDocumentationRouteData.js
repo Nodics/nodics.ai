@@ -1,0 +1,77 @@
+'use strict';
+
+/** @description Generated Nodics framework documentation routes. */
+module.exports = {
+  "record0": {
+    "code": "nodicsDocsRoutecoreOverview",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagecoreOverview",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record1": {
+    "code": "nodicsDocsRouteframeworkModularArchitecture",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/framework-modular-architecture",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPageframeworkModularArchitecture",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record2": {
+    "code": "nodicsDocsRouteframeworkLocalQuickStart",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/framework-local-quick-start",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPageframeworkLocalQuickStart",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record3": {
+    "code": "nodicsDocsRouteframeworkCustomizationGuide",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/framework-customization-guide",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPageframeworkCustomizationGuide",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record4": {
+    "code": "nodicsDocsRouteframeworkDevopsRuntime",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/framework-devops-runtime",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPageframeworkDevopsRuntime",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record5": {
+    "code": "nodicsDocsRouteplatformModuleRegistry",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/platform-module-registry",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPageplatformModuleRegistry",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  }
+};

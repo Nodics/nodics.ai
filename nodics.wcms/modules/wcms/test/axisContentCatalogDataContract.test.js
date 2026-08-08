@@ -12,6 +12,7 @@
 const assert = require('assert');
 const path = require('path');
 
+const wcmsProperties = require('../../../config/properties');
 const moduleRoot = path.resolve(__dirname, '..');
 const load = name => require(path.join(moduleRoot, 'data/init/data/axis', name));
 const records = data => Object.values(data);
@@ -27,6 +28,30 @@ const pages = records(load('axisCmsPageData'));
 const routes = records(load('axisCmsRouteData'));
 const header = require(path.join(moduleRoot, 'data/init/headers/axis/axisContentCatalogHeader'));
 const axisDataSets = [catalog, sites, types, renderers, slots, templates, components, pages, routes];
+
+assert.strictEqual(wcmsProperties.apiExposure.categories.dataImport.enabled, true,
+    'WCMS must expose governed dataImport routes for documentation content-pack lifecycle');
+assert.strictEqual(wcmsProperties.data.contentPacks.enabled, true,
+    'WCMS must enable documentation content packs because CMS owns documentation routes and pages');
+assert.deepStrictEqual(wcmsProperties.data.contentPacks.packs.axisDocumentation.source, {
+    type: 'LOCAL_SIBLING',
+    repositoryName: 'nodics.platform',
+    contentPath: 'modules/axis/data/core',
+    manifestPath: 'modules/axis/manifest/docs-content-pack.json'
+}, 'Axis documentation pack must be imported by WCMS from the Platform axis backend module');
+assert.deepStrictEqual(wcmsProperties.data.contentPacks.packs.nodicsDocumentation.source, {
+    type: 'LOCAL_SIBLING',
+    repositoryName: 'nodics.docs',
+    contentPath: 'data/core',
+    manifestPath: 'manifest/generated-content-pack.json'
+}, 'Framework documentation pack must be imported by WCMS from the nodics.docs backend documentation module');
+assert.deepStrictEqual(wcmsProperties.data.contentPacks.packs.kickoffDocumentation.source, {
+    type: 'LOCAL_PROJECT',
+    contentPath: 'data/core',
+    manifestPath: 'manifest/docs-content-pack.json'
+}, 'Kickoff documentation pack must be imported by WCMS from the active customer project');
+assert.strictEqual(wcmsProperties.data.contentPacks.packs.kickoffDocumentation.manifestPack, 'nodics.kickoff',
+    'Kickoff documentation pack must keep the customer project manifest identity');
 
 axisDataSets.flat().forEach(item => {
     assert.strictEqual(item.functionalModule, 'nodics.wcms', item.code + ' must be owned by nodics.wcms');

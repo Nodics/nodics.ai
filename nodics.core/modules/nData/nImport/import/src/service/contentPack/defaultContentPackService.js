@@ -218,6 +218,14 @@ module.exports = {
 
     /** Resolves a bounded configured sibling repository path. */
     resolveRepositoryPath: function (source) {
+        if (source.type === 'LOCAL_PROJECT') {
+            let configuredPath = (NODICS.getEnvironmentPath && NODICS.getEnvironmentPath()) ||
+                (NODICS.getNodicsEnv && NODICS.getNodicsEnv());
+            if (!configuredPath) {
+                throw this.createError('ERR_IMP_00003', 'Content-pack project path is unavailable');
+            }
+            return path.resolve(configuredPath);
+        }
         if (source.type !== 'LOCAL_SIBLING') {
             throw this.createError('ERR_IMP_00003', 'Content-pack source type is unsupported');
         }

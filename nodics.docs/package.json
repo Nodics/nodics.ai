@@ -5,9 +5,10 @@
   "description": "Versioned documentation content for Nodics functional modules.",
   "type": "module",
   "scripts": {
+    "docs:generate": "node scripts/generate-content-pack.mjs",
+    "docs:check": "node scripts/generate-content-pack.mjs --check",
     "validate": "node scripts/validate.mjs",
-    "test": "npm run validate"
+    "test": "npm run docs:check && npm run validate"
   },
-  "files": ["catalogue.json", "content"]
+  "files": ["catalogue.json", "content", "data/core", "manifest"]
 }
-
