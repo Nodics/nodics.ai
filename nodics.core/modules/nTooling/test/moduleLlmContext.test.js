@@ -23,6 +23,7 @@ const path = require('path');
 const {
     collectModuleOwnedFiles,
     createFilesFingerprint,
+    isNSetupModule,
     scanModules
 } = require('../src/service/context/defaultModuleLlmContextUtilsService');
 
@@ -37,13 +38,17 @@ assert(globalContext.includes('Do not make AI guidance specific to one AI vendor
 
 assert(modules.length > 0, 'No Nodics modules were discovered');
 
+let generatedContextModules = 0;
+
 modules.forEach(module => {
     let llmDirectory = path.join(module.path, 'llm');
     let generatedDirectory = path.join(llmDirectory, 'generated');
     assert(fs.existsSync(llmDirectory), 'Missing llm folder for module: ' + module.relativePath);
-    if (module.relativePath === 'modules/nSetup') {
+    if (isNSetupModule(module)) {
+        assert(!fs.existsSync(generatedDirectory), 'nSetup must not have generated LLM context: ' + module.relativePath);
         return;
     }
+    generatedContextModules += 1;
     assert(fs.existsSync(generatedDirectory), 'Missing generated llm folder for module: ' + module.relativePath);
     ['module-context.md', 'schemas.md', 'tests.md', 'manifest.json'].forEach(fileName => {
         assert(fs.existsSync(path.join(generatedDirectory, fileName)), 'Missing generated LLM file ' + fileName + ' for module: ' + module.relativePath);
@@ -83,4 +88,4 @@ modules.forEach(module => {
     });
 });
 
-console.log('Module LLM context validated: ' + modules.length + ' modules');
+console.log('Module LLM context validated: ' + generatedContextModules + ' generated modules; nSetup global guidance excluded');

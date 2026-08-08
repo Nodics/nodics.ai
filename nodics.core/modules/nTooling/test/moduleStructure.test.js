@@ -86,7 +86,9 @@ modules.forEach(moduleObject => {
     assert.deepStrictEqual(readmes, ['README.md'],
         'Module must contain exactly one canonical README.md: ' + moduleObject.relativePath);
 
-    assert(/^[A-Za-z][A-Za-z0-9]*$/.test(packageJson.name),
+    const validRuntimeName = /^[A-Za-z][A-Za-z0-9]*$/.test(packageJson.name) ||
+        (nodics.kind === 'group' && /^nodics\.[a-z][a-z0-9]*$/.test(packageJson.name));
+    assert(validRuntimeName,
         'Invalid package runtime name: ' + moduleObject.relativePath + ' -> ' + packageJson.name);
 
     if (nodics.kind !== 'template') {
@@ -132,8 +134,8 @@ customHierarchyFixtures.forEach(fixture => {
 
 const nPrefixedCapability = {
     name: 'nInventory',
-    relativePath: 'gFramework/nInventory',
-    path: rootPathForFixture('gFramework/nInventory'),
+    relativePath: 'nodics.core/modules/nInventory',
+    path: rootPathForFixture('nodics.core/modules/nInventory'),
     packageJson: {
         name: 'nInventory',
         nodics: {
@@ -150,15 +152,15 @@ const runtimeBootstrapSource = fs.readFileSync(path.join(__dirname, '../../nConf
 assert(!runtimeBootstrapSource.includes("options.defaultServer || 'monoServer'"),
     'Framework bootstrap must not hardcode a project server');
 
-const nToolingSrcPath = path.join(process.cwd(), 'gFramework', 'nTooling', 'src');
-const nToolingModule = modules.find(moduleObject => moduleObject.relativePath === 'gFramework/nTooling');
+const nToolingSrcPath = path.join(process.cwd(), 'nodics.core', 'modules', 'nTooling', 'src');
+const nToolingModule = modules.find(moduleObject => moduleObject.relativePath === 'nodics.core/modules/nTooling');
 assert(nToolingModule && ((nToolingModule.packageJson.nodics || {}).owns || []).includes('service'),
     'nTooling metadata must declare service ownership because all tooling source lives under src/service');
 fs.readdirSync(nToolingSrcPath, { withFileTypes: true })
     .filter(entry => entry.isDirectory())
     .forEach(entry => {
         assert.strictEqual(entry.name, 'service',
-            'nTooling source must stay service-owned; unexpected src folder: gFramework/nTooling/src/' + entry.name);
+            'nTooling source must stay service-owned; unexpected src folder: nodics.core/modules/nTooling/src/' + entry.name);
     });
 collectJavaScriptFiles(nToolingSrcPath).forEach(filePath => {
     assert(path.basename(filePath).endsWith('Service.js'),

@@ -17,7 +17,11 @@ nodics.ai/
   AGENTS.md
   README.md
   package.json
-  llm/
+  nodics.js
+  config/
+    properties.js
+    prescripts.js
+    postscripts.js
   nodics.core/
   nodics.platform/
   nodics.cron/
@@ -36,6 +40,20 @@ The current standard module groups are:
 - `nodics.cron` — Cron runtime and cron job capability modules.
 - `nodics.docs` — framework documentation content packs only.
 
+The repository root follows the standard Nodics module-group file shape so
+developers, tooling, and AI agents can navigate it consistently. Its
+`package.json` still declares `runtimeModule: false` and
+`loadableByNodicsModuleLoader: false`; the root is not a runtime functional
+module. Root `config/` files are reserved for framework-repository governance
+metadata only. Runtime defaults belong in the owning functional module, such as
+`nodics.core`, `nodics.platform`, `nodics.wcms`, `nodics.cron`, or
+`nodics.docs`.
+
+Repository-wide AI/developer guidance is intentionally not stored in a root
+`llm/` folder. The canonical guidance home is `nodics.core/modules/nSetup/llm/`,
+with module-local `llm/` folders used only by the modules that own specific
+capabilities.
+
 Customer projects, such as `nodics.kickoff`, live outside this repository and
 consume the framework through package dependencies and explicit runtime
 `extends` configuration. Frontend applications, such as `nodics.axis`, are also
@@ -43,7 +61,7 @@ separate projects.
 
 ## Repository ownership rules
 
-- Framework source and framework documentation belong in `nodics.ai`.
+- Framework source belongs in `nodics.ai`.
 - Framework documentation content belongs in `nodics.docs`.
 - Axis product documentation content belongs in `nodics.platform/modules/axis`.
 - Customer/project documentation content belongs in the owning customer project,

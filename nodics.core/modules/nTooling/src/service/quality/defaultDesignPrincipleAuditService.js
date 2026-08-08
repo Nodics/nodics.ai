@@ -94,7 +94,7 @@ function readScripts(failures) {
  */
 function readToolingProperties(failures) {
     try {
-        return require(path.join(rootPath, 'gFramework', 'nTooling', 'config', 'properties.js')).tooling || {};
+        return require(path.join(rootPath, 'nodics.core', 'modules', 'nTooling', 'config', 'properties.js')).tooling || {};
     } catch (error) {
         fail(failures, 'nTooling properties must be readable: ' + error.message);
         return {};
@@ -188,7 +188,7 @@ function auditPrincipleContracts(failures) {
         'modules/nSetup/llm/contracts/nodics-principles.md',
         'Do not add or maintain separate principles here'
     ]);
-    requireClauses(failures, 'modules/nSetup/llm/change-gate-contract.md', [
+    requireClauses(failures, 'modules/nSetup/llm/playbooks/change-gate-contract.md', [
         '## Gate 1A: Implementation Readiness',
         '## Gate 4: Periodic Platform Audit',
         'module structure and naming standards',
@@ -247,12 +247,12 @@ function auditLlmGuidance(failures) {
  */
 function auditGeneratedContextEntrypoints(failures) {
     [
-        'gFramework/nConfig',
-        'gFramework/nCommon',
-        'gFramework/nTooling',
-        'gFramework/nDynamo',
-        'gFramework/nData/nImport/import',
-        'gCore/profile'
+        'nodics.core/modules/nConfig',
+        'nodics.core/modules/nCommon',
+        'nodics.core/modules/nTooling',
+        'nodics.core/modules/nDynamo',
+        'nodics.core/modules/nData/nImport/import',
+        'nodics.platform/modules/profile'
     ].forEach(modulePath => {
         [
             'llm/generated/manifest.json',

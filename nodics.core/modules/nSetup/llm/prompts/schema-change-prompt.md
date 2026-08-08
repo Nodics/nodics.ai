@@ -8,7 +8,7 @@ Change Nodics schema behavior through the schema hierarchy and generation
 contract.
 
 Load the base Nodics assistant prompt, affected module context,
-schema-and-generation.md, artifact-definition-and-change-guide.md, and the
+standards/schema-and-generation.md, standards/artifact-definition-and-change-guide.md, and the
 documentation impact contract.
 
 Before editing, identify:

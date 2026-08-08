@@ -22,7 +22,7 @@ const os = require('os');
 const path = require('path');
 const documentationCoverage = require('../src/service/quality/defaultDocumentationCoverageQualityService');
 
-const rootPath = path.resolve(__dirname, '../../..');
+const rootPath = path.resolve(__dirname, '../../../..');
 const scriptsPath = path.join(rootPath, 'scripts');
 const packageJson = JSON.parse(fs.readFileSync(path.join(rootPath, 'package.json'), 'utf8'));
 
@@ -74,7 +74,7 @@ try {
 }
 
 const toolingPackage = JSON.parse(fs.readFileSync(
-    path.join(rootPath, 'gFramework', 'nTooling', 'package.json'),
+    path.join(rootPath, 'nodics.core', 'modules', 'nTooling', 'package.json'),
     'utf8'
 ));
 assert.strictEqual(toolingPackage.nodics.runtimeModule, false);

@@ -43,7 +43,7 @@ const excludedDirectories = new Set([
 ]);
 
 const excludedFiles = new Map([
-    ['gFramework/nConfig/bin/enum.js', 'Bundled third-party enum compatibility implementation.']
+    ['nodics.core/modules/nConfig/bin/enum.js', 'Bundled third-party enum compatibility implementation.']
 ]);
 
 function readOption(args, name, defaultValue) {

@@ -96,7 +96,7 @@ module.exports = {
             envs: ensureArray(readCsv(args, '--envs', []), ['local']),
             servers: ensureArray(readCsv(args, '--servers', []), [name + 'Server']),
             nodes: readCsv(args, '--nodes', ['node0']),
-            activeGroups: readCsv(args, '--activeGroups', ['gCore', 'gFramework', 'modules'])
+            activeGroups: readCsv(args, '--activeGroups', ['nodics.core', 'nodics.platform', 'modules'])
         };
     },
 

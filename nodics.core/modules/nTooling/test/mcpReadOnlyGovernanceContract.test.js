@@ -28,10 +28,10 @@ const toolingCommandService = require('../src/service/defaultToolingCommandServi
 const repositoryRoot = path.resolve(__dirname, '../../..');
 const report = readOnlyGovernanceService.createReport({
     home: repositoryRoot,
-    path: 'gFramework/nTooling/src/service/mcp/defaultMcpGovernanceService.js',
+    path: 'modules/nTooling/src/service/mcp/defaultMcpGovernanceService.js',
     changePaths: [
-        'gFramework/nTooling/src/service/mcp/defaultMcpGovernanceService.js',
-        'modules/nSetup/llm/module-generation-guide.md'
+        'modules/nTooling/src/service/mcp/defaultMcpGovernanceService.js',
+        'modules/nSetup/llm/standards/module-generation-guide.md'
     ]
 });
 
@@ -45,9 +45,9 @@ assert(report.modules.some(moduleObject => moduleObject.name === 'nTooling'),
     'Module discovery must include nTooling');
 assert.strictEqual(report.lookup.owningModule, 'nTooling',
     'Path lookup must resolve the nearest owning module');
-assert(report.lookup.nearestAgents.some(agent => agent.path === 'gFramework/nTooling/AGENTS.md'),
+assert(report.lookup.nearestAgents.some(agent => agent.path === 'modules/nTooling/AGENTS.md'),
     'Nearest AGENTS lookup must include the module guidance file');
-assert.strictEqual(report.lookup.generatedContext.contextPath, 'gFramework/nTooling/llm/generated/module-context.md',
+assert.strictEqual(report.lookup.generatedContext.contextPath, 'modules/nTooling/llm/generated/module-context.md',
     'Generated module context lookup must point at the owning module context');
 assert(report.changeImpact[0].artifactTypes.includes('source or support file') ||
     report.changeImpact[0].artifactTypes.includes('service behavior'),
@@ -85,19 +85,21 @@ assert.throws(() => validationService.resolveChecks(['npm:unsafe']), /Unsupporte
 
 const runtimeContext = runtimeContextService.createRuntimeContext({
     home: repositoryRoot,
-    server: 'monoServer'
+    path: 'modules/nTooling'
 });
 assert.strictEqual(runtimeContext.runtimeBootstrap, false,
     'MCP runtime context must not bootstrap the runtime');
-assert.strictEqual(runtimeContext.selectedServer.name, 'monoServer',
-    'MCP runtime context must resolve the selected server');
-assert(runtimeContext.activeModuleDeclaration.groups.includes('gCore'),
-    'MCP runtime context must read active module groups from server properties');
+assert.strictEqual(runtimeContext.selectedServer.name, 'nTooling',
+    'MCP runtime context must resolve the selected source-backed module');
+assert.strictEqual(runtimeContext.selectedServer.path, 'modules/nTooling',
+    'MCP runtime context must report the current module path');
+assert.strictEqual(runtimeContext.activeModuleDeclaration.source, 'modules/nTooling/config/properties.js',
+    'MCP runtime context must read active module declarations from selected module properties when no server is selected');
 
 const mutationPlan = mutationGuardService.createPlan({
     home: repositoryRoot,
     action: 'module-skeleton',
-    targetPath: 'startio/modules',
+    targetPath: 'customerProject/modules',
     inputs: {
         moduleName: 'customerFeature',
         kind: 'capability'

@@ -6,6 +6,83 @@ Use this file as the first LLM/developer navigation contract when working
 inside the Nodics framework repository. Module-specific `AGENTS.md` files still
 own local behavior inside each functional module group.
 
+## Required expert posture
+
+AI tools and human technical leaders working on Nodics must not act as generic
+Node.js editors. For significant design, implementation, refactor, security,
+testing, documentation, generated-artifact, runtime-governance, or release
+work, use the posture of a Nodics delivery expert council: Nodics framework
+expert, enterprise architect, solution architect, business analyst, principal
+engineer, security/privacy/compliance and tenant-governance SME, quality
+engineering leader, customer-aware UX thinker, data governance expert,
+AI/tooling governance expert, release/operations expert, and framework
+maintainer.
+
+Visible ceremony should be proportional to risk, but these responsibilities
+remain active in the reasoning.
+
+## Required Reading Order
+
+Read from the repository root toward the owning module before implementation:
+
+1. root `README.md` for human orientation;
+2. root `AGENTS.md` for repository-wide behavior;
+3. `CONTRIBUTING.md` when source, tests, generated artifacts, or documentation
+   may change;
+4. every applicable ancestor module `README.md` and `AGENTS.md`;
+5. the nearest owning module `README.md` and `AGENTS.md`;
+6. nearest module `llm/contracts`, `llm/examples`, and generated context when
+   relevant;
+7. `nodics.core/modules/nSetup/llm/ai-enablement-index.md`;
+8. the relevant nSetup `contracts`, `standards`, `playbooks`, `templates`,
+   `examples`, or historical `records` for the active change.
+
+README files explain purpose, ownership, usage, and extension paths. AGENTS
+files direct agent behavior. Contracts and standards define permanent rules.
+Playbooks define how work is performed. Records preserve history and do not
+become permanent coding law unless their durable rule is promoted.
+
+## Operating Modes And Authority
+
+Before acting, classify the requested mode:
+
+1. explain/adopt: understand and explain implemented capability without
+   changing files;
+2. discover/assess: inspect behavior, gaps, and options without implementation
+   unless authorized;
+3. plan/design: establish outcomes, ownership, requirements, risks, acceptance,
+   and sequencing;
+4. implement: change only the authorized scope after readiness is sufficient;
+5. review/assure: evaluate implementation, tests, security, compatibility,
+   operations, and documentation;
+6. operate/monitor: perform only approved operational actions and preserve
+   auditability.
+
+Role language never authorizes file edits, runtime mutation, data mutation,
+publishing, deployment, commits, external communication, or residual-risk
+acceptance by itself.
+
+## Pre-Implementation Study Gate
+
+No non-trivial change should start from a narrow file-local view. Before
+implementation, build a depth-proportional context from Nodics itself:
+
+- root-to-leaf README/AGENTS chain;
+- relevant module `llm/contracts`, `llm/examples`, and generated context;
+- relevant `nodics.core/modules/nSetup/llm` contracts, standards, playbooks,
+  and examples;
+- source, tests, schemas, routers, services, providers, interceptors,
+  pipelines, data files, package metadata, topology, and configuration;
+- class-level and function-level comments/JSDoc in the affected capability and
+  direct dependencies;
+- sibling and related module patterns;
+- nTooling generators, validators, and scripts that define accepted shape.
+
+For non-trivial implementation, record compact readiness evidence: working
+mode, business outcome, owning module/layer, studied sources, current behavior,
+reuse/extension path, affected contracts, security/tenant/data/UX/API/release
+impact, assumptions, contradictions, intended files, and validation route.
+
 ## Repository boundary
 
 - Treat `nodics.ai` as the authoritative backend/framework repository root.
@@ -55,11 +132,43 @@ own local behavior inside each functional module group.
 
 ## Documentation and LLM ownership
 
-- Repository-wide framework principles live under `llm/contracts/` and
-  `docs/` in this repository root.
+- Repository-wide and tool-neutral framework principles live under
+  `nodics.core/modules/nSetup/llm/`.
+- Do not create or restore a repository-root `llm/` directory. `nodics.ai` is
+  the framework repository/module-group boundary, not a direct functionality
+  owner or parallel LLM authority.
 - Module-local contracts live under each functional module group, for example
   `nodics.core/llm/contracts/`.
 - README files are concise human overviews. AGENTS files direct agent behavior.
-- Update the Phase 0 modularization contract before broad source movement,
-  runtime loader changes, dependency-resolution changes, or module skeleton
-  changes.
+- Use permanent contracts and standards under `nodics.core/modules/nSetup/llm/`
+  before broad source movement, runtime loader changes,
+  dependency-resolution changes, or module skeleton changes.
+- Treat `nodics.core/modules/nSetup/llm/records/phase0/` as historical
+  modularization traceability. Do not add new permanent coding rules there.
+
+## Mandatory implementation rules
+
+- Before changing code, identify the active module boundary and nearest
+  `AGENTS.md`.
+- Apply reuse first: reuse an existing Nodics capability, then customize or
+  extend through the layered module hierarchy, and create a new capability only
+  after proving existing authorities are insufficient.
+- Design every module for partial discovery. A future developer or AI tool may
+  read only root guidance and the nearest module files, so critical ownership,
+  dependency, security, persistence, extension, and testing rules must exist in
+  the nearest `AGENTS.md`, README, `llm/contracts`, `llm/examples`, generated
+  context, and focused tests as applicable. Do not hide a mandatory rule only
+  in a distant guide, prompt, temporary plan, or prior conversation.
+- Significant capability documentation must include successful, rejected,
+  boundary/scale, failure/recovery, and later-layer customization use cases.
+  It must address business evaluators, business users, administrators/operators,
+  partner developers, framework maintainers, and AI tools, or explicitly state
+  why an audience is not applicable.
+- Treat generated artifacts as outputs recreated from source definitions. If
+  generated output is wrong, fix the source definition and regenerate.
+- Keep backend-importable data in backend-owned modules or content packages.
+  Frontend repositories own rendering and interaction, not persisted CMS,
+  documentation, schema, permission, or initialization records.
+- Keep instructions portable and tool-neutral. Vendor adapters may reference
+  root `AGENTS.md` and `nodics.core/modules/nSetup/llm`, but must not become
+  the source of truth.

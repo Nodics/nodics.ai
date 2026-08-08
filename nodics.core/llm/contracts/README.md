@@ -1,16 +1,13 @@
-# Nodics Core Contracts
+# Nodics Core Contract Pointers
 
-This folder contains module-specific AI/developer contracts for `nodics.core`
-and cross-cutting framework contracts that must be stable before broad source
-movement.
+This folder preserves compatibility pointers for older references.
 
-Use these files for rules that are more specific than root `AGENTS.md` and the
-module `AGENTS.md`, especially extension boundaries, override expectations,
-testing rules, security constraints, module skeletons, dependency resolution,
-and generated-artifact responsibilities.
+Current permanent framework contracts live in
+`modules/nSetup/llm/contracts`, `modules/nSetup/llm/standards`, and
+`modules/nSetup/llm/playbooks`.
 
-## Active contracts
+## Historical pointers
 
-- `modularization-phase0-contract.md` stabilizes the workspace, customer
-  project, module skeleton, clean/build, and documentation ownership rules for
-  the current modularization program.
+- `modularization-phase0-contract.md` points to the historical Phase 0 record.
+- `modularization-phase0-validation-checklist.md` points to the historical
+  Phase 0 validation record.

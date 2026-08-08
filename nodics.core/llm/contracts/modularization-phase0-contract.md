@@ -1,17 +1,17 @@
-# Nodics Modularization Phase 0 Contract
+# Nodics Modularization Phase 0 Record Pointer
 
-The authoritative Phase 0 modularization contract now lives at the
-`nodics.ai` framework repository root:
+The historical Phase 0 modularization record lives in nSetup:
 
 ```text
-../../../llm/contracts/modularization-phase0-contract.md
+modules/nSetup/llm/records/phase0/modularization-phase0-contract.md
 ```
 
 From this `nodics.core` folder, use:
 
 ```text
-../llm/contracts/modularization-phase0-contract.md
+modules/nSetup/llm/records/phase0/modularization-phase0-contract.md
 ```
 
-Core keeps this pointer only to preserve older references while avoiding a
-second contract authority.
+Core keeps this pointer only to preserve older references. The permanent
+module/group/contracts are under `modules/nSetup/llm/contracts` and
+`modules/nSetup/llm/standards`; this Phase 0 file is not a coding authority.

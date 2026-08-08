@@ -10,11 +10,20 @@ Allow one tenant to use a stricter import file-size limit than the default envir
 
 Configuration belongs to the smallest layer that owns the change.
 
-- Framework defaults belong in the owning module's `config/properties.js`.
-- Project defaults belong in the project module.
-- Environment, server, and node differences belong in their own module layers.
+- Framework/module defaults belong in the owning module's
+  `config/properties.js`.
+- Project defaults belong in the project module only when every runtime in that
+  project should inherit them.
+- Environment, server, and node files are override layers. They should hold only
+  topology, local coordinates, secret references, active runtime composition, or
+  intentional enable/disable decisions.
 - Tenant-specific active behavior belongs in governed runtime configuration when the setting must change without code release.
 - Secrets belong in secret governance, not in source-controlled configuration.
+
+This rule is not limited to one feature area. `apiExposure`, import/export,
+media management, provider configuration, permission names, limits, discovery
+flags, and tooling gates all follow the same ownership rule: reusable defaults
+live with the owning module; later layers carry only the delta.
 
 ## Correct Layering
 
@@ -22,10 +31,13 @@ Use this order:
 
 1. Identify the owning capability and property namespace.
 2. Confirm the property already exists or add it to the owning module's `config/properties.js`.
-3. Resolve the property through the existing configuration service or runtime governance path.
-4. Add validation, preview, approval, activation, audit, and rollback when the change is mutable at runtime.
-5. Add tenant/environment/server/node tests for precedence and override behavior.
-6. Update docs and generated LLM context.
+3. If the request is project-, environment-, server-, or node-specific, add
+   only the changed subtree in that later layer. Do not copy the whole inherited
+   block.
+4. Resolve the property through the existing configuration service or runtime governance path.
+5. Add validation, preview, approval, activation, audit, and rollback when the change is mutable at runtime.
+6. Add tenant/environment/server/node tests for precedence and override behavior.
+7. Update docs and generated LLM context.
 
 ## Runtime Governance Rule
 
@@ -69,6 +81,8 @@ Use more focused commands when the owning module provides them.
 Avoid:
 
 - creating parallel configuration files for values that belong in `config/properties.js`;
+- turning server or environment configuration into a copied snapshot of module
+  defaults;
 - hardcoding policy values in services, controllers, or routers;
 - using runtime configuration to invent unnamed behavior;
 - storing credentials or tokens in source-controlled files;

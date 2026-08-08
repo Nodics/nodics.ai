@@ -1,8 +1,17 @@
 # nSetup AI Contracts
 
-This folder contains module-specific AI/developer contracts for `nSetup`.
+This folder contains permanent AI/developer contracts for Nodics engineering.
 
-Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.
+Use these files for durable rules that are more specific than root
+`AGENTS.md` and the module `AGENTS.md`, especially ownership, extension
+boundaries, override expectations, testing rules, security constraints,
+configuration ownership, generated-artifact responsibilities, and release
+expectations.
+
+Do not put phase checklists, refactor action registers, temporary migration
+plans, or reusable page templates in this folder. Put them under `records/`,
+`playbooks/`, or `templates/`, and promote only the permanent rule into a
+contract.
 
 ## Contract Index
 
@@ -19,6 +28,9 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
 - `module-structure-contract.md`: standard module, docs, and LLM folder shape.
 - `module-group-participation-contract.md`: canonical workspace, runtime-group,
   structural-group, child-discovery, activation, and registration boundaries.
+- `customer-config-classification-contract.md`: ownership and placement rules
+  for customer/project, environment, server, generated, and framework
+  configuration.
 - `integration-governance-contract.md`: ownership, configuration, security,
   testing, and MCP exposure rules for external/provider integrations.
 - `documentation-impact-contract.md`: canonical platform-wide documentation

@@ -146,7 +146,7 @@ module.exports = {
                 'modules/nSetup/llm/contracts/nodics-principles.md',
                 'modules/nSetup/llm/contracts/developer-implementation-contract.md',
                 'modules/nSetup/llm/contracts/module-structure-contract.md',
-                'modules/nSetup/llm/module-generation-guide.md'
+                'modules/nSetup/llm/standards/module-generation-guide.md'
             ].filter(relativePath => fs.existsSync(path.join(home, relativePath)))
         };
     },

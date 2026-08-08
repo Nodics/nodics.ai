@@ -92,7 +92,7 @@ module.exports = {
         } else if (step.node) {
             this.spawn(context, process.execPath, [path.resolve(context.home, step.node)].concat(step.args || []));
         } else if (step.tool) {
-            const toolPath = path.join(context.frameworkHome, 'gFramework', 'nTooling', 'bin', 'nodics-tool.js');
+            const toolPath = path.join(context.frameworkHome, 'nodics.core', 'modules', 'nTooling', 'bin', 'nodics-tool.js');
             this.spawn(context, process.execPath, [toolPath].concat(step.tool, step.args || []));
         } else {
             throw new Error('Invalid test suite step: ' + JSON.stringify(step));

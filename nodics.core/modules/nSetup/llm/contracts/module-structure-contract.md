@@ -115,7 +115,7 @@ loader/generator contract that cannot be expressed as properties, and that
 exception must be documented in the owning module README and tests.
 
 New project, environment, server, and node modules must follow
-`modules/nSetup/llm/module-generation-guide.md`. Generation must be driven by module
+`modules/nSetup/llm/standards/module-generation-guide.md`. Generation must be driven by module
 metadata, active-module registration, layered configuration, source
 definitions, tests, documentation, and regenerated artifacts. Do not copy
 `nCommon/templates`; active scaffolding comes from maintained module-generation

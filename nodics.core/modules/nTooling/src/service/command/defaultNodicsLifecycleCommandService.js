@@ -63,7 +63,7 @@ module.exports = {
      * @returns {void}
      */
     runTool: function (context, args) {
-        const toolPath = path.join(context.frameworkHome, 'gFramework', 'nTooling', 'bin', 'nodics-tool.js');
+        const toolPath = path.join(context.frameworkHome, 'nodics.core', 'modules', 'nTooling', 'bin', 'nodics-tool.js');
         this.spawn(context, process.execPath, [toolPath].concat(args));
     },
 

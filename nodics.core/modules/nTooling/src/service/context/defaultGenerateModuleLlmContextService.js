@@ -30,6 +30,7 @@ const {
     getModuleRuntime,
     getModuleRuntimeSummary,
     getRelativeIfExists,
+    isNSetupModule,
     listFeatureFolders,
     loadLocalSchemas,
     rootPath,
@@ -452,7 +453,7 @@ function writeModuleContext(module) {
 function run() {
     let modules = scanModules();
     bootstrapSchemaGlobals(modules);
-    let contextModules = modules.filter(module => module.relativePath !== 'modules/nSetup');
+    let contextModules = modules.filter(module => !isNSetupModule(module));
     contextModules.forEach(writeModuleContext);
     console.log('Generated module LLM context for ' + contextModules.length + ' modules');
 }

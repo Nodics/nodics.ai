@@ -166,18 +166,18 @@ requireClauses('modules/nSetup/llm/prompts/runtime-governance-prompt.md', [
     'Do not add a parallel activation channel'
 ]);
 
-requireClauses('modules/nSetup/llm/feature-process.md', [
+requireClauses('modules/nSetup/llm/playbooks/feature-process.md', [
     'override/customization behavior for every new or changed extension point',
     '## 9. Definition Of Done',
     'later-loaded override/customization path is documented and tested'
 ]);
 
-requireClauses('modules/nSetup/llm/testing-playbook.md', [
+requireClauses('modules/nSetup/llm/playbooks/testing-playbook.md', [
     'Every new or changed extension point requires an override/customization test',
     'change-acceptance requirement'
 ]);
 
-requireClauses('modules/nSetup/llm/artifact-definition-and-change-guide.md', [
+requireClauses('modules/nSetup/llm/standards/artifact-definition-and-change-guide.md', [
     '## Configuration Properties',
     '## Schemas',
     '## Routers',
@@ -189,7 +189,7 @@ requireClauses('modules/nSetup/llm/artifact-definition-and-change-guide.md', [
     'later-layer customization works without core edits'
 ]);
 
-requireClauses('modules/nSetup/llm/daily-change-checklist.md', [
+requireClauses('modules/nSetup/llm/playbooks/daily-change-checklist.md', [
     '# Daily Change Checklist',
     'application-developer mode',
     'only project-owned modules and effective project behavior',
@@ -206,7 +206,7 @@ requireClauses('modules/nSetup/llm/daily-change-checklist.md', [
     'Evidence may be reused while the relevant files remain unchanged'
 ]);
 
-requireClauses('modules/nSetup/llm/change-gate-contract.md', [
+requireClauses('modules/nSetup/llm/playbooks/change-gate-contract.md', [
     '## Verification Scope Contract',
     'Gate scope follows code ownership, not repository availability',
     'immutable, previously qualified dependency',
@@ -221,7 +221,7 @@ requireClauses('modules/nSetup/llm/change-gate-contract.md', [
     'may not silently select a weaker category'
 ]);
 
-requireClauses('gFramework/nTooling/src/service/quality/defaultDesignPrincipleAuditService.js', [
+requireClauses('modules/nTooling/src/service/quality/defaultDesignPrincipleAuditService.js', [
     '@module nTooling/service/quality/defaultDesignPrincipleAuditService',
     'capabilities are sacred, implementations are negotiable',
     'Periodic Platform Audit',
@@ -229,7 +229,7 @@ requireClauses('gFramework/nTooling/src/service/quality/defaultDesignPrincipleAu
     'active server/node generated-report location'
 ]);
 
-requireClauses('modules/nSetup/llm/module-generation-guide.md', [
+requireClauses('modules/nSetup/llm/standards/module-generation-guide.md', [
     '# Module Generation Guide',
     'standard folder/file structure for a generated capability module or pure',
     'group module is defined in `standards/module-standard.md`',
@@ -379,7 +379,7 @@ requireClauses('modules/nSetup/llm/ai-enablement-index.md', [
     'standards/nodics-structure-matrix.md',
     'keep built-in nTooling handler aliases',
     'same-name service files under `src/service/mcp`',
-    'module-generation-guide.md',
+    'standards/module-generation-guide.md',
     'contracts/integration-governance-contract.md'
 ]);
 

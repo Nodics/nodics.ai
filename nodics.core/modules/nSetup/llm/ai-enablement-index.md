@@ -9,7 +9,7 @@ Use this pack before making architectural recommendations, code changes, tests, 
 Start every AI-assisted Nodics session with:
 
 ```text
-Read root README.md, root AGENTS.md, CONTRIBUTING.md when source or docs may change, every applicable ancestor README.md and AGENTS.md from root to the owning module, the nearest module README.md and AGENTS.md, modules/nSetup/llm/ai-enablement-index.md, and modules/nSetup/llm/daily-change-checklist.md first. Load module `llm/contracts`, `llm/examples`, generated context, and linked detailed guidance only for the affected artifact or active change gate.
+Read root README.md, root AGENTS.md, CONTRIBUTING.md when source or docs may change, every applicable ancestor README.md and AGENTS.md from root to the owning module, the nearest module README.md and AGENTS.md, modules/nSetup/llm/ai-enablement-index.md, and modules/nSetup/llm/playbooks/daily-change-checklist.md first. Load module `llm/contracts`, `llm/examples`, generated context, and linked detailed guidance only for the affected artifact or active change gate.
 ```
 
 ## Token-Efficient Reading Contract
@@ -29,7 +29,7 @@ Always read:
 5. nearest owning module `README.md` and `AGENTS.md`
 6. nearest module `llm/contracts` and `llm/examples` when relevant
 7. `modules/nSetup/llm/ai-enablement-index.md`
-8. `daily-change-checklist.md`
+8. `playbooks/daily-change-checklist.md`
 9. the affected module's `llm/generated/module-context.md` when available
 
 README files explain capability purpose, usage, and extension paths. AGENTS
@@ -75,33 +75,49 @@ Load detailed files only when their subject is affected:
 9. `contracts/testing-and-release-contract.md`
 10. `contracts/customer-project-mode-contract.md`
 11. `nodics-principles.md` compatibility pointer
-12. `modular-architecture.md`
-12. `module-catalog.md`
-13. `artifact-definition-and-change-guide.md`
-14. `schema-and-generation.md`
-15. `tenant-model-and-runtime-isolation.md`
-16. `versioned-data-and-publish-lifecycle.md`
-17. `testing-playbook.md`
-18. `standards/module-standard.md`
-19. `standards/code-documentation-standard.md`
-20. `standards/nodics-structure-matrix.md`
-21. `feature-process.md`
-22. `prompts/base-nodics-assistant-prompt.md`
-23. `prompts/enterprise-architecture-quality-prompt.md`
-24. `prompts/README.md`
-25. `prompts/review-prompt.md`
-26. `prompts/refactor-prompt.md`
-27. `prompts/testing-prompt.md`
-28. `prompts/schema-change-prompt.md`
-29. `prompts/runtime-governance-prompt.md`
-30. `memory/README.md`
-31. `memory/decisions.md`
-32. `module-generation-guide.md`
-33. `examples/README.md`
+12. `standards/modular-architecture.md`
+13. `standards/module-catalog.md`
+14. `standards/artifact-definition-and-change-guide.md`
+15. `standards/schema-and-generation.md`
+16. `standards/tenant-model-and-runtime-isolation.md`
+17. `standards/versioned-data-and-publish-lifecycle.md`
+18. `playbooks/testing-playbook.md`
+19. `standards/module-standard.md`
+20. `standards/code-documentation-standard.md`
+21. `standards/nodics-structure-matrix.md`
+22. `playbooks/feature-process.md`
+23. `templates/documentation-page-template.md`
+24. `prompts/base-nodics-assistant-prompt.md`
+25. `prompts/enterprise-architecture-quality-prompt.md`
+26. `prompts/README.md`
+27. `prompts/review-prompt.md`
+28. `prompts/refactor-prompt.md`
+29. `prompts/testing-prompt.md`
+30. `prompts/schema-change-prompt.md`
+31. `prompts/runtime-governance-prompt.md`
+32. `memory/README.md`
+33. `memory/decisions.md`
+34. `standards/module-generation-guide.md`
+35. `examples/README.md`
 
-Load `change-gate-contract.md` only at commit, merge/release, periodic-audit, or
+Load `playbooks/change-gate-contract.md` only at commit, merge/release, periodic-audit, or
 explicit comprehensive-review time. Canonical rules should be referenced rather
 than repeated in every prompt or progress update.
+
+## Taxonomy Rule
+
+Keep the pack organized by long-term purpose:
+
+- `contracts/`: permanent non-negotiable engineering rules.
+- `standards/`: concrete source, structure, generation, architecture, and
+  lifecycle standards.
+- `playbooks/`: step-by-step work procedures and gates.
+- `templates/`: reusable rubrics and authoring templates.
+- `records/`: historical phase/refactor records for traceability only.
+
+Do not put phase records, refactor action registers, checklists, or reusable
+page templates in `contracts/`. If a record reveals a durable rule, promote the
+rule into a real contract or standard and keep the record as history.
 
 ## Core Rule
 
@@ -229,9 +245,10 @@ report the drift and resolve through repository authority instead of guessing.
 
 ## Important Boundaries
 
-- Repository-root `llm/` may own framework-wide contracts for the `nodics.ai`
-  repository. `modules/nSetup/llm` owns setup/tooling-specific AI guidance;
-  module-shaped packages keep their own module-local `llm/` context.
+- Do not create a repository-root `llm/` directory. `modules/nSetup/llm` owns
+  repository-wide, setup, tooling, and tool-neutral AI/developer guidance for
+  the `nodics.ai` framework repository; module-shaped packages keep their own
+  module-local `llm/` context only when they own specific capability guidance.
 - Do not create a repository-root `memory/` directory. Curated shared project
   and platform memory belongs under `modules/nSetup/llm/memory`; raw tool memory and
   private session transcripts stay outside the repository.

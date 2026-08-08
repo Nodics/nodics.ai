@@ -28,5 +28,9 @@ indexes determine runtime service merge order.
 Keep Core independently cloneable and verify changes through Core tests plus a
 composed customer server such as Kickoff `platformServer`.
 
-Before moving more code, satisfy the Phase 0 modularization gate documented in
-`llm/contracts/modularization-phase0-contract.md`.
+Before moving more code, follow the permanent repository/module boundary rules
+in `modules/nSetup/llm/contracts/module-group-participation-contract.md`,
+`modules/nSetup/llm/contracts/module-structure-contract.md`, and
+`modules/nSetup/llm/standards/nodics-structure-matrix.md`. Phase 0 records
+under `modules/nSetup/llm/records/phase0/` are historical traceability, not the
+current coding contract.

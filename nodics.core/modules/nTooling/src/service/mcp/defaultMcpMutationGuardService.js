@@ -25,7 +25,7 @@ const actionCatalog = {
         requiresApproval: true,
         description: 'Create a project, environment, server, node, or capability module skeleton from approved hierarchy metadata.',
         requiredInputs: ['moduleName', 'kind', 'parent', 'approvedHierarchy'],
-        sourceOfTruth: ['modules/nSetup/llm/module-generation-guide.md', 'modules/nSetup/llm/contracts/module-structure-contract.md'],
+        sourceOfTruth: ['modules/nSetup/llm/standards/module-generation-guide.md', 'modules/nSetup/llm/contracts/module-structure-contract.md'],
         validation: ['npm run test:module-metadata', 'npm run test:tooling', 'npm run llm:validate']
     },
     'documentation-update': {

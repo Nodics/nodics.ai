@@ -32,9 +32,9 @@ function write(rootDir, relativePath, content) {
 function createFixture() {
     const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-doc-navigation-'));
     write(rootDir, 'README.md', '# Entry\n\n[Docs](publicDocs/README.md)\n');
-    write(rootDir, 'publicDocs/README.md', '# Docs\n\n[Guide](guide.md)\n[Catalog](reference/module-catalog.md)\n');
+    write(rootDir, 'publicDocs/README.md', '# Docs\n\n[Guide](guide.md)\n[Catalog](reference/standards/module-catalog.md)\n');
     write(rootDir, 'publicDocs/guide.md', '# Guide\n\n## Continue\n\n- [Home](README.md)\n');
-    write(rootDir, 'publicDocs/reference/module-catalog.md', '# Catalog\n\n- [sample](../../sample/README.md)\n\n## Continue\n\n- [Home](../README.md)\n');
+    write(rootDir, 'publicDocs/reference/standards/module-catalog.md', '# Catalog\n\n- [sample](../../sample/README.md)\n\n## Continue\n\n- [Home](../README.md)\n');
     write(rootDir, 'sample/package.json', JSON.stringify({ name: 'sample' }));
     write(rootDir, 'sample/README.md', '# Sample\n');
     return rootDir;
@@ -42,7 +42,7 @@ function createFixture() {
 
 const policy = {
     requiredEntryPoints: ['publicDocs/guide.md'],
-    moduleCatalog: 'publicDocs/reference/module-catalog.md'
+    moduleCatalog: 'publicDocs/reference/standards/module-catalog.md'
 };
 
 const positiveRoot = createFixture();

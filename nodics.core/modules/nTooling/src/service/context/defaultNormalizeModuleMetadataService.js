@@ -69,7 +69,7 @@ function inferKind(module) {
     if (relativePath === 'modules/nSetup' || type === 'setup') {
         return 'setup';
     }
-    if (relativePath === 'gFramework/nTooling') {
+    if (relativePath === 'nodics.core/modules/nTooling') {
         return 'tooling';
     }
     if (relativePath.includes('/templates/')) {

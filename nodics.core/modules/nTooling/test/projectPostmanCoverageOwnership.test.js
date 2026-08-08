@@ -21,29 +21,18 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 
-const rootPath = path.resolve(__dirname, '../../..');
+const rootPath = path.resolve(__dirname, '../../../..');
 
 const ownedReferenceCoverage = [{
     name: 'CMS page APIs',
     moduleName: 'cms',
-    modulePath: path.join(rootPath, 'gContent', 'cms'),
+    modulePath: path.join(rootPath, 'nodics.wcms', 'modules', 'cms'),
     expectedKind: 'capability',
     generatedTests: [
         'test/gen/api/cmsPageApiContract.test.js',
         'test/gen/apiScenario/cmsPageApiScenario.test.js',
         'test/gen/crud/cmsPageCrudScenario.test.js',
         'test/gen/schema/cmsPageSchemaContract.test.js'
-    ]
-}, {
-    name: 'CRES review APIs',
-    moduleName: 'cres',
-    modulePath: path.join(rootPath, 'gMrkty', 'cres'),
-    expectedKind: 'capability',
-    generatedTests: [
-        'test/gen/api/customerReviewApiContract.test.js',
-        'test/gen/apiScenario/customerReviewApiScenario.test.js',
-        'test/gen/crud/customerReviewCrudScenario.test.js',
-        'test/gen/schema/customerReviewSchemaContract.test.js'
     ]
 }];
 
@@ -63,7 +52,7 @@ ownedReferenceCoverage.forEach(item => {
     });
 });
 
-const inactiveReferenceModules = ['daasCore', 'daasAPI'];
+const inactiveReferenceModules = ['cres', 'daasCore', 'daasAPI'];
 inactiveReferenceModules.forEach(moduleName => {
     const matches = [];
     walk(rootPath, filePath => {

@@ -7,7 +7,7 @@ Design Nodics tests for this change as both a modular framework and a
 distributed runtime.
 
 Load the base Nodics assistant prompt, affected module context,
-testing-playbook.md, and testing-and-release-contract.md. Load generated module
+playbooks/testing-playbook.md, and testing-and-release-contract.md. Load generated module
 test context when available.
 
 Classify the test need:

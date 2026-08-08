@@ -22,6 +22,11 @@ const path = require('path');
 
 const repositoryRoot = path.resolve(__dirname, '../../..');
 const implementationFolders = new Set(['service', 'controller', 'facade']);
+const contractFiles = [
+    'modules/nSetup/llm/contracts/developer-implementation-contract.md',
+    'modules/nSetup/llm/contracts/nodics-principles.md',
+    'modules/nSetup/llm/examples/changing-runtime-configuration.md'
+];
 const violations = [];
 const rules = [
     {
@@ -84,5 +89,20 @@ function walk(directory) {
 }
 
 walk(repositoryRoot);
+
+contractFiles.forEach(relativeFile => {
+    const source = fs.readFileSync(path.join(repositoryRoot, relativeFile), 'utf8');
+    [
+        /apiExposure/,
+        /import\/export|import\/export|data import\/export|data import, data export/i,
+        /server(?:, and node| and node| or node)?.*(?:override layers|stay light|only deltas)/is,
+        /owning module/i
+    ].forEach((expression, index) => {
+        if (!expression.test(source)) {
+            violations.push(relativeFile + ' [CONFIG_LAYER_CONTRACT_' + index + '] Configuration layering contract must state module-owned defaults and light runtime override layers.');
+        }
+    });
+});
+
 assert.deepStrictEqual(violations, [], 'Extensibility configuration boundary violations:\n' + violations.join('\n'));
 console.log('Extensibility configuration boundary validated');

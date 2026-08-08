@@ -9,7 +9,7 @@ Implement or review this Nodics runtime-governed behavior through the existing
 control-plane lifecycle.
 
 Load the base Nodics assistant prompt, affected module context,
-artifact-definition-and-change-guide.md, tenant-model-and-runtime-isolation.md,
+standards/artifact-definition-and-change-guide.md, standards/tenant-model-and-runtime-isolation.md,
 and testing-and-release-contract.md. For security-sensitive changes, also load
 the developer implementation and integration governance contracts.
 

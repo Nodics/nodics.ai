@@ -1,0 +1,41 @@
+name: Nodics Release Check
+
+on:
+  pull_request:
+    branches:
+      - development
+      - master
+  push:
+    branches:
+      - development
+      - master
+
+jobs:
+  release-check:
+    name: Release check on Node ${{ matrix.node-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+          - 22.x
+          - 24.x
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Print governed release gate
+        run: npm run release:check
+
+      - name: Execute governed release gate
+        run: npm run release:check -- --execute
+
+      - name: Execute full release-candidate gate
+        if: github.ref == 'refs/heads/development' || github.ref == 'refs/heads/master'
+        run: npm run release:check -- --execute --full

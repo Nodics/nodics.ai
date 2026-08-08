@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nTooling/test/designPrincipleAiGovernanceContract
+ * @module nodics.core/modules/nTooling/test/designPrincipleAiGovernanceContract
  * @description Ensures the design-principle audit cannot pass while canonical AI governance is invalid.
  * @layer test
  * @owner nTooling

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nTooling/test/aiGovernanceValidation
+ * @module nodics.core/modules/nTooling/test/aiGovernanceValidation
  * @description Verifies that repository-root AI governance and shared memory are owned by modules/nSetup/llm while module-shaped packages retain local llm entrypoints.
  * @layer test
  * @owner nTooling

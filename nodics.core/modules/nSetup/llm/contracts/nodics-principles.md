@@ -378,7 +378,23 @@ Configurable values, policy defaults, tooling commands, discovery rules,
 provider defaults, thresholds, and governance gate data belong in module-owned
 `config/properties.js` under clear namespaces.
 
-Put configurable values, policy defaults, tooling command declarations, discovery rules, and governance gate data in module-owned `config/properties.js` under clear namespaces.
+Put configurable values, policy defaults, tooling command declarations,
+discovery rules, and governance gate data in module-owned
+`config/properties.js` under clear namespaces. Module-owned defaults are the
+single reusable source for their capability. Project, environment, server, and
+node properties are later override layers, not parallel default catalogues.
+They carry only intentional deltas such as topology, local coordinates,
+secret-source references, active runtime composition, tenant/deployment
+selection, or explicit enable/disable decisions.
+
+Every module must keep tooling command declarations, discovery rules, and governance gate data in module-owned `config/properties.js` so runtime, generator, and AI governance behavior can be discovered from the same module-owned source.
+
+This layering rule applies to every property namespace. Do not treat
+`apiExposure`, import/export, media management, provider settings, permission
+names, limits, discovery flags, or tooling gates as special cases that may be
+copied into server config by default. If a value is generally true for an
+owning module, put it in that module. If a later layer changes it for a project
+or runtime, put only that changed subtree in the later layer.
 
 Do not introduce parallel config files such as `config/tooling.js`, standalone governance JSON, command registries, or hidden policy files when a
 property subtree can own the data. A separate configuration artifact is valid

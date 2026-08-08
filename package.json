@@ -14,8 +14,7 @@
     "loadableByNodicsModuleLoader": false,
     "owns": [
       "repository",
-      "documentation",
-      "llm",
+      "workspace-governance",
       "release"
     ],
     "runtime": {
@@ -33,7 +32,25 @@
     "nodics.docs"
   ],
   "scripts": {
-    "validate:root": "node scripts/validate-framework-root.js",
+    "validate:root": "node nodics.core/modules/nTooling/bin/nodics-tool.js validate:root",
+    "clean": "node nodics.core/modules/nTooling/bin/nodics-tool.js clean",
+    "build": "node nodics.core/modules/nTooling/bin/nodics-tool.js build",
+    "llm:clean": "node nodics.core/modules/nTooling/bin/nodics-tool.js llm:clean",
+    "llm:generate": "node nodics.core/modules/nTooling/bin/nodics-tool.js llm:generate",
+    "llm:validate": "node nodics.core/modules/nTooling/bin/nodics-tool.js llm:validate",
+    "ai:validate": "node nodics.core/modules/nTooling/bin/nodics-tool.js ai:validate",
+    "ai:principle-audit": "node nodics.core/modules/nTooling/bin/nodics-tool.js ai:principle-audit",
+    "quality:docs": "node nodics.core/modules/nTooling/bin/nodics-tool.js quality:docs",
+    "quality:copyright": "node nodics.core/modules/nTooling/bin/nodics-tool.js quality:copyright",
+    "release:check": "node nodics.core/modules/nTooling/bin/nodics-tool.js release:check",
+    "test:suite": "node nodics.core/modules/nTooling/bin/nodics-tool.js test:suite",
+    "test:basic": "npm run test:suite -- test:suite --suite=basic",
+    "test:full": "npm run test:suite -- test:suite --suite=full",
+    "test:import": "npm run test:suite -- test:suite --suite=import",
+    "test:report": "echo test:report pending nTooling reporter implementation",
+    "test:basic:report": "npm run test:suite -- test:suite --suite=basic --report && npm run test:report -- --suite=basic",
+    "test:full:report": "npm run test:suite -- test:suite --suite=full --report && npm run test:report -- --suite=full",
+    "test:import:report": "npm run test:suite -- test:suite --suite=import --report && npm run test:report -- --suite=import",
     "test": "npm run validate:root"
   }
 }

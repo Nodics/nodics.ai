@@ -267,14 +267,26 @@ standalone governance JSON files, command registries, quality-gate files, or
 implementation-specific policy files when the value can be represented as a
 property subtree.
 
-The owning capability or provider module defines reusable defaults once.
-Project, environment, server, and node `properties.js` files must contain only
-intentional deltas for their boundary. Do not copy unchanged defaults,
-disabled-provider placeholders, complete policy blocks, or conventional
-endpoint values into later layers. Before adding a property to an environment,
-server, or node, inspect the owning module and the earlier effective layers; if
-the desired value is already inherited, add nothing. Tests must prove both the
-inherited behavior and any intentional override.
+The owning capability, provider, or functional module defines reusable defaults
+once. This applies to every property namespace, including `apiExposure`,
+import/export enablement, media management, provider settings, permissions,
+policy defaults, operational limits, discovery metadata, and tooling gates.
+Project, environment, server, and node `properties.js` files are override
+layers only. They must contain only intentional deltas for their boundary:
+topology, local coordinates, environment-specific values, secret references,
+active runtime composition, or explicit enable/disable decisions. Do not copy
+unchanged defaults, disabled-provider placeholders, complete policy blocks, or
+conventional endpoint values into later layers. Before adding a property to a
+project, environment, server, or node, inspect the owning module and the earlier
+effective layers; if the desired value is already inherited, add nothing. Tests
+must prove both the inherited behavior and any intentional override.
+
+Server and node properties must stay light. A server may describe what it hosts,
+where it listens, which modules it activates, which remote endpoints it calls,
+and which inherited capabilities it deliberately disables for that process. It
+must not become a second catalogue of framework/module defaults. If a copied
+server property would still be valid when the server name, port, or deployment
+changes, it probably belongs in the owning module instead.
 
 Use clear property namespaces for specialized concerns, for example
 `tooling.commands`, `tooling.discovery`, and

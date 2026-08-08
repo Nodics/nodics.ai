@@ -100,7 +100,7 @@ function collectNavigationReport(rootDir, policy) {
     const entryPoint = policy.entryPoint || 'README.md';
     const publicRoot = policy.publicRoot || 'publicDocs';
     const publicIndex = policy.publicIndex || 'publicDocs/README.md';
-    const moduleCatalog = policy.moduleCatalog || 'publicDocs/reference/module-catalog.md';
+    const moduleCatalog = policy.moduleCatalog || 'publicDocs/reference/standards/module-catalog.md';
     const excluded = new Set(policy.excludedPublicPages || []);
     const markdownFiles = [entryPoint].concat(walkFiles(
         rootDir,

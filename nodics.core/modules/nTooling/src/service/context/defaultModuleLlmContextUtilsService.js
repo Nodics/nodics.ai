@@ -248,7 +248,7 @@ function getModuleKind(module) {
     }
 
     let relativePath = module.relativePath;
-    if (relativePath === 'modules/nSetup') {
+    if (isNSetupModule(module)) {
         return 'setup';
     }
     let pathParts = relativePath.split('/');
@@ -260,19 +260,19 @@ function getModuleKind(module) {
     if (pathParts.some(part => /Modules$/.test(part))) {
         return 'capability';
     }
-    if (pathParts.length === 1 && !relativePath.startsWith('gFramework') && !relativePath.startsWith('gCore')) {
+    if (pathParts.length === 1 && !relativePath.startsWith('nodics.')) {
         return 'application';
     }
     if (relativePath.includes('/templates/')) {
         return 'template';
     }
-    if (relativePath.startsWith('gFramework')) {
-        return 'capability';
-    }
-    if (relativePath.startsWith('gCore')) {
-        return 'capability';
-    }
     return 'capability';
+}
+
+function isNSetupModule(module) {
+    return module.name === 'nSetup' ||
+        module.relativePath === 'modules/nSetup' ||
+        module.relativePath.endsWith('/modules/nSetup');
 }
 
 function getModuleRuntime(module) {
@@ -297,6 +297,7 @@ module.exports = {
     collectModuleOwnedFiles,
     createFilesFingerprint,
     getRelativeIfExists,
+    isNSetupModule,
     getModuleKind,
     getModuleRuntime,
     getModuleRuntimeSummary,

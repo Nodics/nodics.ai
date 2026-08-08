@@ -6,9 +6,16 @@
     "moduleDocumentationDirectory": "docs",
     "moduleAiDirectory": "llm",
     "moduleAiReadmeFile": null,
-    "generatedAiContextDirectory": "llm/generated",
+    "moduleGeneratedAiContextDirectory": "llm/generated",
+    "generatedAiContextExclusions": [
+        "modules/nSetup/llm"
+    ],
     "globalAiGuidance": "modules/nSetup/llm/ai-enablement-index.md",
     "contractsDirectory": "modules/nSetup/llm/contracts",
+    "standardsDirectory": "modules/nSetup/llm/standards",
+    "playbooksDirectory": "modules/nSetup/llm/playbooks",
+    "templatesDirectory": "modules/nSetup/llm/templates",
+    "recordsDirectory": "modules/nSetup/llm/records",
     "promptsDirectory": "modules/nSetup/llm/prompts",
     "toolBridges": [
         "CLAUDE.md",

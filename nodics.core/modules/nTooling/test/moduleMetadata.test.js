@@ -29,6 +29,7 @@ const validKinds = new Set([
     'application',
     'capability',
     'environment',
+    'framework',
     'group',
     'node',
     'project',
@@ -47,7 +48,7 @@ const validRuntimeKeys = new Set([
 ]);
 const validNodicsKeys = new Set([
     'kind', 'displayName', 'runtimeModule', 'loadableByNodicsModuleLoader', 'owns', 'runtime',
-    'entrypoints', 'dependencyGovernance'
+    'entrypoints', 'dependencyGovernance', 'extends', 'functionalModule'
 ]);
 
 const rootPackage = JSON.parse(fs.readFileSync(path.join(rootPath, 'package.json'), 'utf8'));
@@ -58,16 +59,14 @@ const modules = [{
 }].concat(scanModules());
 
 const modernizedDescriptions = {
-    'gExp': ['Backend experience capability group', 'administration', 'client-facing API experiences'],
-    'gExp/backoffice': ['Backend registry', 'discovery', 'Nodics Axis'],
-    'gCore/profile': ['Identity and profile module', 'tenants', 'authentication'],
-    'gCore/cronjob': ['Scheduler capability', 'node ownership', 'event-driven execution'],
-    'gCore/workflow': ['Workflow capability group', 'event continuation', 'split/retry'],
-    'gFramework/nData/nImport/import': ['Governed data import engine', 'diagnostics', 'rollback hooks'],
-    'gFramework/nDynamo': ['Runtime control-plane module', 'activation', 'rollback'],
-    'gFramework/nEms/emsClient': ['Event/message client capability', 'tenant-aware', 'EMS communication'],
-    'gFramework/nTest': ['Nodics testing module', 'suite reporting', 'report ownership'],
-    'gFramework/nTooling': ['Non-runtime Nodics development', 'quality', 'command tooling']
+    'nodics.platform/modules/backoffice': ['Backend registry', 'discovery', 'Nodics Axis'],
+    'nodics.platform/modules/profile': ['Identity and profile module', 'tenants', 'authentication'],
+    'nodics.cron/modules/cronjob': ['Scheduler capability', 'node ownership', 'event-driven execution'],
+    'nodics.core/modules/nData/nImport/import': ['Governed data import engine', 'diagnostics', 'rollback hooks'],
+    'nodics.core/modules/nDynamo': ['Runtime control-plane module', 'activation', 'rollback'],
+    'nodics.core/modules/nEms/emsClient': ['Event/message client capability', 'tenant-aware', 'EMS communication'],
+    'nodics.core/modules/nTest': ['Nodics testing module', 'suite reporting', 'report ownership'],
+    'nodics.core/modules/nTooling': ['Non-runtime Nodics development', 'quality', 'command tooling']
 };
 
 assert(modules.length > 0, 'No Nodics packages were discovered');

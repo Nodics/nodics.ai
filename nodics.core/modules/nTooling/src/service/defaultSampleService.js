@@ -10,7 +10,7 @@
  */
 
 /**
- * @module gFramework/nTooling/src/service/defaultSampleService
+ * @module nodics.core/modules/nTooling/src/service/defaultSampleService
  * @description Implements nTooling default sample service business behavior and extension logic.
  * @layer service
  * @owner nTooling

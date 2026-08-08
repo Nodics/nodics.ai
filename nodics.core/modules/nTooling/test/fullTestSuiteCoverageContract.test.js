@@ -24,7 +24,7 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 
-const repositoryRoot = path.resolve(__dirname, '../../..');
+const repositoryRoot = path.resolve(__dirname, '../../../..');
 const scripts = require(path.join(repositoryRoot, 'package.json')).scripts || {};
 const testSuites = require('../config/properties').tooling.testSuites || {};
 
@@ -89,28 +89,11 @@ requireScriptIncludes('release:check', ['release:check']);
 requireSuiteIncludes('basic', [
     'suite:import',
     'suite:cronjob',
-    'suite:ems',
-    'suite:workflow',
-    'topology-consolidated'
+    'suite:ems'
 ]);
 
 requireSuiteIncludes('full', [
-    'basic',
-    'topology-modular'
-]);
-
-requireSuiteIncludes('storefront', [
-    'storefrontApiContract.test.js',
-    'storefrontContextCacheContract.test.js',
-    'storefrontContextAuditContract.test.js',
-    'storefrontContextAccessPerformanceContract.test.js',
-    'storefrontContextLifecycleContract.test.js',
-    'storefrontCrossModuleJourneyContract.test.js',
-    'storefrontDownstreamHandoffContract.test.js',
-    'storefrontObservabilityContract.test.js',
-    'storefrontPerformanceContract.test.js',
-    'storefrontReferenceTransportContract.test.js',
-    'storefrontTrafficResilienceContract.test.js'
+    'basic'
 ]);
 
 requireSuiteIncludes('import', [
@@ -124,11 +107,6 @@ requireSuiteIncludes('import', [
 ]);
 
 requireSuiteIncludes('workflow', [
-    'workflowServicePipelineContract.test.js',
-    'workflowActionPerformEngineContract.test.js',
-    'workflowEngineCorrectnessContract.test.js',
-    'workflowSplitAndRetryContract.test.js',
-    'workflowEventContinuationContract.test.js',
     'workflowLifecyclePipelineContract.test.js'
 ]);
 
@@ -148,29 +126,21 @@ requireSuiteIncludes('ems', [
 [
     'test:basic:report',
     'test:full:report',
-    'test:import:report',
-    'test:topology:consolidated:report',
-    'test:topology:modular:report'
+    'test:import:report'
 ].forEach(scriptName => {
     requireScriptIncludes(scriptName, ['test:report']);
 });
 
 [
-    'gFramework/nData/nImport/import/test/importTenantPrecedence.test.js',
-    'gFramework/nData/nImport/import/test/testTenantImportIsolation.test.js',
-    'gFramework/nData/nImport/import/test/importGovernanceLifecycleContract.test.js',
-    'gFramework/nTooling/test/dependencyOwnershipContract.test.js',
-    'gFramework/nTooling/test/releaseCheckCommandContract.test.js',
-    'gCore/workflow/flowCore/test/workflowEventContinuationContract.test.js',
-    'gCore/workflow/flowCore/test/workflowSplitAndRetryContract.test.js',
-    'gCore/cronjob/test/cronJobRuntimeContainerContract.test.js',
-    'gCore/cronjob/test/cronJobEventHandlerContract.test.js',
-    'gExp/storefront/test/storefrontApiContract.test.js',
-    'gExp/storefront/test/storefrontTrafficResilienceContract.test.js',
-    'gFramework/nEms/emsClient/test/messageTenantResolution.test.js',
-    'gFramework/nEms/emsClient/test/emsMessageProcessContract.test.js',
-    'startio/envs/startioLocal/test/topology/startioLocalRuntimeTopology.test.js',
-    'startio/envs/startioLocal/test/topology/runtimeContractProbe.js'
+    'nodics.core/modules/nData/nImport/import/test/importTenantPrecedence.test.js',
+    'nodics.core/modules/nData/nImport/import/test/testTenantImportIsolation.test.js',
+    'nodics.core/modules/nData/nImport/import/test/importGovernanceLifecycleContract.test.js',
+    'nodics.core/modules/nTooling/test/dependencyOwnershipContract.test.js',
+    'nodics.core/modules/nTooling/test/releaseCheckCommandContract.test.js',
+    'nodics.cron/modules/cronjob/test/cronJobRuntimeContainerContract.test.js',
+    'nodics.cron/modules/cronjob/test/cronJobEventHandlerContract.test.js',
+    'nodics.core/modules/nEms/emsClient/test/messageTenantResolution.test.js',
+    'nodics.core/modules/nEms/emsClient/test/emsMessageProcessContract.test.js'
 ].forEach(requireFile);
 
 console.log('Full test suite coverage contract validated');

@@ -49,7 +49,7 @@ function loadGovernance(args, rootDir) {
         };
     }
     return {
-        source: 'gFramework/nTooling/config/properties.js#tooling.documentationGovernance',
+        source: 'nodics.core/modules/nTooling/config/properties.js#tooling.documentationGovernance',
         governance: _.get(defaultProperties, 'tooling.documentationGovernance', {})
     };
 }

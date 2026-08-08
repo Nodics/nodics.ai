@@ -15,8 +15,11 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Do not hardcode project, environment, server, node, tenant, or customer behavior into reusable framework code.
 - Do not add schemas, routers, services, pipelines, runtime data, or active lifecycle behavior here.
 - Update the concise `README.md`, canonical documentation content, `llm/` guidance, and tests whenever behavior or extension contracts change.
-- Regenerate and validate module `llm/generated` context when source, schema, documentation, or tests change, but keep generated LLM output out of source control.
-- Generated files must be recreated from source definitions; do not hand-maintain generated artifacts as source of truth.
+- Do not generate module context under `modules/nSetup/llm/generated`; nSetup
+  is the human-authored global LLM governance package. Validate its guidance
+  through the nTooling governance and acceptance tests instead.
+- Generated files in other modules must be recreated from source definitions;
+  do not hand-maintain generated artifacts as source of truth.
 
 ## nSetup Rules
 

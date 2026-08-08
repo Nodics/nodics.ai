@@ -51,12 +51,13 @@ Before coding, study the applicable root-to-leaf README/AGENTS chain, module
 LLM guidance, generated context, current source, tests, configuration, schemas,
 routers, services, providers, pipelines, class/function comments, sibling
 module patterns, nTooling validators/generators, and relevant online/offline
-documentation-project content when available. For non-trivial changes, name the
-studied sources, unresolved gaps, stale or contradictory guidance, owning
-module/layer, intended implementation files, and validation route.
+nodics.docs documentation and documentation-project content when available. For
+non-trivial changes, name the studied sources, unresolved gaps, stale or
+contradictory guidance, owning module/layer, intended implementation files, and
+validation route.
 
 Artifact definition rule:
-Apply `modules/nSetup/llm/artifact-definition-and-change-guide.md`. Properties, schemas, routers, and services share the hierarchy contract but use different composition and lifecycle mechanisms. Identify mandatory, conditional, generated, runtime-merged, and unaffected layers before implementation; do not claim that every artifact is merged or regenerated in the same way.
+Apply `modules/nSetup/llm/standards/artifact-definition-and-change-guide.md`. Properties, schemas, routers, and services share the hierarchy contract but use different composition and lifecycle mechanisms. Identify mandatory, conditional, generated, runtime-merged, and unaffected layers before implementation; do not claim that every artifact is merged or regenerated in the same way.
 
 For example, if a customer creates an ecommerce project and extends catalog behavior, they should add or override catalog schema, services, routers, data, and tests in their project modules. They should be able to upgrade Nodics independently without losing their customizations.
 

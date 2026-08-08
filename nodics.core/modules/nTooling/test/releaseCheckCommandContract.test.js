@@ -23,7 +23,7 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 
-const repositoryRoot = path.resolve(__dirname, '../../..');
+const repositoryRoot = path.resolve(__dirname, '../../../..');
 const packageJson = require(path.join(repositoryRoot, 'package.json'));
 const toolingProperties = require('../config/properties');
 const releaseCheck = require('../src/service/command/defaultReleaseCheckCommandService');
@@ -103,9 +103,9 @@ assert(buildStepLabels.indexOf('tool:llm:generate') < buildStepLabels.indexOf('t
     'Generated documentation coverage must inspect freshly regenerated LLM context');
 assert(basicSuite.some(step => step.suite === 'generated'),
     'Basic test suite must execute generated tests after the release build regenerates them');
-assert(generatedSuite.some(step => step.node === 'gFramework/nTest/test/generatedTestRunnerLifecycleContract.test.js'),
+assert(generatedSuite.some(step => step.node === 'nodics.core/modules/nTest/test/generatedTestRunnerLifecycleContract.test.js'),
     'Generated suite must prove missing generated artifacts fail instead of passing');
-assert(generatedSuite.findIndex(step => step.node === 'gFramework/nTest/test/generatedTestRunnerLifecycleContract.test.js')
+assert(generatedSuite.findIndex(step => step.node === 'nodics.core/modules/nTest/test/generatedTestRunnerLifecycleContract.test.js')
     < generatedSuite.findIndex(step => step.tool && step.tool[0] === 'test:generated'),
     'Generated-test lifecycle guard must run before generated tests are executed');
 

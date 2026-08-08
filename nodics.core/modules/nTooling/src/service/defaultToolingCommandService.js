@@ -14,7 +14,7 @@ const path = require('path');
 const _ = require('lodash');
 const defaultProperties = require('../../config/properties');
 
-const frameworkHome = path.resolve(__dirname, '../../../..');
+const frameworkHome = path.resolve(__dirname, '../../../../..');
 const toolingModulePath = path.resolve(__dirname, '../..');
 
 /**

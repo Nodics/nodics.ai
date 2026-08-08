@@ -32,9 +32,9 @@ const configuredSuites = testSuiteCommandService.getSuites();
 assert(Array.isArray(configuredSuites.basic), 'The basic suite must be configured in nTooling properties');
 assert(configuredSuites.basic.some(step => step.suite === 'config'),
     'The basic suite must compose lower-level configured suites instead of duplicating long script chains');
-assert(configuredSuites.full.some(step => step.suite === 'topology-modular'),
-    'The full suite must keep modular topology validation in the suite registry');
-assert(configuredSuites.tooling.some(step => step.node === 'gFramework/nTooling/test/testSuiteCommandContract.test.js'),
+assert(configuredSuites.full.some(step => step.suite === 'basic'),
+    'The full suite must compose the current framework basic suite from the suite registry');
+assert(configuredSuites.tooling.some(step => step.node === 'nodics.core/modules/nTooling/test/testSuiteCommandContract.test.js'),
     'The tooling suite must guard the suite command contract');
 
 const originalSpawn = testSuiteCommandService.spawn;
@@ -49,14 +49,14 @@ testSuiteCommandService.spawn = function (context, command, args) {
 
 try {
     const context = {
-        frameworkHome: path.resolve(__dirname, '../../..'),
-        home: path.resolve(__dirname, '../../..')
+        frameworkHome: path.resolve(__dirname, '../../../..'),
+        home: path.resolve(__dirname, '../../../..')
     };
     testSuiteCommandService.runSuite(context, {
         composed: [
             { suite: 'leaf' },
             { npm: 'test:sample', args: ['--', '--fast'] },
-            { node: 'gFramework/nTooling/test/sample.test.js', args: ['--dry-run'] },
+            { node: 'nodics.core/modules/nTooling/test/sample.test.js', args: ['--dry-run'] },
             { tool: ['quality:docs'], args: ['--limit=1'] }
         ],
         leaf: [
@@ -70,7 +70,7 @@ try {
         'NPM suite steps must preserve configured arguments');
     assert.strictEqual(spawned[2].command, process.execPath,
         'Node suite steps must run through the current Node executable');
-    assert(spawned[2].args[0].endsWith('gFramework/nTooling/test/sample.test.js'),
+    assert(spawned[2].args[0].endsWith('nodics.core/modules/nTooling/test/sample.test.js'),
         'Node suite steps must resolve project-relative paths');
     assert.deepStrictEqual(spawned[3].args.slice(-2), ['quality:docs', '--limit=1'],
         'Tool suite steps must delegate to the governed Nodics tooling CLI');

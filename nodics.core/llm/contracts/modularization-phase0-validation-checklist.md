@@ -1,17 +1,18 @@
-# Nodics Modularization Phase 0 Validation Checklist
+# Nodics Modularization Phase 0 Validation Record Pointer
 
-The authoritative Phase 0 validation checklist now lives at the `nodics.ai`
-framework repository root:
+The historical Phase 0 validation record lives in nSetup:
 
 ```text
-../../../llm/contracts/modularization-phase0-validation-checklist.md
+modules/nSetup/llm/records/phase0/modularization-phase0-validation-checklist.md
 ```
 
 From this `nodics.core` folder, use:
 
 ```text
-../llm/contracts/modularization-phase0-validation-checklist.md
+modules/nSetup/llm/records/phase0/modularization-phase0-validation-checklist.md
 ```
 
-Core keeps this pointer only to preserve older references while avoiding a
-second validation authority.
+Core keeps this pointer only to preserve older references. The permanent
+validation and delivery rules live in `modules/nSetup/llm/contracts`,
+`modules/nSetup/llm/standards`, and `modules/nSetup/llm/playbooks`; this
+Phase 0 file is not a coding authority.

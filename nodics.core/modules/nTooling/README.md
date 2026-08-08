@@ -102,10 +102,10 @@ Run:
 npm run llm:validate
 npm run quality:docs
 npm run structure:audit -- --fail
-node gFramework/nTooling/test/toolingCommandOverride.test.js
-node gFramework/nTooling/test/moduleStructure.test.js
-node gFramework/nTooling/test/documentationNavigationQuality.test.js
-node gFramework/nTooling/test/mcpReadOnlyGovernanceContract.test.js
+node nodics.core/modules/nTooling/test/toolingCommandOverride.test.js
+node nodics.core/modules/nTooling/test/moduleStructure.test.js
+node nodics.core/modules/nTooling/test/documentationNavigationQuality.test.js
+node nodics.core/modules/nTooling/test/mcpReadOnlyGovernanceContract.test.js
 ```
 
 The documentation quality gate validates source documentation coverage and

@@ -36,8 +36,8 @@ means the change is not complete.
 
 ## Progressive Change Gates
 
-Normal development uses the compact `daily-change-checklist.md` once per coherent
-change slice. The full `change-gate-contract.md` runs against the accumulated
+Normal development uses the compact `playbooks/daily-change-checklist.md` once per coherent
+change slice. The full `playbooks/change-gate-contract.md` runs against the accumulated
 diff at commit, merge/release, and periodic platform-audit gates. This preserves
 strict ownership, customization, maintainability, and verification requirements
 without repeatedly loading or restating the complete architecture pack.

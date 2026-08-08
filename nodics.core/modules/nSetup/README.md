@@ -24,7 +24,10 @@ This folder is intended for project-wide enablement material that should survive
 
 Current contents:
 
-- `llm/`: tool-neutral context, prompts, decision memory, examples, and working rules for AI-assisted Nodics development.
+- `llm/`: tool-neutral guidance taxonomy for AI-assisted Nodics development.
+  Permanent rules live in `llm/contracts` and `llm/standards`; procedures live
+  in `llm/playbooks`; reusable rubrics live in `llm/templates`; historical
+  phase/refactor material lives in `llm/records`.
 - `package.json`: machine-readable setup package metadata with runtime loading disabled.
 - `nodics.js`: no-op lifecycle file retained only for module-shape consistency.
 - `config/properties.js`, `config/prescripts.js`, `config/postscripts.js`: no-op config files retained only for module-shape consistency.
@@ -37,7 +40,8 @@ When starting any AI-assisted Nodics project, ask the LLM to read:
 modules/nSetup/llm/ai-enablement-index.md
 ```
 
-Then ask it to follow the linked principles, modular architecture, schema/generation rules, testing playbook, and feature process before making code changes.
+Then ask it to follow the linked principles, standards, playbooks, examples,
+and templates before making code changes.
 
 If an AI tool automatically scans the repository, this folder should be treated as the canonical instruction source for Nodics development behavior.
 

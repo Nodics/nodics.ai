@@ -20,13 +20,14 @@ const path = require('path');
  */
 
 const {
+    isNSetupModule,
     removeDirectory,
     scanModules
 } = require('./defaultModuleLlmContextUtilsService');
 
 function run() {
     let modules = scanModules();
-    let contextModules = modules.filter(module => module.relativePath !== 'modules/nSetup');
+    let contextModules = modules.filter(module => !isNSetupModule(module));
     contextModules.forEach(module => {
         removeDirectory(path.join(module.path, 'llm', 'generated'));
     });

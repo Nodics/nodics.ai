@@ -19,7 +19,7 @@ layered customization contract.
 Use this structure when generating a new capability module or pure group module.
 Project, environment, server, and node module generation follows this module
 standard where applicable, but also needs topology-specific rules that are
-defined separately in `modules/nSetup/llm/module-generation-guide.md`.
+defined separately in `modules/nSetup/llm/standards/module-generation-guide.md`.
 
 ```text
 module/                         Module boundary and ownership root.
@@ -140,7 +140,7 @@ developers and AI tools rely on:
 1. Read root `README.md`, root `AGENTS.md`, every applicable ancestor
    `AGENTS.md` from root to the target, the nearest module `README.md`, the
    nearest module `AGENTS.md`, this module standard, and
-   `modules/nSetup/llm/module-generation-guide.md`.
+   `modules/nSetup/llm/standards/module-generation-guide.md`.
 2. Generate with `structure:generate` when creating a new boundary. When
    repairing an existing compatibility path, compare the manual files against
    the generated structure before adding behavior.
@@ -172,6 +172,14 @@ quality gates, discovery exclusions, governance policy, provider defaults, or
 similar data when a namespaced property subtree can own it. Examples include
 `tooling.commands`, `tooling.discovery`, and
 `tooling.documentationGovernance`.
+
+The owner of the reusable default is always the module that owns the capability.
+Later project, environment, server, and node modules contribute only deltas:
+topology, coordinates, secret references, active runtime composition, or
+intentional overrides such as disabling an inherited API category for one
+runtime. This applies to all property namespaces, including `apiExposure`,
+data import/export, media management, provider settings, operational limits,
+permissions, discovery flags, and tooling gates.
 
 Keep `config/properties.js` thin. It must not contain executable business logic,
 builders, collection transformations, lifecycle calculators, provider calls, or
