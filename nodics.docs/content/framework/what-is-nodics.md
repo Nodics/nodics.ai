@@ -259,7 +259,7 @@ building and evolving enterprise software without scattering ownership.
 
 ## The Nodics idea in one picture
 
-![Legacy Nodics architecture overview](../assets/images/nodics-architecture.jpg "Legacy architecture diagram retained as governed documentation evidence")
+![Nodics architecture overview](../assets/images/nodics-architecture.jpg "Architecture diagram retained as governed documentation evidence")
 
 ```mermaid
 flowchart LR
@@ -284,6 +284,16 @@ A business usually pays for software twice. The first cost is building the
 feature. The second cost is living with it: support, upgrades, security fixes,
 new customers, new countries, new integrations, and production incidents.
 Nodics is designed to reduce the second cost by making ownership visible.
+
+![Enterprise tenant design](../assets/images/enterprise-tenant-design.jpg "Enterprise and tenant isolation reference from the archived documentation set")
+
+The enterprise/tenant picture is useful for a beginner because it shows why
+Nodics starts with context instead of adding context later. A project may serve
+one company in local development, but the framework must still be able to
+reason about many enterprises, tenants, databases, brands, and operational
+boundaries. That is why Profile, BackOffice, APIs, imports, content, media,
+and Cron jobs must always preserve enterprise and tenant context in their
+contracts.
 
 | Business concern | How Nodics helps |
 | --- | --- |

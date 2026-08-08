@@ -166,7 +166,7 @@ servers also need governed data: catalogs, Profile records, WCMS sites, Axis
 pages, documentation routes, module registry records, and sample data. Axis
 shows this through the Initialize experience.
 
-![Legacy data import process](../assets/images/data-import-process.jpg "Data import process reference from the archived documentation set")
+![Data import process](../assets/images/data-import-process.jpg "Data import process reference from the archived documentation set")
 
 ```mermaid
 sequenceDiagram
@@ -199,6 +199,23 @@ node nodics.core/modules/nTooling/bin/generate-data-release-manifests.js
 Then restart the affected backend server so it rediscovers the updated
 manifests. In local development the most common affected server is WCMS
 because the Initialize page reads import catalogues from port `4310`.
+
+## What “export” means in the same governance model
+
+Imports and exports are two sides of the same governed data story. Import
+brings trusted module-owned records into a runtime database. Export takes
+authorized runtime records and produces a controlled output file, storage
+record, or delivery artifact. Both need ownership, validation, status,
+security, audit, and repeatable operational evidence.
+
+![Data export process flow](../assets/images/data-export-process-flow.jpg "Data export process reference from the archived documentation set")
+
+For a beginner, the important point is that export is not simply “download a
+file.” The request enters through a secured API, reaches an owning controller
+and service, reads data through the owning persistence contracts, writes output
+through an approved storage or delivery path, and records enough evidence for
+support. A future customer module may customize export format or destination,
+but it should not bypass the owner of the data being exported.
 
 ## Fresh database test
 

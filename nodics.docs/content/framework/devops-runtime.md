@@ -119,6 +119,8 @@ Local development proves ownership and behavior. Production topology then
 separates runtime processes only for a reason: scale, resilience, security,
 team ownership, data locality, or operational control.
 
+![Cloud deployment process](../assets/images/cloud-deployment-process.jpg "Cloud deployment topology reference from the archived documentation set")
+
 ```mermaid
 flowchart LR
   Local["Local developer machine<br/>Platform + WCMS + Cron + Axis"] --> Shared["Shared test environment<br/>separate DBs and controlled imports"]
@@ -166,6 +168,15 @@ When something fails, identify the owner first:
 - scheduled job execution: Cron;
 - frontend rendering or shell interaction: Axis;
 - customer-specific behavior: customer project module.
+
+![Log management system](../assets/images/log-management-system.jpg "Logging and output routing reference from the archived documentation set")
+
+Logs are operational evidence, not only developer debugging text. A production
+topology should make it possible to connect a user request, module action,
+scheduled job, import, export, and storage/provider call with a shared
+correlation story. Console output may be enough during local development, but
+shared environments need retained logs, safe rotation, searchability, and
+security-aware redaction.
 
 ## Operational acceptance checklist
 

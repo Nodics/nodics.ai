@@ -87,6 +87,8 @@ Core is loaded everywhere.
 Core always loads before higher functional modules. The exact server graph is
 defined by the customer project and server configuration.
 
+![Request process design](../assets/images/request-process-design.jpg "Request processing reference from the archived documentation set")
+
 ```mermaid
 flowchart LR
   Package["Package dependency<br/>code is available"] --> Extends["Server/module extends<br/>code is selected"]
@@ -104,6 +106,47 @@ These are different concepts:
   active for business use.
 
 Confusing these concepts is one of the fastest ways to create hidden bugs.
+
+## Request processing model
+
+Every API should feel boringly consistent to a developer, tester, and operator.
+The request enters through Express, passes through Nodics routing and request
+processing, reaches the owning controller/facade/service layer, and only then
+touches persistence, cache, search, events, or provider integrations through
+approved contracts.
+
+![Request processor flow](../assets/images/request-processor-flow.jpg "Request processor flow reference from the archived documentation set")
+
+This flow is why Nodics discourages shortcuts. A validation rule, permission
+check, tenant resolution, error response, cache lookup, or persistence call
+should live in the layer that owns that responsibility. If a feature works only
+because one route manually skipped the shared request path, it will become a
+security and regression risk later.
+
+## Cache, search, events, and logging
+
+Core also supplies reusable infrastructure seams. These seams are intentionally
+module-owned so a customer project can change the provider or policy without
+rewriting business APIs.
+
+![API cache flow](../assets/images/api-cache-flow.jpg "API cache flow reference from the archived documentation set")
+
+![Item cache flow](../assets/images/item-cache-flow.jpg "Item cache flow reference from the archived documentation set")
+
+![Search cache flow](../assets/images/search-cache-flow.jpg "Search cache flow reference from the archived documentation set")
+
+![Event handler process](../assets/images/event-handler-process.jpg "Event handler process reference from the archived documentation set")
+
+![EMS producer system](../assets/images/ems-producer-system.jpg "EMS producer reference from the archived documentation set")
+
+![EMS consumer system](../assets/images/ems-consumer-system.jpg "EMS consumer reference from the archived documentation set")
+
+For example, a module may cache API responses, individual models, or search
+results, but the route should not hardcode a specific cache backend. A module
+may publish or consume events, but it should do that through nEvent/nEms
+contracts rather than calling a message broker directly from random business
+code. Logs should carry enough context to explain which module, tenant,
+request, job, import, or event caused the action.
 
 ## Configuration-first rule
 

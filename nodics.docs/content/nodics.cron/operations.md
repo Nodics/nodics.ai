@@ -57,6 +57,8 @@ must share the same tenant, permission, node, logging, and failure contracts.
 
 ![Cron job lifecycle](../assets/images/cron-job-lifecycle.png "Cron lifecycle reference from the archived documentation set")
 
+![Cron job process](../assets/images/cronjob-process.jpg "Cron job process reference from the archived documentation set")
+
 ```mermaid
 stateDiagram-v2
   [*] --> Registered

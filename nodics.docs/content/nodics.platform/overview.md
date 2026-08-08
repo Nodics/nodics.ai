@@ -54,6 +54,22 @@ flowchart LR
 Axis does not decide which rooms exist. Platform/BackOffice returns the
 authorized projection.
 
+## Authentication and authorization flow
+
+Platform is the first runtime most Axis users touch, so beginners often assume
+login is a frontend problem. It is not. Axis collects credentials and renders
+the session experience, but Profile and Platform own the authentication,
+session, authorization, enterprise, and tenant checks.
+
+![Authentication flow](../assets/images/authentication-flow.jpg "Authentication flow reference from the archived documentation set")
+
+![Authorization flow](../assets/images/authorization-flow.jpg "Authorization flow reference from the archived documentation set")
+
+The diagrams show the principle: a secured request must travel through the
+approved request processor, session/token validation, cache/provider lookup,
+and owning service. Axis hiding a menu is only a usability aid. The backend
+must still reject unauthorized API access directly.
+
 ## What Platform owns
 
 Platform owns the employee-facing backend foundation:

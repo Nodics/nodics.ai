@@ -110,6 +110,16 @@ important idea is that each server loads an effective runtime graph. A server
 does not load every module in the workspace just because the files exist. It
 loads the modules that are part of its configured extension chain.
 
+![Micro-services architecture](../assets/images/microservices-architecture.jpg "Micro-service style module separation reference from the archived documentation set")
+
+The archived micro-service visual is not a command to split every feature into
+a separate process on day one. It explains the direction of travel: modules
+expose API/service contracts, persistence is hidden behind owning services,
+and shared infrastructure such as cache, search, and databases are reached
+through governed module contracts. A partner can begin with multiple runtimes
+on one machine and later distribute Platform, WCMS, Cron, Commerce, or other
+capabilities without changing the ownership model.
+
 ## Beginner reading path
 
 For a beginner, read the architecture in two passes. First, ignore every
