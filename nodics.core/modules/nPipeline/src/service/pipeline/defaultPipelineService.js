@@ -186,7 +186,12 @@ module.exports = {
      * @sideEffects Rejects the pipeline promise with enriched error context.
      */
     handleErrorEnd: function (request, response, process) {
-        this.LOG.error('Pipeline: ' + process.getPipelineName() + ' with Id: ' + process.getPipelineId() + ' has error');
+        let message = 'Pipeline: ' + process.getPipelineName() + ' with Id: ' + process.getPipelineId() + ' has error';
+        if (request && request.suppressRetryErrorLog === true) {
+            this.LOG.warn(message + ' during retryable phase');
+        } else {
+            this.LOG.error(message);
+        }
         process.reject(CLASSES.NodicsError.enrich(response.error, {
             layer: 'pipeline',
             phase: 'errorEnd',

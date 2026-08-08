@@ -314,6 +314,7 @@ module.exports = {
     dispatchImportBatch: function (request, response, options, batch) {
         let header = request.fileData.header;
         let models = batch.map(entry => entry.model);
+        let suppressRetryErrorLog = !this.shouldRecordImportFailure(request);
         return SERVICE.DefaultPipelineService.start('processModelImportPipeline', {
             tenant: options.tenant,
             authData: {
@@ -321,7 +322,8 @@ module.exports = {
             },
             header: header,
             dataModel: models.length === 1 ? models[0] : models,
-            importRun: request.importRun
+            importRun: request.importRun,
+            suppressRetryErrorLog: suppressRetryErrorLog
         }, {}).then(success => {
             if (SERVICE.DefaultImportDiagnosticsService) {
                 SERVICE.DefaultImportDiagnosticsService.increment(request, 'recordsDispatched', batch.length);
