@@ -72,6 +72,101 @@ The current reference workspace demonstrates this through `nodics.kickoff`,
 which starts local Platform, WCMS, and Cron servers, and through `nodics.axis`,
 which logs employees in and renders discovered workspaces and documentation.
 
+## How to read Nodics if you are new
+
+You do not need to understand every module, database collection, service, or
+runtime property on the first day. Nodics documentation is intended to be read
+as a journey.
+
+| If you are... | Start with this question | Then read |
+| --- | --- | --- |
+| A business sponsor | What problem does Nodics solve and what risk does it reduce? | This overview, then the local quick start so you can see Axis, module registry, imports, WCMS, media, and documentation. |
+| A developer | How do I run it and where do I customize safely? | Local quick start, modular architecture, customization guide, then module-specific pages. |
+| An architect | How are capability ownership, runtime loading, and extension boundaries enforced? | Modular architecture, functional module registry, runtime and DevOps operations. |
+| A business administrator | What screens and actions can I use from Axis? | Axis documentation, Imports and Exports, Module Registry, WCMS, Media. |
+| A DevOps engineer | Which servers, dependencies, secrets, and recovery steps matter? | Runtime and DevOps operations, local quick start, import/export lifecycle, logs and health checks. |
+| A QA engineer | What should be verified before a feature is accepted? | Capability documentation, module tests, API checks, import validation, and Axis route behavior. |
+
+This sequence matters. A beginner should first understand the product story,
+then the running experience, then the customization model, and only then the
+deep internals.
+
+```mermaid
+flowchart TD
+  A["Understand the business problem"] --> B["Run Kickoff locally"]
+  B --> C["Login to Axis"]
+  C --> D["Open Documentation and Module Registry"]
+  D --> E["Import initialization, core, sample, and documentation data"]
+  E --> F["Study module ownership"]
+  F --> G["Customize through project modules or configuration"]
+  G --> H["Validate with tests, API checks, and runtime evidence"]
+```
+
+## A day-one business scenario
+
+Imagine a company wants to launch a partner portal. The portal needs employee
+login, business-unit onboarding, content pages, media uploads, scheduled jobs,
+documentation, and future customer-specific changes. A quick team can build
+those pieces directly into one application. That works until another customer
+asks for different behavior, another region needs different rules, operations
+asks for independent scaling, and security asks who owns each API.
+
+With Nodics, the first conversation changes:
+
+1. Platform owns employee identity, Profile, BackOffice discovery, and module
+   registration.
+2. WCMS owns websites, catalogs, pages, components, routes, documentation
+   content, and media lifecycle.
+3. Cron owns scheduled work.
+4. Axis renders authorized business workspaces from backend contracts.
+5. The customer project owns project-specific configuration, content, docs,
+   and custom modules.
+
+The business result is not only a running portal. The result is a portal that
+has an upgrade path, a customization path, and an operational model from the
+beginning.
+
+## A day-one developer scenario
+
+A new developer should be able to clone the framework, clone the reference
+project, start the servers, and see the product before writing code.
+
+The flow is:
+
+1. Clone or open `nodics.ai`, `nodics.kickoff`, and `nodics.axis`.
+2. In `nodics.kickoff`, set `NODICS_FRAMEWORK_ROOT` to the framework checkout.
+3. Run the framework configuration command and install dependencies.
+4. Start Platform, WCMS, and Cron from Kickoff.
+5. Start Axis.
+6. Log in as the reference admin user.
+7. Open Module Registry to see which functional modules are mandatory,
+   registered, active, optional, or available.
+8. Open Imports and Exports to validate and install backend-owned data packs.
+9. Open Documentation to read Framework, API, Axis, and Kickoff content.
+10. Make the first customization in the customer project rather than editing
+    framework source.
+
+The developer learns by watching the system run. Folder structure becomes much
+easier after the runtime behavior is visible.
+
+## A day-one operations scenario
+
+An operator should not have to inspect business source code to understand the
+runtime. Nodics separates the major operational questions:
+
+- Platform server answers login, profile, BackOffice, registry, and API
+  discovery questions.
+- WCMS server answers site, catalog, page, component, route, media, and
+  documentation delivery questions.
+- Cron server answers scheduled job questions.
+- Kickoff declares which framework modules the local customer project loads.
+- Axis is a frontend renderer and must not own backend data records.
+
+For local development the servers can run on one machine. For a larger
+deployment they can move into separate processes or infrastructure units. The
+functional ownership model remains stable even when the physical topology
+changes.
+
 ## What Nodics is not
 
 Nodics is not a finished industry product that removes the need for business
@@ -123,6 +218,45 @@ For a non-technical evaluator, the key question is: “Can this platform grow
 without every customer becoming a fork?” Nodics answers that by separating
 framework authority, customer authority, runtime composition, and frontend
 rendering.
+
+## How Nodics compares with common build approaches
+
+This is not a claim that every other platform or project is wrong. Many large
+enterprise platforms teach similar ideas through product guides, administrator
+guides, developer guides, extension guides, API references, and operations
+guides. Nodics follows that same reader-friendly discipline, but its own design
+choice is to keep functional module ownership, runtime composition, and
+customer customization explicit from the start.
+
+| Common approach | What often goes wrong | Nodics principle |
+| --- | --- | --- |
+| One-off application | Fast first delivery, then scattered ownership and painful change. | Start with named functional modules and explicit runtime loading. |
+| Customer fork | One customer is happy, but upgrades become expensive. | Keep framework source separate; customize in later-loaded project modules. |
+| Frontend-owned business behavior | UI becomes the authority for what is installed, active, or allowed. | Axis renders backend-owned capability contracts. |
+| Ungoverned microservices | Many services exist, but ownership, data contracts, and setup become unclear. | Functional modules own APIs, schemas, data releases, docs, and tests. |
+| Configuration as hidden environment magic | Local, test, and production drift without traceability. | Use layered public/private properties and server/environment overrides. |
+| Documentation after delivery | New users cannot understand why the system exists or how to run it. | Documentation is part of feature acceptance and content-pack ownership. |
+
+## The learning path from simple to deep
+
+Nodics documentation should grow from simple questions to deeper capability
+guides:
+
+```mermaid
+flowchart LR
+  Intro["What is Nodics?"] --> Quick["Local quick start"]
+  Quick --> Axis["Explore Axis"]
+  Axis --> Registry["Module registry"]
+  Registry --> Imports["Imports and exports"]
+  Imports --> Modules["Module guides"]
+  Modules --> Custom["Customization"]
+  Custom --> Ops["Runtime and operations"]
+  Ops --> API["Swagger and API reference"]
+```
+
+The order is intentional. A reader first learns the promise, then sees the
+system, then learns how modules are registered and data is initialized, then
+goes deeper into implementation and operations.
 
 ## Developer mindset: how to think before coding
 

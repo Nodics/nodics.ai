@@ -156,6 +156,111 @@ Minimum word and section counts are lower-bound defect detectors only. They do
 not prove accuracy, usefulness, audience completeness, evidence coverage, or
 source preservation.
 
+## Benchmark-Informed Documentation Experience Contract
+
+Nodics documentation must feel like a guided product experience, not a source
+tree dump. Mature enterprise platforms usually help readers through a few
+repeatable journeys before they expose deep internals: get started, learn the
+capability map, use the product, administer it, extend it, integrate it,
+operate it, troubleshoot it, and then move into reference material. Nodics must
+use the same reader-friendly discipline while preserving its own terminology,
+runtime contracts, and modular ownership rules.
+
+Every public documentation entry point, especially a repository `README.md`,
+top-level documentation landing page, capability overview, or customer project
+guide, must answer these questions in order:
+
+1. What is this, in plain language?
+2. Who is it for: business evaluator, developer, architect, administrator,
+   operator, tester, partner, or AI tool?
+3. What business problem does it solve?
+4. Why was the Nodics approach chosen instead of a one-off project structure,
+   hardcoded customization, or copied service implementation?
+5. What can a reader build, run, configure, or evaluate today?
+6. What is included out of the box and what remains project-owned,
+   provider-owned, optional, scaffolded, or future?
+7. What is the shortest safe path to see it running locally?
+8. What should the reader see when the setup is successful?
+9. Where should each reader go next?
+
+The first ten minutes of a new reader's journey are contractual. A developer
+opening the framework on GitHub must understand why Nodics exists, what
+repositories are needed, how to configure the local reference project, which
+servers to start, how to log in to Axis, and how to open documentation without
+having to reverse-engineer module internals. A business evaluator must
+understand the business value, adoption model, customization value,
+multi-enterprise and multi-tenant direction, governance benefits, and
+operational confidence before seeing low-level folders. An operator must see
+the runtime topology, prerequisites, public versus private configuration,
+health expectations, and troubleshooting path.
+
+Use role-based pathways when a page has more than one audience:
+
+| Reader | First questions the documentation must answer |
+| --- | --- |
+| Business evaluator | What problem is solved? What outcomes improve? Why is this safer than a one-off build? What can be demonstrated today? |
+| Developer | What do I clone or install? What commands do I run? Which module owns the behavior? Where do I customize safely? How do I test it? |
+| Enterprise architect | What are the module boundaries? How is ownership enforced? How do extension, runtime loading, security, tenancy, and integration fit together? |
+| Administrator or business user | Which screens exist? Which actions are safe? What data is initialized? What can be configured from Axis? |
+| DevOps or TechOps | Which services run? Which dependencies are mandatory? Which configuration is secret? How do we monitor, recover, scale, and release? |
+| Tester or QA engineer | What are the happy paths, boundary cases, regression risks, and acceptance checks? |
+| AI tool | What is the nearest authority? What may be changed? What must not be invented? Which generated artifacts and tests prove the change? |
+
+Each major page must provide at least one concrete example that follows a
+reader through a realistic sequence. The example must include:
+
+- a starting situation;
+- the reason the user needs the capability;
+- the Nodics-owned module or project that owns the behavior;
+- the safe action path;
+- the expected visible result;
+- the common mistake to avoid;
+- the next deeper topic.
+
+Diagrams, images, screenshots, and tables are required when they materially
+reduce beginner confusion. Use them for journeys, module relationships,
+runtime startup, import/export lifecycle, publishing, authentication
+boundaries, workflow, provider routing, release flow, data ownership, or any
+concept with three or more dependent steps. Diagrams must be paired with prose
+so that the page remains accessible and source-control friendly.
+
+Do not write competitor-copy documentation or unverified comparison claims.
+External enterprise documentation may inspire structure, reader pathways, and
+onboarding sequence, but Nodics documentation must make only Nodics-verified
+claims. When comparing approaches, compare patterns such as monolith-first
+projects, copied customer forks, hardcoded configuration, ungoverned
+microservices, or frontend-owned business authority.
+
+## GitHub Landing Page Contract
+
+The root `README.md` of the framework repository is the first product doorway.
+It must be understandable to a reader who has never seen Nodics, has not read
+`AGENTS.md`, and may not know the domain. It must not begin as an internal
+module inventory unless the business and developer orientation already exists.
+
+The landing page must contain, in this order or an equivalent reader-friendly
+flow:
+
+1. one-paragraph product definition;
+2. business problem and outcomes;
+3. why Nodics is different from ordinary application projects;
+4. audience paths for business, developer, architect, operator, tester, and AI
+   contributors;
+5. what can be run locally today;
+6. exact repository/workspace expectation;
+7. prerequisites and dependency choices;
+8. local quick start commands;
+9. expected login, URLs, and visible result;
+10. documentation and Swagger/API discovery path;
+11. customization model;
+12. repository/module ownership map;
+13. validation and contribution expectations.
+
+If the repository is a framework root rather than a runtime functional module,
+the README must say that plainly. It must also explain that partner or customer
+projects may use their own workspace layout and resolve the framework through
+configured package dependencies or a framework-root setup step.
+
 ## Documentation Quality Rubric
 
 Every public or CMS-importable documentation pack must be useful to three

@@ -1,14 +1,121 @@
 # Nodics Framework
 
-`nodics.ai` is the Nodics backend/framework repository. It contains the standard
-Nodics functional module groups that are used by customer projects and runtime
-servers.
+Nodics is a modular enterprise application framework for building business
+platforms that must survive real customers, real operations, real
+customization, and real growth.
 
-Nodics is designed as a modular enterprise application framework. A customer
-project can run only the functional modules it needs, extend framework behavior
-through project modules, and keep runtime configuration separate from framework
-source. Axis, the BackOffice frontend, discovers available capabilities through
-Platform and renders governed business workspaces from backend-owned contracts.
+In simple terms, Nodics is an application factory. It does not decide what your
+company sells, which workflow your customer needs, or which brand your portal
+uses. Instead, it gives you the reusable machinery: module boundaries, runtime
+composition, APIs, schemas, configuration layers, imports, content management,
+media governance, scheduled jobs, security expectations, documentation
+delivery, testing contracts, and a BackOffice experience through Axis.
+
+`nodics.ai` is the backend/framework repository. It contains the standard
+Nodics functional module groups used by customer projects and runtime servers.
+It is not itself a runtime functional module.
+
+## Why Nodics exists
+
+Most enterprise software does not fail because the first screen was difficult
+to build. It fails later, when the product needs a second customer, a new
+tenant, a production release, a custom rule, a security review, a different
+deployment topology, or an upgrade without breaking everything.
+
+Common project pain looks like this:
+
+- business rules are scattered across routes, services, scripts, and UI code;
+- customer-specific behavior is edited directly into shared framework code;
+- configuration is hardcoded or hidden in environment-specific files;
+- APIs exist, but no one can confidently say which module owns them;
+- import data, sample data, and production data are mixed;
+- frontend screens assume modules exist instead of discovering authorized
+  capabilities;
+- documentation explains files, but not the business journey, beginner setup,
+  customization path, or operational model.
+
+Nodics solves that by making ownership explicit. A feature belongs to an
+owning functional module. Technical modules live under that owner. Runtime
+servers declare what they extend. Customer projects add behavior later in the
+load order instead of rewriting framework source. Axis renders what the backend
+declares as registered, active, and authorized.
+
+## What a business gains
+
+For a business evaluator, the important question is not “How many folders are
+in the repository?” The important question is “Can this platform keep evolving
+without every new customer becoming a fork?”
+
+Nodics is designed to help with:
+
+| Business concern | Nodics answer |
+| --- | --- |
+| Faster adoption | A runnable reference project shows Platform, WCMS, Cron, Axis, imports, documentation, and module lifecycle locally. |
+| Lower customization cost | Customer projects extend framework behavior through later-loaded modules and configuration instead of editing reusable framework code. |
+| Multi-enterprise and multi-tenant direction | Runtime, profile, content, authorization, and data contracts keep enterprise and tenant context visible from the start. |
+| Safer growth | Functional modules publish explicit APIs, schemas, imports, and documentation ownership instead of spreading behavior across unrelated code. |
+| Better operations | Runtime servers, module registration, data releases, checksums, public/private properties, logs, and restart behavior are treated as contracts. |
+| Partner friendliness | A partner can start from Kickoff, see the product running, then replace or extend only the parts they own. |
+
+## How Nodics is different from an ordinary project
+
+An ordinary application project often starts with one codebase and grows until
+every concern knows too much about every other concern. Nodics starts with
+separation of responsibility.
+
+```mermaid
+flowchart LR
+  Need["Business need"] --> Project["Customer project"]
+  Project --> Server["Runtime server"]
+  Server --> Modules["Functional modules"]
+  Modules --> Contracts["APIs, schemas, services, data releases"]
+  Contracts --> Axis["Axis BackOffice"]
+  Contracts --> Apps["Customer apps and integrations"]
+```
+
+Read this from left to right. A customer project expresses the business need.
+The runtime server loads the required module graph. Functional modules publish
+governed contracts. Axis and other applications consume those contracts instead
+of guessing what is installed.
+
+The separation matters because different people care about different parts:
+
+| Reader | Start here |
+| --- | --- |
+| Business evaluator | Read this README through “What a business gains”, then open Axis documentation at `http://localhost:3100/docs` after local startup. |
+| Developer | Follow “Run Nodics locally in the reference workspace”, then read the customization guide before changing framework code. |
+| Enterprise architect | Read repository ownership, modular architecture, functional module lifecycle, and runtime composition. |
+| Business administrator | Start Axis, log in, review Dashboard, Module Registry, Imports and Exports, WCMS, Media, and Documentation. |
+| DevOps or TechOps | Review prerequisites, runtime servers, public/private properties, ports, health, restart behavior, and data bootstrap. |
+| QA or tester | Use the local acceptance checklist, import lifecycle, module registry lifecycle, and route/API verification. |
+| AI contributor | Read `AGENTS.md`, then `nodics.core/modules/nSetup/llm/` before editing. Follow owner-first, customization-first, test-first contracts. |
+
+## What you can run today
+
+The local reference workspace lets a new developer or evaluator see Nodics
+working before writing custom code.
+
+You can run:
+
+- **Platform** for employee login, Profile, BackOffice bootstrap, runtime
+  module registry, API discovery, and documentation-source registry;
+- **WCMS** for sites, content catalogs, pages, components, routes, media, and
+  documentation content-pack delivery;
+- **Cron** for scheduled/background capability runtime;
+- **Axis** for the browser BackOffice experience;
+- **Kickoff** as the reference customer project that composes the framework
+  and contributes customer-owned documentation.
+
+Successful local startup gives you:
+
+- Axis login at `http://localhost:3100`;
+- Platform APIs at `http://localhost:4300`;
+- WCMS APIs at `http://localhost:4310`;
+- module registry visibility for mandatory and optional functional modules;
+- import/export screens for initialization, core, sample, file import, export,
+  and history;
+- Documentation navigation for Framework, Swaggers, Nodics Axis, and Nodics
+  Kickoff.
 
 ## What this repository contains
 
@@ -70,9 +177,11 @@ separate projects.
   own backend-importable CMS catalog, site, page, component, route, or
   documentation records.
 
-## Local reference workspace
+## Run Nodics locally in the reference workspace
 
-The simplest local workspace uses three sibling repositories:
+The simplest local workspace uses three sibling repositories. This layout is
+recommended for the first run because it matches the reference documentation
+and removes unnecessary decisions while you are still learning the framework.
 
 ```text
 nodicsRoot/
@@ -84,6 +193,24 @@ nodicsRoot/
 The sibling layout is convenient for the reference setup, but it is not a hard
 requirement. `nodics.kickoff` can point to any framework checkout by setting
 `NODICS_FRAMEWORK_ROOT` in its local `.env` file.
+
+The first-run journey is:
+
+```mermaid
+flowchart TD
+  Clone["Clone nodics.ai, nodics.kickoff, nodics.axis"] --> Configure["Configure nodics.kickoff .env"]
+  Configure --> Install["Install project dependencies"]
+  Install --> Platform["Start Platform server"]
+  Platform --> WCMS["Start WCMS server"]
+  WCMS --> Cron["Start Cron server when needed"]
+  Cron --> Axis["Start Axis frontend"]
+  Axis --> Login["Login as admin"]
+  Login --> Docs["Open Documentation and Module Registry"]
+```
+
+You do not need to understand every internal technical module before this first
+run. The goal is to see the framework alive, then learn the module ownership
+model from a working system.
 
 ## Prerequisites
 
@@ -128,6 +255,12 @@ npm install
 `npm run configure:framework` creates machine-local links under
 `nodics.kickoff/.nodics/framework/`. Do not commit that generated folder.
 
+Why this step exists: customer projects should not be forced to live in one
+hardcoded folder next to the framework. The `.env` value tells Kickoff where
+the framework checkout is on your machine, then the setup command creates
+local package links for npm. This keeps the reference project easy to run while
+still allowing partners to use their own workspace layout.
+
 ## Start local backend servers
 
 Use separate terminals from `nodics.kickoff`.
@@ -168,6 +301,10 @@ npm run start:cron
 The current local topology is intentionally split by runtime server so the
 framework can prove functional module separation. A customer can later compose
 or extend runtimes differently through project modules and server configuration.
+
+If you are evaluating only the BackOffice and documentation experience, start
+Platform and WCMS first. Start Cron when you want to test scheduled capability
+registration and lifecycle behavior.
 
 ## Start Axis
 
@@ -227,6 +364,13 @@ reference setup exposes:
 
 Documentation source ownership is important. Axis renders documentation, but
 does not own documentation data.
+
+If a documentation page is missing after a fresh database reset, open
+**System and Integrations > Imports and Exports**, select the available
+documentation and initialization releases, validate them, and install them.
+Framework documentation comes from `nodics.docs`; Axis documentation comes
+from `nodics.platform/modules/axis`; Kickoff documentation comes from
+`nodics.kickoff`.
 
 ## Validate the framework repository
 
