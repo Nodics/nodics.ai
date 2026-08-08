@@ -1,6 +1,6 @@
 {
   "pack": "nodics.platform.axis",
-  "version": "0.3.22",
+  "version": "0.3.23",
   "generatedAtPolicy": "deterministic-no-timestamp",
   "sources": [
     {
@@ -420,11 +420,12 @@
       "canonicalSource": "data/core/source/documentation/pages/implementation-and-documentation-contract.md",
       "destinationRoute": "/docs/nodics-axis/implementation-contract",
       "disposition": "migrated",
-      "sourceHash": "587ce77fa7823574df76c4e00b4927bbbf08b707c32317493a088242ce21e66e",
-      "wordCount": 1202,
+      "sourceHash": "4bcbc94f48b7bb34b7ee913c34eafd9b67d2ecd4f422968d353a0a2723ee23dd",
+      "wordCount": 1399,
       "headings": [
         "Local Discovery Chain",
         "Repository Ownership",
+        "AI and developer role stack",
         "Placement Rules",
         "Required Feature Documentation",
         "Customize and extend safely",

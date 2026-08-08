@@ -52,6 +52,57 @@ flowchart TD
   Project -->|No| Framework["Change the owning framework module with tests"]
 ```
 
+## The role an AI tool or developer must play
+
+Nodics is too broad for a narrow “make the code pass” mindset. A developer or
+AI assistant working on Nodics must deliberately switch through several
+perspectives before changing files. This is not ceremony; it is how the
+framework avoids accidental shortcuts that work for one screen and break the
+ecosystem.
+
+| Role | Question to ask before coding | Example |
+| --- | --- | --- |
+| Business analyst | What problem is the user, operator, partner, or business evaluator trying to solve? | If the request is “register Cron,” explain the lifecycle and what business capability becomes available, not only the button click. |
+| Enterprise architect | Which module, runtime, tenant, security boundary, and release unit owns this behavior? | Module registration is Platform/BackOffice state; Axis renders it; Cron only reports its runtime availability. |
+| Nodics framework expert | Is this Core, Platform, WCMS, Cron, Axis renderer, customer project, or customer overlay work? | A documentation content pack belongs in the backend owner, not in the frontend repository. |
+| Domain expert | Could this pattern apply to commerce, telco, logistics, content, workflow, or another domain without becoming domain-locked? | A media picker should be reusable for product media, CMS media, and future workflow attachments. |
+| Principal engineer | Can configuration or extension solve this before new framework code is written? | Prefer a server property, content component property, or customer module overlay before editing a framework default. |
+| QA and tester | What small failure will a user notice after the happy path succeeds? | Register/activate/deactivate buttons must refresh state immediately without forcing login or page reload. |
+| TechOps/DevOps reviewer | How will this run, restart, roll back, and be diagnosed in local and production topology? | A fresh bootstrap script must drop only named local databases and refuse to run if unrelated servers occupy the expected ports. |
+
+If these roles point to different answers, document the trade-off before
+implementation. For example, a browser-only workaround may be fast, but if the
+real authority is a backend registry, the correct fix belongs in the backend
+contract or typed client flow.
+
+## Coding principles that protect customization
+
+Nodics code should be written so future customer projects can extend it without
+copying framework files. Use these rules as the practical checklist:
+
+1. Prefer configuration first. If behavior can be changed through properties,
+   feature metadata, content component properties, server/environment deltas, or
+   tenant configuration, do that before changing code.
+2. Put files in the owner that matches the behavior. Error/status definitions
+   belong in status-definition files, API exposure belongs in owning module
+   properties, runtime topology belongs in server configuration, and renderer
+   code belongs in Axis.
+3. Keep JavaScript export-friendly. Prefer small exported functions, services,
+   and configuration objects over sealed inline behavior, so a later customer
+   module can override or compose the behavior through Nodics loading.
+4. Document the file and exported behavior. A future AI tool may read only the
+   nearest file and `AGENTS.md`, so ownership, override path, side effects, and
+   test expectations must be visible.
+5. Treat generated data as output. If CMS documentation, import manifests, or
+   generated records are wrong, fix the source and regenerate; do not hand-edit
+   generated projections.
+6. Keep public and private configuration separate. Browser-visible values,
+   runtime coordinates, secret references, and actual secrets have different
+   owners and different storage rules.
+7. Test both the owner and the integration. A service override needs focused
+   tests; a runtime graph change needs startup/acceptance tests; a frontend
+   state change needs UI or smoke coverage.
+
 ## Backend customization
 
 Backend behavior belongs in the backend project or module that owns the

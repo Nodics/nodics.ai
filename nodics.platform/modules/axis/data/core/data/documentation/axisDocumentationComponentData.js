@@ -1,14 +1,3 @@
-/*
-    Nodics - Enterprice Micro-Services Management Framework
-
-    Copyright (c) 2026 Nodics All rights reserved.
-
-    This software is governed by the Nodics Source-Available Commercial License.
-    You may use, copy, modify, deploy, or distribute it only as permitted by the
-    root LICENSE file or a separate written agreement with Nodics.
-
- */
-
 'use strict';
 
 /** @description Generated Nodics Axis documentation navigation and article content. */
@@ -282,7 +271,7 @@ module.exports = {
             "ai-tool"
           ],
           "summary": "Follow local discovery, repository ownership, placement, documentation, required scenarios, customization, and acceptance contracts.",
-          "searchText": "Axis Implementation and Documentation Contract Follow local discovery, repository ownership, placement, documentation, required scenarios, customization, and acceptance contracts. # Axis Implementation And Documentation Contract\n\nAxis is a reusable frontend framework application, not a one-off admin screen.\nPartners, developers, and AI tools must be able to extend it without seeing the\nentire repository or moving backend authority into the browser.\n\n## Local Discovery Chain\n\nFor every feature, read:\n\n1. root `AGENTS.md`;\n2. this contract and the feature-delivery checklist;\n3. the nearest feature source and focused tests;\n4. the consuming Nodics API/OpenAPI/CMS contract;\n5. the feature guide linked from the root README.\n\nCritical rules must be repeated concisely near the implementation and protected\nby TypeScript, schema validation, linting, or focused tests. A conversation or\ntemporary plan is never an implementation authority.\n\n## Repository Ownership\n\nAxis owns:\n\n- rendering, interaction, responsive/WebView behavior, and accessibility;\n- typed client contract consumption;\n- browser routing and presentation state;\n- TanStack Query server-state coordination;\n- Axis-owned CMS renderer implementations and typed registries;\n- loading, empty, unauthorized, incompatible, failure, and recovery views.\n\nNodics owns:\n\n- business rules and authoritative validation;\n- authentication and authorization enforcement;\n- persistence, workflows, pipelines, events, jobs, and integrations;\n- secrets, tenant governance, AI execution, tool execution, and audit;\n- backend schemas, APIs, configuration, runtime contracts, and business docs.\n\nWhen both repositories change, analyze and test each boundary separately.\n\n## Placement Rules\n\n- Application composition belongs under `src/app`.\n- Feature interaction belongs in a named feature boundary, not a generic\n  utilities folder.\n- CMS page, template, and component renderers follow the paths defined in\n  `AGENTS.md`, with one renderer implementation per file.\n- Backend logical keys map through typed registries. CMS data never supplies\n  executable JavaScript.\n- Configurable page copy comes from CMS component properties. Page and\n  component renderers consume typed labels, headings, placeholders, help text,\n  empty-state text, action captions, and fragments rather than defining\n  business-facing copy in JSX.\n- Reusable interaction behavior is implemented once and composed everywhere.\n  Query builders, media selectors, relationship selectors, record browsers,\n  and similar repeated controls must be modeled as reusable CMS component\n  contracts and Axis-owned shared renderers or primitives. Do not fork a\n  page-local implementation when a generic component already exists. Schema\n  data querying uses the `axis.component.schema-query-builder` renderer key,\n  so Schema Workbench, Imports and Exports, and future schema-backed pages\n  share one governed query-building experience.\n- Error ownership remains layered: the owning backend module supplies stable\n  domain codes and safe messages, CMS supplies configurable presentation copy,\n  and Axis supplies only generic browser or transport fallbacks needed when\n  the backend is unavailable. Axis never interprets English error text.\n- Locale, channel, and backend-resolved fallback are part of the CMS delivery\n  contract. Axis preserves that context, supports translated text expansion\n  and text direction, and uses locale-aware formatting without creating a\n  parallel backend translation catalogue.\n- Runtime values come from validated Axis configuration and backend contracts.\n  They do not belong in scattered constants or `package.json`.\n- Raw identifiers remain separate from display labels. Humanization is a\n  presentation fallback after contract validation, never a transformation of\n  request, authorization, cache, storage, audit, or telemetry identity. A\n  backend-provided localized display name always takes precedence.\n- Secrets never belong in frontend source, `.env`, generated browser config,\n  storage, URLs, telemetry, or logs.\n\n## Required Feature Documentation\n\nEvery significant feature guide explains:\n\n- purpose and current implemented scope;\n- backend authority and contract version;\n- source/component/client/test map;\n- setup and runtime configuration;\n- permissions and security;\n- keyboard, screen reader, responsive, touch, reduced-motion, and WebView\n  behavior;\n- success, unauthorized/invalid, boundary/responsive, failure/recovery, and\n  supported customization examples;\n- troubleshooting and verification;\n- known limitations and safe fallback.\n\nBusiness workflows and backend customization belong in Nodics documentation.\nAxis guides link to them and focus on frontend setup and contribution.\n\n## Customize and extend safely\n\nEvery feature guide includes this section. It\nshows the smallest supported project-owned Axis customization, identifies the\nbackend contract and security boundary that remain authoritative, lists\nprohibited frontend shortcuts or parallel authorities, and names the focused\npositive, rejected, boundary, integration, and regression tests. Explaining\nonly the out-of-the-box screen or workflow is incomplete.\n\n## Canonical Source and Generated Data\n\nAxis documentation that becomes backend CMS records is authored as granular,\nreviewable pages in `nodics.platform/modules/axis` under\n`data/core/source/documentation`. The deterministic documentation generator creates CMS\npage, component, navigation, route, search, and immutable manifest data under\n`data/core` and `manifest/docs-content-pack.json` in the same module.\n\nThe generator is executable repository tooling and lives beside the authored\ncontent at `data/core/source/documentation/tooling/generate-documentation-content.mjs`.\nIt must not be placed under `config`, because configuration files remain\ndeclarative values only.\n\nDo not hand-edit generated CMS article records. Do not maintain a shorter\ngenerated summary beside a richer project guide. Every implemented feature\nmust update its canonical source page and regenerate the content pack in the\nsame change:\n\n```bash\nnpm run docs:generate\nnpm run docs:check\n```\n\nThe migration register records the original README/docs evidence, canonical\nsource, destination route, source hash, headings, word count, and disposition.\nREADME or legacy docs may be reduced only after all substantive guidance is\nmapped, generated, reviewed in Axis, and protected by content-preservation\ntests.\n\nEvery project and module retains a concise high-level `README.md` after detailed\nguidance migrates. It remains the repository entry point for purpose, ownership,\nimplemented capabilities, setup, verification, extension boundaries, and links\nto canonical pages. It must not become a second copy of the complete\noperational and developer guides. Legacy detailed `docs/` files may be retired\nonly after the migration register records their hashes, word counts, headings,\ncanonical destinations, and the generated and rendered verification gates pass.\nAfter retirement, do not recreate a parallel `docs/` directory. The frontend\nproject keeps one concise `README.md`; backend-importable detailed permanent\nguidance belongs only under `nodics.platform/modules/axis/data/core/source/documentation`\nand its generated `data/core` projection.\n\n## Required Examples\n\n### Successful\n\nAn authorized employee loads a backend descriptor, Axis validates it, maps its\nrenderer key to an Axis-owned component, and displays the result.\n\n### Unauthorized\n\nThe backend denies an operation. Axis presents an accessible unauthorized state\nand does not infer authorization from menu visibility.\n\n### Boundary\n\nThe same feature remains usable with keyboard and touch in desktop, tablet, and\nmobile WebView layouts, including long labels, empty data, and bounded payloads.\n\n### Failure And Recovery\n\nWhen BackOffice or a target module is unavailable, Axis presents a safe\nrecovery state, avoids stale privileged data, and retries through the same\nauthoritative contract.\n\n### Customization\n\nA partner adds an Axis-owned renderer and registry manifest for a backend\nlogical component key. The partner does not download code from CMS or add\nbusiness validation to the renderer.\n\nAn administrator changes a component label or locale-specific content in the\nauthoritative CMS catalog. The same allowlisted Axis renderer displays the\nresolved value without a frontend rebuild. Missing or malformed required\nproperties produce the renderer's safe generic fallback and never execute\nbackend-supplied markup or code.\n\nA validated fallback identifier such as `axisContentCatalog` may be displayed\nas `Axis Content Catalog`. The raw code remains unchanged wherever identity or\nbackend communication is involved.\n\n## Acceptance\n\nA feature is complete only when:\n\n- repository ownership is explicit;\n- the backend contract and security boundary are preserved;\n- strict TypeScript and validation cover external data;\n- accessibility and responsive states are implemented;\n- focused positive, negative, boundary, failure, integration, and regression\n  tests pass;\n- implemented documentation and known limitations are current;\n- `npm run verify` passes at the release-oriented gate.\n\n## Continue\n\n- [Feature Delivery Checklist](feature-delivery-checklist.md)\n- [Architecture And Ownership](architecture-and-ownership.md)\n- [CMS Delivery And Renderers](cms-delivery-and-renderers.md)\n- [Axis README](../README.md)\n"
+          "searchText": "Axis Implementation and Documentation Contract Follow local discovery, repository ownership, placement, documentation, required scenarios, customization, and acceptance contracts. # Axis Implementation And Documentation Contract\n\nAxis is a reusable frontend framework application, not a one-off admin screen.\nPartners, developers, and AI tools must be able to extend it without seeing the\nentire repository or moving backend authority into the browser.\n\n## Local Discovery Chain\n\nFor every feature, read:\n\n1. root `AGENTS.md`;\n2. this contract and the feature-delivery checklist;\n3. the nearest feature source and focused tests;\n4. the consuming Nodics API/OpenAPI/CMS contract;\n5. the feature guide linked from the root README.\n\nCritical rules must be repeated concisely near the implementation and protected\nby TypeScript, schema validation, linting, or focused tests. A conversation or\ntemporary plan is never an implementation authority.\n\n## Repository Ownership\n\nAxis owns:\n\n- rendering, interaction, responsive/WebView behavior, and accessibility;\n- typed client contract consumption;\n- browser routing and presentation state;\n- TanStack Query server-state coordination;\n- Axis-owned CMS renderer implementations and typed registries;\n- loading, empty, unauthorized, incompatible, failure, and recovery views.\n\nNodics owns:\n\n- business rules and authoritative validation;\n- authentication and authorization enforcement;\n- persistence, workflows, pipelines, events, jobs, and integrations;\n- secrets, tenant governance, AI execution, tool execution, and audit;\n- backend schemas, APIs, configuration, runtime contracts, and business docs.\n\nWhen both repositories change, analyze and test each boundary separately.\n\n## AI and developer role stack\n\nAxis work must be reviewed through several roles before a change is accepted:\n\n| Role | Axis responsibility |\n| --- | --- |\n| Business analyst | Confirm the operator journey, dashboard usefulness, form flow, and error/recovery wording from the user’s perspective. |\n| Enterprise architect | Protect the browser/backend boundary, runtime module discovery, tenant context, security, and release topology. |\n| Nodics framework expert | Know which contract is owned by Platform, Profile, BackOffice, WCMS, Media, Cron, documentation packs, or a customer project. |\n| Domain expert | Avoid hardcoding one industry workflow when the component should work for commerce, content, workflow, media, logistics, telco, or another domain. |\n| Principal frontend engineer | Write typed, accessible, responsive React code with clear renderer registration and customization seams. |\n| Quality analyst and tester | Verify refresh behavior, deep links, unavailable modules, unauthorized operations, long labels, empty data, and regression paths. |\n| TechOps/DevOps reviewer | Keep public configuration safe, smoke tests runnable, local setup repeatable, and operational troubleshooting visible. |\n\nThe practical rule is simple: Axis may make a capability usable, but it must\nnot make itself the authority for that capability. If a frontend shortcut would\ninvent backend state, duplicate module discovery, bypass permission checks, or\nstore generated CMS data, the change belongs somewhere else.\n\n## Placement Rules\n\n- Application composition belongs under `src/app`.\n- Feature interaction belongs in a named feature boundary, not a generic\n  utilities folder.\n- CMS page, template, and component renderers follow the paths defined in\n  `AGENTS.md`, with one renderer implementation per file.\n- Backend logical keys map through typed registries. CMS data never supplies\n  executable JavaScript.\n- Configurable page copy comes from CMS component properties. Page and\n  component renderers consume typed labels, headings, placeholders, help text,\n  empty-state text, action captions, and fragments rather than defining\n  business-facing copy in JSX.\n- Reusable interaction behavior is implemented once and composed everywhere.\n  Query builders, media selectors, relationship selectors, record browsers,\n  and similar repeated controls must be modeled as reusable CMS component\n  contracts and Axis-owned shared renderers or primitives. Do not fork a\n  page-local implementation when a generic component already exists. Schema\n  data querying uses the `axis.component.schema-query-builder` renderer key,\n  so Schema Workbench, Imports and Exports, and future schema-backed pages\n  share one governed query-building experience.\n- Error ownership remains layered: the owning backend module supplies stable\n  domain codes and safe messages, CMS supplies configurable presentation copy,\n  and Axis supplies only generic browser or transport fallbacks needed when\n  the backend is unavailable. Axis never interprets English error text.\n- Locale, channel, and backend-resolved fallback are part of the CMS delivery\n  contract. Axis preserves that context, supports translated text expansion\n  and text direction, and uses locale-aware formatting without creating a\n  parallel backend translation catalogue.\n- Runtime values come from validated Axis configuration and backend contracts.\n  They do not belong in scattered constants or `package.json`.\n- Raw identifiers remain separate from display labels. Humanization is a\n  presentation fallback after contract validation, never a transformation of\n  request, authorization, cache, storage, audit, or telemetry identity. A\n  backend-provided localized display name always takes precedence.\n- Secrets never belong in frontend source, `.env`, generated browser config,\n  storage, URLs, telemetry, or logs.\n\n## Required Feature Documentation\n\nEvery significant feature guide explains:\n\n- purpose and current implemented scope;\n- backend authority and contract version;\n- source/component/client/test map;\n- setup and runtime configuration;\n- permissions and security;\n- keyboard, screen reader, responsive, touch, reduced-motion, and WebView\n  behavior;\n- success, unauthorized/invalid, boundary/responsive, failure/recovery, and\n  supported customization examples;\n- troubleshooting and verification;\n- known limitations and safe fallback.\n\nBusiness workflows and backend customization belong in Nodics documentation.\nAxis guides link to them and focus on frontend setup and contribution.\n\n## Customize and extend safely\n\nEvery feature guide includes this section. It\nshows the smallest supported project-owned Axis customization, identifies the\nbackend contract and security boundary that remain authoritative, lists\nprohibited frontend shortcuts or parallel authorities, and names the focused\npositive, rejected, boundary, integration, and regression tests. Explaining\nonly the out-of-the-box screen or workflow is incomplete.\n\n## Canonical Source and Generated Data\n\nAxis documentation that becomes backend CMS records is authored as granular,\nreviewable pages in `nodics.platform/modules/axis` under\n`data/core/source/documentation`. The deterministic documentation generator creates CMS\npage, component, navigation, route, search, and immutable manifest data under\n`data/core` and `manifest/docs-content-pack.json` in the same module.\n\nThe generator is executable repository tooling and lives beside the authored\ncontent at `data/core/source/documentation/tooling/generate-documentation-content.mjs`.\nIt must not be placed under `config`, because configuration files remain\ndeclarative values only.\n\nDo not hand-edit generated CMS article records. Do not maintain a shorter\ngenerated summary beside a richer project guide. Every implemented feature\nmust update its canonical source page and regenerate the content pack in the\nsame change:\n\n```bash\nnpm run docs:generate\nnpm run docs:check\n```\n\nThe migration register records the original README/docs evidence, canonical\nsource, destination route, source hash, headings, word count, and disposition.\nREADME or legacy docs may be reduced only after all substantive guidance is\nmapped, generated, reviewed in Axis, and protected by content-preservation\ntests.\n\nEvery project and module retains a concise high-level `README.md` after detailed\nguidance migrates. It remains the repository entry point for purpose, ownership,\nimplemented capabilities, setup, verification, extension boundaries, and links\nto canonical pages. It must not become a second copy of the complete\noperational and developer guides. Legacy detailed `docs/` files may be retired\nonly after the migration register records their hashes, word counts, headings,\ncanonical destinations, and the generated and rendered verification gates pass.\nAfter retirement, do not recreate a parallel `docs/` directory. The frontend\nproject keeps one concise `README.md`; backend-importable detailed permanent\nguidance belongs only under `nodics.platform/modules/axis/data/core/source/documentation`\nand its generated `data/core` projection.\n\n## Required Examples\n\n### Successful\n\nAn authorized employee loads a backend descriptor, Axis validates it, maps its\nrenderer key to an Axis-owned component, and displays the result.\n\n### Unauthorized\n\nThe backend denies an operation. Axis presents an accessible unauthorized state\nand does not infer authorization from menu visibility.\n\n### Boundary\n\nThe same feature remains usable with keyboard and touch in desktop, tablet, and\nmobile WebView layouts, including long labels, empty data, and bounded payloads.\n\n### Failure And Recovery\n\nWhen BackOffice or a target module is unavailable, Axis presents a safe\nrecovery state, avoids stale privileged data, and retries through the same\nauthoritative contract.\n\n### Customization\n\nA partner adds an Axis-owned renderer and registry manifest for a backend\nlogical component key. The partner does not download code from CMS or add\nbusiness validation to the renderer.\n\nAn administrator changes a component label or locale-specific content in the\nauthoritative CMS catalog. The same allowlisted Axis renderer displays the\nresolved value without a frontend rebuild. Missing or malformed required\nproperties produce the renderer's safe generic fallback and never execute\nbackend-supplied markup or code.\n\nA validated fallback identifier such as `axisContentCatalog` may be displayed\nas `Axis Content Catalog`. The raw code remains unchanged wherever identity or\nbackend communication is involved.\n\n## Acceptance\n\nA feature is complete only when:\n\n- repository ownership is explicit;\n- the backend contract and security boundary are preserved;\n- strict TypeScript and validation cover external data;\n- accessibility and responsive states are implemented;\n- focused positive, negative, boundary, failure, integration, and regression\n  tests pass;\n- implemented documentation and known limitations are current;\n- `npm run verify` passes at the release-oriented gate.\n\n## Continue\n\n- [Feature Delivery Checklist](feature-delivery-checklist.md)\n- [Architecture And Ownership](architecture-and-ownership.md)\n- [CMS Delivery And Renderers](cms-delivery-and-renderers.md)\n- [Axis README](../README.md)\n"
         }
       ]
     },
@@ -726,7 +715,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/project-overview.md",
         "evidence": "README.md",
         "hash": "32cc2183af649a6e40725ec6f44f34d1d1f79c2d54568ca7006ddc22e97f3e36",
-        "version": "0.3.22"
+        "version": "0.3.23"
       },
       "next": {
         "title": "Architecture and Repository Boundaries",
@@ -934,7 +923,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/architecture-and-ownership.md",
         "evidence": "docs/architecture-and-ownership.md",
         "hash": "f47604672729255bb987075b091a9ced856766fdb0b699f3f4f6037d3439293c",
-        "version": "0.3.22"
+        "version": "0.3.23"
       },
       "previous": {
         "title": "What Is Nodics Axis?",
@@ -1276,7 +1265,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/frontend-technology-stack.md",
         "evidence": "docs/frontend-technology-stack.md",
         "hash": "cc6256eee8767787d59c5272e8218d429188eeadbb159154304baa409b54eb51",
-        "version": "0.3.22"
+        "version": "0.3.23"
       },
       "previous": {
         "title": "Architecture and Repository Boundaries",
@@ -1594,7 +1583,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/design-system-and-shell.md",
         "evidence": "docs/design-system-and-shell.md",
         "hash": "78a408e25eceb2c4a59dbf220d96596ac3d2f171238a1019868b4986c3a809fb",
-        "version": "0.3.22"
+        "version": "0.3.23"
       },
       "previous": {
         "title": "Frontend Technology Stack",
@@ -1778,7 +1767,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/cms-delivery-and-renderers.md",
         "evidence": "docs/cms-delivery-and-renderers.md",
         "hash": "84b2be72effcb6eca8b000a43cfcb3414ef8d0ce52861bea24ffc95dbe9c4c15",
-        "version": "0.3.22"
+        "version": "0.3.23"
       },
       "previous": {
         "title": "Design System and Application Shell",
@@ -2050,7 +2039,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/documentation-content.md",
         "evidence": "docs/documentation-content.md",
         "hash": "df2f2c73001a662658349bc6aa5e67e7a1ca1145ea4bb581f6ec6fd25d7aed21",
-        "version": "0.3.22"
+        "version": "0.3.23"
       },
       "previous": {
         "title": "CMS Delivery and Renderer Integration",
@@ -2309,7 +2298,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/employee-login.md",
         "evidence": "docs/employee-login.md",
         "hash": "9a56cf0d03f5a515653f96a48b2c35ddca7eacd5d44a9d8f0ecdf7a2898a8b10",
-        "version": "0.3.22"
+        "version": "0.3.23"
       },
       "previous": {
         "title": "Documentation Content in Axis",
@@ -2730,7 +2719,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/assistant-frontend.md",
         "evidence": "docs/assistant-frontend.md",
         "hash": "4b5f2628a6a7b3e6561fef37e68c4001f02a8385700174ffd36fb293b46b2604",
-        "version": "0.3.22"
+        "version": "0.3.23"
       },
       "previous": {
         "title": "Employee Login, Recovery, Lock, and Dashboard",
@@ -3105,7 +3094,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/schema-workbench.md",
         "evidence": "docs/schema-workbench.md",
         "hash": "459c95070bd524e0f0568220bea7a780e683a0ee0c1ffba1ade629d8507a33bd",
-        "version": "0.3.22"
+        "version": "0.3.23"
       },
       "previous": {
         "title": "Axis Assistant Frontend",
@@ -3282,7 +3271,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/module-health.md",
         "evidence": "docs/module-health.md",
         "hash": "b94bb7b70fb2b4a7b2e8cd755b33cd564769bdf45bf2872dfa99520e6965f937",
-        "version": "0.3.22"
+        "version": "0.3.23"
       },
       "previous": {
         "title": "Axis Schema Workbench",
@@ -3508,7 +3497,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/imports-and-exports.md",
         "evidence": "docs/imports-and-exports.md",
         "hash": "8e6e20e92557c3b3f0b97e7db1c50f859af97be82d9b468108dc78745e47993f",
-        "version": "0.3.22"
+        "version": "0.3.23"
       },
       "previous": {
         "title": "Module Health",
@@ -4012,7 +4001,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/media-management.md",
         "evidence": "data/core/source/documentation/pages/media-management.md",
         "hash": "198e486b7bfa138e395124d557ea83381dff3532c611bc224ef97a1ea54d3e17",
-        "version": "0.3.22"
+        "version": "0.3.23"
       },
       "previous": {
         "title": "Imports and Exports Workspace",
@@ -4328,7 +4317,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/feature-delivery-checklist.md",
         "evidence": "docs/feature-delivery-checklist.md",
         "hash": "da3160391c340399debae48e13e16e44a9ebe134f4e8510724ee502275658694",
-        "version": "0.3.22"
+        "version": "0.3.23"
       },
       "previous": {
         "title": "Media Management Workspace",
@@ -4372,63 +4361,68 @@ module.exports = {
           "level": 2
         },
         {
+          "text": "AI and developer role stack",
+          "anchor": "implementation-contract-3-ai-and-developer-role-stack",
+          "level": 2
+        },
+        {
           "text": "Placement Rules",
-          "anchor": "implementation-contract-3-placement-rules",
+          "anchor": "implementation-contract-4-placement-rules",
           "level": 2
         },
         {
           "text": "Required Feature Documentation",
-          "anchor": "implementation-contract-4-required-feature-documentation",
+          "anchor": "implementation-contract-5-required-feature-documentation",
           "level": 2
         },
         {
           "text": "Customize and extend safely",
-          "anchor": "implementation-contract-5-customize-and-extend-safely",
+          "anchor": "implementation-contract-6-customize-and-extend-safely",
           "level": 2
         },
         {
           "text": "Canonical Source and Generated Data",
-          "anchor": "implementation-contract-6-canonical-source-and-generated-data",
+          "anchor": "implementation-contract-7-canonical-source-and-generated-data",
           "level": 2
         },
         {
           "text": "Required Examples",
-          "anchor": "implementation-contract-7-required-examples",
+          "anchor": "implementation-contract-8-required-examples",
           "level": 2
         },
         {
           "text": "Successful",
-          "anchor": "implementation-contract-8-successful",
+          "anchor": "implementation-contract-9-successful",
           "level": 3
         },
         {
           "text": "Unauthorized",
-          "anchor": "implementation-contract-9-unauthorized",
+          "anchor": "implementation-contract-10-unauthorized",
           "level": 3
         },
         {
           "text": "Boundary",
-          "anchor": "implementation-contract-10-boundary",
+          "anchor": "implementation-contract-11-boundary",
           "level": 3
         },
         {
           "text": "Failure And Recovery",
-          "anchor": "implementation-contract-11-failure-and-recovery",
+          "anchor": "implementation-contract-12-failure-and-recovery",
           "level": 3
         },
         {
           "text": "Customization",
-          "anchor": "implementation-contract-12-customization",
+          "anchor": "implementation-contract-13-customization",
           "level": 3
         },
         {
           "text": "Acceptance",
-          "anchor": "implementation-contract-13-acceptance",
+          "anchor": "implementation-contract-14-acceptance",
           "level": 2
         },
         {
           "text": "Continue",
-          "anchor": "implementation-contract-14-continue",
+          "anchor": "implementation-contract-15-continue",
           "level": 2
         }
       ],
@@ -4503,8 +4497,59 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "AI and developer role stack",
+          "anchor": "implementation-contract-3-ai-and-developer-role-stack"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis work must be reviewed through several roles before a change is accepted:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Role",
+            "Axis responsibility"
+          ],
+          "rows": [
+            [
+              "Business analyst",
+              "Confirm the operator journey, dashboard usefulness, form flow, and error/recovery wording from the user’s perspective."
+            ],
+            [
+              "Enterprise architect",
+              "Protect the browser/backend boundary, runtime module discovery, tenant context, security, and release topology."
+            ],
+            [
+              "Nodics framework expert",
+              "Know which contract is owned by Platform, Profile, BackOffice, WCMS, Media, Cron, documentation packs, or a customer project."
+            ],
+            [
+              "Domain expert",
+              "Avoid hardcoding one industry workflow when the component should work for commerce, content, workflow, media, logistics, telco, or another domain."
+            ],
+            [
+              "Principal frontend engineer",
+              "Write typed, accessible, responsive React code with clear renderer registration and customization seams."
+            ],
+            [
+              "Quality analyst and tester",
+              "Verify refresh behavior, deep links, unavailable modules, unauthorized operations, long labels, empty data, and regression paths."
+            ],
+            [
+              "TechOps/DevOps reviewer",
+              "Keep public configuration safe, smoke tests runnable, local setup repeatable, and operational troubleshooting visible."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "The practical rule is simple: Axis may make a capability usable, but it must not make itself the authority for that capability. If a frontend shortcut would invent backend state, duplicate module discovery, bypass permission checks, or store generated CMS data, the change belongs somewhere else."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Placement Rules",
-          "anchor": "implementation-contract-3-placement-rules"
+          "anchor": "implementation-contract-4-placement-rules"
         },
         {
           "kind": "unordered-list",
@@ -4526,7 +4571,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Required Feature Documentation",
-          "anchor": "implementation-contract-4-required-feature-documentation"
+          "anchor": "implementation-contract-5-required-feature-documentation"
         },
         {
           "kind": "paragraph",
@@ -4554,7 +4599,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Customize and extend safely",
-          "anchor": "implementation-contract-5-customize-and-extend-safely"
+          "anchor": "implementation-contract-6-customize-and-extend-safely"
         },
         {
           "kind": "paragraph",
@@ -4564,7 +4609,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Canonical Source and Generated Data",
-          "anchor": "implementation-contract-6-canonical-source-and-generated-data"
+          "anchor": "implementation-contract-7-canonical-source-and-generated-data"
         },
         {
           "kind": "paragraph",
@@ -4595,13 +4640,13 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Required Examples",
-          "anchor": "implementation-contract-7-required-examples"
+          "anchor": "implementation-contract-8-required-examples"
         },
         {
           "kind": "heading",
           "level": 3,
           "text": "Successful",
-          "anchor": "implementation-contract-8-successful"
+          "anchor": "implementation-contract-9-successful"
         },
         {
           "kind": "paragraph",
@@ -4611,7 +4656,7 @@ module.exports = {
           "kind": "heading",
           "level": 3,
           "text": "Unauthorized",
-          "anchor": "implementation-contract-9-unauthorized"
+          "anchor": "implementation-contract-10-unauthorized"
         },
         {
           "kind": "paragraph",
@@ -4621,7 +4666,7 @@ module.exports = {
           "kind": "heading",
           "level": 3,
           "text": "Boundary",
-          "anchor": "implementation-contract-10-boundary"
+          "anchor": "implementation-contract-11-boundary"
         },
         {
           "kind": "paragraph",
@@ -4631,7 +4676,7 @@ module.exports = {
           "kind": "heading",
           "level": 3,
           "text": "Failure And Recovery",
-          "anchor": "implementation-contract-11-failure-and-recovery"
+          "anchor": "implementation-contract-12-failure-and-recovery"
         },
         {
           "kind": "paragraph",
@@ -4641,7 +4686,7 @@ module.exports = {
           "kind": "heading",
           "level": 3,
           "text": "Customization",
-          "anchor": "implementation-contract-12-customization"
+          "anchor": "implementation-contract-13-customization"
         },
         {
           "kind": "paragraph",
@@ -4659,7 +4704,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Acceptance",
-          "anchor": "implementation-contract-13-acceptance"
+          "anchor": "implementation-contract-14-acceptance"
         },
         {
           "kind": "paragraph",
@@ -4681,7 +4726,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Continue",
-          "anchor": "implementation-contract-14-continue"
+          "anchor": "implementation-contract-15-continue"
         },
         {
           "kind": "unordered-list",
@@ -4693,14 +4738,14 @@ module.exports = {
           ]
         }
       ],
-      "searchText": "Axis Implementation and Documentation Contract Follow local discovery, repository ownership, placement, documentation, required scenarios, customization, and acceptance contracts. # Axis Implementation And Documentation Contract\n\nAxis is a reusable frontend framework application, not a one-off admin screen.\nPartners, developers, and AI tools must be able to extend it without seeing the\nentire repository or moving backend authority into the browser.\n\n## Local Discovery Chain\n\nFor every feature, read:\n\n1. root `AGENTS.md`;\n2. this contract and the feature-delivery checklist;\n3. the nearest feature source and focused tests;\n4. the consuming Nodics API/OpenAPI/CMS contract;\n5. the feature guide linked from the root README.\n\nCritical rules must be repeated concisely near the implementation and protected\nby TypeScript, schema validation, linting, or focused tests. A conversation or\ntemporary plan is never an implementation authority.\n\n## Repository Ownership\n\nAxis owns:\n\n- rendering, interaction, responsive/WebView behavior, and accessibility;\n- typed client contract consumption;\n- browser routing and presentation state;\n- TanStack Query server-state coordination;\n- Axis-owned CMS renderer implementations and typed registries;\n- loading, empty, unauthorized, incompatible, failure, and recovery views.\n\nNodics owns:\n\n- business rules and authoritative validation;\n- authentication and authorization enforcement;\n- persistence, workflows, pipelines, events, jobs, and integrations;\n- secrets, tenant governance, AI execution, tool execution, and audit;\n- backend schemas, APIs, configuration, runtime contracts, and business docs.\n\nWhen both repositories change, analyze and test each boundary separately.\n\n## Placement Rules\n\n- Application composition belongs under `src/app`.\n- Feature interaction belongs in a named feature boundary, not a generic\n  utilities folder.\n- CMS page, template, and component renderers follow the paths defined in\n  `AGENTS.md`, with one renderer implementation per file.\n- Backend logical keys map through typed registries. CMS data never supplies\n  executable JavaScript.\n- Configurable page copy comes from CMS component properties. Page and\n  component renderers consume typed labels, headings, placeholders, help text,\n  empty-state text, action captions, and fragments rather than defining\n  business-facing copy in JSX.\n- Reusable interaction behavior is implemented once and composed everywhere.\n  Query builders, media selectors, relationship selectors, record browsers,\n  and similar repeated controls must be modeled as reusable CMS component\n  contracts and Axis-owned shared renderers or primitives. Do not fork a\n  page-local implementation when a generic component already exists. Schema\n  data querying uses the `axis.component.schema-query-builder` renderer key,\n  so Schema Workbench, Imports and Exports, and future schema-backed pages\n  share one governed query-building experience.\n- Error ownership remains layered: the owning backend module supplies stable\n  domain codes and safe messages, CMS supplies configurable presentation copy,\n  and Axis supplies only generic browser or transport fallbacks needed when\n  the backend is unavailable. Axis never interprets English error text.\n- Locale, channel, and backend-resolved fallback are part of the CMS delivery\n  contract. Axis preserves that context, supports translated text expansion\n  and text direction, and uses locale-aware formatting without creating a\n  parallel backend translation catalogue.\n- Runtime values come from validated Axis configuration and backend contracts.\n  They do not belong in scattered constants or `package.json`.\n- Raw identifiers remain separate from display labels. Humanization is a\n  presentation fallback after contract validation, never a transformation of\n  request, authorization, cache, storage, audit, or telemetry identity. A\n  backend-provided localized display name always takes precedence.\n- Secrets never belong in frontend source, `.env`, generated browser config,\n  storage, URLs, telemetry, or logs.\n\n## Required Feature Documentation\n\nEvery significant feature guide explains:\n\n- purpose and current implemented scope;\n- backend authority and contract version;\n- source/component/client/test map;\n- setup and runtime configuration;\n- permissions and security;\n- keyboard, screen reader, responsive, touch, reduced-motion, and WebView\n  behavior;\n- success, unauthorized/invalid, boundary/responsive, failure/recovery, and\n  supported customization examples;\n- troubleshooting and verification;\n- known limitations and safe fallback.\n\nBusiness workflows and backend customization belong in Nodics documentation.\nAxis guides link to them and focus on frontend setup and contribution.\n\n## Customize and extend safely\n\nEvery feature guide includes this section. It\nshows the smallest supported project-owned Axis customization, identifies the\nbackend contract and security boundary that remain authoritative, lists\nprohibited frontend shortcuts or parallel authorities, and names the focused\npositive, rejected, boundary, integration, and regression tests. Explaining\nonly the out-of-the-box screen or workflow is incomplete.\n\n## Canonical Source and Generated Data\n\nAxis documentation that becomes backend CMS records is authored as granular,\nreviewable pages in `nodics.platform/modules/axis` under\n`data/core/source/documentation`. The deterministic documentation generator creates CMS\npage, component, navigation, route, search, and immutable manifest data under\n`data/core` and `manifest/docs-content-pack.json` in the same module.\n\nThe generator is executable repository tooling and lives beside the authored\ncontent at `data/core/source/documentation/tooling/generate-documentation-content.mjs`.\nIt must not be placed under `config`, because configuration files remain\ndeclarative values only.\n\nDo not hand-edit generated CMS article records. Do not maintain a shorter\ngenerated summary beside a richer project guide. Every implemented feature\nmust update its canonical source page and regenerate the content pack in the\nsame change:\n\n```bash\nnpm run docs:generate\nnpm run docs:check\n```\n\nThe migration register records the original README/docs evidence, canonical\nsource, destination route, source hash, headings, word count, and disposition.\nREADME or legacy docs may be reduced only after all substantive guidance is\nmapped, generated, reviewed in Axis, and protected by content-preservation\ntests.\n\nEvery project and module retains a concise high-level `README.md` after detailed\nguidance migrates. It remains the repository entry point for purpose, ownership,\nimplemented capabilities, setup, verification, extension boundaries, and links\nto canonical pages. It must not become a second copy of the complete\noperational and developer guides. Legacy detailed `docs/` files may be retired\nonly after the migration register records their hashes, word counts, headings,\ncanonical destinations, and the generated and rendered verification gates pass.\nAfter retirement, do not recreate a parallel `docs/` directory. The frontend\nproject keeps one concise `README.md`; backend-importable detailed permanent\nguidance belongs only under `nodics.platform/modules/axis/data/core/source/documentation`\nand its generated `data/core` projection.\n\n## Required Examples\n\n### Successful\n\nAn authorized employee loads a backend descriptor, Axis validates it, maps its\nrenderer key to an Axis-owned component, and displays the result.\n\n### Unauthorized\n\nThe backend denies an operation. Axis presents an accessible unauthorized state\nand does not infer authorization from menu visibility.\n\n### Boundary\n\nThe same feature remains usable with keyboard and touch in desktop, tablet, and\nmobile WebView layouts, including long labels, empty data, and bounded payloads.\n\n### Failure And Recovery\n\nWhen BackOffice or a target module is unavailable, Axis presents a safe\nrecovery state, avoids stale privileged data, and retries through the same\nauthoritative contract.\n\n### Customization\n\nA partner adds an Axis-owned renderer and registry manifest for a backend\nlogical component key. The partner does not download code from CMS or add\nbusiness validation to the renderer.\n\nAn administrator changes a component label or locale-specific content in the\nauthoritative CMS catalog. The same allowlisted Axis renderer displays the\nresolved value without a frontend rebuild. Missing or malformed required\nproperties produce the renderer's safe generic fallback and never execute\nbackend-supplied markup or code.\n\nA validated fallback identifier such as `axisContentCatalog` may be displayed\nas `Axis Content Catalog`. The raw code remains unchanged wherever identity or\nbackend communication is involved.\n\n## Acceptance\n\nA feature is complete only when:\n\n- repository ownership is explicit;\n- the backend contract and security boundary are preserved;\n- strict TypeScript and validation cover external data;\n- accessibility and responsive states are implemented;\n- focused positive, negative, boundary, failure, integration, and regression\n  tests pass;\n- implemented documentation and known limitations are current;\n- `npm run verify` passes at the release-oriented gate.\n\n## Continue\n\n- [Feature Delivery Checklist](feature-delivery-checklist.md)\n- [Architecture And Ownership](architecture-and-ownership.md)\n- [CMS Delivery And Renderers](cms-delivery-and-renderers.md)\n- [Axis README](../README.md)\n",
+      "searchText": "Axis Implementation and Documentation Contract Follow local discovery, repository ownership, placement, documentation, required scenarios, customization, and acceptance contracts. # Axis Implementation And Documentation Contract\n\nAxis is a reusable frontend framework application, not a one-off admin screen.\nPartners, developers, and AI tools must be able to extend it without seeing the\nentire repository or moving backend authority into the browser.\n\n## Local Discovery Chain\n\nFor every feature, read:\n\n1. root `AGENTS.md`;\n2. this contract and the feature-delivery checklist;\n3. the nearest feature source and focused tests;\n4. the consuming Nodics API/OpenAPI/CMS contract;\n5. the feature guide linked from the root README.\n\nCritical rules must be repeated concisely near the implementation and protected\nby TypeScript, schema validation, linting, or focused tests. A conversation or\ntemporary plan is never an implementation authority.\n\n## Repository Ownership\n\nAxis owns:\n\n- rendering, interaction, responsive/WebView behavior, and accessibility;\n- typed client contract consumption;\n- browser routing and presentation state;\n- TanStack Query server-state coordination;\n- Axis-owned CMS renderer implementations and typed registries;\n- loading, empty, unauthorized, incompatible, failure, and recovery views.\n\nNodics owns:\n\n- business rules and authoritative validation;\n- authentication and authorization enforcement;\n- persistence, workflows, pipelines, events, jobs, and integrations;\n- secrets, tenant governance, AI execution, tool execution, and audit;\n- backend schemas, APIs, configuration, runtime contracts, and business docs.\n\nWhen both repositories change, analyze and test each boundary separately.\n\n## AI and developer role stack\n\nAxis work must be reviewed through several roles before a change is accepted:\n\n| Role | Axis responsibility |\n| --- | --- |\n| Business analyst | Confirm the operator journey, dashboard usefulness, form flow, and error/recovery wording from the user’s perspective. |\n| Enterprise architect | Protect the browser/backend boundary, runtime module discovery, tenant context, security, and release topology. |\n| Nodics framework expert | Know which contract is owned by Platform, Profile, BackOffice, WCMS, Media, Cron, documentation packs, or a customer project. |\n| Domain expert | Avoid hardcoding one industry workflow when the component should work for commerce, content, workflow, media, logistics, telco, or another domain. |\n| Principal frontend engineer | Write typed, accessible, responsive React code with clear renderer registration and customization seams. |\n| Quality analyst and tester | Verify refresh behavior, deep links, unavailable modules, unauthorized operations, long labels, empty data, and regression paths. |\n| TechOps/DevOps reviewer | Keep public configuration safe, smoke tests runnable, local setup repeatable, and operational troubleshooting visible. |\n\nThe practical rule is simple: Axis may make a capability usable, but it must\nnot make itself the authority for that capability. If a frontend shortcut would\ninvent backend state, duplicate module discovery, bypass permission checks, or\nstore generated CMS data, the change belongs somewhere else.\n\n## Placement Rules\n\n- Application composition belongs under `src/app`.\n- Feature interaction belongs in a named feature boundary, not a generic\n  utilities folder.\n- CMS page, template, and component renderers follow the paths defined in\n  `AGENTS.md`, with one renderer implementation per file.\n- Backend logical keys map through typed registries. CMS data never supplies\n  executable JavaScript.\n- Configurable page copy comes from CMS component properties. Page and\n  component renderers consume typed labels, headings, placeholders, help text,\n  empty-state text, action captions, and fragments rather than defining\n  business-facing copy in JSX.\n- Reusable interaction behavior is implemented once and composed everywhere.\n  Query builders, media selectors, relationship selectors, record browsers,\n  and similar repeated controls must be modeled as reusable CMS component\n  contracts and Axis-owned shared renderers or primitives. Do not fork a\n  page-local implementation when a generic component already exists. Schema\n  data querying uses the `axis.component.schema-query-builder` renderer key,\n  so Schema Workbench, Imports and Exports, and future schema-backed pages\n  share one governed query-building experience.\n- Error ownership remains layered: the owning backend module supplies stable\n  domain codes and safe messages, CMS supplies configurable presentation copy,\n  and Axis supplies only generic browser or transport fallbacks needed when\n  the backend is unavailable. Axis never interprets English error text.\n- Locale, channel, and backend-resolved fallback are part of the CMS delivery\n  contract. Axis preserves that context, supports translated text expansion\n  and text direction, and uses locale-aware formatting without creating a\n  parallel backend translation catalogue.\n- Runtime values come from validated Axis configuration and backend contracts.\n  They do not belong in scattered constants or `package.json`.\n- Raw identifiers remain separate from display labels. Humanization is a\n  presentation fallback after contract validation, never a transformation of\n  request, authorization, cache, storage, audit, or telemetry identity. A\n  backend-provided localized display name always takes precedence.\n- Secrets never belong in frontend source, `.env`, generated browser config,\n  storage, URLs, telemetry, or logs.\n\n## Required Feature Documentation\n\nEvery significant feature guide explains:\n\n- purpose and current implemented scope;\n- backend authority and contract version;\n- source/component/client/test map;\n- setup and runtime configuration;\n- permissions and security;\n- keyboard, screen reader, responsive, touch, reduced-motion, and WebView\n  behavior;\n- success, unauthorized/invalid, boundary/responsive, failure/recovery, and\n  supported customization examples;\n- troubleshooting and verification;\n- known limitations and safe fallback.\n\nBusiness workflows and backend customization belong in Nodics documentation.\nAxis guides link to them and focus on frontend setup and contribution.\n\n## Customize and extend safely\n\nEvery feature guide includes this section. It\nshows the smallest supported project-owned Axis customization, identifies the\nbackend contract and security boundary that remain authoritative, lists\nprohibited frontend shortcuts or parallel authorities, and names the focused\npositive, rejected, boundary, integration, and regression tests. Explaining\nonly the out-of-the-box screen or workflow is incomplete.\n\n## Canonical Source and Generated Data\n\nAxis documentation that becomes backend CMS records is authored as granular,\nreviewable pages in `nodics.platform/modules/axis` under\n`data/core/source/documentation`. The deterministic documentation generator creates CMS\npage, component, navigation, route, search, and immutable manifest data under\n`data/core` and `manifest/docs-content-pack.json` in the same module.\n\nThe generator is executable repository tooling and lives beside the authored\ncontent at `data/core/source/documentation/tooling/generate-documentation-content.mjs`.\nIt must not be placed under `config`, because configuration files remain\ndeclarative values only.\n\nDo not hand-edit generated CMS article records. Do not maintain a shorter\ngenerated summary beside a richer project guide. Every implemented feature\nmust update its canonical source page and regenerate the content pack in the\nsame change:\n\n```bash\nnpm run docs:generate\nnpm run docs:check\n```\n\nThe migration register records the original README/docs evidence, canonical\nsource, destination route, source hash, headings, word count, and disposition.\nREADME or legacy docs may be reduced only after all substantive guidance is\nmapped, generated, reviewed in Axis, and protected by content-preservation\ntests.\n\nEvery project and module retains a concise high-level `README.md` after detailed\nguidance migrates. It remains the repository entry point for purpose, ownership,\nimplemented capabilities, setup, verification, extension boundaries, and links\nto canonical pages. It must not become a second copy of the complete\noperational and developer guides. Legacy detailed `docs/` files may be retired\nonly after the migration register records their hashes, word counts, headings,\ncanonical destinations, and the generated and rendered verification gates pass.\nAfter retirement, do not recreate a parallel `docs/` directory. The frontend\nproject keeps one concise `README.md`; backend-importable detailed permanent\nguidance belongs only under `nodics.platform/modules/axis/data/core/source/documentation`\nand its generated `data/core` projection.\n\n## Required Examples\n\n### Successful\n\nAn authorized employee loads a backend descriptor, Axis validates it, maps its\nrenderer key to an Axis-owned component, and displays the result.\n\n### Unauthorized\n\nThe backend denies an operation. Axis presents an accessible unauthorized state\nand does not infer authorization from menu visibility.\n\n### Boundary\n\nThe same feature remains usable with keyboard and touch in desktop, tablet, and\nmobile WebView layouts, including long labels, empty data, and bounded payloads.\n\n### Failure And Recovery\n\nWhen BackOffice or a target module is unavailable, Axis presents a safe\nrecovery state, avoids stale privileged data, and retries through the same\nauthoritative contract.\n\n### Customization\n\nA partner adds an Axis-owned renderer and registry manifest for a backend\nlogical component key. The partner does not download code from CMS or add\nbusiness validation to the renderer.\n\nAn administrator changes a component label or locale-specific content in the\nauthoritative CMS catalog. The same allowlisted Axis renderer displays the\nresolved value without a frontend rebuild. Missing or malformed required\nproperties produce the renderer's safe generic fallback and never execute\nbackend-supplied markup or code.\n\nA validated fallback identifier such as `axisContentCatalog` may be displayed\nas `Axis Content Catalog`. The raw code remains unchanged wherever identity or\nbackend communication is involved.\n\n## Acceptance\n\nA feature is complete only when:\n\n- repository ownership is explicit;\n- the backend contract and security boundary are preserved;\n- strict TypeScript and validation cover external data;\n- accessibility and responsive states are implemented;\n- focused positive, negative, boundary, failure, integration, and regression\n  tests pass;\n- implemented documentation and known limitations are current;\n- `npm run verify` passes at the release-oriented gate.\n\n## Continue\n\n- [Feature Delivery Checklist](feature-delivery-checklist.md)\n- [Architecture And Ownership](architecture-and-ownership.md)\n- [CMS Delivery And Renderers](cms-delivery-and-renderers.md)\n- [Axis README](../README.md)\n",
       "source": {
         "repository": "nodics.platform",
         "module": "axis",
         "path": "modules/axis/data/core/source/documentation/pages/implementation-and-documentation-contract.md",
         "evidence": "docs/implementation-and-documentation-contract.md",
-        "hash": "587ce77fa7823574df76c4e00b4927bbbf08b707c32317493a088242ce21e66e",
-        "version": "0.3.22"
+        "hash": "4bcbc94f48b7bb34b7ee913c34eafd9b67d2ecd4f422968d353a0a2723ee23dd",
+        "version": "0.3.23"
       },
       "previous": {
         "title": "Axis Feature Delivery Checklist",

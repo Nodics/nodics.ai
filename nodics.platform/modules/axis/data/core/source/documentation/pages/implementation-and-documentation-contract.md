@@ -39,6 +39,25 @@ Nodics owns:
 
 When both repositories change, analyze and test each boundary separately.
 
+## AI and developer role stack
+
+Axis work must be reviewed through several roles before a change is accepted:
+
+| Role | Axis responsibility |
+| --- | --- |
+| Business analyst | Confirm the operator journey, dashboard usefulness, form flow, and error/recovery wording from the user’s perspective. |
+| Enterprise architect | Protect the browser/backend boundary, runtime module discovery, tenant context, security, and release topology. |
+| Nodics framework expert | Know which contract is owned by Platform, Profile, BackOffice, WCMS, Media, Cron, documentation packs, or a customer project. |
+| Domain expert | Avoid hardcoding one industry workflow when the component should work for commerce, content, workflow, media, logistics, telco, or another domain. |
+| Principal frontend engineer | Write typed, accessible, responsive React code with clear renderer registration and customization seams. |
+| Quality analyst and tester | Verify refresh behavior, deep links, unavailable modules, unauthorized operations, long labels, empty data, and regression paths. |
+| TechOps/DevOps reviewer | Keep public configuration safe, smoke tests runnable, local setup repeatable, and operational troubleshooting visible. |
+
+The practical rule is simple: Axis may make a capability usable, but it must
+not make itself the authority for that capability. If a frontend shortcut would
+invent backend state, duplicate module discovery, bypass permission checks, or
+store generated CMS data, the change belongs somewhere else.
+
 ## Placement Rules
 
 - Application composition belongs under `src/app`.

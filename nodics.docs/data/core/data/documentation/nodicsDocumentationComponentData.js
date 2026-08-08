@@ -1,14 +1,3 @@
-/*
-    Nodics - Enterprice Micro-Services Management Framework
-
-    Copyright (c) 2026 Nodics All rights reserved.
-
-    This software is governed by the Nodics Source-Available Commercial License.
-    You may use, copy, modify, deploy, or distribute it only as permitted by the
-    root LICENSE file or a separate written agreement with Nodics.
-
- */
-
 'use strict';
 
 /** @description Generated Nodics framework documentation navigation and article content. */
@@ -113,7 +102,7 @@ module.exports = {
             "operator"
           ],
           "summary": "How customer projects customize Nodics safely without forking framework authority.",
-          "searchText": "Customization and extension guide How customer projects customize Nodics safely without forking framework authority. # Customization and extension guide\n\nNodics is built for customization, but customization must happen in the right\nowner. The safest path is to reuse an existing capability, configure it, extend\nit in a later-loaded module, and create new framework behavior only when the\nexisting contract truly cannot satisfy the requirement.\n\nFor a beginner, customization means “where should I put my change so I can\nstill upgrade the framework later?” The safest answer is usually configuration\nfirst, then a customer project module, then a customer extension module, and\nonly then a framework change if the behavior is truly reusable for everyone.\n\n## What this is\n\nThis guide explains how a customer or partner changes Nodics behavior without\nturning a customer project into a fork of the framework. It applies to backend\ncustomization, Axis presentation customization, and documentation ownership.\n\n## The customization ladder\n\nStart with the least invasive option:\n\n1. Use existing behavior.\n2. Change configuration in the correct project, environment, server, node, or\n   tenant scope.\n3. Add customer project modules under the customer project.\n4. Add a customer extension module that extends a framework functional module.\n5. Create a new implementation only when the existing capability contract is\n   missing or incorrect.\n\nThis ladder protects upgradeability. The later a customization loads, the more\nspecific it is. Framework modules stay reusable; customer modules carry\ncustomer decisions.\n\n| Customization level | Who should use it | Beginner example | Upgrade risk |\n| --- | --- | --- | --- |\n| Axis/WCMS content | Business user or content admin | Change a heading, image, documentation page, or dashboard card. | Low, because backend content is governed and versioned. |\n| Project configuration | Developer or operator | Change a local port, database name, or feature override for one environment. | Low when the property stays narrow. |\n| Project module | Developer | Add Kickoff-specific schema fields or business services. | Medium, because tests must prove the behavior. |\n| Customer extension module | Senior developer | Override Platform behavior while keeping the Platform functional identity. | Medium to high, because service precedence must be explicit. |\n| Framework module change | Framework team | Improve Core import behavior for every project. | Shared release risk, so it needs broader validation. |\n| New functional module | Architecture owner | Add Commerce, Workflow, or another independent capability. | High if ownership is blurry. |\n\n```mermaid\nflowchart TD\n  Need[\"Need to change behavior or content\"] --> Content{\"Can Axis/WCMS governed content solve it?\"}\n  Content -->|Yes| Wcms[\"Update backend-owned CMS data\"]\n  Content -->|No| Config{\"Can configuration solve it?\"}\n  Config -->|Yes| Props[\"Add narrow project/environment/server property\"]\n  Config -->|No| Project{\"Is it project-specific?\"}\n  Project -->|Yes| Module[\"Add project or customer extension module\"]\n  Project -->|No| Framework[\"Change the owning framework module with tests\"]\n```\n\n## Backend customization\n\nBackend behavior belongs in the backend project or module that owns the\nbusiness rule. In Kickoff, project modules live under `modules/`, while\nenvironment and server composition live under `envs/`.\n\nA future module such as `kickoff.platform` may extend `nodics.platform` to\ncustomize Platform services. The runtime server can load the customer extension\nafter Platform. Service precedence then follows the normal module merge and\nindex order. Axis should still display the functional capability as Platform,\nbecause the customer extension changes implementation, not the business-facing\nidentity.\n\n## Axis customization\n\nAxis is the browser application. It owns renderers, interaction behavior,\nlayout, accessibility, and static recovery. It must not own imported CMS data,\nbackend schemas, permissions, or business rules. If a customer needs a new\nBackOffice page, the backend should expose the authorized navigation,\ncapability metadata, API contract, and CMS content where applicable. Axis then\nrenders that authorized contract.\n\nSimple presentation changes, such as logo, copy, theme, or demo content, should\ncome from backend-owned CMS or configuration where possible. Hard-coding those\nvalues in the frontend makes future customers harder to support.\n\n## Business and DevOps impact\n\nThe business value of this discipline is lower long-term cost. A customer can\nreceive framework upgrades without reapplying hidden edits. DevOps teams also\ngain a clean release story: framework packages, customer modules, environment\nproperties, and imported content packs can be rolled forward or backward as\nseparate operational units.\n\nFor production support, every customization should answer three questions:\nwhich module owns it, which runtime loads it, and which test or document proves\nthe intended behavior? If those answers are missing, the customization is not\nready for a production release.\n\n## Documentation customization\n\nDocumentation follows the owner of the thing being explained:\n\n- framework guidance goes to `nodics.docs`;\n- Axis product guidance goes to `nodics.platform/modules/axis`;\n- project guidance goes to the owning customer project, such as\n  `nodics.kickoff`;\n- generated content records stay under `data/core/data/documentation`;\n- manifests stay under `manifest/docs-content-pack.json`.\n\nDo not put customer project documentation into `nodics.docs`, and do not put\nimportable documentation records into `nodics.axis`.\n\n## Common mistakes\n\n- Editing framework source for one customer.\n- Adding business authorization in the browser.\n- Creating a second module registry or endpoint list in Axis.\n- Moving generated CMS data into a frontend repository.\n- Changing a functional module display name because an implementation was\n  customized.\n- Skipping tests after service override changes.\n\n## Verification\n\nEvery customization should prove success and failure behavior. For backend\nchanges, run the owning module tests and any affected runtime smoke test. For\nAxis changes, run typecheck and focused UI tests. For documentation changes,\nregenerate the owning content pack, validate checksums, import through WCMS,\nand verify the route in Axis.\n"
+          "searchText": "Customization and extension guide How customer projects customize Nodics safely without forking framework authority. # Customization and extension guide\n\nNodics is built for customization, but customization must happen in the right\nowner. The safest path is to reuse an existing capability, configure it, extend\nit in a later-loaded module, and create new framework behavior only when the\nexisting contract truly cannot satisfy the requirement.\n\nFor a beginner, customization means “where should I put my change so I can\nstill upgrade the framework later?” The safest answer is usually configuration\nfirst, then a customer project module, then a customer extension module, and\nonly then a framework change if the behavior is truly reusable for everyone.\n\n## What this is\n\nThis guide explains how a customer or partner changes Nodics behavior without\nturning a customer project into a fork of the framework. It applies to backend\ncustomization, Axis presentation customization, and documentation ownership.\n\n## The customization ladder\n\nStart with the least invasive option:\n\n1. Use existing behavior.\n2. Change configuration in the correct project, environment, server, node, or\n   tenant scope.\n3. Add customer project modules under the customer project.\n4. Add a customer extension module that extends a framework functional module.\n5. Create a new implementation only when the existing capability contract is\n   missing or incorrect.\n\nThis ladder protects upgradeability. The later a customization loads, the more\nspecific it is. Framework modules stay reusable; customer modules carry\ncustomer decisions.\n\n| Customization level | Who should use it | Beginner example | Upgrade risk |\n| --- | --- | --- | --- |\n| Axis/WCMS content | Business user or content admin | Change a heading, image, documentation page, or dashboard card. | Low, because backend content is governed and versioned. |\n| Project configuration | Developer or operator | Change a local port, database name, or feature override for one environment. | Low when the property stays narrow. |\n| Project module | Developer | Add Kickoff-specific schema fields or business services. | Medium, because tests must prove the behavior. |\n| Customer extension module | Senior developer | Override Platform behavior while keeping the Platform functional identity. | Medium to high, because service precedence must be explicit. |\n| Framework module change | Framework team | Improve Core import behavior for every project. | Shared release risk, so it needs broader validation. |\n| New functional module | Architecture owner | Add Commerce, Workflow, or another independent capability. | High if ownership is blurry. |\n\n```mermaid\nflowchart TD\n  Need[\"Need to change behavior or content\"] --> Content{\"Can Axis/WCMS governed content solve it?\"}\n  Content -->|Yes| Wcms[\"Update backend-owned CMS data\"]\n  Content -->|No| Config{\"Can configuration solve it?\"}\n  Config -->|Yes| Props[\"Add narrow project/environment/server property\"]\n  Config -->|No| Project{\"Is it project-specific?\"}\n  Project -->|Yes| Module[\"Add project or customer extension module\"]\n  Project -->|No| Framework[\"Change the owning framework module with tests\"]\n```\n\n## The role an AI tool or developer must play\n\nNodics is too broad for a narrow “make the code pass” mindset. A developer or\nAI assistant working on Nodics must deliberately switch through several\nperspectives before changing files. This is not ceremony; it is how the\nframework avoids accidental shortcuts that work for one screen and break the\necosystem.\n\n| Role | Question to ask before coding | Example |\n| --- | --- | --- |\n| Business analyst | What problem is the user, operator, partner, or business evaluator trying to solve? | If the request is “register Cron,” explain the lifecycle and what business capability becomes available, not only the button click. |\n| Enterprise architect | Which module, runtime, tenant, security boundary, and release unit owns this behavior? | Module registration is Platform/BackOffice state; Axis renders it; Cron only reports its runtime availability. |\n| Nodics framework expert | Is this Core, Platform, WCMS, Cron, Axis renderer, customer project, or customer overlay work? | A documentation content pack belongs in the backend owner, not in the frontend repository. |\n| Domain expert | Could this pattern apply to commerce, telco, logistics, content, workflow, or another domain without becoming domain-locked? | A media picker should be reusable for product media, CMS media, and future workflow attachments. |\n| Principal engineer | Can configuration or extension solve this before new framework code is written? | Prefer a server property, content component property, or customer module overlay before editing a framework default. |\n| QA and tester | What small failure will a user notice after the happy path succeeds? | Register/activate/deactivate buttons must refresh state immediately without forcing login or page reload. |\n| TechOps/DevOps reviewer | How will this run, restart, roll back, and be diagnosed in local and production topology? | A fresh bootstrap script must drop only named local databases and refuse to run if unrelated servers occupy the expected ports. |\n\nIf these roles point to different answers, document the trade-off before\nimplementation. For example, a browser-only workaround may be fast, but if the\nreal authority is a backend registry, the correct fix belongs in the backend\ncontract or typed client flow.\n\n## Coding principles that protect customization\n\nNodics code should be written so future customer projects can extend it without\ncopying framework files. Use these rules as the practical checklist:\n\n1. Prefer configuration first. If behavior can be changed through properties,\n   feature metadata, content component properties, server/environment deltas, or\n   tenant configuration, do that before changing code.\n2. Put files in the owner that matches the behavior. Error/status definitions\n   belong in status-definition files, API exposure belongs in owning module\n   properties, runtime topology belongs in server configuration, and renderer\n   code belongs in Axis.\n3. Keep JavaScript export-friendly. Prefer small exported functions, services,\n   and configuration objects over sealed inline behavior, so a later customer\n   module can override or compose the behavior through Nodics loading.\n4. Document the file and exported behavior. A future AI tool may read only the\n   nearest file and `AGENTS.md`, so ownership, override path, side effects, and\n   test expectations must be visible.\n5. Treat generated data as output. If CMS documentation, import manifests, or\n   generated records are wrong, fix the source and regenerate; do not hand-edit\n   generated projections.\n6. Keep public and private configuration separate. Browser-visible values,\n   runtime coordinates, secret references, and actual secrets have different\n   owners and different storage rules.\n7. Test both the owner and the integration. A service override needs focused\n   tests; a runtime graph change needs startup/acceptance tests; a frontend\n   state change needs UI or smoke coverage.\n\n## Backend customization\n\nBackend behavior belongs in the backend project or module that owns the\nbusiness rule. In Kickoff, project modules live under `modules/`, while\nenvironment and server composition live under `envs/`.\n\nA future module such as `kickoff.platform` may extend `nodics.platform` to\ncustomize Platform services. The runtime server can load the customer extension\nafter Platform. Service precedence then follows the normal module merge and\nindex order. Axis should still display the functional capability as Platform,\nbecause the customer extension changes implementation, not the business-facing\nidentity.\n\n## Axis customization\n\nAxis is the browser application. It owns renderers, interaction behavior,\nlayout, accessibility, and static recovery. It must not own imported CMS data,\nbackend schemas, permissions, or business rules. If a customer needs a new\nBackOffice page, the backend should expose the authorized navigation,\ncapability metadata, API contract, and CMS content where applicable. Axis then\nrenders that authorized contract.\n\nSimple presentation changes, such as logo, copy, theme, or demo content, should\ncome from backend-owned CMS or configuration where possible. Hard-coding those\nvalues in the frontend makes future customers harder to support.\n\n## Business and DevOps impact\n\nThe business value of this discipline is lower long-term cost. A customer can\nreceive framework upgrades without reapplying hidden edits. DevOps teams also\ngain a clean release story: framework packages, customer modules, environment\nproperties, and imported content packs can be rolled forward or backward as\nseparate operational units.\n\nFor production support, every customization should answer three questions:\nwhich module owns it, which runtime loads it, and which test or document proves\nthe intended behavior? If those answers are missing, the customization is not\nready for a production release.\n\n## Documentation customization\n\nDocumentation follows the owner of the thing being explained:\n\n- framework guidance goes to `nodics.docs`;\n- Axis product guidance goes to `nodics.platform/modules/axis`;\n- project guidance goes to the owning customer project, such as\n  `nodics.kickoff`;\n- generated content records stay under `data/core/data/documentation`;\n- manifests stay under `manifest/docs-content-pack.json`.\n\nDo not put customer project documentation into `nodics.docs`, and do not put\nimportable documentation records into `nodics.axis`.\n\n## Common mistakes\n\n- Editing framework source for one customer.\n- Adding business authorization in the browser.\n- Creating a second module registry or endpoint list in Axis.\n- Moving generated CMS data into a frontend repository.\n- Changing a functional module display name because an implementation was\n  customized.\n- Skipping tests after service override changes.\n\n## Verification\n\nEvery customization should prove success and failure behavior. For backend\nchanges, run the owning module tests and any affected runtime smoke test. For\nAxis changes, run typecheck and focused UI tests. For documentation changes,\nregenerate the owning content pack, validate checksums, import through WCMS,\nand verify the route in Axis.\n"
         },
         {
           "code": "framework.devops-runtime",
@@ -1457,33 +1446,43 @@ module.exports = {
           "level": 2
         },
         {
+          "text": "The role an AI tool or developer must play",
+          "anchor": "frameworkCustomizationGuide-3-the-role-an-ai-tool-or-developer-must-play",
+          "level": 2
+        },
+        {
+          "text": "Coding principles that protect customization",
+          "anchor": "frameworkCustomizationGuide-4-coding-principles-that-protect-customization",
+          "level": 2
+        },
+        {
           "text": "Backend customization",
-          "anchor": "frameworkCustomizationGuide-3-backend-customization",
+          "anchor": "frameworkCustomizationGuide-5-backend-customization",
           "level": 2
         },
         {
           "text": "Axis customization",
-          "anchor": "frameworkCustomizationGuide-4-axis-customization",
+          "anchor": "frameworkCustomizationGuide-6-axis-customization",
           "level": 2
         },
         {
           "text": "Business and DevOps impact",
-          "anchor": "frameworkCustomizationGuide-5-business-and-devops-impact",
+          "anchor": "frameworkCustomizationGuide-7-business-and-devops-impact",
           "level": 2
         },
         {
           "text": "Documentation customization",
-          "anchor": "frameworkCustomizationGuide-6-documentation-customization",
+          "anchor": "frameworkCustomizationGuide-8-documentation-customization",
           "level": 2
         },
         {
           "text": "Common mistakes",
-          "anchor": "frameworkCustomizationGuide-7-common-mistakes",
+          "anchor": "frameworkCustomizationGuide-9-common-mistakes",
           "level": 2
         },
         {
           "text": "Verification",
-          "anchor": "frameworkCustomizationGuide-8-verification",
+          "anchor": "frameworkCustomizationGuide-10-verification",
           "level": 2
         }
       ],
@@ -1585,8 +1584,89 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "The role an AI tool or developer must play",
+          "anchor": "frameworkCustomizationGuide-3-the-role-an-ai-tool-or-developer-must-play"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Nodics is too broad for a narrow “make the code pass” mindset. A developer or AI assistant working on Nodics must deliberately switch through several perspectives before changing files. This is not ceremony; it is how the framework avoids accidental shortcuts that work for one screen and break the ecosystem."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Role",
+            "Question to ask before coding",
+            "Example"
+          ],
+          "rows": [
+            [
+              "Business analyst",
+              "What problem is the user, operator, partner, or business evaluator trying to solve?",
+              "If the request is “register Cron,” explain the lifecycle and what business capability becomes available, not only the button click."
+            ],
+            [
+              "Enterprise architect",
+              "Which module, runtime, tenant, security boundary, and release unit owns this behavior?",
+              "Module registration is Platform/BackOffice state; Axis renders it; Cron only reports its runtime availability."
+            ],
+            [
+              "Nodics framework expert",
+              "Is this Core, Platform, WCMS, Cron, Axis renderer, customer project, or customer overlay work?",
+              "A documentation content pack belongs in the backend owner, not in the frontend repository."
+            ],
+            [
+              "Domain expert",
+              "Could this pattern apply to commerce, telco, logistics, content, workflow, or another domain without becoming domain-locked?",
+              "A media picker should be reusable for product media, CMS media, and future workflow attachments."
+            ],
+            [
+              "Principal engineer",
+              "Can configuration or extension solve this before new framework code is written?",
+              "Prefer a server property, content component property, or customer module overlay before editing a framework default."
+            ],
+            [
+              "QA and tester",
+              "What small failure will a user notice after the happy path succeeds?",
+              "Register/activate/deactivate buttons must refresh state immediately without forcing login or page reload."
+            ],
+            [
+              "TechOps/DevOps reviewer",
+              "How will this run, restart, roll back, and be diagnosed in local and production topology?",
+              "A fresh bootstrap script must drop only named local databases and refuse to run if unrelated servers occupy the expected ports."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "If these roles point to different answers, document the trade-off before implementation. For example, a browser-only workaround may be fast, but if the real authority is a backend registry, the correct fix belongs in the backend contract or typed client flow."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Coding principles that protect customization",
+          "anchor": "frameworkCustomizationGuide-4-coding-principles-that-protect-customization"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Nodics code should be written so future customer projects can extend it without copying framework files. Use these rules as the practical checklist:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Prefer configuration first. If behavior can be changed through properties, feature metadata, content component properties, server/environment deltas, or tenant configuration, do that before changing code.",
+            "Put files in the owner that matches the behavior. Error/status definitions belong in status-definition files, API exposure belongs in owning module properties, runtime topology belongs in server configuration, and renderer code belongs in Axis.",
+            "Keep JavaScript export-friendly. Prefer small exported functions, services, and configuration objects over sealed inline behavior, so a later customer module can override or compose the behavior through Nodics loading.",
+            "Document the file and exported behavior. A future AI tool may read only the nearest file and `AGENTS.md`, so ownership, override path, side effects, and test expectations must be visible.",
+            "Treat generated data as output. If CMS documentation, import manifests, or generated records are wrong, fix the source and regenerate; do not hand-edit generated projections.",
+            "Keep public and private configuration separate. Browser-visible values, runtime coordinates, secret references, and actual secrets have different owners and different storage rules.",
+            "Test both the owner and the integration. A service override needs focused tests; a runtime graph change needs startup/acceptance tests; a frontend state change needs UI or smoke coverage."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Backend customization",
-          "anchor": "frameworkCustomizationGuide-3-backend-customization"
+          "anchor": "frameworkCustomizationGuide-5-backend-customization"
         },
         {
           "kind": "paragraph",
@@ -1600,7 +1680,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Axis customization",
-          "anchor": "frameworkCustomizationGuide-4-axis-customization"
+          "anchor": "frameworkCustomizationGuide-6-axis-customization"
         },
         {
           "kind": "paragraph",
@@ -1614,7 +1694,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Business and DevOps impact",
-          "anchor": "frameworkCustomizationGuide-5-business-and-devops-impact"
+          "anchor": "frameworkCustomizationGuide-7-business-and-devops-impact"
         },
         {
           "kind": "paragraph",
@@ -1628,7 +1708,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Documentation customization",
-          "anchor": "frameworkCustomizationGuide-6-documentation-customization"
+          "anchor": "frameworkCustomizationGuide-8-documentation-customization"
         },
         {
           "kind": "paragraph",
@@ -1652,7 +1732,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Common mistakes",
-          "anchor": "frameworkCustomizationGuide-7-common-mistakes"
+          "anchor": "frameworkCustomizationGuide-9-common-mistakes"
         },
         {
           "kind": "unordered-list",
@@ -1669,14 +1749,14 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Verification",
-          "anchor": "frameworkCustomizationGuide-8-verification"
+          "anchor": "frameworkCustomizationGuide-10-verification"
         },
         {
           "kind": "paragraph",
           "text": "Every customization should prove success and failure behavior. For backend changes, run the owning module tests and any affected runtime smoke test. For Axis changes, run typecheck and focused UI tests. For documentation changes, regenerate the owning content pack, validate checksums, import through WCMS, and verify the route in Axis."
         }
       ],
-      "searchText": "Customization and extension guide How customer projects customize Nodics safely without forking framework authority. # Customization and extension guide\n\nNodics is built for customization, but customization must happen in the right\nowner. The safest path is to reuse an existing capability, configure it, extend\nit in a later-loaded module, and create new framework behavior only when the\nexisting contract truly cannot satisfy the requirement.\n\nFor a beginner, customization means “where should I put my change so I can\nstill upgrade the framework later?” The safest answer is usually configuration\nfirst, then a customer project module, then a customer extension module, and\nonly then a framework change if the behavior is truly reusable for everyone.\n\n## What this is\n\nThis guide explains how a customer or partner changes Nodics behavior without\nturning a customer project into a fork of the framework. It applies to backend\ncustomization, Axis presentation customization, and documentation ownership.\n\n## The customization ladder\n\nStart with the least invasive option:\n\n1. Use existing behavior.\n2. Change configuration in the correct project, environment, server, node, or\n   tenant scope.\n3. Add customer project modules under the customer project.\n4. Add a customer extension module that extends a framework functional module.\n5. Create a new implementation only when the existing capability contract is\n   missing or incorrect.\n\nThis ladder protects upgradeability. The later a customization loads, the more\nspecific it is. Framework modules stay reusable; customer modules carry\ncustomer decisions.\n\n| Customization level | Who should use it | Beginner example | Upgrade risk |\n| --- | --- | --- | --- |\n| Axis/WCMS content | Business user or content admin | Change a heading, image, documentation page, or dashboard card. | Low, because backend content is governed and versioned. |\n| Project configuration | Developer or operator | Change a local port, database name, or feature override for one environment. | Low when the property stays narrow. |\n| Project module | Developer | Add Kickoff-specific schema fields or business services. | Medium, because tests must prove the behavior. |\n| Customer extension module | Senior developer | Override Platform behavior while keeping the Platform functional identity. | Medium to high, because service precedence must be explicit. |\n| Framework module change | Framework team | Improve Core import behavior for every project. | Shared release risk, so it needs broader validation. |\n| New functional module | Architecture owner | Add Commerce, Workflow, or another independent capability. | High if ownership is blurry. |\n\n```mermaid\nflowchart TD\n  Need[\"Need to change behavior or content\"] --> Content{\"Can Axis/WCMS governed content solve it?\"}\n  Content -->|Yes| Wcms[\"Update backend-owned CMS data\"]\n  Content -->|No| Config{\"Can configuration solve it?\"}\n  Config -->|Yes| Props[\"Add narrow project/environment/server property\"]\n  Config -->|No| Project{\"Is it project-specific?\"}\n  Project -->|Yes| Module[\"Add project or customer extension module\"]\n  Project -->|No| Framework[\"Change the owning framework module with tests\"]\n```\n\n## Backend customization\n\nBackend behavior belongs in the backend project or module that owns the\nbusiness rule. In Kickoff, project modules live under `modules/`, while\nenvironment and server composition live under `envs/`.\n\nA future module such as `kickoff.platform` may extend `nodics.platform` to\ncustomize Platform services. The runtime server can load the customer extension\nafter Platform. Service precedence then follows the normal module merge and\nindex order. Axis should still display the functional capability as Platform,\nbecause the customer extension changes implementation, not the business-facing\nidentity.\n\n## Axis customization\n\nAxis is the browser application. It owns renderers, interaction behavior,\nlayout, accessibility, and static recovery. It must not own imported CMS data,\nbackend schemas, permissions, or business rules. If a customer needs a new\nBackOffice page, the backend should expose the authorized navigation,\ncapability metadata, API contract, and CMS content where applicable. Axis then\nrenders that authorized contract.\n\nSimple presentation changes, such as logo, copy, theme, or demo content, should\ncome from backend-owned CMS or configuration where possible. Hard-coding those\nvalues in the frontend makes future customers harder to support.\n\n## Business and DevOps impact\n\nThe business value of this discipline is lower long-term cost. A customer can\nreceive framework upgrades without reapplying hidden edits. DevOps teams also\ngain a clean release story: framework packages, customer modules, environment\nproperties, and imported content packs can be rolled forward or backward as\nseparate operational units.\n\nFor production support, every customization should answer three questions:\nwhich module owns it, which runtime loads it, and which test or document proves\nthe intended behavior? If those answers are missing, the customization is not\nready for a production release.\n\n## Documentation customization\n\nDocumentation follows the owner of the thing being explained:\n\n- framework guidance goes to `nodics.docs`;\n- Axis product guidance goes to `nodics.platform/modules/axis`;\n- project guidance goes to the owning customer project, such as\n  `nodics.kickoff`;\n- generated content records stay under `data/core/data/documentation`;\n- manifests stay under `manifest/docs-content-pack.json`.\n\nDo not put customer project documentation into `nodics.docs`, and do not put\nimportable documentation records into `nodics.axis`.\n\n## Common mistakes\n\n- Editing framework source for one customer.\n- Adding business authorization in the browser.\n- Creating a second module registry or endpoint list in Axis.\n- Moving generated CMS data into a frontend repository.\n- Changing a functional module display name because an implementation was\n  customized.\n- Skipping tests after service override changes.\n\n## Verification\n\nEvery customization should prove success and failure behavior. For backend\nchanges, run the owning module tests and any affected runtime smoke test. For\nAxis changes, run typecheck and focused UI tests. For documentation changes,\nregenerate the owning content pack, validate checksums, import through WCMS,\nand verify the route in Axis.\n",
+      "searchText": "Customization and extension guide How customer projects customize Nodics safely without forking framework authority. # Customization and extension guide\n\nNodics is built for customization, but customization must happen in the right\nowner. The safest path is to reuse an existing capability, configure it, extend\nit in a later-loaded module, and create new framework behavior only when the\nexisting contract truly cannot satisfy the requirement.\n\nFor a beginner, customization means “where should I put my change so I can\nstill upgrade the framework later?” The safest answer is usually configuration\nfirst, then a customer project module, then a customer extension module, and\nonly then a framework change if the behavior is truly reusable for everyone.\n\n## What this is\n\nThis guide explains how a customer or partner changes Nodics behavior without\nturning a customer project into a fork of the framework. It applies to backend\ncustomization, Axis presentation customization, and documentation ownership.\n\n## The customization ladder\n\nStart with the least invasive option:\n\n1. Use existing behavior.\n2. Change configuration in the correct project, environment, server, node, or\n   tenant scope.\n3. Add customer project modules under the customer project.\n4. Add a customer extension module that extends a framework functional module.\n5. Create a new implementation only when the existing capability contract is\n   missing or incorrect.\n\nThis ladder protects upgradeability. The later a customization loads, the more\nspecific it is. Framework modules stay reusable; customer modules carry\ncustomer decisions.\n\n| Customization level | Who should use it | Beginner example | Upgrade risk |\n| --- | --- | --- | --- |\n| Axis/WCMS content | Business user or content admin | Change a heading, image, documentation page, or dashboard card. | Low, because backend content is governed and versioned. |\n| Project configuration | Developer or operator | Change a local port, database name, or feature override for one environment. | Low when the property stays narrow. |\n| Project module | Developer | Add Kickoff-specific schema fields or business services. | Medium, because tests must prove the behavior. |\n| Customer extension module | Senior developer | Override Platform behavior while keeping the Platform functional identity. | Medium to high, because service precedence must be explicit. |\n| Framework module change | Framework team | Improve Core import behavior for every project. | Shared release risk, so it needs broader validation. |\n| New functional module | Architecture owner | Add Commerce, Workflow, or another independent capability. | High if ownership is blurry. |\n\n```mermaid\nflowchart TD\n  Need[\"Need to change behavior or content\"] --> Content{\"Can Axis/WCMS governed content solve it?\"}\n  Content -->|Yes| Wcms[\"Update backend-owned CMS data\"]\n  Content -->|No| Config{\"Can configuration solve it?\"}\n  Config -->|Yes| Props[\"Add narrow project/environment/server property\"]\n  Config -->|No| Project{\"Is it project-specific?\"}\n  Project -->|Yes| Module[\"Add project or customer extension module\"]\n  Project -->|No| Framework[\"Change the owning framework module with tests\"]\n```\n\n## The role an AI tool or developer must play\n\nNodics is too broad for a narrow “make the code pass” mindset. A developer or\nAI assistant working on Nodics must deliberately switch through several\nperspectives before changing files. This is not ceremony; it is how the\nframework avoids accidental shortcuts that work for one screen and break the\necosystem.\n\n| Role | Question to ask before coding | Example |\n| --- | --- | --- |\n| Business analyst | What problem is the user, operator, partner, or business evaluator trying to solve? | If the request is “register Cron,” explain the lifecycle and what business capability becomes available, not only the button click. |\n| Enterprise architect | Which module, runtime, tenant, security boundary, and release unit owns this behavior? | Module registration is Platform/BackOffice state; Axis renders it; Cron only reports its runtime availability. |\n| Nodics framework expert | Is this Core, Platform, WCMS, Cron, Axis renderer, customer project, or customer overlay work? | A documentation content pack belongs in the backend owner, not in the frontend repository. |\n| Domain expert | Could this pattern apply to commerce, telco, logistics, content, workflow, or another domain without becoming domain-locked? | A media picker should be reusable for product media, CMS media, and future workflow attachments. |\n| Principal engineer | Can configuration or extension solve this before new framework code is written? | Prefer a server property, content component property, or customer module overlay before editing a framework default. |\n| QA and tester | What small failure will a user notice after the happy path succeeds? | Register/activate/deactivate buttons must refresh state immediately without forcing login or page reload. |\n| TechOps/DevOps reviewer | How will this run, restart, roll back, and be diagnosed in local and production topology? | A fresh bootstrap script must drop only named local databases and refuse to run if unrelated servers occupy the expected ports. |\n\nIf these roles point to different answers, document the trade-off before\nimplementation. For example, a browser-only workaround may be fast, but if the\nreal authority is a backend registry, the correct fix belongs in the backend\ncontract or typed client flow.\n\n## Coding principles that protect customization\n\nNodics code should be written so future customer projects can extend it without\ncopying framework files. Use these rules as the practical checklist:\n\n1. Prefer configuration first. If behavior can be changed through properties,\n   feature metadata, content component properties, server/environment deltas, or\n   tenant configuration, do that before changing code.\n2. Put files in the owner that matches the behavior. Error/status definitions\n   belong in status-definition files, API exposure belongs in owning module\n   properties, runtime topology belongs in server configuration, and renderer\n   code belongs in Axis.\n3. Keep JavaScript export-friendly. Prefer small exported functions, services,\n   and configuration objects over sealed inline behavior, so a later customer\n   module can override or compose the behavior through Nodics loading.\n4. Document the file and exported behavior. A future AI tool may read only the\n   nearest file and `AGENTS.md`, so ownership, override path, side effects, and\n   test expectations must be visible.\n5. Treat generated data as output. If CMS documentation, import manifests, or\n   generated records are wrong, fix the source and regenerate; do not hand-edit\n   generated projections.\n6. Keep public and private configuration separate. Browser-visible values,\n   runtime coordinates, secret references, and actual secrets have different\n   owners and different storage rules.\n7. Test both the owner and the integration. A service override needs focused\n   tests; a runtime graph change needs startup/acceptance tests; a frontend\n   state change needs UI or smoke coverage.\n\n## Backend customization\n\nBackend behavior belongs in the backend project or module that owns the\nbusiness rule. In Kickoff, project modules live under `modules/`, while\nenvironment and server composition live under `envs/`.\n\nA future module such as `kickoff.platform` may extend `nodics.platform` to\ncustomize Platform services. The runtime server can load the customer extension\nafter Platform. Service precedence then follows the normal module merge and\nindex order. Axis should still display the functional capability as Platform,\nbecause the customer extension changes implementation, not the business-facing\nidentity.\n\n## Axis customization\n\nAxis is the browser application. It owns renderers, interaction behavior,\nlayout, accessibility, and static recovery. It must not own imported CMS data,\nbackend schemas, permissions, or business rules. If a customer needs a new\nBackOffice page, the backend should expose the authorized navigation,\ncapability metadata, API contract, and CMS content where applicable. Axis then\nrenders that authorized contract.\n\nSimple presentation changes, such as logo, copy, theme, or demo content, should\ncome from backend-owned CMS or configuration where possible. Hard-coding those\nvalues in the frontend makes future customers harder to support.\n\n## Business and DevOps impact\n\nThe business value of this discipline is lower long-term cost. A customer can\nreceive framework upgrades without reapplying hidden edits. DevOps teams also\ngain a clean release story: framework packages, customer modules, environment\nproperties, and imported content packs can be rolled forward or backward as\nseparate operational units.\n\nFor production support, every customization should answer three questions:\nwhich module owns it, which runtime loads it, and which test or document proves\nthe intended behavior? If those answers are missing, the customization is not\nready for a production release.\n\n## Documentation customization\n\nDocumentation follows the owner of the thing being explained:\n\n- framework guidance goes to `nodics.docs`;\n- Axis product guidance goes to `nodics.platform/modules/axis`;\n- project guidance goes to the owning customer project, such as\n  `nodics.kickoff`;\n- generated content records stay under `data/core/data/documentation`;\n- manifests stay under `manifest/docs-content-pack.json`.\n\nDo not put customer project documentation into `nodics.docs`, and do not put\nimportable documentation records into `nodics.axis`.\n\n## Common mistakes\n\n- Editing framework source for one customer.\n- Adding business authorization in the browser.\n- Creating a second module registry or endpoint list in Axis.\n- Moving generated CMS data into a frontend repository.\n- Changing a functional module display name because an implementation was\n  customized.\n- Skipping tests after service override changes.\n\n## Verification\n\nEvery customization should prove success and failure behavior. For backend\nchanges, run the owning module tests and any affected runtime smoke test. For\nAxis changes, run typecheck and focused UI tests. For documentation changes,\nregenerate the owning content pack, validate checksums, import through WCMS,\nand verify the route in Axis.\n",
       "previous": {
         "title": "Local quick start with Kickoff and Axis",
         "route": "/docs/framework/framework-local-quick-start"
@@ -1690,8 +1770,8 @@ module.exports = {
         "functionalModule": "nodics.core",
         "technicalModule": "nSetup",
         "path": "content/framework/customization-guide.md",
-        "wordCount": 863,
-        "checksum": "ec578d87f87cf5936ca939ccc07643edf7878b05811bda9082eae967a95fc821"
+        "wordCount": 1429,
+        "checksum": "763a14b18b2a671441dc6facd5229b2900d48088f98c022df7c19a6e1ecdeea3"
       }
     },
     "active": true
