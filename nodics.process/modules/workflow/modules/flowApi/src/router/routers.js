@@ -13,13 +13,13 @@
 
 /**
  * @module nodics.process/modules/workflow/modules/flowApi/src/router/routers
- * @description Secured Process API routes for definition CRUD, validation, version publication, archive/delete, and version inspection.
+ * @description Secured Process API routes for definition lifecycle, runtime instances, human tasks, and audit inspection.
  * @layer router
  * @owner flowApi
  * @override Customer process overlays may add routes or narrow exposure through permission and apiExposure configuration.
  */
 module.exports = {
-    process: {
+    flowApi: {
         processDefinitions: {
             listDefinitions: {
                 secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
@@ -68,6 +68,38 @@ module.exports = {
                 permission: 'process.definition.read', apiExposure: 'processManagement',
                 key: '/definitions/:definitionCode/versions', method: 'GET', controller: 'DefaultProcessDefinitionController', operation: 'listVersions',
                 help: { requestType: 'secured', message: 'List immutable published versions for one process definition', method: 'GET', url: 'http://host:port/nodics/process/v0/definitions/:definitionCode/versions' }
+            }
+        },
+        processOperations: {
+            listInstances: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'process.backoffice.view', apiExposure: 'processManagement',
+                key: '/instances', method: 'GET', controller: 'DefaultProcessOperationsController', operation: 'listInstances',
+                help: { requestType: 'secured', message: 'List governed process runtime instances', method: 'GET', url: 'http://host:port/nodics/process/v0/instances' }
+            },
+            getInstance: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'process.backoffice.view', apiExposure: 'processManagement',
+                key: '/instances/:instanceCode', method: 'GET', controller: 'DefaultProcessOperationsController', operation: 'getInstance',
+                help: { requestType: 'secured', message: 'Read one governed process runtime instance', method: 'GET', url: 'http://host:port/nodics/process/v0/instances/:instanceCode' }
+            },
+            listTasks: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'process.backoffice.view', apiExposure: 'processManagement',
+                key: '/tasks', method: 'GET', controller: 'DefaultProcessOperationsController', operation: 'listTasks',
+                help: { requestType: 'secured', message: 'List governed human workflow tasks', method: 'GET', url: 'http://host:port/nodics/process/v0/tasks' }
+            },
+            getTask: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'process.backoffice.view', apiExposure: 'processManagement',
+                key: '/tasks/:taskCode', method: 'GET', controller: 'DefaultProcessOperationsController', operation: 'getTask',
+                help: { requestType: 'secured', message: 'Read one governed human workflow task', method: 'GET', url: 'http://host:port/nodics/process/v0/tasks/:taskCode' }
+            },
+            listAuditEvents: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'process.backoffice.view', apiExposure: 'processManagement',
+                key: '/audit-events', method: 'GET', controller: 'DefaultProcessOperationsController', operation: 'listAuditEvents',
+                help: { requestType: 'secured', message: 'List bounded process audit events', method: 'GET', url: 'http://host:port/nodics/process/v0/audit-events' }
             }
         }
     }

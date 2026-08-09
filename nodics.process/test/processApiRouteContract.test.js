@@ -22,7 +22,8 @@ const assert = require('assert');
 
 const flowApiPackage = require('../modules/workflow/modules/flowApi/package.json');
 const routers = require('../modules/workflow/modules/flowApi/src/router/routers');
-const processRoutes = routers.process.processDefinitions;
+const processDefinitionRoutes = routers.flowApi.processDefinitions;
+const processOperationRoutes = routers.flowApi.processOperations;
 
 assert.strictEqual(flowApiPackage.prefix, 'process');
 assert.strictEqual(flowApiPackage.nodics.runtime.router, true);
@@ -37,7 +38,7 @@ assert.strictEqual(flowApiPackage.nodics.runtime.router, true);
     ['deleteOrArchive', 'DELETE', '/definitions/:definitionCode', 'process.definition.delete'],
     ['listVersions', 'GET', '/definitions/:definitionCode/versions', 'process.definition.read']
 ].forEach(([routeName, method, key, permission]) => {
-    let route = processRoutes[routeName];
+    let route = processDefinitionRoutes[routeName];
     assert(route, `Missing process route ${routeName}`);
     assert.strictEqual(route.secured, true, `${routeName} must be secured`);
     assert.deepStrictEqual(route.authTokenTypes, ['access'], `${routeName} must require access token`);
@@ -46,6 +47,24 @@ assert.strictEqual(flowApiPackage.nodics.runtime.router, true);
     assert.strictEqual(route.permission, permission, `${routeName} permission drift`);
     assert.strictEqual(route.apiExposure, 'processManagement', `${routeName} exposure category drift`);
     assert.strictEqual(route.controller, 'DefaultProcessDefinitionController', `${routeName} controller drift`);
+});
+
+[
+    ['listInstances', 'GET', '/instances', 'process.backoffice.view'],
+    ['getInstance', 'GET', '/instances/:instanceCode', 'process.backoffice.view'],
+    ['listTasks', 'GET', '/tasks', 'process.backoffice.view'],
+    ['getTask', 'GET', '/tasks/:taskCode', 'process.backoffice.view'],
+    ['listAuditEvents', 'GET', '/audit-events', 'process.backoffice.view']
+].forEach(([routeName, method, key, permission]) => {
+    let route = processOperationRoutes[routeName];
+    assert(route, `Missing process operation route ${routeName}`);
+    assert.strictEqual(route.secured, true, `${routeName} must be secured`);
+    assert.deepStrictEqual(route.authTokenTypes, ['access'], `${routeName} must require access token`);
+    assert.strictEqual(route.method, method, `${routeName} method drift`);
+    assert.strictEqual(route.key, key, `${routeName} path drift`);
+    assert.strictEqual(route.permission, permission, `${routeName} permission drift`);
+    assert.strictEqual(route.apiExposure, 'processManagement', `${routeName} exposure category drift`);
+    assert.strictEqual(route.controller, 'DefaultProcessOperationsController', `${routeName} controller drift`);
 });
 
 console.log('Process API route contract passed');
