@@ -70,6 +70,8 @@ module.exports = {
     updateTrigger: function (request, callback) { return this.invoke('updateTrigger', request, callback); },
     /** Archives Process-owned scheduled trigger metadata. */
     archiveTrigger: function (request, callback) { return this.invoke('archiveTrigger', request, callback); },
+    /** Executes an active Process-owned trigger and starts the referenced process. */
+    executeTrigger: function (request, callback) { return this.invoke('executeTrigger', request, callback); },
     /** Lists bounded audit events for operators. */
     listAuditEvents: function (request, callback) { return this.invoke('listAuditEvents', request, callback); }
 };

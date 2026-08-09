@@ -64,6 +64,56 @@ module.exports = {
     "active": true
   },
   "record2": {
+    "code": "processDocumentationPagefirstWorkflow",
+    "name": "Build Your First Workflow",
+    "cmsSite": [
+      "processDocumentationSite"
+    ],
+    "typeCode": "processDocumentationArticlePageType",
+    "template": "processDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "processDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "processDocumentationComponentfirstWorkflow",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record3": {
+    "code": "processDocumentationPagefirstHumanTask",
+    "name": "Build Your First Human Task Flow",
+    "cmsSite": [
+      "processDocumentationSite"
+    ],
+    "typeCode": "processDocumentationArticlePageType",
+    "template": "processDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "processDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "processDocumentationComponentfirstHumanTask",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record4": {
     "code": "processDocumentationPagebusinessValue",
     "name": "Business Value and Adoption Model",
     "cmsSite": [
@@ -88,7 +138,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record3": {
+  "record5": {
     "code": "processDocumentationPagedeveloperCustomization",
     "name": "Developer Customization Guide",
     "cmsSite": [
@@ -113,7 +163,57 @@ module.exports = {
     ],
     "active": true
   },
-  "record4": {
+  "record6": {
+    "code": "processDocumentationPageactionAdapters",
+    "name": "Action Adapter Contract",
+    "cmsSite": [
+      "processDocumentationSite"
+    ],
+    "typeCode": "processDocumentationArticlePageType",
+    "template": "processDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "processDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "processDocumentationComponentactionAdapters",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record7": {
+    "code": "processDocumentationPagecustomProjectExtension",
+    "name": "Custom Project Extension Guide",
+    "cmsSite": [
+      "processDocumentationSite"
+    ],
+    "typeCode": "processDocumentationArticlePageType",
+    "template": "processDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "processDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "processDocumentationComponentcustomProjectExtension",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record8": {
     "code": "processDocumentationPagedevopsTopology",
     "name": "DevOps and Runtime Topology",
     "cmsSite": [
@@ -138,7 +238,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record5": {
+  "record9": {
     "code": "processDocumentationPageprocessCronRuntime",
     "name": "Process and Cron Shared Runtime",
     "cmsSite": [
@@ -163,7 +263,32 @@ module.exports = {
     ],
     "active": true
   },
-  "record6": {
+  "record10": {
+    "code": "processDocumentationPagescheduledAutomation",
+    "name": "Scheduled Automation and Cron Triggers",
+    "cmsSite": [
+      "processDocumentationSite"
+    ],
+    "typeCode": "processDocumentationArticlePageType",
+    "template": "processDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "processDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "processDocumentationComponentscheduledAutomation",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record11": {
     "code": "processDocumentationPagevisualDesigner",
     "name": "Visual Workflow Designer Contract",
     "cmsSite": [
@@ -181,6 +306,31 @@ module.exports = {
       },
       {
         "target": "processDocumentationComponentvisualDesigner",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record12": {
+    "code": "processDocumentationPageqaRegressionGuide",
+    "name": "Process QA and Regression Guide",
+    "cmsSite": [
+      "processDocumentationSite"
+    ],
+    "typeCode": "processDocumentationArticlePageType",
+    "template": "processDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "processDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "processDocumentationComponentqaRegressionGuide",
         "slot": "article",
         "index": 10,
         "active": true

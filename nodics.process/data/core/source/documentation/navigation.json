@@ -1,6 +1,6 @@
 {
   "pack": "nodics.process",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "contractVersion": 1,
   "title": "Nodics Process",
   "pages": [
@@ -29,6 +29,30 @@
       "audience": ["business-user", "administrator", "developer", "operator", "tester"]
     },
     {
+      "code": "first-workflow",
+      "title": "Build Your First Workflow",
+      "route": "/docs/framework/process/first-workflow",
+      "section": "Beginner Guides",
+      "sectionOrder": 15,
+      "order": 25,
+      "source": "pages/first-workflow.md",
+      "evidence": "nodics.process/data/core/source/documentation/pages/first-workflow.md",
+      "summary": "Create a first Process workflow from START through TASK, DECISION, ACTION, TIMER, SUB_PROCESS, and END with beginner-safe examples.",
+      "audience": ["business-user", "developer", "tester", "ai-tool"]
+    },
+    {
+      "code": "first-human-task",
+      "title": "Build Your First Human Task Flow",
+      "route": "/docs/framework/process/first-human-task",
+      "section": "Beginner Guides",
+      "sectionOrder": 15,
+      "order": 27,
+      "source": "pages/first-human-task.md",
+      "evidence": "nodics.process/data/core/source/documentation/pages/first-human-task.md",
+      "summary": "Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps.",
+      "audience": ["business-user", "administrator", "developer", "operator"]
+    },
+    {
       "code": "business-value",
       "title": "Business Value and Adoption Model",
       "route": "/docs/framework/process/business-value",
@@ -51,6 +75,30 @@
       "evidence": "nodics.process/data/core/source/documentation/pages/developer-customization.md",
       "summary": "Show where developers extend Process behavior, where domain actions belong, and how customer modules customize safely.",
       "audience": ["developer", "architect", "ai-tool"]
+    },
+    {
+      "code": "action-adapters",
+      "title": "Action Adapter Contract",
+      "route": "/docs/framework/process/action-adapters",
+      "section": "Build and Extend",
+      "sectionOrder": 30,
+      "order": 45,
+      "source": "pages/action-adapters.md",
+      "evidence": "nodics.process/data/core/source/documentation/pages/action-adapters.md",
+      "summary": "Learn why ACTION nodes use registered declarative adapters and how customer/domain modules own business execution.",
+      "audience": ["developer", "architect", "security", "tester", "ai-tool"]
+    },
+    {
+      "code": "custom-project-extension",
+      "title": "Custom Project Extension Guide",
+      "route": "/docs/framework/process/custom-project-extension",
+      "section": "Build and Extend",
+      "sectionOrder": 30,
+      "order": 47,
+      "source": "pages/custom-project-extension.md",
+      "evidence": "nodics.process/data/core/source/documentation/pages/custom-project-extension.md",
+      "summary": "Explain how customer overlays customize Process behavior while preserving functional module identity and backend governance.",
+      "audience": ["developer", "architect", "operator", "ai-tool"]
     },
     {
       "code": "devops-topology",
@@ -77,6 +125,18 @@
       "audience": ["administrator", "operator", "developer", "architect"]
     },
     {
+      "code": "scheduled-automation",
+      "title": "Scheduled Automation and Cron Triggers",
+      "route": "/docs/framework/process/scheduled-automation",
+      "section": "Operate",
+      "sectionOrder": 40,
+      "order": 65,
+      "source": "pages/scheduled-automation.md",
+      "evidence": "nodics.process/data/core/source/documentation/pages/scheduled-automation.md",
+      "summary": "Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence.",
+      "audience": ["administrator", "operator", "developer", "tester"]
+    },
+    {
       "code": "visual-designer",
       "title": "Visual Workflow Designer Contract",
       "route": "/docs/framework/process/visual-designer",
@@ -87,6 +147,18 @@
       "evidence": "nodics.process/data/core/source/documentation/pages/visual-designer.md",
       "summary": "Describe the backend-owned graph contract, Axis editor projection, and validation workflow for the visual designer.",
       "audience": ["business-user", "developer", "tester", "ai-tool"]
+    },
+    {
+      "code": "qa-regression-guide",
+      "title": "Process QA and Regression Guide",
+      "route": "/docs/framework/process/qa-regression-guide",
+      "section": "Operate",
+      "sectionOrder": 40,
+      "order": 80,
+      "source": "pages/qa-regression-guide.md",
+      "evidence": "nodics.process/data/core/source/documentation/pages/qa-regression-guide.md",
+      "summary": "Define backend, fresh database, Axis smoke, and negative regression checks for Process and Cron automation.",
+      "audience": ["tester", "developer", "operator", "ai-tool"]
     }
   ]
 }

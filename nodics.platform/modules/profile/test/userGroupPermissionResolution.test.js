@@ -198,6 +198,7 @@ assert(runtimeViewerGroup.permissions.includes("backoffice.contract.view"));
   "process.task.complete",
   "process.task.cancel",
   "process.trigger.manage",
+      "process.trigger.execute",
   "workflow.backoffice.view",
   "pricing.backoffice.read",
   "pricing.backoffice.preview",

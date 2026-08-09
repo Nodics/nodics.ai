@@ -132,6 +132,8 @@ const service = require('../src/service/release/defaultDataReleaseService');
     catalogue = await service.getCatalogue({ tenant: 'default', dataType: 'core' });
     assert.strictEqual(catalogue.data[0].status, 'INVALID_RELEASE');
     assert.match(catalogue.data[0].invalidReason, /checksum validation failed/);
+    assert.match(catalogue.data[0].invalidReason, /testModule\/core\/data\/data.js/);
+    assert.match(catalogue.data[0].invalidReason, /expected .+\.\.\., actual .+\.\.\./);
     await assert.rejects(() => service.preflight({
         tenant: 'default',
         releaseRequest: { dataType: 'core', modules: ['testModule'], expectedReleases: { testModule: '1.1.0' } }

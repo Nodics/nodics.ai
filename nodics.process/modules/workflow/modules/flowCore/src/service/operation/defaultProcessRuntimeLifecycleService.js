@@ -77,6 +77,8 @@ module.exports = {
     auditService: function () { return SERVICE.DefaultProcessAuditEventService; },
     /** @returns {Object|undefined} Generated trigger service when the schema is available. */
     triggerService: function () { return SERVICE.DefaultProcessTriggerService; },
+    /** @returns {Object|undefined} Process action adapter registry service. */
+    actionAdapterRegistryService: function () { return SERVICE.DefaultProcessActionAdapterRegistryService; },
 
     /**
      * Lists lifecycle states allowed for Process-owned trigger metadata.
@@ -217,14 +219,55 @@ module.exports = {
     },
 
     /**
+     * Finds all outgoing transitions for a source node.
+     *
+     * @param {Object} graph Published graph.
+     * @param {string} sourceNodeCode Source node code.
+     * @returns {Object[]} Outgoing transitions.
+     */
+    outgoingTransitions: function (graph, sourceNodeCode) {
+        return (graph.transitions || []).filter(item => item && item.source === sourceNodeCode);
+    },
+
+    /**
+     * Resolves the next transition for a runtime node. DECISION nodes can use a
+     * selected transition code, target node code, or a simple equals condition
+     * against the completion decision/context before falling back to the default
+     * transition.
+     *
+     * @param {Object} graph Published graph.
+     * @param {string} sourceNodeCode Source node code.
+     * @param {Object} body Runtime request body.
+     * @returns {Object|undefined} Selected transition.
+     */
+    resolveTransition: function (graph, sourceNodeCode, body) {
+        let transitions = this.outgoingTransitions(graph, sourceNodeCode);
+        let decision = body && body.decision || {};
+        if (decision.transitionCode) {
+            return transitions.find(transition => transition.code === decision.transitionCode);
+        }
+        if (decision.targetNodeCode) {
+            return transitions.find(transition => transition.target === decision.targetNodeCode);
+        }
+        let context = Object.assign({}, body && body.context || {}, decision);
+        let matched = transitions.find(transition => {
+            let condition = transition.condition || {};
+            if (!condition.field) return false;
+            return context[condition.field] === condition.equals;
+        });
+        return matched || transitions.find(transition => transition.default === true) || transitions[0];
+    },
+
+    /**
      * Finds the next transition target for a source node.
      *
      * @param {Object} graph Published graph.
      * @param {string} sourceNodeCode Source node code.
+     * @param {Object} body Runtime request body.
      * @returns {Object|undefined} Next target node.
      */
-    nextNode: function (graph, sourceNodeCode) {
-        let transition = (graph.transitions || []).find(item => item && item.source === sourceNodeCode);
+    nextNode: function (graph, sourceNodeCode, body) {
+        let transition = this.resolveTransition(graph, sourceNodeCode, body || {});
         return transition ? this.findNode(graph, transition.target) : undefined;
     },
 
@@ -287,6 +330,68 @@ module.exports = {
     },
 
     /**
+     * Records that the runtime entered a backend-supported graph node.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {Object} instance Process instance.
+     * @param {Object} version Published definition version.
+     * @param {Object} node Runtime node.
+     * @param {Object} [metadata] Additional bounded metadata.
+     * @returns {Promise<Object>} Saved audit event.
+     */
+    auditNodeEntered: async function (request, instance, version, node, metadata) {
+        return this.audit(request, {
+            definitionCode: instance.definitionCode,
+            instanceCode: instance.code,
+            eventType: 'process.node.entered',
+            metadata: Object.assign({ version: version.version, nodeCode: node && node.code, nodeType: node && node.type }, metadata || {})
+        });
+    },
+
+    /**
+     * Executes an ACTION node through the configured declarative adapter
+     * registry and records the outcome.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {Object} instance Process instance.
+     * @param {Object} version Published definition version.
+     * @param {Object} node ACTION node.
+     * @param {Object} body Runtime request body.
+     * @returns {Promise<Object>} Adapter execution summary.
+     */
+    executeActionNode: async function (request, instance, version, node, body) {
+        let registry = this.actionAdapterRegistryService();
+        if (!registry || typeof registry.execute !== 'function') {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00019', 'Process action adapter registry is unavailable');
+        }
+        try {
+            let result = await registry.execute(request, {
+                instance: instance,
+                version: version,
+                node: node,
+                context: instance.context || {},
+                payload: body && (body.actionPayload || body.payload) || {}
+            });
+            await this.audit(request, {
+                definitionCode: instance.definitionCode,
+                instanceCode: instance.code,
+                eventType: 'process.action.executed',
+                metadata: { nodeCode: node.code, adapter: node.action && node.action.moduleName + '.' + node.action.operation, status: result && result.status }
+            });
+            return result;
+        } catch (error) {
+            await this.audit(request, {
+                definitionCode: instance.definitionCode,
+                instanceCode: instance.code,
+                eventType: 'process.action.failed',
+                outcome: 'failure',
+                metadata: { nodeCode: node.code, errorCode: error.code || 'ERR_PROCESS_00019' }
+            });
+            throw error;
+        }
+    },
+
+    /**
      * Moves an instance to the next backend-supported runtime node.
      *
      * @param {Object} request Nodics request context.
@@ -311,6 +416,7 @@ module.exports = {
             });
             return { instance: Object.assign({}, instance, { status: 'COMPLETED', currentNode: node && node.code || instance.currentNode, completedAt: completedAt }) };
         }
+        await this.auditNodeEntered(request, instance, version, node);
         if (node.type === 'TASK') {
             await this.instanceService().update(this.serviceRequest(request, {
                 query: { code: instance.code },
@@ -320,7 +426,40 @@ module.exports = {
             let task = await this.createTaskForNode(request, updatedInstance, node, body);
             return { instance: updatedInstance, task: task };
         }
-        return this.enterNode(request, instance, version, this.nextNode(version.graph || {}, node.code), body);
+        if (node.type === 'DECISION') {
+            let transition = this.resolveTransition(version.graph || {}, node.code, body || {});
+            if (!transition) throw new CLASSES.NodicsError('ERR_PROCESS_00021', 'Process decision could not resolve a transition');
+            await this.audit(request, {
+                definitionCode: instance.definitionCode,
+                instanceCode: instance.code,
+                eventType: 'process.decision.evaluated',
+                metadata: { nodeCode: node.code, transitionCode: transition.code, targetNodeCode: transition.target }
+            });
+            return this.enterNode(request, instance, version, this.findNode(version.graph || {}, transition.target), body);
+        }
+        if (node.type === 'ACTION') {
+            await this.executeActionNode(request, instance, version, node, body || {});
+            return this.enterNode(request, instance, version, this.nextNode(version.graph || {}, node.code, body), body);
+        }
+        if (node.type === 'TIMER') {
+            await this.audit(request, {
+                definitionCode: instance.definitionCode,
+                instanceCode: instance.code,
+                eventType: 'process.timer.observed',
+                metadata: { nodeCode: node.code, timer: node.timer || {} }
+            });
+            return this.enterNode(request, instance, version, this.nextNode(version.graph || {}, node.code, body), body);
+        }
+        if (node.type === 'SUB_PROCESS') {
+            await this.audit(request, {
+                definitionCode: instance.definitionCode,
+                instanceCode: instance.code,
+                eventType: 'process.subProcess.referenced',
+                metadata: { nodeCode: node.code, definitionCode: node.subProcessDefinitionCode || (node.subProcess && node.subProcess.definitionCode) }
+            });
+            return this.enterNode(request, instance, version, this.nextNode(version.graph || {}, node.code, body), body);
+        }
+        throw new CLASSES.NodicsError('ERR_PROCESS_00018', 'Unsupported process runtime node type');
     },
 
     /**
@@ -450,7 +589,7 @@ module.exports = {
         if (!['RUNNING', 'WAITING'].includes(instance.status)) throw new CLASSES.NodicsError('ERR_PROCESS_00013', 'Process instance transition is not allowed');
         let version = await this.requireVersion(request, instance.definitionCode, instance.version);
         let currentNode = this.findNode(version.graph || {}, task.nodeCode);
-        let nextNode = currentNode ? this.nextNode(version.graph || {}, currentNode.code) : undefined;
+        let nextNode = currentNode ? this.nextNode(version.graph || {}, currentNode.code, body) : undefined;
         let completedAt = new Date();
         await this.taskService().update(this.serviceRequest(request, {
             query: { code: task.code },
@@ -621,6 +760,64 @@ module.exports = {
             metadata: { triggerCode: triggerCode, previousStatus: existingTrigger.status }
         });
         return { code: 'SUC_PROCESS_00010', data: { code: triggerCode, active: false, status: 'ARCHIVED', archivedAt: archivedAt } };
+    },
+
+    /**
+     * Executes a Process-owned trigger by starting the referenced process
+     * definition. Cron or another authorized scheduler may call this endpoint,
+     * but Process remains the owner of instance creation and audit evidence.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Trigger execution and started instance summary.
+     */
+    executeTrigger: async function (request) {
+        let body = this.bodyOf(request);
+        let trigger = await this.requireTrigger(request, request.triggerCode || body.triggerCode);
+        if (trigger.active === false || trigger.status !== 'ACTIVE') {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00020', 'Process trigger is not active');
+        }
+        let correlationId = body.correlationId || body.idempotencyKey || this.runtimeCode(trigger.code + '-correlation');
+        await this.audit(request, {
+            definitionCode: trigger.definitionCode,
+            eventType: 'process.trigger.execution.requested',
+            metadata: {
+                triggerCode: trigger.code,
+                cronJobCode: trigger.cronJobCode,
+                correlationId: correlationId
+            }
+        });
+        try {
+            let started = await this.startInstance(Object.assign({}, request, {
+                runtimeOperation: Object.assign({}, body.runtimeOperation || {}, {
+                    definitionCode: trigger.definitionCode,
+                    version: body.version || trigger.version,
+                    instanceCode: body.instanceCode,
+                    context: Object.assign({}, body.context || {}, {
+                        triggerCode: trigger.code,
+                        cronJobCode: trigger.cronJobCode,
+                        correlationId: correlationId
+                    })
+                })
+            }));
+            await this.audit(request, {
+                definitionCode: trigger.definitionCode,
+                eventType: 'process.trigger.execution.completed',
+                metadata: {
+                    triggerCode: trigger.code,
+                    correlationId: correlationId,
+                    instanceCode: started && started.data && started.data.instance && started.data.instance.code
+                }
+            });
+            return { code: 'SUC_PROCESS_00011', data: { trigger: trigger, correlationId: correlationId, execution: started.data } };
+        } catch (error) {
+            await this.audit(request, {
+                definitionCode: trigger.definitionCode,
+                eventType: 'process.trigger.execution.failed',
+                outcome: 'failure',
+                metadata: { triggerCode: trigger.code, correlationId: correlationId, errorCode: error.code || 'ERR_PROCESS_00020' }
+            });
+            throw error;
+        }
     },
 
     /**

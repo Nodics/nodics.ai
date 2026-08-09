@@ -20,15 +20,15 @@
  */
 const assert = require('assert');
 
+let designerPolicy = {
+    maximumNodesPerDefinition: 3,
+    maximumTransitionsPerDefinition: 3
+};
+
 global.CONFIG = {
     get: function (key) {
         if (key === 'process') {
-            return {
-                designer: {
-                    maximumNodesPerDefinition: 3,
-                    maximumTransitionsPerDefinition: 3
-                }
-            };
+            return { designer: designerPolicy };
         }
         return undefined;
     }
@@ -87,6 +87,50 @@ const executableActionResult = validationService.validateGraph({
 });
 assert.strictEqual(executableActionResult.valid, false);
 assert(executableActionResult.issues.some(issue => issue.code === 'NODE_ACTION_EXECUTABLE'));
+
+designerPolicy = {
+    maximumNodesPerDefinition: 10,
+    maximumTransitionsPerDefinition: 10
+};
+
+const advancedNodeResult = validationService.validateGraph({
+    nodes: [
+        { code: 'start', type: 'START' },
+        { code: 'decision', type: 'DECISION' },
+        { code: 'callNoop', type: 'ACTION', action: { moduleName: 'nodics.process', operation: 'noop' } },
+        { code: 'delay', type: 'TIMER', timer: { delayMs: 0 } },
+        { code: 'childFlow', type: 'SUB_PROCESS', subProcessDefinitionCode: 'childApproval' },
+        { code: 'end', type: 'END' }
+    ],
+    transitions: [
+        { code: 'start_to_decision', source: 'start', target: 'decision' },
+        { code: 'decision_to_action', source: 'decision', target: 'callNoop', condition: { field: 'approved', equals: true } },
+        { code: 'decision_to_end', source: 'decision', target: 'end', default: true },
+        { code: 'action_to_timer', source: 'callNoop', target: 'delay' },
+        { code: 'timer_to_child', source: 'delay', target: 'childFlow' },
+        { code: 'child_to_end', source: 'childFlow', target: 'end' }
+    ]
+});
+assert.strictEqual(advancedNodeResult.valid, true);
+
+const unsafeDecisionResult = validationService.validateGraph({
+    nodes: [
+        { code: 'start', type: 'START' },
+        { code: 'decision', type: 'DECISION' },
+        { code: 'end', type: 'END' }
+    ],
+    transitions: [
+        { code: 'start_to_decision', source: 'start', target: 'decision' },
+        { code: 'decision_to_end', source: 'decision', target: 'end' }
+    ]
+});
+assert.strictEqual(unsafeDecisionResult.valid, false);
+assert(unsafeDecisionResult.issues.some(issue => issue.code === 'DECISION_TRANSITION_REQUIRED'));
+
+designerPolicy = {
+    maximumNodesPerDefinition: 3,
+    maximumTransitionsPerDefinition: 3
+};
 
 const limitResult = validationService.validateGraph({
     nodes: [

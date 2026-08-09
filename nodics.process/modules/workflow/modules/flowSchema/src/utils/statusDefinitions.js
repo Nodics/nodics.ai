@@ -28,6 +28,7 @@ module.exports = {
     SUC_PROCESS_00008: { code: '200', message: 'Process task updated successfully' },
     SUC_PROCESS_00009: { code: '200', message: 'Process instance cancelled successfully' },
     SUC_PROCESS_00010: { code: '200', message: 'Process scheduled trigger metadata returned successfully' },
+    SUC_PROCESS_00011: { code: '202', message: 'Process trigger execution accepted successfully' },
 
     ERR_PROCESS_00000: { code: '500', message: 'Process internal server error' },
     ERR_PROCESS_00001: { code: '400', message: 'Process request is invalid' },
@@ -46,5 +47,9 @@ module.exports = {
     ERR_PROCESS_00014: { code: '503', message: 'Process trigger service is unavailable' },
     ERR_PROCESS_00015: { code: '400', message: 'Process trigger status is invalid' },
     ERR_PROCESS_00016: { code: '404', message: 'Process trigger was not found' },
-    ERR_PROCESS_00017: { code: '409', message: 'Archived process trigger cannot be updated' }
+    ERR_PROCESS_00017: { code: '409', message: 'Archived process trigger cannot be updated' },
+    ERR_PROCESS_00018: { code: '422', message: 'Unsupported process runtime node type' },
+    ERR_PROCESS_00019: { code: '403', message: 'Process action adapter is not registered or allowed' },
+    ERR_PROCESS_00020: { code: '409', message: 'Process trigger is not active' },
+    ERR_PROCESS_00021: { code: '409', message: 'Process decision could not resolve a transition' }
 };

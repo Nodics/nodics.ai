@@ -49,6 +49,8 @@ module.exports = {
     updateTrigger: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.updateTrigger(request); },
     /** Delegates Process-owned trigger metadata archival. */
     archiveTrigger: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.archiveTrigger(request); },
+    /** Delegates active trigger execution into Process-owned runtime start. */
+    executeTrigger: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.executeTrigger(request); },
     /** Delegates audit event listing. */
     listAuditEvents: function (request) { return SERVICE.DefaultProcessOperationsInspectionService.listAuditEvents(request); }
 };

@@ -71,11 +71,20 @@ const graph = {
     nodes: [
         { code: 'start', type: 'START', name: 'Start' },
         { code: 'review', type: 'TASK', name: 'Business Review', assignee: 'reviewQueue' },
+        { code: 'approvalDecision', type: 'DECISION', name: 'Approval Decision' },
+        { code: 'notify', type: 'ACTION', name: 'Notify Domain', action: { moduleName: 'nodics.process', operation: 'noop' } },
+        { code: 'waitForAudit', type: 'TIMER', name: 'Wait for audit window', timer: { delayMs: 0, autoContinue: true } },
+        { code: 'childGovernance', type: 'SUB_PROCESS', name: 'Child Governance', subProcessDefinitionCode: 'childApproval' },
         { code: 'end', type: 'END', name: 'End' }
     ],
     transitions: [
         { code: 'start_to_review', source: 'start', target: 'review' },
-        { code: 'review_to_end', source: 'review', target: 'end' }
+        { code: 'review_to_decision', source: 'review', target: 'approvalDecision' },
+        { code: 'decision_to_notify', source: 'approvalDecision', target: 'notify', condition: { field: 'approved', equals: true } },
+        { code: 'decision_to_end', source: 'approvalDecision', target: 'end', default: true },
+        { code: 'notify_to_wait', source: 'notify', target: 'waitForAudit' },
+        { code: 'wait_to_child', source: 'waitForAudit', target: 'childGovernance' },
+        { code: 'child_to_end', source: 'childGovernance', target: 'end' }
     ]
 };
 const definitions = [{ code: 'contentApproval', name: 'Content Approval', status: 'PUBLISHED', currentVersion: 1 }];
@@ -91,7 +100,8 @@ global.SERVICE = {
     DefaultProcessInstanceService: createGeneratedService(instances),
     DefaultProcessTaskService: createGeneratedService(tasks),
     DefaultProcessAuditEventService: createGeneratedService(auditEvents),
-    DefaultProcessTriggerService: createGeneratedService(triggers)
+    DefaultProcessTriggerService: createGeneratedService(triggers),
+    DefaultProcessActionAdapterRegistryService: require('../modules/workflow/modules/flowCore/src/service/operation/defaultProcessActionAdapterRegistryService')
 };
 
 const runtimeService = require('../modules/workflow/modules/flowCore/src/service/operation/defaultProcessRuntimeLifecycleService');
@@ -114,7 +124,8 @@ const runtimeService = require('../modules/workflow/modules/flowCore/src/service
     assert.strictEqual(tasks[0].status, 'OPEN');
     assert.strictEqual(tasks[0].assignee, 'reviewQueue');
     assert.strictEqual(auditEvents[0].eventType, 'process.instance.started');
-    assert.strictEqual(auditEvents[1].eventType, 'process.task.created');
+    assert.strictEqual(auditEvents.some(event => event.eventType === 'process.node.entered' && event.metadata.nodeCode === 'review'), true);
+    assert.strictEqual(auditEvents.some(event => event.eventType === 'process.task.created'), true);
 
     let claimed = await runtimeService.claimTask({
         tenant: 'default',
@@ -136,6 +147,10 @@ const runtimeService = require('../modules/workflow/modules/flowCore/src/service
     assert.strictEqual(instances[0].status, 'COMPLETED');
     assert.strictEqual(instances[0].currentNode, 'end');
     assert.strictEqual(auditEvents.some(event => event.eventType === 'process.task.completed'), true);
+    assert.strictEqual(auditEvents.some(event => event.eventType === 'process.decision.evaluated'), true);
+    assert.strictEqual(auditEvents.some(event => event.eventType === 'process.action.executed'), true);
+    assert.strictEqual(auditEvents.some(event => event.eventType === 'process.timer.observed'), true);
+    assert.strictEqual(auditEvents.some(event => event.eventType === 'process.subProcess.referenced'), true);
     assert.strictEqual(auditEvents.some(event => event.eventType === 'process.instance.completed'), true);
 
     let detail = await runtimeService.getInstanceDetail({ tenant: 'default', instanceCode: 'contentApproval-001' });
@@ -171,6 +186,21 @@ const runtimeService = require('../modules/workflow/modules/flowCore/src/service
     });
     assert.strictEqual(updatedTrigger.data.status, 'PAUSED');
     assert.strictEqual(triggers[1].status, 'PAUSED');
+
+    let executedTrigger = await runtimeService.executeTrigger({
+        tenant: 'default',
+        authData: { loginId: 'scheduler-runtime' },
+        triggerCode: 'dailyContentApproval',
+        runtimeOperation: {
+            correlationId: 'cron-fire-001',
+            instanceCode: 'contentApproval-triggered-001'
+        }
+    });
+    assert.strictEqual(executedTrigger.code, 'SUC_PROCESS_00011');
+    assert.strictEqual(executedTrigger.data.correlationId, 'cron-fire-001');
+    assert.strictEqual(instances.some(instance => instance.code === 'contentApproval-triggered-001'), true);
+    assert.strictEqual(auditEvents.some(event => event.eventType === 'process.trigger.execution.requested'), true);
+    assert.strictEqual(auditEvents.some(event => event.eventType === 'process.trigger.execution.completed'), true);
 
     let archivedTrigger = await runtimeService.archiveTrigger({
         tenant: 'default',
@@ -213,12 +243,47 @@ const runtimeService = require('../modules/workflow/modules/flowCore/src/service
     );
 
     await assert.rejects(
+        () => runtimeService.executeTrigger({
+            tenant: 'default',
+            triggerCode: 'weeklyContentApproval'
+        }),
+        error => error.code === 'ERR_PROCESS_00020',
+    );
+
+    await assert.rejects(
         () => runtimeService.updateTrigger({
             tenant: 'default',
             triggerCode: 'weeklyContentApproval',
             runtimeOperation: { status: 'ACTIVE' }
         }),
         error => error.code === 'ERR_PROCESS_00017',
+    );
+
+    versions.push({
+        code: 'unsafeActionProcess_v1',
+        definitionCode: 'unsafeActionProcess',
+        version: 1,
+        name: 'Unsafe Action Process',
+        status: 'PUBLISHED',
+        graph: {
+            nodes: [
+                { code: 'start', type: 'START' },
+                { code: 'unsafe', type: 'ACTION', action: { moduleName: 'commerce', operation: 'chargeCustomer' } },
+                { code: 'end', type: 'END' }
+            ],
+            transitions: [
+                { code: 'start_to_unsafe', source: 'start', target: 'unsafe' },
+                { code: 'unsafe_to_end', source: 'unsafe', target: 'end' }
+            ]
+        }
+    });
+    definitions.push({ code: 'unsafeActionProcess', name: 'Unsafe Action Process', status: 'PUBLISHED', currentVersion: 1 });
+    await assert.rejects(
+        () => runtimeService.startInstance({
+            tenant: 'default',
+            runtimeOperation: { definitionCode: 'unsafeActionProcess' }
+        }),
+        error => error.code === 'ERR_PROCESS_00019',
     );
 
     await assert.rejects(

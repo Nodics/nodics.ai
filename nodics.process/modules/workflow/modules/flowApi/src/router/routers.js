@@ -167,6 +167,12 @@ module.exports = {
                 key: '/triggers/:triggerCode/archive', method: 'POST', controller: 'DefaultProcessOperationsController', operation: 'archiveTrigger',
                 help: { requestType: 'secured', message: 'Archive Process-owned trigger metadata', method: 'POST', url: 'http://host:port/nodics/process/v0/triggers/:triggerCode/archive' }
             },
+            executeTrigger: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup'],
+                permission: 'process.trigger.execute', apiExposure: 'processManagement',
+                key: '/triggers/:triggerCode/execute', method: 'POST', controller: 'DefaultProcessOperationsController', operation: 'executeTrigger',
+                help: { requestType: 'secured', message: 'Execute an active Process trigger and start the referenced process instance', method: 'POST', url: 'http://host:port/nodics/process/v0/triggers/:triggerCode/execute' }
+            },
             listAuditEvents: {
                 secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
                 permission: 'process.backoffice.view', apiExposure: 'processManagement',

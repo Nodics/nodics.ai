@@ -156,6 +156,17 @@ module.exports = {
         }
     },
     process: {
+        actionAdapters: {
+            enabled: true,
+            allowUnregisteredActions: false,
+            allowedActions: [
+                {
+                    moduleName: 'nodics.process',
+                    operation: 'noop',
+                    description: 'Safe no-op adapter for framework smoke tests and beginner demos'
+                }
+            ]
+        },
         designer: {
             enabled: false,
             provider: 'NODICS_NATIVE_GRAPH',

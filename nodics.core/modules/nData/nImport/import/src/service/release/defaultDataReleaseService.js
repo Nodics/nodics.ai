@@ -192,27 +192,29 @@ module.exports = {
         try {
             manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
         } catch (error) {
-            throw this.error('ERR_IMP_00003', 'Data release manifest is invalid');
+            throw this.error('ERR_IMP_00003', 'Data release manifest JSON is invalid for module ' + rawModule.name + ' and data type ' + dataType);
         }
         if (!manifest || !(this.configuration().allowedContractVersions || [1]).includes(manifest.contractVersion) ||
             manifest.module !== rawModule.name ||
             manifest.dataType !== dataType || !/^\d+\.\d+\.\d+$/.test(manifest.version || '') ||
             !manifest.files || typeof manifest.files !== 'object' || Array.isArray(manifest.files)) {
-            throw this.error('ERR_IMP_00003', 'Data release manifest is incompatible');
+            throw this.error('ERR_IMP_00003', 'Data release manifest is incompatible for module ' + rawModule.name + ' and data type ' + dataType + '; verify contractVersion, module, dataType, semantic version, and files map');
         }
         let fileNames = Object.keys(manifest.files).sort();
         if (fileNames.length === 0 || fileNames.length > Number(this.configuration().maximumFilesPerRelease || 1024)) {
             throw this.error('ERR_IMP_00003', 'Data release file count is invalid');
         }
         fileNames.forEach(relativeFile => {
-            if (path.isAbsolute(relativeFile) || relativeFile.includes('..')) throw this.error('ERR_IMP_00003', 'Data release path is invalid');
+            if (path.isAbsolute(relativeFile) || relativeFile.includes('..')) throw this.error('ERR_IMP_00003', 'Data release path is invalid: ' + relativeFile);
             let filePath = path.resolve(releaseRoot, relativeFile);
             if (!filePath.startsWith(releaseRoot + path.sep) || !fs.existsSync(filePath) ||
                 fs.lstatSync(filePath).isSymbolicLink() || !fs.statSync(filePath).isFile()) {
-                throw this.error('ERR_IMP_00003', 'Data release file is unavailable');
+                throw this.error('ERR_IMP_00003', 'Data release file is unavailable: ' + relativeFile);
             }
             let checksum = crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
-            if (checksum !== manifest.files[relativeFile]) throw this.error('ERR_IMP_00003', 'Data release checksum validation failed');
+            if (checksum !== manifest.files[relativeFile]) throw this.error('ERR_IMP_00003',
+                'Data release checksum validation failed for ' + rawModule.name + '/' + dataType + '/' + relativeFile +
+                '; expected ' + String(manifest.files[relativeFile]).slice(0, 12) + '..., actual ' + checksum.slice(0, 12) + '...');
         });
         let checksum = crypto.createHash('sha256').update(fileNames.map(file => file + ':' + manifest.files[file]).join('|')).digest('hex');
         return {

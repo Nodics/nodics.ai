@@ -38,6 +38,30 @@ module.exports = {
     "active": true
   },
   "record2": {
+    "code": "processDocumentationRoutefirstWorkflow",
+    "site": "processDocumentationSite",
+    "path": "/docs/framework/process/first-workflow",
+    "locale": "en",
+    "channel": "web",
+    "page": "processDocumentationPagefirstWorkflow",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record3": {
+    "code": "processDocumentationRoutefirstHumanTask",
+    "site": "processDocumentationSite",
+    "path": "/docs/framework/process/first-human-task",
+    "locale": "en",
+    "channel": "web",
+    "page": "processDocumentationPagefirstHumanTask",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record4": {
     "code": "processDocumentationRoutebusinessValue",
     "site": "processDocumentationSite",
     "path": "/docs/framework/process/business-value",
@@ -49,7 +73,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record3": {
+  "record5": {
     "code": "processDocumentationRoutedeveloperCustomization",
     "site": "processDocumentationSite",
     "path": "/docs/framework/process/developer-customization",
@@ -61,7 +85,31 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record4": {
+  "record6": {
+    "code": "processDocumentationRouteactionAdapters",
+    "site": "processDocumentationSite",
+    "path": "/docs/framework/process/action-adapters",
+    "locale": "en",
+    "channel": "web",
+    "page": "processDocumentationPageactionAdapters",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record7": {
+    "code": "processDocumentationRoutecustomProjectExtension",
+    "site": "processDocumentationSite",
+    "path": "/docs/framework/process/custom-project-extension",
+    "locale": "en",
+    "channel": "web",
+    "page": "processDocumentationPagecustomProjectExtension",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record8": {
     "code": "processDocumentationRoutedevopsTopology",
     "site": "processDocumentationSite",
     "path": "/docs/framework/process/devops-topology",
@@ -73,7 +121,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record5": {
+  "record9": {
     "code": "processDocumentationRouteprocessCronRuntime",
     "site": "processDocumentationSite",
     "path": "/docs/framework/process/process-cron-runtime",
@@ -85,13 +133,37 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record6": {
+  "record10": {
+    "code": "processDocumentationRoutescheduledAutomation",
+    "site": "processDocumentationSite",
+    "path": "/docs/framework/process/scheduled-automation",
+    "locale": "en",
+    "channel": "web",
+    "page": "processDocumentationPagescheduledAutomation",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record11": {
     "code": "processDocumentationRoutevisualDesigner",
     "site": "processDocumentationSite",
     "path": "/docs/framework/process/visual-designer",
     "locale": "en",
     "channel": "web",
     "page": "processDocumentationPagevisualDesigner",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record12": {
+    "code": "processDocumentationRouteqaRegressionGuide",
+    "site": "processDocumentationSite",
+    "path": "/docs/framework/process/qa-regression-guide",
+    "locale": "en",
+    "channel": "web",
+    "page": "processDocumentationPageqaRegressionGuide",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
     "accessMode": "AUTHENTICATED",

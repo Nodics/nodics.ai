@@ -59,6 +59,17 @@ module.exports = {
     },
 
     /**
+     * Returns the backend-owned node types supported by the first Nodics-native
+     * process runtime. Axis may render these visually, but cannot invent runtime
+     * node semantics.
+     *
+     * @returns {string[]} Supported process node types.
+     */
+    supportedNodeTypes: function () {
+        return ['START', 'TASK', 'DECISION', 'ACTION', 'TIMER', 'SUB_PROCESS', 'END'];
+    },
+
+    /**
      * Adds a validation issue to the accumulator.
      *
      * @param {Object[]} issues Validation issue accumulator.
@@ -84,8 +95,11 @@ module.exports = {
             return;
         }
         if (!this.isCode(node.code)) this.addIssue(issues, 'NODE_CODE_INVALID', 'Node code is required and must be stable', { nodeCode: node.code });
-        if (!['START', 'END', 'ACTION', 'DECISION', 'TASK', 'EVENT', 'WAIT'].includes(node.type)) {
+        if (!this.supportedNodeTypes().includes(node.type)) {
             this.addIssue(issues, 'NODE_TYPE_INVALID', 'Node type is not supported by nodics.process', { nodeCode: node.code, nodeType: node.type });
+        }
+        if (node.type === 'ACTION' && !node.action) {
+            this.addIssue(issues, 'NODE_ACTION_REQUIRED', 'ACTION nodes must reference a declarative domain action adapter', { nodeCode: node.code });
         }
         if (node.action) {
             if (!this.isObject(node.action) || !this.isCode(node.action.moduleName) || !this.isCode(node.action.operation)) {
@@ -93,6 +107,15 @@ module.exports = {
             }
             if (this.looksExecutable(node.action.operation) || this.looksExecutable(node.action.handler)) {
                 this.addIssue(issues, 'NODE_ACTION_EXECUTABLE', 'Domain action references must not store executable code, URLs, or file paths', { nodeCode: node.code });
+            }
+        }
+        if (node.type === 'TIMER' && !this.isObject(node.timer)) {
+            this.addIssue(issues, 'NODE_TIMER_REQUIRED', 'TIMER nodes must declare timer metadata such as duration, delayMs, or cronExpression', { nodeCode: node.code });
+        }
+        if (node.type === 'SUB_PROCESS') {
+            let subProcessDefinitionCode = node.subProcessDefinitionCode || (node.subProcess && node.subProcess.definitionCode);
+            if (!this.isCode(subProcessDefinitionCode)) {
+                this.addIssue(issues, 'NODE_SUB_PROCESS_REQUIRED', 'SUB_PROCESS nodes must reference a governed process definition code', { nodeCode: node.code });
             }
         }
     },
@@ -144,6 +167,19 @@ module.exports = {
             let targetNode = nodes.find(node => node && node.code === transition.target);
             if (sourceNode && sourceNode.type === 'END') this.addIssue(issues, 'TRANSITION_FROM_END_INVALID', 'END nodes cannot have outgoing transitions', { transitionCode: transition.code });
             if (targetNode && targetNode.type === 'START') this.addIssue(issues, 'TRANSITION_TO_START_INVALID', 'START nodes cannot have incoming transitions', { transitionCode: transition.code });
+            if (sourceNode && sourceNode.type === 'DECISION' && !transition.default && !this.isObject(transition.condition)) {
+                this.addIssue(issues, 'DECISION_CONDITION_REQUIRED', 'DECISION transitions must declare a condition object or be marked as the default path', { transitionCode: transition.code, source: transition.source });
+            }
+        });
+
+        nodes.filter(node => node && node.type === 'DECISION').forEach(node => {
+            let outgoing = transitions.filter(transition => transition && transition.source === node.code);
+            if (outgoing.length < 2) {
+                this.addIssue(issues, 'DECISION_TRANSITION_REQUIRED', 'DECISION nodes must have at least two outgoing paths', { nodeCode: node.code, actual: outgoing.length });
+            }
+            if (outgoing.filter(transition => transition.default === true).length > 1) {
+                this.addIssue(issues, 'DECISION_DEFAULT_DUPLICATE', 'DECISION nodes can have only one default transition', { nodeCode: node.code });
+            }
         });
 
         return {

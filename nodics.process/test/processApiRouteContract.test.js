@@ -66,6 +66,7 @@ assert.strictEqual(flowApiPackage.nodics.runtime.router, true);
     ['createTrigger', 'POST', '/triggers', 'process.trigger.manage'],
     ['updateTrigger', 'PATCH', '/triggers/:triggerCode', 'process.trigger.manage'],
     ['archiveTrigger', 'POST', '/triggers/:triggerCode/archive', 'process.trigger.manage'],
+    ['executeTrigger', 'POST', '/triggers/:triggerCode/execute', 'process.trigger.execute'],
     ['listAuditEvents', 'GET', '/audit-events', 'process.backoffice.view']
 ].forEach(([routeName, method, key, permission]) => {
     let route = processOperationRoutes[routeName];
