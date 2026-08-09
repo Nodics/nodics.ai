@@ -32,13 +32,13 @@ const requiredDocuments = {
         'Commercial Product',
         'separate written agreement'
     ],
-    'SECURITY.md': [
+    '.github/SECURITY.md': [
         'Supported branches',
         'Reporting vulnerabilities',
         'tenant and enterprise scope',
         'service-token versus human-token boundaries'
     ],
-    'CONTRIBUTING.md': [
+    '.github/CONTRIBUTING.md': [
         'AGENTS.md',
         'module `README.md`',
         'root-to-leaf',
@@ -47,44 +47,44 @@ const requiredDocuments = {
         'configuration-only',
         'npm run llm:generate'
     ],
-    'SUPPORT.md': [
+    '.github/SUPPORT.md': [
         'source-available commercial software',
         'commercial/support agreement',
         'production SLA',
         'provider integration guidance'
     ],
-    'RELEASE.md': [
+    'governance/RELEASE.md': [
         'development',
         'master',
         'npm run release:check -- --execute',
         'npm audit --omit=dev',
         'GitHub Actions must delegate'
     ],
-    'VERSIONING.md': [
+    'governance/VERSIONING.md': [
         'Major changes',
         'Minor changes',
         'Patch changes',
         'custom-module override contracts'
     ],
-    'DEPRECATION.md': [
+    'governance/DEPRECATION.md': [
         'replacement path',
         'migration steps',
         'Compatibility shims',
         'removal target'
     ],
-    'COMPATIBILITY.md': [
+    'governance/COMPATIBILITY.md': [
         'generated CRUD behavior',
         'OpenAPI output',
         'temporary compatibility shim',
         'customer modules'
     ],
-    'INCIDENT_RESPONSE.md': [
+    'governance/INCIDENT_RESPONSE.md': [
         'Identify the affected module',
         'tenant isolation',
         'private media/data exposure',
         'generated-route bypass'
     ],
-    'GOVERNANCE.md': [
+    'governance/GOVERNANCE.md': [
         'backend/API framework authority',
         'AGENTS.md',
         'modules/nSetup/llm',

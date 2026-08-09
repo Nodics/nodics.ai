@@ -17,5 +17,7 @@ runtime authority.
 
 External adoption requires clear licensing, security, contribution, support,
 release, versioning, deprecation, compatibility, and incident-response
-documents. These governance documents are root-level repository contracts, while
-runtime behavior remains owned by the relevant module.
+documents. `LICENSE` stays at the repository root because it is the legal
+anchor. GitHub-facing community documents live under `.github/`. Deeper
+framework governance documents live under `governance/` so the repository root
+stays readable while runtime behavior remains owned by the relevant module.

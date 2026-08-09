@@ -33,8 +33,8 @@ Read from the repository root toward the owning module before implementation:
 4. `nodics.core/modules/nSetup/llm/contracts/ai-coding-and-customization-contract.md`
    when source code, generated artifacts, module structure, configuration,
    status definitions, or tests may change;
-5. `CONTRIBUTING.md` when source, tests, generated artifacts, or documentation
-   may change;
+5. `.github/CONTRIBUTING.md` when source, tests, generated artifacts, or
+   documentation may change;
 6. every applicable ancestor module `README.md` and `AGENTS.md`;
 7. the nearest owning module `README.md` and `AGENTS.md`;
 8. nearest module `llm/contracts`, `llm/examples`, and generated context when
