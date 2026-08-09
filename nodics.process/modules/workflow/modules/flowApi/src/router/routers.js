@@ -77,6 +77,12 @@ module.exports = {
             }
         },
         processOperations: {
+            startInstance: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'process.definition.update', apiExposure: 'processManagement',
+                key: '/instances', method: 'POST', controller: 'DefaultProcessOperationsController', operation: 'startInstance',
+                help: { requestType: 'secured', message: 'Start a published process definition and create the first runtime task when needed', method: 'POST', url: 'http://host:port/nodics/process/v0/instances' }
+            },
             listInstances: {
                 secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
                 permission: 'process.backoffice.view', apiExposure: 'processManagement',
@@ -89,6 +95,18 @@ module.exports = {
                 key: '/instances/:instanceCode', method: 'GET', controller: 'DefaultProcessOperationsController', operation: 'getInstance',
                 help: { requestType: 'secured', message: 'Read one governed process runtime instance', method: 'GET', url: 'http://host:port/nodics/process/v0/instances/:instanceCode' }
             },
+            getInstanceDetail: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'process.backoffice.view', apiExposure: 'processManagement',
+                key: '/instances/:instanceCode/detail', method: 'GET', controller: 'DefaultProcessOperationsController', operation: 'getInstanceDetail',
+                help: { requestType: 'secured', message: 'Read process instance detail with tasks and audit timeline', method: 'GET', url: 'http://host:port/nodics/process/v0/instances/:instanceCode/detail' }
+            },
+            cancelInstance: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup'],
+                permission: 'process.definition.update', apiExposure: 'processManagement',
+                key: '/instances/:instanceCode/cancel', method: 'POST', controller: 'DefaultProcessOperationsController', operation: 'cancelInstance',
+                help: { requestType: 'secured', message: 'Cancel a running or waiting process instance', method: 'POST', url: 'http://host:port/nodics/process/v0/instances/:instanceCode/cancel' }
+            },
             listTasks: {
                 secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
                 permission: 'process.backoffice.view', apiExposure: 'processManagement',
@@ -100,6 +118,36 @@ module.exports = {
                 permission: 'process.backoffice.view', apiExposure: 'processManagement',
                 key: '/tasks/:taskCode', method: 'GET', controller: 'DefaultProcessOperationsController', operation: 'getTask',
                 help: { requestType: 'secured', message: 'Read one governed human workflow task', method: 'GET', url: 'http://host:port/nodics/process/v0/tasks/:taskCode' }
+            },
+            claimTask: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'process.definition.update', apiExposure: 'processManagement',
+                key: '/tasks/:taskCode/claim', method: 'POST', controller: 'DefaultProcessOperationsController', operation: 'claimTask',
+                help: { requestType: 'secured', message: 'Claim an open process task', method: 'POST', url: 'http://host:port/nodics/process/v0/tasks/:taskCode/claim' }
+            },
+            assignTask: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup'],
+                permission: 'process.definition.update', apiExposure: 'processManagement',
+                key: '/tasks/:taskCode/assign', method: 'POST', controller: 'DefaultProcessOperationsController', operation: 'assignTask',
+                help: { requestType: 'secured', message: 'Assign or reassign an open process task', method: 'POST', url: 'http://host:port/nodics/process/v0/tasks/:taskCode/assign' }
+            },
+            completeTask: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'process.definition.update', apiExposure: 'processManagement',
+                key: '/tasks/:taskCode/complete', method: 'POST', controller: 'DefaultProcessOperationsController', operation: 'completeTask',
+                help: { requestType: 'secured', message: 'Complete a process task and advance the instance', method: 'POST', url: 'http://host:port/nodics/process/v0/tasks/:taskCode/complete' }
+            },
+            cancelTask: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup'],
+                permission: 'process.definition.update', apiExposure: 'processManagement',
+                key: '/tasks/:taskCode/cancel', method: 'POST', controller: 'DefaultProcessOperationsController', operation: 'cancelTask',
+                help: { requestType: 'secured', message: 'Cancel a process task without cancelling the whole instance', method: 'POST', url: 'http://host:port/nodics/process/v0/tasks/:taskCode/cancel' }
+            },
+            listTriggers: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'process.backoffice.view', apiExposure: 'processManagement',
+                key: '/triggers', method: 'GET', controller: 'DefaultProcessOperationsController', operation: 'listTriggers',
+                help: { requestType: 'secured', message: 'List Process-owned scheduled trigger metadata while Cron owns actual jobs', method: 'GET', url: 'http://host:port/nodics/process/v0/triggers' }
             },
             listAuditEvents: {
                 secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],

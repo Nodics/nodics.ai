@@ -33,6 +33,7 @@ module.exports = {
         request.instanceCode = params.instanceCode || request.instanceCode;
         request.taskCode = params.taskCode || request.taskCode;
         request.query = httpRequest.query || request.query || {};
+        request.runtimeOperation = httpRequest.body || request.runtimeOperation || {};
         let promise = FACADE.DefaultProcessOperationsFacade[operation](request);
         if (!callback) return promise;
         promise.then(result => callback(null, result)).catch(callback);
@@ -40,12 +41,28 @@ module.exports = {
 
     /** Lists governed runtime instances. */
     listInstances: function (request, callback) { return this.invoke('listInstances', request, callback); },
+    /** Starts a published process instance. */
+    startInstance: function (request, callback) { return this.invoke('startInstance', request, callback); },
     /** Reads one governed runtime instance. */
     getInstance: function (request, callback) { return this.invoke('getInstance', request, callback); },
+    /** Reads process instance detail with tasks and audit timeline. */
+    getInstanceDetail: function (request, callback) { return this.invoke('getInstanceDetail', request, callback); },
+    /** Cancels a governed runtime instance. */
+    cancelInstance: function (request, callback) { return this.invoke('cancelInstance', request, callback); },
     /** Lists governed human tasks. */
     listTasks: function (request, callback) { return this.invoke('listTasks', request, callback); },
     /** Reads one governed human task. */
     getTask: function (request, callback) { return this.invoke('getTask', request, callback); },
+    /** Claims a governed human task. */
+    claimTask: function (request, callback) { return this.invoke('claimTask', request, callback); },
+    /** Assigns a governed human task. */
+    assignTask: function (request, callback) { return this.invoke('assignTask', request, callback); },
+    /** Completes a governed human task and advances the instance. */
+    completeTask: function (request, callback) { return this.invoke('completeTask', request, callback); },
+    /** Cancels a governed human task. */
+    cancelTask: function (request, callback) { return this.invoke('cancelTask', request, callback); },
+    /** Lists Process-owned scheduled trigger metadata. */
+    listTriggers: function (request, callback) { return this.invoke('listTriggers', request, callback); },
     /** Lists bounded audit events for operators. */
     listAuditEvents: function (request, callback) { return this.invoke('listAuditEvents', request, callback); }
 };

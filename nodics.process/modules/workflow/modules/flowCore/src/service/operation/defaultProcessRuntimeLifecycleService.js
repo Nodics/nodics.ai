@@ -1,0 +1,519 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+'use strict';
+
+/**
+ * @module nodics.process/modules/workflow/modules/flowCore/src/service/operation/defaultProcessRuntimeLifecycleService
+ * @description Owns backend runtime lifecycle for starting published process definitions, generating human tasks, moving instances, and writing audit evidence.
+ * @layer service
+ * @owner flowCore
+ * @override Customer process overlays may override focused runtime methods for domain policy, assignment, SLA, tenant redaction, or execution providers without moving runtime truth into Axis.
+ */
+module.exports = {
+    /**
+     * Resolves tenant from the Nodics request context.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {string} Tenant code.
+     */
+    getTenant: function (request) {
+        return request && request.tenant || CONFIG.get('defaultTenant') || 'default';
+    },
+
+    /**
+     * Resolves the actor used for runtime audit events.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {string|undefined} Actor identifier.
+     */
+    getActor: function (request) {
+        let auth = request && request.authData || {};
+        return auth.loginId || auth.serviceId || auth.code || auth.userId;
+    },
+
+    /**
+     * Returns a request body/model without binding the service to HTTP.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Object} Body model.
+     */
+    bodyOf: function (request) {
+        return request && (request.runtimeOperation || request.model || request.body) || {};
+    },
+
+    /**
+     * Builds a generated-service request preserving tenant and auth data.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {Object} additions Generated-service request additions.
+     * @returns {Object} Generated-service request.
+     */
+    serviceRequest: function (request, additions) {
+        return Object.assign({
+            tenant: this.getTenant(request),
+            authData: request && request.authData,
+            options: { recursive: false }
+        }, additions || {});
+    },
+
+    /** @returns {Object} Generated definition service. */
+    definitionService: function () { return SERVICE.DefaultProcessDefinitionService; },
+    /** @returns {Object} Generated definition-version service. */
+    versionService: function () { return SERVICE.DefaultProcessDefinitionVersionService; },
+    /** @returns {Object} Generated instance service. */
+    instanceService: function () { return SERVICE.DefaultProcessInstanceService; },
+    /** @returns {Object} Generated task service. */
+    taskService: function () { return SERVICE.DefaultProcessTaskService; },
+    /** @returns {Object} Generated audit service. */
+    auditService: function () { return SERVICE.DefaultProcessAuditEventService; },
+    /** @returns {Object|undefined} Generated trigger service when the schema is available. */
+    triggerService: function () { return SERVICE.DefaultProcessTriggerService; },
+
+    /**
+     * Validates a stable runtime code.
+     *
+     * @param {*} value Candidate code.
+     * @returns {boolean} Whether the code is safe for runtime use.
+     */
+    isCode: function (value) {
+        return typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(value);
+    },
+
+    /**
+     * Throws when a process runtime code is invalid.
+     *
+     * @param {*} code Candidate code.
+     * @returns {string} Valid code.
+     * @throws {CLASSES.NodicsError} When the code is invalid.
+     */
+    assertCode: function (code) {
+        if (!this.isCode(code)) throw new CLASSES.NodicsError('ERR_PROCESS_00006', 'Process runtime code is invalid');
+        return code;
+    },
+
+    /**
+     * Generates a bounded runtime code when the caller did not provide one.
+     *
+     * @param {string} prefix Business-readable prefix.
+     * @returns {string} Runtime code.
+     */
+    runtimeCode: function (prefix) {
+        return String(prefix || 'process').slice(0, 48) + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+    },
+
+    /**
+     * Loads a process definition aggregate.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {string} definitionCode Definition code.
+     * @returns {Promise<Object>} Process definition.
+     */
+    requireDefinition: async function (request, definitionCode) {
+        let response = await this.definitionService().get(this.serviceRequest(request, {
+            query: { code: this.assertCode(definitionCode) },
+            searchOptions: { limit: 1 }
+        }));
+        let definition = response && response.result && response.result[0];
+        if (!definition) throw new CLASSES.NodicsError('ERR_PROCESS_00002', 'Process definition was not found');
+        return definition;
+    },
+
+    /**
+     * Loads an immutable published version.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {string} definitionCode Definition code.
+     * @param {number} version Version number.
+     * @returns {Promise<Object>} Published version.
+     */
+    requireVersion: async function (request, definitionCode, version) {
+        let response = await this.versionService().get(this.serviceRequest(request, {
+            query: { definitionCode: this.assertCode(definitionCode), version: Number(version) },
+            searchOptions: { limit: 1 }
+        }));
+        let processVersion = response && response.result && response.result[0];
+        if (!processVersion || processVersion.status !== 'PUBLISHED') {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00011', 'Process definition is not published for runtime start');
+        }
+        return processVersion;
+    },
+
+    /**
+     * Resolves the published version used by a runtime request.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {Object} body Runtime operation body.
+     * @returns {Promise<Object>} Published version.
+     */
+    resolveStartVersion: async function (request, body) {
+        let definitionCode = body.definitionCode || request.definitionCode;
+        let definition = await this.requireDefinition(request, definitionCode);
+        let version = Number(body.version || request.version || definition.currentVersion || 0);
+        if (definition.status !== 'PUBLISHED' || version < 1) {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00011', 'Process definition is not published for runtime start');
+        }
+        return this.requireVersion(request, definition.code, version);
+    },
+
+    /**
+     * Finds a node in a published process graph.
+     *
+     * @param {Object} graph Published graph.
+     * @param {string} nodeCode Node code.
+     * @returns {Object|undefined} Matching node.
+     */
+    findNode: function (graph, nodeCode) {
+        return (graph.nodes || []).find(node => node && node.code === nodeCode);
+    },
+
+    /**
+     * Finds the next transition target for a source node.
+     *
+     * @param {Object} graph Published graph.
+     * @param {string} sourceNodeCode Source node code.
+     * @returns {Object|undefined} Next target node.
+     */
+    nextNode: function (graph, sourceNodeCode) {
+        let transition = (graph.transitions || []).find(item => item && item.source === sourceNodeCode);
+        return transition ? this.findNode(graph, transition.target) : undefined;
+    },
+
+    /**
+     * Resolves the first executable node after START.
+     *
+     * @param {Object} graph Published graph.
+     * @returns {Object|undefined} First runtime node.
+     */
+    firstRuntimeNode: function (graph) {
+        let startNode = (graph.nodes || []).find(node => node && node.type === 'START');
+        return startNode ? this.nextNode(graph, startNode.code) : undefined;
+    },
+
+    /**
+     * Creates an audit event with bounded metadata.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {Object} model Audit model.
+     * @returns {Promise<Object>} Saved audit model.
+     */
+    audit: async function (request, model) {
+        let auditModel = Object.assign({
+            active: true,
+            actor: this.getActor(request),
+            outcome: 'success'
+        }, model || {});
+        let response = await this.auditService().save(this.serviceRequest(request, { model: auditModel }));
+        return response.result || response;
+    },
+
+    /**
+     * Creates an OPEN human task for the current instance node.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {Object} instance Process instance.
+     * @param {Object} node Task node.
+     * @param {Object} body Runtime request body.
+     * @returns {Promise<Object>} Saved task.
+     */
+    createTaskForNode: async function (request, instance, node, body) {
+        let taskModel = {
+            code: body.taskCode || this.runtimeCode(instance.code + '-' + node.code),
+            active: true,
+            name: node.name || node.code,
+            instanceCode: instance.code,
+            nodeCode: node.code,
+            assignee: body.assignee || node.assignee || (node.assignment && node.assignment.assignee),
+            status: 'OPEN',
+            dueAt: body.dueAt
+        };
+        let response = await this.taskService().save(this.serviceRequest(request, { model: taskModel }));
+        await this.audit(request, {
+            definitionCode: instance.definitionCode,
+            instanceCode: instance.code,
+            eventType: 'process.task.created',
+            metadata: { taskCode: taskModel.code, nodeCode: node.code, assignee: taskModel.assignee }
+        });
+        return response.result || response;
+    },
+
+    /**
+     * Moves an instance to the next backend-supported runtime node.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {Object} instance Process instance.
+     * @param {Object} version Published definition version.
+     * @param {Object} node Target node.
+     * @param {Object} body Runtime request body.
+     * @returns {Promise<Object>} Updated runtime summary.
+     */
+    enterNode: async function (request, instance, version, node, body) {
+        if (!node || node.type === 'END') {
+            let completedAt = new Date();
+            await this.instanceService().update(this.serviceRequest(request, {
+                query: { code: instance.code },
+                model: { $set: { status: 'COMPLETED', currentNode: node && node.code || instance.currentNode, completedAt: completedAt } }
+            }));
+            await this.audit(request, {
+                definitionCode: instance.definitionCode,
+                instanceCode: instance.code,
+                eventType: 'process.instance.completed',
+                metadata: { version: version.version, nodeCode: node && node.code }
+            });
+            return { instance: Object.assign({}, instance, { status: 'COMPLETED', currentNode: node && node.code || instance.currentNode, completedAt: completedAt }) };
+        }
+        if (node.type === 'TASK') {
+            await this.instanceService().update(this.serviceRequest(request, {
+                query: { code: instance.code },
+                model: { $set: { status: 'WAITING', currentNode: node.code } }
+            }));
+            let updatedInstance = Object.assign({}, instance, { status: 'WAITING', currentNode: node.code });
+            let task = await this.createTaskForNode(request, updatedInstance, node, body);
+            return { instance: updatedInstance, task: task };
+        }
+        return this.enterNode(request, instance, version, this.nextNode(version.graph || {}, node.code), body);
+    },
+
+    /**
+     * Starts a published process definition and creates the first task when needed.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Started instance and first task summary.
+     */
+    startInstance: async function (request) {
+        let body = this.bodyOf(request);
+        let version = await this.resolveStartVersion(request, body);
+        let instanceModel = {
+            code: body.instanceCode || this.runtimeCode(version.definitionCode),
+            active: true,
+            name: body.name || version.name || version.definitionCode,
+            definitionCode: version.definitionCode,
+            version: version.version,
+            status: 'RUNNING',
+            context: body.context || {},
+            currentNode: 'start',
+            startedAt: new Date()
+        };
+        let saved = await this.instanceService().save(this.serviceRequest(request, { model: instanceModel }));
+        let instance = saved.result || saved;
+        await this.audit(request, {
+            definitionCode: instance.definitionCode,
+            instanceCode: instance.code,
+            eventType: 'process.instance.started',
+            metadata: { version: instance.version }
+        });
+        let entered = await this.enterNode(request, instance, version, this.firstRuntimeNode(version.graph || {}), body);
+        return { code: 'SUC_PROCESS_00007', data: entered };
+    },
+
+    /**
+     * Loads a process task by code.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {string} taskCode Task code.
+     * @returns {Promise<Object>} Process task.
+     */
+    requireTask: async function (request, taskCode) {
+        let response = await this.taskService().get(this.serviceRequest(request, {
+            query: { code: this.assertCode(taskCode) },
+            searchOptions: { limit: 1 }
+        }));
+        let task = response && response.result && response.result[0];
+        if (!task) throw new CLASSES.NodicsError('ERR_PROCESS_00008', 'Process task was not found');
+        return task;
+    },
+
+    /**
+     * Loads a process instance by code.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {string} instanceCode Instance code.
+     * @returns {Promise<Object>} Process instance.
+     */
+    requireInstance: async function (request, instanceCode) {
+        let response = await this.instanceService().get(this.serviceRequest(request, {
+            query: { code: this.assertCode(instanceCode) },
+            searchOptions: { limit: 1 }
+        }));
+        let instance = response && response.result && response.result[0];
+        if (!instance) throw new CLASSES.NodicsError('ERR_PROCESS_00007', 'Process instance was not found');
+        return instance;
+    },
+
+    /**
+     * Claims an open task for the authenticated actor or provided assignee.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Claimed task summary.
+     */
+    claimTask: async function (request) {
+        let body = this.bodyOf(request);
+        let task = await this.requireTask(request, request.taskCode || body.taskCode);
+        if (task.status !== 'OPEN') throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Process task transition is not allowed');
+        let assignee = body.assignee || this.getActor(request);
+        await this.taskService().update(this.serviceRequest(request, {
+            query: { code: task.code, status: 'OPEN' },
+            model: { $set: { status: 'CLAIMED', assignee: assignee } }
+        }));
+        await this.audit(request, {
+            instanceCode: task.instanceCode,
+            eventType: 'process.task.claimed',
+            metadata: { taskCode: task.code, assignee: assignee }
+        });
+        return { code: 'SUC_PROCESS_00008', data: Object.assign({}, task, { status: 'CLAIMED', assignee: assignee }) };
+    },
+
+    /**
+     * Assigns or reassigns an open/claimed/escalated task.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Assigned task summary.
+     */
+    assignTask: async function (request) {
+        let body = this.bodyOf(request);
+        let task = await this.requireTask(request, request.taskCode || body.taskCode);
+        if (!['OPEN', 'CLAIMED', 'ESCALATED'].includes(task.status)) throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Process task transition is not allowed');
+        let assignee = body.assignee;
+        this.assertCode(assignee);
+        await this.taskService().update(this.serviceRequest(request, {
+            query: { code: task.code },
+            model: { $set: { assignee: assignee } }
+        }));
+        await this.audit(request, {
+            instanceCode: task.instanceCode,
+            eventType: 'process.task.assigned',
+            metadata: { taskCode: task.code, assignee: assignee }
+        });
+        return { code: 'SUC_PROCESS_00008', data: Object.assign({}, task, { assignee: assignee }) };
+    },
+
+    /**
+     * Completes a task and advances the owning process instance.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Completed task and next runtime state.
+     */
+    completeTask: async function (request) {
+        let body = this.bodyOf(request);
+        let task = await this.requireTask(request, request.taskCode || body.taskCode);
+        if (!['OPEN', 'CLAIMED', 'ESCALATED'].includes(task.status)) throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Process task transition is not allowed');
+        let instance = await this.requireInstance(request, task.instanceCode);
+        if (!['RUNNING', 'WAITING'].includes(instance.status)) throw new CLASSES.NodicsError('ERR_PROCESS_00013', 'Process instance transition is not allowed');
+        let version = await this.requireVersion(request, instance.definitionCode, instance.version);
+        let currentNode = this.findNode(version.graph || {}, task.nodeCode);
+        let nextNode = currentNode ? this.nextNode(version.graph || {}, currentNode.code) : undefined;
+        let completedAt = new Date();
+        await this.taskService().update(this.serviceRequest(request, {
+            query: { code: task.code },
+            model: { $set: { status: 'COMPLETED', decision: body.decision || {}, completedAt: completedAt, completedBy: this.getActor(request) } }
+        }));
+        await this.audit(request, {
+            definitionCode: instance.definitionCode,
+            instanceCode: instance.code,
+            eventType: 'process.task.completed',
+            metadata: { taskCode: task.code, nodeCode: task.nodeCode }
+        });
+        let nextState = await this.enterNode(request, instance, version, nextNode, body);
+        return { code: 'SUC_PROCESS_00008', data: Object.assign({ task: Object.assign({}, task, { status: 'COMPLETED', completedAt: completedAt }) }, nextState) };
+    },
+
+    /**
+     * Cancels a human task without cancelling the owning instance.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Cancelled task summary.
+     */
+    cancelTask: async function (request) {
+        let body = this.bodyOf(request);
+        let task = await this.requireTask(request, request.taskCode || body.taskCode);
+        if (['COMPLETED', 'CANCELLED'].includes(task.status)) throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Process task transition is not allowed');
+        await this.taskService().update(this.serviceRequest(request, {
+            query: { code: task.code },
+            model: { $set: { status: 'CANCELLED', cancellationReason: body.reason, cancelledAt: new Date(), cancelledBy: this.getActor(request) } }
+        }));
+        await this.audit(request, {
+            instanceCode: task.instanceCode,
+            eventType: 'process.task.cancelled',
+            metadata: { taskCode: task.code, reason: body.reason }
+        });
+        return { code: 'SUC_PROCESS_00008', data: Object.assign({}, task, { status: 'CANCELLED' }) };
+    },
+
+    /**
+     * Cancels a running or waiting process instance and any open tasks.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Cancelled instance summary.
+     */
+    cancelInstance: async function (request) {
+        let body = this.bodyOf(request);
+        let instance = await this.requireInstance(request, request.instanceCode || body.instanceCode);
+        if (!['CREATED', 'RUNNING', 'WAITING'].includes(instance.status)) throw new CLASSES.NodicsError('ERR_PROCESS_00013', 'Process instance transition is not allowed');
+        let cancelledAt = new Date();
+        await this.instanceService().update(this.serviceRequest(request, {
+            query: { code: instance.code },
+            model: { $set: { status: 'CANCELLED', completedAt: cancelledAt, cancellationReason: body.reason } }
+        }));
+        await this.taskService().update(this.serviceRequest(request, {
+            query: { instanceCode: instance.code, status: 'OPEN' },
+            model: { $set: { status: 'CANCELLED', cancelledAt: cancelledAt, cancellationReason: 'INSTANCE_CANCELLED' } },
+            options: { recursive: true }
+        }));
+        await this.audit(request, {
+            definitionCode: instance.definitionCode,
+            instanceCode: instance.code,
+            eventType: 'process.instance.cancelled',
+            metadata: { reason: body.reason }
+        });
+        return { code: 'SUC_PROCESS_00009', data: Object.assign({}, instance, { status: 'CANCELLED', completedAt: cancelledAt }) };
+    },
+
+    /**
+     * Lists Process-owned trigger metadata while preserving Cron ownership of actual jobs.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Trigger metadata list.
+     */
+    listTriggers: async function (request) {
+        if (!this.triggerService()) return { code: 'SUC_PROCESS_00010', data: [] };
+        let response = await this.triggerService().get(this.serviceRequest(request, {
+            query: request.query || {},
+            searchOptions: { limit: 100, sort: { code: 1 } }
+        }));
+        return { code: 'SUC_PROCESS_00010', data: response.result || [] };
+    },
+
+    /**
+     * Reads an instance together with tasks and audit timeline.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Aggregated runtime detail.
+     */
+    getInstanceDetail: async function (request) {
+        let instance = await this.requireInstance(request, request.instanceCode);
+        let tasks = await this.taskService().get(this.serviceRequest(request, {
+            query: { instanceCode: instance.code },
+            searchOptions: { limit: 100, sort: { createdAt: 1 } }
+        }));
+        let auditEvents = await this.auditService().get(this.serviceRequest(request, {
+            query: { instanceCode: instance.code },
+            searchOptions: { limit: 100, sort: { createdAt: 1 } }
+        }));
+        return {
+            code: 'SUC_PROCESS_00000',
+            data: {
+                instance: instance,
+                tasks: tasks.result || [],
+                auditEvents: auditEvents.result || []
+            }
+        };
+    }
+};

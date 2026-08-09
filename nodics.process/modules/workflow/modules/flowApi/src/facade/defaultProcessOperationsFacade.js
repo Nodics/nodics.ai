@@ -21,12 +21,28 @@
 module.exports = {
     /** Delegates runtime instance listing. */
     listInstances: function (request) { return SERVICE.DefaultProcessOperationsInspectionService.listInstances(request); },
+    /** Delegates published process instance start. */
+    startInstance: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.startInstance(request); },
     /** Delegates runtime instance read. */
     getInstance: function (request) { return SERVICE.DefaultProcessOperationsInspectionService.getInstance(request); },
+    /** Delegates runtime instance detail read. */
+    getInstanceDetail: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.getInstanceDetail(request); },
+    /** Delegates runtime instance cancellation. */
+    cancelInstance: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.cancelInstance(request); },
     /** Delegates human task listing. */
     listTasks: function (request) { return SERVICE.DefaultProcessOperationsInspectionService.listTasks(request); },
     /** Delegates human task read. */
     getTask: function (request) { return SERVICE.DefaultProcessOperationsInspectionService.getTask(request); },
+    /** Delegates human task claim. */
+    claimTask: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.claimTask(request); },
+    /** Delegates human task assignment. */
+    assignTask: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.assignTask(request); },
+    /** Delegates human task completion. */
+    completeTask: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.completeTask(request); },
+    /** Delegates human task cancellation. */
+    cancelTask: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.cancelTask(request); },
+    /** Delegates Process-owned trigger metadata listing. */
+    listTriggers: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.listTriggers(request); },
     /** Delegates audit event listing. */
     listAuditEvents: function (request) { return SERVICE.DefaultProcessOperationsInspectionService.listAuditEvents(request); }
 };

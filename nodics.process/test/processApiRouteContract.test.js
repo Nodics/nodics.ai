@@ -51,10 +51,18 @@ assert.strictEqual(flowApiPackage.nodics.runtime.router, true);
 });
 
 [
+    ['startInstance', 'POST', '/instances', 'process.definition.update'],
     ['listInstances', 'GET', '/instances', 'process.backoffice.view'],
     ['getInstance', 'GET', '/instances/:instanceCode', 'process.backoffice.view'],
+    ['getInstanceDetail', 'GET', '/instances/:instanceCode/detail', 'process.backoffice.view'],
+    ['cancelInstance', 'POST', '/instances/:instanceCode/cancel', 'process.definition.update'],
     ['listTasks', 'GET', '/tasks', 'process.backoffice.view'],
     ['getTask', 'GET', '/tasks/:taskCode', 'process.backoffice.view'],
+    ['claimTask', 'POST', '/tasks/:taskCode/claim', 'process.definition.update'],
+    ['assignTask', 'POST', '/tasks/:taskCode/assign', 'process.definition.update'],
+    ['completeTask', 'POST', '/tasks/:taskCode/complete', 'process.definition.update'],
+    ['cancelTask', 'POST', '/tasks/:taskCode/cancel', 'process.definition.update'],
+    ['listTriggers', 'GET', '/triggers', 'process.backoffice.view'],
     ['listAuditEvents', 'GET', '/audit-events', 'process.backoffice.view']
 ].forEach(([routeName, method, key, permission]) => {
     let route = processOperationRoutes[routeName];

@@ -172,6 +172,24 @@ module.exports = {
                 decision: { type: 'object', required: false, description: 'Completed decision evidence captured from the human task' }
             }
         },
+        processTrigger: {
+            super: 'base',
+            model: true,
+            service: { enabled: true },
+            cache: { enabled: false },
+            router: { enabled: false },
+            search: { enabled: true, idPropertyName: 'code' },
+            definition: {
+                definitionCode: { type: 'string', required: true, description: 'Process definition started by this scheduled trigger' },
+                version: { type: 'int', required: false, description: 'Optional pinned process version; empty means latest published version' },
+                triggerType: { type: 'string', required: true, default: 'CRON', enum: ['CRON', 'EVENT', 'MANUAL'], description: 'Trigger source type without transferring source-module ownership' },
+                ownerModule: { type: 'string', required: true, default: 'nodics.process', description: 'Module that owns this trigger metadata record' },
+                cronJobCode: { type: 'string', required: false, description: 'Optional nodics.cron job code consumed as schedule metadata' },
+                status: { type: 'string', required: true, default: 'DRAFT', enum: ['DRAFT', 'ACTIVE', 'PAUSED', 'ARCHIVED'], description: 'Trigger lifecycle state managed by Process metadata APIs' },
+                schedule: { type: 'object', required: false, description: 'Browser-safe schedule summary; authoritative cron execution stays in nodics.cron' },
+                lastObservedAt: { type: 'date', required: false, description: 'Last time this trigger relationship was observed or refreshed' }
+            }
+        },
         processAuditEvent: {
             super: 'super',
             model: true,

@@ -3,11 +3,11 @@
 `nodics.process` is the standard Nodics functional module group for governed
 business processes and workflows.
 
-It extends `nodics.core` and will package reusable process-definition,
-workflow-definition, task, approval, instance, retry, audit, and visual-design
-contracts. Axis may render process workspaces only from this module's
-BackOffice capability metadata; Axis must not become the workflow engine or
-workflow persistence authority.
+It extends `nodics.core` and packages reusable process-definition,
+workflow-definition, task, approval, instance, audit, runtime-lifecycle, and
+visual-design contracts. Axis may render process workspaces only from this
+module's BackOffice capability metadata and secured APIs; Axis must not become
+the workflow engine or workflow persistence authority.
 
 `nodics.process` is a module group. Runtime implementation is intentionally
 kept under child modules:
@@ -16,7 +16,8 @@ kept under child modules:
 - `modules/workflow/modules/flowSchema` owns process schemas and status
   definitions.
 - `modules/workflow/modules/flowCore` owns graph validation, definition
-  lifecycle, and future runtime execution services.
+  lifecycle, runtime instance lifecycle, task lifecycle, trigger metadata
+  inspection, and future execution providers.
 - `modules/workflow/modules/flowApi` owns secured process HTTP APIs.
 
 The existing `nbpm` capability in `nodics.core` remains a compatibility
@@ -33,6 +34,10 @@ and data compatibility.
   implement the commerce action itself.
 - `nodics.axis` owns the React renderer/editor surface only.
 - Runtime source must not be placed directly under `nodics.process/src`.
+- Backend-owned beginner documentation source lives under
+  `data/core/source/documentation`. Generated/importable documentation records
+  must also stay backend-owned when the Process documentation content-pack
+  scaffold is introduced.
 
 ## Verification
 

@@ -1,0 +1,32 @@
+{
+  "pack": "nodics.process",
+  "version": "0.1.0",
+  "contractVersion": 1,
+  "title": "Nodics Process",
+  "pages": [
+    {
+      "code": "overview",
+      "title": "Business Process and Automation Overview",
+      "route": "/docs/framework/process",
+      "section": "Process Fundamentals",
+      "sectionOrder": 10,
+      "order": 10,
+      "source": "pages/process-overview.md",
+      "evidence": "nodics.process/data/core/source/documentation/pages/process-overview.md",
+      "summary": "Understand why nodics.process exists, how it helps business users, developers, and operators, and where it fits with Core, Cron, Platform, Axis, and customer modules.",
+      "audience": ["business-user", "developer", "operator", "architect", "ai-tool"]
+    },
+    {
+      "code": "runtime-lifecycle",
+      "title": "Runtime Instance and Task Lifecycle",
+      "route": "/docs/framework/process/runtime-lifecycle",
+      "section": "Process Operations",
+      "sectionOrder": 20,
+      "order": 20,
+      "source": "pages/runtime-lifecycle.md",
+      "evidence": "nodics.process/data/core/source/documentation/pages/runtime-lifecycle.md",
+      "summary": "Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships.",
+      "audience": ["business-user", "administrator", "developer", "operator", "tester"]
+    }
+  ]
+}
