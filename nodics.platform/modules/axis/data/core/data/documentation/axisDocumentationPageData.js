@@ -239,6 +239,31 @@ module.exports = {
     "active": true
   },
   "record9": {
+    "code": "axisDocsPagepagedesigner",
+    "name": "Axis Page Designer",
+    "cmsSite": [
+      "axisDocumentationSite"
+    ],
+    "typeCode": "axisDocumentationArticlePageType",
+    "template": "axisDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "axisDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "axisDocsComponentpagedesigner",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record10": {
     "code": "axisDocsPagemodulehealth",
     "name": "Module Health",
     "cmsSite": [
@@ -263,7 +288,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record10": {
+  "record11": {
     "code": "axisDocsPageimportsexports",
     "name": "Imports and Exports Workspace",
     "cmsSite": [
@@ -288,7 +313,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record11": {
+  "record12": {
     "code": "axisDocsPagemediamanagement",
     "name": "Media Management Workspace",
     "cmsSite": [
@@ -313,7 +338,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record12": {
+  "record13": {
     "code": "axisDocsPageopenapireference",
     "name": "Swagger and OpenAPI Reference",
     "cmsSite": [
@@ -338,7 +363,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record13": {
+  "record14": {
     "code": "axisDocsPagefeaturedelivery",
     "name": "Axis Feature Delivery Checklist",
     "cmsSite": [
@@ -363,7 +388,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record14": {
+  "record15": {
     "code": "axisDocsPageimplementationcontract",
     "name": "Axis Implementation and Documentation Contract",
     "cmsSite": [

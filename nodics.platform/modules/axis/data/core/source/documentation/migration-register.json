@@ -19,8 +19,8 @@
       "canonicalSource": "data/core/source/documentation/pages/project-overview.md",
       "destinationRoute": "/docs/nodics-axis",
       "disposition": "migrated",
-      "sourceHash": "78d650cd10d471c68485a55b6099dc91b696c5998bd1a56828d244724d44ee4c",
-      "wordCount": 1941,
+      "sourceHash": "37d5605104222074258a8ed492247a5331c57045075c682f5f99b96ff6ca7db3",
+      "wordCount": 1959,
       "headings": [
         "Why Axis exists",
         "Reader mindset",
@@ -298,6 +298,40 @@
         "Compliance Management workspace",
         "Verification",
         "Common mistakes"
+      ]
+    },
+    {
+      "evidence": "data/core/source/documentation/pages/page-designer.md",
+      "evidenceStatus": "retired-after-verified-migration",
+      "evidenceHash": "818186788db137e5bb8af4847ca232befaf9894baf8748742cdf3fac1a379e75",
+      "evidenceWordCount": 1221,
+      "evidenceHeadings": [
+        "Why Page Designer exists",
+        "Catalog-first model",
+        "What Axis owns",
+        "Backend authority",
+        "Business-user flow",
+        "Developer guidance",
+        "DevOps and operations guidance",
+        "Common mistakes",
+        "Verification"
+      ],
+      "canonicalSource": "data/core/source/documentation/pages/page-designer.md",
+      "destinationRoute": "/docs/nodics-axis/page-designer",
+      "disposition": "migrated",
+      "sourceHash": "8a4e1150ea79a10388a88b24e89847f6ecf2135db3ceb305939ef7b90379fb70",
+      "wordCount": 1457,
+      "headings": [
+        "Why Page Designer exists",
+        "Catalog-first model",
+        "What Axis owns",
+        "Backend authority",
+        "Business-user flow",
+        "Developer guidance",
+        "Customize and extend safely",
+        "DevOps and operations guidance",
+        "Common mistakes",
+        "Verification"
       ]
     },
     {

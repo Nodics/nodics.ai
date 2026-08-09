@@ -27,6 +27,9 @@ module.exports = {
             },
             mediaManagement: {
                 enabled: true
+            },
+            cmsAuthoring: {
+                enabled: true
             }
         }
     },

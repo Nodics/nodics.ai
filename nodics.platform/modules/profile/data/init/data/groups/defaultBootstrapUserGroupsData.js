@@ -65,7 +65,7 @@ module.exports = {
     name: "contentUserGroup",
     active: true,
     parentGroups: ["employeeUserGroup"],
-    permissions: ["cms.backoffice.view"],
+    permissions: ["cms.backoffice.view", "cms.backoffice.manage"],
   },
   record5: {
     code: "contentCreatorUserGroup",
@@ -181,6 +181,7 @@ module.exports = {
       "profile.enterprise.search",
       "profile.enterprise.create",
       "cms.backoffice.view",
+      "cms.backoffice.manage",
       "cronjob.backoffice.view",
       "process.backoffice.view",
       "process.definition.read",

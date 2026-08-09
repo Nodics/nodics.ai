@@ -238,11 +238,14 @@ CMS-driven login/recovery/lock pages, idle screen locking, protected dashboard
 routing, logout, the CMS-driven Assistant workspace shell, typed Assistant HTTP
 contracts, authenticated resumable SSE transport, isolated Assistant
 presentation state, and the CMS-driven Schema Workbench browser with
-direct-module schema discovery, bounded record reads, and independent Address
-and Contact creation, relationship coordination, record detail, generated
-Update, and governed Delete. The Operations workspace includes Module Health
-with permission-filtered navigation, module summaries, on-demand registered
-node details, and governed refresh. Visual designers remain future slices.
+direct-module schema discovery, bounded record reads, relationship
+coordination, record detail, generated Update, and governed Delete. The
+Operations workspace includes Module Health with permission-filtered
+navigation, module summaries, on-demand registered node details, and governed
+refresh. The Content area now includes the first Page Designer foundation:
+a catalog-first, backend-governed composition workspace for sites, templates,
+dynamic slots, sections, components, media references, routes, navigation, and
+publish-readiness validation.
 
 ## Axis startup flow
 

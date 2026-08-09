@@ -29,9 +29,21 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   contracts. It must not introduce a parallel page model, template model,
   component-placement model, media-storage authority, renderer-code authority,
   or publication authority.
-- The designer sequence is Site, Content Catalog, Page Template, Slot
-  Definitions, Page, Components, Media References, Page Routes, Navigation
-  Nodes, and Publishing. Each step must persist through the owning backend
-  schema or operation.
+- The designer sequence is Content Catalog, Site, Page Template, dynamic Slot
+  Definitions, Page, Sections, Components, Media References, Page Routes,
+  Navigation Nodes, and Publishing. Each step must persist through the owning
+  backend schema or operation.
+- Designer implementations must support any number of template slots. Do not
+  hardcode header/main/footer or any other fixed slot model in CMS, Axis, or
+  tests unless that exact template declares those slots.
+- The secured CMS Designer Composition API may guide draft creation,
+  validation, section/component ordering, media association, route assignment,
+  navigation assignment, and publication readiness, but it must reuse
+  `catalog`, `cmsSite`, `cmsPageTemplate`, `cmsSlotDefinition`, `cmsPage`,
+  `cmsComponentDetail`, `cmsComponent`, `cmsComponentMedia`, `cmsPageRoute`,
+  `cmsNavigationNode`, and nPublish contracts rather than creating replacement
+  schemas.
 - Validate authoring model changes with
+  `node nodics.wcms/modules/cms/test/cmsDesignerCompositionContract.test.js`
+  and
   `node nodics.wcms/modules/cms/test/cmsWcmsAuthoringSchemaContract.test.js`.

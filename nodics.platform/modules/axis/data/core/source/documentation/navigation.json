@@ -113,6 +113,18 @@
       "audience": ["business-user", "administrator", "developer", "operator"]
     },
     {
+      "code": "page-designer",
+      "title": "Axis Page Designer",
+      "route": "/docs/nodics-axis/page-designer",
+      "section": "Axis Capabilities",
+      "sectionOrder": 30,
+      "order": 95,
+      "source": "pages/page-designer.md",
+      "evidence": "data/core/source/documentation/pages/page-designer.md",
+      "summary": "Use the governed catalog-first Designer flow for sites, templates, dynamic slots, sections, components, media, routes, navigation, and publish readiness.",
+      "audience": ["business-user", "designer", "developer", "operator"]
+    },
+    {
       "code": "module-health",
       "title": "Module Health",
       "route": "/docs/nodics-axis/module-health",

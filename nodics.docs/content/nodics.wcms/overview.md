@@ -41,12 +41,77 @@ or extend a frontend without losing the governed content source.
 - Publication state: the difference between authored content and content that
   is safe to deliver.
 
+## Catalog-first content model
+
+WCMS uses a catalog-first model. The Content Catalog is the governed content
+container. A Site is one delivery or authoring surface inside that content
+universe. Templates, slots, component types, renderer mappings, pages, routes,
+navigation, restrictions, media references, and publishing evidence all belong
+under that catalog-governed model.
+
+```mermaid
+flowchart TD
+  Catalog["Content Catalog"]
+  Site["Site"]
+  Template["Page Template"]
+  Page["Page"]
+  Slots["Template Slots: any number"]
+  Sections["Page Sections"]
+  Components["Component Instances"]
+  Media["Governed Media"]
+  Route["Page Route"]
+  Nav["Navigation Node"]
+
+  Catalog --> Site
+  Catalog --> Template
+  Site --> Page
+  Template --> Page
+  Page --> Slots
+  Slots --> Sections
+  Sections --> Components
+  Components --> Media
+  Page --> Route
+  Route --> Nav
+```
+
+The slot count is never fixed by Axis or by a generic framework assumption. A
+template can declare one slot, three slots, ten slots, or a specialized set of
+slots such as `navigation`, `article`, `relatedResources`, `hero`, `body`,
+`gallery`, `checkoutSummary`, or anything a module/project template needs.
+Designer behavior must read those slot definitions from CMS and validate
+against the backend contract.
+
+Conceptually, the hierarchy is:
+
+```text
+Content Catalog
+  ├── Sites
+  │   └── Pages
+  │       ├── Route
+  │       ├── Navigation Node
+  │       └── Template Usage
+  │           └── Slots
+  │               └── Sections
+  │                   └── Components
+  │                       └── Media References
+  └── Reusable definitions
+      ├── Page Templates
+      ├── Slot Definitions
+      ├── Component Types
+      └── Renderer Mappings
+```
+
+This matters for beginners because it explains why a page record alone is not
+enough. A page is only useful when it belongs to a Site, that Site belongs to a
+Content Catalog, the selected template declares slots, and the components fit
+those slot rules.
+
 ## How a page becomes visible
 
 ```mermaid
 flowchart TD
-  Catalog["Content catalog<br/>groups related content"]
-  Site["CMS site<br/>delivery surface"]
+  Catalog["Content catalog<br/>governs content universe"]
+  Site["CMS site<br/>delivery surface inside catalog"]
   Type["Page/component types<br/>renderer contract"]
   Template["Page template<br/>slot rules"]
   Component["CMS components<br/>structured properties"]
@@ -55,6 +120,7 @@ flowchart TD
   Axis["Axis renderer<br/>browser presentation"]
 
   Catalog --> Site
+  Catalog --> Template
   Type --> Template
   Template --> Page
   Component --> Page
@@ -85,6 +151,40 @@ still follows the backend ownership rule.
 
 Axis does not read markdown files from `nodics.docs`. Axis reads the backend
 delivery contract. That distinction is the heart of the modularisation work.
+
+## Axis Page Designer foundation
+
+Axis Page Designer is the business-friendly authoring surface over this same
+catalog-first model. It is intentionally not a pixel-perfect website builder.
+It is a guided composition workspace that helps a user select a Content
+Catalog, select or create a Site, select a template, understand the template's
+dynamic slot list, add page sections, add components, associate governed
+media, assign a route, assign navigation, and validate whether the draft is
+ready for publishing.
+
+```mermaid
+flowchart LR
+  User["Business user"] --> AxisDesigner["Axis Page Designer"]
+  AxisDesigner --> CmsAuthoring["CMS Designer Authoring APIs"]
+  CmsAuthoring --> Catalog["Catalog service"]
+  CmsAuthoring --> Site["CMS Site"]
+  CmsAuthoring --> Template["Page Template and Slots"]
+  CmsAuthoring --> Page["Page"]
+  CmsAuthoring --> Detail["Component Detail placements"]
+  CmsAuthoring --> Component["Components"]
+  CmsAuthoring --> Media["CMS media references and nMedia validation"]
+  CmsAuthoring --> Route["Page Route"]
+  CmsAuthoring --> Navigation["Navigation Node"]
+  CmsAuthoring --> Publish["nPublish readiness"]
+```
+
+The Designer may make authoring feel easier, but it must not introduce a
+parallel content model. It must save through CMS, Catalog, Media, and
+Publishing contracts. If a future customer wants a different page-design flow,
+they can override the Designer service methods or provide different backend
+templates, slot definitions, component type groups, and renderer mappings.
+They should not fork Axis to invent storage, route, media, or publishing
+authority in the browser.
 
 ## Required record chain
 

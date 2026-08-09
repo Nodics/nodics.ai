@@ -80,24 +80,58 @@ Axis may provide a Page Designer workspace for business users who do not want
 to start from low-level CMS tables. The designer is a guided composition tool,
 not a second CMS engine and not a browser-owned persistence model.
 
-The designer flow should help a user think in this order:
+The designer flow must be catalog-first:
 
-1. choose or create a Site;
-2. choose the Content Catalog scope;
+```mermaid
+flowchart TD
+  Catalog["Content Catalog"]
+  Site["Site"]
+  Template["Page Template"]
+  Page["Page"]
+  Slots["Template Slots: any number"]
+  Sections["Page Sections"]
+  Components["Component Instances"]
+  Media["Governed Media"]
+  Route["Page Route"]
+  Nav["Navigation Node"]
+
+  Catalog --> Site
+  Catalog --> Template
+  Site --> Page
+  Template --> Page
+  Page --> Slots
+  Slots --> Sections
+  Sections --> Components
+  Components --> Media
+  Page --> Route
+  Route --> Nav
+```
+
+It should help a user think in this order:
+
+1. choose or create the Content Catalog scope;
+2. choose or create a Site inside that catalog;
 3. select or create a Page Template;
-4. review allowed Slot Definitions;
+4. review dynamic Slot Definitions; there is no fixed slot count;
 5. create the Page;
-6. add text, structured properties, and reusable CMS Components;
+6. add sections, text, structured properties, and reusable CMS Components;
 7. associate media through `cmsComponentMedia` and media-owned `mediaCode` or
    `mediaSetCode`;
 8. create Page Routes and Navigation Nodes;
-9. submit or inspect Publishing records when publication is enabled.
+9. validate publish readiness and submit or inspect Publishing records when
+   publication is enabled.
 
 Axis can make this friendly with cards, checklists, intent forms, and preview
 panels. It must still save data only through backend-owned CMS, Catalog,
 Media, and Publishing contracts. Axis must not invent a separate site/page
 composition schema, store raw media paths, embed executable renderer code, or
 turn a visual canvas into the authority for templates and slots.
+
+The secured CMS Designer Composition API is the governed backend façade for
+this flow. It exposes model, validation, draft save, section, component, media,
+route, navigation, and publication-readiness operations under the
+`cmsAuthoring` API exposure category. Server or environment layers may disable
+that category for a delivery-only topology, but WCMS owns the reusable default.
 
 ## CMS Media Components
 

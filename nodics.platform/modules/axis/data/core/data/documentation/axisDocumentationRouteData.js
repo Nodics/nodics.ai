@@ -122,6 +122,18 @@ module.exports = {
     "active": true
   },
   "record9": {
+    "code": "axisDocsRoutepagedesigner",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/page-designer",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPagepagedesigner",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record10": {
     "code": "axisDocsRoutemodulehealth",
     "site": "axisDocumentationSite",
     "path": "/docs/nodics-axis/module-health",
@@ -133,7 +145,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record10": {
+  "record11": {
     "code": "axisDocsRouteimportsexports",
     "site": "axisDocumentationSite",
     "path": "/docs/nodics-axis/imports-exports",
@@ -145,7 +157,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record11": {
+  "record12": {
     "code": "axisDocsRoutemediamanagement",
     "site": "axisDocumentationSite",
     "path": "/docs/nodics-axis/media",
@@ -157,7 +169,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record12": {
+  "record13": {
     "code": "axisDocsRouteopenapireference",
     "site": "axisDocumentationSite",
     "path": "/docs/nodics-axis/openapi-reference",
@@ -169,7 +181,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record13": {
+  "record14": {
     "code": "axisDocsRoutefeaturedelivery",
     "site": "axisDocumentationSite",
     "path": "/docs/nodics-axis/feature-delivery",
@@ -181,7 +193,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record14": {
+  "record15": {
     "code": "axisDocsRouteimplementationcontract",
     "site": "axisDocumentationSite",
     "path": "/docs/nodics-axis/implementation-contract",
