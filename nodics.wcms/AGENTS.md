@@ -15,8 +15,11 @@
 - Keep Platform BackOffice as the control plane. WCMS owns content-management
   data, routes, pages, templates, slots, renderer mappings, delivery, and
   publication behavior.
-- Axis content baseline belongs here because it is CMS/WCMS data. Platform may
-  authenticate and bootstrap Axis, but Platform must not own CMS page/component
-  records.
+- Axis product documentation and Axis-specific backend-importable data belong
+  to the backend `axis` module under `nodics.platform`. WCMS remains the CMS
+  schema, persistence, validation, delivery, publication, and authoring
+  authority for those records after governed import.
+- Generic WCMS baseline content belongs here only when it describes or
+  bootstraps WCMS-owned capability rather than Axis product experience.
 - Do not hardcode project, server, tenant, or customer behavior into reusable
   WCMS modules. Use layered configuration and project overrides.

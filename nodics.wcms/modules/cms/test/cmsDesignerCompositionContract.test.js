@@ -147,6 +147,10 @@ const draft = {
     assert.strictEqual(model.result.rules.arbitrarySlots, true);
     assert.strictEqual(model.result.rules.frontendPersistence, false);
     assert(model.result.operations.includes('associateMedia'));
+    assert.strictEqual(model.result.defaults.draftDefaults.catalogCode, 'documentationContentCatalog',
+        'WCMS must publish designer draft defaults through the authoring model');
+    assert(model.result.defaults.componentKinds.some(kind => kind.typeCode === 'richTextComponentType'),
+        'WCMS must publish component-kind options instead of forcing Axis to own backend type codes');
 
     let validation = await service.validateDraftComposition({ tenant: 'tenant-a', authData: {}, body: draft });
     assert.strictEqual(validation.result.status, 'VALID_DRAFT');

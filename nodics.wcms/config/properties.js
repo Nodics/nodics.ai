@@ -33,6 +33,30 @@ module.exports = {
             }
         }
     },
+    cms: {
+        designerAuthoring: {
+            maximumReferenceLookupItems: 100,
+            requireNavigationForPublish: false,
+            draftDefaults: {
+                catalogCode: 'documentationContentCatalog',
+                siteCode: 'axisDocumentationSite',
+                templateCode: 'articleTemplate',
+                pageTypeCode: 'documentationPageType',
+                pageRenderer: 'axis.documentationPage',
+                routePath: '/docs/home',
+                slots: ['navigation', 'article', 'relatedResources']
+            },
+            componentKinds: [
+                { label: 'Hero banner', typeCode: 'heroBannerComponentType', renderer: 'axis.heroBanner' },
+                { label: 'Rich text', typeCode: 'richTextComponentType', renderer: 'axis.richText' },
+                { label: 'Image card', typeCode: 'imageCardComponentType', renderer: 'axis.imageCard' },
+                { label: 'Media gallery', typeCode: 'mediaGalleryComponentType', renderer: 'axis.mediaGallery' },
+                { label: 'Call to action', typeCode: 'callToActionComponentType', renderer: 'axis.callToAction' },
+                { label: 'Documentation article', typeCode: 'documentationArticleComponentType', renderer: 'axis.documentationArticle' },
+                { label: 'Dashboard widget', typeCode: 'dashboardWidgetComponentType', renderer: 'axis.dashboardWidget' }
+            ]
+        }
+    },
     data: {
         contentPacks: {
             enabled: true,

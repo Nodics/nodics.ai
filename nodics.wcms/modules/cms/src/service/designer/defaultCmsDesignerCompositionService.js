@@ -52,7 +52,7 @@ module.exports = {
                     frontendPersistence: false,
                     pixelPerfectRendering: false
                 },
-                defaults: this.authoringPolicy()
+                defaults: this.clientAuthoringDefaults()
             }
         };
     },
@@ -527,8 +527,37 @@ module.exports = {
         let configured = typeof CONFIG !== 'undefined' && CONFIG.get ? (CONFIG.get('cms') || {}).designerAuthoring : {};
         return Object.assign({
             maximumReferenceLookupItems: 100,
-            requireNavigationForPublish: false
+            requireNavigationForPublish: false,
+            draftDefaults: {
+                catalogCode: 'documentationContentCatalog',
+                siteCode: 'axisDocumentationSite',
+                templateCode: 'articleTemplate',
+                pageTypeCode: 'documentationPageType',
+                pageRenderer: 'axis.documentationPage',
+                routePath: '/docs/home',
+                slots: ['navigation', 'article', 'relatedResources']
+            },
+            componentKinds: [
+                { label: 'Hero banner', typeCode: 'heroBannerComponentType', renderer: 'axis.heroBanner' },
+                { label: 'Rich text', typeCode: 'richTextComponentType', renderer: 'axis.richText' },
+                { label: 'Image card', typeCode: 'imageCardComponentType', renderer: 'axis.imageCard' },
+                { label: 'Media gallery', typeCode: 'mediaGalleryComponentType', renderer: 'axis.mediaGallery' },
+                { label: 'Call to action', typeCode: 'callToActionComponentType', renderer: 'axis.callToAction' },
+                { label: 'Documentation article', typeCode: 'documentationArticleComponentType', renderer: 'axis.documentationArticle' },
+                { label: 'Dashboard widget', typeCode: 'dashboardWidgetComponentType', renderer: 'axis.dashboardWidget' }
+            ]
         }, configured || {});
+    },
+
+    /** Returns client-safe authoring defaults without exposing unrelated runtime policy. */
+    clientAuthoringDefaults: function () {
+        let policy = this.authoringPolicy();
+        return {
+            maximumReferenceLookupItems: policy.maximumReferenceLookupItems,
+            requireNavigationForPublish: policy.requireNavigationForPublish,
+            draftDefaults: policy.draftDefaults,
+            componentKinds: Array.isArray(policy.componentKinds) ? policy.componentKinds : []
+        };
     },
 
     /** Builds a stable component-detail code for page/component placement. */
