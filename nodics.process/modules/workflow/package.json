@@ -1,0 +1,19 @@
+{
+  "name": "workflow",
+  "index": "85.30.99",
+  "requiredModules": ["flowSchema", "flowCore", "flowApi"],
+  "description": "Workflow capability group that composes schema, core engine, and API modules for governed Nodics business processes.",
+  "main": "nodics.js",
+  "version": "0.0.1",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "dependencies": {},
+  "nodics": {
+    "kind": "capability",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": ["composition", "configuration", "test", "llm"],
+    "runtime": { "router": true, "publish": false, "web": false },
+    "displayName": "Workflow"
+  }
+}

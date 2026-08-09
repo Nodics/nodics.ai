@@ -14,6 +14,17 @@ rollback.
 
 ## Boundary
 
+- `nodics.process` is a functional module group, not the direct owner of
+  runtime source files. It must follow the same repository shape as the other
+  standard groups: group root for composition/contracts/defaults, child modules
+  under `modules/` for real runtime behavior.
+- The first process capability is `workflow`.
+  - `workflow` composes `flowSchema`, `flowCore`, and `flowApi`.
+  - `flowSchema` owns schema contracts and process status definitions.
+  - `flowCore` owns graph validation, lifecycle, versioning, and future
+    execution engine services.
+  - `flowApi` owns routers, controllers, facades, and secured API projection.
+- Direct `nodics.process/src` runtime code is forbidden.
 - Process owns reusable process definition, workflow definition, transition,
   task, approval, instance, audit, retry, compensation, visual-designer
   validation, and publication lifecycle.

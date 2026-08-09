@@ -11,7 +11,15 @@
 ## Module Work Rules
 
 - Treat `nodics.process` as the functional module group for business process
-  and workflow capability.
+  and workflow capability. It is a module group like `nodics.platform` and
+  `nodics.core`, not a direct runtime implementation module.
+- Runtime source must live under child modules. The first standard capability
+  is `modules/workflow`, which composes:
+  - `modules/workflow/modules/flowSchema` for schemas and status definitions;
+  - `modules/workflow/modules/flowCore` for validation, lifecycle, and engine
+    services;
+  - `modules/workflow/modules/flowApi` for routers, controllers, and facades.
+- Do not place runtime source directly under `nodics.process/src`.
 - Do not move domain business actions into this module. Domain modules own
   their commands, validation, side effects, and compensation; Process owns
   reusable orchestration, definition, state, task, audit, retry, and designer

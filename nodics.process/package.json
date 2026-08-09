@@ -5,7 +5,7 @@
   "private": true,
   "description": "Nodics business process and workflow functional module group.",
   "main": "nodics.js",
-  "requiredModules": [],
+  "requiredModules": ["workflow"],
   "nodics": {
     "kind": "group",
     "extends": ["nodics.core"],

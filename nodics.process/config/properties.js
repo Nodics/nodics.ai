@@ -17,6 +17,13 @@
  * @override Project, environment, server, tenant, or customer process overlays may enable APIs, designer providers, and process schemas without changing framework defaults.
  */
 module.exports = {
+    apiExposure: {
+        categories: {
+            processManagement: {
+                enabled: true
+            }
+        }
+    },
     backofficeCapabilities: {
         process: {
             enabled: true,
