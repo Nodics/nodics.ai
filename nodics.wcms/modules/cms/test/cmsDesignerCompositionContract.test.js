@@ -85,6 +85,9 @@ const records = {
         { code: 'mediaCardComponentType', kind: 'COMPONENT', active: true }
     ],
     groups: [{ code: 'documentationAuthoringGroup', componentTypeCodes: ['richTextComponentType', 'mediaCardComponentType'], active: true }],
+    mediaFolders: [{ code: 'cmsAssets', name: 'CMS Assets', status: 'ACTIVE', access: 'PUBLIC', businessPurpose: 'cms-asset', reusable: true }],
+    mediaFormats: [{ code: 'original', name: 'Original', status: 'ACTIVE' }],
+    navigationNodes: [{ code: 'nodicsDocumentation', name: 'Nodics Documentation', title: 'Nodics Documentation', site: 'axisDocumentationSite', nodeType: 'CONTAINER', status: 'ACTIVE' }],
     routes: []
 };
 const saved = [];
@@ -109,12 +112,14 @@ global.SERVICE = {
     DefaultCmsSlotDefinitionService: generatedService(records.slots),
     DefaultCmsTypeCodeService: generatedService(records.types),
     DefaultCmsComponentTypeGroupService: generatedService(records.groups),
+    DefaultMediaFolderService: generatedService(records.mediaFolders),
+    DefaultMediaFormatService: generatedService(records.mediaFormats),
+    DefaultCmsNavigationNodeService: generatedService(records.navigationNodes),
     DefaultCmsPageRouteService: generatedService(records.routes),
     DefaultCmsPageService: generatedService([]),
     DefaultCmsComponentService: generatedService([]),
     DefaultCmsComponentDetailService: generatedService([]),
     DefaultCmsComponentMediaService: generatedService([]),
-    DefaultCmsNavigationNodeService: generatedService([]),
     DefaultCmsDeliveryCacheInvalidationService: { invalidate: () => Promise.resolve(true) },
     DefaultMediaReferenceLookupService: {
         validateInternal: request => Promise.resolve({
@@ -164,6 +169,17 @@ const draft = {
     assert(model.result.metadata.componentTypeGroups.some(group =>
         group.code === 'documentationAuthoringGroup' && group.componentTypeCodes.includes('mediaCardComponentType')),
     'WCMS must expose live component type group references');
+    assert(model.result.metadata.mediaFolders.some(folder => folder.code === 'cmsAssets' &&
+        folder.businessPurpose === 'cms-asset'), 'WCMS must expose media folder references without making Axis own media policy');
+    assert(model.result.metadata.mediaFormats.some(format => format.code === 'original'),
+        'WCMS must expose media format references for authoring guidance');
+    assert(model.result.metadata.mediaTypes.includes('IMAGE'),
+        'WCMS must expose media type options for media association guidance');
+    assert(model.result.metadata.navigationNodes.some(node => node.code === 'nodicsDocumentation' &&
+        node.siteCode === 'axisDocumentationSite'), 'WCMS must expose navigation parent references');
+    assert.deepStrictEqual(model.result.metadata.publicationReadiness.requiredDraftParts,
+        ['catalogCode', 'siteCode', 'templateCode', 'page', 'sections', 'route'],
+    'WCMS must expose publication readiness hints in the authoring model');
 
     let validation = await service.validateDraftComposition({ tenant: 'tenant-a', authData: {}, body: draft });
     assert.strictEqual(validation.result.status, 'VALID_DRAFT');

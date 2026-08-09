@@ -497,6 +497,9 @@ module.exports = {
         let slots = await this.safeGet('DefaultCmsSlotDefinitionService', request, { active: true });
         let typeCodes = await this.safeGet('DefaultCmsTypeCodeService', request, { active: true });
         let groups = await this.safeGet('DefaultCmsComponentTypeGroupService', request, { active: true });
+        let mediaFolders = await this.safeOptionalGet('DefaultMediaFolderService', request, { status: 'ACTIVE' });
+        let mediaFormats = await this.safeOptionalGet('DefaultMediaFormatService', request, { status: 'ACTIVE' });
+        let navigationNodes = await this.safeOptionalGet('DefaultCmsNavigationNodeService', request, { status: 'ACTIVE' });
         return {
             contentCatalogs: catalogs.map(this.catalogReference.bind(this)),
             sites: sites.map(this.siteReference.bind(this)),
@@ -504,8 +507,23 @@ module.exports = {
             slotDefinitions: slots.map(this.slotReference.bind(this)),
             pageTypes: typeCodes.filter(item => item.kind === 'PAGE').map(this.typeReference.bind(this)),
             componentTypes: typeCodes.filter(item => item.kind === 'COMPONENT').map(this.typeReference.bind(this)),
-            componentTypeGroups: groups.map(this.componentTypeGroupReference.bind(this))
+            componentTypeGroups: groups.map(this.componentTypeGroupReference.bind(this)),
+            mediaFolders: mediaFolders.map(this.mediaFolderReference.bind(this)),
+            mediaFormats: mediaFormats.map(this.mediaFormatReference.bind(this)),
+            mediaTypes: ['IMAGE', 'VIDEO', 'DOCUMENT', 'FILE', 'MIXED'],
+            navigationNodes: navigationNodes.map(this.navigationReference.bind(this)),
+            publicationReadiness: {
+                requireNavigationForPublish: this.authoringPolicy().requireNavigationForPublish,
+                requiredDraftParts: ['catalogCode', 'siteCode', 'templateCode', 'page', 'sections', 'route']
+            }
         };
+    },
+
+    /** Performs a generated-service get when the service is present, otherwise returns no optional references. */
+    safeOptionalGet: async function (serviceName, request, query) {
+        let service = typeof SERVICE !== 'undefined' && SERVICE ? SERVICE[serviceName] : null;
+        if (!service || typeof service.get !== 'function') return [];
+        return this.safeGet(serviceName, request, query);
     },
 
     /** Returns a client-safe content catalog reference. */
@@ -564,6 +582,38 @@ module.exports = {
             code: item.code,
             name: item.name || item.displayName || item.code,
             componentTypeCodes: Array.isArray(item.componentTypeCodes) ? item.componentTypeCodes.map(this.codeOf.bind(this)).filter(Boolean) : []
+        };
+    },
+
+    /** Returns a client-safe media folder reference for authoring guidance. */
+    mediaFolderReference: function (item) {
+        return {
+            code: item.code,
+            name: item.name || item.code,
+            access: item.access,
+            businessPurpose: item.businessPurpose,
+            reusable: item.reusable === true
+        };
+    },
+
+    /** Returns a client-safe media format reference for authoring guidance. */
+    mediaFormatReference: function (item) {
+        return {
+            code: item.code,
+            name: item.name || item.code,
+            width: item.width,
+            height: item.height
+        };
+    },
+
+    /** Returns a client-safe navigation node reference for parent-node selection. */
+    navigationReference: function (item) {
+        return {
+            code: item.code,
+            name: item.title || item.name || item.code,
+            siteCode: this.codeOf(item.site || item.siteCode),
+            parentCode: this.codeOf(item.parent || item.parentCode),
+            nodeType: item.nodeType || 'PAGE'
         };
     },
 

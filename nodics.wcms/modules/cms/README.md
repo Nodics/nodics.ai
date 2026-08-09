@@ -136,9 +136,17 @@ that category for a delivery-only topology, but WCMS owns the reusable default.
 The authoring model must return more than static labels. It must publish the
 client-safe records that a business designer needs to make correct choices:
 content catalogs, sites, page templates, slot definitions, page types,
-component types, and component type groups. Axis consumes this metadata to
-render dropdowns and helper text; it does not own the data, and a reference
-customer project may only verify that the running stack can observe it.
+component types, component type groups, media folders, media formats, media
+types, navigation parents, and publication-readiness hints. Axis consumes this
+metadata to render dropdowns, chips, helper text, and validation evidence; it
+does not own the data, and a reference customer project may only verify that
+the running stack can observe it.
+
+The experience should be user friendly by default. WCMS should provide enough
+metadata for Axis to auto-fill a recommended path, filter dependent choices,
+and keep optional media/navigation details as guidance instead of forcing a
+business user to complete every low-level field. Save should remain disabled
+until WCMS validates the exact draft the user is about to save.
 
 This distinction is important during testing. The CMS module owns the contract
 test that proves the metadata is complete. Axis owns UI parsing and rendering

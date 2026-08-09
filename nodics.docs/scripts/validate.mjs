@@ -1,6 +1,7 @@
 import { access, readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { dirname, resolve, sep } from 'node:path';
+import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -78,6 +79,38 @@ if (!Array.isArray(catalogue.documents) || catalogue.documents.length === 0) {
 
 const ids = new Set();
 const identity = /^[A-Za-z][A-Za-z0-9._-]{0,127}$/;
+
+async function loadGeneratedRecords(relativePath) {
+  const moduleObject = { exports: {} };
+  const source = await readFile(resolve(root, relativePath), 'utf8');
+  vm.runInNewContext(source, { module: moduleObject, exports: moduleObject.exports }, {
+    filename: relativePath,
+    timeout: 1000,
+  });
+  return Object.values(moduleObject.exports);
+}
+
+const siteRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationSiteData.js');
+const pageRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationPageData.js');
+const routeRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationRouteData.js');
+const siteCodes = new Set(siteRecords.map((site) => site.code));
+for (const site of siteRecords) {
+  if (site.catalog !== 'documentationContentCatalog') {
+    throw new Error(`Framework documentation site must use documentationContentCatalog: ${site.code}`);
+  }
+}
+for (const page of pageRecords) {
+  const pageSites = Array.isArray(page.cmsSite) ? page.cmsSite : [];
+  if (pageSites.length === 0 || pageSites.some((siteCode) => !siteCodes.has(siteCode))) {
+    throw new Error(`Framework documentation page has invalid CMS site ownership: ${page.code}`);
+  }
+}
+for (const route of routeRecords) {
+  if (!siteCodes.has(route.site)) {
+    throw new Error(`Framework documentation route has invalid CMS site ownership: ${route.code}`);
+  }
+}
+
 for (const document of catalogue.documents) {
   if (!identity.test(document.id || '') || ids.has(document.id)) {
     throw new Error(`Invalid or duplicate document id: ${document.id}`);

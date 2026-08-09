@@ -123,6 +123,41 @@ const generatedComponents = await readFile(
   resolve(root, 'data/core/data/documentation/axisDocumentationComponentData.js'),
   'utf8',
 );
+const siteRecords = Object.values(
+  await import(resolve(root, 'data/core/data/documentation/axisDocumentationSiteData.js')),
+).flatMap((moduleValue) =>
+  moduleValue && typeof moduleValue === 'object' ? Object.values(moduleValue) : [],
+);
+const pageRecords = Object.values(
+  await import(resolve(root, 'data/core/data/documentation/axisDocumentationPageData.js')),
+).flatMap((moduleValue) =>
+  moduleValue && typeof moduleValue === 'object' ? Object.values(moduleValue) : [],
+);
+const routeRecords = Object.values(
+  await import(resolve(root, 'data/core/data/documentation/axisDocumentationRouteData.js')),
+).flatMap((moduleValue) =>
+  moduleValue && typeof moduleValue === 'object' ? Object.values(moduleValue) : [],
+);
+const siteCodes = new Set(siteRecords.map((site) => site.code));
+for (const site of siteRecords) {
+  assert(
+    site.catalog === 'documentationContentCatalog',
+    `Axis documentation site must use documentationContentCatalog: ${site.code}`,
+  );
+}
+for (const page of pageRecords) {
+  const pageSites = Array.isArray(page.cmsSite) ? page.cmsSite : [];
+  assert(
+    pageSites.length > 0 && pageSites.every((siteCode) => siteCodes.has(siteCode)),
+    `Axis documentation page has invalid CMS site ownership: ${page.code}`,
+  );
+}
+for (const route of routeRecords) {
+  assert(
+    siteCodes.has(route.site),
+    `Axis documentation route has invalid CMS site ownership: ${route.code}`,
+  );
+}
 assert(
   generatedComponents.includes("repository: 'nodics.platform'") ||
     generatedComponents.includes('"repository": "nodics.platform"'),

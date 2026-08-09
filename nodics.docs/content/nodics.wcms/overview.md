@@ -189,10 +189,31 @@ authority in the browser.
 The first endpoint a Page Designer should call is the WCMS-owned Designer
 authoring model. That model tells Axis which records are currently available:
 content catalogs, sites, page templates, slot definitions, page types,
-component types, and component type groups. The browser can turn those records
-into dropdowns and helper text, but the records still come from backend-owned
-Catalog and CMS services. This protects business users from typing magic
-strings and protects the framework from frontend-owned persistence.
+component types, component type groups, media folders, media formats, media
+types, navigation parents, and publishing-readiness hints. The browser can
+turn those records into dropdowns, chips, and helper text, but the records
+still come from backend-owned Catalog, CMS, Media, Navigation, and Publishing
+services. This protects business users from typing magic strings and protects
+the framework from frontend-owned persistence.
+
+The user journey should stay soft. A business user should not be forced to
+understand every schema before creating a page. The recommended Designer flow
+is:
+
+1. load WCMS defaults and show one recommended starting path;
+2. let the user change the catalog, site, template, page code, route, slots,
+   and primary component only when needed;
+3. auto-filter dependent choices, such as sites by catalog and slots by
+   template;
+4. show media and navigation information as helpful hints, not as mandatory
+   noise;
+5. validate the draft and show backend evidence in a readable panel;
+6. unlock Save only for the exact draft that WCMS validated.
+
+This makes the screen feel like a guided assistant rather than a raw database
+editor. Advanced users can still open the owning workspaces for catalogs,
+sites, templates, components, media, routes, and navigation when they need
+full control.
 
 Ownership also controls how we write tests. CMS tests prove the authoring
 model contract. Axis tests prove that the frontend can parse and render the
