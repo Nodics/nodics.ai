@@ -57,6 +57,12 @@ module.exports = {
                 key: '/definitions/:definitionCode/draft/publish', method: 'POST', controller: 'DefaultProcessDefinitionController', operation: 'publishDraft',
                 help: { requestType: 'secured', message: 'Publish a valid draft process definition as an immutable version', method: 'POST', url: 'http://host:port/nodics/process/v0/definitions/:definitionCode/draft/publish' }
             },
+            prepareNextDraft: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup'],
+                permission: 'process.definition.update', apiExposure: 'processManagement',
+                key: '/definitions/:definitionCode/draft/prepare', method: 'POST', controller: 'DefaultProcessDefinitionController', operation: 'prepareNextDraft',
+                help: { requestType: 'secured', message: 'Prepare the next editable draft from the latest published process version', method: 'POST', url: 'http://host:port/nodics/process/v0/definitions/:definitionCode/draft/prepare' }
+            },
             deleteOrArchive: {
                 secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup'],
                 permission: 'process.definition.delete', apiExposure: 'processManagement',

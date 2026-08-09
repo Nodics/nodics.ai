@@ -49,6 +49,8 @@ module.exports = {
     validateDraft: function (request, callback) { return this.invoke('validateDraft', request, callback); },
     /** Publishes a valid draft process definition. */
     publishDraft: function (request, callback) { return this.invoke('publishDraft', request, callback); },
+    /** Prepares the next editable draft from the latest published version. */
+    prepareNextDraft: function (request, callback) { return this.invoke('prepareNextDraft', request, callback); },
     /** Deletes a draft or archives a published process definition. */
     deleteOrArchive: function (request, callback) { return this.invoke('deleteOrArchive', request, callback); },
     /** Lists published versions for one definition. */

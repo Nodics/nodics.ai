@@ -138,6 +138,24 @@ module.exports = {
     },
 
     /**
+     * Loads the latest immutable published version for one definition.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {Object} definition Process definition aggregate.
+     * @returns {Promise<Object>} Latest immutable version.
+     * @throws {CLASSES.NodicsError} When no published version exists.
+     */
+    requireLatestVersion: async function (request, definition) {
+        let response = await this.versionService().get(this.serviceRequest(request, {
+            query: { definitionCode: definition.code, version: Number(definition.currentVersion || 0) },
+            searchOptions: { limit: 1 }
+        }));
+        let version = response && response.result && response.result[0];
+        if (!version) throw new CLASSES.NodicsError('ERR_PROCESS_00002', 'Process definition version was not found');
+        return version;
+    },
+
+    /**
      * Returns a stable checksum for an immutable published graph.
      *
      * @param {Object} definition Process definition.
@@ -273,6 +291,43 @@ module.exports = {
     },
 
     /**
+     * Prepares the next editable draft from the latest immutable published version.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Prepared draft summary.
+     */
+    prepareNextDraft: async function (request) {
+        let definition = await this.requireDefinition(request, request.definitionCode);
+        if (definition.status === 'DRAFT') {
+            if (Number(definition.currentVersion || 0) > 0) {
+                return { code: 'SUC_PROCESS_00006', data: { code: definition.code, draftRevision: definition.draftRevision, currentVersion: definition.currentVersion, status: 'DRAFT' } };
+            }
+            throw new CLASSES.NodicsError('ERR_PROCESS_00009', 'Only published process definitions can prepare a next draft');
+        }
+        if (definition.status !== 'PUBLISHED') throw new CLASSES.NodicsError('ERR_PROCESS_00009', 'Only published process definitions can prepare a next draft');
+        let latestVersion = await this.requireLatestVersion(request, definition);
+        let draftRevision = Number(definition.draftRevision || 1) + 1;
+        let validation = SERVICE.DefaultProcessGraphValidationService.assertValidGraph(latestVersion.graph);
+        await this.definitionService().update(this.serviceRequest(request, {
+            query: { code: definition.code, status: 'PUBLISHED' },
+            model: {
+                $set: {
+                    active: true,
+                    status: 'DRAFT',
+                    draftRevision: draftRevision,
+                    graph: latestVersion.graph,
+                    designer: latestVersion.designer,
+                    validation: validation,
+                    preparedFromVersion: latestVersion.version,
+                    preparedBy: this.getActor(request),
+                    preparedAt: new Date()
+                }
+            }
+        }));
+        return { code: 'SUC_PROCESS_00006', data: { code: definition.code, draftRevision: draftRevision, currentVersion: definition.currentVersion, preparedFromVersion: latestVersion.version, status: 'DRAFT' } };
+    },
+
+    /**
      * Deletes a draft definition or archives a published definition without losing audit evidence.
      *
      * @param {Object} request Nodics request context.
@@ -281,6 +336,24 @@ module.exports = {
     deleteOrArchive: async function (request) {
         let definition = await this.requireDefinition(request, request.definitionCode);
         if (definition.status === 'DRAFT') {
+            if (Number(definition.currentVersion || 0) > 0) {
+                let latestVersion = await this.requireLatestVersion(request, definition);
+                await this.definitionService().update(this.serviceRequest(request, {
+                    query: { code: definition.code, status: 'DRAFT' },
+                    model: {
+                        $set: {
+                            active: true,
+                            status: 'PUBLISHED',
+                            graph: latestVersion.graph,
+                            designer: latestVersion.designer,
+                            validation: SERVICE.DefaultProcessGraphValidationService.validateGraph(latestVersion.graph),
+                            publishedAt: latestVersion.publishedAt,
+                            draftDiscardedAt: new Date()
+                        }
+                    }
+                }));
+                return { code: 'SUC_PROCESS_00005', data: { code: definition.code, status: 'DRAFT_DISCARDED', currentVersion: definition.currentVersion } };
+            }
             await this.definitionService().remove(this.serviceRequest(request, { query: { code: definition.code, status: 'DRAFT' } }));
             return { code: 'SUC_PROCESS_00005', data: { code: definition.code, status: 'DELETED_DRAFT' } };
         }

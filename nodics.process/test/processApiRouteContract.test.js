@@ -35,6 +35,7 @@ assert.strictEqual(flowApiPackage.nodics.runtime.router, true);
     ['updateDraft', 'PATCH', '/definitions/:definitionCode/draft', 'process.definition.update'],
     ['validateDraft', 'POST', '/definitions/:definitionCode/draft/validate', 'process.definition.validate'],
     ['publishDraft', 'POST', '/definitions/:definitionCode/draft/publish', 'process.definition.publish'],
+    ['prepareNextDraft', 'POST', '/definitions/:definitionCode/draft/prepare', 'process.definition.update'],
     ['deleteOrArchive', 'DELETE', '/definitions/:definitionCode', 'process.definition.delete'],
     ['listVersions', 'GET', '/definitions/:definitionCode/versions', 'process.definition.read']
 ].forEach(([routeName, method, key, permission]) => {

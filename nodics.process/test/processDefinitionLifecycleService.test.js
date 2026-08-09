@@ -146,17 +146,67 @@ const validGraph = Object.freeze({
     assert.strictEqual(versions.length, 1);
     assert.strictEqual(versions[0].publishedBy, 'publisher');
     assert(versions[0].checksum);
+    let versionOneChecksum = versions[0].checksum;
 
     await assert.rejects(
         () => lifecycleService.updateDraft({ tenant: 'default', definitionCode: 'contentApproval', processDefinition: { description: 'not allowed' } }),
         error => error.code === 'ERR_PROCESS_00005',
     );
 
+    let listedVersions = await lifecycleService.listVersions({ tenant: 'default', definitionCode: 'contentApproval' });
+    assert.strictEqual(listedVersions.code, 'SUC_PROCESS_00000');
+    assert.strictEqual(listedVersions.data.length, 1);
+    assert.strictEqual(listedVersions.data[0].checksum, versionOneChecksum);
+
+    let prepared = await lifecycleService.prepareNextDraft({
+        tenant: 'default',
+        authData: { loginId: 'editor' },
+        definitionCode: 'contentApproval'
+    });
+    assert.strictEqual(prepared.code, 'SUC_PROCESS_00006');
+    assert.strictEqual(prepared.data.currentVersion, 1);
+    assert.strictEqual(prepared.data.preparedFromVersion, 1);
+    assert.strictEqual(definitions[0].status, 'DRAFT');
+    assert.strictEqual(definitions[0].preparedBy, 'editor');
+    assert.strictEqual(versions[0].checksum, versionOneChecksum, 'published version checksum must remain immutable while next draft is edited');
+
+    let nextDraftUpdate = await lifecycleService.updateDraft({
+        tenant: 'default',
+        definitionCode: 'contentApproval',
+        processDefinition: {
+            description: 'Version two draft',
+            graph: clone(validGraph)
+        }
+    });
+    assert.strictEqual(nextDraftUpdate.code, 'SUC_PROCESS_00002');
+    assert.strictEqual(definitions[0].description, 'Version two draft');
+    assert.strictEqual(versions[0].checksum, versionOneChecksum, 'editing next draft must not mutate version one');
+
+    let publishedV2 = await lifecycleService.publishDraft({
+        tenant: 'default',
+        authData: { loginId: 'publisher2' },
+        definitionCode: 'contentApproval'
+    });
+    assert.strictEqual(publishedV2.data.version, 2);
+    assert.strictEqual(definitions[0].status, 'PUBLISHED');
+    assert.strictEqual(versions.length, 2);
+    assert.strictEqual(versions[0].checksum, versionOneChecksum);
+    assert.strictEqual(versions[1].version, 2);
+
+    await lifecycleService.prepareNextDraft({ tenant: 'default', definitionCode: 'contentApproval' });
+    assert.strictEqual(definitions[0].status, 'DRAFT');
+    let discardedNextDraft = await lifecycleService.deleteOrArchive({ tenant: 'default', definitionCode: 'contentApproval' });
+    assert.strictEqual(discardedNextDraft.data.status, 'DRAFT_DISCARDED');
+    assert.strictEqual(definitions[0].status, 'PUBLISHED');
+    assert.strictEqual(definitions[0].currentVersion, 2);
+    assert.strictEqual(versions.length, 2, 'discarding a next draft must not remove published versions');
+
     let archived = await lifecycleService.deleteOrArchive({ tenant: 'default', definitionCode: 'contentApproval' });
     assert.strictEqual(archived.code, 'SUC_PROCESS_00005');
     assert.strictEqual(archived.data.status, 'ARCHIVED');
     assert.strictEqual(definitions[0].active, false);
     assert.strictEqual(versions[0].status, 'ARCHIVED');
+    assert.strictEqual(versions[1].status, 'ARCHIVED');
 
     await lifecycleService.createDefinition({
         tenant: 'default',

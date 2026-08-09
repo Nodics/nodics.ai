@@ -31,6 +31,8 @@ module.exports = {
     validateDraft: function (request) { return SERVICE.DefaultProcessDefinitionLifecycleService.validateDraft(request); },
     /** Delegates draft publication. */
     publishDraft: function (request) { return SERVICE.DefaultProcessDefinitionLifecycleService.publishDraft(request); },
+    /** Delegates next-draft preparation from latest published version. */
+    prepareNextDraft: function (request) { return SERVICE.DefaultProcessDefinitionLifecycleService.prepareNextDraft(request); },
     /** Delegates draft delete or published archive. */
     deleteOrArchive: function (request) { return SERVICE.DefaultProcessDefinitionLifecycleService.deleteOrArchive(request); },
     /** Delegates version listing. */
