@@ -100,6 +100,17 @@ uses the Cron-owned generated `cronJob` schema route, and lifecycle buttons call
 Cron-owned command routes. Axis must not create an alternate scheduler state,
 calculate job ownership, or execute job handlers in the browser.
 
+Axis may apply a conservative button policy to reduce operator mistakes. For
+example, an inactive job should not show `run` or `start` as immediately
+available, a running job should make `stop` and `pause` visible, and a paused
+job should make `resume` visible. That policy is only presentation guidance.
+Cron remains the final authority and must validate every command server-side.
+
+When a Cron job declares `jobDetail.processTrigger`, Cron may start a governed
+Process trigger through Process APIs. The Cron definition still owns schedule
+and execution timing. Process owns the trigger relationship, started instance,
+task creation, and audit timeline.
+
 ## Resilience And Recovery
 
 - Graceful drain rejects new scheduler acquisition and stops process-owned
@@ -150,12 +161,17 @@ sensitive business payloads.
 
 ## Verification And Release Evidence
 
-Run `npm run test:suite -- --suite=cronjob`. Every real job also needs positive, invalid
-definition, unauthorized, cross-tenant, schedule-boundary, manual-run,
-duplicate/overlap, timeout, retry, partial-failure, restart, drain, node-loss,
-node-return, downstream-recovery, idempotency, reconciliation, integration, and
-regression tests. Multi-node and external-provider claims require guarded live
-topology tests in the deployment environment.
+Run `npm run test:suite -- --suite=cronjob`. For the modular reference stack,
+also run `npm run acceptance:local:fresh` from the customer reference project
+when Cron permissions, Process handoff, registry lifecycle, or Axis controls
+change.
+
+Every real job also needs positive, invalid definition, unauthorized,
+cross-tenant, schedule-boundary, manual-run, duplicate/overlap, timeout, retry,
+partial-failure, restart, drain, node-loss, node-return, downstream-recovery,
+idempotency, reconciliation, integration, and regression tests. Multi-node and
+external-provider claims require guarded live topology tests in the deployment
+environment.
 
 ## Continue
 

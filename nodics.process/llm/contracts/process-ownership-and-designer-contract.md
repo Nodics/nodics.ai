@@ -51,6 +51,13 @@ Axis must not execute the graph locally and must not persist designer data
 directly. Layout metadata can be captured as draft presentation metadata, but
 the executable workflow definition is always backend-owned.
 
+The first Axis designer can be a simple card/canvas editor. Rich drag/drop
+libraries are optional presentation upgrades, not architecture foundations. A
+library such as React Flow / xyflow may be adopted after the save, validate,
+publish, and runtime evidence contracts are stable. BPMN interoperability
+should be an adapter layer, not the default authority for Nodics workflow
+semantics.
+
 ## Where code belongs
 
 | Change | Correct location |
@@ -70,7 +77,13 @@ the executable workflow definition is always backend-owned.
 - Process routes must be secured and mapped to explicit permissions.
 - Trigger lifecycle must validate status, missing definitions, missing triggers,
   and archived-trigger mutation attempts.
+- Axis designer must let a user change draft graph JSON only through Process
+  APIs, then refresh local state without requiring a browser page reload.
+- Cron controls shown inside the Process and Automation experience must call
+  Cron-owned routes and must remain subject to `cronjob.lifecycle.manage`.
 - Documentation for Process must be backend-owned by `nodics.process` and
   imported through WCMS content packs.
 - Fresh bootstrap acceptance must verify Process APIs, Axis Process routes,
-  Process documentation import, and Process/Cron observed module composition.
+  Process documentation import, Process/Cron observed module composition,
+  Cron-to-Process trigger handoff, OpenAPI module metadata, and registry
+  lifecycle.

@@ -253,7 +253,7 @@ module.exports = {
             "ai-tool"
           ],
           "summary": "Describe the backend-owned graph contract, Axis editor projection, and validation workflow for the visual designer.",
-          "searchText": "Visual Workflow Designer Contract Describe the backend-owned graph contract, Axis editor projection, and validation workflow for the visual designer. # Visual Workflow Designer Contract\n\nThe visual workflow designer lets a business user or developer edit a process\ngraph through Axis. The important contract is that Axis is an editor, not the\nruntime authority.\n\n## Ownership model\n\n```mermaid\nsequenceDiagram\n  participant User as Business user\n  participant Axis as Axis designer\n  participant API as Process API\n  participant Validator as Graph validator\n  participant Store as Process schemas\n\n  User->>Axis: Move nodes and connect steps\n  Axis->>API: Save draft graph\n  API->>Store: Persist draft definition\n  User->>Axis: Validate\n  Axis->>API: Validate draft\n  API->>Validator: Check graph contract\n  Validator-->>API: valid or diagnostics\n  API-->>Axis: Backend-owned result\n  User->>Axis: Publish\n  Axis->>API: Publish draft\n  API->>Store: Create immutable version\n```\n\nAxis can display nodes, edges, positions, labels, and selection state. The\nbackend validates whether the graph is executable.\n\n## MVP graph contract\n\nThe first designer contract supports:\n\n- one `START` node;\n- one or more `TASK` nodes;\n- one or more `END` nodes;\n- transitions with stable codes, source, and target;\n- optional designer metadata for browser positions.\n\n```json\n{\n  \"nodes\": [\n    { \"code\": \"start\", \"type\": \"START\", \"name\": \"Start\" },\n    { \"code\": \"businessReview\", \"type\": \"TASK\", \"name\": \"Business review\" },\n    { \"code\": \"end\", \"type\": \"END\", \"name\": \"End\" }\n  ],\n  \"transitions\": [\n    { \"code\": \"start_to_review\", \"source\": \"start\", \"target\": \"businessReview\" },\n    { \"code\": \"review_to_end\", \"source\": \"businessReview\", \"target\": \"end\" }\n  ]\n}\n```\n\n## What the browser may do\n\nAxis may:\n\n- render a node palette;\n- show a canvas preview;\n- let the user select nodes;\n- collect labels and basic properties;\n- send draft graph data to Process APIs;\n- show backend validation diagnostics.\n\nAxis must not:\n\n- execute process logic;\n- calculate runtime state;\n- bypass backend validation;\n- store workflow definitions in browser storage as authority;\n- create a parallel workflow registry.\n\n## Designer acceptance\n\nThe designer foundation is healthy when:\n\n1. A user can see START, TASK, and END nodes.\n2. A user can inspect selected node details.\n3. Saving calls the Process draft API.\n4. Validation calls the Process graph validator.\n5. Publishing remains a separate backend-owned action.\n6. The same graph can be verified through API tests and fresh acceptance.\n\n## Continue\n\n- [Developer Customization Guide](developer-customization.md)\n- [Runtime Instance and Task Lifecycle](runtime-lifecycle.md)\n"
+          "searchText": "Visual Workflow Designer Contract Describe the backend-owned graph contract, Axis editor projection, and validation workflow for the visual designer. # Visual Workflow Designer Contract\n\nThe visual workflow designer lets a business user or developer edit a process\ngraph through Axis. The important contract is that Axis is an editor, not the\nruntime authority.\n\n## Ownership model\n\n```mermaid\nsequenceDiagram\n  participant User as Business user\n  participant Axis as Axis designer\n  participant API as Process API\n  participant Validator as Graph validator\n  participant Store as Process schemas\n\n  User->>Axis: Move nodes and connect steps\n  Axis->>API: Save draft graph\n  API->>Store: Persist draft definition\n  User->>Axis: Validate\n  Axis->>API: Validate draft\n  API->>Validator: Check graph contract\n  Validator-->>API: valid or diagnostics\n  API-->>Axis: Backend-owned result\n  User->>Axis: Publish\n  Axis->>API: Publish draft\n  API->>Store: Create immutable version\n```\n\nAxis can display nodes, edges, positions, labels, and selection state. The\nbackend validates whether the graph is executable.\n\n## MVP graph contract\n\nThe first designer contract supports:\n\n- one `START` node;\n- one or more `TASK` nodes;\n- one or more `END` nodes;\n- transitions with stable codes, source, and target;\n- optional designer metadata for browser positions.\n\n```json\n{\n  \"nodes\": [\n    { \"code\": \"start\", \"type\": \"START\", \"name\": \"Start\" },\n    { \"code\": \"businessReview\", \"type\": \"TASK\", \"name\": \"Business review\" },\n    { \"code\": \"end\", \"type\": \"END\", \"name\": \"End\" }\n  ],\n  \"transitions\": [\n    { \"code\": \"start_to_review\", \"source\": \"start\", \"target\": \"businessReview\" },\n    { \"code\": \"review_to_end\", \"source\": \"businessReview\", \"target\": \"end\" }\n  ]\n}\n```\n\n## What the browser may do\n\nAxis may:\n\n- render a node palette;\n- show a canvas preview;\n- let the user select nodes;\n- collect labels and basic properties;\n- send draft graph data to Process APIs;\n- show backend validation diagnostics.\n\nAxis must not:\n\n- execute process logic;\n- calculate runtime state;\n- bypass backend validation;\n- store workflow definitions in browser storage as authority;\n- create a parallel workflow registry.\n\n## How a beginner should use the first designer\n\nThe first designer is intentionally simple. It is not trying to be a complex\ndiagramming tool on day one. It gives a business user a safe way to understand\nthe shape of a workflow and gives a developer a safe way to prove the backend\ngraph contract.\n\nStart with this flow:\n\n```mermaid\nflowchart LR\n  Start[\"START: request received\"] --> Review[\"TASK: business review\"]\n  Review --> End[\"END: approved or recorded\"]\n```\n\nThen ask these business questions before adding more nodes:\n\n| Question | Why it matters | Where the answer belongs |\n| --- | --- | --- |\n| Who starts this process? | Prevents hidden automation and duplicate cases. | Process trigger metadata or domain API call. |\n| Who owns the human task? | Makes the work queue visible. | Process task assignment policy. |\n| What happens if the task is delayed? | Defines SLA and escalation. | Process policy, future timer, or Cron relationship. |\n| What business object is affected? | Lets users connect workflow to real work. | Process instance context and domain module reference. |\n| What evidence is required? | Supports audit and compliance. | Process audit event and domain audit. |\n\nIf a user cannot answer these questions, the flow is not ready for publication\neven if the graph is technically valid.\n\n## Designer library roadmap\n\nThe first implementation uses a Nodics-native card/canvas projection because it\nkeeps the contract easy to test. The roadmap is:\n\n1. keep the backend graph contract stable;\n2. keep Axis as the renderer/editor only;\n3. add drag/drop layout metadata after the save/validate/publish flow is stable;\n4. evaluate React Flow / xyflow as the first richer canvas implementation;\n5. add BPMN import/export only as an interoperability adapter when a customer\n   needs it.\n\nThis sequence prevents a drawing library from becoming the workflow authority.\nThe designer may become more attractive and interactive, but the validation,\nversioning, permissions, runtime execution, and audit evidence must remain in\n`nodics.process`.\n\n## Designer acceptance\n\nThe designer foundation is healthy when:\n\n1. A user can see START, TASK, and END nodes.\n2. A user can inspect selected node details.\n3. Saving calls the Process draft API.\n4. Validation calls the Process graph validator.\n5. Publishing remains a separate backend-owned action.\n6. The same graph can be verified through API tests and fresh acceptance.\n7. Axis refresh is not required after create, save, validate, publish, trigger,\n   task, or Cron handoff operations.\n8. A business user can explain the workflow outcome from the page without\n   reading raw JSON.\n9. A developer can reproduce the same graph through the Process API.\n10. An operator can trace a started instance from trigger/job evidence through\n    Process audit events.\n\n## Continue\n\n- [Developer Customization Guide](developer-customization.md)\n- [Runtime Instance and Task Lifecycle](runtime-lifecycle.md)\n"
         },
         {
           "code": "qa-regression-guide",
@@ -2776,13 +2776,23 @@ module.exports = {
           "level": 2
         },
         {
+          "text": "How a beginner should use the first designer",
+          "anchor": "visualDesigner-4-how-a-beginner-should-use-the-first-designer",
+          "level": 2
+        },
+        {
+          "text": "Designer library roadmap",
+          "anchor": "visualDesigner-5-designer-library-roadmap",
+          "level": 2
+        },
+        {
           "text": "Designer acceptance",
-          "anchor": "visualDesigner-4-designer-acceptance",
+          "anchor": "visualDesigner-6-designer-acceptance",
           "level": 2
         },
         {
           "text": "Continue",
-          "anchor": "visualDesigner-5-continue",
+          "anchor": "visualDesigner-7-continue",
           "level": 2
         }
       ],
@@ -2869,8 +2879,94 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "How a beginner should use the first designer",
+          "anchor": "visualDesigner-4-how-a-beginner-should-use-the-first-designer"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The first designer is intentionally simple. It is not trying to be a complex diagramming tool on day one. It gives a business user a safe way to understand the shape of a workflow and gives a developer a safe way to prove the backend graph contract."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Start with this flow:"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Start[\"START: request received\"] --> Review[\"TASK: business review\"]\n  Review --> End[\"END: approved or recorded\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Then ask these business questions before adding more nodes:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Question",
+            "Why it matters",
+            "Where the answer belongs"
+          ],
+          "rows": [
+            [
+              "Who starts this process?",
+              "Prevents hidden automation and duplicate cases.",
+              "Process trigger metadata or domain API call."
+            ],
+            [
+              "Who owns the human task?",
+              "Makes the work queue visible.",
+              "Process task assignment policy."
+            ],
+            [
+              "What happens if the task is delayed?",
+              "Defines SLA and escalation.",
+              "Process policy, future timer, or Cron relationship."
+            ],
+            [
+              "What business object is affected?",
+              "Lets users connect workflow to real work.",
+              "Process instance context and domain module reference."
+            ],
+            [
+              "What evidence is required?",
+              "Supports audit and compliance.",
+              "Process audit event and domain audit."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "If a user cannot answer these questions, the flow is not ready for publication even if the graph is technically valid."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Designer library roadmap",
+          "anchor": "visualDesigner-5-designer-library-roadmap"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The first implementation uses a Nodics-native card/canvas projection because it keeps the contract easy to test. The roadmap is:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "keep the backend graph contract stable;",
+            "keep Axis as the renderer/editor only;",
+            "add drag/drop layout metadata after the save/validate/publish flow is stable;",
+            "evaluate React Flow / xyflow as the first richer canvas implementation;",
+            "add BPMN import/export only as an interoperability adapter when a customer needs it."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "This sequence prevents a drawing library from becoming the workflow authority. The designer may become more attractive and interactive, but the validation, versioning, permissions, runtime execution, and audit evidence must remain in `nodics.process`."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Designer acceptance",
-          "anchor": "visualDesigner-4-designer-acceptance"
+          "anchor": "visualDesigner-6-designer-acceptance"
         },
         {
           "kind": "paragraph",
@@ -2884,14 +2980,18 @@ module.exports = {
             "Saving calls the Process draft API.",
             "Validation calls the Process graph validator.",
             "Publishing remains a separate backend-owned action.",
-            "The same graph can be verified through API tests and fresh acceptance."
+            "The same graph can be verified through API tests and fresh acceptance.",
+            "Axis refresh is not required after create, save, validate, publish, trigger, task, or Cron handoff operations.",
+            "A business user can explain the workflow outcome from the page without reading raw JSON.",
+            "A developer can reproduce the same graph through the Process API.",
+            "An operator can trace a started instance from trigger/job evidence through Process audit events."
           ]
         },
         {
           "kind": "heading",
           "level": 2,
           "text": "Continue",
-          "anchor": "visualDesigner-5-continue"
+          "anchor": "visualDesigner-7-continue"
         },
         {
           "kind": "unordered-list",
@@ -2901,7 +3001,7 @@ module.exports = {
           ]
         }
       ],
-      "searchText": "Visual Workflow Designer Contract Describe the backend-owned graph contract, Axis editor projection, and validation workflow for the visual designer. # Visual Workflow Designer Contract\n\nThe visual workflow designer lets a business user or developer edit a process\ngraph through Axis. The important contract is that Axis is an editor, not the\nruntime authority.\n\n## Ownership model\n\n```mermaid\nsequenceDiagram\n  participant User as Business user\n  participant Axis as Axis designer\n  participant API as Process API\n  participant Validator as Graph validator\n  participant Store as Process schemas\n\n  User->>Axis: Move nodes and connect steps\n  Axis->>API: Save draft graph\n  API->>Store: Persist draft definition\n  User->>Axis: Validate\n  Axis->>API: Validate draft\n  API->>Validator: Check graph contract\n  Validator-->>API: valid or diagnostics\n  API-->>Axis: Backend-owned result\n  User->>Axis: Publish\n  Axis->>API: Publish draft\n  API->>Store: Create immutable version\n```\n\nAxis can display nodes, edges, positions, labels, and selection state. The\nbackend validates whether the graph is executable.\n\n## MVP graph contract\n\nThe first designer contract supports:\n\n- one `START` node;\n- one or more `TASK` nodes;\n- one or more `END` nodes;\n- transitions with stable codes, source, and target;\n- optional designer metadata for browser positions.\n\n```json\n{\n  \"nodes\": [\n    { \"code\": \"start\", \"type\": \"START\", \"name\": \"Start\" },\n    { \"code\": \"businessReview\", \"type\": \"TASK\", \"name\": \"Business review\" },\n    { \"code\": \"end\", \"type\": \"END\", \"name\": \"End\" }\n  ],\n  \"transitions\": [\n    { \"code\": \"start_to_review\", \"source\": \"start\", \"target\": \"businessReview\" },\n    { \"code\": \"review_to_end\", \"source\": \"businessReview\", \"target\": \"end\" }\n  ]\n}\n```\n\n## What the browser may do\n\nAxis may:\n\n- render a node palette;\n- show a canvas preview;\n- let the user select nodes;\n- collect labels and basic properties;\n- send draft graph data to Process APIs;\n- show backend validation diagnostics.\n\nAxis must not:\n\n- execute process logic;\n- calculate runtime state;\n- bypass backend validation;\n- store workflow definitions in browser storage as authority;\n- create a parallel workflow registry.\n\n## Designer acceptance\n\nThe designer foundation is healthy when:\n\n1. A user can see START, TASK, and END nodes.\n2. A user can inspect selected node details.\n3. Saving calls the Process draft API.\n4. Validation calls the Process graph validator.\n5. Publishing remains a separate backend-owned action.\n6. The same graph can be verified through API tests and fresh acceptance.\n\n## Continue\n\n- [Developer Customization Guide](developer-customization.md)\n- [Runtime Instance and Task Lifecycle](runtime-lifecycle.md)\n",
+      "searchText": "Visual Workflow Designer Contract Describe the backend-owned graph contract, Axis editor projection, and validation workflow for the visual designer. # Visual Workflow Designer Contract\n\nThe visual workflow designer lets a business user or developer edit a process\ngraph through Axis. The important contract is that Axis is an editor, not the\nruntime authority.\n\n## Ownership model\n\n```mermaid\nsequenceDiagram\n  participant User as Business user\n  participant Axis as Axis designer\n  participant API as Process API\n  participant Validator as Graph validator\n  participant Store as Process schemas\n\n  User->>Axis: Move nodes and connect steps\n  Axis->>API: Save draft graph\n  API->>Store: Persist draft definition\n  User->>Axis: Validate\n  Axis->>API: Validate draft\n  API->>Validator: Check graph contract\n  Validator-->>API: valid or diagnostics\n  API-->>Axis: Backend-owned result\n  User->>Axis: Publish\n  Axis->>API: Publish draft\n  API->>Store: Create immutable version\n```\n\nAxis can display nodes, edges, positions, labels, and selection state. The\nbackend validates whether the graph is executable.\n\n## MVP graph contract\n\nThe first designer contract supports:\n\n- one `START` node;\n- one or more `TASK` nodes;\n- one or more `END` nodes;\n- transitions with stable codes, source, and target;\n- optional designer metadata for browser positions.\n\n```json\n{\n  \"nodes\": [\n    { \"code\": \"start\", \"type\": \"START\", \"name\": \"Start\" },\n    { \"code\": \"businessReview\", \"type\": \"TASK\", \"name\": \"Business review\" },\n    { \"code\": \"end\", \"type\": \"END\", \"name\": \"End\" }\n  ],\n  \"transitions\": [\n    { \"code\": \"start_to_review\", \"source\": \"start\", \"target\": \"businessReview\" },\n    { \"code\": \"review_to_end\", \"source\": \"businessReview\", \"target\": \"end\" }\n  ]\n}\n```\n\n## What the browser may do\n\nAxis may:\n\n- render a node palette;\n- show a canvas preview;\n- let the user select nodes;\n- collect labels and basic properties;\n- send draft graph data to Process APIs;\n- show backend validation diagnostics.\n\nAxis must not:\n\n- execute process logic;\n- calculate runtime state;\n- bypass backend validation;\n- store workflow definitions in browser storage as authority;\n- create a parallel workflow registry.\n\n## How a beginner should use the first designer\n\nThe first designer is intentionally simple. It is not trying to be a complex\ndiagramming tool on day one. It gives a business user a safe way to understand\nthe shape of a workflow and gives a developer a safe way to prove the backend\ngraph contract.\n\nStart with this flow:\n\n```mermaid\nflowchart LR\n  Start[\"START: request received\"] --> Review[\"TASK: business review\"]\n  Review --> End[\"END: approved or recorded\"]\n```\n\nThen ask these business questions before adding more nodes:\n\n| Question | Why it matters | Where the answer belongs |\n| --- | --- | --- |\n| Who starts this process? | Prevents hidden automation and duplicate cases. | Process trigger metadata or domain API call. |\n| Who owns the human task? | Makes the work queue visible. | Process task assignment policy. |\n| What happens if the task is delayed? | Defines SLA and escalation. | Process policy, future timer, or Cron relationship. |\n| What business object is affected? | Lets users connect workflow to real work. | Process instance context and domain module reference. |\n| What evidence is required? | Supports audit and compliance. | Process audit event and domain audit. |\n\nIf a user cannot answer these questions, the flow is not ready for publication\neven if the graph is technically valid.\n\n## Designer library roadmap\n\nThe first implementation uses a Nodics-native card/canvas projection because it\nkeeps the contract easy to test. The roadmap is:\n\n1. keep the backend graph contract stable;\n2. keep Axis as the renderer/editor only;\n3. add drag/drop layout metadata after the save/validate/publish flow is stable;\n4. evaluate React Flow / xyflow as the first richer canvas implementation;\n5. add BPMN import/export only as an interoperability adapter when a customer\n   needs it.\n\nThis sequence prevents a drawing library from becoming the workflow authority.\nThe designer may become more attractive and interactive, but the validation,\nversioning, permissions, runtime execution, and audit evidence must remain in\n`nodics.process`.\n\n## Designer acceptance\n\nThe designer foundation is healthy when:\n\n1. A user can see START, TASK, and END nodes.\n2. A user can inspect selected node details.\n3. Saving calls the Process draft API.\n4. Validation calls the Process graph validator.\n5. Publishing remains a separate backend-owned action.\n6. The same graph can be verified through API tests and fresh acceptance.\n7. Axis refresh is not required after create, save, validate, publish, trigger,\n   task, or Cron handoff operations.\n8. A business user can explain the workflow outcome from the page without\n   reading raw JSON.\n9. A developer can reproduce the same graph through the Process API.\n10. An operator can trace a started instance from trigger/job evidence through\n    Process audit events.\n\n## Continue\n\n- [Developer Customization Guide](developer-customization.md)\n- [Runtime Instance and Task Lifecycle](runtime-lifecycle.md)\n",
       "previous": {
         "title": "Scheduled Automation and Cron Triggers",
         "route": "/docs/framework/process/scheduled-automation"
@@ -2915,8 +3015,8 @@ module.exports = {
         "functionalModule": "nodics.process",
         "technicalModule": "workflow",
         "path": "data/core/source/documentation/pages/visual-designer.md",
-        "wordCount": 330,
-        "checksum": "c88c1e49266e24c1e658631019df31dbfd6277acfdffad79eeeca9ef6622997a"
+        "wordCount": 699,
+        "checksum": "6a3d5af88c91d915dec075dc6bb8f866f7afc15f202fd2426dd56e9ab6521c3e"
       }
     },
     "active": true
