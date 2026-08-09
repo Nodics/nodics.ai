@@ -40,6 +40,29 @@ contract is under test:
   an explicit compatibility suite and report intentional project deviations as
   not applicable or overridden, not as silent failures.
 
+## Ownership Language In Tests And Acceptance
+
+Test names, helper names, assertion messages, logs, documentation snippets, and
+acceptance summaries must describe ownership accurately. A test can accidentally
+teach the wrong architecture even when its assertions are technically correct.
+
+Use this rule:
+
+- the owning framework module tests its own default contract;
+- the owning customer/project module tests its own customization contract;
+- an application, frontend, reference project, environment, or server
+  acceptance test verifies that the effective runtime can observe, consume, or
+  compose another module's public contract;
+- a consumer or reference project must not name its check as if it owns the
+  provider module's contract.
+
+For example, a reference customer project may verify that the local WCMS server
+exposes a catalog-first Designer authoring model. It must not call that a
+Kickoff-owned CMS Designer authoring contract. The correct language is
+"reference runtime observes the WCMS-owned Designer authoring model" or
+"effective local stack can consume the WCMS Designer contract." This preserves
+the distinction between ownership, consumption, composition, and acceptance.
+
 For active development:
 
 - Run focused tests for the module or behavior changed.
