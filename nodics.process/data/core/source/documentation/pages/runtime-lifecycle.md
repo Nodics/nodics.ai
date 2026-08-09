@@ -82,21 +82,19 @@ The backend creates:
 Human tasks are operational work items. They can be open, claimed, completed,
 cancelled, or escalated.
 
-In the current reference MVP, runtime mutation routes reuse the existing
-`process.definition.update` administrative permission because the Process
-module does not yet ship dedicated permission seed records for
-`process.instance.*` and `process.task.*`. This keeps fresh local Axis
-acceptance usable without weakening the route to read-only permission. A later
-permission-data slice should introduce dedicated runtime permissions and assign
-them through the Profile/BackOffice seed model.
+Runtime mutation routes use dedicated Process permissions. This keeps
+definition governance, instance control, human-task operations, and trigger
+management separate even when the reference admin can exercise all of them.
+Customer projects can assign these permissions to narrower user groups later.
 
-| Action | API | Allowed from | Result |
-| --- | --- | --- | --- |
-| Claim | `POST /tasks/:taskCode/claim` | `OPEN` | Task becomes `CLAIMED` and assignee is recorded. |
-| Assign | `POST /tasks/:taskCode/assign` | `OPEN`, `CLAIMED`, `ESCALATED` | Assignee changes while task remains actionable. |
-| Complete | `POST /tasks/:taskCode/complete` | `OPEN`, `CLAIMED`, `ESCALATED` | Task becomes `COMPLETED`; instance moves to next node. |
-| Cancel task | `POST /tasks/:taskCode/cancel` | `OPEN`, `CLAIMED`, `ESCALATED` | Task becomes `CANCELLED` without cancelling the whole instance. |
-| Cancel instance | `POST /instances/:instanceCode/cancel` | `CREATED`, `RUNNING`, `WAITING` | Instance becomes `CANCELLED`; open tasks are cancelled. |
+| Action | API | Permission | Allowed from | Result |
+| --- | --- | --- | --- | --- |
+| Start instance | `POST /instances` | `process.instance.start` | Published version | Instance starts and first task may be created. |
+| Claim | `POST /tasks/:taskCode/claim` | `process.task.claim` | `OPEN` | Task becomes `CLAIMED` and assignee is recorded. |
+| Assign | `POST /tasks/:taskCode/assign` | `process.task.assign` | `OPEN`, `CLAIMED`, `ESCALATED` | Assignee changes while task remains actionable. |
+| Complete | `POST /tasks/:taskCode/complete` | `process.task.complete` | `OPEN`, `CLAIMED`, `ESCALATED` | Task becomes `COMPLETED`; instance moves to next node. |
+| Cancel task | `POST /tasks/:taskCode/cancel` | `process.task.cancel` | `OPEN`, `CLAIMED`, `ESCALATED` | Task becomes `CANCELLED` without cancelling the whole instance. |
+| Cancel instance | `POST /instances/:instanceCode/cancel` | `process.instance.cancel` | `CREATED`, `RUNNING`, `WAITING` | Instance becomes `CANCELLED`; open tasks are cancelled. |
 
 Completing the current MVP task moves the instance to END and marks it
 `COMPLETED`. Later versions can add gateways, multiple tasks, automated domain
@@ -138,6 +136,11 @@ console while preserving module ownership:
 | Cron expression, job enablement, scheduler runtime | `nodics.cron` |
 | Starting an instance when schedule fires | Process API called by authorized runtime integration |
 | Showing relationship in Axis | `nodics.axis` frontend projection |
+
+The trigger metadata lifecycle uses `process.trigger.manage` for create,
+update, activation, pause, and archive operations. Archiving is preferred over
+delete so operators can still explain why a scheduled automation relationship
+used to exist.
 
 ## QA checklist
 

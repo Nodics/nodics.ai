@@ -23,8 +23,10 @@
   },
   "scripts": {
     "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
-    "test:contract": "node test/processModuleContract.test.js && node test/processApiRouteContract.test.js && node test/processGraphValidationService.test.js && node test/processDefinitionLifecycleService.test.js && node test/processOperationsInspectionService.test.js && node test/processRuntimeLifecycleService.test.js",
-    "test": "npm run check:syntax && npm run test:contract"
+    "docs:generate": "node scripts/generate-documentation-content.mjs",
+    "docs:check": "node scripts/generate-documentation-content.mjs --check",
+    "test:contract": "node test/processModuleContract.test.js && node test/processApiRouteContract.test.js && node test/processPermissionCatalogContract.test.js && node modules/workflow/modules/flowSchema/test/gen/schema/processTriggerSchemaContract.test.js && node test/processGraphValidationService.test.js && node test/processDefinitionLifecycleService.test.js && node test/processOperationsInspectionService.test.js && node test/processRuntimeLifecycleService.test.js",
+    "test": "npm run check:syntax && npm run docs:check && npm run test:contract"
   },
   "dependencies": {
     "nodics.core": "file:../nodics.core"

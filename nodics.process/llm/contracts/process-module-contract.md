@@ -50,6 +50,17 @@ rollback.
    deprecated, and archived states.
 6. A process instance records every transition with tenant, actor/service,
    correlation, input/output summary, error, retry, and compensation evidence.
+7. Runtime instance, task, and trigger mutations use dedicated permissions such
+   as `process.instance.start`, `process.task.complete`, and
+   `process.trigger.manage`; do not reuse definition-write permissions for
+   runtime operations.
+8. Process documentation is backend-owned by `nodics.process`. Axis may render
+   it after WCMS imports the content pack, but Axis must not store framework
+   Process documentation data.
+9. The Process visual designer is a frontend editing surface over a
+   backend-owned graph contract. Axis may project graph layout and collect draft
+   changes, but Process owns validation, persistence, publication, and runtime
+   execution.
 
 ## Minimum future API surface
 
@@ -66,13 +77,20 @@ behind adapters:
 - `DELETE /definitions/{code}`
 - `GET /instances`
 - `GET /instances/{code}`
+- `POST /instances`
+- `POST /instances/{code}/cancel`
 - `POST /instances/{code}/retry`
 - `POST /instances/{code}/pause`
 - `POST /instances/{code}/resume`
 - `GET /tasks`
 - `POST /tasks/{code}/claim`
+- `POST /tasks/{code}/assign`
 - `POST /tasks/{code}/complete`
 - `POST /tasks/{code}/return`
+- `GET /triggers`
+- `POST /triggers`
+- `PATCH /triggers/{code}`
+- `POST /triggers/{code}/archive`
 
 Delete is never a blind destructive operation. Draft definitions may be deleted.
 Published definitions should be archived or deprecated so running instance
@@ -96,3 +114,7 @@ Projects and partner modules customize Process by contributing:
 Configuration belongs in layered properties. Stable lifecycle states, error
 codes, and process statuses belong in status definitions when runtime source is
 added.
+
+For Process/Cron topology, trigger ownership, visual-designer authority, and
+where-to-write rules, also follow
+`llm/contracts/process-ownership-and-designer-contract.md`.

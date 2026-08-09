@@ -32,6 +32,7 @@ module.exports = {
         let params = httpRequest.params || {};
         request.instanceCode = params.instanceCode || request.instanceCode;
         request.taskCode = params.taskCode || request.taskCode;
+        request.triggerCode = params.triggerCode || request.triggerCode;
         request.query = httpRequest.query || request.query || {};
         request.runtimeOperation = httpRequest.body || request.runtimeOperation || {};
         let promise = FACADE.DefaultProcessOperationsFacade[operation](request);
@@ -63,6 +64,12 @@ module.exports = {
     cancelTask: function (request, callback) { return this.invoke('cancelTask', request, callback); },
     /** Lists Process-owned scheduled trigger metadata. */
     listTriggers: function (request, callback) { return this.invoke('listTriggers', request, callback); },
+    /** Creates Process-owned scheduled trigger metadata. */
+    createTrigger: function (request, callback) { return this.invoke('createTrigger', request, callback); },
+    /** Updates Process-owned scheduled trigger metadata. */
+    updateTrigger: function (request, callback) { return this.invoke('updateTrigger', request, callback); },
+    /** Archives Process-owned scheduled trigger metadata. */
+    archiveTrigger: function (request, callback) { return this.invoke('archiveTrigger', request, callback); },
     /** Lists bounded audit events for operators. */
     listAuditEvents: function (request, callback) { return this.invoke('listAuditEvents', request, callback); }
 };

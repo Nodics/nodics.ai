@@ -147,6 +147,80 @@ const runtimeService = require('../modules/workflow/modules/flowCore/src/service
     assert.strictEqual(listedTriggers.code, 'SUC_PROCESS_00010');
     assert.strictEqual(listedTriggers.data[0].cronJobCode, 'dailyContentApprovalJob');
 
+    let createdTrigger = await runtimeService.createTrigger({
+        tenant: 'default',
+        authData: { loginId: 'scheduler-admin' },
+        runtimeOperation: {
+            code: 'weeklyContentApproval',
+            definitionCode: 'contentApproval',
+            triggerType: 'CRON',
+            cronJobCode: 'weeklyContentApprovalJob',
+            status: 'ACTIVE',
+            schedule: { expression: '0 0 * * 1' }
+        }
+    });
+    assert.strictEqual(createdTrigger.code, 'SUC_PROCESS_00010');
+    assert.strictEqual(triggers.length, 2);
+    assert.strictEqual(triggers[1].code, 'weeklyContentApproval');
+    assert.strictEqual(auditEvents.some(event => event.eventType === 'process.trigger.created'), true);
+
+    let updatedTrigger = await runtimeService.updateTrigger({
+        tenant: 'default',
+        triggerCode: 'weeklyContentApproval',
+        runtimeOperation: { status: 'PAUSED', cronJobCode: 'weeklyContentApprovalJob' }
+    });
+    assert.strictEqual(updatedTrigger.data.status, 'PAUSED');
+    assert.strictEqual(triggers[1].status, 'PAUSED');
+
+    let archivedTrigger = await runtimeService.archiveTrigger({
+        tenant: 'default',
+        triggerCode: 'weeklyContentApproval'
+    });
+    assert.strictEqual(archivedTrigger.data.status, 'ARCHIVED');
+    assert.strictEqual(triggers[1].active, false);
+
+    await assert.rejects(
+        () => runtimeService.createTrigger({
+            tenant: 'default',
+            runtimeOperation: {
+                code: 'badTriggerStatus',
+                definitionCode: 'contentApproval',
+                triggerType: 'CRON',
+                status: 'RUNNING'
+            }
+        }),
+        error => error.code === 'ERR_PROCESS_00015',
+    );
+
+    await assert.rejects(
+        () => runtimeService.createTrigger({
+            tenant: 'default',
+            runtimeOperation: {
+                code: 'missingDefinitionTrigger',
+                definitionCode: 'missingDefinition',
+                triggerType: 'CRON'
+            }
+        }),
+        error => error.code === 'ERR_PROCESS_00002',
+    );
+
+    await assert.rejects(
+        () => runtimeService.archiveTrigger({
+            tenant: 'default',
+            triggerCode: 'unknownTrigger'
+        }),
+        error => error.code === 'ERR_PROCESS_00016',
+    );
+
+    await assert.rejects(
+        () => runtimeService.updateTrigger({
+            tenant: 'default',
+            triggerCode: 'weeklyContentApproval',
+            runtimeOperation: { status: 'ACTIVE' }
+        }),
+        error => error.code === 'ERR_PROCESS_00017',
+    );
+
     await assert.rejects(
         () => runtimeService.claimTask({ tenant: 'default', taskCode: tasks[0].code }),
         error => error.code === 'ERR_PROCESS_00012',

@@ -79,6 +79,29 @@ module.exports = {
     triggerService: function () { return SERVICE.DefaultProcessTriggerService; },
 
     /**
+     * Lists lifecycle states allowed for Process-owned trigger metadata.
+     *
+     * @returns {string[]} Supported trigger states.
+     */
+    triggerStatuses: function () {
+        return ['DRAFT', 'ACTIVE', 'PAUSED', 'ARCHIVED'];
+    },
+
+    /**
+     * Validates a Process trigger lifecycle state.
+     *
+     * @param {*} status Candidate trigger status.
+     * @returns {string} Valid trigger status.
+     * @throws {CLASSES.NodicsError} When the status is unsupported.
+     */
+    assertTriggerStatus: function (status) {
+        if (!this.triggerStatuses().includes(status)) {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00015', 'Process trigger status is invalid');
+        }
+        return status;
+    },
+
+    /**
      * Validates a stable runtime code.
      *
      * @param {*} value Candidate code.
@@ -125,6 +148,24 @@ module.exports = {
         let definition = response && response.result && response.result[0];
         if (!definition) throw new CLASSES.NodicsError('ERR_PROCESS_00002', 'Process definition was not found');
         return definition;
+    },
+
+    /**
+     * Loads Process-owned trigger metadata.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {string} triggerCode Trigger code.
+     * @returns {Promise<Object>} Trigger metadata.
+     */
+    requireTrigger: async function (request, triggerCode) {
+        if (!this.triggerService()) throw new CLASSES.NodicsError('ERR_PROCESS_00014', 'Process trigger service is unavailable');
+        let response = await this.triggerService().get(this.serviceRequest(request, {
+            query: { code: this.assertCode(triggerCode) },
+            searchOptions: { limit: 1 }
+        }));
+        let trigger = response && response.result && response.result[0];
+        if (!trigger) throw new CLASSES.NodicsError('ERR_PROCESS_00016', 'Process trigger was not found');
+        return trigger;
     },
 
     /**
@@ -489,6 +530,97 @@ module.exports = {
             searchOptions: { limit: 100, sort: { code: 1 } }
         }));
         return { code: 'SUC_PROCESS_00010', data: response.result || [] };
+    },
+
+    /**
+     * Creates Process-owned trigger metadata after verifying the referenced
+     * definition exists. Cron remains responsible for actual job execution.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Created trigger summary.
+     */
+    createTrigger: async function (request) {
+        let body = this.bodyOf(request);
+        if (!this.triggerService()) throw new CLASSES.NodicsError('ERR_PROCESS_00014', 'Process trigger service is unavailable');
+        let definitionCode = this.assertCode(body.definitionCode);
+        let definition = await this.requireDefinition(request, definitionCode);
+        let triggerModel = {
+            code: body.code || this.runtimeCode(definitionCode + '-trigger'),
+            active: body.active !== false,
+            name: body.name || definition.name || definitionCode,
+            definitionCode: definitionCode,
+            version: body.version ? Number(body.version) : undefined,
+            triggerType: body.triggerType || 'CRON',
+            ownerModule: body.ownerModule || 'nodics.process',
+            cronJobCode: body.cronJobCode,
+            status: this.assertTriggerStatus(body.status || 'DRAFT'),
+            schedule: body.schedule || {},
+            lastObservedAt: new Date()
+        };
+        this.assertCode(triggerModel.code);
+        if (triggerModel.cronJobCode) this.assertCode(triggerModel.cronJobCode);
+        let response = await this.triggerService().save(this.serviceRequest(request, { model: triggerModel }));
+        let trigger = response.result || response;
+        await this.audit(request, {
+            definitionCode: definitionCode,
+            eventType: 'process.trigger.created',
+            metadata: { triggerCode: trigger.code, triggerType: trigger.triggerType, cronJobCode: trigger.cronJobCode }
+        });
+        return { code: 'SUC_PROCESS_00010', data: trigger };
+    },
+
+    /**
+     * Updates Process-owned trigger metadata without moving scheduler behavior
+     * into Process or Axis.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Updated trigger summary.
+     */
+    updateTrigger: async function (request) {
+        let body = this.bodyOf(request);
+        let triggerCode = this.assertCode(request.triggerCode || body.code);
+        if (!this.triggerService()) throw new CLASSES.NodicsError('ERR_PROCESS_00014', 'Process trigger service is unavailable');
+        let allowed = ['name', 'version', 'triggerType', 'cronJobCode', 'status', 'schedule', 'active'];
+        let update = {};
+        allowed.forEach(key => {
+            if (Object.prototype.hasOwnProperty.call(body, key)) update[key] = body[key];
+        });
+        let existingTrigger = await this.requireTrigger(request, triggerCode);
+        if (existingTrigger.status === 'ARCHIVED') throw new CLASSES.NodicsError('ERR_PROCESS_00017', 'Archived process trigger cannot be updated');
+        if (update.cronJobCode) this.assertCode(update.cronJobCode);
+        if (update.status) this.assertTriggerStatus(update.status);
+        update.lastObservedAt = new Date();
+        await this.triggerService().update(this.serviceRequest(request, {
+            query: { code: triggerCode },
+            model: { $set: update }
+        }));
+        await this.audit(request, {
+            eventType: 'process.trigger.updated',
+            metadata: { triggerCode: triggerCode, status: update.status, cronJobCode: update.cronJobCode }
+        });
+        return { code: 'SUC_PROCESS_00010', data: Object.assign({ code: triggerCode }, update) };
+    },
+
+    /**
+     * Archives trigger metadata rather than deleting it so operations teams can
+     * retain evidence of schedule relationships.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Archived trigger summary.
+     */
+    archiveTrigger: async function (request) {
+        let triggerCode = this.assertCode(request.triggerCode || this.bodyOf(request).code);
+        let existingTrigger = await this.requireTrigger(request, triggerCode);
+        let archivedAt = new Date();
+        await this.triggerService().update(this.serviceRequest(request, {
+            query: { code: triggerCode },
+            model: { $set: { active: false, status: 'ARCHIVED', archivedAt: archivedAt } }
+        }));
+        await this.audit(request, {
+            eventType: 'process.trigger.archived',
+            metadata: { triggerCode: triggerCode, previousStatus: existingTrigger.status }
+        });
+        return { code: 'SUC_PROCESS_00010', data: { code: triggerCode, active: false, status: 'ARCHIVED', archivedAt: archivedAt } };
     },
 
     /**

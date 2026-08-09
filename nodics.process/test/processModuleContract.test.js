@@ -86,6 +86,8 @@ assert.strictEqual(
     'flowApi must own process HTTP routes',
 );
 [
+    'llm/contracts/process-module-contract.md',
+    'llm/contracts/process-ownership-and-designer-contract.md',
     'modules/workflow/modules/flowSchema/src/schemas/schemas.js',
     'modules/workflow/modules/flowSchema/src/utils/statusDefinitions.js',
     'modules/workflow/modules/flowCore/src/service/designer/defaultProcessGraphValidationService.js',
@@ -110,8 +112,8 @@ assert(
 );
 assert.deepStrictEqual(
     capability.navigation.map(item => item.label),
-    ['Processes', 'Workflows', 'Tasks'],
-    'Axis Process navigation must stay compact until additional process workspaces are implemented',
+    ['Processes', 'Workflows', 'Tasks', 'Scheduled triggers', 'Designer'],
+    'Axis Process navigation must stay compact and focused on business process automation workspaces',
 );
 assert(
     capability.navigation.every((item) => item.group.id === 'business-process-automation' &&

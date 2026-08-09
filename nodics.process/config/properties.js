@@ -36,6 +36,32 @@ module.exports = {
             roles: ['FUNCTIONAL_CAPABILITY_PROVIDER'],
             discovery: { openApiPath: '/nodics/system/v0/contract/openapi/internal', contractVersion: 1 },
             requiredPermissions: ['process.backoffice.view'],
+            documentation: [
+                {
+                    id: 'process',
+                    label: 'Process',
+                    type: 'CMS',
+                    route: '/docs/framework/process',
+                    order: 160,
+                    connectionModule: 'cms',
+                    site: 'processDocumentationSite',
+                    catalog: 'documentationContentCatalog',
+                    defaultPage: '/docs/framework/process',
+                    packCode: 'processDocumentation',
+                    dashboard: {
+                        kind: 'Capability guide',
+                        icon: 'workflow',
+                        summary: 'Business process, workflow definition, runtime instance, task, trigger, Cron relationship, and visual-designer governance guidance.',
+                        audiences: ['business-user', 'administrator', 'developer', 'operator', 'ai-tool'],
+                        coverage: {
+                            score: 72,
+                            status: 'GROWING',
+                            signals: ['Process module ownership', 'Runtime lifecycle', 'Task operations', 'Trigger relationship boundary', 'Designer guardrails'],
+                            gaps: ['More screenshots', 'More advanced node recipes', 'Dedicated BPMN adapter documentation']
+                        }
+                    }
+                }
+            ],
             navigation: [
                 {
                     id: 'process-workflows',
@@ -86,6 +112,42 @@ module.exports = {
                         summary: 'Review human tasks, assignments, escalations, approvals, and handoffs created by governed workflow instances.',
                         documentationRoute: '/docs/capabilities/process-workflow/process-workflow-model',
                         documentationFragment: 'tasks-and-approvals'
+                    },
+                    featureState: 'PREVIEW',
+                    requiredPermissions: ['process.backoffice.view']
+                },
+                {
+                    id: 'process-triggers',
+                    parentId: 'process-workflows',
+                    label: 'Scheduled triggers',
+                    route: '/process/triggers',
+                    icon: 'cronjob',
+                    order: 530,
+                    group: { id: 'business-process-automation', label: 'Business Process & Automation', order: 500 },
+                    perspectives: ['operations', 'process'],
+                    contexts: ['environment', 'tenant', 'enterprise'],
+                    help: {
+                        summary: 'Create and manage Process-owned trigger relationships while Cron continues to own job execution.',
+                        documentationRoute: '/docs/framework/process/runtime-lifecycle',
+                        documentationFragment: 'scheduled-trigger-relationships'
+                    },
+                    featureState: 'PREVIEW',
+                    requiredPermissions: ['process.backoffice.view']
+                },
+                {
+                    id: 'process-designer',
+                    parentId: 'process-workflows',
+                    label: 'Designer',
+                    route: '/process/designer',
+                    icon: 'design',
+                    order: 540,
+                    group: { id: 'business-process-automation', label: 'Business Process & Automation', order: 500 },
+                    perspectives: ['operations', 'process'],
+                    contexts: ['environment', 'tenant', 'enterprise'],
+                    help: {
+                        summary: 'Preview and edit backend-owned draft workflow graph metadata before validation and publishing.',
+                        documentationRoute: '/docs/framework/process/visual-designer',
+                        documentationFragment: 'visual-workflow-designer-contract'
                     },
                     featureState: 'PREVIEW',
                     requiredPermissions: ['process.backoffice.view']

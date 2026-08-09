@@ -1,6 +1,6 @@
 {
   "pack": "nodics.process",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "contractVersion": 1,
   "title": "Nodics Process",
   "pages": [
@@ -27,6 +27,66 @@
       "evidence": "nodics.process/data/core/source/documentation/pages/runtime-lifecycle.md",
       "summary": "Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships.",
       "audience": ["business-user", "administrator", "developer", "operator", "tester"]
+    },
+    {
+      "code": "business-value",
+      "title": "Business Value and Adoption Model",
+      "route": "/docs/framework/process/business-value",
+      "section": "Process Fundamentals",
+      "sectionOrder": 10,
+      "order": 30,
+      "source": "pages/business-value.md",
+      "evidence": "nodics.process/data/core/source/documentation/pages/business-value.md",
+      "summary": "Explain the business problems Process solves, how it lowers operating cost, and how business users should think about automation governance.",
+      "audience": ["business-user", "administrator", "architect"]
+    },
+    {
+      "code": "developer-customization",
+      "title": "Developer Customization Guide",
+      "route": "/docs/framework/process/developer-customization",
+      "section": "Build and Extend",
+      "sectionOrder": 30,
+      "order": 40,
+      "source": "pages/developer-customization.md",
+      "evidence": "nodics.process/data/core/source/documentation/pages/developer-customization.md",
+      "summary": "Show where developers extend Process behavior, where domain actions belong, and how customer modules customize safely.",
+      "audience": ["developer", "architect", "ai-tool"]
+    },
+    {
+      "code": "devops-topology",
+      "title": "DevOps and Runtime Topology",
+      "route": "/docs/framework/process/devops-topology",
+      "section": "Operate",
+      "sectionOrder": 40,
+      "order": 50,
+      "source": "pages/devops-topology.md",
+      "evidence": "nodics.process/data/core/source/documentation/pages/devops-topology.md",
+      "summary": "Explain deployment topology, observability, fresh bootstrap evidence, and production sustainability for Process runtimes.",
+      "audience": ["operator", "developer", "architect"]
+    },
+    {
+      "code": "process-cron-runtime",
+      "title": "Process and Cron Shared Runtime",
+      "route": "/docs/framework/process/process-cron-runtime",
+      "section": "Operate",
+      "sectionOrder": 40,
+      "order": 60,
+      "source": "pages/process-cron-runtime.md",
+      "evidence": "nodics.process/data/core/source/documentation/pages/process-cron-runtime.md",
+      "summary": "Clarify how processServer can include Cron while Process and Cron keep separate ownership boundaries.",
+      "audience": ["administrator", "operator", "developer", "architect"]
+    },
+    {
+      "code": "visual-designer",
+      "title": "Visual Workflow Designer Contract",
+      "route": "/docs/framework/process/visual-designer",
+      "section": "Build and Extend",
+      "sectionOrder": 30,
+      "order": 70,
+      "source": "pages/visual-designer.md",
+      "evidence": "nodics.process/data/core/source/documentation/pages/visual-designer.md",
+      "summary": "Describe the backend-owned graph contract, Axis editor projection, and validation workflow for the visual designer.",
+      "audience": ["business-user", "developer", "tester", "ai-tool"]
     }
   ]
 }

@@ -43,6 +43,12 @@ module.exports = {
     cancelTask: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.cancelTask(request); },
     /** Delegates Process-owned trigger metadata listing. */
     listTriggers: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.listTriggers(request); },
+    /** Delegates Process-owned trigger metadata creation. */
+    createTrigger: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.createTrigger(request); },
+    /** Delegates Process-owned trigger metadata update. */
+    updateTrigger: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.updateTrigger(request); },
+    /** Delegates Process-owned trigger metadata archival. */
+    archiveTrigger: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.archiveTrigger(request); },
     /** Delegates audit event listing. */
     listAuditEvents: function (request) { return SERVICE.DefaultProcessOperationsInspectionService.listAuditEvents(request); }
 };

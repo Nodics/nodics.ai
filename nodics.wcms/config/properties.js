@@ -50,6 +50,15 @@ module.exports = {
                         manifestPath: 'modules/axis/manifest/docs-content-pack.json'
                     }
                 },
+                processDocumentation: {
+                    manifestPack: 'nodics.process',
+                    source: {
+                        type: 'LOCAL_SIBLING',
+                        repositoryName: 'nodics.process',
+                        contentPath: 'data/core',
+                        manifestPath: 'manifest/docs-content-pack.json'
+                    }
+                },
                 kickoffDocumentation: {
                     manifestPack: 'nodics.kickoff',
                     source: {

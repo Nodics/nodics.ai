@@ -42,5 +42,9 @@ module.exports = {
     ERR_PROCESS_00010: { code: '400', message: 'Process designer request is invalid' },
     ERR_PROCESS_00011: { code: '409', message: 'Process definition is not published for runtime start' },
     ERR_PROCESS_00012: { code: '409', message: 'Process task transition is not allowed' },
-    ERR_PROCESS_00013: { code: '409', message: 'Process instance transition is not allowed' }
+    ERR_PROCESS_00013: { code: '409', message: 'Process instance transition is not allowed' },
+    ERR_PROCESS_00014: { code: '503', message: 'Process trigger service is unavailable' },
+    ERR_PROCESS_00015: { code: '400', message: 'Process trigger status is invalid' },
+    ERR_PROCESS_00016: { code: '404', message: 'Process trigger was not found' },
+    ERR_PROCESS_00017: { code: '409', message: 'Archived process trigger cannot be updated' }
 };

@@ -51,18 +51,21 @@ assert.strictEqual(flowApiPackage.nodics.runtime.router, true);
 });
 
 [
-    ['startInstance', 'POST', '/instances', 'process.definition.update'],
+    ['startInstance', 'POST', '/instances', 'process.instance.start'],
     ['listInstances', 'GET', '/instances', 'process.backoffice.view'],
     ['getInstance', 'GET', '/instances/:instanceCode', 'process.backoffice.view'],
     ['getInstanceDetail', 'GET', '/instances/:instanceCode/detail', 'process.backoffice.view'],
-    ['cancelInstance', 'POST', '/instances/:instanceCode/cancel', 'process.definition.update'],
+    ['cancelInstance', 'POST', '/instances/:instanceCode/cancel', 'process.instance.cancel'],
     ['listTasks', 'GET', '/tasks', 'process.backoffice.view'],
     ['getTask', 'GET', '/tasks/:taskCode', 'process.backoffice.view'],
-    ['claimTask', 'POST', '/tasks/:taskCode/claim', 'process.definition.update'],
-    ['assignTask', 'POST', '/tasks/:taskCode/assign', 'process.definition.update'],
-    ['completeTask', 'POST', '/tasks/:taskCode/complete', 'process.definition.update'],
-    ['cancelTask', 'POST', '/tasks/:taskCode/cancel', 'process.definition.update'],
+    ['claimTask', 'POST', '/tasks/:taskCode/claim', 'process.task.claim'],
+    ['assignTask', 'POST', '/tasks/:taskCode/assign', 'process.task.assign'],
+    ['completeTask', 'POST', '/tasks/:taskCode/complete', 'process.task.complete'],
+    ['cancelTask', 'POST', '/tasks/:taskCode/cancel', 'process.task.cancel'],
     ['listTriggers', 'GET', '/triggers', 'process.backoffice.view'],
+    ['createTrigger', 'POST', '/triggers', 'process.trigger.manage'],
+    ['updateTrigger', 'PATCH', '/triggers/:triggerCode', 'process.trigger.manage'],
+    ['archiveTrigger', 'POST', '/triggers/:triggerCode/archive', 'process.trigger.manage'],
     ['listAuditEvents', 'GET', '/audit-events', 'process.backoffice.view']
 ].forEach(([routeName, method, key, permission]) => {
     let route = processOperationRoutes[routeName];

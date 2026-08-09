@@ -7,6 +7,10 @@
   `../nodics.core/modules/nSetup/llm/ai-enablement-index.md`.
 - Follow the coding and customization contract before moving workflow source,
   adding process APIs, or enabling the visual designer.
+- Read `llm/contracts/process-module-contract.md` and
+  `llm/contracts/process-ownership-and-designer-contract.md` before changing
+  Process ownership, Process/Cron topology, runtime APIs, trigger behavior,
+  Axis process pages, or visual designer behavior.
 
 ## Module Work Rules
 
