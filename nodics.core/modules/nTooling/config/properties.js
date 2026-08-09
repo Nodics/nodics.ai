@@ -135,20 +135,6 @@ module.exports = {
                     description: 'All dataPublisher module lifecycle, configuration, router, schema, pipeline, service, utility, and test contracts must remain fully documented.'
                 },
                 {
-                    name: 'cart complete commerce contract',
-                    scope: 'all',
-                    module: 'cart',
-                    includeTests: true,
-                    description: 'All cart module lifecycle, configuration, schema, router, interceptor, pipeline, service, utility, data, and test contracts must remain fully documented.'
-                },
-                {
-                    name: 'order complete commerce contract',
-                    scope: 'all',
-                    module: 'order',
-                    includeTests: true,
-                    description: 'All order module lifecycle, configuration, initializer data, schema, router, interceptor, pipeline, service, utility, and test contracts must remain fully documented.'
-                },
-                {
                     name: 'cms complete content contract',
                     scope: 'all',
                     module: 'cms',
@@ -156,11 +142,11 @@ module.exports = {
                     description: 'All CMS module lifecycle, configuration, initializer data, sample data, schema, router, interceptor, service, utility, and test contracts must remain fully documented.'
                 },
                 {
-                    name: 'wcms complete workflow content contract',
+                    name: 'wcms complete web content contract',
                     scope: 'all',
                     module: 'wcms',
                     includeTests: true,
-                    description: 'All WCMS module lifecycle, configuration, workflow initializer data, import headers, router, schema, interceptor, pipeline, service, utility, and test contracts must remain fully documented.'
+                    description: 'All WCMS module lifecycle, configuration, initializer data, import headers, router, schema, interceptor, pipeline, service, utility, and test contracts must remain fully documented.'
                 },
                 {
                     name: 'cronjob complete scheduler contract',
@@ -170,11 +156,11 @@ module.exports = {
                     description: 'All cronjob module lifecycle, configuration, initializer data, router, schema, pipeline, scheduler container, lifecycle trigger, node responsibility, service, utility, and test contracts must remain fully documented.'
                 },
                 {
-                    name: 'nems complete event management contract',
+                    name: 'nEms complete event management contract',
                     scope: 'all',
-                    module: 'nems',
+                    module: 'nEms',
                     includeTests: true,
-                    description: 'All NEMS module lifecycle, configuration, initializer data, router, schema, event splitting, event dispatch, service, utility, and test contracts must remain fully documented.'
+                    description: 'All nEms module lifecycle, configuration, initializer data, router, schema, event splitting, event dispatch, service, utility, and test contracts must remain fully documented.'
                 },
                 {
                     name: 'all modules complete source and test documentation contract',
@@ -244,6 +230,7 @@ module.exports = {
                 { node: 'nodics.core/modules/nTooling/test/structureGeneratorAlignment.test.js' },
                 { node: 'nodics.core/modules/nTooling/test/topologyPlanWorkflow.test.js' },
                 { node: 'nodics.core/modules/nTooling/test/testSuiteCommandContract.test.js' },
+                { node: 'nodics.core/modules/nTooling/test/syntaxCheckQualityService.test.js' },
                 { node: 'nodics.core/modules/nTooling/test/llmChangeAcceptanceContract.test.js' },
                 { node: 'nodics.core/modules/nTooling/test/mcpReadOnlyGovernanceContract.test.js' },
                 { node: 'nodics.core/modules/nTooling/test/copyrightHeaderGovernance.test.js' }
@@ -507,6 +494,11 @@ module.exports = {
             'test:suite': {
                 description: 'Run a configured Nodics test suite by name from tooling-owned suite configuration.',
                 handler: 'src/service/command/defaultTestSuiteCommandService.js'
+            },
+            'check:syntax': {
+                description: 'Run Node syntax validation over JavaScript-family source files without executing Nodics runtime code.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/quality/defaultSyntaxCheckQualityService.js'
             },
             'ai:validate': {
                 description: 'Run AI/developer governance validation for Nodics source contracts.',

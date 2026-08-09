@@ -236,9 +236,9 @@ The normal source documentation gates intentionally run before generation. The b
 ## Rollout Order
 
 1. Document core framework contracts: `nConfig`, `nCommon`, `nDatabase`, `nRouter`, `nService`, `nPipeline`.
-2. Document platform capability modules: `nData`, `nEms`, `nSystem`, `nDynamo`, `nSearch`, `nbpm`, `nTest`.
-3. Document core business modules: `profile`, `cronjob`, `nems`, `workflow`.
-4. Document commerce/content/project modules only when they are active in the target product.
+2. Document platform capability modules: `nData`, `nEms`, `nSystem`, `nDynamo`, `nSearch`, `nTest`.
+3. Document current framework business modules: `profile`, `backoffice`, `cronjob`, `cms`, `media`, and `workflow`.
+4. Document planned commerce/content/project modules only after their module packages exist in the target product.
 5. Add Swagger/OpenAPI generation once source-level and schema/router-level metadata are consistent.
 
 ## Coverage Check

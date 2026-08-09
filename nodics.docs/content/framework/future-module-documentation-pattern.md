@@ -75,7 +75,7 @@ return-to-sender, audit, and cross-module process visibility. Then it should
 explain why a Workflow module is better than every module inventing its own
 approval table.
 
-The developer section would say that `nodics.workflow` owns workflow
+The developer section would say that `nodics.process` owns workflow
 definitions, states, transitions, assignments, SLA metadata, process history,
 and Workflow APIs. A Commerce return flow may start a workflow, but Commerce
 does not own the generic workflow engine. Axis may render assigned work,

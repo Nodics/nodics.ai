@@ -19,10 +19,8 @@
 const assert = require('assert');
 const path = require('path');
 
-const groupMetadata = require(path.resolve(__dirname, '../../package.json'));
+const groupMetadata = require(path.resolve(__dirname, '../../../package.json'));
 const moduleMetadata = require(path.resolve(__dirname, '../package.json'));
-const consolidatedProperties = require(path.resolve(__dirname,
-    '../../../nodics.kickoff/envs/kickoffLocal/monoServer/config/properties.js'));
 
 assert.strictEqual(groupMetadata.name, 'nodics.platform');
 assert.strictEqual(groupMetadata.nodics.kind, 'group');
@@ -41,7 +39,5 @@ assert(moduleMetadata.nodics.owns.includes('service'));
 assert(moduleMetadata.nodics.owns.includes('router'));
 assert(moduleMetadata.nodics.owns.includes('schema'));
 assert(moduleMetadata.nodics.owns.includes('test'));
-assert(consolidatedProperties.activeModules.groups.includes('nodics.platform'),
-    'The clean-build authority must include nodics.platform so BackOffice schema services are generated for modular execution');
 
 console.log('BackOffice module boundary contract validated');

@@ -10,6 +10,8 @@
  */
 
 const assert = require('assert');
+const path = require('path');
+const repositoryRoot = path.resolve(__dirname, '../../../../../');
 
 /**
  * @module cache/test/cacheMutationSecurityContract
@@ -21,7 +23,8 @@ const assert = require('assert');
 
 const routerDefinitions = require('../../../nRouter/src/router/routers');
 const authProperties = require('../../../nAuth/config/properties');
-const userGroupsData = require('../../../../nodics.platform/modules/profile/data/init/data/groups/defaultBootstrapUserGroupsData');
+const userGroupsData = require(path.join(repositoryRoot,
+    'nodics.platform/modules/profile/data/init/data/groups/defaultBootstrapUserGroupsData'));
 
 const mutationRoutes = [
     routerDefinitions.common.flushCache.flushKey,

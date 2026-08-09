@@ -185,7 +185,7 @@ Example: a future Workflow dashboard.
 
 This sequence keeps customization safe. A customer extension can override the
 backend Workflow behavior while the functional module identity remains
-`nodics.workflow`. Axis still presents "Workflow" because the customization
+`nodics.process`. Axis still presents "Workflow" because the customization
 extends the capability rather than creating a new product identity.
 
 ## Operations example: deployment and rollback

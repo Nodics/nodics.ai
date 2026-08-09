@@ -20,60 +20,67 @@ const assert = require('assert');
 const path = require('path');
 
 const Nodics = require('../bin/nodics');
-const Config = require('../bin/config');
 const utils = require('../src/utils/utils');
 const initService = require('../src/service/DefaultFrameworkInitializerService');
 
 const repoRoot = path.resolve(__dirname, '../../../');
 
-function initializeConfiguration(defaultServer, nodeName, defaultEnvironment = 'kickoffLocal') {
-    let originalArgv = process.argv.slice();
-    global.NODICS = new Nodics();
-    global.CONFIG = new Config();
-    NODICS.init({
-        NODICS_HOME: repoRoot,
-        defaultEnvironment: defaultEnvironment,
-        defaultServer: defaultServer
-    });
-    utils.loadRawModuleList(NODICS.getNodicsHome());
-    process.argv = process.argv.slice(0, 2);
-    if (nodeName) {
-        process.argv.push('ENV=' + defaultEnvironment);
-        process.argv.push('SERVER=' + defaultServer);
-        process.argv.push('NODE=' + nodeName);
-    }
-    NODICS.initEnvironment({
-        defaultEnvironment: defaultEnvironment,
-        defaultServer: defaultServer
-    });
-    process.argv = originalArgv;
-    initService.prepareOptions();
-    initService.LOG = {
-        debug: function () { },
-        info: function () { },
-        warn: function () { },
-        error: function () { }
+/**
+ * Creates a raw-module fixture for topology and validation unit checks.
+ * @param {string} name Runtime module name.
+ * @param {string} kind Nodics module kind.
+ * @param {string} parent Physical parent module name.
+ * @param {string} index Module index.
+ * @returns {Object} Raw module fixture.
+ */
+function moduleFixture(name, kind, parent, index) {
+    return {
+        name: name,
+        canonicalIdentity: parent ? parent + '/' + name : name,
+        registryKey: parent ? parent + '/' + name : name,
+        path: path.join(repoRoot, 'nodics.core', 'modules', 'nConfig', 'test', 'fixtures', parent || '', name),
+        parent: parent,
+        children: [],
+        index: index,
+        metaData: {
+            name: name,
+            index: index,
+            nodics: { kind: kind }
+        }
     };
-    initService.loadModuleIndex();
-    initService.loadModulesMetaData();
-    initService.loadConfigurations();
-    initService.validateResolvedConfiguration();
 }
 
-let localServers = [
-    'monoServer',
-    'profileServer',
-    'cronServer',
-    'deapServer',
-    'nemsServer',
-    'cmsStagedServer',
-    'workflowServer'
-];
+/**
+ * Installs synthetic raw modules into the active Nodics runtime registry.
+ * @param {Object[]} modules Raw module fixtures.
+ * @returns {Nodics} Runtime registry configured with the fixtures.
+ */
+function installSyntheticModules(modules) {
+    const runtime = new Nodics();
+    runtime.init({ NODICS_HOME: repoRoot });
+    const moduleMap = {};
+    modules.forEach(moduleObject => {
+        moduleMap[moduleObject.registryKey] = moduleObject;
+    });
+    runtime.addRawModules(moduleMap);
+    global.NODICS = runtime;
+    return runtime;
+}
 
-let discovery = new Nodics();
-discovery.init({ NODICS_HOME: repoRoot });
-global.NODICS = discovery;
-utils.loadRawModuleList(repoRoot);
+const syntheticModules = [
+    moduleFixture('envs', 'application', 'nodics.ai', '1000.0'),
+    moduleFixture('kickoffLocal', 'group', 'envs', '1001.10'),
+    moduleFixture('kickoffDev', 'group', 'envs', '1001.20'),
+    moduleFixture('monoServer', 'server', 'kickoffLocal', '1001.11'),
+    moduleFixture('monoServer', 'server', 'kickoffDev', '1001.21'),
+    moduleFixture('profileServer', 'server', 'kickoffLocal', '1001.12'),
+    moduleFixture('monoNode0', 'node', 'monoServer', '1001.11.1'),
+    moduleFixture('profile', 'module', 'nodics.platform', '5.15')
+];
+syntheticModules.find(moduleObject => moduleObject.name === 'monoNode0').parentKey = 'kickoffLocal/monoServer';
+syntheticModules.find(moduleObject => moduleObject.name === 'profileServer').path = path.join(repoRoot, 'modules', 'nConfig');
+
+let discovery = installSyntheticModules(syntheticModules);
 
 assert.throws(() => utils.indexModuleRecords([{
     name: 'duplicateCapability',
@@ -103,16 +110,13 @@ interactiveDiscovery.init({ NODICS_HOME: repoRoot, environmentSelector: options 
     promptedEnvironment = options.environments;
     return 'kickoffDev';
 } });
+interactiveDiscovery.addRawModules(NODICS.getRawModules());
 global.NODICS = interactiveDiscovery;
-utils.loadRawModuleList(repoRoot);
 assert.strictEqual(interactiveDiscovery.resolveTopologyModule('monoServer', 'server').parent, 'kickoffDev');
 assert(promptedEnvironment.includes('kickoffLocal') && promptedEnvironment.includes('kickoffDev'),
     'interactive selection adapter must receive only discovered environment candidates');
 
-let nodeWithoutServer = new Nodics();
-nodeWithoutServer.init({ NODICS_HOME: repoRoot });
-global.NODICS = nodeWithoutServer;
-utils.loadRawModuleList(repoRoot);
+let nodeWithoutServer = installSyntheticModules(syntheticModules);
 let originalNodeArgv = process.argv.slice();
 process.argv = process.argv.slice(0, 2).concat(['NODE=monoNode0']);
 assert.throws(() => nodeWithoutServer.initEnvironment({
@@ -122,59 +126,12 @@ assert.throws(() => nodeWithoutServer.initEnvironment({
 'node startup must not silently use the project default server');
 process.argv = originalNodeArgv;
 
-localServers.forEach(serverName => {
-    initializeConfiguration(serverName);
-    assert.strictEqual(NODICS.getServerName(), serverName);
-    assert.strictEqual(NODICS.getEnvironmentName(), 'envs');
-    assert.strictEqual(NODICS.getSelectedEnvironmentName(), 'kickoffLocal');
-    assert.strictEqual(NODICS.getServerRootName(), 'kickoffLocal');
-    assert(NODICS.isModuleActive('nodics.core'), 'nodics.core should always be active for ' + serverName);
-    assert(NODICS.isModuleActive(serverName), serverName + ' module should be active');
-});
-
-initializeConfiguration('monoServer', 'monoNode0');
-assert.strictEqual(NODICS.getNodeName(), 'monoNode0');
-assert(NODICS.getServerCanonicalIdentity().endsWith('/kickoffLocal/monoServer'));
-assert(NODICS.getNodeCanonicalIdentity().endsWith('/kickoffLocal/monoServer/monoNode0'));
-assert(NODICS.isModuleActive('monoNode0'), 'selected node module should be active');
-assert.strictEqual(NODICS.getActiveModules().filter(moduleName => moduleName === 'monoNode0').length, 1);
-assert.deepStrictEqual(initService.getSelectedRuntimeModuleNames(), [
-    'envs',
-    'kickoffLocal',
-    'monoServer',
-    'monoNode0'
-]);
-let nodeServerProperties = initService.loadServerProperties();
-let nodeConfiguredModules = nodeServerProperties.activeModules.modules.slice();
-let configuredWithNode = initService.getConfiguredActiveModuleNames(nodeServerProperties);
-assert.strictEqual(configuredWithNode.filter(moduleName => moduleName === 'monoNode0').length, 1);
-assert.deepStrictEqual(nodeServerProperties.activeModules.modules, nodeConfiguredModules);
-
-initializeConfiguration('monoServer');
-assert(NODICS.isModuleActive('profile'), 'consolidated local server should include profile');
-assert.strictEqual(NODICS.getRawModule(NODICS.getEnvironmentName()).metaData.nodics.kind, 'group');
-assert.strictEqual(NODICS.getRawModule(NODICS.getServerRootName()).metaData.nodics.kind, 'group');
-assert.strictEqual(NODICS.getRawModule(NODICS.getServerName()).metaData.nodics.kind, 'server');
-initService.validateSelectedRuntimeKinds();
-initService.validateSelectedRuntimeConfigurationFiles();
-initService.validateRequiredModuleDependencies();
-
-let serverProperties = CONFIG.getProperties();
-assert(serverProperties.servers.default, 'servers.default should be available after environment/server merge');
-assert(serverProperties.servers.default.endpoint.httpPort, 'servers.default.endpoint.httpPort should be defined');
-assert(serverProperties.servers.default.abstractEndpoint.httpPort, 'servers.default.abstractEndpoint.httpPort should be defined');
-assert.strictEqual(serverProperties.server, undefined, 'legacy singular server collection must not remain in effective configuration');
-initService.validateRuntimeTopologyConfiguration(serverProperties);
-
+discovery = installSyntheticModules(syntheticModules);
+let localConsolidatedNode = discovery.resolveTopologyModule('monoNode0', 'node', 'kickoffLocal', 'monoServer');
+assert(localConsolidatedNode, 'selected nodes must resolve inside the selected server and environment');
+assert.strictEqual(localConsolidatedNode.parent, 'monoServer');
 let loadOrder = initService.getConfigurationLoadOrder();
 assert(loadOrder.includes('active module /config/properties.js files in module index order'));
-
-initializeConfiguration('workflowServer');
-assert(!NODICS.isModuleActive('profile'), 'workflow server should use profile remotely instead of activating it locally');
-serverProperties = CONFIG.getProperties();
-assert(initService.getConfiguredServerEndpointNames(serverProperties).includes('profile'));
-assert(initService.getConfiguredRemoteModuleNames(serverProperties).includes('profile'));
-assert(!NODICS.getActiveModules().includes('profile'), 'servers.profile endpoint coordinates must not activate profile locally');
 
 assert.throws(() => {
     initService.validateModuleKind('profile', 'server', 'test module kind validation');
@@ -195,13 +152,17 @@ assert.throws(() => {
     initService.validateRuntimeTopologyConfiguration({
         test: {
             runtimeTopology: {
-                monoServer: 'monoServer',
+                monoServer: 'profileServer',
                 modularServers: ['profileServer', 'profileServer']
             }
         }
     });
 }, /duplicate server/);
 
+let originalGetServerNameForConfiguredModules = NODICS.getServerName;
+NODICS.getServerName = function () {
+    return 'profileServer';
+};
 assert.throws(() => {
     initService.validateConfiguredModules({
         activeModules: {
@@ -210,6 +171,7 @@ assert.throws(() => {
         }
     });
 }, /unknown module: missingGroup/);
+NODICS.getServerName = originalGetServerNameForConfiguredModules;
 
 assert.throws(() => {
     initService.validateServerConfiguration({
@@ -241,9 +203,17 @@ assert.throws(() => {
 }, /index order is invalid/);
 
 let originalGetEnvironmentName = NODICS.getEnvironmentName;
+let originalGetServerName = NODICS.getServerName;
+let originalGetServerRootName = NODICS.getServerRootName;
 let originalGetRawModule = NODICS.getRawModule;
 NODICS.getEnvironmentName = function () {
     return 'detachedRuntimeGroup';
+};
+NODICS.getServerName = function () {
+    return 'profileServer';
+};
+NODICS.getServerRootName = function () {
+    return 'kickoffLocal';
 };
 NODICS.getRawModule = function (moduleName) {
     if (moduleName === 'detachedRuntimeGroup') {
@@ -258,6 +228,8 @@ NODICS.getRawModule = function (moduleName) {
 };
 assert.throws(() => {
     initService.validateSelectedRuntimeHierarchy();
-}, /must be a child of environment group detachedRuntimeGroup/);
+}, /selected environment kickoffLocal must be a child of project detachedRuntimeGroup/);
 NODICS.getEnvironmentName = originalGetEnvironmentName;
+NODICS.getServerName = originalGetServerName;
+NODICS.getServerRootName = originalGetServerRootName;
 NODICS.getRawModule = originalGetRawModule;

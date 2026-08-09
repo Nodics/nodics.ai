@@ -19,9 +19,11 @@
  * preserving these isolation and redaction guarantees.
  */
 const assert = require('assert');
+const path = require('path');
 const _ = require('lodash');
 const configuration = require('./authIntegrationTestConfiguration').load();
 const authDefaults = require('../../config/properties').authSecurity;
+const repositoryRoot = path.resolve(__dirname, '../../../../..');
 
 class NodicsError extends Error {
     constructor(code, message) { super(message || code && code.message || String(code)); this.code = typeof code === 'string' ? code : code && code.code; }
@@ -58,7 +60,7 @@ async function run() {
     const serviceTokenService = require('../../src/service/identity/defaultServiceTokenService');
     const authorization = require('../../../nService/src/service/authorization/defaultAuthorizationProviderService');
     const credentialService = require('../../src/service/identity/defaultAPIKeyCredentialService');
-    const employeeService = require('../../../../nodics.platform/modules/profile/src/service/employee/defaultEmployeeService');
+    const employeeService = require(path.join(repositoryRoot, 'nodics.platform/modules/profile/src/service/employee/defaultEmployeeService'));
     const auditService = require('../../src/service/audit/defaultAuthAuditService');
     const securedPipeline = require('../../../nRouter/src/service/request/defaultSecuredRequestPipelineService');
 

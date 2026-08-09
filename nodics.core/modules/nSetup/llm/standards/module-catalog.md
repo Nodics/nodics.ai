@@ -36,25 +36,23 @@ This file gives AI agents and developers a first-pass map of important Nodics mo
 | `nodics.platform/profile` | Enterprise, tenant, user, customer, employee, user group, permission, authentication, API-key, and mandatory identity bootstrap contracts. |
 | `nodics.platform/backoffice` | Module registry, discovery, catalogue, compatibility, availability summary, and registration lifecycle. |
 | `nodics.cron/cronjob` | Cron definitions, lifecycle operations, logs, node ownership, failover ownership, and event-driven execution. |
-| `nodics.workflow/workflow` | Workflow carriers, actions, channels, event continuation, split/retry behavior, and lifecycle integration. |
+| `nodics.wcms/cms` | CMS site, content catalog, page, route, template, component, renderer, restriction, and navigation contracts. |
+| `nodics.wcms/wcms` | Web content management module group defaults and WCMS composition contracts. |
+| `nodics.wcms/media` | Governed media folders, formats, assets, references, sets, uploads, delivery, and media lifecycle policies. |
+| `nodics.docs` | Framework-owned documentation data and documentation import ownership. |
+| `nodics.process/workflow` | Business process and workflow capability group. |
+| `nodics.process/workflow/flowSchema` | Process definition, version, instance, task, trigger, and audit schemas. |
+| `nodics.process/workflow/flowCore` | Process runtime services, lifecycle rules, execution, task handling, trigger behavior, and governance. |
+| `nodics.process/workflow/flowApi` | Process and workflow API/control-plane exposure for Axis and runtime integrations. |
 
-## Commerce And Content Modules
+## Planned Or Project-Owned Domain Modules
 
-| Module | Responsibility |
-| --- | --- |
-| `cart` | Cart capability. |
-| `order` | Order, payment status, shipping status, and reason data. |
-| `cms` | CMS site/page/component/type capabilities. |
-| `wcms` | Web CMS extension module. |
-
-## Data/Application Modules
-
-| Module | Responsibility |
-| --- | --- |
-| `dataProcessor` | Data processing capability. |
-| `dataConsumer` | External/internal data consumer capability. |
-| `dataPublisher` | Data publishing capability. |
-| `cres` | Marketing/review test capability in current repo. |
+Commerce, marketplace, logistics, telco, marketing, data-processing, and other
+domain modules must be added as explicit module groups or customer/project
+modules before they appear in enforceable framework gates. Do not list a
+capability as current framework functionality until its module package,
+README, schemas/routes/services/tests, and generated LLM context exist in this
+repository.
 
 ## Customer Project Shape
 

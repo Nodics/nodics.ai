@@ -65,6 +65,7 @@ assert.deepStrictEqual(dryLabels, [
     'npm run clean',
     'npm run build',
     'npm run llm:validate',
+    'npm run quality:ownership',
     'npm run quality:docs',
     'npm run test:basic'
 ]);

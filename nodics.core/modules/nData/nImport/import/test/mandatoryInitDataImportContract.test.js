@@ -43,9 +43,8 @@ global.NODICS = {
     getServerPath: function () { return '/tmp/nodics-server'; }
 };
 
-const repoRoot = path.resolve(__dirname, '../../../../../');
+const repoRoot = path.resolve(__dirname, '../../../../../../');
 const enterpriseHeader = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init/headers/enterprise/defaultEnterpriseHeader'));
-const tenantHeader = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init/headers/enterprise/defaultTenantsHeader'));
 const groupHeader = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init/headers/groups/defaultUserGroupsHeader'));
 const userHeader = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init/headers/user/defaultUsersHeader'));
 const enterpriseData = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init/data/enterprise/defaultEnterpriseData'));
@@ -57,8 +56,8 @@ const diagnostics = require('../src/service/diagnostics/defaultImportDiagnostics
 
 assert.strictEqual(enterpriseHeader.profile.defaultEnterprise.options.enabled, true);
 assert.deepStrictEqual(enterpriseHeader.profile.defaultEnterprise.options.tenants, ['default']);
-assert.strictEqual(tenantHeader.profile.defaultTenants.options.schemaName, 'tenant');
-assert.deepStrictEqual(tenantHeader.profile.defaultTenants.options.tenants, ['default']);
+assert.strictEqual(enterpriseHeader.profile.defaultTenants.options.schemaName, 'tenant');
+assert.deepStrictEqual(enterpriseHeader.profile.defaultTenants.options.tenants, ['default']);
 assert.strictEqual(groupHeader.profile.defaultUserGroups.options.schemaName, 'userGroup');
 assert.strictEqual(userHeader.profile.defaultEmployee.options.schemaName, 'employee');
 assert.strictEqual(enterpriseData.record0.code, 'default');

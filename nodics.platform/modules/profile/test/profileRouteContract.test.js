@@ -9,7 +9,10 @@
 
  */
 
-const { assertRouteContracts } = require('../../../nodics.core/modules/nRouter/test/routerContractTestUtils');
+const path = require('path');
+const repositoryRoot = path.resolve(__dirname, '../../../..');
+const { assertRouteContracts } = require(path.join(repositoryRoot,
+    'nodics.core/modules/nRouter/test/routerContractTestUtils'));
 const routerConfig = require('../src/router/routers');
 
 const expectedRoutes = [

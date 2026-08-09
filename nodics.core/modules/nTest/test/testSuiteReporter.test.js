@@ -18,7 +18,46 @@
  */
 const assert = require('assert');
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
+
+const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-test-reporter-'));
+
+/**
+ * Writes a synthetic project module file used by the reporter contract.
+ *
+ * @param {string} relativePath relative path under the fixture root.
+ * @param {string} content file content.
+ */
+function writeFixture(relativePath, content) {
+    const filePath = path.join(fixtureRoot, relativePath);
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    fs.writeFileSync(filePath, content);
+}
+
+writeFixture('env.js', `
+module.exports = {
+    defaultOptions: {
+        defaultEnvironment: 'localEnvironment',
+        defaultServer: 'platformServer'
+    }
+};
+`);
+writeFixture('envs/localEnvironment/package.json', JSON.stringify({
+    name: 'localEnvironment',
+    nodics: {
+        kind: 'group'
+    }
+}, null, 2));
+writeFixture('envs/localEnvironment/platformServer/package.json', JSON.stringify({
+    name: 'platformServer',
+    nodics: {
+        kind: 'server'
+    }
+}, null, 2));
+
+process.env.NODICS_HOME = fixtureRoot;
+
 const { parseOutput, createReport, parseArgs, resolveServerReportDir } = require('../src/service/tooling/defaultTestSuiteReportRunnerService');
 
 ['temp', 'tmp'].forEach(directoryName => {
@@ -29,21 +68,21 @@ const { parseOutput, createReport, parseArgs, resolveServerReportDir } = require
     );
 });
 
-let serverReportDir = resolveServerReportDir('monoServer');
+let serverReportDir = resolveServerReportDir('platformServer');
 assert.strictEqual(serverReportDir, path.join(
-    process.cwd(),
-    'nodics.kickoff/envs/kickoffLocal/monoServer/generated/test-reports'
+    fixtureRoot,
+    'envs/localEnvironment/platformServer/generated/test-reports'
 ));
-assert.strictEqual(resolveServerReportDir('monoServer', 'kickoffDev'), path.join(
-    process.cwd(),
-    'nodics.kickoff/envs/kickoffDev/monoServer/generated/test-reports'
+assert.strictEqual(resolveServerReportDir('platformServer', 'localEnvironment'), path.join(
+    fixtureRoot,
+    'envs/localEnvironment/platformServer/generated/test-reports'
 ));
-let parsedArgs = parseArgs(['--server=monoServer', '--', 'npm', 'test']);
-assert.strictEqual(parsedArgs.environmentName, 'kickoffLocal');
-assert.strictEqual(parsedArgs.serverName, 'monoServer');
+let parsedArgs = parseArgs(['--server=platformServer', '--', 'npm', 'test']);
+assert.strictEqual(parsedArgs.environmentName, 'localEnvironment');
+assert.strictEqual(parsedArgs.serverName, 'platformServer');
 assert.strictEqual(parsedArgs.reportDir, serverReportDir);
 assert.throws(() => parseArgs([
-    '--server=monoServer',
+    '--server=platformServer',
     '--report-dir=temp/test-reports',
     '--',
     'npm',
@@ -126,5 +165,7 @@ assert.strictEqual(report.durationMs, 5000);
 assert.strictEqual(report.environment.server, 'monoServer');
 assert.strictEqual(report.environment.node, 'monoNode0');
 assert.strictEqual(report.environment.tenant, 'nodicsTest');
+
+fs.rmSync(fixtureRoot, { recursive: true, force: true });
 
 console.log('Test suite reporter validated');

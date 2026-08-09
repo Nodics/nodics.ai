@@ -10,8 +10,10 @@
  */
 
 const assert = require("assert");
+const path = require("path");
 const _ = require("lodash");
-const authProperties = require("../../../../nodics.core/modules/nAuth/config/properties");
+const repositoryRoot = path.resolve(__dirname, "../../../..");
+const authProperties = require(path.join(repositoryRoot, "nodics.core/modules/nAuth/config/properties"));
 
 // @nodics-capability-behavior @nodics-area profile
 global.CONFIG = {
@@ -35,7 +37,7 @@ global.CONFIG = {
   },
 };
 
-const commonUtils = require("../../../../nodics.core/modules/nCommon/src/utils/utils");
+const commonUtils = require(path.join(repositoryRoot, "nodics.core/modules/nCommon/src/utils/utils"));
 global.UTILS = Object.assign({}, commonUtils, {
   isObject: function (value) {
     return value !== null && typeof value === "object" && !Array.isArray(value);

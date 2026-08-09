@@ -23,7 +23,7 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 
-const repositoryRoot = path.resolve(__dirname, '../../..');
+const repositoryRoot = path.resolve(__dirname, '../../../..');
 const packageJson = require(path.join(repositoryRoot, 'package.json'));
 const lockfilePath = path.join(repositoryRoot, 'package-lock.json');
 const nvmrcPath = path.join(repositoryRoot, '.nvmrc');

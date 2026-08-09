@@ -5,14 +5,26 @@
   "private": true,
   "description": "Nodics business process and workflow functional module group.",
   "main": "nodics.js",
-  "requiredModules": ["workflow"],
+  "requiredModules": [
+    "workflow"
+  ],
   "nodics": {
     "kind": "group",
-    "extends": ["nodics.core"],
+    "extends": [
+      "nodics.core"
+    ],
     "runtimeModule": true,
     "loadableByNodicsModuleLoader": true,
-    "owns": ["composition", "configuration", "llm"],
-    "runtime": { "router": false, "publish": false, "web": false },
+    "owns": [
+      "composition",
+      "configuration",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    },
     "displayName": "Nodics Process",
     "functionalModule": {
       "identity": "nodics.process",
@@ -27,8 +39,5 @@
     "docs:check": "node scripts/generate-documentation-content.mjs --check",
     "test:contract": "node test/processModuleContract.test.js && node test/processApiRouteContract.test.js && node test/processPermissionCatalogContract.test.js && node modules/workflow/modules/flowSchema/test/gen/schema/processTriggerSchemaContract.test.js && node test/processGraphValidationService.test.js && node test/processDefinitionLifecycleService.test.js && node test/processOperationsInspectionService.test.js && node test/processRuntimeLifecycleService.test.js",
     "test": "npm run check:syntax && npm run docs:check && npm run test:contract"
-  },
-  "dependencies": {
-    "nodics.core": "file:../nodics.core"
   }
 }

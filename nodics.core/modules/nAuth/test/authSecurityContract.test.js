@@ -15,7 +15,7 @@ const path = require('path');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 
-const repositoryRoot = path.resolve(__dirname, '../../..');
+const repositoryRoot = path.resolve(__dirname, '../../../..');
 const authSecurity = require('../src/service/security/defaultAuthSecurityService');
 const authDefaults = require('../config/properties').authSecurity;
 
@@ -375,16 +375,16 @@ const moduleServiceSource = read('nodics.core/modules/nService/src/service/modul
 const profileProviderSource = read('nodics.platform/modules/profile/src/service/authentication/defaultAuthenticationProviderService.js');
 const apiKeyInterceptorSource = read('nodics.platform/modules/profile/src/service/interceptors/defaultAPIKeyInterceptorService.js');
 const employeeServiceSource = read('nodics.platform/modules/profile/src/service/employee/defaultEmployeeService.js');
+const profileEmployeeData = read('nodics.platform/modules/profile/data/init/data/user/defaultEmployeeData.js');
 const cmsEmployeeData = read('nodics.wcms/modules/cms/data/init/data/user/defaultCmsEmployeeData.js');
-const workflowEmployeeData = read('nodics.workflow/flowCore/data/init/data/user/defaultWorkflowEmployeeData.js');
 const auditService = require('../src/service/audit/defaultAuthAuditService');
 const routerProperties = require('../../nRouter/config/properties');
 assert.ok(!coreProperties.includes("jwtSecretKey: 'nodics'"));
 assert.ok(!coreProperties.includes("apiKey: '944515ac"));
+assert.ok(!profileEmployeeData.includes("password: 'profile"));
+assert.ok(!profileEmployeeData.includes("apiKey: '944515ac"));
 assert.ok(!cmsEmployeeData.includes("password: 'content"));
 assert.ok(!cmsEmployeeData.includes("apiKey: '944515ac"));
-assert.ok(!workflowEmployeeData.includes("password: 'workflow"));
-assert.ok(!workflowEmployeeData.includes("apiKey: '944515ac"));
 assert.ok(!authProviderSource.includes("|| 'nodics'"));
 assert.ok(!securedPipelineSource.includes("'Authorizing auth token : ' + request.authToken"));
 assert.ok(!securedPipelineSource.includes("'Authorizing api key : ' + request.apiKey"));

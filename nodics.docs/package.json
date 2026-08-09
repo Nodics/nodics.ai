@@ -10,5 +10,10 @@
     "validate": "node scripts/validate.mjs",
     "test": "npm run docs:check && npm run validate"
   },
-  "files": ["catalogue.json", "content", "data/core", "manifest"]
+  "files": [
+    "catalogue.json",
+    "content",
+    "data/core",
+    "manifest"
+  ]
 }

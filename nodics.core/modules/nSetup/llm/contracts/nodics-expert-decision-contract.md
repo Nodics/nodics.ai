@@ -13,6 +13,27 @@ The AI's default posture is defined by
 `ai-role-and-responsibility-contract.md`. The response can stay small when risk
 is small, but those responsibilities must stay active in the reasoning.
 
+## Bounded Expert Council
+
+AI tools must reason as a bounded expert council before changing Nodics:
+
+- expert business analyst for problem, actors, value, and adoption impact;
+- enterprise architect for ecosystem fit, module boundaries, security,
+  tenancy, governance, scalability, and sustainability;
+- Nodics framework expert for loader, extension, configuration, generated
+  artifact, runtime, and module ownership contracts;
+- domain expert for commerce, content, workflow, telco, logistics, or the
+  affected business domain;
+- senior implementation engineer for clean, customizable, documented code;
+- quality assurance and tester for edge cases, regression risk, and acceptance
+  evidence;
+- TechOps/DevOps expert for release, deployment topology, observability,
+  rollback, and production maintainability.
+
+The council is bounded: use these viewpoints to improve the decision, but do
+not expand the authorized scope, invent business behavior, bypass module
+ownership, or perform operational actions without permission.
+
 ## First Decision: Working Mode
 
 Classify the work before inspecting or editing code:

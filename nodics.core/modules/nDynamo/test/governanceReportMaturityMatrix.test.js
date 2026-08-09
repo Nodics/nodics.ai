@@ -22,7 +22,7 @@
 const assert = require('assert');
 const path = require('path');
 
-const repositoryRoot = path.resolve(__dirname, '../../..');
+const repositoryRoot = path.resolve(__dirname, '../../../..');
 const rootPackage = require(path.join(repositoryRoot, 'package.json'));
 const generator = require('../src/service/tooling/defaultGovernanceReportGeneratorService');
 const ownedDependencies = rootPackage.nodics.dependencyGovernance.ownedDependencies;
@@ -37,15 +37,15 @@ const modules = [
         path: path.join(repositoryRoot, 'nodics.core/modules/nEms/activemq')
     },
     {
-        name: 'paymentCore',
-        path: path.join(repositoryRoot, 'nodics.commerce/modules/payment')
+        name: 'media',
+        path: path.join(repositoryRoot, 'nodics.wcms/modules/media')
     }
 ];
 
 const matrix = generator.collectProviderCapabilityMaturitySummary(modules, ownedDependencies);
 const elastic = matrix.find(entry => entry.modulePath === 'nodics.core/modules/nSearch/elastic');
 const activemq = matrix.find(entry => entry.modulePath === 'nodics.core/modules/nEms/activemq');
-const payment = matrix.find(entry => entry.modulePath === 'nodics.commerce/modules/payment');
+const media = matrix.find(entry => entry.modulePath === 'nodics.wcms/modules/media');
 
 assert(elastic, 'Elasticsearch provider module must be present in the maturity matrix');
 assert.strictEqual(elastic.displayName, 'Elasticsearch');
@@ -64,12 +64,13 @@ assert(activemq.evidence.dependencyPackages.some(item => item.packageName === 's
 assert(String(activemq.maturity).toLowerCase().includes('placeholder'),
     'Placeholder provider maturity must not be promoted by scaffold ownership alone');
 
-assert(payment, 'Payment capability module must be present in the maturity matrix');
-assert.strictEqual(payment.displayName, 'Payment Core');
-assert(payment.owns.includes('schema') && payment.owns.includes('service'),
+assert(media, 'Media capability module must be present in the maturity matrix');
+assert.strictEqual(media.displayName, 'Media Management');
+assert(media.owns.includes('schema') && media.owns.includes('service'),
     'Capability maturity evidence must include package ownership metadata');
-assert(payment.evidence.sourceFiles > 0, 'Capability maturity evidence must include source file count');
-assert(payment.evidence.testFiles > 0, 'Capability maturity evidence must include test file count');
-assert(payment.maturity, 'Capability maturity must be explicitly inferred');
+assert.strictEqual(media.providerBacked, false, 'Media capability must not be misclassified as a provider adapter');
+assert(media.evidence.sourceFiles > 0, 'Capability maturity evidence must include source file count');
+assert(media.evidence.testFiles > 0, 'Capability maturity evidence must include test file count');
+assert(media.maturity, 'Capability maturity must be explicitly inferred');
 
 console.log('Governance report maturity matrix validated');

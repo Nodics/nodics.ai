@@ -7,8 +7,8 @@ Nodics loads active modules in index order. Lower-level framework modules provid
 The repository hierarchy includes:
 
 - `nodics.core`: framework capabilities required by every Nodics runtime.
-- product runtime repositories such as `nodics.platform`, `nodics.cron`, and
-  `nodics.workflow`, which functionally extend Core.
+- product runtime repositories such as `nodics.platform`, `nodics.cron`,
+  `nodics.wcms`, and `nodics.process`, which functionally extend Core.
 - independently versioned domain capability repositories where a capability
   does not belong to Core or an existing runtime product.
 - customer projects, which compose product runtimes and add project-owned
@@ -71,7 +71,7 @@ Keep local activation separate from endpoint coordinates. `activeModules.groups`
 and `activeModules.modules` decide which modules run inside the current process.
 `servers.*` entries describe how to reach local or remote module endpoints and
 must not be treated as local activation. In modular runtime, a server may define
-`servers.profile`, `servers.nems`, or another module endpoint so it can call that
+`servers.profile`, `servers.nEms`, or another module endpoint so it can call that
 remote process without loading that module locally.
 
 Testing should cover both styles when behavior depends on module communication.

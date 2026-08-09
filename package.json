@@ -22,7 +22,297 @@
       "publish": false,
       "web": false
     },
-    "displayName": "Nodics AI Framework"
+    "displayName": "Nodics AI Framework",
+    "dependencyGovernance": {
+      "preferredNodeMajor": 24,
+      "supportedNodeMajors": [
+        22,
+        24
+      ],
+      "forwardValidationNodeMajors": [
+        26
+      ],
+      "unsupportedNodeMajors": [
+        25
+      ],
+      "minimumNpmMajor": 10,
+      "maximumNpmMajorExclusive": 12,
+      "lockfile": {
+        "required": true,
+        "file": "package-lock.json",
+        "installCommand": "npm ci",
+        "commitWithPackageJson": true
+      },
+      "releaseValidation": [
+        "npm ci",
+        "npm audit --omit=dev",
+        "npm run clean",
+        "npm run build",
+        "npm run llm:validate",
+        "npm run quality:ownership",
+        "npm run quality:docs",
+        "npm run test:basic",
+        "npm run test:full"
+      ],
+      "ownedDependencies": {
+        "bcryptjs": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-security",
+          "reason": "Password hashing support for profile and authentication services."
+        },
+        "body-parser": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-http",
+          "reason": "HTTP request parsing for generated Express routers."
+        },
+        "busboy": {
+          "owners": [
+            "nodics.core",
+            "nodics.wcms"
+          ],
+          "type": "runtime-upload",
+          "reason": "Multipart upload streaming for data import and governed media/content ingestion."
+        },
+        "clear-module": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-loader",
+          "reason": "Module cache invalidation for configurable startup and test loading."
+        },
+        "cron": {
+          "owners": [
+            "nodics.cron"
+          ],
+          "type": "runtime-scheduler",
+          "reason": "Cron expression scheduling for the cronjob module."
+        },
+        "csvtojson": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-import",
+          "reason": "CSV data import conversion for governed initializer and data operations."
+        },
+        "email-validator": {
+          "owners": [
+            "nodics.platform"
+          ],
+          "type": "runtime-validation",
+          "reason": "Email format validation for profile and identity flows."
+        },
+        "exceljs": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-import-export",
+          "reason": "Spreadsheet import/export support for data operations."
+        },
+        "express": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-http",
+          "reason": "HTTP server and router runtime used by generated APIs."
+        },
+        "flatted": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-serialization",
+          "reason": "Circular-safe serialization for framework diagnostics and object transport."
+        },
+        "fs-extra": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-filesystem",
+          "reason": "File-system helpers for setup, import, export, and generated artifacts."
+        },
+        "jsonwebtoken": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-security",
+          "reason": "JWT token generation and verification for service and human-token boundaries."
+        },
+        "lodash": {
+          "owners": [
+            "nodics.core",
+            "nodics.platform",
+            "nodics.cron",
+            "nodics.wcms"
+          ],
+          "type": "runtime-utility",
+          "reason": "Shared collection and object utilities used across framework modules."
+        },
+        "logform": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-logging",
+          "reason": "Winston log formatting support."
+        },
+        "mongodb": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-database",
+          "reason": "MongoDB adapter for schema, CRUD, repository, and initializer data operations."
+        },
+        "node-fetch": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-http-client",
+          "reason": "HTTP client support for service communication and integration calls."
+        },
+        "object-sizeof": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-diagnostics",
+          "reason": "Payload and object size diagnostics for framework utilities."
+        },
+        "require-from-string": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-loader",
+          "reason": "Dynamic module loading from generated or composed source text."
+        },
+        "stream-json": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-import",
+          "reason": "Streaming JSON import support for large governed data files."
+        },
+        "swagger-ui-dist": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-openapi",
+          "reason": "Swagger UI assets for generated OpenAPI documentation."
+        },
+        "uuid": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-identity",
+          "reason": "Unique identifier generation for records, processes, imports, and traces."
+        },
+        "winston": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-logging",
+          "reason": "Framework logging runtime."
+        },
+        "xml-js": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "runtime-import-export",
+          "reason": "XML conversion support for import/export operations."
+        },
+        "chai": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "test-framework",
+          "reason": "Assertion library used by framework contract tests."
+        },
+        "mocha": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "test-framework",
+          "reason": "Test runner used by framework contract tests."
+        },
+        "@elastic/elasticsearch": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "optional-provider-search",
+          "reason": "Optional Elasticsearch provider adapter.",
+          "restricted": true,
+          "allowedConsumers": [
+            "nodics.core/modules/nSearch"
+          ]
+        },
+        "hazelcast-client": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "optional-provider-cache",
+          "reason": "Optional Hazelcast provider adapter.",
+          "restricted": true,
+          "allowedConsumers": [
+            "nodics.core/modules/nCache"
+          ]
+        },
+        "kafkajs": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "optional-provider-messaging",
+          "reason": "Optional Kafka provider adapter.",
+          "restricted": true,
+          "allowedConsumers": [
+            "nodics.core/modules/nEms"
+          ]
+        },
+        "node-cache": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "optional-provider-cache",
+          "reason": "Optional local in-memory cache provider.",
+          "restricted": true,
+          "allowedConsumers": [
+            "nodics.core/modules/nCache"
+          ]
+        },
+        "redis": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "optional-provider-cache",
+          "reason": "Optional Redis cache/provider adapter.",
+          "restricted": true,
+          "allowedConsumers": [
+            "nodics.core/modules/nCache"
+          ]
+        },
+        "stompit": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "optional-provider-messaging",
+          "reason": "Optional STOMP messaging provider adapter.",
+          "restricted": true,
+          "allowedConsumers": [
+            "nodics.core/modules/nEms"
+          ]
+        },
+        "winston-elasticsearch": {
+          "owners": [
+            "nodics.core"
+          ],
+          "type": "optional-provider-logging",
+          "reason": "Optional Elasticsearch logging transport.",
+          "restricted": true,
+          "allowedConsumers": [
+            "nodics.core/modules/nLog"
+          ]
+        }
+      }
+    }
   },
   "workspaces": [
     "nodics.core",
@@ -33,6 +323,7 @@
     "nodics.process"
   ],
   "scripts": {
+    "check:syntax": "node nodics.core/modules/nTooling/bin/nodics-tool.js check:syntax",
     "validate:root": "node nodics.core/modules/nTooling/bin/nodics-tool.js validate:root",
     "clean": "node nodics.core/modules/nTooling/bin/nodics-tool.js clean",
     "build": "node nodics.core/modules/nTooling/bin/nodics-tool.js build",
@@ -57,5 +348,55 @@
     "test:full:report": "npm run test:suite -- test:suite --suite=full --report && npm run test:report -- --suite=full",
     "test:import:report": "npm run test:suite -- test:suite --suite=import --report && npm run test:report -- --suite=import",
     "test": "npm run validate:root"
+  },
+  "devDependencies": {
+    "chai": "^4.5.0",
+    "mocha": "^11.7.6"
+  },
+  "optionalDependencies": {
+    "@elastic/elasticsearch": "^8.19.2",
+    "hazelcast-client": "^5.6.0",
+    "kafkajs": "^2.2.4",
+    "node-cache": "^5.1.2",
+    "redis": "^4.7.1",
+    "stompit": "^1.0.0",
+    "winston-elasticsearch": "^0.19.0"
+  },
+  "allowScripts": {
+    "@scarf/scarf": false
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.2",
+    "busboy": "^1.6.0",
+    "clear-module": "^4.1.3",
+    "cron": "^1.8.2",
+    "csvtojson": "^2.0.10",
+    "email-validator": "^2.0.4",
+    "exceljs": "^4.4.0",
+    "express": "^4.17.3",
+    "flatted": "^3.2.7",
+    "fs-extra": "^10.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "lodash": "^4.17.21",
+    "logform": "^2.4.0",
+    "mongodb": "^4.17.2",
+    "node-fetch": "^2.7.0",
+    "object-sizeof": "^1.6.3",
+    "require-from-string": "^2.0.2",
+    "stream-json": "^1.9.1",
+    "swagger-ui-dist": "^5.32.9",
+    "uuid": "^11.1.1",
+    "winston": "^3.6.0",
+    "xml-js": "^1.6.11"
+  },
+  "overrides": {
+    "diff": "^8.0.3",
+    "serialize-javascript": "^7.0.7",
+    "js-yaml": "^4.2.0",
+    "qs": "^6.15.3",
+    "cookie": "^0.7.2",
+    "brace-expansion": "^5.0.8",
+    "uuid": "^11.1.1"
   }
 }

@@ -10,6 +10,8 @@
  */
 
 const assert = require('assert');
+const path = require('path');
+const repositoryRoot = path.resolve(__dirname, '../../../..');
 
 // @nodics-capability-behavior @nodics-area profile
 global.CONFIG = {
@@ -90,7 +92,7 @@ global.UTILS = {
 };
 
 global.CLASSES = {
-    NodicsError: require('../../../nodics.core/modules/nCommon/src/lib/nodicsError')
+    NodicsError: require(path.join(repositoryRoot, 'nodics.core/modules/nCommon/src/lib/nodicsError'))
 };
 
 const calls = [];

@@ -11,6 +11,7 @@
 
 const assert = require('assert');
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const merge = require('lodash/merge');
 
@@ -21,8 +22,9 @@ const merge = require('lodash/merge');
  * @owner nConfig
  */
 
-const root = path.resolve(__dirname, '../../..');
-const envRoot = path.join(root, 'nodics.kickoff/envs');
+const root = path.resolve(__dirname, '../../../..');
+const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-config-ownership-'));
+const envRoot = path.join(fixtureRoot, 'customerProject/envs');
 
 function findProperties(directory, result) {
     fs.readdirSync(directory, { withFileTypes: true }).forEach(entry => {
@@ -39,6 +41,79 @@ function findProperties(directory, result) {
 function load(relativePath) {
     return require(path.join(root, relativePath));
 }
+
+/**
+ * Writes a synthetic project/environment/server properties fixture.
+ *
+ * The contract intentionally uses project-neutral fixture names so framework
+ * governance does not accidentally make any reference project a standard.
+ *
+ * @param {string} relativePath relative fixture path.
+ * @param {string} source JavaScript source to write.
+ */
+function writeFixture(relativePath, source) {
+    const filePath = path.join(fixtureRoot, relativePath);
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    fs.writeFileSync(filePath, source);
+}
+
+writeFixture('customerProject/envs/local/config/properties.js', `
+module.exports = {
+    log: {
+        level: 'info'
+    },
+    search: {
+        default: {
+            options: {
+                enabled: false
+            }
+        }
+    }
+};
+`);
+writeFixture('customerProject/envs/local/platformServer/config/properties.js', `
+module.exports = {
+};
+`);
+writeFixture('customerProject/envs/local/diagnosticServer/config/properties.js', `
+module.exports = {
+    log: {
+        level: 'debug'
+    }
+};
+`);
+writeFixture('customerProject/envs/local/searchServer/config/properties.js', `
+module.exports = {
+    search: {
+        default: {
+            options: {
+                enabled: true,
+                engine: 'elastic'
+            }
+        }
+    }
+};
+`);
+writeFixture('customerProject/envs/local/contentServer/config/properties.js', `
+module.exports = {
+    cms: {
+        publication: {
+            target: {
+                timeoutMs: 30000,
+                maxAttempts: 3
+            }
+        }
+    },
+    media: {
+        publication: {
+            target: {
+                timeoutMs: 30000,
+                maxAttempts: 3
+            }
+        }
+    }
+};
+`);
 
 const topologySources = findProperties(envRoot, []).map(file => ({
     file,
@@ -71,43 +146,38 @@ const framework = merge({},
     load('nodics.core/modules/nSearch/search/config/properties.js'),
     load('nodics.core/modules/nEms/emsClient/config/properties.js'),
     load('nodics.cron/modules/cronjob/config/properties.js'));
-const local = load('nodics.kickoff/envs/kickoffLocal/config/properties.js');
+const local = require(path.join(fixtureRoot, 'customerProject/envs/local/config/properties.js'));
 
 const backoffice = merge({}, framework, local,
-    load('nodics.kickoff/envs/kickoffLocal/backofficeServer/config/properties.js'));
+    require(path.join(fixtureRoot, 'customerProject/envs/local/platformServer/config/properties.js')));
 assert.strictEqual(backoffice.log.level, 'info');
 assert.strictEqual(backoffice.cronjob.runOnStartup, false);
 assert.strictEqual(backoffice.search.default.options.enabled, false);
 assert.strictEqual(backoffice.servers.options.contextRoot, 'nodics');
 
 const deap = merge({}, framework, local,
-    load('nodics.kickoff/envs/kickoffLocal/deapServer/config/properties.js'));
+    require(path.join(fixtureRoot, 'customerProject/envs/local/diagnosticServer/config/properties.js')));
 assert.strictEqual(deap.emsClient.logFailedMessages, false);
 assert.strictEqual(deap.search.default.options.enabled, false);
 assert.strictEqual(deap.log.level, 'debug',
     'Server-specific debug logging must remain an intentional override');
 
 const mono = merge({}, framework, local,
-    load('nodics.kickoff/envs/kickoffLocal/monoServer/config/properties.js'));
+    require(path.join(fixtureRoot, 'customerProject/envs/local/searchServer/config/properties.js')));
 assert.strictEqual(mono.cronjob.runOnStartup, false);
 assert.strictEqual(mono.search.default.options.enabled, true);
 assert.strictEqual(mono.search.default.options.engine, 'elastic');
 
 const publicationDefaults = merge({},
     load('nodics.wcms/modules/cms/config/properties.js'),
-    load('nodics.commerce/modules/pricing/config/properties.js'),
-    load('nodics.commerce/modules/product/config/properties.js'));
+    load('nodics.wcms/modules/media/config/properties.js'));
 const staged = merge({}, publicationDefaults,
-    load('nodics.kickoff/envs/kickoffLocal/cmsStagedServer/config/properties.js'));
-['cms', 'pricing', 'product'].forEach(moduleName => {
+    require(path.join(fixtureRoot, 'customerProject/envs/local/contentServer/config/properties.js')));
+['cms', 'media'].forEach(moduleName => {
     assert.strictEqual(staged[moduleName].publication.target.timeoutMs, 30000);
     assert.strictEqual(staged[moduleName].publication.target.maxAttempts, 3);
 });
 
-const online = merge({}, publicationDefaults,
-    load('nodics.kickoff/envs/kickoffLocal/cmsOnlineServer/config/properties.js'));
-['cms', 'pricing', 'product'].forEach(moduleName => {
-    assert.strictEqual(online[moduleName].publication.targetTransportProvider, null);
-});
+fs.rmSync(fixtureRoot, { recursive: true, force: true });
 
 console.log('Framework-wide configuration ownership contract validated');

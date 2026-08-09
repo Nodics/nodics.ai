@@ -10,6 +10,8 @@
  */
 
 const assert = require("assert");
+const path = require("path");
+const repositoryRoot = path.resolve(__dirname, "../../../..");
 
 global.CONFIG = {
   get: function (key) {
@@ -38,7 +40,8 @@ global.ENUMS = {
 };
 
 const scopeGovernance = require("../src/service/identity/defaultPrincipalScopeGovernanceService");
-const schemaHandler = require("../../../nodics.core/modules/nDatabase/database/src/service/schema/defaultDatabaseSchemaHandlerService");
+const schemaHandler = require(path.join(repositoryRoot,
+  "nodics.core/modules/nDatabase/database/src/service/schema/defaultDatabaseSchemaHandlerService"));
 const profileSchemas = schemaHandler.applyNamedSchemaPolicies(
   "profile",
   require("../src/schemas/schemas").profile,

@@ -10,6 +10,8 @@
  */
 
 const assert = require('assert');
+const path = require('path');
+const repositoryRoot = path.resolve(__dirname, '../../../..');
 
 global.CONFIG = {
     get: function (key) {
@@ -47,17 +49,21 @@ global.CLASSES = {
 };
 global.ENUMS = { ContactType: { EMAIL: { key: 'EMAIL' }, PHONE: { key: 'PHONE' }, FAX: { key: 'FAX' }, PAGER: { key: 'PAGER' } } };
 
-const identityService = require('../../../nodics.core/modules/nAuth/src/service/identity/defaultIdentityGovernanceService');
+const identityService = require(path.join(repositoryRoot,
+    'nodics.core/modules/nAuth/src/service/identity/defaultIdentityGovernanceService'));
 const groupGovernance = require('../src/service/group/defaultUserGroupGovernanceService');
 const principalGovernance = require('../src/service/identity/defaultPrincipalGovernanceService');
 const registration = require('../src/service/customer/defaultCustomerRegistrationService');
 const apiKeyInterceptor = require('../src/service/interceptors/defaultAPIKeyInterceptorService');
-const apiKeyCredential = require('../../../nodics.core/modules/nAuth/src/service/identity/defaultAPIKeyCredentialService');
+const apiKeyCredential = require(path.join(repositoryRoot,
+    'nodics.core/modules/nAuth/src/service/identity/defaultAPIKeyCredentialService'));
 const employeeService = require('../src/service/employee/defaultEmployeeService');
-const schemaHandler = require('../../../nodics.core/modules/nDatabase/database/src/service/schema/defaultDatabaseSchemaHandlerService');
+const schemaHandler = require(path.join(repositoryRoot,
+    'nodics.core/modules/nDatabase/database/src/service/schema/defaultDatabaseSchemaHandlerService'));
 const profileSchemas = schemaHandler.applyNamedSchemaPolicies(
     'profile', require('../src/schemas/schemas').profile);
-const schemaAccessHandler = require('../../../nodics.core/modules/nDatabase/database/src/service/schema/defaultSchemaAccessHandlerService');
+const schemaAccessHandler = require(path.join(repositoryRoot,
+    'nodics.core/modules/nDatabase/database/src/service/schema/defaultSchemaAccessHandlerService'));
 registration.LOG = { debug: function () {} };
 
 global.SERVICE = { DefaultIdentityGovernanceService: identityService, DefaultAPIKeyCredentialService: apiKeyCredential };

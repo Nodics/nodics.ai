@@ -10,15 +10,14 @@
  */
 
 const assert = require('assert');
-const path = require('path');
 const redis = require('redis');
 
 /**
  * @module redisCache/test/cacheRedisLive
- * @description Verifies the complete Redis cache adapter contract against the environment override or authoritative local runtime endpoint, or fails closed when neither exists.
+ * @description Verifies the complete Redis cache adapter contract against the environment-provided live endpoint, or fails closed when none exists.
  * @layer test
  * @owner nCache/redisCache
- * @override CI and deployment pipelines may provide NODICS_CACHE_REDIS_URL; local qualification follows kickoffLocal runtime configuration.
+ * @override CI, release, and deployment pipelines provide NODICS_CACHE_REDIS_URL when live provider evidence is mandatory.
  */
 
 class CacheError extends Error {
@@ -28,20 +27,12 @@ global.CLASSES = { CacheError };
 const configurationService = require('../../cache/src/service/config/defaultCacheConfigurationService');
 global.SERVICE = { DefaultCacheConfigurationService: configurationService };
 
-function configuredRedisUrl() {
-    if (process.env.NODICS_CACHE_REDIS_URL) return process.env.NODICS_CACHE_REDIS_URL;
-    const properties = require(path.resolve(__dirname, '../../../../nodics.kickoff/envs/kickoffLocal/config/properties.js'));
-    return properties.cache && properties.cache.default && properties.cache.default.engines &&
-        properties.cache.default.engines.redis && properties.cache.default.engines.redis.options &&
-        properties.cache.default.engines.redis.options.url;
-}
-
 (async function () {
-    const url = configuredRedisUrl();
+    const url = process.env.NODICS_CACHE_REDIS_URL;
     const requireLive = process.argv.includes('--require-live') || process.env.NODICS_CACHE_REQUIRE_LIVE === 'true';
     if (!url) {
         assert(!requireLive, 'A Redis endpoint is required for the cache Redis release gate');
-        console.log('Redis cache live contract NOT EXECUTED: configure the runtime endpoint or NODICS_CACHE_REDIS_URL');
+        console.log('Redis cache live contract NOT EXECUTED: set NODICS_CACHE_REDIS_URL and use --require-live when live provider evidence is mandatory');
         return;
     }
     const client = redis.createClient({ url });

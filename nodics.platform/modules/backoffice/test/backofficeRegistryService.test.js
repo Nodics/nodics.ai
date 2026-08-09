@@ -408,49 +408,49 @@ async function run() {
           backoffice: registration.backoffice,
         },
         {
-          moduleName: "workflow",
-          displayName: "Workflow",
-          canonicalIdentity: "workflow",
+          moduleName: "nodics.process",
+          displayName: "Business Process & Automation",
+          canonicalIdentity: "nodics.process",
           instanceId: "runtime-1",
           moduleKind: "group",
           clientCallable: false,
         },
         {
-          moduleName: "workflowCore",
-          displayName: "Workflow Core",
-          parentModule: "workflow",
-          canonicalIdentity: "nodics.workflow/workflowCore",
+          moduleName: "flowCore",
+          displayName: "Process Runtime Core",
+          parentModule: "nodics.process",
+          canonicalIdentity: "nodics.process/modules/workflow/modules/flowCore",
           instanceId: "runtime-1",
           clientCallable: false,
           capabilities: ["service"],
         },
         {
-          moduleName: "payment",
-          displayName: "Payment",
-          parentModule: "nodics.commerce",
-          canonicalIdentity: "nodics.commerce/modules/payment",
+          moduleName: "media",
+          displayName: "Media Management",
+          parentModule: "nodics.wcms",
+          canonicalIdentity: "nodics.wcms/modules/media",
           instanceId: "runtime-1",
           clientCallable: false,
           capabilities: ["schema", "service"],
           backoffice: {
             enabled: true,
-            capabilityId: "payment-operations",
-            displayName: "Payment Operations",
-            requiredPermissions: ["payment.backoffice.read"],
+            capabilityId: "media-operations",
+            displayName: "Media Operations",
+            requiredPermissions: ["media.backoffice.read"],
             navigation: [
               {
-                id: "payment-operations",
-                label: "Payment Operations",
-                requiredPermissions: ["payment.backoffice.read"],
+                id: "media-operations",
+                label: "Media Operations",
+                requiredPermissions: ["media.backoffice.read"],
               },
               {
-                id: "payment-providers",
-                parentId: "payment-operations",
-                label: "Payment Providers",
-                requiredPermissions: ["payment.backoffice.read"],
+                id: "media-formats",
+                parentId: "media-operations",
+                label: "Media Formats",
+                requiredPermissions: ["media.backoffice.read"],
                 workbenchTarget: {
-                  moduleName: "payment",
-                  schemaName: "paymentProvider",
+                  moduleName: "media",
+                  schemaName: "mediaFormat",
                 },
               },
             ],
@@ -461,7 +461,7 @@ async function run() {
     authData: {
       tokenType: "service",
       runtimeInstanceId: "runtime-1",
-      modules: ["nodics.wcms", "cms", "workflow", "workflowCore", "payment"],
+      modules: ["nodics.wcms", "cms", "nodics.process", "flowCore", "media"],
       userGroups: ["serviceAccountUserGroup"],
     },
   });
@@ -570,31 +570,31 @@ async function run() {
     authData: { permissions: ["cms.backoffice.view"] },
   });
   assert.strictEqual(
-    list.data.modules.workflowCore,
+    list.data.modules.flowCore,
     undefined,
     "non-API modules must not appear in client discovery",
   );
   assert.strictEqual(
-    list.data.modules.payment,
+    list.data.modules.media,
     undefined,
     "BackOffice metadata modules must still require their own permissions",
   );
   list = await service.list({
-    authData: { permissions: ["payment.backoffice.read"] },
+    authData: { permissions: ["media.backoffice.read"] },
   });
   assert.strictEqual(
-    list.data.modules.payment[0].clientCallable,
+    list.data.modules.media[0].clientCallable,
     false,
     "schema-backed BackOffice modules must not be promoted to direct endpoint-callable modules",
   );
   assert.strictEqual(
-    list.data.modules.payment[0].endpoint,
+    list.data.modules.media[0].endpoint,
     undefined,
     "schema-backed BackOffice modules must not expose invented endpoints",
   );
   assert.strictEqual(
-    list.data.modules.payment[0].backoffice.navigation[1].workbenchTarget.schemaName,
-    "paymentProvider",
+    list.data.modules.media[0].backoffice.navigation[1].workbenchTarget.schemaName,
+    "mediaFormat",
     "BackOffice-visible schema-backed modules should remain discoverable for Axis navigation",
   );
   let diagnostics = await service.diagnostics({
@@ -650,32 +650,32 @@ async function run() {
   assert(Array.isArray(bootstrap.data.documentationSources));
   assert.strictEqual(bootstrap.data.tenantCode, "default");
   assert.strictEqual(
-    bootstrap.data.modules.workflowCore,
+    bootstrap.data.modules.flowCore,
     undefined,
     "bootstrap must never expose modules that are not browser callable",
   );
   assert.strictEqual(
-    bootstrap.data.catalogue.workflowCore,
+    bootstrap.data.catalogue.flowCore,
     undefined,
     "bootstrap catalogue must contain only authorized BackOffice-discoverable modules",
   );
   assert.strictEqual(
-    bootstrap.data.catalogue.payment,
+    bootstrap.data.catalogue.media,
     undefined,
     "bootstrap catalogue must keep unauthorized BackOffice modules hidden",
   );
-  let paymentBootstrap = await service.bootstrap({
+  let mediaBootstrap = await service.bootstrap({
     tenant: "default",
-    authData: { permissions: ["payment.backoffice.read"] },
+    authData: { permissions: ["media.backoffice.read"] },
     headers: { "x-nodics-client-contract-version": "1" },
   });
   assert.strictEqual(
-    paymentBootstrap.data.catalogue.payment.navigation[1].workbenchTarget.schemaName,
-    "paymentProvider",
+    mediaBootstrap.data.catalogue.media.navigation[1].workbenchTarget.schemaName,
+    "mediaFormat",
     "bootstrap must expose authorized schema-backed BackOffice navigation even when the owning module has no router",
   );
   assert.strictEqual(
-    paymentBootstrap.data.modules.payment[0].endpoint,
+    mediaBootstrap.data.modules.media[0].endpoint,
     undefined,
     "bootstrap must not invent HTTP endpoints for schema-backed BackOffice modules",
   );
@@ -728,24 +728,24 @@ async function run() {
   );
   let crossModuleCatalogue = service.buildCatalogue(
     {
-      nodics.commerce: [
+      "nodics.wcms": [
         {
           backoffice: {
             navigation: [
-              { id: "commerce-operations", label: "Commerce Operations" },
+              { id: "content-operations", label: "Content Operations" },
             ],
           },
         },
       ],
-      pricing: [
+      media: [
         {
           backoffice: {
             navigation: [
               {
-                id: "pricing",
-                label: "Pricing",
-                parentId: "commerce-operations",
-                parentModuleName: "nodics.commerce",
+                id: "media-assets",
+                label: "Media Assets",
+                parentId: "content-operations",
+                parentModuleName: "nodics.wcms",
               },
             ],
           },
@@ -756,21 +756,21 @@ async function run() {
     { permissions: [] },
   );
   assert.deepStrictEqual(
-    crossModuleCatalogue.pricing.navigation.map((item) => item.id),
-    ["pricing"],
+    crossModuleCatalogue.media.navigation.map((item) => item.id),
+    ["media-assets"],
     "bootstrap must retain explicit cross-module children when their authorized parent is present",
   );
   let missingCrossModuleParentCatalogue = service.buildCatalogue(
     {
-      pricing: [
+      media: [
         {
           backoffice: {
             navigation: [
               {
-                id: "pricing",
-                label: "Pricing",
-                parentId: "commerce-operations",
-                parentModuleName: "nodics.commerce",
+                id: "media-assets",
+                label: "Media Assets",
+                parentId: "content-operations",
+                parentModuleName: "nodics.wcms",
               },
             ],
           },
@@ -781,7 +781,7 @@ async function run() {
     { permissions: [] },
   );
   assert.deepStrictEqual(
-    missingCrossModuleParentCatalogue.pricing.navigation,
+    missingCrossModuleParentCatalogue.media.navigation,
     [],
     "bootstrap must remove explicit cross-module children when their authorized parent is absent",
   );

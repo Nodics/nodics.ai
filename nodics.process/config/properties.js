@@ -55,7 +55,7 @@ module.exports = {
                         audiences: ['business-user', 'administrator', 'developer', 'operator', 'ai-tool'],
                         coverage: {
                             score: 72,
-                            status: 'GROWING',
+                            status: 'PARTIAL',
                             signals: ['Process module ownership', 'Runtime lifecycle', 'Task operations', 'Trigger relationship boundary', 'Designer guardrails'],
                             gaps: ['More screenshots', 'More advanced node recipes', 'Dedicated BPMN adapter documentation']
                         }

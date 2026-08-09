@@ -117,7 +117,7 @@ global.SERVICE = {
         resolve();
     }));
 
-    const repositoryRoot = path.resolve(__dirname, '../../../..');
+    const repositoryRoot = path.resolve(__dirname, '../../../../..');
     [
         'nodics.core/modules/nDatabase/database/src/service/procs/save/defaultModelSaveInitializerService.js',
         'nodics.core/modules/nDatabase/database/src/service/procs/update/defaultModelsUpdateInitializerService.js',

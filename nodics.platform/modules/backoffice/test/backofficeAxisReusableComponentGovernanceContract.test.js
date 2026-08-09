@@ -16,23 +16,18 @@
  * @owner backoffice
  */
 const assert = require("assert");
+const path = require("path");
 const service = require("../src/service/contract/defaultBackofficeContractService");
+const repositoryRoot = path.resolve(__dirname, "../../../..");
 
-const cmsCapability = require("../../../nodics.wcms/modules/cms/config/properties")
+const cmsCapability = require(path.join(repositoryRoot, "nodics.wcms/modules/cms/config/properties"))
   .backofficeCapabilities.cms;
-const mediaCapability = require("../../../nodics.wcms/modules/media/config/properties")
+const mediaCapability = require(path.join(repositoryRoot, "nodics.wcms/modules/media/config/properties"))
   .backofficeCapabilities.media;
-const paymentCapability =
-  require("../../../nodics.commerce/modules/payment/config/properties")
-    .backofficeCapabilities.payment;
-const cresCapability = require("../../../gMrkty/cres/config/properties")
-  .backofficeCapabilities.cres;
 
 const capabilities = [
   cmsCapability,
   mediaCapability,
-  paymentCapability,
-  cresCapability,
 ];
 
 const schemaBackedNavigation = [
@@ -61,40 +56,22 @@ const schemaBackedNavigation = [
     schemaName: "cmsTypeCode2Renderer",
   },
   {
-    capability: paymentCapability,
-    id: "payment-methods",
-    moduleName: "payment",
-    schemaName: "paymentMethod",
+    capability: mediaCapability,
+    id: "media-items",
+    moduleName: "media",
+    schemaName: "media",
   },
   {
-    capability: paymentCapability,
-    id: "payment-providers",
-    moduleName: "payment",
-    schemaName: "paymentProvider",
+    capability: mediaCapability,
+    id: "media-folders",
+    moduleName: "media",
+    schemaName: "mediaFolder",
   },
   {
-    capability: paymentCapability,
-    id: "payment-provider-policies",
-    moduleName: "payment",
-    schemaName: "paymentProviderExecutionPolicy",
-  },
-  {
-    capability: cresCapability,
-    id: "customer-reviews",
-    moduleName: "cres",
-    schemaName: "customerReview",
-  },
-  {
-    capability: cresCapability,
-    id: "review-aggregates",
-    moduleName: "cres",
-    schemaName: "customerReviewAggregate",
-  },
-  {
-    capability: cresCapability,
-    id: "review-abuse-reports",
-    moduleName: "cres",
-    schemaName: "customerReviewAbuseReport",
+    capability: mediaCapability,
+    id: "media-formats",
+    moduleName: "media",
+    schemaName: "mediaFormat",
   },
 ];
 

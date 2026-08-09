@@ -24,7 +24,7 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 
-const repositoryRoot = path.resolve(__dirname, '../../..');
+const repositoryRoot = path.resolve(__dirname, '../../../..');
 
 const requiredDocuments = {
     'LICENSE': [

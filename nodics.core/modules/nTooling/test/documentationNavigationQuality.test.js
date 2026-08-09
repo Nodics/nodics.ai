@@ -34,7 +34,7 @@ function createFixture() {
     write(rootDir, 'README.md', '# Entry\n\n[Docs](publicDocs/README.md)\n');
     write(rootDir, 'publicDocs/README.md', '# Docs\n\n[Guide](guide.md)\n[Catalog](reference/standards/module-catalog.md)\n');
     write(rootDir, 'publicDocs/guide.md', '# Guide\n\n## Continue\n\n- [Home](README.md)\n');
-    write(rootDir, 'publicDocs/reference/standards/module-catalog.md', '# Catalog\n\n- [sample](../../sample/README.md)\n\n## Continue\n\n- [Home](../README.md)\n');
+    write(rootDir, 'publicDocs/reference/standards/module-catalog.md', '# Catalog\n\n- [sample](../../../sample/README.md)\n\n## Continue\n\n- [Home](../../README.md)\n');
     write(rootDir, 'sample/package.json', JSON.stringify({ name: 'sample' }));
     write(rootDir, 'sample/README.md', '# Sample\n');
     return rootDir;

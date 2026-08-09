@@ -145,5 +145,5 @@ the appropriate job, event, messaging, or workflow capability.
 
 - Detailed framework: Pipeline Framework (canonical documentation: `capability.execution-processes.technical-reference`)
 - Public platform guide: [How Platform Capabilities Work](https://github.com/Nodics/nodics.docs)
-- Business workflow modules: [workflow](../../nodics.workflow/README.md)
+- Business workflow modules: [workflow](../../../nodics.process/modules/workflow/README.md)
 - Framework map: [nodics.core](../README.md)

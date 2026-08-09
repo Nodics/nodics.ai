@@ -13,54 +13,8 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 
-const repoRoot = path.resolve(__dirname, '../../../../../');
+const repoRoot = path.resolve(__dirname, '../../../../../../');
 const dataTypes = ['init', 'core', 'sample'];
-const Nodics = require(path.join(repoRoot, 'nodics.core/modules/nConfig/bin/nodics'));
-const Config = require(path.join(repoRoot, 'nodics.core/modules/nConfig/bin/config'));
-const utils = require(path.join(repoRoot, 'nodics.core/modules/nConfig/src/utils/utils'));
-const initService = require(path.join(repoRoot, 'nodics.core/modules/nConfig/src/service/DefaultFrameworkInitializerService'));
-
-function getDefaultServerName() {
-    let env = require(path.join(repoRoot, 'env.js'));
-    return env.defaultOptions.defaultServer || 'monoServer';
-}
-
-function getDefaultEnvironmentName() {
-    let env = require(path.join(repoRoot, 'env'));
-    return env.defaultOptions.defaultEnvironment || 'kickoffLocal';
-}
-
-function getDefaultServerActiveModules() {
-    let serverName = getDefaultServerName();
-    let environmentName = getDefaultEnvironmentName();
-    let originalArgv = process.argv.slice();
-    global.NODICS = new Nodics();
-    global.CONFIG = new Config();
-    NODICS.init({
-        NODICS_HOME: repoRoot,
-        defaultEnvironment: environmentName,
-        defaultServer: serverName
-    });
-    utils.loadRawModuleList(NODICS.getNodicsHome());
-    process.argv = process.argv.slice(0, 2);
-    NODICS.initEnvironment({
-        defaultEnvironment: environmentName,
-        defaultServer: serverName
-    });
-    process.argv = originalArgv;
-    initService.prepareOptions();
-    initService.LOG = {
-        debug: function () { },
-        info: function () { },
-        warn: function () { },
-        error: function () { }
-    };
-    initService.loadModuleIndex();
-    initService.loadModulesMetaData();
-    initService.loadConfigurations();
-    initService.validateResolvedConfiguration();
-    return NODICS.getActiveModules().map(moduleName => NODICS.getRawModule(moduleName)).filter(Boolean);
-}
 
 function walk(dir, matcher, result = []) {
     if (!fs.existsSync(dir)) {
@@ -69,12 +23,36 @@ function walk(dir, matcher, result = []) {
     fs.readdirSync(dir).forEach(entry => {
         let fullPath = path.join(dir, entry);
         if (fs.statSync(fullPath).isDirectory()) {
+            if (['.git', 'node_modules', 'generated'].includes(entry)) {
+                return;
+            }
             walk(fullPath, matcher, result);
         } else if (!matcher || matcher(fullPath, entry)) {
             result.push(fullPath);
         }
     });
     return result;
+}
+
+function collectBackendModules() {
+    let rootPackage = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8'));
+    let modules = [];
+    (rootPackage.workspaces || []).forEach(workspaceName => {
+        walk(path.join(repoRoot, workspaceName), (filePath, fileName) => {
+            if (fileName !== 'package.json') {
+                return false;
+            }
+            let packageJson = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+            if (packageJson.nodics && packageJson.nodics.loadableByNodicsModuleLoader !== false) {
+                modules.push({
+                    name: packageJson.name,
+                    path: path.dirname(filePath)
+                });
+            }
+            return false;
+        });
+    });
+    return modules;
 }
 
 function getActiveDataTypeRoots(activeModules) {
@@ -138,7 +116,7 @@ function getEnabledHeaders(headerFiles) {
 
 let failures = [];
 let scannedRoots = [];
-let activeModules = getDefaultServerActiveModules();
+let activeModules = collectBackendModules();
 let activeDataTypeRoots = getActiveDataTypeRoots(activeModules);
 
 activeDataTypeRoots.forEach(dataTypeRoot => {

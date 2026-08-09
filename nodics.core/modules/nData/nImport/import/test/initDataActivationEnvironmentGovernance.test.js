@@ -12,6 +12,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const _ = require('lodash');
 
 /**
@@ -26,38 +27,80 @@ const _ = require('lodash');
  * activation, manifest integrity, and governed bootstrap identity validation.
  */
 
-const repositoryRoot = path.resolve(__dirname, '../../../../../');
+const repositoryRoot = path.resolve(__dirname, '../../../../../../');
 const importProperties = require('../config/properties');
 const authDefaults = require('../../../../nAuth/config/properties').authSecurity;
-const localProperties = require(path.join(repositoryRoot, 'nodics.kickoff/envs/kickoffLocal/config/properties'));
+const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-import-env-'));
+const localProperties = {
+    data: {
+        dataReleases: {
+            types: {
+                sample: {
+                    enabled: true,
+                    operatorExecution: true
+                }
+            }
+        },
+        contentPacks: {
+            enabled: true
+        }
+    },
+    authSecurity: {
+        compatibility: {
+            allowLocalBootstrapIdentity: true
+        }
+    },
+    bootstrapIdentity: {
+        source: 'test',
+        adminPassword: 'test-admin-password-12345',
+        servicePassword: 'test-service-password-12345',
+        serviceApiKey: 'test-service-api-key-value-12345678901234567890'
+    }
+};
 const protectedEnvironmentPropertyPaths = [
-    'nodics.kickoff/envs/config/properties.js',
-    'nodics.kickoff/envs/kickoffDev/config/properties.js',
-    'nodics.kickoff/envs/kickoffQA/config/properties.js',
-    'nodics.kickoff/envs/kickoffPreProd/config/properties.js',
-    'nodics.kickoff/envs/kickoffProd/config/properties.js'
+    'customer.project/envs/config/properties.js',
+    'customer.project/envs/development/config/properties.js',
+    'customer.project/envs/qa/config/properties.js',
+    'customer.project/envs/preprod/config/properties.js',
+    'customer.project/envs/production/config/properties.js'
 ];
 const protectedEnvironmentRoots = [
-    'nodics.kickoff/envs',
-    'nodics.kickoff/envs/kickoffDev',
-    'nodics.kickoff/envs/kickoffQA',
-    'nodics.kickoff/envs/kickoffPreProd',
-    'nodics.kickoff/envs/kickoffProd'
+    'customer.project/envs',
+    'customer.project/envs/development',
+    'customer.project/envs/qa',
+    'customer.project/envs/preprod',
+    'customer.project/envs/production'
 ];
 const profileEmployeeDataPath = path.join(repositoryRoot, 'nodics.platform/modules/profile/data/init/data/user/defaultEmployeeData.js');
 
 function loadProperties(relativePath) {
-    return require(path.join(repositoryRoot, relativePath));
+    return require(path.join(fixtureRoot, relativePath));
 }
 
 function config(values) {
     const effective = _.merge({ authSecurity: _.merge({}, authDefaults) }, values || {});
     return {
+        /**
+         * Resolves one fixture-backed configuration value.
+         *
+         * @param {string} key Configuration key.
+         * @returns {*} Configured value.
+         */
         get: function (key) {
             return effective[key];
         }
     };
 }
+
+function writeProperties(relativePath, properties) {
+    const filePath = path.join(fixtureRoot, relativePath);
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    fs.writeFileSync(filePath, 'module.exports = ' + JSON.stringify(properties || {}, null, 4) + ';\n');
+}
+
+protectedEnvironmentPropertyPaths.forEach(relativePath => writeProperties(relativePath, {}));
+fs.mkdirSync(path.join(fixtureRoot, 'customer.project/envs/local/data/init'), { recursive: true });
+fs.writeFileSync(path.join(fixtureRoot, 'customer.project/envs/local/data/init/manifest.json'), JSON.stringify({ releases: [] }, null, 4));
 
 function loadProfileBootstrapEmployees(activeConfig) {
     delete require.cache[profileEmployeeDataPath];
@@ -84,9 +127,9 @@ assert.strictEqual(localProperties.data.dataReleases.types.sample.enabled, true)
 assert.strictEqual(localProperties.data.dataReleases.types.sample.operatorExecution, true);
 assert.strictEqual(localProperties.data.contentPacks.enabled, true);
 assert.strictEqual(
-    fs.existsSync(path.join(repositoryRoot, 'nodics.kickoff/envs/kickoffLocal/data/init/manifest.json')),
+    fs.existsSync(path.join(fixtureRoot, 'customer.project/envs/local/data/init/manifest.json')),
     true,
-    'kickoffLocal may own local developer init data explicitly'
+    'local customer environments may own developer init data explicitly'
 );
 
 protectedEnvironmentPropertyPaths.forEach(relativePath => {
@@ -102,7 +145,7 @@ protectedEnvironmentPropertyPaths.forEach(relativePath => {
 
 protectedEnvironmentRoots.forEach(relativeRoot => {
     assert.strictEqual(
-        fs.existsSync(path.join(repositoryRoot, relativeRoot, 'data/init/manifest.json')),
+        fs.existsSync(path.join(fixtureRoot, relativeRoot, 'data/init/manifest.json')),
         false,
         relativeRoot + ' must not carry environment-owned init data unless explicitly governed'
     );

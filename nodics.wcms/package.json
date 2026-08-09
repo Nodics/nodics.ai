@@ -5,14 +5,28 @@
   "private": true,
   "description": "Nodics web content management module group.",
   "main": "nodics.js",
-  "requiredModules": ["media", "cms", "wcms"],
+  "requiredModules": [
+    "media",
+    "cms",
+    "wcms"
+  ],
   "nodics": {
     "kind": "group",
-    "extends": ["nodics.core"],
+    "extends": [
+      "nodics.core"
+    ],
     "runtimeModule": true,
     "loadableByNodicsModuleLoader": true,
-    "owns": ["composition", "configuration", "llm"],
-    "runtime": { "router": false, "publish": false, "web": false },
+    "owns": [
+      "composition",
+      "configuration",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    },
     "displayName": "Nodics WCMS",
     "functionalModule": {
       "identity": "nodics.wcms",
@@ -28,13 +42,5 @@
     "test:cms": "node modules/cms/test/cmsContentDeliveryContract.test.js && node modules/cms/test/cmsDesignerCompositionContract.test.js && node modules/cms/test/cmsMigrationContract.test.js && node modules/cms/test/cmsPublicationManifestContract.test.js && node modules/cms/test/cmsSiteReferenceContract.test.js && node modules/cms/test/cmsStorefrontDeliveryContract.test.js && node modules/cms/test/cmsWcmsAuthoringSchemaContract.test.js",
     "test:wcms": "node modules/wcms/test/wcmsPublicationWorkflowContract.test.js",
     "test": "npm run check:syntax && npm run test:media && npm run test:axis-content && npm run test:cms && npm run test:wcms"
-  },
-  "dependencies": {
-    "busboy": "^1.6.0",
-    "lodash": "^4.17.21",
-    "nodics.core": "file:../nodics.core"
-  },
-  "devDependencies": {
-    "mocha": "^11.7.6"
   }
 }

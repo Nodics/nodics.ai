@@ -188,7 +188,10 @@ function inferMaturity(moduleObject, evidence) {
 function collectDependencyPackages(ownedDependencies, modulePath) {
     return Object.keys(ownedDependencies || {}).filter(packageName => {
         let ownership = ownedDependencies[packageName] || {};
-        return (ownership.owners || []).some(ownerPath => ownerPath === modulePath || ownerPath.startsWith(modulePath + '/'));
+        let ownershipRoots = [].concat(ownership.owners || [], ownership.allowedConsumers || []);
+        return ownershipRoots.some(ownerPath => ownerPath === modulePath ||
+            ownerPath.startsWith(modulePath + '/') ||
+            modulePath.startsWith(ownerPath + '/'));
     }).map(packageName => ({
         packageName: packageName,
         type: ownedDependencies[packageName].type,
@@ -219,7 +222,7 @@ function collectProviderCapabilityMaturitySummary(indexedModules, ownedDependenc
             activeRuntimeModule: nodics.runtimeModule !== false,
             runtime: nodics.runtime || {},
             owns: nodics.owns || [],
-            providerBacked: dependencyPackages.length > 0 ||
+            providerBacked: dependencyPackages.some(item => String(item.type || '').includes('provider')) ||
                 String(moduleObject.name).toLowerCase().includes('provider') ||
                 (nodics.owns || []).includes('provider'),
             maturity: inferMaturity(moduleObject, evidence),

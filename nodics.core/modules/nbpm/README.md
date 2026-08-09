@@ -97,7 +97,7 @@ Avoid:
 
 ## Continue
 
-- Application workflow family: [workflow](../../nodics.workflow/README.md)
-- Runtime engine: [flowCore](../../nodics.workflow/flowCore/README.md)
-- Application data contracts: [flowSchema](../../nodics.workflow/flowSchema/README.md)
+- Application workflow family: [workflow](../../../nodics.process/modules/workflow/README.md)
+- Runtime engine: [flowCore](../../../nodics.process/modules/workflow/modules/flowCore/README.md)
+- Application data contracts: [flowSchema](../../../nodics.process/modules/workflow/modules/flowSchema/README.md)
 - Pipeline framework: [nPipeline](../nPipeline/README.md)

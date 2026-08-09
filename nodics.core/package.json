@@ -14,8 +14,16 @@
     "kind": "group",
     "runtimeModule": true,
     "loadableByNodicsModuleLoader": true,
-    "owns": ["composition", "configuration", "llm"],
-    "runtime": { "router": false, "publish": false, "web": false },
+    "owns": [
+      "composition",
+      "configuration",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    },
     "displayName": "Nodics Core",
     "functionalModule": {
       "identity": "nodics.core",
@@ -29,50 +37,5 @@
     "test:config": "node modules/nConfig/test/artifactOverrideTraceability.test.js && node modules/nConfig/test/nonRuntimePackageDiscovery.test.js",
     "test:router": "node modules/nRouter/test/openapiContractGeneration.test.js && node modules/nRouter/test/routerRuntimeLifecycle.test.js",
     "test": "npm run check:syntax && npm run test:config && npm run test:router"
-  },
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.19.2",
-    "busboy": "^1.6.0",
-    "clear-module": "^4.1.3",
-    "csvtojson": "^2.0.10",
-    "exceljs": "^4.4.0",
-    "express": "^4.17.3",
-    "flatted": "^3.2.7",
-    "fs-extra": "^10.1.0",
-    "jsonwebtoken": "^9.0.3",
-    "lodash": "^4.17.21",
-    "logform": "^2.4.0",
-    "mongodb": "^4.17.2",
-    "node-fetch": "^2.7.0",
-    "object-sizeof": "^1.6.3",
-    "require-from-string": "^2.0.2",
-    "stream-json": "^1.9.1",
-    "swagger-ui-dist": "^5.32.9",
-    "uuid": "^11.1.1",
-    "winston": "^3.6.0",
-    "xml-js": "^1.6.11"
-  },
-  "devDependencies": {
-    "chai": "^4.5.0",
-    "mocha": "^11.7.6"
-  },
-  "optionalDependencies": {
-    "@elastic/elasticsearch": "^8.19.2",
-    "hazelcast-client": "^5.6.0",
-    "kafkajs": "^2.2.4",
-    "node-cache": "^5.1.2",
-    "redis": "^4.7.1",
-    "stompit": "^1.0.0",
-    "winston-elasticsearch": "^0.19.0"
-  },
-  "overrides": {
-    "diff": "^8.0.3",
-    "serialize-javascript": "^7.0.7",
-    "js-yaml": "^4.2.0",
-    "qs": "^6.15.3",
-    "cookie": "^0.7.2",
-    "brace-expansion": "^5.0.8",
-    "uuid": "^11.1.1"
   }
 }

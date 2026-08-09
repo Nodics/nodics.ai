@@ -29,7 +29,7 @@ global.CONFIG = { get: key => ({
 }[key]) };
 global.NODICS = {
     getActiveModules: () => ['cms', 'utility'],
-    getRawModule: name => ({ parent: 'nodics.wcms', canonicalIdentity: 'nodics.wcms/' + name,
+    getRawModule: name => ({ parent: 'nodics.wcms', canonicalIdentity: 'nodics.wcms/modules/' + name,
         metaData: { version: '1.0.0', nodics: Object.assign({
             runtime: { router: name === 'cms' }, owns: ['router']
         }, name === 'cms' ? { displayName: 'Content Management' } : {}) } }),

@@ -16,23 +16,24 @@
  * @owner backoffice
  */
 const assert = require("assert");
+const path = require("path");
 const contracts = require("../src/schemas/apiContracts");
 const service = require("../src/service/contract/defaultBackofficeContractService");
 const routers = require("../src/router/routers").backoffice;
 const statusDefinitions = require("../src/utils/statusDefinitions");
+const repositoryRoot = path.resolve(__dirname, "../../../..");
 
 const capabilities = [
-  require("../../../nodics.platform/modules/profile/config/properties").backofficeCapabilities
-    .profile,
-  require("../../../nodics.wcms/modules/cms/config/properties").backofficeCapabilities.cms,
-  require("../../../nodics.cron/modules/cronjob/config/properties").backofficeCapabilities
-    .cronjob,
-  require("../../../nodics.workflow/config/properties").backofficeCapabilities
-    .workflow,
-  require("../../../nodics.commerce/modules/pricing/config/properties").backofficeCapabilities
-    .pricing,
-  require("../../../nodics.wcms/modules/media/config/properties").backofficeCapabilities
-    .media,
+  require(path.join(repositoryRoot, "nodics.platform/modules/profile/config/properties"))
+    .backofficeCapabilities.profile,
+  require(path.join(repositoryRoot, "nodics.wcms/modules/cms/config/properties"))
+    .backofficeCapabilities.cms,
+  require(path.join(repositoryRoot, "nodics.cron/modules/cronjob/config/properties"))
+    .backofficeCapabilities.cronjob,
+  require(path.join(repositoryRoot, "nodics.process/config/properties"))
+    .backofficeCapabilities.process,
+  require(path.join(repositoryRoot, "nodics.wcms/modules/media/config/properties"))
+    .backofficeCapabilities.media,
   require("../config/properties").backofficeCapabilities.backoffice,
 ];
 
@@ -303,7 +304,7 @@ assert(
         id: "child",
         label: "Child",
         parentId: "parent",
-        parentModuleName: "nodics.commerce",
+        parentModuleName: "nodics.wcms",
       },
     ],
   }),
@@ -319,7 +320,7 @@ assert.strictEqual(
 );
 assert.strictEqual(
   service.validateBackofficeMetadata({
-    navigation: [{ id: "child", label: "Child", parentModuleName: "nodics.commerce" }],
+    navigation: [{ id: "child", label: "Child", parentModuleName: "nodics.wcms" }],
   }),
   false,
   "cross-module parent references must include a parent id",

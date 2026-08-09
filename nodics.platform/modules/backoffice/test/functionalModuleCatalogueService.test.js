@@ -29,7 +29,7 @@ const definition = require('../src/service/registry/defaultFunctionalModuleCatal
 const service = Object.assign({}, definition);
 
 const batch = {
-    project: 'nodics.kickoff', environment: 'kickoffLocal', server: 'platformServer', node: null,
+    project: 'example.project', environment: 'localEnvironment', server: 'platformServer', node: null,
     registrations: [
         { moduleName: 'nodics.core', version: '0.0.1', functionalModule: {
             identity: 'nodics.core', displayName: 'Core', type: 'STANDARD', protected: true } },
@@ -43,13 +43,13 @@ const batch = {
         { moduleName: 'cms', parentModule: 'nodics.wcms' },
         { moduleName: 'media', parentModule: 'nodics.wcms' },
         { moduleName: 'wcms', parentModule: 'nodics.wcms' },
-        { moduleName: 'nodics.kickoff', parentModule: undefined },
-        { moduleName: 'kickoffCore', parentModule: 'nodics.kickoff' }
+        { moduleName: 'example.project', parentModule: undefined },
+        { moduleName: 'projectCore', parentModule: 'example.project' }
     ]
 };
 
 async function run() {
-    assert.deepStrictEqual(service.getQuery({ httpRequest: { query: { project: 'nodics.kickoff' } } }), { project: 'nodics.kickoff' });
+    assert.deepStrictEqual(service.getQuery({ httpRequest: { query: { project: 'example.project' } } }), { project: 'example.project' });
     assert.deepStrictEqual(service.getBody({ httpRequest: { body: { reason: 'approved' } } }), { reason: 'approved' });
     let observations = service.buildObservations(batch);
     assert.deepStrictEqual(observations.map(item => item.functionalModule), ['nodics.core', 'nodics.platform', 'nodics.wcms']);
@@ -57,7 +57,7 @@ async function run() {
     assert.deepStrictEqual(observations[1].technicalModules, ['backoffice', 'profile']);
     assert.deepStrictEqual(observations[2].technicalModules, ['cms', 'media', 'wcms']);
     assert.strictEqual(observations[2].required, true, 'WCMS is an Axis prerequisite and must be default-registered');
-    assert(!observations.some(item => item.functionalModule === 'nodics.kickoff'));
+    assert(!observations.some(item => item.functionalModule === 'example.project'));
 
     let saved;
     let updated;
@@ -72,7 +72,7 @@ async function run() {
     assert.strictEqual(first.registrationState, 'REGISTERED');
     assert.strictEqual(first.catalogueRevision, 1);
     assert.strictEqual(first.required, true);
-    assert.strictEqual(first.code, 'nodics.kickoff::nodics.core');
+    assert.strictEqual(first.code, 'example.project::nodics.core');
 
     existing = Object.assign({}, first, { registeredAt: new Date('2026-01-01T00:00:00Z') });
     saved = undefined;
@@ -82,16 +82,16 @@ async function run() {
     assert.strictEqual(renewed.catalogueRevision, 1, 'unchanged restart must not advance catalogue revision');
     assert.strictEqual(renewed.registeredAt.toISOString(), '2026-01-01T00:00:00.000Z');
 
-    let requiredRequest = { body: { project: 'nodics.kickoff', expectedRevision: 1, reason: 'not allowed' },
+    let requiredRequest = { body: { project: 'example.project', expectedRevision: 1, reason: 'not allowed' },
         params: { functionalModule: 'nodics.core' }, authData: { tokenType: 'access', principalId: 'admin' } };
     await assert.rejects(() => service.deactivate(requiredRequest), /Required functional module/);
 
-    existing = Object.assign({}, first, { code: 'nodics.kickoff::nodics.workflow', functionalModule: 'nodics.workflow',
-        displayName: 'Workflow', required: false, registrationState: 'AVAILABLE', enabled: false,
+    existing = Object.assign({}, first, { code: 'example.project::nodics.process', functionalModule: 'nodics.process',
+        displayName: 'Process', required: false, registrationState: 'AVAILABLE', enabled: false,
         runtimeState: 'ACTIVE', catalogueRevision: 1 });
     updated = undefined;
-    let optionalRequest = { body: { project: 'nodics.kickoff', expectedRevision: 1, reason: 'approved for project' },
-        params: { functionalModule: 'nodics.workflow' }, authData: { tokenType: 'access', principalId: 'admin' } };
+    let optionalRequest = { body: { project: 'example.project', expectedRevision: 1, reason: 'approved for project' },
+        params: { functionalModule: 'nodics.process' }, authData: { tokenType: 'access', principalId: 'admin' } };
     let registered = await service.register(optionalRequest);
     assert.strictEqual(registered.data.registrationState, 'REGISTERED');
     assert.strictEqual(registered.data.enabled, false);
@@ -113,7 +113,7 @@ async function run() {
 
     existing = Object.assign({}, existing, updated, { registrationState: 'DEREGISTERED', runtimeState: 'ACTIVE' });
     let rediscovered = await service.reconcileObservation(Object.assign({}, observations[0], {
-        functionalModule: 'nodics.workflow', displayName: 'Workflow', required: false
+        functionalModule: 'nodics.process', displayName: 'Process', required: false
     }), { tenant: 'default', authData: {} });
     assert.strictEqual(rediscovered.registrationState, 'AVAILABLE',
         'live reconciliation must make previously deregistered optional modules available again');

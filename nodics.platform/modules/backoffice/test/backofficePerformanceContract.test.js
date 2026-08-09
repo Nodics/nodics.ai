@@ -68,6 +68,12 @@ global.SERVICE = {
         },
         reconcileActiveModules: () => 0,
     },
+    DefaultFunctionalModuleCatalogueService: {
+        reconcileRuntimeBatch: (batch) => Promise.resolve((batch.registrations || []).map((registration) => ({
+            functionalModule: registration.canonicalIdentity || registration.moduleName,
+            moduleName: registration.moduleName,
+        }))),
+    },
     DefaultBackofficeAvailabilityService: {
         scheduleObservation: () => Promise.resolve(false),
         reconcileActiveInstances: () => 0,

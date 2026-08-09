@@ -35,7 +35,7 @@ The module now provides:
 
 CMS now supplies the first executable domain adapter and target deployment
 implementation. Additional domains remain extension work. Versioned storage remains owned by provider variants;
-workflow remains owned by `nodics.workflow`; business validation and dependency
+workflow remains owned by `nodics.process`; business validation and dependency
 rules remain in owning domain adapters. No business module may introduce a
 parallel publication state machine.
 

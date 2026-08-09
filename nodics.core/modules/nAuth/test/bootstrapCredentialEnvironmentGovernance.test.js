@@ -12,6 +12,7 @@
 const assert = require('assert');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 const _ = require('lodash');
 
 /**
@@ -26,17 +27,23 @@ const _ = require('lodash');
  * enable predictable bootstrap credentials outside explicit local/test layers.
  */
 
-const repositoryRoot = path.resolve(__dirname, '../../..');
 const authSecurity = require('../src/service/security/defaultAuthSecurityService');
 const authDefaults = require('../config/properties').authSecurity;
+const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-auth-env-'));
 
 function loadProperties(relativePath) {
-    return require(path.join(repositoryRoot, relativePath));
+    return require(path.join(fixtureRoot, relativePath));
 }
 
 function configuration(values) {
     const effective = _.merge({ authSecurity: _.merge({}, authDefaults) }, values || {});
     return {
+        /**
+         * Resolves one fixture-backed configuration value.
+         *
+         * @param {string} key Configuration key.
+         * @returns {*} Configured value.
+         */
         get: function (key) {
             return effective[key];
         }
@@ -44,20 +51,48 @@ function configuration(values) {
 }
 
 function read(relativePath) {
-    return fs.readFileSync(path.join(repositoryRoot, relativePath), 'utf8');
+    return fs.readFileSync(path.join(fixtureRoot, relativePath), 'utf8');
 }
 
-const localPropertiesPath = 'nodics.kickoff/envs/kickoffLocal/config/properties.js';
+function writeProperties(relativePath, properties) {
+    const filePath = path.join(fixtureRoot, relativePath);
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    fs.writeFileSync(filePath, 'module.exports = ' + JSON.stringify(properties, null, 4) + ';\n');
+}
+
+const localPropertiesPath = 'customer.project/envs/local/config/properties.js';
+writeProperties(localPropertiesPath, {
+    authSecurity: {
+        compatibility: {
+            allowLocalBootstrapIdentity: true,
+            allowInsecureDevelopmentSecret: true
+        },
+        jwt: {
+            secret: 'local-development-jwt-secret-with-enough-length'
+        },
+        apiKey: {
+            pepper: 'local-development-api-key-pepper'
+        }
+    },
+    bootstrapIdentity: {
+        source: 'localSample',
+        adminPassword: 'local-admin-password-12345',
+        servicePassword: 'local-service-password-12345',
+        serviceApiKey: 'local-service-api-key-value-12345678901234567890'
+    }
+});
 const localProperties = loadProperties(localPropertiesPath);
 const protectedEnvironmentPropertyPaths = [
-    'nodics.kickoff/envs/config/properties.js',
-    'nodics.kickoff/envs/kickoffDev/config/properties.js',
-    'nodics.kickoff/envs/kickoffQA/config/properties.js',
-    'nodics.kickoff/envs/kickoffPreProd/config/properties.js',
-    'nodics.kickoff/envs/kickoffProd/config/properties.js'
+    'customer.project/envs/config/properties.js',
+    'customer.project/envs/development/config/properties.js',
+    'customer.project/envs/qa/config/properties.js',
+    'customer.project/envs/preprod/config/properties.js',
+    'customer.project/envs/production/config/properties.js'
 ];
 
-const protectedRuntimeNames = ['kickoffDev', 'kickoffQA', 'kickoffPreProd', 'kickoffProd'];
+protectedEnvironmentPropertyPaths.forEach(relativePath => writeProperties(relativePath, {}));
+
+const protectedRuntimeNames = ['development', 'qa', 'preprod', 'production'];
 const localIdentity = localProperties.bootstrapIdentity;
 
 assert.strictEqual(authDefaults.compatibility.allowLocalBootstrapIdentity, false);

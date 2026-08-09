@@ -25,7 +25,7 @@ const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
-const repositoryRoot = path.resolve(__dirname, '../../..');
+const repositoryRoot = path.resolve(__dirname, '../../../..');
 const runnerPath = path.join(repositoryRoot, 'nodics.core/modules/nTest/src/service/tooling/defaultGeneratedTestRunnerService.js');
 const cleanRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-generated-test-empty-'));
 
