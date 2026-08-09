@@ -40,7 +40,7 @@ class NodicsError extends Error {
 
 (async function () {
     const workspace = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-media-contract-'));
-    const serverPath = path.join(workspace, 'nodics.kickoff/envs/kickoffLocal/monoServer');
+    const serverPath = path.join(workspace, 'customer.project/envs/local/mediaServer');
     global.CLASSES = { NodicsError };
     global.NODICS = {
         getNodicsHome: function () {

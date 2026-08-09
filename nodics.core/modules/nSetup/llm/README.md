@@ -6,7 +6,9 @@ documentation, tests, generated artifacts, configuration, and runtime
 governance must be handled.
 
 This folder must not become a history dump for every refactor. Durable rules
-belong in contracts and standards. Temporary work records belong in records.
+belong in contracts, standards, playbooks, examples, templates, prompts, or
+curated memory. Temporary work records should stay outside the reusable
+framework guidance path.
 
 ## Folder responsibilities
 
@@ -26,10 +28,6 @@ belong in contracts and standards. Temporary work records belong in records.
 - `prompts/` contains optional workflow lenses for AI-assisted review,
   refactor, testing, schema, and runtime-governance work. Prompts are not
   separate authorities.
-- `records/` contains historical or phase-specific records. Records explain why
-  a migration or refactor happened; they must not become permanent runtime or
-  coding law unless their durable rule is promoted into `contracts/` or
-  `standards/`.
 - `memory/` contains curated source-controlled decision memory. Raw assistant
   transcripts and private tool memories must stay outside the repository.
 
@@ -39,8 +37,8 @@ Do not place phase checklists, migration notes, refactor action registers,
 temporary implementation plans, or page templates in `contracts/`.
 
 When a temporary record reveals a permanent rule, extract the rule into the
-appropriate contract or standard, then keep the original record under
-`records/` for traceability.
+appropriate contract, standard, playbook, example, template, or curated memory
+entry. Do not make phase-specific notes part of the mandatory navigation path.
 
 ## Navigation route
 
@@ -50,5 +48,5 @@ For non-trivial work, start with:
 2. root `AGENTS.md`;
 3. the root-to-leaf module `README.md`/`AGENTS.md` chain;
 4. `modules/nSetup/llm/ai-enablement-index.md`;
-5. the relevant contract, standard, playbook, template, example, or record for
+5. the relevant contract, standard, playbook, template, example, or memory for
    the actual change.

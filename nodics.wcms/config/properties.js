@@ -86,19 +86,18 @@ module.exports = {
                         manifestPath: 'manifest/docs-content-pack.json'
                     }
                 },
-                kickoffDocumentation: {
-                    manifestPack: 'nodics.kickoff',
+                customerProjectDocumentation: {
                     source: {
                         type: 'LOCAL_PROJECT',
                         contentPath: 'data/core',
                         manifestPath: 'manifest/docs-content-pack.json'
                     },
                     presentation: {
-                        title: 'Nodics Kickoff documentation',
-                        unavailableMessage: 'Nodics Kickoff documentation has not been installed for this environment.',
+                        title: 'Customer project documentation',
+                        unavailableMessage: 'Customer project documentation has not been installed for this environment.',
                         disabledMessage: 'Documentation imports are not enabled for this environment.',
-                        importAction: 'Import Nodics Kickoff documentation',
-                        updateAction: 'Update Nodics Kickoff documentation',
+                        importAction: 'Import customer project documentation',
+                        updateAction: 'Update customer project documentation',
                         retryAction: 'Retry import'
                     }
                 }

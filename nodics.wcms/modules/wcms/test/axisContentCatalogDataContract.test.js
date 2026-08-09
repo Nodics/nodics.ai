@@ -49,13 +49,13 @@ assert.deepStrictEqual(wcmsProperties.data.contentPacks.packs.nodicsDocumentatio
     contentPath: 'data/core',
     manifestPath: 'manifest/generated-content-pack.json'
 }, 'Framework documentation pack must be imported by WCMS from the nodics.docs backend documentation module');
-assert.deepStrictEqual(wcmsProperties.data.contentPacks.packs.kickoffDocumentation.source, {
+assert.deepStrictEqual(wcmsProperties.data.contentPacks.packs.customerProjectDocumentation.source, {
     type: 'LOCAL_PROJECT',
     contentPath: 'data/core',
     manifestPath: 'manifest/docs-content-pack.json'
-}, 'Kickoff documentation pack must be imported by WCMS from the active customer project');
-assert.strictEqual(wcmsProperties.data.contentPacks.packs.kickoffDocumentation.manifestPack, 'nodics.kickoff',
-    'Kickoff documentation pack must keep the customer project manifest identity');
+}, 'Customer project documentation pack must be imported by WCMS from the active customer project');
+assert.strictEqual(wcmsProperties.data.contentPacks.packs.customerProjectDocumentation.manifestPack, undefined,
+    'Customer project documentation pack must derive manifest identity from the active project package metadata');
 
 axisDataSets.flat().forEach(item => {
     assert.strictEqual(item.functionalModule, 'nodics.wcms', item.code + ' must be owned by nodics.wcms');

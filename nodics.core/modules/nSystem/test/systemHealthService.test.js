@@ -41,7 +41,7 @@ global.NODICS = {
         return serverState;
     },
     getEnvironmentName: function () {
-        return 'kickoffLocal';
+        return 'localEnvironment';
     },
     getServerName: function () {
         return 'monoServer';

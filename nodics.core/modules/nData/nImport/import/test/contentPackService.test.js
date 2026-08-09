@@ -38,6 +38,10 @@ function createFixture() {
     fs.mkdirSync(path.join(repository, 'data/core/data'), { recursive: true });
     fs.mkdirSync(path.join(repository, 'manifest'), { recursive: true });
     fs.writeFileSync(generatedFile, 'module.exports = {};\n');
+    fs.writeFileSync(
+        path.join(repository, 'package.json'),
+        JSON.stringify({ name: 'nodics.docs', version: '1.0.0' })
+    );
     let relativeFile = 'data/core/headers/contentHeader.js';
     let manifest = {
         pack: 'nodics.docs',
@@ -88,6 +92,26 @@ function createHarness(fixture, enabled) {
                         },
                         presentation: {
                             title: 'Nodics documentation',
+                            unavailableMessage: 'Unavailable',
+                            disabledMessage: 'Disabled',
+                            importAction: 'Import',
+                            updateAction: 'Update',
+                            retryAction: 'Retry'
+                        }
+                    },
+                    customerProjectDocumentation: {
+                        enabled: true,
+                        source: {
+                            type: 'LOCAL_PROJECT',
+                            contentPath: 'data/core',
+                            manifestPath: 'manifest/generated-content-pack.json'
+                        },
+                        updatePolicy: {
+                            allowDowngrade: false,
+                            sameVersionContentChange: 'REJECT'
+                        },
+                        presentation: {
+                            title: 'Customer project documentation',
                             unavailableMessage: 'Unavailable',
                             disabledMessage: 'Disabled',
                             importAction: 'Import',
@@ -173,6 +197,20 @@ function createHarness(fixture, enabled) {
             fixture.repository,
             'project-owned content packs must resolve from the active customer project'
         );
+        assert.strictEqual(
+            harness.service.resolveExpectedManifestPack(
+                harness.service.resolvePackContext('customerProjectDocumentation'),
+                fixture.repository
+            ),
+            'nodics.docs',
+            'project-owned content packs must derive manifest identity from package.json'
+        );
+
+        let customerProjectStatus = await harness.service.getStatus({
+            packCode: 'customerProjectDocumentation',
+            tenant: 'tenant-a'
+        });
+        assert.strictEqual(customerProjectStatus.data.state, 'NOT_INSTALLED');
 
         let imported = await harness.service.importPack({
             packCode: 'nodicsDocumentation',

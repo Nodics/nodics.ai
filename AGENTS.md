@@ -41,7 +41,7 @@ Read from the repository root toward the owning module before implementation:
    relevant;
 9. `nodics.core/modules/nSetup/llm/ai-enablement-index.md`;
 10. the relevant nSetup `contracts`, `standards`, `playbooks`, `templates`,
-   `examples`, or historical `records` for the active change.
+   `examples`, or curated `memory` decisions for the active change.
 
 README files explain purpose, ownership, usage, and extension paths. AGENTS
 files direct agent behavior. Contracts and standards define permanent rules.
@@ -154,8 +154,9 @@ impact, assumptions, contradictions, intended files, and validation route.
   dependency-resolution changes, or module skeleton changes.
 - Apply the documentation impact contract before creating, restructuring,
   reducing, migrating, or generating documentation.
-- Treat `nodics.core/modules/nSetup/llm/records/phase0/` as historical
-  modularization traceability. Do not add new permanent coding rules there.
+- Do not add phase plans, migration notes, or refactor tracking as standing
+  framework authority. Promote durable rules into nSetup contracts, standards,
+  playbooks, examples, templates, or curated memory.
 
 ## Mandatory implementation rules
 

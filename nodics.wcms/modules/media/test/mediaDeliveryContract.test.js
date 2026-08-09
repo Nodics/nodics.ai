@@ -41,7 +41,7 @@ class NodicsError extends Error {
 
 (async function () {
     const workspace = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-media-delivery-contract-'));
-    const serverPath = path.join(workspace, 'nodics.kickoff/envs/kickoffLocal/monoServer');
+    const serverPath = path.join(workspace, 'customer.project/envs/local/mediaServer');
     const mediaPath = path.join(serverPath, 'temp/media/media/content/default/default/cmsComponent/2026/07/home-banner.png');
     fs.mkdirSync(path.dirname(mediaPath), { recursive: true });
     fs.writeFileSync(mediaPath, Buffer.from('png'));

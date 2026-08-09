@@ -45,8 +45,9 @@
   `modules/nSetup/llm/standards/nodics-structure-matrix.md` before changing
   repository boundaries, module skeletons, customer dependency resolution,
   clean/build behavior, or documentation ownership.
-- Use `modules/nSetup/llm/records/phase0/` only as historical modularization
-  traceability, not as the permanent coding contract.
+- Do not use historical phase/refactor records as coding authority. Promote
+  durable rules into `modules/nSetup/llm/contracts`, `standards`, `playbooks`,
+  `examples`, `templates`, or curated `memory`.
 
 ### New Module Acceptance Gate
 

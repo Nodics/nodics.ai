@@ -122,11 +122,10 @@ Keep the pack organized by long-term purpose:
   lifecycle standards.
 - `playbooks/`: step-by-step work procedures and gates.
 - `templates/`: reusable rubrics and authoring templates.
-- `records/`: historical phase/refactor records for traceability only.
-
 Do not put phase records, refactor action registers, checklists, or reusable
-page templates in `contracts/`. If a record reveals a durable rule, promote the
-rule into a real contract or standard and keep the record as history.
+page templates in `contracts/`. If a temporary record reveals a durable rule,
+promote the rule into a real contract, standard, playbook, example, template,
+or curated memory entry.
 
 ## Core Rule
 

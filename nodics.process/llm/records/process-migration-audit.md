@@ -3,11 +3,9 @@
 ## Current source inventory
 
 - Current modular framework contains `nodics.core/modules/nbpm`.
-- Legacy archive contains a broader workflow family under:
-  - `gFramework/nbpm`
-  - `gCore/workflow/flowSchema`
-  - `gCore/workflow/flowCore`
-  - `gCore/workflow/flowApi`
+- Historical archive review found a broader workflow family for schema,
+  workflow-core, workflow-api, and process behavior. Those archived paths are
+  evidence only; they are not current source, runtime, or navigation authority.
 
 ## Interpretation
 

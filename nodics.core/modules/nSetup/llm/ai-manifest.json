@@ -15,7 +15,6 @@
     "standardsDirectory": "modules/nSetup/llm/standards",
     "playbooksDirectory": "modules/nSetup/llm/playbooks",
     "templatesDirectory": "modules/nSetup/llm/templates",
-    "recordsDirectory": "modules/nSetup/llm/records",
     "promptsDirectory": "modules/nSetup/llm/prompts",
     "toolBridges": [
         "CLAUDE.md",

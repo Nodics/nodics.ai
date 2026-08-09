@@ -322,7 +322,7 @@ module.exports = function () {
         return _envName;
     };
 
-    /** Returns the concrete selected environment/server-root name, such as kickoffLocal. */
+    /** Returns the concrete selected environment/server-root name, such as localEnvironment. */
     this.getSelectedEnvironmentName = function () {
         return _serverRootName;
     };

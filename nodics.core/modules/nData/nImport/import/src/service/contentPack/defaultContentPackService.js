@@ -254,10 +254,33 @@ module.exports = {
         return resolved;
     },
 
+    /** Resolves the expected manifest pack identity for the configured source. */
+    resolveExpectedManifestPack: function (context, repositoryPath) {
+        if (/^[A-Za-z0-9._-]+$/.test(context.pack.manifestPack || '')) {
+            return context.pack.manifestPack;
+        }
+        if (context.pack.manifestPack) {
+            throw this.createError('ERR_IMP_00003', 'Content-pack manifest identity is invalid');
+        }
+        if (context.source.type !== 'LOCAL_PROJECT') {
+            throw this.createError('ERR_IMP_00003', 'Content-pack manifest identity is not configured');
+        }
+        let packagePath = path.join(repositoryPath, 'package.json');
+        if (!fs.existsSync(packagePath)) {
+            throw this.createError('ERR_IMP_00003', 'Project content-pack package metadata is unavailable');
+        }
+        let packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+        if (!/^[A-Za-z0-9._-]+$/.test(packageJson.name || '')) {
+            throw this.createError('ERR_IMP_00003', 'Project content-pack package identity is invalid');
+        }
+        return packageJson.name;
+    },
+
     /** Validates manifest identity, contract, files, and hashes. */
     validateManifest: function (context, manifest, repositoryPath) {
         let allowedVersions = context.configuration.allowedContractVersions || [1];
-        if (manifest.pack !== context.pack.manifestPack ||
+        let expectedManifestPack = this.resolveExpectedManifestPack(context, repositoryPath);
+        if (manifest.pack !== expectedManifestPack ||
             typeof manifest.version !== 'string' ||
             !allowedVersions.includes(manifest.contractVersion) ||
             !manifest.generatedHashes ||

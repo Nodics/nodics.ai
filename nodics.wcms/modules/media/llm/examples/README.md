@@ -66,7 +66,7 @@ NODICS.getServerPath()/temp/media/{purpose}/{tenant}/{enterprise}/{schema}/{yyyy
 For local mono-server development, that becomes:
 
 ```text
-nodics.kickoff/envs/kickoffLocal/monoServer/temp/media/data/import/default/default/tenant/2026/07/tenant-upload-july.xlsx
+customer.project/envs/local/mediaServer/temp/media/data/import/default/default/tenant/2026/07/tenant-upload-july.xlsx
 ```
 
 Do not use a Nodics repository-root `runtime/` directory for uploaded files.

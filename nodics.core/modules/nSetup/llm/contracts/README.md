@@ -9,9 +9,10 @@ configuration ownership, generated-artifact responsibilities, and release
 expectations.
 
 Do not put phase checklists, refactor action registers, temporary migration
-plans, or reusable page templates in this folder. Put them under `records/`,
-`playbooks/`, or `templates/`, and promote only the permanent rule into a
-contract.
+plans, or reusable page templates in this folder. Put procedures under
+`playbooks/`, reusable authoring patterns under `templates/`, examples under
+`examples/`, and durable decisions under curated `memory/`. Promote only the
+permanent rule into a contract.
 
 ## Contract Index
 

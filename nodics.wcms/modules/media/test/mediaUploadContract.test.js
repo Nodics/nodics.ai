@@ -42,7 +42,7 @@ class NodicsError extends Error {
 
 (async function () {
     const workspace = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-media-upload-contract-'));
-    const serverPath = path.join(workspace, 'nodics.kickoff/envs/kickoffLocal/monoServer');
+    const serverPath = path.join(workspace, 'customer.project/envs/local/mediaServer');
     let savedMedia;
     global.CLASSES = { NodicsError };
     global.NODICS = {

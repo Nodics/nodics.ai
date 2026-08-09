@@ -41,8 +41,6 @@ const requiredRootFiles = [
     'config/prescripts.js',
     'config/postscripts.js',
     'nodics.core/modules/nSetup/llm/README.md',
-    'nodics.core/modules/nSetup/llm/records/phase0/modularization-phase0-contract.md',
-    'nodics.core/modules/nSetup/llm/records/phase0/modularization-phase0-validation-checklist.md',
     'nodics.core/modules/nSetup/llm/contracts/customer-config-classification-contract.md',
     'nodics.core/modules/nSetup/llm/templates/documentation-page-template.md'
 ];
@@ -54,7 +52,6 @@ const requiredNSetupLlmFolders = [
     'templates',
     'examples',
     'prompts',
-    'records',
     'memory'
 ];
 

@@ -121,18 +121,18 @@ module.exports = {
                     description: 'All nPublish module lifecycle, configuration, router, schema, pipeline, utility, and test scaffold contracts must remain fully documented.'
                 },
                 {
-                    name: 'dataProcessor complete DEAP processing contract',
+                    name: 'profile complete identity contract',
                     scope: 'all',
-                    module: 'dataProcessor',
+                    module: 'profile',
                     includeTests: true,
-                    description: 'All dataProcessor module lifecycle, configuration, router, schema, pipeline, service, utility, and test contracts must remain fully documented.'
+                    description: 'All Profile module lifecycle, identity, enterprise, tenant, user, group, permission, authentication, router, schema, service, data, and test contracts must remain fully documented.'
                 },
                 {
-                    name: 'dataPublisher complete DEAP publishing contract',
+                    name: 'backoffice complete registry contract',
                     scope: 'all',
-                    module: 'dataPublisher',
+                    module: 'backoffice',
                     includeTests: true,
-                    description: 'All dataPublisher module lifecycle, configuration, router, schema, pipeline, service, utility, and test contracts must remain fully documented.'
+                    description: 'All BackOffice registry, bootstrap, contract lifecycle, catalogue, availability, Axis policy, router, schema, service, data, and test contracts must remain fully documented.'
                 },
                 {
                     name: 'cms complete content contract',
@@ -149,6 +149,13 @@ module.exports = {
                     description: 'All WCMS module lifecycle, configuration, initializer data, import headers, router, schema, interceptor, pipeline, service, utility, and test contracts must remain fully documented.'
                 },
                 {
+                    name: 'media complete governed asset contract',
+                    scope: 'all',
+                    module: 'media',
+                    includeTests: true,
+                    description: 'All Media module lifecycle, folders, formats, uploads, storage providers, delivery, references, sets, router, schema, service, data, and test contracts must remain fully documented.'
+                },
+                {
                     name: 'cronjob complete scheduler contract',
                     scope: 'all',
                     module: 'cronjob',
@@ -161,6 +168,13 @@ module.exports = {
                     module: 'nEms',
                     includeTests: true,
                     description: 'All nEms module lifecycle, configuration, initializer data, router, schema, event splitting, event dispatch, service, utility, and test contracts must remain fully documented.'
+                },
+                {
+                    name: 'process workflow complete automation contract',
+                    scope: 'all',
+                    module: 'flow',
+                    includeTests: true,
+                    description: 'All Process workflow schema, API, runtime core, definition, instance, task, trigger, audit, router, service, and test contracts must remain fully documented.'
                 },
                 {
                     name: 'all modules complete source and test documentation contract',

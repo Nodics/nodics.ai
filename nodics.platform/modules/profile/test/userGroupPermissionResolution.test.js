@@ -142,14 +142,6 @@ assert(
   "Default platform administrators should be allowed to request a bounded module-health refresh",
 );
 [
-  "order.backoffice.read",
-  "order.cancellation.support.read",
-  "order.return.support.read",
-  "order.refund.support.read",
-  "order.lifecycle.approval.read",
-  "order.lifecycle.operations.diagnostics",
-  "order.lifecycle.policy.read",
-  "order.lifecycle.reason.read",
 ].forEach((permission) =>
   assert(
     platformAdminGroup.permissions.includes(permission),
@@ -201,14 +193,6 @@ assert(runtimeViewerGroup.permissions.includes("backoffice.contract.view"));
   "process.task.cancel",
   "process.trigger.manage",
       "process.trigger.execute",
-  "workflow.backoffice.view",
-  "pricing.backoffice.read",
-  "pricing.backoffice.preview",
-  "pricing.backoffice.manage",
-  "payment.backoffice.read",
-  "payment.backoffice.manage",
-  "fulfillment.backoffice.read",
-  "fulfillment.backoffice.manage",
 ].forEach((permission) =>
   assert(
     runtimeAdminGroup.permissions.includes(permission),

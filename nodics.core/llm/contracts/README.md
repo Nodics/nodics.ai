@@ -6,8 +6,9 @@ Current permanent framework contracts live in
 `modules/nSetup/llm/contracts`, `modules/nSetup/llm/standards`, and
 `modules/nSetup/llm/playbooks`.
 
-## Historical pointers
+## Contract hygiene
 
-- `modularization-phase0-contract.md` points to the historical Phase 0 record.
-- `modularization-phase0-validation-checklist.md` points to the historical
-  Phase 0 validation record.
+Historical phase plans, migration notes, and refactor checklists are not kept
+as active contract pointers. When such work reveals a durable rule, promote the
+rule into the nSetup contracts, standards, playbooks, examples, templates, or
+curated memory.

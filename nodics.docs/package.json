@@ -1,9 +1,26 @@
 {
-  "name": "@nodics/documentation-content",
+  "name": "nodics.docs",
   "version": "0.1.0",
   "private": true,
   "description": "Versioned documentation content for Nodics functional modules.",
-  "type": "module",
+  "nodics": {
+    "kind": "group",
+    "runtimeModule": false,
+    "loadableByNodicsModuleLoader": false,
+    "owns": [
+      "composition",
+      "configuration",
+      "documentation",
+      "content-pack",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    },
+    "displayName": "Nodics Documentation"
+  },
   "scripts": {
     "docs:generate": "node scripts/generate-content-pack.mjs",
     "docs:check": "node scripts/generate-content-pack.mjs --check",

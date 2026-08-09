@@ -222,13 +222,13 @@ module into the workflow process.
 Server and node names are local to their validated parent topology. Their
 parentage and canonical identity come from the complete physical ancestry
 discovered by the module loader. For example, `cronServer` may exist under both
-`kickoffLocal` and `kickoffDev`; the derived canonical identities remain distinct
+`localEnvironment` and `developmentEnvironment`; the derived canonical identities remain distinct
 without storing handwritten parent or canonical identifiers.
 
 Use explicit environment selection for deterministic execution:
 
 ```bash
-ENV=kickoffLocal SERVER=cronServer NODE=cronNode0 node -e 'require("./nodics").start()'
+ENV=localEnvironment SERVER=cronServer NODE=schedulerNode0 node -e 'require("./nodics").start()'
 ```
 
 When an interactive terminal supplies only an ambiguous server name, startup

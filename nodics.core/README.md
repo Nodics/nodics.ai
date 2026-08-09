@@ -31,6 +31,7 @@ composed customer server such as Kickoff `platformServer`.
 Before moving more code, follow the permanent repository/module boundary rules
 in `modules/nSetup/llm/contracts/module-group-participation-contract.md`,
 `modules/nSetup/llm/contracts/module-structure-contract.md`, and
-`modules/nSetup/llm/standards/nodics-structure-matrix.md`. Phase 0 records
-under `modules/nSetup/llm/records/phase0/` are historical traceability, not the
-current coding contract.
+`modules/nSetup/llm/standards/nodics-structure-matrix.md`. Historical phase or
+refactor notes are not coding authority unless their durable rule has been
+promoted into a permanent contract, standard, playbook, example, template, or
+curated memory entry.

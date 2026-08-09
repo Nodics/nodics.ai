@@ -59,7 +59,7 @@ Framework defaults keep operational configuration, schema maintenance, and
 OpenAPI contract APIs available, while file access, data import/export, log
 mutation, test execution, and dynamic class APIs are disabled unless a
 project/environment/server/node layer enables them. Developer servers such as
-`kickoffLocal` may opt in through layered `config/properties.js`; production-like
+`localEnvironment` may opt in through layered `config/properties.js`; production-like
 servers should enable only the categories required for their operational model.
 
 Runtime API documentation follows the same route-governance model. OpenAPI is

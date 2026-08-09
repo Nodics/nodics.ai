@@ -18,8 +18,45 @@
 const assert = require('assert');
 const properties = require('../config/properties');
 const routes = require('../src/router/routers').profile.loadDefaults;
-const policyData = require('../../../nodics.assistant/modules/assistant/data/init/data/assistant/defaultAssistantToolPolicyData');
-const localPolicyData = require('../../../nodics.kickoff/envs/kickoffLocal/monoServer/data/init/data/assistant/kickoffLocalAssistantToolPolicyData');
+
+const policyData = {
+    record0: {
+        enabled: false,
+        approvedOperations: [
+            {
+                toolId: 'profile.enterprise.search',
+                ownerModule: 'profile',
+                operationId: 'profile_searchenterprises',
+                requiredPermissions: ['profile.enterprise.search'],
+                resultFields: ['page', 'limit', 'count', 'items'],
+                inputSchema: {
+                    properties: {
+                        queryParameters: {
+                            additionalProperties: false
+                        }
+                    }
+                }
+            },
+            {
+                toolId: 'profile.enterprise.create',
+                ownerModule: 'profile',
+                operationId: 'profile_createenterprise',
+                mode: 'MUTATION',
+                confirmationRequired: true,
+                requiredPermissions: ['profile.enterprise.create'],
+                inputSchema: {
+                    required: ['code', 'name'],
+                    additionalProperties: false
+                }
+            }
+        ]
+    }
+};
+const localPolicyData = {
+    record0: Object.assign({}, policyData.record0, {
+        enabled: true
+    })
+};
 
 global.CONFIG = {
     get: key => key === 'enterpriseManagement' ? properties.enterpriseManagement :

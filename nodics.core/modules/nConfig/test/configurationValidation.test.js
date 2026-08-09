@@ -69,15 +69,15 @@ function installSyntheticModules(modules) {
 
 const syntheticModules = [
     moduleFixture('envs', 'application', 'nodics.ai', '1000.0'),
-    moduleFixture('kickoffLocal', 'group', 'envs', '1001.10'),
-    moduleFixture('kickoffDev', 'group', 'envs', '1001.20'),
-    moduleFixture('monoServer', 'server', 'kickoffLocal', '1001.11'),
-    moduleFixture('monoServer', 'server', 'kickoffDev', '1001.21'),
-    moduleFixture('profileServer', 'server', 'kickoffLocal', '1001.12'),
+    moduleFixture('localEnvironment', 'group', 'envs', '1001.10'),
+    moduleFixture('developmentEnvironment', 'group', 'envs', '1001.20'),
+    moduleFixture('monoServer', 'server', 'localEnvironment', '1001.11'),
+    moduleFixture('monoServer', 'server', 'developmentEnvironment', '1001.21'),
+    moduleFixture('profileServer', 'server', 'localEnvironment', '1001.12'),
     moduleFixture('monoNode0', 'node', 'monoServer', '1001.11.1'),
     moduleFixture('profile', 'module', 'nodics.platform', '5.15')
 ];
-syntheticModules.find(moduleObject => moduleObject.name === 'monoNode0').parentKey = 'kickoffLocal/monoServer';
+syntheticModules.find(moduleObject => moduleObject.name === 'monoNode0').parentKey = 'localEnvironment/monoServer';
 syntheticModules.find(moduleObject => moduleObject.name === 'profileServer').path = path.join(repoRoot, 'modules', 'nConfig');
 
 let discovery = installSyntheticModules(syntheticModules);
@@ -99,8 +99,8 @@ assert.throws(() => utils.indexModuleRecords([{
 
 assert.throws(() => discovery.resolveTopologyModule('monoServer', 'server'), /Ambiguous server/,
     'an unscoped duplicate server name must fail in non-interactive execution');
-let localConsolidated = discovery.resolveTopologyModule('monoServer', 'server', 'kickoffLocal');
-let devConsolidated = discovery.resolveTopologyModule('monoServer', 'server', 'kickoffDev');
+let localConsolidated = discovery.resolveTopologyModule('monoServer', 'server', 'localEnvironment');
+let devConsolidated = discovery.resolveTopologyModule('monoServer', 'server', 'developmentEnvironment');
 assert(localConsolidated && devConsolidated);
 assert.notStrictEqual(localConsolidated.canonicalIdentity, devConsolidated.canonicalIdentity,
     'same-name servers in different environments require distinct runtime-derived canonical identities');
@@ -108,26 +108,26 @@ let promptedEnvironment;
 let interactiveDiscovery = new Nodics();
 interactiveDiscovery.init({ NODICS_HOME: repoRoot, environmentSelector: options => {
     promptedEnvironment = options.environments;
-    return 'kickoffDev';
+    return 'developmentEnvironment';
 } });
 interactiveDiscovery.addRawModules(NODICS.getRawModules());
 global.NODICS = interactiveDiscovery;
-assert.strictEqual(interactiveDiscovery.resolveTopologyModule('monoServer', 'server').parent, 'kickoffDev');
-assert(promptedEnvironment.includes('kickoffLocal') && promptedEnvironment.includes('kickoffDev'),
+assert.strictEqual(interactiveDiscovery.resolveTopologyModule('monoServer', 'server').parent, 'developmentEnvironment');
+assert(promptedEnvironment.includes('localEnvironment') && promptedEnvironment.includes('developmentEnvironment'),
     'interactive selection adapter must receive only discovered environment candidates');
 
 let nodeWithoutServer = installSyntheticModules(syntheticModules);
 let originalNodeArgv = process.argv.slice();
 process.argv = process.argv.slice(0, 2).concat(['NODE=monoNode0']);
 assert.throws(() => nodeWithoutServer.initEnvironment({
-    defaultEnvironment: 'kickoffLocal',
+    defaultEnvironment: 'localEnvironment',
     defaultServer: 'monoServer'
 }), /Node startup requires an explicit SERVER/,
 'node startup must not silently use the project default server');
 process.argv = originalNodeArgv;
 
 discovery = installSyntheticModules(syntheticModules);
-let localConsolidatedNode = discovery.resolveTopologyModule('monoNode0', 'node', 'kickoffLocal', 'monoServer');
+let localConsolidatedNode = discovery.resolveTopologyModule('monoNode0', 'node', 'localEnvironment', 'monoServer');
 assert(localConsolidatedNode, 'selected nodes must resolve inside the selected server and environment');
 assert.strictEqual(localConsolidatedNode.parent, 'monoServer');
 let loadOrder = initService.getConfigurationLoadOrder();
@@ -213,7 +213,7 @@ NODICS.getServerName = function () {
     return 'profileServer';
 };
 NODICS.getServerRootName = function () {
-    return 'kickoffLocal';
+    return 'localEnvironment';
 };
 NODICS.getRawModule = function (moduleName) {
     if (moduleName === 'detachedRuntimeGroup') {
@@ -228,7 +228,7 @@ NODICS.getRawModule = function (moduleName) {
 };
 assert.throws(() => {
     initService.validateSelectedRuntimeHierarchy();
-}, /selected environment kickoffLocal must be a child of project detachedRuntimeGroup/);
+}, /selected environment localEnvironment must be a child of project detachedRuntimeGroup/);
 NODICS.getEnvironmentName = originalGetEnvironmentName;
 NODICS.getServerName = originalGetServerName;
 NODICS.getServerRootName = originalGetServerRootName;
