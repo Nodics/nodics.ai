@@ -446,18 +446,41 @@ module.exports = {
         return true;
     },
 
+    /** Returns router-specific shutdown settings from the shared runtime lifecycle contract. */
+    getRuntimeLifecycleConfig: function () {
+        return (typeof CONFIG !== 'undefined' && CONFIG && CONFIG.get('runtimeLifecycle')) || {};
+    },
+
     /** Stops accepting traffic and optionally destroys remaining connections. */
     closeRuntimeServers: function (force) {
+        let lifecycleConfig = this.getRuntimeLifecycleConfig();
+        let drainTimeoutMs = Number(lifecycleConfig.httpDrainTimeoutMs || 5000);
         return Promise.all(this.runtimeServers.map(runtimeServer => new Promise((resolve, reject) => {
             let server = runtimeServer.server;
+            let completed = false;
+            let timeout;
+            let complete = (error) => {
+                if (completed) return;
+                completed = true;
+                if (timeout) clearTimeout(timeout);
+                if (error) reject(error);
+                else resolve(true);
+            };
             if (!server.listening) {
                 if (force && typeof server.closeAllConnections === 'function') server.closeAllConnections();
-                resolve(true);
+                complete();
                 return;
             }
-            server.close(error => error ? reject(error) : resolve(true));
+            server.close(error => error ? complete(error) : complete());
             if (typeof server.closeIdleConnections === 'function') server.closeIdleConnections();
-            if (force && typeof server.closeAllConnections === 'function') server.closeAllConnections();
+            if (force && typeof server.closeAllConnections === 'function') {
+                server.closeAllConnections();
+            } else if (drainTimeoutMs > 0 && typeof server.closeAllConnections === 'function') {
+                timeout = setTimeout(() => {
+                    server.closeAllConnections();
+                    complete();
+                }, drainTimeoutMs);
+            }
         })));
     },
 };

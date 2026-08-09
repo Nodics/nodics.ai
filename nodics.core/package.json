@@ -27,7 +27,7 @@
   "scripts": {
     "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
     "test:config": "node modules/nConfig/test/artifactOverrideTraceability.test.js && node modules/nConfig/test/nonRuntimePackageDiscovery.test.js",
-    "test:router": "node modules/nRouter/test/openapiContractGeneration.test.js",
+    "test:router": "node modules/nRouter/test/openapiContractGeneration.test.js && node modules/nRouter/test/routerRuntimeLifecycle.test.js",
     "test": "npm run check:syntax && npm run test:config && npm run test:router"
   },
   "dependencies": {

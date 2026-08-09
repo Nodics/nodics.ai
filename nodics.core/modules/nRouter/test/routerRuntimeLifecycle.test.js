@@ -21,6 +21,12 @@ const EventEmitter = require('events');
  */
 
 let registeredContributor;
+global.CONFIG = {
+    get: function (name) {
+        if (name === 'runtimeLifecycle') return { httpDrainTimeoutMs: 5 };
+        return undefined;
+    }
+};
 global.SERVICE = {
     DefaultRuntimeLifecycleService: {
         registerContributor: function (name, contributor) {
@@ -61,6 +67,12 @@ class FakeServer extends EventEmitter {
     }
 }
 
+class HangingCloseServer extends FakeServer {
+    close() {
+        this.listening = false;
+    }
+}
+
 (async function () {
     let moduleConfig = {
         running: false,
@@ -80,6 +92,12 @@ class FakeServer extends EventEmitter {
     assert.strictEqual(server.idleClosed, true, 'drain must close idle keep-alive connections');
     await registeredContributor.contributor.shutdown();
     assert.strictEqual(server.allClosed, true, 'shutdown must force-close remaining connections');
+
+    let hangingServer = new HangingCloseServer();
+    await routerService.startListener('default', 3001, false, hangingServer, moduleConfig);
+    await routerService.closeRuntimeServers(false);
+    assert.strictEqual(hangingServer.listening, false, 'bounded drain must stop accepting traffic even when close callback does not return');
+    assert.strictEqual(hangingServer.allClosed, true, 'bounded drain must force-close connections before lifecycle timeout');
 
     console.log('Router runtime lifecycle contract validated');
 })().catch(error => {

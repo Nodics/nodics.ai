@@ -29,7 +29,8 @@ module.exports = {
         handleFatalErrors: true,
         exitOnSignal: true,
         contributorTimeoutMs: 10000,
-        shutdownTimeoutMs: 30000
+        shutdownTimeoutMs: 30000,
+        httpDrainTimeoutMs: 5000
     },
 
     /*
