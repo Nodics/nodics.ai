@@ -11,4 +11,11 @@
 
 'use strict';
 
+/**
+ * @module nodics.process/modules/workflow/config/postscripts
+ * @description Exposes workflow functional-module post-start script hooks for runtime layering.
+ * @layer config
+ * @owner workflow
+ * @override Project, environment, server, node, tenant, or customer layers may provide executable post-start scripts without changing the out-of-the-box workflow module.
+ */
 module.exports = {};

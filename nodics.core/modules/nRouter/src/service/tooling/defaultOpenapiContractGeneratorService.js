@@ -44,6 +44,33 @@ function readBooleanOption(args, name, defaultValue) {
     return defaultValue;
 }
 
+/**
+ * Resolves module roots for OpenAPI generation from the same repository/customer topology used by lifecycle builds.
+ *
+ * @returns {Object} Nodics home and module-root options for `config.prepareBuild`.
+ */
+function resolveRuntimeRoots() {
+    const commandHome = path.resolve(process.env.NODICS_HOME || process.cwd());
+    const customHome = process.env.CUSTOM_HOME ? path.resolve(process.env.CUSTOM_HOME) : commandHome;
+    const packagePath = path.join(commandHome, 'package.json');
+    if (fs.existsSync(packagePath)) {
+        const packageJson = require(packagePath);
+        if (packageJson.name === 'nodics.ai' && Array.isArray(packageJson.workspaces)) {
+            const workspaceRoots = packageJson.workspaces.map(workspaceName => path.resolve(commandHome, workspaceName));
+            return {
+                NODICS_HOME: path.resolve(commandHome, 'nodics.core'),
+                CUSTOM_HOME: customHome,
+                MODULE_ROOTS: workspaceRoots.includes(customHome) ? workspaceRoots : workspaceRoots.concat([customHome])
+            };
+        }
+    }
+    return {
+        NODICS_HOME: commandHome,
+        CUSTOM_HOME: customHome,
+        MODULE_ROOTS: commandHome === customHome ? [commandHome] : [commandHome, customHome]
+    };
+}
+
 function ensureRuntimeArgument(prefix, value) {
     if (!value) {
         return;
@@ -749,12 +776,12 @@ function createOptions(args) {
     ensureRuntimeArgument('E', environmentName);
     ensureRuntimeArgument('S', serverName);
     ensureRuntimeArgument('NODE', nodeName);
-    return {
+    return Object.assign(resolveRuntimeRoots(), {
         defaultEnvironment: environmentName || env.defaultOptions.defaultEnvironment,
         defaultServer: serverName || env.defaultOptions.defaultServer,
         includeRuntimeSchemas: readBooleanOption(args, '--runtime-schemas', false),
         outputDir: readOption(args, '--output-dir', null)
-    };
+    });
 }
 
 function getDefaultOutputDir() {
@@ -790,7 +817,7 @@ async function runCli(args) {
     const fileName = (NODICS.getNodeName() || NODICS.getServerName() || options.defaultServer) + '.openapi.json';
     const outputPath = path.join(outputDir, fileName);
     fs.writeFileSync(outputPath, JSON.stringify(document, null, 4), 'utf8');
-    console.log('Generated OpenAPI contract: ' + path.relative(rootDir, outputPath));
+    console.log('Generated OpenAPI contract: ' + path.relative(path.resolve(process.env.NODICS_HOME || process.cwd()), outputPath));
     console.log('Paths: ' + Object.keys(document.paths).length);
     console.log('Schemas: ' + Object.keys(document.components.schemas).length);
     if (warnings.length > 0) {

@@ -11,4 +11,11 @@
 
 'use strict';
 
+/**
+ * @module nodics.process/modules/workflow/modules/flowApi/config/prescripts
+ * @description Exposes flow API pre-start script hooks for runtime layering.
+ * @layer config
+ * @owner flowApi
+ * @override Project, environment, server, node, tenant, or customer layers may provide executable pre-start scripts without changing the out-of-the-box flow API module.
+ */
 module.exports = {};

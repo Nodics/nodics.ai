@@ -23,7 +23,7 @@
   },
   "scripts": {
     "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
-    "test:contract": "node test/processModuleContract.test.js",
+    "test:contract": "node test/processModuleContract.test.js && node test/processApiRouteContract.test.js && node test/processGraphValidationService.test.js && node test/processDefinitionLifecycleService.test.js",
     "test": "npm run check:syntax && npm run test:contract"
   },
   "dependencies": {

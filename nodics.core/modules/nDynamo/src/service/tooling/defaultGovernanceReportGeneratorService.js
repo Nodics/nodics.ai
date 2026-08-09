@@ -23,6 +23,34 @@ const path = require('path');
 const frameworkRootDir = path.resolve(__dirname, '../../../..');
 const config = require(path.join(frameworkRootDir, 'nConfig'));
 const env = require(path.join(frameworkRootDir, '..', 'env'));
+const projectRootDir = path.resolve(process.env.NODICS_HOME || process.cwd());
+
+/**
+ * Resolves module roots for governance-report generation from the framework
+ * repository root, core package root, and optional customer project home.
+ *
+ * @returns {Object} Effective runtime options for `config.prepareBuild`.
+ */
+function resolveRuntimeOptions() {
+    const customHome = process.env.CUSTOM_HOME ? path.resolve(process.env.CUSTOM_HOME) : projectRootDir;
+    const packagePath = path.join(projectRootDir, 'package.json');
+    if (fs.existsSync(packagePath)) {
+        const packageJson = require(packagePath);
+        if (packageJson.name === 'nodics.ai' && Array.isArray(packageJson.workspaces)) {
+            const workspaceRoots = packageJson.workspaces.map(workspaceName => path.resolve(projectRootDir, workspaceName));
+            return Object.assign({}, env.defaultOptions || {}, {
+                NODICS_HOME: path.resolve(projectRootDir, 'nodics.core'),
+                CUSTOM_HOME: customHome,
+                MODULE_ROOTS: workspaceRoots.includes(customHome) ? workspaceRoots : workspaceRoots.concat([customHome])
+            });
+        }
+    }
+    return Object.assign({}, env.defaultOptions || {}, {
+        NODICS_HOME: projectRootDir,
+        CUSTOM_HOME: customHome,
+        MODULE_ROOTS: projectRootDir === customHome ? [projectRootDir] : [projectRootDir, customHome]
+    });
+}
 
 function toRelative(filePath) {
     if (!filePath) {
@@ -264,7 +292,7 @@ function collectGeneratedSummary() {
 }
 
 async function initialize() {
-    let options = env.defaultOptions;
+    let options = resolveRuntimeOptions();
     await config.prepareBuild(options);
     await config.initUtilities(options);
     await config.loadModules();

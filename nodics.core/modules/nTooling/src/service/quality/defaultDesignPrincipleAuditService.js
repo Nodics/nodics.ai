@@ -26,6 +26,7 @@ const aiGovernanceValidationService = require('./defaultAiGovernanceValidationSe
  */
 
 const rootPath = path.resolve(process.env.NODICS_HOME || process.cwd());
+const corePrefix = fs.existsSync(path.join(rootPath, 'nodics.core')) ? 'nodics.core/' : '';
 
 /**
  * Reads a UTF-8 file relative to the repository root.
@@ -35,6 +36,17 @@ const rootPath = path.resolve(process.env.NODICS_HOME || process.cwd());
  */
 function read(relativePath) {
     return fs.readFileSync(path.join(rootPath, relativePath), 'utf8');
+}
+
+/**
+ * Resolves a path owned by the core framework module group from either the
+ * framework repository root or the nodics.core package root.
+ *
+ * @param {string} relativePath Path below nodics.core.
+ * @returns {string} Repository-relative path appropriate for the command home.
+ */
+function corePath(relativePath) {
+    return corePrefix + relativePath;
 }
 
 /**
@@ -94,7 +106,7 @@ function readScripts(failures) {
  */
 function readToolingProperties(failures) {
     try {
-        return require(path.join(rootPath, 'nodics.core', 'modules', 'nTooling', 'config', 'properties.js')).tooling || {};
+        return require(path.join(rootPath, corePath('modules/nTooling/config/properties.js'))).tooling || {};
     } catch (error) {
         fail(failures, 'nTooling properties must be readable: ' + error.message);
         return {};
@@ -170,7 +182,7 @@ function auditAiGovernance(failures, validator = aiGovernanceValidationService) 
  * @returns {void}
  */
 function auditPrincipleContracts(failures) {
-    requireClauses(failures, 'modules/nSetup/llm/contracts/nodics-principles.md', [
+    requireClauses(failures, corePath('modules/nSetup/llm/contracts/nodics-principles.md'), [
         'capabilities are sacred, implementations are negotiable',
         'AI Role And Responsibility Boundary',
         'Pre-Implementation Framework Study Gate',
@@ -179,16 +191,16 @@ function auditPrincipleContracts(failures) {
         'root `package.json` is the only npm dependency installation authority',
         'Security, access control, validation, audit, rollback, diagnostics, and test'
     ]);
-    requireClauses(failures, 'modules/nSetup/llm/standards/module-standard.md', [
+    requireClauses(failures, corePath('modules/nSetup/llm/standards/module-standard.md'), [
         'Module `package.json` files must not declare `dependencies` or',
         '`nodics.dependencyGovernance.ownedDependencies` metadata'
     ]);
-    requireClauses(failures, 'modules/nSetup/llm/nodics-principles.md', [
+    requireClauses(failures, corePath('modules/nSetup/llm/nodics-principles.md'), [
         'compatibility pointer',
         'modules/nSetup/llm/contracts/nodics-principles.md',
         'Do not add or maintain separate principles here'
     ]);
-    requireClauses(failures, 'modules/nSetup/llm/playbooks/change-gate-contract.md', [
+    requireClauses(failures, corePath('modules/nSetup/llm/playbooks/change-gate-contract.md'), [
         '## Gate 1A: Implementation Readiness',
         '## Gate 4: Periodic Platform Audit',
         'module structure and naming standards',
@@ -197,13 +209,13 @@ function auditPrincipleContracts(failures) {
         'Do not use repository `temp` or the refactor-only',
         'active server/node generated-report location'
     ]);
-    requireClauses(failures, 'modules/nSetup/llm/contracts/developer-implementation-contract.md', [
+    requireClauses(failures, corePath('modules/nSetup/llm/contracts/developer-implementation-contract.md'), [
         'AI Expert-Council Responsibility',
         'Pre-Implementation Study And Readiness',
         'security, access, validation, audit, rollback, diagnostics, and test',
         'Apply `integration-governance-contract.md`'
     ]);
-    requireClauses(failures, 'modules/nSetup/llm/contracts/human-maintainability-contract.md', [
+    requireClauses(failures, corePath('modules/nSetup/llm/contracts/human-maintainability-contract.md'), [
         'understandable, diagnosable, safely changeable, and',
         'AI-generated code has no special exemption'
     ]);
@@ -216,7 +228,7 @@ function auditPrincipleContracts(failures) {
  * @returns {void}
  */
 function auditLlmGuidance(failures) {
-    requireClauses(failures, 'modules/nSetup/llm/ai-enablement-index.md', [
+    requireClauses(failures, corePath('modules/nSetup/llm/ai-enablement-index.md'), [
         'root-to-leaf README/AGENTS chain',
         'AI Role And Study Gate',
         'Framework-maintainer mode',
@@ -224,16 +236,16 @@ function auditLlmGuidance(failures) {
         'prompts/runtime-governance-prompt.md',
         'contracts/integration-governance-contract.md'
     ]);
-    requireClauses(failures, 'modules/nSetup/llm/prompts/runtime-governance-prompt.md', [
+    requireClauses(failures, corePath('modules/nSetup/llm/prompts/runtime-governance-prompt.md'), [
         'preview before mutation',
         'rollback through the owning service',
         'Do not add a parallel activation channel'
     ]);
-    requireClauses(failures, 'modules/nSetup/llm/prompts/refactor-prompt.md', [
+    requireClauses(failures, corePath('modules/nSetup/llm/prompts/refactor-prompt.md'), [
         'without changing platform capability',
         'do not create a second loader'
     ]);
-    requireClauses(failures, 'modules/nSetup/llm/prompts/testing-prompt.md', [
+    requireClauses(failures, corePath('modules/nSetup/llm/prompts/testing-prompt.md'), [
         'later-loaded project modules can override behavior',
         'separate live'
     ]);

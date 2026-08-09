@@ -17,7 +17,7 @@
  * @override Customer process overlays may extend these schemas through later schema fragments while preserving lifecycle and audit semantics.
  */
 module.exports = {
-    process: {
+    flowSchema: {
         processDefinition: {
             super: 'base',
             model: true,

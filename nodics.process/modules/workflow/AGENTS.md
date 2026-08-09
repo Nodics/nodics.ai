@@ -1,5 +1,13 @@
 # Workflow Agent Guide
 
+## Inheritance
+
+- Follow the repository AGENTS contract: `../../../AGENTS.md`.
+- Follow global AI/development guidance from `../../../nodics.core/modules/nSetup/llm/ai-enablement-index.md`.
+- Follow the process group contract: `../../AGENTS.md`.
+
+## Module Work Rules
+
 Workflow is a capability module inside `nodics.process`. Keep the capability split aligned with the archive-backed contract:
 
 - place schemas and status definitions in `modules/flowSchema`;

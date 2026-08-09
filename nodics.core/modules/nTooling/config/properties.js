@@ -450,6 +450,8 @@ module.exports = {
                 { node: 'nodics.core/modules/nDynamo/test/schemaAccessPolicyGovernanceLifecycle.test.js' }
             ],
             workflow: [
+                { node: 'nodics.core/modules/nbpm/test/coreBootstrapWorkflowBridgeContract.test.js' },
+                { node: 'nodics.core/modules/nbpm/test/removeWorkflowProcessBehavior.test.js' },
                 { node: 'nodics.core/modules/nbpm/test/workflowLifecyclePipelineContract.test.js' }
             ]
         },

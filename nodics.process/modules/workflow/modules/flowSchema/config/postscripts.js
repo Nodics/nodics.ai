@@ -11,4 +11,11 @@
 
 'use strict';
 
+/**
+ * @module nodics.process/modules/workflow/modules/flowSchema/config/postscripts
+ * @description Exposes flow schema post-start script hooks for runtime layering.
+ * @layer config
+ * @owner flowSchema
+ * @override Project, environment, server, node, tenant, or customer layers may provide executable post-start scripts without changing the out-of-the-box flow schema module.
+ */
 module.exports = {};

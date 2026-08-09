@@ -16,6 +16,28 @@
  * @owner nodics.ai
  * @override Do not add runtime behavior here. Functional modules such as nodics.core, nodics.platform, nodics.wcms, nodics.cron, and nodics.docs own runtime behavior.
  */
+const path = require('path');
+const nodicsCore = require('./nodics.core/nodics');
+const frameworkPackage = require('./package.json');
+
+/**
+ * Resolves framework-root lifecycle options without making nodics.ai a runtime module.
+ *
+ * @param {Object} options Optional caller context.
+ * @returns {Object} Effective lifecycle options for core tooling.
+ */
+function resolveCoreLifecycleOptions(options) {
+    const workspaceRoots = (frameworkPackage.workspaces || [])
+        .map(workspaceName => path.resolve(__dirname, workspaceName));
+    const customHome = process.env.CUSTOM_HOME || process.cwd();
+    const moduleRoots = workspaceRoots.includes(customHome) ? workspaceRoots : workspaceRoots.concat([customHome]);
+    return Object.assign({
+        NODICS_HOME: path.resolve(__dirname, 'nodics.core'),
+        CUSTOM_HOME: customHome,
+        MODULE_ROOTS: Object.freeze(moduleRoots)
+    }, options || {});
+}
+
 module.exports = {
     /**
      * Keeps the framework root compatible with standard Nodics package shape.
@@ -39,5 +61,28 @@ module.exports = {
      */
     postInit: function (options) {
         return Promise.resolve(true);
+    },
+
+    /**
+     * Delegates repository-level clean execution to the core framework lifecycle.
+     *
+     * @param {Object} options Optional caller context.
+     * @returns {Promise<boolean>} Resolves when generated artifacts are cleaned by core tooling.
+     */
+    cleanAll: function (options) {
+        return nodicsCore.cleanAll(resolveCoreLifecycleOptions(options));
+    },
+
+    /**
+     * Delegates repository-level build execution to the core framework lifecycle.
+     *
+     * The framework root owns command convenience only; generated artifacts and
+     * schema discovery remain owned by the active functional modules.
+     *
+     * @param {Object} options Optional caller context.
+     * @returns {Promise<boolean>} Resolves when generated artifacts are rebuilt by core tooling.
+     */
+    buildAll: function (options) {
+        return nodicsCore.buildAll(resolveCoreLifecycleOptions(options));
     }
 };
