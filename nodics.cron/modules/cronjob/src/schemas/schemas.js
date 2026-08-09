@@ -73,7 +73,7 @@ module.exports = {
                 jobDetail: {
                     type: 'object',
                     required: false,
-                    description: 'Required to give job handler startNode, endNode and errorNode service funtions'
+                    description: 'Cron execution target. Supports processTrigger, startNode, internal, external, and optional errorNode handlers.'
                 },
                 trigger: {
                     type: 'object',

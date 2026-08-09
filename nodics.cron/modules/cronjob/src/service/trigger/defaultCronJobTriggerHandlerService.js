@@ -145,7 +145,8 @@ module.exports = {
     },
 
     /**
-     * Executes the configured job target as service method, internal module call, or external request.
+     * Executes the configured job target as Process trigger, service method,
+     * internal module call, or external request.
      *
      * @param {Object} request Pipeline request containing cronjob definition.
      * @param {Object} response Pipeline response receiving target output.
@@ -155,7 +156,14 @@ module.exports = {
     triggerProcess: function (request, response, process) {
         this.LOG.debug('Preparing output file path');
         let jobDetail = request.definition.jobDetail;
-        if (jobDetail.startNode) {
+        if (jobDetail.processTrigger) {
+            this.executeProcessTriggerJob(request.definition, request.job).then(success => {
+                response.success = success;
+                process.nextSuccess(request, response);
+            }).catch(error => {
+                process.error(request, response, error);
+            });
+        } else if (jobDetail.startNode) {
             let serviceName = jobDetail.startNode.substring(0, jobDetail.startNode.indexOf('.'));
             let functionName = jobDetail.startNode.substring(jobDetail.startNode.indexOf('.') + 1, jobDetail.startNode.length);
             SERVICE[serviceName][functionName]({
@@ -192,6 +200,58 @@ module.exports = {
         } else {
             process.error(request, response, new CLASSES.NodicsError('ERR_JOB_00000', 'Invalid job detail to execute'));
         }
+    },
+
+    /**
+     * Executes a Process-owned trigger from a Cron-owned scheduled job. Cron
+     * remains responsible for schedule timing and retry policy; Process remains
+     * responsible for trigger authorization, process instance creation, and
+     * runtime audit evidence.
+     *
+     * @param {Object} definition Cronjob definition.
+     * @param {Object} job Runtime cron job wrapper.
+     * @returns {Promise<Object>} Process trigger execution result.
+     * @throws {CLASSES.NodicsError} When Process runtime support or trigger
+     * metadata is unavailable.
+     */
+    executeProcessTriggerJob: function (definition, job) {
+        let processTrigger = definition && definition.jobDetail && definition.jobDetail.processTrigger || {};
+        let triggerCode = processTrigger.triggerCode || processTrigger.code;
+        if (!triggerCode) {
+            return Promise.reject(new CLASSES.NodicsError('ERR_JOB_00008', 'Cron process trigger code is missing'));
+        }
+        if (!SERVICE.DefaultProcessRuntimeLifecycleService || !SERVICE.DefaultProcessRuntimeLifecycleService.executeTrigger) {
+            return Promise.reject(new CLASSES.NodicsError('ERR_JOB_00008', 'Process trigger executor is unavailable'));
+        }
+        let startTime = definition.startTime instanceof Date ? definition.startTime.toISOString() : new Date().toISOString();
+        let correlationId = processTrigger.correlationId || [
+            'cron',
+            definition.code,
+            triggerCode,
+            startTime
+        ].join(':');
+        return SERVICE.DefaultProcessRuntimeLifecycleService.executeTrigger({
+            tenant: definition.tenant,
+            triggerCode: triggerCode,
+            authData: {
+                serviceId: 'cronjob',
+                moduleName: 'cronjob',
+                code: definition.code
+            },
+            runtimeOperation: {
+                correlationId: correlationId,
+                instanceCode: processTrigger.instanceCode,
+                version: processTrigger.version,
+                context: Object.assign({
+                    source: 'cronjob',
+                    cronJobCode: definition.code,
+                    cronJobTenant: definition.tenant,
+                    scheduledExpression: definition.trigger && definition.trigger.expression,
+                    firedAt: startTime
+                }, processTrigger.context || {})
+            },
+            job: job
+        });
     },
 
     /**

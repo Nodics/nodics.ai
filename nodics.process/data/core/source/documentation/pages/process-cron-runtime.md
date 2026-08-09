@@ -34,7 +34,10 @@ flowchart LR
 
 The trigger can reference a Cron job code. It does not become the Cron job.
 Cron still decides when the job fires. When a Cron-owned job wants to start a
-process, it calls the Process API with a secured runtime identity.
+process, it declares a `jobDetail.processTrigger` target. The Cron trigger
+pipeline then calls the Process trigger executor with a service identity,
+correlation id, schedule context, and job evidence. Process verifies the
+trigger is active, starts the workflow instance, and records audit events.
 
 ## Why this is attractive for partners
 
@@ -57,6 +60,40 @@ deregistered, because Process definitions and tasks are not owned by Cron.
 
 The local acceptance smoke proves this by exercising Process runtime first and
 then verifying the Cron registry lifecycle.
+
+## Cron job handoff shape
+
+A Cron job that starts a Process workflow should look declarative. It should not
+embed workflow logic or call arbitrary code when the intent is scheduled
+automation.
+
+```js
+{
+  code: 'dailyContentApprovalJob',
+  tenant: 'default',
+  trigger: { expression: '0 10 * * *' },
+  jobDetail: {
+    processTrigger: {
+      triggerCode: 'dailyContentApproval',
+      context: {
+        businessDateMode: 'CURRENT_DAY'
+      }
+    }
+  }
+}
+```
+
+That shape keeps the responsibilities readable:
+
+- Cron reads the schedule and fires the job.
+- Cron passes `cronJobCode`, tenant, schedule expression, and correlation
+  evidence into Process.
+- Process loads the active trigger relationship.
+- Process starts the published workflow version.
+- Process writes `process.trigger.execution.*` and instance audit events.
+
+If `nodics.process` is not loaded in the same runtime, the Cron job fails closed
+with a dependency error instead of silently pretending the automation ran.
 
 ## Continue
 

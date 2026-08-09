@@ -61,5 +61,9 @@ module.exports = {
     ERR_JOB_00007: {
         code: '400',
         message: 'Invalid job tenant'
+    },
+    ERR_JOB_00008: {
+        code: '424',
+        message: 'Cron process trigger execution dependency failed'
     }
 };

@@ -219,7 +219,7 @@ module.exports = {
             "architect"
           ],
           "summary": "Clarify how processServer can include Cron while Process and Cron keep separate ownership boundaries.",
-          "searchText": "Process and Cron Shared Runtime Clarify how processServer can include Cron while Process and Cron keep separate ownership boundaries. # Process and Cron Shared Runtime\n\nProcess and Cron can run together in one runtime server when a partner wants a\nsmaller topology. This is useful for local development, small installations, or\ncustomers who want business process automation and scheduled jobs without\nrunning many microservice processes.\n\n## The key rule\n\nShared runtime does not mean shared ownership.\n\n| Concern | Owner |\n| --- | --- |\n| Process definitions | `nodics.process` |\n| Published workflow versions | `nodics.process` |\n| Runtime instances and tasks | `nodics.process` |\n| Trigger relationship metadata | `nodics.process` |\n| Cron job definition | `nodics.cron` |\n| Scheduler firing and retries | `nodics.cron` |\n| Domain business action | Domain module |\n| UI rendering | `nodics.axis` |\n\n## Example topology\n\n```mermaid\nflowchart LR\n  ProcessServer[\"processServer\"] --> Core[\"includes nodics.core\"]\n  ProcessServer --> Process[\"extends nodics.process\"]\n  ProcessServer --> Cron[\"includes nodics.cron\"]\n  Process --> Trigger[\"processTrigger metadata\"]\n  Cron --> Job[\"cronJob execution\"]\n  Trigger -.references.-> Job\n```\n\nThe trigger can reference a Cron job code. It does not become the Cron job.\nCron still decides when the job fires. When a Cron-owned job wants to start a\nprocess, it calls the Process API with a secured runtime identity.\n\n## Why this is attractive for partners\n\nPartners often start with one server for operational simplicity. Later they may\nsplit runtimes when scale, isolation, or team ownership requires it. Nodics\nshould support both without changing functional module identity.\n\nThis keeps the mental model stable:\n\n- Process console shows workflows and automation relationships.\n- Cron console shows jobs and scheduler behavior.\n- Axis can place both under \"Business Process & Automation\".\n- Backend ownership still protects maintainability.\n\n## Safe lifecycle behavior\n\nCron can be registered, activated, deactivated, and deregistered through the\nmodule registry. Process APIs should remain reachable even when Cron is\nderegistered, because Process definitions and tasks are not owned by Cron.\n\nThe local acceptance smoke proves this by exercising Process runtime first and\nthen verifying the Cron registry lifecycle.\n\n## Continue\n\n- [Runtime Instance and Task Lifecycle](runtime-lifecycle.md)\n- [DevOps and Runtime Topology](devops-topology.md)\n"
+          "searchText": "Process and Cron Shared Runtime Clarify how processServer can include Cron while Process and Cron keep separate ownership boundaries. # Process and Cron Shared Runtime\n\nProcess and Cron can run together in one runtime server when a partner wants a\nsmaller topology. This is useful for local development, small installations, or\ncustomers who want business process automation and scheduled jobs without\nrunning many microservice processes.\n\n## The key rule\n\nShared runtime does not mean shared ownership.\n\n| Concern | Owner |\n| --- | --- |\n| Process definitions | `nodics.process` |\n| Published workflow versions | `nodics.process` |\n| Runtime instances and tasks | `nodics.process` |\n| Trigger relationship metadata | `nodics.process` |\n| Cron job definition | `nodics.cron` |\n| Scheduler firing and retries | `nodics.cron` |\n| Domain business action | Domain module |\n| UI rendering | `nodics.axis` |\n\n## Example topology\n\n```mermaid\nflowchart LR\n  ProcessServer[\"processServer\"] --> Core[\"includes nodics.core\"]\n  ProcessServer --> Process[\"extends nodics.process\"]\n  ProcessServer --> Cron[\"includes nodics.cron\"]\n  Process --> Trigger[\"processTrigger metadata\"]\n  Cron --> Job[\"cronJob execution\"]\n  Trigger -.references.-> Job\n```\n\nThe trigger can reference a Cron job code. It does not become the Cron job.\nCron still decides when the job fires. When a Cron-owned job wants to start a\nprocess, it declares a `jobDetail.processTrigger` target. The Cron trigger\npipeline then calls the Process trigger executor with a service identity,\ncorrelation id, schedule context, and job evidence. Process verifies the\ntrigger is active, starts the workflow instance, and records audit events.\n\n## Why this is attractive for partners\n\nPartners often start with one server for operational simplicity. Later they may\nsplit runtimes when scale, isolation, or team ownership requires it. Nodics\nshould support both without changing functional module identity.\n\nThis keeps the mental model stable:\n\n- Process console shows workflows and automation relationships.\n- Cron console shows jobs and scheduler behavior.\n- Axis can place both under \"Business Process & Automation\".\n- Backend ownership still protects maintainability.\n\n## Safe lifecycle behavior\n\nCron can be registered, activated, deactivated, and deregistered through the\nmodule registry. Process APIs should remain reachable even when Cron is\nderegistered, because Process definitions and tasks are not owned by Cron.\n\nThe local acceptance smoke proves this by exercising Process runtime first and\nthen verifying the Cron registry lifecycle.\n\n## Cron job handoff shape\n\nA Cron job that starts a Process workflow should look declarative. It should not\nembed workflow logic or call arbitrary code when the intent is scheduled\nautomation.\n\n```js\n{\n  code: 'dailyContentApprovalJob',\n  tenant: 'default',\n  trigger: { expression: '0 10 * * *' },\n  jobDetail: {\n    processTrigger: {\n      triggerCode: 'dailyContentApproval',\n      context: {\n        businessDateMode: 'CURRENT_DAY'\n      }\n    }\n  }\n}\n```\n\nThat shape keeps the responsibilities readable:\n\n- Cron reads the schedule and fires the job.\n- Cron passes `cronJobCode`, tenant, schedule expression, and correlation\n  evidence into Process.\n- Process loads the active trigger relationship.\n- Process starts the published workflow version.\n- Process writes `process.trigger.execution.*` and instance audit events.\n\nIf `nodics.process` is not loaded in the same runtime, the Cron job fails closed\nwith a dependency error instead of silently pretending the automation ran.\n\n## Continue\n\n- [Runtime Instance and Task Lifecycle](runtime-lifecycle.md)\n- [DevOps and Runtime Topology](devops-topology.md)\n"
         },
         {
           "code": "scheduled-automation",
@@ -236,7 +236,7 @@ module.exports = {
             "tester"
           ],
           "summary": "Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence.",
-          "searchText": "Scheduled Automation and Cron Triggers Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence. # Scheduled Automation and Cron Triggers\n\nScheduled automation connects time-based execution to business workflows. Nodics\nkeeps the ownership boundary explicit:\n\n- nodics.process owns process definitions, trigger relationships, instances,\n  tasks, and audit.\n- nodics.cron owns job scheduling, firing, retry timing, and scheduler runtime.\n\n## Why this split exists\n\nIf Process owned Cron jobs directly, workflows would become a hidden scheduler.\nIf Cron owned process definitions, scheduled jobs would become a hidden workflow\nengine. Keeping the boundary clear makes the system easier to test, operate, and\ncustomize.\n\n```mermaid\nsequenceDiagram\n  participant Cron as nodics.cron\n  participant Process as nodics.process\n  participant Audit as Process audit\n  Cron->>Process: POST /triggers/:code/execute\n  Process->>Audit: process.trigger.execution.requested\n  Process->>Process: start published process instance\n  Process->>Audit: process.instance.started\n  Process->>Audit: process.trigger.execution.completed\n```\n\n## Trigger lifecycle\n\n| State | Meaning |\n| --- | --- |\n| `DRAFT` | Relationship exists but is not executable. |\n| `ACTIVE` | Authorized scheduler can execute it. |\n| `PAUSED` | Keep metadata but do not execute. |\n| `ARCHIVED` | Historical relationship; cannot be updated or executed. |\n\nAxis should make this lifecycle obvious. A business user should not need to\nguess why an automation did not run.\n\n## Runtime execution contract\n\nThe execution API requires an active trigger. The scheduler should pass a\ncorrelation or idempotency key.\n\n```http\nPOST /nodics/process/v0/triggers/dailyContentApproval/execute\nAuthorization: Bearer <runtime-token>\ncontent-type: application/json\n\n{\n  \"correlationId\": \"cron-fire-2026-08-09T10:00:00Z\",\n  \"context\": {\n    \"source\": \"cron\",\n    \"businessDate\": \"2026-08-09\"\n  }\n}\n```\n\nProcess starts the referenced workflow and records audit evidence. Cron remains\nresponsible for deciding when to call this endpoint and how to retry scheduler\nfailures.\n\n"
+          "searchText": "Scheduled Automation and Cron Triggers Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence. # Scheduled Automation and Cron Triggers\n\nScheduled automation connects time-based execution to business workflows. Nodics\nkeeps the ownership boundary explicit:\n\n- nodics.process owns process definitions, trigger relationships, instances,\n  tasks, and audit.\n- nodics.cron owns job scheduling, firing, retry timing, and scheduler runtime.\n\n## Why this split exists\n\nIf Process owned Cron jobs directly, workflows would become a hidden scheduler.\nIf Cron owned process definitions, scheduled jobs would become a hidden workflow\nengine. Keeping the boundary clear makes the system easier to test, operate, and\ncustomize.\n\n```mermaid\nsequenceDiagram\n  participant Cron as nodics.cron\n  participant Process as nodics.process\n  participant Audit as Process audit\n  Cron->>Process: POST /triggers/:code/execute\n  Process->>Audit: process.trigger.execution.requested\n  Process->>Process: start published process instance\n  Process->>Audit: process.instance.started\n  Process->>Audit: process.trigger.execution.completed\n```\n\n## Trigger lifecycle\n\n| State | Meaning |\n| --- | --- |\n| `DRAFT` | Relationship exists but is not executable. |\n| `ACTIVE` | Authorized scheduler can execute it. |\n| `PAUSED` | Keep metadata but do not execute. |\n| `ARCHIVED` | Historical relationship; cannot be updated or executed. |\n\nAxis should make this lifecycle obvious. A business user should not need to\nguess why an automation did not run.\n\n## Runtime execution contract\n\nThe execution API requires an active trigger. The scheduler should pass a\ncorrelation or idempotency key.\n\n```http\nPOST /nodics/process/v0/triggers/dailyContentApproval/execute\nAuthorization: Bearer <runtime-token>\ncontent-type: application/json\n\n{\n  \"correlationId\": \"cron-fire-2026-08-09T10:00:00Z\",\n  \"context\": {\n    \"source\": \"cron\",\n    \"businessDate\": \"2026-08-09\"\n  }\n}\n```\n\nProcess starts the referenced workflow and records audit evidence. Cron remains\nresponsible for deciding when to call this endpoint and how to retry scheduler\nfailures.\n\n## Cron-owned job declaration\n\nWhen Process and Cron run together in `processServer`, a Cron job can execute a\nProcess trigger without using a browser-only shortcut:\n\n```js\n{\n  code: 'dailyContentApprovalJob',\n  trigger: { expression: '0 10 * * *' },\n  jobDetail: {\n    processTrigger: {\n      triggerCode: 'dailyContentApproval',\n      context: {\n        sourceDescription: 'Daily content approval automation'\n      }\n    }\n  }\n}\n```\n\nThis declaration is intentionally small. The business process remains in\nProcess. The schedule remains in Cron. Domain-specific work remains in the\ndomain module that Process calls through explicit ACTION adapters.\n\n## What business users should see in Axis\n\nAxis should explain two related but different records:\n\n| Axis concept | Backend owner | What the user controls |\n| --- | --- | --- |\n| Scheduled trigger relationship | `nodics.process` | Which process definition is allowed to start from a schedule. |\n| Cron job | `nodics.cron` | When the schedule fires and how scheduler lifecycle is operated. |\n| Manual execute now | `nodics.process` | Test an active trigger immediately with audit evidence. |\n\nThis helps a business user understand why activating a trigger relationship is\nnot the same thing as starting a scheduler, and why a Cron job may still need to\nexist before real time-based automation fires.\n"
         },
         {
           "code": "visual-designer",
@@ -2351,8 +2351,13 @@ module.exports = {
           "level": 2
         },
         {
+          "text": "Cron job handoff shape",
+          "anchor": "processCronRuntime-5-cron-job-handoff-shape",
+          "level": 2
+        },
+        {
           "text": "Continue",
-          "anchor": "processCronRuntime-5-continue",
+          "anchor": "processCronRuntime-6-continue",
           "level": 2
         }
       ],
@@ -2425,7 +2430,7 @@ module.exports = {
         },
         {
           "kind": "paragraph",
-          "text": "The trigger can reference a Cron job code. It does not become the Cron job. Cron still decides when the job fires. When a Cron-owned job wants to start a process, it calls the Process API with a secured runtime identity."
+          "text": "The trigger can reference a Cron job code. It does not become the Cron job. Cron still decides when the job fires. When a Cron-owned job wants to start a process, it declares a `jobDetail.processTrigger` target. The Cron trigger pipeline then calls the Process trigger executor with a service identity, correlation id, schedule context, and job evidence. Process verifies the trigger is active, starts the workflow instance, and records audit events."
         },
         {
           "kind": "heading",
@@ -2467,8 +2472,41 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "Cron job handoff shape",
+          "anchor": "processCronRuntime-5-cron-job-handoff-shape"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A Cron job that starts a Process workflow should look declarative. It should not embed workflow logic or call arbitrary code when the intent is scheduled automation."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "{\n  code: 'dailyContentApprovalJob',\n  tenant: 'default',\n  trigger: { expression: '0 10 * * *' },\n  jobDetail: {\n    processTrigger: {\n      triggerCode: 'dailyContentApproval',\n      context: {\n        businessDateMode: 'CURRENT_DAY'\n      }\n    }\n  }\n}"
+        },
+        {
+          "kind": "paragraph",
+          "text": "That shape keeps the responsibilities readable:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Cron reads the schedule and fires the job.",
+            "Cron passes `cronJobCode`, tenant, schedule expression, and correlation evidence into Process.",
+            "Process loads the active trigger relationship.",
+            "Process starts the published workflow version.",
+            "Process writes `process.trigger.execution.*` and instance audit events."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "If `nodics.process` is not loaded in the same runtime, the Cron job fails closed with a dependency error instead of silently pretending the automation ran."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Continue",
-          "anchor": "processCronRuntime-5-continue"
+          "anchor": "processCronRuntime-6-continue"
         },
         {
           "kind": "unordered-list",
@@ -2478,7 +2516,7 @@ module.exports = {
           ]
         }
       ],
-      "searchText": "Process and Cron Shared Runtime Clarify how processServer can include Cron while Process and Cron keep separate ownership boundaries. # Process and Cron Shared Runtime\n\nProcess and Cron can run together in one runtime server when a partner wants a\nsmaller topology. This is useful for local development, small installations, or\ncustomers who want business process automation and scheduled jobs without\nrunning many microservice processes.\n\n## The key rule\n\nShared runtime does not mean shared ownership.\n\n| Concern | Owner |\n| --- | --- |\n| Process definitions | `nodics.process` |\n| Published workflow versions | `nodics.process` |\n| Runtime instances and tasks | `nodics.process` |\n| Trigger relationship metadata | `nodics.process` |\n| Cron job definition | `nodics.cron` |\n| Scheduler firing and retries | `nodics.cron` |\n| Domain business action | Domain module |\n| UI rendering | `nodics.axis` |\n\n## Example topology\n\n```mermaid\nflowchart LR\n  ProcessServer[\"processServer\"] --> Core[\"includes nodics.core\"]\n  ProcessServer --> Process[\"extends nodics.process\"]\n  ProcessServer --> Cron[\"includes nodics.cron\"]\n  Process --> Trigger[\"processTrigger metadata\"]\n  Cron --> Job[\"cronJob execution\"]\n  Trigger -.references.-> Job\n```\n\nThe trigger can reference a Cron job code. It does not become the Cron job.\nCron still decides when the job fires. When a Cron-owned job wants to start a\nprocess, it calls the Process API with a secured runtime identity.\n\n## Why this is attractive for partners\n\nPartners often start with one server for operational simplicity. Later they may\nsplit runtimes when scale, isolation, or team ownership requires it. Nodics\nshould support both without changing functional module identity.\n\nThis keeps the mental model stable:\n\n- Process console shows workflows and automation relationships.\n- Cron console shows jobs and scheduler behavior.\n- Axis can place both under \"Business Process & Automation\".\n- Backend ownership still protects maintainability.\n\n## Safe lifecycle behavior\n\nCron can be registered, activated, deactivated, and deregistered through the\nmodule registry. Process APIs should remain reachable even when Cron is\nderegistered, because Process definitions and tasks are not owned by Cron.\n\nThe local acceptance smoke proves this by exercising Process runtime first and\nthen verifying the Cron registry lifecycle.\n\n## Continue\n\n- [Runtime Instance and Task Lifecycle](runtime-lifecycle.md)\n- [DevOps and Runtime Topology](devops-topology.md)\n",
+      "searchText": "Process and Cron Shared Runtime Clarify how processServer can include Cron while Process and Cron keep separate ownership boundaries. # Process and Cron Shared Runtime\n\nProcess and Cron can run together in one runtime server when a partner wants a\nsmaller topology. This is useful for local development, small installations, or\ncustomers who want business process automation and scheduled jobs without\nrunning many microservice processes.\n\n## The key rule\n\nShared runtime does not mean shared ownership.\n\n| Concern | Owner |\n| --- | --- |\n| Process definitions | `nodics.process` |\n| Published workflow versions | `nodics.process` |\n| Runtime instances and tasks | `nodics.process` |\n| Trigger relationship metadata | `nodics.process` |\n| Cron job definition | `nodics.cron` |\n| Scheduler firing and retries | `nodics.cron` |\n| Domain business action | Domain module |\n| UI rendering | `nodics.axis` |\n\n## Example topology\n\n```mermaid\nflowchart LR\n  ProcessServer[\"processServer\"] --> Core[\"includes nodics.core\"]\n  ProcessServer --> Process[\"extends nodics.process\"]\n  ProcessServer --> Cron[\"includes nodics.cron\"]\n  Process --> Trigger[\"processTrigger metadata\"]\n  Cron --> Job[\"cronJob execution\"]\n  Trigger -.references.-> Job\n```\n\nThe trigger can reference a Cron job code. It does not become the Cron job.\nCron still decides when the job fires. When a Cron-owned job wants to start a\nprocess, it declares a `jobDetail.processTrigger` target. The Cron trigger\npipeline then calls the Process trigger executor with a service identity,\ncorrelation id, schedule context, and job evidence. Process verifies the\ntrigger is active, starts the workflow instance, and records audit events.\n\n## Why this is attractive for partners\n\nPartners often start with one server for operational simplicity. Later they may\nsplit runtimes when scale, isolation, or team ownership requires it. Nodics\nshould support both without changing functional module identity.\n\nThis keeps the mental model stable:\n\n- Process console shows workflows and automation relationships.\n- Cron console shows jobs and scheduler behavior.\n- Axis can place both under \"Business Process & Automation\".\n- Backend ownership still protects maintainability.\n\n## Safe lifecycle behavior\n\nCron can be registered, activated, deactivated, and deregistered through the\nmodule registry. Process APIs should remain reachable even when Cron is\nderegistered, because Process definitions and tasks are not owned by Cron.\n\nThe local acceptance smoke proves this by exercising Process runtime first and\nthen verifying the Cron registry lifecycle.\n\n## Cron job handoff shape\n\nA Cron job that starts a Process workflow should look declarative. It should not\nembed workflow logic or call arbitrary code when the intent is scheduled\nautomation.\n\n```js\n{\n  code: 'dailyContentApprovalJob',\n  tenant: 'default',\n  trigger: { expression: '0 10 * * *' },\n  jobDetail: {\n    processTrigger: {\n      triggerCode: 'dailyContentApproval',\n      context: {\n        businessDateMode: 'CURRENT_DAY'\n      }\n    }\n  }\n}\n```\n\nThat shape keeps the responsibilities readable:\n\n- Cron reads the schedule and fires the job.\n- Cron passes `cronJobCode`, tenant, schedule expression, and correlation\n  evidence into Process.\n- Process loads the active trigger relationship.\n- Process starts the published workflow version.\n- Process writes `process.trigger.execution.*` and instance audit events.\n\nIf `nodics.process` is not loaded in the same runtime, the Cron job fails closed\nwith a dependency error instead of silently pretending the automation ran.\n\n## Continue\n\n- [Runtime Instance and Task Lifecycle](runtime-lifecycle.md)\n- [DevOps and Runtime Topology](devops-topology.md)\n",
       "previous": {
         "title": "DevOps and Runtime Topology",
         "route": "/docs/framework/process/devops-topology"
@@ -2492,8 +2530,8 @@ module.exports = {
         "functionalModule": "nodics.process",
         "technicalModule": "workflow",
         "path": "data/core/source/documentation/pages/process-cron-runtime.md",
-        "wordCount": 307,
-        "checksum": "c68000a6c66dd04db58288ffc0319264f4ada9b38e1c0bb04f4004fe08cc4fd1"
+        "wordCount": 456,
+        "checksum": "73260a5f7d4308e3d2b40dc751d72420053049bea0ba0e96a4179844d882071c"
       }
     },
     "active": true
@@ -2530,6 +2568,16 @@ module.exports = {
         {
           "text": "Runtime execution contract",
           "anchor": "scheduledAutomation-3-runtime-execution-contract",
+          "level": 2
+        },
+        {
+          "text": "Cron-owned job declaration",
+          "anchor": "scheduledAutomation-4-cron-owned-job-declaration",
+          "level": 2
+        },
+        {
+          "text": "What business users should see in Axis",
+          "anchor": "scheduledAutomation-5-what-business-users-should-see-in-axis",
           "level": 2
         }
       ],
@@ -2613,9 +2661,67 @@ module.exports = {
         {
           "kind": "paragraph",
           "text": "Process starts the referenced workflow and records audit evidence. Cron remains responsible for deciding when to call this endpoint and how to retry scheduler failures."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Cron-owned job declaration",
+          "anchor": "scheduledAutomation-4-cron-owned-job-declaration"
+        },
+        {
+          "kind": "paragraph",
+          "text": "When Process and Cron run together in `processServer`, a Cron job can execute a Process trigger without using a browser-only shortcut:"
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "{\n  code: 'dailyContentApprovalJob',\n  trigger: { expression: '0 10 * * *' },\n  jobDetail: {\n    processTrigger: {\n      triggerCode: 'dailyContentApproval',\n      context: {\n        sourceDescription: 'Daily content approval automation'\n      }\n    }\n  }\n}"
+        },
+        {
+          "kind": "paragraph",
+          "text": "This declaration is intentionally small. The business process remains in Process. The schedule remains in Cron. Domain-specific work remains in the domain module that Process calls through explicit ACTION adapters."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "What business users should see in Axis",
+          "anchor": "scheduledAutomation-5-what-business-users-should-see-in-axis"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis should explain two related but different records:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Axis concept",
+            "Backend owner",
+            "What the user controls"
+          ],
+          "rows": [
+            [
+              "Scheduled trigger relationship",
+              "`nodics.process`",
+              "Which process definition is allowed to start from a schedule."
+            ],
+            [
+              "Cron job",
+              "`nodics.cron`",
+              "When the schedule fires and how scheduler lifecycle is operated."
+            ],
+            [
+              "Manual execute now",
+              "`nodics.process`",
+              "Test an active trigger immediately with audit evidence."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "This helps a business user understand why activating a trigger relationship is not the same thing as starting a scheduler, and why a Cron job may still need to exist before real time-based automation fires."
         }
       ],
-      "searchText": "Scheduled Automation and Cron Triggers Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence. # Scheduled Automation and Cron Triggers\n\nScheduled automation connects time-based execution to business workflows. Nodics\nkeeps the ownership boundary explicit:\n\n- nodics.process owns process definitions, trigger relationships, instances,\n  tasks, and audit.\n- nodics.cron owns job scheduling, firing, retry timing, and scheduler runtime.\n\n## Why this split exists\n\nIf Process owned Cron jobs directly, workflows would become a hidden scheduler.\nIf Cron owned process definitions, scheduled jobs would become a hidden workflow\nengine. Keeping the boundary clear makes the system easier to test, operate, and\ncustomize.\n\n```mermaid\nsequenceDiagram\n  participant Cron as nodics.cron\n  participant Process as nodics.process\n  participant Audit as Process audit\n  Cron->>Process: POST /triggers/:code/execute\n  Process->>Audit: process.trigger.execution.requested\n  Process->>Process: start published process instance\n  Process->>Audit: process.instance.started\n  Process->>Audit: process.trigger.execution.completed\n```\n\n## Trigger lifecycle\n\n| State | Meaning |\n| --- | --- |\n| `DRAFT` | Relationship exists but is not executable. |\n| `ACTIVE` | Authorized scheduler can execute it. |\n| `PAUSED` | Keep metadata but do not execute. |\n| `ARCHIVED` | Historical relationship; cannot be updated or executed. |\n\nAxis should make this lifecycle obvious. A business user should not need to\nguess why an automation did not run.\n\n## Runtime execution contract\n\nThe execution API requires an active trigger. The scheduler should pass a\ncorrelation or idempotency key.\n\n```http\nPOST /nodics/process/v0/triggers/dailyContentApproval/execute\nAuthorization: Bearer <runtime-token>\ncontent-type: application/json\n\n{\n  \"correlationId\": \"cron-fire-2026-08-09T10:00:00Z\",\n  \"context\": {\n    \"source\": \"cron\",\n    \"businessDate\": \"2026-08-09\"\n  }\n}\n```\n\nProcess starts the referenced workflow and records audit evidence. Cron remains\nresponsible for deciding when to call this endpoint and how to retry scheduler\nfailures.\n\n",
+      "searchText": "Scheduled Automation and Cron Triggers Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence. # Scheduled Automation and Cron Triggers\n\nScheduled automation connects time-based execution to business workflows. Nodics\nkeeps the ownership boundary explicit:\n\n- nodics.process owns process definitions, trigger relationships, instances,\n  tasks, and audit.\n- nodics.cron owns job scheduling, firing, retry timing, and scheduler runtime.\n\n## Why this split exists\n\nIf Process owned Cron jobs directly, workflows would become a hidden scheduler.\nIf Cron owned process definitions, scheduled jobs would become a hidden workflow\nengine. Keeping the boundary clear makes the system easier to test, operate, and\ncustomize.\n\n```mermaid\nsequenceDiagram\n  participant Cron as nodics.cron\n  participant Process as nodics.process\n  participant Audit as Process audit\n  Cron->>Process: POST /triggers/:code/execute\n  Process->>Audit: process.trigger.execution.requested\n  Process->>Process: start published process instance\n  Process->>Audit: process.instance.started\n  Process->>Audit: process.trigger.execution.completed\n```\n\n## Trigger lifecycle\n\n| State | Meaning |\n| --- | --- |\n| `DRAFT` | Relationship exists but is not executable. |\n| `ACTIVE` | Authorized scheduler can execute it. |\n| `PAUSED` | Keep metadata but do not execute. |\n| `ARCHIVED` | Historical relationship; cannot be updated or executed. |\n\nAxis should make this lifecycle obvious. A business user should not need to\nguess why an automation did not run.\n\n## Runtime execution contract\n\nThe execution API requires an active trigger. The scheduler should pass a\ncorrelation or idempotency key.\n\n```http\nPOST /nodics/process/v0/triggers/dailyContentApproval/execute\nAuthorization: Bearer <runtime-token>\ncontent-type: application/json\n\n{\n  \"correlationId\": \"cron-fire-2026-08-09T10:00:00Z\",\n  \"context\": {\n    \"source\": \"cron\",\n    \"businessDate\": \"2026-08-09\"\n  }\n}\n```\n\nProcess starts the referenced workflow and records audit evidence. Cron remains\nresponsible for deciding when to call this endpoint and how to retry scheduler\nfailures.\n\n## Cron-owned job declaration\n\nWhen Process and Cron run together in `processServer`, a Cron job can execute a\nProcess trigger without using a browser-only shortcut:\n\n```js\n{\n  code: 'dailyContentApprovalJob',\n  trigger: { expression: '0 10 * * *' },\n  jobDetail: {\n    processTrigger: {\n      triggerCode: 'dailyContentApproval',\n      context: {\n        sourceDescription: 'Daily content approval automation'\n      }\n    }\n  }\n}\n```\n\nThis declaration is intentionally small. The business process remains in\nProcess. The schedule remains in Cron. Domain-specific work remains in the\ndomain module that Process calls through explicit ACTION adapters.\n\n## What business users should see in Axis\n\nAxis should explain two related but different records:\n\n| Axis concept | Backend owner | What the user controls |\n| --- | --- | --- |\n| Scheduled trigger relationship | `nodics.process` | Which process definition is allowed to start from a schedule. |\n| Cron job | `nodics.cron` | When the schedule fires and how scheduler lifecycle is operated. |\n| Manual execute now | `nodics.process` | Test an active trigger immediately with audit evidence. |\n\nThis helps a business user understand why activating a trigger relationship is\nnot the same thing as starting a scheduler, and why a Cron job may still need to\nexist before real time-based automation fires.\n",
       "previous": {
         "title": "Process and Cron Shared Runtime",
         "route": "/docs/framework/process/process-cron-runtime"
@@ -2629,8 +2735,8 @@ module.exports = {
         "functionalModule": "nodics.process",
         "technicalModule": "workflow",
         "path": "data/core/source/documentation/pages/scheduled-automation.md",
-        "wordCount": 248,
-        "checksum": "2614bb5c3cd2148d3a31ee822a6895ea89d045ce498adf543fd0a3f67db8b945"
+        "wordCount": 419,
+        "checksum": "3194cb4efc46f94d8f6a4dfda7c74e81a6e3deef21092d15bd3a595bdc8993b5"
       }
     },
     "active": true

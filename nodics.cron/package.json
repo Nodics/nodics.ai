@@ -23,7 +23,7 @@
   },
   "scripts": {
     "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
-    "test:cronjob": "node modules/cronjob/test/cronJobRouteContract.test.js && node modules/cronjob/test/cronJobControllerRequestMapping.test.js && node modules/cronjob/test/cronJobServiceLifecycleContract.test.js && node modules/cronjob/test/cronJobRuntimeContainerContract.test.js && node modules/cronjob/test/cronJobEventHandlerContract.test.js",
+    "test:cronjob": "node modules/cronjob/test/cronJobRouteContract.test.js && node modules/cronjob/test/cronJobControllerRequestMapping.test.js && node modules/cronjob/test/cronJobConfigurationServiceContract.test.js && node modules/cronjob/test/cronJobServiceLifecycleContract.test.js && node modules/cronjob/test/cronJobRuntimeContainerContract.test.js && node modules/cronjob/test/cronJobEventHandlerContract.test.js && node modules/cronjob/test/cronJobProcessTriggerContract.test.js",
     "test": "npm run check:syntax && npm run test:cronjob"
   },
   "dependencies": {

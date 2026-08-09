@@ -93,6 +93,7 @@ module.exports = function (definition, trigger, context, timeZone) {
                             _definition.startTime = startTime;
                             _self.LOG.info('--->> job triggered : ' + _definition.code + ' tenant: ' + definition.tenant + ' at: ' + _definition.startTime.getHours() + ':' + _definition.startTime.getMinutes() + ':' + _definition.startTime.getSeconds());
                             SERVICE.DefaultPipelineService.start('defaultCronJobTriggerHandlerPipeline', {
+                                tenant: _definition.tenant,
                                 job: _self,
                                 cronJob: cronJob,
                                 definition: _definition
@@ -152,6 +153,7 @@ module.exports = function (definition, trigger, context, timeZone) {
                 try {
                     if (NODICS.getServerState() === 'started' && (CONFIG.get('nodeId') === _definition.runOnNode || CONFIG.get('nodeId') === definition.tempNode)) {
                         SERVICE.DefaultPipelineService.start('defaultCronJobCompleteHandlerPipeline', {
+                            tenant: _definition.tenant,
                             job: _self,
                             cronJob: _self.getCronJob(),
                             definition: _definition
@@ -190,6 +192,7 @@ module.exports = function (definition, trigger, context, timeZone) {
                     _active = true;
                     _paused = false;
                     SERVICE.DefaultPipelineService.start('defaultCronJobStartHandlerPipeline', {
+                        tenant: _definition.tenant,
                         job: _self,
                         definition: _definition
                     }, {}).then(success => {
@@ -218,6 +221,7 @@ module.exports = function (definition, trigger, context, timeZone) {
                     _active = false;
                     _cronJob.stop();
                     SERVICE.DefaultPipelineService.start('defaultCronJobStopHandlerPipeline', {
+                        tenant: _definition.tenant,
                         job: _self,
                         definition: _definition
                     }, {}).then(success => {
@@ -243,6 +247,7 @@ module.exports = function (definition, trigger, context, timeZone) {
                 if (_active && !_paused) {
                     _paused = true;
                     SERVICE.DefaultPipelineService.start('defaultCronJobPauseHandlerPipeline', {
+                        tenant: _definition.tenant,
                         job: _self,
                         definition: _definition
                     }, {}).then(success => {
@@ -268,6 +273,7 @@ module.exports = function (definition, trigger, context, timeZone) {
                 if (_active && _paused) {
                     _paused = false;
                     SERVICE.DefaultPipelineService.start('defaultCronJobResumedHandlerPipeline', {
+                        tenant: _definition.tenant,
                         job: _self,
                         definition: _definition
                     }, {}).then(success => {
@@ -312,6 +318,7 @@ module.exports = function (definition, trigger, context, timeZone) {
     this.handleError = function (error) {
         _self.LOG.error('Job: ' + _definition.code + ' has issue while running: ', error);
         SERVICE.DefaultPipelineService.start('defaultCronJobErrorHandlerPipeline', {
+            tenant: _definition.tenant,
             job: _self,
             definition: _definition,
             error: error

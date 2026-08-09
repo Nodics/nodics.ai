@@ -61,3 +61,40 @@ Process starts the referenced workflow and records audit evidence. Cron remains
 responsible for deciding when to call this endpoint and how to retry scheduler
 failures.
 
+## Cron-owned job declaration
+
+When Process and Cron run together in `processServer`, a Cron job can execute a
+Process trigger without using a browser-only shortcut:
+
+```js
+{
+  code: 'dailyContentApprovalJob',
+  trigger: { expression: '0 10 * * *' },
+  jobDetail: {
+    processTrigger: {
+      triggerCode: 'dailyContentApproval',
+      context: {
+        sourceDescription: 'Daily content approval automation'
+      }
+    }
+  }
+}
+```
+
+This declaration is intentionally small. The business process remains in
+Process. The schedule remains in Cron. Domain-specific work remains in the
+domain module that Process calls through explicit ACTION adapters.
+
+## What business users should see in Axis
+
+Axis should explain two related but different records:
+
+| Axis concept | Backend owner | What the user controls |
+| --- | --- | --- |
+| Scheduled trigger relationship | `nodics.process` | Which process definition is allowed to start from a schedule. |
+| Cron job | `nodics.cron` | When the schedule fires and how scheduler lifecycle is operated. |
+| Manual execute now | `nodics.process` | Test an active trigger immediately with audit evidence. |
+
+This helps a business user understand why activating a trigger relationship is
+not the same thing as starting a scheduler, and why a Cron job may still need to
+exist before real time-based automation fires.

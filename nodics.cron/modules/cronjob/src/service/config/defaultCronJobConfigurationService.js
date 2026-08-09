@@ -21,7 +21,7 @@ const _ = require('lodash');
 module.exports = {
 
     interceptors: {},
-    valodators: {},
+    validators: {},
     /**
      * Initializes the cronjob configuration service during service loading.
      *
