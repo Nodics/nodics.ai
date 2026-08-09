@@ -11,6 +11,7 @@
 
 const assert = require('assert');
 const { assertRouteContracts, flattenRoutes } = require('../../../../nodics.core/modules/nRouter/test/routerContractTestUtils');
+const properties = require('../config/properties');
 const routerConfig = require('../src/router/routers');
 
 /**
@@ -46,4 +47,17 @@ flattenRoutes(routerConfig).forEach(route => {
         assert.notStrictEqual(route.method, 'GET', 'CronJob lifecycle mutation routes must not use GET');
     }
 });
+const capability = properties.backofficeCapabilities.cronjob;
+assert.strictEqual(capability.displayName, 'Cron Jobs');
+assert.deepStrictEqual(
+    capability.navigation.map(item => item.label),
+    ['Cron jobs', 'Scheduled triggers'],
+    'Cron Axis navigation must remain compact inside automation workspace',
+);
+assert(
+    capability.navigation.every((item) => item.route.startsWith('/cron') &&
+        item.group.id === 'business-process-automation' &&
+        item.group.label === 'Business Process & Automation'),
+    'cron navigation must stay under /cron in the Business Process & Automation group',
+);
 console.log(`CronJob route contract validated: ${expectedRoutes.length} routes`);

@@ -39,11 +39,11 @@ module.exports = {
             navigation: [
                 {
                     id: 'process-workflows',
-                    label: 'Business Processes',
+                    label: 'Processes',
                     route: '/process',
                     icon: 'workflow',
                     order: 500,
-                    group: { id: 'automation', label: 'Process and Automation', order: 500 },
+                    group: { id: 'business-process-automation', label: 'Business Process & Automation', order: 500 },
                     perspectives: ['operations', 'process'],
                     contexts: ['environment', 'tenant', 'enterprise'],
                     help: {
@@ -57,11 +57,11 @@ module.exports = {
                 {
                     id: 'process-definitions',
                     parentId: 'process-workflows',
-                    label: 'Definitions',
+                    label: 'Workflows',
                     route: '/process/definitions',
                     icon: 'schema',
                     order: 510,
-                    group: { id: 'automation', label: 'Process and Automation', order: 500 },
+                    group: { id: 'business-process-automation', label: 'Business Process & Automation', order: 500 },
                     perspectives: ['operations', 'process'],
                     contexts: ['environment', 'tenant', 'enterprise'],
                     help: {
@@ -73,49 +73,13 @@ module.exports = {
                     requiredPermissions: ['process.backoffice.view']
                 },
                 {
-                    id: 'process-designer',
-                    parentId: 'process-workflows',
-                    label: 'Visual Designer',
-                    route: '/process/designer',
-                    icon: 'workflow',
-                    order: 520,
-                    group: { id: 'automation', label: 'Process and Automation', order: 500 },
-                    perspectives: ['operations', 'process'],
-                    contexts: ['environment', 'tenant', 'enterprise'],
-                    help: {
-                        summary: 'Visually compose workflow nodes and transitions while nodics.process remains the validation and persistence authority.',
-                        documentationRoute: '/docs/capabilities/process-workflow/visual-designer',
-                        documentationFragment: 'axis-visual-designer'
-                    },
-                    featureState: 'PREVIEW',
-                    requiredPermissions: ['process.backoffice.view']
-                },
-                {
-                    id: 'process-instances',
-                    parentId: 'process-workflows',
-                    label: 'Instances',
-                    route: '/process/instances',
-                    icon: 'tasks',
-                    order: 530,
-                    group: { id: 'automation', label: 'Process and Automation', order: 500 },
-                    perspectives: ['operations', 'process'],
-                    contexts: ['environment', 'tenant', 'enterprise'],
-                    help: {
-                        summary: 'Inspect active and historical workflow instances, retries, pauses, failures, and audit evidence.',
-                        documentationRoute: '/docs/capabilities/process-workflow/process-workflow-model',
-                        documentationFragment: 'process-instances'
-                    },
-                    featureState: 'PREVIEW',
-                    requiredPermissions: ['process.backoffice.view']
-                },
-                {
                     id: 'process-tasks',
                     parentId: 'process-workflows',
-                    label: 'Tasks and Approvals',
+                    label: 'Tasks',
                     route: '/process/tasks',
                     icon: 'tasks',
-                    order: 540,
-                    group: { id: 'automation', label: 'Process and Automation', order: 500 },
+                    order: 520,
+                    group: { id: 'business-process-automation', label: 'Business Process & Automation', order: 500 },
                     perspectives: ['operations', 'process'],
                     contexts: ['environment', 'tenant', 'enterprise'],
                     help: {

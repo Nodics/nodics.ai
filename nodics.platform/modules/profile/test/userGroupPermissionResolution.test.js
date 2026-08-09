@@ -11,7 +11,7 @@
 
 const assert = require("assert");
 const _ = require("lodash");
-const authProperties = require("../../../nodics.core/modules/nAuth/config/properties");
+const authProperties = require("../../../../nodics.core/modules/nAuth/config/properties");
 
 // @nodics-capability-behavior @nodics-area profile
 global.CONFIG = {
@@ -35,7 +35,7 @@ global.CONFIG = {
   },
 };
 
-const commonUtils = require("../../../nodics.core/modules/nCommon/src/utils/utils");
+const commonUtils = require("../../../../nodics.core/modules/nCommon/src/utils/utils");
 global.UTILS = Object.assign({}, commonUtils, {
   isObject: function (value) {
     return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -184,6 +184,13 @@ assert(runtimeViewerGroup.permissions.includes("backoffice.contract.view"));
   "profile.backoffice.view",
   "cms.backoffice.view",
   "cronjob.backoffice.view",
+  "process.backoffice.view",
+  "process.definition.read",
+  "process.definition.create",
+  "process.definition.update",
+  "process.definition.validate",
+  "process.definition.publish",
+  "process.definition.delete",
   "workflow.backoffice.view",
   "pricing.backoffice.read",
   "pricing.backoffice.preview",

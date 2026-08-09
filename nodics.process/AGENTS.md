@@ -30,6 +30,10 @@
 - Axis process pages must consume BackOffice capability metadata and
   process-owned APIs. Axis must not maintain a second workflow registry,
   calculate process state, or persist workflow definitions directly.
+- Runtime topology may compose `nodics.process` with `nodics.cron` in a shared
+  process/automation server. This does not transfer scheduled-job ownership
+  into Process; Cron remains the owner of job definitions, triggers, scheduler
+  state, and execution lifecycle.
 - Visual workflow design must persist a backend-validated definition model.
   The browser graph is only an editor projection.
 

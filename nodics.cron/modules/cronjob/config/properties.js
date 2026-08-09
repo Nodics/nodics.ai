@@ -19,26 +19,18 @@
 module.exports = {
     backofficeCapabilities: {
         cronjob: {
-            enabled: true, capabilityId: 'job-scheduling', displayName: 'Scheduled Jobs', category: 'operations', icon: 'schedule',
+            enabled: true, capabilityId: 'job-scheduling', displayName: 'Cron Jobs', category: 'operations', icon: 'schedule',
             contractVersion: 1, minimumClientContractVersion: 1, roles: ['FUNCTIONAL_CAPABILITY_PROVIDER'],
             discovery: { openApiPath: '/nodics/system/v0/contract/openapi/internal', contractVersion: 1 },
             requiredPermissions: ['cronjob.backoffice.view'],
-            navigation: [{ id: 'cronjob', label: 'Scheduled Jobs', route: '/jobs', icon: 'cronjob', order: 300,
-                group: { id: 'automation', label: 'Process and Automation', order: 500 },
+            navigation: [{ id: 'cronjob', label: 'Cron jobs', route: '/cron', icon: 'cronjob', order: 530,
+                group: { id: 'business-process-automation', label: 'Business Process & Automation', order: 500 },
                 perspectives: ['operations'], contexts: ['environment', 'tenant'],
                 featureState: 'ACTIVE', requiredPermissions: ['cronjob.backoffice.view'] },
-            { id: 'job-triggers', label: 'Triggers', route: '/jobs/triggers', icon: 'cronjob',
-                order: 310, group: { id: 'automation', label: 'Process and Automation', order: 500 },
+            { id: 'job-triggers', label: 'Scheduled triggers', route: '/cron/triggers', icon: 'cronjob',
+                order: 540, group: { id: 'business-process-automation', label: 'Business Process & Automation', order: 500 },
                 perspectives: ['operations'], contexts: ['environment', 'tenant'],
-                featureState: 'DISABLED' },
-            { id: 'job-execution-history', label: 'Execution History', route: '/jobs/history', icon: 'cronjob',
-                order: 320, group: { id: 'automation', label: 'Process and Automation', order: 500 },
-                perspectives: ['operations'], contexts: ['environment', 'tenant'],
-                featureState: 'DISABLED' },
-            { id: 'job-failures', label: 'Job Failures', route: '/jobs/failures', icon: 'cronjob',
-                order: 330, group: { id: 'automation', label: 'Process and Automation', order: 500 },
-                perspectives: ['operations'], contexts: ['environment', 'tenant'],
-                featureState: 'DISABLED' }]
+                featureState: 'PREVIEW', requiredPermissions: ['cronjob.backoffice.view'] }]
         }
     },
 

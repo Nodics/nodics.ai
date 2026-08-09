@@ -108,6 +108,16 @@ assert(
     capability.navigation.every((item) => item.route.startsWith('/process')),
     'process navigation must stay under the /process route family',
 );
+assert.deepStrictEqual(
+    capability.navigation.map(item => item.label),
+    ['Processes', 'Workflows', 'Tasks'],
+    'Axis Process navigation must stay compact until additional process workspaces are implemented',
+);
+assert(
+    capability.navigation.every((item) => item.group.id === 'business-process-automation' &&
+        item.group.label === 'Business Process & Automation'),
+    'process navigation must stay in the Business Process & Automation group',
+);
 assert.strictEqual(
     properties.process.designer.enabled,
     false,
