@@ -133,6 +133,18 @@ route, navigation, and publication-readiness operations under the
 `cmsAuthoring` API exposure category. Server or environment layers may disable
 that category for a delivery-only topology, but WCMS owns the reusable default.
 
+The authoring model must return more than static labels. It must publish the
+client-safe records that a business designer needs to make correct choices:
+content catalogs, sites, page templates, slot definitions, page types,
+component types, and component type groups. Axis consumes this metadata to
+render dropdowns and helper text; it does not own the data, and a reference
+customer project may only verify that the running stack can observe it.
+
+This distinction is important during testing. The CMS module owns the contract
+test that proves the metadata is complete. Axis owns UI parsing and rendering
+tests for that metadata. A customer or reference project owns only acceptance
+evidence that its composed runtime can consume the WCMS-owned model.
+
 ## CMS Media Components
 
 CMS owns the meaning of a content component, not the binary media lifecycle.

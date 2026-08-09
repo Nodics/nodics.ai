@@ -128,6 +128,7 @@ function auditCommandGates(failures) {
         'llm:validate',
         'quality:docs',
         'quality:copyright',
+        'quality:ownership',
         'test:basic',
         'test:full',
         'test:topology:consolidated',

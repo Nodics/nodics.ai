@@ -43,6 +43,7 @@
     "ai:principle-audit": "node nodics.core/modules/nTooling/bin/nodics-tool.js ai:principle-audit",
     "quality:docs": "node nodics.core/modules/nTooling/bin/nodics-tool.js quality:docs",
     "quality:copyright": "node nodics.core/modules/nTooling/bin/nodics-tool.js quality:copyright",
+    "quality:ownership": "node nodics.core/modules/nTooling/bin/nodics-tool.js quality:ownership",
     "release:check": "node nodics.core/modules/nTooling/bin/nodics-tool.js release:check",
     "test:suite": "node nodics.core/modules/nTooling/bin/nodics-tool.js test:suite",
     "test:basic": "npm run test:suite -- test:suite --suite=basic",

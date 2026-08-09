@@ -68,7 +68,7 @@ Use this map when deciding where new code, data, or documentation should live.
 | --- | --- | --- | --- |
 | Core framework | `nodics.ai/nodics.core` | Mandatory base for every runtime server | `nodics.docs` |
 | Platform and profile | `nodics.ai/nodics.platform` | Platform server capability for user onboarding, authentication, and registry-facing services | `nodics.docs` for framework behavior; `nodics.platform/modules/axis` for Axis product behavior |
-| Axis backend content | `nodics.ai/nodics.platform/modules/axis` | Backend-owned CMS records that allow the Axis frontend to render product documentation and shell experience | `nodics.platform/modules/axis` |
+| Axis backend content | `nodics.ai/nodics.platform/modules/axis` | CMS records owned by the backend Axis module so the Axis frontend can render product documentation and shell experience | `nodics.platform/modules/axis` |
 | WCMS | `nodics.ai/nodics.wcms` | Content management runtime for sites, catalogs, pages, components, routes, and renderable content | `nodics.docs` |
 | Media | `nodics.ai/nodics.wcms/modules/media` | Governed media and asset lifecycle used by content experiences | `nodics.docs` |
 | Cron | `nodics.ai/nodics.cron` | Optional scheduled-job runtime capability | `nodics.docs` |
@@ -189,7 +189,7 @@ Documentation is also modular. It should not become another ungoverned bucket.
 | Documentation topic | Source owner | Why |
 | --- | --- | --- |
 | Framework vision, architecture, Core, Platform, WCMS, Cron | `nodics.docs` | This content explains reusable framework behavior. |
-| Axis product behavior, renderers, shell, login, schema workbench | `nodics.platform/modules/axis` | Axis backend module owns Axis-specific CMS records and product docs. |
+| Axis product behavior, renderers, shell, login, schema workbench | `nodics.platform/modules/axis` | Axis-specific CMS records and product docs are owned by the backend Axis module. |
 | Kickoff local setup and reference customization | `nodics.kickoff` | Kickoff is a customer-style project and must teach customers where project-owned content lives. |
 | Customer-specific module guides | Customer project or customer extension module | Customer data must not be hidden inside framework repositories. |
 

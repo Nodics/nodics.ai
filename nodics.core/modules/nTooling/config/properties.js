@@ -474,6 +474,7 @@ module.exports = {
                 handler: 'src/service/command/defaultNodicsLifecycleCommandService.js',
                 steps: [
                     { tool: ['ai:validate'] },
+                    { tool: ['quality:ownership'] },
                     { tool: ['quality:copyright', '--fail'] },
                     { tool: ['quality:docs'] },
                     { nodicsMethod: 'buildAll' },
@@ -495,6 +496,7 @@ module.exports = {
                     { npmRun: ['clean'] },
                     { npmRun: ['build'] },
                     { npmRun: ['llm:validate'] },
+                    { npmRun: ['quality:ownership'] },
                     { npmRun: ['quality:docs'] },
                     { npmRun: ['test:basic'] }
                 ],
@@ -528,6 +530,11 @@ module.exports = {
                 description: 'Validate standard Nodics copyright headers for JavaScript source and generated artifacts.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/quality/defaultCopyrightHeaderQualityService.js'
+            },
+            'quality:ownership': {
+                description: 'Validate Nodics ownership language so consumer projects and frontend renderers do not claim framework-owned contracts.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/quality/defaultOwnershipLanguageQualityService.js'
             },
             'structure:audit': {
                 description: 'Report Nodics project/module/environment/server/node structure gaps against the canonical structure matrix.',

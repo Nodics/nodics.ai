@@ -151,6 +151,19 @@ const draft = {
         'WCMS must publish designer draft defaults through the authoring model');
     assert(model.result.defaults.componentKinds.some(kind => kind.typeCode === 'richTextComponentType'),
         'WCMS must publish component-kind options instead of forcing Axis to own backend type codes');
+    assert(model.result.metadata.contentCatalogs.some(catalog => catalog.code === 'documentationContentCatalog'),
+        'WCMS must expose live content catalog references for Axis Designer selection');
+    assert(model.result.metadata.sites.some(site => site.code === 'axisDocumentationSite' &&
+        site.catalogCode === 'documentationContentCatalog'), 'WCMS must expose live site references with catalog ownership');
+    assert(model.result.metadata.pageTemplates.some(template => template.code === 'articleTemplate'),
+        'WCMS must expose live page template references');
+    assert.deepStrictEqual(model.result.metadata.slotDefinitions.map(slot => slot.name),
+        ['navigation', 'article', 'relatedResources'], 'WCMS must expose template slot definitions without hardcoding three slots');
+    assert(model.result.metadata.componentTypes.some(type => type.code === 'richTextComponentType'),
+        'WCMS must expose live component type references');
+    assert(model.result.metadata.componentTypeGroups.some(group =>
+        group.code === 'documentationAuthoringGroup' && group.componentTypeCodes.includes('mediaCardComponentType')),
+    'WCMS must expose live component type group references');
 
     let validation = await service.validateDraftComposition({ tenant: 'tenant-a', authData: {}, body: draft });
     assert.strictEqual(validation.result.status, 'VALID_DRAFT');

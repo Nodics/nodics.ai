@@ -58,7 +58,7 @@ Use this rule:
 
 For example, a reference customer project may verify that the local WCMS server
 exposes a catalog-first Designer authoring model. It must not call that a
-Kickoff-owned CMS Designer authoring contract. The correct language is
+Kickoff CMS Designer authoring check. The correct language is
 "reference runtime observes the WCMS-owned Designer authoring model" or
 "effective local stack can consume the WCMS Designer contract." This preserves
 the distinction between ownership, consumption, composition, and acceptance.

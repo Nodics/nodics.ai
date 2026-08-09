@@ -52,7 +52,8 @@ module.exports = {
                     frontendPersistence: false,
                     pixelPerfectRendering: false
                 },
-                defaults: this.clientAuthoringDefaults()
+                defaults: this.clientAuthoringDefaults(),
+                metadata: await this.authoringMetadata(request)
             }
         };
     },
@@ -486,6 +487,84 @@ module.exports = {
             searchOptions: { limit: this.authoringPolicy().maximumReferenceLookupItems }
         });
         return response && Array.isArray(response.result) ? response.result : [];
+    },
+
+    /** Builds the client-safe backend metadata needed by Axis Designer forms. */
+    authoringMetadata: async function (request) {
+        let catalogs = await this.safeGet('DefaultCatalogService', request, { catalogType: 'CONTENT', active: true });
+        let sites = await this.safeGet('DefaultCmsSiteService', request, { active: true });
+        let templates = await this.safeGet('DefaultCmsPageTemplateService', request, { active: true });
+        let slots = await this.safeGet('DefaultCmsSlotDefinitionService', request, { active: true });
+        let typeCodes = await this.safeGet('DefaultCmsTypeCodeService', request, { active: true });
+        let groups = await this.safeGet('DefaultCmsComponentTypeGroupService', request, { active: true });
+        return {
+            contentCatalogs: catalogs.map(this.catalogReference.bind(this)),
+            sites: sites.map(this.siteReference.bind(this)),
+            pageTemplates: templates.map(this.templateReference.bind(this)),
+            slotDefinitions: slots.map(this.slotReference.bind(this)),
+            pageTypes: typeCodes.filter(item => item.kind === 'PAGE').map(this.typeReference.bind(this)),
+            componentTypes: typeCodes.filter(item => item.kind === 'COMPONENT').map(this.typeReference.bind(this)),
+            componentTypeGroups: groups.map(this.componentTypeGroupReference.bind(this))
+        };
+    },
+
+    /** Returns a client-safe content catalog reference. */
+    catalogReference: function (item) {
+        return {
+            code: item.code,
+            name: item.name || item.code,
+            catalogType: item.catalogType || 'CONTENT'
+        };
+    },
+
+    /** Returns a client-safe CMS site reference. */
+    siteReference: function (item) {
+        return {
+            code: item.code,
+            name: item.name || item.displayName || item.code,
+            catalogCode: this.codeOf(item.catalog || item.catalogCode || item.contentCatalog)
+        };
+    },
+
+    /** Returns a client-safe page template reference. */
+    templateReference: function (item) {
+        return {
+            code: item.code,
+            name: item.name || item.displayName || item.code,
+            renderer: item.renderer,
+            typeCode: this.codeOf(item.typeCode || item.pageTypeCode)
+        };
+    },
+
+    /** Returns a client-safe slot definition reference. */
+    slotReference: function (item) {
+        return {
+            code: item.code,
+            name: item.name || item.slot || item.code,
+            templateCode: this.codeOf(item.template || item.templateCode),
+            allowedComponentTypes: Array.isArray(item.allowedComponentTypes) ? item.allowedComponentTypes.map(this.codeOf.bind(this)).filter(Boolean) : [],
+            allowedComponentTypeGroups: Array.isArray(item.allowedComponentTypeGroups) ? item.allowedComponentTypeGroups.map(this.codeOf.bind(this)).filter(Boolean) : [],
+            minItems: Number.isFinite(Number(item.minItems)) ? Number(item.minItems) : undefined,
+            maxItems: Number.isFinite(Number(item.maxItems)) ? Number(item.maxItems) : undefined
+        };
+    },
+
+    /** Returns a client-safe CMS type-code reference. */
+    typeReference: function (item) {
+        return {
+            code: item.code,
+            name: item.name || item.displayName || item.code,
+            kind: item.kind
+        };
+    },
+
+    /** Returns a client-safe component type group reference. */
+    componentTypeGroupReference: function (item) {
+        return {
+            code: item.code,
+            name: item.name || item.displayName || item.code,
+            componentTypeCodes: Array.isArray(item.componentTypeCodes) ? item.componentTypeCodes.map(this.codeOf.bind(this)).filter(Boolean) : []
+        };
     },
 
     /** Resolves a required generated service or throws a designer configuration error. */

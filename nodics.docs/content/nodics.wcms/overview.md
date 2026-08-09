@@ -186,6 +186,21 @@ templates, slot definitions, component type groups, and renderer mappings.
 They should not fork Axis to invent storage, route, media, or publishing
 authority in the browser.
 
+The first endpoint a Page Designer should call is the WCMS-owned Designer
+authoring model. That model tells Axis which records are currently available:
+content catalogs, sites, page templates, slot definitions, page types,
+component types, and component type groups. The browser can turn those records
+into dropdowns and helper text, but the records still come from backend-owned
+Catalog and CMS services. This protects business users from typing magic
+strings and protects the framework from frontend-owned persistence.
+
+Ownership also controls how we write tests. CMS tests prove the authoring
+model contract. Axis tests prove that the frontend can parse and render the
+metadata safely. A reference customer project, such as a local demo project,
+only proves that its composed runtime can observe the model. It must not
+describe that acceptance check as if the customer project owns the WCMS
+contract.
+
 ## Required record chain
 
 | Record | Beginner explanation | Common failure if missing |
