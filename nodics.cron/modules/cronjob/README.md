@@ -83,12 +83,22 @@ resume through its owning controller, service, and process-local container.
 State-changing routes are secured command APIs: `POST` for create, run, start,
 stop, pause, and resume; `PATCH` for update; and `DELETE` for removal. Do not
 expose these operations through `GET` or place business logic in route handlers.
+Every lifecycle command route declares the stable
+`cronjob.lifecycle.manage` permission in addition to its access-group guard.
+The reference runtime administrator group receives this permission through the
+identity-governance migration target, but customer projects should narrow it
+for production operators when needed.
 
 Scheduled triggers and manual `run` commands share the job definition and
 handler contract. Manual execution must not bypass tenant context, node
 eligibility, running-job protection, target permissions, logging, or failure
 handling. A human bearer token can authorize a CronJob command; module calls
 performed by the job use the separate tenant-scoped internal service-token flow.
+
+Axis can present a Cron operation panel, but it remains a client. Saving a job
+uses the Cron-owned generated `cronJob` schema route, and lifecycle buttons call
+Cron-owned command routes. Axis must not create an alternate scheduler state,
+calculate job ownership, or execute job handlers in the browser.
 
 ## Resilience And Recovery
 

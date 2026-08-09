@@ -56,8 +56,8 @@
       "canonicalSource": "data/core/source/documentation/pages/architecture-and-ownership.md",
       "destinationRoute": "/docs/nodics-axis/architecture",
       "disposition": "migrated",
-      "sourceHash": "40f4a9cba5116289fdb4ff792160175def29ae3b1d1fc3f8d1cb048fcb2323c9",
-      "wordCount": 2015,
+      "sourceHash": "153fbbce8b0999b30f5adf40f524f7e96ecdc0147fe66e655ddcd9ce0cdca548",
+      "wordCount": 2133,
       "headings": [
         "Why this page matters",
         "Decision",

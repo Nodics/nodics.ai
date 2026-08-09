@@ -209,6 +209,20 @@ Cron server does not yet expose, the page should say the capability is not
 available for this runtime. It should not guess the endpoint, construct a URL
 from a label, or show a fake success.
 
+The Cron Operations workspace follows the same rule. Axis may show a governed
+job-control panel after the authenticated bootstrap exposes a live `cronjob`
+connection. The panel saves job definitions through Cron-owned schema APIs and
+requests create, run, start, stop, pause, and resume through Cron-owned command
+routes. Axis does not own scheduler state, node eligibility, overlap policy,
+job execution, handler selection, retries, or job logs. Those remain inside
+`nodics.cron`.
+
+Cron lifecycle routes require the `cronjob.lifecycle.manage` permission. A
+button being visible in Axis is not enough; the backend still authorizes the
+route. If the permission is absent, the frontend must surface the backend
+denial and keep the local view unchanged until a refreshed backend contract
+proves otherwise.
+
 ## Security boundary
 
 Human browser authentication remains separate from module-to-module and CronJob

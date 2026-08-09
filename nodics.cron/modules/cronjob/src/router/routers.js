@@ -22,6 +22,7 @@ module.exports = {
             createPostJob: {
                 secured: true,
                 accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
                 key: '/job/create',
                 method: 'POST',
                 controller: 'DefaultCronJobController',
@@ -44,6 +45,7 @@ module.exports = {
             createPostJobByCode: {
                 secured: true,
                 accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
                 key: '/job/create/:jobCode',
                 method: 'POST',
                 controller: 'DefaultCronJobController',
@@ -62,6 +64,7 @@ module.exports = {
             updatePatchJob: {
                 secured: true,
                 accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
                 key: '/job/update',
                 method: 'PATCH',
                 controller: 'DefaultCronJobController',
@@ -84,6 +87,7 @@ module.exports = {
             updatePatchJobByCode: {
                 secured: true,
                 accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
                 key: '/job/update/:jobCode',
                 method: 'PATCH',
                 controller: 'DefaultCronJobController',
@@ -102,6 +106,7 @@ module.exports = {
             runPostJobByCode: {
                 secured: true,
                 accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
                 key: '/job/run/:jobCode',
                 method: 'POST',
                 controller: 'DefaultCronJobController',
@@ -120,6 +125,7 @@ module.exports = {
             startPostJobByCode: {
                 secured: true,
                 accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
                 key: '/job/start/:jobCode',
                 method: 'POST',
                 controller: 'DefaultCronJobController',
@@ -135,6 +141,7 @@ module.exports = {
             startPostJob: {
                 secured: true,
                 accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
                 key: '/job/start',
                 method: 'POST',
                 controller: 'DefaultCronJobController',
@@ -153,6 +160,7 @@ module.exports = {
             stopPostJobByCode: {
                 secured: true,
                 accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
                 key: '/job/stop/:jobCode',
                 method: 'POST',
                 controller: 'DefaultCronJobController',
@@ -168,6 +176,7 @@ module.exports = {
             stopPostJob: {
                 secured: true,
                 accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
                 key: '/job/stop',
                 method: 'POST',
                 controller: 'DefaultCronJobController',
@@ -186,6 +195,7 @@ module.exports = {
             removeDeleteJobByCode: {
                 secured: true,
                 accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
                 key: '/job/remove/:jobCode',
                 method: 'DELETE',
                 controller: 'DefaultCronJobController',
@@ -201,6 +211,7 @@ module.exports = {
             removeDeleteJob: {
                 secured: true,
                 accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
                 key: '/job/remove',
                 method: 'DELETE',
                 controller: 'DefaultCronJobController',
@@ -219,6 +230,7 @@ module.exports = {
             pausePostJobByCode: {
                 secured: true,
                 accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
                 key: '/job/pause/:jobCode',
                 method: 'POST',
                 controller: 'DefaultCronJobController',
@@ -234,6 +246,7 @@ module.exports = {
             pausePostJob: {
                 secured: true,
                 accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
                 key: '/job/pause',
                 method: 'POST',
                 controller: 'DefaultCronJobController',
@@ -252,6 +265,7 @@ module.exports = {
             resumePostJobByCode: {
                 secured: true,
                 accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
                 key: '/job/resume/:jobCode',
                 method: 'POST',
                 controller: 'DefaultCronJobController',
@@ -267,6 +281,7 @@ module.exports = {
             resumePostJob: {
                 secured: true,
                 accessGroups: ['userGroup'],
+                permission: 'cronjob.lifecycle.manage',
                 key: '/job/resume',
                 method: 'POST',
                 controller: 'DefaultCronJobController',
