@@ -24,5 +24,14 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
 - Axis and BackOffice pages must consume backend navigation, help,
   documentation, schema/list/detail/query, and renderer metadata instead of
   hardcoding page-specific CRUD experiences.
+- Axis Page Designer is allowed as a guided business-user composition
+  workspace, but it must remain a client over CMS/Catalog/Media/Publishing
+  contracts. It must not introduce a parallel page model, template model,
+  component-placement model, media-storage authority, renderer-code authority,
+  or publication authority.
+- The designer sequence is Site, Content Catalog, Page Template, Slot
+  Definitions, Page, Components, Media References, Page Routes, Navigation
+  Nodes, and Publishing. Each step must persist through the owning backend
+  schema or operation.
 - Validate authoring model changes with
   `node nodics.wcms/modules/cms/test/cmsWcmsAuthoringSchemaContract.test.js`.

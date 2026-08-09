@@ -242,6 +242,41 @@ secrets, and raw storage descriptors. Axis may display this summary as an
 operations aid, but it must not become a provider configuration console or a
 second storage authority.
 
+## Axis Media Console Contract
+
+Axis is a governed media operations client. It does not own media storage,
+lifecycle, delivery, reference validation, or provider configuration.
+
+Axis may render:
+
+- upload wizard choices from backend media source contexts and folder policies;
+- storage provider health from the provider summary projection;
+- media preview through media-code based delivery routes;
+- usage references from media-owned reference/query contracts;
+- media set membership through media-owned media-set entry routes;
+- lifecycle buttons such as Retire and Restore as display guidance.
+
+Axis lifecycle guidance must be conservative and explainable. A Retire action
+should be visibly blocked while active references exist. Restore should be
+offered only for terminal statuses such as `RETIRED`, `EXPIRED`, or `FAILED`.
+However, these UI policies are not authority. Backend media services must
+repeat all permission, status, reference, and lifecycle checks before mutating
+records.
+
+Axis must not expose, persist, infer, or accept caller-owned storage authority:
+
+- local filesystem paths;
+- NAS paths;
+- bucket names or object keys;
+- provider descriptors;
+- storage keys;
+- signed URLs;
+- credentials, tokens, certificates, or private keys.
+
+Regression checks should cover this boundary. The Axis live smoke must prove
+that `GET /nodics/media/v0/contexts` returns governed source contexts and that
+`GET /nodics/media/v0/storage/providers/summary` hides secrets and raw paths.
+
 ## Storage Root Resolution Contract
 
 Storage root resolution is provider-owned backend behavior. Frontend clients,

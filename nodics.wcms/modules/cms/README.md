@@ -74,6 +74,31 @@ versioned CMS authoring. Customer/project modules may extend these schemas,
 initializer data, and validation services through later layers; Axis must
 discover and render them rather than hardcoding one customer WCMS model.
 
+## Axis Page Designer
+
+Axis may provide a Page Designer workspace for business users who do not want
+to start from low-level CMS tables. The designer is a guided composition tool,
+not a second CMS engine and not a browser-owned persistence model.
+
+The designer flow should help a user think in this order:
+
+1. choose or create a Site;
+2. choose the Content Catalog scope;
+3. select or create a Page Template;
+4. review allowed Slot Definitions;
+5. create the Page;
+6. add text, structured properties, and reusable CMS Components;
+7. associate media through `cmsComponentMedia` and media-owned `mediaCode` or
+   `mediaSetCode`;
+8. create Page Routes and Navigation Nodes;
+9. submit or inspect Publishing records when publication is enabled.
+
+Axis can make this friendly with cards, checklists, intent forms, and preview
+panels. It must still save data only through backend-owned CMS, Catalog,
+Media, and Publishing contracts. Axis must not invent a separate site/page
+composition schema, store raw media paths, embed executable renderer code, or
+turn a visual canvas into the authority for templates and slots.
+
 ## CMS Media Components
 
 CMS owns the meaning of a content component, not the binary media lifecycle.

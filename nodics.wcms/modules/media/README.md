@@ -213,6 +213,47 @@ context to a different folder/format without changing Axis or provider code.
 When behavior needs more than configuration, override the storage policy
 service in a later active module while preserving the same safe projection.
 
+## Axis Media Console Contract
+
+Axis is the operator experience for media, not the media authority. The media
+console may display upload flows, folder policies, format policies, storage
+provider summaries, delivery preview, usage references, media sets, and import
+or export lineage, but each action must remain backed by `nodics.wcms/media`
+contracts.
+
+Axis should treat backend media metadata as governed facts:
+
+- upload choices come from `GET /nodics/media/v0/contexts` and policy routes;
+- provider status comes from `GET /nodics/media/v0/storage/providers/summary`;
+- media record create/update/delete uses generated media schema operations only
+  when the schema explicitly exposes those operations;
+- media set entry management uses media-owned set entry routes;
+- delivery and preview use media-code based delivery routes;
+- business modules save `mediaCode`, `mediaSetCode`, or `mediaReferenceCode`.
+
+Axis may provide display-only lifecycle guidance for actions such as Retire or
+Restore. For example, the UI should block a Retire button while active
+references still use the media item, because that gives business users a clear
+reason before they click. That client policy is only a convenience. The backend
+must still validate every lifecycle mutation, reference check, status change,
+and permission check.
+
+Axis must not:
+
+- invent raw filesystem paths, cloud keys, bucket names, or signed URLs;
+- expose provider credentials or local/NAS absolute paths;
+- treat generic `mediaFolder` or `mediaFormat` CRUD as live upload policy
+  unless a media-owned governance workflow synchronizes it into effective
+  configuration;
+- let Product, CMS, Documentation, Import, Export, Axis, or project modules
+  copy provider storage details into their own records.
+
+The local acceptance smoke must verify the media context route and provider
+summary route so regressions are caught before a developer claims Axis media is
+ready. At minimum, the smoke should prove that safe media contexts are
+available and provider summaries hide secrets, raw paths, and storage
+authority.
+
 ## Storage Root Resolution
 
 The storage root is the provider-owned base location where bytes are written.
