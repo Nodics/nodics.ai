@@ -155,10 +155,12 @@ module.exports = {
 
     /** Loads records through an existing generated schema service. */
     getMany: async function (service, request, query) {
+        let settings = this.settings();
         let response = await service.get({
             tenant: request.tenant,
             authData: request.authData,
             options: Object.assign({}, request.options || {}, { recursive: false }),
+            searchOptions: { pageSize: settings.maxComponents },
             query: query
         });
         return response && Array.isArray(response.result) ? response.result : [];

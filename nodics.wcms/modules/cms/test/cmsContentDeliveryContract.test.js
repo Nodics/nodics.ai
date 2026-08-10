@@ -136,7 +136,11 @@ global.SERVICE = {
         let expected = query[key];
         return expected && expected.$in ? expected.$in.includes(model[key]) : model[key] === expected;
     });
-    const service = list => ({ get: request => Promise.resolve({ result: list.filter(model => matches(model, request.query)) }) });
+    const deliverySearchOptions = [];
+    const service = list => ({ get: request => {
+        deliverySearchOptions.push(request.searchOptions);
+        return Promise.resolve({ result: list.filter(model => matches(model, request.query)) });
+    } });
     global.SERVICE = {
         DefaultCmsPageRouteService: service(data.routes),
         DefaultCmsPageService: service(data.pages),
@@ -152,7 +156,11 @@ global.SERVICE = {
     const deliveryPath = path.join(root, 'modules/cms/src/service/delivery/defaultCmsDeliveryService');
     delete require.cache[require.resolve(deliveryPath)];
     const delivery = require(deliveryPath);
+    deliverySearchOptions.length = 0;
     let response = await delivery.resolvePage({ tenant: 'tenant-a', authData: {}, options: {}, router: { publicAccess: true }, delivery: { site: 'site', path: '/home', locale: 'en', channel: 'web' } });
+    assert(deliverySearchOptions.length > 0);
+    deliverySearchOptions.forEach(options => assert.strictEqual(options.pageSize, 4,
+        'CMS delivery reads must use the configured graph bound instead of the database default page size'));
     assert.strictEqual(response.result.contractVersion, 1);
     assert.strictEqual(response.result.page.renderer, 'page.home');
     assert.strictEqual(response.result.page.rendererContractVersion, 1);

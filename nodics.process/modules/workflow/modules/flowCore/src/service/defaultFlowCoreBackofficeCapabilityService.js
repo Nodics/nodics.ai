@@ -28,49 +28,7 @@ const capability = {
     "requiredPermissions": [
         "process.backoffice.view"
     ],
-    "documentation": [
-        {
-            "id": "process",
-            "label": "Process",
-            "type": "CMS",
-            "route": "/docs/framework/process",
-            "order": 160,
-            "connectionModule": "cms",
-            "site": "processDocumentationSite",
-            "catalog": "documentationContentCatalog",
-            "defaultPage": "/docs/framework/process",
-            "packCode": "processDocumentation",
-            "dashboard": {
-                "kind": "Capability guide",
-                "icon": "workflow",
-                "summary": "Business process, workflow definition, runtime instance, task, trigger, Cron relationship, and visual-designer governance guidance.",
-                "audiences": [
-                    "business-user",
-                    "administrator",
-                    "developer",
-                    "operator",
-                    "ai-tool"
-                ],
-                "coverage": {
-                    "score": 86,
-                    "status": "STRONG",
-                    "signals": [
-                        "Process module ownership",
-                        "Runtime lifecycle",
-                        "Task operations",
-                        "Incident retry and compensation",
-                        "Trigger relationship boundary",
-                        "Designer guardrails"
-                    ],
-                    "gaps": [
-                        "More screenshots",
-                        "Parallel gateway recipes",
-                        "Dedicated BPMN adapter documentation"
-                    ]
-                }
-            }
-        }
-    ],
+    "documentation": [],
     "navigation": [
         {
             "id": "process-workflows",
