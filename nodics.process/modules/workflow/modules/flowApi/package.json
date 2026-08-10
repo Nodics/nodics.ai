@@ -12,7 +12,7 @@
     "kind": "capability",
     "runtimeModule": true,
     "loadableByNodicsModuleLoader": true,
-    "owns": ["configuration", "router", "controller", "facade", "pipeline", "interceptor", "utility", "test", "llm"],
+    "owns": ["configuration", "router", "controller", "facade", "test", "llm"],
     "runtime": { "router": true, "publish": false, "web": false },
     "displayName": "Workflow API"
   }

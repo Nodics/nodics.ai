@@ -73,6 +73,8 @@ assert.strictEqual(governance.lockfile.installCommand, 'npm ci', 'Release instal
 assert.strictEqual(governance.lockfile.commitWithPackageJson, true, 'Dependency changes must commit package and lockfile together');
 assert.strictEqual(packageJson.allowScripts && packageJson.allowScripts['@scarf/scarf'], false,
     'Swagger UI transitive Scarf install script must remain denied until reviewed as a Nodics-owned runtime need');
+assert(packageJson.overrides && /^\^4\./.test(packageJson.overrides['elastic-apm-node']),
+    'The optional winston-elasticsearch APM helper must remain on the maintained Elastic APM 4.x line');
 
 [
     'npm ci',

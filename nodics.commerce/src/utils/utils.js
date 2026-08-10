@@ -9,13 +9,15 @@
 
  */
 'use strict';
-/** @module nodics.commerce/config/navigationItem @description Builds browser-safe Commerce navigation configuration without executable helpers in properties.js. @layer config @owner nodics.commerce */
+/** @module nodics.commerce/src/utils/utils @description Builds browser-safe Commerce navigation configuration behind the thin properties contribution. @layer utility @owner nodics.commerce */
+const enums = require('./enums');
+const statusDefinitions = require('./statusDefinitions');
 module.exports = {
     /** Creates one navigation item. @param {string} id Identifier. @param {string} parentId Parent. @param {string} label Label. @param {string} route Route. @param {string} moduleName Module. @param {string} schemaName Schema. @param {number} order Order. @param {string} permission Permission. @param {string} summary Help. @returns {Object} Navigation item. */
     item: function (id, parentId, label, route, moduleName, schemaName, order, permission, summary) {
         return {
-            id, parentId, label, route, icon: 'commerce', order, perspectives: ['business', 'operations'],
-            contexts: ['environment', 'tenant', 'enterprise'], featureState: 'ACTIVE',
+            id, parentId, label, route, icon: 'commerce', order, perspectives: enums.PERSPECTIVES,
+            contexts: enums.CONTEXTS, featureState: statusDefinitions.FEATURE.ACTIVE,
             requiredPermissions: [permission], workbenchTarget: { moduleName, schemaName },
             workbenchPresentation: { defaultColumns: ['code', 'status', 'revision', 'correlationId'], hiddenFields: ['evidence', 'idempotencyKey'] },
             help: { summary }

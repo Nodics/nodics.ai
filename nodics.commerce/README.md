@@ -1,11 +1,11 @@
 # Nodics Commerce
 
-Nodics Commerce is the source-free functional composition boundary for the
+Nodics Commerce is the functional composition boundary for the
 implemented Store, Product, Pricing, Tax, Promotion, Inventory, Cart,
 Checkout, Order, Payment, Fulfillment, and reverse-lifecycle capabilities.
 Concrete child modules own business schemas and behavior; this root owns only
-functional identity, composition, shared presentation metadata, and stable
-cross-capability policy.
+functional identity, composition, shared presentation metadata, its thin
+configuration utility, and stable cross-capability policy.
 
 The reference runtime is `nodics.kickoff/kickoffLocal/commerceServer`.
 Provider simulators are disabled by default in the framework, and local or

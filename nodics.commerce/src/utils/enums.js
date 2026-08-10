@@ -9,10 +9,15 @@
 
  */
 
+'use strict';
+
 /**
- * @module nodics.commerce/config/properties
- * @description Delegates Commerce defaults to the module-owned configuration utility.
- * @layer config
+ * @module nodics.commerce/src/utils/enums
+ * @description Defines stable browser-safe Commerce presentation dimensions.
+ * @layer utility
  * @owner nodics.commerce
  */
-module.exports = require('../src/utils/defaultCommerceProperties');
+module.exports = Object.freeze({
+    PERSPECTIVES: Object.freeze(['business', 'operations']),
+    CONTEXTS: Object.freeze(['environment', 'tenant', 'enterprise'])
+});

@@ -9,10 +9,14 @@
 
  */
 
+'use strict';
+
 /**
- * @module nodics.commerce/config/properties
- * @description Delegates Commerce defaults to the module-owned configuration utility.
- * @layer config
+ * @module nodics.commerce/src/utils/statusDefinitions
+ * @description Defines stable Commerce presentation status vocabulary.
+ * @layer utility
  * @owner nodics.commerce
  */
-module.exports = require('../src/utils/defaultCommerceProperties');
+module.exports = Object.freeze({
+    FEATURE: Object.freeze({ ACTIVE: 'ACTIVE' })
+});

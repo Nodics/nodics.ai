@@ -19,6 +19,7 @@
     "owns": [
       "composition",
       "configuration",
+      "utility",
       "test",
       "llm"
     ],
