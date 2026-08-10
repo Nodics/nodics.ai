@@ -13,11 +13,6 @@
 module.exports = {
     order: {
         enabled: true,
-        lifecycleWorkflowDefinitions: {
-            cancellation: { code: 'commerceOrderCancellation', version: '1', steps: ['ELIGIBILITY', 'APPROVAL_IF_REQUIRED', 'FULFILLMENT_INTENT', 'INVENTORY_DISPOSITION', 'PAYMENT_VOID_OR_REFUND', 'ORDER_PROJECTION'], makerChecker: true },
-            return: { code: 'commerceOrderReturn', version: '1', steps: ['ELIGIBILITY', 'APPROVAL_IF_REQUIRED', 'RETURN_LOGISTICS', 'RECEIPT_AND_INSPECTION', 'INVENTORY_DISPOSITION', 'PAYMENT_REFUND', 'ORDER_PROJECTION'], makerChecker: true },
-            refund: { code: 'commerceOrderRefund', version: '1', steps: ['ELIGIBILITY', 'APPROVAL_IF_REQUIRED', 'PAYMENT_REFUND', 'RECONCILIATION', 'ORDER_PROJECTION'], makerChecker: true }
-        },
         compatibility: { legacyAliasesEnabled: true, aliasWindow: '2_MINOR_RELEASES_OR_180_DAYS' }
     },
     schemaPolicies: { order: {

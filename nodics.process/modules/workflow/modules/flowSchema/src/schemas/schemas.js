@@ -152,8 +152,38 @@ module.exports = {
                 status: { type: 'string', required: true, default: 'CREATED', enum: ['CREATED', 'RUNNING', 'WAITING', 'COMPLETED', 'FAILED', 'CANCELLED'], description: 'Runtime lifecycle state' },
                 context: { type: 'object', required: false, description: 'Bounded runtime context snapshot; secrets and raw payloads are prohibited' },
                 currentNode: { type: 'string', required: false, description: 'Current node code for runtime diagnostics' },
+                incidentCode: { type: 'string', required: false, description: 'Current Process-owned recovery incident, when execution has failed' },
+                failureCode: { type: 'string', required: false, description: 'Stable redacted failure code for the current incident' },
+                retryCount: { type: 'int', required: true, default: 0, description: 'Number of governed retry attempts performed for this instance' },
+                compensationStatus: { type: 'string', required: true, default: 'NONE', enum: ['NONE', 'PENDING', 'IN_PROGRESS', 'COMPLETED', 'FAILED'], description: 'Orchestration view of domain-owned compensation execution' },
                 startedAt: { type: 'date', required: false, description: 'Runtime start timestamp' },
                 completedAt: { type: 'date', required: false, description: 'Runtime completion timestamp' }
+            }
+        },
+        processIncident: {
+            super: 'base',
+            model: true,
+            service: { enabled: true },
+            cache: { enabled: false },
+            router: { enabled: false },
+            search: { enabled: true, idPropertyName: 'code' },
+            definition: {
+                instanceCode: { type: 'string', required: true, description: 'Failed process instance owned by this incident' },
+                definitionCode: { type: 'string', required: true, description: 'Process definition used by the failed instance' },
+                version: { type: 'int', required: true, description: 'Immutable process version used by the failed instance' },
+                nodeCode: { type: 'string', required: true, description: 'ACTION node that failed' },
+                status: { type: 'string', required: true, default: 'OPEN', enum: ['OPEN', 'RETRYING', 'RESOLVED', 'COMPENSATING', 'COMPENSATED', 'DEAD_LETTER'], description: 'Governed incident and recovery lifecycle' },
+                errorCode: { type: 'string', required: true, description: 'Stable redacted error code; raw exception payloads are prohibited' },
+                attempt: { type: 'int', required: true, default: 1, description: 'Current execution attempt including the initial failure' },
+                maximumAttempts: { type: 'int', required: true, default: 3, description: 'Bounded maximum attempts declared by policy' },
+                nextRetryAt: { type: 'date', required: false, description: 'Earliest policy-calculated retry timestamp' },
+                adapter: { type: 'object', required: false, description: 'Declarative failed domain adapter reference' },
+                compensationAdapter: { type: 'object', required: false, description: 'Declarative domain-owned compensation adapter reference' },
+                correlationId: { type: 'string', required: false, description: 'Caller correlation identifier for evidence tracing' },
+                evidence: { type: 'object', required: false, description: 'Bounded redacted recovery evidence' },
+                lastErrorAt: { type: 'date', required: true, description: 'Timestamp of the latest failed attempt' },
+                resolvedAt: { type: 'date', required: false, description: 'Timestamp when retry resolved the incident' },
+                compensatedAt: { type: 'date', required: false, description: 'Timestamp when domain compensation completed' }
             }
         },
         processTask: {

@@ -1,5 +1,8 @@
 # BackOffice AI Contracts
 
+- `capability-registry-contract.md` defines service-owned providers, runtime
+  registration, effective aggregation, and the Axis projection boundary.
+
 - BackOffice owns observed registry/discovery state and presentation enablement.
 - Target Nodics modules remain authoritative for operations and authorization.
 - Human login and service-to-service registration identities stay separate.
@@ -23,7 +26,7 @@
   Schema-backed business pages declare `workbenchTarget`, bounded
   `workbenchPresentation`, lifecycle-action hints, reusable detail panels, and
   framework documentation links through the owning module's
-  `backofficeCapabilities` contribution. BackOffice validates and filters this
+  module-owned BackOffice capability service. BackOffice validates and filters this
   metadata, but never stores frontend renderers, component names, executable
   render functions, or duplicated page-specific CRUD behavior.
 - Framework capability help must link to framework documentation routes. Use

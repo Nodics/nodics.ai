@@ -18,8 +18,11 @@
  */
 const assert = require("assert");
 const schemas = require("../src/schemas/schemas").cms;
-const cmsNavigation = require("../config/properties").backofficeCapabilities.cms
-  .navigation;
+const cmsNavigation = [
+  require("../src/service/defaultCmsBackofficeCapabilityService").getCapability(),
+  require("../../../../nodics.core/modules/nCatalog/src/service/defaultCatalogBackofficeCapabilityService").getCapability(),
+  require("../../../../nodics.core/modules/nPublish/src/service/defaultPublishBackofficeCapabilityService").getCapability(),
+].flatMap((capability) => capability.navigation);
 const validationService = require("../src/service/validation/defaultCmsContractValidationService");
 const interceptors = require("../src/interceptors/interceptors");
 const statusDefinitions = require("../src/utils/statusDefinitions");

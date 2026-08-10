@@ -29,6 +29,14 @@ module.exports = {
     getInstanceDetail: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.getInstanceDetail(request); },
     /** Delegates runtime instance cancellation. */
     cancelInstance: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.cancelInstance(request); },
+    /** Delegates governed failed-instance retry. */
+    retryInstance: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.retryInstance(request); },
+    /** Delegates governed domain-owned compensation execution. */
+    compensateInstance: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.compensateInstance(request); },
+    /** Delegates recovery incident listing. */
+    listIncidents: function (request) { return SERVICE.DefaultProcessOperationsInspectionService.listIncidents(request); },
+    /** Delegates recovery incident read. */
+    getIncident: function (request) { return SERVICE.DefaultProcessOperationsInspectionService.getIncident(request); },
     /** Delegates human task listing. */
     listTasks: function (request) { return SERVICE.DefaultProcessOperationsInspectionService.listTasks(request); },
     /** Delegates human task read. */

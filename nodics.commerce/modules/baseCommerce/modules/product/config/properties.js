@@ -11,7 +11,27 @@
 
 /** @module product/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner product */
 module.exports = {
-    product: { enabled: true },
+    product: {
+        enabled: true,
+        localization: {
+            supportedLocales: ['en', 'ar'],
+            defaultLocale: 'en',
+            fallbackLocales: ['en'],
+            requiredLocales: ['en', 'ar'],
+            requiredProductFields: ['name'],
+            requiredCategoryFields: ['name'],
+            requiredVariantFields: [],
+            allowLegacySharedText: true,
+            maximumLocalizedFields: 100,
+            maximumBatchSize: 100,
+            searchIndexName: 'productLocalized',
+            searchCacheTtlSeconds: 300,
+            analyzerByLocale: {
+                en: 'standard',
+                ar: 'arabic'
+            }
+        }
+    },
     schemaPolicies: { product: {
         operational: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },
         tenantOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },

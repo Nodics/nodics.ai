@@ -88,7 +88,9 @@ module.exports = {
         publicError: {
             includeValidationErrors: true,
             maximumValidationErrors: 25,
-            maskServerErrorMessages: true
+            maskServerErrorMessages: true,
+            includeLocalizationMetadata: true,
+            permittedLocalizationExposures: ['PUBLIC', 'AUTHENTICATED']
         }
     },
     routeActionAuthorization: {

@@ -33,6 +33,7 @@ module.exports = {
         request.instanceCode = params.instanceCode || request.instanceCode;
         request.taskCode = params.taskCode || request.taskCode;
         request.triggerCode = params.triggerCode || request.triggerCode;
+        request.incidentCode = params.incidentCode || request.incidentCode;
         request.query = httpRequest.query || request.query || {};
         request.runtimeOperation = httpRequest.body || request.runtimeOperation || {};
         let promise = FACADE.DefaultProcessOperationsFacade[operation](request);
@@ -50,6 +51,14 @@ module.exports = {
     getInstanceDetail: function (request, callback) { return this.invoke('getInstanceDetail', request, callback); },
     /** Cancels a governed runtime instance. */
     cancelInstance: function (request, callback) { return this.invoke('cancelInstance', request, callback); },
+    /** Retries a failed instance ACTION under its incident policy. */
+    retryInstance: function (request, callback) { return this.invoke('retryInstance', request, callback); },
+    /** Executes a failed instance domain-owned compensation adapter. */
+    compensateInstance: function (request, callback) { return this.invoke('compensateInstance', request, callback); },
+    /** Lists Process-owned recovery incidents. */
+    listIncidents: function (request, callback) { return this.invoke('listIncidents', request, callback); },
+    /** Reads one Process-owned recovery incident. */
+    getIncident: function (request, callback) { return this.invoke('getIncident', request, callback); },
     /** Lists governed human tasks. */
     listTasks: function (request, callback) { return this.invoke('listTasks', request, callback); },
     /** Reads one governed human task. */

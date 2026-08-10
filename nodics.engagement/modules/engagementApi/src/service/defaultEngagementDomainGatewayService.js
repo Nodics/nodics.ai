@@ -64,4 +64,8 @@ module.exports = {
     , previewEngagementBatch: function (request) { return this.operations('batchPreview', request); }
     , previewEngagementExport: function (request) { return this.operations('exportPreview', request); }
     , previewEngagementRepair: function (request) { return this.operations('repairPreview', request); }
+    , executeEngagementBatch: function (request) { return this.operations('executeBatch', request); }
+    , executeEngagementExport: function (request) { return this.operations('executeExport', request); }
+    , executeEngagementRepair: function (request) { return this.operations('executeRepair', request); }
+    , executeEngagementPrivacy: function (request) { return SERVICE.DefaultEngagementPrivacyOperationsService.execute(request); }
 };

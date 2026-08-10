@@ -24,7 +24,10 @@ global.SERVICE = {
             if (statusCode === 'ERR_TEST_00000') {
                 return {
                     code: '418',
-                    message: 'Configured error message'
+                    message: 'Configured error message',
+                    messageKey: 'test.configuredError',
+                    parameters: ['field'],
+                    exposure: 'PUBLIC'
                 };
             }
             throw new Error('Unexpected status code: ' + statusCode);
@@ -38,7 +41,9 @@ global.CONFIG = {
                 publicError: {
                     includeValidationErrors: true,
                     maximumValidationErrors: 2,
-                    maskServerErrorMessages: true
+                    maskServerErrorMessages: true,
+                    includeLocalizationMetadata: true,
+                    permittedLocalizationExposures: ['PUBLIC']
                 }
             };
         }
@@ -132,6 +137,7 @@ let errorResponse = createResponse();
 let publicError = new global.CLASSES.NodicsError('ERR_TEST_00000');
 publicError.contexts = [{ handler: 'InternalHandler' }];
 publicError.metadata = { query: 'secret' };
+publicError.metadata.messageParameters = { field: 'loginId', ignored: 'secret' };
 publicError.stack = '/private/internal/path';
 responseHandler.handleError({}, errorResponse, publicError);
 
@@ -139,6 +145,9 @@ assert.strictEqual(errorResponse.statusCode, 418);
 assert.strictEqual(errorResponse.payload.code, 'ERR_TEST_00000');
 assert.strictEqual(errorResponse.payload.responseCode, '418');
 assert.strictEqual(errorResponse.payload.message, 'Configured error message');
+assert.strictEqual(errorResponse.payload.messageKey, 'test.configuredError');
+assert.deepStrictEqual(errorResponse.payload.messageParameters, { field: 'loginId' });
+assert.strictEqual(errorResponse.payload.messageExposure, 'PUBLIC');
 assert.strictEqual(errorResponse.payload.contexts, undefined);
 assert.strictEqual(errorResponse.payload.metadata, undefined);
 assert.strictEqual(errorResponse.payload.stack, undefined);

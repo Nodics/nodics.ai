@@ -443,7 +443,8 @@ Project-specific setup, demo business flows, sample data, project modules,
 custom API behavior, customer onboarding, and project extension guidance belong
 in the owning customer backend project using the same
 `data/core/source/documentation`, `data/core/data/documentation`,
-`data/core/headers`, and `manifest/docs-content-pack.json` structure. Do not
+`data/core/headers`, and the documentation section in `data/manifest.json`.
+Do not
 place customer project documentation in `nodics.docs`, the Platform `axis`
 module, or the `nodics.axis` frontend repository.
 

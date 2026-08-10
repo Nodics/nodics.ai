@@ -1,6 +1,6 @@
 {
   "pack": "nodics.process",
-  "version": "0.3.0",
+  "version": "0.4.1",
   "contractVersion": 1,
   "title": "Nodics Process",
   "pages": [
@@ -27,6 +27,18 @@
       "evidence": "nodics.process/data/core/source/documentation/pages/runtime-lifecycle.md",
       "summary": "Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships.",
       "audience": ["business-user", "administrator", "developer", "operator", "tester"]
+    },
+    {
+      "code": "incident-recovery",
+      "title": "Incident, Retry, and Compensation Operations",
+      "route": "/docs/framework/process/incident-recovery",
+      "section": "Process Operations",
+      "sectionOrder": 20,
+      "order": 22,
+      "source": "pages/incident-recovery.md",
+      "evidence": "nodics.process/data/core/source/documentation/pages/incident-recovery.md",
+      "summary": "Operate failed ACTION nodes through Process-owned incidents, bounded retries, dead-letter handling, and declarative domain-owned compensation.",
+      "audience": ["business-user", "administrator", "developer", "operator", "tester", "ai-tool"]
     },
     {
       "code": "first-workflow",

@@ -127,8 +127,8 @@ not expose service or Cron
 credentials, registration secrets, or internal lease-expiry state. See
 [`nodics.docs/security/backoffice-browser-security.md`](https://github.com/Nodics/nodics.docs).
 
-Projects add documentation by contributing `backofficeCapabilities.<module>
-.documentation` from their owning backend module. Source IDs must be unique,
+Projects add documentation through the concrete owning module's optional
+BackOffice capability service. Source IDs must be unique,
 paths must be application-relative, and optional permissions are filtered
 before bootstrap. A CMS source uses a dedicated Site/catalog pair and a
 configured nImport pack; an OpenAPI source references the live System contract.

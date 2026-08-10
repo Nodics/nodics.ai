@@ -164,18 +164,33 @@ module.exports = {
         });
     },
 
-    /** Discovers only active loader-owned module data releases. */
+    /** Discovers only active loader-owned module data releases from the module-owned aggregate manifest. */
     discoverReleases: function (requestedType) {
         if (requestedType) this.validateDataType(requestedType);
         let releases = [];
         (NODICS.getActiveModules() || []).forEach(moduleName => {
             let rawModule = NODICS.getRawModule(moduleName);
             if (!rawModule || !rawModule.path) return;
+            let aggregatePath = path.join(rawModule.path, 'data', 'manifest.json');
+            let aggregate;
+            let aggregateError;
+            try {
+                aggregate = this.readAggregateManifest(rawModule, aggregatePath);
+            } catch (error) {
+                aggregateError = error;
+            }
             ['init', 'core', 'sample'].filter(type => !requestedType || requestedType === type).forEach(dataType => {
-                let manifestPath = path.join(rawModule.path, 'data', dataType, 'manifest.json');
-                if (!fs.existsSync(manifestPath)) return;
+                let legacyPath = path.join(rawModule.path, 'data', dataType, 'manifest.json');
+                let manifestPath = aggregate ? aggregatePath : legacyPath;
+                if (aggregateError) {
+                    releases.push(this.invalidManifestRelease(rawModule, dataType, aggregatePath, aggregateError));
+                    return;
+                }
+                if (aggregate && (!aggregate.sections || !aggregate.sections[dataType])) return;
+                if (!aggregate && !fs.existsSync(legacyPath)) return;
                 try {
-                    releases.push(this.inspectManifest(rawModule, dataType, manifestPath));
+                    releases.push(this.inspectManifest(rawModule, dataType, manifestPath,
+                        aggregate && aggregate.sections && aggregate.sections[dataType]));
                 } catch (error) {
                     releases.push(this.invalidManifestRelease(rawModule, dataType, manifestPath, error));
                 }
@@ -185,20 +200,43 @@ module.exports = {
             first.dataType.localeCompare(second.dataType) || first.moduleName.localeCompare(second.moduleName));
     },
 
-    /** Validates one manifest, containment, symlink policy, and every declared checksum. */
-    inspectManifest: function (rawModule, dataType, manifestPath) {
-        let releaseRoot = path.dirname(manifestPath);
+    /** Reads and validates the aggregate manifest envelope when a module owns a data directory. */
+    readAggregateManifest: function (rawModule, manifestPath) {
+        if (!fs.existsSync(manifestPath)) return undefined;
         let manifest;
         try {
             manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
         } catch (error) {
-            throw this.error('ERR_IMP_00003', 'Data release manifest JSON is invalid for module ' + rawModule.name + ' and data type ' + dataType);
+            throw this.error('ERR_IMP_00003', 'Aggregate data manifest JSON is invalid for module ' + rawModule.name);
         }
-        if (!manifest || !(this.configuration().allowedContractVersions || [1]).includes(manifest.contractVersion) ||
-            manifest.module !== rawModule.name ||
+        if (!manifest || manifest.contractVersion !== 2 || manifest.module !== rawModule.name ||
+            !manifest.sections || typeof manifest.sections !== 'object' || Array.isArray(manifest.sections)) {
+            throw this.error('ERR_IMP_00003', 'Aggregate data manifest is incompatible for module ' + rawModule.name +
+                '; verify contractVersion 2, module identity, and sections map');
+        }
+        return manifest;
+    },
+
+    /** Validates one manifest, containment, symlink policy, and every declared checksum. */
+    inspectManifest: function (rawModule, dataType, manifestPath, aggregateSection) {
+        let releaseRoot = path.dirname(manifestPath);
+        let manifest;
+        if (aggregateSection) {
+            manifest = aggregateSection;
+        } else {
+            try {
+                manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+            } catch (error) {
+                throw this.error('ERR_IMP_00003', 'Data release manifest JSON is invalid for module ' + rawModule.name + ' and data type ' + dataType);
+            }
+        }
+        let isAggregate = Boolean(aggregateSection);
+        if (!manifest || (!isAggregate && !(this.configuration().allowedContractVersions || [1]).includes(manifest.contractVersion)) ||
+            (!isAggregate && manifest.module !== rawModule.name) ||
+            (isAggregate && manifest.kind !== 'DATA_RELEASE') ||
             manifest.dataType !== dataType || !/^\d+\.\d+\.\d+$/.test(manifest.version || '') ||
             !manifest.files || typeof manifest.files !== 'object' || Array.isArray(manifest.files)) {
-            throw this.error('ERR_IMP_00003', 'Data release manifest is incompatible for module ' + rawModule.name + ' and data type ' + dataType + '; verify contractVersion, module, dataType, semantic version, and files map');
+            throw this.error('ERR_IMP_00003', 'Data release manifest is incompatible for module ' + rawModule.name + ' and data type ' + dataType + '; verify kind, dataType, semantic version, and files map');
         }
         let fileNames = Object.keys(manifest.files).sort();
         if (fileNames.length === 0 || fileNames.length > Number(this.configuration().maximumFilesPerRelease || 1024)) {
@@ -213,7 +251,8 @@ module.exports = {
             }
             let checksum = crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
             if (checksum !== manifest.files[relativeFile]) throw this.error('ERR_IMP_00003',
-                'Data release checksum validation failed for ' + rawModule.name + '/' + dataType + '/' + relativeFile +
+                'Data release checksum validation failed for ' + rawModule.name + '/' + dataType + '/' +
+                (isAggregate && relativeFile.startsWith(dataType + '/') ? relativeFile.slice(dataType.length + 1) : relativeFile) +
                 '; expected ' + String(manifest.files[relativeFile]).slice(0, 12) + '..., actual ' + checksum.slice(0, 12) + '...');
         });
         let checksum = crypto.createHash('sha256').update(fileNames.map(file => file + ':' + manifest.files[file]).join('|')).digest('hex');
@@ -234,6 +273,7 @@ module.exports = {
         let manifest = {};
         try {
             manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+            if (manifest.sections && manifest.sections[dataType]) manifest = manifest.sections[dataType];
         } catch (ignored) {
             manifest = {};
         }

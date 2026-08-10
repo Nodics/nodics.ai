@@ -14,8 +14,8 @@ module.exports = {
     /** Handles invoke within the module-owned contract. */
     invoke: function (operation, request, callback) {
         let http = request.httpRequest || {}; let params = http.params || {};
-        request.definitionCode = params.definitionCode || request.definitionCode; request.submissionCode = params.submissionCode || request.submissionCode; request.handoffCode = params.handoffCode || request.handoffCode; request.providerCode = params.providerCode || request.providerCode; request.actionCode = params.actionCode || request.actionCode; request.consentCode = params.consentCode || request.consentCode; request.testimonialCode = params.testimonialCode || request.testimonialCode; request.reviewCode = params.reviewCode || request.reviewCode; request.requestCode = params.requestCode || request.requestCode; request.feedbackCode = params.feedbackCode || request.feedbackCode; request.dashboardCode = params.dashboardCode || request.dashboardCode; request.itemCode = params.itemCode || request.itemCode; request.targetType = params.targetType || request.targetType; request.targetCode = params.targetCode || request.targetCode;
-        request.query = http.query || request.query || {}; request.payload = http.body || request.payload || {};
+        request.definitionCode = params.definitionCode || request.definitionCode; request.submissionCode = params.submissionCode || request.submissionCode; request.handoffCode = params.handoffCode || request.handoffCode; request.providerCode = params.providerCode || request.providerCode; request.actionCode = params.actionCode || request.actionCode; request.consentCode = params.consentCode || request.consentCode; request.testimonialCode = params.testimonialCode || request.testimonialCode; request.reviewCode = params.reviewCode || request.reviewCode; request.requestCode = params.requestCode || request.requestCode; request.feedbackCode = params.feedbackCode || request.feedbackCode; request.dashboardCode = params.dashboardCode || request.dashboardCode; request.itemCode = params.itemCode || request.itemCode; request.targetType = params.targetType || request.targetType; request.targetCode = params.targetCode || request.targetCode; request.domainType = params.domainType || request.domainType; request.domainCode = params.domainCode || request.domainCode; request.privacyAction = params.privacyAction || request.privacyAction;
+        request.query = http.query || request.query || {}; request.payload = http.body || request.payload || {}; if (request.privacyAction) request.payload.operation = String(request.privacyAction).toUpperCase();
         request.idempotencyKey = request.idempotencyKey || (http.headers && http.headers['idempotency-key']);
         let promise = FACADE.DefaultEngagementApiFacade[operation](request).then(result => ({ data: result }));
         if (!callback) return promise; promise.then(result => callback(null, result)).catch(callback);
@@ -87,6 +87,10 @@ module.exports = {
     /** Previews a batch command. */ previewEngagementBatch: function (request, callback) { return this.invoke('previewEngagementBatch', request, callback); },
     /** Previews an engagement export. */ previewEngagementExport: function (request, callback) { return this.invoke('previewEngagementExport', request, callback); },
     /** Previews an engagement repair. */ previewEngagementRepair: function (request, callback) { return this.invoke('previewEngagementRepair', request, callback); },
+    /** Executes an approved engagement batch. */ executeEngagementBatch: function (request, callback) { return this.invoke('executeEngagementBatch', request, callback); },
+    /** Executes an approved engagement export. */ executeEngagementExport: function (request, callback) { return this.invoke('executeEngagementExport', request, callback); },
+    /** Executes an approved engagement repair. */ executeEngagementRepair: function (request, callback) { return this.invoke('executeEngagementRepair', request, callback); },
+    /** Executes a purpose-bound privacy action. */ executeEngagementPrivacy: function (request, callback) { return this.invoke('executeEngagementPrivacy', request, callback); },
     /** Handles receive callback within the module-owned contract. */
     receiveCallback: function (request, callback) { return this.invoke('receiveCallback', request, callback); }
 };

@@ -103,7 +103,11 @@ module.exports = {
         retention: {
             requireConfiguredPolicy: true,
             hardDeleteEnabled: false,
-            legalHoldOverridesExpiry: true
+            legalHoldOverridesExpiry: true,
+            defaultRetentionDays: 365,
+            maximumBatchSize: 100,
+            schedulerOwner: 'nodics.cron',
+            executionOwner: 'domain'
         },
         providers: {
             riskAdapterService: null,

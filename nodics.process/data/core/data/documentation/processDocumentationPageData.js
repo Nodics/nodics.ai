@@ -64,6 +64,31 @@ module.exports = {
     "active": true
   },
   "record2": {
+    "code": "processDocumentationPageincidentRecovery",
+    "name": "Incident, Retry, and Compensation Operations",
+    "cmsSite": [
+      "processDocumentationSite"
+    ],
+    "typeCode": "processDocumentationArticlePageType",
+    "template": "processDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "processDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "processDocumentationComponentincidentRecovery",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record3": {
     "code": "processDocumentationPagefirstWorkflow",
     "name": "Build Your First Workflow",
     "cmsSite": [
@@ -88,7 +113,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record3": {
+  "record4": {
     "code": "processDocumentationPagefirstHumanTask",
     "name": "Build Your First Human Task Flow",
     "cmsSite": [
@@ -113,7 +138,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record4": {
+  "record5": {
     "code": "processDocumentationPagebusinessValue",
     "name": "Business Value and Adoption Model",
     "cmsSite": [
@@ -138,7 +163,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record5": {
+  "record6": {
     "code": "processDocumentationPagedeveloperCustomization",
     "name": "Developer Customization Guide",
     "cmsSite": [
@@ -163,7 +188,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record6": {
+  "record7": {
     "code": "processDocumentationPageactionAdapters",
     "name": "Action Adapter Contract",
     "cmsSite": [
@@ -188,7 +213,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record7": {
+  "record8": {
     "code": "processDocumentationPagecustomProjectExtension",
     "name": "Custom Project Extension Guide",
     "cmsSite": [
@@ -213,7 +238,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record8": {
+  "record9": {
     "code": "processDocumentationPagedevopsTopology",
     "name": "DevOps and Runtime Topology",
     "cmsSite": [
@@ -238,7 +263,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record9": {
+  "record10": {
     "code": "processDocumentationPageprocessCronRuntime",
     "name": "Process and Cron Shared Runtime",
     "cmsSite": [
@@ -263,7 +288,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record10": {
+  "record11": {
     "code": "processDocumentationPagescheduledAutomation",
     "name": "Scheduled Automation and Cron Triggers",
     "cmsSite": [
@@ -288,7 +313,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record11": {
+  "record12": {
     "code": "processDocumentationPagevisualDesigner",
     "name": "Visual Workflow Designer Contract",
     "cmsSite": [
@@ -313,7 +338,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record12": {
+  "record13": {
     "code": "processDocumentationPageqaRegressionGuide",
     "name": "Process QA and Regression Guide",
     "cmsSite": [

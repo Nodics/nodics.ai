@@ -42,5 +42,9 @@ module.exports = {
     ERR_CMS_00103: { code: '404', message: 'CMS designer template was not found' },
     ERR_CMS_00104: { code: '422', message: 'CMS designer slot rule is invalid' },
     ERR_CMS_00105: { code: '409', message: 'CMS designer route already exists' },
-    ERR_CMS_00106: { code: '422', message: 'CMS designer composition is not publish-ready' }
+    ERR_CMS_00106: { code: '422', message: 'CMS designer composition is not publish-ready' },
+    ERR_CMS_00107: { code: '400', message: 'CMS locale is invalid or unsupported' },
+    ERR_CMS_00108: { code: '422', message: 'CMS localized property declaration is invalid' },
+    ERR_CMS_00109: { code: '422', message: 'CMS localized content is invalid' },
+    ERR_CMS_00110: { code: '422', message: 'CMS localization is missing a mandatory property' }
 };

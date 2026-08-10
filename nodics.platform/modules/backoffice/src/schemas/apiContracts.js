@@ -909,6 +909,7 @@ module.exports = {
         properties: {
           profile: { type: "string", format: "uri" },
           cms: { type: "string", format: "uri" },
+          localization: { type: "string", format: "uri" },
         },
       },
       uiComposition: {
@@ -920,6 +921,8 @@ module.exports = {
           "defaultPublicPage",
           "defaultAuthenticatedPage",
           "locale",
+          "supportedLocales",
+          "fallbackLocales",
           "channel",
           "fallbackMode",
         ],
@@ -929,6 +932,8 @@ module.exports = {
           defaultPublicPage: { type: "string", pattern: "^/(?!/)" },
           defaultAuthenticatedPage: { type: "string", pattern: "^/(?!/)" },
           locale: { type: "string" },
+          supportedLocales: { type: "array", items: { type: "string" }, minItems: 1, uniqueItems: true },
+          fallbackLocales: { type: "array", items: { type: "string" }, uniqueItems: true },
           channel: { type: "string" },
           fallbackMode: { enum: ["STATIC_RECOVERY_SHELL"] },
         },

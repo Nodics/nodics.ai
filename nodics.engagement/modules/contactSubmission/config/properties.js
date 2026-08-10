@@ -36,6 +36,7 @@ module.exports = {
             WAITING_CUSTOMER: ['IN_PROGRESS', 'RESOLVED'], WAITING_INTERNAL: ['IN_PROGRESS', 'RESOLVED'], RESOLVED: ['IN_PROGRESS', 'CLOSED'],
             CLOSED: ['IN_PROGRESS', 'ARCHIVED'], REJECTED: ['ARCHIVED'], SPAM: ['ARCHIVED'], DUPLICATE: ['ARCHIVED'], ARCHIVED: []
         } },
-        adapters: { processService: null, communicationService: null, crmService: null, calendarService: null }
+        adapters: { processService: null, communicationService: null, crmService: null, calendarService: null },
+        helpdeskProvider: { enabled: false, maturity: 'SANDBOX_CAPABLE', sandboxOnly: true, liveQualified: false, endpoint: '', credentialReference: '', workspaceReference: '', timeoutMilliseconds: 5000 }
     }
 };

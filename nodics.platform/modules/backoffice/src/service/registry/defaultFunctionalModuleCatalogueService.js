@@ -102,6 +102,19 @@ module.exports = {
             };
         });
     },
+    /** Maps every runtime module in a batch to its declared functional root identity. */
+    buildLeaseFunctionalModuleIndex: function (batch) {
+        let registrations = batch.registrations || [];
+        let registrationsByName = new Map(registrations.map(item => [item.moduleName, item]));
+        let index = {};
+        registrations.forEach(registration => {
+            let root = this.resolveFunctionalRoot(registration, registrationsByName);
+            if (root && root.functionalModule && root.functionalModule.identity) {
+                index[registration.moduleName] = root.functionalModule.identity;
+            }
+        });
+        return index;
+    },
     /** Loads one durable functional-module record. */
     getRecord: async function (project, functionalModule, request) {
         let tenant = this.getTenant(request);
@@ -157,6 +170,33 @@ module.exports = {
         }
         return records;
     },
+    /** Reconciles durable runtime state and current servers from active capability leases. */
+    reconcileActiveRuntimeLeases: async function (activeLeases, affectedProjects, request) {
+        activeLeases = activeLeases || [];
+        let projects = new Set((affectedProjects || []).filter(Boolean).map(String));
+        activeLeases.forEach(lease => { if (lease.projectCode) projects.add(String(lease.projectCode)); });
+        let tenant = this.getTenant(request);
+        let authData = this.getPersistenceAuthData(request && request.authData);
+        let changed = 0;
+        for (let project of projects) {
+            let response = await this.getRecords({ tenant: tenant, authData: authData, query: { projectCode: project },
+                searchOptions: { limit: 256, sort: { functionalModule: 1 } } });
+            for (let record of this.getItems(response)) {
+                let matching = activeLeases.filter(lease => lease.projectCode === project &&
+                    lease.functionalModuleIdentity === record.functionalModule);
+                let observedServers = this.uniqueSorted(matching.map(lease =>
+                    [lease.environment, lease.server, lease.node || 'default'].join(':')));
+                let runtimeState = matching.length > 0 ? 'ACTIVE' : 'OFFLINE';
+                if (record.runtimeState === runtimeState && this.sameList(record.observedServers, observedServers)) continue;
+                let model = { runtimeState: runtimeState, observedServers: observedServers,
+                    catalogueRevision: Number(record.catalogueRevision || 1) + 1,
+                    updatedAt: new Date(), updatedBy: 'runtime-lease-reconciler' };
+                await this.updateRecord({ tenant: tenant, authData: authData, query: { code: record.code }, model: model });
+                changed++;
+            }
+        }
+        return changed;
+    },
     /** Returns a client-safe functional-module registration projection. */
     projectClientSafe: function (record) {
         return {
@@ -192,6 +232,27 @@ module.exports = {
     listAvailable: function (request) { return this.listByState(request, 'AVAILABLE', 'SUC_BOF_00017'); },
     /** Lists durable project functional-module registrations. */
     listRegistrations: function (request) { return this.listByState(request, 'REGISTERED', 'SUC_BOF_00018'); },
+    /** Returns governed technical-module presentation eligibility for one project. */
+    getPresentationEligibility: async function (request) {
+        let query = this.getQuery(request);
+        let project = request && request.project || query.project ||
+            (typeof NODICS !== 'undefined' && NODICS.getEnvironmentName && NODICS.getEnvironmentName());
+        if (!project) throw new CLASSES.NodicsError('ERR_BOF_00000', 'Functional-module project is required');
+        let tenant = this.getTenant(request);
+        let response = await this.getRecords({ tenant: tenant,
+            authData: this.getPersistenceAuthData(request && request.authData), query: { projectCode: project },
+            searchOptions: { limit: 256, sort: { functionalModule: 1 } } });
+        let governed = new Set();
+        let eligible = new Set();
+        this.getItems(response).forEach(record => {
+            let modules = [record.functionalModule].concat(record.technicalModules || []).filter(Boolean);
+            modules.forEach(moduleName => governed.add(moduleName));
+            if (record.runtimeState === 'ACTIVE' && record.registrationState === 'REGISTERED' && record.enabled === true) {
+                modules.forEach(moduleName => eligible.add(moduleName));
+            }
+        });
+        return { project: project, governedModules: Array.from(governed).sort(), eligibleModules: Array.from(eligible).sort() };
+    },
     /** Returns one durable functional-module registration for the authenticated project. */
     detail: async function (request) {
         let params = request.params || request.httpRequest && request.httpRequest.params || {};

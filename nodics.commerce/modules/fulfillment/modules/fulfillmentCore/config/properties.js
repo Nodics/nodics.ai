@@ -11,7 +11,7 @@
 
 /** @module fulfillmentCore/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner fulfillmentCore */
 module.exports = {
-    fulfillmentCore: { enabled: true },
+    fulfillmentCore: { enabled: true, carrierProvider: { enabled: false, maturity: 'SANDBOX_CAPABLE', sandboxOnly: true, liveQualified: false, endpoint: '', credentialReference: '', accountReference: '', timeoutMilliseconds: 5000 } },
     schemaPolicies: { fulfillmentCore: {
         operational: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },
         tenantOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },

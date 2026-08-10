@@ -29,6 +29,8 @@ module.exports = {
     SUC_PROCESS_00009: { code: '200', message: 'Process instance cancelled successfully' },
     SUC_PROCESS_00010: { code: '200', message: 'Process scheduled trigger metadata returned successfully' },
     SUC_PROCESS_00011: { code: '202', message: 'Process trigger execution accepted successfully' },
+    SUC_PROCESS_00012: { code: '200', message: 'Process incident retry resolved successfully' },
+    SUC_PROCESS_00013: { code: '200', message: 'Process domain compensation completed successfully' },
 
     ERR_PROCESS_00000: { code: '500', message: 'Process internal server error' },
     ERR_PROCESS_00001: { code: '400', message: 'Process request is invalid' },
@@ -51,5 +53,9 @@ module.exports = {
     ERR_PROCESS_00018: { code: '422', message: 'Unsupported process runtime node type' },
     ERR_PROCESS_00019: { code: '403', message: 'Process action adapter is not registered or allowed' },
     ERR_PROCESS_00020: { code: '409', message: 'Process trigger is not active' },
-    ERR_PROCESS_00021: { code: '409', message: 'Process decision could not resolve a transition' }
+    ERR_PROCESS_00021: { code: '409', message: 'Process decision could not resolve a transition' },
+    ERR_PROCESS_00022: { code: '404', message: 'Process recovery incident was not found' },
+    ERR_PROCESS_00023: { code: '409', message: 'Process incident is not eligible for retry' },
+    ERR_PROCESS_00024: { code: '409', message: 'Process incident changed; refresh before retrying' },
+    ERR_PROCESS_00025: { code: '409', message: 'Process instance is not eligible for compensation' }
 };

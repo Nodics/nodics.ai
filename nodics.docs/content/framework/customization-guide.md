@@ -223,7 +223,7 @@ Documentation follows the owner of the thing being explained:
 - project guidance goes to the owning customer project, such as
   `nodics.kickoff`;
 - generated content records stay under `data/core/data/documentation`;
-- manifests stay under `manifest/docs-content-pack.json`.
+- each data owner keeps typed release sections in `data/manifest.json`.
 
 Do not put customer project documentation into `nodics.docs`, and do not put
 importable documentation records into `nodics.axis`.

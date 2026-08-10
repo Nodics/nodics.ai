@@ -1,0 +1,37 @@
+{
+    "name": "nLocalization",
+    "index": "1.26",
+    "description": "Shared stateless locale canonicalization, localization context, and provider-neutral localization client capability.",
+    "main": "nodics.js",
+    "version": "0.0.1",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "nodics": {
+        "kind": "capability",
+        "displayName": "Localization Foundation",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": [
+            "configuration",
+            "event",
+            "pipeline",
+            "router",
+            "schema",
+            "search",
+            "interceptor",
+            "service",
+            "utility",
+            "test",
+            "llm"
+        ],
+        "runtime": {
+            "router": false,
+            "publish": false,
+            "web": false
+        }
+    },
+    "scripts": {
+        "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
+        "test": "npm run check:syntax && node test/localeCanonicalizationContract.test.js && node test/localizationContextContract.test.js && node test/localizationClientFailureContract.test.js"
+    }
+}

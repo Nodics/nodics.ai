@@ -17,5 +17,15 @@
  * @override Project modules should provide their own sample component data rather than changing shared CMS samples.
  */
 module.exports = {
-
+    record0: {
+        code: 'sampleLocalizedHomeBanner',
+        active: true,
+        typeCode: 'homePageBannerComponentType',
+        renderer: 'component.home-banner',
+        accessMode: 'PUBLIC',
+        properties: {
+            ctaUrl: '/discover',
+            analyticsId: 'localized-home-hero'
+        }
+    }
 };

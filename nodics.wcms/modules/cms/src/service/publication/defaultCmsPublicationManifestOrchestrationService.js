@@ -34,6 +34,8 @@ module.exports = {
     serviceFor: function (schema) {
         let names = { cmsPageRoute: 'DefaultCmsPageRouteService', cmsPage: 'DefaultCmsPageService',
             cmsComponentDetail: 'DefaultCmsComponentDetailService', cmsComponent: 'DefaultCmsComponentService',
+            cmsComponentLocalization: 'DefaultCmsComponentLocalizationService', cmsComponentMedia: 'DefaultCmsComponentMediaService',
+            cmsTypeCode: 'DefaultCmsTypeCodeService',
             cmsPageTemplate: 'DefaultCmsPageTemplateService', cmsSlotDefinition: 'DefaultCmsSlotDefinitionService' };
         if (!names[schema] || !SERVICE[names[schema]]) throw new CLASSES.NodicsError('CMS_PUBLICATION_SERVICE_UNAVAILABLE', 'CMS manifest service is unavailable');
         return SERVICE[names[schema]];
@@ -62,6 +64,8 @@ module.exports = {
         let components = Object.keys(models).filter(key => key.startsWith('cmsComponent:')).reduce((result, key) => {
             result[models[key].code] = models[key]; return result;
         }, {});
+        let localizations = Object.keys(models).filter(key => key.startsWith('cmsComponentLocalization:')).map(key => models[key]);
+        let media = Object.keys(models).filter(key => key.startsWith('cmsComponentMedia:')).map(key => models[key]);
         let build = (source, ancestors) => {
             ancestors = new Set(ancestors || []);
             if (ancestors.has(source)) throw new CLASSES.NodicsError('CMS_PUBLICATION_GRAPH_CYCLE', 'Frozen CMS component graph contains a cycle');
@@ -70,10 +74,21 @@ module.exports = {
                 let code = item.target && item.target.code || item.target;
                 let component = components[code];
                 if (!component) throw new CLASSES.NodicsError('CMS_PUBLICATION_COMPONENT_MISSING', 'Frozen CMS component is unavailable');
+                let variants = localizations.filter(variant => variant.componentCode === component.code);
+                let resolved = SERVICE.DefaultCmsContentLocalizationService ? SERVICE.DefaultCmsContentLocalizationService.resolve(
+                    component, variants, route.locale) : { properties: component.properties };
+                let componentMedia = media.filter(reference => reference.componentCode === component.code);
+                if (SERVICE.DefaultCmsContentLocalizationService) componentMedia = SERVICE.DefaultCmsContentLocalizationService.selectMedia(
+                    componentMedia, route.locale);
                 return { code: component.code, typeCode: component.typeCode, renderer: component.renderer,
                     rendererContractVersion: component.rendererContractVersion, rendererChannels: component.rendererChannels,
                     rendererDeprecated: component.rendererDeprecated, rendererReplacement: component.rendererReplacement,
-                    properties: component.properties, slot: item.slot || 'default', index: Number(item.index || 0), components: build(component.code, ancestors) };
+                    properties: resolved.properties, localization: resolved.localization,
+                    media: componentMedia.map(reference => ({ componentMediaCode: reference.componentMediaCode,
+                        mediaCode: reference.mediaCode, mediaSetCode: reference.mediaSetCode, mediaType: reference.mediaType,
+                        role: reference.role, slot: reference.slot, localeCode: reference.localeCode,
+                        position: reference.position, altText: reference.altText, caption: reference.caption })),
+                    slot: item.slot || 'default', index: Number(item.index || 0), components: build(component.code, ancestors) };
             });
         };
         return { contractVersion: 1, site: route.site, path: route.path, locale: route.locale, channel: route.channel,

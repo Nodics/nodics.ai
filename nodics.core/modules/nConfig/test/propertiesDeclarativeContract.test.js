@@ -20,6 +20,9 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '../../..');
 const EXCLUDED_DIRECTORIES = new Set(['.git', 'node_modules', 'llm', 'generated']);
 const DISALLOWED_PATTERNS = [
+    { name: 'BackOffice capability document', pattern: /\bbackofficeCapabilities\s*:/ },
+    { name: 'localization contribution document', pattern: /\blocalizationContributions\s*:/ },
+    { name: 'workflow definition document', pattern: /\b(?:lifecycle)?WorkflowDefinitions\s*:/ },
     { name: 'spread syntax', pattern: /\.\.\./ },
     { name: 'module import', pattern: /\brequire\s*\(/ },
     { name: 'environment access', pattern: /\bprocess\s*\./ },

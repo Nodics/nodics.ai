@@ -40,6 +40,19 @@ module.exports = {
             index: 3
         }]
     },
+    record1: {
+        code: 'sampleLocalizedHomePage',
+        name: 'Sample Localized Home Page',
+        active: true,
+        cmsSite: ['sampleLocalizedCmsSite'],
+        typeCode: 'sampleHomePageType',
+        cmsComponents: [{
+            target: 'sampleLocalizedHomeBanner',
+            active: true,
+            slot: 'hero',
+            index: 0
+        }]
+    },
     // record1: {
     //     code: 'sampleProductDetailPage',
     //     name: 'sampleProductDetailPage',

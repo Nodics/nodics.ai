@@ -226,10 +226,22 @@ module.exports = {
                 tenant: { type: 'string', required: true }, domainType: { type: 'string', required: true }, domainCode: { type: 'string', required: true }, repairType: { type: 'string', required: true }, expectedSourceHash: { type: 'string', required: false }, observedSourceHash: { type: 'string', required: false }, status: { type: 'string', required: true, enum: ['DETECTED', 'PREVIEWED', 'APPROVED', 'IN_PROGRESS', 'REPAIRED', 'FAILED', 'RECONCILED'] }, reason: { type: 'string', required: true }, requestedBy: { type: 'string', required: true }, approvedBy: { type: 'string', required: false }, result: { type: 'object', required: false }, correlationId: { type: 'string', required: true }
             }
         },
+        engagementBatchRun: {
+            super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false },
+            definition: {
+                tenant: { type: 'string', required: true }, idempotencyKey: { type: 'string', required: true }, action: { type: 'string', required: true }, reason: { type: 'string', required: true }, requestedBy: { type: 'string', required: true }, approvedBy: { type: 'string', required: true }, status: { type: 'string', required: true, enum: ['APPROVED', 'IN_PROGRESS', 'PARTIAL', 'COMPLETED', 'FAILED'] }, total: { type: 'int', required: true }, succeeded: { type: 'int', required: true }, failed: { type: 'int', required: true }, cursor: { type: 'int', required: true }, results: { type: 'array', required: true }, correlationId: { type: 'string', required: true }, startedAt: { type: 'date', required: true }, completedAt: { type: 'date', required: false }
+            }
+        },
+        engagementPrivacyCase: {
+            super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false },
+            definition: {
+                tenant: { type: 'string', required: true }, domainType: { type: 'string', required: true }, domainCode: { type: 'string', required: true }, operation: { type: 'string', required: true, enum: ['EXPORT', 'ANONYMIZE', 'RETENTION_ARCHIVE'] }, purpose: { type: 'string', required: true }, requestedBy: { type: 'string', required: true }, status: { type: 'string', required: true, enum: ['COMPLETED', 'DENIED_LEGAL_HOLD', 'FAILED'] }, fields: { type: 'array', required: false }, checksum: { type: 'string', required: false }, result: { type: 'object', required: false }, correlationId: { type: 'string', required: true }, executedAt: { type: 'date', required: true }
+            }
+        },
         engagementExportEvidence: {
             super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false },
             definition: {
-                tenant: { type: 'string', required: true }, purpose: { type: 'string', required: true }, requestedBy: { type: 'string', required: true }, filters: { type: 'object', required: false }, fields: { type: 'array', required: true }, maskingPolicy: { type: 'string', required: true }, recordCount: { type: 'int', required: true }, maximumRecords: { type: 'int', required: true }, mediaCode: { type: 'string', required: false }, status: { type: 'string', required: true, enum: ['PREVIEWED', 'APPROVED', 'GENERATING', 'AVAILABLE', 'EXPIRED', 'FAILED'] }, expiresAt: { type: 'date', required: false }, correlationId: { type: 'string', required: true }
+                tenant: { type: 'string', required: true }, purpose: { type: 'string', required: true }, requestedBy: { type: 'string', required: true }, approvedBy: { type: 'string', required: false }, filters: { type: 'object', required: false }, fields: { type: 'array', required: true }, maskingPolicy: { type: 'string', required: true }, recordCount: { type: 'int', required: true }, maximumRecords: { type: 'int', required: true }, checksum: { type: 'string', required: false }, mediaCode: { type: 'string', required: false }, status: { type: 'string', required: true, enum: ['PREVIEWED', 'APPROVED', 'GENERATING', 'AVAILABLE', 'EXPIRED', 'FAILED'] }, generatedAt: { type: 'date', required: false }, expiresAt: { type: 'date', required: false }, correlationId: { type: 'string', required: true }
             }
         },
         engagementAutomationDecision: {

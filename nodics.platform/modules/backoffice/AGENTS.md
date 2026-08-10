@@ -29,12 +29,13 @@
 - Return only client-safe public connection metadata. Never return internal
   tokens, credentials, private keys, secret references, or unapproved internal
   endpoints to the frontend.
-- Optional catalogue and navigation metadata must be declared by the owning
-  module in `config/properties.js#backofficeCapabilities.<moduleName>`. BackOffice validates and
-  permission-filters that metadata; it must not maintain a duplicated manual
-  module catalogue.
+- Optional catalogue and navigation metadata must be returned by a concrete
+  module-owned BackOffice capability service and carried through authenticated
+  runtime registration. Module groups must not become capability owners.
+  BackOffice validates and permission-filters that metadata; it must not
+  maintain a duplicated manual module catalogue.
 - Documentation products must be contributed through the same module-owned
-  `backofficeCapabilities.<moduleName>.documentation` metadata and aggregated
+  module-owned capability-service documentation metadata and aggregated
   by the existing registry. Axis must render the permission-filtered list
   dynamically. CMS products use separate Site/catalog/content-pack identities;
   Swagger products reference live System/OpenAPI paths. Never create an
@@ -44,8 +45,8 @@
   back to the module-level icon or a generic module mark.
 - Navigation hierarchy, business group, perspective, localization key,
   required context, feature state, badge-provider reference, ordering, and
-  permissions must remain part of the owning module's existing
-  `backofficeCapabilities.navigation` contribution. Reject duplicate ids,
+  permissions must remain part of the owning module's capability-service
+  contribution. Reject duplicate ids,
   missing parents, cycles, unknown context dimensions, executable badge
   definitions, and unbounded metadata. Permission filtering must remove
   orphaned descendants; never add an Axis-only or BackOffice-maintained menu

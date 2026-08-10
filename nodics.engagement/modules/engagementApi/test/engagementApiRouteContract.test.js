@@ -12,7 +12,7 @@ const assert = require('assert');
 const packageJson = require('../package.json');
 const routers = require('../src/router/routers').engagementApi;
 const routes = Object.values(routers).flatMap(family => Object.entries(family));
-assert.strictEqual(routes.length, 40);
+assert.strictEqual(routes.length, 44);
 assert.strictEqual(packageJson.prefix, 'engagement');
 routes.forEach(([name, route]) => {
     if (!['getActiveForm', 'submitContact', 'listTestimonials', 'listReviews', 'getReviewAggregate', 'submitFeedback'].includes(name)) assert.strictEqual(route.secured, true, name + ' must be secured');
@@ -36,4 +36,8 @@ assert.strictEqual(routers.operator.reconcileHandoff.permission, 'engagement.han
 assert.strictEqual(routers.operator.actOnTestimonial.permission, 'engagement.testimonial.act');
 assert.strictEqual(routers.operator.moderateReview.permission, 'engagement.review.moderate');
 assert.strictEqual(routers.operator.previewCresMigration.permission, 'engagement.review.migrate');
+assert.strictEqual(routers.operator.executeEngagementBatch.permission, 'engagement.operations.batch.execute');
+assert.strictEqual(routers.operator.executeEngagementExport.permission, 'engagement.operations.export.execute');
+assert.strictEqual(routers.operator.executeEngagementRepair.permission, 'engagement.operations.repair.execute');
+assert.strictEqual(routers.operator.executeEngagementPrivacy.permission, 'engagement.privacy.execute');
 console.log('EngagementApi Phase 3 route contract validated');

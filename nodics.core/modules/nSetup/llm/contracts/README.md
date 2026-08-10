@@ -35,6 +35,9 @@ permanent rule into a contract.
 - `nodics-expert-decision-contract.md`: AI decision rules for choosing the
   correct Nodics layer, artifact, extension point, and proof before coding.
 - `module-structure-contract.md`: standard module, docs, and LLM folder shape.
+- `data-manifest-contract.md`: mandatory module-owned `data/manifest.json`
+  envelope, typed-section, integrity, versioning, compatibility, and compliance
+  rules for system-importable data.
 - `module-group-participation-contract.md`: canonical workspace, runtime-group,
   structural-group, child-discovery, activation, and registration boundaries.
 - `customer-config-classification-contract.md`: ownership and placement rules
@@ -42,6 +45,9 @@ permanent rule into a contract.
   configuration.
 - `integration-governance-contract.md`: ownership, configuration, security,
   testing, and MCP exposure rules for external/provider integrations.
+- `localization-contribution-contract.md`: ownership, stable-key, runtime-value,
+  locale, scope, domain-data, publication, and contribution rules for
+  internationalisation.
 - `documentation-impact-contract.md`: canonical platform-wide documentation
   authority for impact analysis, audience and use-case coverage, detail
   preservation, generation, migration, distributed discovery, and updates

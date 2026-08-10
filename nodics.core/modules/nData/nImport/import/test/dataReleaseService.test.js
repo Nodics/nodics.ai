@@ -31,14 +31,17 @@ let files = {};
 ['data/data.js', 'headers/header.js'].forEach(file => {
     files[file] = crypto.createHash('sha256').update(fs.readFileSync(path.join(releaseRoot, file))).digest('hex');
 });
-fs.writeFileSync(path.join(releaseRoot, 'manifest.json'), JSON.stringify({
-    contractVersion: 1, module: 'testModule', dataType: 'core', version: '1.1.0',
-    description: 'Test core release', files: files
+fs.writeFileSync(path.join(root, 'data', 'manifest.json'), JSON.stringify({
+    contractVersion: 2, module: 'testModule', sections: { core: {
+        kind: 'DATA_RELEASE', dataType: 'core', version: '1.1.0',
+        description: 'Test core release',
+        files: Object.fromEntries(Object.entries(files).map(([name, hash]) => ['core/' + name, hash]))
+    } }
 }));
 
 global.CONFIG = { get: key => key === 'data' ? {
     dataReleases: {
-        allowedContractVersions: [1], maximumFilesPerRelease: 10, maximumModulesPerRun: 5,
+        allowedContractVersions: [1, 2], maximumFilesPerRelease: 10, maximumModulesPerRun: 5,
         allowDowngrade: false, types: { core: { enabled: true, operatorExecution: true }, sample: { enabled: false } }
     }
 } : key === 'defaultTenant' ? 'default' : undefined };
@@ -74,6 +77,10 @@ global.SERVICE = {
 const service = require('../src/service/release/defaultDataReleaseService');
 
 (async function () {
+    let discovered = service.discoverReleases();
+    assert.strictEqual(discovered.length, 1);
+    assert.strictEqual(discovered[0].dataType, 'core');
+
     let catalogue = await service.getCatalogue({ tenant: 'default', dataType: 'core' });
     assert.strictEqual(catalogue.data.length, 1);
     assert.strictEqual(catalogue.data[0].displayName, 'Test Module');

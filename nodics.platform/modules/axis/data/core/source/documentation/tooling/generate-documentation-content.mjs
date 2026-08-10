@@ -21,9 +21,8 @@ const migrationRegisterPath = path.join(
   root,
   'data/core/source/documentation/migration-register.json',
 );
-const manifestPath = path.join(root, 'manifest/docs-content-pack.json');
+const manifestPath = path.join(root, 'data/manifest.json');
 const checkOnly = process.argv.includes('--check');
-const repositoryRelativePrefix = 'modules/axis/';
 const copyrightHeader = `/*
     Nodics - Enterprice Micro-Services Management Framework
 
@@ -526,7 +525,7 @@ const generatedFiles = [
 ];
 const generatedHashes = Object.fromEntries(
   generatedFiles.map((fileName) => [
-    `${repositoryRelativePrefix}${fileName}`,
+    fileName.replace(/^data\//, ''),
     sha256(fs.readFileSync(path.join(root, fileName))),
   ]),
 );
@@ -536,20 +535,36 @@ const releaseChecksum = sha256(
     .map((fileName) => `${fileName}:${generatedHashes[fileName]}`)
     .join('|'),
 );
-const manifest = {
+const documentationSection = {
+  kind: 'CONTENT_PACK',
+  contentPath: 'core',
   pack: navigation.pack,
   version: navigation.version,
-  contractVersion: navigation.contractVersion,
   sourceMode: 'canonical-structured-source',
-  sourceAuthority: 'modules/axis/data/core/source/documentation',
+  sourceAuthority: 'core/source/documentation',
   sites: ['axisDocumentationSite'],
   accessMode: 'AUTHENTICATED',
   pages: sourcePages.length,
   components: sourcePages.length + 1,
   routes: sourcePages.length,
-  migrationRegister: `${repositoryRelativePrefix}data/core/source/documentation/migration-register.json`,
+  migrationRegister: 'core/source/documentation/migration-register.json',
   releaseChecksum,
   generatedHashes,
+};
+const previousManifest = fs.existsSync(manifestPath)
+  ? JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
+  : { contractVersion: 2, module: 'axis', sections: {} };
+const preservedSections = { ...(previousManifest.sections || {}) };
+if (
+  preservedSections.core?.kind === 'DATA_RELEASE' &&
+  documentationSection.contentPath === 'core'
+) {
+  delete preservedSections.core;
+}
+const manifest = {
+  contractVersion: 2,
+  module: 'axis',
+  sections: { ...preservedSections, documentation: documentationSection },
 };
 await writeOrCheck(
   path.relative(root, manifestPath),

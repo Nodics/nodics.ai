@@ -85,7 +85,26 @@ module.exports = {
             "tester"
           ],
           "summary": "Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships.",
-          "searchText": "Runtime Instance and Task Lifecycle Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships. # Runtime Instance and Task Lifecycle\n\nThis page explains the lifecycle that turns a designed process into operational\nwork. It is written for a beginner, so it starts with the simple path before\nexplaining where developers and operators customize behavior.\n\n## Lifecycle summary\n\n```mermaid\nstateDiagram-v2\n  [*] --> DraftDefinition\n  DraftDefinition --> ValidatedDraft: validate draft\n  ValidatedDraft --> PublishedVersion: publish\n  PublishedVersion --> RuntimeInstance: start instance\n  RuntimeInstance --> WaitingTask: reach TASK node\n  WaitingTask --> ClaimedTask: claim\n  ClaimedTask --> CompletedTask: complete\n  CompletedTask --> CompletedInstance: next node is END\n  WaitingTask --> CancelledTask: cancel task\n  RuntimeInstance --> CancelledInstance: cancel instance\n```\n\nEvery arrow is a backend operation. Axis buttons call these APIs, but Axis does\nnot update the database directly and does not invent the next state.\n\n## Definition lifecycle\n\nA process starts as a draft. Drafts can be edited because business users and\ndevelopers often need multiple rounds of naming, description, category, graph\nlayout, and validation. A draft cannot become operational until the backend\ngraph validator accepts it.\n\nThe first supported graph shape is intentionally small:\n\n```mermaid\nflowchart LR\n  Start[\"START\"] --> Review[\"TASK: Business review\"]\n  Review --> End[\"END\"]\n```\n\nThis proves the foundation before advanced behavior is added. The backend\nchecks stable node codes, supported node types, one START node, at least one END\nnode, valid transitions, duplicate node codes, and unsafe executable action\nreferences.\n\nWhen a draft is published, the backend creates an immutable\n`processDefinitionVersion`. Later draft edits must not mutate version 1. This\nis critical for audit: if a process instance ran yesterday, operators must know\nexactly which published graph version it used.\n\n## Starting an instance\n\nStarting a process requires a published definition. The request can specify a\ndefinition code and optional version. If no version is supplied, the backend\nuses the current published version from the definition aggregate.\n\nExample request:\n\n```http\nPOST /nodics/process/v0/instances\nAuthorization: Bearer <access-token>\nx-enterprise-code: default\ncontent-type: application/json\n\n{\n  \"definitionCode\": \"contentApproval\",\n  \"context\": {\n    \"businessKey\": \"page-123\"\n  }\n}\n```\n\nThe backend creates:\n\n- one `processInstance`;\n- a `process.instance.started` audit event;\n- the first `processTask` when the graph reaches a TASK node;\n- a `process.task.created` audit event.\n\n## Task lifecycle\n\nHuman tasks are operational work items. They can be open, claimed, completed,\ncancelled, or escalated.\n\nRuntime mutation routes use dedicated Process permissions. This keeps\ndefinition governance, instance control, human-task operations, and trigger\nmanagement separate even when the reference admin can exercise all of them.\nCustomer projects can assign these permissions to narrower user groups later.\n\n| Action | API | Permission | Allowed from | Result |\n| --- | --- | --- | --- | --- |\n| Start instance | `POST /instances` | `process.instance.start` | Published version | Instance starts and first task may be created. |\n| Claim | `POST /tasks/:taskCode/claim` | `process.task.claim` | `OPEN` | Task becomes `CLAIMED` and assignee is recorded. |\n| Assign | `POST /tasks/:taskCode/assign` | `process.task.assign` | `OPEN`, `CLAIMED`, `ESCALATED` | Assignee changes while task remains actionable. |\n| Complete | `POST /tasks/:taskCode/complete` | `process.task.complete` | `OPEN`, `CLAIMED`, `ESCALATED` | Task becomes `COMPLETED`; instance moves to next node. |\n| Cancel task | `POST /tasks/:taskCode/cancel` | `process.task.cancel` | `OPEN`, `CLAIMED`, `ESCALATED` | Task becomes `CANCELLED` without cancelling the whole instance. |\n| Cancel instance | `POST /instances/:instanceCode/cancel` | `process.instance.cancel` | `CREATED`, `RUNNING`, `WAITING` | Instance becomes `CANCELLED`; open tasks are cancelled. |\n\nCompleting the current MVP task moves the instance to END and marks it\n`COMPLETED`. Later versions can add gateways, multiple tasks, automated domain\nactions, timers, retries, and compensation.\n\n## Instance detail and audit\n\nOperators need evidence, not just status. The detail API returns the instance,\nits tasks, and its audit timeline.\n\n```http\nGET /nodics/process/v0/instances/contentApproval-001/detail\n```\n\nThe response gives Axis enough information to show:\n\n- current instance status;\n- definition and version;\n- current node;\n- all related tasks;\n- timeline events such as instance started, task created, task claimed, task\n  completed, and instance completed.\n\nAudit data must stay bounded and redacted. It should explain what happened\nwithout storing secrets or large raw payloads.\n\n## Scheduled triggers\n\nScheduled automation is represented as Process trigger metadata. A trigger may\nreference a Cron job code, but actual scheduling, firing, retries, and job\nlifecycle stay in `nodics.cron`.\n\nThis split helps a business user see automation relationships from the Process\nconsole while preserving module ownership:\n\n| Concern | Owner |\n| --- | --- |\n| Trigger relationship to a process | `nodics.process` |\n| Cron expression, job enablement, scheduler runtime | `nodics.cron` |\n| Starting an instance when schedule fires | Process API called by authorized runtime integration |\n| Showing relationship in Axis | `nodics.axis` frontend projection |\n\nThe trigger metadata lifecycle uses `process.trigger.manage` for create,\nupdate, activation, pause, and archive operations. Archiving is preferred over\ndelete so operators can still explain why a scheduled automation relationship\nused to exist.\n\n## QA checklist\n\nThe runtime foundation is healthy when:\n\n1. A draft can be created and validated.\n2. A valid draft can publish version 1.\n3. Version 1 remains immutable after preparing version 2 draft.\n4. A published definition can start a runtime instance.\n5. The first TASK node creates an OPEN task.\n6. Claiming the task records assignee and audit evidence.\n7. Completing the task advances the instance to END and COMPLETED.\n8. Instance detail returns tasks and audit timeline.\n9. Invalid task transitions fail with stable Process errors.\n10. Axis refreshes after each operation without calculating runtime state locally.\n\n## Customization examples\n\nA customer project can customize without editing the standard Process source:\n\n- override task assignment policy to assign by enterprise, site, queue, or role;\n- add SLA due-date calculation using project-level properties;\n- add graph validation rules for domain action references;\n- add a provider that executes ACTION nodes through a domain module facade;\n- add escalation rules that create events or Cron-backed reminders;\n- enrich Axis cards using backend-owned API data.\n\nThe key principle stays the same: Process owns orchestration state, domain\nmodules own business actions, Cron owns scheduling, and Axis renders authorized\ncontracts.\n"
+          "searchText": "Runtime Instance and Task Lifecycle Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships. # Runtime Instance and Task Lifecycle\n\nThis page explains the lifecycle that turns a designed process into operational\nwork. It is written for a beginner, so it starts with the simple path before\nexplaining where developers and operators customize behavior.\n\n## Lifecycle summary\n\n```mermaid\nstateDiagram-v2\n  [*] --> DraftDefinition\n  DraftDefinition --> ValidatedDraft: validate draft\n  ValidatedDraft --> PublishedVersion: publish\n  PublishedVersion --> RuntimeInstance: start instance\n  RuntimeInstance --> WaitingTask: reach TASK node\n  WaitingTask --> ClaimedTask: claim\n  ClaimedTask --> CompletedTask: complete\n  CompletedTask --> CompletedInstance: next node is END\n  WaitingTask --> CancelledTask: cancel task\n  RuntimeInstance --> CancelledInstance: cancel instance\n```\n\nEvery arrow is a backend operation. Axis buttons call these APIs, but Axis does\nnot update the database directly and does not invent the next state.\n\n## Definition lifecycle\n\nA process starts as a draft. Drafts can be edited because business users and\ndevelopers often need multiple rounds of naming, description, category, graph\nlayout, and validation. A draft cannot become operational until the backend\ngraph validator accepts it.\n\nThe first supported graph shape is intentionally small:\n\n```mermaid\nflowchart LR\n  Start[\"START\"] --> Review[\"TASK: Business review\"]\n  Review --> End[\"END\"]\n```\n\nThis proves the foundation before advanced behavior is added. The backend\nchecks stable node codes, supported node types, one START node, at least one END\nnode, valid transitions, duplicate node codes, and unsafe executable action\nreferences.\n\nWhen a draft is published, the backend creates an immutable\n`processDefinitionVersion`. Later draft edits must not mutate version 1. This\nis critical for audit: if a process instance ran yesterday, operators must know\nexactly which published graph version it used.\n\n## Starting an instance\n\nStarting a process requires a published definition. The request can specify a\ndefinition code and optional version. If no version is supplied, the backend\nuses the current published version from the definition aggregate.\n\nExample request:\n\n```http\nPOST /nodics/process/v0/instances\nAuthorization: Bearer <access-token>\nx-enterprise-code: default\ncontent-type: application/json\n\n{\n  \"definitionCode\": \"contentApproval\",\n  \"context\": {\n    \"businessKey\": \"page-123\"\n  }\n}\n```\n\nThe backend creates:\n\n- one `processInstance`;\n- a `process.instance.started` audit event;\n- the first `processTask` when the graph reaches a TASK node;\n- a `process.task.created` audit event.\n\n## Task lifecycle\n\nHuman tasks are operational work items. They can be open, claimed, completed,\ncancelled, or escalated.\n\nRuntime mutation routes use dedicated Process permissions. This keeps\ndefinition governance, instance control, human-task operations, and trigger\nmanagement separate even when the reference admin can exercise all of them.\nCustomer projects can assign these permissions to narrower user groups later.\n\n| Action | API | Permission | Allowed from | Result |\n| --- | --- | --- | --- | --- |\n| Start instance | `POST /instances` | `process.instance.start` | Published version | Instance starts and first task may be created. |\n| Claim | `POST /tasks/:taskCode/claim` | `process.task.claim` | `OPEN` | Task becomes `CLAIMED` and assignee is recorded. |\n| Assign | `POST /tasks/:taskCode/assign` | `process.task.assign` | `OPEN`, `CLAIMED`, `ESCALATED` | Assignee changes while task remains actionable. |\n| Complete | `POST /tasks/:taskCode/complete` | `process.task.complete` | `OPEN`, `CLAIMED`, `ESCALATED` | Task becomes `COMPLETED`; instance moves to next node. |\n| Cancel task | `POST /tasks/:taskCode/cancel` | `process.task.cancel` | `OPEN`, `CLAIMED`, `ESCALATED` | Task becomes `CANCELLED` without cancelling the whole instance. |\n| Cancel instance | `POST /instances/:instanceCode/cancel` | `process.instance.cancel` | `CREATED`, `RUNNING`, `WAITING` | Instance becomes `CANCELLED`; open tasks are cancelled. |\n\nCompleting a task advances through the published graph. ACTION, DECISION,\nTIMER, and SUB_PROCESS nodes are backend-executed. If an ACTION fails, Process\nmarks the instance `FAILED` and opens a recovery incident; operators then use\nthe governed retry or compensation APIs described in the incident recovery\nguide.\n\n## Instance detail and audit\n\nOperators need evidence, not just status. The detail API returns the instance,\nits tasks, and its audit timeline.\n\n```http\nGET /nodics/process/v0/instances/contentApproval-001/detail\n```\n\nThe response gives Axis enough information to show:\n\n- current instance status;\n- definition and version;\n- current node;\n- all related tasks;\n- timeline events such as instance started, task created, task claimed, task\n  completed, and instance completed.\n\nAudit data must stay bounded and redacted. It should explain what happened\nwithout storing secrets or large raw payloads.\n\n## Scheduled triggers\n\nScheduled automation is represented as Process trigger metadata. A trigger may\nreference a Cron job code, but actual scheduling, firing, retries, and job\nlifecycle stay in `nodics.cron`.\n\nThis split helps a business user see automation relationships from the Process\nconsole while preserving module ownership:\n\n| Concern | Owner |\n| --- | --- |\n| Trigger relationship to a process | `nodics.process` |\n| Cron expression, job enablement, scheduler runtime | `nodics.cron` |\n| Starting an instance when schedule fires | Process API called by authorized runtime integration |\n| Showing relationship in Axis | `nodics.axis` frontend projection |\n\nThe trigger metadata lifecycle uses `process.trigger.manage` for create,\nupdate, activation, pause, and archive operations. Archiving is preferred over\ndelete so operators can still explain why a scheduled automation relationship\nused to exist.\n\n## QA checklist\n\nThe runtime foundation is healthy when:\n\n1. A draft can be created and validated.\n2. A valid draft can publish version 1.\n3. Version 1 remains immutable after preparing version 2 draft.\n4. A published definition can start a runtime instance.\n5. The first TASK node creates an OPEN task.\n6. Claiming the task records assignee and audit evidence.\n7. Completing the task advances the instance to END and COMPLETED.\n8. Instance detail returns tasks and audit timeline.\n9. Invalid task transitions fail with stable Process errors.\n10. Axis refreshes after each operation without calculating runtime state locally.\n\n## Customization examples\n\nA customer project can customize without editing the standard Process source:\n\n- override task assignment policy to assign by enterprise, site, queue, or role;\n- add SLA due-date calculation using project-level properties;\n- add graph validation rules for domain action references;\n- add a provider that executes ACTION nodes through a domain module facade;\n- add escalation rules that create events or Cron-backed reminders;\n- enrich Axis cards using backend-owned API data.\n\nThe key principle stays the same: Process owns orchestration state, domain\nmodules own business actions, Cron owns scheduling, and Axis renders authorized\ncontracts.\n"
+        },
+        {
+          "code": "incident-recovery",
+          "title": "Incident, Retry, and Compensation Operations",
+          "route": "/docs/framework/process/incident-recovery",
+          "section": "process-operations",
+          "sectionTitle": "Process Operations",
+          "sectionOrder": 20,
+          "order": 22,
+          "audience": [
+            "business-user",
+            "administrator",
+            "developer",
+            "operator",
+            "tester",
+            "ai-tool"
+          ],
+          "summary": "Operate failed ACTION nodes through Process-owned incidents, bounded retries, dead-letter handling, and declarative domain-owned compensation.",
+          "searchText": "Incident, Retry, and Compensation Operations Operate failed ACTION nodes through Process-owned incidents, bounded retries, dead-letter handling, and declarative domain-owned compensation. # Incident, Retry, and Compensation Operations\n\nThis guide explains what happens when an automated workflow step fails and how\nan operator safely recovers it. Process owns the orchestration incident. The\nbusiness module still owns the action and any reversal of business state.\n\n## The recovery lifecycle\n\n```mermaid\nstateDiagram-v2\n  [*] --> Open: ACTION fails\n  Open --> Retrying: authorized retry\n  Retrying --> Resolved: action succeeds\n  Retrying --> Open: attempt fails and budget remains\n  Retrying --> DeadLetter: attempt budget exhausted\n  Open --> Compensating: authorized compensation\n  DeadLetter --> Compensating: authorized compensation\n  Compensating --> Compensated: domain adapter succeeds\n  Compensating --> DeadLetter: domain adapter fails\n```\n\nAn ACTION failure creates one `processIncident` containing the instance,\npublished definition version, failed node, stable error code, current attempt,\nmaximum attempts, optional next retry time, and declarative adapter references.\nRaw exception payloads and secrets must not be copied into incident evidence.\n\n## What an operator sees\n\nThe incident list is the recovery work queue:\n\n```http\nGET /nodics/process/v0/incidents?status=OPEN\nAuthorization: Bearer <access-token>\n```\n\nOpen the incident before acting. Confirm the definition version, node, error\ncode, attempt budget, next retry time, and related instance. Refresh if another\noperator may be working on the same incident.\n\n| Operation | Permission | Result |\n| --- | --- | --- |\n| List or read incidents | `process.incident.read` | Returns bounded recovery evidence. |\n| Retry failed ACTION | `process.instance.retry` | Re-executes the same published ACTION and continues only after success. |\n| Run compensation | `process.instance.compensate` | Dispatches the node's registered domain compensation adapter. |\n\n## Retry safely\n\nSend the attempt number you inspected. This optimistic check prevents an old\nbrowser tab from spending a newer retry attempt.\n\n```http\nPOST /nodics/process/v0/instances/orderApproval-001/retry\nAuthorization: Bearer <access-token>\ncontent-type: application/json\n\n{\n  \"expectedAttempt\": 1,\n  \"correlationId\": \"support-case-4831\"\n}\n```\n\nOn success, the incident becomes `RESOLVED` and the instance continues from the\ntransition after the failed ACTION. On failure, the attempt increments. The\nincident returns to `OPEN` while budget remains or becomes `DEAD_LETTER` after\nthe final attempt. Retry policy is bounded to ten attempts and a maximum delay\nof 24 hours even when project configuration is incorrect.\n\n## Compensate safely\n\nCompensation is not a generic database rollback. A workflow node may declare a\nregistered compensation adapter, for example an Order-owned reversal command.\nProcess invokes that adapter and records orchestration evidence; the domain\nmodule validates its own state, idempotency, authorization, and reversal rules.\n\n```http\nPOST /nodics/process/v0/instances/orderApproval-001/compensate\nAuthorization: Bearer <access-token>\ncontent-type: application/json\n\n{\n  \"payload\": {\n    \"reasonCode\": \"PAYMENT_CAPTURE_FAILED\"\n  }\n}\n```\n\nIf no compensation adapter is declared, the API fails closed. Operators must\nnot substitute a direct database edit. If compensation fails, the incident is\ndead-lettered and the instance keeps `compensationStatus: FAILED` for manual\ninvestigation.\n\n## Developer contract\n\nAn ACTION node can declare retry and compensation without embedding executable\ncode in the graph:\n\n```json\n{\n  \"code\": \"reserveInventory\",\n  \"type\": \"ACTION\",\n  \"action\": {\n    \"moduleName\": \"nodics.commerce.inventory\",\n    \"operation\": \"reserve\"\n  },\n  \"retry\": {\n    \"maximumAttempts\": 3,\n    \"delayMs\": 5000\n  },\n  \"compensation\": {\n    \"moduleName\": \"nodics.commerce.inventory\",\n    \"operation\": \"release\"\n  }\n}\n```\n\nBoth declarations must exist in the configured action-adapter allowlist. The\nadapter implementation lives behind a domain service or facade. Unknown or\nunavailable adapters fail closed.\n\n## Operational checklist\n\n1. Confirm the incident belongs to the intended tenant and instance.\n2. Read the stable error code and current attempt; never expose secrets in notes.\n3. Resolve the external cause before retrying, when applicable.\n4. Pass `expectedAttempt` and a correlation identifier.\n5. Confirm `process.incident.resolved` or `process.incident.compensated` audit evidence.\n6. Escalate dead-letter incidents instead of repeatedly bypassing policy.\n7. Test domain compensation idempotency and partial-failure behavior before production qualification.\n"
         },
         {
           "code": "first-workflow",
@@ -781,7 +800,7 @@ module.exports = {
         },
         {
           "kind": "paragraph",
-          "text": "Completing the current MVP task moves the instance to END and marks it `COMPLETED`. Later versions can add gateways, multiple tasks, automated domain actions, timers, retries, and compensation."
+          "text": "Completing a task advances through the published graph. ACTION, DECISION, TIMER, and SUB_PROCESS nodes are backend-executed. If an ACTION fails, Process marks the instance `FAILED` and opens a recovery incident; operators then use the governed retry or compensation APIs described in the incident recovery guide."
         },
         {
           "kind": "heading",
@@ -910,10 +929,222 @@ module.exports = {
           "text": "The key principle stays the same: Process owns orchestration state, domain modules own business actions, Cron owns scheduling, and Axis renders authorized contracts."
         }
       ],
-      "searchText": "Runtime Instance and Task Lifecycle Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships. # Runtime Instance and Task Lifecycle\n\nThis page explains the lifecycle that turns a designed process into operational\nwork. It is written for a beginner, so it starts with the simple path before\nexplaining where developers and operators customize behavior.\n\n## Lifecycle summary\n\n```mermaid\nstateDiagram-v2\n  [*] --> DraftDefinition\n  DraftDefinition --> ValidatedDraft: validate draft\n  ValidatedDraft --> PublishedVersion: publish\n  PublishedVersion --> RuntimeInstance: start instance\n  RuntimeInstance --> WaitingTask: reach TASK node\n  WaitingTask --> ClaimedTask: claim\n  ClaimedTask --> CompletedTask: complete\n  CompletedTask --> CompletedInstance: next node is END\n  WaitingTask --> CancelledTask: cancel task\n  RuntimeInstance --> CancelledInstance: cancel instance\n```\n\nEvery arrow is a backend operation. Axis buttons call these APIs, but Axis does\nnot update the database directly and does not invent the next state.\n\n## Definition lifecycle\n\nA process starts as a draft. Drafts can be edited because business users and\ndevelopers often need multiple rounds of naming, description, category, graph\nlayout, and validation. A draft cannot become operational until the backend\ngraph validator accepts it.\n\nThe first supported graph shape is intentionally small:\n\n```mermaid\nflowchart LR\n  Start[\"START\"] --> Review[\"TASK: Business review\"]\n  Review --> End[\"END\"]\n```\n\nThis proves the foundation before advanced behavior is added. The backend\nchecks stable node codes, supported node types, one START node, at least one END\nnode, valid transitions, duplicate node codes, and unsafe executable action\nreferences.\n\nWhen a draft is published, the backend creates an immutable\n`processDefinitionVersion`. Later draft edits must not mutate version 1. This\nis critical for audit: if a process instance ran yesterday, operators must know\nexactly which published graph version it used.\n\n## Starting an instance\n\nStarting a process requires a published definition. The request can specify a\ndefinition code and optional version. If no version is supplied, the backend\nuses the current published version from the definition aggregate.\n\nExample request:\n\n```http\nPOST /nodics/process/v0/instances\nAuthorization: Bearer <access-token>\nx-enterprise-code: default\ncontent-type: application/json\n\n{\n  \"definitionCode\": \"contentApproval\",\n  \"context\": {\n    \"businessKey\": \"page-123\"\n  }\n}\n```\n\nThe backend creates:\n\n- one `processInstance`;\n- a `process.instance.started` audit event;\n- the first `processTask` when the graph reaches a TASK node;\n- a `process.task.created` audit event.\n\n## Task lifecycle\n\nHuman tasks are operational work items. They can be open, claimed, completed,\ncancelled, or escalated.\n\nRuntime mutation routes use dedicated Process permissions. This keeps\ndefinition governance, instance control, human-task operations, and trigger\nmanagement separate even when the reference admin can exercise all of them.\nCustomer projects can assign these permissions to narrower user groups later.\n\n| Action | API | Permission | Allowed from | Result |\n| --- | --- | --- | --- | --- |\n| Start instance | `POST /instances` | `process.instance.start` | Published version | Instance starts and first task may be created. |\n| Claim | `POST /tasks/:taskCode/claim` | `process.task.claim` | `OPEN` | Task becomes `CLAIMED` and assignee is recorded. |\n| Assign | `POST /tasks/:taskCode/assign` | `process.task.assign` | `OPEN`, `CLAIMED`, `ESCALATED` | Assignee changes while task remains actionable. |\n| Complete | `POST /tasks/:taskCode/complete` | `process.task.complete` | `OPEN`, `CLAIMED`, `ESCALATED` | Task becomes `COMPLETED`; instance moves to next node. |\n| Cancel task | `POST /tasks/:taskCode/cancel` | `process.task.cancel` | `OPEN`, `CLAIMED`, `ESCALATED` | Task becomes `CANCELLED` without cancelling the whole instance. |\n| Cancel instance | `POST /instances/:instanceCode/cancel` | `process.instance.cancel` | `CREATED`, `RUNNING`, `WAITING` | Instance becomes `CANCELLED`; open tasks are cancelled. |\n\nCompleting the current MVP task moves the instance to END and marks it\n`COMPLETED`. Later versions can add gateways, multiple tasks, automated domain\nactions, timers, retries, and compensation.\n\n## Instance detail and audit\n\nOperators need evidence, not just status. The detail API returns the instance,\nits tasks, and its audit timeline.\n\n```http\nGET /nodics/process/v0/instances/contentApproval-001/detail\n```\n\nThe response gives Axis enough information to show:\n\n- current instance status;\n- definition and version;\n- current node;\n- all related tasks;\n- timeline events such as instance started, task created, task claimed, task\n  completed, and instance completed.\n\nAudit data must stay bounded and redacted. It should explain what happened\nwithout storing secrets or large raw payloads.\n\n## Scheduled triggers\n\nScheduled automation is represented as Process trigger metadata. A trigger may\nreference a Cron job code, but actual scheduling, firing, retries, and job\nlifecycle stay in `nodics.cron`.\n\nThis split helps a business user see automation relationships from the Process\nconsole while preserving module ownership:\n\n| Concern | Owner |\n| --- | --- |\n| Trigger relationship to a process | `nodics.process` |\n| Cron expression, job enablement, scheduler runtime | `nodics.cron` |\n| Starting an instance when schedule fires | Process API called by authorized runtime integration |\n| Showing relationship in Axis | `nodics.axis` frontend projection |\n\nThe trigger metadata lifecycle uses `process.trigger.manage` for create,\nupdate, activation, pause, and archive operations. Archiving is preferred over\ndelete so operators can still explain why a scheduled automation relationship\nused to exist.\n\n## QA checklist\n\nThe runtime foundation is healthy when:\n\n1. A draft can be created and validated.\n2. A valid draft can publish version 1.\n3. Version 1 remains immutable after preparing version 2 draft.\n4. A published definition can start a runtime instance.\n5. The first TASK node creates an OPEN task.\n6. Claiming the task records assignee and audit evidence.\n7. Completing the task advances the instance to END and COMPLETED.\n8. Instance detail returns tasks and audit timeline.\n9. Invalid task transitions fail with stable Process errors.\n10. Axis refreshes after each operation without calculating runtime state locally.\n\n## Customization examples\n\nA customer project can customize without editing the standard Process source:\n\n- override task assignment policy to assign by enterprise, site, queue, or role;\n- add SLA due-date calculation using project-level properties;\n- add graph validation rules for domain action references;\n- add a provider that executes ACTION nodes through a domain module facade;\n- add escalation rules that create events or Cron-backed reminders;\n- enrich Axis cards using backend-owned API data.\n\nThe key principle stays the same: Process owns orchestration state, domain\nmodules own business actions, Cron owns scheduling, and Axis renders authorized\ncontracts.\n",
+      "searchText": "Runtime Instance and Task Lifecycle Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships. # Runtime Instance and Task Lifecycle\n\nThis page explains the lifecycle that turns a designed process into operational\nwork. It is written for a beginner, so it starts with the simple path before\nexplaining where developers and operators customize behavior.\n\n## Lifecycle summary\n\n```mermaid\nstateDiagram-v2\n  [*] --> DraftDefinition\n  DraftDefinition --> ValidatedDraft: validate draft\n  ValidatedDraft --> PublishedVersion: publish\n  PublishedVersion --> RuntimeInstance: start instance\n  RuntimeInstance --> WaitingTask: reach TASK node\n  WaitingTask --> ClaimedTask: claim\n  ClaimedTask --> CompletedTask: complete\n  CompletedTask --> CompletedInstance: next node is END\n  WaitingTask --> CancelledTask: cancel task\n  RuntimeInstance --> CancelledInstance: cancel instance\n```\n\nEvery arrow is a backend operation. Axis buttons call these APIs, but Axis does\nnot update the database directly and does not invent the next state.\n\n## Definition lifecycle\n\nA process starts as a draft. Drafts can be edited because business users and\ndevelopers often need multiple rounds of naming, description, category, graph\nlayout, and validation. A draft cannot become operational until the backend\ngraph validator accepts it.\n\nThe first supported graph shape is intentionally small:\n\n```mermaid\nflowchart LR\n  Start[\"START\"] --> Review[\"TASK: Business review\"]\n  Review --> End[\"END\"]\n```\n\nThis proves the foundation before advanced behavior is added. The backend\nchecks stable node codes, supported node types, one START node, at least one END\nnode, valid transitions, duplicate node codes, and unsafe executable action\nreferences.\n\nWhen a draft is published, the backend creates an immutable\n`processDefinitionVersion`. Later draft edits must not mutate version 1. This\nis critical for audit: if a process instance ran yesterday, operators must know\nexactly which published graph version it used.\n\n## Starting an instance\n\nStarting a process requires a published definition. The request can specify a\ndefinition code and optional version. If no version is supplied, the backend\nuses the current published version from the definition aggregate.\n\nExample request:\n\n```http\nPOST /nodics/process/v0/instances\nAuthorization: Bearer <access-token>\nx-enterprise-code: default\ncontent-type: application/json\n\n{\n  \"definitionCode\": \"contentApproval\",\n  \"context\": {\n    \"businessKey\": \"page-123\"\n  }\n}\n```\n\nThe backend creates:\n\n- one `processInstance`;\n- a `process.instance.started` audit event;\n- the first `processTask` when the graph reaches a TASK node;\n- a `process.task.created` audit event.\n\n## Task lifecycle\n\nHuman tasks are operational work items. They can be open, claimed, completed,\ncancelled, or escalated.\n\nRuntime mutation routes use dedicated Process permissions. This keeps\ndefinition governance, instance control, human-task operations, and trigger\nmanagement separate even when the reference admin can exercise all of them.\nCustomer projects can assign these permissions to narrower user groups later.\n\n| Action | API | Permission | Allowed from | Result |\n| --- | --- | --- | --- | --- |\n| Start instance | `POST /instances` | `process.instance.start` | Published version | Instance starts and first task may be created. |\n| Claim | `POST /tasks/:taskCode/claim` | `process.task.claim` | `OPEN` | Task becomes `CLAIMED` and assignee is recorded. |\n| Assign | `POST /tasks/:taskCode/assign` | `process.task.assign` | `OPEN`, `CLAIMED`, `ESCALATED` | Assignee changes while task remains actionable. |\n| Complete | `POST /tasks/:taskCode/complete` | `process.task.complete` | `OPEN`, `CLAIMED`, `ESCALATED` | Task becomes `COMPLETED`; instance moves to next node. |\n| Cancel task | `POST /tasks/:taskCode/cancel` | `process.task.cancel` | `OPEN`, `CLAIMED`, `ESCALATED` | Task becomes `CANCELLED` without cancelling the whole instance. |\n| Cancel instance | `POST /instances/:instanceCode/cancel` | `process.instance.cancel` | `CREATED`, `RUNNING`, `WAITING` | Instance becomes `CANCELLED`; open tasks are cancelled. |\n\nCompleting a task advances through the published graph. ACTION, DECISION,\nTIMER, and SUB_PROCESS nodes are backend-executed. If an ACTION fails, Process\nmarks the instance `FAILED` and opens a recovery incident; operators then use\nthe governed retry or compensation APIs described in the incident recovery\nguide.\n\n## Instance detail and audit\n\nOperators need evidence, not just status. The detail API returns the instance,\nits tasks, and its audit timeline.\n\n```http\nGET /nodics/process/v0/instances/contentApproval-001/detail\n```\n\nThe response gives Axis enough information to show:\n\n- current instance status;\n- definition and version;\n- current node;\n- all related tasks;\n- timeline events such as instance started, task created, task claimed, task\n  completed, and instance completed.\n\nAudit data must stay bounded and redacted. It should explain what happened\nwithout storing secrets or large raw payloads.\n\n## Scheduled triggers\n\nScheduled automation is represented as Process trigger metadata. A trigger may\nreference a Cron job code, but actual scheduling, firing, retries, and job\nlifecycle stay in `nodics.cron`.\n\nThis split helps a business user see automation relationships from the Process\nconsole while preserving module ownership:\n\n| Concern | Owner |\n| --- | --- |\n| Trigger relationship to a process | `nodics.process` |\n| Cron expression, job enablement, scheduler runtime | `nodics.cron` |\n| Starting an instance when schedule fires | Process API called by authorized runtime integration |\n| Showing relationship in Axis | `nodics.axis` frontend projection |\n\nThe trigger metadata lifecycle uses `process.trigger.manage` for create,\nupdate, activation, pause, and archive operations. Archiving is preferred over\ndelete so operators can still explain why a scheduled automation relationship\nused to exist.\n\n## QA checklist\n\nThe runtime foundation is healthy when:\n\n1. A draft can be created and validated.\n2. A valid draft can publish version 1.\n3. Version 1 remains immutable after preparing version 2 draft.\n4. A published definition can start a runtime instance.\n5. The first TASK node creates an OPEN task.\n6. Claiming the task records assignee and audit evidence.\n7. Completing the task advances the instance to END and COMPLETED.\n8. Instance detail returns tasks and audit timeline.\n9. Invalid task transitions fail with stable Process errors.\n10. Axis refreshes after each operation without calculating runtime state locally.\n\n## Customization examples\n\nA customer project can customize without editing the standard Process source:\n\n- override task assignment policy to assign by enterprise, site, queue, or role;\n- add SLA due-date calculation using project-level properties;\n- add graph validation rules for domain action references;\n- add a provider that executes ACTION nodes through a domain module facade;\n- add escalation rules that create events or Cron-backed reminders;\n- enrich Axis cards using backend-owned API data.\n\nThe key principle stays the same: Process owns orchestration state, domain\nmodules own business actions, Cron owns scheduling, and Axis renders authorized\ncontracts.\n",
       "previous": {
         "title": "Business Process and Automation Overview",
         "route": "/docs/framework/process"
+      },
+      "next": {
+        "title": "Incident, Retry, and Compensation Operations",
+        "route": "/docs/framework/process/incident-recovery"
+      },
+      "source": {
+        "repository": "nodics.process",
+        "functionalModule": "nodics.process",
+        "technicalModule": "workflow",
+        "path": "data/core/source/documentation/pages/runtime-lifecycle.md",
+        "wordCount": 935,
+        "checksum": "d491cfa2a10ed1619ccc0213b3a339bdd9be85445c52821a754ccc6f7cf84674"
+      }
+    },
+    "active": true
+  },
+  "record3": {
+    "code": "processDocumentationComponentincidentRecovery",
+    "typeCode": "processDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "incident-recovery",
+      "title": "Incident, Retry, and Compensation Operations",
+      "route": "/docs/framework/process/incident-recovery",
+      "section": "process-operations",
+      "sectionTitle": "Process Operations",
+      "audience": [
+        "business-user",
+        "administrator",
+        "developer",
+        "operator",
+        "tester",
+        "ai-tool"
+      ],
+      "summary": "Operate failed ACTION nodes through Process-owned incidents, bounded retries, dead-letter handling, and declarative domain-owned compensation.",
+      "headings": [
+        {
+          "text": "The recovery lifecycle",
+          "anchor": "incidentRecovery-1-the-recovery-lifecycle",
+          "level": 2
+        },
+        {
+          "text": "What an operator sees",
+          "anchor": "incidentRecovery-2-what-an-operator-sees",
+          "level": 2
+        },
+        {
+          "text": "Retry safely",
+          "anchor": "incidentRecovery-3-retry-safely",
+          "level": 2
+        },
+        {
+          "text": "Compensate safely",
+          "anchor": "incidentRecovery-4-compensate-safely",
+          "level": 2
+        },
+        {
+          "text": "Developer contract",
+          "anchor": "incidentRecovery-5-developer-contract",
+          "level": 2
+        },
+        {
+          "text": "Operational checklist",
+          "anchor": "incidentRecovery-6-operational-checklist",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "This guide explains what happens when an automated workflow step fails and how an operator safely recovers it. Process owns the orchestration incident. The business module still owns the action and any reversal of business state."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "The recovery lifecycle",
+          "anchor": "incidentRecovery-1-the-recovery-lifecycle"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "stateDiagram-v2\n  [*] --> Open: ACTION fails\n  Open --> Retrying: authorized retry\n  Retrying --> Resolved: action succeeds\n  Retrying --> Open: attempt fails and budget remains\n  Retrying --> DeadLetter: attempt budget exhausted\n  Open --> Compensating: authorized compensation\n  DeadLetter --> Compensating: authorized compensation\n  Compensating --> Compensated: domain adapter succeeds\n  Compensating --> DeadLetter: domain adapter fails"
+        },
+        {
+          "kind": "paragraph",
+          "text": "An ACTION failure creates one `processIncident` containing the instance, published definition version, failed node, stable error code, current attempt, maximum attempts, optional next retry time, and declarative adapter references. Raw exception payloads and secrets must not be copied into incident evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "What an operator sees",
+          "anchor": "incidentRecovery-2-what-an-operator-sees"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The incident list is the recovery work queue:"
+        },
+        {
+          "kind": "code",
+          "language": "http",
+          "text": "GET /nodics/process/v0/incidents?status=OPEN\nAuthorization: Bearer <access-token>"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Open the incident before acting. Confirm the definition version, node, error code, attempt budget, next retry time, and related instance. Refresh if another operator may be working on the same incident."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Operation",
+            "Permission",
+            "Result"
+          ],
+          "rows": [
+            [
+              "List or read incidents",
+              "`process.incident.read`",
+              "Returns bounded recovery evidence."
+            ],
+            [
+              "Retry failed ACTION",
+              "`process.instance.retry`",
+              "Re-executes the same published ACTION and continues only after success."
+            ],
+            [
+              "Run compensation",
+              "`process.instance.compensate`",
+              "Dispatches the node's registered domain compensation adapter."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Retry safely",
+          "anchor": "incidentRecovery-3-retry-safely"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Send the attempt number you inspected. This optimistic check prevents an old browser tab from spending a newer retry attempt."
+        },
+        {
+          "kind": "code",
+          "language": "http",
+          "text": "POST /nodics/process/v0/instances/orderApproval-001/retry\nAuthorization: Bearer <access-token>\ncontent-type: application/json\n\n{\n  \"expectedAttempt\": 1,\n  \"correlationId\": \"support-case-4831\"\n}"
+        },
+        {
+          "kind": "paragraph",
+          "text": "On success, the incident becomes `RESOLVED` and the instance continues from the transition after the failed ACTION. On failure, the attempt increments. The incident returns to `OPEN` while budget remains or becomes `DEAD_LETTER` after the final attempt. Retry policy is bounded to ten attempts and a maximum delay of 24 hours even when project configuration is incorrect."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Compensate safely",
+          "anchor": "incidentRecovery-4-compensate-safely"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Compensation is not a generic database rollback. A workflow node may declare a registered compensation adapter, for example an Order-owned reversal command. Process invokes that adapter and records orchestration evidence; the domain module validates its own state, idempotency, authorization, and reversal rules."
+        },
+        {
+          "kind": "code",
+          "language": "http",
+          "text": "POST /nodics/process/v0/instances/orderApproval-001/compensate\nAuthorization: Bearer <access-token>\ncontent-type: application/json\n\n{\n  \"payload\": {\n    \"reasonCode\": \"PAYMENT_CAPTURE_FAILED\"\n  }\n}"
+        },
+        {
+          "kind": "paragraph",
+          "text": "If no compensation adapter is declared, the API fails closed. Operators must not substitute a direct database edit. If compensation fails, the incident is dead-lettered and the instance keeps `compensationStatus: FAILED` for manual investigation."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Developer contract",
+          "anchor": "incidentRecovery-5-developer-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "An ACTION node can declare retry and compensation without embedding executable code in the graph:"
+        },
+        {
+          "kind": "code",
+          "language": "json",
+          "text": "{\n  \"code\": \"reserveInventory\",\n  \"type\": \"ACTION\",\n  \"action\": {\n    \"moduleName\": \"nodics.commerce.inventory\",\n    \"operation\": \"reserve\"\n  },\n  \"retry\": {\n    \"maximumAttempts\": 3,\n    \"delayMs\": 5000\n  },\n  \"compensation\": {\n    \"moduleName\": \"nodics.commerce.inventory\",\n    \"operation\": \"release\"\n  }\n}"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Both declarations must exist in the configured action-adapter allowlist. The adapter implementation lives behind a domain service or facade. Unknown or unavailable adapters fail closed."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operational checklist",
+          "anchor": "incidentRecovery-6-operational-checklist"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Confirm the incident belongs to the intended tenant and instance.",
+            "Read the stable error code and current attempt; never expose secrets in notes.",
+            "Resolve the external cause before retrying, when applicable.",
+            "Pass `expectedAttempt` and a correlation identifier.",
+            "Confirm `process.incident.resolved` or `process.incident.compensated` audit evidence.",
+            "Escalate dead-letter incidents instead of repeatedly bypassing policy.",
+            "Test domain compensation idempotency and partial-failure behavior before production qualification."
+          ]
+        }
+      ],
+      "searchText": "Incident, Retry, and Compensation Operations Operate failed ACTION nodes through Process-owned incidents, bounded retries, dead-letter handling, and declarative domain-owned compensation. # Incident, Retry, and Compensation Operations\n\nThis guide explains what happens when an automated workflow step fails and how\nan operator safely recovers it. Process owns the orchestration incident. The\nbusiness module still owns the action and any reversal of business state.\n\n## The recovery lifecycle\n\n```mermaid\nstateDiagram-v2\n  [*] --> Open: ACTION fails\n  Open --> Retrying: authorized retry\n  Retrying --> Resolved: action succeeds\n  Retrying --> Open: attempt fails and budget remains\n  Retrying --> DeadLetter: attempt budget exhausted\n  Open --> Compensating: authorized compensation\n  DeadLetter --> Compensating: authorized compensation\n  Compensating --> Compensated: domain adapter succeeds\n  Compensating --> DeadLetter: domain adapter fails\n```\n\nAn ACTION failure creates one `processIncident` containing the instance,\npublished definition version, failed node, stable error code, current attempt,\nmaximum attempts, optional next retry time, and declarative adapter references.\nRaw exception payloads and secrets must not be copied into incident evidence.\n\n## What an operator sees\n\nThe incident list is the recovery work queue:\n\n```http\nGET /nodics/process/v0/incidents?status=OPEN\nAuthorization: Bearer <access-token>\n```\n\nOpen the incident before acting. Confirm the definition version, node, error\ncode, attempt budget, next retry time, and related instance. Refresh if another\noperator may be working on the same incident.\n\n| Operation | Permission | Result |\n| --- | --- | --- |\n| List or read incidents | `process.incident.read` | Returns bounded recovery evidence. |\n| Retry failed ACTION | `process.instance.retry` | Re-executes the same published ACTION and continues only after success. |\n| Run compensation | `process.instance.compensate` | Dispatches the node's registered domain compensation adapter. |\n\n## Retry safely\n\nSend the attempt number you inspected. This optimistic check prevents an old\nbrowser tab from spending a newer retry attempt.\n\n```http\nPOST /nodics/process/v0/instances/orderApproval-001/retry\nAuthorization: Bearer <access-token>\ncontent-type: application/json\n\n{\n  \"expectedAttempt\": 1,\n  \"correlationId\": \"support-case-4831\"\n}\n```\n\nOn success, the incident becomes `RESOLVED` and the instance continues from the\ntransition after the failed ACTION. On failure, the attempt increments. The\nincident returns to `OPEN` while budget remains or becomes `DEAD_LETTER` after\nthe final attempt. Retry policy is bounded to ten attempts and a maximum delay\nof 24 hours even when project configuration is incorrect.\n\n## Compensate safely\n\nCompensation is not a generic database rollback. A workflow node may declare a\nregistered compensation adapter, for example an Order-owned reversal command.\nProcess invokes that adapter and records orchestration evidence; the domain\nmodule validates its own state, idempotency, authorization, and reversal rules.\n\n```http\nPOST /nodics/process/v0/instances/orderApproval-001/compensate\nAuthorization: Bearer <access-token>\ncontent-type: application/json\n\n{\n  \"payload\": {\n    \"reasonCode\": \"PAYMENT_CAPTURE_FAILED\"\n  }\n}\n```\n\nIf no compensation adapter is declared, the API fails closed. Operators must\nnot substitute a direct database edit. If compensation fails, the incident is\ndead-lettered and the instance keeps `compensationStatus: FAILED` for manual\ninvestigation.\n\n## Developer contract\n\nAn ACTION node can declare retry and compensation without embedding executable\ncode in the graph:\n\n```json\n{\n  \"code\": \"reserveInventory\",\n  \"type\": \"ACTION\",\n  \"action\": {\n    \"moduleName\": \"nodics.commerce.inventory\",\n    \"operation\": \"reserve\"\n  },\n  \"retry\": {\n    \"maximumAttempts\": 3,\n    \"delayMs\": 5000\n  },\n  \"compensation\": {\n    \"moduleName\": \"nodics.commerce.inventory\",\n    \"operation\": \"release\"\n  }\n}\n```\n\nBoth declarations must exist in the configured action-adapter allowlist. The\nadapter implementation lives behind a domain service or facade. Unknown or\nunavailable adapters fail closed.\n\n## Operational checklist\n\n1. Confirm the incident belongs to the intended tenant and instance.\n2. Read the stable error code and current attempt; never expose secrets in notes.\n3. Resolve the external cause before retrying, when applicable.\n4. Pass `expectedAttempt` and a correlation identifier.\n5. Confirm `process.incident.resolved` or `process.incident.compensated` audit evidence.\n6. Escalate dead-letter incidents instead of repeatedly bypassing policy.\n7. Test domain compensation idempotency and partial-failure behavior before production qualification.\n",
+      "previous": {
+        "title": "Runtime Instance and Task Lifecycle",
+        "route": "/docs/framework/process/runtime-lifecycle"
       },
       "next": {
         "title": "Build Your First Workflow",
@@ -923,14 +1154,14 @@ module.exports = {
         "repository": "nodics.process",
         "functionalModule": "nodics.process",
         "technicalModule": "workflow",
-        "path": "data/core/source/documentation/pages/runtime-lifecycle.md",
-        "wordCount": 919,
-        "checksum": "8210e395eb5cb8fcfe8c611c8d60f9d81948e1ba70665a2705cdef98199cabc5"
+        "path": "data/core/source/documentation/pages/incident-recovery.md",
+        "wordCount": 554,
+        "checksum": "c860791ead89aca063323cc16dd0d84b221e0756f5d3d09c2d201a93e4d1cffc"
       }
     },
     "active": true
   },
-  "record3": {
+  "record4": {
     "code": "processDocumentationComponentfirstWorkflow",
     "typeCode": "processDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -1141,8 +1372,8 @@ module.exports = {
       ],
       "searchText": "Build Your First Workflow Create a first Process workflow from START through TASK, DECISION, ACTION, TIMER, SUB_PROCESS, and END with beginner-safe examples. # Build Your First Workflow\n\nThis guide is for someone opening Nodics for the first time. The goal is not to\nteach every automation feature at once. The goal is to help you create one small\nworkflow, understand why each step exists, and know where to look when something\ndoes not validate.\n\n## What you are building\n\nYou will build a simple content approval process:\n\n```mermaid\nflowchart LR\n  Start[\"START\"] --> Review[\"TASK: Review content\"]\n  Review --> Decision[\"DECISION: Approved?\"]\n  Decision -->|approved=true| Notify[\"ACTION: nodics.process.noop\"]\n  Decision -->|default| End[\"END\"]\n  Notify --> Timer[\"TIMER: audit pause\"]\n  Timer --> Child[\"SUB_PROCESS: optional governance\"]\n  Child --> End\n```\n\nThe workflow is intentionally small, but it introduces the same building blocks\nused by larger commerce, telco, logistics, onboarding, support, and publishing\nprocesses.\n\n## Step 1: create a draft definition\n\nIn Axis, open Business Process & Automation, then open Workflows or Designer.\nCreate a beginner-safe process draft. Give it a stable code such as\n`contentApproval`.\n\nStable code matters because integrations, audit events, tests, and customer\nextensions refer to codes. Display names can change; codes should not change\ncasually.\n\n## Step 2: understand the nodes\n\n| Node type | Beginner meaning | Runtime owner |\n| --- | --- | --- |\n| `START` | Where the process begins. | Process |\n| `TASK` | Human work, such as review, approval, or correction. | Process |\n| `DECISION` | Chooses the next path using declared decision data. | Process |\n| `ACTION` | Calls an explicitly allowed domain adapter. | Process orchestrates; domain module owns business logic. |\n| `TIMER` | Represents a wait, schedule boundary, or future SLA point. | Process records intent; Cron can schedule real execution. |\n| `SUB_PROCESS` | References another governed workflow definition. | Process |\n| `END` | Marks the instance complete. | Process |\n\nAxis edits these nodes visually, but the backend validator decides whether the\ngraph is valid.\n\n## Step 3: connect the nodes\n\nEvery transition must have:\n\n- a stable transition code;\n- a source node;\n- a target node;\n- no transition from `END`;\n- no transition into `START`.\n\nFor a `DECISION` node, every outgoing path should either declare a condition or\nbe marked as the default path. Example:\n\n```json\n{\n  \"code\": \"decision_to_notify\",\n  \"source\": \"approvalDecision\",\n  \"target\": \"notify\",\n  \"condition\": { \"field\": \"approved\", \"equals\": true }\n}\n```\n\n## Step 4: save, validate, publish\n\nSave stores the draft graph. Validate asks nodics.process to inspect the graph.\nPublish creates an immutable version that can run. A running instance should\nalways point to a published version, not a mutable draft.\n\n```mermaid\nsequenceDiagram\n  participant User as Business user\n  participant Axis\n  participant Process as nodics.process\n  User->>Axis: Edit graph\n  Axis->>Process: Save draft graph\n  User->>Axis: Validate\n  Axis->>Process: Validate backend contract\n  User->>Axis: Publish\n  Axis->>Process: Create immutable version\n```\n\n## Common beginner mistakes\n\n- Creating two `START` nodes.\n- Forgetting an `END` node.\n- Connecting a transition to a deleted node.\n- Adding an `ACTION` node without a registered adapter.\n- Putting JavaScript, URLs, or file paths inside action metadata.\n- Expecting Axis to execute the process locally.\n\nWhen validation fails, fix the graph and validate again. Do not bypass the\nbackend validator.\n\n",
       "previous": {
-        "title": "Runtime Instance and Task Lifecycle",
-        "route": "/docs/framework/process/runtime-lifecycle"
+        "title": "Incident, Retry, and Compensation Operations",
+        "route": "/docs/framework/process/incident-recovery"
       },
       "next": {
         "title": "Build Your First Human Task Flow",
@@ -1159,7 +1390,7 @@ module.exports = {
     },
     "active": true
   },
-  "record4": {
+  "record5": {
     "code": "processDocumentationComponentfirstHumanTask",
     "typeCode": "processDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -1326,7 +1557,7 @@ module.exports = {
     },
     "active": true
   },
-  "record5": {
+  "record6": {
     "code": "processDocumentationComponentbusinessValue",
     "typeCode": "processDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -1581,7 +1812,7 @@ module.exports = {
     },
     "active": true
   },
-  "record6": {
+  "record7": {
     "code": "processDocumentationComponentdeveloperCustomization",
     "typeCode": "processDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -1820,7 +2051,7 @@ module.exports = {
     },
     "active": true
   },
-  "record7": {
+  "record8": {
     "code": "processDocumentationComponentactionAdapters",
     "typeCode": "processDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -1978,7 +2209,7 @@ module.exports = {
     },
     "active": true
   },
-  "record8": {
+  "record9": {
     "code": "processDocumentationComponentcustomProjectExtension",
     "typeCode": "processDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -2106,7 +2337,7 @@ module.exports = {
     },
     "active": true
   },
-  "record9": {
+  "record10": {
     "code": "processDocumentationComponentdevopsTopology",
     "typeCode": "processDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -2311,7 +2542,7 @@ module.exports = {
     },
     "active": true
   },
-  "record10": {
+  "record11": {
     "code": "processDocumentationComponentprocessCronRuntime",
     "typeCode": "processDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -2536,7 +2767,7 @@ module.exports = {
     },
     "active": true
   },
-  "record11": {
+  "record12": {
     "code": "processDocumentationComponentscheduledAutomation",
     "typeCode": "processDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -2741,7 +2972,7 @@ module.exports = {
     },
     "active": true
   },
-  "record12": {
+  "record13": {
     "code": "processDocumentationComponentvisualDesigner",
     "typeCode": "processDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -3021,7 +3252,7 @@ module.exports = {
     },
     "active": true
   },
-  "record13": {
+  "record14": {
     "code": "processDocumentationComponentqaRegressionGuide",
     "typeCode": "processDocumentationArticleComponentType",
     "renderer": "documentation.component.article",

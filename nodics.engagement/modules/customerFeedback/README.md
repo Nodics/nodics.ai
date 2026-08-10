@@ -8,7 +8,7 @@ For implementation rules, read this module `AGENTS.md` after the root-to-leaf an
 
 ## Phase 9 status
 
-The feedback foundation is implemented with suggestions, complaints, experience feedback, survey responses, anonymous or identified intake, classification, assignment fields, optimistic lifecycle transitions, closed-loop follow-up, resolution versions, downstream owner handoffs, and source-traceable insights with correction and deletion propagation.
+The feedback foundation is implemented with suggestions, complaints, experience feedback, survey responses, anonymous or identified intake, classification, assignment fields, optimistic lifecycle transitions, closed-loop follow-up, resolution versions, downstream owner handoffs, source-traceable insights with correction and deletion propagation, and transparent NPS, CSAT, CES, trend, and operational metric calculations.
 
 ## Ownership
 

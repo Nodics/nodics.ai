@@ -107,6 +107,30 @@ module.exports = {
                 key: '/instances/:instanceCode/cancel', method: 'POST', controller: 'DefaultProcessOperationsController', operation: 'cancelInstance',
                 help: { requestType: 'secured', message: 'Cancel a running or waiting process instance', method: 'POST', url: 'http://host:port/nodics/process/v0/instances/:instanceCode/cancel' }
             },
+            retryInstance: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup'],
+                permission: 'process.instance.retry', apiExposure: 'processManagement',
+                key: '/instances/:instanceCode/retry', method: 'POST', controller: 'DefaultProcessOperationsController', operation: 'retryInstance',
+                help: { requestType: 'secured', message: 'Retry the failed ACTION for a governed process incident', method: 'POST', url: 'http://host:port/nodics/process/v0/instances/:instanceCode/retry' }
+            },
+            compensateInstance: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup'],
+                permission: 'process.instance.compensate', apiExposure: 'processManagement',
+                key: '/instances/:instanceCode/compensate', method: 'POST', controller: 'DefaultProcessOperationsController', operation: 'compensateInstance',
+                help: { requestType: 'secured', message: 'Execute the failed node declarative domain compensation adapter', method: 'POST', url: 'http://host:port/nodics/process/v0/instances/:instanceCode/compensate' }
+            },
+            listIncidents: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'process.incident.read', apiExposure: 'processManagement',
+                key: '/incidents', method: 'GET', controller: 'DefaultProcessOperationsController', operation: 'listIncidents',
+                help: { requestType: 'secured', message: 'List Process-owned recovery incidents', method: 'GET', url: 'http://host:port/nodics/process/v0/incidents' }
+            },
+            getIncident: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'process.incident.read', apiExposure: 'processManagement',
+                key: '/incidents/:incidentCode', method: 'GET', controller: 'DefaultProcessOperationsController', operation: 'getIncident',
+                help: { requestType: 'secured', message: 'Read one Process-owned recovery incident', method: 'GET', url: 'http://host:port/nodics/process/v0/incidents/:incidentCode' }
+            },
             listTasks: {
                 secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
                 permission: 'process.backoffice.view', apiExposure: 'processManagement',

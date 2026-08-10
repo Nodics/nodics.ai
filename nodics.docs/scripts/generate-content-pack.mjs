@@ -8,7 +8,7 @@ const cataloguePath = path.join(root, 'catalogue.json');
 const dataRoot = path.join(root, 'data/core');
 const dataPath = path.join(dataRoot, 'data/documentation');
 const headerPath = path.join(dataRoot, 'headers/nodicsDocumentationContentPackHeader.js');
-const manifestPath = path.join(root, 'manifest/generated-content-pack.json');
+const manifestPath = path.join(root, 'data/manifest.json');
 const checkOnly = process.argv.includes('--check');
 const copyrightHeader = `/*
     Nodics - Enterprice Micro-Services Management Framework
@@ -465,7 +465,7 @@ for (const [relativePath, content] of Object.entries(files)) {
 
 const generatedHashes = Object.fromEntries(
   Object.keys(files).map((relativePath) => [
-    relativePath,
+    relativePath.replace(/^data\//, ''),
     sha256(fs.readFileSync(path.join(root, relativePath))),
   ]),
 );
@@ -475,10 +475,11 @@ const releaseChecksum = sha256(
     .map((fileName) => `${fileName}:${generatedHashes[fileName]}`)
     .join('|'),
 );
-const manifest = {
+const documentationSection = {
+  kind: 'CONTENT_PACK',
+  contentPath: 'core',
   pack: 'nodics.docs',
   version: catalogue.release,
-  contractVersion: 1,
   sourceMode: 'catalogue-markdown-source',
   sourceAuthority: 'catalogue.json',
   sites: ['nodicsDocumentationSite'],
@@ -488,6 +489,14 @@ const manifest = {
   routes: sourcePages.length,
   releaseChecksum,
   generatedHashes,
+};
+const previousManifest = fs.existsSync(manifestPath)
+  ? JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
+  : { contractVersion: 2, module: 'nodics.docs', sections: {} };
+const manifest = {
+  contractVersion: 2,
+  module: 'nodics.docs',
+  sections: { ...(previousManifest.sections || {}), documentation: documentationSection },
 };
 await writeOrCheck(
   path.relative(root, manifestPath),

@@ -20,12 +20,14 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const crypto = require('node:crypto');
 
 const repositoryRoot = path.resolve(process.env.NODICS_HOME || process.cwd());
 const packageJsonPath = path.join(repositoryRoot, 'package.json');
 
 const expectedFrameworkWorkspaces = [
     'nodics.core',
+    'nodics.localization',
     'nodics.platform',
     'nodics.cron',
     'nodics.wcms',
@@ -45,6 +47,7 @@ const requiredRootFiles = [
     'config/postscripts.js',
     'nodics.core/modules/nSetup/llm/README.md',
     'nodics.core/modules/nSetup/llm/contracts/customer-config-classification-contract.md',
+    'nodics.core/modules/nSetup/llm/contracts/data-manifest-contract.md',
     'nodics.core/modules/nSetup/llm/templates/documentation-page-template.md'
 ];
 
@@ -142,6 +145,63 @@ function assertNSetupLlmTaxonomy() {
         });
 }
 
+/** Validates the mandatory aggregate data manifest for every concrete package-owned data root. */
+function assertDataManifestCompliance() {
+    const supportedKinds = new Set(['DATA_RELEASE', 'CONTENT_PACK', 'SOURCE_CONTRIBUTION']);
+    const ignoredFolders = new Set(['.git', '.nodics', 'node_modules', 'temp', 'docs', 'local-archive']);
+    function visit(folder) {
+        const packagePath = path.join(folder, 'package.json');
+        const dataRoot = path.join(folder, 'data');
+        if (fs.existsSync(packagePath) && fs.existsSync(dataRoot) && fs.statSync(dataRoot).isDirectory()) {
+            const publishedFiles = [];
+            function collect(current) {
+                fs.readdirSync(current, { withFileTypes: true }).forEach(entry => {
+                    const absolute = path.join(current, entry.name);
+                    if (entry.isDirectory()) collect(absolute);
+                    else if (entry.isFile()) publishedFiles.push(absolute);
+                });
+            }
+            collect(dataRoot);
+            if (publishedFiles.length > 0) {
+                const manifestPath = path.join(dataRoot, 'manifest.json');
+                assert(fs.existsSync(manifestPath), `Published data root is missing data/manifest.json: ${path.relative(repositoryRoot, folder)}`);
+                const packageMetadata = readJson(packagePath);
+                const manifest = readJson(manifestPath);
+                assert(manifest.contractVersion === 2, `Aggregate data manifest must use contractVersion 2: ${path.relative(repositoryRoot, manifestPath)}`);
+                assert(manifest.module === packageMetadata.name, `Aggregate data manifest module identity mismatch: ${path.relative(repositoryRoot, manifestPath)}`);
+                assert(manifest.sections && typeof manifest.sections === 'object' && !Array.isArray(manifest.sections),
+                    `Aggregate data manifest sections are invalid: ${path.relative(repositoryRoot, manifestPath)}`);
+                const nestedManifests = publishedFiles.filter(file => file !== manifestPath && path.basename(file) === 'manifest.json');
+                assert(nestedManifests.length === 0,
+                    `Per-type or nested data manifests are prohibited: ${nestedManifests.map(file => path.relative(repositoryRoot, file)).join(', ')}`);
+                Object.entries(manifest.sections).forEach(([sectionName, section]) => {
+                    assert(section && supportedKinds.has(section.kind), `Unsupported data manifest section kind: ${packageMetadata.name}#${sectionName}`);
+                    assert(/^\d+\.\d+\.\d+$/.test(section.version || ''), `Data manifest section version is invalid: ${packageMetadata.name}#${sectionName}`);
+                    const files = section.kind === 'CONTENT_PACK' ? section.generatedHashes : section.files;
+                    assert(files && typeof files === 'object' && !Array.isArray(files) && Object.keys(files).length > 0,
+                        `Data manifest section files are invalid: ${packageMetadata.name}#${sectionName}`);
+                    Object.entries(files).forEach(([relativeFile, expectedHash]) => {
+                        assert(!path.isAbsolute(relativeFile) && !relativeFile.includes('..'),
+                            `Data manifest file path is invalid: ${packageMetadata.name}#${sectionName}:${relativeFile}`);
+                        const absolute = path.resolve(dataRoot, relativeFile);
+                        assert(absolute.startsWith(dataRoot + path.sep) && fs.existsSync(absolute) && fs.statSync(absolute).isFile(),
+                            `Data manifest file is unavailable: ${packageMetadata.name}#${sectionName}:${relativeFile}`);
+                        assert(!fs.lstatSync(absolute).isSymbolicLink(),
+                            `Data manifest file must not be a symbolic link: ${packageMetadata.name}#${sectionName}:${relativeFile}`);
+                        const actualHash = crypto.createHash('sha256').update(fs.readFileSync(absolute)).digest('hex');
+                        assert(actualHash === expectedHash,
+                            `Data manifest checksum mismatch: ${packageMetadata.name}#${sectionName}:${relativeFile}`);
+                    });
+                });
+            }
+        }
+        fs.readdirSync(folder, { withFileTypes: true }).forEach(entry => {
+            if (entry.isDirectory() && !ignoredFolders.has(entry.name)) visit(path.join(folder, entry.name));
+        });
+    }
+    visit(repositoryRoot);
+}
+
 function main() {
     const packageJson = readJson(packageJsonPath);
     const workspaces = packageJson.workspaces || [];
@@ -172,6 +232,7 @@ function main() {
 
     requiredRootFiles.forEach(assertFileExists);
     assertNSetupLlmTaxonomy();
+    assertDataManifestCompliance();
     assertForbiddenChildrenAbsent();
     expectedFrameworkWorkspaces.forEach(assertWorkspacePackage);
 

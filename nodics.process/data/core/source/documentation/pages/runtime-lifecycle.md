@@ -96,9 +96,11 @@ Customer projects can assign these permissions to narrower user groups later.
 | Cancel task | `POST /tasks/:taskCode/cancel` | `process.task.cancel` | `OPEN`, `CLAIMED`, `ESCALATED` | Task becomes `CANCELLED` without cancelling the whole instance. |
 | Cancel instance | `POST /instances/:instanceCode/cancel` | `process.instance.cancel` | `CREATED`, `RUNNING`, `WAITING` | Instance becomes `CANCELLED`; open tasks are cancelled. |
 
-Completing the current MVP task moves the instance to END and marks it
-`COMPLETED`. Later versions can add gateways, multiple tasks, automated domain
-actions, timers, retries, and compensation.
+Completing a task advances through the published graph. ACTION, DECISION,
+TIMER, and SUB_PROCESS nodes are backend-executed. If an ACTION fails, Process
+marks the instance `FAILED` and opens a recovery incident; operators then use
+the governed retry or compensation APIs described in the incident recovery
+guide.
 
 ## Instance detail and audit
 

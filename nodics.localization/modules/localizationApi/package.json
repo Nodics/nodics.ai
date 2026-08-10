@@ -1,0 +1,39 @@
+{
+    "name": "localizationApi",
+    "index": "40.20",
+    "description": "Audience-specific localization API and BackOffice contract capability.",
+    "main": "nodics.js",
+    "version": "0.0.1",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "nodics": {
+        "kind": "capability",
+        "displayName": "Localization API",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": [
+            "configuration",
+            "controller",
+            "event",
+            "facade",
+            "pipeline",
+            "router",
+            "schema",
+            "search",
+            "interceptor",
+            "service",
+            "utility",
+            "test",
+            "llm"
+        ],
+        "runtime": {
+            "router": true,
+            "publish": false,
+            "web": false
+        }
+    },
+    "scripts": {
+        "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
+        "test": "npm run check:syntax && node test/localizationRuntimeBundleContract.test.js && node test/localizationManagementApiContract.test.js && node test/localizationQualificationContract.test.js"
+    }
+}

@@ -41,5 +41,12 @@ module.exports = {
         code: 'headerComponentType',
         active: true,
         renderer: 'component.header'
+    },
+    record5: {
+        code: 'homePageBannerComponentType',
+        active: true,
+        renderer: 'component.home-banner',
+        contractVersion: 1,
+        channels: ['web']
     }
 };

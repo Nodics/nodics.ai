@@ -36,7 +36,10 @@ module.exports = {
     },
     ERR_AUTH_00002: {
         code: '401',
-        message: 'Invalid authentication parameters'
+        message: 'Invalid authentication parameters',
+        messageKey: 'auth.invalid_credentials',
+        parameters: [],
+        exposure: 'PUBLIC'
     },
     ERR_AUTH_00003: {
         code: '403',

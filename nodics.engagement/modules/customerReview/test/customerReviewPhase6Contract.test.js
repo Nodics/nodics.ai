@@ -36,4 +36,14 @@ assert.strictEqual(mapped.review.status, 'APPROVED'); assert.strictEqual(mapped.
 assert.strictEqual(migration.replay(mapped, { sourceHash: mapped.migration.sourceHash, mappingVersion: '1' }).action, 'SKIP');
 assert.throws(() => migration.replay(mapped, { sourceHash: 'different', mappingVersion: '1' }), error => error.code === 'ERR_REVIEW_00010');
 const rolledBack = migration.rollback(Object.assign({}, mapped.migration, { status: 'MIGRATED' })); assert.strictEqual(rolledBack.status, 'ROLLED_BACK');
+const manifest = migration.plan([
+    { code: 'legacy1', customerCode: 'c1', targetType: 'PRODUCT', targetCode: 'p1', rating: 5, comment: 'Good', status: 'APPROVED' },
+    { code: 'legacy2', customerCode: 'c2', targetType: 'UNKNOWN', targetCode: 'p2', rating: 4, comment: 'Invalid target', status: 'PENDING' }
+], { tenant: 't1', runCode: 'cres-run-1', mappingVersion: '1', maximumRecords: 1, configuration: configuration });
+assert.strictEqual(manifest.validCount, 1); assert.strictEqual(manifest.invalidCount, 0); assert.strictEqual(manifest.nextCursor, 1); assert.strictEqual(manifest.checksum.length, 64);
+const importRequest = migration.nImportRequest(manifest, { approved: true, actorId: 'migration-admin', reason: 'Approved cutover' });
+assert.strictEqual(importRequest.owner, 'nImport'); assert.strictEqual(importRequest.models.length, 2); assert.strictEqual(importRequest.idempotencyKey, manifest.checksum); assert.strictEqual(importRequest.rollback.deleteAuditEvidence, false);
+const invalidManifest = migration.plan([{ code: 'legacy2', customerCode: 'c2', targetType: 'UNKNOWN', targetCode: 'p2', rating: 4, comment: 'Invalid target', status: 'PENDING' }], { tenant: 't1', runCode: 'cres-run-2', mappingVersion: '1', configuration: configuration });
+assert.strictEqual(invalidManifest.invalidCount, 1);
+assert.throws(() => migration.nImportRequest(invalidManifest, { approved: true, actorId: 'migration-admin', reason: 'Approved cutover' }), error => error.code === 'ERR_REVIEW_00010');
 console.log('customerReview Phase 6 contract validated');

@@ -211,9 +211,28 @@ otherwise inactive context fails closed. CMS still owns route lookup, Online
 publication state, graph bounds, renderer projection, and delivery errors.
 
 Resolved responses use the existing Nodics router-cache authority. Page, route,
-component, and association mutations invalidate the tenant's CMS delivery
+component, component-localization, media-association, and composition mutations invalidate the tenant's CMS delivery
 resource through `DefaultCacheService`, including existing cross-node cache
 propagation behavior.
+
+## Localized Component Content
+
+One `cmsComponent` remains the stable logical identity. Shared fields stay in
+`cmsComponent.properties`; language-specific fields are stored in
+`cmsComponentLocalization` records keyed uniquely by component and canonical
+BCP47 locale. A component type's declarative `propertySchema` marks each field
+with `localized: true|false` and may declare `requiredLocales`. CMS validates
+these declarations and variants on backend persistence, so Axis Schema
+Workbench and Content Designer use the same authority.
+
+Delivery derives locale from trusted Storefront context, batches variants with
+the component graph, merges only for projection, and reports requested,
+resolved, missing, and fallback evidence. Existing `cmsComponentMedia`
+placements use `localeCode` for locale-specific assets, alt text, and captions;
+Media continues to own asset lifecycle. Exact locale wins, followed by the
+configured fallback chain and then an unscoped placement. Publication freezes
+component variants and media placements into the immutable manifest and rejects
+variants not marked `READY`.
 
 See canonical documentation `capability.content-publishing.technical-reference` for the schema, security, extension,
 and operational contract.
@@ -273,6 +292,7 @@ Run `node nodics.wcms/modules/cms/test/cmsContentDeliveryContract.test.js`,
 `node nodics.wcms/modules/cms/test/cmsStorefrontDeliveryContract.test.js`,
 `node nodics.wcms/modules/cms/test/cmsSiteReferenceContract.test.js`, and
 `node nodics.wcms/modules/cms/test/cmsPublicationManifestContract.test.js`, and
+`node nodics.wcms/modules/cms/test/cmsLocalizedContentContract.test.js`, and
 `node nodics.wcms/modules/cms/test/cmsWcmsAuthoringSchemaContract.test.js` before broader
 generated and integration suites. CMS contract upgrades use secured
 `/migration/preview`, `/migration/apply`, and `/migration/rollback` operations.

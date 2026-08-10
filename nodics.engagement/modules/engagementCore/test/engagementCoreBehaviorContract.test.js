@@ -20,7 +20,7 @@ const integration = require('../src/service/defaultEngagementIntegrationService'
 const intake = require('../src/service/defaultEngagementIntakeService');
 
 async function run() {
-    assert.strictEqual(Object.keys(schemas).length, 19);
+    assert.strictEqual(Object.keys(schemas).length, 21);
     Object.values(schemas).forEach(schema => {
         assert.strictEqual(schema.router.enabled, false);
         assert.strictEqual(schema.cache.enabled, false);

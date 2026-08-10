@@ -75,11 +75,15 @@ Load detailed files only when their subject is affected:
 5. `contracts/human-maintainability-contract.md`
 6. `contracts/nodics-expert-decision-contract.md`
 7. `contracts/module-structure-contract.md`
-8. `contracts/module-group-participation-contract.md`
+8. `contracts/data-manifest-contract.md` when module, project, environment,
+   server, or node data structure, generation, import, or release metadata changes
+9. `contracts/module-group-participation-contract.md`
 9. `contracts/integration-governance-contract.md`
-10. `contracts/documentation-impact-contract.md`
-11. `contracts/testing-and-release-contract.md`
-12. `contracts/customer-project-mode-contract.md`
+10. `contracts/localization-contribution-contract.md` when locale, message,
+    localized domain data, translation management, or runtime bundle behavior changes
+11. `contracts/documentation-impact-contract.md`
+12. `contracts/testing-and-release-contract.md`
+13. `contracts/customer-project-mode-contract.md`
 13. `nodics-principles.md` compatibility pointer
 14. `standards/modular-architecture.md`
 15. `standards/module-catalog.md`

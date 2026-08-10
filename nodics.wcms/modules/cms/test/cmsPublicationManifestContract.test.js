@@ -24,7 +24,8 @@ global.CONFIG = { get: key => {
     if (key === 'cms') return properties.cms;
 } };
 
-['cmsPageRoute', 'cmsPage', 'cmsComponentDetail', 'cmsComponent', 'cmsPageTemplate', 'cmsSlotDefinition'].forEach(name => {
+['cmsPageRoute', 'cmsPage', 'cmsComponentDetail', 'cmsComponent', 'cmsComponentLocalization', 'cmsComponentMedia',
+    'cmsPageTemplate', 'cmsSlotDefinition'].forEach(name => {
     assert.strictEqual(schemas[name].isVersionedEnabled, false, name + ' must remain disabled until an active versioned deployment layer opts in');
 });
 assert.strictEqual(schemas.cmsPublicationManifest.isVersionedEnabled, false);
@@ -46,7 +47,25 @@ const data = {
     details: [{ code: 'home-hero', versionId: 1, active: true, source: 'home', target: 'hero', slot: 'main', index: 0 }],
     components: [{ code: 'hero', versionId: 4, active: true, typeCode: 'heroType',
         renderer: 'component.hero', rendererContractVersion: 1, rendererChannels: ['web', 'mobile-webview'],
-        rendererDeprecated: true, rendererReplacement: 'component.hero-v2', properties: { title: 'Hello' } }],
+        rendererDeprecated: true, rendererReplacement: 'component.hero-v2', properties: { analyticsId: 'hero-1' } }],
+    localizations: [
+        { code: 'hero-en', versionId: 1, active: true, componentCode: 'hero', locale: 'en',
+            properties: { title: 'Hello' }, status: 'READY' },
+        { code: 'hero-ar', versionId: 1, active: true, componentCode: 'hero', locale: 'ar',
+            properties: { title: 'مرحبا' }, status: 'READY' }
+    ],
+    types: [{ code: 'heroType', versionId: 1, active: true, kind: 'COMPONENT', propertySchema: {
+        title: { type: 'string', localized: true, requiredLocales: ['en', 'ar'] },
+        analyticsId: { type: 'string', localized: false }
+    } }],
+    media: [
+        { code: 'hero-media-en', componentMediaCode: 'hero-media-en', versionId: 1, active: true,
+            componentCode: 'hero', mediaCode: 'hero-en', mediaType: 'IMAGE', role: 'background', slot: 'main',
+            localeCode: 'en', position: 0, altText: 'English hero' },
+        { code: 'hero-media-ar', componentMediaCode: 'hero-media-ar', versionId: 1, active: true,
+            componentCode: 'hero', mediaCode: 'hero-ar', mediaType: 'IMAGE', role: 'background', slot: 'main',
+            localeCode: 'ar', position: 0, altText: 'Arabic hero' }
+    ],
     templates: [{ code: 'main', versionId: 1, active: true, name: 'Main', renderer: 'template.main', contractVersion: 1 }],
     slots: [{ code: 'main-main', versionId: 1, active: true, template: 'main', name: 'main' }],
     manifests: [], pointers: [], receipts: []
@@ -70,6 +89,9 @@ global.SERVICE = {
     DefaultCmsPageService: generated(data.pages),
     DefaultCmsComponentDetailService: generated(data.details),
     DefaultCmsComponentService: generated(data.components),
+    DefaultCmsTypeCodeService: generated(data.types),
+    DefaultCmsComponentLocalizationService: generated(data.localizations),
+    DefaultCmsComponentMediaService: generated(data.media),
     DefaultCmsPageTemplateService: generated(data.templates),
     DefaultCmsSlotDefinitionService: generated(data.slots),
     DefaultCmsPublicationManifestService: generated(data.manifests),
@@ -78,6 +100,7 @@ global.SERVICE = {
     DefaultCmsContractValidationService: require('../src/service/validation/defaultCmsContractValidationService'),
     DefaultCmsDeliveryCacheInvalidationService: { invalidate: async () => true }
 };
+SERVICE.DefaultCmsContentLocalizationService = require('../src/service/localization/defaultCmsContentLocalizationService');
 const adapter = require('../src/service/publication/defaultCmsPublicationAdapterService');
 const manifests = require('../src/service/publication/defaultCmsPublicationManifestOrchestrationService');
 const provider = require('../src/service/publication/defaultCmsPublicationVersionProviderService');
@@ -105,7 +128,18 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     let dependencies = await adapter.resolveDependencies(publication, root, request);
     assert(dependencies.some(item => item.schema === 'cmsPage' && item.code === 'home' && item.version === '3'));
     assert(dependencies.some(item => item.schema === 'cmsComponent' && item.code === 'hero' && item.version === '4'));
+    assert(dependencies.some(item => item.schema === 'cmsTypeCode' && item.code === 'heroType'));
+    assert(dependencies.some(item => item.schema === 'cmsComponentLocalization' && item.code === 'hero-en'));
+    assert(dependencies.some(item => item.schema === 'cmsComponentLocalization' && item.code === 'hero-ar'));
+    assert(dependencies.some(item => item.schema === 'cmsComponentMedia' && item.code === 'hero-media-en'));
+    assert(dependencies.some(item => item.schema === 'cmsComponentMedia' && item.code === 'hero-media-ar'));
     assert.strictEqual((await adapter.validate(publication, root, request, dependencies)).valid, true);
+    data.localizations[1].status = 'DRAFT';
+    assert.deepStrictEqual(await adapter.validate(publication, root, request, dependencies), {
+        valid: false,
+        reason: 'LOCALIZATION_NOT_READY'
+    }, 'publication readiness must reject any frozen locale variant that is not READY');
+    data.localizations[1].status = 'READY';
     let missingDependency = dependencies.map(item => item.schema === 'cmsComponent' ? Object.assign({}, item, { version: '99' }) : item);
     assert.strictEqual((await adapter.validate(publication, root, request, missingDependency)).valid, false,
         'validation must fail closed when a frozen dependency version disappears');
@@ -121,6 +155,11 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     let manifest = await manifests.persist(publication, request);
     assert.strictEqual(manifest.snapshot.page.components[0].code, 'hero');
     assert.strictEqual(manifest.snapshot.page.components[0].properties.title, 'Hello');
+    assert.strictEqual(manifest.snapshot.page.components[0].properties.analyticsId, 'hero-1');
+    assert.strictEqual(manifest.snapshot.page.components[0].localization.resolvedLocale, 'en');
+    assert.strictEqual(manifest.snapshot.page.components[0].localization.fallbackUsed, false);
+    assert.strictEqual(manifest.snapshot.page.components[0].media[0].mediaCode, 'hero-en');
+    assert.strictEqual(manifest.snapshot.page.components[0].media[0].altText, 'English hero');
     assert.strictEqual(manifest.snapshot.page.rendererContractVersion, 1);
     assert.deepStrictEqual(manifest.snapshot.page.rendererChannels, ['web']);
     assert.strictEqual(manifest.snapshot.page.rendererDeprecated, false);

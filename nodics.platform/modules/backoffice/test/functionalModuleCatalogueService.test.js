@@ -20,7 +20,7 @@ const assert = require('assert');
 
 global.CONFIG = { get: key => key === 'defaultTenant' ? 'default' : undefined };
 global.SERVICE = {};
-global.NODICS = {};
+global.NODICS = { getEnvironmentName: () => 'example.project' };
 global.CLASSES = { NodicsError: class NodicsError extends Error {
     constructor(code, message) { super(message || code); this.code = code; }
 } };
@@ -58,6 +58,10 @@ async function run() {
     assert.deepStrictEqual(observations[2].technicalModules, ['cms', 'media', 'wcms']);
     assert.strictEqual(observations[2].required, true, 'WCMS is an Axis prerequisite and must be default-registered');
     assert(!observations.some(item => item.functionalModule === 'example.project'));
+    let leaseIndex = service.buildLeaseFunctionalModuleIndex(batch);
+    assert.strictEqual(leaseIndex.profile, 'nodics.platform');
+    assert.strictEqual(leaseIndex.media, 'nodics.wcms');
+    assert.strictEqual(leaseIndex.projectCore, undefined, 'project modules must not become functional capability owners');
 
     let saved;
     let updated;
@@ -121,6 +125,36 @@ async function run() {
     await assert.rejects(() => service.deregister(Object.assign({}, optionalRequest, {
         authData: { tokenType: 'service', principalId: 'runtime' }
     })), /human employee/);
+
+    service.getRecords = async () => ({ result: [
+        { functionalModule: 'nodics.platform', technicalModules: ['backoffice', 'profile'],
+            registrationState: 'REGISTERED', enabled: true, runtimeState: 'ACTIVE' },
+        { functionalModule: 'nodics.process', technicalModules: ['cronjob', 'workflow'],
+            registrationState: 'REGISTERED', enabled: false, runtimeState: 'ACTIVE' }
+    ] });
+    let eligibility = await service.getPresentationEligibility({ tenant: 'default', authData: {} });
+    assert.deepStrictEqual(eligibility.eligibleModules, ['backoffice', 'nodics.platform', 'profile']);
+    assert(eligibility.governedModules.includes('cronjob'));
+    assert(!eligibility.eligibleModules.includes('workflow'));
+
+    let runtimeRecords = [{ code: 'example.project::nodics.process', projectCode: 'example.project',
+        functionalModule: 'nodics.process', runtimeState: 'ACTIVE', observedServers: ['local:oldServer:default'],
+        catalogueRevision: 8 }];
+    let runtimeUpdates = [];
+    service.getRecords = async () => ({ result: runtimeRecords });
+    service.updateRecord = async request => { runtimeUpdates.push(request); return { result: { modifiedCount: 1 } }; };
+    let reconciled = await service.reconcileActiveRuntimeLeases([], ['example.project'], { tenant: 'default', authData: {} });
+    assert.strictEqual(reconciled, 1);
+    assert.strictEqual(runtimeUpdates[0].model.runtimeState, 'OFFLINE');
+    assert.deepStrictEqual(runtimeUpdates[0].model.observedServers, []);
+    runtimeRecords[0] = Object.assign({}, runtimeRecords[0], runtimeUpdates[0].model);
+    runtimeUpdates = [];
+    reconciled = await service.reconcileActiveRuntimeLeases([{ projectCode: 'example.project',
+        functionalModuleIdentity: 'nodics.process', environment: 'local', server: 'processServer', node: null }],
+    ['example.project'], { tenant: 'default', authData: {} });
+    assert.strictEqual(reconciled, 1);
+    assert.strictEqual(runtimeUpdates[0].model.runtimeState, 'ACTIVE');
+    assert.deepStrictEqual(runtimeUpdates[0].model.observedServers, ['local:processServer:default']);
 
     console.log('Functional-module catalogue service validated');
 }

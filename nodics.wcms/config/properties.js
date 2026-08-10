@@ -66,7 +66,8 @@ module.exports = {
                         type: 'LOCAL_SIBLING',
                         repositoryName: 'nodics.docs',
                         contentPath: 'data/core',
-                        manifestPath: 'manifest/generated-content-pack.json'
+                        manifestPath: 'data/manifest.json',
+                        manifestSection: 'documentation'
                     }
                 },
                 axisDocumentation: {
@@ -74,7 +75,8 @@ module.exports = {
                         type: 'LOCAL_SIBLING',
                         repositoryName: 'nodics.platform',
                         contentPath: 'modules/axis/data/core',
-                        manifestPath: 'modules/axis/manifest/docs-content-pack.json'
+                        manifestPath: 'modules/axis/data/manifest.json',
+                        manifestSection: 'documentation'
                     }
                 },
                 processDocumentation: {
@@ -83,14 +85,16 @@ module.exports = {
                         type: 'LOCAL_SIBLING',
                         repositoryName: 'nodics.process',
                         contentPath: 'data/core',
-                        manifestPath: 'manifest/docs-content-pack.json'
+                        manifestPath: 'data/manifest.json',
+                        manifestSection: 'documentation'
                     }
                 },
                 customerProjectDocumentation: {
                     source: {
                         type: 'LOCAL_PROJECT',
                         contentPath: 'data/core',
-                        manifestPath: 'manifest/docs-content-pack.json'
+                        manifestPath: 'data/manifest.json',
+                        manifestSection: 'documentation'
                     },
                     presentation: {
                         title: 'Customer project documentation',

@@ -48,6 +48,10 @@ module.exports = {
             , engagementBatchPreview: ['preview', 'count', 'commands', 'requiresApproval', 'directMutation']
             , engagementExportPreview: ['purpose', 'fields', 'maskingPolicy', 'recordCount', 'maximumRecords', 'status', 'correlationId']
             , engagementRepairPreview: ['domainType', 'domainCode', 'repairType', 'expectedSourceHash', 'observedSourceHash', 'status', 'reason', 'correlationId']
+            , engagementBatchRun: ['idempotencyKey', 'action', 'status', 'total', 'succeeded', 'failed', 'cursor', 'results', 'correlationId', 'startedAt', 'completedAt', 'duplicate']
+            , engagementExportResult: ['purpose', 'fields', 'maskingPolicy', 'recordCount', 'status', 'checksum', 'generatedAt', 'expiresAt', 'rows', 'correlationId']
+            , engagementRepairResult: ['domainType', 'domainCode', 'repairType', 'status', 'reason', 'result', 'repairedAt', 'correlationId']
+            , engagementPrivacyResult: ['code', 'domainType', 'domainCode', 'operation', 'purpose', 'status', 'fields', 'checksum', 'result', 'data', 'correlationId', 'executedAt']
         },
         permissions: {
             customerRead: 'engagement.customer.read',

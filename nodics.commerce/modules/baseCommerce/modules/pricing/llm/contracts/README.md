@@ -1,3 +1,3 @@
 # Pricing contracts
 
-Phase 1 fixes identity and ownership; behavior arrives only in its authorized phase.
+Pricing selects only active tenant/currency books and effective product rows, chooses the highest applicable quantity tier deterministically, reports same-tier conflicts, and produces exact immutable decision evidence. Browser code and archived gComm are not pricing authorities.

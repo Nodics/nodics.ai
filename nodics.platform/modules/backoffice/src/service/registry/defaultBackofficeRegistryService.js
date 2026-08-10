@@ -178,6 +178,8 @@ module.exports = {
         request._runtimeCoordinates && request._runtimeCoordinates.environment,
       server: request._runtimeCoordinates && request._runtimeCoordinates.server,
       node: request._runtimeCoordinates && request._runtimeCoordinates.node,
+      projectCode: request._projectCode ? String(request._projectCode) : undefined,
+      functionalModuleIdentity: request._functionalModuleIdentity ? String(request._functionalModuleIdentity) : undefined,
       version: String(registration.version || "unknown"),
       moduleKind: String(registration.moduleKind || "unknown"),
       capabilities: Array.isArray(registration.capabilities)
@@ -258,6 +260,11 @@ module.exports = {
       );
     }
     let outcomes = [];
+    if (!SERVICE.DefaultFunctionalModuleCatalogueService) {
+      return Promise.reject(new Error("Functional-module catalogue service is unavailable"));
+    }
+    let functionalModuleIndex = SERVICE.DefaultFunctionalModuleCatalogueService
+      .buildLeaseFunctionalModuleIndex(batch);
     return Promise.all(
       registrations.map((item) =>
         this.register({
@@ -265,6 +272,8 @@ module.exports = {
           _identityValidated: true,
           _batchRegistration: true,
           _batchOutcomes: outcomes,
+          _projectCode: batch.project,
+          _functionalModuleIdentity: functionalModuleIndex[item.moduleName],
           authData: authData,
           _runtimeCoordinates: {
             environment: batch.environment,
@@ -274,10 +283,10 @@ module.exports = {
         }),
       ),
     ).then(async (results) => {
-      if (!SERVICE.DefaultFunctionalModuleCatalogueService) {
-        throw new Error("Functional-module catalogue service is unavailable");
-      }
       let functionalModules = await SERVICE.DefaultFunctionalModuleCatalogueService.reconcileRuntimeBatch(batch, authData);
+      let activeEntries = await this.getStore().values();
+      await SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases(
+        activeEntries.map(entry => entry.value), [batch.project], { authData: authData });
       return this.audit({
         eventType: "backoffice.registry.registration",
         outcome: outcomes.every((outcome) => outcome === "renewed")
@@ -341,6 +350,7 @@ module.exports = {
       );
     }
     let removed = 0;
+    let affectedProjects = new Set();
     let entries = await this.getStore().values();
     await Promise.all(
       entries.map(async (entry) => {
@@ -349,6 +359,7 @@ module.exports = {
           value.instanceId === instanceId &&
           (!moduleName || value.moduleName === moduleName)
         ) {
+          if (value.projectCode) affectedProjects.add(value.projectCode);
           await this.getStore().delete(entry.key);
           removed++;
         }
@@ -363,6 +374,12 @@ module.exports = {
       SERVICE.DefaultBackofficeAvailabilityService.removeInstance(instanceId);
     }
     this._metrics.deregistrations += removed;
+    if (removed > 0 && SERVICE.DefaultFunctionalModuleCatalogueService &&
+      SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases) {
+      let remaining = await this.getStore().values();
+      await SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases(
+        remaining.map(entry => entry.value), Array.from(affectedProjects), { authData: request.authData });
+    }
     await this.audit({
       eventType: "backoffice.registry.deregistration",
       outcome: "removed",
@@ -488,92 +505,11 @@ module.exports = {
 
   /** Aggregates authorized module-owned catalogue metadata without becoming its source of truth. */
   buildCatalogue: function (modules, clientContractVersion, authData) {
-    let catalogue = {};
-    let permissions = (authData && authData.permissions) || [];
-    Object.keys(modules).forEach((moduleName) => {
-      let instances = modules[moduleName];
-      let metadata = instances
-        .map((instance) => instance.backoffice)
-        .find((value) => value && value.enabled !== false);
-      if (!metadata) return;
-      let snapshot =
-        SERVICE.DefaultBackofficeDiscoveryService &&
-        SERVICE.DefaultBackofficeDiscoveryService.getSnapshot(moduleName);
-      let authorizedMetadata = Object.assign({}, metadata);
-      if (Array.isArray(metadata.navigation)) {
-        let authorizedItems = metadata.navigation
-          .filter((item) => {
-            let required = [].concat(item.requiredPermissions || []);
-            return (
-              item.featureState !== "HIDDEN" &&
-              (permissions.includes("*") ||
-                required.every((permission) => permissions.includes(permission)))
-            );
-          })
-          .map((item) => {
-            if (!Array.isArray(item.lifecycleActions)) return item;
-            let lifecycleActions = item.lifecycleActions.filter(
-              (action) =>
-                action.featureState !== "HIDDEN" &&
-                (permissions.includes("*") ||
-                  (action.permission && permissions.includes(action.permission))),
-            );
-            return Object.assign({}, item, { lifecycleActions });
-          });
-        let authorizedIds = new Set(authorizedItems.map((item) => item.id));
-        let changed = true;
-        while (changed) {
-          changed = false;
-          authorizedItems = authorizedItems.filter((item) => {
-            if (
-              !item.parentId ||
-              item.parentModuleName ||
-              authorizedIds.has(item.parentId)
-            )
-              return true;
-            authorizedIds.delete(item.id);
-            changed = true;
-            return false;
-          });
-        }
-        authorizedMetadata.navigation = authorizedItems;
-      }
-      catalogue[moduleName] = Object.assign(authorizedMetadata, {
-        moduleName: moduleName,
-        activeModuleLeases: instances.length,
-        compatibility: this.evaluateCompatibility(
-          metadata,
-          clientContractVersion,
-        ),
-        contract: snapshot,
-      });
-    });
-    let changed = true;
-    while (changed) {
-      changed = false;
-      let authorizedNavigationKeys = new Set();
-      Object.entries(catalogue).forEach(([moduleName, metadata]) => {
-        (metadata.navigation || []).forEach((item) =>
-          authorizedNavigationKeys.add(moduleName + ":" + item.id),
-        );
-      });
-      Object.entries(catalogue).forEach(([moduleName, metadata]) => {
-        if (!Array.isArray(metadata.navigation)) return;
-        let nextNavigation = metadata.navigation.filter((item) => {
-          if (!item.parentId || !item.parentModuleName) return true;
-          let parentKey = item.parentModuleName + ":" + item.parentId;
-          if (authorizedNavigationKeys.has(parentKey)) return true;
-          changed = true;
-          return false;
-        });
-        if (nextNavigation.length !== metadata.navigation.length) {
-          catalogue[moduleName] = Object.assign({}, metadata, {
-            navigation: nextNavigation,
-          });
-        }
-      });
+    if (!SERVICE.DefaultBackofficeCapabilityRegistryService) {
+      throw new Error("BackOffice capability registry service is unavailable");
     }
-    return catalogue;
+    return SERVICE.DefaultBackofficeCapabilityRegistryService.buildCatalogue(
+      modules, clientContractVersion, authData);
   },
 
   /** Returns the most restrictive compatibility state from an authorized catalogue. */
@@ -930,12 +866,18 @@ module.exports = {
   bootstrap: async function (request) {
     let clientContractVersion = this.getClientContractVersion(request);
     let result = await this.list(request);
+    let eligibility = SERVICE.DefaultFunctionalModuleCatalogueService &&
+      typeof SERVICE.DefaultFunctionalModuleCatalogueService.getPresentationEligibility === "function"
+      ? await SERVICE.DefaultFunctionalModuleCatalogueService.getPresentationEligibility(request)
+      : undefined;
+    let effectiveModules = SERVICE.DefaultBackofficeCapabilityRegistryService.applyFunctionalModuleEligibility(
+      result.data.modules, eligibility);
     let catalogue = this.buildCatalogue(
-      result.data.modules,
+      effectiveModules,
       clientContractVersion,
       request && request.authData,
     );
-    let availability = this.buildAvailability(result.data.modules);
+    let availability = this.buildAvailability(effectiveModules);
     let configured = this.getConfiguration().compatibility || {};
     let status = this.getOverallCompatibilityStatus(catalogue);
     if (status !== "COMPATIBLE") {
@@ -961,7 +903,7 @@ module.exports = {
           clientContractVersion: clientContractVersion,
           status: status,
         }),
-        modules: result.data.modules,
+        modules: effectiveModules,
         catalogue: catalogue,
         availability: availability,
         uiComposition: this.selectUiComposition(catalogue, availability),
@@ -1017,6 +959,12 @@ module.exports = {
         );
       }
       endpoints[entry[0]] = candidates[0].endpoint;
+    });
+    Object.entries(policy.optionalModules || {}).forEach((entry) => {
+      let candidate = leases
+        .filter((item) => item.moduleName === entry[1])
+        .sort((left, right) => String(right.lastSeenAt || "").localeCompare(String(left.lastSeenAt || "")))[0];
+      if (candidate) endpoints[entry[0]] = candidate.endpoint;
     });
     return {
       code: "SUC_BOF_00014",
@@ -1079,6 +1027,7 @@ module.exports = {
     let now = Date.now();
     let entries = await this.getStore().values();
     let expired = 0;
+    let affectedProjects = new Set();
     await Promise.all(
       entries.map(async (entry) => {
         let instance = entry.value;
@@ -1088,6 +1037,7 @@ module.exports = {
             instance.expiresAt,
           );
           if (removed) {
+            if (instance.projectCode) affectedProjects.add(instance.projectCode);
             this._metrics.expirations++;
             expired++;
           }
@@ -1101,6 +1051,11 @@ module.exports = {
         moduleCount: expired,
       });
     let remaining = await this.getStore().values();
+    if (expired > 0 && SERVICE.DefaultFunctionalModuleCatalogueService &&
+      SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases) {
+      await SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases(
+        remaining.map(entry => entry.value), Array.from(affectedProjects), {});
+    }
     let availabilityRemoved = 0;
     let discoveryRemoved = 0;
     if (

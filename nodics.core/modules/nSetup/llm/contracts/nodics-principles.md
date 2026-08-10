@@ -175,6 +175,14 @@ the owning backend/customer documentation-content package. WCMS owns the CMS
 engine and default runtime content. Axis owns only the browser renderers that
 display CMS-delivered documentation and presentation contracts.
 
+Every concrete boundary that publishes system data owns one aggregate
+`data/manifest.json`. Init, core, sample, generated content-pack, and governed
+source contributions are independently versioned sections of that manifest.
+Manifests must remain inside the data boundary they describe; repository-root
+manifest collections and per-data-type manifest files are not Nodics-owned
+authoring patterns. Apply `data-manifest-contract.md` for integrity,
+compatibility, generation, and compliance rules.
+
 ## Module-Centric Runtime Principle
 
 Modules are the unit of capability ownership, lifecycle contribution,
@@ -373,6 +381,14 @@ project module can override the smallest necessary function without modifying
 out-of-the-box Nodics code.
 
 ## Configuration Ownership
+
+`config/properties.js` is a runtime-property contribution, not a business
+definition registry. It must not contain functions, navigation catalogues,
+BackOffice capability definitions, localization messages, workflow
+definitions, schemas, routes, or executable transformation logic. These belong
+to their concrete owning services, schemas, routers, pipelines, or governed
+data lifecycle. Runtime properties may select, enable, disable, limit, or tune
+those authorities without reproducing their definitions.
 
 Configurable values, policy defaults, tooling commands, discovery rules,
 provider defaults, thresholds, and governance gate data belong in module-owned

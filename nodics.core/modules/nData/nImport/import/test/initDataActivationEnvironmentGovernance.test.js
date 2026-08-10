@@ -100,7 +100,19 @@ function writeProperties(relativePath, properties) {
 
 protectedEnvironmentPropertyPaths.forEach(relativePath => writeProperties(relativePath, {}));
 fs.mkdirSync(path.join(fixtureRoot, 'customer.project/envs/local/data/init'), { recursive: true });
-fs.writeFileSync(path.join(fixtureRoot, 'customer.project/envs/local/data/init/manifest.json'), JSON.stringify({ releases: [] }, null, 4));
+fs.writeFileSync(path.join(fixtureRoot, 'customer.project/envs/local/data/manifest.json'), JSON.stringify({
+    contractVersion: 2,
+    module: 'local',
+    sections: {
+        init: {
+            kind: 'DATA_RELEASE',
+            dataType: 'init',
+            version: '1.0.0',
+            description: 'Explicitly governed local developer init data',
+            files: {}
+        }
+    }
+}, null, 4));
 
 function loadProfileBootstrapEmployees(activeConfig) {
     delete require.cache[profileEmployeeDataPath];
@@ -115,7 +127,7 @@ function loadProfileBootstrapEmployees(activeConfig) {
 
 const defaultReleasePolicy = importProperties.data.dataReleases;
 
-assert.deepStrictEqual(defaultReleasePolicy.allowedContractVersions, [1]);
+assert.deepStrictEqual(defaultReleasePolicy.allowedContractVersions, [1, 2]);
 assert.strictEqual(defaultReleasePolicy.types.init.enabled, true);
 assert.strictEqual(defaultReleasePolicy.types.init.operatorExecution, true);
 assert.strictEqual(defaultReleasePolicy.types.core.enabled, true);
@@ -127,7 +139,7 @@ assert.strictEqual(localProperties.data.dataReleases.types.sample.enabled, true)
 assert.strictEqual(localProperties.data.dataReleases.types.sample.operatorExecution, true);
 assert.strictEqual(localProperties.data.contentPacks.enabled, true);
 assert.strictEqual(
-    fs.existsSync(path.join(fixtureRoot, 'customer.project/envs/local/data/init/manifest.json')),
+    fs.existsSync(path.join(fixtureRoot, 'customer.project/envs/local/data/manifest.json')),
     true,
     'local customer environments may own developer init data explicitly'
 );
@@ -145,7 +157,7 @@ protectedEnvironmentPropertyPaths.forEach(relativePath => {
 
 protectedEnvironmentRoots.forEach(relativeRoot => {
     assert.strictEqual(
-        fs.existsSync(path.join(fixtureRoot, relativeRoot, 'data/init/manifest.json')),
+        fs.existsSync(path.join(fixtureRoot, relativeRoot, 'data/manifest.json')),
         false,
         relativeRoot + ' must not carry environment-owned init data unless explicitly governed'
     );

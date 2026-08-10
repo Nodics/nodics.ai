@@ -73,12 +73,31 @@ module.exports = {
     instanceService: function () { return SERVICE.DefaultProcessInstanceService; },
     /** @returns {Object} Generated task service. */
     taskService: function () { return SERVICE.DefaultProcessTaskService; },
+    /** @returns {Object} Generated recovery-incident service. */
+    incidentService: function () { return SERVICE.DefaultProcessIncidentService; },
     /** @returns {Object} Generated audit service. */
     auditService: function () { return SERVICE.DefaultProcessAuditEventService; },
     /** @returns {Object|undefined} Generated trigger service when the schema is available. */
     triggerService: function () { return SERVICE.DefaultProcessTriggerService; },
     /** @returns {Object|undefined} Process action adapter registry service. */
     actionAdapterRegistryService: function () { return SERVICE.DefaultProcessActionAdapterRegistryService; },
+
+    /**
+     * Resolves a bounded retry policy from the ACTION node and merged config.
+     *
+     * @param {Object} node ACTION node.
+     * @returns {Object} Retry policy.
+     */
+    retryPolicy: function (node) {
+        let configured = ((CONFIG.get('process') || {}).runtime || {}).retry || {};
+        let declared = node && node.retry || {};
+        let maximumAttempts = Number(declared.maximumAttempts || configured.maximumAttempts || 3);
+        let delayMs = Number(declared.delayMs || configured.delayMs || 0);
+        return {
+            maximumAttempts: Math.max(1, Math.min(Number.isFinite(maximumAttempts) ? Math.floor(maximumAttempts) : 3, 10)),
+            delayMs: Math.max(0, Math.min(Number.isFinite(delayMs) ? Math.floor(delayMs) : 0, 86400000))
+        };
+    },
 
     /**
      * Lists lifecycle states allowed for Process-owned trigger metadata.
@@ -392,6 +411,56 @@ module.exports = {
     },
 
     /**
+     * Fails an instance and creates a Process-owned recovery incident after an
+     * ACTION adapter failure. Business compensation remains domain-owned.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {Object} instance Process instance.
+     * @param {Object} version Published process version.
+     * @param {Object} node Failed ACTION node.
+     * @param {Error} error Adapter failure.
+     * @param {Object} body Runtime request body.
+     * @returns {Promise<Object>} Created incident.
+     */
+    openIncident: async function (request, instance, version, node, error, body) {
+        let policy = this.retryPolicy(node);
+        let failedAt = new Date();
+        let incident = {
+            code: this.runtimeCode(instance.code + '-incident'),
+            active: true,
+            name: 'Recovery incident for ' + instance.code,
+            instanceCode: instance.code,
+            definitionCode: instance.definitionCode,
+            version: instance.version,
+            nodeCode: node.code,
+            status: policy.maximumAttempts > 1 ? 'OPEN' : 'DEAD_LETTER',
+            errorCode: error.code || 'ERR_PROCESS_00019',
+            attempt: 1,
+            maximumAttempts: policy.maximumAttempts,
+            nextRetryAt: policy.maximumAttempts > 1 ? new Date(failedAt.getTime() + policy.delayMs) : undefined,
+            adapter: node.action || {},
+            compensationAdapter: node.compensation || {},
+            correlationId: body && body.correlationId,
+            evidence: { failureStage: 'ACTION_EXECUTION' },
+            lastErrorAt: failedAt
+        };
+        let saved = await this.incidentService().save(this.serviceRequest(request, { model: incident }));
+        incident = saved.result || saved;
+        await this.instanceService().update(this.serviceRequest(request, {
+            query: { code: instance.code },
+            model: { $set: { status: 'FAILED', currentNode: node.code, incidentCode: incident.code, failureCode: incident.errorCode, compensationStatus: node.compensation ? 'PENDING' : 'NONE' } }
+        }));
+        await this.audit(request, {
+            definitionCode: instance.definitionCode,
+            instanceCode: instance.code,
+            eventType: 'process.incident.opened',
+            outcome: 'failure',
+            metadata: { incidentCode: incident.code, nodeCode: node.code, errorCode: incident.errorCode, maximumAttempts: incident.maximumAttempts }
+        });
+        return incident;
+    },
+
+    /**
      * Moves an instance to the next backend-supported runtime node.
      *
      * @param {Object} request Nodics request context.
@@ -438,7 +507,12 @@ module.exports = {
             return this.enterNode(request, instance, version, this.findNode(version.graph || {}, transition.target), body);
         }
         if (node.type === 'ACTION') {
-            await this.executeActionNode(request, instance, version, node, body || {});
+            try {
+                await this.executeActionNode(request, instance, version, node, body || {});
+            } catch (error) {
+                await this.openIncident(request, instance, version, node, error, body || {});
+                throw error;
+            }
             return this.enterNode(request, instance, version, this.nextNode(version.graph || {}, node.code, body), body);
         }
         if (node.type === 'TIMER') {
@@ -526,6 +600,80 @@ module.exports = {
         let instance = response && response.result && response.result[0];
         if (!instance) throw new CLASSES.NodicsError('ERR_PROCESS_00007', 'Process instance was not found');
         return instance;
+    },
+
+    /** Loads one Process-owned recovery incident. */
+    requireIncident: async function (request, incidentCode) {
+        let response = await this.incidentService().get(this.serviceRequest(request, {
+            query: { code: this.assertCode(incidentCode) }, searchOptions: { limit: 1 }
+        }));
+        let incident = response && response.result && response.result[0];
+        if (!incident) throw new CLASSES.NodicsError('ERR_PROCESS_00022', 'Process recovery incident was not found');
+        return incident;
+    },
+
+    /** Retries the failed ACTION of one Process instance under bounded policy. */
+    retryInstance: async function (request) {
+        let body = this.bodyOf(request);
+        let instance = await this.requireInstance(request, request.instanceCode || body.instanceCode);
+        if (instance.status !== 'FAILED' || !instance.incidentCode) throw new CLASSES.NodicsError('ERR_PROCESS_00023', 'Process instance is not retryable');
+        let incident = await this.requireIncident(request, instance.incidentCode);
+        if (!['OPEN', 'DEAD_LETTER'].includes(incident.status) || incident.attempt >= incident.maximumAttempts) {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00023', 'Process incident retry policy is exhausted');
+        }
+        if (body.expectedAttempt !== undefined && Number(body.expectedAttempt) !== incident.attempt) {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00024', 'Process incident changed; refresh before retrying');
+        }
+        let version = await this.requireVersion(request, instance.definitionCode, instance.version);
+        let node = this.findNode(version.graph || {}, incident.nodeCode);
+        if (!node || node.type !== 'ACTION') throw new CLASSES.NodicsError('ERR_PROCESS_00023', 'Process incident ACTION node is unavailable');
+        let nextAttempt = incident.attempt + 1;
+        let claimed = await this.incidentService().update(this.serviceRequest(request, { query: { code: incident.code, attempt: incident.attempt, status: incident.status }, model: { $set: { status: 'RETRYING', attempt: nextAttempt } } }));
+        let claimedCount = claimed && claimed.result && (claimed.result.nModified !== undefined ? claimed.result.nModified : claimed.result.n);
+        if (claimedCount === 0) throw new CLASSES.NodicsError('ERR_PROCESS_00024', 'Process incident changed; refresh before retrying');
+        await this.instanceService().update(this.serviceRequest(request, { query: { code: instance.code, status: 'FAILED' }, model: { $set: { status: 'RUNNING', retryCount: nextAttempt - 1 } } }));
+        try {
+            await this.executeActionNode(request, instance, version, node, body);
+            let resolvedAt = new Date();
+            await this.incidentService().update(this.serviceRequest(request, { query: { code: incident.code, attempt: nextAttempt }, model: { $set: { status: 'RESOLVED', resolvedAt: resolvedAt, nextRetryAt: undefined } } }));
+            await this.audit(request, { definitionCode: instance.definitionCode, instanceCode: instance.code, eventType: 'process.incident.resolved', metadata: { incidentCode: incident.code, attempt: nextAttempt } });
+            let entered = await this.enterNode(request, Object.assign({}, instance, { status: 'RUNNING', retryCount: nextAttempt - 1 }), version, this.nextNode(version.graph || {}, node.code, body), body);
+            return { code: 'SUC_PROCESS_00012', data: Object.assign({ incident: Object.assign({}, incident, { status: 'RESOLVED', attempt: nextAttempt, resolvedAt: resolvedAt }) }, entered) };
+        } catch (error) {
+            let policy = this.retryPolicy(node);
+            let exhausted = nextAttempt >= incident.maximumAttempts;
+            let lastErrorAt = new Date();
+            await this.incidentService().update(this.serviceRequest(request, { query: { code: incident.code, attempt: nextAttempt }, model: { $set: { status: exhausted ? 'DEAD_LETTER' : 'OPEN', errorCode: error.code || 'ERR_PROCESS_00019', lastErrorAt: lastErrorAt, nextRetryAt: exhausted ? undefined : new Date(lastErrorAt.getTime() + policy.delayMs) } } }));
+            await this.instanceService().update(this.serviceRequest(request, { query: { code: instance.code }, model: { $set: { status: 'FAILED', failureCode: error.code || 'ERR_PROCESS_00019', retryCount: nextAttempt - 1 } } }));
+            await this.audit(request, { definitionCode: instance.definitionCode, instanceCode: instance.code, eventType: exhausted ? 'process.incident.deadLettered' : 'process.incident.retryFailed', outcome: 'failure', metadata: { incidentCode: incident.code, attempt: nextAttempt, errorCode: error.code || 'ERR_PROCESS_00019' } });
+            throw error;
+        }
+    },
+
+    /** Executes a declarative domain-owned compensation adapter. */
+    compensateInstance: async function (request) {
+        let body = this.bodyOf(request);
+        let instance = await this.requireInstance(request, request.instanceCode || body.instanceCode);
+        if (instance.status !== 'FAILED' || !instance.incidentCode) throw new CLASSES.NodicsError('ERR_PROCESS_00025', 'Process instance is not compensatable');
+        let incident = await this.requireIncident(request, instance.incidentCode);
+        let version = await this.requireVersion(request, instance.definitionCode, instance.version);
+        let node = this.findNode(version.graph || {}, incident.nodeCode);
+        if (!node || !node.compensation) throw new CLASSES.NodicsError('ERR_PROCESS_00025', 'Process node has no declarative compensation adapter');
+        await this.incidentService().update(this.serviceRequest(request, { query: { code: incident.code }, model: { $set: { status: 'COMPENSATING' } } }));
+        await this.instanceService().update(this.serviceRequest(request, { query: { code: instance.code }, model: { $set: { compensationStatus: 'IN_PROGRESS' } } }));
+        try {
+            let result = await this.actionAdapterRegistryService().execute(request, { instance: instance, version: version, node: Object.assign({}, node, { action: node.compensation }), context: instance.context || {}, payload: body.payload || {} });
+            let compensatedAt = new Date();
+            await this.incidentService().update(this.serviceRequest(request, { query: { code: incident.code }, model: { $set: { status: 'COMPENSATED', compensatedAt: compensatedAt } } }));
+            await this.instanceService().update(this.serviceRequest(request, { query: { code: instance.code }, model: { $set: { compensationStatus: 'COMPLETED' } } }));
+            await this.audit(request, { definitionCode: instance.definitionCode, instanceCode: instance.code, eventType: 'process.incident.compensated', metadata: { incidentCode: incident.code, adapter: node.compensation.moduleName + '.' + node.compensation.operation } });
+            return { code: 'SUC_PROCESS_00013', data: { instanceCode: instance.code, incidentCode: incident.code, compensationStatus: 'COMPLETED', result: result } };
+        } catch (error) {
+            await this.incidentService().update(this.serviceRequest(request, { query: { code: incident.code }, model: { $set: { status: 'DEAD_LETTER', errorCode: error.code || 'ERR_PROCESS_00019' } } }));
+            await this.instanceService().update(this.serviceRequest(request, { query: { code: instance.code }, model: { $set: { compensationStatus: 'FAILED' } } }));
+            await this.audit(request, { definitionCode: instance.definitionCode, instanceCode: instance.code, eventType: 'process.incident.compensationFailed', outcome: 'failure', metadata: { incidentCode: incident.code, errorCode: error.code || 'ERR_PROCESS_00019' } });
+            throw error;
+        }
     },
 
     /**

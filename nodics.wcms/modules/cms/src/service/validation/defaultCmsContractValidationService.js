@@ -32,6 +32,29 @@ module.exports = {
         return Promise.resolve(true);
     },
 
+    /** Validates declarative localized-property markers on a CMS type code. */
+    validateTypeCode: function (request) {
+        if (SERVICE.DefaultCmsContentLocalizationService) {
+            SERVICE.DefaultCmsContentLocalizationService.validateTypeContract(request.model || {});
+        }
+        return Promise.resolve(true);
+    },
+
+    /** Validates one tenant-scoped component locale variant against its component type declaration. */
+    validateComponentLocalization: async function (request) {
+        let model = request.model || {};
+        let components = this.items(await SERVICE.DefaultCmsComponentService.get({ tenant: request.tenant, authData: request.authData,
+            query: { code: model.componentCode, active: true }, searchOptions: { limit: 2 } }));
+        if (components.length !== 1) throw this.error('ERR_CMS_00109', 'CMS localization component is unavailable');
+        let typeCode = components[0].typeCode && components[0].typeCode.code || components[0].typeCode;
+        let types = this.items(await SERVICE.DefaultCmsTypeCodeService.get({ tenant: request.tenant, authData: request.authData,
+            query: { code: typeCode, kind: 'COMPONENT', active: true }, searchOptions: { limit: 2 } }));
+        if (types.length !== 1) throw this.error('ERR_CMS_00109', 'CMS localization type contract is unavailable');
+        SERVICE.DefaultCmsContentLocalizationService.validateTypeContract(types[0]);
+        SERVICE.DefaultCmsContentLocalizationService.validateVariant(model, types[0], components[0]);
+        return true;
+    },
+
     /** Normalizes and validates route and redirect paths. */
     validateRoute: function (request) {
         let model = request.model || {};

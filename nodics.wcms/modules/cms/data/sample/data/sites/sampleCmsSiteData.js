@@ -40,5 +40,11 @@ module.exports = {
         name: 'sampleDeCmsSite',
         catalog: 'deContentCatalog',
         active: true
+    },
+    record4: {
+        code: 'sampleLocalizedCmsSite',
+        name: 'Sample Localized CMS Site',
+        catalog: 'defaultContentCatalog',
+        active: true
     }
 };

@@ -18,8 +18,8 @@
 const assert = require("assert");
 const service = require("../src/service/contract/defaultBackofficeContractService");
 
-const processCapability = require("../../../../nodics.process/config/properties")
-  .backofficeCapabilities.process;
+const processCapability = require("../../../../nodics.process/modules/workflow/modules/flowCore/src/service/defaultFlowCoreBackofficeCapabilityService")
+  .getCapability();
 
 assert(
   service.validateBackofficeMetadata(processCapability),
@@ -49,7 +49,8 @@ for (const entry of processCapability.navigation) {
     `${entry.id} must stay under Process and Automation group`,
   );
   assert(
-    entry.help?.documentationRoute?.startsWith("/docs/capabilities/process-workflow"),
+    entry.help?.documentationRoute?.startsWith("/docs/capabilities/process-workflow") ||
+      entry.help?.documentationRoute?.startsWith("/docs/framework/process/"),
     `${entry.id} must point to process/workflow documentation`,
   );
   assert.strictEqual(

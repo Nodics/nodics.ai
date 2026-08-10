@@ -1,0 +1,34 @@
+{
+  "contractVersion": 2,
+  "module": "axis",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "core",
+      "pack": "nodics.platform.axis",
+      "version": "0.3.31",
+      "sourceMode": "canonical-structured-source",
+      "sourceAuthority": "core/source/documentation",
+      "sites": [
+        "axisDocumentationSite"
+      ],
+      "accessMode": "AUTHENTICATED",
+      "pages": 17,
+      "components": 18,
+      "routes": 17,
+      "migrationRegister": "core/source/documentation/migration-register.json",
+      "releaseChecksum": "c4c0af852b850678007dbbec64b567fff205ae97b2ccfb30d8bc8df44195bed2",
+      "generatedHashes": {
+        "core/data/documentation/axisDocumentationComponentData.js": "14388f8aed8ae40ef3b0d573181d2ac55f5d0194aa1488f6c3f90827ff8d2606",
+        "core/data/documentation/axisDocumentationPageData.js": "aae16acdb0be18fda84ea7208be5c4429780bd8d73408ecaba589076f6a4cf0b",
+        "core/data/documentation/axisDocumentationRendererData.js": "070b7190f78ca9e772023e1ce89c9451b881252bc13185e6d08b8278b45854f5",
+        "core/data/documentation/axisDocumentationRouteData.js": "f3a78fba98d594e94e2ca1163897aa67516ee20855372ac750a713bad1440d47",
+        "core/data/documentation/axisDocumentationSiteData.js": "91b8c928ef77bf1708ee7732fb40034607c2a49970ea8b012647e3f2ba880120",
+        "core/data/documentation/axisDocumentationSlotData.js": "f53ac3815485ce7299fea900cf462fb0d539098ab1790462580d443bc7f2f46f",
+        "core/data/documentation/axisDocumentationTemplateData.js": "c784486b09b4ed167fc9e1004b81dcad37e3ddd4e0afdfc94699736d11c91fb7",
+        "core/data/documentation/axisDocumentationTypeCodeData.js": "7ca9c4183acc1f291b6b21301e461a75dd2eef2a09d1e195c9b1a97c1d250a3d",
+        "core/headers/axisDocumentationContentPackHeader.js": "7033f9df950b06a78692db42b74dc635fc528799c8d391b22fbdf60954678937"
+      }
+    }
+  }
+}

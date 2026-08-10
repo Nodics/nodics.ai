@@ -83,6 +83,19 @@ module.exports = {
             let targets = Array.from(new Set(associations.map(item => item.target && item.target.code || item.target).filter(Boolean)));
             let components = targets.length ? await this.loadLatest('DefaultCmsComponentService', request, { code: { $in: targets } }) : [];
             components.forEach(model => dependencies.push(this.identity('cmsComponent', model)));
+            let typeCodes = Array.from(new Set(components.map(model => model.typeCode && model.typeCode.code || model.typeCode).filter(Boolean)));
+            if (typeCodes.length) {
+                let types = await this.loadLatest('DefaultCmsTypeCodeService', request, { code: { $in: typeCodes } });
+                types.forEach(model => dependencies.push(this.identity('cmsTypeCode', model)));
+            }
+            if (targets.length && SERVICE.DefaultCmsComponentLocalizationService) {
+                let localizations = await this.loadLatest('DefaultCmsComponentLocalizationService', request, { componentCode: { $in: targets } });
+                localizations.forEach(model => dependencies.push(this.identity('cmsComponentLocalization', model)));
+            }
+            if (targets.length && SERVICE.DefaultCmsComponentMediaService) {
+                let media = await this.loadLatest('DefaultCmsComponentMediaService', request, { componentCode: { $in: targets } });
+                media.forEach(model => dependencies.push(this.identity('cmsComponentMedia', model)));
+            }
             frontier = components.map(model => model.code);
             if (dependencies.length > max) throw this.error('CMS_PUBLICATION_DEPENDENCY_EXCEEDED', 'CMS publication graph exceeds configured size');
         }
@@ -105,12 +118,17 @@ module.exports = {
         for (let identity of dependencies) {
             let serviceNames = { cmsPageRoute: 'DefaultCmsPageRouteService', cmsPage: 'DefaultCmsPageService',
                 cmsComponentDetail: 'DefaultCmsComponentDetailService', cmsComponent: 'DefaultCmsComponentService',
+                cmsComponentLocalization: 'DefaultCmsComponentLocalizationService', cmsComponentMedia: 'DefaultCmsComponentMediaService',
+                cmsTypeCode: 'DefaultCmsTypeCodeService',
                 cmsPageTemplate: 'DefaultCmsPageTemplateService', cmsSlotDefinition: 'DefaultCmsSlotDefinitionService' };
             let response = await this.service(serviceNames[identity.schema]).get({ tenant: request.tenant, authData: request.authData,
                 query: { code: identity.code, versionId: Number(identity.version), active: true }, searchOptions: { limit: 1 } });
             let model = this.items(response)[0];
             if (!model) return { valid: false, reason: 'DEPENDENCY_VERSION_MISSING' };
             if (model.renderer) await SERVICE.DefaultCmsContractValidationService.validateRenderer({ model: { renderer: model.renderer } });
+            if (identity.schema === 'cmsComponentLocalization' && model.status !== 'READY') {
+                return { valid: false, reason: 'LOCALIZATION_NOT_READY' };
+            }
         }
         return { valid: Boolean(rootVersion.code && rootVersion.page && rootVersion.site && rootVersion.path),
             rootVersion: rootVersion.versionId, dependencyCount: keys.length };

@@ -30,6 +30,23 @@ function toHttpStatus(value) {
 }
 
 module.exports = {
+    /** Projects only definition-declared scalar localization parameters permitted for the public audience. */
+    localizationMetadata: function (code, metadata) {
+        let policy = CONFIG.get('responseHandler') && CONFIG.get('responseHandler').publicError || {};
+        if (policy.includeLocalizationMetadata === false || !code) return undefined;
+        let status;
+        try { status = SERVICE.DefaultStatusService.get(code); } catch (ignored) { return undefined; }
+        let permitted = policy.permittedLocalizationExposures || ['PUBLIC'];
+        if (!status.messageKey || !permitted.includes(status.exposure)) return undefined;
+        let supplied = metadata && metadata.messageParameters || {};
+        let parameters = {};
+        (status.parameters || []).forEach(name => {
+            let value = supplied[name];
+            if (['string', 'number', 'boolean'].includes(typeof value)) parameters[name] = value;
+        });
+        return { messageKey: status.messageKey, messageParameters: parameters,
+            messageExposure: status.exposure };
+    },
     /**
      * Creates the bounded public error envelope. Pipeline context, metadata,
      * causal internals, and stack traces remain server-side diagnostics.
@@ -52,17 +69,16 @@ module.exports = {
             name: error.name,
             message: message
         };
+        Object.assign(result, this.localizationMetadata(error.code, error.metadata));
         if (error.traceId) result.traceId = error.traceId;
         if (policy.includeValidationErrors !== false &&
             Array.isArray(error.errors) && error.errors.length > 0) {
             let maximum = Number.isInteger(policy.maximumValidationErrors) ?
                 Math.max(1, policy.maximumValidationErrors) : 25;
-            result.errors = error.errors.slice(0, maximum).map(item => ({
-                responseCode: item.responseCode,
-                code: item.code,
-                name: item.name,
+            result.errors = error.errors.slice(0, maximum).map(item => Object.assign({
+                responseCode: item.responseCode, code: item.code, name: item.name,
                 message: item.message
-            }));
+            }, this.localizationMetadata(item.code, item.metadata)));
         }
         return result;
     },
@@ -114,6 +130,7 @@ module.exports = {
             success.code = success.code || 'SUC_SYS_00000';
             success.responseCode = success.responseCode || SERVICE.DefaultStatusService.get(success.code).code;
             success.message = success.message || SERVICE.DefaultStatusService.get(success.code).message;
+            Object.assign(success, this.localizationMetadata(success.code, success.metadata));
             response.status(toHttpStatus(success.responseCode));
             response.json(success);
         } catch (error) {

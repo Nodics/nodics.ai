@@ -10,5 +10,5 @@
  */
 'use strict';
 const assert = require('assert'); const pkg = require('../package.json');
-assert.strictEqual(pkg.name, 'nodics.communication'); assert.strictEqual(pkg.index, '89.99'); assert.deepStrictEqual(pkg.requiredModules, ['commsSchema', 'commsCore', 'commsVerification', 'localCommsProvider', 'commsApi']); assert(!pkg.requiredModules.includes('engagementComms'));
+assert.strictEqual(pkg.name, 'nodics.communication'); assert.strictEqual(pkg.index, '89.99'); assert.deepStrictEqual(pkg.requiredModules, ['commsSchema', 'commsCore', 'commsVerification', 'localCommsProvider', 'smtpCommsProvider', 'smsCommsProvider', 'commsApi']); assert(!pkg.requiredModules.includes('engagementComms'));
 console.log('Communication module composition contract validated');

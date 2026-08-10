@@ -10,6 +10,11 @@ modules, including module communication, tenant/enterprise handling,
 authentication-provider cache access, authorization helpers, and status/log
 services.
 
+It also owns the local runtime registration hook for optional concrete-module
+BackOffice capability providers. The registration agent serializes their safe
+projections into authenticated module leases; it does not activate modules or
+execute their business operations.
+
 Authentication token cache helpers must preserve tenant scope and avoid leaking
 credential material. Invalidation callbacks may emit structured observability
 and audit context such as reason code, tenant, enterprise, principal, source,

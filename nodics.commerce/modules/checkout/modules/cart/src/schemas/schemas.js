@@ -44,3 +44,4 @@ module.exports = { cart: {
         retryable: { type: 'bool', required: true }, occurredAt: { type: 'date', required: true }
     }) })
 } };
+module.exports.cart.cart.backoffice = { operations: ['search', 'read'], description: 'Customer cart evidence; mutations require Cart-owned operations.' };

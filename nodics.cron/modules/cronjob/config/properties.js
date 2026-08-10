@@ -17,22 +17,6 @@
  * @override Project, environment, server, or node layers may override cronjob scheduling behavior without changing framework defaults.
  */
 module.exports = {
-    backofficeCapabilities: {
-        cronjob: {
-            enabled: true, capabilityId: 'job-scheduling', displayName: 'Cron Jobs', category: 'operations', icon: 'schedule',
-            contractVersion: 1, minimumClientContractVersion: 1, roles: ['FUNCTIONAL_CAPABILITY_PROVIDER'],
-            discovery: { openApiPath: '/nodics/system/v0/contract/openapi/internal', contractVersion: 1 },
-            requiredPermissions: ['cronjob.backoffice.view'],
-            navigation: [{ id: 'cronjob', label: 'Cron jobs', route: '/cron', icon: 'cronjob', order: 530,
-                group: { id: 'business-process-automation', label: 'Business Process & Automation', order: 500 },
-                perspectives: ['operations'], contexts: ['environment', 'tenant'],
-                featureState: 'ACTIVE', requiredPermissions: ['cronjob.backoffice.view'] },
-            { id: 'job-triggers', label: 'Scheduled triggers', route: '/cron/triggers', icon: 'cronjob',
-                order: 540, group: { id: 'business-process-automation', label: 'Business Process & Automation', order: 500 },
-                perspectives: ['operations'], contexts: ['environment', 'tenant'],
-                featureState: 'PREVIEW', requiredPermissions: ['cronjob.backoffice.view'] }]
-        }
-    },
 
     nodePingableModules: {
         cronjob: {

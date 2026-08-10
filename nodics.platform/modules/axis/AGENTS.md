@@ -32,7 +32,7 @@
   `nodics.axis`.
 - The Axis documentation content pack is under `data/core/source/documentation`,
   generated into `data/core`, and described by
-  `manifest/docs-content-pack.json`.
+  documentation section in `data/manifest.json`.
 - CMS data may target WCMS schemas, but WCMS remains the CMS schema,
   persistence, delivery, and runtime authority.
 - Use nData/nImport governed import flow; do not add an Axis-specific loader.

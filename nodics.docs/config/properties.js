@@ -26,7 +26,8 @@ module.exports = {
             runtimeModule: false,
             sourceRoot: 'content',
             generatedRoot: 'data/core',
-            manifestPath: 'manifest/generated-content-pack.json'
+            manifestPath: 'data/manifest.json',
+            manifestSection: 'documentation'
         }
     }
 };

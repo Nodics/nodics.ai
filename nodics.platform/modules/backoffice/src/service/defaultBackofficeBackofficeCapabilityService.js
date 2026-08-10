@@ -1,0 +1,676 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+/** @module backoffice/service/DefaultBackofficeBackofficeCapabilityService @description Publishes the concrete backoffice-owned BackOffice capability projection. @layer service @owner backoffice */
+const capability = {
+    "enabled": true,
+    "capabilityId": "backoffice-registry",
+    "displayName": "BackOffice Registry",
+    "category": "platform",
+    "icon": "registry",
+    "contractVersion": 1,
+    "minimumClientContractVersion": 1,
+    "roles": [
+        "CONTROL_PLANE_PROVIDER"
+    ],
+    "discovery": {
+        "openApiPath": "/nodics/system/v0/contract/openapi/internal",
+        "contractVersion": 1
+    },
+    "requiredPermissions": [
+        "backoffice.registry.view"
+    ],
+    "documentation": [
+        {
+            "id": "framework",
+            "label": "Framework",
+            "type": "CMS",
+            "route": "/docs/framework",
+            "order": 100,
+            "connectionModule": "cms",
+            "site": "nodicsDocumentationSite",
+            "catalog": "documentationContentCatalog",
+            "defaultPage": "/docs/framework",
+            "packCode": "nodicsDocumentation",
+            "dashboard": {
+                "kind": "Framework guide",
+                "icon": "content",
+                "summary": "Core Nodics architecture, module layering, configuration-first extension, lifecycle, and customization guidance.",
+                "audiences": [
+                    "architect",
+                    "developer",
+                    "operator",
+                    "ai-tool"
+                ],
+                "coverage": {
+                    "score": 92,
+                    "status": "STRONG",
+                    "signals": [
+                        "Architecture model",
+                        "Module lifecycle",
+                        "Customization guidance",
+                        "Docs module ownership",
+                        "AI-tool standards"
+                    ],
+                    "gaps": [
+                        "More domain module recipes",
+                        "More customer-extension examples"
+                    ]
+                }
+            }
+        },
+        {
+            "id": "swaggers",
+            "label": "Swaggers",
+            "type": "OPENAPI",
+            "route": "/docs/swaggers",
+            "order": 200,
+            "connectionModule": "system",
+            "openApiPath": "/nodics/system/v0/contract/openapi",
+            "swaggerPath": "/nodics/system/v0/contract/swagger",
+            "dashboard": {
+                "kind": "API contracts",
+                "icon": "reference",
+                "summary": "Generated OpenAPI and Swagger contracts for authorized backend modules and runtime APIs.",
+                "audiences": [
+                    "developer",
+                    "operator",
+                    "integration"
+                ],
+                "coverage": {
+                    "score": 100,
+                    "status": "REFERENCE",
+                    "signals": [
+                        "Generated from backend contracts",
+                        "Module API discovery",
+                        "Swagger UI access"
+                    ],
+                    "gaps": [
+                        "Narrative examples belong in framework capability docs"
+                    ]
+                }
+            }
+        }
+    ],
+    "navigation": [
+        {
+            "id": "my-work",
+            "label": "My Work",
+            "route": "/workspace/my-work",
+            "icon": "workflow",
+            "order": 100,
+            "group": {
+                "id": "workspace",
+                "label": "Workspace",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "assigned-to-me",
+            "parentId": "my-work",
+            "label": "Assigned to Me",
+            "route": "/workspace/my-work/assigned",
+            "icon": "workflow",
+            "order": 110,
+            "group": {
+                "id": "workspace",
+                "label": "Workspace",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "approvals",
+            "parentId": "my-work",
+            "label": "Approvals",
+            "route": "/workspace/my-work/approvals",
+            "icon": "workflow",
+            "order": 120,
+            "group": {
+                "id": "workspace",
+                "label": "Workspace",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "returned-work",
+            "parentId": "my-work",
+            "label": "Returned Work",
+            "route": "/workspace/my-work/returned",
+            "icon": "workflow",
+            "order": 130,
+            "group": {
+                "id": "workspace",
+                "label": "Workspace",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "started-workflows",
+            "parentId": "my-work",
+            "label": "Workflows I Started",
+            "route": "/workspace/my-work/started",
+            "icon": "workflow",
+            "order": 140,
+            "group": {
+                "id": "workspace",
+                "label": "Workspace",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "completed-work",
+            "parentId": "my-work",
+            "label": "Completed Work",
+            "route": "/workspace/my-work/completed",
+            "icon": "workflow",
+            "order": 150,
+            "group": {
+                "id": "workspace",
+                "label": "Workspace",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "documentation",
+            "label": "Nodics Documentation",
+            "route": "/docs",
+            "icon": "content",
+            "order": 100,
+            "group": {
+                "id": "documentation",
+                "label": "Documentation",
+                "order": 650
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "ACTIVE"
+        },
+        {
+            "id": "documentation-framework",
+            "parentId": "documentation",
+            "label": "Framework",
+            "route": "/docs/framework",
+            "icon": "content",
+            "order": 110,
+            "group": {
+                "id": "documentation",
+                "label": "Documentation",
+                "order": 650
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "ACTIVE"
+        },
+        {
+            "id": "documentation-swaggers",
+            "parentId": "documentation",
+            "label": "Swaggers",
+            "route": "/docs/swaggers",
+            "icon": "reference",
+            "order": 120,
+            "group": {
+                "id": "documentation",
+                "label": "Documentation",
+                "order": 650
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "ACTIVE"
+        },
+        {
+            "id": "schema-workbench",
+            "label": "Schema Workbench",
+            "route": "/schema-workbench",
+            "icon": "schema",
+            "order": 170,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 150
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "help": {
+                "summary": "Discover authorized backend schemas, query records, and use allowed operations without making Axis a schema or API authority.",
+                "documentationRoute": "/docs/solutions/backoffice/schema-workbench",
+                "documentationFragment": "what-this-screen-does"
+            },
+            "featureState": "ACTIVE",
+            "requiredPermissions": [
+                "system.schema.workbench.view"
+            ]
+        },
+        {
+            "id": "system-integrations",
+            "label": "Dashboard",
+            "route": "/system-integrations",
+            "icon": "operations",
+            "order": 90,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 150
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "help": {
+                "summary": "Review system capabilities, runtime registry status, integration workspaces, and governed operational entry points from one dashboard.",
+                "documentationRoute": "/docs/reference/backoffice",
+                "documentationFragment": "system-integrations"
+            },
+            "featureState": "ACTIVE",
+            "requiredPermissions": [
+                "backoffice.registry.view"
+            ]
+        },
+        {
+            "id": "registry",
+            "label": "Module Registry",
+            "route": "/registry",
+            "icon": "registry",
+            "order": 100,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 150
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "help": {
+                "summary": "Review registered BackOffice capabilities and module catalogue data contributed by owning modules.",
+                "documentationRoute": "/docs/reference/backoffice",
+                "documentationFragment": "capability-discovery"
+            },
+            "featureState": "ACTIVE",
+            "requiredPermissions": [
+                "backoffice.registry.view"
+            ]
+        },
+        {
+            "id": "module-health",
+            "label": "Module Health",
+            "route": "/operations/module-health",
+            "icon": "health",
+            "order": 110,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 150
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "help": {
+                "summary": "Inspect module registrations, availability, readiness, and refresh behavior from the BackOffice registry without replacing module-owned health authority.",
+                "documentationRoute": "/docs/reference/backoffice",
+                "documentationFragment": "module-health-operations"
+            },
+            "featureState": "ACTIVE",
+            "requiredPermissions": [
+                "backoffice.registry.admin.view"
+            ]
+        },
+        {
+            "id": "imports-exports",
+            "label": "Imports and Exports",
+            "route": "/operations/imports-exports",
+            "icon": "import",
+            "order": 120,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 150
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "help": {
+                "summary": "Review governed import and export flows, source files, run history, validation, and outbound data contracts owned by nImport and nExport.",
+                "documentationRoute": "/docs/capabilities/data-exchange",
+                "documentationFragment": "import-and-export"
+            },
+            "featureState": "ACTIVE",
+            "requiredPermissions": [
+                "import.core.run"
+            ]
+        },
+        {
+            "id": "integrations",
+            "label": "Integrations",
+            "route": "/operations/integrations",
+            "icon": "module",
+            "order": 130,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 150
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "events",
+            "label": "Events",
+            "route": "/operations/events",
+            "icon": "module",
+            "order": 140,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 150
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "audit-trail",
+            "label": "Audit Trail",
+            "route": "/operations/audit-trail",
+            "icon": "module",
+            "order": 150,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 150
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "operational-failures",
+            "label": "Operational Failures",
+            "route": "/operations/operational-failures",
+            "icon": "module",
+            "order": 160,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 150
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "axis-configuration",
+            "label": "Axis Configuration",
+            "route": "/administration/axis-configuration",
+            "icon": "settings",
+            "order": 180,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 150
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "module-configuration",
+            "label": "Module Configuration",
+            "route": "/administration/module-configuration",
+            "icon": "settings",
+            "order": 190,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 150
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "localization",
+            "label": "Localization",
+            "route": "/administration/localization",
+            "icon": "settings",
+            "order": 200,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 150
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "units",
+            "label": "Units",
+            "route": "/administration/units",
+            "icon": "settings",
+            "order": 210,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 150
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "security-policies",
+            "label": "Security Policies",
+            "route": "/administration/security-policies",
+            "icon": "settings",
+            "order": 220,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 150
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "themes-branding",
+            "label": "Themes and Branding",
+            "route": "/administration/themes-branding",
+            "icon": "settings",
+            "order": 230,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 150
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "system-information",
+            "label": "System Information",
+            "route": "/administration/system-information",
+            "icon": "settings",
+            "order": 240,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 150
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "featureState": "DISABLED"
+        }
+    ]
+};
+
+module.exports = {
+    /** Registers this module BackOffice capability provider. */
+    init: function () {
+        SERVICE.DefaultModuleRegistrationAgentService.registerBackofficeCapabilityProvider('backoffice', this);
+        return Promise.resolve(true);
+    },
+    /** Completes provider lifecycle initialization. */
+    postInit: function () { return Promise.resolve(true); },
+    /** Returns this module owned BackOffice capability contract. */
+    getCapability: function () { return JSON.parse(JSON.stringify(capability)); }
+};

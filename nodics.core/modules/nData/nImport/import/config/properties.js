@@ -39,7 +39,7 @@ module.exports = {
             }
         },
         dataReleases: {
-            allowedContractVersions: [1],
+            allowedContractVersions: [1, 2],
             maximumFilesPerRelease: 1024,
             maximumModulesPerRun: 256,
             allowDowngrade: false,
@@ -60,7 +60,7 @@ module.exports = {
         },
         contentPacks: {
             enabled: false,
-            allowedContractVersions: [1],
+            allowedContractVersions: [1, 2],
             cleanupStaging: true,
             stagingDirectory: 'import/content-packs',
             packs: {
@@ -71,7 +71,8 @@ module.exports = {
                         type: 'LOCAL_SIBLING',
                         repositoryName: 'nodics.docs',
                         contentPath: 'data/core',
-                        manifestPath: 'manifest/generated-content-pack.json'
+                        manifestPath: 'data/manifest.json',
+                        manifestSection: 'documentation'
                     },
                     updatePolicy: {
                         allowDowngrade: false,
@@ -93,7 +94,8 @@ module.exports = {
                         type: 'LOCAL_SIBLING',
                         repositoryName: 'nodics.platform',
                         contentPath: 'modules/axis/data/core',
-                        manifestPath: 'modules/axis/manifest/docs-content-pack.json'
+                        manifestPath: 'modules/axis/data/manifest.json',
+                        manifestSection: 'documentation'
                     },
                     updatePolicy: {
                         allowDowngrade: false,

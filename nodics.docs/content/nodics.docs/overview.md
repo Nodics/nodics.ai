@@ -159,7 +159,7 @@ Important source files are:
 | `scripts/generate-content-pack.mjs` | Converts source documentation into generated CMS data and manifest files. |
 | `scripts/validate.mjs` | Enforces release, ownership, depth, structure, image/table/diagram, and unsafe-reference checks. |
 | `data/core/data/documentation` | Generated CMS records imported by WCMS. |
-| `manifest/generated-content-pack.json` | Generated release manifest and checksum evidence. |
+| `data/manifest.json` | Aggregate module data manifest with generated documentation release and checksum evidence. |
 
 Generated output must be recreated from source definitions. Do not repair a
 checksum by editing generated files directly.

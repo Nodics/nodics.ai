@@ -1,0 +1,50 @@
+{
+    "contractVersion": 2,
+    "module": "cms",
+    "sections": {
+        "init": {
+            "kind": "DATA_RELEASE",
+            "dataType": "init",
+            "version": "1.0.3",
+            "description": "Content Management init data",
+            "files": {
+                "init/data/content/defaultCmsSiteData.js": "e8542694fba0b563ad046cba914be5d0383abf76e06fdfb120016f68b4e2f869",
+                "init/data/content/defaultCmsTypeCodeData.js": "b57d863ec9d289178f6ce83beb7eb1a8d0f8ceef0c0e9e097daf3735a7e78438",
+                "init/data/user/defaultCmsEmployeeData.js": "81fb143ca6bbeb4b04f19cbe47d26740aa6db0645539a90433cf0b7ea82dbe8e",
+                "init/data/user/defaultCmsUserGroupsData.js": "bddc554e2d1356c78beceaaf7ee15e898ee446e24042bb9041d16e6eb43c74d7",
+                "init/headers/content/defaultCmsSiteDataHeader.js": "b0daf33d33d54111905735913b0eb1c90fafa1b18a3005206a9edf9c38253387",
+                "init/headers/content/defaultCmsTypeCodeDataHeader.js": "48a47d129802cb8be296bbc07ebea4dd3b4c5d1d6aaaaad2c71d1b34e504397d",
+                "init/headers/user/defaultCmsEmployeeDataHeader.js": "056cb07e0936b5f5553d33867737551e1df6cd66fc56c0a6e471a9ce23796e4f",
+                "init/headers/user/defaultCmsUserGroupsDataHeader.js": "1c8bfec125cc26e463dec76e8bef91db59aadee5608b93139276d2df9f346b7e"
+            }
+        },
+        "sample": {
+            "kind": "DATA_RELEASE",
+            "dataType": "sample",
+            "version": "1.0.4",
+            "description": "Content Management sample data",
+            "files": {
+                "sample/data/components/sampleCmsComponentData.js": "ae9af69d2cdedd02790f61ebef0e7b469ffc716e8886338c52b749540e95345d",
+                "sample/data/components/sampleCmsComponentLocalizationData.js": "a3c393afde84f75c871fb63a7bf4e4672af0a4a4e4e886b78bf0bc20a849110a",
+                "sample/data/components/sampleFooterCmsComponentData.js": "0e5a84ecaa96018d2c1832d6b71c0f96fac8422c7ab4bf429f50ddb62a35113c",
+                "sample/data/components/sampleHeaderCmsComponentData.js": "9463f52bacb0e8e949abfbd47b7a17a6711b0c20a9236e6fd5985aa415d47f2d",
+                "sample/data/components/sampleMainCmsComponentData.js": "d1fdd891cc354c2c1fe95c81c60557fdd8ebe61f3d426e22b74f9e3eb904809d",
+                "sample/data/pages/sampleCmsPageData.js": "75b99a3e800fa02e61c01425245c39b469a1a33017d190a2a7df79458d5a551e",
+                "sample/data/pages/sampleCmsPageRouteData.js": "bcb5dbf1924935b9d78acf37370b45138e4f50be2f9c4454fe925c9ffb0a2687",
+                "sample/data/sites/sampleCmsSiteData.js": "73271906e66beec8b153941f25e756a00908b0e37327346d463bc6ccb3c860c3",
+                "sample/data/typeCodes/sampleTypeCode2RendererData.js": "04752785df8c1ea05020bc8a87b3be1cb058c1620a817dd88b46c34e3866d3bf",
+                "sample/data/typeCodes/sampleTypeCodeData.js": "45ecc93a75e36797a181cba76038ad37c8519dc88f76a51dcd9001fdf78836fa",
+                "sample/headers/components/sampleCmsComponentDataHeader.js": "9abd59986412540d1b8da26f2d03635bdb4ccde52d6b56a7f077764c8b87efa6",
+                "sample/headers/components/sampleCmsComponentLocalizationDataHeader.js": "6411eeccb55f88e5cf658e38e1c8948fc4224e76dd493619081b56169d07d793",
+                "sample/headers/components/sampleFooterCmsComponentDataHeader.js": "cc6ee6ba6ba6ad94f036ead7c02440a7bd5decc1d878d1a5988a6f0dd947fe48",
+                "sample/headers/components/sampleHeaderCmsComponentDataHeader.js": "cdb27b9a262c13b96e32aa651d4491cc2d572eb6cabb12112166becbe1714e69",
+                "sample/headers/components/sampleMainCmsComponentDataHeader.js": "a0b5dfbce78f5cea95b0dd4547e581c123d723703a2673ec18781f0acfadd3d7",
+                "sample/headers/pages/sampleCmsPageDataHeader.js": "26c8e37454980f91c71a3b9bfe941f25721f3e715c0a893160908277ea15b8f8",
+                "sample/headers/pages/sampleCmsPageRouteDataHeader.js": "cb648fda128dcb6cb8b5798aaa1ffab9e1b34bbe50d3540b68b01785c5692f06",
+                "sample/headers/sites/sampleCmsSiteDataHeader.js": "33010cd976db653253c7c3a65374ec0ded669b5b04846d4bd0d97f7fefa71dec",
+                "sample/headers/typeCodes/sampleTypeCode2RendererDataHeader.js": "1bd6141a080614c9ff6597efdbba903a339d5872e35b83c1956509311f4658e7",
+                "sample/headers/typeCodes/sampleTypeCodeDataHeader.js": "5445eaa0ef1acdbe9bd2c6b8cc84113a720bf9aa63597e27a094c02e5989c205"
+            }
+        }
+    }
+}

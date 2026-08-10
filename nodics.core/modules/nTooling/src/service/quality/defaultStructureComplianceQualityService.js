@@ -340,6 +340,60 @@ function validateBoundaryFolders(report, moduleObject) {
     }
 }
 
+function collectNamedFiles(directory, fileName, files) {
+    if (!fs.existsSync(directory)) {
+        return files;
+    }
+    fs.readdirSync(directory, { withFileTypes: true }).forEach(entry => {
+        const entryPath = path.join(directory, entry.name);
+        if (entry.isDirectory()) {
+            collectNamedFiles(entryPath, fileName, files);
+        } else if (entry.name === fileName) {
+            files.push(entryPath);
+        }
+    });
+    return files;
+}
+
+function validateDataManifest(report, moduleObject) {
+    const dataPath = path.join(moduleObject.path, 'data');
+    if (!fs.existsSync(dataPath) || fs.readdirSync(dataPath).length === 0) {
+        return;
+    }
+    const manifestPath = path.join(dataPath, 'manifest.json');
+    if (!fs.existsSync(manifestPath)) {
+        createFinding(report, 'error', moduleObject, 'missing-data-manifest',
+            'A non-empty `data/` directory must own exactly one aggregate `data/manifest.json`.');
+        return;
+    }
+    const nestedManifests = collectNamedFiles(dataPath, 'manifest.json', [])
+        .filter(filePath => filePath !== manifestPath);
+    nestedManifests.forEach(filePath => createFinding(report, 'error', moduleObject,
+        'nested-data-manifest', 'Nested data manifest is forbidden: `' + relative(moduleObject.path, filePath) + '`.'));
+    let manifest;
+    try {
+        manifest = readJson(manifestPath);
+    } catch (error) {
+        createFinding(report, 'error', moduleObject, 'invalid-data-manifest-json',
+            '`data/manifest.json` must contain valid JSON.');
+        return;
+    }
+    if (manifest.contractVersion !== 2 || manifest.module !== moduleObject.packageJson.name ||
+        !manifest.sections || typeof manifest.sections !== 'object' || Array.isArray(manifest.sections)) {
+        createFinding(report, 'error', moduleObject, 'invalid-data-manifest-envelope',
+            '`data/manifest.json` must use contractVersion 2, match package name, and declare a sections map.');
+        return;
+    }
+    const supportedKinds = new Set(['DATA_RELEASE', 'CONTENT_PACK', 'SOURCE_CONTRIBUTION']);
+    Object.keys(manifest.sections).forEach(sectionName => {
+        const section = manifest.sections[sectionName];
+        if (!section || !supportedKinds.has(section.kind) || !/^\d+\.\d+\.\d+$/.test(section.version || '')) {
+            createFinding(report, 'error', moduleObject, 'invalid-data-manifest-section',
+                'Section `' + sectionName + '` must declare a supported kind and semantic version.');
+        }
+    });
+}
+
 function validateActivationPlacement(report, moduleObject) {
     const propertiesPath = path.join(moduleObject.path, 'config/properties.js');
     if (!fs.existsSync(propertiesPath)) {
@@ -402,6 +456,7 @@ function collectReport(options) {
         validateSourceStructure(report, moduleObject);
         validateOwnershipAlignment(report, moduleObject);
         validateBoundaryFolders(report, moduleObject);
+        validateDataManifest(report, moduleObject);
         validateActivationPlacement(report, moduleObject);
         validatePropertiesPurity(report, moduleObject);
     });

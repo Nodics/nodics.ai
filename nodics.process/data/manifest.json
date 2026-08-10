@@ -1,0 +1,33 @@
+{
+  "contractVersion": 2,
+  "module": "nodics.process",
+  "sections": {
+    "documentation": {
+      "kind": "CONTENT_PACK",
+      "contentPath": "core",
+      "pack": "nodics.process",
+      "version": "0.4.1",
+      "sourceMode": "module-markdown-source",
+      "sourceAuthority": "data/core/source/documentation/navigation.json",
+      "sites": [
+        "processDocumentationSite"
+      ],
+      "accessMode": "AUTHENTICATED",
+      "pages": 14,
+      "components": 15,
+      "routes": 14,
+      "releaseChecksum": "1a7292853441a481574a594c3399d5814af9bd6b9ba1cb7576ff21b54b9773d9",
+      "generatedHashes": {
+        "core/data/documentation/processDocumentationSiteData.js": "cc8d2cff94fc599148936cb5643fde6bbaee92c851b667d5ddf6d17bcf0f79a3",
+        "core/data/documentation/processDocumentationTypeCodeData.js": "9b7fa3d818191c23f9ce0332844eecff5500e5ca98aaf590e0ab7f7002c28b56",
+        "core/data/documentation/processDocumentationRendererData.js": "f622fcbed0b51c7fd6ea5005c156cc59febbdaa2c29a68ef5645aa748551a8cc",
+        "core/data/documentation/processDocumentationSlotData.js": "7aca9d4b3747c0e6b4deb9bed374e2e231543d6833a35852da339465bb66bf33",
+        "core/data/documentation/processDocumentationTemplateData.js": "01c98c4bfbea6ea02846014358dc762ce33429c45212f49f5fa712c2857086a8",
+        "core/data/documentation/processDocumentationComponentData.js": "ddd2c5051b0053bb35ce0efeb36a47509f739cd98444b1d9827a1bc5e96c8b59",
+        "core/data/documentation/processDocumentationPageData.js": "a36227cd09537927e6d8fc8bbadf52e200e4566b49b89cee05f3e0842a51d0e3",
+        "core/data/documentation/processDocumentationRouteData.js": "6afbb0634e2f37c1b88a3c87427e1dc74ff57396df2ebdace44ef393582b1473",
+        "core/headers/processDocumentationContentPackHeader.js": "c8133828854da8274fd6147e1e7a6b32495610f3561de8ae0907fe046b2c9bcf"
+      }
+    }
+  }
+}

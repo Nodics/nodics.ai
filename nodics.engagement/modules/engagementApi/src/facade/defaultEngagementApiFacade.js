@@ -98,6 +98,10 @@ module.exports = {
     /** Previews domain-routed batch commands. */ previewEngagementBatch: function (request) { return this.invoke('previewEngagementBatch', request, 'engagementBatchPreview', 'operator'); },
     /** Previews a purpose-bound masked export. */ previewEngagementExport: function (request) { return this.invoke('previewEngagementExport', request, 'engagementExportPreview', 'operator'); },
     /** Previews one governed repair. */ previewEngagementRepair: function (request) { return this.invoke('previewEngagementRepair', request, 'engagementRepairPreview', 'operator'); },
+    /** Executes one approved batch. */ executeEngagementBatch: function (request) { return this.invoke('executeEngagementBatch', request, 'engagementBatchRun', 'operator'); },
+    /** Executes one approved export. */ executeEngagementExport: function (request) { return this.invoke('executeEngagementExport', request, 'engagementExportResult', 'operator'); },
+    /** Executes one approved repair. */ executeEngagementRepair: function (request) { return this.invoke('executeEngagementRepair', request, 'engagementRepairResult', 'operator'); },
+    /** Executes one purpose-bound privacy action. */ executeEngagementPrivacy: function (request) { return this.invoke('executeEngagementPrivacy', request, 'engagementPrivacyResult', 'operator'); },
     /** Handles receive callback within the module-owned contract. */
     receiveCallback: function (request) { return this.invoke('receiveCallback', request, 'integrationReceipt', 'integration'); }
 };

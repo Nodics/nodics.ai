@@ -68,6 +68,11 @@ module.exports = {
             let status = statusCodes[errorCode];
             assert.ok(status.code, 'Invalid response code for: ' + errorCode + ', it can not be null or empty');
             assert.ok(status.message, 'Invalid error message for: ' + errorCode + ', it can not be null or empty');
+            if (status.messageKey !== undefined) {
+                assert.ok(/^[a-z][a-z0-9._-]*$/.test(status.messageKey), 'Invalid localization message key for: ' + errorCode);
+                assert.ok(Array.isArray(status.parameters), 'Localization parameters must be an array for: ' + errorCode);
+                assert.ok(['PUBLIC', 'AUTHENTICATED', 'OPERATOR', 'INTERNAL'].includes(status.exposure), 'Invalid localization exposure for: ' + errorCode);
+            }
             this.statusMap[errorCode] = status;
         });
     },

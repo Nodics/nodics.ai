@@ -451,6 +451,63 @@ module.exports = {
                 }
             }
         },
+        cmsComponentLocalization: {
+            super: 'cmsBase',
+            isVersionedEnabled: false,
+            model: true,
+            service: { enabled: true },
+            router: { enabled: true },
+            cache: { enabled: false, ttl: 1000 },
+            search: { enabled: false, idPropertyName: 'code' },
+            refSchema: {
+                componentCode: {
+                    enabled: true,
+                    schemaName: 'cmsComponent',
+                    type: 'one',
+                    propertyName: 'code',
+                    searchEnabled: true
+                }
+            },
+            definition: {
+                componentCode: {
+                    type: 'string',
+                    required: true,
+                    description: 'Stable CMS component identity shared by every locale variant'
+                },
+                locale: {
+                    type: 'string',
+                    required: true,
+                    description: 'Canonical BCP47 locale for this component property variant'
+                },
+                properties: {
+                    type: 'object',
+                    required: true,
+                    description: 'Localized properties declared by the owning cmsTypeCode propertySchema'
+                },
+                seo: {
+                    type: 'object',
+                    required: false,
+                    description: 'Optional localized, declarative SEO metadata for this component'
+                },
+                status: {
+                    type: 'string',
+                    required: true,
+                    default: 'DRAFT',
+                    enum: ['DRAFT', 'READY'],
+                    description: 'Authoring completeness state; publication readiness remains backend validated'
+                }
+            },
+            indexes: {
+                common: {
+                    componentCode: { enabled: true, name: 'componentCode' },
+                    locale: { enabled: true, name: 'locale' }
+                },
+                composite: {
+                    componentCode: { enabled: true, name: 'componentCode', options: { unique: true } },
+                    locale: { enabled: true, name: 'locale', options: { unique: true } }
+                }
+            }
+        },
         cmsComponentMedia: {
             super: 'cmsBase',
             isVersionedEnabled: false,

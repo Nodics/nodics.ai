@@ -28,7 +28,7 @@ const flowSchemaPackage = require('../modules/workflow/modules/flowSchema/packag
 const flowCorePackage = require('../modules/workflow/modules/flowCore/package.json');
 const flowApiPackage = require('../modules/workflow/modules/flowApi/package.json');
 
-const capability = properties.backofficeCapabilities.process;
+const capability = require('../modules/workflow/modules/flowCore/src/service/defaultFlowCoreBackofficeCapabilityService').getCapability();
 const rootDir = path.resolve(__dirname, '..');
 
 /**
@@ -117,8 +117,8 @@ assert.deepStrictEqual(
 );
 assert(
     capability.navigation.every((item) => item.group.id === 'business-process-automation' &&
-        item.group.label === 'Business Process & Automation'),
-    'process navigation must stay in the Business Process & Automation group',
+        item.group.label === 'Process & Automation'),
+    'process navigation must stay in the Process & Automation group',
 );
 assert.strictEqual(
     properties.process.designer.enabled,

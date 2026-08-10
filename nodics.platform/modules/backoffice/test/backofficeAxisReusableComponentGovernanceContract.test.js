@@ -20,10 +20,10 @@ const path = require("path");
 const service = require("../src/service/contract/defaultBackofficeContractService");
 const repositoryRoot = path.resolve(__dirname, "../../../..");
 
-const cmsCapability = require(path.join(repositoryRoot, "nodics.wcms/modules/cms/config/properties"))
-  .backofficeCapabilities.cms;
-const mediaCapability = require(path.join(repositoryRoot, "nodics.wcms/modules/media/config/properties"))
-  .backofficeCapabilities.media;
+const cmsCapability = require(path.join(repositoryRoot, "nodics.wcms/modules/cms/src/service/defaultCmsBackofficeCapabilityService"))
+  .getCapability();
+const mediaCapability = require(path.join(repositoryRoot, "nodics.wcms/modules/media/src/service/defaultMediaBackofficeCapabilityService"))
+  .getCapability();
 
 const capabilities = [
   cmsCapability,
@@ -57,7 +57,7 @@ const schemaBackedNavigation = [
   },
   {
     capability: mediaCapability,
-    id: "media-items",
+    id: "media",
     moduleName: "media",
     schemaName: "media",
   },
@@ -142,7 +142,7 @@ mediaCapability.navigation.forEach((entry) => {
   assert(entry.help, entry.id + " media page must expose backend-owned help");
   assert.strictEqual(
     entry.help.documentationRoute,
-    "/docs/reference/media-management",
+    "/docs/reference/media",
     entry.id + " must link to the nMedia framework documentation pack",
   );
   assert(

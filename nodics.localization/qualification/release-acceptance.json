@@ -1,0 +1,35 @@
+{
+    "contractVersion": 1,
+    "capability": "nodics.localization",
+    "releaseCandidate": "phase-8",
+    "executionScope": "LOCAL_ONLY",
+    "automatedEvidence": [
+        "localizationCompositionContract",
+        "localizationCustomizationContract",
+        "localizationAdopterContributionContract",
+        "localizationRegistryReleaseContract",
+        "localizationOperationsContract",
+        "localizationRuntimeBundleContract",
+        "localizationManagementApiContract",
+        "localizationQualificationContract",
+        "AxisLocalizationContext",
+        "LocalizationOperationsRoutePage"
+    ],
+    "referenceEnvironmentEvidence": [
+        { "id": "KICKOFF-COMPOSITION", "status": "PASSED", "evidence": "Kickoff Platform discovered localizationCore, localizationApi, and nodics.localization and started successfully" },
+        { "id": "AXIS-LIVE-SMOKE", "status": "PASSED", "evidence": "Axis route, public bootstrap, authenticated login, nine-module registry, OpenAPI, media, and process live smoke passed" },
+        { "id": "LOCALIZATION-DISCOVERY", "status": "PASSED", "evidence": "Public bootstrap returned the Localization endpoint and strict module discovery included nodics.localization" }
+    ],
+    "externalAcceptance": [
+        { "id": "LIVE-LOAD-SLO", "owner": "Operations/SRE", "status": "REQUIRED", "evidence": "Measured p95/p99 bundle and invalidation latency from the target topology" },
+        { "id": "LIVE-CACHE-FAILOVER", "owner": "Operations/SRE", "status": "REQUIRED", "evidence": "Distributed-cache loss and recovery exercise" },
+        { "id": "BACKUP-RESTORE-DR", "owner": "Operations/SRE", "status": "REQUIRED", "evidence": "Target datastore restore and regional recovery record" },
+        { "id": "BROWSER-ACCESSIBILITY", "owner": "QA/Accessibility", "status": "REQUIRED", "evidence": "Supported-browser, keyboard, screen-reader, zoom, contrast, and Arabic RTL report" },
+        { "id": "SEO-SSR", "owner": "Web/CMS", "status": "CONDITIONAL", "evidence": "Canonical, hreflang, SSR and hydration report for customer storefronts that enable those capabilities" },
+        { "id": "SECURITY-PRIVACY", "owner": "Security/Privacy", "status": "REQUIRED", "evidence": "Threat-model and data-classification approval" },
+        { "id": "PRODUCT-OWNER-UAT", "owner": "Product owners", "status": "REQUIRED", "evidence": "English/Arabic business-journey acceptance" },
+        { "id": "RELEASE-AUTHORITY", "owner": "Release authority", "status": "REQUIRED", "evidence": "Go/no-go record after every required item is approved" }
+    ],
+    "decision": "CONDITIONALLY_READY",
+    "rule": "Only local deployment is currently in scope. Required human and resilience evidence must be executed against the local topology before local acceptance; production approval is not being requested and remains forbidden."
+}

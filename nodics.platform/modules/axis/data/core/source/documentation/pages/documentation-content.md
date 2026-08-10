@@ -107,7 +107,7 @@ employee to the public authentication journey.
 
 Axis documentation data is directly importable and committed in
 `nodics.platform/modules/axis` under `data/core`. Its immutable release
-manifest is `manifest/docs-content-pack.json`. The manifest pack identity is
+manifest is the documentation section in `data/manifest.json`. The manifest pack identity is
 `nodics.platform.axis`; the configured nImport pack code is `axisDocumentation`; and its
 CMS binding is `axisDocumentationSite` → `documentationContentCatalog`.
 
@@ -207,7 +207,7 @@ to bypass that boundary.
 Author or extend project documentation in that project's canonical structured
 source, for example `nodics.kickoff/data/core/source/documentation`, and
 generate its committed `data/core` content pack with
-`manifest/docs-content-pack.json`. Register the pack through the Nodics-owned
+`data/manifest.json` with `manifestSection: documentation`. Register the pack through the Nodics-owned
 documentation contribution contract; Axis discovers and renders the resulting
 navigation and article blocks.
 

@@ -69,10 +69,15 @@ global.SERVICE = {
         reconcileActiveModules: () => 0,
     },
     DefaultFunctionalModuleCatalogueService: {
+        buildLeaseFunctionalModuleIndex: (batch) => Object.fromEntries(
+            (batch.registrations || []).map(registration => [registration.moduleName,
+                registration.functionalModule && registration.functionalModule.identity || 'nodics.core']),
+        ),
         reconcileRuntimeBatch: (batch) => Promise.resolve((batch.registrations || []).map((registration) => ({
             functionalModule: registration.canonicalIdentity || registration.moduleName,
             moduleName: registration.moduleName,
         }))),
+        reconcileActiveRuntimeLeases: () => Promise.resolve(0),
     },
     DefaultBackofficeAvailabilityService: {
         scheduleObservation: () => Promise.resolve(false),

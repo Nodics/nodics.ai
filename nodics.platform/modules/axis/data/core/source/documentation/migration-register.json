@@ -1,6 +1,6 @@
 {
   "pack": "nodics.platform.axis",
-  "version": "0.3.30",
+  "version": "0.3.31",
   "generatedAtPolicy": "deterministic-no-timestamp",
   "sources": [
     {
@@ -180,8 +180,8 @@
       "canonicalSource": "data/core/source/documentation/pages/documentation-content.md",
       "destinationRoute": "/docs/nodics-axis/documentation-content",
       "disposition": "migrated",
-      "sourceHash": "21a8ddd0cce24b0236212d6f55b59860e17ba6789b65163b83927a21ff3c48be",
-      "wordCount": 2019,
+      "sourceHash": "c881c62d0cf5fd8964517b60e000cf76c9554579eb2cc6d967681a128e1c27de",
+      "wordCount": 2026,
       "headings": [
         "Employee Journey",
         "Nodics Axis Content Pack",
@@ -560,8 +560,8 @@
       "canonicalSource": "data/core/source/documentation/pages/implementation-and-documentation-contract.md",
       "destinationRoute": "/docs/nodics-axis/implementation-contract",
       "disposition": "migrated",
-      "sourceHash": "2ad74c2a1b479db0ff9ad381645746b801e65aa77c8171486ee53631b9387066",
-      "wordCount": 1546,
+      "sourceHash": "cfb64326ba198447e0efe43ed3533a7abf6dbf8446e163655f7e0a26e44d2ad7",
+      "wordCount": 1550,
       "headings": [
         "Local Discovery Chain",
         "Repository Ownership",

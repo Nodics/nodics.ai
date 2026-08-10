@@ -76,6 +76,11 @@ let availabilitySchedules = [];
 global.SERVICE = {
   DefaultFunctionalModuleCatalogueService: {
     reconcileRuntimeBatch: () => Promise.resolve([]),
+    buildLeaseFunctionalModuleIndex: (batch) => Object.fromEntries(
+      (batch.registrations || []).map(item => [item.moduleName,
+        item.functionalModule && item.functionalModule.identity || 'nodics.core']),
+    ),
+    reconcileActiveRuntimeLeases: () => Promise.resolve(0),
   },
   DefaultAxisExperiencePolicyService: {
     getEffective: () =>
@@ -172,6 +177,8 @@ const service = Object.assign({}, definition, {
   },
   _sweepTimer: null,
 });
+SERVICE.DefaultBackofficeRegistryService = service;
+SERVICE.DefaultBackofficeCapabilityRegistryService = require('../src/service/registry/defaultBackofficeCapabilityRegistryService');
 
 async function run() {
   let registration = {

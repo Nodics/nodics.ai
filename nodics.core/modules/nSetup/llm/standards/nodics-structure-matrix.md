@@ -244,6 +244,10 @@ owns that extension point.
 
 `data/` belongs to the concrete boundary that owns the records.
 
+Every non-empty published data root requires `data/manifest.json` using the
+aggregate data-manifest contract. The manifest contains independently versioned
+typed sections and is the only manifest file permitted for that data owner.
+
 | Data path | Owner | Load/use contract |
 | --- | --- | --- |
 | `data/init/` | Capability, environment, server, or node that owns startup/bootstrap records. | Loaded during startup only when initialization is required. |

@@ -65,17 +65,20 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-const manifest = JSON.parse(
-  await readFile(resolve(root, 'manifest/docs-content-pack.json'), 'utf8'),
+const manifestEnvelope = JSON.parse(
+  await readFile(resolve(root, 'data/manifest.json'), 'utf8'),
 );
+const manifest = manifestEnvelope.sections.documentation;
+assert(manifestEnvelope.contractVersion === 2, 'Axis aggregate data manifest contract drifted');
+assert(manifestEnvelope.module === 'axis', 'Axis aggregate data manifest owner drifted');
 assert(manifest.pack === 'nodics.platform.axis', 'Axis documentation pack identity drifted');
 assert(
-  manifest.sourceAuthority === 'modules/axis/data/core/source/documentation',
+  manifest.sourceAuthority === 'core/source/documentation',
   'Axis documentation source must be owned by nodics.platform/modules/axis',
 );
 assert(
   manifest.migrationRegister ===
-    'modules/axis/data/core/source/documentation/migration-register.json',
+    'core/source/documentation/migration-register.json',
   'Axis migration register path drifted',
 );
 assert(
@@ -86,7 +89,7 @@ assert(
 );
 
 for (const [relativePath, expectedHash] of Object.entries(manifest.generatedHashes)) {
-  const actualHash = sha256(readFileSync(resolve(repositoryRoot, relativePath)));
+  const actualHash = sha256(readFileSync(resolve(root, 'data', relativePath)));
   assert(actualHash === expectedHash, `Generated hash mismatch: ${relativePath}`);
 }
 

@@ -10,8 +10,8 @@
  */
 
 /**
- * Generates initial immutable release manifests for module-owned init, core,
- * and sample data. Existing manifests are validated and are never silently
+ * Generates one immutable aggregate manifest for module-owned init, core,
+ * sample, source, and content-pack data sections. Existing sections are validated and are never silently
  * rewritten because changing checksums requires an intentional version bump.
  */
 const crypto = require('crypto');
@@ -20,15 +20,19 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '../../../..');
 const dataTypes = new Set(['init', 'core', 'sample']);
-const releaseIndex = process.argv.indexOf('--release');
-const requestedRelease = releaseIndex >= 0 ? String(process.argv[releaseIndex + 1] || '') : '';
-const requestedParts = requestedRelease.split('=');
-const requestedKey = requestedParts[0];
-const requestedVersion = requestedParts[1];
-if (requestedRelease && (!/^[A-Za-z][A-Za-z0-9_-]{0,127}:(init|core|sample)$/.test(requestedKey) ||
-    !/^\d+\.\d+\.\d+$/.test(requestedVersion || ''))) {
-    throw new Error('Use --release <module>:<init|core|sample>=<major.minor.patch>');
-}
+const requestedReleases = new Map();
+process.argv.forEach((argument, index) => {
+    if (argument !== '--release') return;
+    let requestedRelease = String(process.argv[index + 1] || '');
+    let separator = requestedRelease.lastIndexOf('=');
+    let requestedKey = requestedRelease.slice(0, separator);
+    let requestedVersion = requestedRelease.slice(separator + 1);
+    if (!/^[A-Za-z][A-Za-z0-9_-]{0,127}:(init|core|sample)$/.test(requestedKey) ||
+        !/^\d+\.\d+\.\d+$/.test(requestedVersion)) {
+        throw new Error('Use one or more --release <module>:<init|core|sample>=<major.minor.patch> arguments');
+    }
+    requestedReleases.set(requestedKey, requestedVersion);
+});
 
 function hash(filePath) {
     return crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
@@ -51,36 +55,53 @@ function visit(folder) {
         let packageMetadata = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
         if (packageMetadata.nodics && packageMetadata.name) {
             let dataRoot = path.join(folder, 'data');
+            let manifestPath = path.join(dataRoot, 'manifest.json');
+            let aggregate = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, 'utf8')) : {
+                contractVersion: 2,
+                module: packageMetadata.name,
+                sections: {}
+            };
+            if (aggregate.contractVersion !== 2 || aggregate.module !== packageMetadata.name ||
+                !aggregate.sections || typeof aggregate.sections !== 'object') {
+                throw new Error('Aggregate data manifest is incompatible: ' + manifestPath);
+            }
+            let contentOwnedTypes = new Set(Object.values(aggregate.sections)
+                .filter(section => section && section.kind === 'CONTENT_PACK' && section.contentPath)
+                .map(section => String(section.contentPath).split('/')[0]));
+            let changed = false;
             for (let dataType of dataTypes) {
+                if (contentOwnedTypes.has(dataType) && !aggregate.sections[dataType]) continue;
                 let releaseRoot = path.join(dataRoot, dataType);
                 if (!fs.existsSync(releaseRoot)) continue;
-                let releaseFiles = filesBelow(releaseRoot).filter(file => file !== 'manifest.json');
+                let releaseFiles = filesBelow(releaseRoot);
                 if (releaseFiles.length === 0) continue;
-                let manifestPath = path.join(releaseRoot, 'manifest.json');
-                let files = Object.fromEntries(releaseFiles.map(file => [file, hash(path.join(releaseRoot, file))]));
-                let manifest = {
-                    contractVersion: 1,
-                    module: packageMetadata.name,
+                let files = Object.fromEntries(releaseFiles.map(file => [dataType + '/' + file, hash(path.join(releaseRoot, file))]));
+                let section = {
+                    kind: 'DATA_RELEASE',
                     dataType: dataType,
                     version: '1.0.0',
                     description: (packageMetadata.nodics.displayName || packageMetadata.name) + ' ' + dataType + ' data',
                     files: files
                 };
-                if (fs.existsSync(manifestPath)) {
-                    let existing = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+                let existing = aggregate.sections[dataType];
+                if (existing) {
                     if (JSON.stringify(existing.files || {}) !== JSON.stringify(files)) {
-                        if (requestedKey === packageMetadata.name + ':' + dataType &&
-                            requestedVersion !== existing.version) {
-                            manifest.version = requestedVersion;
-                            fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 4) + '\n');
-                            generated.push(path.relative(root, manifestPath));
+                        let requestedVersion = requestedReleases.get(packageMetadata.name + ':' + dataType);
+                        if (requestedVersion && requestedVersion !== existing.version) {
+                            section.version = requestedVersion;
+                            aggregate.sections[dataType] = section;
+                            changed = true;
                             continue;
                         }
-                        throw new Error('Data release changed without an intentional manifest version update: ' + manifestPath);
+                        throw new Error('Data release changed without an intentional manifest section version update: ' + manifestPath + '#' + dataType);
                     }
                     continue;
                 }
-                fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 4) + '\n');
+                aggregate.sections[dataType] = section;
+                changed = true;
+            }
+            if (changed) {
+                fs.writeFileSync(manifestPath, JSON.stringify(aggregate, null, 4) + '\n');
                 generated.push(path.relative(root, manifestPath));
             }
         }

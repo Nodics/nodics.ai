@@ -12,12 +12,22 @@
 /* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
 'use strict';
 const assert = require('node:assert/strict');
-const properties = require('../config/properties');
 const backofficeContract = require('../../nodics.platform/modules/backoffice/src/service/contract/defaultBackofficeContractService');
-const capability = properties.backofficeCapabilities['nodics.commerce'];
-assert.equal(capability.capabilityId, 'commerce'); assert.equal(capability.enabled, true);
-assert.equal(backofficeContract.validateBackofficeMetadata(capability), true, 'Commerce metadata must be accepted by the live BackOffice registration contract');
-const navigation = capability.navigation; assert.equal(navigation.length, 19);
+global.SERVICE = global.SERVICE || {};
+SERVICE.DefaultBackofficeCapabilityDefinitionService = require('../../nodics.core/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService');
+const providers = [
+    '../modules/baseCommerce/modules/store/src/service/defaultStoreBackofficeCapabilityService',
+    '../modules/baseCommerce/modules/product/src/service/defaultProductBackofficeCapabilityService',
+    '../modules/baseCommerce/modules/pricing/src/service/defaultPricingBackofficeCapabilityService',
+    '../modules/baseCommerce/modules/tax/src/service/defaultTaxBackofficeCapabilityService',
+    '../modules/baseCommerce/modules/promotion/src/service/defaultPromotionBackofficeCapabilityService',
+    '../modules/checkout/modules/cart/src/service/defaultCartBackofficeCapabilityService',
+    '../modules/checkout/modules/order/src/service/defaultOrderBackofficeCapabilityService',
+    '../modules/payment/modules/paymentCore/src/service/defaultPaymentCoreBackofficeCapabilityService',
+    '../modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentCoreBackofficeCapabilityService'
+].map(file => require(file).getCapability());
+assert(providers.every(capability => backofficeContract.validateBackofficeMetadata(capability)), 'Every concrete Commerce provider must satisfy the live BackOffice contract');
+const navigation = providers.flatMap(capability => capability.navigation); assert.equal(navigation.length, 21);
 const ids = new Set(navigation.map(item => item.id)); assert.equal(ids.size, navigation.length);
 navigation.forEach(item => {
     assert(item.requiredPermissions.length > 0); assert(item.workbenchTarget.moduleName); assert(item.workbenchTarget.schemaName);
@@ -28,6 +38,14 @@ assert(catalog.every(item => !item.lifecycleActions), 'Catalog workspaces must n
 const reversal = navigation.filter(item => ['order-cancellations', 'order-returns', 'order-refunds'].includes(item.id));
 assert.equal(reversal.length, 3); assert(reversal.every(item => item.parentId === 'checkout-and-orders'));
 assert(reversal.every(item => item.lifecycleActions.every(action => action.ownerModule === 'order')));
+assert.deepEqual(reversal.map(item => item.workbenchPresentation.fixedFilters[0].value), ['CANCELLATION', 'RETURN', 'REFUND']);
 assert(navigation.find(item => item.id === 'payment-reconciliation').workbenchTarget.moduleName === 'paymentCore');
 assert(navigation.find(item => item.id === 'return-receipts').workbenchTarget.moduleName === 'fulfillmentCore');
+const localizedProductWorkspaces = navigation.filter(item => ['product-localizations', 'category-localizations',
+    'variant-localizations', 'product-search-locales'].includes(item.id));
+assert.equal(localizedProductWorkspaces.length, 4);
+assert(localizedProductWorkspaces.every(item => item.parentId === 'products' && item.workbenchTarget.moduleName === 'product'));
+assert.deepEqual(localizedProductWorkspaces.map(item => item.workbenchTarget.schemaName), [
+    'productLocalization', 'categoryLocalization', 'productVariantLocalization', 'productSearchProjection'
+]);
 console.log('Commerce Phase 8 Axis projection contract validated');

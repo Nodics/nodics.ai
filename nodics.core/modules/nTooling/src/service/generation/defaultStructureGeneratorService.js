@@ -174,6 +174,19 @@ function propertiesFile(moduleName) {
         '};\n';
 }
 
+/**
+ * Creates the aggregate data-pack manifest required by every generated data boundary.
+ * @param {string} moduleName Generated module identity.
+ * @returns {string} Serialized empty manifest ready for future release sections.
+ */
+function dataManifest(moduleName) {
+    return JSON.stringify({
+        contractVersion: 2,
+        module: moduleName,
+        sections: {}
+    }, null, 4) + '\n';
+}
+
 function nodicsFile(moduleName) {
     return copyrightHeader + '\n' +
         '/**\n' +
@@ -411,6 +424,7 @@ module.exports = {
             ensureDirectory(path.join(options.targetPath, 'data/init'));
             ensureDirectory(path.join(options.targetPath, 'data/core'));
             ensureDirectory(path.join(options.targetPath, 'data/sample'));
+            writeFile(path.join(options.targetPath, 'data/manifest.json'), dataManifest(options.name));
         }
         if (options.withTest) {
             ensureDirectory(path.join(options.targetPath, 'test'));

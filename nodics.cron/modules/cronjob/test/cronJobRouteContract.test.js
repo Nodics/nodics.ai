@@ -11,7 +11,7 @@
 
 const assert = require('assert');
 const { assertRouteContracts, flattenRoutes } = require('../../../../nodics.core/modules/nRouter/test/routerContractTestUtils');
-const properties = require('../config/properties');
+const capabilityService = require('../src/service/defaultCronjobBackofficeCapabilityService');
 const routerConfig = require('../src/router/routers');
 
 /**
@@ -58,7 +58,7 @@ assert(
     authProperties.identityGovernance.migration.groupTargets.runtimeConfigAdminUserGroup.permissions.includes(cronJobLifecyclePermission),
     'Runtime configuration admins must be allowed to operate Cron lifecycle in the reference setup',
 );
-const capability = properties.backofficeCapabilities.cronjob;
+const capability = capabilityService.getCapability();
 assert.strictEqual(capability.displayName, 'Cron Jobs');
 assert.deepStrictEqual(
     capability.navigation.map(item => item.label),
@@ -68,7 +68,7 @@ assert.deepStrictEqual(
 assert(
     capability.navigation.every((item) => item.route.startsWith('/cron') &&
         item.group.id === 'business-process-automation' &&
-        item.group.label === 'Business Process & Automation'),
-    'cron navigation must stay under /cron in the Business Process & Automation group',
+        item.group.label === 'Process & Automation'),
+    'cron navigation must stay under /cron in the Process & Automation group',
 );
 console.log(`CronJob route contract validated: ${expectedRoutes.length} routes`);

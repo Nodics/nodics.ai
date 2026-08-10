@@ -17,6 +17,14 @@
  * @override Project modules may add, reorder, disable, or replace CMS interceptor registrations through later module contributions.
  */
 module.exports = {
+    validateCmsTypeCode: {
+        type: 'schema', item: 'cmsTypeCode', trigger: 'preSave', active: 'true', index: 0,
+        handler: 'DefaultCmsContractValidationService.validateTypeCode'
+    },
+    validateCmsComponentLocalization: {
+        type: 'schema', item: 'cmsComponentLocalization', trigger: 'preSave', active: 'true', index: 10,
+        handler: 'DefaultCmsContractValidationService.validateComponentLocalization'
+    },
     validateCmsRendererMapping: {
         type: 'schema', item: 'cmsTypeCode2Renderer', trigger: 'preSave', active: 'true', index: 0,
         handler: 'DefaultCmsContractValidationService.validateRenderer'
@@ -66,6 +74,12 @@ module.exports = {
     invalidateCmsComponentDeliveryAfterSave: { type: 'schema', item: 'cmsComponent', trigger: 'postSave', active: 'true', index: 100, handler: 'DefaultCmsDeliveryCacheInvalidationService.invalidate' },
     invalidateCmsComponentDeliveryAfterUpdate: { type: 'schema', item: 'cmsComponent', trigger: 'postUpdate', active: 'true', index: 100, handler: 'DefaultCmsDeliveryCacheInvalidationService.invalidate' },
     invalidateCmsComponentDeliveryAfterRemove: { type: 'schema', item: 'cmsComponent', trigger: 'postRemove', active: 'true', index: 100, handler: 'DefaultCmsDeliveryCacheInvalidationService.invalidate' },
+    invalidateCmsLocalizationDeliveryAfterSave: { type: 'schema', item: 'cmsComponentLocalization', trigger: 'postSave', active: 'true', index: 100, handler: 'DefaultCmsDeliveryCacheInvalidationService.invalidate' },
+    invalidateCmsLocalizationDeliveryAfterUpdate: { type: 'schema', item: 'cmsComponentLocalization', trigger: 'postUpdate', active: 'true', index: 100, handler: 'DefaultCmsDeliveryCacheInvalidationService.invalidate' },
+    invalidateCmsLocalizationDeliveryAfterRemove: { type: 'schema', item: 'cmsComponentLocalization', trigger: 'postRemove', active: 'true', index: 100, handler: 'DefaultCmsDeliveryCacheInvalidationService.invalidate' },
+    invalidateCmsMediaDeliveryAfterSave: { type: 'schema', item: 'cmsComponentMedia', trigger: 'postSave', active: 'true', index: 100, handler: 'DefaultCmsDeliveryCacheInvalidationService.invalidate' },
+    invalidateCmsMediaDeliveryAfterUpdate: { type: 'schema', item: 'cmsComponentMedia', trigger: 'postUpdate', active: 'true', index: 100, handler: 'DefaultCmsDeliveryCacheInvalidationService.invalidate' },
+    invalidateCmsMediaDeliveryAfterRemove: { type: 'schema', item: 'cmsComponentMedia', trigger: 'postRemove', active: 'true', index: 100, handler: 'DefaultCmsDeliveryCacheInvalidationService.invalidate' },
     invalidateCmsAssociationDeliveryAfterSave: { type: 'schema', item: 'cmsComponentDetail', trigger: 'postSave', active: 'true', index: 100, handler: 'DefaultCmsDeliveryCacheInvalidationService.invalidate' },
     invalidateCmsAssociationDeliveryAfterUpdate: { type: 'schema', item: 'cmsComponentDetail', trigger: 'postUpdate', active: 'true', index: 100, handler: 'DefaultCmsDeliveryCacheInvalidationService.invalidate' },
     invalidateCmsAssociationDeliveryAfterRemove: { type: 'schema', item: 'cmsComponentDetail', trigger: 'postRemove', active: 'true', index: 100, handler: 'DefaultCmsDeliveryCacheInvalidationService.invalidate' },

@@ -18,4 +18,13 @@ module.exports = { stage: function (request, product) {
     if (product.status !== 'ACTIVE') throw new Error('Only active products can be staged');
     const source = { tenant: request.tenant, productCode: product.code, catalogVersion: product.catalogVersion, revision: product.revision };
     return Object.freeze(Object.assign(source, { status: 'STAGED', sourceHash: crypto.createHash('sha256').update(JSON.stringify(source)).digest('hex'), correlationId: request.correlationId }));
+},
+/** Stages Product publication only after every configured mandatory locale is READY. */
+stageLocalized: function (request, product, localizations) {
+    let evidence = SERVICE.DefaultProductLocalizationPolicyService.completeness(request, localizations, 'product');
+    let staged = this.stage(request, product);
+    let source = Object.assign({}, staged, { localization: evidence });
+    return Object.freeze(Object.assign(source, {
+        sourceHash: crypto.createHash('sha256').update(JSON.stringify(source)).digest('hex')
+    }));
 } };

@@ -103,8 +103,8 @@ impact, assumptions, contradictions, intended files, and validation route.
   Project-specific setup, demo flows, sample data, project modules, custom API
   behavior, onboarding, and extension guidance belong in the owning customer
   backend project using `data/core/source/documentation`,
-  `data/core/data/documentation`, `data/core/headers`, and
-  `manifest/docs-content-pack.json`; they do not belong in `nodics.docs`,
+  `data/core/data/documentation`, `data/core/headers`, and the documentation
+  section in `data/manifest.json`; they do not belong in `nodics.docs`,
   `nodics.platform/modules/axis`, or `nodics.axis`.
 - Keep frontend applications outside this repository. `nodics.axis` is the
   Axis/BackOffice frontend application and must be managed as a separate

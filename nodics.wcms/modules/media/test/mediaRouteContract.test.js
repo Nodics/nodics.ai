@@ -22,7 +22,7 @@ const path = require('path');
 const coreRoot = path.dirname(require.resolve('nodics.core/package.json'));
 const { assertRouteContracts } = require(path.join(coreRoot, 'modules/nRouter/test/routerContractTestUtils'));
 const authProperties = require(path.join(coreRoot, 'modules/nAuth/config/properties'));
-const mediaProperties = require('../config/properties');
+const mediaCapabilityService = require('../src/service/defaultMediaBackofficeCapabilityService');
 const routerConfig = require('../src/router/routers');
 
 const expectedRoutes = [
@@ -59,7 +59,7 @@ assert.strictEqual(contentRoute.permission, 'media.content.read', 'inline conten
 assert.notStrictEqual(contentRoute.publicAccess, true, 'inline content route must not be anonymously public');
 assert.strictEqual(downloadRoute.responseHandler, 'fileDownloadResponseHandler', 'download media content must reuse nRouter file-download response handler');
 assert.strictEqual(
-    mediaProperties.backofficeCapabilities.media.discovery.openApiPath,
+    mediaCapabilityService.getCapability().discovery.openApiPath,
     '/nodics/system/v0/contract/openapi/internal',
     'media BackOffice discovery must use the central System OpenAPI contract endpoint'
 );

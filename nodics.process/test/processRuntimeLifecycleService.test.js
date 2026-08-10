@@ -92,6 +92,7 @@ const versions = [{ code: 'contentApproval_v1', definitionCode: 'contentApproval
 const instances = [];
 const tasks = [];
 const auditEvents = [];
+const incidents = [];
 const triggers = [{ code: 'dailyContentApproval', definitionCode: 'contentApproval', triggerType: 'CRON', cronJobCode: 'dailyContentApprovalJob', status: 'ACTIVE' }];
 
 global.SERVICE = {
@@ -100,6 +101,7 @@ global.SERVICE = {
     DefaultProcessInstanceService: createGeneratedService(instances),
     DefaultProcessTaskService: createGeneratedService(tasks),
     DefaultProcessAuditEventService: createGeneratedService(auditEvents),
+    DefaultProcessIncidentService: createGeneratedService(incidents),
     DefaultProcessTriggerService: createGeneratedService(triggers),
     DefaultProcessActionAdapterRegistryService: require('../modules/workflow/modules/flowCore/src/service/operation/defaultProcessActionAdapterRegistryService')
 };
@@ -268,7 +270,7 @@ const runtimeService = require('../modules/workflow/modules/flowCore/src/service
         graph: {
             nodes: [
                 { code: 'start', type: 'START' },
-                { code: 'unsafe', type: 'ACTION', action: { moduleName: 'commerce', operation: 'chargeCustomer' } },
+                { code: 'unsafe', type: 'ACTION', action: { moduleName: 'commerce', operation: 'chargeCustomer' }, retry: { maximumAttempts: 3 }, compensation: { moduleName: 'nodics.process', operation: 'noop' } },
                 { code: 'end', type: 'END' }
             ],
             transitions: [
@@ -285,6 +287,39 @@ const runtimeService = require('../modules/workflow/modules/flowCore/src/service
         }),
         error => error.code === 'ERR_PROCESS_00019',
     );
+    let failedInstance = instances.find(instance => instance.definitionCode === 'unsafeActionProcess');
+    assert.strictEqual(failedInstance.status, 'FAILED');
+    assert.strictEqual(incidents.length, 1);
+    assert.strictEqual(incidents[0].status, 'OPEN');
+    assert.strictEqual(incidents[0].attempt, 1);
+    assert.strictEqual(failedInstance.incidentCode, incidents[0].code);
+    assert.strictEqual(auditEvents.some(event => event.eventType === 'process.incident.opened'), true);
+
+    let compensation = await runtimeService.compensateInstance({
+        tenant: 'default',
+        authData: { loginId: 'recovery-operator' },
+        instanceCode: failedInstance.code,
+        runtimeOperation: { payload: { reasonCode: 'BUSINESS_ROLLBACK' } }
+    });
+    assert.strictEqual(compensation.code, 'SUC_PROCESS_00013');
+    assert.strictEqual(incidents[0].status, 'COMPENSATED');
+    assert.strictEqual(failedInstance.compensationStatus, 'COMPLETED');
+
+    incidents[0].status = 'OPEN';
+    failedInstance.compensationStatus = 'PENDING';
+    versions.find(version => version.definitionCode === 'unsafeActionProcess').graph.nodes
+        .find(node => node.code === 'unsafe').action = { moduleName: 'nodics.process', operation: 'noop' };
+    let retried = await runtimeService.retryInstance({
+        tenant: 'default',
+        authData: { loginId: 'recovery-operator' },
+        instanceCode: failedInstance.code,
+        runtimeOperation: { expectedAttempt: 1 }
+    });
+    assert.strictEqual(retried.code, 'SUC_PROCESS_00012');
+    assert.strictEqual(incidents[0].status, 'RESOLVED');
+    assert.strictEqual(incidents[0].attempt, 2);
+    assert.strictEqual(failedInstance.status, 'COMPLETED');
+    assert.strictEqual(auditEvents.some(event => event.eventType === 'process.incident.resolved'), true);
 
     await assert.rejects(
         () => runtimeService.claimTask({ tenant: 'default', taskCode: tasks[0].code }),

@@ -38,6 +38,7 @@ module.exports = {
                     page: 'cms.cmsPage',
                     section: 'cms.cmsComponentDetail',
                     component: 'cms.cmsComponent',
+                    componentLocalization: 'cms.cmsComponentLocalization',
                     media: 'cms.cmsComponentMedia and media-owned media/mediaSet',
                     route: 'cms.cmsPageRoute',
                     navigation: 'cms.cmsNavigationNode',
@@ -72,6 +73,7 @@ module.exports = {
         let saved = {};
         saved.page = await this.saveRecord('DefaultCmsPageService', request, this.pageModel(draft));
         saved.components = [];
+        saved.localizations = [];
         saved.sections = [];
         saved.media = [];
         for (let sectionIndex = 0; sectionIndex < draft.sections.length; sectionIndex++) {
@@ -79,6 +81,10 @@ module.exports = {
             for (let componentIndex = 0; componentIndex < section.components.length; componentIndex++) {
                 let component = section.components[componentIndex];
                 saved.components.push(await this.saveRecord('DefaultCmsComponentService', request, this.componentModel(component)));
+                for (let localization of component.localizations) {
+                    saved.localizations.push(await this.saveRecord('DefaultCmsComponentLocalizationService', request,
+                        this.localizationModel(component, localization)));
+                }
                 saved.sections.push(await this.saveRecord('DefaultCmsComponentDetailService', request,
                     this.sectionModel(draft, section, component, sectionIndex, componentIndex)));
                 for (let mediaIndex = 0; mediaIndex < component.media.length; mediaIndex++) {
@@ -226,6 +232,7 @@ module.exports = {
                 renderer: safe.renderer,
                 accessMode: safe.accessMode || 'AUTHENTICATED',
                 properties: safe.properties && typeof safe.properties === 'object' && !Array.isArray(safe.properties) ? safe.properties : undefined,
+                localizations: Array.isArray(safe.localizations) ? safe.localizations.map(this.normalizeLocalization.bind(this)) : [],
                 media: Array.isArray(safe.media) ? safe.media : []
             };
         });
@@ -289,7 +296,12 @@ module.exports = {
 
     /** Validates one component type against a template slot allowlist. */
     validateComponentForSlot: async function (request, component, slot) {
-        await this.getSingle('DefaultCmsTypeCodeService', request, { code: component.typeCode, kind: 'COMPONENT', active: true }, 'ERR_CMS_00100');
+        let typeCode = await this.getSingle('DefaultCmsTypeCodeService', request, { code: component.typeCode, kind: 'COMPONENT', active: true }, 'ERR_CMS_00100');
+        if (SERVICE.DefaultCmsContentLocalizationService) {
+            SERVICE.DefaultCmsContentLocalizationService.validateTypeContract(typeCode);
+            component.localizations.forEach(localization => SERVICE.DefaultCmsContentLocalizationService.validateVariant(
+                localization, typeCode, component));
+        }
         if (Array.isArray(slot.allowedComponentTypes) && slot.allowedComponentTypes.length &&
             !slot.allowedComponentTypes.includes(component.typeCode)) {
             throw this.error('ERR_CMS_00104', 'Component type is not allowed in the selected template slot');
@@ -346,6 +358,18 @@ module.exports = {
             properties: component.properties,
             accessMode: component.accessMode,
             subComponents: []
+        };
+    },
+
+    /** Builds one locale variant persisted separately from shared component properties. */
+    localizationModel: function (component, localization) {
+        return {
+            code: [component.code, localization.locale].join('-'),
+            componentCode: component.code,
+            locale: localization.locale,
+            properties: localization.properties,
+            seo: localization.seo,
+            status: localization.status || 'DRAFT'
         };
     },
 
@@ -438,6 +462,7 @@ module.exports = {
             typeCode: this.requiredCode(input.typeCode, 'component.typeCode'),
             renderer: input.renderer,
             properties: input.properties,
+            localizations: Array.isArray(input.localizations) ? input.localizations.map(this.normalizeLocalization.bind(this)) : [],
             accessMode: input.accessMode || 'AUTHENTICATED',
             subComponents: Array.isArray(input.subComponents) ? input.subComponents : []
         };
@@ -512,6 +537,7 @@ module.exports = {
             mediaFormats: mediaFormats.map(this.mediaFormatReference.bind(this)),
             mediaTypes: ['IMAGE', 'VIDEO', 'DOCUMENT', 'FILE', 'MIXED'],
             navigationNodes: navigationNodes.map(this.navigationReference.bind(this)),
+            localization: this.clientLocalizationPolicy(),
             publicationReadiness: {
                 requireNavigationForPublish: this.authoringPolicy().requireNavigationForPublish,
                 requiredDraftParts: ['catalogCode', 'siteCode', 'templateCode', 'page', 'sections', 'route']
@@ -572,7 +598,19 @@ module.exports = {
         return {
             code: item.code,
             name: item.name || item.displayName || item.code,
-            kind: item.kind
+            kind: item.kind,
+            propertySchema: item.propertySchema
+        };
+    },
+
+    /** Normalizes a component locale variant without merging it into shared properties. */
+    normalizeLocalization: function (input) {
+        let safe = input && typeof input === 'object' && !Array.isArray(input) ? input : {};
+        return {
+            locale: this.requiredText(safe.locale, 'localization.locale'),
+            properties: safe.properties && typeof safe.properties === 'object' && !Array.isArray(safe.properties) ? safe.properties : {},
+            seo: safe.seo && typeof safe.seo === 'object' && !Array.isArray(safe.seo) ? safe.seo : undefined,
+            status: safe.status || 'DRAFT'
         };
     },
 
@@ -686,6 +724,16 @@ module.exports = {
             requireNavigationForPublish: policy.requireNavigationForPublish,
             draftDefaults: policy.draftDefaults,
             componentKinds: Array.isArray(policy.componentKinds) ? policy.componentKinds : []
+        };
+    },
+
+    /** Returns the bounded locale policy needed by Axis authoring controls. */
+    clientLocalizationPolicy: function () {
+        let configured = (typeof CONFIG !== 'undefined' && CONFIG.get ? (CONFIG.get('cms') || {}).localization : {}) || {};
+        return {
+            supportedLocales: Array.isArray(configured.supportedLocales) ? configured.supportedLocales : [],
+            defaultLocale: configured.defaultLocale || 'en',
+            fallbackLocales: Array.isArray(configured.fallbackLocales) ? configured.fallbackLocales : []
         };
     },
 

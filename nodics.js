@@ -14,7 +14,7 @@
  * @description Declares the nodics.ai framework repository boundary as a standard module-group-shaped package without making it a runtime module.
  * @layer framework-root
  * @owner nodics.ai
- * @override Do not add runtime behavior here. Functional modules such as nodics.core, nodics.platform, nodics.wcms, nodics.cron, nodics.process, nodics.engagement, and nodics.docs own runtime behavior.
+ * @override Do not add runtime behavior here. Functional modules such as nodics.core, nodics.localization, nodics.platform, nodics.wcms, nodics.cron, nodics.process, nodics.engagement, and nodics.docs own runtime behavior.
  */
 const path = require('path');
 const nodicsCore = require('./nodics.core/nodics');

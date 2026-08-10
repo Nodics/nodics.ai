@@ -20,6 +20,7 @@ module.exports = {
     _timer: null,
     _running: false,
     _registered: [],
+    _backofficeCapabilityProviders: new Map(),
     _metrics: { attempts: 0, successes: 0, failures: 0, deregistrations: 0, lastSuccessAt: null, lastFailureAt: null },
 
     /** Registers this agent with the central runtime lifecycle. */
@@ -72,6 +73,34 @@ module.exports = {
         return (NODICS.getActiveModules() || []).slice();
     },
 
+    /** Registers one concrete module-owned BackOffice capability provider for this runtime instance. */
+    registerBackofficeCapabilityProvider: function (moduleName, provider) {
+        if (!/^[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(moduleName || '') || !provider ||
+            typeof provider.getCapability !== 'function') {
+            throw new Error('BackOffice capability provider contract is invalid');
+        }
+        if (this._backofficeCapabilityProviders.has(moduleName) &&
+            this._backofficeCapabilityProviders.get(moduleName) !== provider) {
+            throw new Error('Duplicate BackOffice capability provider for module ' + moduleName);
+        }
+        this._backofficeCapabilityProviders.set(moduleName, provider);
+        return true;
+    },
+
+    /** Resolves module-owned capability metadata, retaining configuration only as bounded migration compatibility. */
+    getBackofficeCapability: function (moduleName, context) {
+        let legacy = (CONFIG.get('backofficeCapabilities') || {})[moduleName];
+        if (legacy && legacy.enabled === false) return undefined;
+        let provider = this._backofficeCapabilityProviders.get(moduleName);
+        let capability = provider && provider.getCapability(context || {});
+        if (capability && typeof capability.then === 'function') {
+            throw new Error('BackOffice capability providers must return synchronously during registration');
+        }
+        if (!capability) capability = legacy;
+        if (!capability || capability.enabled === false) return undefined;
+        return JSON.parse(JSON.stringify(capability));
+    },
+
     /** Builds a process-unique instance identity from selected runtime coordinates. */
     getInstanceId: function () {
         return [NODICS.getSelectedEnvironmentName(), NODICS.getServerName(), NODICS.getNodeName() || 'default', process.pid].join(':');
@@ -83,7 +112,6 @@ module.exports = {
         let metadata = rawModule.metaData || {};
         let nodicsMetadata = metadata.nodics || {};
         let runtime = nodicsMetadata.runtime || {};
-        let backoffice = (CONFIG.get('backofficeCapabilities') || {})[moduleName];
         let config = this.getConfiguration();
         let registration = {
             moduleName: moduleName,
@@ -106,7 +134,12 @@ module.exports = {
         if (nodicsMetadata.functionalModule) {
             registration.functionalModule = JSON.parse(JSON.stringify(nodicsMetadata.functionalModule));
         }
-        if (backoffice && backoffice.enabled !== false) registration.backoffice = JSON.parse(JSON.stringify(backoffice));
+        let backoffice = this.getBackofficeCapability(moduleName, {
+            moduleName: moduleName,
+            rawModule: rawModule,
+            runtime: runtime
+        });
+        if (backoffice) registration.backoffice = backoffice;
         if (registration.clientCallable) registration.endpoint = SERVICE.DefaultRouterService.prepareUrl({ moduleName: moduleName });
         return registration;
     },

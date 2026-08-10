@@ -1,0 +1,9 @@
+{
+    "formatVersion": 1,
+    "ownerModule": "localizationCore",
+    "entries": [
+        { "namespace": "common", "key": "action.save", "defaultMessage": "Save", "parameters": [], "exposure": "PUBLIC" },
+        { "namespace": "common", "key": "action.cancel", "defaultMessage": "Cancel", "parameters": [], "exposure": "PUBLIC" },
+        { "namespace": "localization", "key": "bundle.updated", "defaultMessage": "Translations updated to release {releaseVersion}", "parameters": ["releaseVersion"], "exposure": "OPERATOR" }
+    ]
+}

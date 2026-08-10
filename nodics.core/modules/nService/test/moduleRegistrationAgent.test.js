@@ -48,6 +48,7 @@ global.SERVICE = {
 const definition = require('../src/service/module/defaultModuleRegistrationAgentService');
 const service = Object.assign({}, definition, {
     _timer: null, _running: false, _registered: [],
+    _backofficeCapabilityProviders: new Map(),
     _metrics: { attempts: 0, successes: 0, failures: 0, deregistrations: 0, lastSuccessAt: null, lastFailureAt: null },
     LOG: { warn: function () {} }
 });
@@ -66,6 +67,14 @@ async function run() {
     assert.strictEqual(requests[0].requestBody.registrations[0].parentModule, 'nodics.wcms');
     assert.strictEqual(requests[0].requestBody.registrations[0].canonicalIdentity, 'nodics.wcms/modules/cms');
     assert.strictEqual(requests[0].requestBody.registrations[0].backoffice.capabilityId, 'content-management');
+    let provider = { getCapability: () => ({ enabled: true, capabilityId: 'service-owned-content',
+        displayName: 'Service-owned content', category: 'content', icon: 'content', contractVersion: 1,
+        minimumClientContractVersion: 1, roles: ['FUNCTIONAL_CAPABILITY_PROVIDER'] }) };
+    assert.strictEqual(service.registerBackofficeCapabilityProvider('cms', provider), true);
+    assert.strictEqual(service.buildRegistration('cms').backoffice.capabilityId, 'service-owned-content',
+        'concrete module service must take precedence over legacy capability configuration');
+    assert.throws(() => service.registerBackofficeCapabilityProvider('cms', { getCapability: () => ({}) }),
+        /Duplicate BackOffice capability provider/);
     CONFIG.get = key => ({ backofficeRegistration: { enabled: true, moduleName: 'backoffice',
         heartbeatIntervalMs: 10000, retryIntervalMs: 5000, maxModulesPerRegistration: 512 }, backofficeCapabilities: {
         cms: { enabled: false, capabilityId: 'environment-disabled' }

@@ -55,6 +55,13 @@
         "npm run test:full"
       ],
       "ownedDependencies": {
+        "@formatjs/icu-messageformat-parser": {
+          "owners": [
+            "nodics.localization"
+          ],
+          "type": "runtime-localization",
+          "reason": "ICU MessageFormat parsing and validation for centrally managed localized messages."
+        },
         "bcryptjs": {
           "owners": [
             "nodics.core"
@@ -316,6 +323,7 @@
   },
   "workspaces": [
     "nodics.core",
+    "nodics.localization",
     "nodics.platform",
     "nodics.cron",
     "nodics.wcms",
@@ -381,6 +389,7 @@
     "@scarf/scarf": false
   },
   "dependencies": {
+    "@formatjs/icu-messageformat-parser": "^3.5.16",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.2",
     "busboy": "^1.6.0",

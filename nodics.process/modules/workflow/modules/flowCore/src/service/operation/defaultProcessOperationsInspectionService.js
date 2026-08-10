@@ -71,6 +71,11 @@ module.exports = {
         return SERVICE.DefaultProcessAuditEventService;
     },
 
+    /** Returns the generated Process recovery-incident service. */
+    incidentService: function () {
+        return SERVICE.DefaultProcessIncidentService;
+    },
+
     /**
      * Validates stable runtime entity codes.
      *
@@ -180,6 +185,25 @@ module.exports = {
         let task = response.result && response.result[0];
         if (!task) throw new CLASSES.NodicsError('ERR_PROCESS_00008', 'Process task was not found');
         return { code: 'SUC_PROCESS_00000', data: task };
+    },
+
+    /** Lists recovery incidents using bounded operational filters. */
+    listIncidents: async function (request) {
+        let response = await this.incidentService().get(this.serviceRequest(request, {
+            query: this.safeQuery(request, ['instanceCode', 'definitionCode', 'nodeCode', 'status', 'errorCode']),
+            searchOptions: { limit: this.listLimit(request), sort: { lastErrorAt: -1 } }
+        }));
+        return { code: 'SUC_PROCESS_00000', data: response.result || [] };
+    },
+
+    /** Reads one Process-owned recovery incident. */
+    getIncident: async function (request) {
+        let response = await this.incidentService().get(this.serviceRequest(request, {
+            query: { code: this.assertCode(request.incidentCode) }, searchOptions: { limit: 2 }
+        }));
+        let incident = response.result && response.result[0];
+        if (!incident) throw new CLASSES.NodicsError('ERR_PROCESS_00022', 'Process recovery incident was not found');
+        return { code: 'SUC_PROCESS_00000', data: incident };
     },
 
     /**

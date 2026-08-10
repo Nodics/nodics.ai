@@ -37,6 +37,12 @@ for startup/bootstrap data, `data/core` for core/reference imports, and
 `data/sample` for demo/sample imports. Do not create empty `data/` folders on
 project roots or pure group modules.
 
+Every non-empty published system-data root must contain exactly one aggregate
+`data/manifest.json` following `data-manifest-contract.md`. Init, core, sample,
+content-pack, and governed source contributions are separate versioned sections
+inside that file. Do not create a root `manifest/` directory or per-type
+`data/<type>/manifest.json` files.
+
 Canonical source files used to generate importable data must stay inside the
 same data ownership tree, for example `data/core/source/...`, while generated
 records remain under the matching `data/core/data/...` and

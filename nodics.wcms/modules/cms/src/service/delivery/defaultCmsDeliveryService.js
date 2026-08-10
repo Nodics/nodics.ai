@@ -29,15 +29,7 @@ module.exports = {
         let context = this.normalizeContext(request);
         let isPublic = request.router && request.router.publicAccess === true;
         if ((((CONFIG.get('cms') || {}).publication || {}).enabled) === true) return this.resolvePublishedManifest(request, context, isPublic);
-        let route = await this.getSingle(SERVICE.DefaultCmsPageRouteService, request, {
-            site: context.site,
-            path: context.path,
-            locale: context.locale,
-            channel: context.channel,
-            deliveryState: 'ONLINE',
-            accessMode: isPublic ? 'PUBLIC' : 'AUTHENTICATED',
-            active: true
-        }, 'ERR_CMS_00087');
+        let route = await this.resolveRoute(request, context, isPublic);
         if (route.routeType === 'REDIRECT') {
             return { result: { contractVersion: 1, type: 'REDIRECT', path: context.path, redirectPath: route.redirectPath } };
         }
@@ -46,7 +38,7 @@ module.exports = {
         let templateCode = this.codeOf(page.template);
         let template = templateCode ? await this.getSingle(SERVICE.DefaultCmsPageTemplateService, request,
             { code: templateCode, active: true }, 'ERR_CMS_00089') : undefined;
-        let graph = await this.resolveGraph(request, [page.code], isPublic ? 'PUBLIC' : 'AUTHENTICATED');
+        let graph = await this.resolveGraph(request, [page.code], isPublic ? 'PUBLIC' : 'AUTHENTICATED', context.locale);
         return {
             result: {
                 contractVersion: 1,
@@ -57,6 +49,22 @@ module.exports = {
                 page: this.projectPage(page, template, graph[page.code] || [])
             }
         };
+    },
+
+    /** Resolves an exact locale route before the configured legacy default route. */
+    resolveRoute: async function (request, context, isPublic) {
+        let localization = this.localizationPolicy();
+        let locales = [context.locale];
+        if (localization.legacyRouteLocale && localization.legacyRouteLocale !== context.locale) locales.push(localization.legacyRouteLocale);
+        for (let locale of locales) {
+            let models = await this.getMany(SERVICE.DefaultCmsPageRouteService, request, {
+                site: context.site, path: context.path, locale: locale, channel: context.channel,
+                deliveryState: 'ONLINE', accessMode: isPublic ? 'PUBLIC' : 'AUTHENTICATED', active: true
+            });
+            if (models.length > 1) throw this.error('ERR_CMS_00087', 'content identity is ambiguous');
+            if (models.length === 1) return models[0];
+        }
+        throw this.error('ERR_CMS_00087', 'content was not found');
     },
 
     /** Resolves delivery exclusively through the configured immutable Online manifest authority. */
@@ -81,13 +89,13 @@ module.exports = {
         return {
             site: String(input.site),
             path: input.path.replace(/\/+/g, '/'),
-            locale: String(input.locale || settings.defaultLocale),
+            locale: String(input.locale || this.localizationPolicy().defaultLocale || settings.defaultLocale),
             channel: String(input.channel || settings.defaultChannel)
         };
     },
 
     /** Resolves component associations breadth-first within configured bounds. */
-    resolveGraph: async function (request, rootCodes, accessMode) {
+    resolveGraph: async function (request, rootCodes, accessMode, locale) {
         let settings = this.settings();
         let graph = {};
         let visited = new Set();
@@ -108,7 +116,14 @@ module.exports = {
             let components = targetCodes.length ? await this.getMany(SERVICE.DefaultCmsComponentService, request, {
                 code: { $in: targetCodes }, active: true
             }) : [];
-            let mediaByComponent = targetCodes.length ? await this.resolveComponentMedia(request, targetCodes) : {};
+            let variants = targetCodes.length && SERVICE.DefaultCmsComponentLocalizationService ?
+                await this.getMany(SERVICE.DefaultCmsComponentLocalizationService, request, { componentCode: { $in: targetCodes }, active: true }) : [];
+            let variantsByComponent = variants.reduce((result, variant) => {
+                result[variant.componentCode] = result[variant.componentCode] || [];
+                result[variant.componentCode].push(variant);
+                return result;
+            }, {});
+            let mediaByComponent = targetCodes.length ? await this.resolveComponentMedia(request, targetCodes, locale) : {};
             if (accessMode === 'PUBLIC' && components.some(component => component.accessMode !== 'PUBLIC')) {
                 throw this.error('ERR_CMS_00086', 'public page composition contains protected content');
             }
@@ -119,7 +134,8 @@ module.exports = {
             sources.forEach(source => {
                 graph[source] = associations.filter(item => item.source === source).map(item => {
                     let target = byCode[this.codeOf(item.target)];
-                    return target ? this.projectComponent(target, item, mediaByComponent[target.code] || []) : null;
+                    return target ? this.projectComponent(target, item, mediaByComponent[target.code] || [],
+                        variantsByComponent[target.code] || [], locale) : null;
                 }).filter(Boolean);
             });
             frontier = components.map(component => component.code);
@@ -149,12 +165,14 @@ module.exports = {
     },
 
     /** Resolves ordered CMS-owned media associations for resolved components. */
-    resolveComponentMedia: async function (request, componentCodes) {
+    resolveComponentMedia: async function (request, componentCodes, locale) {
         if (!SERVICE.DefaultCmsComponentMediaService) return {};
         let references = await this.getMany(SERVICE.DefaultCmsComponentMediaService, request, {
             componentCode: { $in: componentCodes },
             active: true
         });
+        references = SERVICE.DefaultCmsContentLocalizationService ?
+            SERVICE.DefaultCmsContentLocalizationService.selectMedia(references, locale) : references;
         references.sort((left, right) => (left.position || 0) - (right.position || 0));
         return references.reduce((result, item) => {
             result[item.componentCode] = result[item.componentCode] || [];
@@ -174,9 +192,14 @@ module.exports = {
     },
 
     /** Projects safe component and association fields. */
-    projectComponent: function (component, association, componentMedia) {
+    projectComponent: function (component, association, componentMedia, variants, locale) {
         let result = this.pickDefined(component, ['code', 'typeCode', 'renderer', 'rendererContractVersion',
             'rendererChannels', 'rendererDeprecated', 'rendererReplacement', 'properties']);
+        if (SERVICE.DefaultCmsContentLocalizationService) {
+            let resolved = SERVICE.DefaultCmsContentLocalizationService.resolve(component, variants, locale);
+            result.properties = resolved.properties;
+            result.localization = resolved.localization;
+        }
         if (componentMedia && componentMedia.length) result.media = componentMedia;
         return Object.assign(result, { slot: association.slot || 'default', index: association.index || 0, components: [] });
     },
@@ -207,6 +230,12 @@ module.exports = {
             throw this.error('ERR_CMS_00083', 'CMS delivery configuration is incomplete');
         }
         return Object.assign({}, configured);
+    },
+
+    /** Returns locale-delivery compatibility policy without exposing authoring configuration. */
+    localizationPolicy: function () {
+        let configured = typeof CONFIG !== 'undefined' && CONFIG.get ? (CONFIG.get('cms') || {}).localization : {};
+        return Object.assign({ legacyRouteLocale: 'default' }, configured || {});
     },
 
     /** Creates a stable CMS delivery error. */

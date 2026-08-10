@@ -375,6 +375,7 @@ module.exports = {
                 { tool: ['test:capability-behavior', '--area=profile'] }
             ],
             backoffice: [
+                { node: 'nodics.platform/modules/backoffice/test/backofficeCapabilityRegistryService.test.js' },
                 { node: 'nodics.platform/modules/backoffice/test/backofficeModuleBoundaryContract.test.js' },
                 { node: 'nodics.platform/modules/backoffice/test/backofficeRegistryRouteContract.test.js' },
                 { node: 'nodics.platform/modules/backoffice/test/backofficeApiContract.test.js' },

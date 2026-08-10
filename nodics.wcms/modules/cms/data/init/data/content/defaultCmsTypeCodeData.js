@@ -50,10 +50,10 @@ module.exports = {
             maximumReferences: 1
         },
         propertySchema: {
-            title: { type: 'string', required: false, description: 'Text title rendered with the image' },
-            summary: { type: 'string', required: false, description: 'Short text rendered with the image' },
-            ctaLabel: { type: 'string', required: false, description: 'Optional call-to-action label' },
-            ctaUrl: { type: 'string', required: false, description: 'Optional safe application URL or route key' }
+            title: { type: 'string', localized: true, required: false, description: 'Text title rendered with the image' },
+            summary: { type: 'string', localized: true, required: false, description: 'Short text rendered with the image' },
+            ctaLabel: { type: 'string', localized: true, required: false, description: 'Optional call-to-action label' },
+            ctaUrl: { type: 'string', localized: false, required: false, description: 'Optional safe application URL or route key' }
         }
     },
     record7: {
@@ -65,7 +65,7 @@ module.exports = {
             maximumReferences: 1
         },
         propertySchema: {
-            caption: { type: 'string', required: false, description: 'Optional display caption owned by CMS content' }
+            caption: { type: 'string', localized: true, required: false, description: 'Optional display caption owned by CMS content' }
         }
     },
     record8: {
@@ -129,10 +129,11 @@ module.exports = {
             maximumReferences: 10
         },
         propertySchema: {
-            heading: { type: 'string', required: false, description: 'Banner heading text' },
-            subheading: { type: 'string', required: false, description: 'Banner supporting text' },
-            ctaLabel: { type: 'string', required: false, description: 'Banner call-to-action label' },
-            ctaUrl: { type: 'string', required: false, description: 'Safe application URL or route key' }
+            heading: { type: 'string', localized: true, required: true, requiredLocales: ['en', 'ar'], description: 'Banner heading text' },
+            subheading: { type: 'string', localized: true, required: false, description: 'Banner supporting text' },
+            ctaLabel: { type: 'string', localized: true, required: false, description: 'Banner call-to-action label' },
+            ctaUrl: { type: 'string', localized: false, required: false, description: 'Safe application URL or route key' },
+            analyticsId: { type: 'string', localized: false, required: false, description: 'Stable analytics identity shared by every locale' }
         }
     },
     record20: {

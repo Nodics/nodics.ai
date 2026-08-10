@@ -11,8 +11,57 @@
 
 /**
  * @module nodics.commerce/config/properties
- * @description Delegates Commerce defaults to the module-owned configuration utility.
+ * @description Publishes only cross-capability Commerce runtime operating defaults.
  * @layer config
  * @owner nodics.commerce
+ * @override Project, environment, server, node, and tenant layers may override
+ * intentional configuration deltas while concrete child modules retain all
+ * business behavior and schema ownership.
  */
-module.exports = require('../src/utils/defaultCommerceProperties');
+
+module.exports = {
+    commerce: {
+        capabilities: {
+            baseCommerce: true,
+            cart: true,
+            order: true,
+            payment: true,
+            fulfillment: true,
+            reverseLifecycle: true
+        },
+        operations: {
+            budgetVersion: '1',
+            limits: {
+                maximumPageSize: 100,
+                maximumCartEntries: 500,
+                maximumBatchSize: 100,
+                maximumConcurrentProviderRequests: 25
+            },
+            retries: {
+                maximumAttempts: 5,
+                baseDelayMs: 250,
+                maximumDelayMs: 30000
+            },
+            referenceObjectives: {
+                cartCalculationP95Ms: 250,
+                checkoutPlacementP95Ms: 1500,
+                operatorReadP95Ms: 500,
+                recoveryPointMinutes: 15,
+                recoveryTimeMinutes: 60
+            },
+            deploymentApprovalRequired: true,
+            note: 'Reference objectives require environment-specific load, soak, provider, backup, restore, failover, and owner acceptance evidence.'
+        },
+        compatibility: {
+            aliasWindow: '2_MINOR_RELEASES_OR_180_DAYS',
+            rejectUnknownMajor: true
+        },
+        migration: {
+            defaultStrategy: 'DRY_RUN',
+            requireTenantCounts: true,
+            requireSourceHashes: true,
+            quarantineFailures: true,
+            rollbackRequired: true
+        }
+    }
+};

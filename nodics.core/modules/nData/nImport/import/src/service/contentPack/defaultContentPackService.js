@@ -196,8 +196,10 @@ module.exports = {
             if (!fs.existsSync(manifestPath) || !fs.existsSync(contentPath)) {
                 return { available: false };
             }
-            let manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-            this.validateManifest(context, manifest, repositoryPath);
+            let manifestDocument = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+            let manifest = this.resolveManifestSection(context, manifestDocument);
+            let fileRoot = manifestDocument.sections ? path.dirname(manifestPath) : repositoryPath;
+            this.validateManifest(context, manifest, fileRoot, repositoryPath);
             let checksum = this.createReleaseChecksum(manifest.generatedHashes);
             if (manifest.releaseChecksum && manifest.releaseChecksum !== checksum) {
                 throw this.createError('ERR_IMP_00003', 'Content-pack release checksum validation failed');
@@ -214,6 +216,20 @@ module.exports = {
             if (error && error.code && String(error.code).startsWith('ERR_IMP_')) throw error;
             throw this.createError('ERR_IMP_00003', 'Configured content-pack release is invalid');
         }
+    },
+
+    /** Resolves one configured content-pack section from the module-owned aggregate data manifest. */
+    resolveManifestSection: function (context, manifestDocument) {
+        if (!manifestDocument || !manifestDocument.sections) return manifestDocument;
+        if (manifestDocument.contractVersion !== 2 || typeof manifestDocument.sections !== 'object') {
+            throw this.createError('ERR_IMP_00003', 'Aggregate data manifest contract is unsupported');
+        }
+        let sectionName = context.source.manifestSection;
+        let section = sectionName && manifestDocument.sections[sectionName];
+        if (!section || section.kind !== 'CONTENT_PACK') {
+            throw this.createError('ERR_IMP_00003', 'Configured content-pack manifest section is unavailable');
+        }
+        return Object.assign({ contractVersion: manifestDocument.contractVersion }, section);
     },
 
     /** Resolves a bounded configured sibling repository path. */
@@ -277,7 +293,7 @@ module.exports = {
     },
 
     /** Validates manifest identity, contract, files, and hashes. */
-    validateManifest: function (context, manifest, repositoryPath) {
+    validateManifest: function (context, manifest, fileRoot, repositoryPath) {
         let allowedVersions = context.configuration.allowedContractVersions || [1];
         let expectedManifestPack = this.resolveExpectedManifestPack(context, repositoryPath);
         if (manifest.pack !== expectedManifestPack ||
@@ -288,7 +304,7 @@ module.exports = {
             throw this.createError('ERR_IMP_00003', 'Content-pack manifest is incompatible');
         }
         Object.keys(manifest.generatedHashes).forEach(relativeFile => {
-            let filePath = this.resolveContainedPath(repositoryPath, relativeFile, 'generated file');
+            let filePath = this.resolveContainedPath(fileRoot, relativeFile, 'generated file');
             if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
                 throw this.createError('ERR_IMP_00003', 'Content-pack generated file is missing');
             }
