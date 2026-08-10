@@ -1,6 +1,6 @@
 {
   "pack": "nodics.platform.axis",
-  "version": "0.3.29",
+  "version": "0.3.30",
   "contractVersion": 1,
   "title": "Nodics Axis",
   "pages": [
@@ -159,6 +159,18 @@
       "evidence": "data/core/source/documentation/pages/media-management.md",
       "summary": "Understand the governed Media Management navigation, route shell, backend ownership, storage and delivery boundaries, and upcoming capability slices.",
       "audience": ["administrator", "operator", "developer", "business-user"]
+    },
+    {
+      "code": "customer-engagement",
+      "title": "Customer Engagement Workspaces",
+      "route": "/docs/nodics-axis/customer-engagement",
+      "section": "Axis Capabilities",
+      "sectionOrder": 30,
+      "order": 116,
+      "source": "pages/customer-engagement.md",
+      "evidence": "data/core/source/documentation/pages/customer-engagement.md",
+      "summary": "Use the lightweight six-domain Engagement journey for contact, testimonials, reviews, feedback, work management, governance, and recovery.",
+      "audience": ["business-user", "administrator", "operator", "developer"]
     },
     {
       "code": "openapi-reference",

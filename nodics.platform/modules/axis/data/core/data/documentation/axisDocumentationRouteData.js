@@ -170,6 +170,18 @@ module.exports = {
     "active": true
   },
   "record13": {
+    "code": "axisDocsRoutecustomerengagement",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/customer-engagement",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPagecustomerengagement",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "AUTHENTICATED",
+    "active": true
+  },
+  "record14": {
     "code": "axisDocsRouteopenapireference",
     "site": "axisDocumentationSite",
     "path": "/docs/nodics-axis/openapi-reference",
@@ -181,7 +193,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record14": {
+  "record15": {
     "code": "axisDocsRoutefeaturedelivery",
     "site": "axisDocumentationSite",
     "path": "/docs/nodics-axis/feature-delivery",
@@ -193,7 +205,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record15": {
+  "record16": {
     "code": "axisDocsRouteimplementationcontract",
     "site": "axisDocumentationSite",
     "path": "/docs/nodics-axis/implementation-contract",

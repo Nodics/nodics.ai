@@ -268,6 +268,23 @@ module.exports = {
           "searchText": "Media Management Workspace Understand the governed Media Management navigation, route shell, backend ownership, storage and delivery boundaries, and upcoming capability slices. # Media Management Workspace\n\n## Purpose\n\nMedia Management gives BackOffice users a single place to work with files that\nNodics stores through the framework media lifecycle. A media file can be an\nimport spreadsheet, a CMS banner image, a product gallery image, a product\nthumbnail, a PDF document, or another governed file that a business process\nneeds to keep and reference.\n\nAxis does not own media storage. The backend `nMedia` module owns media\nmetadata, folders, formats, sets, references, storage provider selection,\nstorage-key generation, upload validation, access policy, and content delivery.\nAxis only renders the employee workspace that is returned by the BackOffice\nnavigation contract.\n\nIn the Axis UI, the word **Visibility** is used for the backend media access\npolicy. Visibility answers a business question: \"who can safely open this\nfile?\" It does not mean database permission and it does not mean the employee's\nBackOffice role. For example, data import and data export files are normally\nprivate, while approved CMS or product assets may become public or signed later.\n\n## Navigation\n\nThe left navigation group is **Media Management**. It is published by nMedia\nthrough `backofficeCapabilities.media.navigation`, not hardcoded in Axis. The\ncurrent first slice exposes these entries:\n\n- **Media** for uploaded media records.\n- **Media Folders** for purpose-based folders such as import sources, data\n  export files, CMS assets, product assets, and utility files.\n- **Media Sets** for groups of related media variants, such as a product image\n  gallery or responsive CMS image set.\n- **Media Formats** for reusable formats such as original, thumbnail, mobile,\n  desktop, zoom, and import file.\n- **Media Usage** for finding which product, CMS, import, or business record is\n  referencing a media item.\n- **Storage and Delivery** for provider policy, visibility, and delivery\n  behavior.\n\nThese entries appear only when BackOffice returns them for the authenticated\nemployee. Axis must not show a duplicate static media menu when the backend does\nnot authorize it.\n\n## Implemented Axis behavior\n\nThe implemented browser route is `/media/*`, but page composition is\nowned by the authenticated Axis CMS content catalog route at\n`/media`. The catalog maps `axis.page.media-management` to the Axis\npage renderer, `axis.template.media-management` to the template renderer, and\n`axis.component.media-management-workspace` to the reusable workspace component\nrenderer. The renderer reads the current browser location and backend-published\nnavigation to make each section route meaningful:\n\n- `/media` explains the full governed media operations area.\n- `/media/items` explains uploaded media records.\n- `/media/folders` explains media folder policy.\n- `/media/sets` explains logical media sets and variants.\n- `/media/formats` explains reusable presentation or processing\n  formats.\n- `/media/usage` explains media references and usage tracing.\n- `/media/storage-delivery` explains provider policy and delivery\n  behavior.\n\nThe active section shows three beginner-friendly blocks:\n\n1. the backend owner or model that remains authoritative;\n2. what the employee workspace can safely show now;\n3. the next capability slices that will make the section operational.\n\nThe route uses the same employee session, screen-lock, runtime bootstrap,\nleft-nav, CMS renderer boundary, and authorization gates as the rest of Axis.\nAxis must not mount Media Management as a direct operations page that bypasses\nthe content catalog and renderer registry.\n\nThe **Media** section now includes an operational media record workspace. Axis\ndiscovers the `media` schema through the same generated Schema Workbench\ncontract used by the Business Data workbench, then searches records through the\nowning nMedia module connection. The screen shows safe business metadata such as\nmedia code, original filename, folder, format, visibility, lifecycle status,\nMIME type, extension, size, checksum, checksum algorithm, and provider. Normal\nbusiness detail panels do not expose provider storage keys or backend-resolved\nfull paths.\n\nThe media list is designed to scale beyond the small local-development list.\nBusiness users can narrow media records by:\n\n- **Source type**, which is the business purpose published by nMedia context\n  metadata or, for older backend deployments, derived from backend folder\n  metadata. Examples include data imports, data exports, product media, content\n  media, business documents, or utility media;\n- **Visibility**, such as private, public, or future signed delivery;\n- **Status**, such as ready, consumed, retired, or failed;\n- **Format**, such as import file, original, thumbnail, desktop, mobile, or a\n  partner-defined format;\n- free-text search across safe metadata such as code, filename, folder, format,\n  status, MIME type, and extension.\n\nAxis sends search text, queryable source-type/facet selections, page number,\npage size, and the schema default sort to nMedia through the generated\nSchema Workbench record contract. The table count comes from the backend\n`totalCount`, not from a browser-side full-record load. Axis only renders\nfilters when the active schema advertises the corresponding safe filter field\nand operator. Source type is mapped to backend folder codes from `/contexts`,\nthen passed as a `folderCode` filter when the media schema allows it. This keeps\nlarge media libraries scalable while preserving nMedia as the only authority for\nrecord retrieval, filtering, storage, and delivery. Axis must not create a\nbrowser-only media index or read storage folders directly.\n\nThe same section also supports governed upload. The employee selects an upload\npurpose, such as data imports, content media, product media, or utility media.\nAxis first asks nMedia for backend-owned media source contexts through\n`/contexts`. The context response tells Axis which source types are eligible\nfor manual upload, which compatibility aliases identify the same source type,\nwhich folders and formats they use, and which route template can be shown to\nthe employee. Axis treats backend `sourceType`, `code`, and `aliases` as the\nauthority for source-type mapping. Regex-style browser guessing is only an\nolder-backend fallback when `/contexts` is unavailable. If an older backend does\nnot publish contexts, Axis falls back to the older `/storage/policy` folder\nprobes. Data exports are not shown as a manual-upload source type by default\nbecause export files are generated by the Exports workspace. When the employee\nuploads a file, Axis posts multipart data to the nMedia `/storage/upload`\nendpoint. nMedia validates the folder, file type, size, checksum, provider, and\nstorage key. Axis receives the returned media code and refreshes the media list.\nAxis does not choose the filesystem folder, does not generate the storage key,\nand does not persist\nmedia metadata directly.\n\nThe upload UI is implemented as the reusable `MediaUploadWizard` component under\nMedia Management operations. The wizard keeps the interaction layered:\n\n1. select a backend-published source type;\n2. show the resolved nMedia folder, format, route template, extension policy,\n   MIME policy, and max-size policy;\n3. show the backend-published target module and schema when a source type\n   requires target context;\n4. keep file selection disabled until a valid source type, policy, and required\n   target context are known;\n5. let the employee choose a local file;\n6. show a browser-only review; and\n7. submit the file to nMedia and call the parent refresh callback after a media\n   code is returned.\n\nThe browser-only review is intentionally advisory. Axis may show local metadata\nthat helps an employee catch obvious mistakes before upload, including file\nsize, MIME type, extension, image dimensions, a thumbnail for image files, CSV\nheaders and row count, JSON top-level shape, and a small text preview. These\nsignals are not business validation. nMedia still validates upload policy, and\nthe owning module, such as nImport, Product, CMS, or a partner module, still\nvalidates business content after it receives the media code.\n\nMedia detail includes three operational checks:\n\n1. **Delivery preview** uses the nMedia content endpoint only when the media is\n   public and in a deliverable lifecycle state.\n2. **Usage summary** checks nMedia `mediaReference` records for the selected\n   media code and links to `/media/usage?mediaCode=...` so the\n   employee can review where the file is used.\n3. **Lifecycle actions** expose retire or restore actions only when the\n   generated media schema allows update for the employee session. Axis blocks\n   retire when active usage references are visible, because a business user\n   should review dependencies before making a file inactive.\n\nThe **Media Folders** section uses the same backend-owned pattern. Axis\ndiscovers the `mediaFolder` schema from nMedia, searches folder records through\nthe nMedia module connection, and presents folder policy in business-friendly\nlanguage. It shows the folder code, name, description, storage prefix,\nvisibility/access mode, allowed extensions, allowed MIME types, maximum file\nsize, and retention days. This helps administrators understand where import\nfiles, data export files, CMS assets, product assets, and utility documents are\nrouted without making Axis own storage rules.\n\nWhen an employee selects a folder, Axis shows a policy-impact warning. The\nwarning explains that changes to the folder policy affect future upload\nvalidation, default visibility, retention, and provider-relative routing. It\nalso repeats the boundary: provider secrets, raw paths, and alternate\nbrowser-side upload rules must not be added to Axis.\n\nFolder policy editing is intentionally nMedia-owned. If the discovered\n`mediaFolder` schema does not advertise update permission for the employee\nsession, Axis shows the policy as read-only and directs administrators back to\nbackend-approved media configuration. When update is advertised, Axis exposes a\nsmall policy action panel for visibility, maximum upload size, and retention\ndays. The panel submits only those fields through the nMedia folder policy\noperation, so future upload validation uses the same backend authority. Axis\ndoes not edit storage prefixes, resolved paths, provider secrets, provider\nconfiguration, or browser-side policy rules. nMedia remains responsible for\nvalidation, routing, provider behavior, tenant policy, and persistence.\n\nMedia Management may link to Schema Workbench for generic `mediaFolder` record\ninspection, search, audit, or seed-data workflows instead of duplicating the\ngeneric record form. The handoff URL is\n`/schema-workbench?module=media&schema=mediaFolder`; when the backend advertises\ncreate permission, Axis may also link to\n`/schema-workbench?module=media&schema=mediaFolder&mode=create`. Those links do\nnot replace the nMedia policy operation for live upload-policy changes unless a\ndeployment explicitly synchronizes generated records into effective\nconfiguration through nMedia-owned governance.\n\nThe **Media Formats** section is also operational. Axis discovers the\n`mediaFormat` schema from nMedia and shows reusable presentation or processing\nformats such as original, thumbnail, desktop, mobile, zoom, or import file. The\nscreen presents format code, name, purpose, family, lifecycle status,\ndescription, width, height, and a combined dimensions view. Formats help backend\nand frontend teams use consistent business vocabulary for media variants without\nmaking Axis transform images or own storefront rendering behavior.\n\nFormat detail also asks nMedia for `/contexts` and shows where the selected\nformat is advertised. This answers questions such as \"which folders/source\ntypes can use desktop?\" without hardcoding source-type behavior in Axis. A\nformat can be default, allowed, both, or unused by the current backend context\nconfiguration. The live upload authority remains nMedia format policy; Schema\nWorkbench records are useful for inspection and audit, not a second browser\npolicy authority.\n\nThe **Media Sets** section now lists and searches logical media groups from the\n`mediaSet` schema. A media set represents one logical asset group, such as a\nproduct gallery, responsive CMS image group, documentation asset group, or mixed\nfile bundle. Axis shows the set code, name, description, media type, business\npurpose, and lifecycle status.\n\nWhen an employee selects a media set, Axis also loads the set composition from\nthe nMedia-owned `mediaSetEntry` schema. The detail panel shows each linked\nvariant with its media code, optional format code, variant role, locale,\nchannel, device, breakpoint, fallback entry, dimensions, position, primary\nflag, and lifecycle status. This keeps the business view clear: the set\ndescribes the logical group, each entry describes a specific reusable variant,\nand each variant still points to an owned media record. Axis does not duplicate\nvariant ownership or infer image behavior; it asks nMedia for the set entries\nusing a backend filter on the selected set code.\n\nSet-entry actions call nMedia-owned endpoints under\n`/sets/{mediaSetCode}/entries`. Axis can reorder entries, mark one entry as\nprimary, remove an entry from the set, and hand off full create/edit record\nworkflows to Schema Workbench. These actions intentionally do not update\nProduct, CMS, import, export, or partner business records. Those modules decide\nwhere a media set is used; nMedia manages the reusable media grouping and\nvariant metadata.\n\nThe **Media Usage** section now searches the nMedia `mediaReference` schema. A\nmedia reference answers the business question, \"where is this file or media set\nbeing used?\" without moving ownership away from the source module. For example,\na product record may reference a product gallery, a CMS component may reference\na banner image, or an import process may reference the uploaded source file.\nAxis shows the owner module, owner schema, owner record code, relation type,\nmedia code, media set code, position, and lifecycle status.\n\nWhen the route receives a `mediaCode` query parameter, Axis filters the usage\nworkspace to that media item. This gives Media detail a safe deep link into\nusage without inventing a second search endpoint. The filter still runs through\nnMedia's generated schema/workbench contract.\n\nUsage can also be filtered by owner module, owner schema, owner record, relation\ntype, and status when the backend schema advertises those fields as queryable.\nThe owner-record filter is useful when a business user already knows the\nProduct, CMS, import, export, or partner record that may be holding a reference.\n\nThis is not analytics usage and it is not a duplicate product or CMS editor.\nnMedia owns only the media reference trace. The product, CMS, import, or partner\nmodule continues to own the business record and its validation rules. This\nseparation lets administrators safely answer cleanup questions such as \"can this\nfile be retired?\" before removing or retiring media that may still be attached\nto another business object.\n\nMedia detail also includes an **Import/export linkage** panel. The panel is\nread-only. It asks nImport for run history with the selected `mediaCode` and\nshows any matching import runs, counts, status, data type, and modules. It also\nsummarizes import/export `mediaReference` traces when they exist. Axis does not\nedit the import run, export result, Product record, CMS record, or partner\nrecord from this panel; it links the employee to the owning Import/Export\nworkspace for deeper work. Export status remains owned by nExport and should be\nsurfaced only through nExport-published contracts.\n\nThe **Storage and Delivery** section now provides a read-only policy inspection\nview. Axis first calls the nMedia `/contexts` API and derives safe folder\npolicy rows from the backend-owned context projection, including backend-owned\nsource type aliases. For older backend deployments that do not yet publish\ncontexts, Axis falls back to the\n`/storage/policy` API with small safe probe descriptors for known folder\npurposes. The result shows folder-level upload rules: folder code, business\nlabel, visibility, allowed extensions, allowed MIME types, maximum file size,\nand checksum algorithm.\n\nThe same screen also calls `/storage/providers/summary` when the backend\npublishes it. That summary is deliberately safe: active provider code, provider\ntype, enabled/active flags, provider health status, key strategy name, and\ndelivery mode. It does not expose absolute filesystem paths, bucket names,\ncertificates, credentials, object keys, or signed URL secrets. Axis does not\ncall the storage-location endpoint, does not generate storage keys, and does\nnot offer provider credential controls. nMedia still decides whether a folder\nuses local storage, NAS, S3, Azure, Google Cloud Storage, FTP, or a partner\nprovider.\n\nFor a beginner developer, this means:\n\n1. Axis asks nMedia, \"which media source contexts and folder policies are safe\n   for this employee workspace?\"\n2. nMedia returns safe context and upload-policy metadata without provider\n   secrets or raw paths.\n3. Axis optionally asks nMedia for the safe storage provider summary and shows\n   only provider code, type, health, delivery, and key-strategy metadata.\n4. Axis displays only the safe context, policy, and provider summary metadata.\n5. When a real upload happens, Axis sends the selected file to nMedia.\n6. nMedia resolves provider and storage location, creates the media record, and\n   returns the media code.\n7. When a file is opened, Axis uses the nMedia content delivery endpoint with\n   the media code instead of a raw file path.\n\nFor example, an import CSV is uploaded under the `importSources` purpose. A\ngenerated export CSV or ZIP is stored under the `exportFiles` purpose. A CMS\nbanner image is uploaded under the `cmsAssets` purpose. A product gallery image\nis uploaded under the `productAssets` purpose. They may all use the same local\nprovider in local development, but production can route them differently through\nnMedia configuration without changing Axis.\n\nFor single-schema data operations, nMedia uses separate provider-relative data\npaths for imports and exports:\n\n- import files:\n  `data/import/{tenant}/{enterprise}/{schema}/{yyyy}/{mm}/{mediaCode}.{extension}`;\n- generated export files:\n  `data/export/{tenant}/{enterprise}/{schema}/{yyyy}/{mm}/{mediaCode}.{extension}`.\n\nAxis may display the business purpose and media code, but it must not assemble\nor persist these paths itself. Multi-schema aggregated exports will need their\nown backend-owned path contract later.\n\nFor business media operations, nMedia uses separate provider-relative media\npaths by purpose:\n\n- product media:\n  `media/product/{tenant}/{enterprise}/{schema}/{yyyy}/{mm}/{mediaCode}.{extension}`;\n- content media:\n  `media/content/{tenant}/{enterprise}/{schema}/{yyyy}/{mm}/{mediaCode}.{extension}`;\n- utility media:\n  `media/utility/{tenant}/{enterprise}/{schema}/{yyyy}/{mm}/{mediaCode}.{extension}`.\n\nAxis can present these as Product media, Content media, and Utility media\nfilters, but the backend folder configuration and key strategy remain the only\nauthority for the actual storage key.\n\nAxis deliberately does not display backend-resolved full paths. If a file can be\nopened inline, the UI uses the nMedia content endpoint, not a filesystem path.\nIf a file is downloaded, Axis uses the nMedia download endpoint\n`/download/{mediaCode}` so backend content-disposition and authorization policy\nremain in charge. This keeps local storage, NAS, cloud storage, and future\nsigned URL providers behind the backend media contract.\n\nThe **Media** record detail view follows the same rule. When a selected media\nrecord is a public image in a deliverable lifecycle state, Axis can render a\nsmall preview by calling the nMedia content delivery URL. For other file types,\nAxis offers an open action through `/content/{mediaCode}` and a download action\nthrough `/download/{mediaCode}` only when the backend record is public and in a\ndeliverable state. Private and signed files are not opened directly from the\nbrowser until nMedia exposes the proper authorized or signed delivery contract.\nAxis must never convert `fullPath`, `relativePath`, bucket keys, or storage keys\ninto browser links.\n\nProvider diagnostics remain a separate capability slice. They must be\nimplemented against nMedia-owned APIs instead of frontend path logic.\n\n## Backend ownership\n\nnMedia is the source of truth for:\n\n- media records and their original filename, stored filename, MIME type,\n  extension, size, checksum, provider code, folder code, format code, storage\n  key, relative path, absolute path policy, access URL, visibility/access mode,\n  and status;\n- media folders and their allowed file types, storage prefix, visibility/access\n  policy, and retention policy;\n- media formats and named variants;\n- media sets and set entries;\n- media references from CMS, product, import, or other backend-owned records;\n- local, NAS, S3, Azure Blob, Google Cloud Storage, or partner provider\n  configuration;\n- public, private, or future signed delivery policy.\n\nAxis uses only backend contracts. It does not calculate storage paths, expose\nabsolute paths, infer visibility/access policy, or decide whether a media file is\nreusable.\n\n## Customize and extend safely\n\nPartners can customize Media Management safely by changing nMedia configuration\nor extending nMedia services:\n\n- add a new storage provider under nMedia and register it in module\n  configuration;\n- override the storage-key strategy so files route to a partner-specific folder\n  layout;\n- add a new media folder for a business purpose, such as KYC documents,\n  generated export files, or logistics proof-of-delivery images;\n- add new formats for brand or storefront image requirements;\n- extend backend APIs for governed media search, usage inspection, preview,\n  cleanup, or provider diagnostics;\n- add Axis renderers that consume those APIs after BackOffice publishes the\n  corresponding navigation or operation contract.\n\nPartners should not customize Axis by adding hardcoded menus, direct storage\ncalls, direct database reads, raw filesystem URLs, or assumptions about local\ndevelopment paths. Those would create duplicate authority paths and would break\ncloud, NAS, or multi-provider deployments.\n\n### Customizing storage policy safely\n\nStorage customization belongs to nMedia. A partner or project can configure the\nlocal provider for development, a mounted NAS path for enterprise deployments,\nor a cloud provider for production. The important contract is that Axis never\nneeds to know the storage path. Axis only needs the returned media code and the\nsafe delivery URL or content endpoint.\n\nThe safe extension sequence is:\n\n1. Add or override nMedia provider configuration.\n2. Add or override a storage-key strategy service if the folder layout must\n   change.\n3. Add or override folder configuration for business purposes such as import\n   files, product images, CMS banners, KYC documents, or process evidence.\n4. Expose only safe inspection metadata from nMedia when the BackOffice needs to\n   display it.\n5. Keep provider secrets and absolute paths out of Axis, content catalog data,\n   documentation content packs, and browser-visible responses.\n\nIf a partner wants files under a structure like\n`{tenant}/{enterprise}/{schema}/{yyyy}/{mm}/{mediaCode}.{extension}`, that\nstructure must be produced by a backend nMedia key strategy service. Axis can\ndisplay the business folder and media code, but it must not assemble that path\nitself.\n\n### Customizing upload behavior safely\n\nUpload behavior is configured by nMedia folders, formats, providers, and key\nstrategies. Axis should not be customized with file-type rules or storage\nfolders. A partner can extend upload behavior safely by adding backend\nconfiguration such as:\n\n- a new folder for a purpose like KYC documents, warranty attachments, shipment\n  proof images, data export files, or learning resources;\n- a new format such as storefront-thumbnail, mobile-banner, zoom-image, or\n  compliance-document;\n- a new provider such as NAS, S3, Azure Blob, Google Cloud Storage, FTP, or a\n  partner document store;\n- a new key strategy when the physical or provider-side path needs a different\n  structure;\n- a visibility/access policy that marks which media can be public, private,\n  signed, or internal-only.\n\nAfter nMedia publishes the new context or folder policy, Axis can show it\nautomatically in the upload purpose selector. If the partner needs a richer\nworkflow, such as a product gallery uploader or CMS banner picker, that workflow\nshould still call nMedia upload first and then create the product or CMS\nreference through the owning module contract.\n\nThe smallest safe Axis customization is to compose `MediaUploadWizard` inside a\nproject-owned page or workflow and respond to its returned media code. A customer\npage may change surrounding copy, add a next-step panel, or route the media code\nto an owning Product, CMS, Import, or partner API. It must not copy the wizard\ninto a second upload implementation, hardcode folder-to-source mappings, invent\nfile policy, generate media records locally, infer storage paths, or bypass\nnMedia upload.\n\nWhen customizing the wizard, keep tests focused on the boundary:\n\n- generated export contexts remain excluded from manual upload unless nMedia\n  explicitly publishes a different contract;\n- file selection is blocked until backend policy is known;\n- source types marked `targetRequired` by nMedia are blocked until the backend\n  publishes the target module and schema Axis should send with upload;\n- unsupported extensions, MIME types, and oversized files are rejected locally\n  only as early UX warnings;\n- successful upload calls nMedia with the backend-derived folder, format,\n  module, and schema context;\n- backend upload errors are shown as safe messages without exposing service\n  internals; and\n- local previews for images, CSV, JSON, or text remain advisory and never\n  replace backend validation.\n\n## Verification\n\nWhen adding a Media Management feature, verify:\n\n1. nMedia publishes the navigation or API contract.\n2. BackOffice filters the entry by permissions.\n3. Axis renders the route only when the authenticated bootstrap contains the\n   entry and the CMS content catalog resolves the `/media` page.\n4. Media record, folder, format, and set search use the nMedia-owned\n   schema/workbench API and never a direct database or storage read.\n5. Storage policy inspection uses nMedia `/contexts` first, including\n   backend-owned `sourceType`, `code`, and `aliases`, and falls back to\n   `/storage/policy` only for older backend deployments. It does not call\n   storage-location or upload APIs unless that workflow is explicitly being\n   executed.\n6. Preview and download actions use nMedia delivery URLs only, never raw storage\n   paths.\n7. Private and signed media do not show direct browser delivery actions until\n   nMedia exposes and authorizes that delivery contract.\n8. Upload posts to nMedia `/storage/upload`; Axis does not create media records\n   directly.\n9. Usage deep links filter the nMedia `mediaReference` schema through the\n   generated workbench contract.\n10. Renderer coverage includes `axis.page.media-management`,\n    `axis.template.media-management`, and\n    `axis.component.media-management-workspace`; future media presentation\n    changes must extend CMS properties or renderer contracts rather than\n    adding another direct operations page.\n11. Retire and restore actions use the nMedia media schema update contract and\n    are hidden or disabled when update is not authorized.\n12. Large media lists provide source-type, visibility, status, format, free-text\n    search, and pagination without creating a browser-side media authority.\n13. Import/export linkage remains read-only. Axis may query nImport history by\n    media code and show import/export media references, but it must not mutate\n    import runs, export results, Product records, CMS records, or partner owner\n    records through Media Management.\n14. Storage provider summaries show only safe operator metadata: active\n    provider code, provider type, enabled/active state, health, key strategy,\n    and delivery mode. They must not show credentials, certificates, buckets,\n    storage keys, signed URL secrets, absolute paths, or backend-resolved full\n    paths.\n15. Generated export files are downloaded through nMedia media-code delivery,\n    not through export-specific browser paths or duplicate binary routes.\n16. Upload, search, reference, lifecycle, or delivery behavior stays\n    backend-owned.\n17. Positive, negative, boundary, permission, contract, integration, and\n    regression tests cover the new behavior.\n\n## Common mistakes\n\n- Naming the feature “assets” in one place and “media” in another. The\n  current functional language is Media, owned by WCMS/nMedia.\n- Uploading directly to browser-selected storage providers. Axis sends files\n  and metadata to authorized backend contracts; storage policy remains backend\n  owned.\n- Showing absolute filesystem paths, bucket names, credentials, signed URL\n  secrets, or provider internals in operator cards.\n- Mutating CMS, Product, import, export, or partner-owner records from Media\n  Management just because a media item is referenced there.\n- Creating separate `/media-management` route families after standardizing the\n  URL space around `/media`.\n\n## Verification\n\nMedia work is accepted when `/media`, `/media/items`, `/media/folders`, and\nrelated Media navigation routes load through backend-owned CMS/navigation data;\nschema discovery and API category enablement come from module defaults or\nnarrow server overrides; upload, search, retire, restore, download, source\nfilters, pagination, storage summaries, and missing-permission states are\ncovered; and no frontend code exposes storage secrets or creates a second\nmedia lifecycle authority.\n"
         },
         {
+          "code": "axis.customer-engagement",
+          "title": "Customer Engagement Workspaces",
+          "route": "/docs/nodics-axis/customer-engagement",
+          "section": "axis-capabilities",
+          "sectionTitle": "Axis Capabilities",
+          "sectionOrder": 30,
+          "order": 116,
+          "audience": [
+            "business-user",
+            "administrator",
+            "operator",
+            "developer"
+          ],
+          "summary": "Use the lightweight six-domain Engagement journey for contact, testimonials, reviews, feedback, work management, governance, and recovery.",
+          "searchText": "Customer Engagement Workspaces Use the lightweight six-domain Engagement journey for contact, testimonials, reviews, feedback, work management, governance, and recovery. # Customer Engagement in Axis\n\nCustomer Engagement gives business teams one lightweight place to review and\nact on customer contact requests, testimonials, reviews and ratings, feedback,\nand shared operational evidence. Axis does not own those records or decide\ntheir lifecycle. It renders the workspaces, permissions, states, and actions\npublished by `nodics.engagement` through the Platform BackOffice contract.\n\n## Beginner mental model\n\nThink of Axis as the work desk and Engagement as the case system behind it.\nAxis helps an employee find the right work quickly. Engagement validates every\naction, stores the authoritative evidence, enforces tenant and permission\nboundaries, and coordinates Process or Communication when required.\n\nThe Customer Engagement landing page intentionally shows six business domains\ninstead of every technical workspace:\n\n1. **Contact** for enquiries, correspondence, resolution, and Process handoff.\n2. **Testimonials** for candidates, consent, editorial versions, and controlled\n   publication.\n3. **Reviews & ratings** for moderation, responses, abuse, aggregates,\n   acquisition, and syndication evidence.\n4. **Feedback** for feedback, complaints, follow-up, surveys, and insights.\n5. **Work management** for unified queues, dashboards, and masked export\n   previews.\n6. **Governance & automation** for repairs, decision support, delivery,\n   recovery, and compatibility evidence.\n\nOnly domains containing at least one authorized backend-published workspace\nappear. Opening a domain selects its first authorized view. Within a domain,\nuse the compact **Current view** selector instead of scanning a large wall of\nduplicated links.\n\n## Business-user journeys\n\nFor example, a support employee can start from the Contact domain, resolve one\nrequest, then switch to Feedback without seeing testimonial editorial or review\nsyndication controls that are irrelevant to that task and role.\n\n### Contact request\n\nOpen **Customer Experience → Contact** and choose **Contact Submissions**.\nFilter the queue, open a request, and use only the actions offered for its\ncurrent state. Assignment, request-information, resolve, close, reopen, and\nProcess handoff remain backend lifecycle operations. If a handoff fails, open\n**Process Handoffs** to inspect retry, dead-letter, and reconciliation evidence.\nDo not copy customer correspondence into an internal browser note to work\naround an unavailable operation.\n\n### Testimonial\n\nOpen **Testimonials** and start with **Testimonial Candidates**. Verify source,\npurpose, consent scope, expiry, and withdrawal state before editorial work.\nEditorial versions preserve the original submission. Publication is a separate\ncontrolled step and does not follow automatically from approval. If consent is\nwithdrawn, Engagement removes eligibility and coordinates removal through the\nowning publication contract.\n\n### Review and rating\n\nOpen **Reviews & ratings** to moderate a review, inspect authenticity and\nincentive disclosure, publish an approved immutable version, or add a versioned\nbusiness response. Negative sentiment alone is never a valid suppression\nreason. Abuse reports and appeals use their dedicated evidence. Aggregates and\npublic projections are derived and rebuildable; operators reconcile drift from\nthe authoritative review lifecycle rather than editing totals.\n\n### Feedback and complaint\n\nOpen **Feedback** to classify, assign, request information, escalate a\ncomplaint, record follow-up, resolve, confirm, or reopen. Derived topics,\nsentiment, priority, and insights remain correctable suggestions with source,\npolicy, and confidence evidence. A downstream handoff does not transfer\nownership of the original feedback unless an explicitly configured authority\nmode says so.\n\n### Unified operations\n\nOpen **Work management** when a role spans domains. Unified queues and\ndashboards are rebuildable read projections. Batch, export, and repair surfaces\nare previews with limits, purpose, reason, masking, expected revisions, and\naudit correlation; they do not directly mutate domain records. Return to the\nowning domain for the real lifecycle command.\n\n### Automation and recovery\n\nOpen **Governance & automation** to review provider-neutral recommendations,\nevaluations, delivery attempts, recovery checkpoints, or compatibility\nrecords. AI output cannot directly publish, reject, suppress, or contact a\ncustomer. High-impact outcomes require the backend-declared human review.\nProvider payloads, credentials, and raw protected customer content must not be\nshown in operational evidence.\n\n## Unauthorized, unavailable, and invalid behavior\n\nAn employee sees only workspaces and actions allowed by the authenticated\nbootstrap. Hidden or unavailable modules must not leave navigation or a usable\ndeep link. A direct route without the required capability, context, or\npermission fails closed. Revision conflicts require refresh and reconsideration\ninstead of silently overwriting another operator's work.\n\nIf a backend is unavailable, Axis keeps the failure visible and offers a safe\nretry or return path. It does not invent a local success state. If Process,\nCommunication, a provider, search, or cache fails after domain acceptance, the\naccepted domain record remains authoritative and recovery proceeds from\npersisted handoff, delivery, checkpoint, or reconciliation evidence.\n\n## Responsive and accessible use\n\nOn a wide screen, the landing domains use a small card grid. On a narrow screen,\nthey reflow to one column without horizontal scrolling. Detail pages retain the\nsame six-domain switcher and one bounded current-view selector. Keyboard users\nmust be able to reach every card, selector, filter, row, and lifecycle action\nwith visible focus. Labels, errors, loading progress, empty states, dialogs,\nand post-action results must remain understandable without color alone.\n\nOperators should test zoom and reflow, keyboard-only use, focus return after\ndialogs, contrast, screen-reader names, loading and error announcements, and\nsession-lock recovery. Automated scanning is useful but does not replace these\nhuman journeys.\n\n## Administrator and operator checks\n\nBefore enabling Engagement for a tenant:\n\n- confirm `nodics.engagement` is registered, active, healthy, and reachable;\n- assign the smallest required domain and action permissions;\n- verify tenant policies for anonymous intake, consent, retention, legal hold,\n  rate limits, attachments, publication, exports, automation, and providers;\n- confirm Process and Communication handoffs are configured and observable;\n- keep external providers disabled until credentials, sender identity,\n  callbacks, residency, monitoring, and rollback pass qualification;\n- verify queue age, SLA, projection drift, retries, dead letters, checkpoints,\n  privacy propagation, and compatibility alerts;\n- rehearse repair, restart, provider outage, and rollback procedures.\n\n## Customize and extend safely\n\nPresentation labels and help may be supplied through backend-owned CMS and\ncapability metadata. A customer project may add a later-loaded Engagement\nmodule, policy, permission, schema extension, service override, or provider\nadapter. Axis may add a typed renderer or client for a newly published contract.\n\nDo not copy Engagement lifecycle logic into React, create a browser-side module\nregistry, infer permissions from labels, persist customer records in the\nbrowser, or expose generic schema CRUD. Preserve the `nodics.engagement`\nfunctional identity and extend the smallest owning backend capability.\n\n## Common mistakes\n\n- Showing every technical workspace as an equal top-level button.\n- Duplicating the same operation in navigation, cards, tabs, and action menus.\n- Treating an approved review or testimonial as automatically published.\n- Editing aggregates, queues, dashboards, or repair evidence as domain state.\n- Retrying an ambiguous provider action without its idempotency evidence.\n- Hiding a negative review because of sentiment rather than an allowed policy.\n- Treating AI confidence as permission to bypass human review.\n- Logging protected customer content, provider payloads, or credentials.\n- Claiming production readiness from local mocks or configured RPO/RTO values.\n\n## Verification\n\nRelease evidence includes successful and rejected journeys, tenant and\npermission isolation, optimistic concurrency, duplicate/replay behavior,\nprovider and Process failure recovery, consent withdrawal, publication\nremoval, projection rebuild, repair preview, masked export preview, restart,\nresponsive and accessibility review, generated contracts, and effective\nruntime composition. Production acceptance additionally requires measured\nload and soak, penetration testing, backup/restore, failover, RPO/RTO, regional\nresidency, and external-provider qualification in the target deployment.\n\nContinue with the framework Customer Engagement documentation for domain data,\nAPI, security, lifecycle, customization, and operations contracts.\n"
+        },
+        {
           "code": "axis.openapi-reference",
           "title": "Swagger and OpenAPI Reference",
           "route": "/docs/nodics-axis/openapi-reference",
@@ -776,7 +793,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/project-overview.md",
         "evidence": "README.md",
         "hash": "37d5605104222074258a8ed492247a5331c57045075c682f5f99b96ff6ca7db3",
-        "version": "0.3.29"
+        "version": "0.3.30"
       },
       "next": {
         "title": "Architecture and Repository Boundaries",
@@ -1241,7 +1258,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/architecture-and-ownership.md",
         "evidence": "docs/architecture-and-ownership.md",
         "hash": "032e0d07ecf8d812bb415498f285ac983982b4d77d13cd8a447b0180b8dd45c2",
-        "version": "0.3.29"
+        "version": "0.3.30"
       },
       "previous": {
         "title": "What Is Nodics Axis?",
@@ -1604,7 +1621,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/frontend-technology-stack.md",
         "evidence": "docs/frontend-technology-stack.md",
         "hash": "c8bc5a6d39e3f6c07c0d7bdbc20c2a04ab04fbe16912932cc0385fceb1ff9e3e",
-        "version": "0.3.29"
+        "version": "0.3.30"
       },
       "previous": {
         "title": "Architecture and Repository Boundaries",
@@ -1947,7 +1964,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/design-system-and-shell.md",
         "evidence": "docs/design-system-and-shell.md",
         "hash": "2674769647011da20fa07fc70ba2334b0da0637ad4f6d293fb22a5d8b73bd839",
-        "version": "0.3.29"
+        "version": "0.3.30"
       },
       "previous": {
         "title": "Frontend Technology Stack",
@@ -2171,7 +2188,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/cms-delivery-and-renderers.md",
         "evidence": "docs/cms-delivery-and-renderers.md",
         "hash": "72a0f943f4d101f0873ab4bc31d5c96908e7b8a7ba271af5c9ba37bf26f1cd8e",
-        "version": "0.3.29"
+        "version": "0.3.30"
       },
       "previous": {
         "title": "Design System and Application Shell",
@@ -2479,7 +2496,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/documentation-content.md",
         "evidence": "docs/documentation-content.md",
         "hash": "21a8ddd0cce24b0236212d6f55b59860e17ba6789b65163b83927a21ff3c48be",
-        "version": "0.3.29"
+        "version": "0.3.30"
       },
       "previous": {
         "title": "CMS Delivery and Renderer Integration",
@@ -2763,7 +2780,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/employee-login.md",
         "evidence": "docs/employee-login.md",
         "hash": "d9b72db88088b1157ffc6c75b091c14c6c02259cacf741fd19b669d712c0936e",
-        "version": "0.3.29"
+        "version": "0.3.30"
       },
       "previous": {
         "title": "Documentation Content in Axis",
@@ -3236,7 +3253,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/assistant-frontend.md",
         "evidence": "docs/assistant-frontend.md",
         "hash": "67bafd34ff07605036cba3e411db09c7d85d40be139e6a80f97c3ae489ec8f30",
-        "version": "0.3.29"
+        "version": "0.3.30"
       },
       "previous": {
         "title": "Employee Login, Recovery, Lock, and Dashboard",
@@ -3636,7 +3653,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/schema-workbench.md",
         "evidence": "docs/schema-workbench.md",
         "hash": "8edbf82b84624f8ac4bb07d83b21926e904e9c45db739f5a77b707466b5dda1a",
-        "version": "0.3.29"
+        "version": "0.3.30"
       },
       "previous": {
         "title": "Axis Assistant Frontend",
@@ -4034,7 +4051,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/page-designer.md",
         "evidence": "data/core/source/documentation/pages/page-designer.md",
         "hash": "8a4e1150ea79a10388a88b24e89847f6ecf2135db3ceb305939ef7b90379fb70",
-        "version": "0.3.29"
+        "version": "0.3.30"
       },
       "previous": {
         "title": "Axis Schema Workbench",
@@ -4522,7 +4539,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/module-health.md",
         "evidence": "docs/module-health.md",
         "hash": "fb7bd7b5017dee67587229952134b520a60b8f34f6dbcfe5c62f3dd532a720ec",
-        "version": "0.3.29"
+        "version": "0.3.30"
       },
       "previous": {
         "title": "Axis Page Designer",
@@ -4788,7 +4805,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/imports-and-exports.md",
         "evidence": "docs/imports-and-exports.md",
         "hash": "5a19fc9163b4834b698e5ecf427581c427481302c48a584d96f5fcfd2ab3d614",
-        "version": "0.3.29"
+        "version": "0.3.30"
       },
       "previous": {
         "title": "Module Health",
@@ -5328,11 +5345,325 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/media-management.md",
         "evidence": "data/core/source/documentation/pages/media-management.md",
         "hash": "bca6e0bf71531978d6a0840b62b3ed59c8eaad5dbfc9bc4b7d065ffc717148a4",
-        "version": "0.3.29"
+        "version": "0.3.30"
       },
       "previous": {
         "title": "Imports and Exports Workspace",
         "route": "/docs/nodics-axis/imports-exports"
+      },
+      "next": {
+        "title": "Customer Engagement Workspaces",
+        "route": "/docs/nodics-axis/customer-engagement"
+      }
+    },
+    "active": true
+  },
+  "record14": {
+    "code": "axisDocsComponentcustomerengagement",
+    "typeCode": "axisDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "axis.customer-engagement",
+      "title": "Customer Engagement Workspaces",
+      "route": "/docs/nodics-axis/customer-engagement",
+      "section": "axis-capabilities",
+      "sectionTitle": "Axis Capabilities",
+      "category": "Axis Capabilities",
+      "audience": [
+        "business-user",
+        "administrator",
+        "operator",
+        "developer"
+      ],
+      "summary": "Use the lightweight six-domain Engagement journey for contact, testimonials, reviews, feedback, work management, governance, and recovery.",
+      "headings": [
+        {
+          "text": "Beginner mental model",
+          "anchor": "customer-engagement-1-beginner-mental-model",
+          "level": 2
+        },
+        {
+          "text": "Business-user journeys",
+          "anchor": "customer-engagement-2-business-user-journeys",
+          "level": 2
+        },
+        {
+          "text": "Contact request",
+          "anchor": "customer-engagement-3-contact-request",
+          "level": 3
+        },
+        {
+          "text": "Testimonial",
+          "anchor": "customer-engagement-4-testimonial",
+          "level": 3
+        },
+        {
+          "text": "Review and rating",
+          "anchor": "customer-engagement-5-review-and-rating",
+          "level": 3
+        },
+        {
+          "text": "Feedback and complaint",
+          "anchor": "customer-engagement-6-feedback-and-complaint",
+          "level": 3
+        },
+        {
+          "text": "Unified operations",
+          "anchor": "customer-engagement-7-unified-operations",
+          "level": 3
+        },
+        {
+          "text": "Automation and recovery",
+          "anchor": "customer-engagement-8-automation-and-recovery",
+          "level": 3
+        },
+        {
+          "text": "Unauthorized, unavailable, and invalid behavior",
+          "anchor": "customer-engagement-9-unauthorized-unavailable-and-invalid-behavior",
+          "level": 2
+        },
+        {
+          "text": "Responsive and accessible use",
+          "anchor": "customer-engagement-10-responsive-and-accessible-use",
+          "level": 2
+        },
+        {
+          "text": "Administrator and operator checks",
+          "anchor": "customer-engagement-11-administrator-and-operator-checks",
+          "level": 2
+        },
+        {
+          "text": "Customize and extend safely",
+          "anchor": "customer-engagement-12-customize-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "customer-engagement-13-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "customer-engagement-14-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Customer Engagement gives business teams one lightweight place to review and act on customer contact requests, testimonials, reviews and ratings, feedback, and shared operational evidence. Axis does not own those records or decide their lifecycle. It renders the workspaces, permissions, states, and actions published by `nodics.engagement` through the Platform BackOffice contract."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Beginner mental model",
+          "anchor": "customer-engagement-1-beginner-mental-model"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Think of Axis as the work desk and Engagement as the case system behind it. Axis helps an employee find the right work quickly. Engagement validates every action, stores the authoritative evidence, enforces tenant and permission boundaries, and coordinates Process or Communication when required."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The Customer Engagement landing page intentionally shows six business domains instead of every technical workspace:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "**Contact** for enquiries, correspondence, resolution, and Process handoff.",
+            "**Testimonials** for candidates, consent, editorial versions, and controlled publication.",
+            "**Reviews & ratings** for moderation, responses, abuse, aggregates, acquisition, and syndication evidence.",
+            "**Feedback** for feedback, complaints, follow-up, surveys, and insights.",
+            "**Work management** for unified queues, dashboards, and masked export previews.",
+            "**Governance & automation** for repairs, decision support, delivery, recovery, and compatibility evidence."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Only domains containing at least one authorized backend-published workspace appear. Opening a domain selects its first authorized view. Within a domain, use the compact **Current view** selector instead of scanning a large wall of duplicated links."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Business-user journeys",
+          "anchor": "customer-engagement-2-business-user-journeys"
+        },
+        {
+          "kind": "paragraph",
+          "text": "For example, a support employee can start from the Contact domain, resolve one request, then switch to Feedback without seeing testimonial editorial or review syndication controls that are irrelevant to that task and role."
+        },
+        {
+          "kind": "heading",
+          "level": 3,
+          "text": "Contact request",
+          "anchor": "customer-engagement-3-contact-request"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Open **Customer Experience → Contact** and choose **Contact Submissions**. Filter the queue, open a request, and use only the actions offered for its current state. Assignment, request-information, resolve, close, reopen, and Process handoff remain backend lifecycle operations. If a handoff fails, open **Process Handoffs** to inspect retry, dead-letter, and reconciliation evidence. Do not copy customer correspondence into an internal browser note to work around an unavailable operation."
+        },
+        {
+          "kind": "heading",
+          "level": 3,
+          "text": "Testimonial",
+          "anchor": "customer-engagement-4-testimonial"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Open **Testimonials** and start with **Testimonial Candidates**. Verify source, purpose, consent scope, expiry, and withdrawal state before editorial work. Editorial versions preserve the original submission. Publication is a separate controlled step and does not follow automatically from approval. If consent is withdrawn, Engagement removes eligibility and coordinates removal through the owning publication contract."
+        },
+        {
+          "kind": "heading",
+          "level": 3,
+          "text": "Review and rating",
+          "anchor": "customer-engagement-5-review-and-rating"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Open **Reviews & ratings** to moderate a review, inspect authenticity and incentive disclosure, publish an approved immutable version, or add a versioned business response. Negative sentiment alone is never a valid suppression reason. Abuse reports and appeals use their dedicated evidence. Aggregates and public projections are derived and rebuildable; operators reconcile drift from the authoritative review lifecycle rather than editing totals."
+        },
+        {
+          "kind": "heading",
+          "level": 3,
+          "text": "Feedback and complaint",
+          "anchor": "customer-engagement-6-feedback-and-complaint"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Open **Feedback** to classify, assign, request information, escalate a complaint, record follow-up, resolve, confirm, or reopen. Derived topics, sentiment, priority, and insights remain correctable suggestions with source, policy, and confidence evidence. A downstream handoff does not transfer ownership of the original feedback unless an explicitly configured authority mode says so."
+        },
+        {
+          "kind": "heading",
+          "level": 3,
+          "text": "Unified operations",
+          "anchor": "customer-engagement-7-unified-operations"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Open **Work management** when a role spans domains. Unified queues and dashboards are rebuildable read projections. Batch, export, and repair surfaces are previews with limits, purpose, reason, masking, expected revisions, and audit correlation; they do not directly mutate domain records. Return to the owning domain for the real lifecycle command."
+        },
+        {
+          "kind": "heading",
+          "level": 3,
+          "text": "Automation and recovery",
+          "anchor": "customer-engagement-8-automation-and-recovery"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Open **Governance & automation** to review provider-neutral recommendations, evaluations, delivery attempts, recovery checkpoints, or compatibility records. AI output cannot directly publish, reject, suppress, or contact a customer. High-impact outcomes require the backend-declared human review. Provider payloads, credentials, and raw protected customer content must not be shown in operational evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Unauthorized, unavailable, and invalid behavior",
+          "anchor": "customer-engagement-9-unauthorized-unavailable-and-invalid-behavior"
+        },
+        {
+          "kind": "paragraph",
+          "text": "An employee sees only workspaces and actions allowed by the authenticated bootstrap. Hidden or unavailable modules must not leave navigation or a usable deep link. A direct route without the required capability, context, or permission fails closed. Revision conflicts require refresh and reconsideration instead of silently overwriting another operator's work."
+        },
+        {
+          "kind": "paragraph",
+          "text": "If a backend is unavailable, Axis keeps the failure visible and offers a safe retry or return path. It does not invent a local success state. If Process, Communication, a provider, search, or cache fails after domain acceptance, the accepted domain record remains authoritative and recovery proceeds from persisted handoff, delivery, checkpoint, or reconciliation evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Responsive and accessible use",
+          "anchor": "customer-engagement-10-responsive-and-accessible-use"
+        },
+        {
+          "kind": "paragraph",
+          "text": "On a wide screen, the landing domains use a small card grid. On a narrow screen, they reflow to one column without horizontal scrolling. Detail pages retain the same six-domain switcher and one bounded current-view selector. Keyboard users must be able to reach every card, selector, filter, row, and lifecycle action with visible focus. Labels, errors, loading progress, empty states, dialogs, and post-action results must remain understandable without color alone."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Operators should test zoom and reflow, keyboard-only use, focus return after dialogs, contrast, screen-reader names, loading and error announcements, and session-lock recovery. Automated scanning is useful but does not replace these human journeys."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Administrator and operator checks",
+          "anchor": "customer-engagement-11-administrator-and-operator-checks"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Before enabling Engagement for a tenant:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "confirm `nodics.engagement` is registered, active, healthy, and reachable;",
+            "assign the smallest required domain and action permissions;",
+            "verify tenant policies for anonymous intake, consent, retention, legal hold, rate limits, attachments, publication, exports, automation, and providers;",
+            "confirm Process and Communication handoffs are configured and observable;",
+            "keep external providers disabled until credentials, sender identity, callbacks, residency, monitoring, and rollback pass qualification;",
+            "verify queue age, SLA, projection drift, retries, dead letters, checkpoints, privacy propagation, and compatibility alerts;",
+            "rehearse repair, restart, provider outage, and rollback procedures."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customize and extend safely",
+          "anchor": "customer-engagement-12-customize-and-extend-safely"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Presentation labels and help may be supplied through backend-owned CMS and capability metadata. A customer project may add a later-loaded Engagement module, policy, permission, schema extension, service override, or provider adapter. Axis may add a typed renderer or client for a newly published contract."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Do not copy Engagement lifecycle logic into React, create a browser-side module registry, infer permissions from labels, persist customer records in the browser, or expose generic schema CRUD. Preserve the `nodics.engagement` functional identity and extend the smallest owning backend capability."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "customer-engagement-13-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Showing every technical workspace as an equal top-level button.",
+            "Duplicating the same operation in navigation, cards, tabs, and action menus.",
+            "Treating an approved review or testimonial as automatically published.",
+            "Editing aggregates, queues, dashboards, or repair evidence as domain state.",
+            "Retrying an ambiguous provider action without its idempotency evidence.",
+            "Hiding a negative review because of sentiment rather than an allowed policy.",
+            "Treating AI confidence as permission to bypass human review.",
+            "Logging protected customer content, provider payloads, or credentials.",
+            "Claiming production readiness from local mocks or configured RPO/RTO values."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "customer-engagement-14-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Release evidence includes successful and rejected journeys, tenant and permission isolation, optimistic concurrency, duplicate/replay behavior, provider and Process failure recovery, consent withdrawal, publication removal, projection rebuild, repair preview, masked export preview, restart, responsive and accessibility review, generated contracts, and effective runtime composition. Production acceptance additionally requires measured load and soak, penetration testing, backup/restore, failover, RPO/RTO, regional residency, and external-provider qualification in the target deployment."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Continue with the framework Customer Engagement documentation for domain data, API, security, lifecycle, customization, and operations contracts."
+        }
+      ],
+      "searchText": "Customer Engagement Workspaces Use the lightweight six-domain Engagement journey for contact, testimonials, reviews, feedback, work management, governance, and recovery. # Customer Engagement in Axis\n\nCustomer Engagement gives business teams one lightweight place to review and\nact on customer contact requests, testimonials, reviews and ratings, feedback,\nand shared operational evidence. Axis does not own those records or decide\ntheir lifecycle. It renders the workspaces, permissions, states, and actions\npublished by `nodics.engagement` through the Platform BackOffice contract.\n\n## Beginner mental model\n\nThink of Axis as the work desk and Engagement as the case system behind it.\nAxis helps an employee find the right work quickly. Engagement validates every\naction, stores the authoritative evidence, enforces tenant and permission\nboundaries, and coordinates Process or Communication when required.\n\nThe Customer Engagement landing page intentionally shows six business domains\ninstead of every technical workspace:\n\n1. **Contact** for enquiries, correspondence, resolution, and Process handoff.\n2. **Testimonials** for candidates, consent, editorial versions, and controlled\n   publication.\n3. **Reviews & ratings** for moderation, responses, abuse, aggregates,\n   acquisition, and syndication evidence.\n4. **Feedback** for feedback, complaints, follow-up, surveys, and insights.\n5. **Work management** for unified queues, dashboards, and masked export\n   previews.\n6. **Governance & automation** for repairs, decision support, delivery,\n   recovery, and compatibility evidence.\n\nOnly domains containing at least one authorized backend-published workspace\nappear. Opening a domain selects its first authorized view. Within a domain,\nuse the compact **Current view** selector instead of scanning a large wall of\nduplicated links.\n\n## Business-user journeys\n\nFor example, a support employee can start from the Contact domain, resolve one\nrequest, then switch to Feedback without seeing testimonial editorial or review\nsyndication controls that are irrelevant to that task and role.\n\n### Contact request\n\nOpen **Customer Experience → Contact** and choose **Contact Submissions**.\nFilter the queue, open a request, and use only the actions offered for its\ncurrent state. Assignment, request-information, resolve, close, reopen, and\nProcess handoff remain backend lifecycle operations. If a handoff fails, open\n**Process Handoffs** to inspect retry, dead-letter, and reconciliation evidence.\nDo not copy customer correspondence into an internal browser note to work\naround an unavailable operation.\n\n### Testimonial\n\nOpen **Testimonials** and start with **Testimonial Candidates**. Verify source,\npurpose, consent scope, expiry, and withdrawal state before editorial work.\nEditorial versions preserve the original submission. Publication is a separate\ncontrolled step and does not follow automatically from approval. If consent is\nwithdrawn, Engagement removes eligibility and coordinates removal through the\nowning publication contract.\n\n### Review and rating\n\nOpen **Reviews & ratings** to moderate a review, inspect authenticity and\nincentive disclosure, publish an approved immutable version, or add a versioned\nbusiness response. Negative sentiment alone is never a valid suppression\nreason. Abuse reports and appeals use their dedicated evidence. Aggregates and\npublic projections are derived and rebuildable; operators reconcile drift from\nthe authoritative review lifecycle rather than editing totals.\n\n### Feedback and complaint\n\nOpen **Feedback** to classify, assign, request information, escalate a\ncomplaint, record follow-up, resolve, confirm, or reopen. Derived topics,\nsentiment, priority, and insights remain correctable suggestions with source,\npolicy, and confidence evidence. A downstream handoff does not transfer\nownership of the original feedback unless an explicitly configured authority\nmode says so.\n\n### Unified operations\n\nOpen **Work management** when a role spans domains. Unified queues and\ndashboards are rebuildable read projections. Batch, export, and repair surfaces\nare previews with limits, purpose, reason, masking, expected revisions, and\naudit correlation; they do not directly mutate domain records. Return to the\nowning domain for the real lifecycle command.\n\n### Automation and recovery\n\nOpen **Governance & automation** to review provider-neutral recommendations,\nevaluations, delivery attempts, recovery checkpoints, or compatibility\nrecords. AI output cannot directly publish, reject, suppress, or contact a\ncustomer. High-impact outcomes require the backend-declared human review.\nProvider payloads, credentials, and raw protected customer content must not be\nshown in operational evidence.\n\n## Unauthorized, unavailable, and invalid behavior\n\nAn employee sees only workspaces and actions allowed by the authenticated\nbootstrap. Hidden or unavailable modules must not leave navigation or a usable\ndeep link. A direct route without the required capability, context, or\npermission fails closed. Revision conflicts require refresh and reconsideration\ninstead of silently overwriting another operator's work.\n\nIf a backend is unavailable, Axis keeps the failure visible and offers a safe\nretry or return path. It does not invent a local success state. If Process,\nCommunication, a provider, search, or cache fails after domain acceptance, the\naccepted domain record remains authoritative and recovery proceeds from\npersisted handoff, delivery, checkpoint, or reconciliation evidence.\n\n## Responsive and accessible use\n\nOn a wide screen, the landing domains use a small card grid. On a narrow screen,\nthey reflow to one column without horizontal scrolling. Detail pages retain the\nsame six-domain switcher and one bounded current-view selector. Keyboard users\nmust be able to reach every card, selector, filter, row, and lifecycle action\nwith visible focus. Labels, errors, loading progress, empty states, dialogs,\nand post-action results must remain understandable without color alone.\n\nOperators should test zoom and reflow, keyboard-only use, focus return after\ndialogs, contrast, screen-reader names, loading and error announcements, and\nsession-lock recovery. Automated scanning is useful but does not replace these\nhuman journeys.\n\n## Administrator and operator checks\n\nBefore enabling Engagement for a tenant:\n\n- confirm `nodics.engagement` is registered, active, healthy, and reachable;\n- assign the smallest required domain and action permissions;\n- verify tenant policies for anonymous intake, consent, retention, legal hold,\n  rate limits, attachments, publication, exports, automation, and providers;\n- confirm Process and Communication handoffs are configured and observable;\n- keep external providers disabled until credentials, sender identity,\n  callbacks, residency, monitoring, and rollback pass qualification;\n- verify queue age, SLA, projection drift, retries, dead letters, checkpoints,\n  privacy propagation, and compatibility alerts;\n- rehearse repair, restart, provider outage, and rollback procedures.\n\n## Customize and extend safely\n\nPresentation labels and help may be supplied through backend-owned CMS and\ncapability metadata. A customer project may add a later-loaded Engagement\nmodule, policy, permission, schema extension, service override, or provider\nadapter. Axis may add a typed renderer or client for a newly published contract.\n\nDo not copy Engagement lifecycle logic into React, create a browser-side module\nregistry, infer permissions from labels, persist customer records in the\nbrowser, or expose generic schema CRUD. Preserve the `nodics.engagement`\nfunctional identity and extend the smallest owning backend capability.\n\n## Common mistakes\n\n- Showing every technical workspace as an equal top-level button.\n- Duplicating the same operation in navigation, cards, tabs, and action menus.\n- Treating an approved review or testimonial as automatically published.\n- Editing aggregates, queues, dashboards, or repair evidence as domain state.\n- Retrying an ambiguous provider action without its idempotency evidence.\n- Hiding a negative review because of sentiment rather than an allowed policy.\n- Treating AI confidence as permission to bypass human review.\n- Logging protected customer content, provider payloads, or credentials.\n- Claiming production readiness from local mocks or configured RPO/RTO values.\n\n## Verification\n\nRelease evidence includes successful and rejected journeys, tenant and\npermission isolation, optimistic concurrency, duplicate/replay behavior,\nprovider and Process failure recovery, consent withdrawal, publication\nremoval, projection rebuild, repair preview, masked export preview, restart,\nresponsive and accessibility review, generated contracts, and effective\nruntime composition. Production acceptance additionally requires measured\nload and soak, penetration testing, backup/restore, failover, RPO/RTO, regional\nresidency, and external-provider qualification in the target deployment.\n\nContinue with the framework Customer Engagement documentation for domain data,\nAPI, security, lifecycle, customization, and operations contracts.\n",
+      "source": {
+        "repository": "nodics.platform",
+        "module": "axis",
+        "path": "modules/axis/data/core/source/documentation/pages/customer-engagement.md",
+        "evidence": "data/core/source/documentation/pages/customer-engagement.md",
+        "hash": "4d96d3a1b924fdf29f31770bcf0369e2079efa0fd88104645eae2a0cbcff29fa",
+        "version": "0.3.30"
+      },
+      "previous": {
+        "title": "Media Management Workspace",
+        "route": "/docs/nodics-axis/media"
       },
       "next": {
         "title": "Swagger and OpenAPI Reference",
@@ -5341,7 +5672,7 @@ module.exports = {
     },
     "active": true
   },
-  "record14": {
+  "record15": {
     "code": "axisDocsComponentopenapireference",
     "typeCode": "axisDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -5562,11 +5893,11 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/openapi-reference.md",
         "evidence": "data/core/source/documentation/pages/openapi-reference.md",
         "hash": "0fdfc4c7e77dfbf0314247935a46823f3a125baee7f02991023d0f0bdc4d99ca",
-        "version": "0.3.29"
+        "version": "0.3.30"
       },
       "previous": {
-        "title": "Media Management Workspace",
-        "route": "/docs/nodics-axis/media"
+        "title": "Customer Engagement Workspaces",
+        "route": "/docs/nodics-axis/customer-engagement"
       },
       "next": {
         "title": "Axis Feature Delivery Checklist",
@@ -5575,7 +5906,7 @@ module.exports = {
     },
     "active": true
   },
-  "record15": {
+  "record16": {
     "code": "axisDocsComponentfeaturedelivery",
     "typeCode": "axisDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -5914,7 +6245,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/feature-delivery-checklist.md",
         "evidence": "docs/feature-delivery-checklist.md",
         "hash": "d22ef8b9e5c65fb55f0dd9f4f5c04e6989402ac0fa5a16a75afbbbcfa127b420",
-        "version": "0.3.29"
+        "version": "0.3.30"
       },
       "previous": {
         "title": "Swagger and OpenAPI Reference",
@@ -5927,7 +6258,7 @@ module.exports = {
     },
     "active": true
   },
-  "record16": {
+  "record17": {
     "code": "axisDocsComponentimplementationcontract",
     "typeCode": "axisDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -6378,7 +6709,7 @@ module.exports = {
         "path": "modules/axis/data/core/source/documentation/pages/implementation-and-documentation-contract.md",
         "evidence": "docs/implementation-and-documentation-contract.md",
         "hash": "2ad74c2a1b479db0ff9ad381645746b801e65aa77c8171486ee53631b9387066",
-        "version": "0.3.29"
+        "version": "0.3.30"
       },
       "previous": {
         "title": "Axis Feature Delivery Checklist",

@@ -339,6 +339,31 @@ module.exports = {
     "active": true
   },
   "record13": {
+    "code": "axisDocsPagecustomerengagement",
+    "name": "Customer Engagement Workspaces",
+    "cmsSite": [
+      "axisDocumentationSite"
+    ],
+    "typeCode": "axisDocumentationArticlePageType",
+    "template": "axisDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "axisDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "axisDocsComponentcustomerengagement",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record14": {
     "code": "axisDocsPageopenapireference",
     "name": "Swagger and OpenAPI Reference",
     "cmsSite": [
@@ -363,7 +388,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record14": {
+  "record15": {
     "code": "axisDocsPagefeaturedelivery",
     "name": "Axis Feature Delivery Checklist",
     "cmsSite": [
@@ -388,7 +413,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record15": {
+  "record16": {
     "code": "axisDocsPageimplementationcontract",
     "name": "Axis Implementation and Documentation Contract",
     "cmsSite": [

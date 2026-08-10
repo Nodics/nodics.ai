@@ -1,6 +1,6 @@
 {
   "pack": "nodics.platform.axis",
-  "version": "0.3.29",
+  "version": "0.3.30",
   "generatedAtPolicy": "deterministic-no-timestamp",
   "sources": [
     {
@@ -428,6 +428,48 @@
         "Customizing storage policy safely",
         "Customizing upload behavior safely",
         "Verification",
+        "Common mistakes",
+        "Verification"
+      ]
+    },
+    {
+      "evidence": "data/core/source/documentation/pages/customer-engagement.md",
+      "evidenceStatus": "retired-after-verified-migration",
+      "evidenceHash": "84b38ccc3e7e92b1dcf12d0eb681ceb354ffb85a3f22f18b0db4f933ad6bf3f2",
+      "evidenceWordCount": 1043,
+      "evidenceHeadings": [
+        "Beginner mental model",
+        "Business-user journeys",
+        "Contact request",
+        "Testimonial",
+        "Review and rating",
+        "Feedback and complaint",
+        "Unified operations",
+        "Automation and recovery",
+        "Unauthorized, unavailable, and invalid behavior",
+        "Responsive and accessible use",
+        "Administrator and operator checks",
+        "Customize and extend safely",
+        "Verification"
+      ],
+      "canonicalSource": "data/core/source/documentation/pages/customer-engagement.md",
+      "destinationRoute": "/docs/nodics-axis/customer-engagement",
+      "disposition": "migrated",
+      "sourceHash": "4d96d3a1b924fdf29f31770bcf0369e2079efa0fd88104645eae2a0cbcff29fa",
+      "wordCount": 1167,
+      "headings": [
+        "Beginner mental model",
+        "Business-user journeys",
+        "Contact request",
+        "Testimonial",
+        "Review and rating",
+        "Feedback and complaint",
+        "Unified operations",
+        "Automation and recovery",
+        "Unauthorized, unavailable, and invalid behavior",
+        "Responsive and accessible use",
+        "Administrator and operator checks",
+        "Customize and extend safely",
         "Common mistakes",
         "Verification"
       ]

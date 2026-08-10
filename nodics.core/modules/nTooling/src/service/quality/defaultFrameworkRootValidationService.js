@@ -31,6 +31,8 @@ const expectedFrameworkWorkspaces = [
     'nodics.wcms',
     'nodics.docs',
     'nodics.process',
+    'nodics.commerce',
+    'nodics.communication',
     'nodics.engagement'
 ];
 
