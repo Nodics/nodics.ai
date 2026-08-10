@@ -1,0 +1,8 @@
+{
+  "name": "checkoutCore", "version": "0.0.1", "index": "70.20", "private": true,
+  "main": "nodics.js", "description": "Idempotent Checkout placement, checkpoint, compensation, and API capability.",
+  "nodics": { "kind": "capability", "displayName": "Checkout Core", "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": ["configuration", "schema", "service", "facade", "controller", "router", "test", "llm"],
+    "runtime": { "router": true, "publish": false, "web": false } }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "localCommsProvider",
+  "version": "0.0.1",
+  "index": "89.40",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Deterministic local-only Communication delivery provider.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Local Communication Provider",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "service",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  }
+}

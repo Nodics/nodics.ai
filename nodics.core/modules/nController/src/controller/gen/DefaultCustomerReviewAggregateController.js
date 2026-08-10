@@ -11,9 +11,9 @@
 /**
  * @generated
  * @module generated/controller/DefaultCustomerReviewAggregateController
- * @description Generated controller for schema `customerReviewAggregate` owned by module `cres`. This file is recreated by clean/build from the effective schema and common controller template.
+ * @description Generated controller for schema `customerReviewAggregate` owned by module `customerReview`. This file is recreated by clean/build from the effective schema and common controller template.
  * @layer controller
- * @owner cres
+ * @owner customerReview
  * @schema customerReviewAggregate
  * @model CustomerReviewAggregateModel
  * @sourceTemplate /src/controller/common.js

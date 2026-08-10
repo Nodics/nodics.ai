@@ -1,0 +1,26 @@
+{
+  "name": "store",
+  "version": "0.0.1",
+  "index": "70.10",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Nodics Commerce Store capability.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Store",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "schema",
+      "service",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  }
+}

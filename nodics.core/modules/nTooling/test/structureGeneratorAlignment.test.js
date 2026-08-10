@@ -55,6 +55,17 @@ try {
         '--index=9000.1'
     ]);
     generate(projectHome, [
+        '--kind=group',
+        '--name=nodics.example',
+        '--path=nodics.example',
+        '--index=9000.99'
+    ]);
+    assert.strictEqual(
+        JSON.parse(fs.readFileSync(path.join(projectHome, 'nodics.example/package.json'), 'utf8')).name,
+        'nodics.example',
+        'Framework group generation must preserve a dotted functional module identity'
+    );
+    generate(projectHome, [
         '--kind=capability',
         '--name=acmeCore',
         '--path=acme/modules/acmeCore',

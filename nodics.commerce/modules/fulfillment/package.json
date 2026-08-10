@@ -1,0 +1,28 @@
+{
+  "name": "fulfillment",
+  "version": "0.0.1",
+  "index": "70.59",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Fulfillment module group.",
+  "requiredModules": [
+    "fulfillmentCore"
+  ],
+  "nodics": {
+    "kind": "group",
+    "displayName": "Fulfillment",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "composition",
+      "configuration",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  }
+}

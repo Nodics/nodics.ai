@@ -11,9 +11,9 @@
 /**
  * @generated
  * @module generated/service/DefaultCustomerReviewService
- * @description Generated service for schema `customerReview` owned by module `cres`. This file is recreated by clean/build from the effective schema and common service template.
+ * @description Generated service for schema `customerReview` owned by module `customerReview`. This file is recreated by clean/build from the effective schema and common service template.
  * @layer service
- * @owner cres
+ * @owner customerReview
  * @schema customerReview
  * @model CustomerReviewModel
  * @sourceTemplate /src/service/common.js
@@ -31,7 +31,7 @@ module.exports = {
         });
     },
     get: function (request) {
-        let moduleName = request.moduleName || 'cres';
+        let moduleName = request.moduleName || 'customerReview';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).CustomerReviewModel;
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelsGetInitializerPipeline', request, {});
@@ -53,19 +53,19 @@ module.exports = {
         });
     },
     save: function (request) {
-        let moduleName = request.moduleName || 'cres';
+        let moduleName = request.moduleName || 'customerReview';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).CustomerReviewModel;
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelSaveInitializerPipeline', request, {});
     },
     saveAll: function (request) {
-        let moduleName = request.moduleName || 'cres';
+        let moduleName = request.moduleName || 'customerReview';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).CustomerReviewModel;
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelsSaveInitializerPipeline', request, {});
     },
     remove: function (request) {
-        let moduleName = request.moduleName || 'cres';
+        let moduleName = request.moduleName || 'customerReview';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).CustomerReviewModel;
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelsRemoveInitializerPipeline', request, {});
@@ -83,13 +83,13 @@ module.exports = {
         });
     },
     update: function (request) {
-        let moduleName = request.moduleName || 'cres';
+        let moduleName = request.moduleName || 'customerReview';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).CustomerReviewModel;
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelsUpdateInitializerPipeline', request, {});
     },
     getSearchModel: function (request) {
-        let moduleName = request.moduleName || 'cres';
+        let moduleName = request.moduleName || 'customerReview';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).CustomerReviewModel;
         request.moduleName = moduleName;
         request.indexName = request.indexName ? request.indexName : request.schemaModel.indexName;

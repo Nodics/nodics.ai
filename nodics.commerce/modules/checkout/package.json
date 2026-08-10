@@ -1,0 +1,30 @@
+{
+  "name": "checkout",
+  "version": "0.0.1",
+  "index": "70.29",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Checkout module group.",
+  "requiredModules": [
+    "checkoutCore",
+    "cart",
+    "order"
+  ],
+  "nodics": {
+    "kind": "group",
+    "displayName": "Checkout",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "composition",
+      "configuration",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  }
+}

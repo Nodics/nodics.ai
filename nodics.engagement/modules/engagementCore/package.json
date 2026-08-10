@@ -1,0 +1,29 @@
+{
+    "name": "engagementCore",
+    "index": "90.10",
+    "description": "Shared customer engagement contracts and governance foundation.",
+    "main": "nodics.js",
+    "version": "0.0.1",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "nodics": {
+        "kind": "capability",
+        "displayName": "Engagement Core",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": [
+            "configuration",
+            "schema",
+            "service",
+            "utility",
+            "test",
+            "llm"
+        ],
+        "runtime": {
+            "router": false,
+            "publish": false,
+            "web": false
+        }
+    },
+    "scripts": {}
+}

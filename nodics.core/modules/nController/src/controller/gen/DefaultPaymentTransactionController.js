@@ -11,9 +11,9 @@
 /**
  * @generated
  * @module generated/controller/DefaultPaymentTransactionController
- * @description Generated controller for schema `paymentTransaction` owned by module `payment`. This file is recreated by clean/build from the effective schema and common controller template.
+ * @description Generated controller for schema `paymentTransaction` owned by module `paymentCore`. This file is recreated by clean/build from the effective schema and common controller template.
  * @layer controller
- * @owner payment
+ * @owner paymentCore
  * @schema paymentTransaction
  * @model PaymentTransactionModel
  * @sourceTemplate /src/controller/common.js

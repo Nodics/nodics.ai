@@ -1,0 +1,40 @@
+{
+  "name": "nodics.commerce",
+  "version": "0.0.1",
+  "index": "70.99",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Nodics Commerce module group.",
+  "requiredModules": [
+    "baseCommerce",
+    "checkout",
+    "payment",
+    "fulfillment"
+  ],
+  "nodics": {
+    "kind": "group",
+    "displayName": "Nodics Commerce",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "composition",
+      "configuration",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    },
+    "extends": [
+      "nodics.core"
+    ],
+    "functionalModule": {
+      "identity": "nodics.commerce",
+      "displayName": "Commerce",
+      "type": "STANDARD",
+      "protected": false
+    }
+  }
+}

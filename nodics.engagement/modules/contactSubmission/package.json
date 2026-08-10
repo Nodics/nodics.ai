@@ -1,0 +1,29 @@
+{
+    "name": "contactSubmission",
+    "index": "90.50",
+    "description": "Customer contact and enquiry intake, routing, SLA, and resolution capability.",
+    "main": "nodics.js",
+    "version": "0.0.1",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "nodics": {
+        "kind": "capability",
+        "displayName": "Contact Submission",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": [
+            "configuration",
+            "schema",
+            "service",
+            "utility",
+            "test",
+            "llm"
+        ],
+        "runtime": {
+            "router": false,
+            "publish": false,
+            "web": false
+        }
+    },
+    "scripts": {}
+}

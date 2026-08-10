@@ -86,8 +86,10 @@ copied reference material contains `package.json` files.
 
 ## Naming
 
-`package.json.name` is the canonical runtime module identifier. It must be a
-unique alphanumeric JavaScript-style name beginning with a letter.
+`package.json.name` is the canonical runtime module identifier. Capability
+names must be unique alphanumeric JavaScript-style names beginning with a
+letter. Standard framework group identities may use the established dotted
+`nodics.<capability>` form.
 
 For new modules, the physical folder should match `package.json.name` unless a
 framework-owned compatibility convention explicitly requires an `n` namespace

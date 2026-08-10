@@ -1,0 +1,25 @@
+{
+  "name": "cardPayment",
+  "version": "0.0.1",
+  "index": "70.31",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Nodics Commerce Card Payment method capability.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Card Payment",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "service",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  }
+}

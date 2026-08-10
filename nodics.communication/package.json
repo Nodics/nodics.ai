@@ -1,0 +1,7 @@
+{
+  "name": "nodics.communication", "version": "0.0.1", "index": "89.99", "private": true, "main": "nodics.js",
+  "description": "Provider-neutral Nodics communication functional module group.",
+  "requiredModules": ["commsSchema", "commsCore", "commsVerification", "localCommsProvider", "commsApi"],
+  "nodics": { "kind": "group", "displayName": "Nodics Communication", "extends": ["nodics.core"], "runtimeModule": true, "loadableByNodicsModuleLoader": true, "owns": ["composition", "configuration", "test", "llm"], "runtime": { "router": false, "publish": false, "web": false }, "functionalModule": { "identity": "nodics.communication", "displayName": "Communication", "type": "STANDARD", "protected": false } },
+  "scripts": { "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check", "test:contract": "node test/communicationModuleContract.test.js && node modules/commsCore/test/communicationCoreContract.test.js && node modules/commsVerification/test/communicationVerificationContract.test.js", "test": "npm run check:syntax && npm run test:contract" }
+}

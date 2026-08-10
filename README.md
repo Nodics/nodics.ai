@@ -169,6 +169,8 @@ flowchart TB
   Framework --> WCMS["nodics.wcms<br/>CMS, WCMS, Media"]
   Framework --> Cron["nodics.cron<br/>scheduled jobs"]
   Framework --> Process["nodics.process<br/>business process and workflow"]
+  Framework --> Communication["nodics.communication<br/>provider-neutral communication"]
+  Framework --> Engagement["nodics.engagement<br/>customer engagement"]
   Framework --> Docs["nodics.docs<br/>framework documentation"]
 
   Customer["customer project<br/>example: nodics.kickoff"] --> Runtime["environment/server runtime graph"]
@@ -236,6 +238,9 @@ nodics.ai/
   nodics.cron/
   nodics.wcms/
   nodics.process/
+  nodics.commerce/
+  nodics.communication/
+  nodics.engagement/
   nodics.docs/
 ```
 
@@ -250,6 +255,12 @@ The current standard module groups are:
 - `nodics.cron` — Cron runtime and cron job capability modules.
 - `nodics.process` — business process, workflow, task, approval, instance,
   audit, and visual-designer contracts.
+- `nodics.commerce` — store, product, pricing, tax, promotion, inventory,
+  checkout, order, payment, provider, and fulfillment capability composition.
+- `nodics.communication` — provider-neutral templates, rendering, recipient
+  policy, verification, delivery, callback, retry, inbox, and evidence authority.
+- `nodics.engagement` — customer contact, review, feedback, testimonial,
+  communication-intent, unified operations, governance, and API capability group.
 - `nodics.docs` — framework documentation content packs only.
 
 The repository root follows the standard Nodics module-group file shape so
@@ -259,7 +270,8 @@ developers, tooling, and AI agents can navigate it consistently. Its
 module. Root `config/` files are reserved for framework-repository governance
 metadata only. Runtime defaults belong in the owning functional module, such as
 `nodics.core`, `nodics.platform`, `nodics.wcms`, `nodics.cron`, or
-`nodics.docs`, or `nodics.process`.
+`nodics.docs`, `nodics.process`, `nodics.commerce`, `nodics.communication`, or
+`nodics.engagement`.
 
 Repository-wide AI/developer guidance is intentionally not stored in a root
 `llm/` folder. The canonical guidance home is `nodics.core/modules/nSetup/llm/`,

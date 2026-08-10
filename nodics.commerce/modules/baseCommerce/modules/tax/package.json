@@ -1,0 +1,26 @@
+{
+  "name": "tax",
+  "version": "0.0.1",
+  "index": "70.13",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Nodics Commerce Tax capability.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Tax",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "schema",
+      "service",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  }
+}

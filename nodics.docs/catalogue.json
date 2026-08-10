@@ -1,6 +1,6 @@
 {
   "contract": "nodics.documentation/v1",
-  "release": "0.4.5",
+  "release": "0.13.0",
   "documents": [
     {
       "id": "framework.what-is-nodics",
@@ -119,6 +119,114 @@
       "summary": "Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety.",
       "locale": "en",
       "content": "content/nodics.cron/operations.md"
+    },
+    {
+      "id": "engagement.customer-reviews",
+      "functionalModule": "nodics.engagement",
+      "technicalModule": "customerReview",
+      "title": "Customer reviews and ratings",
+      "summary": "Beginner-to-operator journey for review submission, moderation, publication, rating aggregates, recovery, APIs, and safe customization.",
+      "locale": "en",
+      "content": "content/nodics.engagement/customer-reviews.md"
+    },
+    {
+      "id": "engagement.customer-feedback",
+      "functionalModule": "nodics.engagement",
+      "technicalModule": "customerFeedback",
+      "title": "Customer feedback, complaints, and closed-loop action",
+      "summary": "Beginner-to-operator journey for feedback intake, triage, follow-up, resolution, handoffs, surveys, insights, recovery, and safe customization.",
+      "locale": "en",
+      "content": "content/nodics.engagement/customer-feedback.md"
+    },
+    {
+      "id": "engagement.unified-operations",
+      "functionalModule": "nodics.engagement",
+      "technicalModule": "engagementCore",
+      "title": "Unified engagement operations",
+      "summary": "Beginner-to-operator journey for unified queues, dashboards, batch previews, repair evidence, bounded exports, authority boundaries, and recovery.",
+      "locale": "en",
+      "content": "content/nodics.engagement/unified-operations.md"
+    },
+    {
+      "id": "engagement.governed-automation",
+      "functionalModule": "nodics.engagement",
+      "technicalModule": "engagementCore",
+      "title": "Governed automation and AI",
+      "summary": "Beginner-to-operator journey for optional AI proposals, deterministic fallback, evidence, evaluation, human review, overrides, monitoring, and safe extension.",
+      "locale": "en",
+      "content": "content/nodics.engagement/governed-automation.md"
+    },
+    {
+      "id": "engagement.enterprise-operations",
+      "functionalModule": "nodics.engagement",
+      "technicalModule": "engagementCore",
+      "title": "Enterprise scale, resilience, and ecosystem operations",
+      "summary": "Beginner-to-operator journey for capacity, regional residency, provider delivery, backpressure, recovery, compatibility, accessibility, security, and release acceptance.",
+      "locale": "en",
+      "content": "content/nodics.engagement/enterprise-operations.md"
+    },
+    {
+      "id": "commerce.overview",
+      "functionalModule": "nodics.commerce",
+      "technicalModule": "commerce",
+      "title": "Commerce overview",
+      "summary": "Beginner orientation to the Commerce journey, ownership map, phased implementation state, security baseline, verification, and safe customization.",
+      "locale": "en",
+      "content": "content/nodics.commerce/overview.md"
+    },
+    {
+      "id": "commerce.base-foundations",
+      "functionalModule": "nodics.commerce",
+      "technicalModule": "baseCommerce",
+      "title": "Base Commerce foundations",
+      "summary": "Beginner-to-operator guide for Store, Product, Pricing, Tax, Promotion, Inventory, exact decisions, publication, recovery, and customization.",
+      "locale": "en",
+      "content": "content/nodics.commerce/base-commerce.md"
+    },
+    {
+      "id": "commerce.cart-order",
+      "functionalModule": "nodics.commerce",
+      "technicalModule": "checkout",
+      "title": "Cart, checkout, and order placement",
+      "summary": "Customer, developer, and operator journey for exact calculation, placement, idempotency, compensation, immutable Orders, and recovery.",
+      "locale": "en",
+      "content": "content/nodics.commerce/cart-order.md"
+    },
+    {
+      "id": "commerce.payment-fulfillment",
+      "functionalModule": "nodics.commerce",
+      "technicalModule": "payment",
+      "title": "Payment and fulfillment operations",
+      "summary": "Provider-safe payment and fulfillment guide covering methods, adapters, callbacks, reconciliation, shipment, tracking, warehouse work, and returns.",
+      "locale": "en",
+      "content": "content/nodics.commerce/payment-fulfillment.md"
+    },
+    {
+      "id": "commerce.returns-refunds",
+      "functionalModule": "nodics.commerce",
+      "technicalModule": "order",
+      "title": "Cancellation, return, and refund lifecycle",
+      "summary": "Structured self-service and operator journey for policy, maker-checker approval, owner intents, checkpoints, recovery, and final Order evidence.",
+      "locale": "en",
+      "content": "content/nodics.commerce/returns-refunds.md"
+    },
+    {
+      "id": "commerce.enterprise-operations",
+      "functionalModule": "nodics.commerce",
+      "technicalModule": "checkoutCore",
+      "title": "Commerce enterprise operations and migration",
+      "summary": "Capacity, backpressure, providers, recovery, compatibility, tenant migration, rollback, legacy retirement, and production qualification guidance.",
+      "locale": "en",
+      "content": "content/nodics.commerce/enterprise-operations.md"
+    },
+    {
+      "id": "communication.overview",
+      "functionalModule": "nodics.communication",
+      "technicalModule": "commsCore",
+      "title": "Communication, delivery, and verification",
+      "summary": "Beginner-to-operator journey for templates, intent, consent, suppression, verification, provider delivery, callbacks, retry, inbox, recovery, and domain integration.",
+      "locale": "en",
+      "content": "content/nodics.communication/overview.md"
     },
     {
       "id": "docs.overview",

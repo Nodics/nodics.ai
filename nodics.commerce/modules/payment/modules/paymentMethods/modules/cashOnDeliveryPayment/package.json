@@ -1,0 +1,25 @@
+{
+  "name": "cashOnDeliveryPayment",
+  "version": "0.0.1",
+  "index": "70.33",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Nodics Commerce Cash On Delivery Payment method capability.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Cash On Delivery Payment",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "service",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  }
+}

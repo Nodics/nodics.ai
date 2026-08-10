@@ -1,0 +1,16 @@
+{
+  "name": "order",
+  "version": "0.0.1",
+  "index": "70.22",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Nodics Commerce immutable Order and lifecycle authority.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Order",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": ["configuration", "schema", "service", "facade", "controller", "router", "test", "llm"],
+    "runtime": { "router": true, "publish": false, "web": false }
+  }
+}

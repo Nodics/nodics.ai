@@ -1,0 +1,28 @@
+{
+  "name": "commsApi",
+  "version": "0.0.1",
+  "index": "89.80",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Secured Communication customer and operator API.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Communication API",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "router",
+      "controller",
+      "facade",
+      "service",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": true,
+      "publish": false,
+      "web": false
+    }
+  }
+}

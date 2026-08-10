@@ -1,6 +1,6 @@
 {
   "pack": "nodics.platform.axis",
-  "version": "0.3.28",
+  "version": "0.3.29",
   "generatedAtPolicy": "deterministic-no-timestamp",
   "sources": [
     {

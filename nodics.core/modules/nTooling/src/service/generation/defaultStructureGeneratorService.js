@@ -306,7 +306,10 @@ module.exports = {
      * @returns {boolean} True when options are valid.
      */
     validateOptions: function (options) {
-        if (!options.name || !/^[A-Za-z][A-Za-z0-9]*$/.test(options.name)) {
+        const namePattern = options.kind === 'group' ?
+            /^[A-Za-z][A-Za-z0-9]*(?:\.[A-Za-z][A-Za-z0-9]*)*$/ :
+            /^[A-Za-z][A-Za-z0-9]*$/;
+        if (!options.name || !namePattern.test(options.name)) {
             throw new Error('A valid --name=<RuntimeName> is required.');
         }
         if (!nodicsKindByGenerationKind[options.kind]) {

@@ -1,0 +1,24 @@
+{
+  "name": "paypalProvider",
+  "version": "0.0.1",
+  "index": "70.38",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Nodics Commerce PayPal Provider capability.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "PayPal Provider",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  }
+}

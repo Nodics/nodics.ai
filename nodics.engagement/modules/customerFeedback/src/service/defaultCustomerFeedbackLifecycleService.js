@@ -1,0 +1,17 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+/** @module customerFeedback/src/service/defaultCustomerFeedbackLifecycleService @description Applies optimistic feedback transitions, resolutions, follow-up outcomes, and downstream handoff evidence. @layer service @owner customerFeedback @override Later modules may extend configured transitions without weakening audit or owner boundaries. */
+module.exports = {
+    /** Applies one configured optimistic lifecycle command. */ transition: function (feedback, command, configuration) { if (Number(command.expectedRevision) !== Number(feedback.revision || 0)) throw SERVICE.DefaultCustomerFeedbackGovernanceService.error('ERR_FEEDBACK_00004', 'feedback revision conflict'); let target = ((((configuration || {}).lifecycle || {}).transitions || {})[feedback.status] || {})[command.action]; if (!target) throw SERVICE.DefaultCustomerFeedbackGovernanceService.error('ERR_FEEDBACK_00005', 'invalid feedback transition'); let value = Object.assign({}, feedback, { status: target, revision: Number(feedback.revision || 0) + 1 }); if (target === 'RESOLVED') value.resolvedAt = command.now || new Date(); if (target === 'CLOSED') value.closedAt = command.now || new Date(); return value; },
+    /** Creates the next immutable-style resolution version. */ resolution: function (feedback, previous, command) { if (!['IN_PROGRESS', 'WAITING_CUSTOMER', 'WAITING_INTERNAL', 'ESCALATED', 'RESOLVED'].includes(feedback.status)) throw SERVICE.DefaultCustomerFeedbackGovernanceService.error('ERR_FEEDBACK_00005', 'feedback is not resolvable'); return { tenant: feedback.tenant, feedbackCode: feedback.code, version: Math.max(0, ...(previous || []).map(item => Number(item.version || 0))) + 1, outcomeCode: command.outcomeCode, summary: command.summary, customerConfirmed: command.customerConfirmed, resolvedBy: command.actorId, resolvedAt: command.now || new Date(), status: command.customerConfirmed === true ? 'ACCEPTED' : 'RESOLVED', correlationId: feedback.correlationId }; },
+    /** Records a bounded closed-loop follow-up outcome. */ followUp: function (feedback, previous, command, policy) { let attempt = Math.max(0, ...(previous || []).map(item => Number(item.attempt || 0))) + 1; if (attempt > Number((policy || {}).maximumAttempts || 3)) throw SERVICE.DefaultCustomerFeedbackGovernanceService.error('ERR_FEEDBACK_00006', 'follow-up attempt limit reached'); if (!((policy || {}).channels || []).includes(command.channel)) throw SERVICE.DefaultCustomerFeedbackGovernanceService.error('ERR_FEEDBACK_00006', 'follow-up channel is not allowed'); return { tenant: feedback.tenant, feedbackCode: feedback.code, channel: command.channel, status: command.status || 'OFFERED', attempt: attempt, providerReference: command.providerReference, outcomeCode: command.outcomeCode, occurredAt: command.now || new Date(), correlationId: feedback.correlationId }; },
+    /** Creates a retryable reference to another domain owner. */ handoff: function (feedback, command) { return { tenant: feedback.tenant, feedbackCode: feedback.code, targetModule: command.targetModule, targetOperation: command.targetOperation, idempotencyKey: command.idempotencyKey, status: 'PENDING', attemptCount: 0, correlationId: feedback.correlationId }; }
+};

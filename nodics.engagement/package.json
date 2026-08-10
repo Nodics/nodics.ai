@@ -1,0 +1,49 @@
+{
+    "name": "nodics.engagement",
+    "index": "90.99",
+    "description": "Nodics customer engagement functional module group.",
+    "main": "nodics.js",
+    "version": "0.0.1",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "requiredModules": [
+        "engagementCore",
+        "customerReview",
+        "customerFeedback",
+        "testimonial",
+        "contactSubmission",
+        "engagementComms",
+        "engagementApi"
+    ],
+    "nodics": {
+        "kind": "group",
+        "displayName": "Nodics Engagement",
+        "extends": [
+            "nodics.core"
+        ],
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": [
+            "composition",
+            "configuration",
+            "test",
+            "llm"
+        ],
+        "runtime": {
+            "router": false,
+            "publish": false,
+            "web": false
+        },
+        "functionalModule": {
+            "identity": "nodics.engagement",
+            "displayName": "Customer Engagement",
+            "type": "STANDARD",
+            "protected": false
+        }
+    },
+    "scripts": {
+        "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
+        "test:contract": "node test/engagementModuleCompositionContract.test.js && node test/engagementModuleMetadataContract.test.js && for file in modules/*/test/*BoundaryContract.test.js; do node \"$file\" || exit 1; done",
+        "test": "npm run check:syntax && npm run test:contract"
+    }
+}

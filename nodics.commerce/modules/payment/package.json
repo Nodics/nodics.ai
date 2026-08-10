@@ -1,0 +1,30 @@
+{
+  "name": "payment",
+  "version": "0.0.1",
+  "index": "70.49",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Payment module group.",
+  "requiredModules": [
+    "paymentCore",
+    "paymentMethods",
+    "paymentProviders"
+  ],
+  "nodics": {
+    "kind": "group",
+    "displayName": "Payment",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "composition",
+      "configuration",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  }
+}

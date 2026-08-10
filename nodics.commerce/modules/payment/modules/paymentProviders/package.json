@@ -1,0 +1,32 @@
+{
+  "name": "paymentProviders",
+  "version": "0.0.1",
+  "index": "70.45",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Payment Providers module group.",
+  "requiredModules": [
+    "paymentProviderCore",
+    "stripeProvider",
+    "paypalProvider",
+    "cyberSourceProvider",
+    "visaProvider"
+  ],
+  "nodics": {
+    "kind": "group",
+    "displayName": "Payment Providers",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "composition",
+      "configuration",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  }
+}

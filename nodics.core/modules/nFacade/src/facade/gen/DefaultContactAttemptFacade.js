@@ -1,0 +1,99 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+/**
+ * @generated
+ * @module generated/facade/DefaultContactAttemptFacade
+ * @description Generated facade for schema `contactAttempt` owned by module `contactSubmission`. This file is recreated by clean/build from the effective schema and common facade template.
+ * @layer facade
+ * @owner contactSubmission
+ * @schema contactAttempt
+ * @model ContactAttemptModel
+ * @sourceTemplate /src/facade/common.js
+ * @override Do not edit generated files directly. Customize behavior by adding a later module in the hierarchy that overrides this generated artifact or its source template contract.
+ */
+module.exports = {
+    init: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+    postInit: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+    get: function (request) {
+        return SERVICE.DefaultContactAttemptService.get(request);
+    },
+    getById: function (id, tenant) {
+        return SERVICE.DefaultContactAttemptService.getById(id, tenant);
+    },
+    getByCode: function (code, tenant) {
+        return SERVICE.DefaultContactAttemptService.getByCode(code, tenant);
+    },
+    save: function (request) {
+        return SERVICE.DefaultContactAttemptService.save(request);
+    },
+    saveAll: function (request) {
+        return SERVICE.DefaultContactAttemptService.saveAll(request);
+    },
+    remove: function (request) {
+        return SERVICE.DefaultContactAttemptService.remove(request);
+    },
+    removeById: function (request) {
+        return SERVICE.DefaultContactAttemptService.remove(request);
+    },
+    removeByCode: function (request) {
+        return SERVICE.DefaultContactAttemptService.remove(request);
+    },
+    update: function (request) {
+        return SERVICE.DefaultContactAttemptService.update(request);
+    },
+    doRefresh: function (request) {
+        return SERVICE.DefaultContactAttemptService.doRefresh(request);
+    },
+    doCheckHealth: function (request) {
+        return SERVICE.DefaultContactAttemptService.doCheckHealth(request);
+    },
+    doExists: function (request) {
+        return SERVICE.DefaultContactAttemptService.doExists(request);
+    },
+    doGet: function (request) {
+        return SERVICE.DefaultContactAttemptService.doGet(request);
+    },
+    doSearch: function (request) {
+        return SERVICE.DefaultContactAttemptService.doSearch(request);
+    },
+    doSave: function (request) {
+        return SERVICE.DefaultContactAttemptService.doSave(request);
+    },
+    doBulk: function (request) {
+        return SERVICE.DefaultContactAttemptService.doBulk(request);
+    },
+    doRemove: function (request) {
+        return SERVICE.DefaultContactAttemptService.doRemove(request);
+    },
+    doRemoveByQuery: function (request) {
+        return SERVICE.DefaultContactAttemptService.doRemoveByQuery(request);
+    },
+    doGetSchema: function (request) {
+        return SERVICE.DefaultContactAttemptService.doGetSchema(request);
+    },
+    doUpdateSchema: function (request) {
+        return SERVICE.DefaultContactAttemptService.doUpdateSchema(request);
+    },
+    doRemoveIndex: function (request) {
+        return SERVICE.DefaultContactAttemptService.doRemoveIndex(request);
+    },
+    doIndexing: function (request) {
+        return SERVICE.DefaultContactAttemptService.doIndexing(request);
+    }
+};

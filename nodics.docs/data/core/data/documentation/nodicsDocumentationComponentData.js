@@ -48,6 +48,21 @@ module.exports = {
           "code": "nodics-cron",
           "title": "Nodics cron",
           "order": 50
+        },
+        {
+          "code": "nodics-engagement",
+          "title": "Nodics engagement",
+          "order": 60
+        },
+        {
+          "code": "nodics-commerce",
+          "title": "Nodics commerce",
+          "order": 70
+        },
+        {
+          "code": "nodics-communication",
+          "title": "Nodics communication",
+          "order": 80
         }
       ],
       "items": [
@@ -260,13 +275,205 @@ module.exports = {
           "searchText": "Cron operations Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety. # Cron operations\n\nCron is the Nodics optional functional module for scheduled and manually\ntriggered backend work. It extends Core and contributes the `cronjob`\ntechnical module. A project registers Cron when it needs scheduled jobs,\nbackground maintenance, retries, cleanup, synchronization, or other timed\nbusiness processes.\n\nFor a beginner, Cron is the part of Nodics that asks “what should happen\nlater, repeatedly, or in the background?” A user may click a button in Axis,\nbut many real enterprise actions must happen without a user staring at the\nscreen: cleanup temporary media, retry failed exports, synchronize external\nsystems, send reminders, rebuild projections, or close expired workflows.\n\n## Why Cron is optional\n\nCore, Platform, and WCMS are mandatory for Axis-driven onboarding and governed\ncontent. Cron is different. Many deployments do not need scheduled work on day\none, so Cron should appear in the module registry as an optional functional\nmodule when a cron runtime is live. Registering or activating Cron persists\nproject intent; restarting servers should not ask the same registration\nquestion again.\n\n## Ownership model\n\nCron owns scheduler mechanics, lifecycle routes, persisted job definitions,\nruntime containers, execution state, logging, events, and failure handling.\nThe server hosts Cron, but the server is not the functional owner. Node\nplacement fields decide where a job may run; they do not create another module\nidentity.\n\nCustomer jobs belong in project modules. Reusable scheduler behavior belongs\nin `nodics.cron`. If a partner needs custom scheduling behavior, they may\ncreate a customer extension module that loads after Cron and overrides the\napproved service contract.\n\nFor developers, the important rule is that Cron should orchestrate the timing\nand execution contract, while the owning business module should own the actual\nbusiness operation. A media cleanup job should call media-owned cleanup logic.\nA workflow reminder job should call workflow-owned reminder logic. Cron should\nnot become a dumping ground for unrelated domain behavior.\n\n## Job lifecycle\n\nA job definition normally describes:\n\n- job code and active state;\n- schedule, start, optional end, and trigger type;\n- handler or target module operation;\n- tenant, enterprise, and node placement;\n- retry, timeout, priority, and overlap expectations;\n- last execution status and safe operational evidence.\n\nCron supports create or register, update, run, start, stop, pause, resume, and\nremove through secured backend operations. Manual run and scheduled execution\nmust share the same tenant, permission, node, logging, and failure contracts.\n\n![Cron job lifecycle](../assets/images/cron-job-lifecycle.png \"Cron lifecycle reference from the archived documentation set\")\n\n![Cron job process](../assets/images/cronjob-process.jpg \"Cron job process reference from the archived documentation set\")\n\n```mermaid\nstateDiagram-v2\n  [*] --> Registered\n  Registered --> Active: activate\n  Active --> Due: schedule reaches due time\n  Due --> Running: node claims execution\n  Running --> Completed: success\n  Running --> Failed: error or timeout\n  Failed --> Retrying: retry policy allows\n  Retrying --> Due\n  Active --> Paused: pause\n  Paused --> Active: resume\n  Active --> Stopped: stop\n  Stopped --> Active: start\n  Registered --> Removed: remove\n  Completed --> Active: wait for next schedule\n```\n\nFor beginners, the important point is that a job definition and a job run are\nnot the same thing. The definition says what should happen and when. A run is\none execution attempt with its own start time, status, logs, retries, and\noutcome. Production support usually investigates runs, but operators manage\ndefinitions.\n\n## Example job: nightly media cleanup\n\nA realistic first Cron job might clean expired temporary media.\n\n| Field | Example value | Why it matters |\n| --- | --- | --- |\n| Code | `media.temporary.cleanup` | Stable identity for logs, permissions, and support. |\n| Trigger | Daily at 02:00 local environment time | Runs outside peak usage. |\n| Owner module | `media` or project extension | Keeps business behavior with the module that owns the data. |\n| Idempotency | Delete only records already marked expired | Safe if the job runs twice. |\n| Timeout | 10 minutes | Prevents a stuck cleanup from occupying the scheduler forever. |\n| Retry | Two retries with backoff | Handles temporary storage/database failures without hiding persistent bugs. |\n| Audit | Count scanned, deleted, skipped, failed | Lets operators prove what happened. |\n\nThe job should not accept arbitrary paths or delete files by frontend request.\nIt should ask Media for expired records through a governed service and let the\nstorage provider perform safe cleanup.\n\n## Business journey: why scheduled work needs governance\n\nScheduled work often starts innocently: “run this cleanup every night.” In a\nreal enterprise system, the same job may touch many tenants, delete data,\nretry external calls, create reports, or send notifications. That makes Cron a\nbusiness-risk capability, not only a timer.\n\n| Business need | Cron responsibility | Owning business module responsibility |\n| --- | --- | --- |\n| Nightly media cleanup | Schedule, claim, execute, retry, log. | Media decides which records are expired and safe to delete. |\n| Export retry | Run retry window and record attempts. | Import/export module decides retry eligibility and file semantics. |\n| Reminder emails | Schedule and throttle execution. | Workflow or notification module owns message content and recipient rules. |\n| Projection rebuild | Run controlled background task. | Owning data module owns rebuild logic and consistency rules. |\n\nCron should make the work happen at the right time with safe operational\nevidence. It should not absorb every domain rule just because the work happens\nin the background.\n\n## Developer journey: adding a project cron job\n\nWhen a project adds a scheduled job, follow this sequence:\n\n1. Identify the business module that owns the actual operation.\n2. Expose a safe service method in that module.\n3. Add the job definition in the project or owning module data/configuration.\n4. Configure schedule, tenant/enterprise scope, node placement, timeout,\n   retry, overlap, and audit expectations.\n5. Register or import the job through governed data flow.\n6. Test manual run and scheduled execution with the same security and tenant\n   context.\n7. Verify restart behavior by stopping and starting the Cron server.\n8. Document support steps, alert thresholds, and reconciliation behavior.\n\nDo not pass executable code, raw URLs, filesystem paths, or untrusted handler\nnames through job records. Job definitions should point to known backend\ncontracts.\n\n## Registering Cron as an optional module\n\nCore, Platform, and WCMS are mandatory in the Axis reference stack. Cron is\noptional. That means Axis may discover a live Cron server and show it as\navailable to register. When a user registers and activates Cron, the project\nintent is stored in the BackOffice/runtime registry. Restarting the server\nshould not ask again unless the state was removed.\n\nThe lifecycle is:\n\n1. Cron server starts and reports `nodics.cron` as live.\n2. BackOffice observes the runtime module catalogue.\n3. Axis shows Cron under available modules.\n4. A user registers Cron into the project.\n5. A user activates Cron.\n6. Cron-owned navigation, APIs, docs, and initialization data become visible\n   according to permissions and content import state.\n7. Deactivation hides runtime availability without forgetting registration.\n8. Deregistration removes the project registration and returns Cron to the\n   available state while the server remains live.\n\n```mermaid\nsequenceDiagram\n  participant Cron as Cron server\n  participant BackOffice as BackOffice registry\n  participant Axis as Axis module registry\n  Cron->>BackOffice: report nodics.cron runtime observation\n  Axis->>BackOffice: request authorized module registry\n  BackOffice-->>Axis: nodics.cron available\n  Axis->>BackOffice: register nodics.cron\n  BackOffice-->>Axis: registered state\n  Axis->>BackOffice: activate nodics.cron\n  BackOffice-->>Axis: active state\n```\n\nThe server observation starts the conversation. Registration and activation\nrecord project intent. The two should not be collapsed into one hidden action.\n\n## Production safety\n\nScheduled jobs are deceptively simple. A timer firing every minute is easy;\nmaking it safe in production is the real work. Jobs that change external state\nmust define idempotency keys, duplicate-run policy, timeout behavior, retry\nsafety, compensation or reconciliation steps, and alerting.\n\nMulti-node deployments must treat scheduler memory as disposable. Persisted\njob definitions are authoritative; in-memory schedules are rebuilt from\nruntime state. Node failover can help, but it is not a universal exactly-once\nguarantee. Network partitions, process termination, downstream timeouts, and\nuncertain completion must be handled by the job contract.\n\n## Execution safety model\n\n```mermaid\nflowchart TD\n  Due[\"Job becomes due\"] --> Claim[\"Runtime node attempts claim\"]\n  Claim -->|Claim denied| Skip[\"Skip with safe reason\"]\n  Claim -->|Claim accepted| Execute[\"Execute handler\"]\n  Execute --> Success[\"Record success evidence\"]\n  Execute --> Failure[\"Record failure evidence\"]\n  Failure --> Retry{\"Retry allowed?\"}\n  Retry -->|Yes| Backoff[\"Schedule retry with backoff\"]\n  Retry -->|No| Alert[\"Leave failed state and alert\"]\n  Backoff --> Due\n```\n\nThe claim step matters in multi-node environments. Without it, two nodes may\nrun the same job. Even with a claim, job handlers should still be idempotent\nbecause distributed systems can fail after a side effect but before a status\nupdate is recorded.\n\n## Operations runbook outline\n\nEvery production cron capability should have a small runbook:\n\n| Runbook area | Required detail |\n| --- | --- |\n| Job purpose | What business outcome the job supports. |\n| Owner | Functional module or project that owns the business operation. |\n| Schedule | Frequency, timezone, blackout windows, and manual run policy. |\n| Data scope | Tenant, enterprise, site, catalog, or environment boundaries. |\n| Idempotency | What makes repeat execution safe. |\n| Retry | Retry count, backoff, retryable errors, non-retryable errors. |\n| Timeout | Maximum duration and stuck-run recovery. |\n| Observability | Logs, metrics, alerts, dashboards, and correlation fields. |\n| Recovery | Re-run, skip, reconcile, or compensate instructions. |\n| Release impact | What happens during deploy, rollback, or schema/content migration. |\n\n## Security model\n\nCron lifecycle routes require authentication and authorization. A human may\nauthorize a Cron operation, but the job itself must use governed internal\nservice-token flow when calling another module. Do not accept arbitrary URLs,\nservice names, credentials, executable code, or node identifiers from\nuntrusted request data.\n\n## DevOps model\n\nOperations teams should monitor scheduler readiness, active job count, due\njobs, started jobs, completed jobs, failed jobs, skipped jobs, schedule delay,\nduration, retry count, overlap denial, temporary ownership, node handoff, and\ndownstream latency. Logs should carry tenant, enterprise, job code, trigger\ntype, assigned node, attempt, correlation identity, and safe outcome.\n\nBefore production use, every real job should have tests for schedule boundary,\nmanual run, unauthorized access, cross-tenant access, duplicate execution,\ntimeout, retry, partial failure, restart, drain, node loss, node return,\ndownstream recovery, idempotency, and reconciliation.\n\n## Axis and BackOffice view\n\nAxis should show Cron as a functional module, not as every internal technical\nschema. Once registered and active, Cron-owned navigation and workbench\ncapabilities can appear through BackOffice and WCMS data just like other module\ncapabilities. Axis remains the renderer; Cron remains the runtime authority.\n\n## Acceptance checklist\n\nBefore Cron is considered ready beyond local demo use, verify:\n\n- Cron appears in the functional module registry only when the runtime is\n  observed.\n- Register, activate, deactivate, and deregister operations persist and update\n  Axis without manual refresh.\n- Job definitions are persisted and rebuilt after runtime restart.\n- Manual run and scheduled run share the same authorization, tenant, logging,\n  and failure contracts.\n- Duplicate execution is prevented or made harmless through idempotency.\n- Failed runs produce useful diagnostics without exposing secrets.\n- Node loss, restart, timeout, retry, and downstream failure behavior are\n  tested.\n- Business handlers remain in the owning business module.\n\n## Common mistakes\n\n- Putting domain cleanup or workflow logic directly inside Cron instead of the\n  owning business module.\n- Treating an in-memory schedule as the authority instead of persisted job\n  definitions.\n- Assuming one node means production will never run duplicate work.\n- Running jobs without idempotency, timeout, retry, and audit decisions.\n- Letting Axis construct arbitrary job handler names or URLs.\n- Forgetting that Cron registration is optional project state, not process\n  startup.\n\n## Verification\n\nFor local verification, start the Cron runtime from the reference customer\nproject and confirm that the functional module registry observes `nodics.cron`\nas an optional capability. Register it, activate it, deactivate it, and\nderegister it without refreshing the browser. After deregistration, Cron should\nreturn to the available list while the Cron server is still observed. Restart\nservers and confirm that durable registration state behaves as expected.\n\nFor job-level verification, test both manual and scheduled execution. A\nproduction-ready job must prove authorization, tenant context, duplicate-run\nprotection, timeout, retry, logging, downstream failure behavior, and safe\nrestart. If the job performs business work, test the owning business module as\nwell; Cron proves scheduling and execution governance, not the correctness of\nevery domain operation it triggers.\n"
         },
         {
+          "code": "engagement.customer-reviews",
+          "title": "Customer reviews and ratings",
+          "route": "/docs/framework/engagement-customer-reviews",
+          "section": "nodics-engagement",
+          "sectionTitle": "Nodics engagement",
+          "sectionOrder": 60,
+          "order": 140,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Beginner-to-operator journey for review submission, moderation, publication, rating aggregates, recovery, APIs, and safe customization.",
+          "searchText": "Customer reviews and ratings Beginner-to-operator journey for review submission, moderation, publication, rating aggregates, recovery, APIs, and safe customization. # Customer reviews and ratings\n\nCustomer Reviews lets shoppers share an experience and lets a business moderate, respond to, publish, and measure that evidence without changing or suppressing it merely because the opinion is negative. This guide starts with a beginner-friendly mental model and continues into developer and operator detail. It is owned by `nodics.engagement/customerReview`; public and operator HTTP operations are owned by `engagementApi`, and Axis renders backend-authorized workspaces.\n\nThink of a review as a signed evidence folder. The customer's wording and rating are versioned, verification and incentive disclosures are stored beside it, moderation records explain every decision, and the public website receives a smaller safe copy. Rating totals are calculated only from those published copies, so hidden or withdrawn content cannot continue influencing the score.\n\n## Who should read this\n\n| Reader | Start here, then continue to |\n| --- | --- |\n| Shopper or customer-support user | Submit and manage a review; understand verification, publication, and withdrawal. |\n| Moderator or business user | Review queue, policy decisions, responses, abuse reports, appeals, and aggregate repair. |\n| Developer or partner | Ownership, API projections, configuration, safe extension, and tests. |\n| Operator or security reviewer | Tenant isolation, reconciliation, cache/search invalidation, monitoring, and recovery. |\n| Architect or AI tool | Module boundary, immutable evidence, generated artifacts, and prohibited parallel authorities. |\n\n## What is available\n\nThe implemented capability supports polymorphic review targets, overall and dimensional ratings, text and media references, registered-customer ownership, authenticity evidence, incentive disclosures, immutable versions, moderation, business responses, abuse reports, appeals, CRES migration evidence, sanitized public projections, helpfulness votes, rating distributions, verified/unverified counts, deterministic rebuilding, drift detection, bounded sorting/filtering, media galleries, and Schema.org eligibility diagnostics.\n\nReview solicitation, external import/syndication, feedback/complaint management, unified operations, optional AI assistance, and enterprise load/failover qualification are delivered by later phases and must not be represented as active merely because their design is documented.\n\n## End-to-end journey\n\n```mermaid\nflowchart LR\n  Shopper[\"Shopper submits review\"] --> Version[\"Immutable review version\"]\n  Version --> Evidence[\"Authenticity and disclosure evidence\"]\n  Evidence --> Queue[\"Moderator reviews in Axis\"]\n  Queue -->|Approved| Projection[\"Sanitized public projection\"]\n  Queue -->|Policy violation| Restricted[\"Rejected or quarantined with reason\"]\n  Projection --> Aggregate[\"Rebuilt rating aggregate\"]\n  Projection --> Storefront[\"Storefront list, filters, media and rating\"]\n  Withdrawal[\"Customer withdrawal or governed hide\"] --> Projection\n  Projection --> Repair[\"Reconciliation and cache/search invalidation\"]\n  Repair --> Aggregate\n```\n\nIn plain language: the submitted record is not itself a public page. Approval produces a version-specific public projection. The aggregate service reads only projections whose status is `PUBLISHED`. Withdrawal, hiding, anonymization, migration reconciliation, or restoration changes the projection and triggers a deterministic rebuild.\n\n## Shopper journey\n\n1. Sign in through the customer experience and choose an eligible product, service, order, store, seller, content item, event, location, or project-defined target.\n2. Submit a rating, review text, or both, as permitted by policy. Include the idempotency key supplied by the client so a network retry does not create a second review.\n3. Expect a customer-owned record with a safe status. Pre-moderation normally places it in `PENDING_MODERATION`.\n4. View the review through the customer API. Other customers cannot read the private record merely by guessing its code.\n5. When published, the storefront reads the sanitized public projection, not the customer-owned schema.\n6. Withdraw the review when permitted. The public projection leaves published state and the rating is rebuilt without it.\n\nA one-star review is valid evidence. A moderator may restrict it for a recorded policy violation such as personal data, spam, or abusive content, but `NEGATIVE_SENTIMENT` is prohibited as a reason.\n\n## Moderator journey in Axis\n\n1. Open Customer Experience → Reviews or Review Moderation. Navigation appears only when the backend capability catalogue exposes `nodics.engagement` and the user holds the required permission.\n2. Filter the workbench by status, target, site, locale, or queue. Open the detail view to inspect current version, verification/disclosure evidence, and prior moderation history.\n3. Choose only an action supplied by the backend workbench contract. Restrictive actions require a policy reason and optimistic revision.\n4. Approve a valid review. The backend creates a sanitized public projection and rebuilds the relevant aggregate.\n5. Add a versioned business response through the response workflow. Only a `PUBLISHED` response is included in the shopper projection.\n6. If an abuse report or appeal changes the decision, use restore/hide actions. Axis refreshes its query; the backend remains the state authority.\n\nAxis must not calculate ratings, expose owner IDs, store review data locally, invent moderation actions, or directly edit aggregate records.\n\n## Public API behavior\n\n| Purpose | Method and path | Important boundary |\n| --- | --- | --- |\n| List published reviews | `GET /public/reviews` | Returns a bounded page of public projections only. |\n| Get rating summary | `GET /public/review-aggregates/:targetType/:targetCode` | Returns current target aggregate fields; no reviewer identity. |\n| Submit a review | `POST /customer/reviews` | Requires an authenticated customer and tenant context. |\n| Vote helpful/unhelpful | `PUT /customer/reviews/:reviewCode/helpfulness` | One customer-owned vote is replaced/versioned, not duplicated. |\n| Moderate | `POST /operator/reviews/:reviewCode/actions/:actionCode` | Requires employee permission, reason policy, tenant scope, and revision. |\n\nPublic sorting supports recent, helpful, rating-high, and rating-low modes. Filters are bounded by the API policy. Result metadata repeats applied filters, count, offset, and limit so a storefront can explain what the shopper is viewing.\n\n## Aggregate correctness and recovery\n\nAn aggregate records count, sum, average, one-to-five distribution, dimensional summaries, verified and unverified counts, policy version, calculation version, source hash, and calculation time. Its source hash is produced from stable projection evidence. Incremental triggers use the same rebuild function, making retries safe and allowing a full rebuild to be compared with stored state.\n\n| Situation | Expected result |\n| --- | --- |\n| Approval or restoration | Projection becomes published and begins contributing. |\n| Hide, withdrawal, or anonymization | Projection stops contributing; audit evidence remains. |\n| Duplicate event or worker retry | Same source set produces the same hash and totals. |\n| Concurrent lifecycle updates | Optimistic review revision rejects stale commands; reconciliation uses final persisted state. |\n| Drift or missing aggregate | Rebuild from published projections and replace stored aggregate with evidence. |\n| Cache or search outage | Domain records remain authoritative; retain invalidation evidence and retry the adapter. |\n\n## Review requests, sessions, and syndication\n\nA review request starts from completed purchase, service, or experience evidence supplied by its owning module. Review policy calculates the waiting period and expiry, honors opt-out and suppression, restricts channels, limits reminders, and respects quiet hours. It rejects any input that tries to select recipients using predicted sentiment, predicted rating, or a “likely promoter” segment.\n\nEmail, SMS, account, QR, and in-app delivery all use the same request record. Communication providers deliver the invitation but do not own eligibility or review state. Content-free acquisition events record eligible, offered, delivered, opened, started, completed, expired, suppressed, or failed stages so administrators can measure coverage and conversion without copying review text into analytics events.\n\nA request can contain several product targets. Starting it creates a customer-owned session with explicit target and completed-target lists, expiry, and optimistic revision. This supports one order containing several reviewable items without issuing unrelated tokens or losing partial progress.\n\nExternal imports always enter a quarantine-first syndication record. The record preserves provider and external IDs, origin, license, disclosure, governed target mapping, source hash, mapping version, moderation evidence, status, and reconciliation time. A same-hash replay is skipped; a changed payload with the same external identity is reconciled. Neither state changes public ratings until a normal internal review passes moderation and becomes a published projection.\n\nGoogle Customer Reviews is an optional reference adapter and remains disabled until merchant configuration, consent, disclosure, callback security, provider terms, monitoring, and rollback are qualified. The provider never becomes the Nodics review-state authority.\n\n## Configuration and ownership map\n\n- `customerReview/config/properties.js` owns rating bounds, moderation transitions, public page limits, aggregate/calculation versions, media limit, cache TTL, and Schema.org enablement.\n- `customerReview/src/schemas/schemas.js` owns authored persistence definitions. Generated Core schema/service/controller/facade artifacts are outputs and must not be edited.\n- `defaultCustomerReviewProjectionService` owns sanitization, page behavior, media allow-listing, and structured-data diagnostics.\n- `defaultCustomerReviewAggregateService` owns deterministic calculation and drift comparison.\n- `defaultCustomerReviewPublicExperienceService` owns lifecycle reconciliation and adapter invalidation evidence.\n- `engagementApi` owns dedicated public/customer/operator routes and DTO allow-lists.\n- `nodics.axis` owns rendering only. Product storefront rendering remains customer-application owned.\n\n## Customize and extend safely\n\nStart with a later project configuration override. A project may change page limits, cache TTL, enabled target types, rating bounds, moderation modes, or supported sort modes when the invariant remains safe. If a project needs a different aggregate store or search engine, override the relevant service in a later-loaded project module while preserving tenant scope, published-only inclusion, source hashes, and rebuild behavior.\n\nDo not copy the framework service, edit generated schema files, calculate ratings in Axis, expose generic schema CRUD, or use search/cache as the review authority. Add a focused customization test proving the default and override produce equivalent integrity evidence.\n\n## Security and privacy\n\nCustomer records are owner- and tenant-scoped. Operators require explicit permissions. Public DTOs omit owner IDs, internal notes, raw provenance, moderation evidence, and private media fields. Incentives must be disclosed and cannot be conditioned on sentiment. Withdrawal removes public visibility while retention/legal-hold policy determines which private evidence may remain.\n\n## Common mistakes\n\n- Calculating the visible average from private review records instead of published projections.\n- Treating a negative rating as evidence of spam or a moderation violation.\n- Returning customer identity, internal notes, raw provenance, or unapproved media in a public DTO.\n- Updating aggregate counters without retaining source hashes and a full-rebuild path.\n- Letting Axis, a storefront, cache, or search index become the review state authority.\n- Editing generated schema services instead of the owning schema definition and regenerating.\n- Retrying a stale moderation command without honoring the optimistic revision conflict.\n\n## Troubleshooting\n\n| Symptom | Safe check and recovery |\n| --- | --- |\n| Approved review is absent | Confirm a current immutable version exists, inspect projection reconciliation error, then retry reconciliation. |\n| Rating looks stale | Compare aggregate source hash/count with a full projection rebuild; replace only through the review service. |\n| Hidden review still appears | Verify public query requires `PUBLISHED`, clear/retry the recorded cache/search invalidation, and test the source projection directly. |\n| Customer receives forbidden | Confirm access-token subject, tenant, customer group, ownership, and exact permission; never bypass in the browser. |\n| Structured data is missing | Read eligibility diagnostics. Zero published ratings intentionally produces no aggregate markup. |\n\n## Verification\n\nRun the Phase 6 regression and Phase 7 contracts, Engagement API route/security contracts, generated schema contracts, documentation pack validation, and Axis Customer Engagement regression. Acceptance must include approval, negative-review protection, hide, withdrawal, restore, retry, drift rebuild, tenant denial, oversized page request, and later-layer configuration override.\n\nNext: review solicitation and syndication explains how requests and imported evidence are governed without selecting only likely-positive customers.\n"
+        },
+        {
+          "code": "engagement.customer-feedback",
+          "title": "Customer feedback, complaints, and closed-loop action",
+          "route": "/docs/framework/engagement-customer-feedback",
+          "section": "nodics-engagement",
+          "sectionTitle": "Nodics engagement",
+          "sectionOrder": 60,
+          "order": 150,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Beginner-to-operator journey for feedback intake, triage, follow-up, resolution, handoffs, surveys, insights, recovery, and safe customization.",
+          "searchText": "Customer feedback, complaints, and closed-loop action Beginner-to-operator journey for feedback intake, triage, follow-up, resolution, handoffs, surveys, insights, recovery, and safe customization. # Customer feedback, complaints, and closed-loop action\n\nCustomer Feedback helps a business collect a suggestion, complaint, experience report, praise, or survey response and turn it into a traceable outcome. This beginner-friendly guide follows the complete journey from submission through triage, assignment, follow-up, resolution, confirmation, insight, and recovery.\n\nThink of feedback as a case folder with two sides. One side preserves what the customer actually submitted. The other records what the business inferred and did: category, priority, Process task, contact attempts, downstream handoffs, resolution, and optional insights. The inferred side may be corrected; it never overwrites the source side.\n\nThe capability is owned by `nodics.engagement/customerFeedback`. Shared submission, consent, assignment, SLA, relation, form-definition, Process-reference, and integration-reference contracts remain in `engagementCore`. HTTP routes and safe DTOs belong to `engagementApi`. Axis renders the backend-published workspaces and actions.\n\n## Who uses it and why\n\n| Reader | Primary outcome |\n| --- | --- |\n| Customer | Submit feedback, follow its progress, provide more information, and confirm or dispute resolution. |\n| Business user | Triage, classify, assign, contact, escalate, resolve, and reopen feedback. |\n| Administrator | Configure types, forms, queues, SLAs, permissions, channels, attempts, and insight policy. |\n| Developer | Extend targets, policies, handoff adapters, rules, and project behavior safely. |\n| Operator or security reviewer | Monitor backlog, SLA, provider failures, retries, tenant boundaries, privacy, and deletion propagation. |\n\nThe business value is a measurable closed loop. The organization can see not only how many responses arrived, but whether customers were contacted, whether the issue was resolved and accepted, where responsibility moved, and which themes are supported by source evidence.\n\n## End-to-end journey\n\n```mermaid\nflowchart LR\n  Submit[\"Customer submits feedback\"] --> Source[\"Protected source record\"]\n  Source --> Classify[\"Rule, operator, or advisory AI classification\"]\n  Classify --> Assign[\"Queue, owner, SLA and Process reference\"]\n  Assign --> Work[\"Request information, act, or escalate\"]\n  Work --> Handoff[\"Downstream owner intent/reference\"]\n  Work --> FollowUp[\"Same or preferred-channel follow-up\"]\n  FollowUp --> Resolve[\"Versioned resolution\"]\n  Resolve --> Confirm{\"Customer confirms?\"}\n  Confirm -->|Yes| Close[\"Closed and accepted\"]\n  Confirm -->|No| Reopen[\"Reopened with audit evidence\"]\n  Source --> Insight[\"Traceable topic, cluster, trend, anomaly, or summary\"]\n  Insight --> Human[\"Accept, correct, reject, or delete\"]\n```\n\n## Customer journey\n\n1. Open the project’s feedback or survey form. The declarative form definition comes from Engagement Core and must be accessible, versioned, and server-validated.\n2. Choose a type and optionally a target, desired outcome, structured answers, scores, preferred follow-up channel, and governed Media attachment references.\n3. Submit anonymously only when project policy permits it. An identified customer receives an owner-scoped record; the public acknowledgement exposes only safe reference, status, time, and correlation fields.\n4. When more information is requested, respond through the customer experience instead of sending secrets or private evidence through an untracked channel.\n5. Review the proposed resolution and confirm it when satisfactory. A rejected or incomplete outcome can be reopened according to policy.\n\nAn anonymous record cannot later be exposed as if it had an authenticated owner. A customer cannot read another customer’s record by changing a URL. Operators may view protected content only with explicit permission and tenant scope.\n\n## Axis business-user journey\n\nAxis exposes five backend-governed views:\n\n- Customer Feedback for the full operational queue and authorized lifecycle actions.\n- Complaints for a complaint-focused SLA and escalation view.\n- Feedback Follow-up for offered, attempted, contacted, resolved, accepted, no-response, failed, and suppressed evidence.\n- Feedback Surveys for Engagement-owned form definitions and immutable versions.\n- Feedback Insights for topics, clusters, trends, anomalies, summaries, confidence, model/policy versions, corrections, and deletion state.\n\nOpen Customer Experience → Customer Feedback, filter by status, priority, severity, queue, target, or due date, and inspect the protected detail. Choose only actions published by the backend. Every action includes the expected revision, so a stale browser cannot silently overwrite a newer decision.\n\nThe standard lifecycle is `RECEIVED → TRIAGED → ASSIGNED → IN_PROGRESS`. Work may wait for the customer or an internal owner, escalate, resolve, close after confirmation, and reopen. Invalid transitions fail with a stable domain error. Axis refreshes the authoritative query after an action; it does not maintain a browser-side case store.\n\n## Follow-up, resolution, and downstream handoff\n\nFollow-up uses the same or preferred channel, or an explicitly allowed email, SMS, phone, or in-app channel. Each attempt records a bounded status and provider reference. Attempt limits prevent endless automated contact, and Communication owns message rendering and delivery.\n\nA resolution is versioned with an outcome code, business-safe summary, resolver, time, confirmation evidence, and status. Reopening does not erase the previous resolution. If action belongs to Order, Fulfillment, Payment, Profile, Security, or another system, Feedback creates an idempotent handoff reference. The target module executes its own business action. Feedback must not issue refunds, replace products, or change identity records itself.\n\n## Classification and insights\n\nClassification may be supplied by a rule, operator, import, or governed AI adapter. It records category, topic, sentiment, priority, severity, confidence, policy/model reference, evidence, and correction lineage. Sentiment is advisory; it must not by itself reject, suppress, or deprioritize a complaint.\n\nInsights name every source feedback code. Low-confidence output is rejected by policy. A human may correct or reject a proposed value. When source feedback is deleted or anonymized under privacy policy, every derived insight that references it is marked deleted or rebuilt. If AI is unavailable, deterministic and manual operation remains available; no AI output directly contacts a customer or changes lifecycle state.\n\n## API and security boundaries\n\n`POST /public/feedback` accepts a bounded submission and returns a minimal acknowledgement. Authenticated customers use `/customer/feedback` for owner-scoped records. Operators use `/operator/feedback`, lifecycle actions, classification, and insight endpoints with explicit permissions. Generic generated schema routers remain disabled.\n\nTenant context is resolved by the backend, never trusted from a public body. Public DTOs omit message text, attachments, identity, internal evidence, handoff details, and model prompts. Media binaries remain Media-owned. Process tasks remain Process-owned. Provider secrets and message content never belong in funnel or integration events.\n\n## Configure and extend safely\n\nProjects can configure allowed feedback types, anonymous policy, attachment limits, default priority, lifecycle transitions, follow-up channels and attempt limits, insight confidence, and retention policy through a later layer. A project may replace routing, classification, SLA, handoff, or insight services in a later-loaded module while preserving tenant isolation, source traceability, corrections, deletion propagation, and deterministic fallback.\n\nDo not copy framework services, edit generated CRUD files, create a second forms engine, put downstream business actions in Feedback, or calculate lifecycle state in Axis. Prove the default and project override with focused tests.\n\n## Operations and recovery\n\nMonitor received volume, untriaged age, SLA breaches, assignment load, waiting states, follow-up attempts, resolution and acceptance rates, reopen rate, handoff retries/dead letters, insight rejection/correction, and deletion-propagation lag. Logs and metrics use codes and correlation IDs without customer text.\n\n| Failure | Safe recovery |\n| --- | --- |\n| Process unavailable | Preserve feedback and pending reference; retry Process handoff idempotently. |\n| Communication unavailable | Keep follow-up evidence pending/failed; retry delivery without duplicating the case. |\n| Downstream owner times out | Retain intent and idempotency key, reconcile external state, then retry or dead-letter. |\n| Stale Axis action | Reject revision conflict, reload current state, and let the user reassess. |\n| AI unavailable or low confidence | Use deterministic/manual classification; do not block safe operations. |\n| Source deletion | Propagate deletion/anonymization to insights, exports, indexes, and provider references under policy. |\n\n## Common mistakes\n\n- Replacing the customer’s words with a summary or sentiment label.\n- Treating every low score as a complaint or every positive score as closed.\n- Letting Feedback initiate an Order refund or other domain-owned action.\n- Sending private content in analytics, communication, or integration events.\n- Allowing Axis to invent transitions, queues, survey schemas, or permissions.\n- Publishing AI insight without confidence, model/prompt version, source codes, and human correction.\n- Closing a case because a provider accepted a message rather than because the business outcome was completed.\n\n## Verification\n\nProve successful identified and anonymous intake, invalid type, oversized attachments, cross-owner and cross-tenant denial, stale revision, invalid transition, complaint escalation, waiting/resume, resolution/confirmation/reopen, follow-up limit, Process/provider outage and retry, source-traceable insight, human correction, AI fallback, and deletion propagation. Run generated schema contracts, Engagement API security/route tests, the Axis Customer Engagement regression, documentation generation/validation, and the effective engagement-server build.\n\nNext: Unified Engagement Operations explains rebuildable cross-domain queues and dashboards without creating a new writable business authority.\n"
+        },
+        {
+          "code": "engagement.unified-operations",
+          "title": "Unified engagement operations",
+          "route": "/docs/framework/engagement-unified-operations",
+          "section": "nodics-engagement",
+          "sectionTitle": "Nodics engagement",
+          "sectionOrder": 60,
+          "order": 160,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Beginner-to-operator journey for unified queues, dashboards, batch previews, repair evidence, bounded exports, authority boundaries, and recovery.",
+          "searchText": "Unified engagement operations Beginner-to-operator journey for unified queues, dashboards, batch previews, repair evidence, bounded exports, authority boundaries, and recovery. # Unified engagement operations\n\nUnified Engagement Operations gives business teams one place to discover customer work across contact requests, testimonials, reviews, feedback, moderation, publication, consent, and integrations. This beginner-friendly guide explains what the shared view does, what it deliberately does not own, and how an operator can use Axis without accidentally bypassing a domain workflow.\n\nThe most important rule is simple: the unified queue is a projection, not a new case-management database. `contactSubmission`, `testimonial`, `customerReview`, and `customerFeedback` remain authoritative for their records and lifecycle commands. `engagementCore` creates safe operational projections and calculated snapshots. `engagementApi` authenticates the operator, checks permission and tenant scope, and returns bounded DTOs. Axis renders only the navigation and capabilities published by the backend.\n\n## Who uses it and why\n\n| Reader | Primary outcome |\n| --- | --- |\n| Business operator | Find assigned, urgent, overdue, or related engagement work in one queue. |\n| Team lead | Understand workload and SLA pressure without joining domain databases manually. |\n| Administrator | Govern permissions, limits, masking, export fields, and saved operational views. |\n| Developer | Add a domain projection without transferring that domain's command ownership. |\n| Reliability or security operator | Detect projection drift, preview repairs, trace exports, and investigate safely. |\n\n## End-to-end journey\n\n```mermaid\nflowchart LR\n  Domain[\"Domain-owned record changes\"] --> Project[\"Safe projection and source hash\"]\n  Project --> Queue[\"Unified Queue in Axis\"]\n  Queue --> Inspect[\"Operator inspects related evidence\"]\n  Inspect --> Command[\"Operator chooses a domain action\"]\n  Command --> API[\"Engagement API permission and tenant checks\"]\n  API --> Owner[\"Owning module validates and executes\"]\n  Owner --> Rebuild[\"Projection is rebuilt\"]\n  Rebuild --> Queue\n  Project --> Dashboard[\"Calculated dashboard snapshot\"]\n  Project --> Export[\"Purpose-bound masked export preview\"]\n  Project --> Repair[\"Non-executable repair preview\"]\n```\n\n## Axis operator journey\n\n1. Sign in to Axis with an employee account that belongs to an authorized Engagement operator group.\n2. Open **Customer Experience → Unified Queue**. The page lists only records allowed for the active tenant and context.\n3. Filter by domain, status, queue, assignee, priority, due date, or another backend-supported field. A saved view stores a search preference; it does not create business state.\n4. Open an item and inspect its domain code, safe summary, related-record references, consent flags, integration state, due time, projection time, and source revision. Sensitive customer text remains in the protected domain detail and is shown only when a separate permission allows it.\n5. Follow the domain workspace or action published by the backend. A review moderation action still goes to Review; a complaint resolution still goes to Feedback; testimonial publication still goes to Testimonial.\n6. After the action succeeds, reload the queue. The projection must converge from the authoritative source rather than trusting browser state.\n\nUse **Engagement Dashboards** to inspect total, overdue, by-domain, and by-status measurements. Every snapshot records its policy version, calculation time, filters, and source hashes, so a number can be explained and rebuilt. Dashboards are operational indicators, not financial or legal systems of record.\n\n## Batch actions\n\nBatch work is intentionally a two-step operation. The operator selects a bounded set of queue items, chooses an action, and supplies a business reason. The preview returns one command per item with domain type, domain code, expected source revision, and reason. It also states that approval is required and that no direct mutation occurred.\n\nA later approved execution must route every command to its owning domain. Mixed-domain selection does not authorize Engagement Core to invent a universal status or update records directly. Failed items must retain individual evidence and be safe to retry; success for one item must not hide failure for another.\n\n## Export journey\n\nAn export begins with a stated purpose, filters, and requested fields. The backend intersects those fields with the policy allow-list, applies the configured masking policy, and caps the number of records. The preview records requester, purpose, filters, accepted fields, masking policy, record count, maximum limit, status, and correlation ID.\n\nThe preview is evidence, not a downloadable data file. Production delivery requires a later governed exporter, destination policy, retention rule, and audit event. Customer messages, contact details, internal notes, consent evidence, provider secrets, raw model prompts, and hidden hashes must never appear merely because they are visible to a privileged database administrator.\n\n## Repair and reconciliation\n\nProjection drift can occur after an interrupted event, index outage, deployment, or policy change. A repair starts by comparing the recorded source hash with a fresh deterministic projection. The Repair Console captures domain type, domain code, repair type, expected hash, observed hash, reason, requester, and correlation ID.\n\nPreviewing a repair does not change the source or projection. Approved execution rebuilds only the derived record from its domain authority. If the source is missing because retention or privacy policy deleted it, reconciliation removes or anonymizes the projection instead of recreating protected content from logs.\n\n## Security and ownership boundaries\n\nThe read, batch, export, and repair operations have separate permissions. Authentication alone is insufficient. The facade applies tenant checks to queue, dashboard, batch, export, and repair responses. Generated operational schemas allow authorized employee operators, administrators, and service accounts, while public and customer routes cannot query them.\n\nThe projection stores identifiers and bounded summaries needed for work discovery. It must not become a copy of complete review bodies, feedback messages, contact details, attachments, or testimonial source material. Media remains Media-owned, process tasks remain Process-owned, communication delivery remains Communication-owned, and each engagement domain owns its business actions.\n\n## Configure and extend safely\n\nProjects may replace projection search, dashboard calculation, or export adapters in a later-loaded module. Preserve deterministic source hashing, bounded retrieval, allowed export fields, masking, tenant isolation, correlation, expected revision, preview-before-execution, and domain command routing. Add a new domain by defining its safe projector and related-record links, then prove rebuild and deletion behavior with focused contracts.\n\nDo not add a writable `status` transition to the unified queue, copy protected source content into summaries, let Axis calculate permission, or let a search provider become authoritative. A provider outage must reduce search convenience, not lose or corrupt a customer record.\n\n## Operations and recovery\n\nMonitor projection lag, drift count, overdue workload, rebuild duration, batch preview and execution outcomes, export volume, denied fields, repair rate, and cross-tenant denial. Logs use codes and correlation IDs rather than customer text.\n\n| Failure | Safe response |\n| --- | --- |\n| Queue projection is stale | Read the domain source, compare hashes, and rebuild the derived item. |\n| Search or dashboard provider is unavailable | Continue domain operations; retry projection delivery with backpressure. |\n| Operator submits a stale batch | Reject through expected revision and let the operator refresh and preview again. |\n| Export requests prohibited fields | Omit or reject them under policy and retain evidence of the decision. |\n| Repair source is missing | Respect retention/deletion state; remove or anonymize derived data. |\n| One batch item fails | Preserve per-item outcome and retry only eligible failed commands idempotently. |\n\n## Common mistakes\n\n- Treating the unified queue as the owner of customer engagement status.\n- Putting full customer messages or private evidence into a convenient search index.\n- Applying a mixed-domain batch by updating projection records directly.\n- Allowing an export because the requester can read a page, without separate purpose and export permission.\n- Rebuilding deleted personal data from stale events, logs, caches, or provider copies.\n- Letting Axis invent fields, transitions, actions, masks, or limits that the backend did not publish.\n- Repairing a hash mismatch without recording the expected source evidence and reason.\n\n## Verification\n\nProve deterministic projection and rebuild results, changed and removed drift detection, tenant isolation, permission denial for each operation, bounded list and batch sizes, required batch reason, expected revisions, non-executable preview semantics, dashboard source hashes, export purpose and field allow-list, masking and maximum records, repair expected/observed hashes, source deletion behavior, provider outage fallback, and cross-tenant denial. Run the generated schema contracts, Engagement API route and security contracts, module metadata contract, Axis Customer Engagement regression, documentation generation and validation, and the effective engagement-server build.\n\nNext: Governed Automation and AI adds optional decision support while keeping every customer-impacting outcome explainable, reversible, and under existing domain authority.\n"
+        },
+        {
+          "code": "engagement.governed-automation",
+          "title": "Governed automation and AI",
+          "route": "/docs/framework/engagement-governed-automation",
+          "section": "nodics-engagement",
+          "sectionTitle": "Nodics engagement",
+          "sectionOrder": 60,
+          "order": 170,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Beginner-to-operator journey for optional AI proposals, deterministic fallback, evidence, evaluation, human review, overrides, monitoring, and safe extension.",
+          "searchText": "Governed automation and AI Beginner-to-operator journey for optional AI proposals, deterministic fallback, evidence, evaluation, human review, overrides, monitoring, and safe extension. # Governed automation and AI\n\nGoverned Automation helps Engagement teams classify, summarize, translate, detect possible fraud or anomalies, cluster duplicates, recommend moderation, and draft responses. It is decision support, not a replacement business authority. This beginner-friendly guide explains how a proposal moves from a source record through evidence, evaluation, human review, and an ordinary domain-owned action.\n\nAI is optional and disabled by default. Every safe operation must retain a deterministic rule or manual path when a provider is unavailable. `engagementCore` owns the shared evidence and evaluation contract; each engagement domain decides whether a capability is relevant and continues to own its lifecycle. Provider adapters are replaceable and may not publish content, reject a review, suppress feedback, or contact a customer directly.\n\n## Supported capabilities\n\n| Capability | Typical assistance | Required control |\n| --- | --- | --- |\n| Classification | Suggest category, intent, priority, or topic | Source evidence, confidence, correction |\n| Summarization | Produce a bounded operator summary | Original remains authoritative |\n| Translation | Suggest localized working text | Preserve source language and version |\n| Moderation recommendation | Identify policy signals | Human review before moderation action |\n| Fraud or anomaly signal | Highlight unusual patterns | Treat as a signal, never proof by itself |\n| Duplicate clustering | Suggest related records | Human/domain validation before merge |\n| Response drafting | Suggest a customer-visible reply | Human edit and approval before delivery |\n\n## Decision journey\n\n```mermaid\nflowchart LR\n  Source[\"Domain record and revision\"] --> Protect[\"Remove prohibited input\"]\n  Protect --> Evidence[\"Source hash and policy version\"]\n  Evidence --> Adapter{\"AI enabled and healthy?\"}\n  Adapter -->|Yes| Proposal[\"Versioned AI proposal\"]\n  Adapter -->|No| Fallback[\"Deterministic rule or manual path\"]\n  Proposal --> Threshold[\"Confidence and capability policy\"]\n  Fallback --> Threshold\n  Threshold --> Review[\"Human accepts, overrides, or rejects\"]\n  Review --> Domain[\"Separate domain-owned command\"]\n  Domain --> Audit[\"Outcome and monitoring evidence\"]\n```\n\n## Axis business-user journey\n\nOpen **Customer Experience → Automation Decisions**. Filter by capability, source, confidence, domain, status, or time. Open a decision to compare the suggestion with the authorized source record. Confirm that source revision and hash still match; a stale proposal must not be applied to a newer record.\n\nFor a review-required item, choose accept, override, or reject and provide a reason. Override supplies a corrected bounded output while retaining the original evidence. Acceptance does not itself send, publish, reject, hide, merge, or change status. The operator next uses the ordinary domain action, which performs its own current-state, permission, tenant, and revision validation.\n\nOpen **Automation Evaluations** before enabling a new model, provider, prompt, or policy version. Review dataset reference, sample size, accuracy, precision, recall, error rate, thresholds, reviewer, and pass/fail result. A passing offline evaluation is necessary evidence, not a guarantee of production quality.\n\n## Evidence and evaluation\n\nEach decision records tenant, capability, domain type/code, source revision/hash, bounded output, confidence, rule/operator/AI source, provider and model references when applicable, prompt and policy versions, status, explanation, timestamps, reviewer, reason, and correlation ID. Secrets and credentials are prohibited inputs. Full prompts, provider keys, and unnecessary personal data do not belong in decision evidence.\n\nEvaluation uses a governed dataset reference rather than copying test data into operational records. Policy establishes minimum sample size, required metrics, thresholds, and maximum error rate. Projects should add capability-specific measurements such as unsafe-output rate, demographic quality checks where lawful, hallucination rate, translation adequacy, override rate, and customer-impact incidents.\n\n## Failure and fallback\n\nIf an adapter times out or fails and fallback is required, the service invokes the deterministic implementation and marks the source as `RULE`. If neither automatic path is safe, the record remains for manual work. Provider failure cannot block contact intake, feedback resolution, review moderation, consent withdrawal, testimonial takedown, or customer communication performed through approved manual processes.\n\nLow confidence causes review. High confidence does not waive mandatory review for sensitive capabilities. A domain may impose stricter thresholds than the shared default. A provider response with no source traceability, version references, or bounded output must be rejected.\n\n## Security and privacy\n\nSeparate permissions govern reviewing decisions and evaluations. Tenant scope applies to every record. Inputs are minimized for the capability, and protected fields such as passwords, access tokens, refresh tokens, and provider secrets are rejected. Retention and deletion follow the source record: decisions become stale or deleted when their evidence is no longer valid, and provider-side retention must be contractually compatible.\n\nDo not place raw customer text in logs, metric labels, evaluation dashboards, or error messages. Provider configuration belongs in secured configuration, not schemas or Axis. A project must document residency, subprocessors, training-use policy, retention, deletion, incident response, and service-level expectations before enabling an external adapter.\n\n## Configure and extend safely\n\nStart with `aiEnabled: false`. Establish deterministic behavior, a representative evaluation dataset, human-review rules, and monitoring first. Then add a later-layer adapter implementing the bounded proposal interface. Version provider, model, prompt, and policy independently, evaluate the exact combination, and roll out gradually by tenant or capability.\n\nDevelopers should keep the adapter behind the Engagement service boundary, return only the governed proposal contract, and cover provider success, failure, timeout, malformed output, and fallback with focused tests.\n\nA customization may raise confidence thresholds, require review for more capabilities, prohibit additional fields, or add evaluation metrics. It must preserve source hashes, versions, fallback, override evidence, no-direct-action behavior, tenant isolation, and the owning domain’s final validation.\n\n## Monitoring and rollback\n\nMonitor provider latency/errors, fallback rate, confidence distribution, review queue age, acceptance/override/rejection rate, stale proposals, evaluation regressions, unsafe-output incidents, and downstream outcomes by version. Avoid metrics containing customer text.\n\nRollback means disabling the affected capability or model version and returning to deterministic/manual operation. Existing decisions remain audit evidence but are marked stale when source or policy changes. Never delete unfavorable evaluation results to make a release appear healthy.\n\n## Common mistakes\n\n- Treating a moderation recommendation as the moderation decision.\n- Sending an AI-drafted response without human approval and Communication delivery controls.\n- Recording a model name without prompt, policy, source revision, and evaluation evidence.\n- Passing complete customer records when a few bounded fields are sufficient.\n- Assuming a provider SLA removes the need for deterministic fallback.\n- Measuring only aggregate accuracy while ignoring error types and operator overrides.\n- Letting Axis or an adapter call persistence or publication directly.\n\n## Verification\n\nProve AI-disabled startup, deterministic results, provider success, timeout and fallback, prohibited-input rejection, bounded confidence, mandatory human review, low-confidence review, source-hash and revision traceability, accept/override/reject evidence, stale-source handling, minimum evaluation sample, missing metric rejection, threshold pass/fail, cross-tenant denial, deletion propagation, provider configuration secrecy, and zero direct customer-impacting actions. Run focused automation contracts, generated schema contracts, module metadata and Axis journey tests, documentation generation/validation, and the effective engagement-server governance build.\n\nNext: Enterprise Scale, Resilience, and Ecosystem hardens the complete Engagement platform for capacity, provider failure, regional operation, privacy, accessibility, and compatibility.\n"
+        },
+        {
+          "code": "engagement.enterprise-operations",
+          "title": "Enterprise scale, resilience, and ecosystem operations",
+          "route": "/docs/framework/engagement-enterprise-operations",
+          "section": "nodics-engagement",
+          "sectionTitle": "Nodics engagement",
+          "sectionOrder": 60,
+          "order": 180,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Beginner-to-operator journey for capacity, regional residency, provider delivery, backpressure, recovery, compatibility, accessibility, security, and release acceptance.",
+          "searchText": "Enterprise scale, resilience, and ecosystem operations Beginner-to-operator journey for capacity, regional residency, provider delivery, backpressure, recovery, compatibility, accessibility, security, and release acceptance. # Enterprise scale, resilience, and ecosystem operations\n\nEnterprise Engagement must remain safe when volumes rise, providers slow down, regions fail, contracts evolve, and privacy obligations require deletion. This beginner-friendly guide turns those expectations into operational controls and a release acceptance journey. It covers the framework contract and clearly separates it from deployment-specific proof.\n\nThe business value is continuity with trustworthy evidence: customers can still submit and receive service, operators can recover interrupted work, and leaders can understand capacity and risk without sacrificing privacy or domain ownership.\n\n`engagementCore` supplies common bounds and evidence. Domain modules retain customer records and lifecycle authority. `engagementApi` supplies secured versioned interfaces. Provider adapters transport bounded events or requests but never become the source of truth. Axis exposes operational evidence without storing payloads, secrets, or an alternate status.\n\n## Production journey\n\n```mermaid\nflowchart LR\n  Domain[\"Domain transaction\"] --> Outbox[\"Versioned delivery intent\"]\n  Outbox --> Capacity{\"Provider capacity available?\"}\n  Capacity -->|No| Backpressure[\"Pause and checkpoint\"]\n  Capacity -->|Yes| Sign[\"Sign bounded payload\"]\n  Sign --> Provider[\"Provider or webhook\"]\n  Provider -->|Success| Delivered[\"Delivery evidence\"]\n  Provider -->|Failure| Retry[\"Bounded retry\"]\n  Retry --> Provider\n  Retry -->|Exhausted| Dead[\"Dead letter and operator action\"]\n  Backpressure --> Recover[\"Resume from checkpoint\"]\n  Recover --> Capacity\n```\n\n## Capacity and pagination\n\nAll lists use a bounded page size and stable cursor order. The default upper bound is 100 records. Clients do not request every customer record and paginate in the browser. Stable ordering includes a unique tie-breaker so records are neither skipped nor duplicated when timestamps match.\n\nBatch commands, exports, projection rebuilds, provider delivery, archive, and privacy propagation each need an explicit limit. In-flight delivery capacity produces `AVAILABLE` or `BACKPRESSURE`; it does not discard work. A production release defines expected peak arrival rate, sustained throughput, storage growth, index growth, queue age, projection lag, and p95/p99 response budgets.\n\n## Regional residency and recovery\n\nEvery workload resolves an allowed region from tenant policy. A request cannot select an unapproved region through its payload. Multi-region replication must distinguish recoverable derived projections from authoritative customer evidence and must respect legal residency and deletion requirements.\n\nRecovery checkpoints store workload, partition, region, cursor, source hash, processed/failed counts, status, timestamps, and correlation ID. They do not copy domain payloads. After interruption, a worker resumes from durable evidence and applies idempotency and source-revision checks.\n\nThe default framework policy records a 15-minute recovery point objective and a 60-minute recovery time objective. Those numbers are configuration targets, not proof. Each deployment must demonstrate backup restoration, regional failover, provider outage recovery, search/index rebuild, dead-letter reconciliation, and deletion propagation within its approved objectives.\n\n## Provider and webhook delivery\n\nProvider delivery records event type/version, idempotency key, payload hash, region, safe endpoint reference, attempt count, next attempt, response code, delivery time, and correlation. Payload content and credentials stay outside operational evidence.\n\nWebhooks use a timestamped HMAC signature. Verification compares signatures safely and rejects messages outside the replay window. Key rotation, endpoint verification, TLS, network policy, provider authentication, and secret storage remain deployment responsibilities. Retries use bounded exponential delay and stop at dead letter; operators reconcile external state before replaying ambiguous timeouts.\n\n## Axis operator journey\n\nOpen **Customer Experience → Provider Deliveries** to filter pending, retrying, delivered, suppressed, and dead-letter attempts. Inspect provider, event version, region, attempt budget, and correlation—not raw customer payload. A retry action, when later published, must use the backend-owned delivery operation and idempotency key.\n\nOpen **Recovery Checkpoints** during a projection rebuild, archive, import, privacy propagation, or disaster-recovery exercise. Confirm the correct tenant partition and region, compare processed and failed counts, and resume only through the owning worker contract.\n\nOpen **Contract Compatibility** before deploying an API, event, export, or provider contract change. A record identifies current, backward-compatible, deprecated, breaking, or retired posture, successor, notice dates, and evidence. Axis displays that decision; it does not calculate compatibility.\n\n## Compatibility and deprecation\n\nContracts use explicit versions. A supported major version is current; a breaking major requires migration planning. Deprecation records a successor and a minimum notice window, currently 180 days by default. Emergency security retirement requires explicit exception evidence and communication.\n\nCompatibility tests cover request/response fields, status/error codes, permissions, event consumers, replay, export columns, and provider mappings. Adding an optional field is not automatically safe if older consumers reject unknown data. Removing or changing meaning is breaking even when the JSON type stays the same.\n\n## Privacy, security, and accessibility\n\nPrivacy operations must reach domain data, projections, search indexes, exports, delivery evidence, analytics references, automation decisions, caches, backups according to retention policy, and provider copies. Deletion is evidenced without retaining deleted content. Tenant isolation is tested under concurrency, cache reuse, batch work, retry, export, and failover.\n\nSecurity acceptance includes authentication and authorization matrices, abuse/rate controls, replay protection, signature validation, input size limits, injection testing, dependency review, secret scanning, audit integrity, and penetration testing appropriate to the deployment.\n\nAxis and customer experiences require keyboard navigation, visible focus, semantic labels, error association, screen-reader announcements, contrast, zoom/reflow, reduced-motion support, and usable timeout/recovery messages. Accessibility verification combines automated checks with keyboard and assistive-technology journeys.\n\n## Developer and DevOps release journey\n\nDevelopers define backward-compatible contracts, bounded algorithms, deterministic tests, idempotency, and provider-neutral adapters. DevOps engineers supply topology-specific capacity, load, soak, failover, backup/restore, monitoring, alerting, and runbook evidence. Neither group may claim a configuration target is a measured result.\n\nBefore release:\n\n1. Generate schemas, OpenAPI, governance, and documentation from the effective server graph.\n2. Run unit, integration, security, tenant-isolation, migration, compatibility, and Axis journey tests.\n3. Exercise representative load and a sustained soak against production-like infrastructure.\n4. Inject provider, database, search, event, and region failures and prove bounded recovery.\n5. Restore backups and reconcile counts/hashes against authoritative domains.\n6. Verify privacy deletion and consent withdrawal across every derived surface and provider.\n7. Complete keyboard, screen-reader, responsive, and automated accessibility checks.\n8. Record capacity, RPO/RTO, performance, security, residual risk, rollback, and approvers.\n\n## Monitoring and runbooks\n\nMonitor request latency/error rate, queue depth/age, projection lag/drift, provider capacity and retry, dead letters, checkpoint age, regional routing, duplicate prevention, archive/delete lag, contract-version use, and accessibility/customer-impact incidents. Alerts must link to a runbook and use codes rather than customer content.\n\nRunbooks cover provider outage, signature failure, replay attack, rate spike, poison message, projection drift, data-store failover, regional evacuation, stuck privacy request, incompatible consumer, and emergency rollback. Each describes detection, containment, authority, safe commands, evidence, communication, and exit criteria.\n\n## Common mistakes\n\n- Calling a configured RPO, RTO, or latency budget a proven production result.\n- Retrying indefinitely or immediately until a provider and the Engagement runtime both fail.\n- Logging webhook payloads or secrets for easier troubleshooting.\n- Allowing request bodies to choose data residency.\n- Rebuilding derived content from a stale copy after the authoritative source was deleted.\n- Shipping a version change because schema generation succeeded without consumer compatibility tests.\n- Treating automated accessibility scanning as complete accessibility acceptance.\n- Running load tests without tenant-isolation and data-integrity assertions.\n\n## Verification\n\nFramework verification proves bounded pagination, stable ordering contract, region rejection, signature and replay checks, backpressure, exponential retry, dead-letter limits, restart-safe checkpoint evidence, supported-version decisions, deprecation windows, generated schemas, permission-scoped Axis workspaces, and canonical documentation. Deployment acceptance additionally proves measured capacity, soak stability, failover, backup/restore, RPO/RTO, provider recovery, no lost or duplicated domain evidence, privacy propagation, penetration testing, accessibility journeys, compatibility, monitoring, and rehearsed rollback.\n\nThis completes the planned Engagement implementation phases. Communication integration and commerce-domain phases use the same ownership, evidence, security, Axis, documentation, and release-acceptance pattern.\n"
+        },
+        {
+          "code": "commerce.overview",
+          "title": "Commerce overview",
+          "route": "/docs/framework/commerce-overview",
+          "section": "nodics-commerce",
+          "sectionTitle": "Nodics commerce",
+          "sectionOrder": 70,
+          "order": 190,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Beginner orientation to the Commerce journey, ownership map, phased implementation state, security baseline, verification, and safe customization.",
+          "searchText": "Commerce overview Beginner orientation to the Commerce journey, ownership map, phased implementation state, security baseline, verification, and safe customization. # Commerce overview\n\n## What Commerce is\n\nNodics Commerce is the backend product family that turns product information,\ncommercial policy, stock, checkout, orders, payments, and fulfillment into one\ngoverned customer journey. Phases 0-10 now provide the framework contracts,\nschemas, services, secured routes, reference runtime, Axis projections,\noperations evidence, migration controls, and canonical documentation. This is\nframework readiness, not automatic production authorization: every deployment\nmust still qualify its providers, capacity, recovery, data, policy, and owners.\n\nA beginner can picture the journey as:\n\n1. Store decides the selling context.\n2. Product identifies what can be sold.\n3. Pricing, Promotion, and Tax produce exact monetary evidence.\n4. Inventory determines availability and protects stock.\n5. Cart collects intent and Checkout coordinates validation.\n6. Order records the durable purchase.\n7. Payment executes money movement through an approved provider.\n8. Fulfillment moves goods and records delivery evidence.\n\nThese are collaborating owners, not interchangeable layers. Checkout may\ncoordinate them, but it cannot silently become the authority for prices,\ninventory, payment, or shipment state.\n\n| Journey step | Owning capability | Durable evidence |\n| --- | --- | --- |\n| Select selling context | Store | store and channel reference |\n| Understand the offer | Product | product and sellable-unit identity |\n| Calculate the commercial promise | Pricing, Promotion, Tax | exact price, discount, and tax decisions |\n| Protect supply | Inventory | availability, reservation, allocation, and movement |\n| Commit a purchase | Cart, Checkout, Order | calculated cart and immutable order history |\n| Move money | Payment | authorization, capture, void, refund, and reconciliation |\n| Move goods | Fulfillment | consignment, shipment, tracking, and return logistics |\n\n## Module map\n\nThe public functional identity is `nodics.commerce`, displayed as Commerce in\nBackOffice and Axis. Its internal groups are Base Commerce, Checkout, Payment,\nand Fulfillment. Their concrete capability modules remain technical details;\ncustomers register and discover the functional product, not 26 unrelated\nproducts.\n\nPhase 1 creates 27 package identities in total: the functional group, six\ninternal composition groups, and twenty concrete capabilities. Every identity\nuses the reserved `70.x` index family. Group packages compose; they do not own\nbusiness schemas, services, routes, or seed data.\n\n## Choose your documentation journey\n\nThis documentation follows the progressive structure used by mature enterprise\nproducts: orient first, complete a business journey next, then learn extension\nand operations. New readers should not start from generated API details.\n\n1. Read this overview for vocabulary, ownership, and safety boundaries.\n2. Read **Base Commerce foundations** to configure Store, Product, price, tax,\n   promotion, warehouse, availability, publication, and search evidence.\n3. Read **Cart, checkout, and order placement** for the customer purchase path,\n   retry behavior, exact calculation, and compensation.\n4. Read **Payment and fulfillment operations** before enabling any provider or\n   operating warehouse and shipment work.\n5. Read **Cancellation, return, and refund lifecycle** for self-service,\n   operator queues, approval, inspection, refund, and reconciliation.\n6. Read **Commerce enterprise operations and migration** before sizing,\n   upgrading, migrating a tenant, rehearsing recovery, or releasing.\n7. Developers then follow the owning module README/AGENTS hierarchy and\n   generated OpenAPI/schema contracts. Operators use Axis and the runbooks;\n   customers see only the permitted self-service projections.\n\nEach guide repeats the same learning pattern: business outcome, customer or\noperator journey, owner boundary, data/evidence, security, failure/recovery,\nextension points, common mistakes, and verification. This lets a beginner\nbuild a dependable mental model while giving an experienced implementer a\ndirect path to contracts and release evidence.\n\nThe information architecture is informed by the official SAP Commerce Cloud\nsplit across Discover, Implement, Integrate, Storefront, Security, Reference,\nand Support, and Oracle Commerce's task-oriented Use, Administer, Configure and\nExtend, Analyze and Report, Integrate, and REST API paths. Nodics keeps its own\nownership vocabulary and adds explicit failure, recovery, evidence, and release\ngates rather than copying either product's module model.\n\n- SAP Commerce Cloud: <https://help.sap.com/docs/SAP_COMMERCE_CLOUD_PUBLIC_CLOUD>\n- Oracle Commerce: <https://docs.oracle.com/en/cloud/saas/cx-commerce/>\n\n## Current implementation state\n\nPhases 0-8 are framework-implemented. Phase 9 framework controls are complete,\nwhile environment-specific load, soak, provider, backup/restore, failover, and\nRPO/RTO qualification remain release gates. Phase 10 removes archived Commerce\nfrom active runtime authority; final alias removal and physical retirement wait\nfor each production tenant's reconciliation and rollback-window closure.\n\n## Safe customization\n\nA customer project may extend `nodics.commerce` while keeping the standard\nfunctional identity. Put customer rules in a later-loading customer module;\ndo not copy or edit framework packages. Replace narrow services or provider\nports through supported Nodics layering and keep the original domain owner.\n\nExamples:\n\n- a regional tax adapter extends Tax, not Cart;\n- a new payment provider extends Payment Providers, not Order;\n- a store-specific availability rule composes Inventory evidence;\n- a branded Axis screen renders backend contracts but does not own statuses or\n  lifecycle rules.\n\n## Security and evidence baseline\n\nAll future Commerce slices must enforce tenant isolation, authenticated\naudiences, least-privilege permissions, idempotency, audit trails, protected\ndata handling, and exact money and quantity representations. Provider secrets\nmust never enter schemas, logs, browser payloads, documentation, or generated\ncontext.\n\n## How to verify the implementation\n\nFrom the framework root, run the Commerce composition and source-free contract\ntests, module metadata validation, structure audit, then generate and validate\nLLM context. The proof must show all package indexes are unique, composition is\ndeterministic, and no Commerce package contains premature `src/` or `data/`.\n\nDevelopers should start from the concrete owner README and contracts before\nadding code. A schema belongs with the domain that controls its lifecycle; a\ncoordinating service calls that owner instead of recreating its decisions.\nTests should cover the successful path, rejection, tenant isolation,\nidempotent replay, dependency failure, recovery, and a later-layer override.\n\nOperators and DevOps teams should treat module discovery as readiness metadata,\nnot as proof that a customer-facing API is safe to expose. Production\nactivation requires the applicable phase acceptance evidence, secured\npermissions, observable health, capacity budgets, rollback instructions, and\nvalidated provider configuration. A provider package is not production-ready\nmerely because the module loader can see it.\n\n## Common mistakes\n\n- Treating every internal module as a separate BackOffice product.\n- Adding Cart-owned price arithmetic or Order-owned refund execution.\n- Using JavaScript floating-point values for money, rates, or quantities.\n- Copying archived source before classifying its ownership and maturity.\n- Enabling a provider without callback verification, replay protection,\n  idempotency, redaction, reconciliation, and failure recovery.\n- Putting backend statuses, permissions, navigation records, or business rules\n  into Axis.\n- Editing generated documentation or generated schema artifacts directly.\n\n## Verification\n\nFramework acceptance requires the 27-package composition contract, generated\nschema tests, focused owner and workflow tests, a controlled effective runtime\ngraph, generated OpenAPI/security checks, Axis journey/type/build checks,\ndocumentation generation and validation, generated LLM context, metadata and\nstructure audits, and an explicit release-readiness record. External provider\ncertification, representative production load, disaster recovery, regulatory\napproval, tenant cutover, and residual-risk acceptance remain deployment\nevidence and must never be inferred from framework tests.\n"
+        },
+        {
+          "code": "commerce.base-foundations",
+          "title": "Base Commerce foundations",
+          "route": "/docs/framework/commerce-base-foundations",
+          "section": "nodics-commerce",
+          "sectionTitle": "Nodics commerce",
+          "sectionOrder": 70,
+          "order": 200,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Beginner-to-operator guide for Store, Product, Pricing, Tax, Promotion, Inventory, exact decisions, publication, recovery, and customization.",
+          "searchText": "Base Commerce foundations Beginner-to-operator guide for Store, Product, Pricing, Tax, Promotion, Inventory, exact decisions, publication, recovery, and customization. # Base Commerce foundations\n\n## Business journey\n\nBase Commerce answers the questions that come before checkout: where is the customer buying, what is the sellable item, what does it cost, which tax applies, which promotion is earned, and can inventory satisfy the request? Each answer belongs to a separate capability so a business can change tax or stock policy without rewriting Cart.\n\n| Question | Owner | Evidence |\n| --- | --- | --- |\n| Which selling context applies? | Store | tenant, store, channel, currency, locale, timezone |\n| What is sold? | Product | product, variant, category, catalog version |\n| What is the price? | Pricing | exact price decision and source hash |\n| What tax applies? | Tax | jurisdiction, rate, exact amount, policy version |\n| What benefit applies? | Promotion | rule, target, exact discount, reason |\n| Can it be supplied? | Inventory | balance, source, reservation, allocation, movement |\n\nStore rejects inactive or cross-tenant store/channel combinations. Product publication starts with an active product and creates staged evidence; publication does not mutate the authored product. Pricing, Tax, and Promotion use canonical decimal strings. Inventory owns stock and uses optimistic balance revisions plus idempotency keys.\n\n## Beginner example\n\nA customer opens the web channel for an active Dubai store. Store resolves AED, English, and the store timezone. Product resolves a sellable variant. Pricing returns unit amount `19.99`; ordering three produces `59.97` exactly. Promotion returns an applied discount record, Tax returns its own decision, and Inventory returns candidate warehouses. Cart consumes these results later; it does not reproduce their rules.\n\nEvery persisted or transmitted decision includes tenant and correlation evidence. A source hash lets an operator prove what inputs produced a projection. The hash is integrity evidence, not a secret or authorization mechanism.\n\n## Developer guidance\n\nDevelopers extend the owner that controls the decision. Regional tax logic belongs behind Tax. A customer price resolver belongs behind Pricing. Warehouse selection belongs behind Inventory. Later-loading customer modules may replace a narrow service while retaining the same schema and evidence contract.\n\nNever use JavaScript numbers for commercial calculations. The exact amount service accepts canonical decimal strings and uses integer arithmetic internally. Validate currency separately because adding amounts from different currencies is invalid even when their digits look compatible.\n\nProduct search records are projections. Change Product or Pricing source, publish a new version, and rebuild the projection. Do not edit search records as business truth. Media associations remain governed by Media/Product boundaries and raw storage paths never become Product fields.\n\n## Operator and DevOps guidance\n\nOperators monitor stale publications, decision drift, reservation expiry, negative or inconsistent balances, and failed projection work. Reconciliation compares source revision and source hash to the current projection. A repair creates evidence and reruns the owner; it does not silently patch generated output.\n\nProduction teams must set retention, index, cache, throughput, and recovery objectives per deployment. Cache keys include tenant, store, channel, locale, currency, catalog version, and policy versions where relevant. Invalidation follows publication events. A cache hit may improve speed but cannot weaken tenant or effective-date checks.\n\n## Security and failure behavior\n\nAll administrative operations require employee permissions. Customer reads are scoped to an authenticated or explicitly public selling context. Cross-tenant input is rejected. Coupon tokens are stored as hashes. Provider secrets and customer protected data stay out of decision evidence, logs, generated context, and Axis payloads.\n\nIf Pricing, Tax, Promotion, or Inventory is unavailable, callers receive a failure or a clearly governed fallback policy. They must never invent a zero tax, unlimited stock, or successful discount. Partial evidence is retained for diagnosis but not presented as a final calculated promise.\n\n## Common mistakes\n\n- Combining Product and the technical framework Catalog module.\n- Letting Cart own price, tax, promotion, or inventory truth.\n- Using floating point for money, rates, or quantities.\n- Editing a search projection instead of publishing source.\n- Treating a source hash as authorization.\n- Returning records without tenant scope.\n- Enabling a regional adapter before qualification.\n\n## Verification\n\nRun the Phase 2 foundation contract, generated schema contracts, module metadata validation, controlled Commerce graph preparation, and generated LLM validation. Test exact arithmetic, cross-tenant rejection, inactive contexts, unavailable inventory, deterministic hashes, idempotent reservations, stale revisions, publication withdrawal, and a later-layer service override. Production acceptance additionally requires realistic data-volume, index, cache, recovery, and regional-policy evidence.\n"
+        },
+        {
+          "code": "commerce.cart-order",
+          "title": "Cart, checkout, and order placement",
+          "route": "/docs/framework/commerce-cart-order",
+          "section": "nodics-commerce",
+          "sectionTitle": "Nodics commerce",
+          "sectionOrder": 70,
+          "order": 210,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Customer, developer, and operator journey for exact calculation, placement, idempotency, compensation, immutable Orders, and recovery.",
+          "searchText": "Cart, checkout, and order placement Customer, developer, and operator journey for exact calculation, placement, idempotency, compensation, immutable Orders, and recovery. # Cart, checkout, and order placement\n\n## Customer journey\n\nCart stores customer purchase intent. Calculation asks Pricing, Promotion, Tax, and Inventory for authoritative decisions. Checkout validates the final intent and coordinates placement. Order records the durable result and append-only history. These responsibilities are deliberately separate. The business value is a reliable purchase promise: customers see defensible totals, stock is protected, and retries do not create duplicate orders or charges.\n\n| Stage | Owner | Result |\n| --- | --- | --- |\n| Add or change entries | Cart | versioned customer intent |\n| Calculate | Cart coordinating domain owners | exact calculation evidence |\n| Reserve | Inventory | idempotent stock reservation |\n| Authorize | Payment | authorization evidence |\n| Create durable purchase | Order | immutable order and entries |\n| Release goods | Fulfillment | release or consignment evidence |\n| Recover failure | Checkout and each owner | checkpoint and compensation evidence |\n\nA customer can retry placement with the same idempotency key. Checkout first looks for an existing result. It does not create a second order, reservation, or authorization. Each completed step is checkpointed. If a later step fails, compensation asks the original owner to release or void its evidence.\n\n## Calculation explained for beginners\n\nSuppose one entry costs `20.00`, a promotion grants `2.00`, and Tax returns `0.90`. Cart records subtotal `20`, discount `2`, tax `0.9`, and total `18.9`. The formatting can be localized in Axis, but the backend values remain exact decimal strings with a currency.\n\nCalculation is a snapshot, not permanent truth. Before placement, Checkout verifies the Cart revision, owner decision versions, inventory availability, customer ownership, store context, and expiry. A changed Cart cannot reuse evidence from an older revision.\n\n## Developer guidance\n\nDevelopers add Cart rules through validation and calculation pipelines, not by calling provider SDKs. Owner ports make dependency contracts explicit and testable. A customer extension can add an entry validator or replace a Pricing resolver without forking Cart.\n\nOrder data is immutable commercial evidence. Corrections append history or create a governed lifecycle request; they do not rewrite the original placed facts. Store display labels separately from stable codes. Keep protected addresses and payment references in bounded schemas and projections.\n\nPlacement bridges must have deterministic idempotency keys. Derive child keys from the placement key and operation name so retry calls reach the same Inventory and Payment operations. Persist checkpoints before advancing. Do not infer success from a timeout; reconcile with the owner.\n\n## Operator and DevOps guidance\n\nOperators need calculation diagnostics, placement checkpoints, dependency latency, compensation status, stale reservations, and duplicate-attempt indicators. Axis displays backend evidence and refreshes after actions. It does not mark a placement successful because a button was clicked.\n\nSet bounded Cart sizes, pagination, timeouts, retry budgets, and queue backpressure. Load tests must include concurrent updates to one Cart, hot products, promotion bursts, inventory contention, provider timeout, and replay. Backup and restore tests prove that Orders and history survive while transient Carts follow the approved retention policy.\n\n## Security and failure behavior\n\nCustomer routes require customer access tokens and ownership checks. Employee routes require explicit Commerce permissions. Service bridges use service tokens. Tenant comes from trusted authentication context and cannot be overridden by payload data.\n\nA failed dependency leaves a diagnostic and returns an honest incomplete result. Compensation is idempotent and retryable. A Payment timeout becomes unknown until reconciliation, never automatically declined or authorized. Inventory reservation failure prevents Order creation unless an approved backorder policy explicitly applies.\n\n## Common mistakes\n\n- Recalculating money with browser or floating-point logic.\n- Creating Order before durable reservation and authorization evidence.\n- Reusing a calculation after Cart revision changes.\n- Retrying with a new idempotency key.\n- Deleting Order history to correct a mistake.\n- Treating timeout as a known provider outcome.\n- Putting compensation logic inside an unrelated domain.\n\n## Verification\n\nRun Cart calculation and placement tests for success, unauthorized ownership, cross-tenant access, stale revision, concurrency, idempotent replay, dependency failure, each compensation boundary, and recovery after restart. Generate schema and route contracts from the effective Commerce graph. Validate Axis loading, empty, error, keyboard, responsive, and stale-evidence states. Production release additionally requires load and soak evidence at approved Cart size, order rate, and dependency latency budgets.\n"
+        },
+        {
+          "code": "commerce.payment-fulfillment",
+          "title": "Payment and fulfillment operations",
+          "route": "/docs/framework/commerce-payment-fulfillment",
+          "section": "nodics-commerce",
+          "sectionTitle": "Nodics commerce",
+          "sectionOrder": 70,
+          "order": 220,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Provider-safe payment and fulfillment guide covering methods, adapters, callbacks, reconciliation, shipment, tracking, warehouse work, and returns.",
+          "searchText": "Payment and fulfillment operations Provider-safe payment and fulfillment guide covering methods, adapters, callbacks, reconciliation, shipment, tracking, warehouse work, and returns. # Payment and fulfillment operations\n\n## Business journey\n\nPayment moves money; Fulfillment moves goods. Order connects their evidence but does not perform either operation. Payment separates methods, provider adapters, transactions, callbacks, and reconciliation. Fulfillment separates consignments, shipments, tracking, warehouse tasks, returns, receipts, inspections, and exceptions.\n\n| Concern | Authority | Safe evidence |\n| --- | --- | --- |\n| Authorization, capture, void, refund | Payment | transaction entry and provider reference |\n| Card or wallet eligibility | Payment Method | method capability without raw secret |\n| External execution | Payment Provider | redacted request/outcome evidence |\n| Shipment and tracking | Fulfillment | consignment, shipment, tracking event |\n| Warehouse work | Fulfillment | assigned task and completion evidence |\n| Returned stock disposition | Inventory | disposition and movement after inspection |\n\n## Payment for beginners\n\nThe browser sends an opaque provider token, never raw card data. Payment validates tenant, currency, exact amount, operation, and idempotency key. The selected adapter executes AUTHORIZE, CAPTURE, VOID, or REFUND and Payment stores the outcome.\n\nThe included Stripe-shaped sandbox adapter is an offline conformance simulator. It accepts test tokens and returns deterministic references so tests can exercise success and replay. It is disabled by default, is not connected to Stripe, and is not live-qualified. PayPal, CyberSource, and Visa packages are declared but disabled until adapter conformance and external certification are complete.\n\nCallbacks require a service boundary, HMAC or provider-approved signature verification, a freshness window, constant-time comparison, and replay storage. Callback data never bypasses reconciliation. A valid signature proves origin integrity; Payment still validates tenant mapping, transaction identity, amount, currency, event ordering, and allowed transition.\n\n## Fulfillment for beginners\n\nFulfillment releases an Order into consignments. One order may produce partial shipments. Tracking events append evidence and cannot silently rewrite prior carrier history. Cancellation becomes an intent because a warehouse or carrier may already have acted.\n\nA return begins with eligible Order evidence, then Fulfillment manages RMA logistics, pickup or drop-off, receipt, and inspection. Inventory decides whether inspected goods are restocked, quarantined, repaired, or written off. Payment refunds only after the approved lifecycle evidence reaches the configured checkpoint.\n\n## Developer guidance\n\nProvider adapters implement one narrow contract. Do not leak SDK objects into Payment schemas. Normalize provider statuses into owned statuses while retaining the original provider code and redacted reference. Derive deterministic idempotency keys and keep provider secrets in deployment secret management.\n\nCarrier adapters follow the same boundary: normalized request, bounded timeout, redacted outcome, callback verification, retry, and reconciliation. New providers remain disabled until contract tests, sandbox tests, security review, operational runbook, and qualification evidence exist.\n\n## Operator and DevOps guidance\n\nOperators inspect unknown payment outcomes, callback rejection, reconciliation drift, expiring authorizations, partial capture/refund totals, shipment exceptions, missing tracking, warehouse backlog, and return inspection queues. Axis renders evidence and owner actions; it never stores credentials or invents statuses.\n\nProduction teams configure timeouts, retries, circuit breakers, rate limits, concurrency, dead-letter handling, and provider-specific capacity. Monitor success, decline, unknown, latency, duplicate suppression, callback age, shipment delay, and reconciliation lag. Exercise provider outage and carrier outage independently.\n\n## Common mistakes\n\n- Storing raw card, wallet, or bank credentials.\n- Calling a provider from Order or Axis.\n- Treating an HTTP timeout as a final payment state.\n- Accepting a callback without replay protection.\n- Marking the offline simulator as live-qualified.\n- Letting Payment decide returned-stock disposition.\n- Assuming every order ships in one consignment.\n\n## Verification\n\nRun method/provider conformance, sandbox authorize/capture/void/refund, idempotent replay, invalid-token, callback signature, expiry, replay, transition, partial shipment, return receipt, inspection, and exception tests. Verify secrets are absent from logs, schemas, docs, OpenAPI examples, and Axis. A live provider requires separate credentialed sandbox certification, webhook delivery, reconciliation, capacity, security, and owner sign-off; local tests do not substitute for that evidence.\n"
+        },
+        {
+          "code": "commerce.returns-refunds",
+          "title": "Cancellation, return, and refund lifecycle",
+          "route": "/docs/framework/commerce-returns-refunds",
+          "section": "nodics-commerce",
+          "sectionTitle": "Nodics commerce",
+          "sectionOrder": 70,
+          "order": 230,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Structured self-service and operator journey for policy, maker-checker approval, owner intents, checkpoints, recovery, and final Order evidence.",
+          "searchText": "Cancellation, return, and refund lifecycle Structured self-service and operator journey for policy, maker-checker approval, owner intents, checkpoints, recovery, and final Order evidence. # Cancellation, return, and refund lifecycle\n\n## Why one lifecycle is needed\n\nCancellation, return, and refund are related but different business intents. Cancellation tries to stop unfulfilled work. Return moves delivered goods back through Fulfillment and Inventory. Refund moves money through Payment. Order owns the customer intent, eligibility snapshot, approval trail, checkpoints, and final history projection.\n\n| Intent | Typical prerequisite | Domain actions |\n| --- | --- | --- |\n| Cancellation | cancellable unfulfilled quantity | Fulfillment stop, Inventory release, Payment void or refund |\n| Return | delivered eligible quantity | RMA, receipt, inspection, Inventory disposition, Payment refund |\n| Refund | captured refundable amount | maker-checker approval, Payment refund, reconciliation |\n\nCatalog and Product screens do not initiate these actions because a product alone has no customer, quantity, shipment, payment, or settlement evidence.\n\n## Customer self-service journey\n\nFor beginners, requesting a reversal is not the same as completing it.\n\nThe customer opens an owned Order, selects eligible entries and quantities, chooses a reason, and requests a preview. The backend evaluates policy and returns exact refundable amounts, non-refundable charges, tax and discount allocation, expected logistics, approval requirements, and expiry. Submitting creates an immutable request version with an idempotency key.\n\nThe customer can read only their own requests. A retry returns the original result. The UI shows pending, awaiting approval, logistics, inspection, refund, reconciliation, completed, rejected, or failed states from backend evidence. It never promises money before Payment confirms the outcome.\n\n## Administrator and operator journey\n\nAn operator sees queues grouped by Order lifecycle, not Catalog keywords. Maker-checker means the requester cannot approve a protected action. The approver sees policy version, quantities, exact allocation, source Order revision, fulfillment state, payment state, customer reason, and risk evidence.\n\nAfter approval, the workflow calls Fulfillment, Inventory, and Payment through owner intents. Each step records a checkpoint. Failures remain retryable and reconcilable. Emergency stop may pause new execution but cannot erase already completed provider or warehouse evidence.\n\nAxis keeps Cancellation, Return, and Refund as distinct workspaces and provides links only within the backend-published hierarchy. Payment reconciliation remains in Payment Operations. Return receipt and inspection remain in Fulfillment Operations. Catalog displays the explicit message that no catalog-only refund action exists.\n\n## Developer guidance\n\nDevelopers change eligibility through versioned policy pipelines. Exact reversal allocation must reference original price, discount, tax, payment, shipment, and prior reversal evidence. Never recalculate a historic order using today’s price or tax policy.\n\nWorkflow definitions are configured for cancellation, return, and refund with maker-checker steps. Order coordinates but delegates physical and monetary actions. Every service accepts tenant and correlation evidence. Customer extensions may add policy steps or approval thresholds through later layers while retaining owner contracts and history.\n\nCompatibility aliases support migration for two minor releases or 180 days, whichever approved window applies. Aliases map old names to new contracts; they do not keep duplicate authorities alive.\n\n## Operator and DevOps guidance\n\nMonitor pending approvals, checkpoint age, retry counts, unknown payment outcomes, return-in-transit age, inspection backlog, disposition drift, and Order projection lag. Recovery resumes from the last durable checkpoint and reuses idempotency keys.\n\nBackup/restore acceptance must prove requests, versions, approvals, checkpoints, owner evidence, and Order history remain consistent. Disaster recovery must not reissue refunds. Reconciliation compares restored state with Payment and Fulfillment providers before progressing unknown work.\n\n## Security and privacy\n\nCustomer access requires ownership checks. Operator and approver permissions are separate. Service calls use service audiences. Reasons and evidence may contain protected data, so Axis receives only necessary projections and exports are bounded, audited, and retention-controlled.\n\n## Common mistakes\n\n- Starting refunds from Product or Catalog.\n- Letting the requester approve their own protected refund.\n- Repricing historic orders with current policy.\n- Issuing a second refund after timeout.\n- Updating the original Order instead of appending history.\n- Restocking before receipt and inspection evidence.\n- Treating UI visibility as backend authorization.\n\n## Verification\n\nTest customer ownership, tenant isolation, eligibility rejection, exact partial allocation, duplicate request, maker-checker separation, cancellation before and after shipment, partial return, failed pickup, inspection disposition, void versus refund, provider timeout, checkpoint restart, reconciliation, and final Order history. Axis tests verify domain hierarchy, no Catalog refund action, accessibility, responsive rendering, and backend denial behavior. Production release requires approved policy, provider, legal, finance, operations, recovery, and residual-risk evidence.\n"
+        },
+        {
+          "code": "commerce.enterprise-operations",
+          "title": "Commerce enterprise operations and migration",
+          "route": "/docs/framework/commerce-enterprise-operations",
+          "section": "nodics-commerce",
+          "sectionTitle": "Nodics commerce",
+          "sectionOrder": 70,
+          "order": 240,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Capacity, backpressure, providers, recovery, compatibility, tenant migration, rollback, legacy retirement, and production qualification guidance.",
+          "searchText": "Commerce enterprise operations and migration Capacity, backpressure, providers, recovery, compatibility, tenant migration, rollback, legacy retirement, and production qualification guidance. # Commerce enterprise operations and migration\n\n## Operational outcome\n\nCommerce is safe to release only when correctness, capacity, recovery, compatibility, and migration evidence tell the same story. Unit tests prove deterministic rules; they do not prove that a production database, payment provider, carrier, region, or traffic profile is qualified.\n\nThe business value is controlled growth without sacrificing financial\ncorrectness, customer trust, recoverability, or upgrade safety.\n\n| Evidence layer | Framework proof | Deployment proof |\n| --- | --- | --- |\n| Capacity | bounded pages, carts, batches, retries, and a reference arithmetic harness | representative load and soak against production-like topology |\n| Providers | adapter, timeout, callback, replay, idempotency, and offline conformance tests | credentialed sandbox certification and contracted limits |\n| Recovery | checkpoints, restore-manifest comparison, retry and reconciliation contracts | backup, restore, failover, RPO and RTO rehearsal |\n| Compatibility | version comparison, alias window, successor and sunset evidence | consumer matrix and upgrade/rollback rehearsal |\n| Migration | dry-run mapping, count, hash, quarantine, cutover and rollback contracts | tenant-by-tenant approved execution and reconciliation |\n| Retirement | active runtime scan and standard module identity | completed rollback window and operational owner acceptance |\n\n## Beginner mental model\n\nThink of a Commerce release as moving a warehouse while customers continue ordering. First count and label everything. Then rehearse the move, quarantine anything that does not map, move one controlled section, compare the old and new ledgers, and keep a rollback route until the agreed window ends.\n\nThe framework provides the checklist and evidence shapes. A customer deployment supplies real volumes, infrastructure, provider accounts, recovery regions, legal policy, and named approvers. This separation prevents local tests from being presented as production certification.\n\n## Capacity and backpressure\n\nThe reference configuration bounds page size at 100, Cart entries at 500, batch size at 100, and concurrent provider requests at 25. Retry uses exponential delay, a maximum attempt count, and a maximum delay. These are reference defaults, not universal service-level objectives.\n\nDevelopers preserve limits at every API, repository, queue, export, and provider boundary. Operators monitor p50, p95, p99, throughput, error rate, saturation, queue depth, retry age, stale reservations, placement checkpoint age, unknown payments, shipment exceptions, and reconciliation lag. DevOps teams test hot products, concurrent Cart revisions, promotion bursts, inventory contention, dependency latency, callback storms, provider throttling, and regional failure.\n\nThe included capacity test executes 50,000 exact decimal additions and records elapsed time as a regression harness. It is deliberately not called a production load test.\n\n## Backup, restore, and disaster recovery\n\nA backup manifest records tenant, counts for Orders, Payments, Shipments, lifecycle requests and history, checksum, and checkpoint. Restore verification compares counts and checksum before traffic resumes. A mismatch becomes DRIFTED and blocks automatic continuation.\n\nRecovery resumes from durable checkpoints and reuses original idempotency keys. Unknown Payment and carrier outcomes are reconciled externally before replay. Disaster recovery must never reissue an authorization, capture, shipment, void, or refund merely because local state was restored.\n\nEach deployment rehearses backup, restore, regional failover, dependency unavailability, and return to the primary region. It records measured recovery point and recovery time rather than copying the reference targets.\n\n## Compatibility and upgrades\n\nContracts use semantic versions and classify compatible, deprecated, or breaking change. The default compatibility alias window is two minor releases or 180 days. A deprecated alias has a successor and sunset date. It translates identity at the boundary and never keeps a duplicate service or schema authority active.\n\nUpgrade rehearsal runs old consumers against the new compatible surface, then new consumers against the supported server matrix. Rollback rehearsal proves that application rollback does not corrupt newer durable evidence. A breaking database change requires forward and rollback migration plans.\n\n## Tenant migration journey\n\nMigration defaults to DRY_RUN. For every tenant and schema, record source count, target count, source hash, mapping version, errors, quarantined records, and rollback reference. The approved order is Store, Product, Pricing, Tax, Promotion, Inventory, Cart, Order, Payment, Fulfillment, then reverse lifecycle evidence.\n\nCutover is allowed only after dry-run counts and hashes reconcile. Failed records are quarantined; they are not silently skipped. Rollback removes or deactivates only records created by that migration release and preserves immutable audit evidence.\n\nThe archived Commerce repository remains historical reference. Active package metadata, runtime source, configuration, server graphs, routes, and imports use `nodics.commerce`. A retirement contract scans active runtime paths for executable archived references.\n\n## Developer guidance\n\nAdd operational evidence to the owning module. Checkout Core may coordinate cross-domain checkpoints, but Pricing still owns price decisions and Payment still owns reconciliation. Generated schema, service, controller, route-test, OpenAPI, and LLM artifacts come from effective source and are regenerated after changes.\n\nNever hardcode machine paths, credentials, provider secrets, or customer data into evidence. Hashes prove integrity, not confidentiality. Redact protected payloads and retain only references needed for audit.\n\n## Operator and release-owner guidance\n\nThe release owner reviews framework tests, effective graph, generated artifacts, Axis journey, documentation, migration rehearsal, provider qualification, load/soak, restore/failover, compatibility matrix, rollback, known limitations, and residual risks. Finance approves payment/reconciliation policy; Operations approves fulfillment and recovery; Security approves callback, secret, access and audit controls; Product approves customer policy; the deployment owner accepts environment-specific targets.\n\n## Common mistakes\n\n- Calling a microbenchmark a production load test.\n- Claiming provider qualification from an offline simulator.\n- Retrying unknown money movement with a new key.\n- Migrating all tenants before a reconciled dry run.\n- Keeping two active schemas behind a compatibility alias.\n- Restoring counts without comparing a checksum.\n- Retiring the archive before the rollback window ends.\n- Editing generated artifacts instead of source.\n\n## Verification\n\nRun focused Commerce contracts, all generated schema and route contracts, controlled Commerce plus Process graph build, module metadata, syntax, ownership, documentation, LLM generation and validation, Axis verify, and the active-runtime retirement scan. Record the generated counts and observed capacity-harness duration.\n\nDeployment release remains conditional until named owners attach representative load and soak results, credentialed provider and carrier qualification, backup/restore and failover measurements, tenant migration reconciliation, upgrade/rollback rehearsal, and residual-risk acceptance. That conditional gate is a feature of honest enterprise readiness, not an implementation omission.\n"
+        },
+        {
+          "code": "communication.overview",
+          "title": "Communication, delivery, and verification",
+          "route": "/docs/framework/communication-overview",
+          "section": "nodics-communication",
+          "sectionTitle": "Nodics communication",
+          "sectionOrder": 80,
+          "order": 250,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Beginner-to-operator journey for templates, intent, consent, suppression, verification, provider delivery, callbacks, retry, inbox, recovery, and domain integration.",
+          "searchText": "Communication, delivery, and verification Beginner-to-operator journey for templates, intent, consent, suppression, verification, provider delivery, callbacks, retry, inbox, recovery, and domain integration. # Communication, delivery, and verification\n\nNodics Communication turns a business-owned request to inform or verify someone into a governed message and delivery outcome. This beginner-friendly guide explains templates, recipients, consent and suppression, provider delivery, retry, callbacks, inbox records, and the boundary between Communication and consuming modules such as Engagement, Order, Process, Profile/KYC, and Security.\n\nCommunication owns how a message is prepared and delivered. The consuming domain owns why it was requested and what business state changes afterward. For example, Contact Submission owns an enquiry and may request an acknowledgement. Communication renders and sends that acknowledgement, but a provider failure never deletes or rolls back the enquiry.\n\n## Module structure\n\n| Module | Responsibility |\n| --- | --- |\n| `commsSchema` | Source declarations for templates, intents, delivery attempts, suppression, inbox, and verification evidence. |\n| `commsCore` | Rendering, idempotency, policy, delivery orchestration, retry, fallback, and content-free events. |\n| `commsVerification` | Expiring, hashed, attempt-limited communication challenges without owning identity. |\n| `localCommsProvider` | Deterministic development delivery with no external network transmission. |\n| `commsApi` | Secured customer inbox, operator recovery, and service-authenticated callback routes. |\n\n## End-to-end delivery journey\n\n```mermaid\nflowchart LR\n  Domain[\"Business module creates intent\"] --> Policy[\"Recipient, purpose, consent and suppression\"]\n  Policy -->|Suppressed| Evidence[\"Suppression evidence\"]\n  Policy -->|Allowed| Template[\"Validated template version\"]\n  Template --> Render[\"Transient declared-variable rendering\"]\n  Render --> Provider[\"Certified channel provider\"]\n  Provider -->|Delivered| Outcome[\"Content-free delivery evidence\"]\n  Provider -->|Failed| Retry[\"Bounded retry or fallback\"]\n  Retry --> Provider\n  Retry -->|Exhausted| Dead[\"Dead letter and reconciliation\"]\n  Outcome --> Domain\n```\n\n## Template and rendering journey\n\nAn administrator defines a template code, purpose, supported channels, and declared variables. Each locale/channel body is an immutable validated version with a checksum. Activation moves the template pointer; it does not rewrite earlier delivery evidence.\n\nThe renderer accepts only declared variables, rejects executable constructs, and enforces count and rendered-size limits. Rendering is transient. Intent and event records store a variables hash and template version, not a convenient copy of every customer field. Provider secrets never appear in templates or Axis.\n\nDevelopers add a template by declaring the smallest variable set, providing safe locale/channel versions, testing missing and unknown variables, validating output size and escaping, and supplying a migration path before retiring an active version.\n\n## Consent, purpose, and suppression\n\nEvery intent states a purpose such as transactional, service, consent, verification, or marketing. Marketing consent must never be inferred from permission to send a transaction or security challenge. A suppression is recipient-, purpose-, and channel-scoped with reason, source, and validity period.\n\nPolicy runs before rendering and provider delivery. A suppressed request produces evidence and returns safely to the caller. It is not retried through another provider to evade customer preference. Emergency or legally required messages need an explicit policy rather than a hidden bypass.\n\n## Idempotency and delivery evidence\n\nThe consuming domain supplies an idempotency key and correlation ID. Repeating the same logical request returns the existing intent instead of sending a duplicate. Delivery attempts record provider, channel, attempt, bounded status, safe provider reference, response code, retry time, and timestamps. Events contain codes and statuses, not message bodies, addresses, or provider payloads.\n\nRetry uses exponential delay and a maximum attempt count. Ambiguous timeouts require provider reconciliation before replay. Fallback between providers or channels must be allowed by purpose, consent, residency, and customer preference; it is not an automatic escape hatch.\n\n## Verification journey\n\nVerification creates a random transient secret and stores only salted hash evidence plus a destination hash. The challenge has purpose, subject reference, channel, expiry, attempt limit, status, and correlation. Successful comparison marks it verified once. Expiry or lockout prevents further use.\n\nCommunication proves possession of a channel; it does not decide that a user is authenticated, KYC-approved, authorized, or safe. Profile, KYC, Security, or the requesting domain consumes the verified outcome and applies its own current policy.\n\n## Axis and customer journey\n\nCustomers use the secured Communication inbox route to list only their own in-app messages. They can never select another recipient identifier in the URL or query. Axis operators inspect delivery evidence and retry only failed, retry-pending, or dead-letter attempts with explicit permission. Raw content and addresses stay masked.\n\nProvider callbacks use service authentication and bounded provider evidence. Production adapters additionally verify signature, timestamp/replay window, provider/account identity, and idempotency before reconciling an attempt. A callback does not trust domain identifiers supplied by an external payload.\n\n## Engagement integration\n\n`engagementComms` is a later-loaded bridge. It maps CONTACT, FEEDBACK, REVIEW, and TESTIMONIAL scenarios to Communication templates, declared variables, purpose, recipient/address reference, and a stable idempotency key. The dependency is one-way: Communication never imports Engagement or changes its status.\n\nWhen Communication is unavailable, the bridge returns deferred evidence with `domainStateChanged: false`. Contact intake and other safe domain operations remain durable. A scheduled worker can retry or reconcile later.\n\n## Provider activation and operations\n\nThe local provider is enabled for development and returns deterministic content-free evidence. SMTP and Twilio-style external providers remain disabled until a deployment supplies secured credentials, verified sender identity, region/residency approval, consent mapping, callbacks, retry/fallback, observability, rate and cost limits, incident response, and rollback.\n\nOperators monitor accepted/suppressed intent volume, render failures, provider latency/error, delivered rate, retry age, dead letters, callback rejection/replay, inbox expiry, verification success/lockout, and consent/suppression decisions. Logs use intent, attempt, template, and correlation codes without content.\n\n## Common mistakes\n\n- Letting Engagement, Order, or Process own email templates or provider retry.\n- Letting Communication change order, case, identity, or security status.\n- Storing rendered bodies or recipient addresses in events and logs.\n- Treating transactional permission as marketing consent.\n- Sending again after retry without checking the idempotency key or ambiguous provider outcome.\n- Storing a verification secret in plaintext or allowing unlimited guesses.\n- Enabling an external provider because local delivery passed.\n- Trusting callback fields without service authentication, signature, replay, tenant, and provider-reference validation.\n\n## Verification\n\nProve template version/checksum, declared-variable rendering, executable and unknown-variable rejection, output limits, purpose/channel denial, suppression, consent separation, idempotent replay, content-free events, local delivery, provider failure, exponential retry, dead letter, safe fallback, callback authentication and replay policy, tenant isolation, customer inbox ownership, challenge hashing/expiry/lockout/single use, one-way domain integration, and domain durability during outage. Run Communication package tests, generated schema contracts, Communication route/security contracts, Engagement bridge tests, documentation generation/validation, and the effective Engagement server build to confirm Communication loads first.\n"
+        },
+        {
           "code": "docs.overview",
           "title": "Docs overview",
           "route": "/docs/framework/docs-overview",
           "section": "nodics-docs",
           "sectionTitle": "Nodics docs",
           "sectionOrder": 10,
-          "order": 140,
+          "order": 260,
           "audience": [
             "architect",
             "developer",
@@ -7322,8 +7529,8 @@ module.exports = {
         "route": "/docs/framework/wcms-media-management"
       },
       "next": {
-        "title": "Docs overview",
-        "route": "/docs/framework/docs-overview"
+        "title": "Customer reviews and ratings",
+        "route": "/docs/framework/engagement-customer-reviews"
       },
       "source": {
         "repository": "nodics.docs",
@@ -7337,6 +7544,3429 @@ module.exports = {
     "active": true
   },
   "record14": {
+    "code": "nodicsDocsComponentengagementCustomerReviews",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "engagement.customer-reviews",
+      "title": "Customer reviews and ratings",
+      "route": "/docs/framework/engagement-customer-reviews",
+      "section": "nodics-engagement",
+      "sectionTitle": "Nodics engagement",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Beginner-to-operator journey for review submission, moderation, publication, rating aggregates, recovery, APIs, and safe customization.",
+      "headings": [
+        {
+          "text": "Who should read this",
+          "anchor": "engagementCustomerReviews-1-who-should-read-this",
+          "level": 2
+        },
+        {
+          "text": "What is available",
+          "anchor": "engagementCustomerReviews-2-what-is-available",
+          "level": 2
+        },
+        {
+          "text": "End-to-end journey",
+          "anchor": "engagementCustomerReviews-3-end-to-end-journey",
+          "level": 2
+        },
+        {
+          "text": "Shopper journey",
+          "anchor": "engagementCustomerReviews-4-shopper-journey",
+          "level": 2
+        },
+        {
+          "text": "Moderator journey in Axis",
+          "anchor": "engagementCustomerReviews-5-moderator-journey-in-axis",
+          "level": 2
+        },
+        {
+          "text": "Public API behavior",
+          "anchor": "engagementCustomerReviews-6-public-api-behavior",
+          "level": 2
+        },
+        {
+          "text": "Aggregate correctness and recovery",
+          "anchor": "engagementCustomerReviews-7-aggregate-correctness-and-recovery",
+          "level": 2
+        },
+        {
+          "text": "Review requests, sessions, and syndication",
+          "anchor": "engagementCustomerReviews-8-review-requests-sessions-and-syndication",
+          "level": 2
+        },
+        {
+          "text": "Configuration and ownership map",
+          "anchor": "engagementCustomerReviews-9-configuration-and-ownership-map",
+          "level": 2
+        },
+        {
+          "text": "Customize and extend safely",
+          "anchor": "engagementCustomerReviews-10-customize-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Security and privacy",
+          "anchor": "engagementCustomerReviews-11-security-and-privacy",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "engagementCustomerReviews-12-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Troubleshooting",
+          "anchor": "engagementCustomerReviews-13-troubleshooting",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "engagementCustomerReviews-14-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Customer Reviews lets shoppers share an experience and lets a business moderate, respond to, publish, and measure that evidence without changing or suppressing it merely because the opinion is negative. This guide starts with a beginner-friendly mental model and continues into developer and operator detail. It is owned by `nodics.engagement/customerReview`; public and operator HTTP operations are owned by `engagementApi`, and Axis renders backend-authorized workspaces."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Think of a review as a signed evidence folder. The customer's wording and rating are versioned, verification and incentive disclosures are stored beside it, moderation records explain every decision, and the public website receives a smaller safe copy. Rating totals are calculated only from those published copies, so hidden or withdrawn content cannot continue influencing the score."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Who should read this",
+          "anchor": "engagementCustomerReviews-1-who-should-read-this"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Reader",
+            "Start here, then continue to"
+          ],
+          "rows": [
+            [
+              "Shopper or customer-support user",
+              "Submit and manage a review; understand verification, publication, and withdrawal."
+            ],
+            [
+              "Moderator or business user",
+              "Review queue, policy decisions, responses, abuse reports, appeals, and aggregate repair."
+            ],
+            [
+              "Developer or partner",
+              "Ownership, API projections, configuration, safe extension, and tests."
+            ],
+            [
+              "Operator or security reviewer",
+              "Tenant isolation, reconciliation, cache/search invalidation, monitoring, and recovery."
+            ],
+            [
+              "Architect or AI tool",
+              "Module boundary, immutable evidence, generated artifacts, and prohibited parallel authorities."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "What is available",
+          "anchor": "engagementCustomerReviews-2-what-is-available"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The implemented capability supports polymorphic review targets, overall and dimensional ratings, text and media references, registered-customer ownership, authenticity evidence, incentive disclosures, immutable versions, moderation, business responses, abuse reports, appeals, CRES migration evidence, sanitized public projections, helpfulness votes, rating distributions, verified/unverified counts, deterministic rebuilding, drift detection, bounded sorting/filtering, media galleries, and Schema.org eligibility diagnostics."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Review solicitation, external import/syndication, feedback/complaint management, unified operations, optional AI assistance, and enterprise load/failover qualification are delivered by later phases and must not be represented as active merely because their design is documented."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "End-to-end journey",
+          "anchor": "engagementCustomerReviews-3-end-to-end-journey"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Shopper[\"Shopper submits review\"] --> Version[\"Immutable review version\"]\n  Version --> Evidence[\"Authenticity and disclosure evidence\"]\n  Evidence --> Queue[\"Moderator reviews in Axis\"]\n  Queue -->|Approved| Projection[\"Sanitized public projection\"]\n  Queue -->|Policy violation| Restricted[\"Rejected or quarantined with reason\"]\n  Projection --> Aggregate[\"Rebuilt rating aggregate\"]\n  Projection --> Storefront[\"Storefront list, filters, media and rating\"]\n  Withdrawal[\"Customer withdrawal or governed hide\"] --> Projection\n  Projection --> Repair[\"Reconciliation and cache/search invalidation\"]\n  Repair --> Aggregate"
+        },
+        {
+          "kind": "paragraph",
+          "text": "In plain language: the submitted record is not itself a public page. Approval produces a version-specific public projection. The aggregate service reads only projections whose status is `PUBLISHED`. Withdrawal, hiding, anonymization, migration reconciliation, or restoration changes the projection and triggers a deterministic rebuild."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Shopper journey",
+          "anchor": "engagementCustomerReviews-4-shopper-journey"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Sign in through the customer experience and choose an eligible product, service, order, store, seller, content item, event, location, or project-defined target.",
+            "Submit a rating, review text, or both, as permitted by policy. Include the idempotency key supplied by the client so a network retry does not create a second review.",
+            "Expect a customer-owned record with a safe status. Pre-moderation normally places it in `PENDING_MODERATION`.",
+            "View the review through the customer API. Other customers cannot read the private record merely by guessing its code.",
+            "When published, the storefront reads the sanitized public projection, not the customer-owned schema.",
+            "Withdraw the review when permitted. The public projection leaves published state and the rating is rebuilt without it."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "A one-star review is valid evidence. A moderator may restrict it for a recorded policy violation such as personal data, spam, or abusive content, but `NEGATIVE_SENTIMENT` is prohibited as a reason."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Moderator journey in Axis",
+          "anchor": "engagementCustomerReviews-5-moderator-journey-in-axis"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Open Customer Experience → Reviews or Review Moderation. Navigation appears only when the backend capability catalogue exposes `nodics.engagement` and the user holds the required permission.",
+            "Filter the workbench by status, target, site, locale, or queue. Open the detail view to inspect current version, verification/disclosure evidence, and prior moderation history.",
+            "Choose only an action supplied by the backend workbench contract. Restrictive actions require a policy reason and optimistic revision.",
+            "Approve a valid review. The backend creates a sanitized public projection and rebuilds the relevant aggregate.",
+            "Add a versioned business response through the response workflow. Only a `PUBLISHED` response is included in the shopper projection.",
+            "If an abuse report or appeal changes the decision, use restore/hide actions. Axis refreshes its query; the backend remains the state authority."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis must not calculate ratings, expose owner IDs, store review data locally, invent moderation actions, or directly edit aggregate records."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Public API behavior",
+          "anchor": "engagementCustomerReviews-6-public-api-behavior"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Purpose",
+            "Method and path",
+            "Important boundary"
+          ],
+          "rows": [
+            [
+              "List published reviews",
+              "`GET /public/reviews`",
+              "Returns a bounded page of public projections only."
+            ],
+            [
+              "Get rating summary",
+              "`GET /public/review-aggregates/:targetType/:targetCode`",
+              "Returns current target aggregate fields; no reviewer identity."
+            ],
+            [
+              "Submit a review",
+              "`POST /customer/reviews`",
+              "Requires an authenticated customer and tenant context."
+            ],
+            [
+              "Vote helpful/unhelpful",
+              "`PUT /customer/reviews/:reviewCode/helpfulness`",
+              "One customer-owned vote is replaced/versioned, not duplicated."
+            ],
+            [
+              "Moderate",
+              "`POST /operator/reviews/:reviewCode/actions/:actionCode`",
+              "Requires employee permission, reason policy, tenant scope, and revision."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Public sorting supports recent, helpful, rating-high, and rating-low modes. Filters are bounded by the API policy. Result metadata repeats applied filters, count, offset, and limit so a storefront can explain what the shopper is viewing."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Aggregate correctness and recovery",
+          "anchor": "engagementCustomerReviews-7-aggregate-correctness-and-recovery"
+        },
+        {
+          "kind": "paragraph",
+          "text": "An aggregate records count, sum, average, one-to-five distribution, dimensional summaries, verified and unverified counts, policy version, calculation version, source hash, and calculation time. Its source hash is produced from stable projection evidence. Incremental triggers use the same rebuild function, making retries safe and allowing a full rebuild to be compared with stored state."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Situation",
+            "Expected result"
+          ],
+          "rows": [
+            [
+              "Approval or restoration",
+              "Projection becomes published and begins contributing."
+            ],
+            [
+              "Hide, withdrawal, or anonymization",
+              "Projection stops contributing; audit evidence remains."
+            ],
+            [
+              "Duplicate event or worker retry",
+              "Same source set produces the same hash and totals."
+            ],
+            [
+              "Concurrent lifecycle updates",
+              "Optimistic review revision rejects stale commands; reconciliation uses final persisted state."
+            ],
+            [
+              "Drift or missing aggregate",
+              "Rebuild from published projections and replace stored aggregate with evidence."
+            ],
+            [
+              "Cache or search outage",
+              "Domain records remain authoritative; retain invalidation evidence and retry the adapter."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Review requests, sessions, and syndication",
+          "anchor": "engagementCustomerReviews-8-review-requests-sessions-and-syndication"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A review request starts from completed purchase, service, or experience evidence supplied by its owning module. Review policy calculates the waiting period and expiry, honors opt-out and suppression, restricts channels, limits reminders, and respects quiet hours. It rejects any input that tries to select recipients using predicted sentiment, predicted rating, or a “likely promoter” segment."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Email, SMS, account, QR, and in-app delivery all use the same request record. Communication providers deliver the invitation but do not own eligibility or review state. Content-free acquisition events record eligible, offered, delivered, opened, started, completed, expired, suppressed, or failed stages so administrators can measure coverage and conversion without copying review text into analytics events."
+        },
+        {
+          "kind": "paragraph",
+          "text": "A request can contain several product targets. Starting it creates a customer-owned session with explicit target and completed-target lists, expiry, and optimistic revision. This supports one order containing several reviewable items without issuing unrelated tokens or losing partial progress."
+        },
+        {
+          "kind": "paragraph",
+          "text": "External imports always enter a quarantine-first syndication record. The record preserves provider and external IDs, origin, license, disclosure, governed target mapping, source hash, mapping version, moderation evidence, status, and reconciliation time. A same-hash replay is skipped; a changed payload with the same external identity is reconciled. Neither state changes public ratings until a normal internal review passes moderation and becomes a published projection."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Google Customer Reviews is an optional reference adapter and remains disabled until merchant configuration, consent, disclosure, callback security, provider terms, monitoring, and rollback are qualified. The provider never becomes the Nodics review-state authority."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Configuration and ownership map",
+          "anchor": "engagementCustomerReviews-9-configuration-and-ownership-map"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "`customerReview/config/properties.js` owns rating bounds, moderation transitions, public page limits, aggregate/calculation versions, media limit, cache TTL, and Schema.org enablement.",
+            "`customerReview/src/schemas/schemas.js` owns authored persistence definitions. Generated Core schema/service/controller/facade artifacts are outputs and must not be edited.",
+            "`defaultCustomerReviewProjectionService` owns sanitization, page behavior, media allow-listing, and structured-data diagnostics.",
+            "`defaultCustomerReviewAggregateService` owns deterministic calculation and drift comparison.",
+            "`defaultCustomerReviewPublicExperienceService` owns lifecycle reconciliation and adapter invalidation evidence.",
+            "`engagementApi` owns dedicated public/customer/operator routes and DTO allow-lists.",
+            "`nodics.axis` owns rendering only. Product storefront rendering remains customer-application owned."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customize and extend safely",
+          "anchor": "engagementCustomerReviews-10-customize-and-extend-safely"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Start with a later project configuration override. A project may change page limits, cache TTL, enabled target types, rating bounds, moderation modes, or supported sort modes when the invariant remains safe. If a project needs a different aggregate store or search engine, override the relevant service in a later-loaded project module while preserving tenant scope, published-only inclusion, source hashes, and rebuild behavior."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Do not copy the framework service, edit generated schema files, calculate ratings in Axis, expose generic schema CRUD, or use search/cache as the review authority. Add a focused customization test proving the default and override produce equivalent integrity evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Security and privacy",
+          "anchor": "engagementCustomerReviews-11-security-and-privacy"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Customer records are owner- and tenant-scoped. Operators require explicit permissions. Public DTOs omit owner IDs, internal notes, raw provenance, moderation evidence, and private media fields. Incentives must be disclosed and cannot be conditioned on sentiment. Withdrawal removes public visibility while retention/legal-hold policy determines which private evidence may remain."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "engagementCustomerReviews-12-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Calculating the visible average from private review records instead of published projections.",
+            "Treating a negative rating as evidence of spam or a moderation violation.",
+            "Returning customer identity, internal notes, raw provenance, or unapproved media in a public DTO.",
+            "Updating aggregate counters without retaining source hashes and a full-rebuild path.",
+            "Letting Axis, a storefront, cache, or search index become the review state authority.",
+            "Editing generated schema services instead of the owning schema definition and regenerating.",
+            "Retrying a stale moderation command without honoring the optimistic revision conflict."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Troubleshooting",
+          "anchor": "engagementCustomerReviews-13-troubleshooting"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Symptom",
+            "Safe check and recovery"
+          ],
+          "rows": [
+            [
+              "Approved review is absent",
+              "Confirm a current immutable version exists, inspect projection reconciliation error, then retry reconciliation."
+            ],
+            [
+              "Rating looks stale",
+              "Compare aggregate source hash/count with a full projection rebuild; replace only through the review service."
+            ],
+            [
+              "Hidden review still appears",
+              "Verify public query requires `PUBLISHED`, clear/retry the recorded cache/search invalidation, and test the source projection directly."
+            ],
+            [
+              "Customer receives forbidden",
+              "Confirm access-token subject, tenant, customer group, ownership, and exact permission; never bypass in the browser."
+            ],
+            [
+              "Structured data is missing",
+              "Read eligibility diagnostics. Zero published ratings intentionally produces no aggregate markup."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "engagementCustomerReviews-14-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run the Phase 6 regression and Phase 7 contracts, Engagement API route/security contracts, generated schema contracts, documentation pack validation, and Axis Customer Engagement regression. Acceptance must include approval, negative-review protection, hide, withdrawal, restore, retry, drift rebuild, tenant denial, oversized page request, and later-layer configuration override."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Next: review solicitation and syndication explains how requests and imported evidence are governed without selecting only likely-positive customers."
+        }
+      ],
+      "searchText": "Customer reviews and ratings Beginner-to-operator journey for review submission, moderation, publication, rating aggregates, recovery, APIs, and safe customization. # Customer reviews and ratings\n\nCustomer Reviews lets shoppers share an experience and lets a business moderate, respond to, publish, and measure that evidence without changing or suppressing it merely because the opinion is negative. This guide starts with a beginner-friendly mental model and continues into developer and operator detail. It is owned by `nodics.engagement/customerReview`; public and operator HTTP operations are owned by `engagementApi`, and Axis renders backend-authorized workspaces.\n\nThink of a review as a signed evidence folder. The customer's wording and rating are versioned, verification and incentive disclosures are stored beside it, moderation records explain every decision, and the public website receives a smaller safe copy. Rating totals are calculated only from those published copies, so hidden or withdrawn content cannot continue influencing the score.\n\n## Who should read this\n\n| Reader | Start here, then continue to |\n| --- | --- |\n| Shopper or customer-support user | Submit and manage a review; understand verification, publication, and withdrawal. |\n| Moderator or business user | Review queue, policy decisions, responses, abuse reports, appeals, and aggregate repair. |\n| Developer or partner | Ownership, API projections, configuration, safe extension, and tests. |\n| Operator or security reviewer | Tenant isolation, reconciliation, cache/search invalidation, monitoring, and recovery. |\n| Architect or AI tool | Module boundary, immutable evidence, generated artifacts, and prohibited parallel authorities. |\n\n## What is available\n\nThe implemented capability supports polymorphic review targets, overall and dimensional ratings, text and media references, registered-customer ownership, authenticity evidence, incentive disclosures, immutable versions, moderation, business responses, abuse reports, appeals, CRES migration evidence, sanitized public projections, helpfulness votes, rating distributions, verified/unverified counts, deterministic rebuilding, drift detection, bounded sorting/filtering, media galleries, and Schema.org eligibility diagnostics.\n\nReview solicitation, external import/syndication, feedback/complaint management, unified operations, optional AI assistance, and enterprise load/failover qualification are delivered by later phases and must not be represented as active merely because their design is documented.\n\n## End-to-end journey\n\n```mermaid\nflowchart LR\n  Shopper[\"Shopper submits review\"] --> Version[\"Immutable review version\"]\n  Version --> Evidence[\"Authenticity and disclosure evidence\"]\n  Evidence --> Queue[\"Moderator reviews in Axis\"]\n  Queue -->|Approved| Projection[\"Sanitized public projection\"]\n  Queue -->|Policy violation| Restricted[\"Rejected or quarantined with reason\"]\n  Projection --> Aggregate[\"Rebuilt rating aggregate\"]\n  Projection --> Storefront[\"Storefront list, filters, media and rating\"]\n  Withdrawal[\"Customer withdrawal or governed hide\"] --> Projection\n  Projection --> Repair[\"Reconciliation and cache/search invalidation\"]\n  Repair --> Aggregate\n```\n\nIn plain language: the submitted record is not itself a public page. Approval produces a version-specific public projection. The aggregate service reads only projections whose status is `PUBLISHED`. Withdrawal, hiding, anonymization, migration reconciliation, or restoration changes the projection and triggers a deterministic rebuild.\n\n## Shopper journey\n\n1. Sign in through the customer experience and choose an eligible product, service, order, store, seller, content item, event, location, or project-defined target.\n2. Submit a rating, review text, or both, as permitted by policy. Include the idempotency key supplied by the client so a network retry does not create a second review.\n3. Expect a customer-owned record with a safe status. Pre-moderation normally places it in `PENDING_MODERATION`.\n4. View the review through the customer API. Other customers cannot read the private record merely by guessing its code.\n5. When published, the storefront reads the sanitized public projection, not the customer-owned schema.\n6. Withdraw the review when permitted. The public projection leaves published state and the rating is rebuilt without it.\n\nA one-star review is valid evidence. A moderator may restrict it for a recorded policy violation such as personal data, spam, or abusive content, but `NEGATIVE_SENTIMENT` is prohibited as a reason.\n\n## Moderator journey in Axis\n\n1. Open Customer Experience → Reviews or Review Moderation. Navigation appears only when the backend capability catalogue exposes `nodics.engagement` and the user holds the required permission.\n2. Filter the workbench by status, target, site, locale, or queue. Open the detail view to inspect current version, verification/disclosure evidence, and prior moderation history.\n3. Choose only an action supplied by the backend workbench contract. Restrictive actions require a policy reason and optimistic revision.\n4. Approve a valid review. The backend creates a sanitized public projection and rebuilds the relevant aggregate.\n5. Add a versioned business response through the response workflow. Only a `PUBLISHED` response is included in the shopper projection.\n6. If an abuse report or appeal changes the decision, use restore/hide actions. Axis refreshes its query; the backend remains the state authority.\n\nAxis must not calculate ratings, expose owner IDs, store review data locally, invent moderation actions, or directly edit aggregate records.\n\n## Public API behavior\n\n| Purpose | Method and path | Important boundary |\n| --- | --- | --- |\n| List published reviews | `GET /public/reviews` | Returns a bounded page of public projections only. |\n| Get rating summary | `GET /public/review-aggregates/:targetType/:targetCode` | Returns current target aggregate fields; no reviewer identity. |\n| Submit a review | `POST /customer/reviews` | Requires an authenticated customer and tenant context. |\n| Vote helpful/unhelpful | `PUT /customer/reviews/:reviewCode/helpfulness` | One customer-owned vote is replaced/versioned, not duplicated. |\n| Moderate | `POST /operator/reviews/:reviewCode/actions/:actionCode` | Requires employee permission, reason policy, tenant scope, and revision. |\n\nPublic sorting supports recent, helpful, rating-high, and rating-low modes. Filters are bounded by the API policy. Result metadata repeats applied filters, count, offset, and limit so a storefront can explain what the shopper is viewing.\n\n## Aggregate correctness and recovery\n\nAn aggregate records count, sum, average, one-to-five distribution, dimensional summaries, verified and unverified counts, policy version, calculation version, source hash, and calculation time. Its source hash is produced from stable projection evidence. Incremental triggers use the same rebuild function, making retries safe and allowing a full rebuild to be compared with stored state.\n\n| Situation | Expected result |\n| --- | --- |\n| Approval or restoration | Projection becomes published and begins contributing. |\n| Hide, withdrawal, or anonymization | Projection stops contributing; audit evidence remains. |\n| Duplicate event or worker retry | Same source set produces the same hash and totals. |\n| Concurrent lifecycle updates | Optimistic review revision rejects stale commands; reconciliation uses final persisted state. |\n| Drift or missing aggregate | Rebuild from published projections and replace stored aggregate with evidence. |\n| Cache or search outage | Domain records remain authoritative; retain invalidation evidence and retry the adapter. |\n\n## Review requests, sessions, and syndication\n\nA review request starts from completed purchase, service, or experience evidence supplied by its owning module. Review policy calculates the waiting period and expiry, honors opt-out and suppression, restricts channels, limits reminders, and respects quiet hours. It rejects any input that tries to select recipients using predicted sentiment, predicted rating, or a “likely promoter” segment.\n\nEmail, SMS, account, QR, and in-app delivery all use the same request record. Communication providers deliver the invitation but do not own eligibility or review state. Content-free acquisition events record eligible, offered, delivered, opened, started, completed, expired, suppressed, or failed stages so administrators can measure coverage and conversion without copying review text into analytics events.\n\nA request can contain several product targets. Starting it creates a customer-owned session with explicit target and completed-target lists, expiry, and optimistic revision. This supports one order containing several reviewable items without issuing unrelated tokens or losing partial progress.\n\nExternal imports always enter a quarantine-first syndication record. The record preserves provider and external IDs, origin, license, disclosure, governed target mapping, source hash, mapping version, moderation evidence, status, and reconciliation time. A same-hash replay is skipped; a changed payload with the same external identity is reconciled. Neither state changes public ratings until a normal internal review passes moderation and becomes a published projection.\n\nGoogle Customer Reviews is an optional reference adapter and remains disabled until merchant configuration, consent, disclosure, callback security, provider terms, monitoring, and rollback are qualified. The provider never becomes the Nodics review-state authority.\n\n## Configuration and ownership map\n\n- `customerReview/config/properties.js` owns rating bounds, moderation transitions, public page limits, aggregate/calculation versions, media limit, cache TTL, and Schema.org enablement.\n- `customerReview/src/schemas/schemas.js` owns authored persistence definitions. Generated Core schema/service/controller/facade artifacts are outputs and must not be edited.\n- `defaultCustomerReviewProjectionService` owns sanitization, page behavior, media allow-listing, and structured-data diagnostics.\n- `defaultCustomerReviewAggregateService` owns deterministic calculation and drift comparison.\n- `defaultCustomerReviewPublicExperienceService` owns lifecycle reconciliation and adapter invalidation evidence.\n- `engagementApi` owns dedicated public/customer/operator routes and DTO allow-lists.\n- `nodics.axis` owns rendering only. Product storefront rendering remains customer-application owned.\n\n## Customize and extend safely\n\nStart with a later project configuration override. A project may change page limits, cache TTL, enabled target types, rating bounds, moderation modes, or supported sort modes when the invariant remains safe. If a project needs a different aggregate store or search engine, override the relevant service in a later-loaded project module while preserving tenant scope, published-only inclusion, source hashes, and rebuild behavior.\n\nDo not copy the framework service, edit generated schema files, calculate ratings in Axis, expose generic schema CRUD, or use search/cache as the review authority. Add a focused customization test proving the default and override produce equivalent integrity evidence.\n\n## Security and privacy\n\nCustomer records are owner- and tenant-scoped. Operators require explicit permissions. Public DTOs omit owner IDs, internal notes, raw provenance, moderation evidence, and private media fields. Incentives must be disclosed and cannot be conditioned on sentiment. Withdrawal removes public visibility while retention/legal-hold policy determines which private evidence may remain.\n\n## Common mistakes\n\n- Calculating the visible average from private review records instead of published projections.\n- Treating a negative rating as evidence of spam or a moderation violation.\n- Returning customer identity, internal notes, raw provenance, or unapproved media in a public DTO.\n- Updating aggregate counters without retaining source hashes and a full-rebuild path.\n- Letting Axis, a storefront, cache, or search index become the review state authority.\n- Editing generated schema services instead of the owning schema definition and regenerating.\n- Retrying a stale moderation command without honoring the optimistic revision conflict.\n\n## Troubleshooting\n\n| Symptom | Safe check and recovery |\n| --- | --- |\n| Approved review is absent | Confirm a current immutable version exists, inspect projection reconciliation error, then retry reconciliation. |\n| Rating looks stale | Compare aggregate source hash/count with a full projection rebuild; replace only through the review service. |\n| Hidden review still appears | Verify public query requires `PUBLISHED`, clear/retry the recorded cache/search invalidation, and test the source projection directly. |\n| Customer receives forbidden | Confirm access-token subject, tenant, customer group, ownership, and exact permission; never bypass in the browser. |\n| Structured data is missing | Read eligibility diagnostics. Zero published ratings intentionally produces no aggregate markup. |\n\n## Verification\n\nRun the Phase 6 regression and Phase 7 contracts, Engagement API route/security contracts, generated schema contracts, documentation pack validation, and Axis Customer Engagement regression. Acceptance must include approval, negative-review protection, hide, withdrawal, restore, retry, drift rebuild, tenant denial, oversized page request, and later-layer configuration override.\n\nNext: review solicitation and syndication explains how requests and imported evidence are governed without selecting only likely-positive customers.\n",
+      "previous": {
+        "title": "Cron operations",
+        "route": "/docs/framework/cron-operations"
+      },
+      "next": {
+        "title": "Customer feedback, complaints, and closed-loop action",
+        "route": "/docs/framework/engagement-customer-feedback"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.engagement",
+        "technicalModule": "customerReview",
+        "path": "content/nodics.engagement/customer-reviews.md",
+        "wordCount": 1728,
+        "checksum": "69f08cc4de08a07d2da10ba77a791856916fc05531015209cfcd962573d0f6a4"
+      }
+    },
+    "active": true
+  },
+  "record15": {
+    "code": "nodicsDocsComponentengagementCustomerFeedback",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "engagement.customer-feedback",
+      "title": "Customer feedback, complaints, and closed-loop action",
+      "route": "/docs/framework/engagement-customer-feedback",
+      "section": "nodics-engagement",
+      "sectionTitle": "Nodics engagement",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Beginner-to-operator journey for feedback intake, triage, follow-up, resolution, handoffs, surveys, insights, recovery, and safe customization.",
+      "headings": [
+        {
+          "text": "Who uses it and why",
+          "anchor": "engagementCustomerFeedback-1-who-uses-it-and-why",
+          "level": 2
+        },
+        {
+          "text": "End-to-end journey",
+          "anchor": "engagementCustomerFeedback-2-end-to-end-journey",
+          "level": 2
+        },
+        {
+          "text": "Customer journey",
+          "anchor": "engagementCustomerFeedback-3-customer-journey",
+          "level": 2
+        },
+        {
+          "text": "Axis business-user journey",
+          "anchor": "engagementCustomerFeedback-4-axis-business-user-journey",
+          "level": 2
+        },
+        {
+          "text": "Follow-up, resolution, and downstream handoff",
+          "anchor": "engagementCustomerFeedback-5-follow-up-resolution-and-downstream-handoff",
+          "level": 2
+        },
+        {
+          "text": "Classification and insights",
+          "anchor": "engagementCustomerFeedback-6-classification-and-insights",
+          "level": 2
+        },
+        {
+          "text": "API and security boundaries",
+          "anchor": "engagementCustomerFeedback-7-api-and-security-boundaries",
+          "level": 2
+        },
+        {
+          "text": "Configure and extend safely",
+          "anchor": "engagementCustomerFeedback-8-configure-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Operations and recovery",
+          "anchor": "engagementCustomerFeedback-9-operations-and-recovery",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "engagementCustomerFeedback-10-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "engagementCustomerFeedback-11-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Customer Feedback helps a business collect a suggestion, complaint, experience report, praise, or survey response and turn it into a traceable outcome. This beginner-friendly guide follows the complete journey from submission through triage, assignment, follow-up, resolution, confirmation, insight, and recovery."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Think of feedback as a case folder with two sides. One side preserves what the customer actually submitted. The other records what the business inferred and did: category, priority, Process task, contact attempts, downstream handoffs, resolution, and optional insights. The inferred side may be corrected; it never overwrites the source side."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The capability is owned by `nodics.engagement/customerFeedback`. Shared submission, consent, assignment, SLA, relation, form-definition, Process-reference, and integration-reference contracts remain in `engagementCore`. HTTP routes and safe DTOs belong to `engagementApi`. Axis renders the backend-published workspaces and actions."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Who uses it and why",
+          "anchor": "engagementCustomerFeedback-1-who-uses-it-and-why"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Reader",
+            "Primary outcome"
+          ],
+          "rows": [
+            [
+              "Customer",
+              "Submit feedback, follow its progress, provide more information, and confirm or dispute resolution."
+            ],
+            [
+              "Business user",
+              "Triage, classify, assign, contact, escalate, resolve, and reopen feedback."
+            ],
+            [
+              "Administrator",
+              "Configure types, forms, queues, SLAs, permissions, channels, attempts, and insight policy."
+            ],
+            [
+              "Developer",
+              "Extend targets, policies, handoff adapters, rules, and project behavior safely."
+            ],
+            [
+              "Operator or security reviewer",
+              "Monitor backlog, SLA, provider failures, retries, tenant boundaries, privacy, and deletion propagation."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business value is a measurable closed loop. The organization can see not only how many responses arrived, but whether customers were contacted, whether the issue was resolved and accepted, where responsibility moved, and which themes are supported by source evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "End-to-end journey",
+          "anchor": "engagementCustomerFeedback-2-end-to-end-journey"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Submit[\"Customer submits feedback\"] --> Source[\"Protected source record\"]\n  Source --> Classify[\"Rule, operator, or advisory AI classification\"]\n  Classify --> Assign[\"Queue, owner, SLA and Process reference\"]\n  Assign --> Work[\"Request information, act, or escalate\"]\n  Work --> Handoff[\"Downstream owner intent/reference\"]\n  Work --> FollowUp[\"Same or preferred-channel follow-up\"]\n  FollowUp --> Resolve[\"Versioned resolution\"]\n  Resolve --> Confirm{\"Customer confirms?\"}\n  Confirm -->|Yes| Close[\"Closed and accepted\"]\n  Confirm -->|No| Reopen[\"Reopened with audit evidence\"]\n  Source --> Insight[\"Traceable topic, cluster, trend, anomaly, or summary\"]\n  Insight --> Human[\"Accept, correct, reject, or delete\"]"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customer journey",
+          "anchor": "engagementCustomerFeedback-3-customer-journey"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Open the project’s feedback or survey form. The declarative form definition comes from Engagement Core and must be accessible, versioned, and server-validated.",
+            "Choose a type and optionally a target, desired outcome, structured answers, scores, preferred follow-up channel, and governed Media attachment references.",
+            "Submit anonymously only when project policy permits it. An identified customer receives an owner-scoped record; the public acknowledgement exposes only safe reference, status, time, and correlation fields.",
+            "When more information is requested, respond through the customer experience instead of sending secrets or private evidence through an untracked channel.",
+            "Review the proposed resolution and confirm it when satisfactory. A rejected or incomplete outcome can be reopened according to policy."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "An anonymous record cannot later be exposed as if it had an authenticated owner. A customer cannot read another customer’s record by changing a URL. Operators may view protected content only with explicit permission and tenant scope."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Axis business-user journey",
+          "anchor": "engagementCustomerFeedback-4-axis-business-user-journey"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis exposes five backend-governed views:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Customer Feedback for the full operational queue and authorized lifecycle actions.",
+            "Complaints for a complaint-focused SLA and escalation view.",
+            "Feedback Follow-up for offered, attempted, contacted, resolved, accepted, no-response, failed, and suppressed evidence.",
+            "Feedback Surveys for Engagement-owned form definitions and immutable versions.",
+            "Feedback Insights for topics, clusters, trends, anomalies, summaries, confidence, model/policy versions, corrections, and deletion state."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Open Customer Experience → Customer Feedback, filter by status, priority, severity, queue, target, or due date, and inspect the protected detail. Choose only actions published by the backend. Every action includes the expected revision, so a stale browser cannot silently overwrite a newer decision."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The standard lifecycle is `RECEIVED → TRIAGED → ASSIGNED → IN_PROGRESS`. Work may wait for the customer or an internal owner, escalate, resolve, close after confirmation, and reopen. Invalid transitions fail with a stable domain error. Axis refreshes the authoritative query after an action; it does not maintain a browser-side case store."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Follow-up, resolution, and downstream handoff",
+          "anchor": "engagementCustomerFeedback-5-follow-up-resolution-and-downstream-handoff"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Follow-up uses the same or preferred channel, or an explicitly allowed email, SMS, phone, or in-app channel. Each attempt records a bounded status and provider reference. Attempt limits prevent endless automated contact, and Communication owns message rendering and delivery."
+        },
+        {
+          "kind": "paragraph",
+          "text": "A resolution is versioned with an outcome code, business-safe summary, resolver, time, confirmation evidence, and status. Reopening does not erase the previous resolution. If action belongs to Order, Fulfillment, Payment, Profile, Security, or another system, Feedback creates an idempotent handoff reference. The target module executes its own business action. Feedback must not issue refunds, replace products, or change identity records itself."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Classification and insights",
+          "anchor": "engagementCustomerFeedback-6-classification-and-insights"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Classification may be supplied by a rule, operator, import, or governed AI adapter. It records category, topic, sentiment, priority, severity, confidence, policy/model reference, evidence, and correction lineage. Sentiment is advisory; it must not by itself reject, suppress, or deprioritize a complaint."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Insights name every source feedback code. Low-confidence output is rejected by policy. A human may correct or reject a proposed value. When source feedback is deleted or anonymized under privacy policy, every derived insight that references it is marked deleted or rebuilt. If AI is unavailable, deterministic and manual operation remains available; no AI output directly contacts a customer or changes lifecycle state."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "API and security boundaries",
+          "anchor": "engagementCustomerFeedback-7-api-and-security-boundaries"
+        },
+        {
+          "kind": "paragraph",
+          "text": "`POST /public/feedback` accepts a bounded submission and returns a minimal acknowledgement. Authenticated customers use `/customer/feedback` for owner-scoped records. Operators use `/operator/feedback`, lifecycle actions, classification, and insight endpoints with explicit permissions. Generic generated schema routers remain disabled."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Tenant context is resolved by the backend, never trusted from a public body. Public DTOs omit message text, attachments, identity, internal evidence, handoff details, and model prompts. Media binaries remain Media-owned. Process tasks remain Process-owned. Provider secrets and message content never belong in funnel or integration events."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Configure and extend safely",
+          "anchor": "engagementCustomerFeedback-8-configure-and-extend-safely"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Projects can configure allowed feedback types, anonymous policy, attachment limits, default priority, lifecycle transitions, follow-up channels and attempt limits, insight confidence, and retention policy through a later layer. A project may replace routing, classification, SLA, handoff, or insight services in a later-loaded module while preserving tenant isolation, source traceability, corrections, deletion propagation, and deterministic fallback."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Do not copy framework services, edit generated CRUD files, create a second forms engine, put downstream business actions in Feedback, or calculate lifecycle state in Axis. Prove the default and project override with focused tests."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operations and recovery",
+          "anchor": "engagementCustomerFeedback-9-operations-and-recovery"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Monitor received volume, untriaged age, SLA breaches, assignment load, waiting states, follow-up attempts, resolution and acceptance rates, reopen rate, handoff retries/dead letters, insight rejection/correction, and deletion-propagation lag. Logs and metrics use codes and correlation IDs without customer text."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Failure",
+            "Safe recovery"
+          ],
+          "rows": [
+            [
+              "Process unavailable",
+              "Preserve feedback and pending reference; retry Process handoff idempotently."
+            ],
+            [
+              "Communication unavailable",
+              "Keep follow-up evidence pending/failed; retry delivery without duplicating the case."
+            ],
+            [
+              "Downstream owner times out",
+              "Retain intent and idempotency key, reconcile external state, then retry or dead-letter."
+            ],
+            [
+              "Stale Axis action",
+              "Reject revision conflict, reload current state, and let the user reassess."
+            ],
+            [
+              "AI unavailable or low confidence",
+              "Use deterministic/manual classification; do not block safe operations."
+            ],
+            [
+              "Source deletion",
+              "Propagate deletion/anonymization to insights, exports, indexes, and provider references under policy."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "engagementCustomerFeedback-10-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Replacing the customer’s words with a summary or sentiment label.",
+            "Treating every low score as a complaint or every positive score as closed.",
+            "Letting Feedback initiate an Order refund or other domain-owned action.",
+            "Sending private content in analytics, communication, or integration events.",
+            "Allowing Axis to invent transitions, queues, survey schemas, or permissions.",
+            "Publishing AI insight without confidence, model/prompt version, source codes, and human correction.",
+            "Closing a case because a provider accepted a message rather than because the business outcome was completed."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "engagementCustomerFeedback-11-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Prove successful identified and anonymous intake, invalid type, oversized attachments, cross-owner and cross-tenant denial, stale revision, invalid transition, complaint escalation, waiting/resume, resolution/confirmation/reopen, follow-up limit, Process/provider outage and retry, source-traceable insight, human correction, AI fallback, and deletion propagation. Run generated schema contracts, Engagement API security/route tests, the Axis Customer Engagement regression, documentation generation/validation, and the effective engagement-server build."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Next: Unified Engagement Operations explains rebuildable cross-domain queues and dashboards without creating a new writable business authority."
+        }
+      ],
+      "searchText": "Customer feedback, complaints, and closed-loop action Beginner-to-operator journey for feedback intake, triage, follow-up, resolution, handoffs, surveys, insights, recovery, and safe customization. # Customer feedback, complaints, and closed-loop action\n\nCustomer Feedback helps a business collect a suggestion, complaint, experience report, praise, or survey response and turn it into a traceable outcome. This beginner-friendly guide follows the complete journey from submission through triage, assignment, follow-up, resolution, confirmation, insight, and recovery.\n\nThink of feedback as a case folder with two sides. One side preserves what the customer actually submitted. The other records what the business inferred and did: category, priority, Process task, contact attempts, downstream handoffs, resolution, and optional insights. The inferred side may be corrected; it never overwrites the source side.\n\nThe capability is owned by `nodics.engagement/customerFeedback`. Shared submission, consent, assignment, SLA, relation, form-definition, Process-reference, and integration-reference contracts remain in `engagementCore`. HTTP routes and safe DTOs belong to `engagementApi`. Axis renders the backend-published workspaces and actions.\n\n## Who uses it and why\n\n| Reader | Primary outcome |\n| --- | --- |\n| Customer | Submit feedback, follow its progress, provide more information, and confirm or dispute resolution. |\n| Business user | Triage, classify, assign, contact, escalate, resolve, and reopen feedback. |\n| Administrator | Configure types, forms, queues, SLAs, permissions, channels, attempts, and insight policy. |\n| Developer | Extend targets, policies, handoff adapters, rules, and project behavior safely. |\n| Operator or security reviewer | Monitor backlog, SLA, provider failures, retries, tenant boundaries, privacy, and deletion propagation. |\n\nThe business value is a measurable closed loop. The organization can see not only how many responses arrived, but whether customers were contacted, whether the issue was resolved and accepted, where responsibility moved, and which themes are supported by source evidence.\n\n## End-to-end journey\n\n```mermaid\nflowchart LR\n  Submit[\"Customer submits feedback\"] --> Source[\"Protected source record\"]\n  Source --> Classify[\"Rule, operator, or advisory AI classification\"]\n  Classify --> Assign[\"Queue, owner, SLA and Process reference\"]\n  Assign --> Work[\"Request information, act, or escalate\"]\n  Work --> Handoff[\"Downstream owner intent/reference\"]\n  Work --> FollowUp[\"Same or preferred-channel follow-up\"]\n  FollowUp --> Resolve[\"Versioned resolution\"]\n  Resolve --> Confirm{\"Customer confirms?\"}\n  Confirm -->|Yes| Close[\"Closed and accepted\"]\n  Confirm -->|No| Reopen[\"Reopened with audit evidence\"]\n  Source --> Insight[\"Traceable topic, cluster, trend, anomaly, or summary\"]\n  Insight --> Human[\"Accept, correct, reject, or delete\"]\n```\n\n## Customer journey\n\n1. Open the project’s feedback or survey form. The declarative form definition comes from Engagement Core and must be accessible, versioned, and server-validated.\n2. Choose a type and optionally a target, desired outcome, structured answers, scores, preferred follow-up channel, and governed Media attachment references.\n3. Submit anonymously only when project policy permits it. An identified customer receives an owner-scoped record; the public acknowledgement exposes only safe reference, status, time, and correlation fields.\n4. When more information is requested, respond through the customer experience instead of sending secrets or private evidence through an untracked channel.\n5. Review the proposed resolution and confirm it when satisfactory. A rejected or incomplete outcome can be reopened according to policy.\n\nAn anonymous record cannot later be exposed as if it had an authenticated owner. A customer cannot read another customer’s record by changing a URL. Operators may view protected content only with explicit permission and tenant scope.\n\n## Axis business-user journey\n\nAxis exposes five backend-governed views:\n\n- Customer Feedback for the full operational queue and authorized lifecycle actions.\n- Complaints for a complaint-focused SLA and escalation view.\n- Feedback Follow-up for offered, attempted, contacted, resolved, accepted, no-response, failed, and suppressed evidence.\n- Feedback Surveys for Engagement-owned form definitions and immutable versions.\n- Feedback Insights for topics, clusters, trends, anomalies, summaries, confidence, model/policy versions, corrections, and deletion state.\n\nOpen Customer Experience → Customer Feedback, filter by status, priority, severity, queue, target, or due date, and inspect the protected detail. Choose only actions published by the backend. Every action includes the expected revision, so a stale browser cannot silently overwrite a newer decision.\n\nThe standard lifecycle is `RECEIVED → TRIAGED → ASSIGNED → IN_PROGRESS`. Work may wait for the customer or an internal owner, escalate, resolve, close after confirmation, and reopen. Invalid transitions fail with a stable domain error. Axis refreshes the authoritative query after an action; it does not maintain a browser-side case store.\n\n## Follow-up, resolution, and downstream handoff\n\nFollow-up uses the same or preferred channel, or an explicitly allowed email, SMS, phone, or in-app channel. Each attempt records a bounded status and provider reference. Attempt limits prevent endless automated contact, and Communication owns message rendering and delivery.\n\nA resolution is versioned with an outcome code, business-safe summary, resolver, time, confirmation evidence, and status. Reopening does not erase the previous resolution. If action belongs to Order, Fulfillment, Payment, Profile, Security, or another system, Feedback creates an idempotent handoff reference. The target module executes its own business action. Feedback must not issue refunds, replace products, or change identity records itself.\n\n## Classification and insights\n\nClassification may be supplied by a rule, operator, import, or governed AI adapter. It records category, topic, sentiment, priority, severity, confidence, policy/model reference, evidence, and correction lineage. Sentiment is advisory; it must not by itself reject, suppress, or deprioritize a complaint.\n\nInsights name every source feedback code. Low-confidence output is rejected by policy. A human may correct or reject a proposed value. When source feedback is deleted or anonymized under privacy policy, every derived insight that references it is marked deleted or rebuilt. If AI is unavailable, deterministic and manual operation remains available; no AI output directly contacts a customer or changes lifecycle state.\n\n## API and security boundaries\n\n`POST /public/feedback` accepts a bounded submission and returns a minimal acknowledgement. Authenticated customers use `/customer/feedback` for owner-scoped records. Operators use `/operator/feedback`, lifecycle actions, classification, and insight endpoints with explicit permissions. Generic generated schema routers remain disabled.\n\nTenant context is resolved by the backend, never trusted from a public body. Public DTOs omit message text, attachments, identity, internal evidence, handoff details, and model prompts. Media binaries remain Media-owned. Process tasks remain Process-owned. Provider secrets and message content never belong in funnel or integration events.\n\n## Configure and extend safely\n\nProjects can configure allowed feedback types, anonymous policy, attachment limits, default priority, lifecycle transitions, follow-up channels and attempt limits, insight confidence, and retention policy through a later layer. A project may replace routing, classification, SLA, handoff, or insight services in a later-loaded module while preserving tenant isolation, source traceability, corrections, deletion propagation, and deterministic fallback.\n\nDo not copy framework services, edit generated CRUD files, create a second forms engine, put downstream business actions in Feedback, or calculate lifecycle state in Axis. Prove the default and project override with focused tests.\n\n## Operations and recovery\n\nMonitor received volume, untriaged age, SLA breaches, assignment load, waiting states, follow-up attempts, resolution and acceptance rates, reopen rate, handoff retries/dead letters, insight rejection/correction, and deletion-propagation lag. Logs and metrics use codes and correlation IDs without customer text.\n\n| Failure | Safe recovery |\n| --- | --- |\n| Process unavailable | Preserve feedback and pending reference; retry Process handoff idempotently. |\n| Communication unavailable | Keep follow-up evidence pending/failed; retry delivery without duplicating the case. |\n| Downstream owner times out | Retain intent and idempotency key, reconcile external state, then retry or dead-letter. |\n| Stale Axis action | Reject revision conflict, reload current state, and let the user reassess. |\n| AI unavailable or low confidence | Use deterministic/manual classification; do not block safe operations. |\n| Source deletion | Propagate deletion/anonymization to insights, exports, indexes, and provider references under policy. |\n\n## Common mistakes\n\n- Replacing the customer’s words with a summary or sentiment label.\n- Treating every low score as a complaint or every positive score as closed.\n- Letting Feedback initiate an Order refund or other domain-owned action.\n- Sending private content in analytics, communication, or integration events.\n- Allowing Axis to invent transitions, queues, survey schemas, or permissions.\n- Publishing AI insight without confidence, model/prompt version, source codes, and human correction.\n- Closing a case because a provider accepted a message rather than because the business outcome was completed.\n\n## Verification\n\nProve successful identified and anonymous intake, invalid type, oversized attachments, cross-owner and cross-tenant denial, stale revision, invalid transition, complaint escalation, waiting/resume, resolution/confirmation/reopen, follow-up limit, Process/provider outage and retry, source-traceable insight, human correction, AI fallback, and deletion propagation. Run generated schema contracts, Engagement API security/route tests, the Axis Customer Engagement regression, documentation generation/validation, and the effective engagement-server build.\n\nNext: Unified Engagement Operations explains rebuildable cross-domain queues and dashboards without creating a new writable business authority.\n",
+      "previous": {
+        "title": "Customer reviews and ratings",
+        "route": "/docs/framework/engagement-customer-reviews"
+      },
+      "next": {
+        "title": "Unified engagement operations",
+        "route": "/docs/framework/engagement-unified-operations"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.engagement",
+        "technicalModule": "customerFeedback",
+        "path": "content/nodics.engagement/customer-feedback.md",
+        "wordCount": 1332,
+        "checksum": "06d0134cc010b82a6c496123a7cf91bbc22259102dd7e3c262ee0b0bff06a6f8"
+      }
+    },
+    "active": true
+  },
+  "record16": {
+    "code": "nodicsDocsComponentengagementUnifiedOperations",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "engagement.unified-operations",
+      "title": "Unified engagement operations",
+      "route": "/docs/framework/engagement-unified-operations",
+      "section": "nodics-engagement",
+      "sectionTitle": "Nodics engagement",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Beginner-to-operator journey for unified queues, dashboards, batch previews, repair evidence, bounded exports, authority boundaries, and recovery.",
+      "headings": [
+        {
+          "text": "Who uses it and why",
+          "anchor": "engagementUnifiedOperations-1-who-uses-it-and-why",
+          "level": 2
+        },
+        {
+          "text": "End-to-end journey",
+          "anchor": "engagementUnifiedOperations-2-end-to-end-journey",
+          "level": 2
+        },
+        {
+          "text": "Axis operator journey",
+          "anchor": "engagementUnifiedOperations-3-axis-operator-journey",
+          "level": 2
+        },
+        {
+          "text": "Batch actions",
+          "anchor": "engagementUnifiedOperations-4-batch-actions",
+          "level": 2
+        },
+        {
+          "text": "Export journey",
+          "anchor": "engagementUnifiedOperations-5-export-journey",
+          "level": 2
+        },
+        {
+          "text": "Repair and reconciliation",
+          "anchor": "engagementUnifiedOperations-6-repair-and-reconciliation",
+          "level": 2
+        },
+        {
+          "text": "Security and ownership boundaries",
+          "anchor": "engagementUnifiedOperations-7-security-and-ownership-boundaries",
+          "level": 2
+        },
+        {
+          "text": "Configure and extend safely",
+          "anchor": "engagementUnifiedOperations-8-configure-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Operations and recovery",
+          "anchor": "engagementUnifiedOperations-9-operations-and-recovery",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "engagementUnifiedOperations-10-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "engagementUnifiedOperations-11-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Unified Engagement Operations gives business teams one place to discover customer work across contact requests, testimonials, reviews, feedback, moderation, publication, consent, and integrations. This beginner-friendly guide explains what the shared view does, what it deliberately does not own, and how an operator can use Axis without accidentally bypassing a domain workflow."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The most important rule is simple: the unified queue is a projection, not a new case-management database. `contactSubmission`, `testimonial`, `customerReview`, and `customerFeedback` remain authoritative for their records and lifecycle commands. `engagementCore` creates safe operational projections and calculated snapshots. `engagementApi` authenticates the operator, checks permission and tenant scope, and returns bounded DTOs. Axis renders only the navigation and capabilities published by the backend."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Who uses it and why",
+          "anchor": "engagementUnifiedOperations-1-who-uses-it-and-why"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Reader",
+            "Primary outcome"
+          ],
+          "rows": [
+            [
+              "Business operator",
+              "Find assigned, urgent, overdue, or related engagement work in one queue."
+            ],
+            [
+              "Team lead",
+              "Understand workload and SLA pressure without joining domain databases manually."
+            ],
+            [
+              "Administrator",
+              "Govern permissions, limits, masking, export fields, and saved operational views."
+            ],
+            [
+              "Developer",
+              "Add a domain projection without transferring that domain's command ownership."
+            ],
+            [
+              "Reliability or security operator",
+              "Detect projection drift, preview repairs, trace exports, and investigate safely."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "End-to-end journey",
+          "anchor": "engagementUnifiedOperations-2-end-to-end-journey"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Domain[\"Domain-owned record changes\"] --> Project[\"Safe projection and source hash\"]\n  Project --> Queue[\"Unified Queue in Axis\"]\n  Queue --> Inspect[\"Operator inspects related evidence\"]\n  Inspect --> Command[\"Operator chooses a domain action\"]\n  Command --> API[\"Engagement API permission and tenant checks\"]\n  API --> Owner[\"Owning module validates and executes\"]\n  Owner --> Rebuild[\"Projection is rebuilt\"]\n  Rebuild --> Queue\n  Project --> Dashboard[\"Calculated dashboard snapshot\"]\n  Project --> Export[\"Purpose-bound masked export preview\"]\n  Project --> Repair[\"Non-executable repair preview\"]"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Axis operator journey",
+          "anchor": "engagementUnifiedOperations-3-axis-operator-journey"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Sign in to Axis with an employee account that belongs to an authorized Engagement operator group.",
+            "Open **Customer Experience → Unified Queue**. The page lists only records allowed for the active tenant and context.",
+            "Filter by domain, status, queue, assignee, priority, due date, or another backend-supported field. A saved view stores a search preference; it does not create business state.",
+            "Open an item and inspect its domain code, safe summary, related-record references, consent flags, integration state, due time, projection time, and source revision. Sensitive customer text remains in the protected domain detail and is shown only when a separate permission allows it.",
+            "Follow the domain workspace or action published by the backend. A review moderation action still goes to Review; a complaint resolution still goes to Feedback; testimonial publication still goes to Testimonial.",
+            "After the action succeeds, reload the queue. The projection must converge from the authoritative source rather than trusting browser state."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Use **Engagement Dashboards** to inspect total, overdue, by-domain, and by-status measurements. Every snapshot records its policy version, calculation time, filters, and source hashes, so a number can be explained and rebuilt. Dashboards are operational indicators, not financial or legal systems of record."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Batch actions",
+          "anchor": "engagementUnifiedOperations-4-batch-actions"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Batch work is intentionally a two-step operation. The operator selects a bounded set of queue items, chooses an action, and supplies a business reason. The preview returns one command per item with domain type, domain code, expected source revision, and reason. It also states that approval is required and that no direct mutation occurred."
+        },
+        {
+          "kind": "paragraph",
+          "text": "A later approved execution must route every command to its owning domain. Mixed-domain selection does not authorize Engagement Core to invent a universal status or update records directly. Failed items must retain individual evidence and be safe to retry; success for one item must not hide failure for another."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Export journey",
+          "anchor": "engagementUnifiedOperations-5-export-journey"
+        },
+        {
+          "kind": "paragraph",
+          "text": "An export begins with a stated purpose, filters, and requested fields. The backend intersects those fields with the policy allow-list, applies the configured masking policy, and caps the number of records. The preview records requester, purpose, filters, accepted fields, masking policy, record count, maximum limit, status, and correlation ID."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The preview is evidence, not a downloadable data file. Production delivery requires a later governed exporter, destination policy, retention rule, and audit event. Customer messages, contact details, internal notes, consent evidence, provider secrets, raw model prompts, and hidden hashes must never appear merely because they are visible to a privileged database administrator."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Repair and reconciliation",
+          "anchor": "engagementUnifiedOperations-6-repair-and-reconciliation"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Projection drift can occur after an interrupted event, index outage, deployment, or policy change. A repair starts by comparing the recorded source hash with a fresh deterministic projection. The Repair Console captures domain type, domain code, repair type, expected hash, observed hash, reason, requester, and correlation ID."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Previewing a repair does not change the source or projection. Approved execution rebuilds only the derived record from its domain authority. If the source is missing because retention or privacy policy deleted it, reconciliation removes or anonymizes the projection instead of recreating protected content from logs."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Security and ownership boundaries",
+          "anchor": "engagementUnifiedOperations-7-security-and-ownership-boundaries"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The read, batch, export, and repair operations have separate permissions. Authentication alone is insufficient. The facade applies tenant checks to queue, dashboard, batch, export, and repair responses. Generated operational schemas allow authorized employee operators, administrators, and service accounts, while public and customer routes cannot query them."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The projection stores identifiers and bounded summaries needed for work discovery. It must not become a copy of complete review bodies, feedback messages, contact details, attachments, or testimonial source material. Media remains Media-owned, process tasks remain Process-owned, communication delivery remains Communication-owned, and each engagement domain owns its business actions."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Configure and extend safely",
+          "anchor": "engagementUnifiedOperations-8-configure-and-extend-safely"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Projects may replace projection search, dashboard calculation, or export adapters in a later-loaded module. Preserve deterministic source hashing, bounded retrieval, allowed export fields, masking, tenant isolation, correlation, expected revision, preview-before-execution, and domain command routing. Add a new domain by defining its safe projector and related-record links, then prove rebuild and deletion behavior with focused contracts."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Do not add a writable `status` transition to the unified queue, copy protected source content into summaries, let Axis calculate permission, or let a search provider become authoritative. A provider outage must reduce search convenience, not lose or corrupt a customer record."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operations and recovery",
+          "anchor": "engagementUnifiedOperations-9-operations-and-recovery"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Monitor projection lag, drift count, overdue workload, rebuild duration, batch preview and execution outcomes, export volume, denied fields, repair rate, and cross-tenant denial. Logs use codes and correlation IDs rather than customer text."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Failure",
+            "Safe response"
+          ],
+          "rows": [
+            [
+              "Queue projection is stale",
+              "Read the domain source, compare hashes, and rebuild the derived item."
+            ],
+            [
+              "Search or dashboard provider is unavailable",
+              "Continue domain operations; retry projection delivery with backpressure."
+            ],
+            [
+              "Operator submits a stale batch",
+              "Reject through expected revision and let the operator refresh and preview again."
+            ],
+            [
+              "Export requests prohibited fields",
+              "Omit or reject them under policy and retain evidence of the decision."
+            ],
+            [
+              "Repair source is missing",
+              "Respect retention/deletion state; remove or anonymize derived data."
+            ],
+            [
+              "One batch item fails",
+              "Preserve per-item outcome and retry only eligible failed commands idempotently."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "engagementUnifiedOperations-10-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating the unified queue as the owner of customer engagement status.",
+            "Putting full customer messages or private evidence into a convenient search index.",
+            "Applying a mixed-domain batch by updating projection records directly.",
+            "Allowing an export because the requester can read a page, without separate purpose and export permission.",
+            "Rebuilding deleted personal data from stale events, logs, caches, or provider copies.",
+            "Letting Axis invent fields, transitions, actions, masks, or limits that the backend did not publish.",
+            "Repairing a hash mismatch without recording the expected source evidence and reason."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "engagementUnifiedOperations-11-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Prove deterministic projection and rebuild results, changed and removed drift detection, tenant isolation, permission denial for each operation, bounded list and batch sizes, required batch reason, expected revisions, non-executable preview semantics, dashboard source hashes, export purpose and field allow-list, masking and maximum records, repair expected/observed hashes, source deletion behavior, provider outage fallback, and cross-tenant denial. Run the generated schema contracts, Engagement API route and security contracts, module metadata contract, Axis Customer Engagement regression, documentation generation and validation, and the effective engagement-server build."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Next: Governed Automation and AI adds optional decision support while keeping every customer-impacting outcome explainable, reversible, and under existing domain authority."
+        }
+      ],
+      "searchText": "Unified engagement operations Beginner-to-operator journey for unified queues, dashboards, batch previews, repair evidence, bounded exports, authority boundaries, and recovery. # Unified engagement operations\n\nUnified Engagement Operations gives business teams one place to discover customer work across contact requests, testimonials, reviews, feedback, moderation, publication, consent, and integrations. This beginner-friendly guide explains what the shared view does, what it deliberately does not own, and how an operator can use Axis without accidentally bypassing a domain workflow.\n\nThe most important rule is simple: the unified queue is a projection, not a new case-management database. `contactSubmission`, `testimonial`, `customerReview`, and `customerFeedback` remain authoritative for their records and lifecycle commands. `engagementCore` creates safe operational projections and calculated snapshots. `engagementApi` authenticates the operator, checks permission and tenant scope, and returns bounded DTOs. Axis renders only the navigation and capabilities published by the backend.\n\n## Who uses it and why\n\n| Reader | Primary outcome |\n| --- | --- |\n| Business operator | Find assigned, urgent, overdue, or related engagement work in one queue. |\n| Team lead | Understand workload and SLA pressure without joining domain databases manually. |\n| Administrator | Govern permissions, limits, masking, export fields, and saved operational views. |\n| Developer | Add a domain projection without transferring that domain's command ownership. |\n| Reliability or security operator | Detect projection drift, preview repairs, trace exports, and investigate safely. |\n\n## End-to-end journey\n\n```mermaid\nflowchart LR\n  Domain[\"Domain-owned record changes\"] --> Project[\"Safe projection and source hash\"]\n  Project --> Queue[\"Unified Queue in Axis\"]\n  Queue --> Inspect[\"Operator inspects related evidence\"]\n  Inspect --> Command[\"Operator chooses a domain action\"]\n  Command --> API[\"Engagement API permission and tenant checks\"]\n  API --> Owner[\"Owning module validates and executes\"]\n  Owner --> Rebuild[\"Projection is rebuilt\"]\n  Rebuild --> Queue\n  Project --> Dashboard[\"Calculated dashboard snapshot\"]\n  Project --> Export[\"Purpose-bound masked export preview\"]\n  Project --> Repair[\"Non-executable repair preview\"]\n```\n\n## Axis operator journey\n\n1. Sign in to Axis with an employee account that belongs to an authorized Engagement operator group.\n2. Open **Customer Experience → Unified Queue**. The page lists only records allowed for the active tenant and context.\n3. Filter by domain, status, queue, assignee, priority, due date, or another backend-supported field. A saved view stores a search preference; it does not create business state.\n4. Open an item and inspect its domain code, safe summary, related-record references, consent flags, integration state, due time, projection time, and source revision. Sensitive customer text remains in the protected domain detail and is shown only when a separate permission allows it.\n5. Follow the domain workspace or action published by the backend. A review moderation action still goes to Review; a complaint resolution still goes to Feedback; testimonial publication still goes to Testimonial.\n6. After the action succeeds, reload the queue. The projection must converge from the authoritative source rather than trusting browser state.\n\nUse **Engagement Dashboards** to inspect total, overdue, by-domain, and by-status measurements. Every snapshot records its policy version, calculation time, filters, and source hashes, so a number can be explained and rebuilt. Dashboards are operational indicators, not financial or legal systems of record.\n\n## Batch actions\n\nBatch work is intentionally a two-step operation. The operator selects a bounded set of queue items, chooses an action, and supplies a business reason. The preview returns one command per item with domain type, domain code, expected source revision, and reason. It also states that approval is required and that no direct mutation occurred.\n\nA later approved execution must route every command to its owning domain. Mixed-domain selection does not authorize Engagement Core to invent a universal status or update records directly. Failed items must retain individual evidence and be safe to retry; success for one item must not hide failure for another.\n\n## Export journey\n\nAn export begins with a stated purpose, filters, and requested fields. The backend intersects those fields with the policy allow-list, applies the configured masking policy, and caps the number of records. The preview records requester, purpose, filters, accepted fields, masking policy, record count, maximum limit, status, and correlation ID.\n\nThe preview is evidence, not a downloadable data file. Production delivery requires a later governed exporter, destination policy, retention rule, and audit event. Customer messages, contact details, internal notes, consent evidence, provider secrets, raw model prompts, and hidden hashes must never appear merely because they are visible to a privileged database administrator.\n\n## Repair and reconciliation\n\nProjection drift can occur after an interrupted event, index outage, deployment, or policy change. A repair starts by comparing the recorded source hash with a fresh deterministic projection. The Repair Console captures domain type, domain code, repair type, expected hash, observed hash, reason, requester, and correlation ID.\n\nPreviewing a repair does not change the source or projection. Approved execution rebuilds only the derived record from its domain authority. If the source is missing because retention or privacy policy deleted it, reconciliation removes or anonymizes the projection instead of recreating protected content from logs.\n\n## Security and ownership boundaries\n\nThe read, batch, export, and repair operations have separate permissions. Authentication alone is insufficient. The facade applies tenant checks to queue, dashboard, batch, export, and repair responses. Generated operational schemas allow authorized employee operators, administrators, and service accounts, while public and customer routes cannot query them.\n\nThe projection stores identifiers and bounded summaries needed for work discovery. It must not become a copy of complete review bodies, feedback messages, contact details, attachments, or testimonial source material. Media remains Media-owned, process tasks remain Process-owned, communication delivery remains Communication-owned, and each engagement domain owns its business actions.\n\n## Configure and extend safely\n\nProjects may replace projection search, dashboard calculation, or export adapters in a later-loaded module. Preserve deterministic source hashing, bounded retrieval, allowed export fields, masking, tenant isolation, correlation, expected revision, preview-before-execution, and domain command routing. Add a new domain by defining its safe projector and related-record links, then prove rebuild and deletion behavior with focused contracts.\n\nDo not add a writable `status` transition to the unified queue, copy protected source content into summaries, let Axis calculate permission, or let a search provider become authoritative. A provider outage must reduce search convenience, not lose or corrupt a customer record.\n\n## Operations and recovery\n\nMonitor projection lag, drift count, overdue workload, rebuild duration, batch preview and execution outcomes, export volume, denied fields, repair rate, and cross-tenant denial. Logs use codes and correlation IDs rather than customer text.\n\n| Failure | Safe response |\n| --- | --- |\n| Queue projection is stale | Read the domain source, compare hashes, and rebuild the derived item. |\n| Search or dashboard provider is unavailable | Continue domain operations; retry projection delivery with backpressure. |\n| Operator submits a stale batch | Reject through expected revision and let the operator refresh and preview again. |\n| Export requests prohibited fields | Omit or reject them under policy and retain evidence of the decision. |\n| Repair source is missing | Respect retention/deletion state; remove or anonymize derived data. |\n| One batch item fails | Preserve per-item outcome and retry only eligible failed commands idempotently. |\n\n## Common mistakes\n\n- Treating the unified queue as the owner of customer engagement status.\n- Putting full customer messages or private evidence into a convenient search index.\n- Applying a mixed-domain batch by updating projection records directly.\n- Allowing an export because the requester can read a page, without separate purpose and export permission.\n- Rebuilding deleted personal data from stale events, logs, caches, or provider copies.\n- Letting Axis invent fields, transitions, actions, masks, or limits that the backend did not publish.\n- Repairing a hash mismatch without recording the expected source evidence and reason.\n\n## Verification\n\nProve deterministic projection and rebuild results, changed and removed drift detection, tenant isolation, permission denial for each operation, bounded list and batch sizes, required batch reason, expected revisions, non-executable preview semantics, dashboard source hashes, export purpose and field allow-list, masking and maximum records, repair expected/observed hashes, source deletion behavior, provider outage fallback, and cross-tenant denial. Run the generated schema contracts, Engagement API route and security contracts, module metadata contract, Axis Customer Engagement regression, documentation generation and validation, and the effective engagement-server build.\n\nNext: Governed Automation and AI adds optional decision support while keeping every customer-impacting outcome explainable, reversible, and under existing domain authority.\n",
+      "previous": {
+        "title": "Customer feedback, complaints, and closed-loop action",
+        "route": "/docs/framework/engagement-customer-feedback"
+      },
+      "next": {
+        "title": "Governed automation and AI",
+        "route": "/docs/framework/engagement-governed-automation"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.engagement",
+        "technicalModule": "engagementCore",
+        "path": "content/nodics.engagement/unified-operations.md",
+        "wordCount": 1286,
+        "checksum": "fe3b25fcc04fca0d45603f38eaa0882db3fa54531fb8ad31dbaec874d126da78"
+      }
+    },
+    "active": true
+  },
+  "record17": {
+    "code": "nodicsDocsComponentengagementGovernedAutomation",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "engagement.governed-automation",
+      "title": "Governed automation and AI",
+      "route": "/docs/framework/engagement-governed-automation",
+      "section": "nodics-engagement",
+      "sectionTitle": "Nodics engagement",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Beginner-to-operator journey for optional AI proposals, deterministic fallback, evidence, evaluation, human review, overrides, monitoring, and safe extension.",
+      "headings": [
+        {
+          "text": "Supported capabilities",
+          "anchor": "engagementGovernedAutomation-1-supported-capabilities",
+          "level": 2
+        },
+        {
+          "text": "Decision journey",
+          "anchor": "engagementGovernedAutomation-2-decision-journey",
+          "level": 2
+        },
+        {
+          "text": "Axis business-user journey",
+          "anchor": "engagementGovernedAutomation-3-axis-business-user-journey",
+          "level": 2
+        },
+        {
+          "text": "Evidence and evaluation",
+          "anchor": "engagementGovernedAutomation-4-evidence-and-evaluation",
+          "level": 2
+        },
+        {
+          "text": "Failure and fallback",
+          "anchor": "engagementGovernedAutomation-5-failure-and-fallback",
+          "level": 2
+        },
+        {
+          "text": "Security and privacy",
+          "anchor": "engagementGovernedAutomation-6-security-and-privacy",
+          "level": 2
+        },
+        {
+          "text": "Configure and extend safely",
+          "anchor": "engagementGovernedAutomation-7-configure-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Monitoring and rollback",
+          "anchor": "engagementGovernedAutomation-8-monitoring-and-rollback",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "engagementGovernedAutomation-9-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "engagementGovernedAutomation-10-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Governed Automation helps Engagement teams classify, summarize, translate, detect possible fraud or anomalies, cluster duplicates, recommend moderation, and draft responses. It is decision support, not a replacement business authority. This beginner-friendly guide explains how a proposal moves from a source record through evidence, evaluation, human review, and an ordinary domain-owned action."
+        },
+        {
+          "kind": "paragraph",
+          "text": "AI is optional and disabled by default. Every safe operation must retain a deterministic rule or manual path when a provider is unavailable. `engagementCore` owns the shared evidence and evaluation contract; each engagement domain decides whether a capability is relevant and continues to own its lifecycle. Provider adapters are replaceable and may not publish content, reject a review, suppress feedback, or contact a customer directly."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Supported capabilities",
+          "anchor": "engagementGovernedAutomation-1-supported-capabilities"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Capability",
+            "Typical assistance",
+            "Required control"
+          ],
+          "rows": [
+            [
+              "Classification",
+              "Suggest category, intent, priority, or topic",
+              "Source evidence, confidence, correction"
+            ],
+            [
+              "Summarization",
+              "Produce a bounded operator summary",
+              "Original remains authoritative"
+            ],
+            [
+              "Translation",
+              "Suggest localized working text",
+              "Preserve source language and version"
+            ],
+            [
+              "Moderation recommendation",
+              "Identify policy signals",
+              "Human review before moderation action"
+            ],
+            [
+              "Fraud or anomaly signal",
+              "Highlight unusual patterns",
+              "Treat as a signal, never proof by itself"
+            ],
+            [
+              "Duplicate clustering",
+              "Suggest related records",
+              "Human/domain validation before merge"
+            ],
+            [
+              "Response drafting",
+              "Suggest a customer-visible reply",
+              "Human edit and approval before delivery"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Decision journey",
+          "anchor": "engagementGovernedAutomation-2-decision-journey"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Source[\"Domain record and revision\"] --> Protect[\"Remove prohibited input\"]\n  Protect --> Evidence[\"Source hash and policy version\"]\n  Evidence --> Adapter{\"AI enabled and healthy?\"}\n  Adapter -->|Yes| Proposal[\"Versioned AI proposal\"]\n  Adapter -->|No| Fallback[\"Deterministic rule or manual path\"]\n  Proposal --> Threshold[\"Confidence and capability policy\"]\n  Fallback --> Threshold\n  Threshold --> Review[\"Human accepts, overrides, or rejects\"]\n  Review --> Domain[\"Separate domain-owned command\"]\n  Domain --> Audit[\"Outcome and monitoring evidence\"]"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Axis business-user journey",
+          "anchor": "engagementGovernedAutomation-3-axis-business-user-journey"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Open **Customer Experience → Automation Decisions**. Filter by capability, source, confidence, domain, status, or time. Open a decision to compare the suggestion with the authorized source record. Confirm that source revision and hash still match; a stale proposal must not be applied to a newer record."
+        },
+        {
+          "kind": "paragraph",
+          "text": "For a review-required item, choose accept, override, or reject and provide a reason. Override supplies a corrected bounded output while retaining the original evidence. Acceptance does not itself send, publish, reject, hide, merge, or change status. The operator next uses the ordinary domain action, which performs its own current-state, permission, tenant, and revision validation."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Open **Automation Evaluations** before enabling a new model, provider, prompt, or policy version. Review dataset reference, sample size, accuracy, precision, recall, error rate, thresholds, reviewer, and pass/fail result. A passing offline evaluation is necessary evidence, not a guarantee of production quality."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Evidence and evaluation",
+          "anchor": "engagementGovernedAutomation-4-evidence-and-evaluation"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Each decision records tenant, capability, domain type/code, source revision/hash, bounded output, confidence, rule/operator/AI source, provider and model references when applicable, prompt and policy versions, status, explanation, timestamps, reviewer, reason, and correlation ID. Secrets and credentials are prohibited inputs. Full prompts, provider keys, and unnecessary personal data do not belong in decision evidence."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Evaluation uses a governed dataset reference rather than copying test data into operational records. Policy establishes minimum sample size, required metrics, thresholds, and maximum error rate. Projects should add capability-specific measurements such as unsafe-output rate, demographic quality checks where lawful, hallucination rate, translation adequacy, override rate, and customer-impact incidents."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Failure and fallback",
+          "anchor": "engagementGovernedAutomation-5-failure-and-fallback"
+        },
+        {
+          "kind": "paragraph",
+          "text": "If an adapter times out or fails and fallback is required, the service invokes the deterministic implementation and marks the source as `RULE`. If neither automatic path is safe, the record remains for manual work. Provider failure cannot block contact intake, feedback resolution, review moderation, consent withdrawal, testimonial takedown, or customer communication performed through approved manual processes."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Low confidence causes review. High confidence does not waive mandatory review for sensitive capabilities. A domain may impose stricter thresholds than the shared default. A provider response with no source traceability, version references, or bounded output must be rejected."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Security and privacy",
+          "anchor": "engagementGovernedAutomation-6-security-and-privacy"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Separate permissions govern reviewing decisions and evaluations. Tenant scope applies to every record. Inputs are minimized for the capability, and protected fields such as passwords, access tokens, refresh tokens, and provider secrets are rejected. Retention and deletion follow the source record: decisions become stale or deleted when their evidence is no longer valid, and provider-side retention must be contractually compatible."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Do not place raw customer text in logs, metric labels, evaluation dashboards, or error messages. Provider configuration belongs in secured configuration, not schemas or Axis. A project must document residency, subprocessors, training-use policy, retention, deletion, incident response, and service-level expectations before enabling an external adapter."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Configure and extend safely",
+          "anchor": "engagementGovernedAutomation-7-configure-and-extend-safely"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Start with `aiEnabled: false`. Establish deterministic behavior, a representative evaluation dataset, human-review rules, and monitoring first. Then add a later-layer adapter implementing the bounded proposal interface. Version provider, model, prompt, and policy independently, evaluate the exact combination, and roll out gradually by tenant or capability."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers should keep the adapter behind the Engagement service boundary, return only the governed proposal contract, and cover provider success, failure, timeout, malformed output, and fallback with focused tests."
+        },
+        {
+          "kind": "paragraph",
+          "text": "A customization may raise confidence thresholds, require review for more capabilities, prohibit additional fields, or add evaluation metrics. It must preserve source hashes, versions, fallback, override evidence, no-direct-action behavior, tenant isolation, and the owning domain’s final validation."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Monitoring and rollback",
+          "anchor": "engagementGovernedAutomation-8-monitoring-and-rollback"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Monitor provider latency/errors, fallback rate, confidence distribution, review queue age, acceptance/override/rejection rate, stale proposals, evaluation regressions, unsafe-output incidents, and downstream outcomes by version. Avoid metrics containing customer text."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Rollback means disabling the affected capability or model version and returning to deterministic/manual operation. Existing decisions remain audit evidence but are marked stale when source or policy changes. Never delete unfavorable evaluation results to make a release appear healthy."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "engagementGovernedAutomation-9-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating a moderation recommendation as the moderation decision.",
+            "Sending an AI-drafted response without human approval and Communication delivery controls.",
+            "Recording a model name without prompt, policy, source revision, and evaluation evidence.",
+            "Passing complete customer records when a few bounded fields are sufficient.",
+            "Assuming a provider SLA removes the need for deterministic fallback.",
+            "Measuring only aggregate accuracy while ignoring error types and operator overrides.",
+            "Letting Axis or an adapter call persistence or publication directly."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "engagementGovernedAutomation-10-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Prove AI-disabled startup, deterministic results, provider success, timeout and fallback, prohibited-input rejection, bounded confidence, mandatory human review, low-confidence review, source-hash and revision traceability, accept/override/reject evidence, stale-source handling, minimum evaluation sample, missing metric rejection, threshold pass/fail, cross-tenant denial, deletion propagation, provider configuration secrecy, and zero direct customer-impacting actions. Run focused automation contracts, generated schema contracts, module metadata and Axis journey tests, documentation generation/validation, and the effective engagement-server governance build."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Next: Enterprise Scale, Resilience, and Ecosystem hardens the complete Engagement platform for capacity, provider failure, regional operation, privacy, accessibility, and compatibility."
+        }
+      ],
+      "searchText": "Governed automation and AI Beginner-to-operator journey for optional AI proposals, deterministic fallback, evidence, evaluation, human review, overrides, monitoring, and safe extension. # Governed automation and AI\n\nGoverned Automation helps Engagement teams classify, summarize, translate, detect possible fraud or anomalies, cluster duplicates, recommend moderation, and draft responses. It is decision support, not a replacement business authority. This beginner-friendly guide explains how a proposal moves from a source record through evidence, evaluation, human review, and an ordinary domain-owned action.\n\nAI is optional and disabled by default. Every safe operation must retain a deterministic rule or manual path when a provider is unavailable. `engagementCore` owns the shared evidence and evaluation contract; each engagement domain decides whether a capability is relevant and continues to own its lifecycle. Provider adapters are replaceable and may not publish content, reject a review, suppress feedback, or contact a customer directly.\n\n## Supported capabilities\n\n| Capability | Typical assistance | Required control |\n| --- | --- | --- |\n| Classification | Suggest category, intent, priority, or topic | Source evidence, confidence, correction |\n| Summarization | Produce a bounded operator summary | Original remains authoritative |\n| Translation | Suggest localized working text | Preserve source language and version |\n| Moderation recommendation | Identify policy signals | Human review before moderation action |\n| Fraud or anomaly signal | Highlight unusual patterns | Treat as a signal, never proof by itself |\n| Duplicate clustering | Suggest related records | Human/domain validation before merge |\n| Response drafting | Suggest a customer-visible reply | Human edit and approval before delivery |\n\n## Decision journey\n\n```mermaid\nflowchart LR\n  Source[\"Domain record and revision\"] --> Protect[\"Remove prohibited input\"]\n  Protect --> Evidence[\"Source hash and policy version\"]\n  Evidence --> Adapter{\"AI enabled and healthy?\"}\n  Adapter -->|Yes| Proposal[\"Versioned AI proposal\"]\n  Adapter -->|No| Fallback[\"Deterministic rule or manual path\"]\n  Proposal --> Threshold[\"Confidence and capability policy\"]\n  Fallback --> Threshold\n  Threshold --> Review[\"Human accepts, overrides, or rejects\"]\n  Review --> Domain[\"Separate domain-owned command\"]\n  Domain --> Audit[\"Outcome and monitoring evidence\"]\n```\n\n## Axis business-user journey\n\nOpen **Customer Experience → Automation Decisions**. Filter by capability, source, confidence, domain, status, or time. Open a decision to compare the suggestion with the authorized source record. Confirm that source revision and hash still match; a stale proposal must not be applied to a newer record.\n\nFor a review-required item, choose accept, override, or reject and provide a reason. Override supplies a corrected bounded output while retaining the original evidence. Acceptance does not itself send, publish, reject, hide, merge, or change status. The operator next uses the ordinary domain action, which performs its own current-state, permission, tenant, and revision validation.\n\nOpen **Automation Evaluations** before enabling a new model, provider, prompt, or policy version. Review dataset reference, sample size, accuracy, precision, recall, error rate, thresholds, reviewer, and pass/fail result. A passing offline evaluation is necessary evidence, not a guarantee of production quality.\n\n## Evidence and evaluation\n\nEach decision records tenant, capability, domain type/code, source revision/hash, bounded output, confidence, rule/operator/AI source, provider and model references when applicable, prompt and policy versions, status, explanation, timestamps, reviewer, reason, and correlation ID. Secrets and credentials are prohibited inputs. Full prompts, provider keys, and unnecessary personal data do not belong in decision evidence.\n\nEvaluation uses a governed dataset reference rather than copying test data into operational records. Policy establishes minimum sample size, required metrics, thresholds, and maximum error rate. Projects should add capability-specific measurements such as unsafe-output rate, demographic quality checks where lawful, hallucination rate, translation adequacy, override rate, and customer-impact incidents.\n\n## Failure and fallback\n\nIf an adapter times out or fails and fallback is required, the service invokes the deterministic implementation and marks the source as `RULE`. If neither automatic path is safe, the record remains for manual work. Provider failure cannot block contact intake, feedback resolution, review moderation, consent withdrawal, testimonial takedown, or customer communication performed through approved manual processes.\n\nLow confidence causes review. High confidence does not waive mandatory review for sensitive capabilities. A domain may impose stricter thresholds than the shared default. A provider response with no source traceability, version references, or bounded output must be rejected.\n\n## Security and privacy\n\nSeparate permissions govern reviewing decisions and evaluations. Tenant scope applies to every record. Inputs are minimized for the capability, and protected fields such as passwords, access tokens, refresh tokens, and provider secrets are rejected. Retention and deletion follow the source record: decisions become stale or deleted when their evidence is no longer valid, and provider-side retention must be contractually compatible.\n\nDo not place raw customer text in logs, metric labels, evaluation dashboards, or error messages. Provider configuration belongs in secured configuration, not schemas or Axis. A project must document residency, subprocessors, training-use policy, retention, deletion, incident response, and service-level expectations before enabling an external adapter.\n\n## Configure and extend safely\n\nStart with `aiEnabled: false`. Establish deterministic behavior, a representative evaluation dataset, human-review rules, and monitoring first. Then add a later-layer adapter implementing the bounded proposal interface. Version provider, model, prompt, and policy independently, evaluate the exact combination, and roll out gradually by tenant or capability.\n\nDevelopers should keep the adapter behind the Engagement service boundary, return only the governed proposal contract, and cover provider success, failure, timeout, malformed output, and fallback with focused tests.\n\nA customization may raise confidence thresholds, require review for more capabilities, prohibit additional fields, or add evaluation metrics. It must preserve source hashes, versions, fallback, override evidence, no-direct-action behavior, tenant isolation, and the owning domain’s final validation.\n\n## Monitoring and rollback\n\nMonitor provider latency/errors, fallback rate, confidence distribution, review queue age, acceptance/override/rejection rate, stale proposals, evaluation regressions, unsafe-output incidents, and downstream outcomes by version. Avoid metrics containing customer text.\n\nRollback means disabling the affected capability or model version and returning to deterministic/manual operation. Existing decisions remain audit evidence but are marked stale when source or policy changes. Never delete unfavorable evaluation results to make a release appear healthy.\n\n## Common mistakes\n\n- Treating a moderation recommendation as the moderation decision.\n- Sending an AI-drafted response without human approval and Communication delivery controls.\n- Recording a model name without prompt, policy, source revision, and evaluation evidence.\n- Passing complete customer records when a few bounded fields are sufficient.\n- Assuming a provider SLA removes the need for deterministic fallback.\n- Measuring only aggregate accuracy while ignoring error types and operator overrides.\n- Letting Axis or an adapter call persistence or publication directly.\n\n## Verification\n\nProve AI-disabled startup, deterministic results, provider success, timeout and fallback, prohibited-input rejection, bounded confidence, mandatory human review, low-confidence review, source-hash and revision traceability, accept/override/reject evidence, stale-source handling, minimum evaluation sample, missing metric rejection, threshold pass/fail, cross-tenant denial, deletion propagation, provider configuration secrecy, and zero direct customer-impacting actions. Run focused automation contracts, generated schema contracts, module metadata and Axis journey tests, documentation generation/validation, and the effective engagement-server governance build.\n\nNext: Enterprise Scale, Resilience, and Ecosystem hardens the complete Engagement platform for capacity, provider failure, regional operation, privacy, accessibility, and compatibility.\n",
+      "previous": {
+        "title": "Unified engagement operations",
+        "route": "/docs/framework/engagement-unified-operations"
+      },
+      "next": {
+        "title": "Enterprise scale, resilience, and ecosystem operations",
+        "route": "/docs/framework/engagement-enterprise-operations"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.engagement",
+        "technicalModule": "engagementCore",
+        "path": "content/nodics.engagement/governed-automation.md",
+        "wordCount": 1088,
+        "checksum": "a3ba077f6f21b91dd6e3ac97d06c523e5059b7eebf29fec1ab64d2e83e46c7e3"
+      }
+    },
+    "active": true
+  },
+  "record18": {
+    "code": "nodicsDocsComponentengagementEnterpriseOperations",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "engagement.enterprise-operations",
+      "title": "Enterprise scale, resilience, and ecosystem operations",
+      "route": "/docs/framework/engagement-enterprise-operations",
+      "section": "nodics-engagement",
+      "sectionTitle": "Nodics engagement",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Beginner-to-operator journey for capacity, regional residency, provider delivery, backpressure, recovery, compatibility, accessibility, security, and release acceptance.",
+      "headings": [
+        {
+          "text": "Production journey",
+          "anchor": "engagementEnterpriseOperations-1-production-journey",
+          "level": 2
+        },
+        {
+          "text": "Capacity and pagination",
+          "anchor": "engagementEnterpriseOperations-2-capacity-and-pagination",
+          "level": 2
+        },
+        {
+          "text": "Regional residency and recovery",
+          "anchor": "engagementEnterpriseOperations-3-regional-residency-and-recovery",
+          "level": 2
+        },
+        {
+          "text": "Provider and webhook delivery",
+          "anchor": "engagementEnterpriseOperations-4-provider-and-webhook-delivery",
+          "level": 2
+        },
+        {
+          "text": "Axis operator journey",
+          "anchor": "engagementEnterpriseOperations-5-axis-operator-journey",
+          "level": 2
+        },
+        {
+          "text": "Compatibility and deprecation",
+          "anchor": "engagementEnterpriseOperations-6-compatibility-and-deprecation",
+          "level": 2
+        },
+        {
+          "text": "Privacy, security, and accessibility",
+          "anchor": "engagementEnterpriseOperations-7-privacy-security-and-accessibility",
+          "level": 2
+        },
+        {
+          "text": "Developer and DevOps release journey",
+          "anchor": "engagementEnterpriseOperations-8-developer-and-devops-release-journey",
+          "level": 2
+        },
+        {
+          "text": "Monitoring and runbooks",
+          "anchor": "engagementEnterpriseOperations-9-monitoring-and-runbooks",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "engagementEnterpriseOperations-10-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "engagementEnterpriseOperations-11-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Enterprise Engagement must remain safe when volumes rise, providers slow down, regions fail, contracts evolve, and privacy obligations require deletion. This beginner-friendly guide turns those expectations into operational controls and a release acceptance journey. It covers the framework contract and clearly separates it from deployment-specific proof."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business value is continuity with trustworthy evidence: customers can still submit and receive service, operators can recover interrupted work, and leaders can understand capacity and risk without sacrificing privacy or domain ownership."
+        },
+        {
+          "kind": "paragraph",
+          "text": "`engagementCore` supplies common bounds and evidence. Domain modules retain customer records and lifecycle authority. `engagementApi` supplies secured versioned interfaces. Provider adapters transport bounded events or requests but never become the source of truth. Axis exposes operational evidence without storing payloads, secrets, or an alternate status."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Production journey",
+          "anchor": "engagementEnterpriseOperations-1-production-journey"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Domain[\"Domain transaction\"] --> Outbox[\"Versioned delivery intent\"]\n  Outbox --> Capacity{\"Provider capacity available?\"}\n  Capacity -->|No| Backpressure[\"Pause and checkpoint\"]\n  Capacity -->|Yes| Sign[\"Sign bounded payload\"]\n  Sign --> Provider[\"Provider or webhook\"]\n  Provider -->|Success| Delivered[\"Delivery evidence\"]\n  Provider -->|Failure| Retry[\"Bounded retry\"]\n  Retry --> Provider\n  Retry -->|Exhausted| Dead[\"Dead letter and operator action\"]\n  Backpressure --> Recover[\"Resume from checkpoint\"]\n  Recover --> Capacity"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Capacity and pagination",
+          "anchor": "engagementEnterpriseOperations-2-capacity-and-pagination"
+        },
+        {
+          "kind": "paragraph",
+          "text": "All lists use a bounded page size and stable cursor order. The default upper bound is 100 records. Clients do not request every customer record and paginate in the browser. Stable ordering includes a unique tie-breaker so records are neither skipped nor duplicated when timestamps match."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Batch commands, exports, projection rebuilds, provider delivery, archive, and privacy propagation each need an explicit limit. In-flight delivery capacity produces `AVAILABLE` or `BACKPRESSURE`; it does not discard work. A production release defines expected peak arrival rate, sustained throughput, storage growth, index growth, queue age, projection lag, and p95/p99 response budgets."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Regional residency and recovery",
+          "anchor": "engagementEnterpriseOperations-3-regional-residency-and-recovery"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Every workload resolves an allowed region from tenant policy. A request cannot select an unapproved region through its payload. Multi-region replication must distinguish recoverable derived projections from authoritative customer evidence and must respect legal residency and deletion requirements."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Recovery checkpoints store workload, partition, region, cursor, source hash, processed/failed counts, status, timestamps, and correlation ID. They do not copy domain payloads. After interruption, a worker resumes from durable evidence and applies idempotency and source-revision checks."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The default framework policy records a 15-minute recovery point objective and a 60-minute recovery time objective. Those numbers are configuration targets, not proof. Each deployment must demonstrate backup restoration, regional failover, provider outage recovery, search/index rebuild, dead-letter reconciliation, and deletion propagation within its approved objectives."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Provider and webhook delivery",
+          "anchor": "engagementEnterpriseOperations-4-provider-and-webhook-delivery"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Provider delivery records event type/version, idempotency key, payload hash, region, safe endpoint reference, attempt count, next attempt, response code, delivery time, and correlation. Payload content and credentials stay outside operational evidence."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Webhooks use a timestamped HMAC signature. Verification compares signatures safely and rejects messages outside the replay window. Key rotation, endpoint verification, TLS, network policy, provider authentication, and secret storage remain deployment responsibilities. Retries use bounded exponential delay and stop at dead letter; operators reconcile external state before replaying ambiguous timeouts."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Axis operator journey",
+          "anchor": "engagementEnterpriseOperations-5-axis-operator-journey"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Open **Customer Experience → Provider Deliveries** to filter pending, retrying, delivered, suppressed, and dead-letter attempts. Inspect provider, event version, region, attempt budget, and correlation—not raw customer payload. A retry action, when later published, must use the backend-owned delivery operation and idempotency key."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Open **Recovery Checkpoints** during a projection rebuild, archive, import, privacy propagation, or disaster-recovery exercise. Confirm the correct tenant partition and region, compare processed and failed counts, and resume only through the owning worker contract."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Open **Contract Compatibility** before deploying an API, event, export, or provider contract change. A record identifies current, backward-compatible, deprecated, breaking, or retired posture, successor, notice dates, and evidence. Axis displays that decision; it does not calculate compatibility."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Compatibility and deprecation",
+          "anchor": "engagementEnterpriseOperations-6-compatibility-and-deprecation"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Contracts use explicit versions. A supported major version is current; a breaking major requires migration planning. Deprecation records a successor and a minimum notice window, currently 180 days by default. Emergency security retirement requires explicit exception evidence and communication."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Compatibility tests cover request/response fields, status/error codes, permissions, event consumers, replay, export columns, and provider mappings. Adding an optional field is not automatically safe if older consumers reject unknown data. Removing or changing meaning is breaking even when the JSON type stays the same."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Privacy, security, and accessibility",
+          "anchor": "engagementEnterpriseOperations-7-privacy-security-and-accessibility"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Privacy operations must reach domain data, projections, search indexes, exports, delivery evidence, analytics references, automation decisions, caches, backups according to retention policy, and provider copies. Deletion is evidenced without retaining deleted content. Tenant isolation is tested under concurrency, cache reuse, batch work, retry, export, and failover."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Security acceptance includes authentication and authorization matrices, abuse/rate controls, replay protection, signature validation, input size limits, injection testing, dependency review, secret scanning, audit integrity, and penetration testing appropriate to the deployment."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis and customer experiences require keyboard navigation, visible focus, semantic labels, error association, screen-reader announcements, contrast, zoom/reflow, reduced-motion support, and usable timeout/recovery messages. Accessibility verification combines automated checks with keyboard and assistive-technology journeys."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Developer and DevOps release journey",
+          "anchor": "engagementEnterpriseOperations-8-developer-and-devops-release-journey"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers define backward-compatible contracts, bounded algorithms, deterministic tests, idempotency, and provider-neutral adapters. DevOps engineers supply topology-specific capacity, load, soak, failover, backup/restore, monitoring, alerting, and runbook evidence. Neither group may claim a configuration target is a measured result."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Before release:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Generate schemas, OpenAPI, governance, and documentation from the effective server graph.",
+            "Run unit, integration, security, tenant-isolation, migration, compatibility, and Axis journey tests.",
+            "Exercise representative load and a sustained soak against production-like infrastructure.",
+            "Inject provider, database, search, event, and region failures and prove bounded recovery.",
+            "Restore backups and reconcile counts/hashes against authoritative domains.",
+            "Verify privacy deletion and consent withdrawal across every derived surface and provider.",
+            "Complete keyboard, screen-reader, responsive, and automated accessibility checks.",
+            "Record capacity, RPO/RTO, performance, security, residual risk, rollback, and approvers."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Monitoring and runbooks",
+          "anchor": "engagementEnterpriseOperations-9-monitoring-and-runbooks"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Monitor request latency/error rate, queue depth/age, projection lag/drift, provider capacity and retry, dead letters, checkpoint age, regional routing, duplicate prevention, archive/delete lag, contract-version use, and accessibility/customer-impact incidents. Alerts must link to a runbook and use codes rather than customer content."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Runbooks cover provider outage, signature failure, replay attack, rate spike, poison message, projection drift, data-store failover, regional evacuation, stuck privacy request, incompatible consumer, and emergency rollback. Each describes detection, containment, authority, safe commands, evidence, communication, and exit criteria."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "engagementEnterpriseOperations-10-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Calling a configured RPO, RTO, or latency budget a proven production result.",
+            "Retrying indefinitely or immediately until a provider and the Engagement runtime both fail.",
+            "Logging webhook payloads or secrets for easier troubleshooting.",
+            "Allowing request bodies to choose data residency.",
+            "Rebuilding derived content from a stale copy after the authoritative source was deleted.",
+            "Shipping a version change because schema generation succeeded without consumer compatibility tests.",
+            "Treating automated accessibility scanning as complete accessibility acceptance.",
+            "Running load tests without tenant-isolation and data-integrity assertions."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "engagementEnterpriseOperations-11-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Framework verification proves bounded pagination, stable ordering contract, region rejection, signature and replay checks, backpressure, exponential retry, dead-letter limits, restart-safe checkpoint evidence, supported-version decisions, deprecation windows, generated schemas, permission-scoped Axis workspaces, and canonical documentation. Deployment acceptance additionally proves measured capacity, soak stability, failover, backup/restore, RPO/RTO, provider recovery, no lost or duplicated domain evidence, privacy propagation, penetration testing, accessibility journeys, compatibility, monitoring, and rehearsed rollback."
+        },
+        {
+          "kind": "paragraph",
+          "text": "This completes the planned Engagement implementation phases. Communication integration and commerce-domain phases use the same ownership, evidence, security, Axis, documentation, and release-acceptance pattern."
+        }
+      ],
+      "searchText": "Enterprise scale, resilience, and ecosystem operations Beginner-to-operator journey for capacity, regional residency, provider delivery, backpressure, recovery, compatibility, accessibility, security, and release acceptance. # Enterprise scale, resilience, and ecosystem operations\n\nEnterprise Engagement must remain safe when volumes rise, providers slow down, regions fail, contracts evolve, and privacy obligations require deletion. This beginner-friendly guide turns those expectations into operational controls and a release acceptance journey. It covers the framework contract and clearly separates it from deployment-specific proof.\n\nThe business value is continuity with trustworthy evidence: customers can still submit and receive service, operators can recover interrupted work, and leaders can understand capacity and risk without sacrificing privacy or domain ownership.\n\n`engagementCore` supplies common bounds and evidence. Domain modules retain customer records and lifecycle authority. `engagementApi` supplies secured versioned interfaces. Provider adapters transport bounded events or requests but never become the source of truth. Axis exposes operational evidence without storing payloads, secrets, or an alternate status.\n\n## Production journey\n\n```mermaid\nflowchart LR\n  Domain[\"Domain transaction\"] --> Outbox[\"Versioned delivery intent\"]\n  Outbox --> Capacity{\"Provider capacity available?\"}\n  Capacity -->|No| Backpressure[\"Pause and checkpoint\"]\n  Capacity -->|Yes| Sign[\"Sign bounded payload\"]\n  Sign --> Provider[\"Provider or webhook\"]\n  Provider -->|Success| Delivered[\"Delivery evidence\"]\n  Provider -->|Failure| Retry[\"Bounded retry\"]\n  Retry --> Provider\n  Retry -->|Exhausted| Dead[\"Dead letter and operator action\"]\n  Backpressure --> Recover[\"Resume from checkpoint\"]\n  Recover --> Capacity\n```\n\n## Capacity and pagination\n\nAll lists use a bounded page size and stable cursor order. The default upper bound is 100 records. Clients do not request every customer record and paginate in the browser. Stable ordering includes a unique tie-breaker so records are neither skipped nor duplicated when timestamps match.\n\nBatch commands, exports, projection rebuilds, provider delivery, archive, and privacy propagation each need an explicit limit. In-flight delivery capacity produces `AVAILABLE` or `BACKPRESSURE`; it does not discard work. A production release defines expected peak arrival rate, sustained throughput, storage growth, index growth, queue age, projection lag, and p95/p99 response budgets.\n\n## Regional residency and recovery\n\nEvery workload resolves an allowed region from tenant policy. A request cannot select an unapproved region through its payload. Multi-region replication must distinguish recoverable derived projections from authoritative customer evidence and must respect legal residency and deletion requirements.\n\nRecovery checkpoints store workload, partition, region, cursor, source hash, processed/failed counts, status, timestamps, and correlation ID. They do not copy domain payloads. After interruption, a worker resumes from durable evidence and applies idempotency and source-revision checks.\n\nThe default framework policy records a 15-minute recovery point objective and a 60-minute recovery time objective. Those numbers are configuration targets, not proof. Each deployment must demonstrate backup restoration, regional failover, provider outage recovery, search/index rebuild, dead-letter reconciliation, and deletion propagation within its approved objectives.\n\n## Provider and webhook delivery\n\nProvider delivery records event type/version, idempotency key, payload hash, region, safe endpoint reference, attempt count, next attempt, response code, delivery time, and correlation. Payload content and credentials stay outside operational evidence.\n\nWebhooks use a timestamped HMAC signature. Verification compares signatures safely and rejects messages outside the replay window. Key rotation, endpoint verification, TLS, network policy, provider authentication, and secret storage remain deployment responsibilities. Retries use bounded exponential delay and stop at dead letter; operators reconcile external state before replaying ambiguous timeouts.\n\n## Axis operator journey\n\nOpen **Customer Experience → Provider Deliveries** to filter pending, retrying, delivered, suppressed, and dead-letter attempts. Inspect provider, event version, region, attempt budget, and correlation—not raw customer payload. A retry action, when later published, must use the backend-owned delivery operation and idempotency key.\n\nOpen **Recovery Checkpoints** during a projection rebuild, archive, import, privacy propagation, or disaster-recovery exercise. Confirm the correct tenant partition and region, compare processed and failed counts, and resume only through the owning worker contract.\n\nOpen **Contract Compatibility** before deploying an API, event, export, or provider contract change. A record identifies current, backward-compatible, deprecated, breaking, or retired posture, successor, notice dates, and evidence. Axis displays that decision; it does not calculate compatibility.\n\n## Compatibility and deprecation\n\nContracts use explicit versions. A supported major version is current; a breaking major requires migration planning. Deprecation records a successor and a minimum notice window, currently 180 days by default. Emergency security retirement requires explicit exception evidence and communication.\n\nCompatibility tests cover request/response fields, status/error codes, permissions, event consumers, replay, export columns, and provider mappings. Adding an optional field is not automatically safe if older consumers reject unknown data. Removing or changing meaning is breaking even when the JSON type stays the same.\n\n## Privacy, security, and accessibility\n\nPrivacy operations must reach domain data, projections, search indexes, exports, delivery evidence, analytics references, automation decisions, caches, backups according to retention policy, and provider copies. Deletion is evidenced without retaining deleted content. Tenant isolation is tested under concurrency, cache reuse, batch work, retry, export, and failover.\n\nSecurity acceptance includes authentication and authorization matrices, abuse/rate controls, replay protection, signature validation, input size limits, injection testing, dependency review, secret scanning, audit integrity, and penetration testing appropriate to the deployment.\n\nAxis and customer experiences require keyboard navigation, visible focus, semantic labels, error association, screen-reader announcements, contrast, zoom/reflow, reduced-motion support, and usable timeout/recovery messages. Accessibility verification combines automated checks with keyboard and assistive-technology journeys.\n\n## Developer and DevOps release journey\n\nDevelopers define backward-compatible contracts, bounded algorithms, deterministic tests, idempotency, and provider-neutral adapters. DevOps engineers supply topology-specific capacity, load, soak, failover, backup/restore, monitoring, alerting, and runbook evidence. Neither group may claim a configuration target is a measured result.\n\nBefore release:\n\n1. Generate schemas, OpenAPI, governance, and documentation from the effective server graph.\n2. Run unit, integration, security, tenant-isolation, migration, compatibility, and Axis journey tests.\n3. Exercise representative load and a sustained soak against production-like infrastructure.\n4. Inject provider, database, search, event, and region failures and prove bounded recovery.\n5. Restore backups and reconcile counts/hashes against authoritative domains.\n6. Verify privacy deletion and consent withdrawal across every derived surface and provider.\n7. Complete keyboard, screen-reader, responsive, and automated accessibility checks.\n8. Record capacity, RPO/RTO, performance, security, residual risk, rollback, and approvers.\n\n## Monitoring and runbooks\n\nMonitor request latency/error rate, queue depth/age, projection lag/drift, provider capacity and retry, dead letters, checkpoint age, regional routing, duplicate prevention, archive/delete lag, contract-version use, and accessibility/customer-impact incidents. Alerts must link to a runbook and use codes rather than customer content.\n\nRunbooks cover provider outage, signature failure, replay attack, rate spike, poison message, projection drift, data-store failover, regional evacuation, stuck privacy request, incompatible consumer, and emergency rollback. Each describes detection, containment, authority, safe commands, evidence, communication, and exit criteria.\n\n## Common mistakes\n\n- Calling a configured RPO, RTO, or latency budget a proven production result.\n- Retrying indefinitely or immediately until a provider and the Engagement runtime both fail.\n- Logging webhook payloads or secrets for easier troubleshooting.\n- Allowing request bodies to choose data residency.\n- Rebuilding derived content from a stale copy after the authoritative source was deleted.\n- Shipping a version change because schema generation succeeded without consumer compatibility tests.\n- Treating automated accessibility scanning as complete accessibility acceptance.\n- Running load tests without tenant-isolation and data-integrity assertions.\n\n## Verification\n\nFramework verification proves bounded pagination, stable ordering contract, region rejection, signature and replay checks, backpressure, exponential retry, dead-letter limits, restart-safe checkpoint evidence, supported-version decisions, deprecation windows, generated schemas, permission-scoped Axis workspaces, and canonical documentation. Deployment acceptance additionally proves measured capacity, soak stability, failover, backup/restore, RPO/RTO, provider recovery, no lost or duplicated domain evidence, privacy propagation, penetration testing, accessibility journeys, compatibility, monitoring, and rehearsed rollback.\n\nThis completes the planned Engagement implementation phases. Communication integration and commerce-domain phases use the same ownership, evidence, security, Axis, documentation, and release-acceptance pattern.\n",
+      "previous": {
+        "title": "Governed automation and AI",
+        "route": "/docs/framework/engagement-governed-automation"
+      },
+      "next": {
+        "title": "Commerce overview",
+        "route": "/docs/framework/commerce-overview"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.engagement",
+        "technicalModule": "engagementCore",
+        "path": "content/nodics.engagement/enterprise-operations.md",
+        "wordCount": 1219,
+        "checksum": "d6e442e6d7fc7c40878d1f97572282d6cf45bb435630504976752ec47ce57e51"
+      }
+    },
+    "active": true
+  },
+  "record19": {
+    "code": "nodicsDocsComponentcommerceOverview",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "commerce.overview",
+      "title": "Commerce overview",
+      "route": "/docs/framework/commerce-overview",
+      "section": "nodics-commerce",
+      "sectionTitle": "Nodics commerce",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Beginner orientation to the Commerce journey, ownership map, phased implementation state, security baseline, verification, and safe customization.",
+      "headings": [
+        {
+          "text": "What Commerce is",
+          "anchor": "commerceOverview-1-what-commerce-is",
+          "level": 2
+        },
+        {
+          "text": "Module map",
+          "anchor": "commerceOverview-2-module-map",
+          "level": 2
+        },
+        {
+          "text": "Choose your documentation journey",
+          "anchor": "commerceOverview-3-choose-your-documentation-journey",
+          "level": 2
+        },
+        {
+          "text": "Current implementation state",
+          "anchor": "commerceOverview-4-current-implementation-state",
+          "level": 2
+        },
+        {
+          "text": "Safe customization",
+          "anchor": "commerceOverview-5-safe-customization",
+          "level": 2
+        },
+        {
+          "text": "Security and evidence baseline",
+          "anchor": "commerceOverview-6-security-and-evidence-baseline",
+          "level": 2
+        },
+        {
+          "text": "How to verify the implementation",
+          "anchor": "commerceOverview-7-how-to-verify-the-implementation",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "commerceOverview-8-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "commerceOverview-9-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "What Commerce is",
+          "anchor": "commerceOverview-1-what-commerce-is"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Nodics Commerce is the backend product family that turns product information, commercial policy, stock, checkout, orders, payments, and fulfillment into one governed customer journey. Phases 0-10 now provide the framework contracts, schemas, services, secured routes, reference runtime, Axis projections, operations evidence, migration controls, and canonical documentation. This is framework readiness, not automatic production authorization: every deployment must still qualify its providers, capacity, recovery, data, policy, and owners."
+        },
+        {
+          "kind": "paragraph",
+          "text": "A beginner can picture the journey as:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Store decides the selling context.",
+            "Product identifies what can be sold.",
+            "Pricing, Promotion, and Tax produce exact monetary evidence.",
+            "Inventory determines availability and protects stock.",
+            "Cart collects intent and Checkout coordinates validation.",
+            "Order records the durable purchase.",
+            "Payment executes money movement through an approved provider.",
+            "Fulfillment moves goods and records delivery evidence."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "These are collaborating owners, not interchangeable layers. Checkout may coordinate them, but it cannot silently become the authority for prices, inventory, payment, or shipment state."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Journey step",
+            "Owning capability",
+            "Durable evidence"
+          ],
+          "rows": [
+            [
+              "Select selling context",
+              "Store",
+              "store and channel reference"
+            ],
+            [
+              "Understand the offer",
+              "Product",
+              "product and sellable-unit identity"
+            ],
+            [
+              "Calculate the commercial promise",
+              "Pricing, Promotion, Tax",
+              "exact price, discount, and tax decisions"
+            ],
+            [
+              "Protect supply",
+              "Inventory",
+              "availability, reservation, allocation, and movement"
+            ],
+            [
+              "Commit a purchase",
+              "Cart, Checkout, Order",
+              "calculated cart and immutable order history"
+            ],
+            [
+              "Move money",
+              "Payment",
+              "authorization, capture, void, refund, and reconciliation"
+            ],
+            [
+              "Move goods",
+              "Fulfillment",
+              "consignment, shipment, tracking, and return logistics"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Module map",
+          "anchor": "commerceOverview-2-module-map"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The public functional identity is `nodics.commerce`, displayed as Commerce in BackOffice and Axis. Its internal groups are Base Commerce, Checkout, Payment, and Fulfillment. Their concrete capability modules remain technical details; customers register and discover the functional product, not 26 unrelated products."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Phase 1 creates 27 package identities in total: the functional group, six internal composition groups, and twenty concrete capabilities. Every identity uses the reserved `70.x` index family. Group packages compose; they do not own business schemas, services, routes, or seed data."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Choose your documentation journey",
+          "anchor": "commerceOverview-3-choose-your-documentation-journey"
+        },
+        {
+          "kind": "paragraph",
+          "text": "This documentation follows the progressive structure used by mature enterprise products: orient first, complete a business journey next, then learn extension and operations. New readers should not start from generated API details."
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Read this overview for vocabulary, ownership, and safety boundaries.",
+            "Read **Base Commerce foundations** to configure Store, Product, price, tax, promotion, warehouse, availability, publication, and search evidence.",
+            "Read **Cart, checkout, and order placement** for the customer purchase path, retry behavior, exact calculation, and compensation.",
+            "Read **Payment and fulfillment operations** before enabling any provider or operating warehouse and shipment work.",
+            "Read **Cancellation, return, and refund lifecycle** for self-service, operator queues, approval, inspection, refund, and reconciliation.",
+            "Read **Commerce enterprise operations and migration** before sizing, upgrading, migrating a tenant, rehearsing recovery, or releasing.",
+            "Developers then follow the owning module README/AGENTS hierarchy and generated OpenAPI/schema contracts. Operators use Axis and the runbooks; customers see only the permitted self-service projections."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Each guide repeats the same learning pattern: business outcome, customer or operator journey, owner boundary, data/evidence, security, failure/recovery, extension points, common mistakes, and verification. This lets a beginner build a dependable mental model while giving an experienced implementer a direct path to contracts and release evidence."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The information architecture is informed by the official SAP Commerce Cloud split across Discover, Implement, Integrate, Storefront, Security, Reference, and Support, and Oracle Commerce's task-oriented Use, Administer, Configure and Extend, Analyze and Report, Integrate, and REST API paths. Nodics keeps its own ownership vocabulary and adds explicit failure, recovery, evidence, and release gates rather than copying either product's module model."
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "SAP Commerce Cloud: <https://help.sap.com/docs/SAP_COMMERCE_CLOUD_PUBLIC_CLOUD>",
+            "Oracle Commerce: <https://docs.oracle.com/en/cloud/saas/cx-commerce/>"
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Current implementation state",
+          "anchor": "commerceOverview-4-current-implementation-state"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Phases 0-8 are framework-implemented. Phase 9 framework controls are complete, while environment-specific load, soak, provider, backup/restore, failover, and RPO/RTO qualification remain release gates. Phase 10 removes archived Commerce from active runtime authority; final alias removal and physical retirement wait for each production tenant's reconciliation and rollback-window closure."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Safe customization",
+          "anchor": "commerceOverview-5-safe-customization"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A customer project may extend `nodics.commerce` while keeping the standard functional identity. Put customer rules in a later-loading customer module; do not copy or edit framework packages. Replace narrow services or provider ports through supported Nodics layering and keep the original domain owner."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Examples:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "a regional tax adapter extends Tax, not Cart;",
+            "a new payment provider extends Payment Providers, not Order;",
+            "a store-specific availability rule composes Inventory evidence;",
+            "a branded Axis screen renders backend contracts but does not own statuses or lifecycle rules."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Security and evidence baseline",
+          "anchor": "commerceOverview-6-security-and-evidence-baseline"
+        },
+        {
+          "kind": "paragraph",
+          "text": "All future Commerce slices must enforce tenant isolation, authenticated audiences, least-privilege permissions, idempotency, audit trails, protected data handling, and exact money and quantity representations. Provider secrets must never enter schemas, logs, browser payloads, documentation, or generated context."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "How to verify the implementation",
+          "anchor": "commerceOverview-7-how-to-verify-the-implementation"
+        },
+        {
+          "kind": "paragraph",
+          "text": "From the framework root, run the Commerce composition and source-free contract tests, module metadata validation, structure audit, then generate and validate LLM context. The proof must show all package indexes are unique, composition is deterministic, and no Commerce package contains premature `src/` or `data/`."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers should start from the concrete owner README and contracts before adding code. A schema belongs with the domain that controls its lifecycle; a coordinating service calls that owner instead of recreating its decisions. Tests should cover the successful path, rejection, tenant isolation, idempotent replay, dependency failure, recovery, and a later-layer override."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Operators and DevOps teams should treat module discovery as readiness metadata, not as proof that a customer-facing API is safe to expose. Production activation requires the applicable phase acceptance evidence, secured permissions, observable health, capacity budgets, rollback instructions, and validated provider configuration. A provider package is not production-ready merely because the module loader can see it."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "commerceOverview-8-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating every internal module as a separate BackOffice product.",
+            "Adding Cart-owned price arithmetic or Order-owned refund execution.",
+            "Using JavaScript floating-point values for money, rates, or quantities.",
+            "Copying archived source before classifying its ownership and maturity.",
+            "Enabling a provider without callback verification, replay protection, idempotency, redaction, reconciliation, and failure recovery.",
+            "Putting backend statuses, permissions, navigation records, or business rules into Axis.",
+            "Editing generated documentation or generated schema artifacts directly."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "commerceOverview-9-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Framework acceptance requires the 27-package composition contract, generated schema tests, focused owner and workflow tests, a controlled effective runtime graph, generated OpenAPI/security checks, Axis journey/type/build checks, documentation generation and validation, generated LLM context, metadata and structure audits, and an explicit release-readiness record. External provider certification, representative production load, disaster recovery, regulatory approval, tenant cutover, and residual-risk acceptance remain deployment evidence and must never be inferred from framework tests."
+        }
+      ],
+      "searchText": "Commerce overview Beginner orientation to the Commerce journey, ownership map, phased implementation state, security baseline, verification, and safe customization. # Commerce overview\n\n## What Commerce is\n\nNodics Commerce is the backend product family that turns product information,\ncommercial policy, stock, checkout, orders, payments, and fulfillment into one\ngoverned customer journey. Phases 0-10 now provide the framework contracts,\nschemas, services, secured routes, reference runtime, Axis projections,\noperations evidence, migration controls, and canonical documentation. This is\nframework readiness, not automatic production authorization: every deployment\nmust still qualify its providers, capacity, recovery, data, policy, and owners.\n\nA beginner can picture the journey as:\n\n1. Store decides the selling context.\n2. Product identifies what can be sold.\n3. Pricing, Promotion, and Tax produce exact monetary evidence.\n4. Inventory determines availability and protects stock.\n5. Cart collects intent and Checkout coordinates validation.\n6. Order records the durable purchase.\n7. Payment executes money movement through an approved provider.\n8. Fulfillment moves goods and records delivery evidence.\n\nThese are collaborating owners, not interchangeable layers. Checkout may\ncoordinate them, but it cannot silently become the authority for prices,\ninventory, payment, or shipment state.\n\n| Journey step | Owning capability | Durable evidence |\n| --- | --- | --- |\n| Select selling context | Store | store and channel reference |\n| Understand the offer | Product | product and sellable-unit identity |\n| Calculate the commercial promise | Pricing, Promotion, Tax | exact price, discount, and tax decisions |\n| Protect supply | Inventory | availability, reservation, allocation, and movement |\n| Commit a purchase | Cart, Checkout, Order | calculated cart and immutable order history |\n| Move money | Payment | authorization, capture, void, refund, and reconciliation |\n| Move goods | Fulfillment | consignment, shipment, tracking, and return logistics |\n\n## Module map\n\nThe public functional identity is `nodics.commerce`, displayed as Commerce in\nBackOffice and Axis. Its internal groups are Base Commerce, Checkout, Payment,\nand Fulfillment. Their concrete capability modules remain technical details;\ncustomers register and discover the functional product, not 26 unrelated\nproducts.\n\nPhase 1 creates 27 package identities in total: the functional group, six\ninternal composition groups, and twenty concrete capabilities. Every identity\nuses the reserved `70.x` index family. Group packages compose; they do not own\nbusiness schemas, services, routes, or seed data.\n\n## Choose your documentation journey\n\nThis documentation follows the progressive structure used by mature enterprise\nproducts: orient first, complete a business journey next, then learn extension\nand operations. New readers should not start from generated API details.\n\n1. Read this overview for vocabulary, ownership, and safety boundaries.\n2. Read **Base Commerce foundations** to configure Store, Product, price, tax,\n   promotion, warehouse, availability, publication, and search evidence.\n3. Read **Cart, checkout, and order placement** for the customer purchase path,\n   retry behavior, exact calculation, and compensation.\n4. Read **Payment and fulfillment operations** before enabling any provider or\n   operating warehouse and shipment work.\n5. Read **Cancellation, return, and refund lifecycle** for self-service,\n   operator queues, approval, inspection, refund, and reconciliation.\n6. Read **Commerce enterprise operations and migration** before sizing,\n   upgrading, migrating a tenant, rehearsing recovery, or releasing.\n7. Developers then follow the owning module README/AGENTS hierarchy and\n   generated OpenAPI/schema contracts. Operators use Axis and the runbooks;\n   customers see only the permitted self-service projections.\n\nEach guide repeats the same learning pattern: business outcome, customer or\noperator journey, owner boundary, data/evidence, security, failure/recovery,\nextension points, common mistakes, and verification. This lets a beginner\nbuild a dependable mental model while giving an experienced implementer a\ndirect path to contracts and release evidence.\n\nThe information architecture is informed by the official SAP Commerce Cloud\nsplit across Discover, Implement, Integrate, Storefront, Security, Reference,\nand Support, and Oracle Commerce's task-oriented Use, Administer, Configure and\nExtend, Analyze and Report, Integrate, and REST API paths. Nodics keeps its own\nownership vocabulary and adds explicit failure, recovery, evidence, and release\ngates rather than copying either product's module model.\n\n- SAP Commerce Cloud: <https://help.sap.com/docs/SAP_COMMERCE_CLOUD_PUBLIC_CLOUD>\n- Oracle Commerce: <https://docs.oracle.com/en/cloud/saas/cx-commerce/>\n\n## Current implementation state\n\nPhases 0-8 are framework-implemented. Phase 9 framework controls are complete,\nwhile environment-specific load, soak, provider, backup/restore, failover, and\nRPO/RTO qualification remain release gates. Phase 10 removes archived Commerce\nfrom active runtime authority; final alias removal and physical retirement wait\nfor each production tenant's reconciliation and rollback-window closure.\n\n## Safe customization\n\nA customer project may extend `nodics.commerce` while keeping the standard\nfunctional identity. Put customer rules in a later-loading customer module;\ndo not copy or edit framework packages. Replace narrow services or provider\nports through supported Nodics layering and keep the original domain owner.\n\nExamples:\n\n- a regional tax adapter extends Tax, not Cart;\n- a new payment provider extends Payment Providers, not Order;\n- a store-specific availability rule composes Inventory evidence;\n- a branded Axis screen renders backend contracts but does not own statuses or\n  lifecycle rules.\n\n## Security and evidence baseline\n\nAll future Commerce slices must enforce tenant isolation, authenticated\naudiences, least-privilege permissions, idempotency, audit trails, protected\ndata handling, and exact money and quantity representations. Provider secrets\nmust never enter schemas, logs, browser payloads, documentation, or generated\ncontext.\n\n## How to verify the implementation\n\nFrom the framework root, run the Commerce composition and source-free contract\ntests, module metadata validation, structure audit, then generate and validate\nLLM context. The proof must show all package indexes are unique, composition is\ndeterministic, and no Commerce package contains premature `src/` or `data/`.\n\nDevelopers should start from the concrete owner README and contracts before\nadding code. A schema belongs with the domain that controls its lifecycle; a\ncoordinating service calls that owner instead of recreating its decisions.\nTests should cover the successful path, rejection, tenant isolation,\nidempotent replay, dependency failure, recovery, and a later-layer override.\n\nOperators and DevOps teams should treat module discovery as readiness metadata,\nnot as proof that a customer-facing API is safe to expose. Production\nactivation requires the applicable phase acceptance evidence, secured\npermissions, observable health, capacity budgets, rollback instructions, and\nvalidated provider configuration. A provider package is not production-ready\nmerely because the module loader can see it.\n\n## Common mistakes\n\n- Treating every internal module as a separate BackOffice product.\n- Adding Cart-owned price arithmetic or Order-owned refund execution.\n- Using JavaScript floating-point values for money, rates, or quantities.\n- Copying archived source before classifying its ownership and maturity.\n- Enabling a provider without callback verification, replay protection,\n  idempotency, redaction, reconciliation, and failure recovery.\n- Putting backend statuses, permissions, navigation records, or business rules\n  into Axis.\n- Editing generated documentation or generated schema artifacts directly.\n\n## Verification\n\nFramework acceptance requires the 27-package composition contract, generated\nschema tests, focused owner and workflow tests, a controlled effective runtime\ngraph, generated OpenAPI/security checks, Axis journey/type/build checks,\ndocumentation generation and validation, generated LLM context, metadata and\nstructure audits, and an explicit release-readiness record. External provider\ncertification, representative production load, disaster recovery, regulatory\napproval, tenant cutover, and residual-risk acceptance remain deployment\nevidence and must never be inferred from framework tests.\n",
+      "previous": {
+        "title": "Enterprise scale, resilience, and ecosystem operations",
+        "route": "/docs/framework/engagement-enterprise-operations"
+      },
+      "next": {
+        "title": "Base Commerce foundations",
+        "route": "/docs/framework/commerce-base-foundations"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.commerce",
+        "technicalModule": "commerce",
+        "path": "content/nodics.commerce/overview.md",
+        "wordCount": 1086,
+        "checksum": "281f97e0b29f6443cd287052f83f3a9318dc9b6949b346c6ca11bb915cc7a018"
+      }
+    },
+    "active": true
+  },
+  "record20": {
+    "code": "nodicsDocsComponentcommerceBaseFoundations",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "commerce.base-foundations",
+      "title": "Base Commerce foundations",
+      "route": "/docs/framework/commerce-base-foundations",
+      "section": "nodics-commerce",
+      "sectionTitle": "Nodics commerce",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Beginner-to-operator guide for Store, Product, Pricing, Tax, Promotion, Inventory, exact decisions, publication, recovery, and customization.",
+      "headings": [
+        {
+          "text": "Business journey",
+          "anchor": "commerceBaseFoundations-1-business-journey",
+          "level": 2
+        },
+        {
+          "text": "Beginner example",
+          "anchor": "commerceBaseFoundations-2-beginner-example",
+          "level": 2
+        },
+        {
+          "text": "Developer guidance",
+          "anchor": "commerceBaseFoundations-3-developer-guidance",
+          "level": 2
+        },
+        {
+          "text": "Operator and DevOps guidance",
+          "anchor": "commerceBaseFoundations-4-operator-and-devops-guidance",
+          "level": 2
+        },
+        {
+          "text": "Security and failure behavior",
+          "anchor": "commerceBaseFoundations-5-security-and-failure-behavior",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "commerceBaseFoundations-6-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "commerceBaseFoundations-7-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Business journey",
+          "anchor": "commerceBaseFoundations-1-business-journey"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Base Commerce answers the questions that come before checkout: where is the customer buying, what is the sellable item, what does it cost, which tax applies, which promotion is earned, and can inventory satisfy the request? Each answer belongs to a separate capability so a business can change tax or stock policy without rewriting Cart."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Question",
+            "Owner",
+            "Evidence"
+          ],
+          "rows": [
+            [
+              "Which selling context applies?",
+              "Store",
+              "tenant, store, channel, currency, locale, timezone"
+            ],
+            [
+              "What is sold?",
+              "Product",
+              "product, variant, category, catalog version"
+            ],
+            [
+              "What is the price?",
+              "Pricing",
+              "exact price decision and source hash"
+            ],
+            [
+              "What tax applies?",
+              "Tax",
+              "jurisdiction, rate, exact amount, policy version"
+            ],
+            [
+              "What benefit applies?",
+              "Promotion",
+              "rule, target, exact discount, reason"
+            ],
+            [
+              "Can it be supplied?",
+              "Inventory",
+              "balance, source, reservation, allocation, movement"
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Store rejects inactive or cross-tenant store/channel combinations. Product publication starts with an active product and creates staged evidence; publication does not mutate the authored product. Pricing, Tax, and Promotion use canonical decimal strings. Inventory owns stock and uses optimistic balance revisions plus idempotency keys."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Beginner example",
+          "anchor": "commerceBaseFoundations-2-beginner-example"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A customer opens the web channel for an active Dubai store. Store resolves AED, English, and the store timezone. Product resolves a sellable variant. Pricing returns unit amount `19.99`; ordering three produces `59.97` exactly. Promotion returns an applied discount record, Tax returns its own decision, and Inventory returns candidate warehouses. Cart consumes these results later; it does not reproduce their rules."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Every persisted or transmitted decision includes tenant and correlation evidence. A source hash lets an operator prove what inputs produced a projection. The hash is integrity evidence, not a secret or authorization mechanism."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Developer guidance",
+          "anchor": "commerceBaseFoundations-3-developer-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers extend the owner that controls the decision. Regional tax logic belongs behind Tax. A customer price resolver belongs behind Pricing. Warehouse selection belongs behind Inventory. Later-loading customer modules may replace a narrow service while retaining the same schema and evidence contract."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Never use JavaScript numbers for commercial calculations. The exact amount service accepts canonical decimal strings and uses integer arithmetic internally. Validate currency separately because adding amounts from different currencies is invalid even when their digits look compatible."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Product search records are projections. Change Product or Pricing source, publish a new version, and rebuild the projection. Do not edit search records as business truth. Media associations remain governed by Media/Product boundaries and raw storage paths never become Product fields."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operator and DevOps guidance",
+          "anchor": "commerceBaseFoundations-4-operator-and-devops-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Operators monitor stale publications, decision drift, reservation expiry, negative or inconsistent balances, and failed projection work. Reconciliation compares source revision and source hash to the current projection. A repair creates evidence and reruns the owner; it does not silently patch generated output."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Production teams must set retention, index, cache, throughput, and recovery objectives per deployment. Cache keys include tenant, store, channel, locale, currency, catalog version, and policy versions where relevant. Invalidation follows publication events. A cache hit may improve speed but cannot weaken tenant or effective-date checks."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Security and failure behavior",
+          "anchor": "commerceBaseFoundations-5-security-and-failure-behavior"
+        },
+        {
+          "kind": "paragraph",
+          "text": "All administrative operations require employee permissions. Customer reads are scoped to an authenticated or explicitly public selling context. Cross-tenant input is rejected. Coupon tokens are stored as hashes. Provider secrets and customer protected data stay out of decision evidence, logs, generated context, and Axis payloads."
+        },
+        {
+          "kind": "paragraph",
+          "text": "If Pricing, Tax, Promotion, or Inventory is unavailable, callers receive a failure or a clearly governed fallback policy. They must never invent a zero tax, unlimited stock, or successful discount. Partial evidence is retained for diagnosis but not presented as a final calculated promise."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "commerceBaseFoundations-6-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Combining Product and the technical framework Catalog module.",
+            "Letting Cart own price, tax, promotion, or inventory truth.",
+            "Using floating point for money, rates, or quantities.",
+            "Editing a search projection instead of publishing source.",
+            "Treating a source hash as authorization.",
+            "Returning records without tenant scope.",
+            "Enabling a regional adapter before qualification."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "commerceBaseFoundations-7-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run the Phase 2 foundation contract, generated schema contracts, module metadata validation, controlled Commerce graph preparation, and generated LLM validation. Test exact arithmetic, cross-tenant rejection, inactive contexts, unavailable inventory, deterministic hashes, idempotent reservations, stale revisions, publication withdrawal, and a later-layer service override. Production acceptance additionally requires realistic data-volume, index, cache, recovery, and regional-policy evidence."
+        }
+      ],
+      "searchText": "Base Commerce foundations Beginner-to-operator guide for Store, Product, Pricing, Tax, Promotion, Inventory, exact decisions, publication, recovery, and customization. # Base Commerce foundations\n\n## Business journey\n\nBase Commerce answers the questions that come before checkout: where is the customer buying, what is the sellable item, what does it cost, which tax applies, which promotion is earned, and can inventory satisfy the request? Each answer belongs to a separate capability so a business can change tax or stock policy without rewriting Cart.\n\n| Question | Owner | Evidence |\n| --- | --- | --- |\n| Which selling context applies? | Store | tenant, store, channel, currency, locale, timezone |\n| What is sold? | Product | product, variant, category, catalog version |\n| What is the price? | Pricing | exact price decision and source hash |\n| What tax applies? | Tax | jurisdiction, rate, exact amount, policy version |\n| What benefit applies? | Promotion | rule, target, exact discount, reason |\n| Can it be supplied? | Inventory | balance, source, reservation, allocation, movement |\n\nStore rejects inactive or cross-tenant store/channel combinations. Product publication starts with an active product and creates staged evidence; publication does not mutate the authored product. Pricing, Tax, and Promotion use canonical decimal strings. Inventory owns stock and uses optimistic balance revisions plus idempotency keys.\n\n## Beginner example\n\nA customer opens the web channel for an active Dubai store. Store resolves AED, English, and the store timezone. Product resolves a sellable variant. Pricing returns unit amount `19.99`; ordering three produces `59.97` exactly. Promotion returns an applied discount record, Tax returns its own decision, and Inventory returns candidate warehouses. Cart consumes these results later; it does not reproduce their rules.\n\nEvery persisted or transmitted decision includes tenant and correlation evidence. A source hash lets an operator prove what inputs produced a projection. The hash is integrity evidence, not a secret or authorization mechanism.\n\n## Developer guidance\n\nDevelopers extend the owner that controls the decision. Regional tax logic belongs behind Tax. A customer price resolver belongs behind Pricing. Warehouse selection belongs behind Inventory. Later-loading customer modules may replace a narrow service while retaining the same schema and evidence contract.\n\nNever use JavaScript numbers for commercial calculations. The exact amount service accepts canonical decimal strings and uses integer arithmetic internally. Validate currency separately because adding amounts from different currencies is invalid even when their digits look compatible.\n\nProduct search records are projections. Change Product or Pricing source, publish a new version, and rebuild the projection. Do not edit search records as business truth. Media associations remain governed by Media/Product boundaries and raw storage paths never become Product fields.\n\n## Operator and DevOps guidance\n\nOperators monitor stale publications, decision drift, reservation expiry, negative or inconsistent balances, and failed projection work. Reconciliation compares source revision and source hash to the current projection. A repair creates evidence and reruns the owner; it does not silently patch generated output.\n\nProduction teams must set retention, index, cache, throughput, and recovery objectives per deployment. Cache keys include tenant, store, channel, locale, currency, catalog version, and policy versions where relevant. Invalidation follows publication events. A cache hit may improve speed but cannot weaken tenant or effective-date checks.\n\n## Security and failure behavior\n\nAll administrative operations require employee permissions. Customer reads are scoped to an authenticated or explicitly public selling context. Cross-tenant input is rejected. Coupon tokens are stored as hashes. Provider secrets and customer protected data stay out of decision evidence, logs, generated context, and Axis payloads.\n\nIf Pricing, Tax, Promotion, or Inventory is unavailable, callers receive a failure or a clearly governed fallback policy. They must never invent a zero tax, unlimited stock, or successful discount. Partial evidence is retained for diagnosis but not presented as a final calculated promise.\n\n## Common mistakes\n\n- Combining Product and the technical framework Catalog module.\n- Letting Cart own price, tax, promotion, or inventory truth.\n- Using floating point for money, rates, or quantities.\n- Editing a search projection instead of publishing source.\n- Treating a source hash as authorization.\n- Returning records without tenant scope.\n- Enabling a regional adapter before qualification.\n\n## Verification\n\nRun the Phase 2 foundation contract, generated schema contracts, module metadata validation, controlled Commerce graph preparation, and generated LLM validation. Test exact arithmetic, cross-tenant rejection, inactive contexts, unavailable inventory, deterministic hashes, idempotent reservations, stale revisions, publication withdrawal, and a later-layer service override. Production acceptance additionally requires realistic data-volume, index, cache, recovery, and regional-policy evidence.\n",
+      "previous": {
+        "title": "Commerce overview",
+        "route": "/docs/framework/commerce-overview"
+      },
+      "next": {
+        "title": "Cart, checkout, and order placement",
+        "route": "/docs/framework/commerce-cart-order"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.commerce",
+        "technicalModule": "baseCommerce",
+        "path": "content/nodics.commerce/base-commerce.md",
+        "wordCount": 680,
+        "checksum": "d0802b09986ba8751e3ca45996447db33803103931f8d5a076533c1539b93c78"
+      }
+    },
+    "active": true
+  },
+  "record21": {
+    "code": "nodicsDocsComponentcommerceCartOrder",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "commerce.cart-order",
+      "title": "Cart, checkout, and order placement",
+      "route": "/docs/framework/commerce-cart-order",
+      "section": "nodics-commerce",
+      "sectionTitle": "Nodics commerce",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Customer, developer, and operator journey for exact calculation, placement, idempotency, compensation, immutable Orders, and recovery.",
+      "headings": [
+        {
+          "text": "Customer journey",
+          "anchor": "commerceCartOrder-1-customer-journey",
+          "level": 2
+        },
+        {
+          "text": "Calculation explained for beginners",
+          "anchor": "commerceCartOrder-2-calculation-explained-for-beginners",
+          "level": 2
+        },
+        {
+          "text": "Developer guidance",
+          "anchor": "commerceCartOrder-3-developer-guidance",
+          "level": 2
+        },
+        {
+          "text": "Operator and DevOps guidance",
+          "anchor": "commerceCartOrder-4-operator-and-devops-guidance",
+          "level": 2
+        },
+        {
+          "text": "Security and failure behavior",
+          "anchor": "commerceCartOrder-5-security-and-failure-behavior",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "commerceCartOrder-6-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "commerceCartOrder-7-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customer journey",
+          "anchor": "commerceCartOrder-1-customer-journey"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Cart stores customer purchase intent. Calculation asks Pricing, Promotion, Tax, and Inventory for authoritative decisions. Checkout validates the final intent and coordinates placement. Order records the durable result and append-only history. These responsibilities are deliberately separate. The business value is a reliable purchase promise: customers see defensible totals, stock is protected, and retries do not create duplicate orders or charges."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Stage",
+            "Owner",
+            "Result"
+          ],
+          "rows": [
+            [
+              "Add or change entries",
+              "Cart",
+              "versioned customer intent"
+            ],
+            [
+              "Calculate",
+              "Cart coordinating domain owners",
+              "exact calculation evidence"
+            ],
+            [
+              "Reserve",
+              "Inventory",
+              "idempotent stock reservation"
+            ],
+            [
+              "Authorize",
+              "Payment",
+              "authorization evidence"
+            ],
+            [
+              "Create durable purchase",
+              "Order",
+              "immutable order and entries"
+            ],
+            [
+              "Release goods",
+              "Fulfillment",
+              "release or consignment evidence"
+            ],
+            [
+              "Recover failure",
+              "Checkout and each owner",
+              "checkpoint and compensation evidence"
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "A customer can retry placement with the same idempotency key. Checkout first looks for an existing result. It does not create a second order, reservation, or authorization. Each completed step is checkpointed. If a later step fails, compensation asks the original owner to release or void its evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Calculation explained for beginners",
+          "anchor": "commerceCartOrder-2-calculation-explained-for-beginners"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Suppose one entry costs `20.00`, a promotion grants `2.00`, and Tax returns `0.90`. Cart records subtotal `20`, discount `2`, tax `0.9`, and total `18.9`. The formatting can be localized in Axis, but the backend values remain exact decimal strings with a currency."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Calculation is a snapshot, not permanent truth. Before placement, Checkout verifies the Cart revision, owner decision versions, inventory availability, customer ownership, store context, and expiry. A changed Cart cannot reuse evidence from an older revision."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Developer guidance",
+          "anchor": "commerceCartOrder-3-developer-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers add Cart rules through validation and calculation pipelines, not by calling provider SDKs. Owner ports make dependency contracts explicit and testable. A customer extension can add an entry validator or replace a Pricing resolver without forking Cart."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Order data is immutable commercial evidence. Corrections append history or create a governed lifecycle request; they do not rewrite the original placed facts. Store display labels separately from stable codes. Keep protected addresses and payment references in bounded schemas and projections."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Placement bridges must have deterministic idempotency keys. Derive child keys from the placement key and operation name so retry calls reach the same Inventory and Payment operations. Persist checkpoints before advancing. Do not infer success from a timeout; reconcile with the owner."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operator and DevOps guidance",
+          "anchor": "commerceCartOrder-4-operator-and-devops-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Operators need calculation diagnostics, placement checkpoints, dependency latency, compensation status, stale reservations, and duplicate-attempt indicators. Axis displays backend evidence and refreshes after actions. It does not mark a placement successful because a button was clicked."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Set bounded Cart sizes, pagination, timeouts, retry budgets, and queue backpressure. Load tests must include concurrent updates to one Cart, hot products, promotion bursts, inventory contention, provider timeout, and replay. Backup and restore tests prove that Orders and history survive while transient Carts follow the approved retention policy."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Security and failure behavior",
+          "anchor": "commerceCartOrder-5-security-and-failure-behavior"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Customer routes require customer access tokens and ownership checks. Employee routes require explicit Commerce permissions. Service bridges use service tokens. Tenant comes from trusted authentication context and cannot be overridden by payload data."
+        },
+        {
+          "kind": "paragraph",
+          "text": "A failed dependency leaves a diagnostic and returns an honest incomplete result. Compensation is idempotent and retryable. A Payment timeout becomes unknown until reconciliation, never automatically declined or authorized. Inventory reservation failure prevents Order creation unless an approved backorder policy explicitly applies."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "commerceCartOrder-6-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Recalculating money with browser or floating-point logic.",
+            "Creating Order before durable reservation and authorization evidence.",
+            "Reusing a calculation after Cart revision changes.",
+            "Retrying with a new idempotency key.",
+            "Deleting Order history to correct a mistake.",
+            "Treating timeout as a known provider outcome.",
+            "Putting compensation logic inside an unrelated domain."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "commerceCartOrder-7-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run Cart calculation and placement tests for success, unauthorized ownership, cross-tenant access, stale revision, concurrency, idempotent replay, dependency failure, each compensation boundary, and recovery after restart. Generate schema and route contracts from the effective Commerce graph. Validate Axis loading, empty, error, keyboard, responsive, and stale-evidence states. Production release additionally requires load and soak evidence at approved Cart size, order rate, and dependency latency budgets."
+        }
+      ],
+      "searchText": "Cart, checkout, and order placement Customer, developer, and operator journey for exact calculation, placement, idempotency, compensation, immutable Orders, and recovery. # Cart, checkout, and order placement\n\n## Customer journey\n\nCart stores customer purchase intent. Calculation asks Pricing, Promotion, Tax, and Inventory for authoritative decisions. Checkout validates the final intent and coordinates placement. Order records the durable result and append-only history. These responsibilities are deliberately separate. The business value is a reliable purchase promise: customers see defensible totals, stock is protected, and retries do not create duplicate orders or charges.\n\n| Stage | Owner | Result |\n| --- | --- | --- |\n| Add or change entries | Cart | versioned customer intent |\n| Calculate | Cart coordinating domain owners | exact calculation evidence |\n| Reserve | Inventory | idempotent stock reservation |\n| Authorize | Payment | authorization evidence |\n| Create durable purchase | Order | immutable order and entries |\n| Release goods | Fulfillment | release or consignment evidence |\n| Recover failure | Checkout and each owner | checkpoint and compensation evidence |\n\nA customer can retry placement with the same idempotency key. Checkout first looks for an existing result. It does not create a second order, reservation, or authorization. Each completed step is checkpointed. If a later step fails, compensation asks the original owner to release or void its evidence.\n\n## Calculation explained for beginners\n\nSuppose one entry costs `20.00`, a promotion grants `2.00`, and Tax returns `0.90`. Cart records subtotal `20`, discount `2`, tax `0.9`, and total `18.9`. The formatting can be localized in Axis, but the backend values remain exact decimal strings with a currency.\n\nCalculation is a snapshot, not permanent truth. Before placement, Checkout verifies the Cart revision, owner decision versions, inventory availability, customer ownership, store context, and expiry. A changed Cart cannot reuse evidence from an older revision.\n\n## Developer guidance\n\nDevelopers add Cart rules through validation and calculation pipelines, not by calling provider SDKs. Owner ports make dependency contracts explicit and testable. A customer extension can add an entry validator or replace a Pricing resolver without forking Cart.\n\nOrder data is immutable commercial evidence. Corrections append history or create a governed lifecycle request; they do not rewrite the original placed facts. Store display labels separately from stable codes. Keep protected addresses and payment references in bounded schemas and projections.\n\nPlacement bridges must have deterministic idempotency keys. Derive child keys from the placement key and operation name so retry calls reach the same Inventory and Payment operations. Persist checkpoints before advancing. Do not infer success from a timeout; reconcile with the owner.\n\n## Operator and DevOps guidance\n\nOperators need calculation diagnostics, placement checkpoints, dependency latency, compensation status, stale reservations, and duplicate-attempt indicators. Axis displays backend evidence and refreshes after actions. It does not mark a placement successful because a button was clicked.\n\nSet bounded Cart sizes, pagination, timeouts, retry budgets, and queue backpressure. Load tests must include concurrent updates to one Cart, hot products, promotion bursts, inventory contention, provider timeout, and replay. Backup and restore tests prove that Orders and history survive while transient Carts follow the approved retention policy.\n\n## Security and failure behavior\n\nCustomer routes require customer access tokens and ownership checks. Employee routes require explicit Commerce permissions. Service bridges use service tokens. Tenant comes from trusted authentication context and cannot be overridden by payload data.\n\nA failed dependency leaves a diagnostic and returns an honest incomplete result. Compensation is idempotent and retryable. A Payment timeout becomes unknown until reconciliation, never automatically declined or authorized. Inventory reservation failure prevents Order creation unless an approved backorder policy explicitly applies.\n\n## Common mistakes\n\n- Recalculating money with browser or floating-point logic.\n- Creating Order before durable reservation and authorization evidence.\n- Reusing a calculation after Cart revision changes.\n- Retrying with a new idempotency key.\n- Deleting Order history to correct a mistake.\n- Treating timeout as a known provider outcome.\n- Putting compensation logic inside an unrelated domain.\n\n## Verification\n\nRun Cart calculation and placement tests for success, unauthorized ownership, cross-tenant access, stale revision, concurrency, idempotent replay, dependency failure, each compensation boundary, and recovery after restart. Generate schema and route contracts from the effective Commerce graph. Validate Axis loading, empty, error, keyboard, responsive, and stale-evidence states. Production release additionally requires load and soak evidence at approved Cart size, order rate, and dependency latency budgets.\n",
+      "previous": {
+        "title": "Base Commerce foundations",
+        "route": "/docs/framework/commerce-base-foundations"
+      },
+      "next": {
+        "title": "Payment and fulfillment operations",
+        "route": "/docs/framework/commerce-payment-fulfillment"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.commerce",
+        "technicalModule": "checkout",
+        "path": "content/nodics.commerce/cart-order.md",
+        "wordCount": 659,
+        "checksum": "e66c2d17bc9eed58575550c69573e8f653bb3ead76493eca204477aa36887ad7"
+      }
+    },
+    "active": true
+  },
+  "record22": {
+    "code": "nodicsDocsComponentcommercePaymentFulfillment",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "commerce.payment-fulfillment",
+      "title": "Payment and fulfillment operations",
+      "route": "/docs/framework/commerce-payment-fulfillment",
+      "section": "nodics-commerce",
+      "sectionTitle": "Nodics commerce",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Provider-safe payment and fulfillment guide covering methods, adapters, callbacks, reconciliation, shipment, tracking, warehouse work, and returns.",
+      "headings": [
+        {
+          "text": "Business journey",
+          "anchor": "commercePaymentFulfillment-1-business-journey",
+          "level": 2
+        },
+        {
+          "text": "Payment for beginners",
+          "anchor": "commercePaymentFulfillment-2-payment-for-beginners",
+          "level": 2
+        },
+        {
+          "text": "Fulfillment for beginners",
+          "anchor": "commercePaymentFulfillment-3-fulfillment-for-beginners",
+          "level": 2
+        },
+        {
+          "text": "Developer guidance",
+          "anchor": "commercePaymentFulfillment-4-developer-guidance",
+          "level": 2
+        },
+        {
+          "text": "Operator and DevOps guidance",
+          "anchor": "commercePaymentFulfillment-5-operator-and-devops-guidance",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "commercePaymentFulfillment-6-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "commercePaymentFulfillment-7-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Business journey",
+          "anchor": "commercePaymentFulfillment-1-business-journey"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Payment moves money; Fulfillment moves goods. Order connects their evidence but does not perform either operation. Payment separates methods, provider adapters, transactions, callbacks, and reconciliation. Fulfillment separates consignments, shipments, tracking, warehouse tasks, returns, receipts, inspections, and exceptions."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Concern",
+            "Authority",
+            "Safe evidence"
+          ],
+          "rows": [
+            [
+              "Authorization, capture, void, refund",
+              "Payment",
+              "transaction entry and provider reference"
+            ],
+            [
+              "Card or wallet eligibility",
+              "Payment Method",
+              "method capability without raw secret"
+            ],
+            [
+              "External execution",
+              "Payment Provider",
+              "redacted request/outcome evidence"
+            ],
+            [
+              "Shipment and tracking",
+              "Fulfillment",
+              "consignment, shipment, tracking event"
+            ],
+            [
+              "Warehouse work",
+              "Fulfillment",
+              "assigned task and completion evidence"
+            ],
+            [
+              "Returned stock disposition",
+              "Inventory",
+              "disposition and movement after inspection"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Payment for beginners",
+          "anchor": "commercePaymentFulfillment-2-payment-for-beginners"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The browser sends an opaque provider token, never raw card data. Payment validates tenant, currency, exact amount, operation, and idempotency key. The selected adapter executes AUTHORIZE, CAPTURE, VOID, or REFUND and Payment stores the outcome."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The included Stripe-shaped sandbox adapter is an offline conformance simulator. It accepts test tokens and returns deterministic references so tests can exercise success and replay. It is disabled by default, is not connected to Stripe, and is not live-qualified. PayPal, CyberSource, and Visa packages are declared but disabled until adapter conformance and external certification are complete."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Callbacks require a service boundary, HMAC or provider-approved signature verification, a freshness window, constant-time comparison, and replay storage. Callback data never bypasses reconciliation. A valid signature proves origin integrity; Payment still validates tenant mapping, transaction identity, amount, currency, event ordering, and allowed transition."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Fulfillment for beginners",
+          "anchor": "commercePaymentFulfillment-3-fulfillment-for-beginners"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Fulfillment releases an Order into consignments. One order may produce partial shipments. Tracking events append evidence and cannot silently rewrite prior carrier history. Cancellation becomes an intent because a warehouse or carrier may already have acted."
+        },
+        {
+          "kind": "paragraph",
+          "text": "A return begins with eligible Order evidence, then Fulfillment manages RMA logistics, pickup or drop-off, receipt, and inspection. Inventory decides whether inspected goods are restocked, quarantined, repaired, or written off. Payment refunds only after the approved lifecycle evidence reaches the configured checkpoint."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Developer guidance",
+          "anchor": "commercePaymentFulfillment-4-developer-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Provider adapters implement one narrow contract. Do not leak SDK objects into Payment schemas. Normalize provider statuses into owned statuses while retaining the original provider code and redacted reference. Derive deterministic idempotency keys and keep provider secrets in deployment secret management."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Carrier adapters follow the same boundary: normalized request, bounded timeout, redacted outcome, callback verification, retry, and reconciliation. New providers remain disabled until contract tests, sandbox tests, security review, operational runbook, and qualification evidence exist."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operator and DevOps guidance",
+          "anchor": "commercePaymentFulfillment-5-operator-and-devops-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Operators inspect unknown payment outcomes, callback rejection, reconciliation drift, expiring authorizations, partial capture/refund totals, shipment exceptions, missing tracking, warehouse backlog, and return inspection queues. Axis renders evidence and owner actions; it never stores credentials or invents statuses."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Production teams configure timeouts, retries, circuit breakers, rate limits, concurrency, dead-letter handling, and provider-specific capacity. Monitor success, decline, unknown, latency, duplicate suppression, callback age, shipment delay, and reconciliation lag. Exercise provider outage and carrier outage independently."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "commercePaymentFulfillment-6-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Storing raw card, wallet, or bank credentials.",
+            "Calling a provider from Order or Axis.",
+            "Treating an HTTP timeout as a final payment state.",
+            "Accepting a callback without replay protection.",
+            "Marking the offline simulator as live-qualified.",
+            "Letting Payment decide returned-stock disposition.",
+            "Assuming every order ships in one consignment."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "commercePaymentFulfillment-7-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run method/provider conformance, sandbox authorize/capture/void/refund, idempotent replay, invalid-token, callback signature, expiry, replay, transition, partial shipment, return receipt, inspection, and exception tests. Verify secrets are absent from logs, schemas, docs, OpenAPI examples, and Axis. A live provider requires separate credentialed sandbox certification, webhook delivery, reconciliation, capacity, security, and owner sign-off; local tests do not substitute for that evidence."
+        }
+      ],
+      "searchText": "Payment and fulfillment operations Provider-safe payment and fulfillment guide covering methods, adapters, callbacks, reconciliation, shipment, tracking, warehouse work, and returns. # Payment and fulfillment operations\n\n## Business journey\n\nPayment moves money; Fulfillment moves goods. Order connects their evidence but does not perform either operation. Payment separates methods, provider adapters, transactions, callbacks, and reconciliation. Fulfillment separates consignments, shipments, tracking, warehouse tasks, returns, receipts, inspections, and exceptions.\n\n| Concern | Authority | Safe evidence |\n| --- | --- | --- |\n| Authorization, capture, void, refund | Payment | transaction entry and provider reference |\n| Card or wallet eligibility | Payment Method | method capability without raw secret |\n| External execution | Payment Provider | redacted request/outcome evidence |\n| Shipment and tracking | Fulfillment | consignment, shipment, tracking event |\n| Warehouse work | Fulfillment | assigned task and completion evidence |\n| Returned stock disposition | Inventory | disposition and movement after inspection |\n\n## Payment for beginners\n\nThe browser sends an opaque provider token, never raw card data. Payment validates tenant, currency, exact amount, operation, and idempotency key. The selected adapter executes AUTHORIZE, CAPTURE, VOID, or REFUND and Payment stores the outcome.\n\nThe included Stripe-shaped sandbox adapter is an offline conformance simulator. It accepts test tokens and returns deterministic references so tests can exercise success and replay. It is disabled by default, is not connected to Stripe, and is not live-qualified. PayPal, CyberSource, and Visa packages are declared but disabled until adapter conformance and external certification are complete.\n\nCallbacks require a service boundary, HMAC or provider-approved signature verification, a freshness window, constant-time comparison, and replay storage. Callback data never bypasses reconciliation. A valid signature proves origin integrity; Payment still validates tenant mapping, transaction identity, amount, currency, event ordering, and allowed transition.\n\n## Fulfillment for beginners\n\nFulfillment releases an Order into consignments. One order may produce partial shipments. Tracking events append evidence and cannot silently rewrite prior carrier history. Cancellation becomes an intent because a warehouse or carrier may already have acted.\n\nA return begins with eligible Order evidence, then Fulfillment manages RMA logistics, pickup or drop-off, receipt, and inspection. Inventory decides whether inspected goods are restocked, quarantined, repaired, or written off. Payment refunds only after the approved lifecycle evidence reaches the configured checkpoint.\n\n## Developer guidance\n\nProvider adapters implement one narrow contract. Do not leak SDK objects into Payment schemas. Normalize provider statuses into owned statuses while retaining the original provider code and redacted reference. Derive deterministic idempotency keys and keep provider secrets in deployment secret management.\n\nCarrier adapters follow the same boundary: normalized request, bounded timeout, redacted outcome, callback verification, retry, and reconciliation. New providers remain disabled until contract tests, sandbox tests, security review, operational runbook, and qualification evidence exist.\n\n## Operator and DevOps guidance\n\nOperators inspect unknown payment outcomes, callback rejection, reconciliation drift, expiring authorizations, partial capture/refund totals, shipment exceptions, missing tracking, warehouse backlog, and return inspection queues. Axis renders evidence and owner actions; it never stores credentials or invents statuses.\n\nProduction teams configure timeouts, retries, circuit breakers, rate limits, concurrency, dead-letter handling, and provider-specific capacity. Monitor success, decline, unknown, latency, duplicate suppression, callback age, shipment delay, and reconciliation lag. Exercise provider outage and carrier outage independently.\n\n## Common mistakes\n\n- Storing raw card, wallet, or bank credentials.\n- Calling a provider from Order or Axis.\n- Treating an HTTP timeout as a final payment state.\n- Accepting a callback without replay protection.\n- Marking the offline simulator as live-qualified.\n- Letting Payment decide returned-stock disposition.\n- Assuming every order ships in one consignment.\n\n## Verification\n\nRun method/provider conformance, sandbox authorize/capture/void/refund, idempotent replay, invalid-token, callback signature, expiry, replay, transition, partial shipment, return receipt, inspection, and exception tests. Verify secrets are absent from logs, schemas, docs, OpenAPI examples, and Axis. A live provider requires separate credentialed sandbox certification, webhook delivery, reconciliation, capacity, security, and owner sign-off; local tests do not substitute for that evidence.\n",
+      "previous": {
+        "title": "Cart, checkout, and order placement",
+        "route": "/docs/framework/commerce-cart-order"
+      },
+      "next": {
+        "title": "Cancellation, return, and refund lifecycle",
+        "route": "/docs/framework/commerce-returns-refunds"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.commerce",
+        "technicalModule": "payment",
+        "path": "content/nodics.commerce/payment-fulfillment.md",
+        "wordCount": 585,
+        "checksum": "b6c4d2bdb68d234ed6b3d07c43386ce7afa8e2503b9cce74ce87a68ccef87a71"
+      }
+    },
+    "active": true
+  },
+  "record23": {
+    "code": "nodicsDocsComponentcommerceReturnsRefunds",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "commerce.returns-refunds",
+      "title": "Cancellation, return, and refund lifecycle",
+      "route": "/docs/framework/commerce-returns-refunds",
+      "section": "nodics-commerce",
+      "sectionTitle": "Nodics commerce",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Structured self-service and operator journey for policy, maker-checker approval, owner intents, checkpoints, recovery, and final Order evidence.",
+      "headings": [
+        {
+          "text": "Why one lifecycle is needed",
+          "anchor": "commerceReturnsRefunds-1-why-one-lifecycle-is-needed",
+          "level": 2
+        },
+        {
+          "text": "Customer self-service journey",
+          "anchor": "commerceReturnsRefunds-2-customer-self-service-journey",
+          "level": 2
+        },
+        {
+          "text": "Administrator and operator journey",
+          "anchor": "commerceReturnsRefunds-3-administrator-and-operator-journey",
+          "level": 2
+        },
+        {
+          "text": "Developer guidance",
+          "anchor": "commerceReturnsRefunds-4-developer-guidance",
+          "level": 2
+        },
+        {
+          "text": "Operator and DevOps guidance",
+          "anchor": "commerceReturnsRefunds-5-operator-and-devops-guidance",
+          "level": 2
+        },
+        {
+          "text": "Security and privacy",
+          "anchor": "commerceReturnsRefunds-6-security-and-privacy",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "commerceReturnsRefunds-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "commerceReturnsRefunds-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Why one lifecycle is needed",
+          "anchor": "commerceReturnsRefunds-1-why-one-lifecycle-is-needed"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Cancellation, return, and refund are related but different business intents. Cancellation tries to stop unfulfilled work. Return moves delivered goods back through Fulfillment and Inventory. Refund moves money through Payment. Order owns the customer intent, eligibility snapshot, approval trail, checkpoints, and final history projection."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Intent",
+            "Typical prerequisite",
+            "Domain actions"
+          ],
+          "rows": [
+            [
+              "Cancellation",
+              "cancellable unfulfilled quantity",
+              "Fulfillment stop, Inventory release, Payment void or refund"
+            ],
+            [
+              "Return",
+              "delivered eligible quantity",
+              "RMA, receipt, inspection, Inventory disposition, Payment refund"
+            ],
+            [
+              "Refund",
+              "captured refundable amount",
+              "maker-checker approval, Payment refund, reconciliation"
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Catalog and Product screens do not initiate these actions because a product alone has no customer, quantity, shipment, payment, or settlement evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customer self-service journey",
+          "anchor": "commerceReturnsRefunds-2-customer-self-service-journey"
+        },
+        {
+          "kind": "paragraph",
+          "text": "For beginners, requesting a reversal is not the same as completing it."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The customer opens an owned Order, selects eligible entries and quantities, chooses a reason, and requests a preview. The backend evaluates policy and returns exact refundable amounts, non-refundable charges, tax and discount allocation, expected logistics, approval requirements, and expiry. Submitting creates an immutable request version with an idempotency key."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The customer can read only their own requests. A retry returns the original result. The UI shows pending, awaiting approval, logistics, inspection, refund, reconciliation, completed, rejected, or failed states from backend evidence. It never promises money before Payment confirms the outcome."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Administrator and operator journey",
+          "anchor": "commerceReturnsRefunds-3-administrator-and-operator-journey"
+        },
+        {
+          "kind": "paragraph",
+          "text": "An operator sees queues grouped by Order lifecycle, not Catalog keywords. Maker-checker means the requester cannot approve a protected action. The approver sees policy version, quantities, exact allocation, source Order revision, fulfillment state, payment state, customer reason, and risk evidence."
+        },
+        {
+          "kind": "paragraph",
+          "text": "After approval, the workflow calls Fulfillment, Inventory, and Payment through owner intents. Each step records a checkpoint. Failures remain retryable and reconcilable. Emergency stop may pause new execution but cannot erase already completed provider or warehouse evidence."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis keeps Cancellation, Return, and Refund as distinct workspaces and provides links only within the backend-published hierarchy. Payment reconciliation remains in Payment Operations. Return receipt and inspection remain in Fulfillment Operations. Catalog displays the explicit message that no catalog-only refund action exists."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Developer guidance",
+          "anchor": "commerceReturnsRefunds-4-developer-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers change eligibility through versioned policy pipelines. Exact reversal allocation must reference original price, discount, tax, payment, shipment, and prior reversal evidence. Never recalculate a historic order using today’s price or tax policy."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Workflow definitions are configured for cancellation, return, and refund with maker-checker steps. Order coordinates but delegates physical and monetary actions. Every service accepts tenant and correlation evidence. Customer extensions may add policy steps or approval thresholds through later layers while retaining owner contracts and history."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Compatibility aliases support migration for two minor releases or 180 days, whichever approved window applies. Aliases map old names to new contracts; they do not keep duplicate authorities alive."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operator and DevOps guidance",
+          "anchor": "commerceReturnsRefunds-5-operator-and-devops-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Monitor pending approvals, checkpoint age, retry counts, unknown payment outcomes, return-in-transit age, inspection backlog, disposition drift, and Order projection lag. Recovery resumes from the last durable checkpoint and reuses idempotency keys."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Backup/restore acceptance must prove requests, versions, approvals, checkpoints, owner evidence, and Order history remain consistent. Disaster recovery must not reissue refunds. Reconciliation compares restored state with Payment and Fulfillment providers before progressing unknown work."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Security and privacy",
+          "anchor": "commerceReturnsRefunds-6-security-and-privacy"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Customer access requires ownership checks. Operator and approver permissions are separate. Service calls use service audiences. Reasons and evidence may contain protected data, so Axis receives only necessary projections and exports are bounded, audited, and retention-controlled."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "commerceReturnsRefunds-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Starting refunds from Product or Catalog.",
+            "Letting the requester approve their own protected refund.",
+            "Repricing historic orders with current policy.",
+            "Issuing a second refund after timeout.",
+            "Updating the original Order instead of appending history.",
+            "Restocking before receipt and inspection evidence.",
+            "Treating UI visibility as backend authorization."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "commerceReturnsRefunds-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Test customer ownership, tenant isolation, eligibility rejection, exact partial allocation, duplicate request, maker-checker separation, cancellation before and after shipment, partial return, failed pickup, inspection disposition, void versus refund, provider timeout, checkpoint restart, reconciliation, and final Order history. Axis tests verify domain hierarchy, no Catalog refund action, accessibility, responsive rendering, and backend denial behavior. Production release requires approved policy, provider, legal, finance, operations, recovery, and residual-risk evidence."
+        }
+      ],
+      "searchText": "Cancellation, return, and refund lifecycle Structured self-service and operator journey for policy, maker-checker approval, owner intents, checkpoints, recovery, and final Order evidence. # Cancellation, return, and refund lifecycle\n\n## Why one lifecycle is needed\n\nCancellation, return, and refund are related but different business intents. Cancellation tries to stop unfulfilled work. Return moves delivered goods back through Fulfillment and Inventory. Refund moves money through Payment. Order owns the customer intent, eligibility snapshot, approval trail, checkpoints, and final history projection.\n\n| Intent | Typical prerequisite | Domain actions |\n| --- | --- | --- |\n| Cancellation | cancellable unfulfilled quantity | Fulfillment stop, Inventory release, Payment void or refund |\n| Return | delivered eligible quantity | RMA, receipt, inspection, Inventory disposition, Payment refund |\n| Refund | captured refundable amount | maker-checker approval, Payment refund, reconciliation |\n\nCatalog and Product screens do not initiate these actions because a product alone has no customer, quantity, shipment, payment, or settlement evidence.\n\n## Customer self-service journey\n\nFor beginners, requesting a reversal is not the same as completing it.\n\nThe customer opens an owned Order, selects eligible entries and quantities, chooses a reason, and requests a preview. The backend evaluates policy and returns exact refundable amounts, non-refundable charges, tax and discount allocation, expected logistics, approval requirements, and expiry. Submitting creates an immutable request version with an idempotency key.\n\nThe customer can read only their own requests. A retry returns the original result. The UI shows pending, awaiting approval, logistics, inspection, refund, reconciliation, completed, rejected, or failed states from backend evidence. It never promises money before Payment confirms the outcome.\n\n## Administrator and operator journey\n\nAn operator sees queues grouped by Order lifecycle, not Catalog keywords. Maker-checker means the requester cannot approve a protected action. The approver sees policy version, quantities, exact allocation, source Order revision, fulfillment state, payment state, customer reason, and risk evidence.\n\nAfter approval, the workflow calls Fulfillment, Inventory, and Payment through owner intents. Each step records a checkpoint. Failures remain retryable and reconcilable. Emergency stop may pause new execution but cannot erase already completed provider or warehouse evidence.\n\nAxis keeps Cancellation, Return, and Refund as distinct workspaces and provides links only within the backend-published hierarchy. Payment reconciliation remains in Payment Operations. Return receipt and inspection remain in Fulfillment Operations. Catalog displays the explicit message that no catalog-only refund action exists.\n\n## Developer guidance\n\nDevelopers change eligibility through versioned policy pipelines. Exact reversal allocation must reference original price, discount, tax, payment, shipment, and prior reversal evidence. Never recalculate a historic order using today’s price or tax policy.\n\nWorkflow definitions are configured for cancellation, return, and refund with maker-checker steps. Order coordinates but delegates physical and monetary actions. Every service accepts tenant and correlation evidence. Customer extensions may add policy steps or approval thresholds through later layers while retaining owner contracts and history.\n\nCompatibility aliases support migration for two minor releases or 180 days, whichever approved window applies. Aliases map old names to new contracts; they do not keep duplicate authorities alive.\n\n## Operator and DevOps guidance\n\nMonitor pending approvals, checkpoint age, retry counts, unknown payment outcomes, return-in-transit age, inspection backlog, disposition drift, and Order projection lag. Recovery resumes from the last durable checkpoint and reuses idempotency keys.\n\nBackup/restore acceptance must prove requests, versions, approvals, checkpoints, owner evidence, and Order history remain consistent. Disaster recovery must not reissue refunds. Reconciliation compares restored state with Payment and Fulfillment providers before progressing unknown work.\n\n## Security and privacy\n\nCustomer access requires ownership checks. Operator and approver permissions are separate. Service calls use service audiences. Reasons and evidence may contain protected data, so Axis receives only necessary projections and exports are bounded, audited, and retention-controlled.\n\n## Common mistakes\n\n- Starting refunds from Product or Catalog.\n- Letting the requester approve their own protected refund.\n- Repricing historic orders with current policy.\n- Issuing a second refund after timeout.\n- Updating the original Order instead of appending history.\n- Restocking before receipt and inspection evidence.\n- Treating UI visibility as backend authorization.\n\n## Verification\n\nTest customer ownership, tenant isolation, eligibility rejection, exact partial allocation, duplicate request, maker-checker separation, cancellation before and after shipment, partial return, failed pickup, inspection disposition, void versus refund, provider timeout, checkpoint restart, reconciliation, and final Order history. Axis tests verify domain hierarchy, no Catalog refund action, accessibility, responsive rendering, and backend denial behavior. Production release requires approved policy, provider, legal, finance, operations, recovery, and residual-risk evidence.\n",
+      "previous": {
+        "title": "Payment and fulfillment operations",
+        "route": "/docs/framework/commerce-payment-fulfillment"
+      },
+      "next": {
+        "title": "Commerce enterprise operations and migration",
+        "route": "/docs/framework/commerce-enterprise-operations"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.commerce",
+        "technicalModule": "order",
+        "path": "content/nodics.commerce/returns-refunds.md",
+        "wordCount": 674,
+        "checksum": "63f933bbac4a3243f9ae25f3732ad5b571f40411e8d59e7ff122081e1bd4ae5e"
+      }
+    },
+    "active": true
+  },
+  "record24": {
+    "code": "nodicsDocsComponentcommerceEnterpriseOperations",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "commerce.enterprise-operations",
+      "title": "Commerce enterprise operations and migration",
+      "route": "/docs/framework/commerce-enterprise-operations",
+      "section": "nodics-commerce",
+      "sectionTitle": "Nodics commerce",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Capacity, backpressure, providers, recovery, compatibility, tenant migration, rollback, legacy retirement, and production qualification guidance.",
+      "headings": [
+        {
+          "text": "Operational outcome",
+          "anchor": "commerceEnterpriseOperations-1-operational-outcome",
+          "level": 2
+        },
+        {
+          "text": "Beginner mental model",
+          "anchor": "commerceEnterpriseOperations-2-beginner-mental-model",
+          "level": 2
+        },
+        {
+          "text": "Capacity and backpressure",
+          "anchor": "commerceEnterpriseOperations-3-capacity-and-backpressure",
+          "level": 2
+        },
+        {
+          "text": "Backup, restore, and disaster recovery",
+          "anchor": "commerceEnterpriseOperations-4-backup-restore-and-disaster-recovery",
+          "level": 2
+        },
+        {
+          "text": "Compatibility and upgrades",
+          "anchor": "commerceEnterpriseOperations-5-compatibility-and-upgrades",
+          "level": 2
+        },
+        {
+          "text": "Tenant migration journey",
+          "anchor": "commerceEnterpriseOperations-6-tenant-migration-journey",
+          "level": 2
+        },
+        {
+          "text": "Developer guidance",
+          "anchor": "commerceEnterpriseOperations-7-developer-guidance",
+          "level": 2
+        },
+        {
+          "text": "Operator and release-owner guidance",
+          "anchor": "commerceEnterpriseOperations-8-operator-and-release-owner-guidance",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "commerceEnterpriseOperations-9-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "commerceEnterpriseOperations-10-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operational outcome",
+          "anchor": "commerceEnterpriseOperations-1-operational-outcome"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Commerce is safe to release only when correctness, capacity, recovery, compatibility, and migration evidence tell the same story. Unit tests prove deterministic rules; they do not prove that a production database, payment provider, carrier, region, or traffic profile is qualified."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business value is controlled growth without sacrificing financial correctness, customer trust, recoverability, or upgrade safety."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Evidence layer",
+            "Framework proof",
+            "Deployment proof"
+          ],
+          "rows": [
+            [
+              "Capacity",
+              "bounded pages, carts, batches, retries, and a reference arithmetic harness",
+              "representative load and soak against production-like topology"
+            ],
+            [
+              "Providers",
+              "adapter, timeout, callback, replay, idempotency, and offline conformance tests",
+              "credentialed sandbox certification and contracted limits"
+            ],
+            [
+              "Recovery",
+              "checkpoints, restore-manifest comparison, retry and reconciliation contracts",
+              "backup, restore, failover, RPO and RTO rehearsal"
+            ],
+            [
+              "Compatibility",
+              "version comparison, alias window, successor and sunset evidence",
+              "consumer matrix and upgrade/rollback rehearsal"
+            ],
+            [
+              "Migration",
+              "dry-run mapping, count, hash, quarantine, cutover and rollback contracts",
+              "tenant-by-tenant approved execution and reconciliation"
+            ],
+            [
+              "Retirement",
+              "active runtime scan and standard module identity",
+              "completed rollback window and operational owner acceptance"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Beginner mental model",
+          "anchor": "commerceEnterpriseOperations-2-beginner-mental-model"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Think of a Commerce release as moving a warehouse while customers continue ordering. First count and label everything. Then rehearse the move, quarantine anything that does not map, move one controlled section, compare the old and new ledgers, and keep a rollback route until the agreed window ends."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The framework provides the checklist and evidence shapes. A customer deployment supplies real volumes, infrastructure, provider accounts, recovery regions, legal policy, and named approvers. This separation prevents local tests from being presented as production certification."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Capacity and backpressure",
+          "anchor": "commerceEnterpriseOperations-3-capacity-and-backpressure"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The reference configuration bounds page size at 100, Cart entries at 500, batch size at 100, and concurrent provider requests at 25. Retry uses exponential delay, a maximum attempt count, and a maximum delay. These are reference defaults, not universal service-level objectives."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers preserve limits at every API, repository, queue, export, and provider boundary. Operators monitor p50, p95, p99, throughput, error rate, saturation, queue depth, retry age, stale reservations, placement checkpoint age, unknown payments, shipment exceptions, and reconciliation lag. DevOps teams test hot products, concurrent Cart revisions, promotion bursts, inventory contention, dependency latency, callback storms, provider throttling, and regional failure."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The included capacity test executes 50,000 exact decimal additions and records elapsed time as a regression harness. It is deliberately not called a production load test."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Backup, restore, and disaster recovery",
+          "anchor": "commerceEnterpriseOperations-4-backup-restore-and-disaster-recovery"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A backup manifest records tenant, counts for Orders, Payments, Shipments, lifecycle requests and history, checksum, and checkpoint. Restore verification compares counts and checksum before traffic resumes. A mismatch becomes DRIFTED and blocks automatic continuation."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Recovery resumes from durable checkpoints and reuses original idempotency keys. Unknown Payment and carrier outcomes are reconciled externally before replay. Disaster recovery must never reissue an authorization, capture, shipment, void, or refund merely because local state was restored."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Each deployment rehearses backup, restore, regional failover, dependency unavailability, and return to the primary region. It records measured recovery point and recovery time rather than copying the reference targets."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Compatibility and upgrades",
+          "anchor": "commerceEnterpriseOperations-5-compatibility-and-upgrades"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Contracts use semantic versions and classify compatible, deprecated, or breaking change. The default compatibility alias window is two minor releases or 180 days. A deprecated alias has a successor and sunset date. It translates identity at the boundary and never keeps a duplicate service or schema authority active."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Upgrade rehearsal runs old consumers against the new compatible surface, then new consumers against the supported server matrix. Rollback rehearsal proves that application rollback does not corrupt newer durable evidence. A breaking database change requires forward and rollback migration plans."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Tenant migration journey",
+          "anchor": "commerceEnterpriseOperations-6-tenant-migration-journey"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Migration defaults to DRY_RUN. For every tenant and schema, record source count, target count, source hash, mapping version, errors, quarantined records, and rollback reference. The approved order is Store, Product, Pricing, Tax, Promotion, Inventory, Cart, Order, Payment, Fulfillment, then reverse lifecycle evidence."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Cutover is allowed only after dry-run counts and hashes reconcile. Failed records are quarantined; they are not silently skipped. Rollback removes or deactivates only records created by that migration release and preserves immutable audit evidence."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The archived Commerce repository remains historical reference. Active package metadata, runtime source, configuration, server graphs, routes, and imports use `nodics.commerce`. A retirement contract scans active runtime paths for executable archived references."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Developer guidance",
+          "anchor": "commerceEnterpriseOperations-7-developer-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Add operational evidence to the owning module. Checkout Core may coordinate cross-domain checkpoints, but Pricing still owns price decisions and Payment still owns reconciliation. Generated schema, service, controller, route-test, OpenAPI, and LLM artifacts come from effective source and are regenerated after changes."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Never hardcode machine paths, credentials, provider secrets, or customer data into evidence. Hashes prove integrity, not confidentiality. Redact protected payloads and retain only references needed for audit."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operator and release-owner guidance",
+          "anchor": "commerceEnterpriseOperations-8-operator-and-release-owner-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The release owner reviews framework tests, effective graph, generated artifacts, Axis journey, documentation, migration rehearsal, provider qualification, load/soak, restore/failover, compatibility matrix, rollback, known limitations, and residual risks. Finance approves payment/reconciliation policy; Operations approves fulfillment and recovery; Security approves callback, secret, access and audit controls; Product approves customer policy; the deployment owner accepts environment-specific targets."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "commerceEnterpriseOperations-9-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Calling a microbenchmark a production load test.",
+            "Claiming provider qualification from an offline simulator.",
+            "Retrying unknown money movement with a new key.",
+            "Migrating all tenants before a reconciled dry run.",
+            "Keeping two active schemas behind a compatibility alias.",
+            "Restoring counts without comparing a checksum.",
+            "Retiring the archive before the rollback window ends.",
+            "Editing generated artifacts instead of source."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "commerceEnterpriseOperations-10-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run focused Commerce contracts, all generated schema and route contracts, controlled Commerce plus Process graph build, module metadata, syntax, ownership, documentation, LLM generation and validation, Axis verify, and the active-runtime retirement scan. Record the generated counts and observed capacity-harness duration."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Deployment release remains conditional until named owners attach representative load and soak results, credentialed provider and carrier qualification, backup/restore and failover measurements, tenant migration reconciliation, upgrade/rollback rehearsal, and residual-risk acceptance. That conditional gate is a feature of honest enterprise readiness, not an implementation omission."
+        }
+      ],
+      "searchText": "Commerce enterprise operations and migration Capacity, backpressure, providers, recovery, compatibility, tenant migration, rollback, legacy retirement, and production qualification guidance. # Commerce enterprise operations and migration\n\n## Operational outcome\n\nCommerce is safe to release only when correctness, capacity, recovery, compatibility, and migration evidence tell the same story. Unit tests prove deterministic rules; they do not prove that a production database, payment provider, carrier, region, or traffic profile is qualified.\n\nThe business value is controlled growth without sacrificing financial\ncorrectness, customer trust, recoverability, or upgrade safety.\n\n| Evidence layer | Framework proof | Deployment proof |\n| --- | --- | --- |\n| Capacity | bounded pages, carts, batches, retries, and a reference arithmetic harness | representative load and soak against production-like topology |\n| Providers | adapter, timeout, callback, replay, idempotency, and offline conformance tests | credentialed sandbox certification and contracted limits |\n| Recovery | checkpoints, restore-manifest comparison, retry and reconciliation contracts | backup, restore, failover, RPO and RTO rehearsal |\n| Compatibility | version comparison, alias window, successor and sunset evidence | consumer matrix and upgrade/rollback rehearsal |\n| Migration | dry-run mapping, count, hash, quarantine, cutover and rollback contracts | tenant-by-tenant approved execution and reconciliation |\n| Retirement | active runtime scan and standard module identity | completed rollback window and operational owner acceptance |\n\n## Beginner mental model\n\nThink of a Commerce release as moving a warehouse while customers continue ordering. First count and label everything. Then rehearse the move, quarantine anything that does not map, move one controlled section, compare the old and new ledgers, and keep a rollback route until the agreed window ends.\n\nThe framework provides the checklist and evidence shapes. A customer deployment supplies real volumes, infrastructure, provider accounts, recovery regions, legal policy, and named approvers. This separation prevents local tests from being presented as production certification.\n\n## Capacity and backpressure\n\nThe reference configuration bounds page size at 100, Cart entries at 500, batch size at 100, and concurrent provider requests at 25. Retry uses exponential delay, a maximum attempt count, and a maximum delay. These are reference defaults, not universal service-level objectives.\n\nDevelopers preserve limits at every API, repository, queue, export, and provider boundary. Operators monitor p50, p95, p99, throughput, error rate, saturation, queue depth, retry age, stale reservations, placement checkpoint age, unknown payments, shipment exceptions, and reconciliation lag. DevOps teams test hot products, concurrent Cart revisions, promotion bursts, inventory contention, dependency latency, callback storms, provider throttling, and regional failure.\n\nThe included capacity test executes 50,000 exact decimal additions and records elapsed time as a regression harness. It is deliberately not called a production load test.\n\n## Backup, restore, and disaster recovery\n\nA backup manifest records tenant, counts for Orders, Payments, Shipments, lifecycle requests and history, checksum, and checkpoint. Restore verification compares counts and checksum before traffic resumes. A mismatch becomes DRIFTED and blocks automatic continuation.\n\nRecovery resumes from durable checkpoints and reuses original idempotency keys. Unknown Payment and carrier outcomes are reconciled externally before replay. Disaster recovery must never reissue an authorization, capture, shipment, void, or refund merely because local state was restored.\n\nEach deployment rehearses backup, restore, regional failover, dependency unavailability, and return to the primary region. It records measured recovery point and recovery time rather than copying the reference targets.\n\n## Compatibility and upgrades\n\nContracts use semantic versions and classify compatible, deprecated, or breaking change. The default compatibility alias window is two minor releases or 180 days. A deprecated alias has a successor and sunset date. It translates identity at the boundary and never keeps a duplicate service or schema authority active.\n\nUpgrade rehearsal runs old consumers against the new compatible surface, then new consumers against the supported server matrix. Rollback rehearsal proves that application rollback does not corrupt newer durable evidence. A breaking database change requires forward and rollback migration plans.\n\n## Tenant migration journey\n\nMigration defaults to DRY_RUN. For every tenant and schema, record source count, target count, source hash, mapping version, errors, quarantined records, and rollback reference. The approved order is Store, Product, Pricing, Tax, Promotion, Inventory, Cart, Order, Payment, Fulfillment, then reverse lifecycle evidence.\n\nCutover is allowed only after dry-run counts and hashes reconcile. Failed records are quarantined; they are not silently skipped. Rollback removes or deactivates only records created by that migration release and preserves immutable audit evidence.\n\nThe archived Commerce repository remains historical reference. Active package metadata, runtime source, configuration, server graphs, routes, and imports use `nodics.commerce`. A retirement contract scans active runtime paths for executable archived references.\n\n## Developer guidance\n\nAdd operational evidence to the owning module. Checkout Core may coordinate cross-domain checkpoints, but Pricing still owns price decisions and Payment still owns reconciliation. Generated schema, service, controller, route-test, OpenAPI, and LLM artifacts come from effective source and are regenerated after changes.\n\nNever hardcode machine paths, credentials, provider secrets, or customer data into evidence. Hashes prove integrity, not confidentiality. Redact protected payloads and retain only references needed for audit.\n\n## Operator and release-owner guidance\n\nThe release owner reviews framework tests, effective graph, generated artifacts, Axis journey, documentation, migration rehearsal, provider qualification, load/soak, restore/failover, compatibility matrix, rollback, known limitations, and residual risks. Finance approves payment/reconciliation policy; Operations approves fulfillment and recovery; Security approves callback, secret, access and audit controls; Product approves customer policy; the deployment owner accepts environment-specific targets.\n\n## Common mistakes\n\n- Calling a microbenchmark a production load test.\n- Claiming provider qualification from an offline simulator.\n- Retrying unknown money movement with a new key.\n- Migrating all tenants before a reconciled dry run.\n- Keeping two active schemas behind a compatibility alias.\n- Restoring counts without comparing a checksum.\n- Retiring the archive before the rollback window ends.\n- Editing generated artifacts instead of source.\n\n## Verification\n\nRun focused Commerce contracts, all generated schema and route contracts, controlled Commerce plus Process graph build, module metadata, syntax, ownership, documentation, LLM generation and validation, Axis verify, and the active-runtime retirement scan. Record the generated counts and observed capacity-harness duration.\n\nDeployment release remains conditional until named owners attach representative load and soak results, credentialed provider and carrier qualification, backup/restore and failover measurements, tenant migration reconciliation, upgrade/rollback rehearsal, and residual-risk acceptance. That conditional gate is a feature of honest enterprise readiness, not an implementation omission.\n",
+      "previous": {
+        "title": "Cancellation, return, and refund lifecycle",
+        "route": "/docs/framework/commerce-returns-refunds"
+      },
+      "next": {
+        "title": "Communication, delivery, and verification",
+        "route": "/docs/framework/communication-overview"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.commerce",
+        "technicalModule": "checkoutCore",
+        "path": "content/nodics.commerce/enterprise-operations.md",
+        "wordCount": 966,
+        "checksum": "0d3794a2841a108ed3905838662efa322ad95a7304389489b649acea38e8a1d4"
+      }
+    },
+    "active": true
+  },
+  "record25": {
+    "code": "nodicsDocsComponentcommunicationOverview",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "communication.overview",
+      "title": "Communication, delivery, and verification",
+      "route": "/docs/framework/communication-overview",
+      "section": "nodics-communication",
+      "sectionTitle": "Nodics communication",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Beginner-to-operator journey for templates, intent, consent, suppression, verification, provider delivery, callbacks, retry, inbox, recovery, and domain integration.",
+      "headings": [
+        {
+          "text": "Module structure",
+          "anchor": "communicationOverview-1-module-structure",
+          "level": 2
+        },
+        {
+          "text": "End-to-end delivery journey",
+          "anchor": "communicationOverview-2-end-to-end-delivery-journey",
+          "level": 2
+        },
+        {
+          "text": "Template and rendering journey",
+          "anchor": "communicationOverview-3-template-and-rendering-journey",
+          "level": 2
+        },
+        {
+          "text": "Consent, purpose, and suppression",
+          "anchor": "communicationOverview-4-consent-purpose-and-suppression",
+          "level": 2
+        },
+        {
+          "text": "Idempotency and delivery evidence",
+          "anchor": "communicationOverview-5-idempotency-and-delivery-evidence",
+          "level": 2
+        },
+        {
+          "text": "Verification journey",
+          "anchor": "communicationOverview-6-verification-journey",
+          "level": 2
+        },
+        {
+          "text": "Axis and customer journey",
+          "anchor": "communicationOverview-7-axis-and-customer-journey",
+          "level": 2
+        },
+        {
+          "text": "Engagement integration",
+          "anchor": "communicationOverview-8-engagement-integration",
+          "level": 2
+        },
+        {
+          "text": "Provider activation and operations",
+          "anchor": "communicationOverview-9-provider-activation-and-operations",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "communicationOverview-10-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "communicationOverview-11-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Nodics Communication turns a business-owned request to inform or verify someone into a governed message and delivery outcome. This beginner-friendly guide explains templates, recipients, consent and suppression, provider delivery, retry, callbacks, inbox records, and the boundary between Communication and consuming modules such as Engagement, Order, Process, Profile/KYC, and Security."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Communication owns how a message is prepared and delivered. The consuming domain owns why it was requested and what business state changes afterward. For example, Contact Submission owns an enquiry and may request an acknowledgement. Communication renders and sends that acknowledgement, but a provider failure never deletes or rolls back the enquiry."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Module structure",
+          "anchor": "communicationOverview-1-module-structure"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Module",
+            "Responsibility"
+          ],
+          "rows": [
+            [
+              "`commsSchema`",
+              "Source declarations for templates, intents, delivery attempts, suppression, inbox, and verification evidence."
+            ],
+            [
+              "`commsCore`",
+              "Rendering, idempotency, policy, delivery orchestration, retry, fallback, and content-free events."
+            ],
+            [
+              "`commsVerification`",
+              "Expiring, hashed, attempt-limited communication challenges without owning identity."
+            ],
+            [
+              "`localCommsProvider`",
+              "Deterministic development delivery with no external network transmission."
+            ],
+            [
+              "`commsApi`",
+              "Secured customer inbox, operator recovery, and service-authenticated callback routes."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "End-to-end delivery journey",
+          "anchor": "communicationOverview-2-end-to-end-delivery-journey"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Domain[\"Business module creates intent\"] --> Policy[\"Recipient, purpose, consent and suppression\"]\n  Policy -->|Suppressed| Evidence[\"Suppression evidence\"]\n  Policy -->|Allowed| Template[\"Validated template version\"]\n  Template --> Render[\"Transient declared-variable rendering\"]\n  Render --> Provider[\"Certified channel provider\"]\n  Provider -->|Delivered| Outcome[\"Content-free delivery evidence\"]\n  Provider -->|Failed| Retry[\"Bounded retry or fallback\"]\n  Retry --> Provider\n  Retry -->|Exhausted| Dead[\"Dead letter and reconciliation\"]\n  Outcome --> Domain"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Template and rendering journey",
+          "anchor": "communicationOverview-3-template-and-rendering-journey"
+        },
+        {
+          "kind": "paragraph",
+          "text": "An administrator defines a template code, purpose, supported channels, and declared variables. Each locale/channel body is an immutable validated version with a checksum. Activation moves the template pointer; it does not rewrite earlier delivery evidence."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The renderer accepts only declared variables, rejects executable constructs, and enforces count and rendered-size limits. Rendering is transient. Intent and event records store a variables hash and template version, not a convenient copy of every customer field. Provider secrets never appear in templates or Axis."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers add a template by declaring the smallest variable set, providing safe locale/channel versions, testing missing and unknown variables, validating output size and escaping, and supplying a migration path before retiring an active version."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Consent, purpose, and suppression",
+          "anchor": "communicationOverview-4-consent-purpose-and-suppression"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Every intent states a purpose such as transactional, service, consent, verification, or marketing. Marketing consent must never be inferred from permission to send a transaction or security challenge. A suppression is recipient-, purpose-, and channel-scoped with reason, source, and validity period."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Policy runs before rendering and provider delivery. A suppressed request produces evidence and returns safely to the caller. It is not retried through another provider to evade customer preference. Emergency or legally required messages need an explicit policy rather than a hidden bypass."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Idempotency and delivery evidence",
+          "anchor": "communicationOverview-5-idempotency-and-delivery-evidence"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The consuming domain supplies an idempotency key and correlation ID. Repeating the same logical request returns the existing intent instead of sending a duplicate. Delivery attempts record provider, channel, attempt, bounded status, safe provider reference, response code, retry time, and timestamps. Events contain codes and statuses, not message bodies, addresses, or provider payloads."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Retry uses exponential delay and a maximum attempt count. Ambiguous timeouts require provider reconciliation before replay. Fallback between providers or channels must be allowed by purpose, consent, residency, and customer preference; it is not an automatic escape hatch."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification journey",
+          "anchor": "communicationOverview-6-verification-journey"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Verification creates a random transient secret and stores only salted hash evidence plus a destination hash. The challenge has purpose, subject reference, channel, expiry, attempt limit, status, and correlation. Successful comparison marks it verified once. Expiry or lockout prevents further use."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Communication proves possession of a channel; it does not decide that a user is authenticated, KYC-approved, authorized, or safe. Profile, KYC, Security, or the requesting domain consumes the verified outcome and applies its own current policy."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Axis and customer journey",
+          "anchor": "communicationOverview-7-axis-and-customer-journey"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Customers use the secured Communication inbox route to list only their own in-app messages. They can never select another recipient identifier in the URL or query. Axis operators inspect delivery evidence and retry only failed, retry-pending, or dead-letter attempts with explicit permission. Raw content and addresses stay masked."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Provider callbacks use service authentication and bounded provider evidence. Production adapters additionally verify signature, timestamp/replay window, provider/account identity, and idempotency before reconciling an attempt. A callback does not trust domain identifiers supplied by an external payload."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Engagement integration",
+          "anchor": "communicationOverview-8-engagement-integration"
+        },
+        {
+          "kind": "paragraph",
+          "text": "`engagementComms` is a later-loaded bridge. It maps CONTACT, FEEDBACK, REVIEW, and TESTIMONIAL scenarios to Communication templates, declared variables, purpose, recipient/address reference, and a stable idempotency key. The dependency is one-way: Communication never imports Engagement or changes its status."
+        },
+        {
+          "kind": "paragraph",
+          "text": "When Communication is unavailable, the bridge returns deferred evidence with `domainStateChanged: false`. Contact intake and other safe domain operations remain durable. A scheduled worker can retry or reconcile later."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Provider activation and operations",
+          "anchor": "communicationOverview-9-provider-activation-and-operations"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The local provider is enabled for development and returns deterministic content-free evidence. SMTP and Twilio-style external providers remain disabled until a deployment supplies secured credentials, verified sender identity, region/residency approval, consent mapping, callbacks, retry/fallback, observability, rate and cost limits, incident response, and rollback."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Operators monitor accepted/suppressed intent volume, render failures, provider latency/error, delivered rate, retry age, dead letters, callback rejection/replay, inbox expiry, verification success/lockout, and consent/suppression decisions. Logs use intent, attempt, template, and correlation codes without content."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "communicationOverview-10-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Letting Engagement, Order, or Process own email templates or provider retry.",
+            "Letting Communication change order, case, identity, or security status.",
+            "Storing rendered bodies or recipient addresses in events and logs.",
+            "Treating transactional permission as marketing consent.",
+            "Sending again after retry without checking the idempotency key or ambiguous provider outcome.",
+            "Storing a verification secret in plaintext or allowing unlimited guesses.",
+            "Enabling an external provider because local delivery passed.",
+            "Trusting callback fields without service authentication, signature, replay, tenant, and provider-reference validation."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "communicationOverview-11-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Prove template version/checksum, declared-variable rendering, executable and unknown-variable rejection, output limits, purpose/channel denial, suppression, consent separation, idempotent replay, content-free events, local delivery, provider failure, exponential retry, dead letter, safe fallback, callback authentication and replay policy, tenant isolation, customer inbox ownership, challenge hashing/expiry/lockout/single use, one-way domain integration, and domain durability during outage. Run Communication package tests, generated schema contracts, Communication route/security contracts, Engagement bridge tests, documentation generation/validation, and the effective Engagement server build to confirm Communication loads first."
+        }
+      ],
+      "searchText": "Communication, delivery, and verification Beginner-to-operator journey for templates, intent, consent, suppression, verification, provider delivery, callbacks, retry, inbox, recovery, and domain integration. # Communication, delivery, and verification\n\nNodics Communication turns a business-owned request to inform or verify someone into a governed message and delivery outcome. This beginner-friendly guide explains templates, recipients, consent and suppression, provider delivery, retry, callbacks, inbox records, and the boundary between Communication and consuming modules such as Engagement, Order, Process, Profile/KYC, and Security.\n\nCommunication owns how a message is prepared and delivered. The consuming domain owns why it was requested and what business state changes afterward. For example, Contact Submission owns an enquiry and may request an acknowledgement. Communication renders and sends that acknowledgement, but a provider failure never deletes or rolls back the enquiry.\n\n## Module structure\n\n| Module | Responsibility |\n| --- | --- |\n| `commsSchema` | Source declarations for templates, intents, delivery attempts, suppression, inbox, and verification evidence. |\n| `commsCore` | Rendering, idempotency, policy, delivery orchestration, retry, fallback, and content-free events. |\n| `commsVerification` | Expiring, hashed, attempt-limited communication challenges without owning identity. |\n| `localCommsProvider` | Deterministic development delivery with no external network transmission. |\n| `commsApi` | Secured customer inbox, operator recovery, and service-authenticated callback routes. |\n\n## End-to-end delivery journey\n\n```mermaid\nflowchart LR\n  Domain[\"Business module creates intent\"] --> Policy[\"Recipient, purpose, consent and suppression\"]\n  Policy -->|Suppressed| Evidence[\"Suppression evidence\"]\n  Policy -->|Allowed| Template[\"Validated template version\"]\n  Template --> Render[\"Transient declared-variable rendering\"]\n  Render --> Provider[\"Certified channel provider\"]\n  Provider -->|Delivered| Outcome[\"Content-free delivery evidence\"]\n  Provider -->|Failed| Retry[\"Bounded retry or fallback\"]\n  Retry --> Provider\n  Retry -->|Exhausted| Dead[\"Dead letter and reconciliation\"]\n  Outcome --> Domain\n```\n\n## Template and rendering journey\n\nAn administrator defines a template code, purpose, supported channels, and declared variables. Each locale/channel body is an immutable validated version with a checksum. Activation moves the template pointer; it does not rewrite earlier delivery evidence.\n\nThe renderer accepts only declared variables, rejects executable constructs, and enforces count and rendered-size limits. Rendering is transient. Intent and event records store a variables hash and template version, not a convenient copy of every customer field. Provider secrets never appear in templates or Axis.\n\nDevelopers add a template by declaring the smallest variable set, providing safe locale/channel versions, testing missing and unknown variables, validating output size and escaping, and supplying a migration path before retiring an active version.\n\n## Consent, purpose, and suppression\n\nEvery intent states a purpose such as transactional, service, consent, verification, or marketing. Marketing consent must never be inferred from permission to send a transaction or security challenge. A suppression is recipient-, purpose-, and channel-scoped with reason, source, and validity period.\n\nPolicy runs before rendering and provider delivery. A suppressed request produces evidence and returns safely to the caller. It is not retried through another provider to evade customer preference. Emergency or legally required messages need an explicit policy rather than a hidden bypass.\n\n## Idempotency and delivery evidence\n\nThe consuming domain supplies an idempotency key and correlation ID. Repeating the same logical request returns the existing intent instead of sending a duplicate. Delivery attempts record provider, channel, attempt, bounded status, safe provider reference, response code, retry time, and timestamps. Events contain codes and statuses, not message bodies, addresses, or provider payloads.\n\nRetry uses exponential delay and a maximum attempt count. Ambiguous timeouts require provider reconciliation before replay. Fallback between providers or channels must be allowed by purpose, consent, residency, and customer preference; it is not an automatic escape hatch.\n\n## Verification journey\n\nVerification creates a random transient secret and stores only salted hash evidence plus a destination hash. The challenge has purpose, subject reference, channel, expiry, attempt limit, status, and correlation. Successful comparison marks it verified once. Expiry or lockout prevents further use.\n\nCommunication proves possession of a channel; it does not decide that a user is authenticated, KYC-approved, authorized, or safe. Profile, KYC, Security, or the requesting domain consumes the verified outcome and applies its own current policy.\n\n## Axis and customer journey\n\nCustomers use the secured Communication inbox route to list only their own in-app messages. They can never select another recipient identifier in the URL or query. Axis operators inspect delivery evidence and retry only failed, retry-pending, or dead-letter attempts with explicit permission. Raw content and addresses stay masked.\n\nProvider callbacks use service authentication and bounded provider evidence. Production adapters additionally verify signature, timestamp/replay window, provider/account identity, and idempotency before reconciling an attempt. A callback does not trust domain identifiers supplied by an external payload.\n\n## Engagement integration\n\n`engagementComms` is a later-loaded bridge. It maps CONTACT, FEEDBACK, REVIEW, and TESTIMONIAL scenarios to Communication templates, declared variables, purpose, recipient/address reference, and a stable idempotency key. The dependency is one-way: Communication never imports Engagement or changes its status.\n\nWhen Communication is unavailable, the bridge returns deferred evidence with `domainStateChanged: false`. Contact intake and other safe domain operations remain durable. A scheduled worker can retry or reconcile later.\n\n## Provider activation and operations\n\nThe local provider is enabled for development and returns deterministic content-free evidence. SMTP and Twilio-style external providers remain disabled until a deployment supplies secured credentials, verified sender identity, region/residency approval, consent mapping, callbacks, retry/fallback, observability, rate and cost limits, incident response, and rollback.\n\nOperators monitor accepted/suppressed intent volume, render failures, provider latency/error, delivered rate, retry age, dead letters, callback rejection/replay, inbox expiry, verification success/lockout, and consent/suppression decisions. Logs use intent, attempt, template, and correlation codes without content.\n\n## Common mistakes\n\n- Letting Engagement, Order, or Process own email templates or provider retry.\n- Letting Communication change order, case, identity, or security status.\n- Storing rendered bodies or recipient addresses in events and logs.\n- Treating transactional permission as marketing consent.\n- Sending again after retry without checking the idempotency key or ambiguous provider outcome.\n- Storing a verification secret in plaintext or allowing unlimited guesses.\n- Enabling an external provider because local delivery passed.\n- Trusting callback fields without service authentication, signature, replay, tenant, and provider-reference validation.\n\n## Verification\n\nProve template version/checksum, declared-variable rendering, executable and unknown-variable rejection, output limits, purpose/channel denial, suppression, consent separation, idempotent replay, content-free events, local delivery, provider failure, exponential retry, dead letter, safe fallback, callback authentication and replay policy, tenant isolation, customer inbox ownership, challenge hashing/expiry/lockout/single use, one-way domain integration, and domain durability during outage. Run Communication package tests, generated schema contracts, Communication route/security contracts, Engagement bridge tests, documentation generation/validation, and the effective Engagement server build to confirm Communication loads first.\n",
+      "previous": {
+        "title": "Commerce enterprise operations and migration",
+        "route": "/docs/framework/commerce-enterprise-operations"
+      },
+      "next": {
+        "title": "Docs overview",
+        "route": "/docs/framework/docs-overview"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.communication",
+        "technicalModule": "commsCore",
+        "path": "content/nodics.communication/overview.md",
+        "wordCount": 1020,
+        "checksum": "73f39a2c92ad8e388dcb16063f6fe704aa4db72987e69ec4b720d44509b0360b"
+      }
+    },
+    "active": true
+  },
+  "record26": {
     "code": "nodicsDocsComponentdocsOverview",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -7829,8 +11459,8 @@ module.exports = {
       ],
       "searchText": "Docs overview How Nodics framework documentation is authored, generated, validated, imported, rendered, and kept separate from Axis and customer project documentation. # Nodics Docs overview\n\n`nodics.docs` is the standard Nodics framework documentation module. It owns\nframework documentation content that is imported into WCMS and rendered by\nAxis. It is not a frontend, not a runtime server, and not a dumping ground for\nevery page a user can see. Its job is narrower and more important: preserve\nthe reusable framework story, generate governed CMS records, and make that\ncontent available through the same backend-owned content-pack lifecycle used\nby other Nodics capabilities.\n\nFor a beginner, think of `nodics.docs` as the framework library. Axis is the\nreading application. WCMS is the library catalogue and delivery desk. The docs\nmodule owns the books about the framework. Axis can display those books, but\nAxis does not own them.\n\n## What this is\n\nThis page explains the documentation module as a functional capability. It is\nwritten for business evaluators who want to understand how Nodics teaches its\nplatform, developers who need to add or change framework documentation,\noperators who need to import documentation content safely, testers who need to\nverify release integrity, and AI tools that must not place documentation in the\nwrong repository.\n\n`nodics.docs` owns framework-level documentation such as:\n\n- what Nodics is and what business problem it solves;\n- modular architecture and ownership;\n- local quick start and verification;\n- customization and extension;\n- runtime and DevOps guidance;\n- Core, Platform, WCMS, Media, Cron, Docs, and future standard module\n  explanations.\n\nIt does not own Axis product documentation, customer project documentation,\ncustomer-specific setup, or frontend renderer code.\n\n## Why it exists\n\nEnterprise frameworks fail adoption when the product can run but nobody can\nexplain it. A new business user needs to understand the problem being solved.\nA new developer needs to know what to clone, which commands to run, and where\nto customize safely. An operator needs to know which servers, imports,\nproperties, logs, and rollback paths matter. An AI tool needs a durable\nauthority that survives beyond one chat.\n\nWithout a documentation module, framework guidance tends to scatter across\nREADME files, old project notes, frontend pages, temporary migration folders,\nand generated data. That creates a second authority problem. `nodics.docs`\nkeeps framework documentation in one backend-owned module and publishes it as\nan immutable content release that WCMS can validate and import.\n\n## Business value\n\nDocumentation is part of the product, not an afterthought. Good framework\ndocumentation reduces onboarding cost, sales friction, partner confusion,\nsupport time, and customization risk. It helps a business evaluator understand\nwhy Nodics exists before asking a developer to inspect code. It helps a\npartner developer avoid unsafe shortcuts. It helps an operations team rebuild\nan environment from source-controlled content instead of relying on manually\nedited database records.\n\nThe business value is strongest when documentation is governed the same way as\nother enterprise content:\n\n| Business concern | `nodics.docs` answer |\n| --- | --- |\n| First-time adoption | Guided pages explain what Nodics is, how to run it, and what to inspect first. |\n| Partner customization | The customization guide explains configuration-first and customer-module-first extension. |\n| Operational confidence | Runtime and verification pages explain servers, imports, registry, and recovery. |\n| Governance | Generated CMS records and manifests prevent silent content drift. |\n| Multi-project clarity | Framework docs, Axis docs, and customer docs remain separate even when Axis renders them together. |\n\n## Beginner mental model\n\nImagine a company library. The library has books, a catalogue, shelves, access\nrules, and a reading room. In Nodics:\n\n- `nodics.docs` writes and owns the framework books.\n- The generator converts those books into WCMS records.\n- WCMS imports the records and delivers pages.\n- Axis is the reading room where employees open documentation.\n- Customer projects write their own customer/project books in their own\n  repository.\n\nThat separation matters because a book about the framework should not be\nrewritten by a customer project, and a customer-specific guide should not be\npublished as if every Nodics adopter used the same project.\n\n## How it works\n\nThe module starts from authored Markdown and a catalogue. The generator reads\nthe catalogue, parses each page, embeds governed local images as safe data\npayloads, creates CMS catalogs, sites, page records, component records, route\nrecords, renderer mappings, and a release manifest. WCMS then validates and\nimports the release. Axis renders the delivered documentation pages through\nits documentation renderer.\n\n```mermaid\nflowchart LR\n  Markdown[\"Authored Markdown\"] --> Catalogue[\"Documentation catalogue\"]\n  Catalogue --> Generator[\"Content-pack generator\"]\n  Generator --> Data[\"Generated CMS records\"]\n  Generator --> Manifest[\"Release manifest and checksums\"]\n  Data --> WCMS[\"WCMS import\"]\n  Manifest --> WCMS\n  WCMS --> Axis[\"Axis documentation renderer\"]\n  Axis --> Reader[\"Business, developer, operator, QA, AI reader\"]\n```\n\nThe generated data is committed because the runtime import contract needs\ndeterministic records and checksums. The generated data is not the source of\ntruth. If a page title, body, route, image, or navigation entry is wrong, fix\nthe Markdown or catalogue and regenerate.\n\n## Documentation ownership map\n\n| Documentation product | Source owner | Runtime delivery | What must not happen |\n| --- | --- | --- | --- |\n| Framework docs | `nodics.ai/nodics.docs` | WCMS imports framework docs pack and Axis renders `/docs/framework` routes. | Do not store framework docs in the frontend repository. |\n| Axis product docs | `nodics.ai/nodics.platform/modules/axis` | WCMS imports Axis docs pack and Axis renders `/docs/nodics-axis`. | Do not put Axis product docs in `nodics.docs` just because Axis displays them. |\n| Customer project docs | Owning customer project | WCMS imports the project docs pack and Axis renders the project docs source. | Do not hardcode a customer project into framework docs. |\n| Swagger/API docs | Registered runtime modules | Axis groups API references by runtime/module discovery. | Do not invent API groups in the browser without backend evidence. |\n\nThis matrix is one of the most important documentation contracts in Nodics.\nNavigation may group products together for a nice user experience, but source\nownership remains separate.\n\n## Step-by-step usage\n\nTo update framework documentation:\n\n1. Edit the authored Markdown page under `nodics.docs/content`.\n2. If you add a new page, add it to `nodics.docs/catalogue.json`.\n3. If the page uses an image, place the image under\n   `nodics.docs/content/assets/images` and reference it with a relative path.\n4. Bump the documentation release when generated output or release content\n   changes.\n5. Run the documentation generator.\n6. Run the documentation tests.\n7. Import the release through WCMS in a local or fresh bootstrap environment.\n8. Open Axis documentation and verify the page renders with headings, tables,\n   diagrams, and images.\n\nFor example, if you add a future Commerce module overview, the page belongs in\n`nodics.docs` only if it explains reusable framework Commerce behavior. If a\ncustomer project adds customer-specific Commerce setup, that guide belongs in\nthe customer project.\n\n## Configuration and source map\n\nImportant source files are:\n\n| Artifact | Purpose |\n| --- | --- |\n| `catalogue.json` | Authored list of framework documentation pages, owners, routes, summaries, and release version. |\n| `content/**.md` | Human-authored canonical documentation source. |\n| `content/assets/images` | Governed images used by documentation pages. |\n| `scripts/generate-content-pack.mjs` | Converts source documentation into generated CMS data and manifest files. |\n| `scripts/validate.mjs` | Enforces release, ownership, depth, structure, image/table/diagram, and unsafe-reference checks. |\n| `data/core/data/documentation` | Generated CMS records imported by WCMS. |\n| `manifest/generated-content-pack.json` | Generated release manifest and checksum evidence. |\n\nGenerated output must be recreated from source definitions. Do not repair a\nchecksum by editing generated files directly.\n\n## Customization and extension\n\nPartners should not customize framework documentation inside `nodics.docs`\nunless the change improves reusable framework guidance. A customer project can\nadd its own documentation content pack to explain project modules, local setup,\nsample data, customer-specific business rules, or environment-specific\noperations. Axis can display that customer documentation alongside framework\ndocumentation after BackOffice and WCMS advertise it.\n\nThe safe extension ladder is:\n\n1. improve the existing framework page when the guidance is reusable;\n2. add a new `nodics.docs` page when a standard framework module needs public\n   explanation;\n3. add Axis product docs in the Platform Axis backend module when the topic is\n   Axis behavior;\n4. add customer docs in the customer project when the topic is project-owned;\n5. add frontend renderer behavior in `nodics.axis` only when presentation code\n   is required.\n\n## DevOps and production notes\n\nDocumentation releases are operational artifacts. A production environment\nshould import them through WCMS, preserve import history, reject changed\nchecksums under the same version, and make rollback possible by installing a\nknown previous release. Images should remain governed content payloads or safe\nmedia references rather than copied frontend files.\n\nOperators should monitor documentation import status, checksum failures,\nroute delivery, missing renderer errors, and image rendering. A documentation\npage that is correct in Git but not imported into WCMS is not live. A page\nthat is imported but points to missing images is not acceptable for business\nonboarding.\n\n## Security, tenant, and governance notes\n\nDocumentation should never expose credentials, private URLs, local machine\npaths, provider secrets, database passwords, tokens, or customer-private\nconfiguration. It may explain where secrets belong, but it must not publish\nsecret values. Public documentation should also avoid implying that one\nreference project name is mandatory for all customers.\n\nTenant and enterprise behavior should be described carefully. If a behavior is\nimplemented, say so. If it is a design direction, mark it as planned or future.\nDo not invent runtime behavior to make documentation look complete.\n\n## Troubleshooting\n\n| Symptom | Likely cause | Safe recovery |\n| --- | --- | --- |\n| Documentation release is invalid | Markdown, catalogue, or generated manifest changed without regeneration or version bump. | Fix source, bump release when needed, regenerate, rerun tests. |\n| Axis documentation page shows recovery | WCMS has not imported the pack, route is missing, or WCMS is unavailable. | Check WCMS, import status, generated route data, and page route. |\n| Image displays as text or broken link | Markdown image path or generator image embedding failed. | Verify image exists under `content/assets/images`, path is relative, and generated component contains an image block. |\n| Page appears under wrong product | Documentation source ownership or BackOffice documentation registry is wrong. | Move source to the owning module/project and regenerate the correct pack. |\n| Customer-specific setup appears in framework docs | Ownership drift. | Move the project-specific guide to the customer project documentation pack. |\n\n## Common mistakes\n\n- Writing short summaries when the page needs beginner-level explanation,\n  examples, operations notes, and verification.\n- Creating a new page when an existing canonical page should be expanded.\n- Putting customer project documentation into the framework docs module.\n- Putting Axis product documentation into the frontend repository.\n- Editing generated data or manifests by hand.\n- Forgetting to bump the release after changing generated content.\n- Importing docs without opening the rendered Axis page to verify diagrams,\n  tables, images, and navigation.\n\n## Verification\n\nRun the documentation generator and validator from `nodics.docs`. Then run the\nframework quality checks that cover documentation and AI guidance. For runtime\nproof, import the generated release through WCMS and open the Axis\ndocumentation routes. The live result should show Framework documentation as a\nseparate documentation product with rendered pages, headings, tables, diagrams,\nand images.\n\nFor a fresh local proof, run the customer project's local acceptance script\nafter database reset. The evidence should show documentation releases current,\nWCMS record counts healthy, Axis documentation routes returning HTTP 200, and\nimages embedded as renderable documentation blocks. If only the Markdown file\nlooks correct but the generated pack, import status, or Axis route fails, the\ndocumentation change is not complete.\n\n## Related pages\n\nRead **What is Nodics?** for the product story, **Modular architecture and\nownership** for the source-ownership model, **Local quick start** for the\nfirst runnable setup, **Customization and extension guide** before moving\ndocumentation between owners, and **WCMS content management** to understand\nhow generated documentation records become delivered pages.\n",
       "previous": {
-        "title": "Cron operations",
-        "route": "/docs/framework/cron-operations"
+        "title": "Communication, delivery, and verification",
+        "route": "/docs/framework/communication-overview"
       },
       "next": null,
       "source": {

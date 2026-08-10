@@ -1,0 +1,33 @@
+{
+  "name": "baseCommerce",
+  "version": "0.0.1",
+  "index": "70.19",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Base Commerce module group.",
+  "requiredModules": [
+    "store",
+    "product",
+    "pricing",
+    "tax",
+    "promotion",
+    "inventory"
+  ],
+  "nodics": {
+    "kind": "group",
+    "displayName": "Base Commerce",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "composition",
+      "configuration",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  }
+}

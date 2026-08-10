@@ -11,9 +11,9 @@
 /**
  * @generated
  * @module generated/service/DefaultPaymentTransactionService
- * @description Generated service for schema `paymentTransaction` owned by module `payment`. This file is recreated by clean/build from the effective schema and common service template.
+ * @description Generated service for schema `paymentTransaction` owned by module `paymentCore`. This file is recreated by clean/build from the effective schema and common service template.
  * @layer service
- * @owner payment
+ * @owner paymentCore
  * @schema paymentTransaction
  * @model PaymentTransactionModel
  * @sourceTemplate /src/service/common.js
@@ -31,7 +31,7 @@ module.exports = {
         });
     },
     get: function (request) {
-        let moduleName = request.moduleName || 'payment';
+        let moduleName = request.moduleName || 'paymentCore';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).PaymentTransactionModel;
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelsGetInitializerPipeline', request, {});
@@ -53,19 +53,19 @@ module.exports = {
         });
     },
     save: function (request) {
-        let moduleName = request.moduleName || 'payment';
+        let moduleName = request.moduleName || 'paymentCore';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).PaymentTransactionModel;
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelSaveInitializerPipeline', request, {});
     },
     saveAll: function (request) {
-        let moduleName = request.moduleName || 'payment';
+        let moduleName = request.moduleName || 'paymentCore';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).PaymentTransactionModel;
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelsSaveInitializerPipeline', request, {});
     },
     remove: function (request) {
-        let moduleName = request.moduleName || 'payment';
+        let moduleName = request.moduleName || 'paymentCore';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).PaymentTransactionModel;
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelsRemoveInitializerPipeline', request, {});
@@ -83,13 +83,13 @@ module.exports = {
         });
     },
     update: function (request) {
-        let moduleName = request.moduleName || 'payment';
+        let moduleName = request.moduleName || 'paymentCore';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).PaymentTransactionModel;
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelsUpdateInitializerPipeline', request, {});
     },
     getSearchModel: function (request) {
-        let moduleName = request.moduleName || 'payment';
+        let moduleName = request.moduleName || 'paymentCore';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).PaymentTransactionModel;
         request.moduleName = moduleName;
         request.indexName = request.indexName ? request.indexName : request.schemaModel.indexName;

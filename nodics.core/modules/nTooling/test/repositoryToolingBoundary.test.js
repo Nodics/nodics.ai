@@ -39,6 +39,23 @@ Object.keys(packageJson.scripts || {}).forEach(scriptName => {
         'Package command `' + scriptName + '` must not load executable configuration from docs');
 });
 
+[
+    'structure:audit',
+    'structure:generate',
+    'structure:plan',
+    'generate:app',
+    'generate:group',
+    'generate:module',
+    'generate:env',
+    'generate:server',
+    'generate:node',
+    'generate:provider',
+    'module:metadata',
+    'module:metadata:validate'
+].forEach(scriptName => {
+    assert(packageJson.scripts[scriptName], 'Root package.json must expose governed tooling command `' + scriptName + '`');
+});
+
 assert(!fs.existsSync(path.join(rootPath, 'docs', 'documentation-governance.json')),
     'Documentation governance must not live in disposable docs');
 const toolingProperties = require('../config/properties');

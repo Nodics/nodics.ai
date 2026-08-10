@@ -1,0 +1,99 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+/**
+ * @generated
+ * @module generated/facade/DefaultEngagementFormVersionFacade
+ * @description Generated facade for schema `engagementFormVersion` owned by module `engagementCore`. This file is recreated by clean/build from the effective schema and common facade template.
+ * @layer facade
+ * @owner engagementCore
+ * @schema engagementFormVersion
+ * @model EngagementFormVersionModel
+ * @sourceTemplate /src/facade/common.js
+ * @override Do not edit generated files directly. Customize behavior by adding a later module in the hierarchy that overrides this generated artifact or its source template contract.
+ */
+module.exports = {
+    init: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+    postInit: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+    get: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.get(request);
+    },
+    getById: function (id, tenant) {
+        return SERVICE.DefaultEngagementFormVersionService.getById(id, tenant);
+    },
+    getByCode: function (code, tenant) {
+        return SERVICE.DefaultEngagementFormVersionService.getByCode(code, tenant);
+    },
+    save: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.save(request);
+    },
+    saveAll: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.saveAll(request);
+    },
+    remove: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.remove(request);
+    },
+    removeById: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.remove(request);
+    },
+    removeByCode: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.remove(request);
+    },
+    update: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.update(request);
+    },
+    doRefresh: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.doRefresh(request);
+    },
+    doCheckHealth: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.doCheckHealth(request);
+    },
+    doExists: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.doExists(request);
+    },
+    doGet: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.doGet(request);
+    },
+    doSearch: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.doSearch(request);
+    },
+    doSave: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.doSave(request);
+    },
+    doBulk: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.doBulk(request);
+    },
+    doRemove: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.doRemove(request);
+    },
+    doRemoveByQuery: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.doRemoveByQuery(request);
+    },
+    doGetSchema: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.doGetSchema(request);
+    },
+    doUpdateSchema: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.doUpdateSchema(request);
+    },
+    doRemoveIndex: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.doRemoveIndex(request);
+    },
+    doIndexing: function (request) {
+        return SERVICE.DefaultEngagementFormVersionService.doIndexing(request);
+    }
+};

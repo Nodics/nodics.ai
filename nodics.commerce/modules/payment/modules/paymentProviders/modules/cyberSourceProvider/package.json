@@ -1,0 +1,24 @@
+{
+  "name": "cyberSourceProvider",
+  "version": "0.0.1",
+  "index": "70.39",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Nodics Commerce CyberSource Provider capability.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "CyberSource Provider",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  }
+}

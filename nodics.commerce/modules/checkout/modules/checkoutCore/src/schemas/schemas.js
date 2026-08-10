@@ -1,0 +1,22 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+/** @module checkoutCore/src/schemas/schemas @description Defines Checkout and cross-domain Commerce operational evidence. @layer schema @owner checkoutCore */
+const internal = policy => ({ super: 'base', model: true, schemaPolicies: [policy], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } });
+const common = { code: { type: 'string', required: true }, tenant: { type: 'string', required: true }, status: { type: 'string', required: true }, revision: { type: 'int', required: true }, correlationId: { type: 'string', required: true } };
+module.exports = { checkoutCore: {
+    checkoutSession: Object.assign(internal('customerOwned'), { definition: Object.assign({}, common, { ownerId: { type: 'string', required: true }, cartCode: { type: 'string', required: true }, expiresAt: { type: 'date', required: true } }) }),
+    checkoutCheckpoint: Object.assign(internal('customerOwned'), { definition: Object.assign({}, common, { ownerId: { type: 'string', required: true }, cartCode: { type: 'string', required: false }, orderCode: { type: 'string', required: false }, idempotencyKey: { type: 'string', required: true }, evidence: { type: 'object', required: true }, occurredAt: { type: 'date', required: false } }) }),
+    commerceCapacityEvidence: Object.assign(internal('operational'), { definition: Object.assign({}, common, { workload: { type: 'string', required: true }, sampleSize: { type: 'int', required: true }, concurrency: { type: 'int', required: true }, durationMs: { type: 'int', required: true }, throughputPerSecond: { type: 'string', required: true }, p95Ms: { type: 'int', required: true }, errorCount: { type: 'int', required: true }, budgetVersion: { type: 'string', required: true }, environment: { type: 'string', required: true }, measuredAt: { type: 'date', required: true }, evidence: { type: 'object', required: true } }) }),
+    commerceRecoveryCheckpoint: Object.assign(internal('operational'), { definition: Object.assign({}, common, { workload: { type: 'string', required: true }, partitionKey: { type: 'string', required: true }, cursor: { type: 'string', required: false }, processedCount: { type: 'int', required: true }, failedCount: { type: 'int', required: true }, sourceHash: { type: 'string', required: true }, checkpointedAt: { type: 'date', required: true } }) }),
+    commerceCompatibilityRecord: Object.assign(internal('operational'), { definition: Object.assign({}, common, { contractType: { type: 'string', required: true }, contractCode: { type: 'string', required: true }, version: { type: 'string', required: true }, compatibility: { type: 'string', required: true, enum: ['COMPATIBLE', 'DEPRECATED', 'BREAKING'] }, successorVersion: { type: 'string', required: false }, deprecatedAt: { type: 'date', required: false }, sunsetAt: { type: 'date', required: false }, evidence: { type: 'object', required: true } }) }),
+    commerceMigrationRecord: Object.assign(internal('operational'), { definition: Object.assign({}, common, { sourceModule: { type: 'string', required: true }, sourceSchema: { type: 'string', required: true }, sourceCode: { type: 'string', required: true }, targetModule: { type: 'string', required: true }, targetSchema: { type: 'string', required: true }, targetCode: { type: 'string', required: false }, sourceHash: { type: 'string', required: true }, mappingVersion: { type: 'string', required: true }, strategy: { type: 'string', required: true, enum: ['DRY_RUN', 'CUTOVER', 'ROLLBACK'] }, errors: { type: 'array', required: false }, migratedAt: { type: 'date', required: false } }) })
+} };

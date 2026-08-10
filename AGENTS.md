@@ -93,8 +93,9 @@ impact, assumptions, contradictions, intended files, and validation route.
 
 - Treat `nodics.ai` as the authoritative backend/framework repository root.
 - Keep standard Nodics backend functional module groups under this repository,
-  such as `nodics.core`, `nodics.platform`, `nodics.cron`, `nodics.wcms`, and
-  `nodics.docs`, and `nodics.process`.
+  such as `nodics.core`, `nodics.platform`, `nodics.cron`, `nodics.wcms`,
+  `nodics.docs`, `nodics.process`, `nodics.commerce`, `nodics.communication`,
+  and `nodics.engagement`.
 - Keep customer projects outside this repository. A reference customer project
   may exist for demos, but no framework contract may depend on that project
   name or require customer projects to use the same name.
@@ -119,7 +120,8 @@ impact, assumptions, contradictions, intended files, and validation route.
 
 - BackOffice and Axis must reason about standard functional module identities:
   `nodics.platform`, `nodics.cron`, `nodics.wcms`, `nodics.docs`,
-  `nodics.process`, and so on.
+  `nodics.process`, `nodics.commerce`, `nodics.communication`,
+  `nodics.engagement`, and so on.
 - Customer extension modules customize implementation but do not rename the
   standard functional capability.
 - Example: `<customer-project>.platform` may extend `nodics.platform`, but the

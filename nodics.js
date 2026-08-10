@@ -14,7 +14,7 @@
  * @description Declares the nodics.ai framework repository boundary as a standard module-group-shaped package without making it a runtime module.
  * @layer framework-root
  * @owner nodics.ai
- * @override Do not add runtime behavior here. Functional modules such as nodics.core, nodics.platform, nodics.wcms, nodics.cron, and nodics.docs own runtime behavior.
+ * @override Do not add runtime behavior here. Functional modules such as nodics.core, nodics.platform, nodics.wcms, nodics.cron, nodics.process, nodics.engagement, and nodics.docs own runtime behavior.
  */
 const path = require('path');
 const nodicsCore = require('./nodics.core/nodics');
@@ -30,7 +30,8 @@ function resolveCoreLifecycleOptions(options) {
     const workspaceRoots = (frameworkPackage.workspaces || [])
         .map(workspaceName => path.resolve(__dirname, workspaceName));
     const customHome = process.env.CUSTOM_HOME || process.cwd();
-    const moduleRoots = workspaceRoots.includes(customHome) ? workspaceRoots : workspaceRoots.concat([customHome]);
+    const moduleRoots = customHome === __dirname || workspaceRoots.includes(customHome) ?
+        workspaceRoots : workspaceRoots.concat([customHome]);
     return Object.assign({
         NODICS_HOME: path.resolve(__dirname, 'nodics.core'),
         CUSTOM_HOME: customHome,

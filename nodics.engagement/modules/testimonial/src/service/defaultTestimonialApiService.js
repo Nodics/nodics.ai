@@ -1,0 +1,21 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+/** @module testimonial/src/service/defaultTestimonialApiService @description Implements bounded public, customer, and operator testimonial use cases without exposing generated schema CRUD. @layer service @owner testimonial @override Later modules may extend actions through secured API contracts. */
+module.exports = {
+    /** Returns active public projections for one explicit channel, region, and locale. */
+    listPublished: function (request) { let query = request.query || {}; return SERVICE.DefaultTestimonialRepositoryService.list('testimonialProjection', request.tenant, { status: 'PUBLISHED', channel: query.channel, region: query.region, locale: query.locale || 'en' }, undefined, query.limit); },
+    /** Returns one customer-owned consent record. */
+    getOwnConsent: async function (request) { let principalId = request.principalId || request.authData && (request.authData.principalId || request.authData.code || request.authData.loginId); let record = await SERVICE.DefaultTestimonialRepositoryService.get('testimonialConsent', request.tenant, request.consentCode, request.authData); return record && record.ownerId === principalId ? record : undefined; },
+    /** Withdraws customer consent and synchronously removes every active public projection. */
+    withdrawOwnConsent: async function (request) { let consent = await this.getOwnConsent(request); if (!consent) { let error = new Error('testimonial consent not found'); error.code = 'ERR_TESTIMONIAL_00001'; throw error; } let now = new Date(); consent = Object.assign({}, consent, { status: 'WITHDRAWN', withdrawnAt: now }); await SERVICE.DefaultTestimonialRepositoryService.save('testimonialConsent', request.tenant, consent, request.authData); let projections = await SERVICE.DefaultTestimonialRepositoryService.list('testimonialProjection', request.tenant, { candidateCode: consent.candidateCode }, undefined, 100); let hidden = SERVICE.DefaultTestimonialLifecycleService.hideAll(projections, 'CONSENT_WITHDRAWN', now); await Promise.all(hidden.filter((item, index) => item !== projections[index]).map(item => SERVICE.DefaultTestimonialRepositoryService.save('testimonialProjection', request.tenant, item))); return { consentCode: consent.code, status: consent.status, hiddenCount: hidden.filter(item => item.status === 'WITHDRAWN').length, withdrawnAt: now }; },
+    /** Executes a secured operator testimonial action. */
+    act: async function (request) { let action = String(request.actionCode || '').toUpperCase(); if (action === 'EMERGENCY_HIDE') { let items = await SERVICE.DefaultTestimonialRepositoryService.list('testimonialProjection', request.tenant, { candidateCode: request.testimonialCode }, request.authData, 100); let hidden = SERVICE.DefaultTestimonialLifecycleService.hideAll(items, 'EMERGENCY', new Date()); await Promise.all(hidden.filter((item, index) => item !== items[index]).map(item => SERVICE.DefaultTestimonialRepositoryService.save('testimonialProjection', request.tenant, item, request.authData))); return { testimonialCode: request.testimonialCode, status: 'HIDDEN', hiddenCount: hidden.filter(item => item.status === 'HIDDEN').length }; } if (action === 'RECONCILE') { let items = await SERVICE.DefaultTestimonialRepositoryService.list('testimonialProjection', request.tenant, { candidateCode: request.testimonialCode }, request.authData, 100); let consents = await SERVICE.DefaultTestimonialRepositoryService.list('testimonialConsent', request.tenant, { candidateCode: request.testimonialCode }, request.authData, 100); let result = SERVICE.DefaultTestimonialLifecycleService.reconcile(items, consents, new Date()); await Promise.all(result.projections.filter((item, index) => item !== items[index]).map(item => SERVICE.DefaultTestimonialRepositoryService.save('testimonialProjection', request.tenant, item, request.authData))); return result; } let error = new Error('unsupported testimonial action'); error.code = 'ERR_TESTIMONIAL_00006'; throw error; }
+};

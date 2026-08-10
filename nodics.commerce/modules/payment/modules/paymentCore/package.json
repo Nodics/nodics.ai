@@ -1,0 +1,26 @@
+{
+  "name": "paymentCore",
+  "version": "0.0.1",
+  "index": "70.30",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Nodics Commerce Payment Core capability.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Payment Core",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "schema",
+      "service",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  }
+}

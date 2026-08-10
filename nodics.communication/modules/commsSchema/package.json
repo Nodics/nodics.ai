@@ -1,0 +1,25 @@
+{
+  "name": "commsSchema",
+  "version": "0.0.1",
+  "index": "89.10",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Communication persistence schema authority.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Communication Schema",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "schema",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  }
+}

@@ -1,0 +1,19 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+/** @module inventory/src/schemas/schemas @description Defines governed Phase 2 inventory persistence and decision evidence. @layer schema @owner inventory */
+const internal = policy => ({ super: 'base', model: true, schemaPolicies: [policy], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } });
+module.exports = { inventory: {
+    warehouse: Object.assign(internal('tenantOwned'), { definition: { code: { type: 'string', required: true }, tenant: { type: 'string', required: true }, name: { type: 'string', required: true }, status: { type: 'string', required: true, enum: ['ACTIVE', 'INACTIVE'] }, priority: { type: 'int', required: true }, revision: { type: 'int', required: true } } }),
+    inventoryBalance: Object.assign(internal('tenantOwned'), { definition: { code: { type: 'string', required: true }, tenant: { type: 'string', required: true }, warehouseCode: { type: 'string', required: true }, sku: { type: 'string', required: true }, onHand: { type: 'string', required: true }, reserved: { type: 'string', required: true }, allocated: { type: 'string', required: true }, available: { type: 'string', required: true }, revision: { type: 'int', required: true } } }),
+    inventoryReservation: Object.assign(internal('tenantOwned'), { definition: { code: { type: 'string', required: true }, tenant: { type: 'string', required: true }, warehouseCode: { type: 'string', required: true }, sku: { type: 'string', required: true }, ownerType: { type: 'string', required: true, enum: ['CART', 'ORDER'] }, ownerCode: { type: 'string', required: true }, quantity: { type: 'string', required: true }, status: { type: 'string', required: true, enum: ['ACTIVE', 'CONSUMED', 'RELEASED', 'EXPIRED'] }, expiresAt: { type: 'date', required: false }, idempotencyKey: { type: 'string', required: true }, correlationId: { type: 'string', required: true } } }),
+    inventoryMovement: Object.assign(internal('operational'), { definition: { code: { type: 'string', required: true }, tenant: { type: 'string', required: true }, warehouseCode: { type: 'string', required: true }, sku: { type: 'string', required: true }, quantity: { type: 'string', required: true }, movementType: { type: 'string', required: true, enum: ['RECEIPT', 'RESERVE', 'RELEASE', 'ALLOCATE', 'SHIP', 'RETURN', 'ADJUST'] }, referenceCode: { type: 'string', required: true }, balanceRevision: { type: 'int', required: true }, occurredAt: { type: 'date', required: true }, correlationId: { type: 'string', required: true } } })
+} };

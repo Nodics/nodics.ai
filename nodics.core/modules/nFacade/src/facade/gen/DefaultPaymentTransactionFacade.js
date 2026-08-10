@@ -11,9 +11,9 @@
 /**
  * @generated
  * @module generated/facade/DefaultPaymentTransactionFacade
- * @description Generated facade for schema `paymentTransaction` owned by module `payment`. This file is recreated by clean/build from the effective schema and common facade template.
+ * @description Generated facade for schema `paymentTransaction` owned by module `paymentCore`. This file is recreated by clean/build from the effective schema and common facade template.
  * @layer facade
- * @owner payment
+ * @owner paymentCore
  * @schema paymentTransaction
  * @model PaymentTransactionModel
  * @sourceTemplate /src/facade/common.js

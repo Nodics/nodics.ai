@@ -1,0 +1,32 @@
+{
+    "name": "engagementApi",
+    "index": "90.80",
+    "description": "Secured public, customer, operator, projection, and integration API capability.",
+    "main": "nodics.js",
+    "prefix": "engagement",
+    "version": "0.0.1",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "nodics": {
+        "kind": "capability",
+        "displayName": "Engagement Api",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": [
+            "configuration",
+            "router",
+            "controller",
+            "facade",
+            "service",
+            "utility",
+            "test",
+            "llm"
+        ],
+        "runtime": {
+            "router": true,
+            "publish": false,
+            "web": false
+        }
+    },
+    "scripts": {}
+}

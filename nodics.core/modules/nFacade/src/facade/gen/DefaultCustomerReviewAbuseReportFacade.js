@@ -11,9 +11,9 @@
 /**
  * @generated
  * @module generated/facade/DefaultCustomerReviewAbuseReportFacade
- * @description Generated facade for schema `customerReviewAbuseReport` owned by module `cres`. This file is recreated by clean/build from the effective schema and common facade template.
+ * @description Generated facade for schema `customerReviewAbuseReport` owned by module `customerReview`. This file is recreated by clean/build from the effective schema and common facade template.
  * @layer facade
- * @owner cres
+ * @owner customerReview
  * @schema customerReviewAbuseReport
  * @model CustomerReviewAbuseReportModel
  * @sourceTemplate /src/facade/common.js
