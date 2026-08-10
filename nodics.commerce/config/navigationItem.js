@@ -24,7 +24,7 @@ module.exports = {
     /** Adds Order-owned lifecycle preview actions. @param {Array<Object>} navigation Navigation records. @returns {Array<Object>} Enriched records. */
     lifecycle: function (navigation) {
         navigation.forEach(function (entry) {
-            if (entry.id.startsWith('order-')) entry.lifecycleActions = [{ id: 'preview', label: 'Preview decision', intent: 'READ', permission: 'commerce.lifecycle.read', ownerModule: 'order', operationRoute: '/customer/orders/:orderCode/lifecycle/preview', order: 10 }];
+            if (entry.id.startsWith('order-')) entry.lifecycleActions = [{ id: 'preview', label: 'Preview decision', intent: 'VALIDATE', permission: 'commerce.lifecycle.read', ownerModule: 'order', operationRoute: '/customer/orders/:orderCode/lifecycle/preview', order: 10 }];
         });
         return navigation;
     }
