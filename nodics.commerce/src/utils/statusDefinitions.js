@@ -17,6 +17,4 @@
  * @layer utility
  * @owner nodics.commerce
  */
-module.exports = Object.freeze({
-    FEATURE: Object.freeze({ ACTIVE: 'ACTIVE' })
-});
+module.exports = {};

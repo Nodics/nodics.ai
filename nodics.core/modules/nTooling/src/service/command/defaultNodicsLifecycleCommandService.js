@@ -20,6 +20,12 @@ const { spawnSync } = require('child_process');
  * @override Project tooling modules may replace lifecycle command definitions through standard tooling command override governance.
  */
 module.exports = {
+    /** Returns true when lifecycle commands target the non-runtime framework repository root. @param {Object} context Tooling context. @returns {boolean} True for nodics.ai. */
+    isFrameworkRepository: function (context) {
+        const packageJson = require(path.join(context.home, 'package.json'));
+        return packageJson.nodics && packageJson.nodics.runtimeModule === false;
+    },
+
     /**
      * Spawns a child command inside the selected Nodics project home.
      *
@@ -28,10 +34,10 @@ module.exports = {
      * @param {string[]} args Executable arguments.
      * @returns {void}
      */
-    spawn: function (context, command, args) {
+    spawn: function (context, command, args, environment) {
         const result = spawnSync(command, args, {
             cwd: context.home,
-            env: Object.assign({}, process.env, { NODICS_HOME: context.home }),
+            env: Object.assign({}, process.env, { NODICS_HOME: context.home }, environment || {}),
             stdio: 'inherit'
         });
         if (result.error) {
@@ -50,6 +56,12 @@ module.exports = {
      * @returns {void}
      */
     runNodicsMethod: function (context, method) {
+        if (this.isFrameworkRepository(context)) {
+            this.spawn(context, process.execPath, [
+                path.join(__dirname, 'defaultRepositoryBuildCompositionService.js'), method, context.home
+            ]);
+            return;
+        }
         this.spawn(context, process.execPath, ['-e',
             'Promise.resolve(require("./nodics").' + method + '()).catch(error => { console.error(error); process.exit(1); })'
         ]);
@@ -64,6 +76,20 @@ module.exports = {
      */
     runTool: function (context, args) {
         const toolPath = path.join(context.frameworkHome, 'nodics.core', 'modules', 'nTooling', 'bin', 'nodics-tool.js');
+        if (this.isFrameworkRepository(context) && ['docs:openapi', 'governance:report'].includes(args[0])) {
+            const compositionService = require('./defaultRepositoryBuildCompositionService');
+            const composition = compositionService.create();
+            try {
+                this.spawn(context, process.execPath, [toolPath].concat(args), {
+                    CUSTOM_HOME: composition.root,
+                    S: composition.serverName,
+                    E: composition.environmentName
+                });
+            } finally {
+                compositionService.remove(composition);
+            }
+            return;
+        }
         this.spawn(context, process.execPath, [toolPath].concat(args));
     },
 

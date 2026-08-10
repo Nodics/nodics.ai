@@ -53,6 +53,8 @@ handler is still possible, but it requires the normal explicit
 - command discovery from layered `tooling.commands` properties;
 - explicit command override governance;
 - clean/build/lifecycle command wrappers;
+- an ephemeral framework repository build composition that covers every
+  standard runtime product group without depending on a customer project;
 - test-suite command orchestration;
 - documentation coverage and documentation gate checks;
 - source structure compliance audits;

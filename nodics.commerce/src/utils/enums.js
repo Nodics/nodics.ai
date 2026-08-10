@@ -17,7 +17,4 @@
  * @layer utility
  * @owner nodics.commerce
  */
-module.exports = Object.freeze({
-    PERSPECTIVES: Object.freeze(['business', 'operations']),
-    CONTEXTS: Object.freeze(['environment', 'tenant', 'enterprise'])
-});
+module.exports = {};

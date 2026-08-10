@@ -82,6 +82,13 @@ Before commit or release:
 - Run broader/full checks when shared runtime behavior, security, persistence,
   cache, auth, schema, router, or generated artifacts are affected.
 
+When clean/build targets the non-runtime `nodics.ai` repository root, nTooling
+must materialize an ephemeral composition outside framework source that extends
+every standard runtime product group. It must be removed after the lifecycle
+command and must never become a production server, customer-project authority,
+or committed environment topology. Project-targeted clean/build continues to
+use the project's effective server composition.
+
 ## Production Operating Evidence
 
 Release evidence must include the production operating model when a change
