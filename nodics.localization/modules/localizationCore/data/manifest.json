@@ -13,10 +13,15 @@
         "core": {
             "kind": "DATA_RELEASE",
             "dataType": "core",
-            "version": "1.0.0",
-            "description": "Localization Core core data",
+            "version": "1.0.1",
+            "description": "Localization Core core data and initial published Axis runtime bundles",
             "files": {
-                "core/source/localization/common.json": "bd9257463ae63823234d54a43f78d741724109cfb8a031ad06b5b9d59a5852c9"
+                "core/source/localization/common.json": "bd9257463ae63823234d54a43f78d741724109cfb8a031ad06b5b9d59a5852c9",
+                "core/data/localization/defaultLocalizationKeyData.js": "c8b8c94d23d90d8be4f0c9a43c2ded5b31d629905d5f3fb8227da18a080cd5f7",
+                "core/data/localization/defaultLocalizationValueData.js": "cdc1ae390cbff99cdf0f28358970bec86a8112962dd5b0d2d9aada6ece191f44",
+                "core/data/localization/defaultLocalizationReleaseData.js": "29648fac380b64d6dd3e29d54447e306054e4a4d965374d16dbfc06a51eea3a8",
+                "core/data/localization/defaultLocalizationOnlinePointerData.js": "c83fd7375bb8a223a2efc5d1fd834c828c2a034dfec20302438e05d65a9b6bb8",
+                "core/headers/localization/defaultLocalizationRuntimeHeader.js": "36cf8fe6bb0ec818330dcf1bd82d8696c527be5f4c8cd4d0f4911da424f3f637"
             }
         }
     }

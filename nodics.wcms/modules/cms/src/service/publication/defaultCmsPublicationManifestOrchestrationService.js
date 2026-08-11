@@ -80,7 +80,7 @@ module.exports = {
                 let componentMedia = media.filter(reference => reference.componentCode === component.code);
                 if (SERVICE.DefaultCmsContentLocalizationService) componentMedia = SERVICE.DefaultCmsContentLocalizationService.selectMedia(
                     componentMedia, route.locale);
-                return { code: component.code, typeCode: component.typeCode, renderer: component.renderer,
+                return { code: component.code, typeCode: component.typeCode, active: component.active !== false, renderer: component.renderer,
                     rendererContractVersion: component.rendererContractVersion, rendererChannels: component.rendererChannels,
                     rendererDeprecated: component.rendererDeprecated, rendererReplacement: component.rendererReplacement,
                     properties: resolved.properties, localization: resolved.localization,

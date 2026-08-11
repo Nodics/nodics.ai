@@ -271,8 +271,14 @@ const sections = [...new Set(documents.map((document) => document.functionalModu
     order: (index + 1) * 10,
   }),
 );
-const routeFor = (document, index) =>
-  index === 0 ? '/docs/framework' : `/docs/framework/${slug(document.id.replace(/\./g, '-'))}`;
+const routeFor = (document, index) => {
+  const route = document.route ||
+    (index === 0 ? '/docs/framework' : `/docs/framework/${slug(document.id.replace(/\./g, '-'))}`);
+  if (!/^\/docs\/framework(?:\/[a-z0-9-]+)*$/.test(route)) {
+    throw new Error(`Invalid framework documentation route: ${route}`);
+  }
+  return route;
+};
 const sourcePages = documents.map((document, index) => {
   const markdown = fs.readFileSync(path.join(root, document.content), 'utf8');
   const section = sections.find((item) => item.code === slug(document.functionalModule));

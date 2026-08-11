@@ -195,7 +195,7 @@ module.exports = {
 
     /** Projects safe component and association fields. */
     projectComponent: function (component, association, componentMedia, variants, locale) {
-        let result = this.pickDefined(component, ['code', 'typeCode', 'renderer', 'rendererContractVersion',
+        let result = this.pickDefined(component, ['code', 'typeCode', 'active', 'renderer', 'rendererContractVersion',
             'rendererChannels', 'rendererDeprecated', 'rendererReplacement', 'properties']);
         if (SERVICE.DefaultCmsContentLocalizationService) {
             let resolved = SERVICE.DefaultCmsContentLocalizationService.resolve(component, variants, locale);

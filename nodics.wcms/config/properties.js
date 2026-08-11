@@ -79,16 +79,6 @@ module.exports = {
                         manifestSection: 'documentation'
                     }
                 },
-                processDocumentation: {
-                    manifestPack: 'nodics.process',
-                    source: {
-                        type: 'LOCAL_SIBLING',
-                        repositoryName: 'nodics.process',
-                        contentPath: 'data/core',
-                        manifestPath: 'data/manifest.json',
-                        manifestSection: 'documentation'
-                    }
-                },
                 customerProjectDocumentation: {
                     source: {
                         type: 'LOCAL_PROJECT',

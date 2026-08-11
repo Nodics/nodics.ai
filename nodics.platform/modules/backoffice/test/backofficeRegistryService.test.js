@@ -41,6 +41,7 @@ global.CONFIG = {
             enabled: true,
             contractVersion: 1,
             requiredModules: { profile: "profile", cms: "cms" },
+            optionalModules: { engagement: "engagementApi" },
             uiComposition: {
               site: "axisCmsSite",
               catalog: "axisContentCatalog",
@@ -354,12 +355,31 @@ async function run() {
       userGroups: ["serviceAccountUserGroup"],
     },
   });
+  await service.register({
+    body: {
+      moduleName: "engagementApi",
+      displayName: "Engagement API",
+      parentModule: "nodics.engagement",
+      canonicalIdentity: "nodics.engagement/modules/engagementApi",
+      instanceId: "engagement-1",
+      endpoint: "http://engagement:4340/nodics/engagement",
+      clientCallable: true,
+      leaseTtlMs: 1000,
+    },
+    authData: {
+      tokenType: "service",
+      runtimeInstanceId: "engagement-1",
+      modules: ["engagementApi"],
+      userGroups: ["serviceAccountUserGroup"],
+    },
+  });
   let publicBootstrap = await service.publicBootstrap({
     headers: { "x-nodics-client-contract-version": "1" },
   });
   assert.deepStrictEqual(publicBootstrap.data.endpoints, {
     profile: "http://profile:3000/nodics/profile",
     cms: "http://cms:3040/nodics/cms",
+    engagement: "http://engagement:4340/nodics/engagement",
   });
   assert.strictEqual(publicBootstrap.data.uiComposition.site, "axisCmsSite");
   assert.strictEqual(
@@ -377,6 +397,7 @@ async function run() {
       headers: { "x-nodics-client-contract-version": "2" },
     }),
   );
+  store._instances.delete("engagementApi:engagement-1");
   store._instances.delete("profile:profile-1");
   await assert.rejects(
     service.publicBootstrap({

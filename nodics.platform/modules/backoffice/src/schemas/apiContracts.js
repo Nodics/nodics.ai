@@ -909,6 +909,8 @@ module.exports = {
         properties: {
           profile: { type: "string", format: "uri" },
           cms: { type: "string", format: "uri" },
+          engagement: { type: "string", format: "uri" },
+          editorial: { type: "string", format: "uri" },
           localization: { type: "string", format: "uri" },
         },
       },

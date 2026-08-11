@@ -154,6 +154,7 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     publication.dependencies = dependencies;
     let manifest = await manifests.persist(publication, request);
     assert.strictEqual(manifest.snapshot.page.components[0].code, 'hero');
+    assert.strictEqual(manifest.snapshot.page.components[0].active, true);
     assert.strictEqual(manifest.snapshot.page.components[0].properties.title, 'Hello');
     assert.strictEqual(manifest.snapshot.page.components[0].properties.analyticsId, 'hero-1');
     assert.strictEqual(manifest.snapshot.page.components[0].localization.resolvedLocale, 'en');

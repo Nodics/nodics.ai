@@ -140,7 +140,11 @@ module.exports = {
             runtime: runtime
         });
         if (backoffice) registration.backoffice = backoffice;
-        if (registration.clientCallable) registration.endpoint = SERVICE.DefaultRouterService.prepareUrl({ moduleName: moduleName });
+        if (registration.clientCallable) {
+            registration.endpoint = SERVICE.DefaultRouterService.prepareUrl({
+                moduleName: metadata.prefix || moduleName
+            });
+        }
         return registration;
     },
 

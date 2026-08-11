@@ -1,6 +1,6 @@
 {
   "contract": "nodics.documentation/v1",
-  "release": "0.13.1",
+  "release": "0.14.0",
   "documents": [
     {
       "id": "framework.what-is-nodics",
@@ -227,6 +227,146 @@
       "summary": "Beginner-to-operator journey for templates, intent, consent, suppression, verification, provider delivery, callbacks, retry, inbox, recovery, and domain integration.",
       "locale": "en",
       "content": "content/nodics.communication/overview.md"
+    },
+    {
+      "id": "process.overview",
+      "functionalModule": "nodics.process",
+      "technicalModule": "flowCore",
+      "title": "Business Process and Automation Overview",
+      "summary": "Understand why nodics.process exists, how it helps business users, developers, and operators, and where it fits with Core, Cron, Platform, Axis, and customer modules.",
+      "locale": "en",
+      "route": "/docs/framework/process",
+      "content": "content/nodics.process/process-overview.md"
+    },
+    {
+      "id": "process.runtime-lifecycle",
+      "functionalModule": "nodics.process",
+      "technicalModule": "flowCore",
+      "title": "Runtime Instance and Task Lifecycle",
+      "summary": "Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships.",
+      "locale": "en",
+      "route": "/docs/framework/process/runtime-lifecycle",
+      "content": "content/nodics.process/runtime-lifecycle.md"
+    },
+    {
+      "id": "process.incident-recovery",
+      "functionalModule": "nodics.process",
+      "technicalModule": "flowCore",
+      "title": "Incident, Retry, and Compensation Operations",
+      "summary": "Operate failed ACTION nodes through Process-owned incidents, bounded retries, dead-letter handling, and declarative domain-owned compensation.",
+      "locale": "en",
+      "route": "/docs/framework/process/incident-recovery",
+      "content": "content/nodics.process/incident-recovery.md"
+    },
+    {
+      "id": "process.first-workflow",
+      "functionalModule": "nodics.process",
+      "technicalModule": "flowCore",
+      "title": "Build Your First Workflow",
+      "summary": "Create a first Process workflow from START through TASK, DECISION, ACTION, TIMER, SUB_PROCESS, and END with beginner-safe examples.",
+      "locale": "en",
+      "route": "/docs/framework/process/first-workflow",
+      "content": "content/nodics.process/first-workflow.md"
+    },
+    {
+      "id": "process.first-human-task",
+      "functionalModule": "nodics.process",
+      "technicalModule": "flowCore",
+      "title": "Build Your First Human Task Flow",
+      "summary": "Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps.",
+      "locale": "en",
+      "route": "/docs/framework/process/first-human-task",
+      "content": "content/nodics.process/first-human-task.md"
+    },
+    {
+      "id": "process.business-value",
+      "functionalModule": "nodics.process",
+      "technicalModule": "flowCore",
+      "title": "Business Value and Adoption Model",
+      "summary": "Explain the business problems Process solves, how it lowers operating cost, and how business users should think about automation governance.",
+      "locale": "en",
+      "route": "/docs/framework/process/business-value",
+      "content": "content/nodics.process/business-value.md"
+    },
+    {
+      "id": "process.developer-customization",
+      "functionalModule": "nodics.process",
+      "technicalModule": "flowCore",
+      "title": "Developer Customization Guide",
+      "summary": "Show where developers extend Process behavior, where domain actions belong, and how customer modules customize safely.",
+      "locale": "en",
+      "route": "/docs/framework/process/developer-customization",
+      "content": "content/nodics.process/developer-customization.md"
+    },
+    {
+      "id": "process.action-adapters",
+      "functionalModule": "nodics.process",
+      "technicalModule": "flowCore",
+      "title": "Action Adapter Contract",
+      "summary": "Learn why ACTION nodes use registered declarative adapters and how customer and domain modules own business execution.",
+      "locale": "en",
+      "route": "/docs/framework/process/action-adapters",
+      "content": "content/nodics.process/action-adapters.md"
+    },
+    {
+      "id": "process.custom-project-extension",
+      "functionalModule": "nodics.process",
+      "technicalModule": "workflow",
+      "title": "Custom Project Extension Guide",
+      "summary": "Explain how customer overlays customize Process behavior while preserving functional module identity and backend governance.",
+      "locale": "en",
+      "route": "/docs/framework/process/custom-project-extension",
+      "content": "content/nodics.process/custom-project-extension.md"
+    },
+    {
+      "id": "process.devops-topology",
+      "functionalModule": "nodics.process",
+      "technicalModule": "workflow",
+      "title": "DevOps and Runtime Topology",
+      "summary": "Explain deployment topology, observability, fresh bootstrap evidence, and production sustainability for Process runtimes.",
+      "locale": "en",
+      "route": "/docs/framework/process/devops-topology",
+      "content": "content/nodics.process/devops-topology.md"
+    },
+    {
+      "id": "process.process-cron-runtime",
+      "functionalModule": "nodics.process",
+      "technicalModule": "workflow",
+      "title": "Process and Cron Shared Runtime",
+      "summary": "Clarify how processServer can include Cron while Process and Cron keep separate ownership boundaries.",
+      "locale": "en",
+      "route": "/docs/framework/process/process-cron-runtime",
+      "content": "content/nodics.process/process-cron-runtime.md"
+    },
+    {
+      "id": "process.scheduled-automation",
+      "functionalModule": "nodics.process",
+      "technicalModule": "flowCore",
+      "title": "Scheduled Automation and Cron Triggers",
+      "summary": "Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence.",
+      "locale": "en",
+      "route": "/docs/framework/process/scheduled-automation",
+      "content": "content/nodics.process/scheduled-automation.md"
+    },
+    {
+      "id": "process.visual-designer",
+      "functionalModule": "nodics.process",
+      "technicalModule": "flowCore",
+      "title": "Visual Workflow Designer Contract",
+      "summary": "Describe the backend-owned graph contract, Axis editor projection, and validation workflow for the visual designer.",
+      "locale": "en",
+      "route": "/docs/framework/process/visual-designer",
+      "content": "content/nodics.process/visual-designer.md"
+    },
+    {
+      "id": "process.qa-regression-guide",
+      "functionalModule": "nodics.process",
+      "technicalModule": "workflow",
+      "title": "Process QA and Regression Guide",
+      "summary": "Define backend, fresh database, Axis smoke, and negative regression checks for Process and Cron automation.",
+      "locale": "en",
+      "route": "/docs/framework/process/qa-regression-guide",
+      "content": "content/nodics.process/qa-regression-guide.md"
     },
     {
       "id": "docs.overview",

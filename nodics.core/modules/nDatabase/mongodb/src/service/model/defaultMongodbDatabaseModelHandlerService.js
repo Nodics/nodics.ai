@@ -31,6 +31,23 @@ const util = require('util');
  */
 module.exports = {
     /**
+     * Resolves Nodics schema scalar types into MongoDB JSON-schema bsonType
+     * declarations. JavaScript/Mongoose numeric writes may be stored as
+     * different BSON numeric subtypes, so Nodics numeric intent must not create
+     * an over-strict validator that rejects valid runtime writes.
+     *
+     * @param {string} type Nodics schema property type.
+     * @returns {string|string[]} MongoDB JSON-schema bsonType declaration.
+     */
+    resolveBsonType: function (type) {
+        if (type === 'int' || type === 'integer' || type === 'number' || type === 'float' || type === 'double') {
+            return ['int', 'long', 'double', 'decimal'];
+        }
+        if (type === 'bool' || type === 'boolean') return 'bool';
+        return type;
+    },
+
+    /**
      * Initializes the MongoDB model handler.
      *
      * @param {Object} options Startup options supplied by the module initializer.
@@ -85,7 +102,7 @@ module.exports = {
                         let property = _.merge({}, schema.definition[propertyName]);
                         jsonSchema.properties[propertyName] = {};
                         if (property.type) {
-                            jsonSchema.properties[propertyName].bsonType = property.type;
+                            jsonSchema.properties[propertyName].bsonType = this.resolveBsonType(property.type);
                             delete property.type;
                         }
                         if (property.required) {

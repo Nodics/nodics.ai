@@ -125,6 +125,12 @@ for (const document of catalogue.documents) {
   if (!document.title || !document.summary || document.locale !== 'en') {
     throw new Error(`Incomplete document metadata: ${document.id}`);
   }
+  if (
+    document.route &&
+    !/^\/docs\/framework(?:\/[a-z0-9-]+)*$/.test(document.route)
+  ) {
+    throw new Error(`Invalid framework documentation route: ${document.id}`);
+  }
   const contentPath = resolve(root, document.content || '');
   if (!contentPath.startsWith(root + sep)) {
     throw new Error(`Content escapes package root: ${document.id}`);

@@ -89,8 +89,10 @@ module.exports = {
     loadRawSchema: function (request, response, process) {
         this.LOG.debug('Loading raw schema for header');
         let header = request.header;
-        if (header.options.schemaName && NODICS.getModule(header.options.moduleName)) {
-            header.rawSchema = NODICS.getModule(header.options.moduleName).rawSchema[header.options.schemaName];
+        if (header.options.schemaName) {
+            let targetModule = NODICS.getModule(header.options.moduleName);
+            header.rawSchema = targetModule && targetModule.rawSchema && targetModule.rawSchema[header.options.schemaName];
+            header.localSchemaAvailable = Boolean(header.rawSchema);
         }
         process.nextSuccess(request, response);
     },
@@ -129,6 +131,66 @@ module.exports = {
         }).catch(error => {
             process.error(request, response, new CLASSES.DataImportError(error, 'Import payload violates schema access policy', 'ERR_IMP_00003'));
         });
+    },
+
+    /**
+     * Normalizes finalized import scalar values using the effective schema
+     * before generated persistence executes. Finalized JavaScript imports can
+     * cross a JSON boundary, so dates and scalar values need the same runtime
+     * casting protection normal API payloads receive.
+     *
+     * @param {Object} header Effective import header carrying raw schema.
+     * @param {Object[]} models Import records.
+     * @returns {Object[]} Normalized import records.
+     */
+    normalizeModelsForSchema: function (header, models) {
+        let definition = header && header.rawSchema && header.rawSchema.definition || {};
+        return (models || []).map(model => this.normalizeModelForSchema(definition, model));
+    },
+
+    /**
+     * Normalizes one model according to scalar schema definitions.
+     *
+     * @param {Object} definition Effective schema definition map.
+     * @param {Object} model Import model.
+     * @returns {Object} Normalized model.
+     */
+    normalizeModelForSchema: function (definition, model) {
+        if (!model || typeof model !== 'object') return model;
+        let normalized = Object.assign({}, model);
+        Object.keys(definition || {}).forEach(propertyName => {
+            if (normalized[propertyName] === undefined || normalized[propertyName] === null) return;
+            let property = definition[propertyName] || {};
+            normalized[propertyName] = this.normalizeScalarValue(property.type, normalized[propertyName]);
+        });
+        return normalized;
+    },
+
+    /**
+     * Normalizes one scalar value for generated schema persistence.
+     *
+     * @param {string} type Nodics schema scalar type.
+     * @param {*} value Import value.
+     * @returns {*} Normalized value.
+     */
+    normalizeScalarValue: function (type, value) {
+        if (type === 'date' && typeof value === 'string') {
+            let parsed = new Date(value);
+            return Number.isNaN(parsed.getTime()) ? value : parsed;
+        }
+        if ((type === 'int' || type === 'integer') && typeof value === 'string' && value.trim() !== '') {
+            let parsed = Number.parseInt(value, 10);
+            return Number.isNaN(parsed) ? value : parsed;
+        }
+        if ((type === 'number' || type === 'float' || type === 'double') && typeof value === 'string' && value.trim() !== '') {
+            let parsed = Number(value);
+            return Number.isNaN(parsed) ? value : parsed;
+        }
+        if ((type === 'bool' || type === 'boolean') && typeof value === 'string') {
+            if (value.toLowerCase() === 'true') return true;
+            if (value.toLowerCase() === 'false') return false;
+        }
+        return value;
     },
 
     /**
@@ -457,7 +519,13 @@ module.exports = {
         } else {
             models.push(request.dataModel);
         }
-        if (NODICS.isModuleActive(header.options.moduleName)) {
+        // A module name can be present in the composed catalogue while its schema
+        // authority is hosted by another runtime. Only use the local generated
+        // service when this node actually loaded the target raw schema; otherwise
+        // preserve the existing remote-import dispatch contract.
+        let localSchemaTarget = header.options.schemaName && header.localSchemaAvailable !== false;
+        let localSearchTarget = header.options.indexName;
+        if (NODICS.isModuleActive(header.options.moduleName) && (localSchemaTarget || localSearchTarget)) {
             if (header.options.schemaName) {
                 this.insertLocalSchemaModel(request, models).then(success => {
                     response.success = success;
@@ -493,6 +561,7 @@ module.exports = {
      */
     insertLocalSchemaModel: function (request, models) {
         let header = request.header;
+        models = this.normalizeModelsForSchema(header, models);
         return new Promise((resolve, reject) => {
             SERVICE['Default' + header.options.schemaName.toUpperCaseFirstChar() + 'Service'][header.options.operation]({
                 tenant: request.tenant,

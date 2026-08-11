@@ -21,7 +21,7 @@ module.exports = {
         lifecycle: {
             initialState: 'STAGED',
             onlineState: 'ONLINE',
-            terminalStates: ['ONLINE', 'ROLLED_BACK', 'REJECTED', 'FAILED'],
+            terminalStates: ['ONLINE', 'WITHDRAWN', 'ROLLED_BACK', 'REJECTED', 'FAILED'],
             transitions: {
                 STAGED: ['VALIDATING'],
                 VALIDATING: ['VALIDATED', 'FAILED'],
@@ -29,8 +29,9 @@ module.exports = {
                 PENDING_APPROVAL: ['APPROVED', 'REJECTED'],
                 APPROVED: ['ACTIVATING'],
                 ACTIVATING: ['ONLINE', 'FAILED'],
-                ONLINE: ['ROLLING_BACK'],
-                ROLLING_BACK: ['ROLLED_BACK', 'FAILED']
+                ONLINE: ['ROLLING_BACK', 'WITHDRAWING'],
+                ROLLING_BACK: ['ROLLED_BACK', 'FAILED'],
+                WITHDRAWING: ['WITHDRAWN', 'FAILED']
             },
             maxDependencies: 10000,
             requireExpectedRevision: true

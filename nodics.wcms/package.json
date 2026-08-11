@@ -6,8 +6,10 @@
   "description": "Nodics web content management module group.",
   "main": "nodics.js",
   "requiredModules": [
+    "publish",
     "media",
     "cms",
+    "editorial",
     "wcms"
   ],
   "nodics": {
@@ -40,7 +42,8 @@
     "test:axis-content": "node modules/wcms/test/axisContentCatalogDataContract.test.js",
     "test:media": "node modules/media/test/mediaBusinessOwnershipBoundary.test.js && node modules/media/test/mediaContextPolicyContract.test.js && node modules/media/test/mediaDeliveryContract.test.js && node modules/media/test/mediaFolderPolicyManagementContract.test.js && node modules/media/test/mediaFormatPolicyManagementContract.test.js && node modules/media/test/mediaImportSourceResolverContract.test.js && npx mocha modules/media/test/mediaLifecycleCoordinationContract.test.js && node modules/media/test/mediaMultipartUploadBodyParserContract.test.js && node modules/media/test/mediaReferenceLookupContract.test.js && node modules/media/test/mediaRouteContract.test.js && node modules/media/test/mediaSchemaContract.test.js && node modules/media/test/mediaSchemaWorkbenchContract.test.js && node modules/media/test/mediaSetEntryManagementContract.test.js && node modules/media/test/mediaStorageProviderContract.test.js && node modules/media/test/mediaStorageProviderSummaryContract.test.js && node modules/media/test/mediaUploadContract.test.js",
     "test:cms": "node modules/cms/test/cmsContentDeliveryContract.test.js && node modules/cms/test/cmsDesignerCompositionContract.test.js && node modules/cms/test/cmsMigrationContract.test.js && node modules/cms/test/cmsPublicationManifestContract.test.js && node modules/cms/test/cmsSiteReferenceContract.test.js && node modules/cms/test/cmsStorefrontDeliveryContract.test.js && node modules/cms/test/cmsWcmsAuthoringSchemaContract.test.js",
+    "test:editorial": "find modules/editorial/test -name '*.test.js' -print0 | sort -z | xargs -0 -n 1 node",
     "test:wcms": "node modules/wcms/test/wcmsPublicationWorkflowContract.test.js",
-    "test": "npm run check:syntax && npm run test:media && npm run test:axis-content && npm run test:cms && npm run test:wcms"
+    "test": "npm run check:syntax && npm run test:media && npm run test:axis-content && npm run test:cms && npm run test:editorial && npm run test:wcms"
   }
 }

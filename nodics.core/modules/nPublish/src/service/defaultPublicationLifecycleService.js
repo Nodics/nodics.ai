@@ -210,5 +210,23 @@ module.exports = {
                 { failureCode: error.code || error.name || 'ROLLBACK_FAILED' }).catch(() => false);
             throw error;
         }
+    },
+    /** Withdraws the current Online version through the configured domain provider. */
+    withdraw: async function (request) {
+        let publication = await this.getRepository().get(request.publicationCode, request);
+        if (publication && publication.state === 'WITHDRAWN') return publication;
+        if (!publication || publication.state !== 'ONLINE') throw new CLASSES.NodicsError('ERR_PUB_00005', 'Only an Online publication can be withdrawn');
+        publication = await this.transition(publication, 'WITHDRAWING', request);
+        try {
+            let provider = this.getVersionProvider(publication.domain);
+            if (!provider.withdraw) throw new CLASSES.NodicsError('ERR_PUB_00002', 'Publication domain does not support withdrawal');
+            let result = await provider.withdraw(publication, request);
+            let adapter = this.getDomainAdapter(publication.domain);
+            if (adapter.afterWithdraw) await adapter.afterWithdraw(publication, result, request);
+            return await this.transition(publication, 'WITHDRAWN', Object.assign({}, request, { expectedRevision: publication.revision }), {}, result);
+        } catch (error) {
+            await this.transition(publication, 'FAILED', Object.assign({}, request, { expectedRevision: publication.revision }), {}, { failureCode: error.code || error.name || 'WITHDRAWAL_FAILED' }).catch(() => false);
+            throw error;
+        }
     }
 };

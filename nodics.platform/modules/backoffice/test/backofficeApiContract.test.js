@@ -80,6 +80,8 @@ assert.deepStrictEqual(contracts.publicBootstrapData.required, [
   "endpoints",
   "uiComposition",
 ]);
+assert(contracts.publicBootstrapData.properties.endpoints.properties.engagement);
+assert(contracts.publicBootstrapData.properties.endpoints.properties.editorial);
 assert.deepStrictEqual(contracts.moduleAvailability.properties.state.enum, [
   "UP",
   "DEGRADED",

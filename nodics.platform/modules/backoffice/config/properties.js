@@ -72,6 +72,8 @@ module.exports = {
                 cms: 'cms'
             },
             optionalModules: {
+                engagement: 'engagementApi',
+                editorial: 'editorial',
                 localization: 'localizationApi'
             },
             uiComposition: {

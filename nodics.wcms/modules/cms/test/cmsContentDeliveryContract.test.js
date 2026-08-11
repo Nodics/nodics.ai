@@ -119,7 +119,7 @@ global.SERVICE = {
         routes: [{ site: 'site', path: '/home', locale: 'en', channel: 'web', page: 'home', routeType: 'PAGE', deliveryState: 'ONLINE', accessMode: 'PUBLIC' }],
         pages: [{ code: 'home', name: 'Home', typeCode: 'homePage', template: 'main', internalNote: 'hidden' }],
         details: [{ code: 'homeHero', source: 'home', target: 'hero', slot: 'main', index: 0, active: true }],
-        components: [{ code: 'hero', typeCode: 'heroType', accessMode: 'PUBLIC',
+        components: [{ code: 'hero', typeCode: 'heroType', accessMode: 'PUBLIC', active: true,
             properties: { title: 'Hello' }, secret: 'hidden' }],
         componentMedia: [{ code: 'heroBackground', componentMediaCode: 'heroBackground', componentCode: 'hero',
             mediaSetCode: 'heroBackgroundSet', mediaType: 'IMAGE', role: 'background', slot: 'default',
@@ -172,6 +172,7 @@ global.SERVICE = {
         contractVersion: 1
     });
     assert.strictEqual(response.result.page.components[0].code, 'hero');
+    assert.strictEqual(response.result.page.components[0].active, true);
     assert.strictEqual(response.result.page.components[0].renderer, 'component.hero');
     assert.strictEqual(response.result.page.components[0].rendererContractVersion, 2);
     assert.deepStrictEqual(response.result.page.components[0].rendererChannels, ['web', 'mobile-webview']);

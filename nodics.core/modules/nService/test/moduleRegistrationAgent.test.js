@@ -30,7 +30,7 @@ global.CONFIG = { get: key => ({
 global.NODICS = {
     getActiveModules: () => ['cms', 'utility'],
     getRawModule: name => ({ parent: 'nodics.wcms', canonicalIdentity: 'nodics.wcms/modules/' + name,
-        metaData: { version: '1.0.0', nodics: Object.assign({
+        metaData: { version: '1.0.0', prefix: name === 'cms' ? 'content' : undefined, nodics: Object.assign({
             runtime: { router: name === 'cms' }, owns: ['router']
         }, name === 'cms' ? { displayName: 'Content Management' } : {}) } }),
     getEnvironmentName: () => 'envs', getSelectedEnvironmentName: () => 'local', getServerName: () => 'cmsServer', getNodeName: () => null,
@@ -67,6 +67,8 @@ async function run() {
     assert.strictEqual(requests[0].requestBody.registrations[0].parentModule, 'nodics.wcms');
     assert.strictEqual(requests[0].requestBody.registrations[0].canonicalIdentity, 'nodics.wcms/modules/cms');
     assert.strictEqual(requests[0].requestBody.registrations[0].backoffice.capabilityId, 'content-management');
+    assert.strictEqual(requests[0].requestBody.registrations[0].endpoint, 'http://localhost:3040/nodics/content',
+        'client-callable registration endpoint must follow the router prefix when a module declares one');
     let provider = { getCapability: () => ({ enabled: true, capabilityId: 'service-owned-content',
         displayName: 'Service-owned content', category: 'content', icon: 'content', contractVersion: 1,
         minimumClientContractVersion: 1, roles: ['FUNCTIONAL_CAPABILITY_PROVIDER'] }) };

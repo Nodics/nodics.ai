@@ -63,6 +63,11 @@ module.exports = {
           "code": "nodics-communication",
           "title": "Nodics communication",
           "order": 80
+        },
+        {
+          "code": "nodics-process",
+          "title": "Nodics process",
+          "order": 90
         }
       ],
       "items": [
@@ -467,13 +472,237 @@ module.exports = {
           "searchText": "Communication, delivery, and verification Beginner-to-operator journey for templates, intent, consent, suppression, verification, provider delivery, callbacks, retry, inbox, recovery, and domain integration. # Communication, delivery, and verification\n\nNodics Communication turns a business-owned request to inform or verify someone into a governed message and delivery outcome. This beginner-friendly guide explains templates, recipients, consent and suppression, provider delivery, retry, callbacks, inbox records, and the boundary between Communication and consuming modules such as Engagement, Order, Process, Profile/KYC, and Security.\n\nCommunication owns how a message is prepared and delivered. The consuming domain owns why it was requested and what business state changes afterward. For example, Contact Submission owns an enquiry and may request an acknowledgement. Communication renders and sends that acknowledgement, but a provider failure never deletes or rolls back the enquiry.\n\n## Module structure\n\n| Module | Responsibility |\n| --- | --- |\n| `commsSchema` | Source declarations for templates, intents, delivery attempts, suppression, inbox, and verification evidence. |\n| `commsCore` | Rendering, idempotency, policy, delivery orchestration, retry, fallback, and content-free events. |\n| `commsVerification` | Expiring, hashed, attempt-limited communication challenges without owning identity. |\n| `localCommsProvider` | Deterministic development delivery with no external network transmission. |\n| `commsApi` | Secured customer inbox, operator recovery, and service-authenticated callback routes. |\n\n## End-to-end delivery journey\n\n```mermaid\nflowchart LR\n  Domain[\"Business module creates intent\"] --> Policy[\"Recipient, purpose, consent and suppression\"]\n  Policy -->|Suppressed| Evidence[\"Suppression evidence\"]\n  Policy -->|Allowed| Template[\"Validated template version\"]\n  Template --> Render[\"Transient declared-variable rendering\"]\n  Render --> Provider[\"Certified channel provider\"]\n  Provider -->|Delivered| Outcome[\"Content-free delivery evidence\"]\n  Provider -->|Failed| Retry[\"Bounded retry or fallback\"]\n  Retry --> Provider\n  Retry -->|Exhausted| Dead[\"Dead letter and reconciliation\"]\n  Outcome --> Domain\n```\n\n## Template and rendering journey\n\nAn administrator defines a template code, purpose, supported channels, and declared variables. Each locale/channel body is an immutable validated version with a checksum. Activation moves the template pointer; it does not rewrite earlier delivery evidence.\n\nThe renderer accepts only declared variables, rejects executable constructs, and enforces count and rendered-size limits. Rendering is transient. Intent and event records store a variables hash and template version, not a convenient copy of every customer field. Provider secrets never appear in templates or Axis.\n\nDevelopers add a template by declaring the smallest variable set, providing safe locale/channel versions, testing missing and unknown variables, validating output size and escaping, and supplying a migration path before retiring an active version.\n\n## Consent, purpose, and suppression\n\nEvery intent states a purpose such as transactional, service, consent, verification, or marketing. Marketing consent must never be inferred from permission to send a transaction or security challenge. A suppression is recipient-, purpose-, and channel-scoped with reason, source, and validity period.\n\nPolicy runs before rendering and provider delivery. A suppressed request produces evidence and returns safely to the caller. It is not retried through another provider to evade customer preference. Emergency or legally required messages need an explicit policy rather than a hidden bypass.\n\n## Idempotency and delivery evidence\n\nThe consuming domain supplies an idempotency key and correlation ID. Repeating the same logical request returns the existing intent instead of sending a duplicate. Delivery attempts record provider, channel, attempt, bounded status, safe provider reference, response code, retry time, and timestamps. Events contain codes and statuses, not message bodies, addresses, or provider payloads.\n\nRetry uses exponential delay and a maximum attempt count. Ambiguous timeouts require provider reconciliation before replay. Fallback between providers or channels must be allowed by purpose, consent, residency, and customer preference; it is not an automatic escape hatch.\n\n## Verification journey\n\nVerification creates a random transient secret and stores only salted hash evidence plus a destination hash. The challenge has purpose, subject reference, channel, expiry, attempt limit, status, and correlation. Successful comparison marks it verified once. Expiry or lockout prevents further use.\n\nCommunication proves possession of a channel; it does not decide that a user is authenticated, KYC-approved, authorized, or safe. Profile, KYC, Security, or the requesting domain consumes the verified outcome and applies its own current policy.\n\n## Axis and customer journey\n\nCustomers use the secured Communication inbox route to list only their own in-app messages. They can never select another recipient identifier in the URL or query. Axis operators inspect delivery evidence and retry only failed, retry-pending, or dead-letter attempts with explicit permission. Raw content and addresses stay masked.\n\nProvider callbacks use service authentication and bounded provider evidence. Production adapters additionally verify signature, timestamp/replay window, provider/account identity, and idempotency before reconciling an attempt. A callback does not trust domain identifiers supplied by an external payload.\n\n## Engagement integration\n\n`engagementComms` is a later-loaded bridge. It maps CONTACT, FEEDBACK, REVIEW, and TESTIMONIAL scenarios to Communication templates, declared variables, purpose, recipient/address reference, and a stable idempotency key. The dependency is one-way: Communication never imports Engagement or changes its status.\n\nWhen Communication is unavailable, the bridge returns deferred evidence with `domainStateChanged: false`. Contact intake and other safe domain operations remain durable. A scheduled worker can retry or reconcile later.\n\n## Provider activation and operations\n\nThe local provider is enabled for development and returns deterministic content-free evidence. SMTP and Twilio-style external providers remain disabled until a deployment supplies secured credentials, verified sender identity, region/residency approval, consent mapping, callbacks, retry/fallback, observability, rate and cost limits, incident response, and rollback.\n\nOperators monitor accepted/suppressed intent volume, render failures, provider latency/error, delivered rate, retry age, dead letters, callback rejection/replay, inbox expiry, verification success/lockout, and consent/suppression decisions. Logs use intent, attempt, template, and correlation codes without content.\n\n## Common mistakes\n\n- Letting Engagement, Order, or Process own email templates or provider retry.\n- Letting Communication change order, case, identity, or security status.\n- Storing rendered bodies or recipient addresses in events and logs.\n- Treating transactional permission as marketing consent.\n- Sending again after retry without checking the idempotency key or ambiguous provider outcome.\n- Storing a verification secret in plaintext or allowing unlimited guesses.\n- Enabling an external provider because local delivery passed.\n- Trusting callback fields without service authentication, signature, replay, tenant, and provider-reference validation.\n\n## Verification\n\nProve template version/checksum, declared-variable rendering, executable and unknown-variable rejection, output limits, purpose/channel denial, suppression, consent separation, idempotent replay, content-free events, local delivery, provider failure, exponential retry, dead letter, safe fallback, callback authentication and replay policy, tenant isolation, customer inbox ownership, challenge hashing/expiry/lockout/single use, one-way domain integration, and domain durability during outage. Run Communication package tests, generated schema contracts, Communication route/security contracts, Engagement bridge tests, documentation generation/validation, and the effective Engagement server build to confirm Communication loads first.\n"
         },
         {
+          "code": "process.overview",
+          "title": "Business Process and Automation Overview",
+          "route": "/docs/framework/process",
+          "section": "nodics-process",
+          "sectionTitle": "Nodics process",
+          "sectionOrder": 90,
+          "order": 260,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Understand why nodics.process exists, how it helps business users, developers, and operators, and where it fits with Core, Cron, Platform, Axis, and customer modules.",
+          "searchText": "Business Process and Automation Overview Understand why nodics.process exists, how it helps business users, developers, and operators, and where it fits with Core, Cron, Platform, Axis, and customer modules. # Business Process and Automation Overview\n\n`nodics.process` is the standard Nodics functional module group for business\nprocesses, workflows, task orchestration, runtime instances, audit evidence,\nand future automation design. It exists because most enterprise applications do\nnot run as one simple button click. A content approval, onboarding request,\norder exception, document review, refund approval, or partner activation often\nneeds multiple steps, people, systems, deadlines, decisions, retries, and audit\nrecords.\n\nFor a business user, Process answers: \"What work is moving, who needs to act,\nwhat is delayed, and what evidence do we have?\" For a developer, Process\nanswers: \"How do I model orchestration without hardcoding the flow into one\ndomain service?\" For an operator, Process answers: \"Which instances are\nrunning, which tasks are stuck, which triggers are related to schedules, and\nwhat happened when something failed?\"\n\n## Beginner mental model\n\nImagine a simple content approval:\n\n1. A page is submitted.\n2. A reviewer checks it.\n3. The reviewer approves or rejects it.\n4. The system records who acted and when.\n5. The page can continue to publication or return for changes.\n\nWithout a process engine, each application might write that flow in its own\nservice. That makes every flow difficult to inspect, customize, test, and\noperate. `nodics.process` gives Nodics one governed place to model the flow,\npublish versions, start runtime instances, create human tasks, and record audit\nevents.\n\n```mermaid\nflowchart LR\n  Business[\"Business user\"] --> Axis[\"Axis process console\"]\n  Axis --> ProcessApi[\"nodics.process APIs\"]\n  ProcessApi --> Definition[\"Draft definition\"]\n  Definition --> Version[\"Immutable published version\"]\n  Version --> Instance[\"Runtime instance\"]\n  Instance --> Task[\"Human task\"]\n  Task --> Audit[\"Audit timeline\"]\n```\n\nAxis is the console. It is not the engine. The backend owns every state change.\n\n## Where Process fits in Nodics\n\n`nodics.process` is a module group like `nodics.platform`, `nodics.wcms`, and\n`nodics.cron`. Runtime implementation lives under `modules/workflow`, and that\ncapability is split into three technical modules:\n\n| Layer | Module | Responsibility |\n| --- | --- | --- |\n| Schema | `flowSchema` | Process definitions, versions, instances, tasks, triggers, audit events, statuses, and errors. |\n| Core behavior | `flowCore` | Graph validation, definition lifecycle, runtime lifecycle, task movement, audit writing, and future execution providers. |\n| API | `flowApi` | Secured routes, controllers, facades, help metadata, permission contracts, and BackOffice-facing API projection. |\n\nThis structure keeps the module customizable. A customer overlay can override a\nsingle assignment method, add a validation rule, or change SLA policy without\ncopying the whole Process module.\n\n## Business value\n\nProcess reduces cost and risk in three practical ways:\n\n- Business teams can see work as a lifecycle instead of searching logs or\n  asking developers which status field matters.\n- Developers can create reusable orchestration without mixing workflow logic\n  into commerce, content, profile, media, or customer-specific modules.\n- Operators can monitor running instances, tasks, scheduled relationships, and\n  audit events using one consistent model.\n\nThis is especially important for partners who want one server topology for\nbusiness process and automation. A `processServer` can compose\n`nodics.process`, `nodics.cron`, and `nodics.core`, while each module still\nkeeps its own ownership boundary.\n\n## Relationship with Cron\n\nProcess may reference scheduled triggers, but Cron owns job scheduling.\n\n```mermaid\nflowchart TD\n  Trigger[\"Process trigger metadata\"] --> Reference[\"cronJobCode reference\"]\n  Reference --> Cron[\"nodics.cron job lifecycle\"]\n  Cron --> Fire[\"Schedule fires\"]\n  Fire --> Process[\"Start process instance\"]\n```\n\nThe important rule: Process owns orchestration state; Cron owns scheduler state.\nSharing a runtime server does not mean mixing responsibilities.\n\n## Relationship with domain modules\n\nProcess does not own commerce refunds, CMS publishing, profile onboarding,\nmedia storage, or logistics shipment rules. Those domain modules own their\nbusiness actions. Process may orchestrate the steps and wait for tasks, but the\ndomain module must still validate and execute its own operation.\n\nExample:\n\n| Need | Owner |\n| --- | --- |\n| Decide whether a refund is allowed | Commerce module |\n| Ask a manager to approve the refund | Process task |\n| Schedule a nightly reconciliation flow | Cron job plus Process trigger metadata |\n| Show the task to an employee | Axis process console |\n| Persist instance and audit history | Process backend |\n\n## What exists in the current MVP\n\nThe current Process foundation supports:\n\n- draft process definition creation;\n- backend graph validation;\n- immutable publish versioning;\n- prepare-next-draft behavior;\n- start published process instance;\n- create first human task for a TASK node;\n- claim, assign, complete, and cancel tasks;\n- cancel running or waiting instances;\n- instance detail with tasks and audit timeline;\n- scheduled trigger metadata list;\n- Axis console projection for definitions, instances, tasks, triggers, and\n  timeline evidence.\n\nThe current runtime intentionally keeps execution small: START -> TASK -> END\nis supported as the first reliable path. Complex gateways, domain action\nexecution, compensation, retries, timers, and BPMN import/export can be added\nlater as governed extensions after the foundation is proven.\n\n## Extension direction\n\nFuture modules or customer projects should extend Process through:\n\n- graph validation policy;\n- task assignment policy;\n- SLA and escalation policy;\n- domain action execution providers;\n- trigger providers;\n- audit redaction policy;\n- Axis renderer components that call backend-owned Process APIs.\n\nDo not put process runtime rules into Axis. The browser can edit and display a\ngraph, but backend validation and execution remain authoritative.\n\n## Common mistakes\n\n- Treating Process as the owner of domain commands or Cron scheduler state.\n- Building a second workflow registry, state machine, or execution path in Axis or a customer project.\n\n## Verification\n\nRun Process contracts and fresh-bootstrap acceptance, confirm one backend definition and runtime authority, verify permission denial and invalid graphs, and observe successful, failed, retried, and recovered instances.\n"
+        },
+        {
+          "code": "process.runtime-lifecycle",
+          "title": "Runtime Instance and Task Lifecycle",
+          "route": "/docs/framework/process/runtime-lifecycle",
+          "section": "nodics-process",
+          "sectionTitle": "Nodics process",
+          "sectionOrder": 90,
+          "order": 270,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships.",
+          "searchText": "Runtime Instance and Task Lifecycle Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships. # Runtime Instance and Task Lifecycle\n\nThis page explains the lifecycle that turns a designed process into operational\nwork. It is written for a beginner, so it starts with the simple path before\nexplaining where developers and operators customize behavior.\n\n## Lifecycle summary\n\n```mermaid\nstateDiagram-v2\n  [*] --> DraftDefinition\n  DraftDefinition --> ValidatedDraft: validate draft\n  ValidatedDraft --> PublishedVersion: publish\n  PublishedVersion --> RuntimeInstance: start instance\n  RuntimeInstance --> WaitingTask: reach TASK node\n  WaitingTask --> ClaimedTask: claim\n  ClaimedTask --> CompletedTask: complete\n  CompletedTask --> CompletedInstance: next node is END\n  WaitingTask --> CancelledTask: cancel task\n  RuntimeInstance --> CancelledInstance: cancel instance\n```\n\nEvery arrow is a backend operation. Axis buttons call these APIs, but Axis does\nnot update the database directly and does not invent the next state.\n\n## Definition lifecycle\n\nA process starts as a draft. Drafts can be edited because business users and\ndevelopers often need multiple rounds of naming, description, category, graph\nlayout, and validation. A draft cannot become operational until the backend\ngraph validator accepts it.\n\nThe first supported graph shape is intentionally small:\n\n```mermaid\nflowchart LR\n  Start[\"START\"] --> Review[\"TASK: Business review\"]\n  Review --> End[\"END\"]\n```\n\nThis proves the foundation before advanced behavior is added. The backend\nchecks stable node codes, supported node types, one START node, at least one END\nnode, valid transitions, duplicate node codes, and unsafe executable action\nreferences.\n\nWhen a draft is published, the backend creates an immutable\n`processDefinitionVersion`. Later draft edits must not mutate version 1. This\nis critical for audit: if a process instance ran yesterday, operators must know\nexactly which published graph version it used.\n\n## Starting an instance\n\nStarting a process requires a published definition. The request can specify a\ndefinition code and optional version. If no version is supplied, the backend\nuses the current published version from the definition aggregate.\n\nExample request:\n\n```http\nPOST /nodics/process/v0/instances\nAuthorization: Bearer <access-token>\nx-enterprise-code: default\ncontent-type: application/json\n\n{\n  \"definitionCode\": \"contentApproval\",\n  \"context\": {\n    \"businessKey\": \"page-123\"\n  }\n}\n```\n\nThe backend creates:\n\n- one `processInstance`;\n- a `process.instance.started` audit event;\n- the first `processTask` when the graph reaches a TASK node;\n- a `process.task.created` audit event.\n\n## Task lifecycle\n\nHuman tasks are operational work items. They can be open, claimed, completed,\ncancelled, or escalated.\n\nRuntime mutation routes use dedicated Process permissions. This keeps\ndefinition governance, instance control, human-task operations, and trigger\nmanagement separate even when the reference admin can exercise all of them.\nCustomer projects can assign these permissions to narrower user groups later.\n\n| Action | API | Permission | Allowed from | Result |\n| --- | --- | --- | --- | --- |\n| Start instance | `POST /instances` | `process.instance.start` | Published version | Instance starts and first task may be created. |\n| Claim | `POST /tasks/:taskCode/claim` | `process.task.claim` | `OPEN` | Task becomes `CLAIMED` and assignee is recorded. |\n| Assign | `POST /tasks/:taskCode/assign` | `process.task.assign` | `OPEN`, `CLAIMED`, `ESCALATED` | Assignee changes while task remains actionable. |\n| Complete | `POST /tasks/:taskCode/complete` | `process.task.complete` | `OPEN`, `CLAIMED`, `ESCALATED` | Task becomes `COMPLETED`; instance moves to next node. |\n| Cancel task | `POST /tasks/:taskCode/cancel` | `process.task.cancel` | `OPEN`, `CLAIMED`, `ESCALATED` | Task becomes `CANCELLED` without cancelling the whole instance. |\n| Cancel instance | `POST /instances/:instanceCode/cancel` | `process.instance.cancel` | `CREATED`, `RUNNING`, `WAITING` | Instance becomes `CANCELLED`; open tasks are cancelled. |\n\nCompleting a task advances through the published graph. ACTION, DECISION,\nTIMER, and SUB_PROCESS nodes are backend-executed. If an ACTION fails, Process\nmarks the instance `FAILED` and opens a recovery incident; operators then use\nthe governed retry or compensation APIs described in the incident recovery\nguide.\n\n## Instance detail and audit\n\nOperators need evidence, not just status. The detail API returns the instance,\nits tasks, and its audit timeline.\n\n```http\nGET /nodics/process/v0/instances/contentApproval-001/detail\n```\n\nThe response gives Axis enough information to show:\n\n- current instance status;\n- definition and version;\n- current node;\n- all related tasks;\n- timeline events such as instance started, task created, task claimed, task\n  completed, and instance completed.\n\nAudit data must stay bounded and redacted. It should explain what happened\nwithout storing secrets or large raw payloads.\n\n## Scheduled triggers\n\nScheduled automation is represented as Process trigger metadata. A trigger may\nreference a Cron job code, but actual scheduling, firing, retries, and job\nlifecycle stay in `nodics.cron`.\n\nThis split helps a business user see automation relationships from the Process\nconsole while preserving module ownership:\n\n| Concern | Owner |\n| --- | --- |\n| Trigger relationship to a process | `nodics.process` |\n| Cron expression, job enablement, scheduler runtime | `nodics.cron` |\n| Starting an instance when schedule fires | Process API called by authorized runtime integration |\n| Showing relationship in Axis | `nodics.axis` frontend projection |\n\nThe trigger metadata lifecycle uses `process.trigger.manage` for create,\nupdate, activation, pause, and archive operations. Archiving is preferred over\ndelete so operators can still explain why a scheduled automation relationship\nused to exist.\n\n## QA checklist\n\nThe runtime foundation is healthy when:\n\n1. A draft can be created and validated.\n2. A valid draft can publish version 1.\n3. Version 1 remains immutable after preparing version 2 draft.\n4. A published definition can start a runtime instance.\n5. The first TASK node creates an OPEN task.\n6. Claiming the task records assignee and audit evidence.\n7. Completing the task advances the instance to END and COMPLETED.\n8. Instance detail returns tasks and audit timeline.\n9. Invalid task transitions fail with stable Process errors.\n10. Axis refreshes after each operation without calculating runtime state locally.\n\n## Customization examples\n\nA customer project can customize without editing the standard Process source:\n\n- override task assignment policy to assign by enterprise, site, queue, or role;\n- add SLA due-date calculation using project-level properties;\n- add graph validation rules for domain action references;\n- add a provider that executes ACTION nodes through a domain module facade;\n- add escalation rules that create events or Cron-backed reminders;\n- enrich Axis cards using backend-owned API data.\n\nThe key principle stays the same: Process owns orchestration state, domain\nmodules own business actions, Cron owns scheduling, and Axis renders authorized\ncontracts.\n\n## Common mistakes\n\n- Updating instances or tasks without expected-state concurrency checks.\n- Mutating published definitions, deleting audit history, or allowing domain actions to bypass Process lifecycle rules.\n\n## Verification\n\nExercise draft, validation, publication, instance start, task completion, failure, retry, compensation, and terminal-state rejection. Restart the runtime and confirm durable state and audit continuity.\nThe production operator must verify alerts, ownership, and restart recovery for each non-terminal state.\n"
+        },
+        {
+          "code": "process.incident-recovery",
+          "title": "Incident, Retry, and Compensation Operations",
+          "route": "/docs/framework/process/incident-recovery",
+          "section": "nodics-process",
+          "sectionTitle": "Nodics process",
+          "sectionOrder": 90,
+          "order": 280,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Operate failed ACTION nodes through Process-owned incidents, bounded retries, dead-letter handling, and declarative domain-owned compensation.",
+          "searchText": "Incident, Retry, and Compensation Operations Operate failed ACTION nodes through Process-owned incidents, bounded retries, dead-letter handling, and declarative domain-owned compensation. # Incident, Retry, and Compensation Operations\n\nThis guide explains what happens when an automated workflow step fails and how\nan operator safely recovers it. Process owns the orchestration incident. The\nbusiness module still owns the action and any reversal of business state.\n\n## The recovery lifecycle\n\n```mermaid\nstateDiagram-v2\n  [*] --> Open: ACTION fails\n  Open --> Retrying: authorized retry\n  Retrying --> Resolved: action succeeds\n  Retrying --> Open: attempt fails and budget remains\n  Retrying --> DeadLetter: attempt budget exhausted\n  Open --> Compensating: authorized compensation\n  DeadLetter --> Compensating: authorized compensation\n  Compensating --> Compensated: domain adapter succeeds\n  Compensating --> DeadLetter: domain adapter fails\n```\n\nAn ACTION failure creates one `processIncident` containing the instance,\npublished definition version, failed node, stable error code, current attempt,\nmaximum attempts, optional next retry time, and declarative adapter references.\nRaw exception payloads and secrets must not be copied into incident evidence.\n\n## What an operator sees\n\nThe incident list is the recovery work queue:\n\n```http\nGET /nodics/process/v0/incidents?status=OPEN\nAuthorization: Bearer <access-token>\n```\n\nOpen the incident before acting. Confirm the definition version, node, error\ncode, attempt budget, next retry time, and related instance. Refresh if another\noperator may be working on the same incident.\n\n| Operation | Permission | Result |\n| --- | --- | --- |\n| List or read incidents | `process.incident.read` | Returns bounded recovery evidence. |\n| Retry failed ACTION | `process.instance.retry` | Re-executes the same published ACTION and continues only after success. |\n| Run compensation | `process.instance.compensate` | Dispatches the node's registered domain compensation adapter. |\n\n## Retry safely\n\nSend the attempt number you inspected. This optimistic check prevents an old\nbrowser tab from spending a newer retry attempt.\n\n```http\nPOST /nodics/process/v0/instances/orderApproval-001/retry\nAuthorization: Bearer <access-token>\ncontent-type: application/json\n\n{\n  \"expectedAttempt\": 1,\n  \"correlationId\": \"support-case-4831\"\n}\n```\n\nOn success, the incident becomes `RESOLVED` and the instance continues from the\ntransition after the failed ACTION. On failure, the attempt increments. The\nincident returns to `OPEN` while budget remains or becomes `DEAD_LETTER` after\nthe final attempt. Retry policy is bounded to ten attempts and a maximum delay\nof 24 hours even when project configuration is incorrect.\n\n## Compensate safely\n\nCompensation is not a generic database rollback. A workflow node may declare a\nregistered compensation adapter, for example an Order-owned reversal command.\nProcess invokes that adapter and records orchestration evidence; the domain\nmodule validates its own state, idempotency, authorization, and reversal rules.\n\n```http\nPOST /nodics/process/v0/instances/orderApproval-001/compensate\nAuthorization: Bearer <access-token>\ncontent-type: application/json\n\n{\n  \"payload\": {\n    \"reasonCode\": \"PAYMENT_CAPTURE_FAILED\"\n  }\n}\n```\n\nIf no compensation adapter is declared, the API fails closed. Operators must\nnot substitute a direct database edit. If compensation fails, the incident is\ndead-lettered and the instance keeps `compensationStatus: FAILED` for manual\ninvestigation.\n\n## Developer contract\n\nAn ACTION node can declare retry and compensation without embedding executable\ncode in the graph:\n\n```json\n{\n  \"code\": \"reserveInventory\",\n  \"type\": \"ACTION\",\n  \"action\": {\n    \"moduleName\": \"nodics.commerce.inventory\",\n    \"operation\": \"reserve\"\n  },\n  \"retry\": {\n    \"maximumAttempts\": 3,\n    \"delayMs\": 5000\n  },\n  \"compensation\": {\n    \"moduleName\": \"nodics.commerce.inventory\",\n    \"operation\": \"release\"\n  }\n}\n```\n\nBoth declarations must exist in the configured action-adapter allowlist. The\nadapter implementation lives behind a domain service or facade. Unknown or\nunavailable adapters fail closed.\n\n## Operational checklist\n\n1. Confirm the incident belongs to the intended tenant and instance.\n2. Read the stable error code and current attempt; never expose secrets in notes.\n3. Resolve the external cause before retrying, when applicable.\n4. Pass `expectedAttempt` and a correlation identifier.\n5. Confirm `process.incident.resolved` or `process.incident.compensated` audit evidence.\n6. Escalate dead-letter incidents instead of repeatedly bypassing policy.\n7. Test domain compensation idempotency and partial-failure behavior before production qualification.\n\n## Common mistakes\n\n- Retrying continuously without resolving the dependency or respecting bounded policy.\n- Treating compensation as deletion of history or allowing Process to invent domain reversal behavior.\n\n## Verification\n\nForce a controlled failure, confirm incident and audit creation, test stale and unauthorized retry rejection, execute bounded retry or domain-owned compensation, and verify final state after restart.\nA beginner operator should rehearse this with a non-production incident before receiving recovery authority.\n"
+        },
+        {
+          "code": "process.first-workflow",
+          "title": "Build Your First Workflow",
+          "route": "/docs/framework/process/first-workflow",
+          "section": "nodics-process",
+          "sectionTitle": "Nodics process",
+          "sectionOrder": 90,
+          "order": 290,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Create a first Process workflow from START through TASK, DECISION, ACTION, TIMER, SUB_PROCESS, and END with beginner-safe examples.",
+          "searchText": "Build Your First Workflow Create a first Process workflow from START through TASK, DECISION, ACTION, TIMER, SUB_PROCESS, and END with beginner-safe examples. # Build Your First Workflow\n\nThis guide is for someone opening Nodics for the first time. The goal is not to\nteach every automation feature at once. The goal is to help you create one small\nworkflow, understand why each step exists, and know where to look when something\ndoes not validate.\n\n## What you are building\n\nYou will build a simple content approval process:\n\n```mermaid\nflowchart LR\n  Start[\"START\"] --> Review[\"TASK: Review content\"]\n  Review --> Decision[\"DECISION: Approved?\"]\n  Decision -->|approved=true| Notify[\"ACTION: nodics.process.noop\"]\n  Decision -->|default| End[\"END\"]\n  Notify --> Timer[\"TIMER: audit pause\"]\n  Timer --> Child[\"SUB_PROCESS: optional governance\"]\n  Child --> End\n```\n\nThe workflow is intentionally small, but it introduces the same building blocks\nused by larger commerce, telco, logistics, onboarding, support, and publishing\nprocesses.\n\n## Step 1: create a draft definition\n\nIn Axis, open Business Process & Automation, then open Workflows or Designer.\nCreate a beginner-safe process draft. Give it a stable code such as\n`contentApproval`.\n\nStable code matters because integrations, audit events, tests, and customer\nextensions refer to codes. Display names can change; codes should not change\ncasually.\n\n## Step 2: understand the nodes\n\n| Node type | Beginner meaning | Runtime owner |\n| --- | --- | --- |\n| `START` | Where the process begins. | Process |\n| `TASK` | Human work, such as review, approval, or correction. | Process |\n| `DECISION` | Chooses the next path using declared decision data. | Process |\n| `ACTION` | Calls an explicitly allowed domain adapter. | Process orchestrates; domain module owns business logic. |\n| `TIMER` | Represents a wait, schedule boundary, or future SLA point. | Process records intent; Cron can schedule real execution. |\n| `SUB_PROCESS` | References another governed workflow definition. | Process |\n| `END` | Marks the instance complete. | Process |\n\nAxis edits these nodes visually, but the backend validator decides whether the\ngraph is valid.\n\n## Step 3: connect the nodes\n\nEvery transition must have:\n\n- a stable transition code;\n- a source node;\n- a target node;\n- no transition from `END`;\n- no transition into `START`.\n\nFor a `DECISION` node, every outgoing path should either declare a condition or\nbe marked as the default path. Example:\n\n```json\n{\n  \"code\": \"decision_to_notify\",\n  \"source\": \"approvalDecision\",\n  \"target\": \"notify\",\n  \"condition\": { \"field\": \"approved\", \"equals\": true }\n}\n```\n\n## Step 4: save, validate, publish\n\nSave stores the draft graph. Validate asks nodics.process to inspect the graph.\nPublish creates an immutable version that can run. A running instance should\nalways point to a published version, not a mutable draft.\n\n```mermaid\nsequenceDiagram\n  participant User as Business user\n  participant Axis\n  participant Process as nodics.process\n  User->>Axis: Edit graph\n  Axis->>Process: Save draft graph\n  User->>Axis: Validate\n  Axis->>Process: Validate backend contract\n  User->>Axis: Publish\n  Axis->>Process: Create immutable version\n```\n\n## Common beginner mistakes\n\n- Creating two `START` nodes.\n- Forgetting an `END` node.\n- Connecting a transition to a deleted node.\n- Adding an `ACTION` node without a registered adapter.\n- Putting JavaScript, URLs, or file paths inside action metadata.\n- Expecting Axis to execute the process locally.\n\nWhen validation fails, fix the graph and validate again. Do not bypass the\nbackend validator.\n\n## Common mistakes\n\n- Publishing disconnected graphs, bypassing validation, or embedding executable implementation details in nodes.\n- Assuming Axis owns persistence or that every business action belongs in Process.\n\n## Verification\n\nValidate and publish the definition through Process APIs, start an instance, complete each supported node path, reject malformed graphs, and confirm lifecycle and audit projections after restart.\nA developer and production operator should verify the same published definition and recovery evidence.\n"
+        },
+        {
+          "code": "process.first-human-task",
+          "title": "Build Your First Human Task Flow",
+          "route": "/docs/framework/process/first-human-task",
+          "section": "nodics-process",
+          "sectionTitle": "Nodics process",
+          "sectionOrder": 90,
+          "order": 300,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps.",
+          "searchText": "Build Your First Human Task Flow Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps. # Build Your First Human Task Flow\n\nHuman tasks are the bridge between automation and people. A task tells an\noperator, reviewer, merchandiser, support agent, or approver what needs human\nattention.\n\n## Example business scenario\n\nA content editor changes a page. The change should not go live until someone\nreviews it. The process creates a task called `Review content`. The reviewer can\nclaim it, assign it, complete it, or cancel it.\n\n```mermaid\nstateDiagram-v2\n  [*] --> OPEN\n  OPEN --> CLAIMED: claim\n  OPEN --> COMPLETED: complete\n  CLAIMED --> COMPLETED: complete\n  OPEN --> CANCELLED: cancel\n  CLAIMED --> CANCELLED: cancel\n```\n\n## Task fields you should understand\n\n| Field | Why it matters |\n| --- | --- |\n| `code` | Stable task identifier for audit and support. |\n| `instanceCode` | Links the task to the running process instance. |\n| `nodeCode` | Shows which workflow step produced the task. |\n| `assignee` | Person, queue, or group expected to work on it. |\n| `status` | Current state such as `OPEN`, `CLAIMED`, or `COMPLETED`. |\n| `dueAt` | Optional SLA date for operations. |\n\n## How Axis should present task work\n\nAxis should show tasks as business work, not as raw database rows. A good task\nscreen answers:\n\n1. What process created this task?\n2. What business object is affected?\n3. Who owns it now?\n4. What action can I take safely?\n5. What happened before this task?\n\nThe detail timeline answers the fifth question by reading Process audit events.\n\n## Developer customization\n\nCustomer modules can customize assignment without editing standard Process\nsource. For example:\n\n- route enterprise onboarding approvals to an enterprise admin queue;\n- route product publishing approvals to merchandising;\n- route logistics exceptions to warehouse operations;\n- route refund approval tasks to finance.\n\nThe customization should live in the customer or domain module, not in Axis.\nAxis renders authorized actions; Process owns task lifecycle.\n\n## End-to-end task example\n\nConsider a high-value refund that requires finance approval. The Order module\nowns refund eligibility and the Payment module owns provider execution. Process\ncreates the approval task with bounded business references, candidate group,\ndue date, and expected outcome choices. It does not copy the full Order or\npayment credentials into task data.\n\nAn authorized finance user opens Axis, claims the task, reviews backend-owned\ncontext, and chooses approve or reject. The claim request includes the current\ntask version so two users cannot both become the assignee. Completion includes\nthe expected task state, chosen outcome, correlation identifier, and a bounded\ncomment. Process records the transition and invokes the next registered domain\nadapter; Axis does not calculate the next node.\n\n| Test path | Expected result | Evidence |\n| --- | --- | --- |\n| Authorized claim | Task becomes assigned once. | Assignee, version, timestamp, and audit event |\n| Competing claim | Stale request is rejected. | Stable conflict code and unchanged assignee |\n| Unauthorized completion | No state or domain side effect changes. | Permission denial and security audit |\n| Valid approval | Process advances to the approved path. | Completion event and next-node correlation |\n| Expired task | Policy-driven escalation or rejection occurs. | Due-date evaluation and escalation evidence |\n| Runtime restart | Open task remains available in the same state. | Durable task and process instance projection |\n\nOperators should monitor open-task age, overdue volume, claim conflicts,\ncompletion latency, failed continuations, and escalation backlog. Alerts must\nidentify the tenant and stable task or process reference without exposing\nsensitive task payloads. A business administrator may change assignment policy\nthrough a governed definition or customer configuration, but cannot bypass\npermissions or rewrite completed history.\n\n## Common mistakes\n\n- Letting the browser assign, complete, or reopen tasks without backend validation and expected-state checks.\n- Omitting tenant, permission, correlation, expiry, escalation, or audit requirements.\n\n## Verification\n\nCreate a task, test authorized claim and completion, reject an unauthorized actor and stale update, then confirm assignment history, process continuation, and operator-visible audit evidence.\nThis is the minimum beginner verification before adding assignment customization.\n"
+        },
+        {
+          "code": "process.business-value",
+          "title": "Business Value and Adoption Model",
+          "route": "/docs/framework/process/business-value",
+          "section": "nodics-process",
+          "sectionTitle": "Nodics process",
+          "sectionOrder": 90,
+          "order": 310,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Explain the business problems Process solves, how it lowers operating cost, and how business users should think about automation governance.",
+          "searchText": "Business Value and Adoption Model Explain the business problems Process solves, how it lowers operating cost, and how business users should think about automation governance. # Business Value and Adoption Model\n\nNodics Process exists to make business operations visible, governed, reusable,\nand changeable without scattering workflow rules across many domain services.\nA beginner can think of it as the operating playbook for work that crosses\npeople, systems, approvals, time, and exceptions.\n\n## The business problem\n\nMost enterprises already have processes, but those processes are often hidden:\n\n- an approval rule lives in one service;\n- a retry rule lives in a scheduler;\n- an escalation rule lives in an email template;\n- a support team tracks manual work in a spreadsheet;\n- a developer knows which service has to be called next.\n\nThat structure works until the business asks simple questions:\n\n| Business question | Without Process | With Nodics Process |\n| --- | --- | --- |\n| Where is this onboarding request stuck? | Ask several teams and inspect logs. | Open the instance and task timeline. |\n| Who owns the next action? | Read custom code or tribal knowledge. | The current task shows assignee/queue. |\n| Can we change the approval path? | Deploy risky domain-service changes. | Update and publish a governed definition version. |\n| Which version ran last month? | Difficult to prove. | Immutable version and audit evidence are stored. |\n| Can operations pause automation? | Maybe, if the scheduler has a switch. | Trigger metadata is visible and governed. |\n\n## What Process gives business users\n\nProcess gives business users a shared language:\n\n- **definition**: the designed workflow;\n- **version**: the published immutable contract that actually ran;\n- **instance**: one running or completed business case;\n- **task**: one human action waiting for a person, queue, or team;\n- **trigger**: a relationship saying automation can start a process;\n- **audit event**: evidence of what changed and who did it.\n\n```mermaid\nflowchart LR\n  Idea[\"Business policy\"] --> Definition[\"Process definition\"]\n  Definition --> Version[\"Published version\"]\n  Version --> Instance[\"Runtime instance\"]\n  Instance --> Task[\"Human task\"]\n  Instance --> Audit[\"Audit timeline\"]\n  Trigger[\"Scheduled trigger metadata\"] --> Instance\n```\n\n## Why this reduces cost\n\nThe cost benefit is not only automation. The real saving comes from reducing\nthe number of places where people have to look, change, test, and explain a\nbusiness process.\n\nProcess helps reduce operating cost by:\n\n1. making work state visible;\n2. reducing custom one-off orchestration code;\n3. separating workflow orchestration from domain action ownership;\n4. preserving version history for audit and rollback discussions;\n5. allowing standard Axis screens to manage definitions, tasks, and triggers.\n\nIt can also reduce capital expenditure because partner projects can reuse the\nsame Process engine instead of building a new workflow layer for every domain.\n\n## Adoption path\n\nStart small. A good first process has one start, one human task, and one end.\n\n```mermaid\nflowchart LR\n  Start[\"Start\"] --> Review[\"Business review task\"]\n  Review --> End[\"End\"]\n```\n\nOnce that works, add richer behavior in layers:\n\n1. add assignment policy;\n2. add SLA and escalation;\n3. add scheduled trigger metadata;\n4. add domain action providers;\n5. add gateway rules;\n6. add analytics and operational dashboards.\n\nThis avoids the classic workflow failure: trying to model the whole company on\nday one.\n\n## Business-user acceptance\n\nA business user should be able to:\n\n- see active process definitions;\n- understand which workflows are drafts and which are published;\n- open a task list and know who must act next;\n- see whether scheduled automation is active or paused;\n- understand that Process coordinates work while domain modules still own\n  actual business behavior.\n\n## Continue\n\n- [Runtime Instance and Task Lifecycle](runtime-lifecycle.md)\n- [Process and Cron Shared Runtime](process-cron-runtime.md)\n\n## Common mistakes\n\n- Measuring automation only by technical execution counts instead of business outcomes and recovery cost.\n- Automating an unstable journey before ownership, approval, and exception handling are explicit.\n\n## Verification\n\nValidate the proposed journey with business users, developers, and operators; prove the happy path, rejection path, recovery path, audit evidence, and measurable operational benefit.\nThe operator must also confirm that alerts and recovery ownership are practical.\n"
+        },
+        {
+          "code": "process.developer-customization",
+          "title": "Developer Customization Guide",
+          "route": "/docs/framework/process/developer-customization",
+          "section": "nodics-process",
+          "sectionTitle": "Nodics process",
+          "sectionOrder": 90,
+          "order": 320,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Show where developers extend Process behavior, where domain actions belong, and how customer modules customize safely.",
+          "searchText": "Developer Customization Guide Show where developers extend Process behavior, where domain actions belong, and how customer modules customize safely. # Developer Customization Guide\n\nThis guide explains where developers should extend Process behavior. The most\nimportant rule is simple: Process owns orchestration state, but domain modules\nown business action behavior.\n\n## Where code belongs\n\n| Need | Owning place |\n| --- | --- |\n| Process schemas and status definitions | `nodics.process/modules/workflow/modules/flowSchema` |\n| Runtime lifecycle, validation, assignment, audit | `nodics.process/modules/workflow/modules/flowCore` |\n| HTTP routes, controllers, facades | `nodics.process/modules/workflow/modules/flowApi` |\n| Cron job definitions and scheduler execution | `nodics.cron` |\n| Order, commerce, content, profile, media side effects | Owning domain module |\n| Customer-specific policy override | Customer module loaded after framework module |\n| Browser rendering and editor interactions | `nodics.axis` |\n\nDo not put runtime source directly under `nodics.process/src`. The module group\nroot is for composition, contracts, package metadata, documentation, and shared\ndefaults.\n\n## Customization-first approach\n\nBefore writing new code, ask:\n\n1. Can this be changed by a property?\n2. Can this be changed by a provider?\n3. Can this be changed by an interceptor or pipeline?\n4. Can a customer module override only one service method?\n5. Is a new framework feature actually needed?\n\nExample: a customer wants task assignment to go to a site-specific queue.\n\nDo not edit the standard Process task lifecycle directly. Instead, create a\ncustomer module that overrides assignment policy and loads after Process.\n\n```js\n/*\n    Customer Project - Process Customization\n */\n\n'use strict';\n\n/**\n * @module customer.process/src/service/defaultCustomerTaskAssignmentService\n * @description Resolves task assignee from enterprise, site, and process category.\n * @override Loaded after nodics.process to customize assignment without forking framework source.\n */\nmodule.exports = {\n    resolveAssignee: function (request, taskModel) {\n        const site = request.runtimeOperation && request.runtimeOperation.site;\n        if (site === 'uae-store') return 'uaeOperationsQueue';\n        return taskModel.assignee || 'defaultProcessQueue';\n    }\n};\n```\n\n## Domain action boundary\n\nProcess can decide that an ACTION node should be executed. It must not directly\nown a commerce refund, media upload, content publication, logistics shipment,\nor telco provisioning command.\n\n```mermaid\nflowchart LR\n  Process[\"Process engine\"] --> Contract[\"Domain action contract\"]\n  Contract --> Commerce[\"Commerce module\"]\n  Contract --> Media[\"Media module\"]\n  Contract --> Wcms[\"WCMS module\"]\n  Contract --> Profile[\"Profile module\"]\n```\n\nThe Process engine should store orchestration evidence. The domain module\nshould validate permissions, data, side effects, rollback, and audit for its\nown action.\n\n## API extension rule\n\nAdd a Process API only when:\n\n- the behavior is process-owned;\n- route permission is added to the identity catalog;\n- status codes live in `statusDefinitions.js`;\n- controller/facade/service layers remain separated;\n- tests cover positive, negative, boundary, and permission behavior.\n\n## Generated artifacts\n\nGenerated service/facade files are loader-visible runtime artifacts. If the\ngenerator is available for the affected schema, regenerate from schema source.\nIf a generated-style file must be repaired manually during migration, mirror\nthe nearest generated artifact exactly and add tests that prove the runtime\nservice is available.\n\n## Developer acceptance checklist\n\n- Source is in the nearest owning module.\n- No customer-specific rule is hardcoded in standard Process.\n- Axis is not storing workflow truth.\n- New permissions exist in the identity catalog.\n- Status/error codes live in status definitions.\n- Fresh bootstrap and live smoke prove the change.\n\n## Continue\n\n- [Visual Workflow Designer Contract](visual-designer.md)\n- [DevOps and Runtime Topology](devops-topology.md)\n\n## Common mistakes\n\n- Editing generated data or framework defaults instead of the owning source or project overlay.\n- Putting domain actions, credentials, executable expressions, or authorization decisions in workflow metadata.\n\n## Verification\n\nRun syntax, graph, lifecycle, permission, retry, compensation, and fresh-bootstrap tests. Confirm the same definition behaves safely with the default implementation and an approved customer customization.\nA beginner should start with the smallest configuration or module overlay before replacing a service.\n"
+        },
+        {
+          "code": "process.action-adapters",
+          "title": "Action Adapter Contract",
+          "route": "/docs/framework/process/action-adapters",
+          "section": "nodics-process",
+          "sectionTitle": "Nodics process",
+          "sectionOrder": 90,
+          "order": 330,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Learn why ACTION nodes use registered declarative adapters and how customer and domain modules own business execution.",
+          "searchText": "Action Adapter Contract Learn why ACTION nodes use registered declarative adapters and how customer and domain modules own business execution. # Action Adapter Contract\n\nAn `ACTION` node is where a workflow asks another capability to do something.\nExamples:\n\n- ask Commerce to reserve stock;\n- ask Profile to notify a user;\n- ask WCMS to move content to review;\n- ask a customer module to call a partner integration.\n\nProcess should not contain that business logic. Process should orchestrate,\nauthorize, and audit the request.\n\n## Safe default\n\nThe framework includes one safe demo action:\n\n```json\n{\n  \"moduleName\": \"nodics.process\",\n  \"operation\": \"noop\"\n}\n```\n\nThis proves the runtime path without touching a real business domain.\n\n## What is not allowed\n\nGraph JSON must not contain:\n\n- JavaScript functions;\n- file paths;\n- URLs as executable handlers;\n- arbitrary script fragments;\n- secrets or credentials.\n\nThis is a security and maintainability rule. A workflow should say what domain\noperation is requested, not how to execute arbitrary code.\n\n## Customer extension pattern\n\nA customer project can register allowed adapters through configuration or a\ncustom registry override.\n\n```js\nmodule.exports = {\n  process: {\n    actionAdapters: {\n      allowedActions: [\n        {\n          moduleName: 'customer.commerce',\n          operation: 'reserveStock',\n          service: 'CustomerCommerceProcessAdapterService',\n          method: 'reserveStock'\n        }\n      ]\n    }\n  }\n};\n```\n\nThe service implementation belongs to the customer/domain module. Process only\ncalls it through the approved registry and records the result.\n\n## QA checklist\n\n- Unknown actions fail with a stable Process error.\n- Allowed demo no-op action completes successfully.\n- Failed actions create audit evidence.\n- Action output is bounded and does not leak secrets.\n- Domain modules can be tested independently from Process orchestration.\n\n## Adapter operating contract\n\n| Concern | Required behavior | Rejection evidence |\n| --- | --- | --- |\n| Registration | Resolve an allowlisted adapter owned by a functional or customer module. | Unknown adapter returns a stable Process error before any side effect. |\n| Input | Accept only the versioned, bounded input contract declared by the adapter. | Invalid or oversized input is rejected and redacted in logs. |\n| Authorization | Enforce the initiating identity, tenant, permission, and workflow context in the backend. | Unauthorized execution records a denial without invoking the domain action. |\n| Idempotency | Reuse the process instance, node, attempt, and business correlation identity. | Duplicate delivery returns prior evidence or a deterministic conflict. |\n| Output | Return a bounded, serializable result suitable for Process audit and transition evaluation. | Secrets, provider payloads, and unbounded objects are excluded. |\n| Failure | Classify retryable, terminal, and compensatable failure through stable codes. | Process creates an incident and preserves the original attempt evidence. |\n\nA beginner developer should start with a deterministic no-op or test adapter in\nthe owning customer module. The adapter should validate one small input, return\none bounded output, and expose no network or filesystem path through workflow\nmetadata. After that contract works, the developer can connect a domain-owned\nservice such as Order, Fulfillment, Payment, or Communication. Process invokes\nthe adapter but does not take ownership of the domain command.\n\nFor production, operators need enough evidence to distinguish a Process engine\nfailure from a domain dependency failure. Every attempt therefore needs the\ndefinition version, instance and node identity, adapter identity, attempt\nnumber, tenant, correlation identifier, duration, outcome code, and redacted\nerror classification. Metrics should show latency, retry volume, terminal\nfailure, compensation, and dead-letter growth without placing request bodies or\ncredentials in labels.\n\nNegative testing is part of the adapter contract. Test an unknown adapter,\ninvalid input, unauthorized caller, duplicate correlation, timeout, dependency\nfailure, malformed output, retry exhaustion, and compensation failure. A test\nthat only proves the successful call does not establish that the adapter is safe\nfor a long-running business process.\n\n## Common mistakes\n\n- Executing arbitrary code or URLs from workflow metadata instead of registered adapters.\n- Moving domain validation, authorization, or compensation ownership into Process or Axis.\n\n## Verification\n\nRun the Process contract suite, reject unknown adapters, verify permission denial, and confirm bounded audit evidence for successful, failed, retried, and compensated actions.\nA beginner developer should be able to repeat this while a production operator can inspect the resulting evidence.\n"
+        },
+        {
+          "code": "process.custom-project-extension",
+          "title": "Custom Project Extension Guide",
+          "route": "/docs/framework/process/custom-project-extension",
+          "section": "nodics-process",
+          "sectionTitle": "Nodics process",
+          "sectionOrder": 90,
+          "order": 340,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Explain how customer overlays customize Process behavior while preserving functional module identity and backend governance.",
+          "searchText": "Custom Project Extension Guide Explain how customer overlays customize Process behavior while preserving functional module identity and backend governance. # Custom Project Extension Guide\n\nCustomer projects may customize Process behavior without renaming the functional\nmodule. A customer module can extend or override standard behavior, but Axis and\nBackOffice should still show the capability as Process.\n\n## Example topology\n\n```mermaid\nflowchart TD\n  Server[\"customer processServer\"] --> CustomerProcess[\"customer.process overlay\"]\n  CustomerProcess --> NodicsProcess[\"nodics.process\"]\n  NodicsProcess --> NodicsCore[\"nodics.core\"]\n  Server --> NodicsCron[\"nodics.cron included in shared runtime\"]\n```\n\nThe server can include Cron and Process together for operational simplicity,\nwhile ownership remains clear.\n\n## What belongs in a customer extension\n\n- custom task assignment rules;\n- domain-specific action adapters;\n- additional graph validation policies;\n- extra audit metadata with safe redaction;\n- environment-specific timer/SLA rules;\n- customer documentation and sample workflows.\n\n## What should not be customized casually\n\n- published version immutability;\n- permission checks;\n- audit event creation;\n- backend graph validation;\n- module identity exposed to Axis.\n\nChanging those weakens trust in the automation platform.\n\n## Documentation ownership\n\nFramework Process docs belong in nodics.process. Customer process docs belong in\nthe customer project module or project documentation pack. Axis only renders\nimported content; it should not own backend documentation data.\n\n## Extension decision and lifecycle\n\n| Need | Correct extension point | Authority that remains unchanged |\n| --- | --- | --- |\n| Change a runtime property | Customer environment or server configuration | Process configuration contract |\n| Implement a business action | Owning customer or domain module adapter | Domain validation and side effects |\n| Add an API projection | Customer API module using Process services | Process lifecycle and persistence |\n| Change visual presentation | Axis component or renderer customization | Backend Process graph and permissions |\n| Add scheduled execution | Cron-owned job calling an active Process trigger | Process trigger and Cron schedule ownership |\n\nStart with the smallest reversible customization. A beginner developer should\nfirst prove that a property or registered adapter is insufficient before\noverriding a service. A service override must preserve method contracts, status\ndefinitions, tenant isolation, authorization, idempotency, audit behavior, and\nerror semantics. If the customer implementation changes those capabilities, it\nis no longer a safe overlay and needs an explicit contract change in the owning\nframework module.\n\nThe runtime graph must show the customer module loading after the standard\nProcess modules. Availability through a package dependency is not enough; the\nmodule and server `extends` relationships determine functional composition and\nservice precedence. Test both the default framework path and the customized\npath so future framework releases cannot silently break only one of them.\n\nOperational ownership must also be explicit. The customer team owns its\nadapter dependencies, secrets, deployment configuration, alerts, runbooks, and\nrollback. Process continues to own definition and instance state, task\nlifecycle, incidents, retries, and audit. Axis continues to render authorized\ncontracts and must not become a fallback persistence layer when the customized\nbackend is unavailable.\n\nA production-ready extension includes a failure scenario and recovery proof.\nStop the external dependency, confirm bounded retry and incident creation,\nrestore it, perform the authorized recovery action, and verify the same process\ncontinues without duplicate domain side effects. Repeat after a runtime restart\nand after a framework upgrade candidate.\n\n## Common mistakes\n\n- Forking framework Process services when a customer module overlay is sufficient.\n- Renaming the standard functional module or moving backend authority into Axis.\n\n## Verification\n\nRun framework and customer-project contract tests, prepare the effective runtime graph, and prove the extension works after a fresh database bootstrap without modifying framework-owned behavior.\nA beginner developer, business reviewer, and production operator should each be able to identify the owner and supported extension point.\n"
+        },
+        {
+          "code": "process.devops-topology",
+          "title": "DevOps and Runtime Topology",
+          "route": "/docs/framework/process/devops-topology",
+          "section": "nodics-process",
+          "sectionTitle": "Nodics process",
+          "sectionOrder": 90,
+          "order": 350,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Explain deployment topology, observability, fresh bootstrap evidence, and production sustainability for Process runtimes.",
+          "searchText": "DevOps and Runtime Topology Explain deployment topology, observability, fresh bootstrap evidence, and production sustainability for Process runtimes. # DevOps and Runtime Topology\n\nOperations teams need Process to be understandable after deployment, not only\nduring development. This page explains how Process should be deployed, observed,\ntested, and sustained.\n\n## Runtime shape\n\nIn local Kickoff, Process runs in the Business Process & Automation runtime.\nThat server can include `nodics.process`, `nodics.cron`, and `nodics.core`.\n\n```mermaid\nflowchart TB\n  Axis[\"nodics.axis browser\"] --> Platform[\"Platform server\"]\n  Axis --> Wcms[\"WCMS server\"]\n  Axis --> ProcessServer[\"Process server\"]\n  ProcessServer --> Process[\"nodics.process\"]\n  ProcessServer --> Cron[\"nodics.cron\"]\n  ProcessServer --> Core[\"nodics.core\"]\n  Process --> Mongo[\"Process database\"]\n  Cron --> Mongo\n```\n\nSharing a runtime is a deployment decision, not an ownership merge. Process\nstill owns process instances, tasks, triggers, and audit. Cron still owns job\ndefinitions, scheduler state, firing, retry, and job execution lifecycle.\n\n## Fresh bootstrap evidence\n\nThe local fresh acceptance test drops only local Kickoff databases, starts the\nruntime servers, imports documentation packs, verifies Axis routes, logs in as\nadmin, exercises Process APIs, and runs Cron lifecycle operations.\n\nThis is the minimum confidence gate before saying the local stack is healthy.\n\n## What to monitor\n\n| Signal | Why it matters |\n| --- | --- |\n| Process server readiness | Axis process screens depend on this API. |\n| Definition publish failures | Bad graph contracts block operations. |\n| Waiting task count | Shows work stuck with humans or queues. |\n| Failed/cancelled instance count | Reveals broken policy or domain integration. |\n| Trigger status distribution | Shows scheduled automation posture. |\n| Audit event volume | Confirms runtime evidence is being written. |\n\n## Failure and recovery\n\nIf Axis can load but Process APIs fail, Axis should show recovery or unavailable\nstates. Do not fake process data in the browser.\n\nIf Process starts but trigger creation fails, check:\n\n1. `flowSchema` includes the `processTrigger` schema;\n2. generated trigger service/facade artifacts are loader-visible;\n3. route permissions exist in the identity catalog;\n4. the referenced definition exists and is safe to use;\n5. fresh acceptance passes from zero database state.\n\n## Release discipline\n\nProcess changes are release-sensitive because they can affect long-running\ninstances. Always ask:\n\n- Is the schema backward compatible?\n- Are published versions immutable?\n- Can older instances still be inspected?\n- Does a new route have a dedicated permission?\n- Does the change preserve tenant and audit boundaries?\n- Can a customer override the behavior without editing framework source?\n\n## Continue\n\n- [Process and Cron Shared Runtime](process-cron-runtime.md)\n- [Developer Customization Guide](developer-customization.md)\n\n## Deployment qualification evidence\n\nBefore production promotion, capture the effective module graph, sanitized\nconfiguration source order, health and readiness results, imported release\nversions, database migration state, Process and Cron registration, queue or\nscheduler dependencies, and smoke-test correlation identifiers. Keep this\nevidence environment-specific and reproducible; a screenshot of listening ports\nis not a deployment record.\n\nExercise at least one controlled dependency outage and one runtime restart.\nVerify that inflight work is either resumed, retried within policy, or surfaced\nas an incident, and that no second scheduler or duplicate execution path starts\nduring recovery.\n\n## Common mistakes\n\n- Starting a standalone Cron server when Cron is intentionally composed into Process.\n- Treating a listening port as proof that persistence, imports, health, permissions, and recovery work.\n\n## Verification\n\nUse the bounded fresh-bootstrap acceptance path, verify health and readiness, inspect error-level startup logs, confirm Process and Cron observation, and exercise restart and dependency-failure recovery.\nA beginner operator should follow the documented server order before changing topology.\n"
+        },
+        {
+          "code": "process.process-cron-runtime",
+          "title": "Process and Cron Shared Runtime",
+          "route": "/docs/framework/process/process-cron-runtime",
+          "section": "nodics-process",
+          "sectionTitle": "Nodics process",
+          "sectionOrder": 90,
+          "order": 360,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Clarify how processServer can include Cron while Process and Cron keep separate ownership boundaries.",
+          "searchText": "Process and Cron Shared Runtime Clarify how processServer can include Cron while Process and Cron keep separate ownership boundaries. # Process and Cron Shared Runtime\n\nProcess and Cron can run together in one runtime server when a partner wants a\nsmaller topology. This is useful for local development, small installations, or\ncustomers who want business process automation and scheduled jobs without\nrunning many microservice processes.\n\n## The key rule\n\nShared runtime does not mean shared ownership.\n\n| Concern | Owner |\n| --- | --- |\n| Process definitions | `nodics.process` |\n| Published workflow versions | `nodics.process` |\n| Runtime instances and tasks | `nodics.process` |\n| Trigger relationship metadata | `nodics.process` |\n| Cron job definition | `nodics.cron` |\n| Scheduler firing and retries | `nodics.cron` |\n| Domain business action | Domain module |\n| UI rendering | `nodics.axis` |\n\n## Example topology\n\n```mermaid\nflowchart LR\n  ProcessServer[\"processServer\"] --> Core[\"includes nodics.core\"]\n  ProcessServer --> Process[\"extends nodics.process\"]\n  ProcessServer --> Cron[\"includes nodics.cron\"]\n  Process --> Trigger[\"processTrigger metadata\"]\n  Cron --> Job[\"cronJob execution\"]\n  Trigger -.references.-> Job\n```\n\nThe trigger can reference a Cron job code. It does not become the Cron job.\nCron still decides when the job fires. When a Cron-owned job wants to start a\nprocess, it declares a `jobDetail.processTrigger` target. The Cron trigger\npipeline then calls the Process trigger executor with a service identity,\ncorrelation id, schedule context, and job evidence. Process verifies the\ntrigger is active, starts the workflow instance, and records audit events.\n\n## Why this is attractive for partners\n\nPartners often start with one server for operational simplicity. Later they may\nsplit runtimes when scale, isolation, or team ownership requires it. Nodics\nshould support both without changing functional module identity.\n\nThis keeps the mental model stable:\n\n- Process console shows workflows and automation relationships.\n- Cron console shows jobs and scheduler behavior.\n- Axis can place both under \"Business Process & Automation\".\n- Backend ownership still protects maintainability.\n\n## Safe lifecycle behavior\n\nCron can be registered, activated, deactivated, and deregistered through the\nmodule registry. Process APIs should remain reachable even when Cron is\nderegistered, because Process definitions and tasks are not owned by Cron.\n\nThe local acceptance smoke proves this by exercising Process runtime first and\nthen verifying the Cron registry lifecycle.\n\n## Cron job handoff shape\n\nA Cron job that starts a Process workflow should look declarative. It should not\nembed workflow logic or call arbitrary code when the intent is scheduled\nautomation.\n\n```js\n{\n  code: 'dailyContentApprovalJob',\n  tenant: 'default',\n  trigger: { expression: '0 10 * * *' },\n  jobDetail: {\n    processTrigger: {\n      triggerCode: 'dailyContentApproval',\n      context: {\n        businessDateMode: 'CURRENT_DAY'\n      }\n    }\n  }\n}\n```\n\nThat shape keeps the responsibilities readable:\n\n- Cron reads the schedule and fires the job.\n- Cron passes `cronJobCode`, tenant, schedule expression, and correlation\n  evidence into Process.\n- Process loads the active trigger relationship.\n- Process starts the published workflow version.\n- Process writes `process.trigger.execution.*` and instance audit events.\n\nIf `nodics.process` is not loaded in the same runtime, the Cron job fails closed\nwith a dependency error instead of silently pretending the automation ran.\n\n## Continue\n\n- [Runtime Instance and Task Lifecycle](runtime-lifecycle.md)\n- [DevOps and Runtime Topology](devops-topology.md)\n\n## Common mistakes\n\n- Confusing shared runtime composition with merged functional ownership.\n- Starting duplicate schedulers or registering the same trigger through parallel Process and Cron authorities.\n\n## Verification\n\nPrepare processServer, confirm both `nodics.process` and `nodics.cron` are observed once, execute a scheduled trigger with correlation evidence, and verify no standalone Cron listener is required.\nA beginner developer should confirm this shared runtime before adding another server.\n"
+        },
+        {
+          "code": "process.scheduled-automation",
+          "title": "Scheduled Automation and Cron Triggers",
+          "route": "/docs/framework/process/scheduled-automation",
+          "section": "nodics-process",
+          "sectionTitle": "Nodics process",
+          "sectionOrder": 90,
+          "order": 370,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence.",
+          "searchText": "Scheduled Automation and Cron Triggers Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence. # Scheduled Automation and Cron Triggers\n\nScheduled automation connects time-based execution to business workflows. Nodics\nkeeps the ownership boundary explicit:\n\n- nodics.process owns process definitions, trigger relationships, instances,\n  tasks, and audit.\n- nodics.cron owns job scheduling, firing, retry timing, and scheduler runtime.\n\n## Why this split exists\n\nIf Process owned Cron jobs directly, workflows would become a hidden scheduler.\nIf Cron owned process definitions, scheduled jobs would become a hidden workflow\nengine. Keeping the boundary clear makes the system easier to test, operate, and\ncustomize.\n\n```mermaid\nsequenceDiagram\n  participant Cron as nodics.cron\n  participant Process as nodics.process\n  participant Audit as Process audit\n  Cron->>Process: POST /triggers/:code/execute\n  Process->>Audit: process.trigger.execution.requested\n  Process->>Process: start published process instance\n  Process->>Audit: process.instance.started\n  Process->>Audit: process.trigger.execution.completed\n```\n\n## Trigger lifecycle\n\n| State | Meaning |\n| --- | --- |\n| `DRAFT` | Relationship exists but is not executable. |\n| `ACTIVE` | Authorized scheduler can execute it. |\n| `PAUSED` | Keep metadata but do not execute. |\n| `ARCHIVED` | Historical relationship; cannot be updated or executed. |\n\nAxis should make this lifecycle obvious. A business user should not need to\nguess why an automation did not run.\n\n## Runtime execution contract\n\nThe execution API requires an active trigger. The scheduler should pass a\ncorrelation or idempotency key.\n\n```http\nPOST /nodics/process/v0/triggers/dailyContentApproval/execute\nAuthorization: Bearer <runtime-token>\ncontent-type: application/json\n\n{\n  \"correlationId\": \"cron-fire-2026-08-09T10:00:00Z\",\n  \"context\": {\n    \"source\": \"cron\",\n    \"businessDate\": \"2026-08-09\"\n  }\n}\n```\n\nProcess starts the referenced workflow and records audit evidence. Cron remains\nresponsible for deciding when to call this endpoint and how to retry scheduler\nfailures.\n\n## Cron-owned job declaration\n\nWhen Process and Cron run together in `processServer`, a Cron job can execute a\nProcess trigger without using a browser-only shortcut:\n\n```js\n{\n  code: 'dailyContentApprovalJob',\n  trigger: { expression: '0 10 * * *' },\n  jobDetail: {\n    processTrigger: {\n      triggerCode: 'dailyContentApproval',\n      context: {\n        sourceDescription: 'Daily content approval automation'\n      }\n    }\n  }\n}\n```\n\nThis declaration is intentionally small. The business process remains in\nProcess. The schedule remains in Cron. Domain-specific work remains in the\ndomain module that Process calls through explicit ACTION adapters.\n\n## What business users should see in Axis\n\nAxis should explain two related but different records:\n\n| Axis concept | Backend owner | What the user controls |\n| --- | --- | --- |\n| Scheduled trigger relationship | `nodics.process` | Which process definition is allowed to start from a schedule. |\n| Cron job | `nodics.cron` | When the schedule fires and how scheduler lifecycle is operated. |\n| Manual execute now | `nodics.process` | Test an active trigger immediately with audit evidence. |\n\nThis helps a business user understand why activating a trigger relationship is\nnot the same thing as starting a scheduler, and why a Cron job may still need to\nexist before real time-based automation fires.\n\n## Common mistakes\n\n- Treating trigger activation as proof that a scheduler exists and is healthy.\n- Duplicating schedule state in Process and Cron or losing tenant, correlation, idempotency, and audit context.\n\n## Verification\n\nActivate a Process trigger, verify the Cron-owned schedule handoff, execute it once with idempotency evidence, reject unauthorized or inactive execution, and confirm retry and recovery behavior.\nA beginner developer and production operator should both understand which evidence belongs to Process and which belongs to Cron.\nAlso repeat the check after processServer restarts and after a missed schedule window. Confirm the scheduler follows the configured misfire policy, does not replay a completed correlation unexpectedly, and exposes a recoverable incident when downstream execution fails. Metrics and logs must remain tenant-safe, bounded, and free of trigger payload secrets.\n"
+        },
+        {
+          "code": "process.visual-designer",
+          "title": "Visual Workflow Designer Contract",
+          "route": "/docs/framework/process/visual-designer",
+          "section": "nodics-process",
+          "sectionTitle": "Nodics process",
+          "sectionOrder": 90,
+          "order": 380,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Describe the backend-owned graph contract, Axis editor projection, and validation workflow for the visual designer.",
+          "searchText": "Visual Workflow Designer Contract Describe the backend-owned graph contract, Axis editor projection, and validation workflow for the visual designer. # Visual Workflow Designer Contract\n\nThe visual workflow designer lets a business user or developer edit a process\ngraph through Axis. The important contract is that Axis is an editor, not the\nruntime authority.\n\n## Ownership model\n\n```mermaid\nsequenceDiagram\n  participant User as Business user\n  participant Axis as Axis designer\n  participant API as Process API\n  participant Validator as Graph validator\n  participant Store as Process schemas\n\n  User->>Axis: Move nodes and connect steps\n  Axis->>API: Save draft graph\n  API->>Store: Persist draft definition\n  User->>Axis: Validate\n  Axis->>API: Validate draft\n  API->>Validator: Check graph contract\n  Validator-->>API: valid or diagnostics\n  API-->>Axis: Backend-owned result\n  User->>Axis: Publish\n  Axis->>API: Publish draft\n  API->>Store: Create immutable version\n```\n\nAxis can display nodes, edges, positions, labels, and selection state. The\nbackend validates whether the graph is executable.\n\n## MVP graph contract\n\nThe first designer contract supports:\n\n- one `START` node;\n- one or more `TASK` nodes;\n- one or more `END` nodes;\n- transitions with stable codes, source, and target;\n- optional designer metadata for browser positions.\n\n```json\n{\n  \"nodes\": [\n    { \"code\": \"start\", \"type\": \"START\", \"name\": \"Start\" },\n    { \"code\": \"businessReview\", \"type\": \"TASK\", \"name\": \"Business review\" },\n    { \"code\": \"end\", \"type\": \"END\", \"name\": \"End\" }\n  ],\n  \"transitions\": [\n    { \"code\": \"start_to_review\", \"source\": \"start\", \"target\": \"businessReview\" },\n    { \"code\": \"review_to_end\", \"source\": \"businessReview\", \"target\": \"end\" }\n  ]\n}\n```\n\n## What the browser may do\n\nAxis may:\n\n- render a node palette;\n- show a canvas preview;\n- let the user select nodes;\n- collect labels and basic properties;\n- send draft graph data to Process APIs;\n- show backend validation diagnostics.\n\nAxis must not:\n\n- execute process logic;\n- calculate runtime state;\n- bypass backend validation;\n- store workflow definitions in browser storage as authority;\n- create a parallel workflow registry.\n\n## How a beginner should use the first designer\n\nThe first designer is intentionally simple. It is not trying to be a complex\ndiagramming tool on day one. It gives a business user a safe way to understand\nthe shape of a workflow and gives a developer a safe way to prove the backend\ngraph contract.\n\nStart with this flow:\n\n```mermaid\nflowchart LR\n  Start[\"START: request received\"] --> Review[\"TASK: business review\"]\n  Review --> End[\"END: approved or recorded\"]\n```\n\nThen ask these business questions before adding more nodes:\n\n| Question | Why it matters | Where the answer belongs |\n| --- | --- | --- |\n| Who starts this process? | Prevents hidden automation and duplicate cases. | Process trigger metadata or domain API call. |\n| Who owns the human task? | Makes the work queue visible. | Process task assignment policy. |\n| What happens if the task is delayed? | Defines SLA and escalation. | Process policy, future timer, or Cron relationship. |\n| What business object is affected? | Lets users connect workflow to real work. | Process instance context and domain module reference. |\n| What evidence is required? | Supports audit and compliance. | Process audit event and domain audit. |\n\nIf a user cannot answer these questions, the flow is not ready for publication\neven if the graph is technically valid.\n\n## Designer library roadmap\n\nThe first implementation uses a Nodics-native card/canvas projection because it\nkeeps the contract easy to test. The roadmap is:\n\n1. keep the backend graph contract stable;\n2. keep Axis as the renderer/editor only;\n3. add drag/drop layout metadata after the save/validate/publish flow is stable;\n4. evaluate React Flow / xyflow as the first richer canvas implementation;\n5. add BPMN import/export only as an interoperability adapter when a customer\n   needs it.\n\nThis sequence prevents a drawing library from becoming the workflow authority.\nThe designer may become more attractive and interactive, but the validation,\nversioning, permissions, runtime execution, and audit evidence must remain in\n`nodics.process`.\n\n## Designer acceptance\n\nThe designer foundation is healthy when:\n\n1. A user can see START, TASK, and END nodes.\n2. A user can inspect selected node details.\n3. Saving calls the Process draft API.\n4. Validation calls the Process graph validator.\n5. Publishing remains a separate backend-owned action.\n6. The same graph can be verified through API tests and fresh acceptance.\n7. Axis refresh is not required after create, save, validate, publish, trigger,\n   task, or Cron handoff operations.\n8. A business user can explain the workflow outcome from the page without\n   reading raw JSON.\n9. A developer can reproduce the same graph through the Process API.\n10. An operator can trace a started instance from trigger/job evidence through\n    Process audit events.\n\n## Continue\n\n- [Developer Customization Guide](developer-customization.md)\n- [Runtime Instance and Task Lifecycle](runtime-lifecycle.md)\n\n## Common mistakes\n\n- Persisting the browser graph directly or treating visual placement as executable authority.\n- Allowing unsupported nodes, arbitrary code, unregistered actions, or invalid transitions to bypass backend validation.\n\n## Verification\n\nCreate valid and invalid graphs in the designer, confirm backend validation messages, publish only a valid definition, reload it without semantic loss, and prove keyboard, permission, and recovery behavior.\n"
+        },
+        {
+          "code": "process.qa-regression-guide",
+          "title": "Process QA and Regression Guide",
+          "route": "/docs/framework/process/qa-regression-guide",
+          "section": "nodics-process",
+          "sectionTitle": "Nodics process",
+          "sectionOrder": 90,
+          "order": 390,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Define backend, fresh database, Axis smoke, and negative regression checks for Process and Cron automation.",
+          "searchText": "Process QA and Regression Guide Define backend, fresh database, Axis smoke, and negative regression checks for Process and Cron automation. # Process QA and Regression Guide\n\nProcess automation touches business operations, so small bugs can become noisy\nin production. QA must test both the happy path and the boundaries.\n\n## Minimum backend regression\n\nRun the Process contract suite:\n\n```bash\ncd nodics.ai/nodics.process\nnpm test\n```\n\nThis validates module structure, secured routes, permission catalog coverage,\ngenerated schemas, graph validation, definition lifecycle, operation inspection,\nruntime lifecycle, trigger execution, and action adapter blocking.\n\n## Fresh database acceptance\n\nFrom the reference customer project, run the fresh local acceptance when you\nneed evidence that bootstrap, imports, module registration, Axis content, and\nruntime servers still cooperate:\n\n```bash\ncd nodics.kickoff\nnpm run acceptance:local:fresh\n```\n\nThis is heavier than unit tests, but it catches integration drift.\n\n## Manual Axis smoke checklist\n\n1. Login to Axis.\n2. Open Business Process & Automation.\n3. Create a sample draft.\n4. Save a graph change in Designer.\n5. Validate the draft.\n6. Publish the draft.\n7. Start an instance.\n8. Claim and complete a task.\n9. Create a scheduled trigger relationship.\n10. Activate and execute the trigger.\n11. Confirm a new instance appears.\n12. Open the timeline and verify audit evidence.\n\n## Negative tests that matter\n\n- Unknown action adapter must fail.\n- Paused or archived trigger must not execute.\n- Draft definition must not start.\n- Archived trigger must not update.\n- User without Process permission must be denied.\n- Axis refresh must not be required after every operation.\n\nIf these fail, stop and fix the contract before adding more UI.\n\n## Regression evidence matrix\n\n| Layer | Positive proof | Negative or recovery proof |\n| --- | --- | --- |\n| Definition | Valid graph saves, validates, and publishes. | Invalid transition, unsupported node, and stale version are rejected. |\n| Runtime | Published definition starts and reaches the expected terminal state. | Failure creates an incident and restart preserves durable state. |\n| Task | Authorized user claims and completes a task. | Unauthorized, expired, and competing updates are rejected. |\n| Action | Registered adapter executes once with bounded output. | Unknown adapter, timeout, duplicate delivery, and malformed output fail safely. |\n| Trigger | Active trigger executes with correlation and audit. | Inactive or unauthorized trigger does not execute. |\n| Cron composition | Process and Cron are observed in processServer. | No standalone Cron listener or duplicate schedule authority exists. |\n| Axis | Authorized pages render current backend state. | Deep links and actions remain guarded when permission or module availability is absent. |\n\nThe regression run starts with deterministic contract tests, then uses an empty\nlocal database so every schema, import release, registration, and default record\nmust be rebuilt from source. It finishes with retained-data acceptance to prove\nrepeatability and immutable release handling. Manual database edits invalidate\nthe result because they hide missing generators or import contracts.\n\nA beginner developer should record the exact command, commit, environment,\nruntime graph, database names, and outcome. Production qualification adds\ndependency outage, restart, concurrency, capacity, redaction, and rollback\nevidence. Operators should inspect error-level startup output and persisted\nincidents instead of relying only on exit code or HTTP 200.\n\nSecurity regression covers cross-tenant identifiers, missing and insufficient\npermissions, malformed graph metadata, oversized input, executable strings,\nsecret-bearing output, replayed correlation identifiers, and unauthorized\nrecovery. Performance regression covers large but bounded graphs, navigation,\ntask queues, audit history, and retry storms. Each boundary needs a documented\nlimit and a stable rejection or degradation behavior.\n\n## Common mistakes\n\n- Testing only successful API responses while skipping permissions, stale state, retry bounds, recovery, and restart behavior.\n- Accepting UI refresh workarounds or manually repaired database records as valid regression evidence.\n\n## Verification\n\nRun the complete Process contract suite and bounded fresh local acceptance against empty databases, then repeat the live smoke against retained data and inspect startup logs for error-level output.\nA beginner developer should be able to follow the same regression sequence without manual database repair.\n"
+        },
+        {
           "code": "docs.overview",
           "title": "Docs overview",
           "route": "/docs/framework/docs-overview",
           "section": "nodics-docs",
           "sectionTitle": "Nodics docs",
           "sectionOrder": 10,
-          "order": 260,
+          "order": 400,
           "audience": [
             "architect",
             "developer",
@@ -10952,8 +11181,8 @@ module.exports = {
         "route": "/docs/framework/commerce-enterprise-operations"
       },
       "next": {
-        "title": "Docs overview",
-        "route": "/docs/framework/docs-overview"
+        "title": "Business Process and Automation Overview",
+        "route": "/docs/framework/process"
       },
       "source": {
         "repository": "nodics.docs",
@@ -10967,6 +11196,3835 @@ module.exports = {
     "active": true
   },
   "record26": {
+    "code": "nodicsDocsComponentprocessOverview",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "process.overview",
+      "title": "Business Process and Automation Overview",
+      "route": "/docs/framework/process",
+      "section": "nodics-process",
+      "sectionTitle": "Nodics process",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Understand why nodics.process exists, how it helps business users, developers, and operators, and where it fits with Core, Cron, Platform, Axis, and customer modules.",
+      "headings": [
+        {
+          "text": "Beginner mental model",
+          "anchor": "processOverview-1-beginner-mental-model",
+          "level": 2
+        },
+        {
+          "text": "Where Process fits in Nodics",
+          "anchor": "processOverview-2-where-process-fits-in-nodics",
+          "level": 2
+        },
+        {
+          "text": "Business value",
+          "anchor": "processOverview-3-business-value",
+          "level": 2
+        },
+        {
+          "text": "Relationship with Cron",
+          "anchor": "processOverview-4-relationship-with-cron",
+          "level": 2
+        },
+        {
+          "text": "Relationship with domain modules",
+          "anchor": "processOverview-5-relationship-with-domain-modules",
+          "level": 2
+        },
+        {
+          "text": "What exists in the current MVP",
+          "anchor": "processOverview-6-what-exists-in-the-current-mvp",
+          "level": 2
+        },
+        {
+          "text": "Extension direction",
+          "anchor": "processOverview-7-extension-direction",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "processOverview-8-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "processOverview-9-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "`nodics.process` is the standard Nodics functional module group for business processes, workflows, task orchestration, runtime instances, audit evidence, and future automation design. It exists because most enterprise applications do not run as one simple button click. A content approval, onboarding request, order exception, document review, refund approval, or partner activation often needs multiple steps, people, systems, deadlines, decisions, retries, and audit records."
+        },
+        {
+          "kind": "paragraph",
+          "text": "For a business user, Process answers: \"What work is moving, who needs to act, what is delayed, and what evidence do we have?\" For a developer, Process answers: \"How do I model orchestration without hardcoding the flow into one domain service?\" For an operator, Process answers: \"Which instances are running, which tasks are stuck, which triggers are related to schedules, and what happened when something failed?\""
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Beginner mental model",
+          "anchor": "processOverview-1-beginner-mental-model"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Imagine a simple content approval:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "A page is submitted.",
+            "A reviewer checks it.",
+            "The reviewer approves or rejects it.",
+            "The system records who acted and when.",
+            "The page can continue to publication or return for changes."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Without a process engine, each application might write that flow in its own service. That makes every flow difficult to inspect, customize, test, and operate. `nodics.process` gives Nodics one governed place to model the flow, publish versions, start runtime instances, create human tasks, and record audit events."
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Business[\"Business user\"] --> Axis[\"Axis process console\"]\n  Axis --> ProcessApi[\"nodics.process APIs\"]\n  ProcessApi --> Definition[\"Draft definition\"]\n  Definition --> Version[\"Immutable published version\"]\n  Version --> Instance[\"Runtime instance\"]\n  Instance --> Task[\"Human task\"]\n  Task --> Audit[\"Audit timeline\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis is the console. It is not the engine. The backend owns every state change."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Where Process fits in Nodics",
+          "anchor": "processOverview-2-where-process-fits-in-nodics"
+        },
+        {
+          "kind": "paragraph",
+          "text": "`nodics.process` is a module group like `nodics.platform`, `nodics.wcms`, and `nodics.cron`. Runtime implementation lives under `modules/workflow`, and that capability is split into three technical modules:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Layer",
+            "Module",
+            "Responsibility"
+          ],
+          "rows": [
+            [
+              "Schema",
+              "`flowSchema`",
+              "Process definitions, versions, instances, tasks, triggers, audit events, statuses, and errors."
+            ],
+            [
+              "Core behavior",
+              "`flowCore`",
+              "Graph validation, definition lifecycle, runtime lifecycle, task movement, audit writing, and future execution providers."
+            ],
+            [
+              "API",
+              "`flowApi`",
+              "Secured routes, controllers, facades, help metadata, permission contracts, and BackOffice-facing API projection."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "This structure keeps the module customizable. A customer overlay can override a single assignment method, add a validation rule, or change SLA policy without copying the whole Process module."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Business value",
+          "anchor": "processOverview-3-business-value"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Process reduces cost and risk in three practical ways:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Business teams can see work as a lifecycle instead of searching logs or asking developers which status field matters.",
+            "Developers can create reusable orchestration without mixing workflow logic into commerce, content, profile, media, or customer-specific modules.",
+            "Operators can monitor running instances, tasks, scheduled relationships, and audit events using one consistent model."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "This is especially important for partners who want one server topology for business process and automation. A `processServer` can compose `nodics.process`, `nodics.cron`, and `nodics.core`, while each module still keeps its own ownership boundary."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Relationship with Cron",
+          "anchor": "processOverview-4-relationship-with-cron"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Process may reference scheduled triggers, but Cron owns job scheduling."
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart TD\n  Trigger[\"Process trigger metadata\"] --> Reference[\"cronJobCode reference\"]\n  Reference --> Cron[\"nodics.cron job lifecycle\"]\n  Cron --> Fire[\"Schedule fires\"]\n  Fire --> Process[\"Start process instance\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The important rule: Process owns orchestration state; Cron owns scheduler state. Sharing a runtime server does not mean mixing responsibilities."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Relationship with domain modules",
+          "anchor": "processOverview-5-relationship-with-domain-modules"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Process does not own commerce refunds, CMS publishing, profile onboarding, media storage, or logistics shipment rules. Those domain modules own their business actions. Process may orchestrate the steps and wait for tasks, but the domain module must still validate and execute its own operation."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Example:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Need",
+            "Owner"
+          ],
+          "rows": [
+            [
+              "Decide whether a refund is allowed",
+              "Commerce module"
+            ],
+            [
+              "Ask a manager to approve the refund",
+              "Process task"
+            ],
+            [
+              "Schedule a nightly reconciliation flow",
+              "Cron job plus Process trigger metadata"
+            ],
+            [
+              "Show the task to an employee",
+              "Axis process console"
+            ],
+            [
+              "Persist instance and audit history",
+              "Process backend"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "What exists in the current MVP",
+          "anchor": "processOverview-6-what-exists-in-the-current-mvp"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The current Process foundation supports:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "draft process definition creation;",
+            "backend graph validation;",
+            "immutable publish versioning;",
+            "prepare-next-draft behavior;",
+            "start published process instance;",
+            "create first human task for a TASK node;",
+            "claim, assign, complete, and cancel tasks;",
+            "cancel running or waiting instances;",
+            "instance detail with tasks and audit timeline;",
+            "scheduled trigger metadata list;",
+            "Axis console projection for definitions, instances, tasks, triggers, and timeline evidence."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "The current runtime intentionally keeps execution small: START -> TASK -> END is supported as the first reliable path. Complex gateways, domain action execution, compensation, retries, timers, and BPMN import/export can be added later as governed extensions after the foundation is proven."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Extension direction",
+          "anchor": "processOverview-7-extension-direction"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Future modules or customer projects should extend Process through:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "graph validation policy;",
+            "task assignment policy;",
+            "SLA and escalation policy;",
+            "domain action execution providers;",
+            "trigger providers;",
+            "audit redaction policy;",
+            "Axis renderer components that call backend-owned Process APIs."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Do not put process runtime rules into Axis. The browser can edit and display a graph, but backend validation and execution remain authoritative."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "processOverview-8-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating Process as the owner of domain commands or Cron scheduler state.",
+            "Building a second workflow registry, state machine, or execution path in Axis or a customer project."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "processOverview-9-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run Process contracts and fresh-bootstrap acceptance, confirm one backend definition and runtime authority, verify permission denial and invalid graphs, and observe successful, failed, retried, and recovered instances."
+        }
+      ],
+      "searchText": "Business Process and Automation Overview Understand why nodics.process exists, how it helps business users, developers, and operators, and where it fits with Core, Cron, Platform, Axis, and customer modules. # Business Process and Automation Overview\n\n`nodics.process` is the standard Nodics functional module group for business\nprocesses, workflows, task orchestration, runtime instances, audit evidence,\nand future automation design. It exists because most enterprise applications do\nnot run as one simple button click. A content approval, onboarding request,\norder exception, document review, refund approval, or partner activation often\nneeds multiple steps, people, systems, deadlines, decisions, retries, and audit\nrecords.\n\nFor a business user, Process answers: \"What work is moving, who needs to act,\nwhat is delayed, and what evidence do we have?\" For a developer, Process\nanswers: \"How do I model orchestration without hardcoding the flow into one\ndomain service?\" For an operator, Process answers: \"Which instances are\nrunning, which tasks are stuck, which triggers are related to schedules, and\nwhat happened when something failed?\"\n\n## Beginner mental model\n\nImagine a simple content approval:\n\n1. A page is submitted.\n2. A reviewer checks it.\n3. The reviewer approves or rejects it.\n4. The system records who acted and when.\n5. The page can continue to publication or return for changes.\n\nWithout a process engine, each application might write that flow in its own\nservice. That makes every flow difficult to inspect, customize, test, and\noperate. `nodics.process` gives Nodics one governed place to model the flow,\npublish versions, start runtime instances, create human tasks, and record audit\nevents.\n\n```mermaid\nflowchart LR\n  Business[\"Business user\"] --> Axis[\"Axis process console\"]\n  Axis --> ProcessApi[\"nodics.process APIs\"]\n  ProcessApi --> Definition[\"Draft definition\"]\n  Definition --> Version[\"Immutable published version\"]\n  Version --> Instance[\"Runtime instance\"]\n  Instance --> Task[\"Human task\"]\n  Task --> Audit[\"Audit timeline\"]\n```\n\nAxis is the console. It is not the engine. The backend owns every state change.\n\n## Where Process fits in Nodics\n\n`nodics.process` is a module group like `nodics.platform`, `nodics.wcms`, and\n`nodics.cron`. Runtime implementation lives under `modules/workflow`, and that\ncapability is split into three technical modules:\n\n| Layer | Module | Responsibility |\n| --- | --- | --- |\n| Schema | `flowSchema` | Process definitions, versions, instances, tasks, triggers, audit events, statuses, and errors. |\n| Core behavior | `flowCore` | Graph validation, definition lifecycle, runtime lifecycle, task movement, audit writing, and future execution providers. |\n| API | `flowApi` | Secured routes, controllers, facades, help metadata, permission contracts, and BackOffice-facing API projection. |\n\nThis structure keeps the module customizable. A customer overlay can override a\nsingle assignment method, add a validation rule, or change SLA policy without\ncopying the whole Process module.\n\n## Business value\n\nProcess reduces cost and risk in three practical ways:\n\n- Business teams can see work as a lifecycle instead of searching logs or\n  asking developers which status field matters.\n- Developers can create reusable orchestration without mixing workflow logic\n  into commerce, content, profile, media, or customer-specific modules.\n- Operators can monitor running instances, tasks, scheduled relationships, and\n  audit events using one consistent model.\n\nThis is especially important for partners who want one server topology for\nbusiness process and automation. A `processServer` can compose\n`nodics.process`, `nodics.cron`, and `nodics.core`, while each module still\nkeeps its own ownership boundary.\n\n## Relationship with Cron\n\nProcess may reference scheduled triggers, but Cron owns job scheduling.\n\n```mermaid\nflowchart TD\n  Trigger[\"Process trigger metadata\"] --> Reference[\"cronJobCode reference\"]\n  Reference --> Cron[\"nodics.cron job lifecycle\"]\n  Cron --> Fire[\"Schedule fires\"]\n  Fire --> Process[\"Start process instance\"]\n```\n\nThe important rule: Process owns orchestration state; Cron owns scheduler state.\nSharing a runtime server does not mean mixing responsibilities.\n\n## Relationship with domain modules\n\nProcess does not own commerce refunds, CMS publishing, profile onboarding,\nmedia storage, or logistics shipment rules. Those domain modules own their\nbusiness actions. Process may orchestrate the steps and wait for tasks, but the\ndomain module must still validate and execute its own operation.\n\nExample:\n\n| Need | Owner |\n| --- | --- |\n| Decide whether a refund is allowed | Commerce module |\n| Ask a manager to approve the refund | Process task |\n| Schedule a nightly reconciliation flow | Cron job plus Process trigger metadata |\n| Show the task to an employee | Axis process console |\n| Persist instance and audit history | Process backend |\n\n## What exists in the current MVP\n\nThe current Process foundation supports:\n\n- draft process definition creation;\n- backend graph validation;\n- immutable publish versioning;\n- prepare-next-draft behavior;\n- start published process instance;\n- create first human task for a TASK node;\n- claim, assign, complete, and cancel tasks;\n- cancel running or waiting instances;\n- instance detail with tasks and audit timeline;\n- scheduled trigger metadata list;\n- Axis console projection for definitions, instances, tasks, triggers, and\n  timeline evidence.\n\nThe current runtime intentionally keeps execution small: START -> TASK -> END\nis supported as the first reliable path. Complex gateways, domain action\nexecution, compensation, retries, timers, and BPMN import/export can be added\nlater as governed extensions after the foundation is proven.\n\n## Extension direction\n\nFuture modules or customer projects should extend Process through:\n\n- graph validation policy;\n- task assignment policy;\n- SLA and escalation policy;\n- domain action execution providers;\n- trigger providers;\n- audit redaction policy;\n- Axis renderer components that call backend-owned Process APIs.\n\nDo not put process runtime rules into Axis. The browser can edit and display a\ngraph, but backend validation and execution remain authoritative.\n\n## Common mistakes\n\n- Treating Process as the owner of domain commands or Cron scheduler state.\n- Building a second workflow registry, state machine, or execution path in Axis or a customer project.\n\n## Verification\n\nRun Process contracts and fresh-bootstrap acceptance, confirm one backend definition and runtime authority, verify permission denial and invalid graphs, and observe successful, failed, retried, and recovered instances.\n",
+      "previous": {
+        "title": "Communication, delivery, and verification",
+        "route": "/docs/framework/communication-overview"
+      },
+      "next": {
+        "title": "Runtime Instance and Task Lifecycle",
+        "route": "/docs/framework/process/runtime-lifecycle"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.process",
+        "technicalModule": "flowCore",
+        "path": "content/nodics.process/process-overview.md",
+        "wordCount": 866,
+        "checksum": "1b428a1a1a4081b0a4a725c9f8bb447892acc46971b228c12fde3fee91099178"
+      }
+    },
+    "active": true
+  },
+  "record27": {
+    "code": "nodicsDocsComponentprocessRuntimeLifecycle",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "process.runtime-lifecycle",
+      "title": "Runtime Instance and Task Lifecycle",
+      "route": "/docs/framework/process/runtime-lifecycle",
+      "section": "nodics-process",
+      "sectionTitle": "Nodics process",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships.",
+      "headings": [
+        {
+          "text": "Lifecycle summary",
+          "anchor": "processRuntimeLifecycle-1-lifecycle-summary",
+          "level": 2
+        },
+        {
+          "text": "Definition lifecycle",
+          "anchor": "processRuntimeLifecycle-2-definition-lifecycle",
+          "level": 2
+        },
+        {
+          "text": "Starting an instance",
+          "anchor": "processRuntimeLifecycle-3-starting-an-instance",
+          "level": 2
+        },
+        {
+          "text": "Task lifecycle",
+          "anchor": "processRuntimeLifecycle-4-task-lifecycle",
+          "level": 2
+        },
+        {
+          "text": "Instance detail and audit",
+          "anchor": "processRuntimeLifecycle-5-instance-detail-and-audit",
+          "level": 2
+        },
+        {
+          "text": "Scheduled triggers",
+          "anchor": "processRuntimeLifecycle-6-scheduled-triggers",
+          "level": 2
+        },
+        {
+          "text": "QA checklist",
+          "anchor": "processRuntimeLifecycle-7-qa-checklist",
+          "level": 2
+        },
+        {
+          "text": "Customization examples",
+          "anchor": "processRuntimeLifecycle-8-customization-examples",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "processRuntimeLifecycle-9-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "processRuntimeLifecycle-10-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "This page explains the lifecycle that turns a designed process into operational work. It is written for a beginner, so it starts with the simple path before explaining where developers and operators customize behavior."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Lifecycle summary",
+          "anchor": "processRuntimeLifecycle-1-lifecycle-summary"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "stateDiagram-v2\n  [*] --> DraftDefinition\n  DraftDefinition --> ValidatedDraft: validate draft\n  ValidatedDraft --> PublishedVersion: publish\n  PublishedVersion --> RuntimeInstance: start instance\n  RuntimeInstance --> WaitingTask: reach TASK node\n  WaitingTask --> ClaimedTask: claim\n  ClaimedTask --> CompletedTask: complete\n  CompletedTask --> CompletedInstance: next node is END\n  WaitingTask --> CancelledTask: cancel task\n  RuntimeInstance --> CancelledInstance: cancel instance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Every arrow is a backend operation. Axis buttons call these APIs, but Axis does not update the database directly and does not invent the next state."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Definition lifecycle",
+          "anchor": "processRuntimeLifecycle-2-definition-lifecycle"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A process starts as a draft. Drafts can be edited because business users and developers often need multiple rounds of naming, description, category, graph layout, and validation. A draft cannot become operational until the backend graph validator accepts it."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The first supported graph shape is intentionally small:"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Start[\"START\"] --> Review[\"TASK: Business review\"]\n  Review --> End[\"END\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "This proves the foundation before advanced behavior is added. The backend checks stable node codes, supported node types, one START node, at least one END node, valid transitions, duplicate node codes, and unsafe executable action references."
+        },
+        {
+          "kind": "paragraph",
+          "text": "When a draft is published, the backend creates an immutable `processDefinitionVersion`. Later draft edits must not mutate version 1. This is critical for audit: if a process instance ran yesterday, operators must know exactly which published graph version it used."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Starting an instance",
+          "anchor": "processRuntimeLifecycle-3-starting-an-instance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Starting a process requires a published definition. The request can specify a definition code and optional version. If no version is supplied, the backend uses the current published version from the definition aggregate."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Example request:"
+        },
+        {
+          "kind": "code",
+          "language": "http",
+          "text": "POST /nodics/process/v0/instances\nAuthorization: Bearer <access-token>\nx-enterprise-code: default\ncontent-type: application/json\n\n{\n  \"definitionCode\": \"contentApproval\",\n  \"context\": {\n    \"businessKey\": \"page-123\"\n  }\n}"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The backend creates:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "one `processInstance`;",
+            "a `process.instance.started` audit event;",
+            "the first `processTask` when the graph reaches a TASK node;",
+            "a `process.task.created` audit event."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Task lifecycle",
+          "anchor": "processRuntimeLifecycle-4-task-lifecycle"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Human tasks are operational work items. They can be open, claimed, completed, cancelled, or escalated."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Runtime mutation routes use dedicated Process permissions. This keeps definition governance, instance control, human-task operations, and trigger management separate even when the reference admin can exercise all of them. Customer projects can assign these permissions to narrower user groups later."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Action",
+            "API",
+            "Permission",
+            "Allowed from",
+            "Result"
+          ],
+          "rows": [
+            [
+              "Start instance",
+              "`POST /instances`",
+              "`process.instance.start`",
+              "Published version",
+              "Instance starts and first task may be created."
+            ],
+            [
+              "Claim",
+              "`POST /tasks/:taskCode/claim`",
+              "`process.task.claim`",
+              "`OPEN`",
+              "Task becomes `CLAIMED` and assignee is recorded."
+            ],
+            [
+              "Assign",
+              "`POST /tasks/:taskCode/assign`",
+              "`process.task.assign`",
+              "`OPEN`, `CLAIMED`, `ESCALATED`",
+              "Assignee changes while task remains actionable."
+            ],
+            [
+              "Complete",
+              "`POST /tasks/:taskCode/complete`",
+              "`process.task.complete`",
+              "`OPEN`, `CLAIMED`, `ESCALATED`",
+              "Task becomes `COMPLETED`; instance moves to next node."
+            ],
+            [
+              "Cancel task",
+              "`POST /tasks/:taskCode/cancel`",
+              "`process.task.cancel`",
+              "`OPEN`, `CLAIMED`, `ESCALATED`",
+              "Task becomes `CANCELLED` without cancelling the whole instance."
+            ],
+            [
+              "Cancel instance",
+              "`POST /instances/:instanceCode/cancel`",
+              "`process.instance.cancel`",
+              "`CREATED`, `RUNNING`, `WAITING`",
+              "Instance becomes `CANCELLED`; open tasks are cancelled."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Completing a task advances through the published graph. ACTION, DECISION, TIMER, and SUB_PROCESS nodes are backend-executed. If an ACTION fails, Process marks the instance `FAILED` and opens a recovery incident; operators then use the governed retry or compensation APIs described in the incident recovery guide."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Instance detail and audit",
+          "anchor": "processRuntimeLifecycle-5-instance-detail-and-audit"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Operators need evidence, not just status. The detail API returns the instance, its tasks, and its audit timeline."
+        },
+        {
+          "kind": "code",
+          "language": "http",
+          "text": "GET /nodics/process/v0/instances/contentApproval-001/detail"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The response gives Axis enough information to show:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "current instance status;",
+            "definition and version;",
+            "current node;",
+            "all related tasks;",
+            "timeline events such as instance started, task created, task claimed, task completed, and instance completed."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Audit data must stay bounded and redacted. It should explain what happened without storing secrets or large raw payloads."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Scheduled triggers",
+          "anchor": "processRuntimeLifecycle-6-scheduled-triggers"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Scheduled automation is represented as Process trigger metadata. A trigger may reference a Cron job code, but actual scheduling, firing, retries, and job lifecycle stay in `nodics.cron`."
+        },
+        {
+          "kind": "paragraph",
+          "text": "This split helps a business user see automation relationships from the Process console while preserving module ownership:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Concern",
+            "Owner"
+          ],
+          "rows": [
+            [
+              "Trigger relationship to a process",
+              "`nodics.process`"
+            ],
+            [
+              "Cron expression, job enablement, scheduler runtime",
+              "`nodics.cron`"
+            ],
+            [
+              "Starting an instance when schedule fires",
+              "Process API called by authorized runtime integration"
+            ],
+            [
+              "Showing relationship in Axis",
+              "`nodics.axis` frontend projection"
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "The trigger metadata lifecycle uses `process.trigger.manage` for create, update, activation, pause, and archive operations. Archiving is preferred over delete so operators can still explain why a scheduled automation relationship used to exist."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "QA checklist",
+          "anchor": "processRuntimeLifecycle-7-qa-checklist"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The runtime foundation is healthy when:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "A draft can be created and validated.",
+            "A valid draft can publish version 1.",
+            "Version 1 remains immutable after preparing version 2 draft.",
+            "A published definition can start a runtime instance.",
+            "The first TASK node creates an OPEN task.",
+            "Claiming the task records assignee and audit evidence.",
+            "Completing the task advances the instance to END and COMPLETED.",
+            "Instance detail returns tasks and audit timeline.",
+            "Invalid task transitions fail with stable Process errors.",
+            "Axis refreshes after each operation without calculating runtime state locally."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization examples",
+          "anchor": "processRuntimeLifecycle-8-customization-examples"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A customer project can customize without editing the standard Process source:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "override task assignment policy to assign by enterprise, site, queue, or role;",
+            "add SLA due-date calculation using project-level properties;",
+            "add graph validation rules for domain action references;",
+            "add a provider that executes ACTION nodes through a domain module facade;",
+            "add escalation rules that create events or Cron-backed reminders;",
+            "enrich Axis cards using backend-owned API data."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "The key principle stays the same: Process owns orchestration state, domain modules own business actions, Cron owns scheduling, and Axis renders authorized contracts."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "processRuntimeLifecycle-9-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Updating instances or tasks without expected-state concurrency checks.",
+            "Mutating published definitions, deleting audit history, or allowing domain actions to bypass Process lifecycle rules."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "processRuntimeLifecycle-10-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Exercise draft, validation, publication, instance start, task completion, failure, retry, compensation, and terminal-state rejection. Restart the runtime and confirm durable state and audit continuity. The production operator must verify alerts, ownership, and restart recovery for each non-terminal state."
+        }
+      ],
+      "searchText": "Runtime Instance and Task Lifecycle Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships. # Runtime Instance and Task Lifecycle\n\nThis page explains the lifecycle that turns a designed process into operational\nwork. It is written for a beginner, so it starts with the simple path before\nexplaining where developers and operators customize behavior.\n\n## Lifecycle summary\n\n```mermaid\nstateDiagram-v2\n  [*] --> DraftDefinition\n  DraftDefinition --> ValidatedDraft: validate draft\n  ValidatedDraft --> PublishedVersion: publish\n  PublishedVersion --> RuntimeInstance: start instance\n  RuntimeInstance --> WaitingTask: reach TASK node\n  WaitingTask --> ClaimedTask: claim\n  ClaimedTask --> CompletedTask: complete\n  CompletedTask --> CompletedInstance: next node is END\n  WaitingTask --> CancelledTask: cancel task\n  RuntimeInstance --> CancelledInstance: cancel instance\n```\n\nEvery arrow is a backend operation. Axis buttons call these APIs, but Axis does\nnot update the database directly and does not invent the next state.\n\n## Definition lifecycle\n\nA process starts as a draft. Drafts can be edited because business users and\ndevelopers often need multiple rounds of naming, description, category, graph\nlayout, and validation. A draft cannot become operational until the backend\ngraph validator accepts it.\n\nThe first supported graph shape is intentionally small:\n\n```mermaid\nflowchart LR\n  Start[\"START\"] --> Review[\"TASK: Business review\"]\n  Review --> End[\"END\"]\n```\n\nThis proves the foundation before advanced behavior is added. The backend\nchecks stable node codes, supported node types, one START node, at least one END\nnode, valid transitions, duplicate node codes, and unsafe executable action\nreferences.\n\nWhen a draft is published, the backend creates an immutable\n`processDefinitionVersion`. Later draft edits must not mutate version 1. This\nis critical for audit: if a process instance ran yesterday, operators must know\nexactly which published graph version it used.\n\n## Starting an instance\n\nStarting a process requires a published definition. The request can specify a\ndefinition code and optional version. If no version is supplied, the backend\nuses the current published version from the definition aggregate.\n\nExample request:\n\n```http\nPOST /nodics/process/v0/instances\nAuthorization: Bearer <access-token>\nx-enterprise-code: default\ncontent-type: application/json\n\n{\n  \"definitionCode\": \"contentApproval\",\n  \"context\": {\n    \"businessKey\": \"page-123\"\n  }\n}\n```\n\nThe backend creates:\n\n- one `processInstance`;\n- a `process.instance.started` audit event;\n- the first `processTask` when the graph reaches a TASK node;\n- a `process.task.created` audit event.\n\n## Task lifecycle\n\nHuman tasks are operational work items. They can be open, claimed, completed,\ncancelled, or escalated.\n\nRuntime mutation routes use dedicated Process permissions. This keeps\ndefinition governance, instance control, human-task operations, and trigger\nmanagement separate even when the reference admin can exercise all of them.\nCustomer projects can assign these permissions to narrower user groups later.\n\n| Action | API | Permission | Allowed from | Result |\n| --- | --- | --- | --- | --- |\n| Start instance | `POST /instances` | `process.instance.start` | Published version | Instance starts and first task may be created. |\n| Claim | `POST /tasks/:taskCode/claim` | `process.task.claim` | `OPEN` | Task becomes `CLAIMED` and assignee is recorded. |\n| Assign | `POST /tasks/:taskCode/assign` | `process.task.assign` | `OPEN`, `CLAIMED`, `ESCALATED` | Assignee changes while task remains actionable. |\n| Complete | `POST /tasks/:taskCode/complete` | `process.task.complete` | `OPEN`, `CLAIMED`, `ESCALATED` | Task becomes `COMPLETED`; instance moves to next node. |\n| Cancel task | `POST /tasks/:taskCode/cancel` | `process.task.cancel` | `OPEN`, `CLAIMED`, `ESCALATED` | Task becomes `CANCELLED` without cancelling the whole instance. |\n| Cancel instance | `POST /instances/:instanceCode/cancel` | `process.instance.cancel` | `CREATED`, `RUNNING`, `WAITING` | Instance becomes `CANCELLED`; open tasks are cancelled. |\n\nCompleting a task advances through the published graph. ACTION, DECISION,\nTIMER, and SUB_PROCESS nodes are backend-executed. If an ACTION fails, Process\nmarks the instance `FAILED` and opens a recovery incident; operators then use\nthe governed retry or compensation APIs described in the incident recovery\nguide.\n\n## Instance detail and audit\n\nOperators need evidence, not just status. The detail API returns the instance,\nits tasks, and its audit timeline.\n\n```http\nGET /nodics/process/v0/instances/contentApproval-001/detail\n```\n\nThe response gives Axis enough information to show:\n\n- current instance status;\n- definition and version;\n- current node;\n- all related tasks;\n- timeline events such as instance started, task created, task claimed, task\n  completed, and instance completed.\n\nAudit data must stay bounded and redacted. It should explain what happened\nwithout storing secrets or large raw payloads.\n\n## Scheduled triggers\n\nScheduled automation is represented as Process trigger metadata. A trigger may\nreference a Cron job code, but actual scheduling, firing, retries, and job\nlifecycle stay in `nodics.cron`.\n\nThis split helps a business user see automation relationships from the Process\nconsole while preserving module ownership:\n\n| Concern | Owner |\n| --- | --- |\n| Trigger relationship to a process | `nodics.process` |\n| Cron expression, job enablement, scheduler runtime | `nodics.cron` |\n| Starting an instance when schedule fires | Process API called by authorized runtime integration |\n| Showing relationship in Axis | `nodics.axis` frontend projection |\n\nThe trigger metadata lifecycle uses `process.trigger.manage` for create,\nupdate, activation, pause, and archive operations. Archiving is preferred over\ndelete so operators can still explain why a scheduled automation relationship\nused to exist.\n\n## QA checklist\n\nThe runtime foundation is healthy when:\n\n1. A draft can be created and validated.\n2. A valid draft can publish version 1.\n3. Version 1 remains immutable after preparing version 2 draft.\n4. A published definition can start a runtime instance.\n5. The first TASK node creates an OPEN task.\n6. Claiming the task records assignee and audit evidence.\n7. Completing the task advances the instance to END and COMPLETED.\n8. Instance detail returns tasks and audit timeline.\n9. Invalid task transitions fail with stable Process errors.\n10. Axis refreshes after each operation without calculating runtime state locally.\n\n## Customization examples\n\nA customer project can customize without editing the standard Process source:\n\n- override task assignment policy to assign by enterprise, site, queue, or role;\n- add SLA due-date calculation using project-level properties;\n- add graph validation rules for domain action references;\n- add a provider that executes ACTION nodes through a domain module facade;\n- add escalation rules that create events or Cron-backed reminders;\n- enrich Axis cards using backend-owned API data.\n\nThe key principle stays the same: Process owns orchestration state, domain\nmodules own business actions, Cron owns scheduling, and Axis renders authorized\ncontracts.\n\n## Common mistakes\n\n- Updating instances or tasks without expected-state concurrency checks.\n- Mutating published definitions, deleting audit history, or allowing domain actions to bypass Process lifecycle rules.\n\n## Verification\n\nExercise draft, validation, publication, instance start, task completion, failure, retry, compensation, and terminal-state rejection. Restart the runtime and confirm durable state and audit continuity.\nThe production operator must verify alerts, ownership, and restart recovery for each non-terminal state.\n",
+      "previous": {
+        "title": "Business Process and Automation Overview",
+        "route": "/docs/framework/process"
+      },
+      "next": {
+        "title": "Incident, Retry, and Compensation Operations",
+        "route": "/docs/framework/process/incident-recovery"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.process",
+        "technicalModule": "flowCore",
+        "path": "content/nodics.process/runtime-lifecycle.md",
+        "wordCount": 999,
+        "checksum": "3e74c94e12de6cc5419fcac20f9d55d2e99fa00c8e9a55ce063b759a5b0b623f"
+      }
+    },
+    "active": true
+  },
+  "record28": {
+    "code": "nodicsDocsComponentprocessIncidentRecovery",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "process.incident-recovery",
+      "title": "Incident, Retry, and Compensation Operations",
+      "route": "/docs/framework/process/incident-recovery",
+      "section": "nodics-process",
+      "sectionTitle": "Nodics process",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Operate failed ACTION nodes through Process-owned incidents, bounded retries, dead-letter handling, and declarative domain-owned compensation.",
+      "headings": [
+        {
+          "text": "The recovery lifecycle",
+          "anchor": "processIncidentRecovery-1-the-recovery-lifecycle",
+          "level": 2
+        },
+        {
+          "text": "What an operator sees",
+          "anchor": "processIncidentRecovery-2-what-an-operator-sees",
+          "level": 2
+        },
+        {
+          "text": "Retry safely",
+          "anchor": "processIncidentRecovery-3-retry-safely",
+          "level": 2
+        },
+        {
+          "text": "Compensate safely",
+          "anchor": "processIncidentRecovery-4-compensate-safely",
+          "level": 2
+        },
+        {
+          "text": "Developer contract",
+          "anchor": "processIncidentRecovery-5-developer-contract",
+          "level": 2
+        },
+        {
+          "text": "Operational checklist",
+          "anchor": "processIncidentRecovery-6-operational-checklist",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "processIncidentRecovery-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "processIncidentRecovery-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "This guide explains what happens when an automated workflow step fails and how an operator safely recovers it. Process owns the orchestration incident. The business module still owns the action and any reversal of business state."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "The recovery lifecycle",
+          "anchor": "processIncidentRecovery-1-the-recovery-lifecycle"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "stateDiagram-v2\n  [*] --> Open: ACTION fails\n  Open --> Retrying: authorized retry\n  Retrying --> Resolved: action succeeds\n  Retrying --> Open: attempt fails and budget remains\n  Retrying --> DeadLetter: attempt budget exhausted\n  Open --> Compensating: authorized compensation\n  DeadLetter --> Compensating: authorized compensation\n  Compensating --> Compensated: domain adapter succeeds\n  Compensating --> DeadLetter: domain adapter fails"
+        },
+        {
+          "kind": "paragraph",
+          "text": "An ACTION failure creates one `processIncident` containing the instance, published definition version, failed node, stable error code, current attempt, maximum attempts, optional next retry time, and declarative adapter references. Raw exception payloads and secrets must not be copied into incident evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "What an operator sees",
+          "anchor": "processIncidentRecovery-2-what-an-operator-sees"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The incident list is the recovery work queue:"
+        },
+        {
+          "kind": "code",
+          "language": "http",
+          "text": "GET /nodics/process/v0/incidents?status=OPEN\nAuthorization: Bearer <access-token>"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Open the incident before acting. Confirm the definition version, node, error code, attempt budget, next retry time, and related instance. Refresh if another operator may be working on the same incident."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Operation",
+            "Permission",
+            "Result"
+          ],
+          "rows": [
+            [
+              "List or read incidents",
+              "`process.incident.read`",
+              "Returns bounded recovery evidence."
+            ],
+            [
+              "Retry failed ACTION",
+              "`process.instance.retry`",
+              "Re-executes the same published ACTION and continues only after success."
+            ],
+            [
+              "Run compensation",
+              "`process.instance.compensate`",
+              "Dispatches the node's registered domain compensation adapter."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Retry safely",
+          "anchor": "processIncidentRecovery-3-retry-safely"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Send the attempt number you inspected. This optimistic check prevents an old browser tab from spending a newer retry attempt."
+        },
+        {
+          "kind": "code",
+          "language": "http",
+          "text": "POST /nodics/process/v0/instances/orderApproval-001/retry\nAuthorization: Bearer <access-token>\ncontent-type: application/json\n\n{\n  \"expectedAttempt\": 1,\n  \"correlationId\": \"support-case-4831\"\n}"
+        },
+        {
+          "kind": "paragraph",
+          "text": "On success, the incident becomes `RESOLVED` and the instance continues from the transition after the failed ACTION. On failure, the attempt increments. The incident returns to `OPEN` while budget remains or becomes `DEAD_LETTER` after the final attempt. Retry policy is bounded to ten attempts and a maximum delay of 24 hours even when project configuration is incorrect."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Compensate safely",
+          "anchor": "processIncidentRecovery-4-compensate-safely"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Compensation is not a generic database rollback. A workflow node may declare a registered compensation adapter, for example an Order-owned reversal command. Process invokes that adapter and records orchestration evidence; the domain module validates its own state, idempotency, authorization, and reversal rules."
+        },
+        {
+          "kind": "code",
+          "language": "http",
+          "text": "POST /nodics/process/v0/instances/orderApproval-001/compensate\nAuthorization: Bearer <access-token>\ncontent-type: application/json\n\n{\n  \"payload\": {\n    \"reasonCode\": \"PAYMENT_CAPTURE_FAILED\"\n  }\n}"
+        },
+        {
+          "kind": "paragraph",
+          "text": "If no compensation adapter is declared, the API fails closed. Operators must not substitute a direct database edit. If compensation fails, the incident is dead-lettered and the instance keeps `compensationStatus: FAILED` for manual investigation."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Developer contract",
+          "anchor": "processIncidentRecovery-5-developer-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "An ACTION node can declare retry and compensation without embedding executable code in the graph:"
+        },
+        {
+          "kind": "code",
+          "language": "json",
+          "text": "{\n  \"code\": \"reserveInventory\",\n  \"type\": \"ACTION\",\n  \"action\": {\n    \"moduleName\": \"nodics.commerce.inventory\",\n    \"operation\": \"reserve\"\n  },\n  \"retry\": {\n    \"maximumAttempts\": 3,\n    \"delayMs\": 5000\n  },\n  \"compensation\": {\n    \"moduleName\": \"nodics.commerce.inventory\",\n    \"operation\": \"release\"\n  }\n}"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Both declarations must exist in the configured action-adapter allowlist. The adapter implementation lives behind a domain service or facade. Unknown or unavailable adapters fail closed."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operational checklist",
+          "anchor": "processIncidentRecovery-6-operational-checklist"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Confirm the incident belongs to the intended tenant and instance.",
+            "Read the stable error code and current attempt; never expose secrets in notes.",
+            "Resolve the external cause before retrying, when applicable.",
+            "Pass `expectedAttempt` and a correlation identifier.",
+            "Confirm `process.incident.resolved` or `process.incident.compensated` audit evidence.",
+            "Escalate dead-letter incidents instead of repeatedly bypassing policy.",
+            "Test domain compensation idempotency and partial-failure behavior before production qualification."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "processIncidentRecovery-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Retrying continuously without resolving the dependency or respecting bounded policy.",
+            "Treating compensation as deletion of history or allowing Process to invent domain reversal behavior."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "processIncidentRecovery-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Force a controlled failure, confirm incident and audit creation, test stale and unauthorized retry rejection, execute bounded retry or domain-owned compensation, and verify final state after restart. A beginner operator should rehearse this with a non-production incident before receiving recovery authority."
+        }
+      ],
+      "searchText": "Incident, Retry, and Compensation Operations Operate failed ACTION nodes through Process-owned incidents, bounded retries, dead-letter handling, and declarative domain-owned compensation. # Incident, Retry, and Compensation Operations\n\nThis guide explains what happens when an automated workflow step fails and how\nan operator safely recovers it. Process owns the orchestration incident. The\nbusiness module still owns the action and any reversal of business state.\n\n## The recovery lifecycle\n\n```mermaid\nstateDiagram-v2\n  [*] --> Open: ACTION fails\n  Open --> Retrying: authorized retry\n  Retrying --> Resolved: action succeeds\n  Retrying --> Open: attempt fails and budget remains\n  Retrying --> DeadLetter: attempt budget exhausted\n  Open --> Compensating: authorized compensation\n  DeadLetter --> Compensating: authorized compensation\n  Compensating --> Compensated: domain adapter succeeds\n  Compensating --> DeadLetter: domain adapter fails\n```\n\nAn ACTION failure creates one `processIncident` containing the instance,\npublished definition version, failed node, stable error code, current attempt,\nmaximum attempts, optional next retry time, and declarative adapter references.\nRaw exception payloads and secrets must not be copied into incident evidence.\n\n## What an operator sees\n\nThe incident list is the recovery work queue:\n\n```http\nGET /nodics/process/v0/incidents?status=OPEN\nAuthorization: Bearer <access-token>\n```\n\nOpen the incident before acting. Confirm the definition version, node, error\ncode, attempt budget, next retry time, and related instance. Refresh if another\noperator may be working on the same incident.\n\n| Operation | Permission | Result |\n| --- | --- | --- |\n| List or read incidents | `process.incident.read` | Returns bounded recovery evidence. |\n| Retry failed ACTION | `process.instance.retry` | Re-executes the same published ACTION and continues only after success. |\n| Run compensation | `process.instance.compensate` | Dispatches the node's registered domain compensation adapter. |\n\n## Retry safely\n\nSend the attempt number you inspected. This optimistic check prevents an old\nbrowser tab from spending a newer retry attempt.\n\n```http\nPOST /nodics/process/v0/instances/orderApproval-001/retry\nAuthorization: Bearer <access-token>\ncontent-type: application/json\n\n{\n  \"expectedAttempt\": 1,\n  \"correlationId\": \"support-case-4831\"\n}\n```\n\nOn success, the incident becomes `RESOLVED` and the instance continues from the\ntransition after the failed ACTION. On failure, the attempt increments. The\nincident returns to `OPEN` while budget remains or becomes `DEAD_LETTER` after\nthe final attempt. Retry policy is bounded to ten attempts and a maximum delay\nof 24 hours even when project configuration is incorrect.\n\n## Compensate safely\n\nCompensation is not a generic database rollback. A workflow node may declare a\nregistered compensation adapter, for example an Order-owned reversal command.\nProcess invokes that adapter and records orchestration evidence; the domain\nmodule validates its own state, idempotency, authorization, and reversal rules.\n\n```http\nPOST /nodics/process/v0/instances/orderApproval-001/compensate\nAuthorization: Bearer <access-token>\ncontent-type: application/json\n\n{\n  \"payload\": {\n    \"reasonCode\": \"PAYMENT_CAPTURE_FAILED\"\n  }\n}\n```\n\nIf no compensation adapter is declared, the API fails closed. Operators must\nnot substitute a direct database edit. If compensation fails, the incident is\ndead-lettered and the instance keeps `compensationStatus: FAILED` for manual\ninvestigation.\n\n## Developer contract\n\nAn ACTION node can declare retry and compensation without embedding executable\ncode in the graph:\n\n```json\n{\n  \"code\": \"reserveInventory\",\n  \"type\": \"ACTION\",\n  \"action\": {\n    \"moduleName\": \"nodics.commerce.inventory\",\n    \"operation\": \"reserve\"\n  },\n  \"retry\": {\n    \"maximumAttempts\": 3,\n    \"delayMs\": 5000\n  },\n  \"compensation\": {\n    \"moduleName\": \"nodics.commerce.inventory\",\n    \"operation\": \"release\"\n  }\n}\n```\n\nBoth declarations must exist in the configured action-adapter allowlist. The\nadapter implementation lives behind a domain service or facade. Unknown or\nunavailable adapters fail closed.\n\n## Operational checklist\n\n1. Confirm the incident belongs to the intended tenant and instance.\n2. Read the stable error code and current attempt; never expose secrets in notes.\n3. Resolve the external cause before retrying, when applicable.\n4. Pass `expectedAttempt` and a correlation identifier.\n5. Confirm `process.incident.resolved` or `process.incident.compensated` audit evidence.\n6. Escalate dead-letter incidents instead of repeatedly bypassing policy.\n7. Test domain compensation idempotency and partial-failure behavior before production qualification.\n\n## Common mistakes\n\n- Retrying continuously without resolving the dependency or respecting bounded policy.\n- Treating compensation as deletion of history or allowing Process to invent domain reversal behavior.\n\n## Verification\n\nForce a controlled failure, confirm incident and audit creation, test stale and unauthorized retry rejection, execute bounded retry or domain-owned compensation, and verify final state after restart.\nA beginner operator should rehearse this with a non-production incident before receiving recovery authority.\n",
+      "previous": {
+        "title": "Runtime Instance and Task Lifecycle",
+        "route": "/docs/framework/process/runtime-lifecycle"
+      },
+      "next": {
+        "title": "Build Your First Workflow",
+        "route": "/docs/framework/process/first-workflow"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.process",
+        "technicalModule": "flowCore",
+        "path": "content/nodics.process/incident-recovery.md",
+        "wordCount": 622,
+        "checksum": "6395f6c383ef1e2bfd6edd369df61ca867bf7fbeb14fdd4bb99a30604add3d22"
+      }
+    },
+    "active": true
+  },
+  "record29": {
+    "code": "nodicsDocsComponentprocessFirstWorkflow",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "process.first-workflow",
+      "title": "Build Your First Workflow",
+      "route": "/docs/framework/process/first-workflow",
+      "section": "nodics-process",
+      "sectionTitle": "Nodics process",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Create a first Process workflow from START through TASK, DECISION, ACTION, TIMER, SUB_PROCESS, and END with beginner-safe examples.",
+      "headings": [
+        {
+          "text": "What you are building",
+          "anchor": "processFirstWorkflow-1-what-you-are-building",
+          "level": 2
+        },
+        {
+          "text": "Step 1: create a draft definition",
+          "anchor": "processFirstWorkflow-2-step-1-create-a-draft-definition",
+          "level": 2
+        },
+        {
+          "text": "Step 2: understand the nodes",
+          "anchor": "processFirstWorkflow-3-step-2-understand-the-nodes",
+          "level": 2
+        },
+        {
+          "text": "Step 3: connect the nodes",
+          "anchor": "processFirstWorkflow-4-step-3-connect-the-nodes",
+          "level": 2
+        },
+        {
+          "text": "Step 4: save, validate, publish",
+          "anchor": "processFirstWorkflow-5-step-4-save-validate-publish",
+          "level": 2
+        },
+        {
+          "text": "Common beginner mistakes",
+          "anchor": "processFirstWorkflow-6-common-beginner-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "processFirstWorkflow-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "processFirstWorkflow-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "This guide is for someone opening Nodics for the first time. The goal is not to teach every automation feature at once. The goal is to help you create one small workflow, understand why each step exists, and know where to look when something does not validate."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "What you are building",
+          "anchor": "processFirstWorkflow-1-what-you-are-building"
+        },
+        {
+          "kind": "paragraph",
+          "text": "You will build a simple content approval process:"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Start[\"START\"] --> Review[\"TASK: Review content\"]\n  Review --> Decision[\"DECISION: Approved?\"]\n  Decision -->|approved=true| Notify[\"ACTION: nodics.process.noop\"]\n  Decision -->|default| End[\"END\"]\n  Notify --> Timer[\"TIMER: audit pause\"]\n  Timer --> Child[\"SUB_PROCESS: optional governance\"]\n  Child --> End"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The workflow is intentionally small, but it introduces the same building blocks used by larger commerce, telco, logistics, onboarding, support, and publishing processes."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Step 1: create a draft definition",
+          "anchor": "processFirstWorkflow-2-step-1-create-a-draft-definition"
+        },
+        {
+          "kind": "paragraph",
+          "text": "In Axis, open Business Process & Automation, then open Workflows or Designer. Create a beginner-safe process draft. Give it a stable code such as `contentApproval`."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Stable code matters because integrations, audit events, tests, and customer extensions refer to codes. Display names can change; codes should not change casually."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Step 2: understand the nodes",
+          "anchor": "processFirstWorkflow-3-step-2-understand-the-nodes"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Node type",
+            "Beginner meaning",
+            "Runtime owner"
+          ],
+          "rows": [
+            [
+              "`START`",
+              "Where the process begins.",
+              "Process"
+            ],
+            [
+              "`TASK`",
+              "Human work, such as review, approval, or correction.",
+              "Process"
+            ],
+            [
+              "`DECISION`",
+              "Chooses the next path using declared decision data.",
+              "Process"
+            ],
+            [
+              "`ACTION`",
+              "Calls an explicitly allowed domain adapter.",
+              "Process orchestrates; domain module owns business logic."
+            ],
+            [
+              "`TIMER`",
+              "Represents a wait, schedule boundary, or future SLA point.",
+              "Process records intent; Cron can schedule real execution."
+            ],
+            [
+              "`SUB_PROCESS`",
+              "References another governed workflow definition.",
+              "Process"
+            ],
+            [
+              "`END`",
+              "Marks the instance complete.",
+              "Process"
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis edits these nodes visually, but the backend validator decides whether the graph is valid."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Step 3: connect the nodes",
+          "anchor": "processFirstWorkflow-4-step-3-connect-the-nodes"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Every transition must have:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "a stable transition code;",
+            "a source node;",
+            "a target node;",
+            "no transition from `END`;",
+            "no transition into `START`."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "For a `DECISION` node, every outgoing path should either declare a condition or be marked as the default path. Example:"
+        },
+        {
+          "kind": "code",
+          "language": "json",
+          "text": "{\n  \"code\": \"decision_to_notify\",\n  \"source\": \"approvalDecision\",\n  \"target\": \"notify\",\n  \"condition\": { \"field\": \"approved\", \"equals\": true }\n}"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Step 4: save, validate, publish",
+          "anchor": "processFirstWorkflow-5-step-4-save-validate-publish"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Save stores the draft graph. Validate asks nodics.process to inspect the graph. Publish creates an immutable version that can run. A running instance should always point to a published version, not a mutable draft."
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "sequenceDiagram\n  participant User as Business user\n  participant Axis\n  participant Process as nodics.process\n  User->>Axis: Edit graph\n  Axis->>Process: Save draft graph\n  User->>Axis: Validate\n  Axis->>Process: Validate backend contract\n  User->>Axis: Publish\n  Axis->>Process: Create immutable version"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common beginner mistakes",
+          "anchor": "processFirstWorkflow-6-common-beginner-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Creating two `START` nodes.",
+            "Forgetting an `END` node.",
+            "Connecting a transition to a deleted node.",
+            "Adding an `ACTION` node without a registered adapter.",
+            "Putting JavaScript, URLs, or file paths inside action metadata.",
+            "Expecting Axis to execute the process locally."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "When validation fails, fix the graph and validate again. Do not bypass the backend validator."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "processFirstWorkflow-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Publishing disconnected graphs, bypassing validation, or embedding executable implementation details in nodes.",
+            "Assuming Axis owns persistence or that every business action belongs in Process."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "processFirstWorkflow-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Validate and publish the definition through Process APIs, start an instance, complete each supported node path, reject malformed graphs, and confirm lifecycle and audit projections after restart. A developer and production operator should verify the same published definition and recovery evidence."
+        }
+      ],
+      "searchText": "Build Your First Workflow Create a first Process workflow from START through TASK, DECISION, ACTION, TIMER, SUB_PROCESS, and END with beginner-safe examples. # Build Your First Workflow\n\nThis guide is for someone opening Nodics for the first time. The goal is not to\nteach every automation feature at once. The goal is to help you create one small\nworkflow, understand why each step exists, and know where to look when something\ndoes not validate.\n\n## What you are building\n\nYou will build a simple content approval process:\n\n```mermaid\nflowchart LR\n  Start[\"START\"] --> Review[\"TASK: Review content\"]\n  Review --> Decision[\"DECISION: Approved?\"]\n  Decision -->|approved=true| Notify[\"ACTION: nodics.process.noop\"]\n  Decision -->|default| End[\"END\"]\n  Notify --> Timer[\"TIMER: audit pause\"]\n  Timer --> Child[\"SUB_PROCESS: optional governance\"]\n  Child --> End\n```\n\nThe workflow is intentionally small, but it introduces the same building blocks\nused by larger commerce, telco, logistics, onboarding, support, and publishing\nprocesses.\n\n## Step 1: create a draft definition\n\nIn Axis, open Business Process & Automation, then open Workflows or Designer.\nCreate a beginner-safe process draft. Give it a stable code such as\n`contentApproval`.\n\nStable code matters because integrations, audit events, tests, and customer\nextensions refer to codes. Display names can change; codes should not change\ncasually.\n\n## Step 2: understand the nodes\n\n| Node type | Beginner meaning | Runtime owner |\n| --- | --- | --- |\n| `START` | Where the process begins. | Process |\n| `TASK` | Human work, such as review, approval, or correction. | Process |\n| `DECISION` | Chooses the next path using declared decision data. | Process |\n| `ACTION` | Calls an explicitly allowed domain adapter. | Process orchestrates; domain module owns business logic. |\n| `TIMER` | Represents a wait, schedule boundary, or future SLA point. | Process records intent; Cron can schedule real execution. |\n| `SUB_PROCESS` | References another governed workflow definition. | Process |\n| `END` | Marks the instance complete. | Process |\n\nAxis edits these nodes visually, but the backend validator decides whether the\ngraph is valid.\n\n## Step 3: connect the nodes\n\nEvery transition must have:\n\n- a stable transition code;\n- a source node;\n- a target node;\n- no transition from `END`;\n- no transition into `START`.\n\nFor a `DECISION` node, every outgoing path should either declare a condition or\nbe marked as the default path. Example:\n\n```json\n{\n  \"code\": \"decision_to_notify\",\n  \"source\": \"approvalDecision\",\n  \"target\": \"notify\",\n  \"condition\": { \"field\": \"approved\", \"equals\": true }\n}\n```\n\n## Step 4: save, validate, publish\n\nSave stores the draft graph. Validate asks nodics.process to inspect the graph.\nPublish creates an immutable version that can run. A running instance should\nalways point to a published version, not a mutable draft.\n\n```mermaid\nsequenceDiagram\n  participant User as Business user\n  participant Axis\n  participant Process as nodics.process\n  User->>Axis: Edit graph\n  Axis->>Process: Save draft graph\n  User->>Axis: Validate\n  Axis->>Process: Validate backend contract\n  User->>Axis: Publish\n  Axis->>Process: Create immutable version\n```\n\n## Common beginner mistakes\n\n- Creating two `START` nodes.\n- Forgetting an `END` node.\n- Connecting a transition to a deleted node.\n- Adding an `ACTION` node without a registered adapter.\n- Putting JavaScript, URLs, or file paths inside action metadata.\n- Expecting Axis to execute the process locally.\n\nWhen validation fails, fix the graph and validate again. Do not bypass the\nbackend validator.\n\n## Common mistakes\n\n- Publishing disconnected graphs, bypassing validation, or embedding executable implementation details in nodes.\n- Assuming Axis owns persistence or that every business action belongs in Process.\n\n## Verification\n\nValidate and publish the definition through Process APIs, start an instance, complete each supported node path, reject malformed graphs, and confirm lifecycle and audit projections after restart.\nA developer and production operator should verify the same published definition and recovery evidence.\n",
+      "previous": {
+        "title": "Incident, Retry, and Compensation Operations",
+        "route": "/docs/framework/process/incident-recovery"
+      },
+      "next": {
+        "title": "Build Your First Human Task Flow",
+        "route": "/docs/framework/process/first-human-task"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.process",
+        "technicalModule": "flowCore",
+        "path": "content/nodics.process/first-workflow.md",
+        "wordCount": 533,
+        "checksum": "fad4ffbea7ce9c415b535b65ed3901e11ac582f2dc47c1acf89a149d45abbe59"
+      }
+    },
+    "active": true
+  },
+  "record30": {
+    "code": "nodicsDocsComponentprocessFirstHumanTask",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "process.first-human-task",
+      "title": "Build Your First Human Task Flow",
+      "route": "/docs/framework/process/first-human-task",
+      "section": "nodics-process",
+      "sectionTitle": "Nodics process",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps.",
+      "headings": [
+        {
+          "text": "Example business scenario",
+          "anchor": "processFirstHumanTask-1-example-business-scenario",
+          "level": 2
+        },
+        {
+          "text": "Task fields you should understand",
+          "anchor": "processFirstHumanTask-2-task-fields-you-should-understand",
+          "level": 2
+        },
+        {
+          "text": "How Axis should present task work",
+          "anchor": "processFirstHumanTask-3-how-axis-should-present-task-work",
+          "level": 2
+        },
+        {
+          "text": "Developer customization",
+          "anchor": "processFirstHumanTask-4-developer-customization",
+          "level": 2
+        },
+        {
+          "text": "End-to-end task example",
+          "anchor": "processFirstHumanTask-5-end-to-end-task-example",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "processFirstHumanTask-6-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "processFirstHumanTask-7-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Human tasks are the bridge between automation and people. A task tells an operator, reviewer, merchandiser, support agent, or approver what needs human attention."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Example business scenario",
+          "anchor": "processFirstHumanTask-1-example-business-scenario"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A content editor changes a page. The change should not go live until someone reviews it. The process creates a task called `Review content`. The reviewer can claim it, assign it, complete it, or cancel it."
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "stateDiagram-v2\n  [*] --> OPEN\n  OPEN --> CLAIMED: claim\n  OPEN --> COMPLETED: complete\n  CLAIMED --> COMPLETED: complete\n  OPEN --> CANCELLED: cancel\n  CLAIMED --> CANCELLED: cancel"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Task fields you should understand",
+          "anchor": "processFirstHumanTask-2-task-fields-you-should-understand"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Field",
+            "Why it matters"
+          ],
+          "rows": [
+            [
+              "`code`",
+              "Stable task identifier for audit and support."
+            ],
+            [
+              "`instanceCode`",
+              "Links the task to the running process instance."
+            ],
+            [
+              "`nodeCode`",
+              "Shows which workflow step produced the task."
+            ],
+            [
+              "`assignee`",
+              "Person, queue, or group expected to work on it."
+            ],
+            [
+              "`status`",
+              "Current state such as `OPEN`, `CLAIMED`, or `COMPLETED`."
+            ],
+            [
+              "`dueAt`",
+              "Optional SLA date for operations."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "How Axis should present task work",
+          "anchor": "processFirstHumanTask-3-how-axis-should-present-task-work"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis should show tasks as business work, not as raw database rows. A good task screen answers:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "What process created this task?",
+            "What business object is affected?",
+            "Who owns it now?",
+            "What action can I take safely?",
+            "What happened before this task?"
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "The detail timeline answers the fifth question by reading Process audit events."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Developer customization",
+          "anchor": "processFirstHumanTask-4-developer-customization"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Customer modules can customize assignment without editing standard Process source. For example:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "route enterprise onboarding approvals to an enterprise admin queue;",
+            "route product publishing approvals to merchandising;",
+            "route logistics exceptions to warehouse operations;",
+            "route refund approval tasks to finance."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "The customization should live in the customer or domain module, not in Axis. Axis renders authorized actions; Process owns task lifecycle."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "End-to-end task example",
+          "anchor": "processFirstHumanTask-5-end-to-end-task-example"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Consider a high-value refund that requires finance approval. The Order module owns refund eligibility and the Payment module owns provider execution. Process creates the approval task with bounded business references, candidate group, due date, and expected outcome choices. It does not copy the full Order or payment credentials into task data."
+        },
+        {
+          "kind": "paragraph",
+          "text": "An authorized finance user opens Axis, claims the task, reviews backend-owned context, and chooses approve or reject. The claim request includes the current task version so two users cannot both become the assignee. Completion includes the expected task state, chosen outcome, correlation identifier, and a bounded comment. Process records the transition and invokes the next registered domain adapter; Axis does not calculate the next node."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Test path",
+            "Expected result",
+            "Evidence"
+          ],
+          "rows": [
+            [
+              "Authorized claim",
+              "Task becomes assigned once.",
+              "Assignee, version, timestamp, and audit event"
+            ],
+            [
+              "Competing claim",
+              "Stale request is rejected.",
+              "Stable conflict code and unchanged assignee"
+            ],
+            [
+              "Unauthorized completion",
+              "No state or domain side effect changes.",
+              "Permission denial and security audit"
+            ],
+            [
+              "Valid approval",
+              "Process advances to the approved path.",
+              "Completion event and next-node correlation"
+            ],
+            [
+              "Expired task",
+              "Policy-driven escalation or rejection occurs.",
+              "Due-date evaluation and escalation evidence"
+            ],
+            [
+              "Runtime restart",
+              "Open task remains available in the same state.",
+              "Durable task and process instance projection"
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Operators should monitor open-task age, overdue volume, claim conflicts, completion latency, failed continuations, and escalation backlog. Alerts must identify the tenant and stable task or process reference without exposing sensitive task payloads. A business administrator may change assignment policy through a governed definition or customer configuration, but cannot bypass permissions or rewrite completed history."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "processFirstHumanTask-6-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Letting the browser assign, complete, or reopen tasks without backend validation and expected-state checks.",
+            "Omitting tenant, permission, correlation, expiry, escalation, or audit requirements."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "processFirstHumanTask-7-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Create a task, test authorized claim and completion, reject an unauthorized actor and stale update, then confirm assignment history, process continuation, and operator-visible audit evidence. This is the minimum beginner verification before adding assignment customization."
+        }
+      ],
+      "searchText": "Build Your First Human Task Flow Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps. # Build Your First Human Task Flow\n\nHuman tasks are the bridge between automation and people. A task tells an\noperator, reviewer, merchandiser, support agent, or approver what needs human\nattention.\n\n## Example business scenario\n\nA content editor changes a page. The change should not go live until someone\nreviews it. The process creates a task called `Review content`. The reviewer can\nclaim it, assign it, complete it, or cancel it.\n\n```mermaid\nstateDiagram-v2\n  [*] --> OPEN\n  OPEN --> CLAIMED: claim\n  OPEN --> COMPLETED: complete\n  CLAIMED --> COMPLETED: complete\n  OPEN --> CANCELLED: cancel\n  CLAIMED --> CANCELLED: cancel\n```\n\n## Task fields you should understand\n\n| Field | Why it matters |\n| --- | --- |\n| `code` | Stable task identifier for audit and support. |\n| `instanceCode` | Links the task to the running process instance. |\n| `nodeCode` | Shows which workflow step produced the task. |\n| `assignee` | Person, queue, or group expected to work on it. |\n| `status` | Current state such as `OPEN`, `CLAIMED`, or `COMPLETED`. |\n| `dueAt` | Optional SLA date for operations. |\n\n## How Axis should present task work\n\nAxis should show tasks as business work, not as raw database rows. A good task\nscreen answers:\n\n1. What process created this task?\n2. What business object is affected?\n3. Who owns it now?\n4. What action can I take safely?\n5. What happened before this task?\n\nThe detail timeline answers the fifth question by reading Process audit events.\n\n## Developer customization\n\nCustomer modules can customize assignment without editing standard Process\nsource. For example:\n\n- route enterprise onboarding approvals to an enterprise admin queue;\n- route product publishing approvals to merchandising;\n- route logistics exceptions to warehouse operations;\n- route refund approval tasks to finance.\n\nThe customization should live in the customer or domain module, not in Axis.\nAxis renders authorized actions; Process owns task lifecycle.\n\n## End-to-end task example\n\nConsider a high-value refund that requires finance approval. The Order module\nowns refund eligibility and the Payment module owns provider execution. Process\ncreates the approval task with bounded business references, candidate group,\ndue date, and expected outcome choices. It does not copy the full Order or\npayment credentials into task data.\n\nAn authorized finance user opens Axis, claims the task, reviews backend-owned\ncontext, and chooses approve or reject. The claim request includes the current\ntask version so two users cannot both become the assignee. Completion includes\nthe expected task state, chosen outcome, correlation identifier, and a bounded\ncomment. Process records the transition and invokes the next registered domain\nadapter; Axis does not calculate the next node.\n\n| Test path | Expected result | Evidence |\n| --- | --- | --- |\n| Authorized claim | Task becomes assigned once. | Assignee, version, timestamp, and audit event |\n| Competing claim | Stale request is rejected. | Stable conflict code and unchanged assignee |\n| Unauthorized completion | No state or domain side effect changes. | Permission denial and security audit |\n| Valid approval | Process advances to the approved path. | Completion event and next-node correlation |\n| Expired task | Policy-driven escalation or rejection occurs. | Due-date evaluation and escalation evidence |\n| Runtime restart | Open task remains available in the same state. | Durable task and process instance projection |\n\nOperators should monitor open-task age, overdue volume, claim conflicts,\ncompletion latency, failed continuations, and escalation backlog. Alerts must\nidentify the tenant and stable task or process reference without exposing\nsensitive task payloads. A business administrator may change assignment policy\nthrough a governed definition or customer configuration, but cannot bypass\npermissions or rewrite completed history.\n\n## Common mistakes\n\n- Letting the browser assign, complete, or reopen tasks without backend validation and expected-state checks.\n- Omitting tenant, permission, correlation, expiry, escalation, or audit requirements.\n\n## Verification\n\nCreate a task, test authorized claim and completion, reject an unauthorized actor and stale update, then confirm assignment history, process continuation, and operator-visible audit evidence.\nThis is the minimum beginner verification before adding assignment customization.\n",
+      "previous": {
+        "title": "Build Your First Workflow",
+        "route": "/docs/framework/process/first-workflow"
+      },
+      "next": {
+        "title": "Business Value and Adoption Model",
+        "route": "/docs/framework/process/business-value"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.process",
+        "technicalModule": "flowCore",
+        "path": "content/nodics.process/first-human-task.md",
+        "wordCount": 591,
+        "checksum": "0451d4ac3be9154c1fb74996e6af09f7e294f0321635f61b7e8e8202cf8b59e1"
+      }
+    },
+    "active": true
+  },
+  "record31": {
+    "code": "nodicsDocsComponentprocessBusinessValue",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "process.business-value",
+      "title": "Business Value and Adoption Model",
+      "route": "/docs/framework/process/business-value",
+      "section": "nodics-process",
+      "sectionTitle": "Nodics process",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Explain the business problems Process solves, how it lowers operating cost, and how business users should think about automation governance.",
+      "headings": [
+        {
+          "text": "The business problem",
+          "anchor": "processBusinessValue-1-the-business-problem",
+          "level": 2
+        },
+        {
+          "text": "What Process gives business users",
+          "anchor": "processBusinessValue-2-what-process-gives-business-users",
+          "level": 2
+        },
+        {
+          "text": "Why this reduces cost",
+          "anchor": "processBusinessValue-3-why-this-reduces-cost",
+          "level": 2
+        },
+        {
+          "text": "Adoption path",
+          "anchor": "processBusinessValue-4-adoption-path",
+          "level": 2
+        },
+        {
+          "text": "Business-user acceptance",
+          "anchor": "processBusinessValue-5-business-user-acceptance",
+          "level": 2
+        },
+        {
+          "text": "Continue",
+          "anchor": "processBusinessValue-6-continue",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "processBusinessValue-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "processBusinessValue-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Nodics Process exists to make business operations visible, governed, reusable, and changeable without scattering workflow rules across many domain services. A beginner can think of it as the operating playbook for work that crosses people, systems, approvals, time, and exceptions."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "The business problem",
+          "anchor": "processBusinessValue-1-the-business-problem"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Most enterprises already have processes, but those processes are often hidden:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "an approval rule lives in one service;",
+            "a retry rule lives in a scheduler;",
+            "an escalation rule lives in an email template;",
+            "a support team tracks manual work in a spreadsheet;",
+            "a developer knows which service has to be called next."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "That structure works until the business asks simple questions:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Business question",
+            "Without Process",
+            "With Nodics Process"
+          ],
+          "rows": [
+            [
+              "Where is this onboarding request stuck?",
+              "Ask several teams and inspect logs.",
+              "Open the instance and task timeline."
+            ],
+            [
+              "Who owns the next action?",
+              "Read custom code or tribal knowledge.",
+              "The current task shows assignee/queue."
+            ],
+            [
+              "Can we change the approval path?",
+              "Deploy risky domain-service changes.",
+              "Update and publish a governed definition version."
+            ],
+            [
+              "Which version ran last month?",
+              "Difficult to prove.",
+              "Immutable version and audit evidence are stored."
+            ],
+            [
+              "Can operations pause automation?",
+              "Maybe, if the scheduler has a switch.",
+              "Trigger metadata is visible and governed."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "What Process gives business users",
+          "anchor": "processBusinessValue-2-what-process-gives-business-users"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Process gives business users a shared language:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "**definition**: the designed workflow;",
+            "**version**: the published immutable contract that actually ran;",
+            "**instance**: one running or completed business case;",
+            "**task**: one human action waiting for a person, queue, or team;",
+            "**trigger**: a relationship saying automation can start a process;",
+            "**audit event**: evidence of what changed and who did it."
+          ]
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Idea[\"Business policy\"] --> Definition[\"Process definition\"]\n  Definition --> Version[\"Published version\"]\n  Version --> Instance[\"Runtime instance\"]\n  Instance --> Task[\"Human task\"]\n  Instance --> Audit[\"Audit timeline\"]\n  Trigger[\"Scheduled trigger metadata\"] --> Instance"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Why this reduces cost",
+          "anchor": "processBusinessValue-3-why-this-reduces-cost"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The cost benefit is not only automation. The real saving comes from reducing the number of places where people have to look, change, test, and explain a business process."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Process helps reduce operating cost by:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "making work state visible;",
+            "reducing custom one-off orchestration code;",
+            "separating workflow orchestration from domain action ownership;",
+            "preserving version history for audit and rollback discussions;",
+            "allowing standard Axis screens to manage definitions, tasks, and triggers."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "It can also reduce capital expenditure because partner projects can reuse the same Process engine instead of building a new workflow layer for every domain."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Adoption path",
+          "anchor": "processBusinessValue-4-adoption-path"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Start small. A good first process has one start, one human task, and one end."
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Start[\"Start\"] --> Review[\"Business review task\"]\n  Review --> End[\"End\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Once that works, add richer behavior in layers:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "add assignment policy;",
+            "add SLA and escalation;",
+            "add scheduled trigger metadata;",
+            "add domain action providers;",
+            "add gateway rules;",
+            "add analytics and operational dashboards."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "This avoids the classic workflow failure: trying to model the whole company on day one."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Business-user acceptance",
+          "anchor": "processBusinessValue-5-business-user-acceptance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A business user should be able to:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "see active process definitions;",
+            "understand which workflows are drafts and which are published;",
+            "open a task list and know who must act next;",
+            "see whether scheduled automation is active or paused;",
+            "understand that Process coordinates work while domain modules still own actual business behavior."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Continue",
+          "anchor": "processBusinessValue-6-continue"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "[Runtime Instance and Task Lifecycle](runtime-lifecycle.md)",
+            "[Process and Cron Shared Runtime](process-cron-runtime.md)"
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "processBusinessValue-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Measuring automation only by technical execution counts instead of business outcomes and recovery cost.",
+            "Automating an unstable journey before ownership, approval, and exception handling are explicit."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "processBusinessValue-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Validate the proposed journey with business users, developers, and operators; prove the happy path, rejection path, recovery path, audit evidence, and measurable operational benefit. The operator must also confirm that alerts and recovery ownership are practical."
+        }
+      ],
+      "searchText": "Business Value and Adoption Model Explain the business problems Process solves, how it lowers operating cost, and how business users should think about automation governance. # Business Value and Adoption Model\n\nNodics Process exists to make business operations visible, governed, reusable,\nand changeable without scattering workflow rules across many domain services.\nA beginner can think of it as the operating playbook for work that crosses\npeople, systems, approvals, time, and exceptions.\n\n## The business problem\n\nMost enterprises already have processes, but those processes are often hidden:\n\n- an approval rule lives in one service;\n- a retry rule lives in a scheduler;\n- an escalation rule lives in an email template;\n- a support team tracks manual work in a spreadsheet;\n- a developer knows which service has to be called next.\n\nThat structure works until the business asks simple questions:\n\n| Business question | Without Process | With Nodics Process |\n| --- | --- | --- |\n| Where is this onboarding request stuck? | Ask several teams and inspect logs. | Open the instance and task timeline. |\n| Who owns the next action? | Read custom code or tribal knowledge. | The current task shows assignee/queue. |\n| Can we change the approval path? | Deploy risky domain-service changes. | Update and publish a governed definition version. |\n| Which version ran last month? | Difficult to prove. | Immutable version and audit evidence are stored. |\n| Can operations pause automation? | Maybe, if the scheduler has a switch. | Trigger metadata is visible and governed. |\n\n## What Process gives business users\n\nProcess gives business users a shared language:\n\n- **definition**: the designed workflow;\n- **version**: the published immutable contract that actually ran;\n- **instance**: one running or completed business case;\n- **task**: one human action waiting for a person, queue, or team;\n- **trigger**: a relationship saying automation can start a process;\n- **audit event**: evidence of what changed and who did it.\n\n```mermaid\nflowchart LR\n  Idea[\"Business policy\"] --> Definition[\"Process definition\"]\n  Definition --> Version[\"Published version\"]\n  Version --> Instance[\"Runtime instance\"]\n  Instance --> Task[\"Human task\"]\n  Instance --> Audit[\"Audit timeline\"]\n  Trigger[\"Scheduled trigger metadata\"] --> Instance\n```\n\n## Why this reduces cost\n\nThe cost benefit is not only automation. The real saving comes from reducing\nthe number of places where people have to look, change, test, and explain a\nbusiness process.\n\nProcess helps reduce operating cost by:\n\n1. making work state visible;\n2. reducing custom one-off orchestration code;\n3. separating workflow orchestration from domain action ownership;\n4. preserving version history for audit and rollback discussions;\n5. allowing standard Axis screens to manage definitions, tasks, and triggers.\n\nIt can also reduce capital expenditure because partner projects can reuse the\nsame Process engine instead of building a new workflow layer for every domain.\n\n## Adoption path\n\nStart small. A good first process has one start, one human task, and one end.\n\n```mermaid\nflowchart LR\n  Start[\"Start\"] --> Review[\"Business review task\"]\n  Review --> End[\"End\"]\n```\n\nOnce that works, add richer behavior in layers:\n\n1. add assignment policy;\n2. add SLA and escalation;\n3. add scheduled trigger metadata;\n4. add domain action providers;\n5. add gateway rules;\n6. add analytics and operational dashboards.\n\nThis avoids the classic workflow failure: trying to model the whole company on\nday one.\n\n## Business-user acceptance\n\nA business user should be able to:\n\n- see active process definitions;\n- understand which workflows are drafts and which are published;\n- open a task list and know who must act next;\n- see whether scheduled automation is active or paused;\n- understand that Process coordinates work while domain modules still own\n  actual business behavior.\n\n## Continue\n\n- [Runtime Instance and Task Lifecycle](runtime-lifecycle.md)\n- [Process and Cron Shared Runtime](process-cron-runtime.md)\n\n## Common mistakes\n\n- Measuring automation only by technical execution counts instead of business outcomes and recovery cost.\n- Automating an unstable journey before ownership, approval, and exception handling are explicit.\n\n## Verification\n\nValidate the proposed journey with business users, developers, and operators; prove the happy path, rejection path, recovery path, audit evidence, and measurable operational benefit.\nThe operator must also confirm that alerts and recovery ownership are practical.\n",
+      "previous": {
+        "title": "Build Your First Human Task Flow",
+        "route": "/docs/framework/process/first-human-task"
+      },
+      "next": {
+        "title": "Developer Customization Guide",
+        "route": "/docs/framework/process/developer-customization"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.process",
+        "technicalModule": "flowCore",
+        "path": "content/nodics.process/business-value.md",
+        "wordCount": 608,
+        "checksum": "f09cc1f67264c380406ed94da174ffe3b146c645d97b183459c4ff8d450724cf"
+      }
+    },
+    "active": true
+  },
+  "record32": {
+    "code": "nodicsDocsComponentprocessDeveloperCustomization",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "process.developer-customization",
+      "title": "Developer Customization Guide",
+      "route": "/docs/framework/process/developer-customization",
+      "section": "nodics-process",
+      "sectionTitle": "Nodics process",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Show where developers extend Process behavior, where domain actions belong, and how customer modules customize safely.",
+      "headings": [
+        {
+          "text": "Where code belongs",
+          "anchor": "processDeveloperCustomization-1-where-code-belongs",
+          "level": 2
+        },
+        {
+          "text": "Customization-first approach",
+          "anchor": "processDeveloperCustomization-2-customization-first-approach",
+          "level": 2
+        },
+        {
+          "text": "Domain action boundary",
+          "anchor": "processDeveloperCustomization-3-domain-action-boundary",
+          "level": 2
+        },
+        {
+          "text": "API extension rule",
+          "anchor": "processDeveloperCustomization-4-api-extension-rule",
+          "level": 2
+        },
+        {
+          "text": "Generated artifacts",
+          "anchor": "processDeveloperCustomization-5-generated-artifacts",
+          "level": 2
+        },
+        {
+          "text": "Developer acceptance checklist",
+          "anchor": "processDeveloperCustomization-6-developer-acceptance-checklist",
+          "level": 2
+        },
+        {
+          "text": "Continue",
+          "anchor": "processDeveloperCustomization-7-continue",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "processDeveloperCustomization-8-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "processDeveloperCustomization-9-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "This guide explains where developers should extend Process behavior. The most important rule is simple: Process owns orchestration state, but domain modules own business action behavior."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Where code belongs",
+          "anchor": "processDeveloperCustomization-1-where-code-belongs"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Need",
+            "Owning place"
+          ],
+          "rows": [
+            [
+              "Process schemas and status definitions",
+              "`nodics.process/modules/workflow/modules/flowSchema`"
+            ],
+            [
+              "Runtime lifecycle, validation, assignment, audit",
+              "`nodics.process/modules/workflow/modules/flowCore`"
+            ],
+            [
+              "HTTP routes, controllers, facades",
+              "`nodics.process/modules/workflow/modules/flowApi`"
+            ],
+            [
+              "Cron job definitions and scheduler execution",
+              "`nodics.cron`"
+            ],
+            [
+              "Order, commerce, content, profile, media side effects",
+              "Owning domain module"
+            ],
+            [
+              "Customer-specific policy override",
+              "Customer module loaded after framework module"
+            ],
+            [
+              "Browser rendering and editor interactions",
+              "`nodics.axis`"
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Do not put runtime source directly under `nodics.process/src`. The module group root is for composition, contracts, package metadata, documentation, and shared defaults."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization-first approach",
+          "anchor": "processDeveloperCustomization-2-customization-first-approach"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Before writing new code, ask:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Can this be changed by a property?",
+            "Can this be changed by a provider?",
+            "Can this be changed by an interceptor or pipeline?",
+            "Can a customer module override only one service method?",
+            "Is a new framework feature actually needed?"
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Example: a customer wants task assignment to go to a site-specific queue."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Do not edit the standard Process task lifecycle directly. Instead, create a customer module that overrides assignment policy and loads after Process."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "/*\n    Customer Project - Process Customization\n */\n\n'use strict';\n\n/**\n * @module customer.process/src/service/defaultCustomerTaskAssignmentService\n * @description Resolves task assignee from enterprise, site, and process category.\n * @override Loaded after nodics.process to customize assignment without forking framework source.\n */\nmodule.exports = {\n    resolveAssignee: function (request, taskModel) {\n        const site = request.runtimeOperation && request.runtimeOperation.site;\n        if (site === 'uae-store') return 'uaeOperationsQueue';\n        return taskModel.assignee || 'defaultProcessQueue';\n    }\n};"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Domain action boundary",
+          "anchor": "processDeveloperCustomization-3-domain-action-boundary"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Process can decide that an ACTION node should be executed. It must not directly own a commerce refund, media upload, content publication, logistics shipment, or telco provisioning command."
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Process[\"Process engine\"] --> Contract[\"Domain action contract\"]\n  Contract --> Commerce[\"Commerce module\"]\n  Contract --> Media[\"Media module\"]\n  Contract --> Wcms[\"WCMS module\"]\n  Contract --> Profile[\"Profile module\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The Process engine should store orchestration evidence. The domain module should validate permissions, data, side effects, rollback, and audit for its own action."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "API extension rule",
+          "anchor": "processDeveloperCustomization-4-api-extension-rule"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Add a Process API only when:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "the behavior is process-owned;",
+            "route permission is added to the identity catalog;",
+            "status codes live in `statusDefinitions.js`;",
+            "controller/facade/service layers remain separated;",
+            "tests cover positive, negative, boundary, and permission behavior."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Generated artifacts",
+          "anchor": "processDeveloperCustomization-5-generated-artifacts"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Generated service/facade files are loader-visible runtime artifacts. If the generator is available for the affected schema, regenerate from schema source. If a generated-style file must be repaired manually during migration, mirror the nearest generated artifact exactly and add tests that prove the runtime service is available."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Developer acceptance checklist",
+          "anchor": "processDeveloperCustomization-6-developer-acceptance-checklist"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Source is in the nearest owning module.",
+            "No customer-specific rule is hardcoded in standard Process.",
+            "Axis is not storing workflow truth.",
+            "New permissions exist in the identity catalog.",
+            "Status/error codes live in status definitions.",
+            "Fresh bootstrap and live smoke prove the change."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Continue",
+          "anchor": "processDeveloperCustomization-7-continue"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "[Visual Workflow Designer Contract](visual-designer.md)",
+            "[DevOps and Runtime Topology](devops-topology.md)"
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "processDeveloperCustomization-8-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Editing generated data or framework defaults instead of the owning source or project overlay.",
+            "Putting domain actions, credentials, executable expressions, or authorization decisions in workflow metadata."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "processDeveloperCustomization-9-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run syntax, graph, lifecycle, permission, retry, compensation, and fresh-bootstrap tests. Confirm the same definition behaves safely with the default implementation and an approved customer customization. A beginner should start with the smallest configuration or module overlay before replacing a service."
+        }
+      ],
+      "searchText": "Developer Customization Guide Show where developers extend Process behavior, where domain actions belong, and how customer modules customize safely. # Developer Customization Guide\n\nThis guide explains where developers should extend Process behavior. The most\nimportant rule is simple: Process owns orchestration state, but domain modules\nown business action behavior.\n\n## Where code belongs\n\n| Need | Owning place |\n| --- | --- |\n| Process schemas and status definitions | `nodics.process/modules/workflow/modules/flowSchema` |\n| Runtime lifecycle, validation, assignment, audit | `nodics.process/modules/workflow/modules/flowCore` |\n| HTTP routes, controllers, facades | `nodics.process/modules/workflow/modules/flowApi` |\n| Cron job definitions and scheduler execution | `nodics.cron` |\n| Order, commerce, content, profile, media side effects | Owning domain module |\n| Customer-specific policy override | Customer module loaded after framework module |\n| Browser rendering and editor interactions | `nodics.axis` |\n\nDo not put runtime source directly under `nodics.process/src`. The module group\nroot is for composition, contracts, package metadata, documentation, and shared\ndefaults.\n\n## Customization-first approach\n\nBefore writing new code, ask:\n\n1. Can this be changed by a property?\n2. Can this be changed by a provider?\n3. Can this be changed by an interceptor or pipeline?\n4. Can a customer module override only one service method?\n5. Is a new framework feature actually needed?\n\nExample: a customer wants task assignment to go to a site-specific queue.\n\nDo not edit the standard Process task lifecycle directly. Instead, create a\ncustomer module that overrides assignment policy and loads after Process.\n\n```js\n/*\n    Customer Project - Process Customization\n */\n\n'use strict';\n\n/**\n * @module customer.process/src/service/defaultCustomerTaskAssignmentService\n * @description Resolves task assignee from enterprise, site, and process category.\n * @override Loaded after nodics.process to customize assignment without forking framework source.\n */\nmodule.exports = {\n    resolveAssignee: function (request, taskModel) {\n        const site = request.runtimeOperation && request.runtimeOperation.site;\n        if (site === 'uae-store') return 'uaeOperationsQueue';\n        return taskModel.assignee || 'defaultProcessQueue';\n    }\n};\n```\n\n## Domain action boundary\n\nProcess can decide that an ACTION node should be executed. It must not directly\nown a commerce refund, media upload, content publication, logistics shipment,\nor telco provisioning command.\n\n```mermaid\nflowchart LR\n  Process[\"Process engine\"] --> Contract[\"Domain action contract\"]\n  Contract --> Commerce[\"Commerce module\"]\n  Contract --> Media[\"Media module\"]\n  Contract --> Wcms[\"WCMS module\"]\n  Contract --> Profile[\"Profile module\"]\n```\n\nThe Process engine should store orchestration evidence. The domain module\nshould validate permissions, data, side effects, rollback, and audit for its\nown action.\n\n## API extension rule\n\nAdd a Process API only when:\n\n- the behavior is process-owned;\n- route permission is added to the identity catalog;\n- status codes live in `statusDefinitions.js`;\n- controller/facade/service layers remain separated;\n- tests cover positive, negative, boundary, and permission behavior.\n\n## Generated artifacts\n\nGenerated service/facade files are loader-visible runtime artifacts. If the\ngenerator is available for the affected schema, regenerate from schema source.\nIf a generated-style file must be repaired manually during migration, mirror\nthe nearest generated artifact exactly and add tests that prove the runtime\nservice is available.\n\n## Developer acceptance checklist\n\n- Source is in the nearest owning module.\n- No customer-specific rule is hardcoded in standard Process.\n- Axis is not storing workflow truth.\n- New permissions exist in the identity catalog.\n- Status/error codes live in status definitions.\n- Fresh bootstrap and live smoke prove the change.\n\n## Continue\n\n- [Visual Workflow Designer Contract](visual-designer.md)\n- [DevOps and Runtime Topology](devops-topology.md)\n\n## Common mistakes\n\n- Editing generated data or framework defaults instead of the owning source or project overlay.\n- Putting domain actions, credentials, executable expressions, or authorization decisions in workflow metadata.\n\n## Verification\n\nRun syntax, graph, lifecycle, permission, retry, compensation, and fresh-bootstrap tests. Confirm the same definition behaves safely with the default implementation and an approved customer customization.\nA beginner should start with the smallest configuration or module overlay before replacing a service.\n",
+      "previous": {
+        "title": "Business Value and Adoption Model",
+        "route": "/docs/framework/process/business-value"
+      },
+      "next": {
+        "title": "Action Adapter Contract",
+        "route": "/docs/framework/process/action-adapters"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.process",
+        "technicalModule": "flowCore",
+        "path": "content/nodics.process/developer-customization.md",
+        "wordCount": 565,
+        "checksum": "01e28459d86e6d373294aca122f634b3a46312dea12035a215c1cc5ec77454cd"
+      }
+    },
+    "active": true
+  },
+  "record33": {
+    "code": "nodicsDocsComponentprocessActionAdapters",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "process.action-adapters",
+      "title": "Action Adapter Contract",
+      "route": "/docs/framework/process/action-adapters",
+      "section": "nodics-process",
+      "sectionTitle": "Nodics process",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Learn why ACTION nodes use registered declarative adapters and how customer and domain modules own business execution.",
+      "headings": [
+        {
+          "text": "Safe default",
+          "anchor": "processActionAdapters-1-safe-default",
+          "level": 2
+        },
+        {
+          "text": "What is not allowed",
+          "anchor": "processActionAdapters-2-what-is-not-allowed",
+          "level": 2
+        },
+        {
+          "text": "Customer extension pattern",
+          "anchor": "processActionAdapters-3-customer-extension-pattern",
+          "level": 2
+        },
+        {
+          "text": "QA checklist",
+          "anchor": "processActionAdapters-4-qa-checklist",
+          "level": 2
+        },
+        {
+          "text": "Adapter operating contract",
+          "anchor": "processActionAdapters-5-adapter-operating-contract",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "processActionAdapters-6-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "processActionAdapters-7-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "An `ACTION` node is where a workflow asks another capability to do something. Examples:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "ask Commerce to reserve stock;",
+            "ask Profile to notify a user;",
+            "ask WCMS to move content to review;",
+            "ask a customer module to call a partner integration."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Process should not contain that business logic. Process should orchestrate, authorize, and audit the request."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Safe default",
+          "anchor": "processActionAdapters-1-safe-default"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The framework includes one safe demo action:"
+        },
+        {
+          "kind": "code",
+          "language": "json",
+          "text": "{\n  \"moduleName\": \"nodics.process\",\n  \"operation\": \"noop\"\n}"
+        },
+        {
+          "kind": "paragraph",
+          "text": "This proves the runtime path without touching a real business domain."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "What is not allowed",
+          "anchor": "processActionAdapters-2-what-is-not-allowed"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Graph JSON must not contain:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "JavaScript functions;",
+            "file paths;",
+            "URLs as executable handlers;",
+            "arbitrary script fragments;",
+            "secrets or credentials."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "This is a security and maintainability rule. A workflow should say what domain operation is requested, not how to execute arbitrary code."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customer extension pattern",
+          "anchor": "processActionAdapters-3-customer-extension-pattern"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A customer project can register allowed adapters through configuration or a custom registry override."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "module.exports = {\n  process: {\n    actionAdapters: {\n      allowedActions: [\n        {\n          moduleName: 'customer.commerce',\n          operation: 'reserveStock',\n          service: 'CustomerCommerceProcessAdapterService',\n          method: 'reserveStock'\n        }\n      ]\n    }\n  }\n};"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The service implementation belongs to the customer/domain module. Process only calls it through the approved registry and records the result."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "QA checklist",
+          "anchor": "processActionAdapters-4-qa-checklist"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Unknown actions fail with a stable Process error.",
+            "Allowed demo no-op action completes successfully.",
+            "Failed actions create audit evidence.",
+            "Action output is bounded and does not leak secrets.",
+            "Domain modules can be tested independently from Process orchestration."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Adapter operating contract",
+          "anchor": "processActionAdapters-5-adapter-operating-contract"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Concern",
+            "Required behavior",
+            "Rejection evidence"
+          ],
+          "rows": [
+            [
+              "Registration",
+              "Resolve an allowlisted adapter owned by a functional or customer module.",
+              "Unknown adapter returns a stable Process error before any side effect."
+            ],
+            [
+              "Input",
+              "Accept only the versioned, bounded input contract declared by the adapter.",
+              "Invalid or oversized input is rejected and redacted in logs."
+            ],
+            [
+              "Authorization",
+              "Enforce the initiating identity, tenant, permission, and workflow context in the backend.",
+              "Unauthorized execution records a denial without invoking the domain action."
+            ],
+            [
+              "Idempotency",
+              "Reuse the process instance, node, attempt, and business correlation identity.",
+              "Duplicate delivery returns prior evidence or a deterministic conflict."
+            ],
+            [
+              "Output",
+              "Return a bounded, serializable result suitable for Process audit and transition evaluation.",
+              "Secrets, provider payloads, and unbounded objects are excluded."
+            ],
+            [
+              "Failure",
+              "Classify retryable, terminal, and compensatable failure through stable codes.",
+              "Process creates an incident and preserves the original attempt evidence."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "A beginner developer should start with a deterministic no-op or test adapter in the owning customer module. The adapter should validate one small input, return one bounded output, and expose no network or filesystem path through workflow metadata. After that contract works, the developer can connect a domain-owned service such as Order, Fulfillment, Payment, or Communication. Process invokes the adapter but does not take ownership of the domain command."
+        },
+        {
+          "kind": "paragraph",
+          "text": "For production, operators need enough evidence to distinguish a Process engine failure from a domain dependency failure. Every attempt therefore needs the definition version, instance and node identity, adapter identity, attempt number, tenant, correlation identifier, duration, outcome code, and redacted error classification. Metrics should show latency, retry volume, terminal failure, compensation, and dead-letter growth without placing request bodies or credentials in labels."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Negative testing is part of the adapter contract. Test an unknown adapter, invalid input, unauthorized caller, duplicate correlation, timeout, dependency failure, malformed output, retry exhaustion, and compensation failure. A test that only proves the successful call does not establish that the adapter is safe for a long-running business process."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "processActionAdapters-6-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Executing arbitrary code or URLs from workflow metadata instead of registered adapters.",
+            "Moving domain validation, authorization, or compensation ownership into Process or Axis."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "processActionAdapters-7-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run the Process contract suite, reject unknown adapters, verify permission denial, and confirm bounded audit evidence for successful, failed, retried, and compensated actions. A beginner developer should be able to repeat this while a production operator can inspect the resulting evidence."
+        }
+      ],
+      "searchText": "Action Adapter Contract Learn why ACTION nodes use registered declarative adapters and how customer and domain modules own business execution. # Action Adapter Contract\n\nAn `ACTION` node is where a workflow asks another capability to do something.\nExamples:\n\n- ask Commerce to reserve stock;\n- ask Profile to notify a user;\n- ask WCMS to move content to review;\n- ask a customer module to call a partner integration.\n\nProcess should not contain that business logic. Process should orchestrate,\nauthorize, and audit the request.\n\n## Safe default\n\nThe framework includes one safe demo action:\n\n```json\n{\n  \"moduleName\": \"nodics.process\",\n  \"operation\": \"noop\"\n}\n```\n\nThis proves the runtime path without touching a real business domain.\n\n## What is not allowed\n\nGraph JSON must not contain:\n\n- JavaScript functions;\n- file paths;\n- URLs as executable handlers;\n- arbitrary script fragments;\n- secrets or credentials.\n\nThis is a security and maintainability rule. A workflow should say what domain\noperation is requested, not how to execute arbitrary code.\n\n## Customer extension pattern\n\nA customer project can register allowed adapters through configuration or a\ncustom registry override.\n\n```js\nmodule.exports = {\n  process: {\n    actionAdapters: {\n      allowedActions: [\n        {\n          moduleName: 'customer.commerce',\n          operation: 'reserveStock',\n          service: 'CustomerCommerceProcessAdapterService',\n          method: 'reserveStock'\n        }\n      ]\n    }\n  }\n};\n```\n\nThe service implementation belongs to the customer/domain module. Process only\ncalls it through the approved registry and records the result.\n\n## QA checklist\n\n- Unknown actions fail with a stable Process error.\n- Allowed demo no-op action completes successfully.\n- Failed actions create audit evidence.\n- Action output is bounded and does not leak secrets.\n- Domain modules can be tested independently from Process orchestration.\n\n## Adapter operating contract\n\n| Concern | Required behavior | Rejection evidence |\n| --- | --- | --- |\n| Registration | Resolve an allowlisted adapter owned by a functional or customer module. | Unknown adapter returns a stable Process error before any side effect. |\n| Input | Accept only the versioned, bounded input contract declared by the adapter. | Invalid or oversized input is rejected and redacted in logs. |\n| Authorization | Enforce the initiating identity, tenant, permission, and workflow context in the backend. | Unauthorized execution records a denial without invoking the domain action. |\n| Idempotency | Reuse the process instance, node, attempt, and business correlation identity. | Duplicate delivery returns prior evidence or a deterministic conflict. |\n| Output | Return a bounded, serializable result suitable for Process audit and transition evaluation. | Secrets, provider payloads, and unbounded objects are excluded. |\n| Failure | Classify retryable, terminal, and compensatable failure through stable codes. | Process creates an incident and preserves the original attempt evidence. |\n\nA beginner developer should start with a deterministic no-op or test adapter in\nthe owning customer module. The adapter should validate one small input, return\none bounded output, and expose no network or filesystem path through workflow\nmetadata. After that contract works, the developer can connect a domain-owned\nservice such as Order, Fulfillment, Payment, or Communication. Process invokes\nthe adapter but does not take ownership of the domain command.\n\nFor production, operators need enough evidence to distinguish a Process engine\nfailure from a domain dependency failure. Every attempt therefore needs the\ndefinition version, instance and node identity, adapter identity, attempt\nnumber, tenant, correlation identifier, duration, outcome code, and redacted\nerror classification. Metrics should show latency, retry volume, terminal\nfailure, compensation, and dead-letter growth without placing request bodies or\ncredentials in labels.\n\nNegative testing is part of the adapter contract. Test an unknown adapter,\ninvalid input, unauthorized caller, duplicate correlation, timeout, dependency\nfailure, malformed output, retry exhaustion, and compensation failure. A test\nthat only proves the successful call does not establish that the adapter is safe\nfor a long-running business process.\n\n## Common mistakes\n\n- Executing arbitrary code or URLs from workflow metadata instead of registered adapters.\n- Moving domain validation, authorization, or compensation ownership into Process or Axis.\n\n## Verification\n\nRun the Process contract suite, reject unknown adapters, verify permission denial, and confirm bounded audit evidence for successful, failed, retried, and compensated actions.\nA beginner developer should be able to repeat this while a production operator can inspect the resulting evidence.\n",
+      "previous": {
+        "title": "Developer Customization Guide",
+        "route": "/docs/framework/process/developer-customization"
+      },
+      "next": {
+        "title": "Custom Project Extension Guide",
+        "route": "/docs/framework/process/custom-project-extension"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.process",
+        "technicalModule": "flowCore",
+        "path": "content/nodics.process/action-adapters.md",
+        "wordCount": 606,
+        "checksum": "69b8dbd402083354fd0a806a8f1fddeea899090b1d79820c4c6db83c68ccd771"
+      }
+    },
+    "active": true
+  },
+  "record34": {
+    "code": "nodicsDocsComponentprocessCustomProjectExtension",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "process.custom-project-extension",
+      "title": "Custom Project Extension Guide",
+      "route": "/docs/framework/process/custom-project-extension",
+      "section": "nodics-process",
+      "sectionTitle": "Nodics process",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Explain how customer overlays customize Process behavior while preserving functional module identity and backend governance.",
+      "headings": [
+        {
+          "text": "Example topology",
+          "anchor": "processCustomProjectExtension-1-example-topology",
+          "level": 2
+        },
+        {
+          "text": "What belongs in a customer extension",
+          "anchor": "processCustomProjectExtension-2-what-belongs-in-a-customer-extension",
+          "level": 2
+        },
+        {
+          "text": "What should not be customized casually",
+          "anchor": "processCustomProjectExtension-3-what-should-not-be-customized-casually",
+          "level": 2
+        },
+        {
+          "text": "Documentation ownership",
+          "anchor": "processCustomProjectExtension-4-documentation-ownership",
+          "level": 2
+        },
+        {
+          "text": "Extension decision and lifecycle",
+          "anchor": "processCustomProjectExtension-5-extension-decision-and-lifecycle",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "processCustomProjectExtension-6-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "processCustomProjectExtension-7-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Customer projects may customize Process behavior without renaming the functional module. A customer module can extend or override standard behavior, but Axis and BackOffice should still show the capability as Process."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Example topology",
+          "anchor": "processCustomProjectExtension-1-example-topology"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart TD\n  Server[\"customer processServer\"] --> CustomerProcess[\"customer.process overlay\"]\n  CustomerProcess --> NodicsProcess[\"nodics.process\"]\n  NodicsProcess --> NodicsCore[\"nodics.core\"]\n  Server --> NodicsCron[\"nodics.cron included in shared runtime\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The server can include Cron and Process together for operational simplicity, while ownership remains clear."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "What belongs in a customer extension",
+          "anchor": "processCustomProjectExtension-2-what-belongs-in-a-customer-extension"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "custom task assignment rules;",
+            "domain-specific action adapters;",
+            "additional graph validation policies;",
+            "extra audit metadata with safe redaction;",
+            "environment-specific timer/SLA rules;",
+            "customer documentation and sample workflows."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "What should not be customized casually",
+          "anchor": "processCustomProjectExtension-3-what-should-not-be-customized-casually"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "published version immutability;",
+            "permission checks;",
+            "audit event creation;",
+            "backend graph validation;",
+            "module identity exposed to Axis."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Changing those weakens trust in the automation platform."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Documentation ownership",
+          "anchor": "processCustomProjectExtension-4-documentation-ownership"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Framework Process docs belong in nodics.process. Customer process docs belong in the customer project module or project documentation pack. Axis only renders imported content; it should not own backend documentation data."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Extension decision and lifecycle",
+          "anchor": "processCustomProjectExtension-5-extension-decision-and-lifecycle"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Need",
+            "Correct extension point",
+            "Authority that remains unchanged"
+          ],
+          "rows": [
+            [
+              "Change a runtime property",
+              "Customer environment or server configuration",
+              "Process configuration contract"
+            ],
+            [
+              "Implement a business action",
+              "Owning customer or domain module adapter",
+              "Domain validation and side effects"
+            ],
+            [
+              "Add an API projection",
+              "Customer API module using Process services",
+              "Process lifecycle and persistence"
+            ],
+            [
+              "Change visual presentation",
+              "Axis component or renderer customization",
+              "Backend Process graph and permissions"
+            ],
+            [
+              "Add scheduled execution",
+              "Cron-owned job calling an active Process trigger",
+              "Process trigger and Cron schedule ownership"
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Start with the smallest reversible customization. A beginner developer should first prove that a property or registered adapter is insufficient before overriding a service. A service override must preserve method contracts, status definitions, tenant isolation, authorization, idempotency, audit behavior, and error semantics. If the customer implementation changes those capabilities, it is no longer a safe overlay and needs an explicit contract change in the owning framework module."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The runtime graph must show the customer module loading after the standard Process modules. Availability through a package dependency is not enough; the module and server `extends` relationships determine functional composition and service precedence. Test both the default framework path and the customized path so future framework releases cannot silently break only one of them."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Operational ownership must also be explicit. The customer team owns its adapter dependencies, secrets, deployment configuration, alerts, runbooks, and rollback. Process continues to own definition and instance state, task lifecycle, incidents, retries, and audit. Axis continues to render authorized contracts and must not become a fallback persistence layer when the customized backend is unavailable."
+        },
+        {
+          "kind": "paragraph",
+          "text": "A production-ready extension includes a failure scenario and recovery proof. Stop the external dependency, confirm bounded retry and incident creation, restore it, perform the authorized recovery action, and verify the same process continues without duplicate domain side effects. Repeat after a runtime restart and after a framework upgrade candidate."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "processCustomProjectExtension-6-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Forking framework Process services when a customer module overlay is sufficient.",
+            "Renaming the standard functional module or moving backend authority into Axis."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "processCustomProjectExtension-7-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run framework and customer-project contract tests, prepare the effective runtime graph, and prove the extension works after a fresh database bootstrap without modifying framework-owned behavior. A beginner developer, business reviewer, and production operator should each be able to identify the owner and supported extension point."
+        }
+      ],
+      "searchText": "Custom Project Extension Guide Explain how customer overlays customize Process behavior while preserving functional module identity and backend governance. # Custom Project Extension Guide\n\nCustomer projects may customize Process behavior without renaming the functional\nmodule. A customer module can extend or override standard behavior, but Axis and\nBackOffice should still show the capability as Process.\n\n## Example topology\n\n```mermaid\nflowchart TD\n  Server[\"customer processServer\"] --> CustomerProcess[\"customer.process overlay\"]\n  CustomerProcess --> NodicsProcess[\"nodics.process\"]\n  NodicsProcess --> NodicsCore[\"nodics.core\"]\n  Server --> NodicsCron[\"nodics.cron included in shared runtime\"]\n```\n\nThe server can include Cron and Process together for operational simplicity,\nwhile ownership remains clear.\n\n## What belongs in a customer extension\n\n- custom task assignment rules;\n- domain-specific action adapters;\n- additional graph validation policies;\n- extra audit metadata with safe redaction;\n- environment-specific timer/SLA rules;\n- customer documentation and sample workflows.\n\n## What should not be customized casually\n\n- published version immutability;\n- permission checks;\n- audit event creation;\n- backend graph validation;\n- module identity exposed to Axis.\n\nChanging those weakens trust in the automation platform.\n\n## Documentation ownership\n\nFramework Process docs belong in nodics.process. Customer process docs belong in\nthe customer project module or project documentation pack. Axis only renders\nimported content; it should not own backend documentation data.\n\n## Extension decision and lifecycle\n\n| Need | Correct extension point | Authority that remains unchanged |\n| --- | --- | --- |\n| Change a runtime property | Customer environment or server configuration | Process configuration contract |\n| Implement a business action | Owning customer or domain module adapter | Domain validation and side effects |\n| Add an API projection | Customer API module using Process services | Process lifecycle and persistence |\n| Change visual presentation | Axis component or renderer customization | Backend Process graph and permissions |\n| Add scheduled execution | Cron-owned job calling an active Process trigger | Process trigger and Cron schedule ownership |\n\nStart with the smallest reversible customization. A beginner developer should\nfirst prove that a property or registered adapter is insufficient before\noverriding a service. A service override must preserve method contracts, status\ndefinitions, tenant isolation, authorization, idempotency, audit behavior, and\nerror semantics. If the customer implementation changes those capabilities, it\nis no longer a safe overlay and needs an explicit contract change in the owning\nframework module.\n\nThe runtime graph must show the customer module loading after the standard\nProcess modules. Availability through a package dependency is not enough; the\nmodule and server `extends` relationships determine functional composition and\nservice precedence. Test both the default framework path and the customized\npath so future framework releases cannot silently break only one of them.\n\nOperational ownership must also be explicit. The customer team owns its\nadapter dependencies, secrets, deployment configuration, alerts, runbooks, and\nrollback. Process continues to own definition and instance state, task\nlifecycle, incidents, retries, and audit. Axis continues to render authorized\ncontracts and must not become a fallback persistence layer when the customized\nbackend is unavailable.\n\nA production-ready extension includes a failure scenario and recovery proof.\nStop the external dependency, confirm bounded retry and incident creation,\nrestore it, perform the authorized recovery action, and verify the same process\ncontinues without duplicate domain side effects. Repeat after a runtime restart\nand after a framework upgrade candidate.\n\n## Common mistakes\n\n- Forking framework Process services when a customer module overlay is sufficient.\n- Renaming the standard functional module or moving backend authority into Axis.\n\n## Verification\n\nRun framework and customer-project contract tests, prepare the effective runtime graph, and prove the extension works after a fresh database bootstrap without modifying framework-owned behavior.\nA beginner developer, business reviewer, and production operator should each be able to identify the owner and supported extension point.\n",
+      "previous": {
+        "title": "Action Adapter Contract",
+        "route": "/docs/framework/process/action-adapters"
+      },
+      "next": {
+        "title": "DevOps and Runtime Topology",
+        "route": "/docs/framework/process/devops-topology"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.process",
+        "technicalModule": "workflow",
+        "path": "content/nodics.process/custom-project-extension.md",
+        "wordCount": 551,
+        "checksum": "06dd0c518fce554f8e5ed09ccf9d222593ab144f99907abdf0ae6e6e0a347b80"
+      }
+    },
+    "active": true
+  },
+  "record35": {
+    "code": "nodicsDocsComponentprocessDevopsTopology",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "process.devops-topology",
+      "title": "DevOps and Runtime Topology",
+      "route": "/docs/framework/process/devops-topology",
+      "section": "nodics-process",
+      "sectionTitle": "Nodics process",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Explain deployment topology, observability, fresh bootstrap evidence, and production sustainability for Process runtimes.",
+      "headings": [
+        {
+          "text": "Runtime shape",
+          "anchor": "processDevopsTopology-1-runtime-shape",
+          "level": 2
+        },
+        {
+          "text": "Fresh bootstrap evidence",
+          "anchor": "processDevopsTopology-2-fresh-bootstrap-evidence",
+          "level": 2
+        },
+        {
+          "text": "What to monitor",
+          "anchor": "processDevopsTopology-3-what-to-monitor",
+          "level": 2
+        },
+        {
+          "text": "Failure and recovery",
+          "anchor": "processDevopsTopology-4-failure-and-recovery",
+          "level": 2
+        },
+        {
+          "text": "Release discipline",
+          "anchor": "processDevopsTopology-5-release-discipline",
+          "level": 2
+        },
+        {
+          "text": "Continue",
+          "anchor": "processDevopsTopology-6-continue",
+          "level": 2
+        },
+        {
+          "text": "Deployment qualification evidence",
+          "anchor": "processDevopsTopology-7-deployment-qualification-evidence",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "processDevopsTopology-8-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "processDevopsTopology-9-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Operations teams need Process to be understandable after deployment, not only during development. This page explains how Process should be deployed, observed, tested, and sustained."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Runtime shape",
+          "anchor": "processDevopsTopology-1-runtime-shape"
+        },
+        {
+          "kind": "paragraph",
+          "text": "In local Kickoff, Process runs in the Business Process & Automation runtime. That server can include `nodics.process`, `nodics.cron`, and `nodics.core`."
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart TB\n  Axis[\"nodics.axis browser\"] --> Platform[\"Platform server\"]\n  Axis --> Wcms[\"WCMS server\"]\n  Axis --> ProcessServer[\"Process server\"]\n  ProcessServer --> Process[\"nodics.process\"]\n  ProcessServer --> Cron[\"nodics.cron\"]\n  ProcessServer --> Core[\"nodics.core\"]\n  Process --> Mongo[\"Process database\"]\n  Cron --> Mongo"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Sharing a runtime is a deployment decision, not an ownership merge. Process still owns process instances, tasks, triggers, and audit. Cron still owns job definitions, scheduler state, firing, retry, and job execution lifecycle."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Fresh bootstrap evidence",
+          "anchor": "processDevopsTopology-2-fresh-bootstrap-evidence"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The local fresh acceptance test drops only local Kickoff databases, starts the runtime servers, imports documentation packs, verifies Axis routes, logs in as admin, exercises Process APIs, and runs Cron lifecycle operations."
+        },
+        {
+          "kind": "paragraph",
+          "text": "This is the minimum confidence gate before saying the local stack is healthy."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "What to monitor",
+          "anchor": "processDevopsTopology-3-what-to-monitor"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Signal",
+            "Why it matters"
+          ],
+          "rows": [
+            [
+              "Process server readiness",
+              "Axis process screens depend on this API."
+            ],
+            [
+              "Definition publish failures",
+              "Bad graph contracts block operations."
+            ],
+            [
+              "Waiting task count",
+              "Shows work stuck with humans or queues."
+            ],
+            [
+              "Failed/cancelled instance count",
+              "Reveals broken policy or domain integration."
+            ],
+            [
+              "Trigger status distribution",
+              "Shows scheduled automation posture."
+            ],
+            [
+              "Audit event volume",
+              "Confirms runtime evidence is being written."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Failure and recovery",
+          "anchor": "processDevopsTopology-4-failure-and-recovery"
+        },
+        {
+          "kind": "paragraph",
+          "text": "If Axis can load but Process APIs fail, Axis should show recovery or unavailable states. Do not fake process data in the browser."
+        },
+        {
+          "kind": "paragraph",
+          "text": "If Process starts but trigger creation fails, check:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "`flowSchema` includes the `processTrigger` schema;",
+            "generated trigger service/facade artifacts are loader-visible;",
+            "route permissions exist in the identity catalog;",
+            "the referenced definition exists and is safe to use;",
+            "fresh acceptance passes from zero database state."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Release discipline",
+          "anchor": "processDevopsTopology-5-release-discipline"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Process changes are release-sensitive because they can affect long-running instances. Always ask:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Is the schema backward compatible?",
+            "Are published versions immutable?",
+            "Can older instances still be inspected?",
+            "Does a new route have a dedicated permission?",
+            "Does the change preserve tenant and audit boundaries?",
+            "Can a customer override the behavior without editing framework source?"
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Continue",
+          "anchor": "processDevopsTopology-6-continue"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "[Process and Cron Shared Runtime](process-cron-runtime.md)",
+            "[Developer Customization Guide](developer-customization.md)"
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Deployment qualification evidence",
+          "anchor": "processDevopsTopology-7-deployment-qualification-evidence"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Before production promotion, capture the effective module graph, sanitized configuration source order, health and readiness results, imported release versions, database migration state, Process and Cron registration, queue or scheduler dependencies, and smoke-test correlation identifiers. Keep this evidence environment-specific and reproducible; a screenshot of listening ports is not a deployment record."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Exercise at least one controlled dependency outage and one runtime restart. Verify that inflight work is either resumed, retried within policy, or surfaced as an incident, and that no second scheduler or duplicate execution path starts during recovery."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "processDevopsTopology-8-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Starting a standalone Cron server when Cron is intentionally composed into Process.",
+            "Treating a listening port as proof that persistence, imports, health, permissions, and recovery work."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "processDevopsTopology-9-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Use the bounded fresh-bootstrap acceptance path, verify health and readiness, inspect error-level startup logs, confirm Process and Cron observation, and exercise restart and dependency-failure recovery. A beginner operator should follow the documented server order before changing topology."
+        }
+      ],
+      "searchText": "DevOps and Runtime Topology Explain deployment topology, observability, fresh bootstrap evidence, and production sustainability for Process runtimes. # DevOps and Runtime Topology\n\nOperations teams need Process to be understandable after deployment, not only\nduring development. This page explains how Process should be deployed, observed,\ntested, and sustained.\n\n## Runtime shape\n\nIn local Kickoff, Process runs in the Business Process & Automation runtime.\nThat server can include `nodics.process`, `nodics.cron`, and `nodics.core`.\n\n```mermaid\nflowchart TB\n  Axis[\"nodics.axis browser\"] --> Platform[\"Platform server\"]\n  Axis --> Wcms[\"WCMS server\"]\n  Axis --> ProcessServer[\"Process server\"]\n  ProcessServer --> Process[\"nodics.process\"]\n  ProcessServer --> Cron[\"nodics.cron\"]\n  ProcessServer --> Core[\"nodics.core\"]\n  Process --> Mongo[\"Process database\"]\n  Cron --> Mongo\n```\n\nSharing a runtime is a deployment decision, not an ownership merge. Process\nstill owns process instances, tasks, triggers, and audit. Cron still owns job\ndefinitions, scheduler state, firing, retry, and job execution lifecycle.\n\n## Fresh bootstrap evidence\n\nThe local fresh acceptance test drops only local Kickoff databases, starts the\nruntime servers, imports documentation packs, verifies Axis routes, logs in as\nadmin, exercises Process APIs, and runs Cron lifecycle operations.\n\nThis is the minimum confidence gate before saying the local stack is healthy.\n\n## What to monitor\n\n| Signal | Why it matters |\n| --- | --- |\n| Process server readiness | Axis process screens depend on this API. |\n| Definition publish failures | Bad graph contracts block operations. |\n| Waiting task count | Shows work stuck with humans or queues. |\n| Failed/cancelled instance count | Reveals broken policy or domain integration. |\n| Trigger status distribution | Shows scheduled automation posture. |\n| Audit event volume | Confirms runtime evidence is being written. |\n\n## Failure and recovery\n\nIf Axis can load but Process APIs fail, Axis should show recovery or unavailable\nstates. Do not fake process data in the browser.\n\nIf Process starts but trigger creation fails, check:\n\n1. `flowSchema` includes the `processTrigger` schema;\n2. generated trigger service/facade artifacts are loader-visible;\n3. route permissions exist in the identity catalog;\n4. the referenced definition exists and is safe to use;\n5. fresh acceptance passes from zero database state.\n\n## Release discipline\n\nProcess changes are release-sensitive because they can affect long-running\ninstances. Always ask:\n\n- Is the schema backward compatible?\n- Are published versions immutable?\n- Can older instances still be inspected?\n- Does a new route have a dedicated permission?\n- Does the change preserve tenant and audit boundaries?\n- Can a customer override the behavior without editing framework source?\n\n## Continue\n\n- [Process and Cron Shared Runtime](process-cron-runtime.md)\n- [Developer Customization Guide](developer-customization.md)\n\n## Deployment qualification evidence\n\nBefore production promotion, capture the effective module graph, sanitized\nconfiguration source order, health and readiness results, imported release\nversions, database migration state, Process and Cron registration, queue or\nscheduler dependencies, and smoke-test correlation identifiers. Keep this\nevidence environment-specific and reproducible; a screenshot of listening ports\nis not a deployment record.\n\nExercise at least one controlled dependency outage and one runtime restart.\nVerify that inflight work is either resumed, retried within policy, or surfaced\nas an incident, and that no second scheduler or duplicate execution path starts\nduring recovery.\n\n## Common mistakes\n\n- Starting a standalone Cron server when Cron is intentionally composed into Process.\n- Treating a listening port as proof that persistence, imports, health, permissions, and recovery work.\n\n## Verification\n\nUse the bounded fresh-bootstrap acceptance path, verify health and readiness, inspect error-level startup logs, confirm Process and Cron observation, and exercise restart and dependency-failure recovery.\nA beginner operator should follow the documented server order before changing topology.\n",
+      "previous": {
+        "title": "Custom Project Extension Guide",
+        "route": "/docs/framework/process/custom-project-extension"
+      },
+      "next": {
+        "title": "Process and Cron Shared Runtime",
+        "route": "/docs/framework/process/process-cron-runtime"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.process",
+        "technicalModule": "workflow",
+        "path": "content/nodics.process/devops-topology.md",
+        "wordCount": 530,
+        "checksum": "bad00a99b9923196a917437db6358abff1e7d61c7542310abc3375616652ab44"
+      }
+    },
+    "active": true
+  },
+  "record36": {
+    "code": "nodicsDocsComponentprocessProcessCronRuntime",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "process.process-cron-runtime",
+      "title": "Process and Cron Shared Runtime",
+      "route": "/docs/framework/process/process-cron-runtime",
+      "section": "nodics-process",
+      "sectionTitle": "Nodics process",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Clarify how processServer can include Cron while Process and Cron keep separate ownership boundaries.",
+      "headings": [
+        {
+          "text": "The key rule",
+          "anchor": "processProcessCronRuntime-1-the-key-rule",
+          "level": 2
+        },
+        {
+          "text": "Example topology",
+          "anchor": "processProcessCronRuntime-2-example-topology",
+          "level": 2
+        },
+        {
+          "text": "Why this is attractive for partners",
+          "anchor": "processProcessCronRuntime-3-why-this-is-attractive-for-partners",
+          "level": 2
+        },
+        {
+          "text": "Safe lifecycle behavior",
+          "anchor": "processProcessCronRuntime-4-safe-lifecycle-behavior",
+          "level": 2
+        },
+        {
+          "text": "Cron job handoff shape",
+          "anchor": "processProcessCronRuntime-5-cron-job-handoff-shape",
+          "level": 2
+        },
+        {
+          "text": "Continue",
+          "anchor": "processProcessCronRuntime-6-continue",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "processProcessCronRuntime-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "processProcessCronRuntime-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Process and Cron can run together in one runtime server when a partner wants a smaller topology. This is useful for local development, small installations, or customers who want business process automation and scheduled jobs without running many microservice processes."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "The key rule",
+          "anchor": "processProcessCronRuntime-1-the-key-rule"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Shared runtime does not mean shared ownership."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Concern",
+            "Owner"
+          ],
+          "rows": [
+            [
+              "Process definitions",
+              "`nodics.process`"
+            ],
+            [
+              "Published workflow versions",
+              "`nodics.process`"
+            ],
+            [
+              "Runtime instances and tasks",
+              "`nodics.process`"
+            ],
+            [
+              "Trigger relationship metadata",
+              "`nodics.process`"
+            ],
+            [
+              "Cron job definition",
+              "`nodics.cron`"
+            ],
+            [
+              "Scheduler firing and retries",
+              "`nodics.cron`"
+            ],
+            [
+              "Domain business action",
+              "Domain module"
+            ],
+            [
+              "UI rendering",
+              "`nodics.axis`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Example topology",
+          "anchor": "processProcessCronRuntime-2-example-topology"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  ProcessServer[\"processServer\"] --> Core[\"includes nodics.core\"]\n  ProcessServer --> Process[\"extends nodics.process\"]\n  ProcessServer --> Cron[\"includes nodics.cron\"]\n  Process --> Trigger[\"processTrigger metadata\"]\n  Cron --> Job[\"cronJob execution\"]\n  Trigger -.references.-> Job"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The trigger can reference a Cron job code. It does not become the Cron job. Cron still decides when the job fires. When a Cron-owned job wants to start a process, it declares a `jobDetail.processTrigger` target. The Cron trigger pipeline then calls the Process trigger executor with a service identity, correlation id, schedule context, and job evidence. Process verifies the trigger is active, starts the workflow instance, and records audit events."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Why this is attractive for partners",
+          "anchor": "processProcessCronRuntime-3-why-this-is-attractive-for-partners"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Partners often start with one server for operational simplicity. Later they may split runtimes when scale, isolation, or team ownership requires it. Nodics should support both without changing functional module identity."
+        },
+        {
+          "kind": "paragraph",
+          "text": "This keeps the mental model stable:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Process console shows workflows and automation relationships.",
+            "Cron console shows jobs and scheduler behavior.",
+            "Axis can place both under \"Business Process & Automation\".",
+            "Backend ownership still protects maintainability."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Safe lifecycle behavior",
+          "anchor": "processProcessCronRuntime-4-safe-lifecycle-behavior"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Cron can be registered, activated, deactivated, and deregistered through the module registry. Process APIs should remain reachable even when Cron is deregistered, because Process definitions and tasks are not owned by Cron."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The local acceptance smoke proves this by exercising Process runtime first and then verifying the Cron registry lifecycle."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Cron job handoff shape",
+          "anchor": "processProcessCronRuntime-5-cron-job-handoff-shape"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A Cron job that starts a Process workflow should look declarative. It should not embed workflow logic or call arbitrary code when the intent is scheduled automation."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "{\n  code: 'dailyContentApprovalJob',\n  tenant: 'default',\n  trigger: { expression: '0 10 * * *' },\n  jobDetail: {\n    processTrigger: {\n      triggerCode: 'dailyContentApproval',\n      context: {\n        businessDateMode: 'CURRENT_DAY'\n      }\n    }\n  }\n}"
+        },
+        {
+          "kind": "paragraph",
+          "text": "That shape keeps the responsibilities readable:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Cron reads the schedule and fires the job.",
+            "Cron passes `cronJobCode`, tenant, schedule expression, and correlation evidence into Process.",
+            "Process loads the active trigger relationship.",
+            "Process starts the published workflow version.",
+            "Process writes `process.trigger.execution.*` and instance audit events."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "If `nodics.process` is not loaded in the same runtime, the Cron job fails closed with a dependency error instead of silently pretending the automation ran."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Continue",
+          "anchor": "processProcessCronRuntime-6-continue"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "[Runtime Instance and Task Lifecycle](runtime-lifecycle.md)",
+            "[DevOps and Runtime Topology](devops-topology.md)"
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "processProcessCronRuntime-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Confusing shared runtime composition with merged functional ownership.",
+            "Starting duplicate schedulers or registering the same trigger through parallel Process and Cron authorities."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "processProcessCronRuntime-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Prepare processServer, confirm both `nodics.process` and `nodics.cron` are observed once, execute a scheduled trigger with correlation evidence, and verify no standalone Cron listener is required. A beginner developer should confirm this shared runtime before adding another server."
+        }
+      ],
+      "searchText": "Process and Cron Shared Runtime Clarify how processServer can include Cron while Process and Cron keep separate ownership boundaries. # Process and Cron Shared Runtime\n\nProcess and Cron can run together in one runtime server when a partner wants a\nsmaller topology. This is useful for local development, small installations, or\ncustomers who want business process automation and scheduled jobs without\nrunning many microservice processes.\n\n## The key rule\n\nShared runtime does not mean shared ownership.\n\n| Concern | Owner |\n| --- | --- |\n| Process definitions | `nodics.process` |\n| Published workflow versions | `nodics.process` |\n| Runtime instances and tasks | `nodics.process` |\n| Trigger relationship metadata | `nodics.process` |\n| Cron job definition | `nodics.cron` |\n| Scheduler firing and retries | `nodics.cron` |\n| Domain business action | Domain module |\n| UI rendering | `nodics.axis` |\n\n## Example topology\n\n```mermaid\nflowchart LR\n  ProcessServer[\"processServer\"] --> Core[\"includes nodics.core\"]\n  ProcessServer --> Process[\"extends nodics.process\"]\n  ProcessServer --> Cron[\"includes nodics.cron\"]\n  Process --> Trigger[\"processTrigger metadata\"]\n  Cron --> Job[\"cronJob execution\"]\n  Trigger -.references.-> Job\n```\n\nThe trigger can reference a Cron job code. It does not become the Cron job.\nCron still decides when the job fires. When a Cron-owned job wants to start a\nprocess, it declares a `jobDetail.processTrigger` target. The Cron trigger\npipeline then calls the Process trigger executor with a service identity,\ncorrelation id, schedule context, and job evidence. Process verifies the\ntrigger is active, starts the workflow instance, and records audit events.\n\n## Why this is attractive for partners\n\nPartners often start with one server for operational simplicity. Later they may\nsplit runtimes when scale, isolation, or team ownership requires it. Nodics\nshould support both without changing functional module identity.\n\nThis keeps the mental model stable:\n\n- Process console shows workflows and automation relationships.\n- Cron console shows jobs and scheduler behavior.\n- Axis can place both under \"Business Process & Automation\".\n- Backend ownership still protects maintainability.\n\n## Safe lifecycle behavior\n\nCron can be registered, activated, deactivated, and deregistered through the\nmodule registry. Process APIs should remain reachable even when Cron is\nderegistered, because Process definitions and tasks are not owned by Cron.\n\nThe local acceptance smoke proves this by exercising Process runtime first and\nthen verifying the Cron registry lifecycle.\n\n## Cron job handoff shape\n\nA Cron job that starts a Process workflow should look declarative. It should not\nembed workflow logic or call arbitrary code when the intent is scheduled\nautomation.\n\n```js\n{\n  code: 'dailyContentApprovalJob',\n  tenant: 'default',\n  trigger: { expression: '0 10 * * *' },\n  jobDetail: {\n    processTrigger: {\n      triggerCode: 'dailyContentApproval',\n      context: {\n        businessDateMode: 'CURRENT_DAY'\n      }\n    }\n  }\n}\n```\n\nThat shape keeps the responsibilities readable:\n\n- Cron reads the schedule and fires the job.\n- Cron passes `cronJobCode`, tenant, schedule expression, and correlation\n  evidence into Process.\n- Process loads the active trigger relationship.\n- Process starts the published workflow version.\n- Process writes `process.trigger.execution.*` and instance audit events.\n\nIf `nodics.process` is not loaded in the same runtime, the Cron job fails closed\nwith a dependency error instead of silently pretending the automation ran.\n\n## Continue\n\n- [Runtime Instance and Task Lifecycle](runtime-lifecycle.md)\n- [DevOps and Runtime Topology](devops-topology.md)\n\n## Common mistakes\n\n- Confusing shared runtime composition with merged functional ownership.\n- Starting duplicate schedulers or registering the same trigger through parallel Process and Cron authorities.\n\n## Verification\n\nPrepare processServer, confirm both `nodics.process` and `nodics.cron` are observed once, execute a scheduled trigger with correlation evidence, and verify no standalone Cron listener is required.\nA beginner developer should confirm this shared runtime before adding another server.\n",
+      "previous": {
+        "title": "DevOps and Runtime Topology",
+        "route": "/docs/framework/process/devops-topology"
+      },
+      "next": {
+        "title": "Scheduled Automation and Cron Triggers",
+        "route": "/docs/framework/process/scheduled-automation"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.process",
+        "technicalModule": "workflow",
+        "path": "content/nodics.process/process-cron-runtime.md",
+        "wordCount": 520,
+        "checksum": "cadc809c06ec6fd2054d62a3894e89723856c839321ce4f2a3ed7a8c0c29cc44"
+      }
+    },
+    "active": true
+  },
+  "record37": {
+    "code": "nodicsDocsComponentprocessScheduledAutomation",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "process.scheduled-automation",
+      "title": "Scheduled Automation and Cron Triggers",
+      "route": "/docs/framework/process/scheduled-automation",
+      "section": "nodics-process",
+      "sectionTitle": "Nodics process",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence.",
+      "headings": [
+        {
+          "text": "Why this split exists",
+          "anchor": "processScheduledAutomation-1-why-this-split-exists",
+          "level": 2
+        },
+        {
+          "text": "Trigger lifecycle",
+          "anchor": "processScheduledAutomation-2-trigger-lifecycle",
+          "level": 2
+        },
+        {
+          "text": "Runtime execution contract",
+          "anchor": "processScheduledAutomation-3-runtime-execution-contract",
+          "level": 2
+        },
+        {
+          "text": "Cron-owned job declaration",
+          "anchor": "processScheduledAutomation-4-cron-owned-job-declaration",
+          "level": 2
+        },
+        {
+          "text": "What business users should see in Axis",
+          "anchor": "processScheduledAutomation-5-what-business-users-should-see-in-axis",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "processScheduledAutomation-6-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "processScheduledAutomation-7-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Scheduled automation connects time-based execution to business workflows. Nodics keeps the ownership boundary explicit:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "nodics.process owns process definitions, trigger relationships, instances, tasks, and audit.",
+            "nodics.cron owns job scheduling, firing, retry timing, and scheduler runtime."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Why this split exists",
+          "anchor": "processScheduledAutomation-1-why-this-split-exists"
+        },
+        {
+          "kind": "paragraph",
+          "text": "If Process owned Cron jobs directly, workflows would become a hidden scheduler. If Cron owned process definitions, scheduled jobs would become a hidden workflow engine. Keeping the boundary clear makes the system easier to test, operate, and customize."
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "sequenceDiagram\n  participant Cron as nodics.cron\n  participant Process as nodics.process\n  participant Audit as Process audit\n  Cron->>Process: POST /triggers/:code/execute\n  Process->>Audit: process.trigger.execution.requested\n  Process->>Process: start published process instance\n  Process->>Audit: process.instance.started\n  Process->>Audit: process.trigger.execution.completed"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Trigger lifecycle",
+          "anchor": "processScheduledAutomation-2-trigger-lifecycle"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "State",
+            "Meaning"
+          ],
+          "rows": [
+            [
+              "`DRAFT`",
+              "Relationship exists but is not executable."
+            ],
+            [
+              "`ACTIVE`",
+              "Authorized scheduler can execute it."
+            ],
+            [
+              "`PAUSED`",
+              "Keep metadata but do not execute."
+            ],
+            [
+              "`ARCHIVED`",
+              "Historical relationship; cannot be updated or executed."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis should make this lifecycle obvious. A business user should not need to guess why an automation did not run."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Runtime execution contract",
+          "anchor": "processScheduledAutomation-3-runtime-execution-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The execution API requires an active trigger. The scheduler should pass a correlation or idempotency key."
+        },
+        {
+          "kind": "code",
+          "language": "http",
+          "text": "POST /nodics/process/v0/triggers/dailyContentApproval/execute\nAuthorization: Bearer <runtime-token>\ncontent-type: application/json\n\n{\n  \"correlationId\": \"cron-fire-2026-08-09T10:00:00Z\",\n  \"context\": {\n    \"source\": \"cron\",\n    \"businessDate\": \"2026-08-09\"\n  }\n}"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Process starts the referenced workflow and records audit evidence. Cron remains responsible for deciding when to call this endpoint and how to retry scheduler failures."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Cron-owned job declaration",
+          "anchor": "processScheduledAutomation-4-cron-owned-job-declaration"
+        },
+        {
+          "kind": "paragraph",
+          "text": "When Process and Cron run together in `processServer`, a Cron job can execute a Process trigger without using a browser-only shortcut:"
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "{\n  code: 'dailyContentApprovalJob',\n  trigger: { expression: '0 10 * * *' },\n  jobDetail: {\n    processTrigger: {\n      triggerCode: 'dailyContentApproval',\n      context: {\n        sourceDescription: 'Daily content approval automation'\n      }\n    }\n  }\n}"
+        },
+        {
+          "kind": "paragraph",
+          "text": "This declaration is intentionally small. The business process remains in Process. The schedule remains in Cron. Domain-specific work remains in the domain module that Process calls through explicit ACTION adapters."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "What business users should see in Axis",
+          "anchor": "processScheduledAutomation-5-what-business-users-should-see-in-axis"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis should explain two related but different records:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Axis concept",
+            "Backend owner",
+            "What the user controls"
+          ],
+          "rows": [
+            [
+              "Scheduled trigger relationship",
+              "`nodics.process`",
+              "Which process definition is allowed to start from a schedule."
+            ],
+            [
+              "Cron job",
+              "`nodics.cron`",
+              "When the schedule fires and how scheduler lifecycle is operated."
+            ],
+            [
+              "Manual execute now",
+              "`nodics.process`",
+              "Test an active trigger immediately with audit evidence."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "This helps a business user understand why activating a trigger relationship is not the same thing as starting a scheduler, and why a Cron job may still need to exist before real time-based automation fires."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "processScheduledAutomation-6-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating trigger activation as proof that a scheduler exists and is healthy.",
+            "Duplicating schedule state in Process and Cron or losing tenant, correlation, idempotency, and audit context."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "processScheduledAutomation-7-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Activate a Process trigger, verify the Cron-owned schedule handoff, execute it once with idempotency evidence, reject unauthorized or inactive execution, and confirm retry and recovery behavior. A beginner developer and production operator should both understand which evidence belongs to Process and which belongs to Cron. Also repeat the check after processServer restarts and after a missed schedule window. Confirm the scheduler follows the configured misfire policy, does not replay a completed correlation unexpectedly, and exposes a recoverable incident when downstream execution fails. Metrics and logs must remain tenant-safe, bounded, and free of trigger payload secrets."
+        }
+      ],
+      "searchText": "Scheduled Automation and Cron Triggers Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence. # Scheduled Automation and Cron Triggers\n\nScheduled automation connects time-based execution to business workflows. Nodics\nkeeps the ownership boundary explicit:\n\n- nodics.process owns process definitions, trigger relationships, instances,\n  tasks, and audit.\n- nodics.cron owns job scheduling, firing, retry timing, and scheduler runtime.\n\n## Why this split exists\n\nIf Process owned Cron jobs directly, workflows would become a hidden scheduler.\nIf Cron owned process definitions, scheduled jobs would become a hidden workflow\nengine. Keeping the boundary clear makes the system easier to test, operate, and\ncustomize.\n\n```mermaid\nsequenceDiagram\n  participant Cron as nodics.cron\n  participant Process as nodics.process\n  participant Audit as Process audit\n  Cron->>Process: POST /triggers/:code/execute\n  Process->>Audit: process.trigger.execution.requested\n  Process->>Process: start published process instance\n  Process->>Audit: process.instance.started\n  Process->>Audit: process.trigger.execution.completed\n```\n\n## Trigger lifecycle\n\n| State | Meaning |\n| --- | --- |\n| `DRAFT` | Relationship exists but is not executable. |\n| `ACTIVE` | Authorized scheduler can execute it. |\n| `PAUSED` | Keep metadata but do not execute. |\n| `ARCHIVED` | Historical relationship; cannot be updated or executed. |\n\nAxis should make this lifecycle obvious. A business user should not need to\nguess why an automation did not run.\n\n## Runtime execution contract\n\nThe execution API requires an active trigger. The scheduler should pass a\ncorrelation or idempotency key.\n\n```http\nPOST /nodics/process/v0/triggers/dailyContentApproval/execute\nAuthorization: Bearer <runtime-token>\ncontent-type: application/json\n\n{\n  \"correlationId\": \"cron-fire-2026-08-09T10:00:00Z\",\n  \"context\": {\n    \"source\": \"cron\",\n    \"businessDate\": \"2026-08-09\"\n  }\n}\n```\n\nProcess starts the referenced workflow and records audit evidence. Cron remains\nresponsible for deciding when to call this endpoint and how to retry scheduler\nfailures.\n\n## Cron-owned job declaration\n\nWhen Process and Cron run together in `processServer`, a Cron job can execute a\nProcess trigger without using a browser-only shortcut:\n\n```js\n{\n  code: 'dailyContentApprovalJob',\n  trigger: { expression: '0 10 * * *' },\n  jobDetail: {\n    processTrigger: {\n      triggerCode: 'dailyContentApproval',\n      context: {\n        sourceDescription: 'Daily content approval automation'\n      }\n    }\n  }\n}\n```\n\nThis declaration is intentionally small. The business process remains in\nProcess. The schedule remains in Cron. Domain-specific work remains in the\ndomain module that Process calls through explicit ACTION adapters.\n\n## What business users should see in Axis\n\nAxis should explain two related but different records:\n\n| Axis concept | Backend owner | What the user controls |\n| --- | --- | --- |\n| Scheduled trigger relationship | `nodics.process` | Which process definition is allowed to start from a schedule. |\n| Cron job | `nodics.cron` | When the schedule fires and how scheduler lifecycle is operated. |\n| Manual execute now | `nodics.process` | Test an active trigger immediately with audit evidence. |\n\nThis helps a business user understand why activating a trigger relationship is\nnot the same thing as starting a scheduler, and why a Cron job may still need to\nexist before real time-based automation fires.\n\n## Common mistakes\n\n- Treating trigger activation as proof that a scheduler exists and is healthy.\n- Duplicating schedule state in Process and Cron or losing tenant, correlation, idempotency, and audit context.\n\n## Verification\n\nActivate a Process trigger, verify the Cron-owned schedule handoff, execute it once with idempotency evidence, reject unauthorized or inactive execution, and confirm retry and recovery behavior.\nA beginner developer and production operator should both understand which evidence belongs to Process and which belongs to Cron.\nAlso repeat the check after processServer restarts and after a missed schedule window. Confirm the scheduler follows the configured misfire policy, does not replay a completed correlation unexpectedly, and exposes a recoverable incident when downstream execution fails. Metrics and logs must remain tenant-safe, bounded, and free of trigger payload secrets.\n",
+      "previous": {
+        "title": "Process and Cron Shared Runtime",
+        "route": "/docs/framework/process/process-cron-runtime"
+      },
+      "next": {
+        "title": "Visual Workflow Designer Contract",
+        "route": "/docs/framework/process/visual-designer"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.process",
+        "technicalModule": "flowCore",
+        "path": "content/nodics.process/scheduled-automation.md",
+        "wordCount": 544,
+        "checksum": "9aaf9624cfb0821cf77859333fe96d3caeb6d725d83a27e5137c24b53d7e1bc0"
+      }
+    },
+    "active": true
+  },
+  "record38": {
+    "code": "nodicsDocsComponentprocessVisualDesigner",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "process.visual-designer",
+      "title": "Visual Workflow Designer Contract",
+      "route": "/docs/framework/process/visual-designer",
+      "section": "nodics-process",
+      "sectionTitle": "Nodics process",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Describe the backend-owned graph contract, Axis editor projection, and validation workflow for the visual designer.",
+      "headings": [
+        {
+          "text": "Ownership model",
+          "anchor": "processVisualDesigner-1-ownership-model",
+          "level": 2
+        },
+        {
+          "text": "MVP graph contract",
+          "anchor": "processVisualDesigner-2-mvp-graph-contract",
+          "level": 2
+        },
+        {
+          "text": "What the browser may do",
+          "anchor": "processVisualDesigner-3-what-the-browser-may-do",
+          "level": 2
+        },
+        {
+          "text": "How a beginner should use the first designer",
+          "anchor": "processVisualDesigner-4-how-a-beginner-should-use-the-first-designer",
+          "level": 2
+        },
+        {
+          "text": "Designer library roadmap",
+          "anchor": "processVisualDesigner-5-designer-library-roadmap",
+          "level": 2
+        },
+        {
+          "text": "Designer acceptance",
+          "anchor": "processVisualDesigner-6-designer-acceptance",
+          "level": 2
+        },
+        {
+          "text": "Continue",
+          "anchor": "processVisualDesigner-7-continue",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "processVisualDesigner-8-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "processVisualDesigner-9-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "The visual workflow designer lets a business user or developer edit a process graph through Axis. The important contract is that Axis is an editor, not the runtime authority."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Ownership model",
+          "anchor": "processVisualDesigner-1-ownership-model"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "sequenceDiagram\n  participant User as Business user\n  participant Axis as Axis designer\n  participant API as Process API\n  participant Validator as Graph validator\n  participant Store as Process schemas\n\n  User->>Axis: Move nodes and connect steps\n  Axis->>API: Save draft graph\n  API->>Store: Persist draft definition\n  User->>Axis: Validate\n  Axis->>API: Validate draft\n  API->>Validator: Check graph contract\n  Validator-->>API: valid or diagnostics\n  API-->>Axis: Backend-owned result\n  User->>Axis: Publish\n  Axis->>API: Publish draft\n  API->>Store: Create immutable version"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis can display nodes, edges, positions, labels, and selection state. The backend validates whether the graph is executable."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "MVP graph contract",
+          "anchor": "processVisualDesigner-2-mvp-graph-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The first designer contract supports:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "one `START` node;",
+            "one or more `TASK` nodes;",
+            "one or more `END` nodes;",
+            "transitions with stable codes, source, and target;",
+            "optional designer metadata for browser positions."
+          ]
+        },
+        {
+          "kind": "code",
+          "language": "json",
+          "text": "{\n  \"nodes\": [\n    { \"code\": \"start\", \"type\": \"START\", \"name\": \"Start\" },\n    { \"code\": \"businessReview\", \"type\": \"TASK\", \"name\": \"Business review\" },\n    { \"code\": \"end\", \"type\": \"END\", \"name\": \"End\" }\n  ],\n  \"transitions\": [\n    { \"code\": \"start_to_review\", \"source\": \"start\", \"target\": \"businessReview\" },\n    { \"code\": \"review_to_end\", \"source\": \"businessReview\", \"target\": \"end\" }\n  ]\n}"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "What the browser may do",
+          "anchor": "processVisualDesigner-3-what-the-browser-may-do"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis may:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "render a node palette;",
+            "show a canvas preview;",
+            "let the user select nodes;",
+            "collect labels and basic properties;",
+            "send draft graph data to Process APIs;",
+            "show backend validation diagnostics."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis must not:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "execute process logic;",
+            "calculate runtime state;",
+            "bypass backend validation;",
+            "store workflow definitions in browser storage as authority;",
+            "create a parallel workflow registry."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "How a beginner should use the first designer",
+          "anchor": "processVisualDesigner-4-how-a-beginner-should-use-the-first-designer"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The first designer is intentionally simple. It is not trying to be a complex diagramming tool on day one. It gives a business user a safe way to understand the shape of a workflow and gives a developer a safe way to prove the backend graph contract."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Start with this flow:"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Start[\"START: request received\"] --> Review[\"TASK: business review\"]\n  Review --> End[\"END: approved or recorded\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Then ask these business questions before adding more nodes:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Question",
+            "Why it matters",
+            "Where the answer belongs"
+          ],
+          "rows": [
+            [
+              "Who starts this process?",
+              "Prevents hidden automation and duplicate cases.",
+              "Process trigger metadata or domain API call."
+            ],
+            [
+              "Who owns the human task?",
+              "Makes the work queue visible.",
+              "Process task assignment policy."
+            ],
+            [
+              "What happens if the task is delayed?",
+              "Defines SLA and escalation.",
+              "Process policy, future timer, or Cron relationship."
+            ],
+            [
+              "What business object is affected?",
+              "Lets users connect workflow to real work.",
+              "Process instance context and domain module reference."
+            ],
+            [
+              "What evidence is required?",
+              "Supports audit and compliance.",
+              "Process audit event and domain audit."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "If a user cannot answer these questions, the flow is not ready for publication even if the graph is technically valid."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Designer library roadmap",
+          "anchor": "processVisualDesigner-5-designer-library-roadmap"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The first implementation uses a Nodics-native card/canvas projection because it keeps the contract easy to test. The roadmap is:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "keep the backend graph contract stable;",
+            "keep Axis as the renderer/editor only;",
+            "add drag/drop layout metadata after the save/validate/publish flow is stable;",
+            "evaluate React Flow / xyflow as the first richer canvas implementation;",
+            "add BPMN import/export only as an interoperability adapter when a customer needs it."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "This sequence prevents a drawing library from becoming the workflow authority. The designer may become more attractive and interactive, but the validation, versioning, permissions, runtime execution, and audit evidence must remain in `nodics.process`."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Designer acceptance",
+          "anchor": "processVisualDesigner-6-designer-acceptance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The designer foundation is healthy when:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "A user can see START, TASK, and END nodes.",
+            "A user can inspect selected node details.",
+            "Saving calls the Process draft API.",
+            "Validation calls the Process graph validator.",
+            "Publishing remains a separate backend-owned action.",
+            "The same graph can be verified through API tests and fresh acceptance.",
+            "Axis refresh is not required after create, save, validate, publish, trigger, task, or Cron handoff operations.",
+            "A business user can explain the workflow outcome from the page without reading raw JSON.",
+            "A developer can reproduce the same graph through the Process API.",
+            "An operator can trace a started instance from trigger/job evidence through Process audit events."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Continue",
+          "anchor": "processVisualDesigner-7-continue"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "[Developer Customization Guide](developer-customization.md)",
+            "[Runtime Instance and Task Lifecycle](runtime-lifecycle.md)"
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "processVisualDesigner-8-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Persisting the browser graph directly or treating visual placement as executable authority.",
+            "Allowing unsupported nodes, arbitrary code, unregistered actions, or invalid transitions to bypass backend validation."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "processVisualDesigner-9-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Create valid and invalid graphs in the designer, confirm backend validation messages, publish only a valid definition, reload it without semantic loss, and prove keyboard, permission, and recovery behavior."
+        }
+      ],
+      "searchText": "Visual Workflow Designer Contract Describe the backend-owned graph contract, Axis editor projection, and validation workflow for the visual designer. # Visual Workflow Designer Contract\n\nThe visual workflow designer lets a business user or developer edit a process\ngraph through Axis. The important contract is that Axis is an editor, not the\nruntime authority.\n\n## Ownership model\n\n```mermaid\nsequenceDiagram\n  participant User as Business user\n  participant Axis as Axis designer\n  participant API as Process API\n  participant Validator as Graph validator\n  participant Store as Process schemas\n\n  User->>Axis: Move nodes and connect steps\n  Axis->>API: Save draft graph\n  API->>Store: Persist draft definition\n  User->>Axis: Validate\n  Axis->>API: Validate draft\n  API->>Validator: Check graph contract\n  Validator-->>API: valid or diagnostics\n  API-->>Axis: Backend-owned result\n  User->>Axis: Publish\n  Axis->>API: Publish draft\n  API->>Store: Create immutable version\n```\n\nAxis can display nodes, edges, positions, labels, and selection state. The\nbackend validates whether the graph is executable.\n\n## MVP graph contract\n\nThe first designer contract supports:\n\n- one `START` node;\n- one or more `TASK` nodes;\n- one or more `END` nodes;\n- transitions with stable codes, source, and target;\n- optional designer metadata for browser positions.\n\n```json\n{\n  \"nodes\": [\n    { \"code\": \"start\", \"type\": \"START\", \"name\": \"Start\" },\n    { \"code\": \"businessReview\", \"type\": \"TASK\", \"name\": \"Business review\" },\n    { \"code\": \"end\", \"type\": \"END\", \"name\": \"End\" }\n  ],\n  \"transitions\": [\n    { \"code\": \"start_to_review\", \"source\": \"start\", \"target\": \"businessReview\" },\n    { \"code\": \"review_to_end\", \"source\": \"businessReview\", \"target\": \"end\" }\n  ]\n}\n```\n\n## What the browser may do\n\nAxis may:\n\n- render a node palette;\n- show a canvas preview;\n- let the user select nodes;\n- collect labels and basic properties;\n- send draft graph data to Process APIs;\n- show backend validation diagnostics.\n\nAxis must not:\n\n- execute process logic;\n- calculate runtime state;\n- bypass backend validation;\n- store workflow definitions in browser storage as authority;\n- create a parallel workflow registry.\n\n## How a beginner should use the first designer\n\nThe first designer is intentionally simple. It is not trying to be a complex\ndiagramming tool on day one. It gives a business user a safe way to understand\nthe shape of a workflow and gives a developer a safe way to prove the backend\ngraph contract.\n\nStart with this flow:\n\n```mermaid\nflowchart LR\n  Start[\"START: request received\"] --> Review[\"TASK: business review\"]\n  Review --> End[\"END: approved or recorded\"]\n```\n\nThen ask these business questions before adding more nodes:\n\n| Question | Why it matters | Where the answer belongs |\n| --- | --- | --- |\n| Who starts this process? | Prevents hidden automation and duplicate cases. | Process trigger metadata or domain API call. |\n| Who owns the human task? | Makes the work queue visible. | Process task assignment policy. |\n| What happens if the task is delayed? | Defines SLA and escalation. | Process policy, future timer, or Cron relationship. |\n| What business object is affected? | Lets users connect workflow to real work. | Process instance context and domain module reference. |\n| What evidence is required? | Supports audit and compliance. | Process audit event and domain audit. |\n\nIf a user cannot answer these questions, the flow is not ready for publication\neven if the graph is technically valid.\n\n## Designer library roadmap\n\nThe first implementation uses a Nodics-native card/canvas projection because it\nkeeps the contract easy to test. The roadmap is:\n\n1. keep the backend graph contract stable;\n2. keep Axis as the renderer/editor only;\n3. add drag/drop layout metadata after the save/validate/publish flow is stable;\n4. evaluate React Flow / xyflow as the first richer canvas implementation;\n5. add BPMN import/export only as an interoperability adapter when a customer\n   needs it.\n\nThis sequence prevents a drawing library from becoming the workflow authority.\nThe designer may become more attractive and interactive, but the validation,\nversioning, permissions, runtime execution, and audit evidence must remain in\n`nodics.process`.\n\n## Designer acceptance\n\nThe designer foundation is healthy when:\n\n1. A user can see START, TASK, and END nodes.\n2. A user can inspect selected node details.\n3. Saving calls the Process draft API.\n4. Validation calls the Process graph validator.\n5. Publishing remains a separate backend-owned action.\n6. The same graph can be verified through API tests and fresh acceptance.\n7. Axis refresh is not required after create, save, validate, publish, trigger,\n   task, or Cron handoff operations.\n8. A business user can explain the workflow outcome from the page without\n   reading raw JSON.\n9. A developer can reproduce the same graph through the Process API.\n10. An operator can trace a started instance from trigger/job evidence through\n    Process audit events.\n\n## Continue\n\n- [Developer Customization Guide](developer-customization.md)\n- [Runtime Instance and Task Lifecycle](runtime-lifecycle.md)\n\n## Common mistakes\n\n- Persisting the browser graph directly or treating visual placement as executable authority.\n- Allowing unsupported nodes, arbitrary code, unregistered actions, or invalid transitions to bypass backend validation.\n\n## Verification\n\nCreate valid and invalid graphs in the designer, confirm backend validation messages, publish only a valid definition, reload it without semantic loss, and prove keyboard, permission, and recovery behavior.\n",
+      "previous": {
+        "title": "Scheduled Automation and Cron Triggers",
+        "route": "/docs/framework/process/scheduled-automation"
+      },
+      "next": {
+        "title": "Process QA and Regression Guide",
+        "route": "/docs/framework/process/qa-regression-guide"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.process",
+        "technicalModule": "flowCore",
+        "path": "content/nodics.process/visual-designer.md",
+        "wordCount": 757,
+        "checksum": "55c2373b285ca06fdbee7c0484396b1079d836808dcb201f149ab80d83022f36"
+      }
+    },
+    "active": true
+  },
+  "record39": {
+    "code": "nodicsDocsComponentprocessQaRegressionGuide",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "AUTHENTICATED",
+    "properties": {
+      "code": "process.qa-regression-guide",
+      "title": "Process QA and Regression Guide",
+      "route": "/docs/framework/process/qa-regression-guide",
+      "section": "nodics-process",
+      "sectionTitle": "Nodics process",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Define backend, fresh database, Axis smoke, and negative regression checks for Process and Cron automation.",
+      "headings": [
+        {
+          "text": "Minimum backend regression",
+          "anchor": "processQaRegressionGuide-1-minimum-backend-regression",
+          "level": 2
+        },
+        {
+          "text": "Fresh database acceptance",
+          "anchor": "processQaRegressionGuide-2-fresh-database-acceptance",
+          "level": 2
+        },
+        {
+          "text": "Manual Axis smoke checklist",
+          "anchor": "processQaRegressionGuide-3-manual-axis-smoke-checklist",
+          "level": 2
+        },
+        {
+          "text": "Negative tests that matter",
+          "anchor": "processQaRegressionGuide-4-negative-tests-that-matter",
+          "level": 2
+        },
+        {
+          "text": "Regression evidence matrix",
+          "anchor": "processQaRegressionGuide-5-regression-evidence-matrix",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "processQaRegressionGuide-6-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "processQaRegressionGuide-7-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Process automation touches business operations, so small bugs can become noisy in production. QA must test both the happy path and the boundaries."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Minimum backend regression",
+          "anchor": "processQaRegressionGuide-1-minimum-backend-regression"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run the Process contract suite:"
+        },
+        {
+          "kind": "code",
+          "language": "bash",
+          "text": "cd nodics.ai/nodics.process\nnpm test"
+        },
+        {
+          "kind": "paragraph",
+          "text": "This validates module structure, secured routes, permission catalog coverage, generated schemas, graph validation, definition lifecycle, operation inspection, runtime lifecycle, trigger execution, and action adapter blocking."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Fresh database acceptance",
+          "anchor": "processQaRegressionGuide-2-fresh-database-acceptance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "From the reference customer project, run the fresh local acceptance when you need evidence that bootstrap, imports, module registration, Axis content, and runtime servers still cooperate:"
+        },
+        {
+          "kind": "code",
+          "language": "bash",
+          "text": "cd nodics.kickoff\nnpm run acceptance:local:fresh"
+        },
+        {
+          "kind": "paragraph",
+          "text": "This is heavier than unit tests, but it catches integration drift."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Manual Axis smoke checklist",
+          "anchor": "processQaRegressionGuide-3-manual-axis-smoke-checklist"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Login to Axis.",
+            "Open Business Process & Automation.",
+            "Create a sample draft.",
+            "Save a graph change in Designer.",
+            "Validate the draft.",
+            "Publish the draft.",
+            "Start an instance.",
+            "Claim and complete a task.",
+            "Create a scheduled trigger relationship.",
+            "Activate and execute the trigger.",
+            "Confirm a new instance appears.",
+            "Open the timeline and verify audit evidence."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Negative tests that matter",
+          "anchor": "processQaRegressionGuide-4-negative-tests-that-matter"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Unknown action adapter must fail.",
+            "Paused or archived trigger must not execute.",
+            "Draft definition must not start.",
+            "Archived trigger must not update.",
+            "User without Process permission must be denied.",
+            "Axis refresh must not be required after every operation."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "If these fail, stop and fix the contract before adding more UI."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Regression evidence matrix",
+          "anchor": "processQaRegressionGuide-5-regression-evidence-matrix"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Layer",
+            "Positive proof",
+            "Negative or recovery proof"
+          ],
+          "rows": [
+            [
+              "Definition",
+              "Valid graph saves, validates, and publishes.",
+              "Invalid transition, unsupported node, and stale version are rejected."
+            ],
+            [
+              "Runtime",
+              "Published definition starts and reaches the expected terminal state.",
+              "Failure creates an incident and restart preserves durable state."
+            ],
+            [
+              "Task",
+              "Authorized user claims and completes a task.",
+              "Unauthorized, expired, and competing updates are rejected."
+            ],
+            [
+              "Action",
+              "Registered adapter executes once with bounded output.",
+              "Unknown adapter, timeout, duplicate delivery, and malformed output fail safely."
+            ],
+            [
+              "Trigger",
+              "Active trigger executes with correlation and audit.",
+              "Inactive or unauthorized trigger does not execute."
+            ],
+            [
+              "Cron composition",
+              "Process and Cron are observed in processServer.",
+              "No standalone Cron listener or duplicate schedule authority exists."
+            ],
+            [
+              "Axis",
+              "Authorized pages render current backend state.",
+              "Deep links and actions remain guarded when permission or module availability is absent."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "The regression run starts with deterministic contract tests, then uses an empty local database so every schema, import release, registration, and default record must be rebuilt from source. It finishes with retained-data acceptance to prove repeatability and immutable release handling. Manual database edits invalidate the result because they hide missing generators or import contracts."
+        },
+        {
+          "kind": "paragraph",
+          "text": "A beginner developer should record the exact command, commit, environment, runtime graph, database names, and outcome. Production qualification adds dependency outage, restart, concurrency, capacity, redaction, and rollback evidence. Operators should inspect error-level startup output and persisted incidents instead of relying only on exit code or HTTP 200."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Security regression covers cross-tenant identifiers, missing and insufficient permissions, malformed graph metadata, oversized input, executable strings, secret-bearing output, replayed correlation identifiers, and unauthorized recovery. Performance regression covers large but bounded graphs, navigation, task queues, audit history, and retry storms. Each boundary needs a documented limit and a stable rejection or degradation behavior."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "processQaRegressionGuide-6-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Testing only successful API responses while skipping permissions, stale state, retry bounds, recovery, and restart behavior.",
+            "Accepting UI refresh workarounds or manually repaired database records as valid regression evidence."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "processQaRegressionGuide-7-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run the complete Process contract suite and bounded fresh local acceptance against empty databases, then repeat the live smoke against retained data and inspect startup logs for error-level output. A beginner developer should be able to follow the same regression sequence without manual database repair."
+        }
+      ],
+      "searchText": "Process QA and Regression Guide Define backend, fresh database, Axis smoke, and negative regression checks for Process and Cron automation. # Process QA and Regression Guide\n\nProcess automation touches business operations, so small bugs can become noisy\nin production. QA must test both the happy path and the boundaries.\n\n## Minimum backend regression\n\nRun the Process contract suite:\n\n```bash\ncd nodics.ai/nodics.process\nnpm test\n```\n\nThis validates module structure, secured routes, permission catalog coverage,\ngenerated schemas, graph validation, definition lifecycle, operation inspection,\nruntime lifecycle, trigger execution, and action adapter blocking.\n\n## Fresh database acceptance\n\nFrom the reference customer project, run the fresh local acceptance when you\nneed evidence that bootstrap, imports, module registration, Axis content, and\nruntime servers still cooperate:\n\n```bash\ncd nodics.kickoff\nnpm run acceptance:local:fresh\n```\n\nThis is heavier than unit tests, but it catches integration drift.\n\n## Manual Axis smoke checklist\n\n1. Login to Axis.\n2. Open Business Process & Automation.\n3. Create a sample draft.\n4. Save a graph change in Designer.\n5. Validate the draft.\n6. Publish the draft.\n7. Start an instance.\n8. Claim and complete a task.\n9. Create a scheduled trigger relationship.\n10. Activate and execute the trigger.\n11. Confirm a new instance appears.\n12. Open the timeline and verify audit evidence.\n\n## Negative tests that matter\n\n- Unknown action adapter must fail.\n- Paused or archived trigger must not execute.\n- Draft definition must not start.\n- Archived trigger must not update.\n- User without Process permission must be denied.\n- Axis refresh must not be required after every operation.\n\nIf these fail, stop and fix the contract before adding more UI.\n\n## Regression evidence matrix\n\n| Layer | Positive proof | Negative or recovery proof |\n| --- | --- | --- |\n| Definition | Valid graph saves, validates, and publishes. | Invalid transition, unsupported node, and stale version are rejected. |\n| Runtime | Published definition starts and reaches the expected terminal state. | Failure creates an incident and restart preserves durable state. |\n| Task | Authorized user claims and completes a task. | Unauthorized, expired, and competing updates are rejected. |\n| Action | Registered adapter executes once with bounded output. | Unknown adapter, timeout, duplicate delivery, and malformed output fail safely. |\n| Trigger | Active trigger executes with correlation and audit. | Inactive or unauthorized trigger does not execute. |\n| Cron composition | Process and Cron are observed in processServer. | No standalone Cron listener or duplicate schedule authority exists. |\n| Axis | Authorized pages render current backend state. | Deep links and actions remain guarded when permission or module availability is absent. |\n\nThe regression run starts with deterministic contract tests, then uses an empty\nlocal database so every schema, import release, registration, and default record\nmust be rebuilt from source. It finishes with retained-data acceptance to prove\nrepeatability and immutable release handling. Manual database edits invalidate\nthe result because they hide missing generators or import contracts.\n\nA beginner developer should record the exact command, commit, environment,\nruntime graph, database names, and outcome. Production qualification adds\ndependency outage, restart, concurrency, capacity, redaction, and rollback\nevidence. Operators should inspect error-level startup output and persisted\nincidents instead of relying only on exit code or HTTP 200.\n\nSecurity regression covers cross-tenant identifiers, missing and insufficient\npermissions, malformed graph metadata, oversized input, executable strings,\nsecret-bearing output, replayed correlation identifiers, and unauthorized\nrecovery. Performance regression covers large but bounded graphs, navigation,\ntask queues, audit history, and retry storms. Each boundary needs a documented\nlimit and a stable rejection or degradation behavior.\n\n## Common mistakes\n\n- Testing only successful API responses while skipping permissions, stale state, retry bounds, recovery, and restart behavior.\n- Accepting UI refresh workarounds or manually repaired database records as valid regression evidence.\n\n## Verification\n\nRun the complete Process contract suite and bounded fresh local acceptance against empty databases, then repeat the live smoke against retained data and inspect startup logs for error-level output.\nA beginner developer should be able to follow the same regression sequence without manual database repair.\n",
+      "previous": {
+        "title": "Visual Workflow Designer Contract",
+        "route": "/docs/framework/process/visual-designer"
+      },
+      "next": {
+        "title": "Docs overview",
+        "route": "/docs/framework/docs-overview"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.process",
+        "technicalModule": "workflow",
+        "path": "content/nodics.process/qa-regression-guide.md",
+        "wordCount": 602,
+        "checksum": "ed282d7511a1ebe559c098b8637c681fb73c349612ddf55f225bece5062f0c0c"
+      }
+    },
+    "active": true
+  },
+  "record40": {
     "code": "nodicsDocsComponentdocsOverview",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -11459,8 +15517,8 @@ module.exports = {
       ],
       "searchText": "Docs overview How Nodics framework documentation is authored, generated, validated, imported, rendered, and kept separate from Axis and customer project documentation. # Nodics Docs overview\n\n`nodics.docs` is the standard Nodics framework documentation module. It owns\nframework documentation content that is imported into WCMS and rendered by\nAxis. It is not a frontend, not a runtime server, and not a dumping ground for\nevery page a user can see. Its job is narrower and more important: preserve\nthe reusable framework story, generate governed CMS records, and make that\ncontent available through the same backend-owned content-pack lifecycle used\nby other Nodics capabilities.\n\nFor a beginner, think of `nodics.docs` as the framework library. Axis is the\nreading application. WCMS is the library catalogue and delivery desk. The docs\nmodule owns the books about the framework. Axis can display those books, but\nAxis does not own them.\n\n## What this is\n\nThis page explains the documentation module as a functional capability. It is\nwritten for business evaluators who want to understand how Nodics teaches its\nplatform, developers who need to add or change framework documentation,\noperators who need to import documentation content safely, testers who need to\nverify release integrity, and AI tools that must not place documentation in the\nwrong repository.\n\n`nodics.docs` owns framework-level documentation such as:\n\n- what Nodics is and what business problem it solves;\n- modular architecture and ownership;\n- local quick start and verification;\n- customization and extension;\n- runtime and DevOps guidance;\n- Core, Platform, WCMS, Media, Cron, Docs, and future standard module\n  explanations.\n\nIt does not own Axis product documentation, customer project documentation,\ncustomer-specific setup, or frontend renderer code.\n\n## Why it exists\n\nEnterprise frameworks fail adoption when the product can run but nobody can\nexplain it. A new business user needs to understand the problem being solved.\nA new developer needs to know what to clone, which commands to run, and where\nto customize safely. An operator needs to know which servers, imports,\nproperties, logs, and rollback paths matter. An AI tool needs a durable\nauthority that survives beyond one chat.\n\nWithout a documentation module, framework guidance tends to scatter across\nREADME files, old project notes, frontend pages, temporary migration folders,\nand generated data. That creates a second authority problem. `nodics.docs`\nkeeps framework documentation in one backend-owned module and publishes it as\nan immutable content release that WCMS can validate and import.\n\n## Business value\n\nDocumentation is part of the product, not an afterthought. Good framework\ndocumentation reduces onboarding cost, sales friction, partner confusion,\nsupport time, and customization risk. It helps a business evaluator understand\nwhy Nodics exists before asking a developer to inspect code. It helps a\npartner developer avoid unsafe shortcuts. It helps an operations team rebuild\nan environment from source-controlled content instead of relying on manually\nedited database records.\n\nThe business value is strongest when documentation is governed the same way as\nother enterprise content:\n\n| Business concern | `nodics.docs` answer |\n| --- | --- |\n| First-time adoption | Guided pages explain what Nodics is, how to run it, and what to inspect first. |\n| Partner customization | The customization guide explains configuration-first and customer-module-first extension. |\n| Operational confidence | Runtime and verification pages explain servers, imports, registry, and recovery. |\n| Governance | Generated CMS records and manifests prevent silent content drift. |\n| Multi-project clarity | Framework docs, Axis docs, and customer docs remain separate even when Axis renders them together. |\n\n## Beginner mental model\n\nImagine a company library. The library has books, a catalogue, shelves, access\nrules, and a reading room. In Nodics:\n\n- `nodics.docs` writes and owns the framework books.\n- The generator converts those books into WCMS records.\n- WCMS imports the records and delivers pages.\n- Axis is the reading room where employees open documentation.\n- Customer projects write their own customer/project books in their own\n  repository.\n\nThat separation matters because a book about the framework should not be\nrewritten by a customer project, and a customer-specific guide should not be\npublished as if every Nodics adopter used the same project.\n\n## How it works\n\nThe module starts from authored Markdown and a catalogue. The generator reads\nthe catalogue, parses each page, embeds governed local images as safe data\npayloads, creates CMS catalogs, sites, page records, component records, route\nrecords, renderer mappings, and a release manifest. WCMS then validates and\nimports the release. Axis renders the delivered documentation pages through\nits documentation renderer.\n\n```mermaid\nflowchart LR\n  Markdown[\"Authored Markdown\"] --> Catalogue[\"Documentation catalogue\"]\n  Catalogue --> Generator[\"Content-pack generator\"]\n  Generator --> Data[\"Generated CMS records\"]\n  Generator --> Manifest[\"Release manifest and checksums\"]\n  Data --> WCMS[\"WCMS import\"]\n  Manifest --> WCMS\n  WCMS --> Axis[\"Axis documentation renderer\"]\n  Axis --> Reader[\"Business, developer, operator, QA, AI reader\"]\n```\n\nThe generated data is committed because the runtime import contract needs\ndeterministic records and checksums. The generated data is not the source of\ntruth. If a page title, body, route, image, or navigation entry is wrong, fix\nthe Markdown or catalogue and regenerate.\n\n## Documentation ownership map\n\n| Documentation product | Source owner | Runtime delivery | What must not happen |\n| --- | --- | --- | --- |\n| Framework docs | `nodics.ai/nodics.docs` | WCMS imports framework docs pack and Axis renders `/docs/framework` routes. | Do not store framework docs in the frontend repository. |\n| Axis product docs | `nodics.ai/nodics.platform/modules/axis` | WCMS imports Axis docs pack and Axis renders `/docs/nodics-axis`. | Do not put Axis product docs in `nodics.docs` just because Axis displays them. |\n| Customer project docs | Owning customer project | WCMS imports the project docs pack and Axis renders the project docs source. | Do not hardcode a customer project into framework docs. |\n| Swagger/API docs | Registered runtime modules | Axis groups API references by runtime/module discovery. | Do not invent API groups in the browser without backend evidence. |\n\nThis matrix is one of the most important documentation contracts in Nodics.\nNavigation may group products together for a nice user experience, but source\nownership remains separate.\n\n## Step-by-step usage\n\nTo update framework documentation:\n\n1. Edit the authored Markdown page under `nodics.docs/content`.\n2. If you add a new page, add it to `nodics.docs/catalogue.json`.\n3. If the page uses an image, place the image under\n   `nodics.docs/content/assets/images` and reference it with a relative path.\n4. Bump the documentation release when generated output or release content\n   changes.\n5. Run the documentation generator.\n6. Run the documentation tests.\n7. Import the release through WCMS in a local or fresh bootstrap environment.\n8. Open Axis documentation and verify the page renders with headings, tables,\n   diagrams, and images.\n\nFor example, if you add a future Commerce module overview, the page belongs in\n`nodics.docs` only if it explains reusable framework Commerce behavior. If a\ncustomer project adds customer-specific Commerce setup, that guide belongs in\nthe customer project.\n\n## Configuration and source map\n\nImportant source files are:\n\n| Artifact | Purpose |\n| --- | --- |\n| `catalogue.json` | Authored list of framework documentation pages, owners, routes, summaries, and release version. |\n| `content/**.md` | Human-authored canonical documentation source. |\n| `content/assets/images` | Governed images used by documentation pages. |\n| `scripts/generate-content-pack.mjs` | Converts source documentation into generated CMS data and manifest files. |\n| `scripts/validate.mjs` | Enforces release, ownership, depth, structure, image/table/diagram, and unsafe-reference checks. |\n| `data/core/data/documentation` | Generated CMS records imported by WCMS. |\n| `data/manifest.json` | Aggregate module data manifest with generated documentation release and checksum evidence. |\n\nGenerated output must be recreated from source definitions. Do not repair a\nchecksum by editing generated files directly.\n\n## Customization and extension\n\nPartners should not customize framework documentation inside `nodics.docs`\nunless the change improves reusable framework guidance. A customer project can\nadd its own documentation content pack to explain project modules, local setup,\nsample data, customer-specific business rules, or environment-specific\noperations. Axis can display that customer documentation alongside framework\ndocumentation after BackOffice and WCMS advertise it.\n\nThe safe extension ladder is:\n\n1. improve the existing framework page when the guidance is reusable;\n2. add a new `nodics.docs` page when a standard framework module needs public\n   explanation;\n3. add Axis product docs in the Platform Axis backend module when the topic is\n   Axis behavior;\n4. add customer docs in the customer project when the topic is project-owned;\n5. add frontend renderer behavior in `nodics.axis` only when presentation code\n   is required.\n\n## DevOps and production notes\n\nDocumentation releases are operational artifacts. A production environment\nshould import them through WCMS, preserve import history, reject changed\nchecksums under the same version, and make rollback possible by installing a\nknown previous release. Images should remain governed content payloads or safe\nmedia references rather than copied frontend files.\n\nOperators should monitor documentation import status, checksum failures,\nroute delivery, missing renderer errors, and image rendering. A documentation\npage that is correct in Git but not imported into WCMS is not live. A page\nthat is imported but points to missing images is not acceptable for business\nonboarding.\n\n## Security, tenant, and governance notes\n\nDocumentation should never expose credentials, private URLs, local machine\npaths, provider secrets, database passwords, tokens, or customer-private\nconfiguration. It may explain where secrets belong, but it must not publish\nsecret values. Public documentation should also avoid implying that one\nreference project name is mandatory for all customers.\n\nTenant and enterprise behavior should be described carefully. If a behavior is\nimplemented, say so. If it is a design direction, mark it as planned or future.\nDo not invent runtime behavior to make documentation look complete.\n\n## Troubleshooting\n\n| Symptom | Likely cause | Safe recovery |\n| --- | --- | --- |\n| Documentation release is invalid | Markdown, catalogue, or generated manifest changed without regeneration or version bump. | Fix source, bump release when needed, regenerate, rerun tests. |\n| Axis documentation page shows recovery | WCMS has not imported the pack, route is missing, or WCMS is unavailable. | Check WCMS, import status, generated route data, and page route. |\n| Image displays as text or broken link | Markdown image path or generator image embedding failed. | Verify image exists under `content/assets/images`, path is relative, and generated component contains an image block. |\n| Page appears under wrong product | Documentation source ownership or BackOffice documentation registry is wrong. | Move source to the owning module/project and regenerate the correct pack. |\n| Customer-specific setup appears in framework docs | Ownership drift. | Move the project-specific guide to the customer project documentation pack. |\n\n## Common mistakes\n\n- Writing short summaries when the page needs beginner-level explanation,\n  examples, operations notes, and verification.\n- Creating a new page when an existing canonical page should be expanded.\n- Putting customer project documentation into the framework docs module.\n- Putting Axis product documentation into the frontend repository.\n- Editing generated data or manifests by hand.\n- Forgetting to bump the release after changing generated content.\n- Importing docs without opening the rendered Axis page to verify diagrams,\n  tables, images, and navigation.\n\n## Verification\n\nRun the documentation generator and validator from `nodics.docs`. Then run the\nframework quality checks that cover documentation and AI guidance. For runtime\nproof, import the generated release through WCMS and open the Axis\ndocumentation routes. The live result should show Framework documentation as a\nseparate documentation product with rendered pages, headings, tables, diagrams,\nand images.\n\nFor a fresh local proof, run the customer project's local acceptance script\nafter database reset. The evidence should show documentation releases current,\nWCMS record counts healthy, Axis documentation routes returning HTTP 200, and\nimages embedded as renderable documentation blocks. If only the Markdown file\nlooks correct but the generated pack, import status, or Axis route fails, the\ndocumentation change is not complete.\n\n## Related pages\n\nRead **What is Nodics?** for the product story, **Modular architecture and\nownership** for the source-ownership model, **Local quick start** for the\nfirst runnable setup, **Customization and extension guide** before moving\ndocumentation between owners, and **WCMS content management** to understand\nhow generated documentation records become delivered pages.\n",
       "previous": {
-        "title": "Communication, delivery, and verification",
-        "route": "/docs/framework/communication-overview"
+        "title": "Process QA and Regression Guide",
+        "route": "/docs/framework/process/qa-regression-guide"
       },
       "next": null,
       "source": {

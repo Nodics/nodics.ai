@@ -17,6 +17,13 @@
  * @override Project, environment, server, node, tenant, or customer layers may refine presentation and feature policy without changing functional identity.
  */
 module.exports = {
+    apiExposure: {
+        categories: {
+            dataImport: {
+                enabled: true
+            }
+        }
+    },
     engagement: {
         capabilities: {
             contactSubmission: true,
