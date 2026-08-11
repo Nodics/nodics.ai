@@ -65,3 +65,42 @@ let validModules = validate({
 });
 assert.strictEqual(validModules.state.success, true);
 assert.deepStrictEqual(validModules.request.data, {});
+
+global.NODICS = {
+    isModuleActive: function (moduleName) {
+        return moduleName === 'activeTarget';
+    }
+};
+
+let buildHeaderState = {};
+let headerRequest = {
+    data: {
+        headerFiles: {
+            mixedHeaders: [
+                require.resolve('./fixtures/system-import/mixedTargetHeader.js')
+            ]
+        }
+    },
+    importRun: {
+        summary: {
+            enabledHeaders: 0,
+            disabledHeaders: 0
+        },
+        headers: []
+    }
+};
+
+createService().buildHeaderInstances(headerRequest, {}, {
+    nextSuccess: function () {
+        buildHeaderState.success = true;
+    },
+    error: function (_request, _response, error) {
+        buildHeaderState.error = error;
+    }
+});
+
+assert.strictEqual(buildHeaderState.success, true);
+assert.deepStrictEqual(Object.keys(headerRequest.data.headers), ['activeData']);
+assert.strictEqual(headerRequest.importRun.summary.enabledHeaders, 1);
+assert.strictEqual(headerRequest.importRun.summary.disabledHeaders, 1);
+assert.strictEqual(headerRequest.importRun.headers[0].targetModule, 'activeTarget');

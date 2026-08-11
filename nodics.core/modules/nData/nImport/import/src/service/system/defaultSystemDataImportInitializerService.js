@@ -432,7 +432,8 @@ module.exports = {
             _.each(internalHeaderObj, (headerFile, headerFileName) => {
                 _.each(headerFile, (moduleHeaders, moduleName) => {
                     _.each(moduleHeaders, (header, headerName) => {
-                        if (header.options.enabled) {
+                        let isTargetModuleActive = !NODICS.isModuleActive || NODICS.isModuleActive(moduleName);
+                        if (header.options.enabled && isTargetModuleActive) {
                             if (!request.data.headers) {
                                 request.data.headers = {};
                             }
