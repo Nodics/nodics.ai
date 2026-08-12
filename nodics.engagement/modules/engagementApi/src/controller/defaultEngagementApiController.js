@@ -26,6 +26,8 @@ module.exports = {
     submitContact: function (request, callback) { return this.invoke('submitContact', request, callback); },
     /** Lists published testimonials. */
     listTestimonials: function (request, callback) { return this.invoke('listTestimonials', request, callback); },
+    /** Submits one public testimonial candidate for governed curation. */
+    submitTestimonialCandidate: function (request, callback) { return this.invoke('submitTestimonialCandidate', request, callback); },
     /** Handles list own submissions within the module-owned contract. */
     listOwnSubmissions: function (request, callback) { return this.invoke('listOwnSubmissions', request, callback); },
     /** Handles get own submission within the module-owned contract. */

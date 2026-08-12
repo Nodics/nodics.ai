@@ -18,7 +18,7 @@
  */
 module.exports = {
     engagementApi: {
-        anonymousRouteAllowList: ['getActiveForm', 'submitContact', 'listTestimonials', 'listReviews', 'getReviewAggregate', 'submitFeedback'],
+        anonymousRouteAllowList: ['getActiveForm', 'submitContact', 'listTestimonials', 'submitTestimonialCandidate', 'listReviews', 'getReviewAggregate', 'submitFeedback'],
         limits: { maximumPayloadBytes: 65536, maximumQueryLimit: 100, defaultQueryLimit: 25 },
         projections: {
             publicForm: ['code', 'submissionType', 'version', 'structure', 'sites', 'locales', 'channels'],
@@ -28,6 +28,7 @@ module.exports = {
             , contactAcknowledgement: ['referenceCode', 'duplicate', 'verificationRequired'],
             handoffRecovery: ['code', 'status', 'reconciled', 'workerId', 'examined', 'succeeded', 'retryPending', 'deadLetter', 'skipped', 'results'],
             publicTestimonial: ['candidateCode', 'versionCode', 'projectionVersion', 'publicText', 'attribution', 'disclosures', 'channel', 'region', 'locale', 'wcmsPlacementCodes', 'publishedAt', 'expiresAt'],
+            testimonialAcknowledgement: ['referenceCode', 'status', 'verificationRequired'],
             testimonialConsent: ['code', 'candidateCode', 'status', 'attribution', 'channels', 'regions', 'likenessAllowed', 'mediaAllowed', 'policyVersion', 'validFrom', 'expiresAt', 'withdrawnAt'],
             testimonialAction: ['testimonialCode', 'status', 'hiddenCount', 'examined', 'repaired', 'projections', 'withdrawnAt']
             , customerReview: ['code', 'targetType', 'targetCode', 'overallRating', 'dimensionRatings', 'title', 'body', 'advantages', 'disadvantages', 'recommendation', 'mediaCodes', 'site', 'locale', 'channel', 'status', 'moderationMode', 'revision', 'submittedAt', 'withdrawnAt', 'correlationId']

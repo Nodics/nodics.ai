@@ -31,6 +31,8 @@ module.exports = {
     submitContact: function (request) { return this.anonymous('submitContact', request, 'contactAcknowledgement'); },
     /** Lists safe published testimonial DTOs. */
     listTestimonials: function (request) { return this.anonymous('listTestimonials', request, 'publicTestimonial'); },
+    /** Accepts a public testimonial candidate without publishing it. */
+    submitTestimonialCandidate: function (request) { return this.anonymous('submitTestimonialCandidate', request, 'testimonialAcknowledgement'); },
     /** Handles list own submissions within the module-owned contract. */
     listOwnSubmissions: function (request) { return this.invoke('listOwnSubmissions', request, 'customerSubmission', 'customer'); },
     /** Handles get own submission within the module-owned contract. */

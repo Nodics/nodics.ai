@@ -22,7 +22,7 @@ module.exports = {
     "page": "nodicsDocsPageframeworkOverview",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record1": {
@@ -34,7 +34,7 @@ module.exports = {
     "page": "nodicsDocsPageframeworkModularArchitecture",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record2": {
@@ -46,7 +46,7 @@ module.exports = {
     "page": "nodicsDocsPageframeworkLocalQuickStart",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record3": {
@@ -58,7 +58,7 @@ module.exports = {
     "page": "nodicsDocsPageframeworkLocalVerificationChecklist",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record4": {
@@ -70,7 +70,7 @@ module.exports = {
     "page": "nodicsDocsPageframeworkCustomizationGuide",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record5": {
@@ -82,7 +82,7 @@ module.exports = {
     "page": "nodicsDocsPageframeworkDevopsRuntime",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record6": {
@@ -94,7 +94,7 @@ module.exports = {
     "page": "nodicsDocsPageframeworkFutureModuleDocumentationPattern",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record7": {
@@ -106,7 +106,7 @@ module.exports = {
     "page": "nodicsDocsPagecoreOverview",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record8": {
@@ -118,7 +118,7 @@ module.exports = {
     "page": "nodicsDocsPageplatformOverview",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record9": {
@@ -130,7 +130,7 @@ module.exports = {
     "page": "nodicsDocsPageplatformModuleRegistry",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record10": {
@@ -142,7 +142,7 @@ module.exports = {
     "page": "nodicsDocsPagewcmsOverview",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record11": {
@@ -154,7 +154,7 @@ module.exports = {
     "page": "nodicsDocsPagewcmsMediaManagement",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record12": {
@@ -166,7 +166,7 @@ module.exports = {
     "page": "nodicsDocsPagecronOperations",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record13": {
@@ -178,7 +178,7 @@ module.exports = {
     "page": "nodicsDocsPageengagementCustomerReviews",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record14": {
@@ -190,7 +190,7 @@ module.exports = {
     "page": "nodicsDocsPageengagementCustomerFeedback",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record15": {
@@ -202,7 +202,7 @@ module.exports = {
     "page": "nodicsDocsPageengagementUnifiedOperations",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record16": {
@@ -214,7 +214,7 @@ module.exports = {
     "page": "nodicsDocsPageengagementGovernedAutomation",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record17": {
@@ -226,7 +226,7 @@ module.exports = {
     "page": "nodicsDocsPageengagementEnterpriseOperations",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record18": {
@@ -238,7 +238,7 @@ module.exports = {
     "page": "nodicsDocsPagecommerceOverview",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record19": {
@@ -250,7 +250,7 @@ module.exports = {
     "page": "nodicsDocsPagecommerceBaseFoundations",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record20": {
@@ -262,7 +262,7 @@ module.exports = {
     "page": "nodicsDocsPagecommerceCartOrder",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record21": {
@@ -274,7 +274,7 @@ module.exports = {
     "page": "nodicsDocsPagecommercePaymentFulfillment",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record22": {
@@ -286,7 +286,7 @@ module.exports = {
     "page": "nodicsDocsPagecommerceReturnsRefunds",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record23": {
@@ -298,7 +298,7 @@ module.exports = {
     "page": "nodicsDocsPagecommerceEnterpriseOperations",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record24": {
@@ -310,7 +310,7 @@ module.exports = {
     "page": "nodicsDocsPagecommunicationOverview",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record25": {
@@ -322,7 +322,7 @@ module.exports = {
     "page": "nodicsDocsPageprocessOverview",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record26": {
@@ -334,7 +334,7 @@ module.exports = {
     "page": "nodicsDocsPageprocessRuntimeLifecycle",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record27": {
@@ -346,7 +346,7 @@ module.exports = {
     "page": "nodicsDocsPageprocessIncidentRecovery",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record28": {
@@ -358,7 +358,7 @@ module.exports = {
     "page": "nodicsDocsPageprocessFirstWorkflow",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record29": {
@@ -370,7 +370,7 @@ module.exports = {
     "page": "nodicsDocsPageprocessFirstHumanTask",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record30": {
@@ -382,7 +382,7 @@ module.exports = {
     "page": "nodicsDocsPageprocessBusinessValue",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record31": {
@@ -394,7 +394,7 @@ module.exports = {
     "page": "nodicsDocsPageprocessDeveloperCustomization",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record32": {
@@ -406,7 +406,7 @@ module.exports = {
     "page": "nodicsDocsPageprocessActionAdapters",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record33": {
@@ -418,7 +418,7 @@ module.exports = {
     "page": "nodicsDocsPageprocessCustomProjectExtension",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record34": {
@@ -430,7 +430,7 @@ module.exports = {
     "page": "nodicsDocsPageprocessDevopsTopology",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record35": {
@@ -442,7 +442,7 @@ module.exports = {
     "page": "nodicsDocsPageprocessProcessCronRuntime",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record36": {
@@ -454,7 +454,7 @@ module.exports = {
     "page": "nodicsDocsPageprocessScheduledAutomation",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record37": {
@@ -466,7 +466,7 @@ module.exports = {
     "page": "nodicsDocsPageprocessVisualDesigner",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record38": {
@@ -478,7 +478,7 @@ module.exports = {
     "page": "nodicsDocsPageprocessQaRegressionGuide",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record39": {
@@ -490,7 +490,7 @@ module.exports = {
     "page": "nodicsDocsPagedocsOverview",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   }
 };

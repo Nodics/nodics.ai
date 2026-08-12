@@ -147,8 +147,7 @@ function createHarness(fixture, enabled) {
                 get: request => {
                     let matches = records.filter(record =>
                         record.tenant === request.tenant &&
-                        record.contentPackCode === request.query.contentPackCode &&
-                        record.status === request.query.status
+                        Object.entries(request.query || {}).every(([key, value]) => record[key] === value)
                     );
                     return Promise.resolve({ result: matches });
                 }
@@ -243,6 +242,18 @@ function createHarness(fixture, enabled) {
         });
         assert.strictEqual(current.data.state, 'CURRENT');
         assert.strictEqual(current.data.installedVersion, '1.0.0');
+
+        let selectedByCreated = harness.service.selectLatestInstalledRelease([
+            {
+                contentPackVersion: '1.0.0',
+                finishedAt: '2026-01-01T00:00:00.000Z'
+            },
+            {
+                contentPackVersion: '1.1.0',
+                created: '2026-02-01T00:00:00.000Z'
+            }
+        ]);
+        assert.strictEqual(selectedByCreated.contentPackVersion, '1.1.0');
 
         fs.writeFileSync(fixture.generatedFile, 'module.exports = { changed: true };\n');
         fixture.manifest.generatedHashes['core/headers/contentHeader.js'] =

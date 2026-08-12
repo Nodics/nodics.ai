@@ -22,7 +22,7 @@ module.exports = {
     "page": "axisDocsPageoverview",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record1": {
@@ -34,7 +34,7 @@ module.exports = {
     "page": "axisDocsPagearchitecture",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record2": {
@@ -46,7 +46,7 @@ module.exports = {
     "page": "axisDocsPagetechnologystack",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record3": {
@@ -58,7 +58,7 @@ module.exports = {
     "page": "axisDocsPagedesignsystem",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record4": {
@@ -70,7 +70,7 @@ module.exports = {
     "page": "axisDocsPagecmsrenderers",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record5": {
@@ -82,7 +82,7 @@ module.exports = {
     "page": "axisDocsPagedocumentationcontent",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record6": {
@@ -94,7 +94,7 @@ module.exports = {
     "page": "axisDocsPageemployeeaccess",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record7": {
@@ -106,7 +106,7 @@ module.exports = {
     "page": "axisDocsPageassistant",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record8": {
@@ -118,7 +118,7 @@ module.exports = {
     "page": "axisDocsPageschemaworkbench",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record9": {
@@ -130,7 +130,7 @@ module.exports = {
     "page": "axisDocsPagepagedesigner",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record10": {
@@ -142,7 +142,7 @@ module.exports = {
     "page": "axisDocsPagemodulehealth",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record11": {
@@ -154,7 +154,7 @@ module.exports = {
     "page": "axisDocsPageimportsexports",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record12": {
@@ -166,7 +166,7 @@ module.exports = {
     "page": "axisDocsPagemediamanagement",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record13": {
@@ -178,7 +178,7 @@ module.exports = {
     "page": "axisDocsPagecustomerengagement",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record14": {
@@ -190,7 +190,7 @@ module.exports = {
     "page": "axisDocsPageopenapireference",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record15": {
@@ -202,7 +202,7 @@ module.exports = {
     "page": "axisDocsPagefeaturedelivery",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record16": {
@@ -214,7 +214,7 @@ module.exports = {
     "page": "axisDocsPageimplementationcontract",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   }
 };

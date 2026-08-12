@@ -23,6 +23,7 @@ schemaPolicies: { testimonial: {
 } },
 testimonial: {
     enabled: false,
+    intake: { publicCandidateMaximumTextLength: 1000 },
     editorial: { requireCustomerConfirmation: true, allowedVariants: ['SHORT_QUOTE', 'FULL_STORY', 'CASE_STUDY_TEASER', 'VIDEO'] },
     consent: { required: true, defaultPolicyVersion: '1', requireExplicitChannels: true, requireExplicitRegions: true },
     publication: { domain: 'testimonial', emergencyHideSynchronous: true, withdrawalSynchronous: true, defaultLocale: 'en' },

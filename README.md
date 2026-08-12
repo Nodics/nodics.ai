@@ -40,6 +40,31 @@ servers declare what they extend. Customer projects add behavior later in the
 load order instead of rewriting framework source. Axis renders what the backend
 declares as registered, active, and authorized.
 
+## From AI-built MVP to scalable product
+
+AI-assisted development and vibe coding are changing how quickly teams can
+prove an idea. A startup can now assemble screens, flows, and a convincing MVP
+in days. That speed is valuable, but the MVP often carries hidden structural
+risk: unclear module ownership, mixed business rules, direct data access,
+missing tenant boundaries, weak API contracts, limited tests, no BackOffice
+model, and no reliable path from prototype to production operations.
+
+Nodics is designed for the next step after the MVP works. It lets teams keep
+the validated customer journey while moving the implementation onto governed
+framework contracts:
+
+- reusable backend capabilities instead of one-off application code;
+- schemas, APIs, imports, documentation, and module ownership in known places;
+- Axis administration for operational control instead of hidden scripts;
+- project-owned customization that does not fork the framework;
+- security, audit, runtime composition, and release evidence from the start;
+- AI assistance that accelerates coding and administration without removing
+  human authority.
+
+The goal is not to slow down experimentation. The goal is to make fast
+experimentation survivable when the product gains real customers, integrations,
+tenants, partners, support expectations, and production reviews.
+
 ## What a business gains
 
 For a business evaluator, the important question is not “How many folders are

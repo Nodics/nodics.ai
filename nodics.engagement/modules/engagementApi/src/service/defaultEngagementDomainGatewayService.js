@@ -33,6 +33,8 @@ module.exports = {
     actOnContact: function (request) { return this.contact('act', request); }, runHandoffRecovery: function (request) { return this.contact('runHandoffRecovery', request); }, retryHandoff: function (request) { return this.contact('retryHandoff', request); }, reconcileHandoff: function (request) { return this.contact('reconcileHandoff', request); },
     /** Lists published testimonial projections. */
     listTestimonials: function (request) { return this.testimonial('listPublished', request); },
+    /** Submits one testimonial candidate to the testimonial domain. */
+    submitTestimonialCandidate: function (request) { return this.testimonial('submitCandidate', request); },
     /** Gets customer-owned testimonial consent. */
     getOwnTestimonialConsent: function (request) { return this.testimonial('getOwnConsent', request); },
     /** Withdraws customer-owned testimonial consent. */

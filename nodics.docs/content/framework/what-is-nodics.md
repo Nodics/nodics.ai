@@ -29,6 +29,36 @@ Customer customizations load after framework behavior instead of editing the
 framework directly. Axis renders employee workspaces, but backend modules keep
 authority over data and operations.
 
+## From vibe-coded MVP to scalable product
+
+AI-assisted development can create an MVP quickly. That is a major advantage
+for founders, product teams, and delivery partners because it shortens the
+distance between idea and working experience. The problem is that a fast MVP is
+not automatically a scalable product.
+
+Many AI-built or vibe-coded MVPs work well for the first demo but become
+expensive when the product needs:
+
+- multiple tenants, enterprises, brands, or regions;
+- secure employee and customer access;
+- governed schemas, APIs, imports, exports, and media;
+- content and operational administration;
+- repeatable deployment, monitoring, logs, and rollback;
+- safe customizations for different customers;
+- documentation that explains ownership rather than only files;
+- tests and contracts that let the system change without breaking silently.
+
+Nodics addresses this gap by giving the MVP a durable foundation. The customer
+journey can still move fast, but the implementation is organized through
+framework modules, project-owned extensions, runtime composition, data
+releases, Axis administration, and documentation ownership. AI remains useful,
+but it works inside a governed architecture instead of becoming the hidden
+author of an unmaintainable codebase.
+
+The promise is simple: use AI to discover and prove the product faster, then
+use Nodics to make that product explainable, secure, operable, and ready to
+scale.
+
 ## Why a business should care
 
 For a business evaluator, the important point is not the folder structure. The

@@ -6,26 +6,26 @@
       "kind": "CONTENT_PACK",
       "contentPath": "core",
       "pack": "nodics.docs",
-      "version": "0.14.0",
+      "version": "0.14.2",
       "sourceMode": "catalogue-markdown-source",
       "sourceAuthority": "catalogue.json",
       "sites": [
         "nodicsDocumentationSite"
       ],
-      "accessMode": "AUTHENTICATED",
+      "accessMode": "PUBLIC",
       "pages": 40,
       "components": 41,
       "routes": 40,
-      "releaseChecksum": "07502b65dbe583e84a50af930a6152abfba82ab04ced3e3da3e87c3e2f780c5d",
+      "releaseChecksum": "df1b31d769f1b7d31e2899e5dd1341d2016f3667f0b2ffde8cabf5f39ddce197",
       "generatedHashes": {
         "core/data/documentation/nodicsDocumentationSiteData.js": "2c3a262be1c3d672c36c0f9f89dc9117c8b04297af1e1501491c1c7afc7e8089",
         "core/data/documentation/nodicsDocumentationTypeCodeData.js": "73fb58f4eb72ab7ca3f3bb652a3913c4836e729f8a4ed87b3571791880f31f6c",
         "core/data/documentation/nodicsDocumentationRendererData.js": "91d17435c7a768141ae19f8b0713fb62f1dca996bed98ac1e2af82990ca9f09c",
         "core/data/documentation/nodicsDocumentationSlotData.js": "d4f874d520dae6b0256daf3e75cdd4f9e1e8e151729ce6f4122803a99011d6e2",
         "core/data/documentation/nodicsDocumentationTemplateData.js": "b163637dce87cb76596dfd1968a48c8e38061ec7e633d67b16e79a9e412d1045",
-        "core/data/documentation/nodicsDocumentationComponentData.js": "0865a9f03a9e9d736d4b04c981bf0670fc09bc08f8c9198074bf855fe604875b",
+        "core/data/documentation/nodicsDocumentationComponentData.js": "5e8255ace0e2119e5ac152452ae9dc39176fcccde224fa9baa204b33002cc64c",
         "core/data/documentation/nodicsDocumentationPageData.js": "5bae6b321883b2e7ffc057f5173ff1ae1b24d2f4530ea143b8dc8a2a50317b9b",
-        "core/data/documentation/nodicsDocumentationRouteData.js": "22f549512cea9a2002f1b743ac72400f1a346867c07f69e54a2f9af3c558a951",
+        "core/data/documentation/nodicsDocumentationRouteData.js": "3084dae97b6aaaffc25668adbc6bd6c85827680f802f48c695964df4f5bc41be",
         "core/headers/nodicsDocumentationContentPackHeader.js": "62a2db95805d6da554c76c802f0aacb469ca86e67110e0e662a8f73aabcafbdd"
       }
     }

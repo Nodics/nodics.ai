@@ -59,7 +59,7 @@ module.exports = {
         let activeKey = this.createTenantPackKey(tenant, packCode);
         let activeRun = this.activeImports.get(activeKey);
         let availableRelease = this.inspectRelease(context);
-        return this.findInstalledRelease(tenant, packCode).then(installedRelease => {
+        return this.findInstalledRelease(tenant, packCode, availableRelease).then(installedRelease => {
             installedRelease = installedRelease || this.recentCompletions.get(activeKey);
             return {
                 code: 'SUC_IMP_00000',
@@ -89,7 +89,7 @@ module.exports = {
         if (!release.available) {
             return Promise.reject(this.createError('ERR_IMP_00004', 'Configured content-pack release is unavailable'));
         }
-        return this.findInstalledRelease(tenant, packCode).then(installedRelease => {
+        return this.findInstalledRelease(tenant, packCode, release).then(installedRelease => {
             this.validateUpdatePolicy(context, release, installedRelease);
             if (installedRelease &&
                 installedRelease.contentPackVersion === release.version &&
@@ -342,7 +342,7 @@ module.exports = {
     },
 
     /** Finds the installed release from authoritative import history. */
-    findInstalledRelease: function (tenant, packCode) {
+    findInstalledRelease: function (tenant, packCode, availableRelease) {
         let historyService = SERVICE.DefaultImportRunHistoryService;
         if (!historyService || typeof historyService.getImportRunService !== 'function') {
             return Promise.resolve(undefined);
@@ -351,18 +351,37 @@ module.exports = {
         if (!modelService || typeof modelService.get !== 'function') {
             return Promise.resolve(undefined);
         }
-        return modelService.get({
+        let findLatestRelease = () => modelService.get({
             tenant: tenant,
             query: {
                 contentPackCode: packCode,
                 status: 'COMPLETED'
             },
             searchOptions: {
-                limit: 100,
-                sort: { creationTime: -1 }
+                limit: 100
             }
         }).then(result => this.selectLatestInstalledRelease(result && result.result))
             .catch(() => undefined);
+        if (!availableRelease || !availableRelease.available ||
+            !availableRelease.version || !availableRelease.checksum) {
+            return findLatestRelease();
+        }
+        return modelService.get({
+            tenant: tenant,
+            query: {
+                contentPackCode: packCode,
+                contentPackVersion: availableRelease.version,
+                contentPackChecksum: availableRelease.checksum,
+                status: 'COMPLETED'
+            },
+            searchOptions: {
+                limit: 1
+            }
+        }).then(result => {
+            let exactMatches = result && result.result || [];
+            if (exactMatches.length > 0) return exactMatches[0];
+            return findLatestRelease();
+        }).catch(() => findLatestRelease());
     },
 
     /**
@@ -377,11 +396,11 @@ module.exports = {
             if (!latest) return release;
             let releaseTime = new Date(
                 release.finishedAt || release.startedAt || release.updateTime ||
-                release.creationTime || 0
+                release.updated || release.creationTime || release.created || 0
             ).getTime();
             let latestTime = new Date(
                 latest.finishedAt || latest.startedAt || latest.updateTime ||
-                latest.creationTime || 0
+                latest.updated || latest.creationTime || latest.created || 0
             ).getTime();
             return releaseTime > latestTime ? release : latest;
         }, undefined);
