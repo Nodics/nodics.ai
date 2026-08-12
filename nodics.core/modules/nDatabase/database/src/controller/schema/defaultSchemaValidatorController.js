@@ -32,7 +32,8 @@ module.exports = {
      * @returns {Promise|undefined} Promise when no callback is supplied.
      */
     updateSchemaValidator: function (request, callback) {
-        let moduleName = request.moduleName;
+        let body = request.httpRequest && request.httpRequest.body || {};
+        let moduleName = body.moduleName || body.targetModule || request.moduleName;
         if (request.httpRequest.params.schema) {
             if (callback) {
                 FACADE.DefaultSchemaValidatorFacade.updateSchemaValidator(moduleName, request.httpRequest.params.schema).then(success => {

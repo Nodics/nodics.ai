@@ -20,6 +20,8 @@ module.exports = {
     /** Validates one Editorial draft. */ validate: function (request, callback) { return this.invoke('validate', request, callback); },
     /** Evaluates one Editorial draft for workflow readiness. */ evaluateReadiness: function (request, callback) { return this.invoke('evaluateReadiness', request, callback); },
     /** Submits a ready exact revision to Process. */ submit: function (request, callback) { return this.invoke('submit', request, callback); },
+    /** Approves a submitted Editorial review. */ approve: function (request, callback) { return this.invoke('approve', request, callback); },
+    /** Requests changes for a submitted Editorial review. */ reject: function (request, callback) { return this.invoke('reject', request, callback); },
     /** Reads Process-owned workflow detail. */ inspectWorkflow: function (request, callback) { return this.invoke('inspectWorkflow', request, callback); },
     /** Immediately publishes an approved exact revision through nPublish. */ publish: function (request, callback) { return this.invoke('publish', request, callback); },
     /** Creates Process/Cron scheduling metadata. */ schedule: function (request, callback) { return this.invoke('schedule', request, callback); },

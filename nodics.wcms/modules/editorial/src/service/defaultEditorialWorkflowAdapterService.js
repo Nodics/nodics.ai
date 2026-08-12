@@ -73,9 +73,43 @@ module.exports = {
         return this.callProcess(request, '/nodics/process/v0/instances/' + encodeURIComponent(instanceCode) + '/detail', undefined, 'GET');
     },
 
+    /** Lists open review tasks through same-runtime Process services or the configured remote Process API. */
+    listReviewTasks: function (request, instanceCode) {
+        if (SERVICE.DefaultProcessOperationsInspectionService && SERVICE.DefaultProcessOperationsInspectionService.listTasks) {
+            return SERVICE.DefaultProcessOperationsInspectionService.listTasks(Object.assign({}, request, { query: { instanceCode: instanceCode, limit: 20 } }));
+        }
+        return this.callProcess(request, '/nodics/process/v0/tasks?instanceCode=' + encodeURIComponent(instanceCode) + '&limit=20', undefined, 'GET');
+    },
+
+    /** Claims a review task through same-runtime Process services or the configured remote Process API. */
+    claimReviewTask: function (request, taskCode) {
+        if (SERVICE.DefaultProcessRuntimeLifecycleService && SERVICE.DefaultProcessRuntimeLifecycleService.claimTask) {
+            return SERVICE.DefaultProcessRuntimeLifecycleService.claimTask(Object.assign({}, request, { taskCode: taskCode, editorial: undefined, httpRequest: Object.assign({}, request.httpRequest, { body: {} }) }));
+        }
+        return this.callProcess(request, '/nodics/process/v0/tasks/' + encodeURIComponent(taskCode) + '/claim', {}, 'POST');
+    },
+
+    /** Completes a review task through same-runtime Process services or the configured remote Process API. */
+    completeReviewTask: function (request, taskCode, action) {
+        let body = { decision: { approved: action === 'APPROVE', action: action } };
+        if (SERVICE.DefaultProcessRuntimeLifecycleService && SERVICE.DefaultProcessRuntimeLifecycleService.completeTask) {
+            return SERVICE.DefaultProcessRuntimeLifecycleService.completeTask(Object.assign({}, request, {
+                taskCode: taskCode,
+                editorial: undefined,
+                httpRequest: Object.assign({}, request.httpRequest, { body: body })
+            }));
+        }
+        return this.callProcess(request, '/nodics/process/v0/tasks/' + encodeURIComponent(taskCode) + '/complete', body, 'POST');
+    },
+
     /** Starts the configured published Process definition with exact article revision correlation. */
     submit: async function (request) {
         let input = request.editorial || {};
+        if (!input.article && input.model) input.article = input.model;
+        if (typeof input.localizations === 'string') {
+            try { input.localizations = JSON.parse(input.localizations); } catch (error) { input.localizations = []; }
+        }
+        if (!input.article || input.article.status !== 'READY') throw new CLASSES.NodicsError('ERR_EDT_00002', 'Validate the Editorial article before submitting it for review');
         let readiness = SERVICE.DefaultEditorialReadinessService.evaluate(input.article, input.localizations, input.policy);
         if (!readiness.ready) throw new CLASSES.NodicsError('ERR_EDT_00002', 'Editorial article is not ready for workflow submission');
         let settings = (CONFIG.get('editorial') || {}).workflow || {};
@@ -95,7 +129,8 @@ module.exports = {
                 purpose: 'TRANSACTIONAL', channel: input.notification.channel || 'INBOX', locale: input.notification.locale || 'en', variables: { articleCode: input.article.code, workflowInstanceCode: workflowInstanceCode },
                 idempotencyKey: workflowInstanceCode + ':created', correlationId: request.correlationId || request.requestId, now: new Date() }, request.communicationPorts, CONFIG.get('communication') || {});
         }
-        return { articleCode: input.article.code, articleRevision: revision, workflowInstanceCode: workflowInstanceCode, processResult: data };
+        await SERVICE.DefaultEditorialArticleService.update({ tenant: request.tenant, authData: request.authData, query: { code: input.article.code, revision: revision }, model: { $set: { status: 'IN_REVIEW', workflowInstanceCode: workflowInstanceCode }, $unset: { publicationCode: '' } } });
+        return { articleCode: input.article.code, articleRevision: revision, workflowInstanceCode: workflowInstanceCode, article: Object.assign({}, input.article, { status: 'IN_REVIEW', workflowInstanceCode: workflowInstanceCode, publicationCode: undefined }), processResult: data };
     },
     /** Reads workflow detail from Process without copying Process-owned state. */
     inspect: function (request) {
@@ -120,5 +155,21 @@ module.exports = {
         let patch = this.applyDecision(article, { articleRevision: context.articleRevision, workflowInstanceCode: execution.instance.code, action: decision.action || (decision.approved === true ? 'APPROVE' : 'REJECT'), actor: request.authData && request.authData.loginId, completedAt: new Date() });
         await SERVICE.DefaultEditorialArticleService.update({ tenant: request.tenant, authData: request.authData, query: { code: article.code, revision: article.revision }, model: patch });
         return { status: 'COMPLETED', output: { articleCode: article.code, articleRevision: article.revision, editorialStatus: patch.status } };
+    },
+    /** Applies a bounded Axis review decision through Process-owned task APIs when Process is colocated. */
+    decideReview: async function (request, action) {
+        let input = request.editorial || {};
+        if (!input.article && input.model) input.article = input.model;
+        if (!input.article || input.article.status !== 'IN_REVIEW' || !input.article.workflowInstanceCode) throw new CLASSES.NodicsError('ERR_EDT_00002', 'Only an in-review Editorial article can receive a review decision');
+        let listed = await this.listReviewTasks(request, input.article.workflowInstanceCode);
+        let items = listed && (listed.items || listed.result || listed.data && listed.data.items || listed.data) || [];
+        let task = (Array.isArray(items) ? items : []).find(item => item && item.instanceCode === input.article.workflowInstanceCode && ['OPEN', 'CLAIMED', 'ESCALATED'].includes(item.status));
+        if (!task) throw new CLASSES.NodicsError('ERR_EDT_00003', 'No open Editorial review task was found');
+        if (task.status === 'OPEN') {
+            await this.claimReviewTask(request, task.code);
+        }
+        let completed = await this.completeReviewTask(request, task.code, action);
+        let articleStatus = action === 'APPROVE' ? 'APPROVED' : 'CHANGES_REQUESTED';
+        return { articleCode: input.article.code, articleRevision: input.article.revision, article: Object.assign({}, input.article, { status: articleStatus }), processResult: completed };
     }
 };

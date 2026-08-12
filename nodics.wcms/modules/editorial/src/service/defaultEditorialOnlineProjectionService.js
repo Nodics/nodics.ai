@@ -32,8 +32,10 @@ module.exports = {
         let projections = [];
         for (let siteCode of article.siteCodes || []) for (let localization of localizations) {
             let payload = { articleCode: article.code, contentTypeCode: article.contentTypeCode, siteCode: siteCode, localeCode: localization.localeCode,
-                slug: localization.slug || article.slug, title: localization.title, summary: localization.summary, body: localization.body, seo: localization.seo,
+                slug: localization.slug || article.slug, title: localization.title, summary: localization.summary, body: localization.body, takeaways: localization.takeaways || [], seo: localization.seo,
                 authorCodes: article.authorCodes || [], taxonomyTermCodes: article.taxonomyTermCodes || [], seriesCode: article.seriesCode, featuredMediaCode: article.featuredMediaCode,
+                special: article.special === true, specialLabel: article.specialLabel, specialRank: article.specialRank, specialFrom: article.specialFrom,
+                specialUntil: article.specialUntil, specialVariant: article.specialVariant,
                 publishFrom: article.publishFrom, publishUntil: article.publishUntil };
             let sourceHash = crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex');
             let code = [article.code, siteCode, localization.localeCode, article.revision].join('-');

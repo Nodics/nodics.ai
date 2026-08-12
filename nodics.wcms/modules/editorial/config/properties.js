@@ -22,7 +22,7 @@ module.exports = {
         operational: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10 } }
     } },
     editorial: {
-        workflow: { definitionCode: 'editorialApproval', requiredStatus: 'DRAFT', readyStatus: 'APPROVED', notificationIntent: 'editorial.workflow.task' },
+        workflow: { definitionCode: 'editorialApproval', requiredStatus: 'READY', readyStatus: 'APPROVED', notificationIntent: 'editorial.workflow.task' },
         publication: { runtimeRole: 'STAGED', maximumDependencies: 500, versionProvider: 'DefaultEditorialPublicationVersionProviderService' },
         delivery: { defaultLimit: 20, maximumLimit: 100, cacheTtl: 30000, supportedLocales: ['en', 'ar'], supportedChannels: ['web'] },
         syndication: { maximumItems: 100 }

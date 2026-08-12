@@ -30,14 +30,16 @@ module.exports = { editorial: {
         code: { type: 'string', required: true }, contentTypeCode: { type: 'string', required: true }, internalName: { type: 'string', required: true },
         slug: { type: 'string', required: true }, siteCodes: { type: 'array', required: true }, authorCodes: { type: 'array', required: true },
         seriesCode: { type: 'string', required: false }, featuredMediaCode: { type: 'string', required: false }, taxonomyTermCodes: { type: 'array', required: false },
-        status: { type: 'string', required: true, enum: ['DRAFT', 'IN_REVIEW', 'CHANGES_REQUESTED', 'APPROVED', 'PUBLISHED', 'WITHDRAWN', 'ARCHIVED'] },
+        special: { type: 'bool', required: false }, specialLabel: { type: 'string', required: false }, specialRank: { type: 'int', required: false },
+        specialFrom: { type: 'date', required: false }, specialUntil: { type: 'date', required: false }, specialVariant: { type: 'string', required: false },
+        status: { type: 'string', required: true, enum: ['DRAFT', 'READY', 'IN_REVIEW', 'CHANGES_REQUESTED', 'APPROVED', 'PUBLISHED', 'WITHDRAWN', 'ARCHIVED'] },
         embargoAt: { type: 'date', required: false }, publishFrom: { type: 'date', required: false }, publishUntil: { type: 'date', required: false },
         workflowInstanceCode: { type: 'string', required: false }, publicationCode: { type: 'string', required: false }, revision: { type: 'int', required: true }
     }, backoffice: { operations: ['search', 'read', 'create', 'update'], description: 'Editorial article authoring master data.' } }),
     editorialArticleLocalization: Object.assign(tenantOwned(), { definition: {
         code: { type: 'string', required: true }, articleCode: { type: 'string', required: true }, localeCode: { type: 'string', required: true },
         title: { type: 'string', required: true }, summary: { type: 'string', required: false }, body: { type: 'object', required: true },
-        seo: { type: 'object', required: false }, slug: { type: 'string', required: true }, status: { type: 'string', required: true, enum: ['DRAFT', 'READY'] }, revision: { type: 'int', required: true }
+        takeaways: { type: 'array', required: false }, seo: { type: 'object', required: false }, slug: { type: 'string', required: true }, status: { type: 'string', required: true, enum: ['DRAFT', 'READY'] }, revision: { type: 'int', required: true }
     }, indexes: { composite: { articleCode: { enabled: true, name: 'articleCode', options: { unique: true } }, localeCode: { enabled: true, name: 'localeCode', options: { unique: true } } } } }),
     editorialAuthor: Object.assign(tenantOwned(), { definition: {
         code: { type: 'string', required: true }, displayName: { type: 'string', required: true }, biography: { type: 'object', required: false },

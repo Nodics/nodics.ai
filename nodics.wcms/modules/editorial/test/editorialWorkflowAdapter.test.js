@@ -13,16 +13,23 @@ const assert = require('assert');
 class NodicsError extends Error {}
 global.CLASSES = { NodicsError };
 global.CONFIG = { get: name => name === 'editorial' ? { workflow: { definitionCode: 'editorialApproval', processBaseUrl: 'http://process.local/' } } : {} };
+let articleUpdates = [];
 global.SERVICE = {
     DefaultEditorialReadinessService: { evaluate: () => ({ ready: true }) },
+    DefaultEditorialArticleService: { update: request => { articleUpdates.push(request); return Promise.resolve({ modified: 1 }); } },
     DefaultProcessRuntimeLifecycleService: { startInstance: request => Promise.resolve({ data: { instance: { code: request.runtimeOperation.instanceCode } } }) }
 };
 const adapter = require('../src/service/defaultEditorialWorkflowAdapterService');
 (async () => {
-    let request = { editorial: { article: { code: 'article', internalName: 'Article', contentTypeCode: 'NEWS', revision: 3 }, localizations: [] }, requestId: 'request' };
+    let request = { editorial: { article: { code: 'article', internalName: 'Article', contentTypeCode: 'NEWS', status: 'READY', revision: 3 }, localizations: [] }, requestId: 'request' };
     let result = await adapter.submit(request);
     assert.equal(result.workflowInstanceCode, 'editorial-article-r3');
     assert.equal(result.articleRevision, 3);
+    assert.equal(result.article.status, 'IN_REVIEW');
+    assert.equal(result.article.publicationCode, undefined);
+    assert.equal(articleUpdates[0].model.$set.status, 'IN_REVIEW');
+    assert.equal(articleUpdates[0].model.$set.workflowInstanceCode, 'editorial-article-r3');
+    assert.equal(articleUpdates[0].model.$unset.publicationCode, '');
     assert.equal(adapter.applyDecision({ code: 'article', revision: 3 }, { articleRevision: 3, action: 'APPROVE' }).status, 'APPROVED');
     assert.throws(() => adapter.applyDecision({ code: 'article', revision: 4 }, { articleRevision: 3, action: 'APPROVE' }));
 

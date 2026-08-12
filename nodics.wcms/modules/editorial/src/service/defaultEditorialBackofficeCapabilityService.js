@@ -36,10 +36,12 @@ module.exports = {
         ];
         let actions = [
             { id: 'validate', label: 'Validate', intent: 'UPDATE', permission: 'editorial.backoffice.manage', ownerModule: 'editorial', operationRoute: '/authoring/articles/validate', targetStatuses: ['DRAFT', 'CHANGES_REQUESTED'], order: 10 },
-            { id: 'submit', label: 'Submit for review', intent: 'UPDATE', permission: 'editorial.workflow.submit', ownerModule: 'editorial', operationRoute: '/authoring/articles/:code/submit', targetStatuses: ['DRAFT', 'CHANGES_REQUESTED'], order: 20 },
-            { id: 'publish', label: 'Publish now', intent: 'UPDATE', permission: 'editorial.publish.execute', ownerModule: 'editorial', operationRoute: '/authoring/articles/:code/publish', targetStatuses: ['APPROVED'], order: 30 },
-            { id: 'schedule', label: 'Schedule publication', intent: 'UPDATE', permission: 'editorial.publish.schedule', ownerModule: 'editorial', operationRoute: '/authoring/articles/:code/schedule', targetStatuses: ['APPROVED'], order: 40 },
-            { id: 'withdraw', label: 'Withdraw', intent: 'UPDATE', permission: 'editorial.publish.withdraw', ownerModule: 'editorial', operationRoute: '/authoring/articles/:code/withdraw', targetStatuses: ['PUBLISHED'], order: 50 }
+            { id: 'submit', label: 'Submit for review', intent: 'UPDATE', permission: 'editorial.workflow.submit', ownerModule: 'editorial', operationRoute: '/authoring/articles/:code/submit', targetStatuses: ['READY'], order: 20 },
+            { id: 'approve', label: 'Approve review', intent: 'APPROVE', permission: 'editorial.workflow.submit', ownerModule: 'editorial', operationRoute: '/authoring/articles/:code/approve', targetStatuses: ['IN_REVIEW'], order: 30 },
+            { id: 'reject', label: 'Request changes', intent: 'REJECT', permission: 'editorial.workflow.submit', ownerModule: 'editorial', operationRoute: '/authoring/articles/:code/reject', targetStatuses: ['IN_REVIEW'], order: 40 },
+            { id: 'publish', label: 'Publish now', intent: 'UPDATE', permission: 'editorial.publish.execute', ownerModule: 'editorial', operationRoute: '/authoring/articles/:code/publish', targetStatuses: ['APPROVED'], order: 50 },
+            { id: 'schedule', label: 'Schedule publication', intent: 'UPDATE', permission: 'editorial.publish.schedule', ownerModule: 'editorial', operationRoute: '/authoring/articles/:code/schedule', targetStatuses: ['APPROVED'], order: 60 },
+            { id: 'withdraw', label: 'Withdraw', intent: 'UPDATE', permission: 'editorial.publish.withdraw', ownerModule: 'editorial', operationRoute: '/authoring/articles/:code/withdraw', targetStatuses: ['PUBLISHED'], order: 70 }
         ];
         navigation.filter(entry => ['editorial-content', 'editorial-news', 'editorial-blogs'].includes(entry.id)).forEach(entry => { entry.lifecycleActions = actions; });
         return definitions.capability({ capabilityId: 'wcms-editorial', displayName: 'Editorial Content', category: 'content', icon: 'article', navigation: navigation });

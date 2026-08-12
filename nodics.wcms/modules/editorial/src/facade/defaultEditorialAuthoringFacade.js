@@ -14,6 +14,8 @@ module.exports = {
     /** Validates an Editorial draft. */ validate: function (request) { return SERVICE.DefaultEditorialArticleAuthoringService.validate(request); },
     /** Evaluates pre-workflow readiness. */ evaluateReadiness: function (request) { return SERVICE.DefaultEditorialArticleAuthoringService.evaluateReadiness(request); },
     /** Submits a ready revision to Process authority. */ submit: function (request) { return SERVICE.DefaultEditorialWorkflowAdapterService.submit(request); },
+    /** Approves an in-review Editorial revision through Process task authority. */ approve: function (request) { return SERVICE.DefaultEditorialWorkflowAdapterService.decideReview(request, 'APPROVE'); },
+    /** Requests changes for an in-review Editorial revision through Process task authority. */ reject: function (request) { return SERVICE.DefaultEditorialWorkflowAdapterService.decideReview(request, 'REJECT'); },
     /** Inspects Process-owned workflow detail. */ inspectWorkflow: function (request) { return SERVICE.DefaultEditorialWorkflowAdapterService.inspect(request); },
     /** Immediately publishes one approved revision through nPublish. */ publish: function (request) { return SERVICE.DefaultEditorialPublicationService.publishApproved(request); },
     /** Schedules a future publication through Process/Cron metadata. */ schedule: function (request) { return SERVICE.DefaultEditorialScheduleService.schedule(request); },

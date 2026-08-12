@@ -14,11 +14,13 @@ module.exports = {
     /** Immediately publishes one exact approved article revision through nPublish. */
     publishApproved: function (request) {
         let input = request.editorial || {};
+        if (!input.article && input.model) input.article = input.model;
         if (!input.article || input.article.status !== 'APPROVED' || !input.article.code || !Number.isInteger(Number(input.article.revision))) throw new CLASSES.NodicsError('ERR_EDT_00002', 'Only an approved exact Editorial revision can be published');
         let code = input.publicationCode || 'editorial-' + input.article.code + '-r' + input.article.revision;
         return SERVICE.DefaultPublicationLifecycleService.publishApproved(Object.assign({}, request, { expectedRevision: input.expectedRevision, publication: {
             code: code, domain: 'editorial', rootType: 'article', rootCode: input.article.code, sourceVersion: String(input.article.revision), workflowRef: input.article.workflowInstanceCode
-        }}));
+        }})).then(result => SERVICE.DefaultEditorialArticleService.update({ tenant: request.tenant, authData: request.authData, query: { code: input.article.code, revision: Number(input.article.revision) }, model: { status: 'PUBLISHED', publicationCode: code } })
+            .then(() => Object.assign({}, result, { article: Object.assign({}, input.article, { status: 'PUBLISHED', publicationCode: code }) })));
     },
     /** Executes the allow-listed scheduled Process ACTION using immutable context. */
     applyProcessPublication: function (request, execution) {

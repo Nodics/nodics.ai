@@ -21,5 +21,7 @@ const capability = provider.getCapability();
 assert.equal(capability.capabilityId, 'wcms-editorial');
 assert.equal(capability.navigation.length, 9);
 assert.equal(capability.navigation.find(item => item.id === 'editorial-news').presentation.fixedFilters[0].value, 'NEWS');
-assert.equal(capability.navigation.find(item => item.id === 'editorial-content').lifecycleActions.length, 5);
+assert.equal(capability.navigation.find(item => item.id === 'editorial-content').lifecycleActions.length, 7);
 assert.equal(capability.navigation.find(item => item.id === 'editorial-content').lifecycleActions[1].ownerModule, 'editorial');
+assert.deepEqual(capability.navigation.find(item => item.id === 'editorial-content').lifecycleActions.map(action => action.id), ['validate', 'submit', 'approve', 'reject', 'publish', 'schedule', 'withdraw']);
+assert.deepEqual(capability.navigation.find(item => item.id === 'editorial-content').lifecycleActions.find(action => action.id === 'submit').targetStatuses, ['READY']);
