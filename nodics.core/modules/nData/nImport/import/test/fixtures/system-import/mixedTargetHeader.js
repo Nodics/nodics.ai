@@ -11,6 +11,14 @@
 
 'use strict';
 
+/**
+ * @module nData/nImport/test/fixtures/system-import/mixedTargetHeader
+ * @description Fixture import target map used to verify mixed enabled and disabled system import target handling.
+ * @layer test
+ * @owner nImport
+ * @override Test fixtures may add target maps without changing runtime import target resolution.
+ */
+
 module.exports = {
     activeTarget: {
         activeData: {
