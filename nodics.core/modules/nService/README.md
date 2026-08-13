@@ -111,6 +111,7 @@ Run focused service coverage with:
 node nodics.core/modules/nService/test/authTokenInvalidationService.test.js
 node nodics.core/modules/nService/test/moduleRequestHeaderNormalization.test.js
 node nodics.core/modules/nService/test/moduleTransportResilience.test.js
+node nodics.core/modules/nService/test/modulesConfigurationService.test.js
 node nodics.core/modules/nService/test/statusDefinitionCatalog.test.js
 npm run quality:docs
 ```
@@ -131,6 +132,12 @@ Avoid:
 Services consume schemas, models, pipelines, configuration, tenant context, and
 provider contracts. They may emit events or call another module, but the data
 contract and failure behavior must remain owned and documented.
+
+`DefaultModulesConfigurationService` owns the process-level effective topology
+registry built from layered `servers.*` configuration. It creates one
+`ModuleConfiguration` descriptor per configured module and activates a rebuilt
+registry only after every contribution validates. Routers and module clients
+consume this service; they do not construct a parallel topology container.
 
 Human username/password authentication is separate from internal
 module-to-module and scheduled access. Internal communication uses service

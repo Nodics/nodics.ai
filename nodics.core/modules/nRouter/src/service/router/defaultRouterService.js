@@ -25,12 +25,12 @@ const https = require('https');
  * @override Project modules may override this service to change router generation,
  * URL construction, module-server selection, validation rules, or server startup behavior.
  *
- * @property {Object} CLASSES.ModulesConfigurationContainer Module/server/node configuration container.
+ * @property {Object} SERVICE.DefaultModulesConfigurationService Owns module/server/node topology state.
  * @property {Object} CONFIG Runtime configuration registry used for server context root, cache, and exit code.
  * @property {Object} NODICS Runtime registry for modules and effective routers.
  * @property {Object} SERVICE.DefaultRouterConfigurationService Supplies effective router definitions.
  * @property {Object} SERVICE.DefaultRouterOperationService Binds prepared router definitions to Express.
- * @property {Object} serversConfigPool Prepared module server configuration container.
+ * @property {Object} serversConfigPool Compatibility reference to the topology service.
  */
 module.exports = {
 
@@ -75,13 +75,17 @@ module.exports = {
      * Builds the module/server/node configuration pool for the selected runtime hierarchy.
      *
      * @returns {Promise<boolean>} Resolves after module configuration is prepared.
-     * @sideEffects Replaces `serversConfigPool` with a prepared `ModulesConfigurationContainer`.
+     * @sideEffects Atomically refreshes the nService-owned module topology registry.
      */
     prepareModulesConfiguration: function () {
         return new Promise((resolve, reject) => {
-            this.serversConfigPool = new CLASSES.ModulesConfigurationContainer();
-            this.serversConfigPool.prepareModulesConfiguration();
-            resolve(true);
+            try {
+                SERVICE.DefaultModulesConfigurationService.prepareModulesConfiguration();
+                this.serversConfigPool = SERVICE.DefaultModulesConfigurationService;
+                resolve(true);
+            } catch (error) {
+                reject(error);
+            }
         });
     },
 
@@ -91,7 +95,7 @@ module.exports = {
      * @returns {Object|string} Prepared module/server/node configuration container.
      */
     getModulesPool: function () {
-        return this.serversConfigPool;
+        return this.serversConfigPool || SERVICE.DefaultModulesConfigurationService;
     },
 
     /**
@@ -101,10 +105,11 @@ module.exports = {
      * @returns {Object} Module server configuration object.
      */
     getModuleServerConfig: function (moduleName) {
-        if (this.serversConfigPool.isAvailableModuleConfig(moduleName)) {
-            return this.serversConfigPool.getModule(moduleName);
+        let modulesConfigurationService = this.getModulesPool();
+        if (modulesConfigurationService.isAvailableModuleConfig(moduleName)) {
+            return modulesConfigurationService.getModule(moduleName);
         } else {
-            return this.serversConfigPool.getModule('default');
+            return modulesConfigurationService.getModule('default');
         }
     },
 
