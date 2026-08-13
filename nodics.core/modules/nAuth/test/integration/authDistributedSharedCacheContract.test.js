@@ -77,9 +77,10 @@ async function run() {
     const stampService = require('../../src/service/identity/defaultPrincipalSecurityStampService');
     function stampConfig(engineName, engineDefinition, fallback, overrides) {
         overrides = overrides || {};
-        global.CONFIG = { get: key => key === 'authSecurity' ? { securityStamp: { enabled: true, failClosed: true, allowMissingStamp: false } } : key === 'cache' ? {
+        const cacheModuleName = overrides.cacheModuleName || 'profile';
+        global.CONFIG = { get: key => key === 'authSecurity' ? { securityStamp: { enabled: true, failClosed: true, allowMissingStamp: false, cacheModuleName: overrides.cacheModuleName } } : key === 'cache' ? {
             enabled: overrides.cacheEnabled,
-            profile: { channels: { auth: Object.assign({ engine: engineName, fallback: fallback }, overrides.channel || {}) } },
+            [cacheModuleName]: { channels: { auth: Object.assign({ engine: engineName, fallback: fallback }, overrides.channel || {}) } },
             default: { engines: { [engineName]: Object.assign({}, engineDefinition, overrides.engine || {}) } }
         } : undefined };
     }
@@ -96,6 +97,9 @@ async function run() {
     stampConfig('redis', { distributed: true, atomicConsume: true }, false, { engine: { enabled: false } });
     await assert.rejects(stampService.validateConfiguration(), /enabled distributed auth cache/);
     stampConfig('redis', { distributed: true, atomicConsume: true }, false);
+    await stampService.validateConfiguration();
+    stampConfig('redis', { distributed: true, atomicConsume: true }, false, { cacheModuleName: 'projectAuthState' });
+    assert.strictEqual(stampService.getCacheModuleName(), 'projectAuthState');
     await stampService.validateConfiguration();
 
     console.log('nAuth distributed authentication shared-cache contract validated');

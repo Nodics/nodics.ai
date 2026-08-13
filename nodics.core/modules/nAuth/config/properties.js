@@ -60,6 +60,7 @@ module.exports = {
       enabled: true,
       failClosed: true,
       allowMissingStamp: false,
+      cacheModuleName: null,
     },
     internalToken: {
       routePermission: "auth.internal.token.read",

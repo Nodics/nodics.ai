@@ -30,6 +30,10 @@ module.exports = {
     getPolicy: function () {
         return CONFIG.get('authSecurity') && CONFIG.get('authSecurity').securityStamp || {};
     },
+    /** Resolves the configured shared auth-state cache namespace without changing Profile service ownership. */
+    getCacheModuleName: function () {
+        return this.getPolicy().cacheModuleName || CONFIG.get('profileModuleName') || 'profile';
+    },
     /** Builds a tenant-scoped principal stamp cache key. */
     getKey: function (tenant, principalId) {
         return 'securityStamp:' + tenant + ':' + principalId;
@@ -42,8 +46,10 @@ module.exports = {
         let strictStamp = policy.enabled !== false && policy.failClosed !== false && policy.allowMissingStamp !== true;
         if (!strictStamp && refreshPolicy.requireDistributedCache !== true) return Promise.resolve(true);
         let cache = CONFIG.get('cache') || {};
-        let channel = cache.profile && cache.profile.channels && cache.profile.channels.auth || {};
-        let profileEngines = cache.profile && cache.profile.engines || {};
+        let cacheModuleName = this.getCacheModuleName();
+        let moduleCache = cache[cacheModuleName] || {};
+        let channel = moduleCache.channels && moduleCache.channels.auth || {};
+        let profileEngines = moduleCache.engines || {};
         let defaultEngines = cache.default && cache.default.engines || {};
         let engine = profileEngines[channel.engine] || defaultEngines[channel.engine] || {};
         if (cache.enabled === false || channel.enabled === false || engine.enabled === false ||
@@ -56,7 +62,7 @@ module.exports = {
     register: function (tenant, principalId, authVersion) {
         if (!principalId || authVersion === undefined) return Promise.resolve(false);
         return SERVICE.DefaultAuthenticationProviderService.addToken(
-            CONFIG.get('profileModuleName') || 'profile', false,
+            this.getCacheModuleName(), false,
             this.getKey(tenant, principalId),
             { tenant: tenant, principalId: principalId, authVersion: authVersion }
         );
@@ -70,7 +76,7 @@ module.exports = {
             return policy.allowMissingStamp === true ? Promise.resolve(true) : Promise.reject(new CLASSES.NodicsError('ERR_AUTH_00001', 'Token security stamp is required'));
         }
         return SERVICE.DefaultAuthenticationProviderService.findToken(
-            CONFIG.get('profileModuleName') || 'profile', this.getKey(payload.tenant, principalId)
+            this.getCacheModuleName(), this.getKey(payload.tenant, principalId)
         ).then(stamp => {
             if (!stamp || String(stamp.authVersion) !== String(payload.authVersion)) throw new CLASSES.NodicsError('ERR_AUTH_00001', 'Authentication token security stamp is stale');
             return true;
