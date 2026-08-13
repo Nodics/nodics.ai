@@ -278,6 +278,11 @@ module.exports = {
             status: 'PUBLISHED',
             graph: definition.graph,
             designer: definition.designer,
+            contributionOwner: definition.contributionOwner,
+            contributionCode: definition.contributionCode,
+            contributionVersion: definition.contributionVersion,
+            contributionChecksum: definition.contributionChecksum,
+            policy: definition.policy,
             checksum: this.checksum(Object.assign({}, definition, { currentVersion: version })),
             publishedBy: this.getActor(request),
             publishedAt: now

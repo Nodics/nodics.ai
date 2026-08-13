@@ -82,9 +82,12 @@ dispatch.
 The default policy:
 
 - keeps CORS closed unless a project/environment/server/node layer enables
-  allowed origins;
+  allowed origins; later layers may use `deniedOrigins` to subtract an origin
+  inherited through merged configuration, and denial always wins;
 - applies security headers such as `X-Content-Type-Options`,
   `X-Frame-Options`, `Referrer-Policy`, and resource policy headers;
+- defaults API responses to `Cache-Control: no-store`; an owning response
+  contract may replace this only when its public caching semantics are explicit;
 - keeps proxy trust disabled unless the deployment topology explicitly enables
   it;
 - applies bounded body parser limits for URL-encoded, JSON, and text payloads;

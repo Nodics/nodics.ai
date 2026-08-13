@@ -18,6 +18,27 @@ Media lifecycle is backend-owned and provider-neutral.
 provider descriptors, and media records. `nRouter` owns the route/body-parser
 extension point and must not learn media business meaning.
 
+## Media Publication Transfer Contract
+
+- Only media codes frozen into a publication graph are eligible for transfer.
+- Staged provider paths, storage keys, credentials, and URLs never become
+  target-owned transport authority.
+- Staged and Online independently verify size and checksum.
+- Online writes through `DefaultMediaUploadService` and its configured provider;
+  it never reuses the Staged locator.
+- Matching Online code/checksum is idempotent; a code/checksum mismatch is a
+  publication conflict.
+- Count, per-asset bytes, and total bytes are bounded under `media.publication`.
+- The media payload remains manifest-internal and must never be returned by CMS
+  delivery projections.
+- Imported Online copies use the `CMS_PUBLICATION` purpose, a checksum-bound
+  owner reference, and `media.publication.retentionDays`.
+- Garbage collection accepts a protected media-code set from CMS, considers
+  only publication-managed `READY` records, respects retention and legal hold,
+  and deletes bytes only through the media lifecycle/provider services.
+- Never collect generic authored media or infer protection from filesystem or
+  database inspection.
+
 ## Media Download Contract
 
 `media` must not own a parallel attachment-download response path.

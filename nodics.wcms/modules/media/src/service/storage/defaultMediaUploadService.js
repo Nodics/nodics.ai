@@ -97,6 +97,7 @@ module.exports = {
         let response = await service.save({
             tenant: request.tenant,
             authData: request.authData,
+            transactionContext: request.transactionContext,
             moduleName: 'media',
             model: media
         });

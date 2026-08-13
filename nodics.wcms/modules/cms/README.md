@@ -253,6 +253,22 @@ or `ONLINE`. A Staged process activates publish/version variants and versioned
 CMS schema overrides. An Online process keeps `publishEnabled: false`, uses
 non-versioned schemas, and stores imported manifests in a separate database.
 
+The Online target also owns reference calculation for published-media cleanup.
+It protects media from every active or inactive recoverable pointer plus each
+pointer's `previousManifestCode`, fails closed if a protected manifest is
+missing, and delegates physical collection to Media. The internal collection
+endpoint is service-token-only and defaults to dry-run unless the caller
+explicitly requests deletion.
+
+Before any Online manifest, pointer, receipt, or outbox mutation begins, the
+target queries the provider-neutral transaction authority and requires both
+atomic multi-record commit and opaque context propagation. Missing services,
+standalone/non-transactional providers, disabled fail-closed policy, and
+incomplete adapters reject the publication before work starts. Pointer updates
+remain optimistic and conflicting revisions fail rather than overwrite. The
+same operation key makes a retry after a committed-but-lost response converge
+on the existing manifest, pointer, receipt, and outbox event.
+
 See canonical documentation `capability.content-publishing.technical-reference` for authority, migration, extension,
 and fail-closed delivery behavior.
 

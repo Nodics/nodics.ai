@@ -31,6 +31,21 @@ or residual-risk acceptance. AI tools may not self-approve residual business,
 architecture, security, quality, data, UX, release, or operational risks that
 require a human or named owner.
 
+## Zero Direct Database Operations
+
+No developer, AI tool, test helper, migration, repair utility, import/export
+tool, operational procedure, or application feature may inspect or mutate a
+Nodics database directly. All data access must pass through the owning Nodics
+API or loader-visible service and, below that boundary, the generated
+service/DAO and configured database provider.
+
+This is a strict platform invariant, not a preference or temporary shortcut.
+It applies to diagnosis and verification as well as writes: use governed APIs,
+services, receipts, audit projections, and bounded diagnostics instead of a
+database shell, driver command, raw collection operation, or ad hoc script.
+Provider/DAO implementations may use their governed database adapter internally;
+business modules, clients, contributors, and tools must not bypass them.
+
 ## Pre-Implementation Framework Study Gate
 
 Before implementation, human developers and AI tools must build context from

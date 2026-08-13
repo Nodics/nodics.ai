@@ -69,8 +69,27 @@ const manifestEnvelope = JSON.parse(
   await readFile(resolve(root, 'data/manifest.json'), 'utf8'),
 );
 const manifest = manifestEnvelope.sections.documentation;
+const baseline = manifestEnvelope.sections.axisBaseline;
 assert(manifestEnvelope.contractVersion === 2, 'Axis aggregate data manifest contract drifted');
 assert(manifestEnvelope.module === 'axis', 'Axis aggregate data manifest owner drifted');
+assert(baseline?.kind === 'DATA_RELEASE', 'Axis baseline must remain a named data release');
+assert(baseline.dataType === 'init', 'Axis baseline must use governed init execution');
+assert(baseline.owningDomain === 'axis', 'Axis baseline ownership drifted');
+assert(baseline.lifecycle === 'PUBLISHABLE', 'Axis baseline must remain publishable');
+assert(baseline.destinationRole === 'WCMS_STAGED', 'Axis baseline must target WCMS Staged only');
+assert(baseline.versioningPolicy === 'IMMUTABLE', 'Axis baseline must retain immutable release identity');
+assert(baseline.publicationPolicy === 'REQUIRED', 'Axis baseline must require publication');
+assert(baseline.initialPublicationPolicy === 'ADMIN_INITIATED', 'Axis first baseline must remain administrator initiated');
+assert(baseline.removalPolicy === 'UNPUBLISH_OR_RETIRE', 'Axis baseline removal must remain explicit');
+for (const [relativePath, expectedHash] of Object.entries(baseline.files ?? {})) {
+  assert(relativePath.startsWith('init/'), `Axis baseline file must remain under governed init data: ${relativePath}`);
+  const absolutePath = resolve(root, 'data', relativePath);
+  assert(existsSync(absolutePath), `Axis baseline file is missing: ${relativePath}`);
+  assert(sha256(readFileSync(absolutePath)) === expectedHash, `Axis baseline hash mismatch: ${relativePath}`);
+  const source = readFileSync(absolutePath, 'utf8');
+  assert(!source.includes('nodics.wcms'), `Axis baseline retained obsolete WCMS functional ownership: ${relativePath}`);
+  assert(!source.includes('@owner wcms'), `Axis baseline retained obsolete WCMS owner annotation: ${relativePath}`);
+}
 assert(manifest.pack === 'nodics.platform.axis', 'Axis documentation pack identity drifted');
 assert(
   manifest.sourceAuthority === 'core/source/documentation',

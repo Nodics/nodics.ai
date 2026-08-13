@@ -40,6 +40,7 @@ const capability = {
             "catalog": "documentationContentCatalog",
             "defaultPage": "/docs/framework",
             "packCode": "nodicsDocumentation",
+            "initializationProfile": "frameworkdocs",
             "dashboard": {
                 "kind": "Framework guide",
                 "icon": "content",

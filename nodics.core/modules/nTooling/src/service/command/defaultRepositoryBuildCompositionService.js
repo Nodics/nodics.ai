@@ -24,7 +24,7 @@ const crypto = require('crypto');
  */
 module.exports = {
     runtimeGroups: Object.freeze([
-        'nodics.core', 'nodics.platform', 'nodics.cron', 'nodics.wcms',
+        'nodics.core', 'nodics.platform', 'nodics.cron', 'nodics.wcms', 'nodics.localization',
         'nodics.process', 'nodics.commerce', 'nodics.communication', 'nodics.engagement'
     ]),
 

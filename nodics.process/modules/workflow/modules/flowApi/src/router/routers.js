@@ -77,6 +77,14 @@ module.exports = {
             }
         },
         processOperations: {
+            startPublicationApproval: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+                permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'moduleInternal',
+                key: '/instances/publication-approval', method: 'POST',
+                controller: 'DefaultProcessOperationsController', operation: 'startPublicationApproval',
+                help: { requestType: 'internal', message: 'Start the fixed CMS publication approval workflow from bounded context',
+                    method: 'POST', url: 'http://host:port/nodics/process/v0/instances/publication-approval' }
+            },
             startInstance: {
                 secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
                 permission: 'process.instance.start', apiExposure: 'processManagement',

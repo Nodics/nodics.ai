@@ -50,19 +50,47 @@ module.exports = {
     getOnlineVersion: async function (publication, request) {
         this.assertStagedRuntime();
         let route = await this.getVersion(publication, request);
-        return this.transport().getStatus({ scope: { site: route.site, path: route.path, locale: route.locale,
-            channel: route.channel, accessMode: route.accessMode } }, request);
+        let scope = publication.rootType === 'site' ? { site: route.code, bundle: true } :
+            { site: route.site, path: route.path, locale: route.locale, channel: route.channel, accessMode: route.accessMode };
+        return this.transport().getStatus({ scope: scope }, request);
+    },
+    /** Returns sanitized target evidence for one exact deployed manifest. */
+    getLineage: function (publication, request) {
+        this.assertStagedRuntime();
+        if (!publication.targetVersion) return Promise.resolve(undefined);
+        return this.transport().getStatus({ manifestCode: publication.targetVersion }, request);
+    },
+    /** Reconciles Online evidence for the exact target manifest without permitting pointer repair. */
+    reconcile: function (publication, request) {
+        this.assertStagedRuntime();
+        if (!publication.targetVersion) return Promise.resolve({ status: 'NOT_DEPLOYED', repaired: false });
+        return this.transport().reconcile({ manifestCode: publication.targetVersion,
+            repairEvidence: request.repairEvidence === true,
+            operationKey: publication.code + ':reconcile:' + String(publication.revision) }, request);
     },
     /** Builds an immutable manifest and atomically activates its Online pointer. */
     activate: async function (publication, request) {
         this.assertStagedRuntime();
+        if (publication.targetVersion && ['ROLLED_BACK', 'WITHDRAWN'].includes(publication.recoveryFromState)) {
+            return this.transport().rollback({ manifestCode: publication.targetVersion,
+                operationKey: publication.code + ':recover:' + String(publication.revision) }, request);
+        }
         let manifest = await this.manifests().persist(publication, request);
-        return this.transport().deploy({ manifest: manifest }, request);
+        return this.transport().deploy({ manifest: manifest,
+            operationKey: publication.code + ':activate:' + String(publication.revision) }, request);
     },
     /** Atomically restores a previously active immutable manifest. */
     rollback: async function (publication, targetVersion, request) {
         this.assertStagedRuntime();
         if (!targetVersion) throw new CLASSES.NodicsError('CMS_PUBLICATION_ROLLBACK_UNAVAILABLE', 'Previous CMS Online manifest is unavailable');
-        return this.transport().rollback({ manifestCode: targetVersion }, request);
+        return this.transport().rollback({ manifestCode: targetVersion,
+            operationKey: publication.code + ':rollback:' + String(publication.revision) }, request);
+    },
+    /** Removes the publication's currently active route pointers from Online delivery. */
+    withdraw: async function (publication, request) {
+        this.assertStagedRuntime();
+        if (!publication.targetVersion) throw new CLASSES.NodicsError('CMS_PUBLICATION_WITHDRAWAL_UNAVAILABLE', 'CMS Online manifest is unavailable');
+        return this.transport().withdraw({ manifestCode: publication.targetVersion,
+            operationKey: publication.code + ':withdraw:' + String(publication.revision) }, request);
     }
 };

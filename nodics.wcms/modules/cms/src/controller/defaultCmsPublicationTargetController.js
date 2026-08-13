@@ -29,6 +29,12 @@ module.exports = {
     deploy: function (request, callback) { return this.invoke('deploy', request, callback); },
     /** Returns target-local Online release status. */
     getStatus: function (request, callback) { return this.invoke('getStatus', request, callback); },
+    /** Diagnoses target evidence and repairs only evidence gaps when pointers already agree. */
+    reconcile: function (request, callback) { return this.invoke('reconcile', request, callback); },
+    /** Runs reference-safe published-media retention through CMS and Media authorities. */
+    collectMediaGarbage: function (request, callback) { return this.invoke('collectMediaGarbage', request, callback); },
     /** Restores a previously deployed target release. */
-    rollback: function (request, callback) { return this.invoke('rollback', request, callback); }
+    rollback: function (request, callback) { return this.invoke('rollback', request, callback); },
+    /** Removes one deployed target release from Online delivery. */
+    withdraw: function (request, callback) { return this.invoke('withdraw', request, callback); }
 };

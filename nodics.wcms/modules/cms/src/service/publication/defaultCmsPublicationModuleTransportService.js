@@ -39,7 +39,8 @@ module.exports = {
             connectionName: target.connectionName, connectionType: target.connectionType || 'abstract', nodeId: target.nodeId, methodName: 'POST',
             apiName: '/publication/target/' + operation, requestBody: Object.assign({ tenant: request.tenant,
                 correlationId: request.correlationId || request.requestId }, payload),
-            timeoutMs: target.timeoutMs, maxAttempts: target.maxAttempts, idempotencyKey: payload.manifest && payload.manifest.code || payload.manifestCode,
+            timeoutMs: target.timeoutMs, maxAttempts: target.maxAttempts,
+            idempotencyKey: payload.operationKey || payload.manifest && payload.manifest.code || payload.manifestCode,
             header: { Authorization: 'Bearer ' + internalToken } });
         return SERVICE.DefaultModuleService.fetch(descriptor).then(response => response && response.result);
     },
@@ -47,6 +48,10 @@ module.exports = {
     deploy: function (payload, request) { return this.send('deploy', payload, request); },
     /** Reads target Online status for one release scope. */
     getStatus: function (payload, request) { return this.send('status', payload, request); },
+    /** Diagnoses and optionally repairs target-local evidence without changing delivery pointers. */
+    reconcile: function (payload, request) { return this.send('reconcile', payload, request); },
     /** Rolls the Online target back to a previously deployed release. */
-    rollback: function (payload, request) { return this.send('rollback', payload, request); }
+    rollback: function (payload, request) { return this.send('rollback', payload, request); },
+    /** Withdraws one deployed release from Online delivery. */
+    withdraw: function (payload, request) { return this.send('withdraw', payload, request); }
 };

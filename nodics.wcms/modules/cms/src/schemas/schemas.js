@@ -798,6 +798,7 @@ module.exports = {
         cmsPublicationManifest: {
             super: 'base',
             isVersionedEnabled: false,
+            transaction: { enabled: true, sideEffects: 'none' },
             model: true,
             service: { enabled: true },
             router: { enabled: false },
@@ -809,6 +810,7 @@ module.exports = {
                 sourceVersion: { type: 'string', required: true },
                 dependencies: { type: 'array', required: true, description: 'Frozen schema, code, and version identities' },
                 snapshot: { type: 'object', required: true, description: 'Immutable client-safe CMS delivery graph' },
+                mediaAssets: { type: 'array', required: false, description: 'Checksum-verified referenced media transfer payloads; never exposed by delivery' },
                 contentHash: { type: 'string', required: true, description: 'Deterministic manifest integrity identifier' },
                 createdBy: { type: 'string', required: false },
                 correlationId: { type: 'string', required: false }
@@ -817,6 +819,8 @@ module.exports = {
         cmsOnlinePublicationPointer: {
             super: 'base',
             isVersionedEnabled: false,
+            cache: { enabled: false },
+            transaction: { enabled: true, sideEffects: 'none' },
             model: true,
             service: { enabled: true },
             router: { enabled: false },
@@ -846,17 +850,46 @@ module.exports = {
         cmsPublicationDeploymentReceipt: {
             super: 'base',
             isVersionedEnabled: false,
+            transaction: { enabled: true, sideEffects: 'none' },
             model: true,
             service: { enabled: true },
             router: { enabled: false },
             event: { enabled: false },
             definition: {
+                publicationCode: { type: 'string', required: true },
                 manifestCode: { type: 'string', required: true },
-                operation: { type: 'string', required: true, enum: ['DEPLOY', 'ROLLBACK'] },
+                sourceVersion: { type: 'string', required: true },
+                operation: { type: 'string', required: true, enum: ['DEPLOY', 'ROLLBACK', 'WITHDRAW'] },
                 status: { type: 'string', required: true, enum: ['ONLINE'] },
                 targetVersion: { type: 'string', required: true },
                 previousOnlineVersion: { type: 'string', required: false },
+                operationKey: { type: 'string', required: false },
                 correlationId: { type: 'string', required: false }
+            }
+        },
+        cmsPublicationEventOutbox: {
+            super: 'base',
+            isVersionedEnabled: false,
+            transaction: { enabled: true, sideEffects: 'none' },
+            model: true,
+            service: { enabled: true },
+            router: { enabled: false },
+            event: { enabled: false },
+            definition: {
+                publicationCode: { type: 'string', required: true },
+                manifestCode: { type: 'string', required: true },
+                operation: { type: 'string', required: true, enum: ['DEPLOY', 'ROLLBACK', 'WITHDRAW'] },
+                operationKey: { type: 'string', required: false },
+                sequence: { type: 'int', required: true, default: 0 },
+                eventType: { type: 'string', required: true },
+                status: { type: 'string', required: true, enum: ['PENDING', 'PROCESSING', 'DELIVERED', 'FAILED'] },
+                attempts: { type: 'int', required: true, default: 0 },
+                leaseToken: { type: 'string', required: false },
+                leaseUntil: { type: 'string', required: false },
+                correlationId: { type: 'string', required: false },
+                deliveredAt: { type: 'string', required: false },
+                lastAttemptAt: { type: 'string', required: false },
+                failureCode: { type: 'string', required: false }
             }
         }
     }

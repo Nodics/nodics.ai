@@ -19,6 +19,8 @@ const lifecycleService = require('../src/service/command/defaultNodicsLifecycleC
 const repositoryRoot = path.resolve(__dirname, '../../../..');
 const composition = compositionService.create();
 try {
+    assert(compositionService.runtimeGroups.includes('nodics.localization'),
+        'Repository builds must regenerate Localization schema artifacts after clean');
     assert(composition.root.startsWith(require('os').tmpdir()), 'Composition must be outside framework source');
     assert.strictEqual(compositionService.validate(composition), true);
     const serverPackagePath = path.join(composition.serverRoot, 'package.json');

@@ -17,4 +17,10 @@
  * @layer config
  * @owner flowCore
  */
-module.exports = {};
+module.exports = {
+    process: {
+        definitionContributions: {
+            maximumDefinitionsPerContribution: 50
+        }
+    }
+};

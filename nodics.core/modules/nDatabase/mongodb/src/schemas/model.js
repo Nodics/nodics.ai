@@ -68,7 +68,7 @@ module.exports = {
                     if (input.searchOptions && input.searchOptions.sort && !UTILS.isBlank(input.searchOptions.sort)) {
                         cursor = cursor.sort(input.searchOptions.sort);
                     }
-                    cursor.count().then(count => {
+                    if (input.transactionContext) {
                         cursor.toArray((error, result) => {
                             if (error) {
                                 reject(new CLASSES.NodicsError(error, null, 'ERR_MDL_00000'));
@@ -76,14 +76,29 @@ module.exports = {
                                 resolve({
                                     options: input.searchOptions,
                                     query: input.query,
-                                    count: count,
+                                    count: result.length,
                                     result: result
                                 });
                             }
                         });
-                    }).catch(error => {
-                        reject(new CLASSES.NodicsError(error, 'While executing count operation', 'ERR_MDL_00000'));
-                    });
+                    } else {
+                        cursor.count().then(count => {
+                            cursor.toArray((error, result) => {
+                                if (error) {
+                                    reject(new CLASSES.NodicsError(error, null, 'ERR_MDL_00000'));
+                                } else {
+                                    resolve({
+                                        options: input.searchOptions,
+                                        query: input.query,
+                                        count: count,
+                                        result: result
+                                    });
+                                }
+                            });
+                        }).catch(error => {
+                            reject(new CLASSES.NodicsError(error, 'While executing count operation', 'ERR_MDL_00000'));
+                        });
+                    }
                 } catch (error) {
                     reject(new CLASSES.NodicsError(error, 'While executing find operation', 'ERR_MDL_00000'));
                 }

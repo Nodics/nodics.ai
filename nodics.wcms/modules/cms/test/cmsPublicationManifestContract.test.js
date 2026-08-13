@@ -30,17 +30,31 @@ global.CONFIG = { get: key => {
 });
 assert.strictEqual(schemas.cmsPublicationManifest.isVersionedEnabled, false);
 assert.strictEqual(schemas.cmsOnlinePublicationPointer.isVersionedEnabled, false);
+assert.deepStrictEqual(schemas.cmsOnlinePublicationPointer.cache, { enabled: false });
+assert.deepStrictEqual(schemas.cmsPublicationManifest.transaction, { enabled: true, sideEffects: 'none' });
+assert.deepStrictEqual(schemas.cmsOnlinePublicationPointer.transaction, { enabled: true, sideEffects: 'none' });
+assert.deepStrictEqual(schemas.cmsPublicationDeploymentReceipt.transaction, { enabled: true, sideEffects: 'none' });
+assert.deepStrictEqual(schemas.cmsPublicationEventOutbox.transaction, { enabled: true, sideEffects: 'none' });
 assert.strictEqual(properties.publish.providers.domainAdapters.cms, 'DefaultCmsPublicationAdapterService');
 assert.strictEqual(properties.publish.providers.versionProviders.cms, 'DefaultCmsPublicationVersionProviderService');
-['deployPublication', 'getPublicationStatus', 'rollbackPublication'].forEach(operation => {
+assert.strictEqual(properties.cms.publication.maximumDeploymentRequestBytes, '16mb');
+assert.strictEqual(properties.cms.publication.target.maxManifestBytes, 12582912);
+assert.strictEqual(properties.bodyParserHandler.cmsPublicationBodyParserHandler,
+    'DefaultCmsPublicationBodyParserHandlerService');
+assert.strictEqual(routes.cmsPublicationTarget.deployPublication.bodyParserHandler,
+    'cmsPublicationBodyParserHandler');
+['deployPublication', 'getPublicationStatus', 'reconcilePublicationEvidence', 'rollbackPublication'].forEach(operation => {
     assert.strictEqual(routes.cmsPublicationTarget[operation].secured, true);
     assert.deepStrictEqual(routes.cmsPublicationTarget[operation].authTokenTypes, ['service']);
     assert.strictEqual(routes.cmsPublicationTarget[operation].permissionConfig, 'authSecurity.internalToken.routePermission');
 });
 
 const data = {
+    sites: [{ code: 'site-a', versionId: 1, active: true, name: 'Site A' }],
     routes: [{ code: 'home-route', versionId: 2, active: true, site: 'site-a', path: '/home', locale: 'en', channel: 'web',
-        accessMode: 'PUBLIC', routeType: 'PAGE', page: 'home' }],
+        accessMode: 'PUBLIC', routeType: 'PAGE', page: 'home' },
+    { code: 'dashboard-route', versionId: 1, active: true, site: 'site-a', path: '/dashboard', locale: 'en', channel: 'web',
+        accessMode: 'AUTHENTICATED', routeType: 'PAGE', page: 'home' }],
     pages: [{ code: 'home', versionId: 3, active: true, name: 'Home', typeCode: 'homePage',
         renderer: 'page.home', rendererContractVersion: 1, rendererChannels: ['web'],
         rendererDeprecated: false, template: 'main' }],
@@ -68,23 +82,30 @@ const data = {
     ],
     templates: [{ code: 'main', versionId: 1, active: true, name: 'Main', renderer: 'template.main', contractVersion: 1 }],
     slots: [{ code: 'main-main', versionId: 1, active: true, template: 'main', name: 'main' }],
-    manifests: [], pointers: [], receipts: []
+    manifests: [], pointers: [], receipts: [], outbox: []
 };
 const matches = (model, query) => Object.keys(query || {}).every(key => {
     let expected = query[key];
     if (expected && expected.$in) return expected.$in.includes(model[key]);
+    if (expected && expected.$ne !== undefined) return model[key] !== expected.$ne;
     return model[key] === expected;
 });
+const transactionContexts = [];
 const generated = list => ({
     get: async request => ({ result: list.filter(item => matches(item, request.query)) }),
-    save: async request => { list.push(Object.assign({}, request.model)); return { result: [request.model] }; },
+    save: async request => {
+        if (request.transactionContext) transactionContexts.push(request.transactionContext);
+        list.push(Object.assign({}, request.model)); return { result: [request.model] };
+    },
     update: async request => {
+        if (request.transactionContext) transactionContexts.push(request.transactionContext);
         let item = list.find(model => matches(model, request.query));
         if (!item) return { result: { modifiedCount: 0 } };
         Object.assign(item, request.model); return { result: { modifiedCount: 1 } };
     }
 });
 global.SERVICE = {
+    DefaultCmsSiteService: generated(data.sites),
     DefaultCmsPageRouteService: generated(data.routes),
     DefaultCmsPageService: generated(data.pages),
     DefaultCmsComponentDetailService: generated(data.details),
@@ -97,10 +118,24 @@ global.SERVICE = {
     DefaultCmsPublicationManifestService: generated(data.manifests),
     DefaultCmsOnlinePublicationPointerService: generated(data.pointers),
     DefaultCmsPublicationDeploymentReceiptService: generated(data.receipts),
+    DefaultCmsPublicationEventOutboxService: generated(data.outbox),
+    DefaultMediaPublicationTransferService: {
+        exportReferenced: async codes => codes.map(code => ({ code: code, checksum: code + '-checksum', checksumAlgorithm: 'sha256',
+            sizeBytes: 1, contentBase64: 'eA==' })),
+        importReferenced: async assets => assets
+    },
+    DefaultDatabaseTransactionService: {
+        capabilities: () => ({ multiRecordAtomic: true, contextPropagation: true, contractVersion: 1 }),
+        execute: async (scope, work) => {
+            assert.deepStrictEqual(scope, { tenant: 'tenant-a', moduleName: 'cms' });
+            return work(Object.freeze({ transactionId: 'transaction-' + (transactionContexts.length + 1) }));
+        }
+    },
     DefaultCmsContractValidationService: require('../src/service/validation/defaultCmsContractValidationService'),
     DefaultCmsDeliveryCacheInvalidationService: { invalidate: async () => true }
 };
 SERVICE.DefaultCmsContentLocalizationService = require('../src/service/localization/defaultCmsContentLocalizationService');
+SERVICE.DefaultCmsPublicationOutboxService = require('../src/service/publication/defaultCmsPublicationOutboxService');
 const adapter = require('../src/service/publication/defaultCmsPublicationAdapterService');
 const manifests = require('../src/service/publication/defaultCmsPublicationManifestOrchestrationService');
 const provider = require('../src/service/publication/defaultCmsPublicationVersionProviderService');
@@ -115,7 +150,9 @@ const onTarget = async operation => {
 SERVICE.TestCmsTargetTransport = {
     deploy: (payload, targetRequest) => onTarget(() => target.deploy(Object.assign({}, targetRequest, { cmsPublicationTarget: payload }))),
     getStatus: (payload, targetRequest) => onTarget(() => target.getStatus(Object.assign({}, targetRequest, { cmsPublicationTarget: payload }))),
-    rollback: (payload, targetRequest) => onTarget(() => target.rollback(Object.assign({}, targetRequest, { cmsPublicationTarget: payload })))
+    reconcile: (payload, targetRequest) => onTarget(() => target.reconcile(Object.assign({}, targetRequest, { cmsPublicationTarget: payload }))),
+    rollback: (payload, targetRequest) => onTarget(() => target.rollback(Object.assign({}, targetRequest, { cmsPublicationTarget: payload }))),
+    withdraw: (payload, targetRequest) => onTarget(() => target.withdraw(Object.assign({}, targetRequest, { cmsPublicationTarget: payload })))
 };
 properties.cms.publication.targetTransportProvider = 'TestCmsTargetTransport';
 properties.cms.publication.runtimeRole = 'STAGED';
@@ -179,8 +216,58 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     assert.strictEqual(activated.version, manifest.code);
     assert.strictEqual(data.pointers.length, 1);
     assert.strictEqual(data.receipts.length, 1);
+    assert.strictEqual(data.outbox.length, 1);
+    assert.strictEqual(data.outbox[0].status, 'DELIVERED');
+    let lineage = await provider.getLineage(Object.assign({}, publication, { targetVersion: manifest.code }), request);
+    assert.strictEqual((await provider.reconcile(Object.assign({}, publication, { targetVersion: manifest.code, revision: 4 }), request)).status,
+        'CONSISTENT', 'aligned manifest, pointer, receipt, and outbox evidence must reconcile without mutation');
+    data.receipts.length = 0;
+    data.outbox.length = 0;
+    let diagnosed = await provider.reconcile(Object.assign({}, publication, { targetVersion: manifest.code, revision: 4 }), request);
+    assert.strictEqual(diagnosed.status, 'EVIDENCE_GAP');
+    assert.strictEqual(diagnosed.repaired, false);
+    let repaired = await provider.reconcile(Object.assign({}, publication, { targetVersion: manifest.code, revision: 4 }),
+        Object.assign({}, request, { repairEvidence: true }));
+    assert.strictEqual(repaired.status, 'REPAIRED');
+    assert.strictEqual(data.receipts.length, 1);
+    assert.strictEqual(data.outbox.length, 1);
+    let pointerManifest = data.pointers[0].manifestCode;
+    data.pointers[0].manifestCode = 'unexpected-manifest';
+    let refused = await provider.reconcile(Object.assign({}, publication, { targetVersion: manifest.code, revision: 5 }),
+        Object.assign({}, request, { repairEvidence: true }));
+    assert.strictEqual(refused.status, 'POINTER_DRIFT');
+    assert.strictEqual(refused.repairRefused, true);
+    assert.strictEqual(data.pointers[0].manifestCode, 'unexpected-manifest', 'reconciliation must never switch a drifted pointer');
+    data.pointers[0].manifestCode = pointerManifest;
+    assert.strictEqual(lineage.manifest.publicationCode, publication.code);
+    assert.strictEqual(lineage.manifest.sourceVersion, publication.sourceVersion);
+    assert.strictEqual(lineage.manifest.correlationId, request.correlationId);
+    assert(lineage.receipts.some(receipt => receipt.operation === 'DEPLOY' && receipt.correlationId === request.correlationId));
+    assert(lineage.outbox.some(event => event.operation === 'DEPLOY' && event.status === 'DELIVERED'));
+    assert(transactionContexts.length >= 2, 'Online pointer and receipt writes must use a governed transaction context');
+    assert.strictEqual(transactionContexts.at(-1), transactionContexts.at(-2),
+        'Online pointer and receipt writes must share one transaction context');
     assert.strictEqual((await provider.getOnlineVersion(publication, request)).version, manifest.code);
     assert.strictEqual((await provider.activate(publication, request)).version, manifest.code, 'activation replay must be idempotent');
+
+    let lossPublication = Object.assign({}, publication, { code: 'publish-home-response-loss', revision: 1 });
+    let originalTransportDeploy = SERVICE.TestCmsTargetTransport.deploy;
+    let loseResponse = true;
+    SERVICE.TestCmsTargetTransport.deploy = async (payload, targetRequest) => {
+        let committed = await originalTransportDeploy(payload, targetRequest);
+        if (loseResponse) { loseResponse = false; throw new NodicsError('SIMULATED_RESPONSE_LOSS', 'Committed response was lost'); }
+        return committed;
+    };
+    let pointerCountBeforeLoss = data.pointers.length;
+    let receiptCountBeforeLoss = data.receipts.length;
+    let outboxCountBeforeLoss = data.outbox.length;
+    await assert.rejects(provider.activate(lossPublication, request), error => error.code === 'SIMULATED_RESPONSE_LOSS');
+    let recoveredLoss = await provider.activate(lossPublication, request);
+    assert.strictEqual(recoveredLoss.version, 'publish-home-response-loss_2');
+    assert.strictEqual(data.pointers.length, pointerCountBeforeLoss, 'response-loss retry must reuse the committed pointer');
+    assert.strictEqual(data.receipts.length, receiptCountBeforeLoss + 1, 'response-loss retry must reuse the committed receipt');
+    assert.strictEqual(data.outbox.length, outboxCountBeforeLoss + 1, 'response-loss retry must reuse the committed outbox event');
+    SERVICE.TestCmsTargetTransport.deploy = originalTransportDeploy;
 
     properties.cms.publication.enabled = true;
     const delivery = require('../src/service/delivery/defaultCmsDeliveryService');
@@ -198,6 +285,15 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     assert.strictEqual(rolledBack.version, previous.code);
     assert.strictEqual(data.pointers[0].manifestCode, previous.code);
     assert(data.receipts.some(receipt => receipt.operation === 'ROLLBACK' && receipt.manifestCode === previous.code));
+    assert(data.outbox.some(event => event.operation === 'ROLLBACK' && event.status === 'DELIVERED'));
+
+    let withdrawn = await provider.withdraw(Object.assign({}, publication, { targetVersion: previous.code }), request);
+    assert.strictEqual(withdrawn.version, previous.code);
+    assert.strictEqual(data.pointers[0].active, false, 'withdrawal must remove the route from delivery without deleting its manifest');
+    assert(data.receipts.some(receipt => receipt.operation === 'WITHDRAW' && receipt.manifestCode === previous.code));
+    assert.strictEqual((await provider.activate(publication, request)).version, manifest.code,
+        'a withdrawn immutable release must be safely reactivated through the normal deployment path');
+    assert.strictEqual(data.pointers[0].active, true);
 
     let tampered = JSON.parse(JSON.stringify(manifest));
     tampered.snapshot.page.name = 'Tampered page';
@@ -221,7 +317,7 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
 
     let originalUpdate = SERVICE.DefaultCmsOnlinePublicationPointerService.update;
     SERVICE.DefaultCmsOnlinePublicationPointerService.update = async () => ({ result: { modifiedCount: 0 } });
-    await assert.rejects(manifests.activate(manifest, request), error => error.code === 'CMS_PUBLICATION_POINTER_CONFLICT');
+    await assert.rejects(manifests.activate(previous, request), error => error.code === 'CMS_PUBLICATION_POINTER_CONFLICT');
     SERVICE.DefaultCmsOnlinePublicationPointerService.update = originalUpdate;
 
     let originalPointerGet = SERVICE.DefaultCmsOnlinePublicationPointerService.get;
@@ -254,10 +350,42 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
         target.recordReceipt('DEPLOY', raceManifest, { version: raceManifest.code }, request),
         target.recordReceipt('DEPLOY', raceManifest, { version: raceManifest.code }, request)
     ]);
-    assert(concurrentReceipt.every(receipt => receipt.code === 'DEPLOY_' + raceManifest.code),
+    assert(concurrentReceipt.every(receipt => receipt.code === concurrentReceipt[0].code &&
+        receipt.code.startsWith('DEPLOY_' + raceManifest.code + '_')),
         'concurrent identical receipt writes must converge on one deployment receipt');
     SERVICE.DefaultCmsPublicationDeploymentReceiptService.get = originalReceiptGet;
     SERVICE.DefaultCmsPublicationDeploymentReceiptService.save = originalReceiptSave;
+
+    data.pointers.splice(0);
+    const sitePublication = { code: 'publish-site-a', domain: 'cms', rootType: 'site', rootCode: 'site-a', sourceVersion: '1' };
+    const siteRoot = await adapter.getVersion(sitePublication, request);
+    sitePublication.dependencies = await adapter.resolveDependencies(sitePublication, siteRoot, request);
+    const siteValidation = await adapter.validate(sitePublication, siteRoot, request, sitePublication.dependencies);
+    assert.strictEqual(siteValidation.valid, true);
+    assert.strictEqual(siteValidation.routeCount, 2);
+    const siteManifest = await manifests.persist(sitePublication, request);
+    assert.strictEqual(siteManifest.snapshot.contractVersion, 2);
+    assert.strictEqual(siteManifest.snapshot.bundleType, 'SITE');
+    assert.deepStrictEqual(siteManifest.snapshot.routes.map(route => route.path), ['/dashboard', '/home']);
+    const siteActivation = await provider.activate(sitePublication, request);
+    assert.strictEqual(siteActivation.routeCount, 2);
+    assert.strictEqual(data.pointers.length, 2);
+    assert(data.pointers.every(pointer => pointer.manifestCode === siteManifest.code),
+        'one site-bundle deployment must switch every route pointer to the same immutable manifest');
+    assert.strictEqual((await provider.getOnlineVersion(sitePublication, request)).version, siteManifest.code);
+    properties.cms.publication.enabled = true;
+    let siteDelivery = await delivery.resolvePage({ tenant: 'tenant-a', authData: {}, router: { publicAccess: true },
+        delivery: { site: 'site-a', path: '/home', locale: 'en', channel: 'web' } });
+    assert.strictEqual(siteDelivery.result.path, '/home');
+    properties.cms.publication.enabled = false;
+    let siteWithdrawal = await provider.withdraw(Object.assign({}, sitePublication,
+        { targetVersion: siteManifest.code }), request);
+    assert.strictEqual(siteWithdrawal.routeCount, 2);
+    assert(data.pointers.every(pointer => pointer.active === false));
+    let siteRecovery = await provider.rollback(sitePublication, siteManifest.code, request);
+    assert.strictEqual(siteRecovery.routeCount, 2,
+        'a fully withdrawn site bundle must be recoverable when no competing active scope exists');
+    assert(data.pointers.every(pointer => pointer.active === true && pointer.manifestCode === siteManifest.code));
 
     const transport = require('../src/service/publication/defaultCmsPublicationModuleTransportService');
     properties.cms.publication.runtimeRole = 'STAGED';
@@ -285,6 +413,19 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     global.CONFIG = { get: key => key === 'cms' ? properties.cms : key === 'publishEnabled' ? true : undefined };
     await assert.rejects(target.deploy({ tenant: 'tenant-a', cmsPublicationTarget: { manifest: manifest } }),
         error => error.code === 'CMS_PUBLICATION_TARGET_VERSIONING_INVALID');
+
+    let replayEvent = { code: 'DEPLOY_replay_manifest', active: true, publicationCode: 'replay',
+        manifestCode: 'replay_manifest', operation: 'DEPLOY', eventType: 'CMS_ONLINE_CHANGED',
+        status: 'PENDING', attempts: 0, correlationId: 'replay-correlation' };
+    data.outbox.push(replayEvent);
+    let invalidation = SERVICE.DefaultCmsDeliveryCacheInvalidationService.invalidate;
+    SERVICE.DefaultCmsDeliveryCacheInvalidationService.invalidate = async () => { throw new Error('cache unavailable'); };
+    await assert.rejects(SERVICE.DefaultCmsPublicationOutboxService.deliver(replayEvent, request), /cache unavailable/);
+    assert.strictEqual(replayEvent.status, 'PENDING', 'failed delivery must remain replayable');
+    SERVICE.DefaultCmsDeliveryCacheInvalidationService.invalidate = invalidation;
+    let reconciled = await SERVICE.DefaultCmsPublicationOutboxService.reconcile(request);
+    assert.strictEqual(reconciled.delivered, 1);
+    assert.strictEqual(replayEvent.status, 'DELIVERED');
 
     console.log('CMS publication manifest contract validated');
 })().catch(error => { console.error(error); process.exit(1); });

@@ -17,6 +17,11 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+    ERR_SYS_00120: { code: '403', message: 'Local reset provider is disabled' },
+    ERR_SYS_00121: { code: '403', message: 'Local reset provider requires a service token' },
+    ERR_SYS_00122: { code: '400', message: 'Local reset provider confirmation is invalid' },
+    ERR_SYS_00123: { code: '500', message: 'Local reset provider service boundary is invalid' },
+    ERR_SYS_00124: { code: '503', message: 'Configured Local reset service is unavailable' },
     SUC_SYS_HEALTH_LIVE: {
         code: '200',
         message: 'Runtime process is live'

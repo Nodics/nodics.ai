@@ -29,7 +29,7 @@
     "docs:generate": "node data/core/source/documentation/tooling/generate-documentation-content.mjs",
     "docs:check": "node data/core/source/documentation/tooling/generate-documentation-content.mjs --check",
     "validate": "node scripts/validate-axis-content-pack.mjs",
-    "test": "npm run docs:check && npm run validate"
+    "test": "npm run docs:check && npm run validate && node test/axisInitializationService.test.js"
   },
   "dependencies": {}
 }

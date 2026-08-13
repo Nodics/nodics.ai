@@ -64,10 +64,10 @@ module.exports = {
         return { schema: schema, code: model.code, version: String(model.versionId) };
     },
     /** Resolves the bounded exact-version graph owned by one page route. */
-    resolveDependencies: async function (publication, rootVersion, request) {
+    resolveRouteDependencies: async function (rootVersion, request) {
         let settings = this.settings();
         let max = Number(settings.maxDependencies || 500);
-        let dependencies = [this.identity(this.descriptor(publication.rootType).schema, rootVersion)];
+        let dependencies = [this.identity('cmsPageRoute', rootVersion)];
         let pages = await this.loadLatest('DefaultCmsPageService', request, { code: rootVersion.page });
         if (pages.length !== 1) throw this.error('CMS_PUBLICATION_PAGE_INVALID', 'Published route must resolve exactly one page');
         dependencies.push(this.identity('cmsPage', pages[0]));
@@ -110,13 +110,40 @@ module.exports = {
             result.set(item.schema + ':' + item.code + ':' + item.version, item); return result;
         }, new Map()).values());
     },
+    /** Resolves either one page route or every route in one immutable site baseline. */
+    resolveDependencies: async function (publication, rootVersion, request) {
+        if (publication.rootType !== 'site') return this.resolveRouteDependencies(rootVersion, request);
+        let routes = await this.loadLatest('DefaultCmsPageRouteService', request, { site: rootVersion.code });
+        if (!routes.length) throw this.error('CMS_PUBLICATION_SITE_EMPTY', 'Published CMS site must contain at least one route');
+        let maximumRoutes = Number(this.settings().maxBundleRoutes || 200);
+        if (routes.length > maximumRoutes) throw this.error('CMS_PUBLICATION_ROUTE_BOUNDARY', 'CMS site publication route boundary exceeded');
+        let dependencies = [this.identity('cmsSite', rootVersion)];
+        for (let route of routes) dependencies.push(...await this.resolveRouteDependencies(route, request));
+        dependencies = Array.from(dependencies.reduce((result, item) => {
+            result.set(item.schema + ':' + item.code + ':' + item.version, item); return result;
+        }, new Map()).values());
+        if (dependencies.length > Number(this.settings().maxDependencies || 500)) {
+            throw this.error('CMS_PUBLICATION_DEPENDENCY_EXCEEDED', 'CMS publication graph exceeds configured size');
+        }
+        return dependencies;
+    },
     /** Validates route, graph identity uniqueness, and renderer contracts. */
     validate: async function (publication, rootVersion, request, dependencies) {
-        await SERVICE.DefaultCmsContractValidationService.validateRoute({ model: Object.assign({}, rootVersion) });
+        let routes = publication.rootType === 'site'
+            ? (dependencies || []).filter(identity => identity.schema === 'cmsPageRoute')
+            : [{ code: rootVersion.code, version: String(rootVersion.versionId) }];
+        if (!routes.length) return { valid: false, reason: 'SITE_ROUTES_MISSING' };
+        for (let identity of routes) {
+            let route = identity.code === rootVersion.code && publication.rootType !== 'site' ? rootVersion :
+                this.items(await this.service('DefaultCmsPageRouteService').get({ tenant: request.tenant, authData: request.authData,
+                    query: { code: identity.code, versionId: Number(identity.version), active: true }, searchOptions: { limit: 1 } }))[0];
+            if (!route) return { valid: false, reason: 'ROUTE_VERSION_MISSING' };
+            await SERVICE.DefaultCmsContractValidationService.validateRoute({ model: Object.assign({}, route) });
+        }
         let keys = (dependencies || []).map(item => item.schema + ':' + item.code + ':' + item.version);
         if (!keys.length || keys.length !== new Set(keys).size) return { valid: false, reason: 'DEPENDENCY_IDENTITY_INVALID' };
         for (let identity of dependencies) {
-            let serviceNames = { cmsPageRoute: 'DefaultCmsPageRouteService', cmsPage: 'DefaultCmsPageService',
+            let serviceNames = { cmsSite: 'DefaultCmsSiteService', cmsPageRoute: 'DefaultCmsPageRouteService', cmsPage: 'DefaultCmsPageService',
                 cmsComponentDetail: 'DefaultCmsComponentDetailService', cmsComponent: 'DefaultCmsComponentService',
                 cmsComponentLocalization: 'DefaultCmsComponentLocalizationService', cmsComponentMedia: 'DefaultCmsComponentMediaService',
                 cmsTypeCode: 'DefaultCmsTypeCodeService',
@@ -130,16 +157,26 @@ module.exports = {
                 return { valid: false, reason: 'LOCALIZATION_NOT_READY' };
             }
         }
-        return { valid: Boolean(rootVersion.code && rootVersion.page && rootVersion.site && rootVersion.path),
-            rootVersion: rootVersion.versionId, dependencyCount: keys.length };
+        return { valid: publication.rootType === 'site' ? Boolean(rootVersion.code) :
+            Boolean(rootVersion.code && rootVersion.page && rootVersion.site && rootVersion.path),
+            rootVersion: rootVersion.versionId, routeCount: routes.length, dependencyCount: keys.length };
     },
-    /** Invalidates CMS delivery cache after activation. */
+    /** Invalidates locally only when this runtime also owns the publication target. */
+    invalidateLocalTarget: function (request) {
+        if (this.settings().targetTransportProvider) return Promise.resolve(true);
+        return SERVICE.DefaultCmsDeliveryCacheInvalidationService.invalidate(request);
+    },
+    /** Invalidates CMS delivery cache after activation for an in-process target. */
     afterActivate: function (publication, activation, request) {
-        return SERVICE.DefaultCmsDeliveryCacheInvalidationService.invalidate(request);
+        return this.invalidateLocalTarget(request);
     },
-    /** Invalidates CMS delivery cache after rollback. */
+    /** Invalidates CMS delivery cache after rollback for an in-process target. */
     afterRollback: function (publication, activation, request) {
-        return SERVICE.DefaultCmsDeliveryCacheInvalidationService.invalidate(request);
+        return this.invalidateLocalTarget(request);
+    },
+    /** Invalidates CMS delivery cache after withdrawal for an in-process target. */
+    afterWithdraw: function (publication, activation, request) {
+        return this.invalidateLocalTarget(request);
     },
     /** Creates a stable CMS publication error. */
     error: function (code, message) {

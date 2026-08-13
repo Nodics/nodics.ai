@@ -35,6 +35,10 @@ fs.writeFileSync(path.join(root, 'data', 'manifest.json'), JSON.stringify({
     contractVersion: 2, module: 'testModule', sections: { core: {
         kind: 'DATA_RELEASE', dataType: 'core', version: '1.1.0',
         description: 'Test core release',
+        owningDomain: 'test.domain', lifecycle: 'PUBLISHABLE', destinationRole: 'WCMS_STAGED',
+        environmentScope: ['LOCAL'], sensitivity: 'PUBLIC', versioningPolicy: 'IMMUTABLE',
+        publicationPolicy: 'REQUIRED', initialPublicationPolicy: 'ADMIN_INITIATED',
+        removalPolicy: 'UNPUBLISH_OR_RETIRE',
         files: Object.fromEntries(Object.entries(files).map(([name, hash]) => ['core/' + name, hash]))
     } }
 }));
@@ -75,15 +79,25 @@ global.SERVICE = {
 };
 
 const service = require('../src/service/release/defaultDataReleaseService');
+const routers = require('../src/router/routers');
 
 (async function () {
+    const releaseRoutes = routers.import.dataReleases;
+    ['preflightInit', 'preflightCore', 'preflightSample', 'executeInit', 'executeCore', 'executeSample'].forEach(code => {
+        const schema = releaseRoutes[code].requestBody.content['application/json'].schema;
+        assert(schema.properties.releaseCodes, code + ' must publish the explicit releaseCodes selector');
+        assert(schema.properties.expectedReleases, code + ' must publish immutable expected-release qualification');
+    });
     let discovered = service.discoverReleases();
     assert.strictEqual(discovered.length, 1);
     assert.strictEqual(discovered[0].dataType, 'core');
+    assert.strictEqual(discovered[0].lifecycle, 'PUBLISHABLE');
+    assert.strictEqual(discovered[0].destinationRole, 'WCMS_STAGED');
 
     let catalogue = await service.getCatalogue({ tenant: 'default', dataType: 'core' });
     assert.strictEqual(catalogue.data.length, 1);
     assert.strictEqual(catalogue.data[0].displayName, 'Test Module');
+    assert.strictEqual(catalogue.data[0].initialPublicationPolicy, 'ADMIN_INITIATED');
     assert.strictEqual(catalogue.data[0].status, 'NOT_INSTALLED');
 
     let preflight = await service.preflight({
@@ -131,6 +145,15 @@ const service = require('../src/service/release/defaultDataReleaseService');
     await assert.rejects(() => service.preflight({
         tenant: 'default', releaseRequest: { dataType: 'sample', modules: ['testModule'] }
     }), /disabled/);
+
+    assert.throws(() => service.validateLifecycleMetadata({ owningDomain: 'test.domain' }, 'testModule', 'core'),
+        /metadata is incomplete/);
+    assert.throws(() => service.validateLifecycleMetadata({
+        owningDomain: 'test.domain', lifecycle: 'PUBLISHABLE', destinationRole: 'ONLINE',
+        environmentScope: ['LOCAL'], sensitivity: 'PUBLIC', versioningPolicy: 'IMMUTABLE',
+        publicationPolicy: 'REQUIRED', initialPublicationPolicy: 'ADMIN_INITIATED',
+        removalPolicy: 'UNPUBLISH_OR_RETIRE'
+    }, 'testModule', 'core'), /must target a Staged runtime/);
 
     fs.writeFileSync(path.join(releaseRoot, 'data', 'data.js'), 'module.exports = [1];\n');
     let invalidReleases = service.discoverReleases('core');

@@ -21,6 +21,7 @@ module.exports = {
         publicationRequest: {
             super: 'base',
             isVersionedEnabled: false,
+            cache: { enabled: false },
             model: true,
             service: {
                 enabled: true
@@ -41,6 +42,7 @@ module.exports = {
                 validation: { type: 'object', required: false, description: 'Sanitized domain validation result' },
                 workflowRef: { type: 'string', required: false, description: 'Existing workflow authority reference' },
                 previousOnlineVersion: { type: 'string', required: false, description: 'Rollback target captured before activation' },
+                recoveryFromState: { type: 'string', required: false, description: 'Terminal state that initiated the current governed recovery attempt' },
                 requestedBy: { type: 'string', required: false },
                 correlationId: { type: 'string', required: false }
             }

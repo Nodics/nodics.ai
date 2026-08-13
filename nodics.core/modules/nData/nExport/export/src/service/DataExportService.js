@@ -16,6 +16,8 @@
  * @owner nExport
  * @override Project modules may override export behavior through later active modules while preserving media-owned media lookup, access policy, and download delivery.
  */
+const crypto = require('crypto');
+
 module.exports = {
     /**
      * Initializes the data export service.
@@ -56,7 +58,8 @@ module.exports = {
             }),
             records,
         );
-        let rendered = this.render(payload, exportRecords, descriptor);
+        let provenance = this.buildProvenance(request, payload, descriptor, exportRecords.length);
+        let rendered = this.render(payload, exportRecords, descriptor, provenance);
         let media = await this.storeMedia(request, payload, rendered);
         return {
             code: 'SUC_SYS_00000',
@@ -65,7 +68,11 @@ module.exports = {
                 schemaName: payload.schemaName,
                 format: payload.format,
                 fileName: rendered.fileName,
-                media: media,
+                media: this.projectMedia(media),
+                provenance: Object.assign({}, provenance, {
+                    checksumAlgorithm: 'SHA-256',
+                    checksum: rendered.checksum,
+                }),
                 summary: {
                     requestedRecords: records.length,
                     exportedRecords: exportRecords.length,
@@ -101,10 +108,15 @@ module.exports = {
         if (!Number.isInteger(pageSize) || pageSize < 1) pageSize = 50;
         let maximumRecords = Number(config.maximumRecords || 1000);
         if (!Number.isInteger(maximumRecords) || maximumRecords < 1) maximumRecords = 1000;
+        let authenticatedEnterpriseCode = this.resolveEnterpriseCode(request);
+        let requestedEnterpriseCode = this.safeOptionalCode(body.enterpriseCode);
+        if (requestedEnterpriseCode && authenticatedEnterpriseCode && requestedEnterpriseCode !== authenticatedEnterpriseCode) {
+            throw new CLASSES.NodicsError('ERR_EXP_00001', 'Cross-enterprise export is not permitted');
+        }
         return {
             moduleName: moduleName,
             schemaName: schemaName,
-            enterpriseCode: this.safeOptionalCode(body.enterpriseCode) || this.resolveEnterpriseCode(request),
+            enterpriseCode: requestedEnterpriseCode || authenticatedEnterpriseCode,
             format: format,
             query: {
                 search: typeof query.search === 'string' ? query.search : '',
@@ -159,6 +171,7 @@ module.exports = {
      * @param {Object} request Runtime request.
      * @param {Object} payload Normalized export payload.
      * @param {Object} descriptor Schema descriptor.
+     * @param {Object} provenance Export provenance.
      * @returns {Promise<Object[]>} Export candidate records.
      */
     collectRecords: async function (request, payload, descriptor) {
@@ -255,7 +268,7 @@ module.exports = {
      * @param {Object} descriptor Schema descriptor.
      * @returns {Object} Rendered file descriptor.
      */
-    render: function (payload, records, descriptor) {
+    render: function (payload, records, descriptor, provenance) {
         let extension = payload.format;
         let mimeType = payload.format === 'json' ? 'application/json' : 'text/csv';
         let fileName =
@@ -269,13 +282,14 @@ module.exports = {
             ].join('-') +
             '.' +
             extension;
-        let content = payload.format === 'json' ? this.renderJson(payload, records, descriptor) : this.renderCsv(records, descriptor);
+        let content = payload.format === 'json' ? this.renderJson(payload, records, descriptor, provenance) : this.renderCsv(records, descriptor);
         return {
             fileName: fileName,
             originalFileName: fileName,
             mimeType: mimeType,
             extension: extension,
             buffer: Buffer.from(content, 'utf8'),
+            checksum: crypto.createHash('sha256').update(content, 'utf8').digest('hex'),
         };
     },
 
@@ -285,14 +299,13 @@ module.exports = {
      * @param {Object} payload Normalized payload.
      * @param {Object[]} records Export records.
      * @param {Object} descriptor Schema descriptor.
+     * @param {Object} provenance Export provenance.
      * @returns {string} JSON content.
      */
-    renderJson: function (payload, records, descriptor) {
+    renderJson: function (payload, records, descriptor, provenance) {
         return JSON.stringify(
             {
-                exportedAt: new Date().toISOString(),
-                moduleName: payload.moduleName,
-                schemaName: payload.schemaName,
+                contract: provenance,
                 label: descriptor.label,
                 records: records,
             },
@@ -357,7 +370,40 @@ module.exports = {
     escapeCsvValue: function (value) {
         if (value === undefined || value === null) return '';
         let text = value instanceof Date ? value.toISOString() : String(value);
+        if (/^[=+\-@]/.test(text)) text = "'" + text;
         return /[",\n\r]/.test(text) ? '"' + text.replace(/"/g, '""') + '"' : text;
+    },
+
+    /** Builds non-authoritative provenance for one governed schema export. */
+    buildProvenance: function (request, payload, descriptor, recordCount) {
+        return {
+            contractType: 'NODICS_SCHEMA_EXPORT',
+            contractVersion: 1,
+            moduleName: payload.moduleName,
+            schemaName: payload.schemaName,
+            schemaVersion: descriptor.contractVersion || descriptor.version || 1,
+            owner: descriptor.owner || payload.moduleName,
+            enterpriseCode: payload.enterpriseCode,
+            tenant: request.tenant,
+            recordCount: recordCount,
+            classification: 'GOVERNED_SCHEMA_EXPORT',
+            destinationRole: 'OWNING_RUNTIME',
+            importAuthorization: false,
+            publicationAuthorization: false,
+            onlineWriteAuthorization: false,
+            correlationId: request.correlationId || (request.headers && request.headers['x-correlation-id']),
+            exportedAt: new Date().toISOString(),
+        };
+    },
+
+    /** Returns only media fields needed by an authorized client. */
+    projectMedia: function (media) {
+        let source = media || {};
+        return {
+            code: source.code,
+            accessUrl: source.accessUrl,
+            originalFileName: source.originalFileName,
+        };
     },
 
     /**

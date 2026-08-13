@@ -40,7 +40,10 @@ global.CONFIG = {
           publicBootstrap: {
             enabled: true,
             contractVersion: 1,
-            requiredModules: { profile: "profile", cms: "cms" },
+            requiredModules: {
+              profile: "profile",
+              cms: { moduleName: "cms", server: "wcmsOnlineServer", runtimeRole: "ONLINE" },
+            },
             optionalModules: { engagement: "engagementApi" },
             uiComposition: {
               site: "axisCmsSite",
@@ -244,7 +247,11 @@ async function run() {
   });
   assert.strictEqual(first.data.moduleName, "cms");
   assert.strictEqual(first.data.backoffice.capabilityId, "content-management");
-  await service.register({ body: registration, authData: identity });
+  await service.register({
+    body: registration,
+    authData: identity,
+    _runtimeCoordinates: { environment: "kickoffLocal", server: "wcmsOnlineServer", node: "default" },
+  });
   assert.strictEqual(
     store._instances.size,
     1,
@@ -335,7 +342,11 @@ async function run() {
   });
   assert.strictEqual(store._instances.size, 0);
 
-  await service.register({ body: registration, authData: identity });
+  await service.register({
+    body: registration,
+    authData: identity,
+    _runtimeCoordinates: { environment: "kickoffLocal", server: "wcmsOnlineServer", node: "default" },
+  });
   let profileRegistration = {
     moduleName: "profile",
     displayName: "Profile and Identity",
@@ -373,6 +384,14 @@ async function run() {
       userGroups: ["serviceAccountUserGroup"],
     },
   });
+  await service.register({
+    body: Object.assign({}, registration, {
+      instanceId: "cms-staged-1",
+      endpoint: "http://cms-staged:4312/nodics/cms",
+    }),
+    authData: Object.assign({}, identity, { runtimeInstanceId: "cms-staged-1" }),
+    _runtimeCoordinates: { environment: "kickoffLocal", server: "wcmsStagedServer", node: "default" },
+  });
   let publicBootstrap = await service.publicBootstrap({
     headers: { "x-nodics-client-contract-version": "1" },
   });
@@ -381,6 +400,7 @@ async function run() {
     cms: "http://cms:3040/nodics/cms",
     engagement: "http://engagement:4340/nodics/engagement",
   });
+  assert.deepStrictEqual(publicBootstrap.data.endpointRoles, { cms: "ONLINE" });
   assert.strictEqual(publicBootstrap.data.uiComposition.site, "axisCmsSite");
   assert.strictEqual(
     JSON.stringify(publicBootstrap).includes("instanceId"),
@@ -399,6 +419,7 @@ async function run() {
   );
   store._instances.delete("engagementApi:engagement-1");
   store._instances.delete("profile:profile-1");
+  store._instances.delete("cms:cms-staged-1");
   await assert.rejects(
     service.publicBootstrap({
       headers: { "x-nodics-client-contract-version": "1" },

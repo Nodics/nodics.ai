@@ -17,8 +17,20 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
-
     system: {
+        localResetProvider: {
+            execute: {
+                secured: true,
+                authTokenTypes: ['service'],
+                accessGroups: ['userGroup'],
+                permissionConfig: 'authSecurity.internalToken.routePermission',
+                apiExposure: 'moduleInternal',
+                key: '/operations/local-reset',
+                method: 'POST',
+                controller: 'DefaultLocalResetProviderController',
+                operation: 'execute'
+            }
+        },
         health: {
             getLiveness: {
                 secured: false,

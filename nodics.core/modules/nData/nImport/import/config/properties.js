@@ -40,6 +40,10 @@ module.exports = {
         },
         dataReleases: {
             allowedContractVersions: [1, 2],
+            lifecycleMetadataRequired: false,
+            contributions: [],
+            installers: {},
+            environmentClass: null,
             maximumFilesPerRelease: 1024,
             maximumModulesPerRun: 256,
             allowDowngrade: false,

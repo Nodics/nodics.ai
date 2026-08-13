@@ -22,3 +22,17 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   permissions; do not use a permission grant as a substitute for token type.
 - Leave `authTokenTypes` absent only when the route intentionally supports the
   normal authenticated credential types.
+
+## HTTP boundary defaults
+
+- Keep CORS closed in framework defaults and declare exact browser origins in
+  the environment/server layer. Never use wildcard origins with credentials.
+- Because layered origin arrays may merge, use server-layer `deniedOrigins` to
+  subtract inherited origins. Explicit denial always takes precedence.
+- Default API responses to the standard CSP/clickjacking/nosniff/referrer
+  headers and `Cache-Control: no-store`; a capability may replace caching only
+  through an explicit response contract.
+- Keep JSON parsing strict and bounded. Larger route-specific payloads require
+  a named body-parser handler and a configured maximum.
+- Internal module routes require service-token metadata even when browser CORS
+  would already block a caller; origin policy is not authentication.

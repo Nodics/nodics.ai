@@ -14,7 +14,8 @@ const path = require('path');
 
 const wcmsProperties = require('../../../config/properties');
 const moduleRoot = path.resolve(__dirname, '..');
-const load = name => require(path.join(moduleRoot, 'data/init/data/axis', name));
+const axisModuleRoot = path.resolve(moduleRoot, '../../../nodics.platform/modules/axis');
+const load = name => require(path.join(axisModuleRoot, 'data/init/data/axis', name));
 const records = data => Object.values(data);
 
 const catalog = records(load('axisContentCatalogData'));
@@ -26,7 +27,7 @@ const templates = records(load('axisCmsTemplateData'));
 const components = records(load('axisCmsComponentData'));
 const pages = records(load('axisCmsPageData'));
 const routes = records(load('axisCmsRouteData'));
-const header = require(path.join(moduleRoot, 'data/init/headers/axis/axisContentCatalogHeader'));
+const header = require(path.join(axisModuleRoot, 'data/init/headers/axis/axisContentCatalogHeader'));
 const axisDataSets = [catalog, sites, types, renderers, slots, templates, components, pages, routes];
 
 assert.strictEqual(wcmsProperties.apiExposure.categories.dataImport.enabled, true,
@@ -61,8 +62,8 @@ assert.strictEqual(wcmsProperties.data.contentPacks.packs.customerProjectDocumen
     'Customer project documentation pack must derive manifest identity from the active project package metadata');
 
 axisDataSets.flat().forEach(item => {
-    assert.strictEqual(item.functionalModule, 'nodics.wcms', item.code + ' must be owned by nodics.wcms');
-    assert.strictEqual(item.activationMode, 'RUNTIME_MODULE_ACTIVE', item.code + ' must require runtime module activation');
+    assert.strictEqual(item.functionalModule, 'nodics.platform', item.code + ' must be owned by nodics.platform');
+    assert.strictEqual(item.activationMode, 'PLATFORM_ACTIVE', item.code + ' must require Platform activation');
 });
 
 assert.strictEqual(catalog.length, 2);

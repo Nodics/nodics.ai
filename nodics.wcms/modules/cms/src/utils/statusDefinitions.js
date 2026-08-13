@@ -17,6 +17,7 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+    SUC_CMS_00000: { code: '200', message: 'CMS operation completed successfully' },
     ERR_CMS_00084: { code: '400', message: 'CMS delivery context is invalid' },
     ERR_CMS_00085: { code: '400', message: 'CMS delivery path is invalid' },
     ERR_CMS_00086: { code: '403', message: 'CMS component access is denied' },

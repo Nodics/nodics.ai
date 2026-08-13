@@ -7,6 +7,17 @@
       "contentPath": "core",
       "pack": "nodics.docs",
       "version": "0.14.2",
+      "owningDomain": "documentation",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
       "sourceMode": "catalogue-markdown-source",
       "sourceAuthority": "catalogue.json",
       "sites": [

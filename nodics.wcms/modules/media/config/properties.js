@@ -24,6 +24,13 @@ module.exports = {
         mediaContentResponseHandler: 'DefaultMediaContentResponseHandlerService'
     },
     media: {
+        publication: {
+            maximumAssets: 100,
+            maximumAssetBytes: 4194304,
+            maximumTotalBytes: 4194304,
+            retentionDays: 7,
+            garbageCollectionBatchSize: 100
+        },
         storage: {
             defaultProvider: 'local',
             defaultKeyStrategy: 'tenantEnterpriseSchemaDateMedia',
@@ -251,6 +258,8 @@ module.exports = {
         importSource: {
             allowedFolders: ['importSources'],
             allowedFormats: ['importFile'],
+            validationOnlyFolders: ['exportFiles'],
+            validationOnlyFormats: ['exportFile'],
             allowedStatuses: ['READY', 'CONSUMED'],
             maximumResults: 2
         },

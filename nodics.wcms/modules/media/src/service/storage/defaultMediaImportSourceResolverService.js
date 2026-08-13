@@ -39,6 +39,8 @@ module.exports = {
         return {
             allowedFolders: lookup.allowedFolders || ['importSources'],
             allowedFormats: lookup.allowedFormats || ['importFile'],
+            validationOnlyFolders: lookup.validationOnlyFolders || ['exportFiles'],
+            validationOnlyFormats: lookup.validationOnlyFormats || ['exportFile'],
             allowedStatuses: lookup.allowedStatuses || ['READY', 'CONSUMED'],
             maximumResults: lookup.maximumResults || 2
         };
@@ -57,7 +59,7 @@ module.exports = {
             throw new CLASSES.NodicsError('ERR_MED_00011', 'Media code is required for import source resolution');
         }
         let media = await this.loadMedia(request, mediaCode);
-        this.validateImportSourceMedia(media);
+        this.validateImportSourceMedia(media, request);
         let source = SERVICE.DefaultMediaStorageProviderRegistryService.resolveImportSource({
             tenant: request.tenant,
             authData: request.authData,
@@ -134,14 +136,18 @@ module.exports = {
      * Validates that a media item may be consumed by import.
      *
      * @param {Object} media Media model.
+     * @param {Object} request Import-source request.
      * @returns {boolean} True when valid.
      */
-    validateImportSourceMedia: function (media) {
+    validateImportSourceMedia: function (media, request) {
         let policy = this.policy();
-        if (!policy.allowedFolders.includes(media.folderCode)) {
+        let validationOnly = request && (request.validationOnly === true || request.options && request.options.validateOnly === true);
+        let allowedFolders = validationOnly ? policy.allowedFolders.concat(policy.validationOnlyFolders) : policy.allowedFolders;
+        let allowedFormats = validationOnly ? policy.allowedFormats.concat(policy.validationOnlyFormats) : policy.allowedFormats;
+        if (!allowedFolders.includes(media.folderCode)) {
             throw new CLASSES.NodicsError('ERR_MED_00011', 'Media folder is not allowed for import sources');
         }
-        if (media.formatCode && policy.allowedFormats.length && !policy.allowedFormats.includes(media.formatCode)) {
+        if (media.formatCode && allowedFormats.length && !allowedFormats.includes(media.formatCode)) {
             throw new CLASSES.NodicsError('ERR_MED_00011', 'Media format is not allowed for import sources');
         }
         if (!media.providerCode || !media.storageKey) {

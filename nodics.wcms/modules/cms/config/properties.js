@@ -17,6 +17,9 @@
  * @override Project modules may provide later property contributions for CMS rendering, data, and integration settings.
  */
 module.exports = {
+    bodyParserHandler: {
+        cmsPublicationBodyParserHandler: 'DefaultCmsPublicationBodyParserHandlerService'
+    },
     cms: {
         referenceLookup: { requireServiceToken: true, maximumResultCount: 1 },
         delivery: {
@@ -72,29 +75,42 @@ module.exports = {
         },
         publication: {
             enabled: false,
+            maximumDeploymentRequestBytes: '16mb',
             runtimeRole: 'UNASSIGNED',
             maxDependencies: 500,
             maxDepth: 12,
+            maxBundleRoutes: 200,
             manifestService: 'DefaultCmsPublicationManifestOrchestrationService',
             targetTransportProvider: null,
+            transactionModuleName: 'cms',
+            outbox: {
+                batchSize: 100,
+                maximumAttempts: 10,
+                leaseMs: 30000,
+                startupReconciliation: true
+            },
+            mediaGarbageCollection: { maximumPointers: 1000, maximumProtectedManifests: 1000 },
+            baselines: {},
             target: {
                 moduleName: null,
                 connectionName: null,
                 connectionType: 'abstract',
                 timeoutMs: 30000,
                 maxAttempts: 3,
-                maxManifestBytes: 5242880,
-                supportedContractVersions: [1]
+                maxManifestBytes: 12582912,
+                supportedContractVersions: [1, 2]
             },
             rootTypes: {
-                pageRoute: { schema: 'cmsPageRoute', service: 'DefaultCmsPageRouteService' }
+                pageRoute: { schema: 'cmsPageRoute', service: 'DefaultCmsPageRouteService' },
+                site: { schema: 'cmsSite', service: 'DefaultCmsSiteService', bundle: true }
             }
         }
     },
     publish: {
         providers: {
             domainAdapters: { cms: 'DefaultCmsPublicationAdapterService' },
-            versionProviders: { cms: 'DefaultCmsPublicationVersionProviderService' }
+            versionProviders: { cms: 'DefaultCmsPublicationVersionProviderService' },
+            workflowProvider: 'DefaultCmsPublicationWorkflowService'
         }
     }
 };

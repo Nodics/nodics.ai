@@ -944,9 +944,15 @@ module.exports = {
           item.clientCallable === true && item.endpoint && item.state === "UP",
       );
     let endpoints = {};
+    let endpointRoles = {};
     Object.entries(policy.requiredModules || {}).forEach((entry) => {
+      let selection = typeof entry[1] === "string"
+        ? { moduleName: entry[1] }
+        : Object.assign({}, entry[1]);
       let candidates = leases
-        .filter((item) => item.moduleName === entry[1])
+        .filter((item) => item.moduleName === selection.moduleName)
+        .filter((item) => !selection.server || item.server === selection.server)
+        .filter((item) => !selection.environment || item.environment === selection.environment)
         .sort((left, right) =>
           String(right.lastSeenAt || "").localeCompare(
             String(left.lastSeenAt || ""),
@@ -959,12 +965,21 @@ module.exports = {
         );
       }
       endpoints[entry[0]] = candidates[0].endpoint;
+      if (selection.runtimeRole) endpointRoles[entry[0]] = selection.runtimeRole;
     });
     Object.entries(policy.optionalModules || {}).forEach((entry) => {
+      let selection = typeof entry[1] === "string"
+        ? { moduleName: entry[1] }
+        : Object.assign({}, entry[1]);
       let candidate = leases
-        .filter((item) => item.moduleName === entry[1])
+        .filter((item) => item.moduleName === selection.moduleName)
+        .filter((item) => !selection.server || item.server === selection.server)
+        .filter((item) => !selection.environment || item.environment === selection.environment)
         .sort((left, right) => String(right.lastSeenAt || "").localeCompare(String(left.lastSeenAt || "")))[0];
-      if (candidate) endpoints[entry[0]] = candidate.endpoint;
+      if (candidate) {
+        endpoints[entry[0]] = candidate.endpoint;
+        if (selection.runtimeRole) endpointRoles[entry[0]] = selection.runtimeRole;
+      }
     });
     return {
       code: "SUC_BOF_00014",
@@ -972,6 +987,7 @@ module.exports = {
         contractVersion: contractVersion,
         clientContractVersion: clientContractVersion,
         endpoints: endpoints,
+        endpointRoles: endpointRoles,
         uiComposition: Object.assign({}, policy.uiComposition),
       },
     };

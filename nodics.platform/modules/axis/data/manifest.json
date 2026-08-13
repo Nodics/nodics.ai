@@ -2,11 +2,51 @@
   "contractVersion": 2,
   "module": "axis",
   "sections": {
+    "axisBaseline": {
+      "kind": "DATA_RELEASE",
+      "dataType": "init",
+      "version": "1.0.0",
+      "description": "Platform-owned Axis baseline experience for Staged installation and controlled publication",
+      "owningDomain": "axis",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "files": {
+        "init/data/axis/axisCmsComponentData.js": "597656722290058cd0255a8872c621e2e6ba494b062413a738afa2899e560f9d",
+        "init/data/axis/axisCmsPageData.js": "597149b6828ee5952d0dbaa44f842fdb865cc26683b918e9a555f7698b7905f3",
+        "init/data/axis/axisCmsRendererData.js": "2b37167721d007902d984ffaeaeaec19063d28ab9d368795ae397009dc706a47",
+        "init/data/axis/axisCmsRouteData.js": "602ded097f412a7cbf2bd614d734d0cfa43881cf7675b68f97be537ec0f20ee4",
+        "init/data/axis/axisCmsSiteData.js": "0c07f8e294fd7ff8ce1f3df787e0cc5c60e52d010685677b5dbb499009d73929",
+        "init/data/axis/axisCmsSlotData.js": "861d8021650e991409ee768692ad18eb5e7358699f962baa27bc15f58b901d10",
+        "init/data/axis/axisCmsTemplateData.js": "5c2f5924274f396a82885ba7fe9d9155352b61e08d2d9cd0df6922f2093e4f35",
+        "init/data/axis/axisCmsTypeCodeData.js": "7c8222dee467feeba5d90b593e1dd97a35e92dc97cec4d34c7a77844576a8249",
+        "init/data/axis/axisContentCatalogData.js": "cb807a566daa82760e2fa2362a38783dae542b2ee5daaf426a21eb4d2c6ea4b2",
+        "init/headers/axis/axisContentCatalogHeader.js": "ec398e034ae3a31f387787ef174e4050b5ac775cca6a0a29e2948b54897fe25e"
+      }
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "core",
       "pack": "nodics.platform.axis",
       "version": "0.3.32",
+      "owningDomain": "axis",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
       "sourceMode": "canonical-structured-source",
       "sourceAuthority": "core/source/documentation",
       "sites": [

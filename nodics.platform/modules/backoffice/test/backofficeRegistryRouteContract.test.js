@@ -28,6 +28,12 @@ assert.strictEqual(routers.registryDiscovery.refresh.permission, 'backoffice.reg
 assert.strictEqual(routers.axisPolicy.get.permission, 'backoffice.axis.policy.view');
 assert.strictEqual(routers.axisPolicy.update.permission, 'backoffice.axis.policy.update');
 assert.strictEqual(routers.axisPolicy.update.requestBody.required, true);
+assert.strictEqual(routers.axisInitialization.initializationStatus.permission, 'backoffice.axis.initialization.view');
+assert.strictEqual(routers.axisInitialization.initiateInitialization.permission, 'backoffice.axis.initialization.initiate');
+assert.strictEqual(routers.axisInitialization.initiateInitialization.requestBody.required, true);
+assert.strictEqual(routers.localReset.localResetStatus.permission, 'backoffice.localReset.view');
+assert.strictEqual(routers.localReset.executeLocalReset.permission, 'backoffice.localReset.execute');
+assert.strictEqual(routers.localReset.executeLocalReset.requestBody.required, true);
 assert.strictEqual(routers.contractHistory.current.permission, 'backoffice.contract.view');
 assert.strictEqual(routers.contractHistory.history.permission, 'backoffice.contract.view');
 assert.strictEqual(routers.contractHistory.approve.permission, 'backoffice.contract.approve');
@@ -38,7 +44,8 @@ Object.values(routers.contractHistory).forEach(route => assert(route.responses['
 assert(routers.contractHistory.history.help.parameters.some(parameter => parameter.name === 'limit'));
 [routers.registryControl.register, routers.registryControl.deregister, routers.registryDiscovery.list, routers.registryDiscovery.bootstrap,
     routers.registryDiscovery.diagnostics, routers.registryDiscovery.adminList, routers.registryDiscovery.adminDetail,
-    routers.registryDiscovery.refresh, ...Object.values(routers.axisPolicy), ...Object.values(routers.contractHistory)].forEach(route => {
+    routers.registryDiscovery.refresh, ...Object.values(routers.axisPolicy), ...Object.values(routers.axisInitialization), ...Object.values(routers.localReset),
+    ...Object.values(routers.contractHistory)].forEach(route => {
     assert.strictEqual(route.secured, true);
     assert.strictEqual(route.apiExposure, 'serviceRegistry');
 });
@@ -50,6 +57,8 @@ assert(routers.contractHistory.history.help.parameters.some(parameter => paramet
     routers.registryDiscovery.adminDetail,
     routers.registryDiscovery.refresh,
     ...Object.values(routers.axisPolicy),
+    ...Object.values(routers.axisInitialization),
+    ...Object.values(routers.localReset),
     ...Object.values(routers.contractHistory)
 ].forEach(route => {
     assert.deepStrictEqual(route.authTokenTypes, ['access'],

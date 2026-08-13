@@ -1,0 +1,17 @@
+{
+  "name": "cmsStaged",
+  "version": "0.0.1",
+  "index": "50.21",
+  "private": true,
+  "main": "nodics.js",
+  "requiredModules": ["cms", "vDatabase", "vMongodb", "vService"],
+  "nodics": {
+    "kind": "publish",
+    "extends": ["cms"],
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": ["schemas", "configuration"],
+    "runtime": { "router": false, "publish": true, "web": false },
+    "displayName": "CMS Staged Versioning"
+  }
+}

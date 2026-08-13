@@ -5,8 +5,17 @@
     "core": {
       "kind": "DATA_RELEASE",
       "dataType": "core",
-      "version": "1.0.0",
-      "description": "Authentication and Authorization core data",
+            "version": "1.0.0",
+            "description": "Authentication and Authorization core data",
+            "owningDomain": "auth",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "PLATFORM",
+            "environmentScope": ["ALL"],
+            "sensitivity": "PUBLIC",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
       "files": {
         "core/source/localization/auth.json": "d761c44d7d950a5f18661bfd2fcc44241388ae86ffc100f689ea26ec76cf2a6c"
       }

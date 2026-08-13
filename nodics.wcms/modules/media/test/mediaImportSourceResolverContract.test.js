@@ -25,6 +25,16 @@ class NodicsError extends Error { constructor(code, message) { super(message || 
 
 const mediaItems = [
     {
+        code: 'tenant-export',
+        folderCode: 'exportFiles',
+        formatCode: 'exportFile',
+        providerCode: 'local',
+        storageKey: 'default/default/exports/2026/07/tenant-export.csv',
+        originalFileName: 'tenant-export.csv',
+        extension: 'csv',
+        status: 'READY'
+    },
+    {
         code: 'tenant-upload',
         folderCode: 'importSources',
         formatCode: 'importFile',
@@ -93,6 +103,10 @@ global.SERVICE = {
     assert.strictEqual(descriptor.source.absolutePath, '/server-owned/media/default/default/imports/2026/07/tenant-upload.xlsx');
 
     await assert.rejects(service.resolve({ tenant: 'default', mediaCode: 'product-image' }), error => error.code === 'ERR_MED_00011');
+    await assert.rejects(service.resolve({ tenant: 'default', mediaCode: 'tenant-export' }), error => error.code === 'ERR_MED_00011');
+    let exportValidation = await service.resolve({ tenant: 'default', mediaCode: 'tenant-export', validationOnly: true });
+    assert.strictEqual(exportValidation.folderCode, 'exportFiles');
+    assert.strictEqual(exportValidation.formatCode, 'exportFile');
     await assert.rejects(service.resolve({ tenant: 'default', mediaCode: 'draft-upload' }), error => error.code === 'ERR_MED_00011');
     await assert.rejects(service.resolve({ tenant: 'default' }), error => error.code === 'ERR_MED_00011');
 

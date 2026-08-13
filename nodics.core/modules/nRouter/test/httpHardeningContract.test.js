@@ -25,6 +25,8 @@ const defaultPolicy = require('../config/properties').httpHardening;
 
 assert(defaultPolicy.cors.allowedHeaders.includes('X-Enterprise-Code'),
     'CORS must allow the canonical enterprise header consumed by the request pipeline');
+assert.strictEqual(defaultPolicy.securityHeaders.headers['Cache-Control'], 'no-store',
+    'API responses must default to no-store until an owning response contract explicitly replaces caching');
 
 // @nodics-capability-behavior @nodics-area router
 const policy = {
@@ -55,6 +57,7 @@ const policy = {
     cors: {
         enabled: true,
         allowedOrigins: ['http://localhost:5173'],
+        deniedOrigins: ['http://denied.example'],
         allowedMethods: ['GET', 'POST', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization', 'X-Enterprise-Code'],
         exposedHeaders: ['X-Nodics-Trace'],
@@ -190,6 +193,13 @@ let deniedActualContinued = runMiddleware({
 assert.strictEqual(deniedActualContinued, false, 'Disallowed actual cross-origin requests must fail closed');
 assert.strictEqual(deniedActualResponse.statusCode, 403);
 assert.strictEqual(deniedActualResponse.jsonBody.code, 'ERR_RTR_00003');
+
+const explicitlyDeniedResponse = createResponse();
+let explicitlyDeniedContinued = runMiddleware({
+    method: 'GET', headers: { origin: 'http://denied.example', 'x-forwarded-for': '10.0.0.13' }
+}, explicitlyDeniedResponse);
+assert.strictEqual(explicitlyDeniedContinued, false);
+assert.strictEqual(explicitlyDeniedResponse.statusCode, 403);
 
 const correlationResponse = createResponse();
 let correlationContinued = runMiddleware({

@@ -25,6 +25,7 @@
             "configuration",
             "schema",
             "router",
+            "controller",
             "service",
             "pipeline",
             "utility",
@@ -32,7 +33,7 @@
             "llm"
         ],
         "runtime": {
-            "router": false,
+            "router": true,
             "publish": true,
             "web": false
         },

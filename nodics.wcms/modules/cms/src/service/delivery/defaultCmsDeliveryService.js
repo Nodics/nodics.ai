@@ -75,7 +75,15 @@ module.exports = {
         }, 'ERR_CMS_00090');
         let manifest = await this.getSingle(SERVICE.DefaultCmsPublicationManifestService, request,
             { code: pointer.manifestCode, active: true }, 'ERR_CMS_00091');
-        return { result: manifest.snapshot };
+        let snapshot = manifest.snapshot;
+        if (snapshot && snapshot.contractVersion === 2 && snapshot.bundleType === 'SITE') {
+            let matches = (snapshot.routes || []).filter(route => route.site === context.site && route.path === context.path &&
+                route.locale === context.locale && route.channel === context.channel &&
+                route.accessMode === (isPublic ? 'PUBLIC' : 'AUTHENTICATED'));
+            if (matches.length !== 1) throw this.error('ERR_CMS_00091', 'published bundle route is missing or ambiguous');
+            snapshot = matches[0];
+        }
+        return { result: snapshot };
     },
 
     /** Validates and normalizes site, path, locale, and channel input. */

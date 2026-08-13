@@ -22,7 +22,7 @@ module.exports = {
             super: 'base',
             schemaPolicies: ['contractReader'],
             model: true,
-            service: { enabled: false },
+            service: { enabled: true },
             event: { enabled: false },
             router: { enabled: false },
             tenants: ['default'],

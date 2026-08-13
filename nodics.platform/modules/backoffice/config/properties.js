@@ -17,6 +17,9 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+    backofficeApplicationInitialization: {
+        profiles: {}
+    },
     schemaPolicies: {
         backoffice: {
             contractReader: {
@@ -47,6 +50,13 @@ module.exports = {
         minimumRecentNavigationLimit: 1,
         maximumRecentNavigationLimit: 24
     },
+    backofficeLocalReset: {
+        enabled: false,
+        environmentAllowlist: [],
+        confirmation: 'RESET_LOCAL_NODICS_DATA',
+        maximumTargets: 16,
+        providers: []
+    },
     backofficeRegistry: {
         enabled: true,
         leaseTtlMs: 30000,
@@ -69,11 +79,15 @@ module.exports = {
             contractVersion: 1,
             requiredModules: {
                 profile: 'profile',
-                cms: 'cms'
+                cms: {
+                    moduleName: 'cms',
+                    server: 'wcmsOnlineServer',
+                    runtimeRole: 'ONLINE'
+                }
             },
             optionalModules: {
                 engagement: 'engagementApi',
-                editorial: 'editorial',
+                editorial: { moduleName: 'editorial', server: 'wcmsOnlineServer', runtimeRole: 'ONLINE' },
                 localization: 'localizationApi'
             },
             uiComposition: {

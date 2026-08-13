@@ -31,14 +31,21 @@ module.exports = {
                 ACTIVATING: ['ONLINE', 'FAILED'],
                 ONLINE: ['ROLLING_BACK', 'WITHDRAWING'],
                 ROLLING_BACK: ['ROLLED_BACK', 'FAILED'],
-                WITHDRAWING: ['WITHDRAWN', 'FAILED']
+                WITHDRAWING: ['WITHDRAWN', 'FAILED'],
+                FAILED: ['VALIDATING'],
+                ROLLED_BACK: ['VALIDATING'],
+                WITHDRAWN: ['VALIDATING'],
+                REJECTED: ['VALIDATING']
             },
             maxDependencies: 10000,
             requireExpectedRevision: true
         },
         reconciliation: {
             batchSize: 100,
-            maxDurationMs: 5000
+            maxDurationMs: 5000,
+            stuckAfterMs: 300000,
+            alertFailureCount: 1,
+            correlationSearchLimit: 100
         },
         providers: {
             domainAdapters: {},

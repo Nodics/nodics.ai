@@ -45,7 +45,8 @@ module.exports = {
         let mediaSource = await SERVICE.DefaultMediaImportSourceResolverService.resolve({
             tenant: request.tenant,
             authData: request.authData,
-            mediaCode: mediaCode
+            mediaCode: mediaCode,
+            validationOnly: request.validationOnly === true || request.options && request.options.validateOnly === true
         });
         this.validateReadableSource(mediaSource);
         let rootPath = this.resolveRootPath(request);

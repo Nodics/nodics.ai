@@ -83,7 +83,11 @@ const request = (revision, extra) => Object.assign({ tenant: 'tenant-a', publica
     let pending = await service.requestApproval(request(2));
     assert.strictEqual((await service.requestApproval(request(pending.revision))).state, 'PENDING_APPROVAL');
     assert.strictEqual(approvalRequests, 2, 'approval retries must redeliver through an idempotent workflow provider');
-    let approved = await service.approve(request(pending.revision));
+    let approved = await service.approve(request(pending.revision, { workflowEvidence: {
+        instanceCode: 'approval-instance-1', definitionCode: 'cmsPublicationApproval', version: 1
+    } }));
+    assert.strictEqual(approved.workflowRef, 'approval-instance-1');
+    assert.strictEqual(approved.auditTrail.at(-1).details.workflow.instanceCode, 'approval-instance-1');
     let online = await service.activate(request(approved.revision));
     assert.strictEqual(online.state, 'ONLINE');
     assert.strictEqual(online.previousOnlineVersion, 'v0');
@@ -102,9 +106,14 @@ const request = (revision, extra) => Object.assign({ tenant: 'tenant-a', publica
     assert.strictEqual(rolledBack, 1);
     assert.strictEqual((await service.rollback(request(rollback.revision))).state, 'ROLLED_BACK');
     assert.strictEqual(rolledBack, 1, 'rollback replay must be idempotent');
+    let resubmitted = await service.resubmit(request(rollback.revision));
+    assert.strictEqual(resubmitted.state, 'VALIDATED', 'rollback recovery must revalidate before approval');
+    let repending = await service.requestApproval(request(resubmitted.revision));
+    assert.strictEqual(repending.state, 'PENDING_APPROVAL', 'rollback recovery must require approval again');
     assert([...audits.values()].every(audit => !JSON.stringify(audit).includes('must-not-be-audited')));
 
     records.set('invalid', { code: 'invalid', domain: 'cms', state: 'STAGED', revision: 0 });
+    await assert.rejects(service.resubmit(request(0, { publicationCode: 'invalid' })), /Only a rolled back/);
     await assert.rejects(service.approve(request(0, { publicationCode: 'invalid' })), /Invalid publication transition/);
     await assert.rejects(service.validate(request(9, { publicationCode: 'invalid' })), /revision conflict/);
 

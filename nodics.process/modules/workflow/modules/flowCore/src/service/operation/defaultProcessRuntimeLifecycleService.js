@@ -389,6 +389,7 @@ module.exports = {
                 version: version,
                 node: node,
                 context: instance.context || {},
+                decision: body && body.decision || {},
                 payload: body && (body.actionPayload || body.payload) || {}
             });
             await this.audit(request, {

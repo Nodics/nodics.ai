@@ -16,6 +16,24 @@ Media is a framework capability. CMS, Product, Import, Documentation, Axis, and 
 
 Frontend clients may request a media purpose or folder, but the backend resolves the storage provider, base path, generated storage key, checksum, access URL, lifecycle state, and security policy.
 
+## Staged To Online Publication
+
+CMS publication copies only media identities referenced by the frozen page or
+site graph. `DefaultMediaPublicationTransferService` reads bytes through the
+Staged provider, verifies the persisted checksum, removes provider paths from
+the transfer contract, and enforces configurable count and byte limits. Online
+verifies the payload again and stores it through its own active provider, which
+generates an Online-local storage key. Existing Online media with the same code
+and checksum is reused; a conflicting checksum fails closed. Unreferenced
+Staged media is not copied.
+
+Online imports are marked as publication-managed and receive a configurable
+minimum retention boundary. Cleanup is initiated by the internal Online CMS
+target, which supplies the media identities referenced by every stored pointer
+and its rollback predecessor. Media alone deletes expired, unprotected copies
+through its lifecycle and provider services; active, withdrawn-but-recoverable,
+rollback, legally held, young, and non-publication media are never collected.
+
 ## Production Storage Model
 
 Production systems usually do not store static files on the same application process disk. `media` therefore separates:

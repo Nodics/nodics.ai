@@ -276,10 +276,13 @@ module.exports = {
                 }
                 _self.createIndexes(schemaModel).then(success => {
                     _self.LOG.debug('Indexes created for: ' + schemaModel.schemaName);
+                    return _self.updateValidator(schemaModel);
+                }).then(() => {
+                    _self.LOG.debug('Validator updated for: ' + schemaModel.schemaName);
                     resolve(schemaModel);
                 }).catch(error => {
-                    _self.LOG.error('Indexes failed for: ' + schemaModel.schemaName + ' : ', error);
-                    reject(new CLASSES.NodicsError(error, 'Indexes failed for: ' + schemaModel.schemaName, 'ERR_DBS_00000'));
+                    _self.LOG.error('Model metadata refresh failed for: ' + schemaModel.schemaName + ' : ', error);
+                    reject(new CLASSES.NodicsError(error, 'Model metadata refresh failed for: ' + schemaModel.schemaName, 'ERR_DBS_00000'));
                 });
             } else {
                 _self.createModel(options, dataBase).then(success => {

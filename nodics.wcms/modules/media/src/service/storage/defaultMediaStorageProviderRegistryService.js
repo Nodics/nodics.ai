@@ -78,6 +78,19 @@ module.exports = {
         }));
     },
 
+    /** Reads one bounded backend-only payload through its owning provider. */
+    read: function (request) {
+        let context = this.resolveProvider(request);
+        if (typeof context.service.read !== 'function') {
+            throw new CLASSES.NodicsError('ERR_MED_00011', 'Media storage provider cannot read publication payloads');
+        }
+        return context.service.read(Object.assign({}, request, {
+            providerCode: context.code,
+            provider: context.policy.provider,
+            storage: context.policy.storage
+        }));
+    },
+
     /**
      * Removes media data through the active provider.
      *

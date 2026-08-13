@@ -23,6 +23,8 @@ module.exports = {
     listInstances: function (request) { return SERVICE.DefaultProcessOperationsInspectionService.listInstances(request); },
     /** Delegates published process instance start. */
     startInstance: function (request) { return SERVICE.DefaultProcessRuntimeLifecycleService.startInstance(request); },
+    /** Delegates fixed CMS publication approval startup. */
+    startPublicationApproval: function (request) { return SERVICE.DefaultProcessPublicationApprovalService.start(request); },
     /** Delegates runtime instance read. */
     getInstance: function (request) { return SERVICE.DefaultProcessOperationsInspectionService.getInstance(request); },
     /** Delegates runtime instance detail read. */

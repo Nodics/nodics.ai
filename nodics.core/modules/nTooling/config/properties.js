@@ -236,6 +236,8 @@ module.exports = {
                 { node: 'nodics.core/modules/nTooling/test/documentationNavigationQuality.test.js' },
                 { node: 'nodics.core/modules/nTooling/test/dependencyRuntimeContract.test.js' },
                 { node: 'nodics.core/modules/nTooling/test/dependencyOwnershipContract.test.js' },
+                { node: 'nodics.core/modules/nTooling/test/dataReleaseManifestGeneratorContract.test.js' },
+                { node: 'nodics.core/modules/nTooling/test/dataLifecycleClassificationContract.test.js' },
                 { node: 'nodics.core/modules/nTooling/test/releaseCheckCommandContract.test.js' },
                 { node: 'nodics.core/modules/nTooling/test/repositoryBuildCompositionContract.test.js' },
                 { node: 'nodics.core/modules/nTooling/test/projectPostmanCoverageOwnership.test.js' },

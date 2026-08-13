@@ -88,6 +88,11 @@ platform governance:
 
 Data movement should always pass through governed pipelines. Do not create one-off scripts that write directly to models just because the source is simple.
 
+The same rule applies to verification and repair. Developers, AI tools,
+migrations, tests, and operators must not query or mutate a database directly;
+use the owning Nodics API/service plus import/export history, receipts, and
+audited diagnostics.
+
 ## DaaS Pattern
 
 Data as a Service is a platform pattern, not a single module. Nodics can act as a governed data lake or information center by combining:

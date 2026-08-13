@@ -57,12 +57,14 @@ module.exports = {
                 'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'none'; base-uri 'none'; object-src 'none'",
                 'Referrer-Policy': 'no-referrer',
                 'Cross-Origin-Resource-Policy': 'same-origin',
+                'Cache-Control': 'no-store',
                 'X-XSS-Protection': '0'
             }
         },
         cors: {
             enabled: false,
             allowedOrigins: [],
+            deniedOrigins: [],
             allowedMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
             allowedHeaders: ['Content-Type', 'Authorization', 'Idempotency-Key', 'X-CSRF-Token', 'X-Request-Id',
                 'X-Correlation-Id', 'X-Nodics-Client-Contract-Version', 'X-Enterprise-Code',

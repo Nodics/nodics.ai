@@ -15,7 +15,7 @@ const path = require('path');
 
 /**
  * @module import/service/release/DefaultDataReleaseService
- * @description Discovers immutable module-owned init, core, and sample releases, validates installation plans, and invokes the existing nImport execution authority.
+ * @description Discovers immutable active-module and explicitly allowlisted destination contributions, validates installation plans, and invokes the existing nImport execution authority.
  * @layer service
  * @owner import
  * @override Projects may extend release policy or installation persistence while preserving manifest integrity, active-module ownership, tenant isolation, and nImport execution.
@@ -109,31 +109,57 @@ module.exports = {
         this.validateDataType(dataType);
         this.validateTypePolicy(dataType);
         let available = this.discoverReleases(dataType);
-        let requestedModules = Array.isArray(body.modules) && body.modules.length > 0 ? body.modules : available.map(item => item.moduleName);
-        if (requestedModules.length > Number(this.configuration().maximumModulesPerRun || 256) ||
-            new Set(requestedModules).size !== requestedModules.length ||
-            requestedModules.some(moduleName => !/^[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(moduleName))) {
+        let requestedCodes = Array.isArray(body.releaseCodes) && body.releaseCodes.length > 0 ? body.releaseCodes : undefined;
+        let requestedModules = Array.isArray(body.modules) && body.modules.length > 0 ? body.modules : undefined;
+        if (requestedCodes && requestedModules) throw this.error('ERR_IMP_00003', 'Select releases by releaseCodes or legacy modules, not both');
+        let requested = requestedCodes || requestedModules || available.map(item => item.releaseCode);
+        if (requested.length > Number(this.configuration().maximumModulesPerRun || 256) ||
+            new Set(requested).size !== requested.length ||
+            requested.some(code => !/^[A-Za-z][A-Za-z0-9_-]{0,127}(?::[A-Za-z][A-Za-z0-9_-]{0,127})?$/.test(code))) {
             throw this.error('ERR_IMP_00003', 'Requested data release modules are invalid');
         }
-        let availableByModule = Object.fromEntries(available.map(item => [item.moduleName, item]));
-        let releases = requestedModules.map(moduleName => {
-            if (!availableByModule[moduleName]) throw this.error('ERR_IMP_00004', 'Requested module data release is unavailable');
-            return availableByModule[moduleName];
+        let availableByCode = Object.fromEntries(available.map(item => [item.releaseCode, item]));
+        let releases = requestedCodes ? requested.map(code => availableByCode[code]) : requested.map(moduleName => {
+            let matches = available.filter(item => item.moduleName === moduleName);
+            if (matches.length > 1) throw this.error('ERR_IMP_00003', 'Module owns multiple releases; select an explicit releaseCode');
+            return matches[0];
         });
+        if (releases.some(release => !release)) throw this.error('ERR_IMP_00004', 'Requested data release is unavailable');
         if (releases.some(release => release.invalidManifest === true)) {
             throw this.error('ERR_IMP_00003', 'Requested data release manifest is invalid; repair manifest before installation');
         }
         let expected = body.expectedReleases || {};
         releases.forEach(release => {
-            if (expected[release.moduleName] && expected[release.moduleName] !== release.version) {
+            if ((expected[release.releaseCode] || expected[release.moduleName]) &&
+                (expected[release.releaseCode] || expected[release.moduleName]) !== release.version) {
                 throw this.error('ERR_IMP_00003', 'Data release changed after selection; refresh and validate again');
             }
         });
         let tenant = this.resolveTenant(request);
+        releases.forEach(release => this.validateDestination(release));
         let installations = await this.getInstallations(tenant);
         let installedByCode = Object.fromEntries(installations.map(item => [item.code, item]));
         releases.forEach(release => this.validateUpgradePolicy(release, installedByCode[this.installationCode(tenant, release)]));
         return { dataType: dataType, tenant: tenant, releases: releases };
+    },
+
+    /** Prevents a qualified release from being installed into a runtime role or environment outside its manifest contract. */
+    validateDestination: function (release) {
+        let policy = this.configuration();
+        if (policy.destinationEnforced !== true) return true;
+        if (!release.destinationRole) throw this.error('ERR_IMP_00003', 'Data release destination metadata is required');
+        let configuredRole = CONFIG.get('runtimeRole');
+        let runtimeRole = typeof configuredRole === 'string' ? configuredRole : configuredRole && configuredRole.code;
+        let allowed = Array.isArray(policy.allowedDestinationRoles) ? policy.allowedDestinationRoles : runtimeRole ? [runtimeRole] : [];
+        if (!runtimeRole || !allowed.includes(release.destinationRole) || release.destinationRole !== runtimeRole) {
+            throw this.error('ERR_IMP_00004', 'Data release is not permitted for runtime destination ' + String(runtimeRole || 'UNDECLARED'));
+        }
+        let environment = String(policy.environmentClass ||
+            NODICS.getSelectedEnvironmentName && NODICS.getSelectedEnvironmentName() || '').toUpperCase();
+        if (!release.environmentScope.includes('ALL') && !release.environmentScope.includes(environment)) {
+            throw this.error('ERR_IMP_00004', 'Data release is not permitted for environment ' + environment);
+        }
+        return true;
     },
 
     /** Projects operation responses using the same client-safe release contract as the catalogue. */
@@ -164,12 +190,30 @@ module.exports = {
         });
     },
 
-    /** Discovers only active loader-owned module data releases from the module-owned aggregate manifest. */
+    /** Resolves active owners plus explicitly allowlisted inactive contribution owners without activating their runtime behavior. */
+    discoveryOwners: function () {
+        let active = new Set(NODICS.getActiveModules() || []);
+        let configured = this.configuration().contributions || [];
+        if (!Array.isArray(configured)) throw this.error('ERR_IMP_00003', 'Data release contributions configuration must be a list');
+        let selectors = new Map(Array.from(active).map(moduleName => [moduleName, { moduleName: moduleName, active: true }]));
+        configured.forEach(selector => {
+            if (!selector || typeof selector !== 'object' || !/^[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(selector.moduleName || '') ||
+                !Array.isArray(selector.sections) || selector.sections.length === 0 ||
+                selector.sections.some(section => !/^[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(section))) {
+                throw this.error('ERR_IMP_00003', 'Data release contribution selector is invalid');
+            }
+            let existing = selectors.get(selector.moduleName);
+            selectors.set(selector.moduleName, Object.assign({}, selector, { active: existing && existing.active === true }));
+        });
+        return Array.from(selectors.values());
+    },
+
+    /** Discovers active loader-owned releases and explicitly selected destination-qualified contributions. */
     discoverReleases: function (requestedType) {
         if (requestedType) this.validateDataType(requestedType);
         let releases = [];
-        (NODICS.getActiveModules() || []).forEach(moduleName => {
-            let rawModule = NODICS.getRawModule(moduleName);
+        this.discoveryOwners().forEach(selector => {
+            let rawModule = NODICS.getRawModule(selector.moduleName);
             if (!rawModule || !rawModule.path) return;
             let aggregatePath = path.join(rawModule.path, 'data', 'manifest.json');
             let aggregate;
@@ -179,25 +223,38 @@ module.exports = {
             } catch (error) {
                 aggregateError = error;
             }
+            let sections = aggregate ? Object.entries(aggregate.sections || {}).filter(entry =>
+                entry[1] && entry[1].kind === 'DATA_RELEASE' &&
+                (!requestedType || entry[1].dataType === requestedType) &&
+                (selector.active || selector.sections.includes(entry[0]))) : [];
+            if (aggregateError) {
+                let types = ['init', 'core', 'sample'].filter(type => !requestedType || requestedType === type);
+                types.forEach(dataType => releases.push(this.invalidManifestRelease(rawModule, dataType, aggregatePath, aggregateError, dataType)));
+                return;
+            }
+            if (aggregate) {
+                sections.forEach(entry => {
+                    try {
+                        releases.push(this.inspectManifest(rawModule, entry[1].dataType, aggregatePath, entry[1], entry[0], !selector.active));
+                    } catch (error) {
+                        releases.push(this.invalidManifestRelease(rawModule, entry[1].dataType, aggregatePath, error, entry[0]));
+                    }
+                });
+                return;
+            }
+            if (!selector.active) return;
             ['init', 'core', 'sample'].filter(type => !requestedType || requestedType === type).forEach(dataType => {
                 let legacyPath = path.join(rawModule.path, 'data', dataType, 'manifest.json');
-                let manifestPath = aggregate ? aggregatePath : legacyPath;
-                if (aggregateError) {
-                    releases.push(this.invalidManifestRelease(rawModule, dataType, aggregatePath, aggregateError));
-                    return;
-                }
-                if (aggregate && (!aggregate.sections || !aggregate.sections[dataType])) return;
-                if (!aggregate && !fs.existsSync(legacyPath)) return;
+                if (!fs.existsSync(legacyPath)) return;
                 try {
-                    releases.push(this.inspectManifest(rawModule, dataType, manifestPath,
-                        aggregate && aggregate.sections && aggregate.sections[dataType]));
+                    releases.push(this.inspectManifest(rawModule, dataType, legacyPath, undefined, dataType));
                 } catch (error) {
-                    releases.push(this.invalidManifestRelease(rawModule, dataType, manifestPath, error));
+                    releases.push(this.invalidManifestRelease(rawModule, dataType, legacyPath, error, dataType));
                 }
             });
         });
         return releases.sort((first, second) =>
-            first.dataType.localeCompare(second.dataType) || first.moduleName.localeCompare(second.moduleName));
+            first.dataType.localeCompare(second.dataType) || first.releaseCode.localeCompare(second.releaseCode));
     },
 
     /** Reads and validates the aggregate manifest envelope when a module owns a data directory. */
@@ -218,7 +275,7 @@ module.exports = {
     },
 
     /** Validates one manifest, containment, symlink policy, and every declared checksum. */
-    inspectManifest: function (rawModule, dataType, manifestPath, aggregateSection) {
+    inspectManifest: function (rawModule, dataType, manifestPath, aggregateSection, sectionCode, lifecycleRequired) {
         let releaseRoot = path.dirname(manifestPath);
         let manifest;
         if (aggregateSection) {
@@ -237,6 +294,15 @@ module.exports = {
             manifest.dataType !== dataType || !/^\d+\.\d+\.\d+$/.test(manifest.version || '') ||
             !manifest.files || typeof manifest.files !== 'object' || Array.isArray(manifest.files)) {
             throw this.error('ERR_IMP_00003', 'Data release manifest is incompatible for module ' + rawModule.name + ' and data type ' + dataType + '; verify kind, dataType, semantic version, and files map');
+        }
+        let lifecycle = this.validateLifecycleMetadata(manifest, rawModule.name, dataType, lifecycleRequired);
+        let installer = manifest.installer;
+        if (installer !== undefined && !/^[A-Z][A-Z0-9_]{1,63}$/.test(installer)) {
+            throw this.error('ERR_IMP_00003', 'Data release installer code is invalid');
+        }
+        let sourceRoot = manifest.sourceRoot || dataType;
+        if (!['init', 'core', 'sample', 'staged', 'operational', 'reference'].includes(sourceRoot)) {
+            throw this.error('ERR_IMP_00003', 'Data release sourceRoot is invalid');
         }
         let fileNames = Object.keys(manifest.files).sort();
         if (fileNames.length === 0 || fileNames.length > Number(this.configuration().maximumFilesPerRelease || 1024)) {
@@ -257,6 +323,8 @@ module.exports = {
         });
         let checksum = crypto.createHash('sha256').update(fileNames.map(file => file + ':' + manifest.files[file]).join('|')).digest('hex');
         return {
+            releaseCode: rawModule.name + ':' + sectionCode,
+            sectionCode: sectionCode,
             moduleName: rawModule.name,
             displayName: rawModule.metaData && rawModule.metaData.nodics && rawModule.metaData.nodics.displayName || rawModule.name,
             parentModule: rawModule.parent,
@@ -264,20 +332,74 @@ module.exports = {
             dataType: dataType,
             version: manifest.version,
             description: String(manifest.description || ''),
-            checksum: checksum
+            checksum: checksum,
+            owningDomain: lifecycle && lifecycle.owningDomain,
+            lifecycle: lifecycle && lifecycle.lifecycle,
+            destinationRole: lifecycle && lifecycle.destinationRole,
+            environmentScope: lifecycle && lifecycle.environmentScope,
+            sensitivity: lifecycle && lifecycle.sensitivity,
+            versioningPolicy: lifecycle && lifecycle.versioningPolicy,
+            publicationPolicy: lifecycle && lifecycle.publicationPolicy,
+            initialPublicationPolicy: lifecycle && lifecycle.initialPublicationPolicy,
+            removalPolicy: lifecycle && lifecycle.removalPolicy,
+            installer: installer,
+            sourceRoot: sourceRoot,
+            declaredFiles: fileNames.slice()
         };
     },
 
+    /** Validates optional contract-v2 lifecycle routing metadata during migration. */
+    validateLifecycleMetadata: function (manifest, moduleName, dataType, lifecycleRequired) {
+        let fields = ['owningDomain', 'lifecycle', 'destinationRole', 'environmentScope', 'sensitivity',
+            'versioningPolicy', 'publicationPolicy', 'initialPublicationPolicy', 'removalPolicy'];
+        let present = fields.filter(field => manifest[field] !== undefined);
+        if (present.length === 0 && lifecycleRequired !== true && this.configuration().lifecycleMetadataRequired !== true) return undefined;
+        if (present.length !== fields.length) throw this.error('ERR_IMP_00003',
+            'Data lifecycle metadata is incomplete for module ' + moduleName + ' and data type ' + dataType);
+        if (!/^[A-Za-z][A-Za-z0-9._-]{1,127}$/.test(manifest.owningDomain) ||
+            !['PUBLISHABLE', 'OPERATIONAL_VERSIONED', 'REFERENCE'].includes(manifest.lifecycle) ||
+            !/^[A-Z][A-Z0-9_]{1,63}$/.test(manifest.destinationRole) ||
+            !Array.isArray(manifest.environmentScope) || manifest.environmentScope.length === 0 ||
+            manifest.environmentScope.some(scope => !/^[A-Z][A-Z0-9_]{1,31}$/.test(scope)) ||
+            !/^[A-Z][A-Z0-9_]{1,31}$/.test(manifest.sensitivity) ||
+            !['IMMUTABLE', 'NONE'].includes(manifest.versioningPolicy) ||
+            !['REQUIRED', 'NONE'].includes(manifest.publicationPolicy) ||
+            !['ADMIN_INITIATED', 'NONE'].includes(manifest.initialPublicationPolicy) ||
+            !['RETAIN', 'DELETE_EXPLICIT', 'UNPUBLISH_OR_RETIRE'].includes(manifest.removalPolicy)) {
+            throw this.error('ERR_IMP_00003',
+                'Data lifecycle metadata is invalid for module ' + moduleName + ' and data type ' + dataType);
+        }
+        if (manifest.lifecycle === 'PUBLISHABLE' &&
+            (!/_STAGED$/.test(manifest.destinationRole) || manifest.versioningPolicy !== 'IMMUTABLE' ||
+                manifest.publicationPolicy !== 'REQUIRED' || manifest.initialPublicationPolicy !== 'ADMIN_INITIATED' ||
+                manifest.removalPolicy !== 'UNPUBLISH_OR_RETIRE')) {
+            throw this.error('ERR_IMP_00003', 'Publishable data must target a Staged runtime with immutable, administrator-initiated publication semantics');
+        }
+        if (manifest.lifecycle !== 'PUBLISHABLE' &&
+            (manifest.publicationPolicy !== 'NONE' || manifest.initialPublicationPolicy !== 'NONE')) {
+            throw this.error('ERR_IMP_00003', 'Non-publishable data must not declare a publication lifecycle');
+        }
+        if (manifest.lifecycle === 'OPERATIONAL_VERSIONED' && manifest.versioningPolicy !== 'IMMUTABLE') {
+            throw this.error('ERR_IMP_00003', 'Operational-versioned data must use immutable business versions');
+        }
+        if (manifest.lifecycle === 'REFERENCE' && manifest.versioningPolicy !== 'NONE') {
+            throw this.error('ERR_IMP_00003', 'Reference data must not acquire artificial business versioning');
+        }
+        return Object.fromEntries(fields.map(field => [field, manifest[field]]));
+    },
+
     /** Projects a bad manifest as a visible but non-executable release. */
-    invalidManifestRelease: function (rawModule, dataType, manifestPath, error) {
+    invalidManifestRelease: function (rawModule, dataType, manifestPath, error, sectionCode) {
         let manifest = {};
         try {
             manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-            if (manifest.sections && manifest.sections[dataType]) manifest = manifest.sections[dataType];
+            if (manifest.sections && manifest.sections[sectionCode]) manifest = manifest.sections[sectionCode];
         } catch (ignored) {
             manifest = {};
         }
         return {
+            releaseCode: rawModule.name + ':' + sectionCode,
+            sectionCode: sectionCode,
             moduleName: rawModule.name,
             displayName: rawModule.metaData && rawModule.metaData.nodics && rawModule.metaData.nodics.displayName || rawModule.name,
             parentModule: rawModule.parent,
@@ -295,17 +417,38 @@ module.exports = {
     createImportRequest: function (request, plan, validationOnly) {
         let next = Object.assign({}, request, {
             tenant: plan.tenant,
-            modules: plan.releases.map(release => release.moduleName),
+            modules: [...new Set(plan.releases.map(release => release.moduleName))],
             options: Object.assign({}, request && request.options, { validateOnly: validationOnly }),
-            dataReleasePlan: plan.releases.map(release => this.publicRelease(release))
+            dataReleasePlan: plan.releases.map(release => Object.assign(this.publicRelease(release), {
+                sourceRoot: release.sourceRoot,
+                declaredFiles: release.declaredFiles.slice()
+            }))
         });
         return next;
     },
 
     /** Invokes the authoritative Init, Core, or Sample import operation. */
-    invokeImport: function (request, dataType) {
+    invokeImport: async function (request, dataType) {
         let operation = { init: 'importInitData', core: 'importCoreData', sample: 'importSampleData' }[dataType];
-        return SERVICE.DefaultImportService[operation](request);
+        let selected = request.dataReleasePlan || [];
+        let custom = selected.filter(release => release.installer);
+        let standard = selected.filter(release => !release.installer);
+        let results = [];
+        for (let release of custom) {
+            let providerName = (this.configuration().installers || {})[release.installer];
+            let provider = providerName && SERVICE[providerName];
+            if (!provider || typeof provider.installContribution !== 'function') {
+                throw this.error('ERR_IMP_00004', 'Data release installer is unavailable: ' + release.installer);
+            }
+            results.push(await provider.installContribution(Object.assign({}, request, { contribution: release })));
+        }
+        if (standard.length > 0) {
+            results.push(await SERVICE.DefaultImportService[operation](Object.assign(request, {
+                dataReleasePlan: standard,
+                modules: [...new Set(standard.map(release => release.moduleName))]
+            })));
+        }
+        return { contributions: results };
     },
 
     /** Returns durable current installation projections for one tenant. */
@@ -326,10 +469,17 @@ module.exports = {
         let model = {
             code: code, active: true, tenant: plan.tenant,
             environment: NODICS.getSelectedEnvironmentName(), moduleName: release.moduleName,
+            releaseCode: release.releaseCode, sectionCode: release.sectionCode,
             dataType: release.dataType,
             version: status === 'CURRENT' ? release.version : existing && existing.version,
             checksum: status === 'CURRENT' ? release.checksum : existing && existing.checksum,
             availableVersion: release.version, availableChecksum: release.checksum,
+            owningDomain: release.owningDomain, lifecycle: release.lifecycle,
+            destinationRole: release.destinationRole, environmentScope: release.environmentScope,
+            sensitivity: release.sensitivity, versioningPolicy: release.versioningPolicy,
+            publicationPolicy: release.publicationPolicy,
+            initialPublicationPolicy: release.initialPublicationPolicy,
+            removalPolicy: release.removalPolicy,
             runId: importRun && importRun.runId || existing && existing.runId,
             status: status,
             installedAt: status === 'CURRENT' ? new Date().toISOString() : existing && existing.installedAt,
@@ -403,16 +553,25 @@ module.exports = {
 
     /** Creates the stable environment, tenant, module, and type projection key. */
     installationCode: function (tenant, release) {
-        return [NODICS.getSelectedEnvironmentName(), tenant, release.moduleName, release.dataType].join(':');
+        return [NODICS.getSelectedEnvironmentName(), tenant, release.releaseCode, release.dataType].join(':');
     },
 
     /** Projects release metadata without paths or executable content. */
     publicRelease: function (release) {
         return {
+            releaseCode: release.releaseCode, sectionCode: release.sectionCode,
             moduleName: release.moduleName, displayName: release.displayName,
             parentModule: release.parentModule, canonicalIdentity: release.canonicalIdentity,
             dataType: release.dataType, version: release.version,
+            sourceRoot: release.sourceRoot,
             description: release.description, checksum: release.checksum,
+            owningDomain: release.owningDomain, lifecycle: release.lifecycle,
+            destinationRole: release.destinationRole, environmentScope: release.environmentScope,
+            sensitivity: release.sensitivity, versioningPolicy: release.versioningPolicy,
+            publicationPolicy: release.publicationPolicy,
+            initialPublicationPolicy: release.initialPublicationPolicy,
+            removalPolicy: release.removalPolicy,
+            installer: release.installer,
             invalidReason: release.invalidReason
         };
     },

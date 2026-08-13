@@ -261,6 +261,94 @@ module.exports = {
                 } } } }
             }
         },
+        axisInitialization: {
+            initializationStatus: {
+                secured: true, accessGroups: ['userGroup'], permission: 'backoffice.axis.initialization.view',
+                authTokenTypes: ['access'], apiExposure: 'serviceRegistry',
+                key: '/axis/initialization', method: 'GET',
+                cache: { enabled: false },
+                controller: 'DefaultBackofficeAxisInitializationController', operation: 'status',
+                responses: { '200': { description: 'Derived Axis initialization readiness', content: { 'application/json': {
+                    schema: successEnvelope({ type: 'object' })
+                } } } }
+            },
+            initiateInitialization: {
+                secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'backoffice.axis.initialization.initiate',
+                authTokenTypes: ['access'], apiExposure: 'serviceRegistry',
+                key: '/axis/initialization/initiate', method: 'POST',
+                cache: { enabled: false },
+                controller: 'DefaultBackofficeAxisInitializationController', operation: 'initiate',
+                requestBody: { required: true, content: { 'application/json': { schema: {
+                    type: 'object', additionalProperties: false, properties: {
+                        reason: { type: 'string', maxLength: 1000 },
+                        correlationId: { type: 'string', maxLength: 256 }
+                    }
+                } } } },
+                responses: { '200': { description: 'Axis baseline submitted to normal approval', content: { 'application/json': {
+                    schema: successEnvelope({ type: 'object' })
+                } } } }
+            }
+        },
+        applicationInitialization: {
+            applicationInitializationStatus: {
+                secured: true, accessGroups: ['userGroup'], permission: 'backoffice.application.initialization.view',
+                authTokenTypes: ['access'], apiExposure: 'serviceRegistry', cache: { enabled: false },
+                key: '/applications/:profileCode/initialization', method: 'GET',
+                controller: 'DefaultBackofficeApplicationInitializationController', operation: 'status'
+            },
+            initiateApplicationInitialization: {
+                secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'backoffice.application.initialization.initiate',
+                authTokenTypes: ['access'], apiExposure: 'serviceRegistry', cache: { enabled: false },
+                key: '/applications/:profileCode/initialization/initiate', method: 'POST',
+                controller: 'DefaultBackofficeApplicationInitializationController', operation: 'initiate',
+                requestBody: { required: true, content: { 'application/json': { schema: {
+                    type: 'object', additionalProperties: false, properties: {
+                        reason: { type: 'string', maxLength: 1000 },
+                        correlationId: { type: 'string', maxLength: 256 }
+                    }
+                } } } }
+            },
+            rollbackApplicationInitialization: {
+                secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'backoffice.application.initialization.rollback',
+                authTokenTypes: ['access'], apiExposure: 'serviceRegistry', cache: { enabled: false },
+                key: '/applications/:profileCode/initialization/rollback', method: 'POST',
+                controller: 'DefaultBackofficeApplicationInitializationController', operation: 'rollback'
+            },
+            retireApplicationInitialization: {
+                secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'backoffice.application.initialization.retire',
+                authTokenTypes: ['access'], apiExposure: 'serviceRegistry', cache: { enabled: false },
+                key: '/applications/:profileCode/initialization/retire', method: 'POST',
+                controller: 'DefaultBackofficeApplicationInitializationController', operation: 'retire'
+            }
+        },
+        localReset: {
+            localResetStatus: {
+                secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'backoffice.localReset.view',
+                authTokenTypes: ['access'], apiExposure: 'serviceRegistry',
+                key: '/operations/local-reset', method: 'GET',
+                cache: { enabled: false },
+                controller: 'DefaultBackofficeLocalResetController', operation: 'status',
+                responses: { '200': { description: 'Governed Local reset readiness without data inspection', content: { 'application/json': {
+                    schema: successEnvelope({ type: 'object' })
+                } } } }
+            },
+            executeLocalReset: {
+                secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'backoffice.localReset.execute',
+                authTokenTypes: ['access'], apiExposure: 'serviceRegistry',
+                key: '/operations/local-reset', method: 'POST',
+                cache: { enabled: false },
+                controller: 'DefaultBackofficeLocalResetController', operation: 'execute',
+                requestBody: { required: true, content: { 'application/json': { schema: {
+                    type: 'object', additionalProperties: false, required: ['confirmation', 'reason'], properties: {
+                        confirmation: { type: 'string', maxLength: 64 }, reason: { type: 'string', minLength: 8, maxLength: 1000 },
+                        correlationId: { type: 'string', maxLength: 256 }
+                    }
+                } } } },
+                responses: { '200': { description: 'Every configured owner acknowledged its bounded Local reset', content: { 'application/json': {
+                    schema: successEnvelope({ type: 'object' })
+                } } } }
+            }
+        },
         contractHistory: {
             current: {
                 secured: true, accessGroups: ['userGroup'], permission: 'backoffice.contract.view',

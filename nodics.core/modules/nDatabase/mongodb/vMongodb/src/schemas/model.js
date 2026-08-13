@@ -37,6 +37,21 @@ module.exports = {
         },
 
         /**
+         * Detects an idempotent replay of an already persisted version.
+         * Runtime-maintained audit fields are excluded because a repeated API
+         * or governed import request receives fresh timestamps before it reaches
+         * persistence. All business fields must remain identical.
+         *
+         * @param {Object} previous Latest persisted version.
+         * @param {Object} candidate Candidate model supplied by the caller.
+         * @returns {boolean} True when the candidate is an unchanged replay.
+         */
+        isIdempotentVersionReplay: function (previous, candidate) {
+            const runtimeFields = ['_id', 'created', 'updated'];
+            return _.isEqual(_.omit(previous, runtimeFields), _.omit(candidate, runtimeFields));
+        },
+
+        /**
          * Validates model rules.
          *
          * @param {*} query Method input.
@@ -66,17 +81,19 @@ module.exports = {
                         if (matchedItems.length > 0) {
                             let preMoidel = matchedItems[0];
                             preMoidel.versionId = (preMoidel.versionId === undefined) ? -1 : preMoidel.versionId;
-                            if (model.versionId <= preMoidel.versionId) {
+                            if (model.versionId === preMoidel.versionId && this.isIdempotentVersionReplay(preMoidel, model)) {
+                                resolve({ model: preMoidel, idempotentReplay: true });
+                            } else if (model.versionId <= preMoidel.versionId) {
                                 reject(new CLASSES.NodicsError('ERR_MDL_00004', model.versionId + ', it should be: ' + (preMoidel.versionId + 1)));
                             } else {
                                 model.versionId = preMoidel.versionId + 1;
-                                resolve(_.merge(preMoidel, model));
+                                resolve({ model: _.merge(preMoidel, model), idempotentReplay: false });
                             }
                         } else {
                             if (model.versionId > 0) {
                                 reject(new CLASSES.NodicsError('ERR_MDL_00004', model.versionId + ', it should be: 0'));
                             } else {
-                                resolve(model);
+                                resolve({ model: model, idempotentReplay: false });
                             }
                         }
                     }).catch(error => {
@@ -104,7 +121,12 @@ module.exports = {
             let _self = this;
             return new Promise((resolve, reject) => {
                 try {
-                    _self.validateModel(input.query, input.searchOptions, input.model).then(model => {
+                    _self.validateModel(input.query, input.searchOptions, input.model).then(validation => {
+                        let model = validation.model;
+                        if (validation.idempotentReplay) {
+                            resolve(model);
+                            return;
+                        }
                         _self.insertOne(model, {}).then(result => {
                             if (result.ops && result.ops.length > 0) {
                                 resolve(result.ops[0]);

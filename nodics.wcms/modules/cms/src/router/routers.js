@@ -139,6 +139,7 @@ module.exports = {
         deployPublication: {
             secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'], permissionConfig: 'authSecurity.internalToken.routePermission',
             apiExposure: 'moduleInternal', key: '/publication/target/deploy', method: 'POST',
+            bodyParserHandler: 'cmsPublicationBodyParserHandler',
             controller: 'DefaultCmsPublicationTargetController', operation: 'deploy'
         },
         getPublicationStatus: {
@@ -146,10 +147,67 @@ module.exports = {
             apiExposure: 'moduleInternal', key: '/publication/target/status', method: 'POST',
             controller: 'DefaultCmsPublicationTargetController', operation: 'getStatus'
         },
+        reconcilePublicationEvidence: {
+            secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'], permissionConfig: 'authSecurity.internalToken.routePermission',
+            apiExposure: 'moduleInternal', key: '/publication/target/reconcile', method: 'POST',
+            controller: 'DefaultCmsPublicationTargetController', operation: 'reconcile'
+        },
+        collectPublishedMediaGarbage: {
+            secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'], permissionConfig: 'authSecurity.internalToken.routePermission',
+            apiExposure: 'moduleInternal', key: '/publication/target/media/collect', method: 'POST',
+            controller: 'DefaultCmsPublicationTargetController', operation: 'collectMediaGarbage'
+        },
         rollbackPublication: {
             secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'], permissionConfig: 'authSecurity.internalToken.routePermission',
             apiExposure: 'moduleInternal', key: '/publication/target/rollback', method: 'POST',
             controller: 'DefaultCmsPublicationTargetController', operation: 'rollback'
+        },
+        withdrawPublication: {
+            secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'], permissionConfig: 'authSecurity.internalToken.routePermission',
+            apiExposure: 'moduleInternal', key: '/publication/target/withdraw', method: 'POST',
+            controller: 'DefaultCmsPublicationTargetController', operation: 'withdraw'
+        }
+    },
+    cmsPublicationProcess: {
+        applyDecision: {
+            secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+            permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'moduleInternal',
+            key: '/publication/process/decision', method: 'POST',
+            controller: 'DefaultCmsPublicationProcessController', operation: 'applyDecision'
+        }
+    },
+    cmsPublicationBaseline: {
+        status: {
+            secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+            permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'moduleInternal',
+            key: '/publication/baselines/:baselineCode', method: 'GET',
+            controller: 'DefaultCmsPublicationBaselineController', operation: 'status'
+        },
+        initiate: {
+            secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+            permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'moduleInternal',
+            key: '/publication/baselines/:baselineCode/initiate', method: 'POST',
+            controller: 'DefaultCmsPublicationBaselineController', operation: 'initiate',
+            requestBody: { required: true, content: { 'application/json': { schema: {
+                type: 'object', additionalProperties: false, required: ['requestedBy'], properties: {
+                    requestedBy: { type: 'string', minLength: 1, maxLength: 256 },
+                    reason: { type: 'string', maxLength: 1000 },
+                    correlationId: { type: 'string', maxLength: 256 },
+                    catalogCode: { type: 'string', maxLength: 128 }
+                }
+            } } } }
+        },
+        rollback: {
+            secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+            permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'moduleInternal',
+            key: '/publication/baselines/:baselineCode/rollback', method: 'POST',
+            controller: 'DefaultCmsPublicationBaselineController', operation: 'rollback'
+        },
+        retire: {
+            secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+            permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'moduleInternal',
+            key: '/publication/baselines/:baselineCode/retire', method: 'POST',
+            controller: 'DefaultCmsPublicationBaselineController', operation: 'retire'
         }
     }
   }

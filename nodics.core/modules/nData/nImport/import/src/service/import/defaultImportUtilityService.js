@@ -43,6 +43,21 @@ module.exports = {
         });
     },
 
+    /** Resolves active modules for legacy imports and explicitly qualified raw owners for governed destination contributions. */
+    modulesForImport: function (moduleList, dataReleasePlan) {
+        if (Array.isArray(dataReleasePlan) && dataReleasePlan.length > 0) {
+            return Array.from(new Set(dataReleasePlan.map(release => release.moduleName)))
+                .filter(moduleName => moduleList.includes(moduleName))
+                .map(moduleName => NODICS.getRawModule(moduleName))
+                .filter(moduleObject => moduleObject && moduleObject.path);
+        }
+        let modules = [];
+        NODICS.getIndexedModules().forEach(moduleObject => {
+            if (moduleList.includes(moduleObject.name)) modules.push(moduleObject);
+        });
+        return modules;
+    },
+
     /**
 
      * Retrieves system data headers information.
@@ -57,7 +72,7 @@ module.exports = {
 
      */
 
-    getSystemDataHeaders: function (moduleList, dataType) {
+    getSystemDataHeaders: function (moduleList, dataType, dataReleasePlan) {
         let _self = this;
         return new Promise((resolve, reject) => {
             try {
@@ -65,20 +80,11 @@ module.exports = {
                     reject(new CLASSES.DataImportError('ERR_IMP_00003', 'Invalid list of modules to be proccesses'));
                 } else {
                     let fileList = {};
-                    NODICS.getIndexedModules().forEach((moduleObject, moduleIndex) => {
-                        if (moduleList.includes(moduleObject.name)) {
-                            let dataFilesRoot = moduleObject.path;
-                            if (dataType === 'init') {
-                                dataFilesRoot = dataFilesRoot + '/data/init';
-                            } else if (dataType === 'core') {
-                                dataFilesRoot = dataFilesRoot + '/data/core';
-                            } else {
-                                dataFilesRoot = dataFilesRoot + '/data/sample';
-                            }
-                            _self.getHeaderFiles(dataFilesRoot, fileList);
-                        }
+                    _self.modulesForImport(moduleList, dataReleasePlan).forEach(moduleObject => {
+                        let roots = _self.releaseRoots(moduleObject, dataType, dataReleasePlan);
+                        roots.forEach(dataFilesRoot => _self.getHeaderFiles(dataFilesRoot, fileList));
                     });
-                    resolve(fileList);
+                    resolve(_self.filterDeclaredReleaseFiles(fileList, dataReleasePlan, 'headers'));
                 }
             } catch (error) {
                 reject(new CLASSES.DataImportError(error, 'while collecting system data headers'));
@@ -120,7 +126,7 @@ module.exports = {
      * @param {*} moduleList 
      * @param {*} dataType 
      */
-    getSystemDataFiles: function (moduleList, dataType) {
+    getSystemDataFiles: function (moduleList, dataType, dataReleasePlan) {
         let _self = this;
         return new Promise((resolve, reject) => {
             try {
@@ -128,25 +134,42 @@ module.exports = {
                     reject(new CLASSES.DataImportError('ERR_IMP_00003', 'Invalid list of modules to be proccesses'));
                 } else {
                     let fileList = {};
-                    NODICS.getIndexedModules().forEach((moduleObject, moduleIndex) => {
-                        if (moduleList.includes(moduleObject.name)) {
-                            let dataFilesRoot = moduleObject.path;
-                            if (dataType === 'init') {
-                                dataFilesRoot = dataFilesRoot + '/data/init';
-                            } else if (dataType === 'core') {
-                                dataFilesRoot = dataFilesRoot + '/data/core';
-                            } else {
-                                dataFilesRoot = dataFilesRoot + '/data/sample';
-                            }
-                            _self.getDataFiles(dataFilesRoot, fileList);
-                        }
+                    _self.modulesForImport(moduleList, dataReleasePlan).forEach(moduleObject => {
+                        let roots = _self.releaseRoots(moduleObject, dataType, dataReleasePlan);
+                        roots.forEach(dataFilesRoot => _self.getDataFiles(dataFilesRoot, fileList));
                     });
-                    resolve(fileList);
+                    resolve(_self.filterDeclaredReleaseFiles(fileList, dataReleasePlan, 'data'));
                 }
             } catch (error) {
                 reject(new CLASSES.DataImportError(error, 'while collecting system data files'));
             }
         });
+    },
+
+    /**
+     * Restricts governed release execution to files covered by the selected immutable manifest sections.
+     * Calls outside the data-release lifecycle retain the established unfiltered behavior.
+     */
+    filterDeclaredReleaseFiles: function (fileList, dataReleasePlan, folderName) {
+        if (!Array.isArray(dataReleasePlan) || dataReleasePlan.length === 0) return fileList;
+        let allowed = new Set();
+        dataReleasePlan.forEach(release => {
+            (release.declaredFiles || []).filter(file => file.split('/').includes(folderName))
+                .forEach(file => allowed.add(path.resolve(NODICS.getRawModule(release.moduleName).path, 'data', file)));
+        });
+        let filtered = {};
+        _.each(fileList, (paths, name) => {
+            let selected = [].concat(paths || []).filter(file => allowed.has(path.resolve(file)));
+            if (selected.length > 0) filtered[name] = selected;
+        });
+        return filtered;
+    },
+
+    /** Resolves only manifest-qualified physical roots, retaining legacy type folders for ordinary callers. */
+    releaseRoots: function (moduleObject, dataType, dataReleasePlan) {
+        let selected = Array.isArray(dataReleasePlan) ? dataReleasePlan.filter(release => release.moduleName === moduleObject.name) : [];
+        let roots = selected.length ? selected.map(release => release.sourceRoot || release.dataType) : [dataType];
+        return Array.from(new Set(roots)).map(root => path.resolve(moduleObject.path, 'data', root));
     },
 
     /**

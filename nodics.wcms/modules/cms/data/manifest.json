@@ -7,6 +7,15 @@
             "dataType": "init",
             "version": "1.0.3",
             "description": "Content Management init data",
+            "owningDomain": "cms",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "WCMS_STAGED",
+            "environmentScope": ["ALL"],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
             "files": {
                 "init/data/content/defaultCmsSiteData.js": "e8542694fba0b563ad046cba914be5d0383abf76e06fdfb120016f68b4e2f869",
                 "init/data/content/defaultCmsTypeCodeData.js": "b57d863ec9d289178f6ce83beb7eb1a8d0f8ceef0c0e9e097daf3735a7e78438",
@@ -18,11 +27,41 @@
                 "init/headers/user/defaultCmsUserGroupsDataHeader.js": "1c8bfec125cc26e463dec76e8bef91db59aadee5608b93139276d2df9f346b7e"
             }
         },
+        "cmsPublicationApproval": {
+            "kind": "DATA_RELEASE",
+            "dataType": "init",
+            "version": "1.0.0",
+            "description": "WCMS-owned mandatory CMS publication approval workflow contribution",
+            "owningDomain": "cms",
+            "lifecycle": "OPERATIONAL_VERSIONED",
+            "destinationRole": "PROCESS",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "IMMUTABLE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "installer": "PROCESS_DEFINITION",
+            "files": {
+                "init/data/process/cmsPublicationApprovalDefinitionData.js": "d5c1ef362d90b1526655d9d81079d05192e7df489705d721b1bb413e368d0830"
+            }
+        },
         "sample": {
             "kind": "DATA_RELEASE",
             "dataType": "sample",
             "version": "1.0.4",
             "description": "Content Management sample data",
+            "owningDomain": "cms",
+            "lifecycle": "PUBLISHABLE",
+            "destinationRole": "WCMS_STAGED",
+            "environmentScope": ["LOCAL", "DEVELOPMENT", "TEST"],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "IMMUTABLE",
+            "publicationPolicy": "REQUIRED",
+            "initialPublicationPolicy": "ADMIN_INITIATED",
+            "removalPolicy": "UNPUBLISH_OR_RETIRE",
             "files": {
                 "sample/data/components/sampleCmsComponentData.js": "ae9af69d2cdedd02790f61ebef0e7b469ffc716e8886338c52b749540e95345d",
                 "sample/data/components/sampleCmsComponentLocalizationData.js": "a3c393afde84f75c871fb63a7bf4e4672af0a4a4e4e886b78bf0bc20a849110a",

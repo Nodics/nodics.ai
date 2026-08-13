@@ -36,6 +36,12 @@
 - CMS data may target WCMS schemas, but WCMS remains the CMS schema,
   persistence, delivery, and runtime authority.
 - Use nData/nImport governed import flow; do not add an Axis-specific loader.
+- Keep the CMS-driven Axis baseline in the named `axis:axisBaseline` aggregate
+  manifest section. It must target `WCMS_STAGED`, retain immutable checksums,
+  and require explicit administrator-initiated publication; startup import must
+  never publish it or write WCMS Online.
+- The bundled frontend fallback is executable/static client code owned by
+  `nodics.axis`; do not copy it into this backend data module.
 
 ## Verification
 

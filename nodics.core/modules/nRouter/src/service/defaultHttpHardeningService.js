@@ -201,6 +201,10 @@ module.exports = {
      */
     resolveAllowedOrigin: function (requestOrigin, cors) {
         let allowedOrigins = cors.allowedOrigins || [];
+        let deniedOrigins = cors.deniedOrigins || [];
+        if (requestOrigin && deniedOrigins.indexOf(requestOrigin) >= 0) {
+            return undefined;
+        }
         if (!requestOrigin || allowedOrigins.length === 0) {
             return undefined;
         }

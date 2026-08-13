@@ -5,8 +5,19 @@
         "init": {
             "kind": "DATA_RELEASE",
             "dataType": "init",
-            "version": "1.0.7",
+            "version": "1.0.9",
             "description": "Profile and Identity init data",
+            "owningDomain": "profile",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "PLATFORM",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "RESTRICTED",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
             "files": {
                 "init/data/address/defaultAddressesData.js": "39507c228b61de60ef6e6385293631eb660e64b13b389196906f1b75dc47ae63",
                 "init/data/address/defaultContactsData.js": "ebbe7117f5685bc344337cd10e41d4afbfe2f087ab0b4b66c03a74d03b8103f3",
@@ -14,7 +25,7 @@
                 "init/data/address/defaultTenantContactsData.js": "cc69019c88728d606bcd84c298bcf12b302e3c7c67e99acd19e5defb1f3ed170",
                 "init/data/enterprise/defaultEnterpriseData.js": "02c57b34ba14d46673e146088b8f26e3ded42ac05d59d89440a8aa8b0aa480c5",
                 "init/data/enterprise/defaultTenantsData.js": "d83563312b485fb0aa29f4f9108dd7600814b1dbf54b38da1b499a332cfbed32",
-                "init/data/groups/defaultBootstrapUserGroupsData.js": "655ed4600b36b6b96170a64d31fd9e4bdca6acfe75528c2b9197203005176f54",
+                "init/data/groups/defaultBootstrapUserGroupsData.js": "3faa153fe9ee27227133b4281ca9e5928886cc4a82f6ab0480496f5ea49423b5",
                 "init/data/user/defaultCutomerData.js": "b8c0e56ba8ba6db86740de026a6df1bf23ea3815cc9f0f3174abf7f204415c2d",
                 "init/data/user/defaultEmployeeData.js": "e8c735f3332f1bdb2b16d72403f3a629fda9b273b253b3055b419c679ec5455a",
                 "init/headers/address/defaultAddressesHeader.js": "4b2c8a026830151466708a90cee091f5aa4d7adcaf4b0e8ffce0d76729f969c0",
@@ -30,6 +41,19 @@
             "dataType": "sample",
             "version": "1.0.7",
             "description": "Profile and Identity sample data",
+            "owningDomain": "profile",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "PLATFORM",
+            "environmentScope": [
+                "LOCAL",
+                "DEVELOPMENT",
+                "TEST"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "DELETE_EXPLICIT",
             "files": {
                 "sample/tenant/data/defaultTenantCsvData.csv": "4163a0b8cf26bf8804b8761852e8b0a75843cc85e7002b7fe78bdb96c85edfcb",
                 "sample/tenant/data/defaultTenantExcelData.xlsx": "cf4f3d7f7e1b94c5ccbfeab90bf99594bbd2cc57afdf830ccca4d31af2c2f95d",

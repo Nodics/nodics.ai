@@ -16,6 +16,23 @@
  * @owner nData
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
+const releasePlanRequest = {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+        releaseCodes: { type: 'array', minItems: 1, maxItems: 256, uniqueItems: true,
+            items: { type: 'string', pattern: '^[A-Za-z][A-Za-z0-9_-]{0,127}:[A-Za-z][A-Za-z0-9_-]{0,127}$' } },
+        modules: { type: 'array', minItems: 1, maxItems: 256, uniqueItems: true,
+            description: 'Legacy selector; use releaseCodes when a module owns multiple sections.',
+            items: { type: 'string', pattern: '^[A-Za-z][A-Za-z0-9_-]{0,127}$' } },
+        expectedReleases: { type: 'object', maxProperties: 256, additionalProperties: {
+            type: 'string', pattern: '^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?$'
+        } }
+    }
+};
+
+const releasePlanBody = { required: true, content: { 'application/json': { schema: releasePlanRequest } } };
+
 module.exports = {
     import: {
         directImports: {
@@ -174,7 +191,8 @@ module.exports = {
                 key: '/init/validate',
                 method: 'POST',
                 controller: 'DefaultDataReleaseController',
-                operation: 'preflight'
+                operation: 'preflight',
+                requestBody: releasePlanBody
             },
             preflightCore: {
                 secured: true,
@@ -185,7 +203,8 @@ module.exports = {
                 key: '/core/validate',
                 method: 'POST',
                 controller: 'DefaultDataReleaseController',
-                operation: 'preflight'
+                operation: 'preflight',
+                requestBody: releasePlanBody
             },
             preflightSample: {
                 secured: true,
@@ -196,7 +215,8 @@ module.exports = {
                 key: '/sample/validate',
                 method: 'POST',
                 controller: 'DefaultDataReleaseController',
-                operation: 'preflight'
+                operation: 'preflight',
+                requestBody: releasePlanBody
             },
             executeInit: {
                 secured: true,
@@ -206,7 +226,8 @@ module.exports = {
                 key: '/init/install',
                 method: 'POST',
                 controller: 'DefaultDataReleaseController',
-                operation: 'executeInit'
+                operation: 'executeInit',
+                requestBody: releasePlanBody
             },
             executeCore: {
                 secured: true,
@@ -216,7 +237,8 @@ module.exports = {
                 key: '/core/install',
                 method: 'POST',
                 controller: 'DefaultDataReleaseController',
-                operation: 'executeCore'
+                operation: 'executeCore',
+                requestBody: releasePlanBody
             },
             executeSample: {
                 secured: true,
@@ -226,7 +248,8 @@ module.exports = {
                 key: '/sample/install',
                 method: 'POST',
                 controller: 'DefaultDataReleaseController',
-                operation: 'executeSample'
+                operation: 'executeSample',
+                requestBody: releasePlanBody
             }
         },
         importRunHistory: {

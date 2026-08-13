@@ -31,6 +31,12 @@ That means:
 
 ## Before Writing Code
 
+Database inspection or mutation is never an implementation shortcut. AI tools
+must use Nodics APIs or loader-visible services for diagnosis, migration,
+repair, import/export, tests, and acceptance evidence. Raw database drivers,
+shells, collection commands, and direct model persistence outside the owning
+generated service/DAO/provider boundary are prohibited.
+
 Before changing or creating code, the AI must pass the Nodics **what / where /
 how** gate:
 

@@ -65,6 +65,7 @@ const documentationSource = {
     catalog: { type: "string", minLength: 1, maxLength: 128 },
     defaultPage: { type: "string", pattern: "^/(?!/)", maxLength: 512 },
     packCode: { type: "string", minLength: 1, maxLength: 128 },
+    initializationProfile: { type: "string", pattern: "^[a-z][a-z0-9_-]{0,63}$" },
     openApiPath: { type: "string", pattern: "^/(?!/)", maxLength: 512 },
     swaggerPath: { type: "string", pattern: "^/(?!/)", maxLength: 512 },
     requiredPermissions: {
@@ -897,6 +898,7 @@ module.exports = {
       "contractVersion",
       "clientContractVersion",
       "endpoints",
+      "endpointRoles",
       "uiComposition",
     ],
     properties: {
@@ -912,6 +914,15 @@ module.exports = {
           engagement: { type: "string", format: "uri" },
           editorial: { type: "string", format: "uri" },
           localization: { type: "string", format: "uri" },
+        },
+      },
+      endpointRoles: {
+        type: "object",
+        additionalProperties: false,
+        required: ["cms"],
+        properties: {
+          cms: { enum: ["ONLINE"] },
+          editorial: { enum: ["ONLINE"] },
         },
       },
       uiComposition: {

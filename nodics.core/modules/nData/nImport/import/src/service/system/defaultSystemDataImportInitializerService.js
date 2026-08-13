@@ -323,7 +323,7 @@ module.exports = {
             request.modules = moduleList;
             request.importRun.modules = [].concat(moduleList);
         }
-        SERVICE.DefaultImportUtilityService.getSystemDataHeaders(request.modules, request.inputPath.dataType).then(success => {
+        SERVICE.DefaultImportUtilityService.getSystemDataHeaders(request.modules, request.inputPath.dataType, request.dataReleasePlan).then(success => {
             request.data.headerFiles = success;
             if (request.importRun) {
                 request.importRun.summary.headerFilesDiscovered = Object.keys(success || {}).length;
@@ -361,7 +361,7 @@ module.exports = {
 
     loadDataFileList: function (request, response, process) {
         this.LOG.debug('Loading list of data files from modules to be imported');
-        SERVICE.DefaultImportUtilityService.getSystemDataFiles(request.modules, request.inputPath.dataType).then(success => {
+        SERVICE.DefaultImportUtilityService.getSystemDataFiles(request.modules, request.inputPath.dataType, request.dataReleasePlan).then(success => {
             request.data.dataFiles = success;
             if (request.importRun) {
                 request.importRun.dataFiles.discovered = Object.keys(success || {});

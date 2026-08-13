@@ -55,6 +55,11 @@ module.exports = {
      */
 
     remove: function (request) {
+        if (SERVICE.DefaultLocalResetProviderService && SERVICE.DefaultLocalResetProviderService.authorizes(request)) {
+            request.moduleName = 'system';
+            request.schemaModel = NODICS.getModels('system', request.tenant).Workflow2SchemaModel;
+            return SERVICE.DefaultPipelineService.start('modelsRemoveInitializerPipeline', request, {});
+        }
         return Promise.reject(new CLASSES.WorkflowError('ERR_WF_00002', 'Please use save operation with value active: false'));
     },
     /**

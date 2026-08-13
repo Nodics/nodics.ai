@@ -95,6 +95,23 @@ module.exports = {
         });
     },
 
+    /** Reads one provider-relative media object without exposing its path. */
+    read: function (request) {
+        let basePath = this.resolveBasePath(request.provider);
+        let storageKey = SERVICE.DefaultMediaStorageKeyService.assertSafeStorageKey(request.storageKey);
+        let absolutePath = path.resolve(basePath, storageKey);
+        if (!absolutePath.startsWith(basePath + path.sep) && absolutePath !== basePath) {
+            return Promise.reject(new CLASSES.NodicsError('ERR_MED_00004', 'Unsafe media storage key'));
+        }
+        return fs.promises.stat(absolutePath).then(stat => {
+            let maximum = Number(request.maximumBytes || 0);
+            if (maximum > 0 && stat.size > maximum) {
+                throw new CLASSES.NodicsError('ERR_MED_00012', 'Media publication payload exceeds configured boundary');
+            }
+            return fs.promises.readFile(absolutePath);
+        });
+    },
+
     /**
      * Removes a local media file.
      *

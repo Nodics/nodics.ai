@@ -537,6 +537,7 @@ module.exports = {
         "catalog",
         "defaultPage",
         "packCode",
+        "initializationProfile",
         "openApiPath",
         "swaggerPath",
         "requiredPermissions",
@@ -559,7 +560,7 @@ module.exports = {
         return false;
       if (source.type === "CMS") {
         return (
-          ["site", "catalog", "defaultPage", "packCode"].every((key) =>
+          ["site", "catalog", "defaultPage", "packCode", "initializationProfile"].every((key) =>
             this.isString(source[key], 128),
           ) &&
           this.isSafePath(source.defaultPage) &&
@@ -570,7 +571,7 @@ module.exports = {
       return (
         this.isSafePath(source.openApiPath) &&
         this.isSafePath(source.swaggerPath) &&
-        ["site", "catalog", "defaultPage", "packCode"].every(
+        ["site", "catalog", "defaultPage", "packCode", "initializationProfile"].every(
           (key) => source[key] === undefined,
         )
       );

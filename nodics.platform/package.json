@@ -38,7 +38,7 @@
   "scripts": {
     "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
     "test:axis": "npm --prefix modules/axis test",
-    "test:documentation": "node modules/backoffice/test/backofficeDocumentationNavigationContract.test.js",
+    "test:documentation": "node modules/backoffice/test/backofficeDocumentationNavigationContract.test.js && node modules/backoffice/test/backofficeLocalResetCoordinatorContract.test.js",
     "test:functional-catalogue": "node modules/backoffice/test/functionalModuleCatalogueService.test.js",
     "test": "npm run check:syntax && npm run test:axis && npm run test:documentation && npm run test:functional-catalogue"
   }

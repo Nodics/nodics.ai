@@ -45,6 +45,8 @@ module.exports = {
     listInstances: function (request, callback) { return this.invoke('listInstances', request, callback); },
     /** Starts a published process instance. */
     startInstance: function (request, callback) { return this.invoke('startInstance', request, callback); },
+    /** Starts the fixed internally requested CMS publication approval workflow. */
+    startPublicationApproval: function (request, callback) { return this.invoke('startPublicationApproval', request, callback); },
     /** Reads one governed runtime instance. */
     getInstance: function (request, callback) { return this.invoke('getInstance', request, callback); },
     /** Reads process instance detail with tasks and audit timeline. */

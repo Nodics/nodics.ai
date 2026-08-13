@@ -17,6 +17,13 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+    localResetProvider: {
+        enabled: false,
+        environmentAllowlist: [],
+        confirmation: 'RESET_LOCAL_NODICS_DATA',
+        maximumServices: 128,
+        serviceNames: []
+    },
     readiness: {
         contributorTimeoutMs: 1000,
         cacheTtlMs: 1000,

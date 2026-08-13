@@ -48,6 +48,11 @@ module.exports = {
                     required: false,
                     description: 'Optional domain module that contributes or primarily consumes this process'
                 },
+                contributionOwner: { type: 'string', required: false, description: 'Module that owns the installed definition contribution' },
+                contributionCode: { type: 'string', required: false, description: 'Stable destination-qualified contribution identity' },
+                contributionVersion: { type: 'string', required: false, description: 'Installed immutable contribution release version' },
+                contributionChecksum: { type: 'string', required: false, description: 'Installed immutable contribution release checksum' },
+                policy: { type: 'object', required: false, description: 'Domain-owned secure workflow policy defaults customizable by later contributions' },
                 currentVersion: {
                     type: 'int',
                     required: true,
@@ -127,6 +132,11 @@ module.exports = {
                     required: true,
                     description: 'Deterministic checksum of the published graph contract'
                 },
+                contributionOwner: { type: 'string', required: false, description: 'Module owning the source contribution for this version' },
+                contributionCode: { type: 'string', required: false, description: 'Source contribution identity for this version' },
+                contributionVersion: { type: 'string', required: false, description: 'Source contribution release version for this version' },
+                contributionChecksum: { type: 'string', required: false, description: 'Source contribution checksum for this version' },
+                policy: { type: 'object', required: false, description: 'Published workflow policy defaults bound to this immutable version' },
                 publishedBy: {
                     type: 'string',
                     required: false,

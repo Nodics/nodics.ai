@@ -24,6 +24,18 @@ assert(states.definition.includes('ONLINE'));
 assert.strictEqual(properties.publish.lifecycle.initialState, 'STAGED');
 assert(properties.publish.lifecycle.transitions.APPROVED.includes('ACTIVATING'));
 assert(properties.publish.lifecycle.transitions.ACTIVATING.includes('ONLINE'));
+assert(properties.publish.lifecycle.transitions.FAILED.includes('VALIDATING'));
+
+const routes = require('../src/router/routers').publish.publicationLifecycle;
+const operations = require('../src/router/routers').publish.publicationOperations;
+assert.deepStrictEqual(routes.create.authTokenTypes, ['access']);
+assert.deepStrictEqual(routes.retry.authTokenTypes, ['access']);
+assert.deepStrictEqual(routes.approve.authTokenTypes, ['service']);
+assert.deepStrictEqual(routes.reject.authTokenTypes, ['service']);
+assert.deepStrictEqual(routes.activate.authTokenTypes, ['service']);
+assert.deepStrictEqual(operations.diagnostics.authTokenTypes, ['access']);
+assert.strictEqual(operations.reconcile.permission, 'publish.operations.reconcile');
+assert.strictEqual(operations.recover.permission, 'publish.operations.recover');
 assert.strictEqual(properties.publish.providers.versionProvider, null, 'nPublish must not embed a storage provider');
 assert.deepStrictEqual(properties.publish.providers.domainAdapters, {}, 'business adapters must be contributed by owning modules');
 let source = require('fs').readFileSync(require('path').join(__dirname, '../src/schemas/schemas.js'), 'utf8');

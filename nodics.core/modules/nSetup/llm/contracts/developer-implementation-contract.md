@@ -107,6 +107,19 @@ Nodics guidance is organized around how a developer experiences the platform:
 That perspective must stay aligned with current source code, security, runtime
 governance, and generated LLM context.
 
+## Zero Direct Database Operation Contract
+
+Human developers and AI tools must not perform direct database reads or writes
+to implement, debug, migrate, repair, verify, or operate Nodics data. Use the
+owning API or loader-visible service; persistence then flows through generated
+services/DAOs and the configured provider. This prohibition includes database
+shells, raw driver calls, collection commands, ad hoc scripts, test shortcuts,
+and manual production fixes. It cannot be waived as residual risk.
+
+Database provider and DAO maintainers may implement adapter internals only
+inside the owning persistence boundary and must expose provider-neutral,
+tenant-aware, transactional services to callers.
+
 ## AI Coding And Customization Contract
 
 Before writing source code, developers and AI tools must follow

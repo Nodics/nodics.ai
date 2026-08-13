@@ -38,6 +38,17 @@ function hash(filePath) {
     return crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
 }
 
+/**
+ * Compares manifest file maps by path and checksum without treating JSON key
+ * insertion order as release content. Aggregate manifests remain readable in
+ * an owner-chosen order while immutable file membership still fails closed.
+ */
+function sameFileMap(left, right) {
+    let leftEntries = Object.entries(left || {}).sort(([leftPath], [rightPath]) => leftPath.localeCompare(rightPath));
+    let rightEntries = Object.entries(right || {}).sort(([leftPath], [rightPath]) => leftPath.localeCompare(rightPath));
+    return JSON.stringify(leftEntries) === JSON.stringify(rightEntries);
+}
+
 function filesBelow(folder, prefix = '') {
     if (!fs.existsSync(folder)) return [];
     return fs.readdirSync(folder, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name)).flatMap(entry => {
@@ -73,7 +84,12 @@ function visit(folder) {
                 if (contentOwnedTypes.has(dataType) && !aggregate.sections[dataType]) continue;
                 let releaseRoot = path.join(dataRoot, dataType);
                 if (!fs.existsSync(releaseRoot)) continue;
-                let releaseFiles = filesBelow(releaseRoot);
+                let contributionFiles = new Set(Object.entries(aggregate.sections)
+                    .filter(([sectionCode, contribution]) => sectionCode !== dataType && contribution &&
+                        contribution.kind === 'DATA_RELEASE' && contribution.dataType === dataType)
+                    .flatMap(([, contribution]) => Object.keys(contribution.files || {}))
+                    .map(file => file.startsWith(dataType + '/') ? file.slice(dataType.length + 1) : file));
+                let releaseFiles = filesBelow(releaseRoot).filter(file => !contributionFiles.has(file));
                 if (releaseFiles.length === 0) continue;
                 let files = Object.fromEntries(releaseFiles.map(file => [dataType + '/' + file, hash(path.join(releaseRoot, file))]));
                 let section = {
@@ -85,11 +101,11 @@ function visit(folder) {
                 };
                 let existing = aggregate.sections[dataType];
                 if (existing) {
-                    if (JSON.stringify(existing.files || {}) !== JSON.stringify(files)) {
+                    if (!sameFileMap(existing.files, files)) {
                         let requestedVersion = requestedReleases.get(packageMetadata.name + ':' + dataType);
                         if (requestedVersion && requestedVersion !== existing.version) {
                             section.version = requestedVersion;
-                            aggregate.sections[dataType] = section;
+                            aggregate.sections[dataType] = Object.assign({}, existing, section);
                             changed = true;
                             continue;
                         }

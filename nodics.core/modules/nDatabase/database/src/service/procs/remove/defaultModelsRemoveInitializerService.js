@@ -81,6 +81,10 @@ module.exports = {
      */
     checkAccess: function (request, response, process) {
         this.LOG.debug('Checking model access');
+        if (SERVICE.DefaultLocalResetProviderService && SERVICE.DefaultLocalResetProviderService.authorizes(request)) {
+            process.nextSuccess(request, response);
+            return;
+        }
         let rawSchema = request.schemaModel.rawSchema;
         if (SERVICE.DefaultSchemaAccessHandlerService.getAccessPoint(request.authData, rawSchema.accessGroups) >= CONFIG.get('accessPoints').removeAccessPoint) {
             SERVICE.DefaultRecordOwnershipPolicyService.enforce(request, 'remove').then(() => process.nextSuccess(request, response)).catch(error => process.error(request, response, error));
@@ -98,6 +102,10 @@ module.exports = {
      */
     enforceDeleteAccessPolicies: function (request, response, process) {
         this.LOG.debug('Applying delete access policies');
+        if (SERVICE.DefaultLocalResetProviderService && SERVICE.DefaultLocalResetProviderService.authorizes(request)) {
+            process.nextSuccess(request, response);
+            return;
+        }
         if (!SERVICE.DefaultSchemaWriteAccessPolicyService ||
             typeof SERVICE.DefaultSchemaWriteAccessPolicyService.enforceDeletePolicies !== 'function') {
             process.nextSuccess(request, response);
@@ -162,6 +170,10 @@ module.exports = {
      * @returns {undefined}
      */
     enforceReferenceIntegrity: function (request, response, process) {
+        if (SERVICE.DefaultLocalResetProviderService && SERVICE.DefaultLocalResetProviderService.authorizes(request)) {
+            process.nextSuccess(request, response);
+            return;
+        }
         let service = SERVICE.DefaultReferenceIntegrityService;
         if (!service || typeof service.enforceRemove !== 'function') {
             let config = CONFIG.get('referenceIntegrity') || {};

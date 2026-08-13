@@ -91,6 +91,37 @@ async function validateVersionedSaveUsesGetItemsEnvelope() {
     assert.strictEqual(schemaModel.inserted.versionId, 3);
 }
 
+async function validateVersionedSaveAcceptsIdenticalReplay() {
+    const existing = {
+        code: 'item-replay',
+        name: 'Existing',
+        versionId: 0,
+        created: new Date('2026-01-01T00:00:00.000Z'),
+        updated: new Date('2026-01-01T00:00:00.000Z')
+    };
+    const schemaModel = modelWithItems([existing]);
+    const saved = await schemaModel.saveVersionedItems({
+        query: { code: 'item-replay' },
+        searchOptions: {},
+        model: Object.assign({}, existing, {
+            created: new Date('2026-08-13T00:00:00.000Z'),
+            updated: new Date('2026-08-13T00:00:00.000Z')
+        })
+    });
+    assert.strictEqual(saved.code, 'item-replay');
+    assert.strictEqual(saved.versionId, 0);
+    assert.strictEqual(schemaModel.inserted, undefined, 'an identical replay must not create another version');
+}
+
+async function validateVersionedSaveRejectsChangedStaleReplay() {
+    const schemaModel = modelWithItems([{ code: 'item-stale', name: 'Existing', versionId: 0 }]);
+    await assert.rejects(schemaModel.saveVersionedItems({
+        query: { code: 'item-stale' },
+        searchOptions: {},
+        model: { code: 'item-stale', name: 'Changed', versionId: 0 }
+    }), /it should be: 1/);
+}
+
 async function validateVersionedUpdateUsesGetItemsEnvelope() {
     const schemaModel = modelWithItems([{ code: 'item-1', name: 'Old', versionId: 2 }]);
     const updated = await schemaModel.updateVersionedItems({
@@ -106,6 +137,8 @@ async function validateVersionedUpdateUsesGetItemsEnvelope() {
 
 validateVersionedSaveUsesGetItemsEnvelope()
     .then(validateVersionedSaveSupportsCurrentMongoInsertResult)
+    .then(validateVersionedSaveAcceptsIdenticalReplay)
+    .then(validateVersionedSaveRejectsChangedStaleReplay)
     .then(validateVersionedUpdateUsesGetItemsEnvelope)
     .then(() => {
         console.log('vMongodb versioned model contract validated');

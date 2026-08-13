@@ -16,7 +16,7 @@ const expected = {
     "moduleName": "backoffice",
     "schemaName": "backofficeFunctionalModuleRegistration",
     "model": true,
-    "serviceEnabled": false,
+    "serviceEnabled": true,
     "routerEnabled": false,
     "super": "base"
 };

@@ -33,6 +33,7 @@ const capability = {
             "catalog": "documentationContentCatalog",
             "defaultPage": "/docs/nodics-axis",
             "packCode": "axisDocumentation",
+            "initializationProfile": "axisdocs",
             "dashboard": {
                 "kind": "Application guide",
                 "icon": "schema",

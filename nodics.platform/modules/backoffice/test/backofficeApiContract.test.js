@@ -78,8 +78,10 @@ assert.deepStrictEqual(contracts.publicBootstrapData.required, [
   "contractVersion",
   "clientContractVersion",
   "endpoints",
+  "endpointRoles",
   "uiComposition",
 ]);
+assert.deepStrictEqual(contracts.publicBootstrapData.properties.endpointRoles.properties.cms.enum, ["ONLINE"]);
 assert(contracts.publicBootstrapData.properties.endpoints.properties.engagement);
 assert(contracts.publicBootstrapData.properties.endpoints.properties.editorial);
 assert.deepStrictEqual(contracts.moduleAvailability.properties.state.enum, [
@@ -446,6 +448,7 @@ assert(
         catalog: "guideCatalog",
         defaultPage: "/docs/guide",
         packCode: "guideDocumentation",
+        initializationProfile: "guidedocs",
         dashboard: {
           summary: "Guide documentation",
           kind: "Guide",

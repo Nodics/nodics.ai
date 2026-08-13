@@ -38,5 +38,19 @@ module.exports = {
     SUC_BOF_00018: { code: '200', message: 'Registered functional modules returned' },
     SUC_BOF_00019: { code: '200', message: 'Functional-module registration returned' },
     SUC_BOF_00020: { code: '200', message: 'Functional-module registration updated' },
-    ERR_BOF_00000: { code: '400', message: 'Invalid module registration' }
+    SUC_BOF_00021: { code: '200', message: 'Application initialization status returned' },
+    SUC_BOF_00022: { code: '200', message: 'Application initialization submitted' },
+    ERR_BOF_00080: { code: '400', message: 'Application initialization profile is invalid' },
+    ERR_BOF_00081: { code: '404', message: 'Application initialization profile is unavailable' },
+    ERR_BOF_00082: { code: '403', message: 'Application initialization requires a human administrator' },
+    ERR_BOF_00083: { code: '503', message: 'Application initialization target is unavailable' },
+    ERR_BOF_00000: { code: '400', message: 'Invalid module registration' },
+    ERR_BOF_00090: { code: '400', message: 'Local reset target boundary exceeded' },
+    ERR_BOF_00091: { code: '503', message: 'Local reset provider is unavailable' },
+    ERR_BOF_00092: { code: '403', message: 'Local reset is disabled' },
+    ERR_BOF_00093: { code: '403', message: 'Local reset requires a human administrator' },
+    ERR_BOF_00094: { code: '400', message: 'Local reset confirmation and reason are required' },
+    ERR_BOF_00095: { code: '502', message: 'Local reset provider did not acknowledge completion' },
+    ERR_BOF_00096: { code: '403', message: 'Local reset is not allowed in this environment' },
+    ERR_BOF_00097: { code: '503', message: 'Local reset service authentication is unavailable' }
 };

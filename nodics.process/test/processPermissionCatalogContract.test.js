@@ -30,8 +30,13 @@ const missing = [];
 routeGroups.forEach(group => {
     Object.entries(group).forEach(([routeName, route]) => {
         assert.strictEqual(route.secured, true, `${routeName} must stay secured`);
-        assert(route.permission, `${routeName} must declare a specific permission`);
-        if (!permissionCatalog.has(route.permission)) missing.push(`${routeName}:${route.permission}`);
+        assert(route.permission || route.permissionConfig, `${routeName} must declare a specific permission or governed permission configuration`);
+        if (route.permission && !permissionCatalog.has(route.permission)) missing.push(`${routeName}:${route.permission}`);
+        if (route.permissionConfig) {
+            assert.deepStrictEqual(route.authTokenTypes, ['service'], `${routeName} may use configured internal permission only for service tokens`);
+            assert.strictEqual(route.permissionConfig, 'authSecurity.internalToken.routePermission',
+                `${routeName} must use the governed internal-token route permission`);
+        }
     });
 });
 

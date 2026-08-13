@@ -18,4 +18,11 @@
  * @owner axis
  */
 module.exports = {
+    axis: {
+        initialization: {
+            baselineCode: 'axis',
+            target: { moduleName: 'cms', connectionName: 'wcmsStaged', connectionType: 'abstract',
+                timeoutMs: 30000, maxAttempts: 2 }
+        }
+    }
 };

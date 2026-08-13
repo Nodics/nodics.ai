@@ -53,6 +53,33 @@ file map, checksum evidence, and kind-specific metadata. Section file paths
 must be relative to the containing `data/` directory, remain inside it, and
 must not be absolute, traverse with `..`, or resolve through symbolic links.
 
+Every runtime-executable section must additionally declare its data lifecycle
+and permitted placement through governed contract fields:
+
+- `owningDomain`: authoritative functional module/domain identity;
+- `lifecycle`: `PUBLISHABLE`, `OPERATIONAL_VERSIONED`, or `REFERENCE`;
+- `destinationRole`: the runtime role allowed to import the section;
+- `environmentScope`: explicit permitted environment classes;
+- `sensitivity`: a registered data classification;
+- `versioningPolicy`: whether business records are immutable-versioned;
+- `publicationPolicy`: `REQUIRED` or `NONE`;
+- `initialPublicationPolicy`: for publishable data, normally
+  `ADMIN_INITIATED`; startup import must never imply Online publication;
+- `removalPolicy`: explicit governed retention, unpublish, retire, or deletion
+  semantics; omission from a later release never deletes records.
+
+`PUBLISHABLE` data imports only into a Staged authoring runtime and reaches
+Online only through `nPublish`. `OPERATIONAL_VERSIONED` data remains in its
+owning runtime and never enters Staged-to-Online publication. `REFERENCE` data
+has neither a publishing lifecycle nor artificial business versioning unless
+its owning contract explicitly promotes it to another class.
+
+Destination-qualified contributions may be selected for another runtime only
+through an explicit manifest contract resolved by nImport. Selection must not
+activate the source module's runtime behavior, scan arbitrary packages, or
+create a second importer. Test fixtures and expected Online projections are
+never runtime-executable manifest sections.
+
 ## Ownership and process
 
 - The nearest concrete module or project boundary owns its manifest and data.
@@ -64,8 +91,11 @@ must not be absolute, traverse with `..`, or resolve through symbolic links.
   preserve unrelated sections.
 - nImport remains the only execution authority. Manifest placement does not
   create another loader or importer.
-- Runtime discovery considers only active modules and only executable
-  `DATA_RELEASE` sections for operator data-release operations.
+- Runtime discovery normally considers active modules and executable
+  `DATA_RELEASE` sections. An explicitly selected destination-qualified
+  contribution may be discovered without source-module runtime activation only
+  when its manifest identity, owner, destination, compatibility, checksum,
+  dependency, environment, and security policy all qualify through nImport.
 - Content-pack configuration must identify both `data/manifest.json` and its
   `manifestSection`.
 

@@ -53,6 +53,13 @@ module.exports = {
         let auth = request && request.authData || {};
         return String(auth.principalId || auth.code || auth.loginId || 'system');
     },
+    /** Returns one tenant-scoped publication lifecycle record through the configured repository. */
+    get: async function (request) {
+        if (!request || !request.publicationCode) throw new CLASSES.NodicsError('ERR_PUB_00000', 'Publication code is required');
+        let publication = await this.getRepository().get(request.publicationCode, request);
+        if (!publication) throw new CLASSES.NodicsError('ERR_PUB_00000', 'Publication request was not found');
+        return publication;
+    },
     /** Validates and returns the expected optimistic revision. */
     requireExpectedRevision: function (request, publication) {
         let expected = request && request.expectedRevision;
@@ -146,13 +153,38 @@ module.exports = {
     approve: async function (request) {
         let publication = await this.getRepository().get(request.publicationCode, request);
         if (publication && publication.state === 'APPROVED') return publication;
-        return this.transition(publication, 'APPROVED', request);
+        let workflow = request && request.workflowEvidence;
+        return this.transition(publication, 'APPROVED', request,
+            workflow && workflow.instanceCode ? { workflowRef: workflow.instanceCode } : {},
+            workflow ? { workflow: workflow } : undefined);
     },
     /** Records rejection for a pending publication. */
     reject: async function (request) {
         let publication = await this.getRepository().get(request.publicationCode, request);
         if (publication && publication.state === 'REJECTED') return publication;
-        return this.transition(publication, 'REJECTED', request);
+        let workflow = request && request.workflowEvidence;
+        return this.transition(publication, 'REJECTED', request,
+            workflow && workflow.instanceCode ? { workflowRef: workflow.instanceCode } : {},
+            workflow ? { workflow: workflow } : undefined);
+    },
+    /** Revalidates a failed immutable publication before any later approval or activation attempt. */
+    retry: async function (request) {
+        let publication = await this.getRepository().get(request.publicationCode, request);
+        if (!publication) throw new CLASSES.NodicsError('ERR_PUB_00000', 'Publication request was not found');
+        if (publication.state !== 'FAILED') throw new CLASSES.NodicsError('ERR_PUB_00005', 'Only a failed publication can be retried');
+        publication = await this.transition(publication, 'VALIDATING', request, {}, { retry: true });
+        return this.validate(Object.assign({}, request, { expectedRevision: publication.revision }));
+    },
+    /** Re-enters validation after a terminal rollback, withdrawal, or rejection; approval must be requested again. */
+    resubmit: async function (request) {
+        let publication = await this.getRepository().get(request.publicationCode, request);
+        if (!publication) throw new CLASSES.NodicsError('ERR_PUB_00000', 'Publication request was not found');
+        if (!['ROLLED_BACK', 'WITHDRAWN', 'REJECTED'].includes(publication.state)) {
+            throw new CLASSES.NodicsError('ERR_PUB_00005', 'Only a rolled back, withdrawn, or rejected publication can be resubmitted');
+        }
+        publication = await this.transition(publication, 'VALIDATING', request,
+            { recoveryFromState: publication.state }, { resubmission: true, recoveryFromState: publication.state });
+        return this.validate(Object.assign({}, request, { expectedRevision: publication.revision }));
     },
     /** Resumes an already-approved domain workflow release idempotently through validation and Online activation. */
     publishApproved: async function (request) {

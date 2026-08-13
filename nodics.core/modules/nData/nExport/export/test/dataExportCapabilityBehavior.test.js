@@ -127,6 +127,16 @@ const routerConfig = require('../src/router/routers');
     assert.strictEqual(exportError.code, 'ERR_EXP_00001');
     assert(exportError.message.includes('Export module is invalid'));
 
+    assert.throws(
+        () => global.SERVICE.DataExportService.normalizeRequest({
+            tenant: 'default',
+            authData: { enterprise: { code: 'default' } },
+            export: { moduleName: 'profile', schemaName: 'tenant', enterpriseCode: 'anotherEnterprise' },
+        }),
+        (error) => error.code === 'ERR_EXP_00001' && error.message.includes('Cross-enterprise'),
+    );
+    assert.strictEqual(global.SERVICE.DataExportService.escapeCsvValue('=SUM(A1:A2)'), "'=SUM(A1:A2)");
+
     let selectedModels = [
         {
             code: 'product-001',
@@ -225,6 +235,7 @@ const routerConfig = require('../src/router/routers');
                 code: 'tenant-export-test',
                 accessUrl: '/nodics/media/v0/content/tenant-export-test',
                 originalFileName: mediaRequest.files[0].originalFileName,
+                storageKey: 'must-not-leave-export-boundary',
             });
         },
     };
@@ -262,7 +273,22 @@ const routerConfig = require('../src/router/routers');
 
     assert.strictEqual(exportResult.code, 'SUC_SYS_00000');
     assert.strictEqual(exportResult.data.media.code, 'tenant-export-test');
+    assert.strictEqual(exportResult.data.media.storageKey, undefined);
     assert.strictEqual(exportResult.data.summary.exportedRecords, 2);
+    assert.strictEqual(exportResult.data.provenance.contractType, 'NODICS_SCHEMA_EXPORT');
+    assert.strictEqual(exportResult.data.provenance.importAuthorization, false);
+    assert.strictEqual(exportResult.data.provenance.publicationAuthorization, false);
+    assert.strictEqual(exportResult.data.provenance.onlineWriteAuthorization, false);
+    assert.match(exportResult.data.provenance.checksum, /^[a-f0-9]{64}$/);
+
+    const jsonPayload = JSON.parse(global.SERVICE.DataExportService.renderJson(
+        { moduleName: 'profile', schemaName: 'tenant' },
+        [{ code: 'default' }],
+        { label: 'Tenant' },
+        { contractType: 'NODICS_SCHEMA_EXPORT', contractVersion: 1 },
+    ));
+    assert.strictEqual(jsonPayload.contract.contractType, 'NODICS_SCHEMA_EXPORT');
+    assert.deepStrictEqual(jsonPayload.records, [{ code: 'default' }]);
 
     assert.strictEqual(typeof controller.downloadGeneratedExport, 'undefined', 'nExport must not expose a duplicate download controller operation');
     assert.strictEqual(typeof global.FACADE.DataExportFacade.downloadGeneratedExport, 'undefined', 'nExport must not expose a duplicate download facade operation');

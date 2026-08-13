@@ -26,3 +26,18 @@
   overridable.
 - Keep scheduling in cronjob, generic lifecycle/audit in nPublish, physical
   versions in database variants, and CMS dependency/delivery rules in CMS.
+- CMS computes published-media protection from all stored Online pointers and
+  both `manifestCode` and `previousManifestCode`; inactive pointers remain
+  recoverable and therefore protected.
+- Missing protected manifests and configured pointer/manifest boundaries fail
+  collection closed. CMS never removes media storage directly; it delegates a
+  bounded protected-code set to Media, and deletion defaults to dry-run.
+- Before target mutation, require `DefaultDatabaseTransactionService`
+  capabilities `multiRecordAtomic: true` and `contextPropagation: true`.
+  Unsupported or non-transactional providers must fail before work begins;
+  never describe ordered writes or compensation as an atomic deployment.
+- Manifest, pointer, receipt, and outbox writes share one opaque transaction
+  context. Cache delivery occurs only after commit.
+- Use pointer revision compare-and-set plus operation-scoped receipt/outbox
+  identities. A retry after a committed response is lost must converge without
+  another pointer, receipt, or event.
