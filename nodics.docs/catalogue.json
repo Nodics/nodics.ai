@@ -1,6 +1,6 @@
 {
   "contract": "nodics.documentation/v1",
-  "release": "0.14.2",
+  "release": "0.15.0",
   "documents": [
     {
       "id": "framework.what-is-nodics",
@@ -110,6 +110,15 @@
       "summary": "Governed upload, storage policy, media metadata, source contexts, and safe frontend boundaries.",
       "locale": "en",
       "content": "content/nodics.wcms/media-management.md"
+    },
+    {
+      "id": "wcms.publishing-lifecycle",
+      "functionalModule": "nodics.wcms",
+      "technicalModule": "cms",
+      "title": "Staged-to-Online publishing lifecycle",
+      "summary": "Author, approve, deploy, recover, and customize immutable WCMS releases across physically separated Staged and Online runtimes.",
+      "locale": "en",
+      "content": "content/nodics.wcms/publishing-lifecycle.md"
     },
     {
       "id": "cron.operations",

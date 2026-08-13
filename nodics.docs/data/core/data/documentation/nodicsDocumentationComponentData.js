@@ -264,13 +264,29 @@ module.exports = {
           "searchText": "Media management Governed upload, storage policy, media metadata, source contexts, and safe frontend boundaries. # Media management\n\nMedia is the Nodics capability for governed files and assets. It lives inside\n`nodics.wcms` because content experiences need images, documents, imports,\nexports, and downloadable files, but the binary lifecycle must remain a backend\ncontract rather than a browser convention.\n\n## Problem it solves\n\nWithout a media module, each application starts inventing its own file paths,\nfolder rules, validation, and download behavior. That quickly becomes risky:\nfrontends may leak storage locations, imports may accept unsafe files, and\nbusiness modules may duplicate asset records. Media creates one governed place\nfor upload policy, metadata, storage-provider resolution, source context, and\ndelivery safety.\n\n## Core concepts\n\n- Media record: metadata for a governed file or external asset.\n- Folder policy: which purpose, path prefix, file types, size limits, access\n  mode, and retention rules apply.\n- Format policy: original, preview, responsive, import, export, document, or\n  custom format vocabulary.\n- Storage provider: the backend implementation that stores bytes locally, on\n  NAS, S3, Azure Blob, GCP Storage, CDN-backed storage, or a custom provider.\n- Source context: a safe backend projection that tells Axis which upload and\n  selection choices are valid for data imports, content media, product media,\n  utility media, and generated exports.\n\n```mermaid\nflowchart LR\n  Source[\"Source context\"] --> Policy[\"Folder and format policy\"]\n  Policy --> Upload[\"Upload validation\"]\n  Upload --> Provider[\"Storage provider\"]\n  Provider --> Record[\"Media metadata record\"]\n  Record --> Reference[\"WCMS/module references\"]\n  Record --> Delivery[\"Safe delivery contract\"]\n```\n\n## Frontend boundary\n\nAxis may display upload controls, folder choices, media records, and selection\ndialogs. It must not decide absolute paths, bucket names, storage keys,\ncredentials, signed URLs, retention behavior, or provider details. Axis sends\nthe intended source context and allowed business target; Media resolves the\neffective upload policy and storage behavior.\n\nThis is especially important for partners. A customer can remap storage from\nlocal development folders to cloud storage without changing Axis renderers or\nbusiness modules.\n\n## Upload and delivery lifecycle\n\nThe typical lifecycle is:\n\n1. A user or module selects a source context, such as `contentMedia` or\n   `dataImports`.\n2. Media resolves the effective folder and format policy from layered Nodics\n   configuration.\n3. The upload validates extension, MIME type, size, access mode, and target\n   schema expectations.\n4. The provider writes bytes and returns safe provider-relative metadata.\n5. Media persists the record, checksum, lifecycle state, and reference data.\n6. Other modules reference the media record instead of storing file paths.\n7. Delivery routes enforce authorization and expose only safe access details.\n\n```mermaid\nsequenceDiagram\n  participant User as Business user\n  participant Axis as Axis media page\n  participant Media as WCMS Media API\n  participant Policy as Folder and format policy\n  participant Store as Storage provider\n  participant DB as Media metadata DB\n\n  User->>Axis: Choose file and source context\n  Axis->>Media: Upload request with business context\n  Media->>Policy: Resolve allowed folder, format, size, MIME\n  Policy-->>Media: Effective upload policy\n  Media->>Store: Persist bytes through provider\n  Store-->>Media: Provider-relative storage evidence\n  Media->>DB: Save media record, checksum, status, references\n  Media-->>Axis: Safe media contract\n```\n\nThe frontend never receives private storage roots or credentials. It receives a\nsafe media contract: code, name, type, lifecycle state, preview or delivery\ninformation allowed by policy, and metadata that the user is permitted to see.\n\n## Source contexts\n\nMedia source context tells the backend why a file is being used. That matters\nbecause a CSV import file, a CMS hero image, a PDF document, and a generated\nexport should not share the same policy.\n\n| Source context | Typical file examples | Different policy needs |\n| --- | --- | --- |\n| `dataImports` | CSV, JSON, XLSX | Strict schema target, validation, short retention, no public delivery. |\n| `contentMedia` | Images, icons, documents | Editorial lifecycle, preview, reuse by components and pages. |\n| `documentationMedia` | Diagrams, screenshots, how-to images | Versioned with documentation and safe for authenticated delivery. |\n| `exports` | Generated CSV, PDF, report files | Expiry, audit evidence, download authorization. |\n| `utility` | Temporary or operational files | Narrow access, cleanup, and operational logging. |\n\nWhen a new module needs files, add a source context and policy instead of\ncreating another upload API. That keeps scanning, retention, audit, and storage\nprovider behavior consistent.\n\n## Media ownership across modules\n\nMedia is a shared governed capability, but shared does not mean ownerless.\nOther modules reference media records; they do not invent storage authority.\n\n| Consumer | What it may do | What it must not do |\n| --- | --- | --- |\n| WCMS pages/components | Reference media records for images, documents, or downloads. | Store private paths or credentials in component data. |\n| Documentation | Reference screenshots, diagrams, and help images as governed media. | Copy images into every frontend or leave broken Markdown as visible text. |\n| Imports and exports | Upload import files or expose generated export files through source context. | Bypass validation or retention policy. |\n| Product or commerce modules | Associate media records with product or business entities. | Own the binary lifecycle unless explicitly implemented as a media provider. |\n| Axis | Render upload/select/manage screens from backend contracts. | Decide storage paths, buckets, signed URLs, virus scan rules, or retention. |\n\nThe goal is simple: a business module can say “this record uses this media,”\nbut Media decides how the file is governed.\n\n## Business journey: adding a website banner\n\nImagine a business user needs a new homepage banner image.\n\n1. Axis opens the Media page and asks the backend for valid source contexts.\n2. The user chooses a content-media context and selects an image.\n3. Media validates type, size, folder policy, and access mode.\n4. The storage provider saves bytes and returns safe storage evidence.\n5. Media creates or updates the media record.\n6. A WCMS component references the media record.\n7. The page renders through WCMS/Axis or a customer site renderer.\n\nAt no point should the business user or frontend type a filesystem path,\nbucket name, or private URL. That information belongs to the backend provider\ncontract.\n\n## Developer journey: adding a new media use case\n\nWhen a new module needs files, the developer should add a source context or\npolicy before creating new upload code. A good implementation explains:\n\n- which module needs the media;\n- whether files are user-uploaded, generated, imported, or externally\n  referenced;\n- allowed extensions and MIME types;\n- maximum size and retention;\n- public, authenticated, private, or temporary delivery mode;\n- audit and cleanup requirements;\n- whether previews, thumbnails, or transformations are required;\n- which tests prove rejected files and unauthorized access fail safely.\n\nIf the use case needs a different storage backend, implement or configure a\nprovider behind Media rather than exposing storage rules to each consumer.\n\n## Beginner customization example\n\nImagine a partner wants to allow PNG and JPG images for website banners, but\nnot PDF files. They should not change Axis upload code. The correct path is:\n\n1. Add or override a media folder policy in a later project module.\n2. Set allowed MIME types and maximum size.\n3. Keep the same Media upload API.\n4. Let Axis rediscover allowed source contexts from backend metadata.\n5. Verify upload, preview, delivery, unauthorized access, and cleanup.\n\nThis gives the business the custom behavior it wants without creating a forked\nfrontend or a hidden storage convention.\n\n## Business value\n\nMedia lets business teams reuse assets across CMS, documentation, imports,\nexports, product experiences, and future websites without losing governance.\nIt also keeps operating cost flexible: local storage can support a developer\nmachine, while production can move to cloud or CDN-backed storage under the\nsame module contract.\n\n## DevOps considerations\n\nProduction storage should be explicit. Define provider roots, backup,\nretention, size limits, virus scanning or approval workflows where required,\ndownload authorization, cache headers, and lifecycle cleanup. Never rely on a\nrepository folder as production storage. Development defaults may write under\nserver temp paths, but those paths are disposable and environment-specific.\n\n## Failure and recovery examples\n\n| Failure | Safe behavior |\n| --- | --- |\n| File exceeds policy | Reject before storage and show a business-safe reason. |\n| MIME type is not allowed | Reject using backend policy, not frontend-only validation. |\n| Storage provider is unavailable | Keep metadata unchanged and return a bounded failure. |\n| Bytes missing for an existing record | Show unavailable media state and preserve audit evidence. |\n| Unauthorized download | Fail closed without leaking storage path or provider details. |\n| Checksum mismatch | Block delivery or mark the record for operator review. |\n\nThese failures should feel understandable in Axis, but the decision belongs to\nMedia and its provider contracts.\n\n## Operational acceptance checklist\n\n| Area | Acceptance evidence |\n| --- | --- |\n| Upload policy | Allowed and rejected MIME types, extensions, and sizes behave as configured. |\n| Storage provider | Provider returns safe relative evidence and does not leak private roots. |\n| Metadata | Media record includes code, filename, format, size, checksum, lifecycle state, source context, and references. |\n| Authorization | Unauthorized upload, view, update, and download attempts fail closed. |\n| Retention | Temporary and generated files have cleanup policy and audit evidence. |\n| Delivery | Public or authenticated delivery matches the media access mode. |\n| Reuse | WCMS/documentation/business modules reference media by record, not storage path. |\n| Recovery | Missing bytes, stale records, provider failure, and checksum mismatch have safe error behavior. |\n\nMedia failures often look like frontend problems because users see them in\nAxis, but most root causes are backend policy, provider, or metadata issues.\nStart investigation at the media record and source context.\n\n## Customization model\n\nCustomer projects may add or override media folder and format policy through\nlater module configuration. If behavior needs more than configuration, replace\nthe media storage policy or provider service in a later active module while\npreserving the same safe API contract. Do not fork Axis to change storage\nrules.\n\n## Common mistakes\n\n- Letting Axis build storage keys, local paths, bucket names, or download URLs.\n- Treating a media upload as successful before backend validation, checksum,\n  metadata persistence, and lifecycle state are recorded.\n- Reusing one folder policy for imports, exports, CMS images, product images,\n  private documents, and generated artifacts.\n- Exposing absolute paths, provider credentials, signed URL secrets, or\n  storage internals in browser-visible responses.\n- Deleting media because one screen no longer references it without checking\n  backend media-reference usage.\n- Creating media records without an owning source context, format policy, and\n  delivery rule.\n\n## Verification\n\nVerify Media through policy, metadata, storage, delivery, and usage. Upload\nallowed and rejected file types, confirm backend policy owns the result, check\nthat media records contain checksum and lifecycle evidence, and make sure Axis\nshows only safe metadata. Download or preview must go through the Media\ndelivery contract using a media code, never a raw filesystem or provider path.\n\nFor content and documentation scenarios, verify that pages and components\nreference media records or governed embedded images rather than copying assets\ninto the frontend. For production scenarios, add provider failure, missing\nbytes, unauthorized download, oversized file, checksum mismatch, retention,\nbackup, and restore checks. Media is acceptable only when both the happy path\nand the unsafe shortcut are proven.\n"
         },
         {
+          "code": "wcms.publishing-lifecycle",
+          "title": "Staged-to-Online publishing lifecycle",
+          "route": "/docs/framework/wcms-publishing-lifecycle",
+          "section": "nodics-wcms",
+          "sectionTitle": "Nodics wcms",
+          "sectionOrder": 40,
+          "order": 130,
+          "audience": [
+            "architect",
+            "developer",
+            "operator"
+          ],
+          "summary": "Author, approve, deploy, recover, and customize immutable WCMS releases across physically separated Staged and Online runtimes.",
+          "searchText": "Staged-to-Online publishing lifecycle Author, approve, deploy, recover, and customize immutable WCMS releases across physically separated Staged and Online runtimes. # Staged-to-Online publishing lifecycle\n\nPublishing is the governed movement of an exact, approved content version from\nan authoring runtime to a delivery runtime. Think of Staged as a newsroom where\neditors prepare and verify an edition, and Online as the distribution system\nthat serves only editions formally released. Saving a page does not make it\npublic; publishing its frozen version does.\n\nThis beginner-friendly guide is for business users, administrators, developers, architects,\noperators, testers, partners, and AI tools working with publishable Nodics\ncontent. WCMS owns content and deployment behavior, `nPublish` owns the generic\npublication lifecycle, Process owns approval workflow state, and Platform/Axis\nprovides the employee administration surface. A public client consumes Online\nonly.\n\n## Why separate Staged and Online\n\nA content editor needs freedom to create incomplete versions without exposing\nthem to customers. Physical runtime separation also prevents a public request\nfrom accidentally resolving an unpublished record. Publishing therefore uses\nseparate runtime roles, databases, credentials, routes, APIs, and media stores.\n\n```mermaid\nflowchart LR\n  Author[\"Business user in Axis\"] --> Staged[\"WCMS Staged: author and freeze\"]\n  Staged --> Process[\"Process: approval workflow\"]\n  Process --> Publish[\"nPublish: authorized lifecycle\"]\n  Publish --> Online[\"WCMS Online: deploy and activate\"]\n  Online --> Public[\"Nexus or another public client\"]\n```\n\nAxis may reach authoring and delivery operations through backend-declared\nrouting. Nexus and other public applications receive only Online coordinates;\nthey must never receive a Staged host, credential, or operation route.\n\n## Data lifecycle categories\n\nNot all records should be published:\n\n| Category | Examples | Lifecycle |\n| --- | --- | --- |\n| Publishable and versioned | sites, catalogs, pages, templates, components, navigation, routes, selected media and editorial projections | Author and freeze in Staged; approve; deploy an immutable package to Online |\n| Operational and versioned | orders, workflow state, governed submissions and audit history | Remain in the owning Online/operational runtime; version for history without Staged-to-Online publication |\n| Operational reference | users, customers, runtime registrations and similar identity/reference records | Remain with the owning module; do not invent publication or business-version semantics |\n\nEvery module-owned data bundle declares its lifecycle and destination. Import\ndoes not grant authority to publish, and export does not become an import or\npublication bypass.\n\n## Running example\n\nAn editor changes a page template and page data in WCMS Staged. The editor\nselects a specific version and requests publication. WCMS freezes the exact\ndependency graph—including required components, routes, localization, media,\nand accepted editorial members—into an immutable manifest. Process creates or\nresumes the approval workflow. After an authorized decision, `nPublish` invokes\nthe WCMS adapter, which validates the Online role, promotes required media,\ndeploys the manifest transactionally, activates Online pointers, and records an\nidempotent receipt and outbox evidence. The public client then resolves that\nOnline version.\n\nA validation rejection, approval rejection, signature failure, missing media,\nor transaction failure leaves the previous Online version active. A repeated\nrequest with the same operation identity converges on the existing result.\nRollback reactivates a previously deployed immutable release; it does not copy\nthe latest Staged state.\n\n## Initialization and reusable site bundles\n\nMandatory framework data such as the standard publication approval workflow\nand baseline policy is installed from its owning backend module. Application or\nwebsite bundles are imported into Staged through governed nImport APIs. An\nadministrator verifies the content and explicitly publishes it. This supports\nAxis initialization, partner website starters, and future template bundles\nwithout making the frontend or a customer database script the content owner.\n\nAxis includes a minimal bundled recovery login so an administrator can sign in\nwhen CMS data is not initialized. Once the Axis content baseline is Online, the\nnormal WCMS-delivered experience replaces that recovery surface.\n\n## Security and integrity rules\n\n- Never create, repair, seed, version, publish, restore, or verify business data\n  through direct database CRUD. Use Nodics APIs or owning services.\n- Human and service identities are distinct. Internal deployment credentials\n  cannot substitute for a human approval decision.\n- Online refuses authoring and publication-source export operations. Staged,\n  Online, Process, Platform, and public routes fail closed for the wrong role.\n- Tenant and enterprise identity, manifest checksum, source version, actor,\n  approval, correlation ID, target receipt, and delivery outcome remain linked\n  in audit evidence.\n- Media is promoted to Online-owned storage before metadata activation. Online\n  never reads a Staged media path.\n- Reconciliation may rebuild missing evidence only when the target already\n  points to the exact manifest. Pointer drift is reported and never silently\n  overwritten.\n\n## Customization boundary\n\nA customer project may contribute later-loaded content bundles, environment\nproperties, server compositions, approval policy, or service overlays through\nthe standard Nodics extension hierarchy. It must preserve functional ownership,\nruntime-role checks, immutable package identity, authorization, tenant\nisolation, audit lineage, and idempotency. Do not fork `nPublish`, introduce a\nsecond workflow authority, hardcode Staged routing in a frontend, or place\nbackend-importable CMS data in Axis or Nexus.\n\n## Common mistakes\n\nDo not treat a database copy as publication: it loses the selected-version,\napproval, receipt, audit, and retry guarantees. Do not point Nexus at Staged to\npreview a change, publish whichever version happens to be latest, seed Online\nthrough an importer, or let a Process definition become content authority.\nDo not store Axis or Nexus CMS records in the frontend merely because those\napplications render them. Finally, do not report Local timing or automated\naccessibility checks as production or human assurance.\n\n## Verification\n\nVerify a release through the complete path: Staged import and version, frozen\nmanifest, Process approval, authenticated deployment, Online receipt and\npointer, media availability, outbox delivery, audit correlation, and public\ndelivery. Also test rejection, response loss, retry, concurrent requests,\nrestart recovery, rollback, and unpublished isolation.\n\nLocal production simulation may prove container health, network separation,\nauthenticated data services, failover, backup/restore rehearsal, bounded load,\nand soak behavior. It is not production certification. Managed-provider\nfailover, regional residency, real external providers, independent penetration\ntesting, production-scale load, and human assistive-technology review require\nenvironment-specific evidence and accountable approval.\n\nFor executable reference-project commands, use the owning Kickoff Local\npublishing operations guide. For content concepts and delivery structure, read\nthe WCMS overview and Media management guides next.\n"
+        },
+        {
           "code": "cron.operations",
           "title": "Cron operations",
           "route": "/docs/framework/cron-operations",
           "section": "nodics-cron",
           "sectionTitle": "Nodics cron",
           "sectionOrder": 50,
-          "order": 130,
+          "order": 140,
           "audience": [
             "architect",
             "developer",
@@ -286,7 +302,7 @@ module.exports = {
           "section": "nodics-engagement",
           "sectionTitle": "Nodics engagement",
           "sectionOrder": 60,
-          "order": 140,
+          "order": 150,
           "audience": [
             "architect",
             "developer",
@@ -302,7 +318,7 @@ module.exports = {
           "section": "nodics-engagement",
           "sectionTitle": "Nodics engagement",
           "sectionOrder": 60,
-          "order": 150,
+          "order": 160,
           "audience": [
             "architect",
             "developer",
@@ -318,7 +334,7 @@ module.exports = {
           "section": "nodics-engagement",
           "sectionTitle": "Nodics engagement",
           "sectionOrder": 60,
-          "order": 160,
+          "order": 170,
           "audience": [
             "architect",
             "developer",
@@ -334,7 +350,7 @@ module.exports = {
           "section": "nodics-engagement",
           "sectionTitle": "Nodics engagement",
           "sectionOrder": 60,
-          "order": 170,
+          "order": 180,
           "audience": [
             "architect",
             "developer",
@@ -350,7 +366,7 @@ module.exports = {
           "section": "nodics-engagement",
           "sectionTitle": "Nodics engagement",
           "sectionOrder": 60,
-          "order": 180,
+          "order": 190,
           "audience": [
             "architect",
             "developer",
@@ -366,7 +382,7 @@ module.exports = {
           "section": "nodics-commerce",
           "sectionTitle": "Nodics commerce",
           "sectionOrder": 70,
-          "order": 190,
+          "order": 200,
           "audience": [
             "architect",
             "developer",
@@ -382,7 +398,7 @@ module.exports = {
           "section": "nodics-commerce",
           "sectionTitle": "Nodics commerce",
           "sectionOrder": 70,
-          "order": 200,
+          "order": 210,
           "audience": [
             "architect",
             "developer",
@@ -398,7 +414,7 @@ module.exports = {
           "section": "nodics-commerce",
           "sectionTitle": "Nodics commerce",
           "sectionOrder": 70,
-          "order": 210,
+          "order": 220,
           "audience": [
             "architect",
             "developer",
@@ -414,7 +430,7 @@ module.exports = {
           "section": "nodics-commerce",
           "sectionTitle": "Nodics commerce",
           "sectionOrder": 70,
-          "order": 220,
+          "order": 230,
           "audience": [
             "architect",
             "developer",
@@ -430,7 +446,7 @@ module.exports = {
           "section": "nodics-commerce",
           "sectionTitle": "Nodics commerce",
           "sectionOrder": 70,
-          "order": 230,
+          "order": 240,
           "audience": [
             "architect",
             "developer",
@@ -446,7 +462,7 @@ module.exports = {
           "section": "nodics-commerce",
           "sectionTitle": "Nodics commerce",
           "sectionOrder": 70,
-          "order": 240,
+          "order": 250,
           "audience": [
             "architect",
             "developer",
@@ -462,7 +478,7 @@ module.exports = {
           "section": "nodics-communication",
           "sectionTitle": "Nodics communication",
           "sectionOrder": 80,
-          "order": 250,
+          "order": 260,
           "audience": [
             "architect",
             "developer",
@@ -478,7 +494,7 @@ module.exports = {
           "section": "nodics-process",
           "sectionTitle": "Nodics process",
           "sectionOrder": 90,
-          "order": 260,
+          "order": 270,
           "audience": [
             "architect",
             "developer",
@@ -494,7 +510,7 @@ module.exports = {
           "section": "nodics-process",
           "sectionTitle": "Nodics process",
           "sectionOrder": 90,
-          "order": 270,
+          "order": 280,
           "audience": [
             "architect",
             "developer",
@@ -510,7 +526,7 @@ module.exports = {
           "section": "nodics-process",
           "sectionTitle": "Nodics process",
           "sectionOrder": 90,
-          "order": 280,
+          "order": 290,
           "audience": [
             "architect",
             "developer",
@@ -526,7 +542,7 @@ module.exports = {
           "section": "nodics-process",
           "sectionTitle": "Nodics process",
           "sectionOrder": 90,
-          "order": 290,
+          "order": 300,
           "audience": [
             "architect",
             "developer",
@@ -542,7 +558,7 @@ module.exports = {
           "section": "nodics-process",
           "sectionTitle": "Nodics process",
           "sectionOrder": 90,
-          "order": 300,
+          "order": 310,
           "audience": [
             "architect",
             "developer",
@@ -558,7 +574,7 @@ module.exports = {
           "section": "nodics-process",
           "sectionTitle": "Nodics process",
           "sectionOrder": 90,
-          "order": 310,
+          "order": 320,
           "audience": [
             "architect",
             "developer",
@@ -574,7 +590,7 @@ module.exports = {
           "section": "nodics-process",
           "sectionTitle": "Nodics process",
           "sectionOrder": 90,
-          "order": 320,
+          "order": 330,
           "audience": [
             "architect",
             "developer",
@@ -590,7 +606,7 @@ module.exports = {
           "section": "nodics-process",
           "sectionTitle": "Nodics process",
           "sectionOrder": 90,
-          "order": 330,
+          "order": 340,
           "audience": [
             "architect",
             "developer",
@@ -606,7 +622,7 @@ module.exports = {
           "section": "nodics-process",
           "sectionTitle": "Nodics process",
           "sectionOrder": 90,
-          "order": 340,
+          "order": 350,
           "audience": [
             "architect",
             "developer",
@@ -622,7 +638,7 @@ module.exports = {
           "section": "nodics-process",
           "sectionTitle": "Nodics process",
           "sectionOrder": 90,
-          "order": 350,
+          "order": 360,
           "audience": [
             "architect",
             "developer",
@@ -638,7 +654,7 @@ module.exports = {
           "section": "nodics-process",
           "sectionTitle": "Nodics process",
           "sectionOrder": 90,
-          "order": 360,
+          "order": 370,
           "audience": [
             "architect",
             "developer",
@@ -654,7 +670,7 @@ module.exports = {
           "section": "nodics-process",
           "sectionTitle": "Nodics process",
           "sectionOrder": 90,
-          "order": 370,
+          "order": 380,
           "audience": [
             "architect",
             "developer",
@@ -670,7 +686,7 @@ module.exports = {
           "section": "nodics-process",
           "sectionTitle": "Nodics process",
           "sectionOrder": 90,
-          "order": 380,
+          "order": 390,
           "audience": [
             "architect",
             "developer",
@@ -686,7 +702,7 @@ module.exports = {
           "section": "nodics-process",
           "sectionTitle": "Nodics process",
           "sectionOrder": 90,
-          "order": 390,
+          "order": 400,
           "audience": [
             "architect",
             "developer",
@@ -702,7 +718,7 @@ module.exports = {
           "section": "nodics-docs",
           "sectionTitle": "Nodics docs",
           "sectionOrder": 10,
-          "order": 400,
+          "order": 410,
           "audience": [
             "architect",
             "developer",
@@ -7253,8 +7269,8 @@ module.exports = {
         "route": "/docs/framework/wcms-overview"
       },
       "next": {
-        "title": "Cron operations",
-        "route": "/docs/framework/cron-operations"
+        "title": "Staged-to-Online publishing lifecycle",
+        "route": "/docs/framework/wcms-publishing-lifecycle"
       },
       "source": {
         "repository": "nodics.docs",
@@ -7268,6 +7284,236 @@ module.exports = {
     "active": true
   },
   "record13": {
+    "code": "nodicsDocsComponentwcmsPublishingLifecycle",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "wcms.publishing-lifecycle",
+      "title": "Staged-to-Online publishing lifecycle",
+      "route": "/docs/framework/wcms-publishing-lifecycle",
+      "section": "nodics-wcms",
+      "sectionTitle": "Nodics wcms",
+      "audience": [
+        "architect",
+        "developer",
+        "operator"
+      ],
+      "summary": "Author, approve, deploy, recover, and customize immutable WCMS releases across physically separated Staged and Online runtimes.",
+      "headings": [
+        {
+          "text": "Why separate Staged and Online",
+          "anchor": "wcmsPublishingLifecycle-1-why-separate-staged-and-online",
+          "level": 2
+        },
+        {
+          "text": "Data lifecycle categories",
+          "anchor": "wcmsPublishingLifecycle-2-data-lifecycle-categories",
+          "level": 2
+        },
+        {
+          "text": "Running example",
+          "anchor": "wcmsPublishingLifecycle-3-running-example",
+          "level": 2
+        },
+        {
+          "text": "Initialization and reusable site bundles",
+          "anchor": "wcmsPublishingLifecycle-4-initialization-and-reusable-site-bundles",
+          "level": 2
+        },
+        {
+          "text": "Security and integrity rules",
+          "anchor": "wcmsPublishingLifecycle-5-security-and-integrity-rules",
+          "level": 2
+        },
+        {
+          "text": "Customization boundary",
+          "anchor": "wcmsPublishingLifecycle-6-customization-boundary",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "wcmsPublishingLifecycle-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "wcmsPublishingLifecycle-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Publishing is the governed movement of an exact, approved content version from an authoring runtime to a delivery runtime. Think of Staged as a newsroom where editors prepare and verify an edition, and Online as the distribution system that serves only editions formally released. Saving a page does not make it public; publishing its frozen version does."
+        },
+        {
+          "kind": "paragraph",
+          "text": "This beginner-friendly guide is for business users, administrators, developers, architects, operators, testers, partners, and AI tools working with publishable Nodics content. WCMS owns content and deployment behavior, `nPublish` owns the generic publication lifecycle, Process owns approval workflow state, and Platform/Axis provides the employee administration surface. A public client consumes Online only."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Why separate Staged and Online",
+          "anchor": "wcmsPublishingLifecycle-1-why-separate-staged-and-online"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A content editor needs freedom to create incomplete versions without exposing them to customers. Physical runtime separation also prevents a public request from accidentally resolving an unpublished record. Publishing therefore uses separate runtime roles, databases, credentials, routes, APIs, and media stores."
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Author[\"Business user in Axis\"] --> Staged[\"WCMS Staged: author and freeze\"]\n  Staged --> Process[\"Process: approval workflow\"]\n  Process --> Publish[\"nPublish: authorized lifecycle\"]\n  Publish --> Online[\"WCMS Online: deploy and activate\"]\n  Online --> Public[\"Nexus or another public client\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis may reach authoring and delivery operations through backend-declared routing. Nexus and other public applications receive only Online coordinates; they must never receive a Staged host, credential, or operation route."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Data lifecycle categories",
+          "anchor": "wcmsPublishingLifecycle-2-data-lifecycle-categories"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Not all records should be published:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Category",
+            "Examples",
+            "Lifecycle"
+          ],
+          "rows": [
+            [
+              "Publishable and versioned",
+              "sites, catalogs, pages, templates, components, navigation, routes, selected media and editorial projections",
+              "Author and freeze in Staged; approve; deploy an immutable package to Online"
+            ],
+            [
+              "Operational and versioned",
+              "orders, workflow state, governed submissions and audit history",
+              "Remain in the owning Online/operational runtime; version for history without Staged-to-Online publication"
+            ],
+            [
+              "Operational reference",
+              "users, customers, runtime registrations and similar identity/reference records",
+              "Remain with the owning module; do not invent publication or business-version semantics"
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Every module-owned data bundle declares its lifecycle and destination. Import does not grant authority to publish, and export does not become an import or publication bypass."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Running example",
+          "anchor": "wcmsPublishingLifecycle-3-running-example"
+        },
+        {
+          "kind": "paragraph",
+          "text": "An editor changes a page template and page data in WCMS Staged. The editor selects a specific version and requests publication. WCMS freezes the exact dependency graph—including required components, routes, localization, media, and accepted editorial members—into an immutable manifest. Process creates or resumes the approval workflow. After an authorized decision, `nPublish` invokes the WCMS adapter, which validates the Online role, promotes required media, deploys the manifest transactionally, activates Online pointers, and records an idempotent receipt and outbox evidence. The public client then resolves that Online version."
+        },
+        {
+          "kind": "paragraph",
+          "text": "A validation rejection, approval rejection, signature failure, missing media, or transaction failure leaves the previous Online version active. A repeated request with the same operation identity converges on the existing result. Rollback reactivates a previously deployed immutable release; it does not copy the latest Staged state."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Initialization and reusable site bundles",
+          "anchor": "wcmsPublishingLifecycle-4-initialization-and-reusable-site-bundles"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Mandatory framework data such as the standard publication approval workflow and baseline policy is installed from its owning backend module. Application or website bundles are imported into Staged through governed nImport APIs. An administrator verifies the content and explicitly publishes it. This supports Axis initialization, partner website starters, and future template bundles without making the frontend or a customer database script the content owner."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis includes a minimal bundled recovery login so an administrator can sign in when CMS data is not initialized. Once the Axis content baseline is Online, the normal WCMS-delivered experience replaces that recovery surface."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Security and integrity rules",
+          "anchor": "wcmsPublishingLifecycle-5-security-and-integrity-rules"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Never create, repair, seed, version, publish, restore, or verify business data through direct database CRUD. Use Nodics APIs or owning services.",
+            "Human and service identities are distinct. Internal deployment credentials cannot substitute for a human approval decision.",
+            "Online refuses authoring and publication-source export operations. Staged, Online, Process, Platform, and public routes fail closed for the wrong role.",
+            "Tenant and enterprise identity, manifest checksum, source version, actor, approval, correlation ID, target receipt, and delivery outcome remain linked in audit evidence.",
+            "Media is promoted to Online-owned storage before metadata activation. Online never reads a Staged media path.",
+            "Reconciliation may rebuild missing evidence only when the target already points to the exact manifest. Pointer drift is reported and never silently overwritten."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization boundary",
+          "anchor": "wcmsPublishingLifecycle-6-customization-boundary"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A customer project may contribute later-loaded content bundles, environment properties, server compositions, approval policy, or service overlays through the standard Nodics extension hierarchy. It must preserve functional ownership, runtime-role checks, immutable package identity, authorization, tenant isolation, audit lineage, and idempotency. Do not fork `nPublish`, introduce a second workflow authority, hardcode Staged routing in a frontend, or place backend-importable CMS data in Axis or Nexus."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "wcmsPublishingLifecycle-7-common-mistakes"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Do not treat a database copy as publication: it loses the selected-version, approval, receipt, audit, and retry guarantees. Do not point Nexus at Staged to preview a change, publish whichever version happens to be latest, seed Online through an importer, or let a Process definition become content authority. Do not store Axis or Nexus CMS records in the frontend merely because those applications render them. Finally, do not report Local timing or automated accessibility checks as production or human assurance."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "wcmsPublishingLifecycle-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Verify a release through the complete path: Staged import and version, frozen manifest, Process approval, authenticated deployment, Online receipt and pointer, media availability, outbox delivery, audit correlation, and public delivery. Also test rejection, response loss, retry, concurrent requests, restart recovery, rollback, and unpublished isolation."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Local production simulation may prove container health, network separation, authenticated data services, failover, backup/restore rehearsal, bounded load, and soak behavior. It is not production certification. Managed-provider failover, regional residency, real external providers, independent penetration testing, production-scale load, and human assistive-technology review require environment-specific evidence and accountable approval."
+        },
+        {
+          "kind": "paragraph",
+          "text": "For executable reference-project commands, use the owning Kickoff Local publishing operations guide. For content concepts and delivery structure, read the WCMS overview and Media management guides next."
+        }
+      ],
+      "searchText": "Staged-to-Online publishing lifecycle Author, approve, deploy, recover, and customize immutable WCMS releases across physically separated Staged and Online runtimes. # Staged-to-Online publishing lifecycle\n\nPublishing is the governed movement of an exact, approved content version from\nan authoring runtime to a delivery runtime. Think of Staged as a newsroom where\neditors prepare and verify an edition, and Online as the distribution system\nthat serves only editions formally released. Saving a page does not make it\npublic; publishing its frozen version does.\n\nThis beginner-friendly guide is for business users, administrators, developers, architects,\noperators, testers, partners, and AI tools working with publishable Nodics\ncontent. WCMS owns content and deployment behavior, `nPublish` owns the generic\npublication lifecycle, Process owns approval workflow state, and Platform/Axis\nprovides the employee administration surface. A public client consumes Online\nonly.\n\n## Why separate Staged and Online\n\nA content editor needs freedom to create incomplete versions without exposing\nthem to customers. Physical runtime separation also prevents a public request\nfrom accidentally resolving an unpublished record. Publishing therefore uses\nseparate runtime roles, databases, credentials, routes, APIs, and media stores.\n\n```mermaid\nflowchart LR\n  Author[\"Business user in Axis\"] --> Staged[\"WCMS Staged: author and freeze\"]\n  Staged --> Process[\"Process: approval workflow\"]\n  Process --> Publish[\"nPublish: authorized lifecycle\"]\n  Publish --> Online[\"WCMS Online: deploy and activate\"]\n  Online --> Public[\"Nexus or another public client\"]\n```\n\nAxis may reach authoring and delivery operations through backend-declared\nrouting. Nexus and other public applications receive only Online coordinates;\nthey must never receive a Staged host, credential, or operation route.\n\n## Data lifecycle categories\n\nNot all records should be published:\n\n| Category | Examples | Lifecycle |\n| --- | --- | --- |\n| Publishable and versioned | sites, catalogs, pages, templates, components, navigation, routes, selected media and editorial projections | Author and freeze in Staged; approve; deploy an immutable package to Online |\n| Operational and versioned | orders, workflow state, governed submissions and audit history | Remain in the owning Online/operational runtime; version for history without Staged-to-Online publication |\n| Operational reference | users, customers, runtime registrations and similar identity/reference records | Remain with the owning module; do not invent publication or business-version semantics |\n\nEvery module-owned data bundle declares its lifecycle and destination. Import\ndoes not grant authority to publish, and export does not become an import or\npublication bypass.\n\n## Running example\n\nAn editor changes a page template and page data in WCMS Staged. The editor\nselects a specific version and requests publication. WCMS freezes the exact\ndependency graph—including required components, routes, localization, media,\nand accepted editorial members—into an immutable manifest. Process creates or\nresumes the approval workflow. After an authorized decision, `nPublish` invokes\nthe WCMS adapter, which validates the Online role, promotes required media,\ndeploys the manifest transactionally, activates Online pointers, and records an\nidempotent receipt and outbox evidence. The public client then resolves that\nOnline version.\n\nA validation rejection, approval rejection, signature failure, missing media,\nor transaction failure leaves the previous Online version active. A repeated\nrequest with the same operation identity converges on the existing result.\nRollback reactivates a previously deployed immutable release; it does not copy\nthe latest Staged state.\n\n## Initialization and reusable site bundles\n\nMandatory framework data such as the standard publication approval workflow\nand baseline policy is installed from its owning backend module. Application or\nwebsite bundles are imported into Staged through governed nImport APIs. An\nadministrator verifies the content and explicitly publishes it. This supports\nAxis initialization, partner website starters, and future template bundles\nwithout making the frontend or a customer database script the content owner.\n\nAxis includes a minimal bundled recovery login so an administrator can sign in\nwhen CMS data is not initialized. Once the Axis content baseline is Online, the\nnormal WCMS-delivered experience replaces that recovery surface.\n\n## Security and integrity rules\n\n- Never create, repair, seed, version, publish, restore, or verify business data\n  through direct database CRUD. Use Nodics APIs or owning services.\n- Human and service identities are distinct. Internal deployment credentials\n  cannot substitute for a human approval decision.\n- Online refuses authoring and publication-source export operations. Staged,\n  Online, Process, Platform, and public routes fail closed for the wrong role.\n- Tenant and enterprise identity, manifest checksum, source version, actor,\n  approval, correlation ID, target receipt, and delivery outcome remain linked\n  in audit evidence.\n- Media is promoted to Online-owned storage before metadata activation. Online\n  never reads a Staged media path.\n- Reconciliation may rebuild missing evidence only when the target already\n  points to the exact manifest. Pointer drift is reported and never silently\n  overwritten.\n\n## Customization boundary\n\nA customer project may contribute later-loaded content bundles, environment\nproperties, server compositions, approval policy, or service overlays through\nthe standard Nodics extension hierarchy. It must preserve functional ownership,\nruntime-role checks, immutable package identity, authorization, tenant\nisolation, audit lineage, and idempotency. Do not fork `nPublish`, introduce a\nsecond workflow authority, hardcode Staged routing in a frontend, or place\nbackend-importable CMS data in Axis or Nexus.\n\n## Common mistakes\n\nDo not treat a database copy as publication: it loses the selected-version,\napproval, receipt, audit, and retry guarantees. Do not point Nexus at Staged to\npreview a change, publish whichever version happens to be latest, seed Online\nthrough an importer, or let a Process definition become content authority.\nDo not store Axis or Nexus CMS records in the frontend merely because those\napplications render them. Finally, do not report Local timing or automated\naccessibility checks as production or human assurance.\n\n## Verification\n\nVerify a release through the complete path: Staged import and version, frozen\nmanifest, Process approval, authenticated deployment, Online receipt and\npointer, media availability, outbox delivery, audit correlation, and public\ndelivery. Also test rejection, response loss, retry, concurrent requests,\nrestart recovery, rollback, and unpublished isolation.\n\nLocal production simulation may prove container health, network separation,\nauthenticated data services, failover, backup/restore rehearsal, bounded load,\nand soak behavior. It is not production certification. Managed-provider\nfailover, regional residency, real external providers, independent penetration\ntesting, production-scale load, and human assistive-technology review require\nenvironment-specific evidence and accountable approval.\n\nFor executable reference-project commands, use the owning Kickoff Local\npublishing operations guide. For content concepts and delivery structure, read\nthe WCMS overview and Media management guides next.\n",
+      "previous": {
+        "title": "Media management",
+        "route": "/docs/framework/wcms-media-management"
+      },
+      "next": {
+        "title": "Cron operations",
+        "route": "/docs/framework/cron-operations"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.wcms",
+        "technicalModule": "cms",
+        "path": "content/nodics.wcms/publishing-lifecycle.md",
+        "wordCount": 967,
+        "checksum": "300dbd7eae518bc0b5a048381f11af8b8917ebae8528a7465c9d39a43949060b"
+      }
+    },
+    "active": true
+  },
+  "record14": {
     "code": "nodicsDocsComponentcronOperations",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -7794,8 +8040,8 @@ module.exports = {
       ],
       "searchText": "Cron operations Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety. # Cron operations\n\nCron is the Nodics optional functional module for scheduled and manually\ntriggered backend work. It extends Core and contributes the `cronjob`\ntechnical module. A project registers Cron when it needs scheduled jobs,\nbackground maintenance, retries, cleanup, synchronization, or other timed\nbusiness processes.\n\nFor a beginner, Cron is the part of Nodics that asks “what should happen\nlater, repeatedly, or in the background?” A user may click a button in Axis,\nbut many real enterprise actions must happen without a user staring at the\nscreen: cleanup temporary media, retry failed exports, synchronize external\nsystems, send reminders, rebuild projections, or close expired workflows.\n\n## Why Cron is optional\n\nCore, Platform, and WCMS are mandatory for Axis-driven onboarding and governed\ncontent. Cron is different. Many deployments do not need scheduled work on day\none, so Cron should appear in the module registry as an optional functional\nmodule when a cron runtime is live. Registering or activating Cron persists\nproject intent; restarting servers should not ask the same registration\nquestion again.\n\n## Ownership model\n\nCron owns scheduler mechanics, lifecycle routes, persisted job definitions,\nruntime containers, execution state, logging, events, and failure handling.\nThe server hosts Cron, but the server is not the functional owner. Node\nplacement fields decide where a job may run; they do not create another module\nidentity.\n\nCustomer jobs belong in project modules. Reusable scheduler behavior belongs\nin `nodics.cron`. If a partner needs custom scheduling behavior, they may\ncreate a customer extension module that loads after Cron and overrides the\napproved service contract.\n\nFor developers, the important rule is that Cron should orchestrate the timing\nand execution contract, while the owning business module should own the actual\nbusiness operation. A media cleanup job should call media-owned cleanup logic.\nA workflow reminder job should call workflow-owned reminder logic. Cron should\nnot become a dumping ground for unrelated domain behavior.\n\n## Job lifecycle\n\nA job definition normally describes:\n\n- job code and active state;\n- schedule, start, optional end, and trigger type;\n- handler or target module operation;\n- tenant, enterprise, and node placement;\n- retry, timeout, priority, and overlap expectations;\n- last execution status and safe operational evidence.\n\nCron supports create or register, update, run, start, stop, pause, resume, and\nremove through secured backend operations. Manual run and scheduled execution\nmust share the same tenant, permission, node, logging, and failure contracts.\n\n![Cron job lifecycle](../assets/images/cron-job-lifecycle.png \"Cron lifecycle reference from the archived documentation set\")\n\n![Cron job process](../assets/images/cronjob-process.jpg \"Cron job process reference from the archived documentation set\")\n\n```mermaid\nstateDiagram-v2\n  [*] --> Registered\n  Registered --> Active: activate\n  Active --> Due: schedule reaches due time\n  Due --> Running: node claims execution\n  Running --> Completed: success\n  Running --> Failed: error or timeout\n  Failed --> Retrying: retry policy allows\n  Retrying --> Due\n  Active --> Paused: pause\n  Paused --> Active: resume\n  Active --> Stopped: stop\n  Stopped --> Active: start\n  Registered --> Removed: remove\n  Completed --> Active: wait for next schedule\n```\n\nFor beginners, the important point is that a job definition and a job run are\nnot the same thing. The definition says what should happen and when. A run is\none execution attempt with its own start time, status, logs, retries, and\noutcome. Production support usually investigates runs, but operators manage\ndefinitions.\n\n## Example job: nightly media cleanup\n\nA realistic first Cron job might clean expired temporary media.\n\n| Field | Example value | Why it matters |\n| --- | --- | --- |\n| Code | `media.temporary.cleanup` | Stable identity for logs, permissions, and support. |\n| Trigger | Daily at 02:00 local environment time | Runs outside peak usage. |\n| Owner module | `media` or project extension | Keeps business behavior with the module that owns the data. |\n| Idempotency | Delete only records already marked expired | Safe if the job runs twice. |\n| Timeout | 10 minutes | Prevents a stuck cleanup from occupying the scheduler forever. |\n| Retry | Two retries with backoff | Handles temporary storage/database failures without hiding persistent bugs. |\n| Audit | Count scanned, deleted, skipped, failed | Lets operators prove what happened. |\n\nThe job should not accept arbitrary paths or delete files by frontend request.\nIt should ask Media for expired records through a governed service and let the\nstorage provider perform safe cleanup.\n\n## Business journey: why scheduled work needs governance\n\nScheduled work often starts innocently: “run this cleanup every night.” In a\nreal enterprise system, the same job may touch many tenants, delete data,\nretry external calls, create reports, or send notifications. That makes Cron a\nbusiness-risk capability, not only a timer.\n\n| Business need | Cron responsibility | Owning business module responsibility |\n| --- | --- | --- |\n| Nightly media cleanup | Schedule, claim, execute, retry, log. | Media decides which records are expired and safe to delete. |\n| Export retry | Run retry window and record attempts. | Import/export module decides retry eligibility and file semantics. |\n| Reminder emails | Schedule and throttle execution. | Workflow or notification module owns message content and recipient rules. |\n| Projection rebuild | Run controlled background task. | Owning data module owns rebuild logic and consistency rules. |\n\nCron should make the work happen at the right time with safe operational\nevidence. It should not absorb every domain rule just because the work happens\nin the background.\n\n## Developer journey: adding a project cron job\n\nWhen a project adds a scheduled job, follow this sequence:\n\n1. Identify the business module that owns the actual operation.\n2. Expose a safe service method in that module.\n3. Add the job definition in the project or owning module data/configuration.\n4. Configure schedule, tenant/enterprise scope, node placement, timeout,\n   retry, overlap, and audit expectations.\n5. Register or import the job through governed data flow.\n6. Test manual run and scheduled execution with the same security and tenant\n   context.\n7. Verify restart behavior by stopping and starting the Cron server.\n8. Document support steps, alert thresholds, and reconciliation behavior.\n\nDo not pass executable code, raw URLs, filesystem paths, or untrusted handler\nnames through job records. Job definitions should point to known backend\ncontracts.\n\n## Registering Cron as an optional module\n\nCore, Platform, and WCMS are mandatory in the Axis reference stack. Cron is\noptional. That means Axis may discover a live Cron server and show it as\navailable to register. When a user registers and activates Cron, the project\nintent is stored in the BackOffice/runtime registry. Restarting the server\nshould not ask again unless the state was removed.\n\nThe lifecycle is:\n\n1. Cron server starts and reports `nodics.cron` as live.\n2. BackOffice observes the runtime module catalogue.\n3. Axis shows Cron under available modules.\n4. A user registers Cron into the project.\n5. A user activates Cron.\n6. Cron-owned navigation, APIs, docs, and initialization data become visible\n   according to permissions and content import state.\n7. Deactivation hides runtime availability without forgetting registration.\n8. Deregistration removes the project registration and returns Cron to the\n   available state while the server remains live.\n\n```mermaid\nsequenceDiagram\n  participant Cron as Cron server\n  participant BackOffice as BackOffice registry\n  participant Axis as Axis module registry\n  Cron->>BackOffice: report nodics.cron runtime observation\n  Axis->>BackOffice: request authorized module registry\n  BackOffice-->>Axis: nodics.cron available\n  Axis->>BackOffice: register nodics.cron\n  BackOffice-->>Axis: registered state\n  Axis->>BackOffice: activate nodics.cron\n  BackOffice-->>Axis: active state\n```\n\nThe server observation starts the conversation. Registration and activation\nrecord project intent. The two should not be collapsed into one hidden action.\n\n## Production safety\n\nScheduled jobs are deceptively simple. A timer firing every minute is easy;\nmaking it safe in production is the real work. Jobs that change external state\nmust define idempotency keys, duplicate-run policy, timeout behavior, retry\nsafety, compensation or reconciliation steps, and alerting.\n\nMulti-node deployments must treat scheduler memory as disposable. Persisted\njob definitions are authoritative; in-memory schedules are rebuilt from\nruntime state. Node failover can help, but it is not a universal exactly-once\nguarantee. Network partitions, process termination, downstream timeouts, and\nuncertain completion must be handled by the job contract.\n\n## Execution safety model\n\n```mermaid\nflowchart TD\n  Due[\"Job becomes due\"] --> Claim[\"Runtime node attempts claim\"]\n  Claim -->|Claim denied| Skip[\"Skip with safe reason\"]\n  Claim -->|Claim accepted| Execute[\"Execute handler\"]\n  Execute --> Success[\"Record success evidence\"]\n  Execute --> Failure[\"Record failure evidence\"]\n  Failure --> Retry{\"Retry allowed?\"}\n  Retry -->|Yes| Backoff[\"Schedule retry with backoff\"]\n  Retry -->|No| Alert[\"Leave failed state and alert\"]\n  Backoff --> Due\n```\n\nThe claim step matters in multi-node environments. Without it, two nodes may\nrun the same job. Even with a claim, job handlers should still be idempotent\nbecause distributed systems can fail after a side effect but before a status\nupdate is recorded.\n\n## Operations runbook outline\n\nEvery production cron capability should have a small runbook:\n\n| Runbook area | Required detail |\n| --- | --- |\n| Job purpose | What business outcome the job supports. |\n| Owner | Functional module or project that owns the business operation. |\n| Schedule | Frequency, timezone, blackout windows, and manual run policy. |\n| Data scope | Tenant, enterprise, site, catalog, or environment boundaries. |\n| Idempotency | What makes repeat execution safe. |\n| Retry | Retry count, backoff, retryable errors, non-retryable errors. |\n| Timeout | Maximum duration and stuck-run recovery. |\n| Observability | Logs, metrics, alerts, dashboards, and correlation fields. |\n| Recovery | Re-run, skip, reconcile, or compensate instructions. |\n| Release impact | What happens during deploy, rollback, or schema/content migration. |\n\n## Security model\n\nCron lifecycle routes require authentication and authorization. A human may\nauthorize a Cron operation, but the job itself must use governed internal\nservice-token flow when calling another module. Do not accept arbitrary URLs,\nservice names, credentials, executable code, or node identifiers from\nuntrusted request data.\n\n## DevOps model\n\nOperations teams should monitor scheduler readiness, active job count, due\njobs, started jobs, completed jobs, failed jobs, skipped jobs, schedule delay,\nduration, retry count, overlap denial, temporary ownership, node handoff, and\ndownstream latency. Logs should carry tenant, enterprise, job code, trigger\ntype, assigned node, attempt, correlation identity, and safe outcome.\n\nBefore production use, every real job should have tests for schedule boundary,\nmanual run, unauthorized access, cross-tenant access, duplicate execution,\ntimeout, retry, partial failure, restart, drain, node loss, node return,\ndownstream recovery, idempotency, and reconciliation.\n\n## Axis and BackOffice view\n\nAxis should show Cron as a functional module, not as every internal technical\nschema. Once registered and active, Cron-owned navigation and workbench\ncapabilities can appear through BackOffice and WCMS data just like other module\ncapabilities. Axis remains the renderer; Cron remains the runtime authority.\n\n## Acceptance checklist\n\nBefore Cron is considered ready beyond local demo use, verify:\n\n- Cron appears in the functional module registry only when the runtime is\n  observed.\n- Register, activate, deactivate, and deregister operations persist and update\n  Axis without manual refresh.\n- Job definitions are persisted and rebuilt after runtime restart.\n- Manual run and scheduled run share the same authorization, tenant, logging,\n  and failure contracts.\n- Duplicate execution is prevented or made harmless through idempotency.\n- Failed runs produce useful diagnostics without exposing secrets.\n- Node loss, restart, timeout, retry, and downstream failure behavior are\n  tested.\n- Business handlers remain in the owning business module.\n\n## Common mistakes\n\n- Putting domain cleanup or workflow logic directly inside Cron instead of the\n  owning business module.\n- Treating an in-memory schedule as the authority instead of persisted job\n  definitions.\n- Assuming one node means production will never run duplicate work.\n- Running jobs without idempotency, timeout, retry, and audit decisions.\n- Letting Axis construct arbitrary job handler names or URLs.\n- Forgetting that Cron registration is optional project state, not process\n  startup.\n\n## Verification\n\nFor local verification, start the Cron runtime from the reference customer\nproject and confirm that the functional module registry observes `nodics.cron`\nas an optional capability. Register it, activate it, deactivate it, and\nderegister it without refreshing the browser. After deregistration, Cron should\nreturn to the available list while the Cron server is still observed. Restart\nservers and confirm that durable registration state behaves as expected.\n\nFor job-level verification, test both manual and scheduled execution. A\nproduction-ready job must prove authorization, tenant context, duplicate-run\nprotection, timeout, retry, logging, downstream failure behavior, and safe\nrestart. If the job performs business work, test the owning business module as\nwell; Cron proves scheduling and execution governance, not the correctness of\nevery domain operation it triggers.\n",
       "previous": {
-        "title": "Media management",
-        "route": "/docs/framework/wcms-media-management"
+        "title": "Staged-to-Online publishing lifecycle",
+        "route": "/docs/framework/wcms-publishing-lifecycle"
       },
       "next": {
         "title": "Customer reviews and ratings",
@@ -7812,7 +8058,7 @@ module.exports = {
     },
     "active": true
   },
-  "record14": {
+  "record15": {
     "code": "nodicsDocsComponentengagementCustomerReviews",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -8260,7 +8506,7 @@ module.exports = {
     },
     "active": true
   },
-  "record15": {
+  "record16": {
     "code": "nodicsDocsComponentengagementCustomerFeedback",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -8597,7 +8843,7 @@ module.exports = {
     },
     "active": true
   },
-  "record16": {
+  "record17": {
     "code": "nodicsDocsComponentengagementUnifiedOperations",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -8913,7 +9159,7 @@ module.exports = {
     },
     "active": true
   },
-  "record17": {
+  "record18": {
     "code": "nodicsDocsComponentengagementGovernedAutomation",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -9198,7 +9444,7 @@ module.exports = {
     },
     "active": true
   },
-  "record18": {
+  "record19": {
     "code": "nodicsDocsComponentengagementEnterpriseOperations",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -9487,7 +9733,7 @@ module.exports = {
     },
     "active": true
   },
-  "record19": {
+  "record20": {
     "code": "nodicsDocsComponentcommerceOverview",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -9789,7 +10035,7 @@ module.exports = {
     },
     "active": true
   },
-  "record20": {
+  "record21": {
     "code": "nodicsDocsComponentcommerceBaseFoundations",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -10007,7 +10253,7 @@ module.exports = {
     },
     "active": true
   },
-  "record21": {
+  "record22": {
     "code": "nodicsDocsComponentcommerceCartOrder",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -10230,7 +10476,7 @@ module.exports = {
     },
     "active": true
   },
-  "record22": {
+  "record23": {
     "code": "nodicsDocsComponentcommercePaymentFulfillment",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -10444,7 +10690,7 @@ module.exports = {
     },
     "active": true
   },
-  "record23": {
+  "record24": {
     "code": "nodicsDocsComponentcommerceReturnsRefunds",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -10670,7 +10916,7 @@ module.exports = {
     },
     "active": true
   },
-  "record24": {
+  "record25": {
     "code": "nodicsDocsComponentcommerceEnterpriseOperations",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -10954,7 +11200,7 @@ module.exports = {
     },
     "active": true
   },
-  "record25": {
+  "record26": {
     "code": "nodicsDocsComponentcommunicationOverview",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -11235,7 +11481,7 @@ module.exports = {
     },
     "active": true
   },
-  "record26": {
+  "record27": {
     "code": "nodicsDocsComponentprocessOverview",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -11564,7 +11810,7 @@ module.exports = {
     },
     "active": true
   },
-  "record27": {
+  "record28": {
     "code": "nodicsDocsComponentprocessRuntimeLifecycle",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -11954,7 +12200,7 @@ module.exports = {
     },
     "active": true
   },
-  "record28": {
+  "record29": {
     "code": "nodicsDocsComponentprocessIncidentRecovery",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -12196,7 +12442,7 @@ module.exports = {
     },
     "active": true
   },
-  "record29": {
+  "record30": {
     "code": "nodicsDocsComponentprocessFirstWorkflow",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -12457,7 +12703,7 @@ module.exports = {
     },
     "active": true
   },
-  "record30": {
+  "record31": {
     "code": "nodicsDocsComponentprocessFirstHumanTask",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -12719,7 +12965,7 @@ module.exports = {
     },
     "active": true
   },
-  "record31": {
+  "record32": {
     "code": "nodicsDocsComponentprocessBusinessValue",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -13007,7 +13253,7 @@ module.exports = {
     },
     "active": true
   },
-  "record32": {
+  "record33": {
     "code": "nodicsDocsComponentprocessDeveloperCustomization",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -13279,7 +13525,7 @@ module.exports = {
     },
     "active": true
   },
-  "record33": {
+  "record34": {
     "code": "nodicsDocsComponentprocessActionAdapters",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -13531,7 +13777,7 @@ module.exports = {
     },
     "active": true
   },
-  "record34": {
+  "record35": {
     "code": "nodicsDocsComponentprocessCustomProjectExtension",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -13753,7 +13999,7 @@ module.exports = {
     },
     "active": true
   },
-  "record35": {
+  "record36": {
     "code": "nodicsDocsComponentprocessDevopsTopology",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -14010,7 +14256,7 @@ module.exports = {
     },
     "active": true
   },
-  "record36": {
+  "record37": {
     "code": "nodicsDocsComponentprocessProcessCronRuntime",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -14267,7 +14513,7 @@ module.exports = {
     },
     "active": true
   },
-  "record37": {
+  "record38": {
     "code": "nodicsDocsComponentprocessScheduledAutomation",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -14504,7 +14750,7 @@ module.exports = {
     },
     "active": true
   },
-  "record38": {
+  "record39": {
     "code": "nodicsDocsComponentprocessVisualDesigner",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -14816,7 +15062,7 @@ module.exports = {
     },
     "active": true
   },
-  "record39": {
+  "record40": {
     "code": "nodicsDocsComponentprocessQaRegressionGuide",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -15064,7 +15310,7 @@ module.exports = {
     },
     "active": true
   },
-  "record40": {
+  "record41": {
     "code": "nodicsDocsComponentdocsOverview",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",

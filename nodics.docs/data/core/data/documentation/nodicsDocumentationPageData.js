@@ -314,6 +314,31 @@ module.exports = {
     "active": true
   },
   "record12": {
+    "code": "nodicsDocsPagewcmsPublishingLifecycle",
+    "name": "Staged-to-Online publishing lifecycle",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentwcmsPublishingLifecycle",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record13": {
     "code": "nodicsDocsPagecronOperations",
     "name": "Cron operations",
     "cmsSite": [
@@ -338,7 +363,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record13": {
+  "record14": {
     "code": "nodicsDocsPageengagementCustomerReviews",
     "name": "Customer reviews and ratings",
     "cmsSite": [
@@ -363,7 +388,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record14": {
+  "record15": {
     "code": "nodicsDocsPageengagementCustomerFeedback",
     "name": "Customer feedback, complaints, and closed-loop action",
     "cmsSite": [
@@ -388,7 +413,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record15": {
+  "record16": {
     "code": "nodicsDocsPageengagementUnifiedOperations",
     "name": "Unified engagement operations",
     "cmsSite": [
@@ -413,7 +438,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record16": {
+  "record17": {
     "code": "nodicsDocsPageengagementGovernedAutomation",
     "name": "Governed automation and AI",
     "cmsSite": [
@@ -438,7 +463,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record17": {
+  "record18": {
     "code": "nodicsDocsPageengagementEnterpriseOperations",
     "name": "Enterprise scale, resilience, and ecosystem operations",
     "cmsSite": [
@@ -463,7 +488,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record18": {
+  "record19": {
     "code": "nodicsDocsPagecommerceOverview",
     "name": "Commerce overview",
     "cmsSite": [
@@ -488,7 +513,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record19": {
+  "record20": {
     "code": "nodicsDocsPagecommerceBaseFoundations",
     "name": "Base Commerce foundations",
     "cmsSite": [
@@ -513,7 +538,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record20": {
+  "record21": {
     "code": "nodicsDocsPagecommerceCartOrder",
     "name": "Cart, checkout, and order placement",
     "cmsSite": [
@@ -538,7 +563,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record21": {
+  "record22": {
     "code": "nodicsDocsPagecommercePaymentFulfillment",
     "name": "Payment and fulfillment operations",
     "cmsSite": [
@@ -563,7 +588,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record22": {
+  "record23": {
     "code": "nodicsDocsPagecommerceReturnsRefunds",
     "name": "Cancellation, return, and refund lifecycle",
     "cmsSite": [
@@ -588,7 +613,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record23": {
+  "record24": {
     "code": "nodicsDocsPagecommerceEnterpriseOperations",
     "name": "Commerce enterprise operations and migration",
     "cmsSite": [
@@ -613,7 +638,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record24": {
+  "record25": {
     "code": "nodicsDocsPagecommunicationOverview",
     "name": "Communication, delivery, and verification",
     "cmsSite": [
@@ -638,7 +663,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record25": {
+  "record26": {
     "code": "nodicsDocsPageprocessOverview",
     "name": "Business Process and Automation Overview",
     "cmsSite": [
@@ -663,7 +688,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record26": {
+  "record27": {
     "code": "nodicsDocsPageprocessRuntimeLifecycle",
     "name": "Runtime Instance and Task Lifecycle",
     "cmsSite": [
@@ -688,7 +713,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record27": {
+  "record28": {
     "code": "nodicsDocsPageprocessIncidentRecovery",
     "name": "Incident, Retry, and Compensation Operations",
     "cmsSite": [
@@ -713,7 +738,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record28": {
+  "record29": {
     "code": "nodicsDocsPageprocessFirstWorkflow",
     "name": "Build Your First Workflow",
     "cmsSite": [
@@ -738,7 +763,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record29": {
+  "record30": {
     "code": "nodicsDocsPageprocessFirstHumanTask",
     "name": "Build Your First Human Task Flow",
     "cmsSite": [
@@ -763,7 +788,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record30": {
+  "record31": {
     "code": "nodicsDocsPageprocessBusinessValue",
     "name": "Business Value and Adoption Model",
     "cmsSite": [
@@ -788,7 +813,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record31": {
+  "record32": {
     "code": "nodicsDocsPageprocessDeveloperCustomization",
     "name": "Developer Customization Guide",
     "cmsSite": [
@@ -813,7 +838,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record32": {
+  "record33": {
     "code": "nodicsDocsPageprocessActionAdapters",
     "name": "Action Adapter Contract",
     "cmsSite": [
@@ -838,7 +863,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record33": {
+  "record34": {
     "code": "nodicsDocsPageprocessCustomProjectExtension",
     "name": "Custom Project Extension Guide",
     "cmsSite": [
@@ -863,7 +888,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record34": {
+  "record35": {
     "code": "nodicsDocsPageprocessDevopsTopology",
     "name": "DevOps and Runtime Topology",
     "cmsSite": [
@@ -888,7 +913,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record35": {
+  "record36": {
     "code": "nodicsDocsPageprocessProcessCronRuntime",
     "name": "Process and Cron Shared Runtime",
     "cmsSite": [
@@ -913,7 +938,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record36": {
+  "record37": {
     "code": "nodicsDocsPageprocessScheduledAutomation",
     "name": "Scheduled Automation and Cron Triggers",
     "cmsSite": [
@@ -938,7 +963,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record37": {
+  "record38": {
     "code": "nodicsDocsPageprocessVisualDesigner",
     "name": "Visual Workflow Designer Contract",
     "cmsSite": [
@@ -963,7 +988,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record38": {
+  "record39": {
     "code": "nodicsDocsPageprocessQaRegressionGuide",
     "name": "Process QA and Regression Guide",
     "cmsSite": [
@@ -988,7 +1013,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record39": {
+  "record40": {
     "code": "nodicsDocsPagedocsOverview",
     "name": "Docs overview",
     "cmsSite": [
