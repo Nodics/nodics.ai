@@ -27,7 +27,8 @@ Because all nodes share Redis, Nodics does not need redundant peer invalidation 
 
 1. The cache engine resolves a channel to the Redis engine.
 2. `DefaultRedisCacheEngineService.initCache` builds Redis client options from layered configuration.
-3. Supported options include `url`, socket host/port/TLS, database, username, password, and client name.
+3. Supported options include direct `url`, socket host/port/TLS, database,
+   username, password, and client name, or Sentinel master discovery.
 4. The Redis client connects before the engine is exposed to cache channels.
 5. `DefaultRedisCacheService` performs put, get, consume, prefix flush, and key flush operations through the canonical cache key builder.
 6. Event registration configures `notify-keyspace-events` and subscribes to the configured database event channel.
@@ -58,6 +59,41 @@ Typical engine options:
 ```
 
 For secured environments, keep credentials and TLS settings in governed configuration or secrets.
+
+Sentinel topology is opt-in and preserves the direct URL behavior when
+disabled. Every enabled topology requires a master name and one or more valid
+endpoints. Runtime and Sentinel authentication are separate:
+
+```js
+{
+    engine: 'redis',
+    options: {
+        database: 0,
+        username: process.env.REDIS_USERNAME,
+        password: process.env.REDIS_PASSWORD,
+        sentinel: {
+            enabled: true,
+            name: 'nodics',
+            endpoints: [
+                { host: 'sentinel-a', port: 26379 },
+                { host: 'sentinel-b', port: 26379 }
+            ],
+            username: process.env.REDIS_SENTINEL_USERNAME,
+            password: process.env.REDIS_SENTINEL_PASSWORD,
+            connectTimeout: 10000,
+            commandTimeout: 10000,
+            retryDelayMs: 250,
+            maximumRetryDelayMs: 5000,
+            tls: false
+        }
+    }
+}
+```
+
+Invalid or partial Sentinel configuration fails before client connection. The
+provider discovers the promoted primary and reconnects; security-sensitive
+channels still decide whether an individual request fails closed while the
+provider is unavailable.
 
 ## Release Gate
 
@@ -100,6 +136,7 @@ Run:
 
 ```bash
 node nodics.core/modules/nCache/cache/test/cacheAdapterContract.test.js
+node nodics.core/modules/nCache/redisCache/test/redisSentinelConfigurationContract.test.js
 npm run test:suite -- --suite=cache-redis-live
 npm run quality:docs
 ```

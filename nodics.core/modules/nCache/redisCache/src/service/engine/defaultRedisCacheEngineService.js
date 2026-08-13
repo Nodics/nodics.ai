@@ -10,6 +10,7 @@
  */
 
 const redis = require("redis");
+const sentinelAdapter = require('../../utils/sentinelRedisClientAdapter');
 
 /**
  * @module nodics.core/modules/nCache/redisCache/src/service/engine/defaultRedisCacheEngineService
@@ -19,6 +20,39 @@ const redis = require("redis");
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+    /** Validates and converts layered Sentinel settings into ioredis connection options. */
+    buildSentinelOptions: function (source) {
+        let sentinel = source.sentinel || {};
+        if (sentinel.enabled !== true) return null;
+        if (!sentinel.name || !Array.isArray(sentinel.endpoints) || sentinel.endpoints.length === 0) {
+            throw new Error('Redis Sentinel requires a master name and at least one endpoint');
+        }
+        let sentinels = sentinel.endpoints.map(endpoint => {
+            if (!endpoint || !endpoint.host || !Number.isInteger(Number(endpoint.port)) || Number(endpoint.port) < 1) {
+                throw new Error('Every Redis Sentinel endpoint requires a valid host and port');
+            }
+            return { host: endpoint.host, port: Number(endpoint.port) };
+        });
+        let options = {
+            sentinels: sentinels,
+            name: sentinel.name,
+            db: Number(source.database !== undefined ? source.database : source.db || 0),
+            username: source.username,
+            password: source.password,
+            sentinelUsername: sentinel.username,
+            sentinelPassword: sentinel.password,
+            connectTimeout: Number(sentinel.connectTimeout || 10000),
+            commandTimeout: Number(sentinel.commandTimeout || 10000),
+            enableReadyCheck: sentinel.enableReadyCheck !== false,
+            maxRetriesPerRequest: Number(sentinel.maxRetriesPerRequest || 3),
+            sentinelRetryStrategy: times => Math.min(times * Number(sentinel.retryDelayMs || 250), Number(sentinel.maximumRetryDelayMs || 5000)),
+            retryStrategy: times => Math.min(times * Number(sentinel.retryDelayMs || 250), Number(sentinel.maximumRetryDelayMs || 5000))
+        };
+        if (source.name) options.connectionName = source.name;
+        if (source.tls || source.socket && source.socket.tls) options.tls = source.socket && source.socket.tls === true ? {} : source.socket && source.socket.tls || {};
+        if (sentinel.tls) options.sentinelTLS = sentinel.tls === true ? {} : sentinel.tls;
+        return options;
+    },
     /**
      * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
      * defined it that with Promise way
@@ -60,6 +94,13 @@ module.exports = {
         return new Promise((resolve, reject) => {
             _self.LOG.info('Initializing Redis cache instance for module: ' + moduleName);
             let source = Object.assign({}, redisCacheConfig.options || {});
+            let sentinelOptions;
+            try {
+                sentinelOptions = _self.buildSentinelOptions(source);
+            } catch (error) {
+                reject(new CLASSES.CacheError(error, 'While validating Redis Sentinel configuration'));
+                return;
+            }
             let clientOptions = {};
             if (source.url) clientOptions.url = source.url;
             if (source.host || source.port || source.tls) {
@@ -75,7 +116,7 @@ module.exports = {
             ['username', 'password', 'name'].forEach(property => {
                 if (source[property] !== undefined) clientOptions[property] = source[property];
             });
-            let client = redis.createClient(clientOptions);
+            let client = sentinelOptions ? sentinelAdapter.createSentinelClient(sentinelOptions) : redis.createClient(clientOptions);
             let settled = false;
             client.on('error', error => {
                 _self.LOG.error('Redis cache client error for module: ' + moduleName, error);

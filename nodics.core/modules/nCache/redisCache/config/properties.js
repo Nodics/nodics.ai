@@ -17,5 +17,15 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
-
+    cache: {
+        default: {
+            engines: {
+                redis: {
+                    options: {
+                        sentinel: { enabled: false, name: null, endpoints: [] }
+                    }
+                }
+            }
+        }
+    }
 };
