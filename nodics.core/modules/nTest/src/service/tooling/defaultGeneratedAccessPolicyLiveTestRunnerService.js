@@ -33,8 +33,6 @@ const policyEnterprise = process.env.NODICS_TEST_POLICY_ENTERPRISE || process.en
 const policyToken = process.env.NODICS_TEST_POLICY_TOKEN || process.env.NODICS_TEST_CONTROL_TOKEN || token;
 const contextRoot = process.env.NODICS_TEST_CONTEXT_ROOT || process.env.NODICS_TEST_API_PREFIX || '/nodics';
 const restrictedUserGroup = process.env.NODICS_TEST_RESTRICTED_USER_GROUP || 'userGroup';
-const selectedModule = (this.getArgValue || exportedService.getArgValue).call(this, '--module=');
-const selectedSchema = (this.getArgValue || exportedService.getArgValue).call(this, '--schema=');
 const dryRunContract = process.argv.includes('--dry-run-contract');
 const runId = process.env.NODICS_TEST_RUN_ID || String(Date.now());
 
@@ -58,6 +56,8 @@ module.exports = exportedService = {
 
     /** Implements run as an overrideable service operation. */
     run: async function () {
+    const selectedModule = (this.getArgValue || exportedService.getArgValue).call(this, '--module=');
+    const selectedSchema = (this.getArgValue || exportedService.getArgValue).call(this, '--schema=');
     let specs = (this.collectSpecs || exportedService.collectSpecs).call(this, );
     let policySpec = specs.find(spec => spec.moduleName === 'dynamo' && spec.schemaName === 'schemaAccessPolicy');
     if (!policySpec) {

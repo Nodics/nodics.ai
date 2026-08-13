@@ -28,8 +28,6 @@ const token = process.env.NODICS_TEST_TOKEN;
 const tenant = process.env.NODICS_TEST_TENANT;
 const enterprise = process.env.NODICS_TEST_ENTERPRISE;
 const contextRoot = process.env.NODICS_TEST_CONTEXT_ROOT || process.env.NODICS_TEST_API_PREFIX || '/nodics';
-const selectedModule = (this.getArgValue || exportedService.getArgValue).call(this, '--module=');
-const selectedSchema = (this.getArgValue || exportedService.getArgValue).call(this, '--schema=');
 const runId = process.env.NODICS_TEST_RUN_ID || String(Date.now());
 
 /** Executes generated live CRUD tests when invoked as a tooling command. */
@@ -51,6 +49,8 @@ module.exports = exportedService = {
 
     /** Implements run as an overrideable service operation. */
     run: async function () {
+    const selectedModule = (this.getArgValue || exportedService.getArgValue).call(this, '--module=');
+    const selectedSchema = (this.getArgValue || exportedService.getArgValue).call(this, '--schema=');
     let testPaths = collectGeneratedTests(rootPath, [], {
         selectedType: 'crud',
         includeDestructive: true
