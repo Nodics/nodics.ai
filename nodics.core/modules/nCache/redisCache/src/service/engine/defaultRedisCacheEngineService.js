@@ -10,7 +10,6 @@
  */
 
 const redis = require("redis");
-const sentinelAdapter = require('../../utils/sentinelRedisClientAdapter');
 
 /**
  * @module nodics.core/modules/nCache/redisCache/src/service/engine/defaultRedisCacheEngineService
@@ -45,13 +44,17 @@ module.exports = {
             commandTimeout: Number(sentinel.commandTimeout || 10000),
             enableReadyCheck: sentinel.enableReadyCheck !== false,
             maxRetriesPerRequest: Number(sentinel.maxRetriesPerRequest || 3),
-            sentinelRetryStrategy: times => Math.min(times * Number(sentinel.retryDelayMs || 250), Number(sentinel.maximumRetryDelayMs || 5000)),
-            retryStrategy: times => Math.min(times * Number(sentinel.retryDelayMs || 250), Number(sentinel.maximumRetryDelayMs || 5000))
+            sentinelRetryStrategy: this.calculateSentinelRetryDelay.bind(this, sentinel),
+            retryStrategy: this.calculateSentinelRetryDelay.bind(this, sentinel)
         };
         if (source.name) options.connectionName = source.name;
         if (source.tls || source.socket && source.socket.tls) options.tls = source.socket && source.socket.tls === true ? {} : source.socket && source.socket.tls || {};
         if (sentinel.tls) options.sentinelTLS = sentinel.tls === true ? {} : sentinel.tls;
         return options;
+    },
+    /** Calculates one bounded retry delay from layered Sentinel settings. */
+    calculateSentinelRetryDelay: function (sentinel, times) {
+        return Math.min(times * Number(sentinel.retryDelayMs || 250), Number(sentinel.maximumRetryDelayMs || 5000));
     },
     /**
      * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
@@ -116,7 +119,9 @@ module.exports = {
             ['username', 'password', 'name'].forEach(property => {
                 if (source[property] !== undefined) clientOptions[property] = source[property];
             });
-            let client = sentinelOptions ? sentinelAdapter.createSentinelClient(sentinelOptions) : redis.createClient(clientOptions);
+            let client = sentinelOptions
+                ? SERVICE.DefaultSentinelRedisClientAdapterService.createSentinelClient(sentinelOptions)
+                : redis.createClient(clientOptions);
             let settled = false;
             client.on('error', error => {
                 _self.LOG.error('Redis cache client error for module: ' + moduleName, error);

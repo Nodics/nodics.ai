@@ -14,6 +14,7 @@ const assert = require('assert');
 /** @module redisCache/test/RedisSentinelConfigurationContract @description Verifies direct compatibility and strict Sentinel option mapping. */
 
 const service = require('../src/service/engine/defaultRedisCacheEngineService');
+const adapter = require('../src/service/engine/defaultSentinelRedisClientAdapterService');
 
 assert.strictEqual(service.buildSentinelOptions({ url: 'redis://127.0.0.1:6379' }), null);
 assert.throws(() => service.buildSentinelOptions({ sentinel: { enabled: true, endpoints: [] } }), /master name/);
@@ -46,5 +47,10 @@ assert.strictEqual(options.sentinelUsername, 'sentinel-runtime');
 assert.strictEqual(options.sentinelPassword, 'sentinel-secret');
 assert.deepStrictEqual(options.sentinelTLS, {});
 assert.strictEqual(options.retryStrategy(100), 1000);
+assert.strictEqual(typeof adapter.createSentinelClient, 'function');
+assert.strictEqual(typeof adapter.adaptClient, 'function');
+assert.strictEqual(typeof adapter.adaptSubscriber, 'function');
+assert.strictEqual(typeof adapter.scanIterator, 'function');
+assert.strictEqual(typeof adapter.subscribe, 'function');
 
 console.log('Redis Sentinel configuration contract validated');
