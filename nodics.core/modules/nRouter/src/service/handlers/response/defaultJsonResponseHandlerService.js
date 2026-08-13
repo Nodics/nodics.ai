@@ -21,15 +21,19 @@
  * @property {Object} CLASSES.NodicsError Standard error wrapper used for unknown failures.
  * @property {Object} SERVICE.DefaultStatusService Resolves response code and message by status code.
  */
-function toHttpStatus(value) {
+
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements toHttpStatus as an overrideable service operation. */
+    toHttpStatus: function (value) {
     let status = Number(value);
     if (!Number.isInteger(status) || status < 100 || status > 599) {
         return 500;
     }
     return status;
-}
+},
 
-module.exports = {
     /** Projects only definition-declared scalar localization parameters permitted for the public audience. */
     localizationMetadata: function (code, metadata) {
         let policy = CONFIG.get('responseHandler') && CONFIG.get('responseHandler').publicError || {};
@@ -47,6 +51,7 @@ module.exports = {
         return { messageKey: status.messageKey, messageParameters: parameters,
             messageExposure: status.exposure };
     },
+
     /**
      * Creates the bounded public error envelope. Pipeline context, metadata,
      * causal internals, and stack traces remain server-side diagnostics.
@@ -54,7 +59,7 @@ module.exports = {
     publicError: function (error) {
         let policy = CONFIG.get('responseHandler') &&
             CONFIG.get('responseHandler').publicError || {};
-        let status = toHttpStatus(error.responseCode);
+        let status = (this.toHttpStatus || exportedService.toHttpStatus).call(this, error.responseCode);
         let message = error.message;
         if (status >= 500 && policy.maskServerErrorMessages !== false) {
             try {
@@ -69,7 +74,7 @@ module.exports = {
             name: error.name,
             message: message
         };
-        Object.assign(result, this.localizationMetadata(error.code, error.metadata));
+        Object.assign(result, (this.localizationMetadata || exportedService.localizationMetadata).call(this, error.code, error.metadata));
         if (error.traceId) result.traceId = error.traceId;
         if (policy.includeValidationErrors !== false &&
             Array.isArray(error.errors) && error.errors.length > 0) {
@@ -78,7 +83,7 @@ module.exports = {
             result.errors = error.errors.slice(0, maximum).map(item => Object.assign({
                 responseCode: item.responseCode, code: item.code, name: item.name,
                 message: item.message
-            }, this.localizationMetadata(item.code, item.metadata)));
+            }, (this.localizationMetadata || exportedService.localizationMetadata).call(this, item.code, item.metadata)));
         }
         return result;
     },
@@ -123,18 +128,18 @@ module.exports = {
                 if (success.metadata.contentType && response.type) {
                     response.type(success.metadata.contentType);
                 }
-                response.status(toHttpStatus(success.responseCode || 200));
+                response.status((this.toHttpStatus || exportedService.toHttpStatus).call(this, success.responseCode || 200));
                 response.json(success.data);
                 return;
             }
             success.code = success.code || 'SUC_SYS_00000';
             success.responseCode = success.responseCode || SERVICE.DefaultStatusService.get(success.code).code;
             success.message = success.message || SERVICE.DefaultStatusService.get(success.code).message;
-            Object.assign(success, this.localizationMetadata(success.code, success.metadata));
-            response.status(toHttpStatus(success.responseCode));
+            Object.assign(success, (this.localizationMetadata || exportedService.localizationMetadata).call(this, success.code, success.metadata));
+            response.status((this.toHttpStatus || exportedService.toHttpStatus).call(this, success.responseCode));
             response.json(success);
         } catch (error) {
-            this.handleError(request, response, error);
+            (this.handleError || exportedService.handleError).call(this, request, response, error);
         }
 
     },
@@ -153,7 +158,7 @@ module.exports = {
             error = new CLASSES.NodicsError(error);
         }
         this.LOG.error(error);
-        response.status(toHttpStatus(error.responseCode));
-        response.json(this.publicError(error));
+        response.status((this.toHttpStatus || exportedService.toHttpStatus).call(this, error.responseCode));
+        response.json((this.publicError || exportedService.publicError).call(this, error));
     }
 };

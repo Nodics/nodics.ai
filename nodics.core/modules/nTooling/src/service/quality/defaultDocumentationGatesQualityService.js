@@ -24,24 +24,33 @@ const documentationNavigation = require('./defaultDocumentationNavigationQuality
  * @override Projects may override `tooling.documentationGovernance` through properties or supply an explicit `--governance` file for temporary external checks.
  */
 
-function readOption(args, name, defaultValue) {
+
+
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements readOption as an overrideable service operation. */
+    readOption: function (args, name, defaultValue) {
     const prefix = name + '=';
     const match = (args || []).find(arg => arg.indexOf(prefix) === 0);
     return match ? match.slice(prefix.length) : defaultValue;
-}
+},
 
-function resolveRootDir(args) {
-    const configuredHome = readOption(args, '--home', process.env.NODICS_HOME || '');
+    /** Implements resolveRootDir as an overrideable service operation. */
+    resolveRootDir: function (args) {
+    const configuredHome = (this.readOption || exportedService.readOption).call(this, args, '--home', process.env.NODICS_HOME || '');
     return configuredHome ? path.resolve(configuredHome) : process.cwd();
-}
+},
 
-function resolveGovernancePath(args, rootDir) {
-    const configuredPath = readOption(args, '--governance', process.env.NODICS_DOCUMENTATION_GOVERNANCE || '');
+    /** Implements resolveGovernancePath as an overrideable service operation. */
+    resolveGovernancePath: function (args, rootDir) {
+    const configuredPath = (this.readOption || exportedService.readOption).call(this, args, '--governance', process.env.NODICS_DOCUMENTATION_GOVERNANCE || '');
     return configuredPath ? path.resolve(rootDir, configuredPath) : null;
-}
+},
 
-function loadGovernance(args, rootDir) {
-    const governancePath = resolveGovernancePath(args, rootDir);
+    /** Implements loadGovernance as an overrideable service operation. */
+    loadGovernance: function (args, rootDir) {
+    const governancePath = (this.resolveGovernancePath || exportedService.resolveGovernancePath).call(this, args, rootDir);
     if (governancePath) {
         return {
             source: path.relative(rootDir, governancePath),
@@ -52,9 +61,10 @@ function loadGovernance(args, rootDir) {
         source: 'nodics.core/modules/nTooling/config/properties.js#tooling.documentationGovernance',
         governance: _.get(defaultProperties, 'tooling.documentationGovernance', {})
     };
-}
+},
 
-function toArgs(gate, fail, rootDir) {
+    /** Implements toArgs as an overrideable service operation. */
+    toArgs: function (gate, fail, rootDir) {
     const args = [
         '--home=' + rootDir,
         '--scope=' + (gate.scope || 'all'),
@@ -73,26 +83,29 @@ function toArgs(gate, fail, rootDir) {
         args.push('--fail');
     }
     return args;
-}
+},
 
-function printGateHeader(type, gate) {
+    /** Implements printGateHeader as an overrideable service operation. */
+    printGateHeader: function (type, gate) {
     console.log('\n' + type + ': ' + gate.name);
     if (gate.description) {
         console.log(gate.description);
     }
-}
+},
 
-function runGate(type, gate, fail, rootDir) {
-    printGateHeader(type, gate);
-    const options = documentationCoverage.createOptions(toArgs(gate, fail, rootDir));
+    /** Implements runGate as an overrideable service operation. */
+    runGate: function (type, gate, fail, rootDir) {
+    (this.printGateHeader || exportedService.printGateHeader).call(this, type, gate);
+    const options = documentationCoverage.createOptions((this.toArgs || exportedService.toArgs).call(this, gate, fail, rootDir));
     const report = documentationCoverage.collectCoverage(options);
     documentationCoverage.printReport(report, options.reportLimit);
     return documentationCoverage.hasMissingDocumentation(report);
-}
+},
 
-function run(args) {
-    const rootDir = resolveRootDir(args || []);
-    const governanceContext = loadGovernance(args || [], rootDir);
+    /** Implements run as an overrideable service operation. */
+    run: function (args) {
+    const rootDir = (this.resolveRootDir || exportedService.resolveRootDir).call(this, args || []);
+    const governanceContext = (this.loadGovernance || exportedService.loadGovernance).call(this, args || [], rootDir);
     const governance = governanceContext.governance;
     const enforcedGates = governance.enforcedGates || [];
     const reportOnlyGates = governance.reportOnlyGates || [];
@@ -102,13 +115,13 @@ function run(args) {
     console.log('Governance source          : ' + governanceContext.source);
 
     enforcedGates.forEach(gate => {
-        if (runGate('ENFORCED', gate, true, rootDir)) {
+        if ((this.runGate || exportedService.runGate).call(this, 'ENFORCED', gate, true, rootDir)) {
             hasFailure = true;
         }
     });
 
     reportOnlyGates.forEach(gate => {
-        runGate('REPORT ONLY', gate, false, rootDir);
+        (this.runGate || exportedService.runGate).call(this, 'REPORT ONLY', gate, false, rootDir);
     });
 
     const navigationReport = documentationNavigation.collectNavigationReport(rootDir, governance.navigation || {});
@@ -124,14 +137,8 @@ function run(args) {
         console.log('\nDocumentation governance passed.');
     }
 }
+};
 
 if (require.main === module) {
-    run(process.argv.slice(2));
+    exportedService.run(process.argv.slice(2));
 }
-
-module.exports = {
-    loadGovernance,
-    resolveGovernancePath,
-    resolveRootDir,
-    run
-};

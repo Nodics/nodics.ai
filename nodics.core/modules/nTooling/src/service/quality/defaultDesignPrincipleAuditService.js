@@ -34,9 +34,7 @@ const corePrefix = fs.existsSync(path.join(rootPath, 'nodics.core')) ? 'nodics.c
  * @param {string} relativePath Repository-relative file path.
  * @returns {string} File content.
  */
-function read(relativePath) {
-    return fs.readFileSync(path.join(rootPath, relativePath), 'utf8');
-}
+
 
 /**
  * Resolves a path owned by the core framework module group from either the
@@ -45,9 +43,7 @@ function read(relativePath) {
  * @param {string} relativePath Path below nodics.core.
  * @returns {string} Repository-relative path appropriate for the command home.
  */
-function corePath(relativePath) {
-    return corePrefix + relativePath;
-}
+
 
 /**
  * Records an audit failure.
@@ -56,9 +52,7 @@ function corePath(relativePath) {
  * @param {string} message Failure message.
  * @returns {void}
  */
-function fail(failures, message) {
-    failures.push(message);
-}
+
 
 /**
  * Requires a file to contain all supplied clauses.
@@ -68,20 +62,7 @@ function fail(failures, message) {
  * @param {string[]} clauses Required clauses.
  * @returns {void}
  */
-function requireClauses(failures, relativePath, clauses) {
-    let content = '';
-    try {
-        content = read(relativePath);
-    } catch (error) {
-        fail(failures, 'Missing principle audit file: ' + relativePath);
-        return;
-    }
-    clauses.forEach(clause => {
-        if (!content.includes(clause)) {
-            fail(failures, relativePath + ' is missing principle audit clause: ' + clause);
-        }
-    });
-}
+
 
 /**
  * Parses package.json scripts.
@@ -89,14 +70,7 @@ function requireClauses(failures, relativePath, clauses) {
  * @param {string[]} failures Mutable failure list.
  * @returns {Object} Script map.
  */
-function readScripts(failures) {
-    try {
-        return JSON.parse(read('package.json')).scripts || {};
-    } catch (error) {
-        fail(failures, 'package.json must be readable JSON: ' + error.message);
-        return {};
-    }
-}
+
 
 /**
  * Parses nTooling properties.
@@ -104,14 +78,7 @@ function readScripts(failures) {
  * @param {string[]} failures Mutable failure list.
  * @returns {Object} Tooling configuration.
  */
-function readToolingProperties(failures) {
-    try {
-        return require(path.join(rootPath, corePath('modules/nTooling/config/properties.js'))).tooling || {};
-    } catch (error) {
-        fail(failures, 'nTooling properties must be readable: ' + error.message);
-        return {};
-    }
-}
+
 
 /**
  * Validates that required command gates remain available.
@@ -119,9 +86,115 @@ function readToolingProperties(failures) {
  * @param {string[]} failures Mutable failure list.
  * @returns {void}
  */
-function auditCommandGates(failures) {
-    const scripts = readScripts(failures);
-    const tooling = readToolingProperties(failures);
+
+
+/**
+ * Runs the canonical AI-governance checks as a prerequisite for the broader
+ * design-principle audit.
+ *
+ * @param {string[]} failures Mutable failure list.
+ * @param {Object} validator AI-governance validator, injectable for focused tests.
+ * @returns {void}
+ */
+
+
+/**
+ * Validates source-of-truth principle and contract files.
+ *
+ * @param {string[]} failures Mutable failure list.
+ * @returns {void}
+ */
+
+
+/**
+ * Validates LLM guidance that keeps AI and human developers on the same rules.
+ *
+ * @param {string[]} failures Mutable failure list.
+ * @returns {void}
+ */
+
+
+/**
+ * Validates generated module-context entrypoints and manifest availability.
+ *
+ * @param {string[]} failures Mutable failure list.
+ * @returns {void}
+ */
+
+
+/**
+ * Runs the design-principle audit.
+ *
+ * @returns {string[]} Validation failures.
+ */
+
+
+/**
+ * Executes the audit from the command line.
+ *
+ * @returns {void}
+ */
+
+
+
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements read as an overrideable service operation. */
+    read: function (relativePath) {
+    return fs.readFileSync(path.join(rootPath, relativePath), 'utf8');
+},
+
+    /** Implements corePath as an overrideable service operation. */
+    corePath: function (relativePath) {
+    return corePrefix + relativePath;
+},
+
+    /** Implements fail as an overrideable service operation. */
+    fail: function (failures, message) {
+    failures.push(message);
+},
+
+    /** Implements requireClauses as an overrideable service operation. */
+    requireClauses: function (failures, relativePath, clauses) {
+    let content = '';
+    try {
+        content = (this.read || exportedService.read).call(this, relativePath);
+    } catch (error) {
+        (this.fail || exportedService.fail).call(this, failures, 'Missing principle audit file: ' + relativePath);
+        return;
+    }
+    clauses.forEach(clause => {
+        if (!content.includes(clause)) {
+            (this.fail || exportedService.fail).call(this, failures, relativePath + ' is missing principle audit clause: ' + clause);
+        }
+    });
+},
+
+    /** Implements readScripts as an overrideable service operation. */
+    readScripts: function (failures) {
+    try {
+        return JSON.parse((this.read || exportedService.read).call(this, 'package.json')).scripts || {};
+    } catch (error) {
+        (this.fail || exportedService.fail).call(this, failures, 'package.json must be readable JSON: ' + error.message);
+        return {};
+    }
+},
+
+    /** Implements readToolingProperties as an overrideable service operation. */
+    readToolingProperties: function (failures) {
+    try {
+        return require(path.join(rootPath, (this.corePath || exportedService.corePath).call(this, 'modules/nTooling/config/properties.js'))).tooling || {};
+    } catch (error) {
+        (this.fail || exportedService.fail).call(this, failures, 'nTooling properties must be readable: ' + error.message);
+        return {};
+    }
+},
+
+    /** Implements auditCommandGates as an overrideable service operation. */
+    auditCommandGates: function (failures) {
+    const scripts = (this.readScripts || exportedService.readScripts).call(this, failures);
+    const tooling = (this.readToolingProperties || exportedService.readToolingProperties).call(this, failures);
     [
         'ai:validate',
         'ai:principle-audit',
@@ -137,53 +210,41 @@ function auditCommandGates(failures) {
         'build'
     ].forEach(scriptName => {
         if (!scripts[scriptName]) {
-            fail(failures, 'Missing principle audit command gate: ' + scriptName);
+            (this.fail || exportedService.fail).call(this, failures, 'Missing principle audit command gate: ' + scriptName);
         }
     });
     if (scripts.build && !scripts.build.includes('nodics-tool.js build')) {
-        fail(failures, 'build must delegate to the governed nTooling lifecycle command');
+        (this.fail || exportedService.fail).call(this, failures, 'build must delegate to the governed nTooling lifecycle command');
     }
     const buildSteps = (((tooling.commands || {}).build || {}).steps || []);
     const llmGenerateIndex = buildSteps.findIndex(step => (step.tool || []).includes('llm:generate'));
     const principleAuditIndex = buildSteps.findIndex(step => (step.tool || []).includes('ai:principle-audit'));
     const includesGovernanceReport = buildSteps.some(step => (step.tool || []).includes('governance:report'));
     if (llmGenerateIndex === -1) {
-        fail(failures, 'nTooling build lifecycle must generate LLM context before generated-context audit');
+        (this.fail || exportedService.fail).call(this, failures, 'nTooling build lifecycle must generate LLM context before generated-context audit');
     }
     if (principleAuditIndex === -1) {
-        fail(failures, 'nTooling build lifecycle must include ai:principle-audit after generated LLM context is available');
+        (this.fail || exportedService.fail).call(this, failures, 'nTooling build lifecycle must include ai:principle-audit after generated LLM context is available');
     }
     if (llmGenerateIndex !== -1 && principleAuditIndex !== -1 && principleAuditIndex < llmGenerateIndex) {
-        fail(failures, 'nTooling build lifecycle must run llm:generate before ai:principle-audit');
+        (this.fail || exportedService.fail).call(this, failures, 'nTooling build lifecycle must run llm:generate before ai:principle-audit');
     }
     if (!includesGovernanceReport) {
-        fail(failures, 'nTooling build lifecycle must keep governance:report in the generated-artifact gate');
+        (this.fail || exportedService.fail).call(this, failures, 'nTooling build lifecycle must keep governance:report in the generated-artifact gate');
     }
-}
+},
 
-/**
- * Runs the canonical AI-governance checks as a prerequisite for the broader
- * design-principle audit.
- *
- * @param {string[]} failures Mutable failure list.
- * @param {Object} validator AI-governance validator, injectable for focused tests.
- * @returns {void}
- */
-function auditAiGovernance(failures, validator = aiGovernanceValidationService) {
+    /** Implements auditAiGovernance as an overrideable service operation. */
+    auditAiGovernance: function (failures, validator = aiGovernanceValidationService) {
     validator.validateRootFiles(failures);
     validator.validatePackageFiles(failures);
     validator.validateReadmeCasing(failures);
     validator.validateAgentFiles(failures);
-}
+},
 
-/**
- * Validates source-of-truth principle and contract files.
- *
- * @param {string[]} failures Mutable failure list.
- * @returns {void}
- */
-function auditPrincipleContracts(failures) {
-    requireClauses(failures, corePath('modules/nSetup/llm/contracts/nodics-principles.md'), [
+    /** Implements auditPrincipleContracts as an overrideable service operation. */
+    auditPrincipleContracts: function (failures) {
+    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/contracts/nodics-principles.md'), [
         'capabilities are sacred, implementations are negotiable',
         'AI Role And Responsibility Boundary',
         'Pre-Implementation Framework Study Gate',
@@ -192,16 +253,16 @@ function auditPrincipleContracts(failures) {
         'root `package.json` is the only npm dependency installation authority',
         'Security, access control, validation, audit, rollback, diagnostics, and test'
     ]);
-    requireClauses(failures, corePath('modules/nSetup/llm/standards/module-standard.md'), [
+    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/standards/module-standard.md'), [
         'Module `package.json` files must not declare `dependencies` or',
         '`nodics.dependencyGovernance.ownedDependencies` metadata'
     ]);
-    requireClauses(failures, corePath('modules/nSetup/llm/nodics-principles.md'), [
+    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/nodics-principles.md'), [
         'compatibility pointer',
         'modules/nSetup/llm/contracts/nodics-principles.md',
         'Do not add or maintain separate principles here'
     ]);
-    requireClauses(failures, corePath('modules/nSetup/llm/playbooks/change-gate-contract.md'), [
+    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/playbooks/change-gate-contract.md'), [
         '## Gate 1A: Implementation Readiness',
         '## Gate 4: Periodic Platform Audit',
         'module structure and naming standards',
@@ -210,26 +271,21 @@ function auditPrincipleContracts(failures) {
         'Do not use repository `temp` or the refactor-only',
         'active server/node generated-report location'
     ]);
-    requireClauses(failures, corePath('modules/nSetup/llm/contracts/developer-implementation-contract.md'), [
+    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/contracts/developer-implementation-contract.md'), [
         'AI Expert-Council Responsibility',
         'Pre-Implementation Study And Readiness',
         'security, access, validation, audit, rollback, diagnostics, and test',
         'Apply `integration-governance-contract.md`'
     ]);
-    requireClauses(failures, corePath('modules/nSetup/llm/contracts/human-maintainability-contract.md'), [
+    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/contracts/human-maintainability-contract.md'), [
         'understandable, diagnosable, safely changeable, and',
         'AI-generated code has no special exemption'
     ]);
-}
+},
 
-/**
- * Validates LLM guidance that keeps AI and human developers on the same rules.
- *
- * @param {string[]} failures Mutable failure list.
- * @returns {void}
- */
-function auditLlmGuidance(failures) {
-    requireClauses(failures, corePath('modules/nSetup/llm/ai-enablement-index.md'), [
+    /** Implements auditLlmGuidance as an overrideable service operation. */
+    auditLlmGuidance: function (failures) {
+    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/ai-enablement-index.md'), [
         'root-to-leaf README/AGENTS chain',
         'AI Role And Study Gate',
         'Framework-maintainer mode',
@@ -237,28 +293,23 @@ function auditLlmGuidance(failures) {
         'prompts/runtime-governance-prompt.md',
         'contracts/integration-governance-contract.md'
     ]);
-    requireClauses(failures, corePath('modules/nSetup/llm/prompts/runtime-governance-prompt.md'), [
+    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/prompts/runtime-governance-prompt.md'), [
         'preview before mutation',
         'rollback through the owning service',
         'Do not add a parallel activation channel'
     ]);
-    requireClauses(failures, corePath('modules/nSetup/llm/prompts/refactor-prompt.md'), [
+    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/prompts/refactor-prompt.md'), [
         'without changing platform capability',
         'do not create a second loader'
     ]);
-    requireClauses(failures, corePath('modules/nSetup/llm/prompts/testing-prompt.md'), [
+    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/prompts/testing-prompt.md'), [
         'later-loaded project modules can override behavior',
         'separate live'
     ]);
-}
+},
 
-/**
- * Validates generated module-context entrypoints and manifest availability.
- *
- * @param {string[]} failures Mutable failure list.
- * @returns {void}
- */
-function auditGeneratedContextEntrypoints(failures) {
+    /** Implements auditGeneratedContextEntrypoints as an overrideable service operation. */
+    auditGeneratedContextEntrypoints: function (failures) {
     [
         'nodics.core/modules/nConfig',
         'nodics.core/modules/nCommon',
@@ -273,34 +324,26 @@ function auditGeneratedContextEntrypoints(failures) {
         ].forEach(relativeFile => {
             const fullPath = path.join(rootPath, modulePath, relativeFile);
             if (!fs.existsSync(fullPath)) {
-                fail(failures, 'Missing generated context entrypoint: ' + modulePath + '/' + relativeFile);
+                (this.fail || exportedService.fail).call(this, failures, 'Missing generated context entrypoint: ' + modulePath + '/' + relativeFile);
             }
         });
     });
-}
+},
 
-/**
- * Runs the design-principle audit.
- *
- * @returns {string[]} Validation failures.
- */
-function audit() {
+    /** Implements audit as an overrideable service operation. */
+    audit: function () {
     const failures = [];
-    auditAiGovernance(failures);
-    auditCommandGates(failures);
-    auditPrincipleContracts(failures);
-    auditLlmGuidance(failures);
-    auditGeneratedContextEntrypoints(failures);
+    (this.auditAiGovernance || exportedService.auditAiGovernance).call(this, failures);
+    (this.auditCommandGates || exportedService.auditCommandGates).call(this, failures);
+    (this.auditPrincipleContracts || exportedService.auditPrincipleContracts).call(this, failures);
+    (this.auditLlmGuidance || exportedService.auditLlmGuidance).call(this, failures);
+    (this.auditGeneratedContextEntrypoints || exportedService.auditGeneratedContextEntrypoints).call(this, failures);
     return failures;
-}
+},
 
-/**
- * Executes the audit from the command line.
- *
- * @returns {void}
- */
-function run() {
-    const failures = audit();
+    /** Implements run as an overrideable service operation. */
+    run: function () {
+    const failures = (this.audit || exportedService.audit).call(this, );
     if (failures.length > 0) {
         console.error('Nodics design-principle audit failed:');
         failures.forEach(failure => console.error('- ' + failure));
@@ -308,17 +351,8 @@ function run() {
     }
     console.log('Nodics design-principle audit validated');
 }
+};
 
 if (require.main === module) {
-    run();
+    exportedService.run();
 }
-
-module.exports = {
-    audit,
-    auditAiGovernance,
-    auditCommandGates,
-    auditPrincipleContracts,
-    auditLlmGuidance,
-    auditGeneratedContextEntrypoints,
-    run
-};

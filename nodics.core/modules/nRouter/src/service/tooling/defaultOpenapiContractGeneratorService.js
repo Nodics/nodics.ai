@@ -25,16 +25,28 @@ const frameworkRootDir = path.resolve(__dirname, '../../../..');
 const config = require(path.join(frameworkRootDir, 'nConfig'));
 const env = require(path.join(frameworkRootDir, '..', 'env'));
 
-function readOption(args, name, defaultValue) {
+
+/**
+ * Resolves module roots for OpenAPI generation from the same repository/customer topology used by lifecycle builds.
+ *
+ * @returns {Object} Nodics home and module-root options for `config.prepareBuild`.
+ */
+
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements readOption as an overrideable service operation. */
+    readOption: function (args, name, defaultValue) {
     const prefix = name + '=';
     const match = args.find(arg => arg.indexOf(prefix) === 0);
     if (!match) {
         return defaultValue;
     }
     return match.slice(prefix.length);
-}
+},
 
-function readBooleanOption(args, name, defaultValue) {
+    /** Implements readBooleanOption as an overrideable service operation. */
+    readBooleanOption: function (args, name, defaultValue) {
     if (args.includes(name)) {
         return true;
     }
@@ -42,14 +54,10 @@ function readBooleanOption(args, name, defaultValue) {
         return false;
     }
     return defaultValue;
-}
+},
 
-/**
- * Resolves module roots for OpenAPI generation from the same repository/customer topology used by lifecycle builds.
- *
- * @returns {Object} Nodics home and module-root options for `config.prepareBuild`.
- */
-function resolveRuntimeRoots() {
+    /** Implements resolveRuntimeRoots as an overrideable service operation. */
+    resolveRuntimeRoots: function () {
     const commandHome = path.resolve(process.env.NODICS_HOME || process.cwd());
     const customHome = process.env.CUSTOM_HOME ? path.resolve(process.env.CUSTOM_HOME) : commandHome;
     const packagePath = path.join(commandHome, 'package.json');
@@ -69,9 +77,10 @@ function resolveRuntimeRoots() {
         CUSTOM_HOME: customHome,
         MODULE_ROOTS: commandHome === customHome ? [commandHome] : [commandHome, customHome]
     };
-}
+},
 
-function ensureRuntimeArgument(prefix, value) {
+    /** Implements ensureRuntimeArgument as an overrideable service operation. */
+    ensureRuntimeArgument: function (prefix, value) {
     if (!value) {
         return;
     }
@@ -79,27 +88,32 @@ function ensureRuntimeArgument(prefix, value) {
     if (!hasArg) {
         process.argv.push(prefix + '=' + value);
     }
-}
+},
 
-function clone(value) {
+    /** Implements clone as an overrideable service operation. */
+    clone: function (value) {
     return _.merge({}, value || {});
-}
+},
 
-function upperCaseEachWord(value) {
+    /** Implements upperCaseEachWord as an overrideable service operation. */
+    upperCaseEachWord: function (value) {
     return String(value || '').split(/[-_\s]+/).filter(Boolean).map(part => {
         return part.charAt(0).toUpperCase() + part.slice(1);
     }).join('');
-}
+},
 
-function replaceAll(value, search, replacement) {
+    /** Implements replaceAll as an overrideable service operation. */
+    replaceAll: function (value, search, replacement) {
     return String(value || '').split(search).join(replacement);
-}
+},
 
-function toOpenApiPath(url) {
+    /** Implements toOpenApiPath as an overrideable service operation. */
+    toOpenApiPath: function (url) {
     return String(url || '').replace(/:([A-Za-z0-9_]+)/g, '{$1}');
-}
+},
 
-function getPathParameters(openApiPath) {
+    /** Implements getPathParameters as an overrideable service operation. */
+    getPathParameters: function (openApiPath) {
     const parameters = [];
     const pattern = /\{([^}]+)\}/g;
     let match;
@@ -114,9 +128,10 @@ function getPathParameters(openApiPath) {
         });
     }
     return parameters;
-}
+},
 
-function getSecurityParameters(route) {
+    /** Implements getSecurityParameters as an overrideable service operation. */
+    getSecurityParameters: function (route) {
     if (!route.secured) {
         return [];
     }
@@ -131,11 +146,12 @@ function getSecurityParameters(route) {
             }
         }
     ];
-}
+},
 
-function getDeclaredParameters(route) {
+    /** Implements getDeclaredParameters as an overrideable service operation. */
+    getDeclaredParameters: function (route) {
     const declared = route.parameters || (route.help && route.help.parameters) || [];
-    if (Array.isArray(declared)) return declared.map(parameter => clone(parameter));
+    if (Array.isArray(declared)) return declared.map(parameter => (this.clone || exportedService.clone).call(this, parameter));
     return Object.keys(declared).map(name => {
         const definition = declared[name];
         if (definition && typeof definition === 'object') {
@@ -143,9 +159,10 @@ function getDeclaredParameters(route) {
         }
         return { name: name, in: 'query', required: false, description: String(definition), schema: { type: 'string' } };
     });
-}
+},
 
-function mergeParameters(parameters) {
+    /** Implements mergeParameters as an overrideable service operation. */
+    mergeParameters: function (parameters) {
     const merged = new Map();
     parameters.forEach(parameter => {
         if (!parameter || !parameter.name || !parameter.in) return;
@@ -153,13 +170,15 @@ function mergeParameters(parameters) {
         merged.set(parameter.in + ':' + parameter.name, parameter);
     });
     return Array.from(merged.values());
-}
+},
 
-function hasBody(method) {
+    /** Implements hasBody as an overrideable service operation. */
+    hasBody: function (method) {
     return ['post', 'put', 'patch', 'delete'].includes(String(method || '').toLowerCase());
-}
+},
 
-function toJsonSchemaType(type) {
+    /** Implements toJsonSchemaType as an overrideable service operation. */
+    toJsonSchemaType: function (type) {
     const normalized = String(type || 'object').toLowerCase();
     if (['string', 'object', 'array', 'number', 'integer', 'boolean'].includes(normalized)) {
         return normalized;
@@ -174,35 +193,37 @@ function toJsonSchemaType(type) {
         return 'string';
     }
     return 'object';
-}
+},
 
-function toJsonSchemaFormat(type) {
+    /** Implements toJsonSchemaFormat as an overrideable service operation. */
+    toJsonSchemaFormat: function (type) {
     const normalized = String(type || '').toLowerCase();
     if (normalized === 'date' || normalized === 'datetime') {
         return 'date-time';
     }
     return undefined;
-}
+},
 
-function createSchemaProperty(propertyDefinition, referenceDefinition) {
+    /** Implements createSchemaProperty as an overrideable service operation. */
+    createSchemaProperty: function (propertyDefinition, referenceDefinition) {
     const property = {};
     if (propertyDefinition.enum && Array.isArray(propertyDefinition.enum)) {
-        property.type = toJsonSchemaType(propertyDefinition.type || typeof propertyDefinition.enum[0]);
+        property.type = (this.toJsonSchemaType || exportedService.toJsonSchemaType).call(this, propertyDefinition.type || typeof propertyDefinition.enum[0]);
         property.enum = propertyDefinition.enum;
     } else {
-        property.type = toJsonSchemaType(propertyDefinition.type);
+        property.type = (this.toJsonSchemaType || exportedService.toJsonSchemaType).call(this, propertyDefinition.type);
     }
-    const format = toJsonSchemaFormat(propertyDefinition.type);
+    const format = (this.toJsonSchemaFormat || exportedService.toJsonSchemaFormat).call(this, propertyDefinition.type);
     if (format) {
         property.format = format;
     }
     if (property.type === 'array') {
-        property.items = propertyDefinition.items ? createSchemaProperty(propertyDefinition.items) : {};
+        property.items = propertyDefinition.items ? (this.createSchemaProperty || exportedService.createSchemaProperty).call(this, propertyDefinition.items) : {};
     }
     if (property.type === 'object' && propertyDefinition.properties) {
         property.properties = {};
         Object.keys(propertyDefinition.properties).forEach(name => {
-            property.properties[name] = createSchemaProperty(propertyDefinition.properties[name]);
+            property.properties[name] = (this.createSchemaProperty || exportedService.createSchemaProperty).call(this, propertyDefinition.properties[name]);
         });
     }
     if (propertyDefinition.description) {
@@ -217,31 +238,33 @@ function createSchemaProperty(propertyDefinition, referenceDefinition) {
         }
     });
     if (referenceDefinition && referenceDefinition.enabled) {
-        property['x-nodics-reference'] = clone(referenceDefinition);
+        property['x-nodics-reference'] = (this.clone || exportedService.clone).call(this, referenceDefinition);
     }
     return property;
-}
+},
 
-function inferExampleSchema(value) {
+    /** Implements inferExampleSchema as an overrideable service operation. */
+    inferExampleSchema: function (value) {
     if (Array.isArray(value)) {
         return {
             type: 'array',
-            items: value.length > 0 ? inferExampleSchema(value[0]) : {}
+            items: value.length > 0 ? (this.inferExampleSchema || exportedService.inferExampleSchema).call(this, value[0]) : {}
         };
     }
     if (value && typeof value === 'object') {
         const properties = {};
         Object.keys(value).forEach(name => {
-            properties[name] = inferExampleSchema(value[name]);
+            properties[name] = (this.inferExampleSchema || exportedService.inferExampleSchema).call(this, value[name]);
         });
         return { type: 'object', properties: properties };
     }
     if (typeof value === 'boolean') return { type: 'boolean', example: value };
     if (typeof value === 'number') return { type: Number.isInteger(value) ? 'integer' : 'number', example: value };
     return { type: 'string', description: typeof value === 'string' ? value : undefined };
-}
+},
 
-function createCrudRequestSchema(route) {
+    /** Implements createCrudRequestSchema as an overrideable service operation. */
+    createCrudRequestSchema: function (route) {
     const componentName = route['x-nodics'] && route['x-nodics'].schemaComponentName;
     if (!componentName) return undefined;
     const model = { '$ref': '#/components/schemas/' + componentName };
@@ -249,14 +272,15 @@ function createCrudRequestSchema(route) {
     if (route.operation === 'update') return { oneOf: [model, { type: 'array', items: model }] };
     if (route.operation === 'save') return model;
     return undefined;
-}
+},
 
-function createSchemaComponent(moduleName, schemaName, schemaObject) {
+    /** Implements createSchemaComponent as an overrideable service operation. */
+    createSchemaComponent: function (moduleName, schemaName, schemaObject) {
     const required = [];
     const properties = {};
     Object.keys(schemaObject.definition || {}).forEach(propertyName => {
         const propertyDefinition = schemaObject.definition[propertyName] || {};
-        properties[propertyName] = createSchemaProperty(propertyDefinition, schemaObject.refSchema && schemaObject.refSchema[propertyName]);
+        properties[propertyName] = (this.createSchemaProperty || exportedService.createSchemaProperty).call(this, propertyDefinition, schemaObject.refSchema && schemaObject.refSchema[propertyName]);
         if (propertyDefinition.required) {
             required.push(propertyName);
         }
@@ -278,15 +302,16 @@ function createSchemaComponent(moduleName, schemaName, schemaObject) {
         schema.required = required;
     }
     return schema;
-}
+},
 
-function createRequestBody(route) {
-    if (!hasBody(route.method)) {
+    /** Implements createRequestBody as an overrideable service operation. */
+    createRequestBody: function (route) {
+    if (!(this.hasBody || exportedService.hasBody).call(this, route.method)) {
         return undefined;
     }
-    if (route.requestBody) return clone(route.requestBody);
+    if (route.requestBody) return (this.clone || exportedService.clone).call(this, route.requestBody);
     const helpBody = route.help && route.help.body;
-    const schema = createCrudRequestSchema(route) || (helpBody ? inferExampleSchema(helpBody) : undefined);
+    const schema = (this.createCrudRequestSchema || exportedService.createCrudRequestSchema).call(this, route) || (helpBody ? this.inferExampleSchema(helpBody) : undefined);
     if (!schema) return undefined;
     return {
         required: false,
@@ -296,10 +321,11 @@ function createRequestBody(route) {
             }
         }
     };
-}
+},
 
-function createResponses(route) {
-    if (route.responses) return clone(route.responses);
+    /** Implements createResponses as an overrideable service operation. */
+    createResponses: function (route) {
+    if (route.responses) return (this.clone || exportedService.clone).call(this, route.responses);
     if (route.responseHandler === 'fileDownloadResponseHandler') {
         return {
             '200': {
@@ -313,21 +339,22 @@ function createResponses(route) {
         '200': { '$ref': '#/components/responses/NodicsSuccess' },
         default: { '$ref': '#/components/responses/NodicsError' }
     };
-}
+},
 
-function createOperation(route) {
-    const openApiPath = toOpenApiPath(route.url);
-    const parameters = mergeParameters(getPathParameters(openApiPath).concat(getDeclaredParameters(route), getSecurityParameters(route)));
+    /** Implements createOperation as an overrideable service operation. */
+    createOperation: function (route) {
+    const openApiPath = (this.toOpenApiPath || exportedService.toOpenApiPath).call(this, route.url);
+    const parameters = (this.mergeParameters || exportedService.mergeParameters).call(this, this.getPathParameters(openApiPath).concat(this.getDeclaredParameters(route), this.getSecurityParameters(route)));
     const operation = {
         operationId: route.routerName,
         summary: route.summary || (route.operation ? route.operation + ' via ' + (route.controller || route.handler) : route.routerName),
         description: route.description || (route.help && route.help.message ? route.help.message : 'Nodics route generated from the active module hierarchy.'),
         tags: route.tags || [route.moduleName],
         parameters: parameters,
-        responses: createResponses(route),
+        responses: (this.createResponses || exportedService.createResponses).call(this, route),
         'x-nodics': route['x-nodics']
     };
-    const requestBody = createRequestBody(route);
+    const requestBody = (this.createRequestBody || exportedService.createRequestBody).call(this, route);
     if (requestBody) {
         operation.requestBody = requestBody;
     }
@@ -342,18 +369,19 @@ function createOperation(route) {
         ];
     }
     return operation;
-}
+},
 
-function addRoute(paths, route) {
+    /** Implements addRoute as an overrideable service operation. */
+    addRoute: function (paths, route) {
     if (!route || !route.url || !route.method || route.active === false) {
         return;
     }
-    const openApiPath = toOpenApiPath(route.url);
+    const openApiPath = (this.toOpenApiPath || exportedService.toOpenApiPath).call(this, route.url);
     const method = String(route.method).toLowerCase();
     if (!paths[openApiPath]) {
         paths[openApiPath] = {};
     }
-    const incoming = createOperation(route);
+    const incoming = (this.createOperation || exportedService.createOperation).call(this, route);
     if (paths[openApiPath][method]) {
         const existing = paths[openApiPath][method];
         const existingMetadata = existing['x-nodics'] || {};
@@ -385,15 +413,16 @@ function addRoute(paths, route) {
             existing.operationId + ' and ' + route.routerName);
     }
     paths[openApiPath][method] = incoming;
-}
+},
 
-function prepareDefaultRoute(options) {
-    const definition = clone(options.routerDef);
+    /** Implements prepareDefaultRoute as an overrideable service operation. */
+    prepareDefaultRoute: function (options) {
+    const definition = (this.clone || exportedService.clone).call(this, options.routerDef);
     const schemaName = options.schemaName;
     const schemaObject = options.schemaObject;
     definition.method = String(definition.method || '').toLowerCase();
-    definition.key = replaceAll(definition.key, 'schemaName', String(options.alias || schemaName).toLowerCase());
-    definition.controller = replaceAll(definition.controller, 'ctrlName', upperCaseEachWord(schemaName) + 'Controller');
+    definition.key = (this.replaceAll || exportedService.replaceAll).call(this, definition.key, 'schemaName', String(options.alias || schemaName).toLowerCase());
+    definition.controller = (this.replaceAll || exportedService.replaceAll).call(this, definition.controller, 'ctrlName', this.upperCaseEachWord(schemaName) + 'Controller');
     definition.apiVersion = definition.apiVersion || 'v0';
     definition.url = '/' + options.contextRoot + '/' + options.urlPrefix + '/' + definition.apiVersion + definition.key;
     definition.active = definition.active === undefined ? true : definition.active;
@@ -423,17 +452,19 @@ function prepareDefaultRoute(options) {
         routerAlias: schemaObject.router && schemaObject.router.alias
     };
     return definition;
-}
+},
 
-function isValidRoute(routerName, routerDef) {
+    /** Implements isValidRoute as an overrideable service operation. */
+    isValidRoute: function (routerName, routerDef) {
     if (routerDef && routerDef.accessGroups && routerDef.accessGroups.length > 0) {
         return true;
     }
     throw new CLASSES.NodicsError('Invalid router definition: accessGroups is not valid for: ' + routerName);
-}
+},
 
-function prepareConfiguredRoute(options) {
-    const definition = clone(options.routerDef);
+    /** Implements prepareConfiguredRoute as an overrideable service operation. */
+    prepareConfiguredRoute: function (options) {
+    const definition = (this.clone || exportedService.clone).call(this, options.routerDef);
     definition.method = String(definition.method || '').toLowerCase();
     definition.apiVersion = definition.apiVersion || 'v0';
     definition.url = '/' + options.contextRoot + '/' + options.urlPrefix + '/' + definition.apiVersion + definition.key;
@@ -467,9 +498,10 @@ function prepareConfiguredRoute(options) {
         publicAccess: definition.publicAccess === true
     };
     return definition;
-}
+},
 
-function addDefaultRoutes(paths, options) {
+    /** Implements addDefaultRoutes as an overrideable service operation. */
+    addDefaultRoutes: function (paths, options) {
     Object.keys(options.routers.default || {}).forEach(groupName => {
         if (groupName === 'options') {
             return;
@@ -478,16 +510,17 @@ function addDefaultRoutes(paths, options) {
             if (routerName === 'options') {
                 return;
             }
-            isValidRoute(routerName, options.routers.default[groupName][routerName]);
-            addRoute(paths, prepareDefaultRoute(Object.assign({}, options, {
+            (this.isValidRoute || exportedService.isValidRoute).call(this, routerName, options.routers.default[groupName][routerName]);
+            (this.addRoute || exportedService.addRoute).call(this, paths, this.prepareDefaultRoute(Object.assign({}, options, {
                 routerDef: options.routers.default[groupName][routerName],
                 routerName: routerName
             })));
         });
     });
-}
+},
 
-function addConfiguredRoutes(paths, options) {
+    /** Implements addConfiguredRoutes as an overrideable service operation. */
+    addConfiguredRoutes: function (paths, options) {
     Object.keys(options.routeGroup || {}).forEach(groupName => {
         if (groupName === 'options') {
             return;
@@ -496,17 +529,18 @@ function addConfiguredRoutes(paths, options) {
             if (routerName === 'options') {
                 return;
             }
-            isValidRoute(routerName, options.routeGroup[groupName][routerName]);
-            addRoute(paths, prepareConfiguredRoute(Object.assign({}, options, {
+            (this.isValidRoute || exportedService.isValidRoute).call(this, routerName, options.routeGroup[groupName][routerName]);
+            (this.addRoute || exportedService.addRoute).call(this, paths, this.prepareConfiguredRoute(Object.assign({}, options, {
                 routerDef: options.routeGroup[groupName][routerName],
                 groupName: groupName,
                 routerName: routerName
             })));
         });
     });
-}
+},
 
-function isConfiguredRouteGroupEnabled(routeGroup, moduleName) {
+    /** Implements isConfiguredRouteGroupEnabled as an overrideable service operation. */
+    isConfiguredRouteGroupEnabled: function (routeGroup, moduleName) {
     if (!routeGroup) return false;
     return Object.keys(routeGroup).some(groupName => {
         if (groupName === 'options') return false;
@@ -514,9 +548,10 @@ function isConfiguredRouteGroupEnabled(routeGroup, moduleName) {
         const groupOptions = group && group.options || {};
         return !Array.isArray(groupOptions.targetModules) || groupOptions.targetModules.includes(moduleName);
     });
-}
+},
 
-function collectRoutes(rawRouters, rawSchema, components) {
+    /** Implements collectRoutes as an overrideable service operation. */
+    collectRoutes: function (rawRouters, rawSchema, components) {
     const paths = {};
     const modules = NODICS.getModules();
     const contextRoot = CONFIG.get('servers').options.contextRoot;
@@ -533,7 +568,7 @@ function collectRoutes(rawRouters, rawSchema, components) {
             if (schemaObject.service && schemaObject.service.enabled &&
                 schemaObject.router && schemaObject.router.enabled &&
                 (!schemaObject.router.target || schemaObject.router.target === moduleName)) {
-                addDefaultRoutes(paths, {
+                (this.addDefaultRoutes || exportedService.addDefaultRoutes).call(this, paths, {
                     routers: rawRouters,
                     contextRoot: contextRoot,
                     urlPrefix: urlPrefix,
@@ -555,7 +590,7 @@ function collectRoutes(rawRouters, rawSchema, components) {
                     schemaObject.router && schemaObject.router.enabled &&
                     schemaObject.router.target && schemaObject.router.target === moduleName &&
                     schemaObject.router.target !== sourceModuleName) {
-                    addDefaultRoutes(paths, {
+                    (this.addDefaultRoutes || exportedService.addDefaultRoutes).call(this, paths, {
                         routers: rawRouters,
                         contextRoot: contextRoot,
                         urlPrefix: urlPrefix,
@@ -570,7 +605,7 @@ function collectRoutes(rawRouters, rawSchema, components) {
                 }
             });
         });
-        if (isConfiguredRouteGroupEnabled(rawRouters.common, moduleName)) {
+        if ((this.isConfiguredRouteGroupEnabled || exportedService.isConfiguredRouteGroupEnabled).call(this, rawRouters.common, moduleName)) {
             const scopedCommon = {};
             Object.keys(rawRouters.common || {}).forEach(groupName => {
                 if (groupName === 'options') return;
@@ -578,7 +613,7 @@ function collectRoutes(rawRouters, rawSchema, components) {
                 const groupOptions = group && group.options || {};
                 if (!Array.isArray(groupOptions.targetModules) || groupOptions.targetModules.includes(moduleName)) scopedCommon[groupName] = group;
             });
-            addConfiguredRoutes(paths, {
+            (this.addConfiguredRoutes || exportedService.addConfiguredRoutes).call(this, paths, {
                 routeGroup: scopedCommon,
                 contextRoot: contextRoot,
                 urlPrefix: urlPrefix,
@@ -586,7 +621,7 @@ function collectRoutes(rawRouters, rawSchema, components) {
                 source: 'common-router'
             });
         }
-        addConfiguredRoutes(paths, {
+        (this.addConfiguredRoutes || exportedService.addConfiguredRoutes).call(this, paths, {
             routeGroup: rawRouters[moduleName],
             contextRoot: contextRoot,
             urlPrefix: urlPrefix,
@@ -595,9 +630,10 @@ function collectRoutes(rawRouters, rawSchema, components) {
         });
     });
     return paths;
-}
+},
 
-function validateDocument(document) {
+    /** Implements validateDocument as an overrideable service operation. */
+    validateDocument: function (document) {
     const errors = [];
     const operationIds = new Set();
     const methods = ['get', 'post', 'put', 'patch', 'delete', 'options', 'head', 'trace'];
@@ -637,9 +673,10 @@ function validateDocument(document) {
     });
     if (errors.length > 0) throw new Error('Invalid generated OpenAPI contract:\n- ' + errors.join('\n- '));
     return true;
-}
+},
 
-async function loadEffectiveSchemas(options, warnings) {
+    /** Implements loadEffectiveSchemas as an overrideable service operation. */
+    loadEffectiveSchemas: async function (options, warnings) {
     SERVICE.DefaultDatabaseConfigurationService.setRawSchema(SERVICE.DefaultFilesLoaderService.loadSchemaFiles('/src/schemas/schemas.js', null));
     if (options.includeRuntimeSchemas && SERVICE.DefaultDatabaseConnectionHandlerService) {
         const defaultTenant = CONFIG.get('defaultTenant') || 'default';
@@ -657,19 +694,21 @@ async function loadEffectiveSchemas(options, warnings) {
     }
     await SERVICE.DefaultDatabaseSchemaHandlerService.buildDatabaseSchema(SERVICE.DefaultDatabaseConfigurationService.getRawSchema());
     return SERVICE.DefaultDatabaseConfigurationService.getRawSchema();
-}
+},
 
-function collectSchemas(rawSchema) {
+    /** Implements collectSchemas as an overrideable service operation. */
+    collectSchemas: function (rawSchema) {
     const schemas = {};
     Object.keys(rawSchema || {}).forEach(moduleName => {
         Object.keys(rawSchema[moduleName] || {}).forEach(schemaName => {
-            schemas[moduleName + '_' + schemaName] = createSchemaComponent(moduleName, schemaName, rawSchema[moduleName][schemaName]);
+            schemas[moduleName + '_' + schemaName] = (this.createSchemaComponent || exportedService.createSchemaComponent).call(this, moduleName, schemaName, rawSchema[moduleName][schemaName]);
         });
     });
     return schemas;
-}
+},
 
-async function initialize(options, warnings) {
+    /** Implements initialize as an overrideable service operation. */
+    initialize: async function (options, warnings) {
     await config.prepareBuild(options);
     await config.initUtilities(options);
     await config.loadModules();
@@ -677,7 +716,7 @@ async function initialize(options, warnings) {
     if (SERVICE.DefaultStatusService && SERVICE.DefaultStatusService.loadStatusDefinitions) {
         SERVICE.DefaultStatusService.loadStatusDefinitions();
     }
-    const rawSchema = await loadEffectiveSchemas(options, warnings);
+    const rawSchema = await (this.loadEffectiveSchemas || exportedService.loadEffectiveSchemas).call(this, options, warnings);
     await SERVICE.DefaultRouterService.prepareModulesConfiguration();
     const rawRouters = SERVICE.DefaultFilesLoaderService.loadRouterFiles('/src/router/routers.js');
     SERVICE.DefaultRouterConfigurationService.setRawRouters(rawRouters);
@@ -685,11 +724,12 @@ async function initialize(options, warnings) {
         rawRouters: rawRouters,
         rawSchema: rawSchema
     };
-}
+},
 
-function createDocument(input) {
-    const components = collectSchemas(input.rawSchema);
-    const paths = collectRoutes(input.rawRouters, input.rawSchema, components);
+    /** Implements createDocument as an overrideable service operation. */
+    createDocument: function (input) {
+    const components = (this.collectSchemas || exportedService.collectSchemas).call(this, input.rawSchema);
+    const paths = (this.collectRoutes || exportedService.collectRoutes).call(this, input.rawRouters, input.rawSchema, components);
     const document = {
         openapi: '3.0.3',
         info: {
@@ -765,54 +805,58 @@ function createDocument(input) {
             warnings: input.warnings
         }
     };
-    validateDocument(document);
+    (this.validateDocument || exportedService.validateDocument).call(this, document);
     return document;
-}
+},
 
-function createOptions(args) {
-    const environmentName = readOption(args, '--environment', null);
-    const serverName = readOption(args, '--server', null);
-    const nodeName = readOption(args, '--node', null);
-    ensureRuntimeArgument('E', environmentName);
-    ensureRuntimeArgument('S', serverName);
-    ensureRuntimeArgument('NODE', nodeName);
-    return Object.assign(resolveRuntimeRoots(), {
+    /** Implements createOptions as an overrideable service operation. */
+    createOptions: function (args) {
+    const environmentName = (this.readOption || exportedService.readOption).call(this, args, '--environment', null);
+    const serverName = (this.readOption || exportedService.readOption).call(this, args, '--server', null);
+    const nodeName = (this.readOption || exportedService.readOption).call(this, args, '--node', null);
+    (this.ensureRuntimeArgument || exportedService.ensureRuntimeArgument).call(this, 'E', environmentName);
+    (this.ensureRuntimeArgument || exportedService.ensureRuntimeArgument).call(this, 'S', serverName);
+    (this.ensureRuntimeArgument || exportedService.ensureRuntimeArgument).call(this, 'NODE', nodeName);
+    return Object.assign((this.resolveRuntimeRoots || exportedService.resolveRuntimeRoots).call(this, ), {
         defaultEnvironment: environmentName || env.defaultOptions.defaultEnvironment,
         defaultServer: serverName || env.defaultOptions.defaultServer,
-        includeRuntimeSchemas: readBooleanOption(args, '--runtime-schemas', false),
-        outputDir: readOption(args, '--output-dir', null)
+        includeRuntimeSchemas: (this.readBooleanOption || exportedService.readBooleanOption).call(this, args, '--runtime-schemas', false),
+        outputDir: (this.readOption || exportedService.readOption).call(this, args, '--output-dir', null)
     });
-}
+},
 
-function getDefaultOutputDir() {
+    /** Implements getDefaultOutputDir as an overrideable service operation. */
+    getDefaultOutputDir: function () {
     const modulePath = NODICS.getServerPath();
     if (!modulePath) {
         throw new CLASSES.NodicsError('Unable to resolve active server path for generated OpenAPI contract output');
     }
     return path.join(modulePath, 'generated', 'openapi');
-}
+},
 
-function assertOutputDirAllowed(outputDir) {
+    /** Implements assertOutputDirAllowed as an overrideable service operation. */
+    assertOutputDirAllowed: function (outputDir) {
     const resolvedOutputDir = path.resolve(outputDir);
     const serverPath = path.resolve(NODICS.getServerPath());
     if (resolvedOutputDir.indexOf(serverPath + path.sep) !== 0) {
         throw new CLASSES.NodicsError('Generated API contracts must be written under the active server module');
     }
-}
+},
 
-async function runCli(args) {
-    const options = createOptions(args || []);
+    /** Implements runCli as an overrideable service operation. */
+    runCli: async function (args) {
+    const options = (this.createOptions || exportedService.createOptions).call(this, args || []);
     const warnings = [];
-    const initialized = await initialize(options, warnings);
-    const document = createDocument({
+    const initialized = await (this.initialize || exportedService.initialize).call(this, options, warnings);
+    const document = (this.createDocument || exportedService.createDocument).call(this, {
         rawRouters: initialized.rawRouters,
         rawSchema: initialized.rawSchema,
         options: options,
         warnings: warnings
     });
-    validateDocument(document);
-    const outputDir = options.outputDir || getDefaultOutputDir();
-    assertOutputDirAllowed(outputDir);
+    (this.validateDocument || exportedService.validateDocument).call(this, document);
+    const outputDir = options.outputDir || (this.getDefaultOutputDir || exportedService.getDefaultOutputDir).call(this, );
+    (this.assertOutputDirAllowed || exportedService.assertOutputDirAllowed).call(this, outputDir);
     fs.mkdirSync(outputDir, { recursive: true });
     const fileName = (NODICS.getNodeName() || NODICS.getServerName() || options.defaultServer) + '.openapi.json';
     const outputPath = path.join(outputDir, fileName);
@@ -824,21 +868,10 @@ async function runCli(args) {
         warnings.forEach(warning => console.warn('Warning: ' + warning));
     }
 }
-
-module.exports = {
-    addRoute: addRoute,
-    collectRoutes: collectRoutes,
-    createOperation: createOperation,
-    createSchemaComponent: createSchemaComponent,
-    createDocument: createDocument,
-    createOptions: createOptions,
-    initialize: initialize,
-    runCli: runCli,
-    validateDocument: validateDocument
 };
 
 if (require.main === module) {
-    runCli(process.argv.slice(2)).catch(error => {
+    exportedService.runCli(process.argv.slice(2)).catch(error => {
         console.error(error);
         process.exit(1);
     });

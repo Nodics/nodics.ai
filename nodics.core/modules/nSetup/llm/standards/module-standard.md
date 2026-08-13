@@ -246,6 +246,11 @@ under `src/service/**/*Service.js`, controllers under
 and pipeline definitions in the `src/pipelines/pipelines.js` registry. Export
 mergeable `module.exports = { methodName: function (...) {} }` objects so a
 later module can replace one behavior member without copying the whole file.
+Named behavioral helpers follow the same rule: they are documented exported
+members, not top-level function declarations or top-level function/arrow
+variables, and internal calls resolve through the effective object. Existing
+constructor/class implementations under `src/lib` remain subject to their
+separate compatibility review.
 
 Non-runtime tooling source still lives below `src/service` in explicit
 subfolders such as `src/service/command`, `src/service/context`,

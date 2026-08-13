@@ -23,13 +23,6 @@ const copyrightHeader = '/*\n' +
     '\n' +
     ' */\n';
 
-function getCopyrightHeader() {
-    return typeof UTILS !== 'undefined' && UTILS.getCopywriteComment ? UTILS.getCopywriteComment() : copyrightHeader;
-}
-
-function createModuleBody(body) {
-    return getCopyrightHeader() + '\n' + 'module' + '.exports = ' + body + ';';
-}
 
 /**
  * @module nodics.core/modules/nDynamo/src/service/class/defaultClassConfigurationService
@@ -38,7 +31,17 @@ function createModuleBody(body) {
  * @owner nDynamo
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
-module.exports = {
+let exportedService;
+module.exports = exportedService = {
+    /** Implements getCopyrightHeader as an overrideable service operation. */
+    getCopyrightHeader: function () {
+    return typeof UTILS !== 'undefined' && UTILS.getCopywriteComment ? UTILS.getCopywriteComment() : copyrightHeader;
+},
+
+    /** Implements createModuleBody as an overrideable service operation. */
+    createModuleBody: function (body) {
+    return (this.getCopyrightHeader || exportedService.getCopyrightHeader).call(this, ) + '\n' + 'module' + '.exports = ' + body + ';';
+},
 
     /**
      * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
@@ -132,11 +135,10 @@ module.exports = {
                         return value;
                     }
                 }, 4);
-                resolve(createModuleBody(finalClassData.replace(/\\n/gm, '\n').replace(/\\t/gm, '').replaceAll("\"", "")));
+                resolve((this.createModuleBody || exportedService.createModuleBody).call(this, finalClassData.replace(/\\n/gm, '\n').replace(/\\t/gm, '').replaceAll("\"", "")));
             }
         });
     },
-
 
     /**
 
@@ -160,8 +162,8 @@ module.exports = {
         return new Promise((resolve, reject) => {
             let className = request.className;
             let type = request.type;
-            this.finalizeClass(className, request.body).then(success => {
-                this.save({
+            (this.finalizeClass || exportedService.finalizeClass).call(this, className, request.body).then(success => {
+                (this.save || exportedService.save).call(this, {
                     tenant: CONFIG.get('defaultTenant') || 'default',
                     model: {
                         code: className,
@@ -216,10 +218,10 @@ module.exports = {
                             return value;
                         }
                     }, 4);
-                    finalClassData = createModuleBody(finalClassData.replace(/\\n/gm, '\n').replace(/\\t/gm, '').replaceAll("\"", ""));
+                    finalClassData = (this.createModuleBody || exportedService.createModuleBody).call(this, finalClassData.replace(/\\n/gm, '\n').replace(/\\t/gm, '').replaceAll("\"", ""));
                     byteBody = Buffer.from(finalClassData, 'utf8');
                 } else {
-                    byteBody = Buffer.from(createModuleBody(body), 'utf8');
+                    byteBody = Buffer.from((this.createModuleBody || exportedService.createModuleBody).call(this, body), 'utf8');
                 }
                 resolve(byteBody);
             }).catch(error => {
@@ -245,7 +247,7 @@ module.exports = {
             if (!request.event.data.models || request.event.data.models.length <= 0) {
                 reject(new CLASSES.NodicsError('ERR_SYS_00001', 'ClassName can not be null or empty'));
             }
-            this.get({
+            (this.get || exportedService.get).call(this, {
                 tenant: CONFIG.get('defaultTenant') || 'default',
                 query: {
                     code: {
@@ -298,7 +300,7 @@ module.exports = {
                 resolve(true);
                 return;
             }
-            this.get({
+            (this.get || exportedService.get).call(this, {
                 tenant: CONFIG.get('defaultTenant') || 'default'
             }).then(success => {
                 try {

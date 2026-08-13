@@ -25,8 +25,13 @@ const rootPath = path.resolve(process.env.NODICS_HOME || process.cwd());
 const skippedDirectories = new Set(['.git', 'node_modules']);
 
 /** Executes route contract tests when invoked as a tooling command. */
-function runCli() {
-    const tests = collectRouteContractTests(rootPath).sort();
+
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements runCli as an overrideable service operation. */
+    runCli: function () {
+    const tests = (this.collectRouteContractTests || exportedService.collectRouteContractTests).call(this, rootPath).sort();
 
     if (tests.length === 0) {
         console.log('No route contract tests found.');
@@ -47,16 +52,17 @@ function runCli() {
     });
 
     console.log(`\nRoute contract tests passed: ${tests.length}`);
-}
+},
 
-function collectRouteContractTests(currentPath, tests = []) {
+    /** Implements collectRouteContractTests as an overrideable service operation. */
+    collectRouteContractTests: function (currentPath, tests = []) {
     const entries = fs.readdirSync(currentPath, { withFileTypes: true });
 
     entries.forEach((entry) => {
         const entryPath = path.join(currentPath, entry.name);
         if (entry.isDirectory()) {
             if (!skippedDirectories.has(entry.name)) {
-                collectRouteContractTests(entryPath, tests);
+                (this.collectRouteContractTests || exportedService.collectRouteContractTests).call(this, entryPath, tests);
             }
             return;
         }
@@ -70,12 +76,8 @@ function collectRouteContractTests(currentPath, tests = []) {
 
     return tests;
 }
-
-module.exports = {
-    collectRouteContractTests: collectRouteContractTests,
-    runCli: runCli
 };
 
 if (require.main === module) {
-    runCli();
+    exportedService.runCli();
 }

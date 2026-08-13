@@ -117,11 +117,18 @@ Avoid:
   server may need to tune;
 - direct generated-file edits instead of source-definition changes.
 
-Small helper functions may be private when they are purely local implementation
-detail and are not a reasonable customization point. If a helper contains
-business policy, provider behavior, validation decisions, routing decisions, or
-security decisions, export or move it behind the correct Nodics extension
-point.
+Do not declare behavioral helpers as top-level named functions, function
+expressions, or arrow-function variables in runtime source. A helper that is
+meaningful enough to name is a customization surface and must be a documented
+member of the mergeable `module.exports` object. Internal calls must resolve
+through the effective object (`this`) so a later-layer member override is
+honored; a documented exported fallback is permitted only where a callback or
+tool entrypoint can legitimately invoke the member without a receiver.
+
+Constructor, prototype, and class implementations under an established
+`src/lib` boundary are a distinct legacy artifact category. They require an
+explicit constructor/class compatibility review and must not be mechanically
+converted under this object-export rule.
 
 ## Artifact Placement
 

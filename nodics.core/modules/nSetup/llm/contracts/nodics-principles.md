@@ -342,7 +342,12 @@ Implementation must follow these platform coding principles:
    the established Nodics paths and use the expected suffixes and registries.
 7. Export runtime behavior as mergeable CommonJS object members, normally
    `module.exports = { methodName: function (...) {} }`, so later modules can
-   override the smallest supported function without copying a whole file.
+   override the smallest supported function without copying a whole file. Do
+   not hide named behavioral helpers in top-level function declarations or
+   top-level function/arrow variables; export and document them, and resolve
+   internal calls through the effective object so member overrides remain
+   active. Established `src/lib` constructor/class artifacts require a separate
+   compatibility review before conversion.
 8. Source definitions are authoritative for generated artifacts. Change
    schemas, routers, generation templates, metadata, or source definitions and
    regenerate; do not hand-edit generated output as source truth.

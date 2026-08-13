@@ -22,22 +22,6 @@ const path = require('path');
 
 const frameworkRootDir = path.resolve(__dirname, '../../../../..');
 
-function readOption(args, name, defaultValue) {
-    const prefix = name + '=';
-    const match = args.find(arg => arg.indexOf(prefix) === 0);
-    if (!match) {
-        return defaultValue;
-    }
-    return match.slice(prefix.length);
-}
-
-function readCsvOption(args, name) {
-    const value = readOption(args, name, '');
-    if (!value) {
-        return [];
-    }
-    return value.split(',').map(item => item.trim()).filter(Boolean);
-}
 
 const excludedDirs = new Set([
     '.git',
@@ -76,41 +60,69 @@ const contractLayers = new Set([
     'router'
 ]);
 
-function isExcludedDirectory(fullPath, entryName, rootDir, includeGenerated) {
+
+
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements readOption as an overrideable service operation. */
+    readOption: function (args, name, defaultValue) {
+    const prefix = name + '=';
+    const match = args.find(arg => arg.indexOf(prefix) === 0);
+    if (!match) {
+        return defaultValue;
+    }
+    return match.slice(prefix.length);
+},
+
+    /** Implements readCsvOption as an overrideable service operation. */
+    readCsvOption: function (args, name) {
+    const value = (this.readOption || exportedService.readOption).call(this, args, name, '');
+    if (!value) {
+        return [];
+    }
+    return value.split(',').map(item => item.trim()).filter(Boolean);
+},
+
+    /** Implements isExcludedDirectory as an overrideable service operation. */
+    isExcludedDirectory: function (fullPath, entryName, rootDir, includeGenerated) {
     if (path.relative(rootDir, fullPath) === 'docs') {
         return true;
     }
     return excludedDirs.has(entryName) && !(includeGenerated && entryName === 'gen');
-}
+},
 
-function walk(dir, files, includeTests, includeGenerated, rootDir) {
+    /** Implements walk as an overrideable service operation. */
+    walk: function (dir, files, includeTests, includeGenerated, rootDir) {
     fs.readdirSync(dir, { withFileTypes: true }).forEach(entry => {
         if (entry.name.startsWith('.')) {
             return;
         }
         const fullPath = path.join(dir, entry.name);
         if (entry.isDirectory()) {
-            if (isExcludedDirectory(fullPath, entry.name, rootDir, includeGenerated)) {
+            if ((this.isExcludedDirectory || exportedService.isExcludedDirectory).call(this, fullPath, entry.name, rootDir, includeGenerated)) {
                 return;
             }
             if (!includeTests && entry.name === 'test') {
                 return;
             }
-            walk(fullPath, files, includeTests, includeGenerated, rootDir);
+            (this.walk || exportedService.walk).call(this, fullPath, files, includeTests, includeGenerated, rootDir);
             return;
         }
         if (entry.isFile() && entry.name.endsWith('.js')) {
             files.push(fullPath);
         }
     });
-}
+},
 
-function pathParts(filePath, coverageRootDir) {
-    return relative(filePath, coverageRootDir).split(path.sep);
-}
+    /** Implements pathParts as an overrideable service operation. */
+    pathParts: function (filePath, coverageRootDir) {
+    return (this.relative || exportedService.relative).call(this, filePath, coverageRootDir).split(path.sep);
+},
 
-function getModuleName(filePath, coverageRootDir) {
-    const parts = pathParts(filePath, coverageRootDir);
+    /** Implements getModuleName as an overrideable service operation. */
+    getModuleName: function (filePath, coverageRootDir) {
+    const parts = (this.pathParts || exportedService.pathParts).call(this, filePath, coverageRootDir);
     if (parts.length < 2) {
         return '';
     }
@@ -118,10 +130,11 @@ function getModuleName(filePath, coverageRootDir) {
         return parts[1];
     }
     return parts[0];
-}
+},
 
-function getLayer(filePath, coverageRootDir) {
-    const parts = pathParts(filePath, coverageRootDir);
+    /** Implements getLayer as an overrideable service operation. */
+    getLayer: function (filePath, coverageRootDir) {
+    const parts = (this.pathParts || exportedService.pathParts).call(this, filePath, coverageRootDir);
     const srcIndex = parts.indexOf('src');
     if (srcIndex >= 0 && parts[srcIndex + 1]) {
         return parts[srcIndex + 1];
@@ -139,9 +152,10 @@ function getLayer(filePath, coverageRootDir) {
         return 'module';
     }
     return 'unknown';
-}
+},
 
-function isFrameworkCoreModule(moduleName) {
+    /** Implements isFrameworkCoreModule as an overrideable service operation. */
+    isFrameworkCoreModule: function (moduleName) {
     return [
         'nConfig',
         'nCommon',
@@ -150,10 +164,11 @@ function isFrameworkCoreModule(moduleName) {
         'nService',
         'nPipeline'
     ].includes(moduleName);
-}
+},
 
-function isGeneratedRuntimeArtifact(filePath, coverageRootDir) {
-    const parts = pathParts(filePath, coverageRootDir);
+    /** Implements isGeneratedRuntimeArtifact as an overrideable service operation. */
+    isGeneratedRuntimeArtifact: function (filePath, coverageRootDir) {
+    const parts = (this.pathParts || exportedService.pathParts).call(this, filePath, coverageRootDir);
     const genIndex = parts.indexOf('gen');
     if (genIndex < 0 || !parts.includes('src')) {
         return false;
@@ -161,12 +176,13 @@ function isGeneratedRuntimeArtifact(filePath, coverageRootDir) {
     const srcIndex = parts.indexOf('src');
     const layer = parts[srcIndex + 1];
     return ['service', 'facade', 'controller'].includes(layer) && parts[genIndex - 1] === layer;
-}
+},
 
-function matchesScope(filePath, options) {
-    const parts = pathParts(filePath, options.rootDir);
-    const layer = getLayer(filePath, options.rootDir);
-    const moduleName = getModuleName(filePath, options.rootDir);
+    /** Implements matchesScope as an overrideable service operation. */
+    matchesScope: function (filePath, options) {
+    const parts = (this.pathParts || exportedService.pathParts).call(this, filePath, options.rootDir);
+    const layer = (this.getLayer || exportedService.getLayer).call(this, filePath, options.rootDir);
+    const moduleName = (this.getModuleName || exportedService.getModuleName).call(this, filePath, options.rootDir);
 
     if (options.moduleFilter.length > 0 && !options.moduleFilter.includes(moduleName)) {
         return false;
@@ -188,15 +204,16 @@ function matchesScope(filePath, options) {
         return (parts.includes('src') && contractLayers.has(layer)) || layer === 'config' || layer === 'module';
     }
     if (options.scope === 'framework-core') {
-        return isFrameworkCoreModule(moduleName) && parts.includes('src') && runtimeLayers.has(layer);
+        return (this.isFrameworkCoreModule || exportedService.isFrameworkCoreModule).call(this, moduleName) && parts.includes('src') && runtimeLayers.has(layer);
     }
     if (options.scope === 'generated') {
-        return isGeneratedRuntimeArtifact(filePath, options.rootDir);
+        return (this.isGeneratedRuntimeArtifact || exportedService.isGeneratedRuntimeArtifact).call(this, filePath, options.rootDir);
     }
     throw new Error('Unknown documentation coverage scope: ' + options.scope);
-}
+},
 
-function hasModuleDocumentation(content) {
+    /** Implements hasModuleDocumentation as an overrideable service operation. */
+    hasModuleDocumentation: function (content) {
     const exportIndex = content.indexOf('module.exports');
     if (exportIndex < 0) {
         return true;
@@ -204,9 +221,10 @@ function hasModuleDocumentation(content) {
     const beforeExport = content.slice(0, exportIndex);
     const docBlocks = beforeExport.match(/\/\*\*[\s\S]*?\*\//g) || [];
     return docBlocks.some(block => block.includes('@module') || block.includes('@description'));
-}
+},
 
-function hasGeneratedDocumentation(content) {
+    /** Implements hasGeneratedDocumentation as an overrideable service operation. */
+    hasGeneratedDocumentation: function (content) {
     const exportIndex = content.indexOf('module.exports');
     const header = exportIndex >= 0 ? content.slice(0, exportIndex) : content;
     return header.includes('@generated') &&
@@ -214,21 +232,23 @@ function hasGeneratedDocumentation(content) {
         header.includes('@sourceTemplate') &&
         header.includes('@schema') &&
         header.includes('@override');
-}
+},
 
-function maskComments(content) {
+    /** Implements maskComments as an overrideable service operation. */
+    maskComments: function (content) {
     return content.replace(/\/\*[\s\S]*?\*\//g, match => ' '.repeat(match.length))
         .replace(/\/\/[^\n\r]*/g, match => ' '.repeat(match.length));
-}
+},
 
-function findExportedMethods(content) {
+    /** Implements findExportedMethods as an overrideable service operation. */
+    findExportedMethods: function (content) {
     const methods = [];
     const exportIndex = content.indexOf('module.exports');
     if (exportIndex < 0) {
         return methods;
     }
 
-    const scanContent = maskComments(content);
+    const scanContent = (this.maskComments || exportedService.maskComments).call(this, content);
     const methodPattern = /(?:^|\n)(\s*)([A-Za-z_$][\w$]*)\s*:\s*(?:async\s+)?function\s*\(/g;
     let match;
     while ((match = methodPattern.exec(scanContent)) !== null) {
@@ -238,9 +258,10 @@ function findExportedMethods(content) {
         });
     }
     return methods;
-}
+},
 
-function hasMethodDocumentation(content, methodIndex) {
+    /** Implements hasMethodDocumentation as an overrideable service operation. */
+    hasMethodDocumentation: function (content, methodIndex) {
     const beforeMethod = content.slice(Math.max(0, methodIndex - 2000), methodIndex);
     const lastDocStart = beforeMethod.lastIndexOf('/**');
     const lastDocEnd = beforeMethod.lastIndexOf('*/');
@@ -249,30 +270,33 @@ function hasMethodDocumentation(content, methodIndex) {
     }
     const betweenDocAndMethod = beforeMethod.slice(lastDocEnd + 2).trim();
     return betweenDocAndMethod.length === 0;
-}
+},
 
-function relative(filePath, coverageRootDir) {
+    /** Implements relative as an overrideable service operation. */
+    relative: function (filePath, coverageRootDir) {
     return path.relative(coverageRootDir || frameworkRootDir, filePath);
-}
+},
 
-function createOptions(args) {
+    /** Implements createOptions as an overrideable service operation. */
+    createOptions: function (args) {
     args = args || [];
-    const configuredHome = readOption(args, '--home', process.env.NODICS_HOME || '');
+    const configuredHome = (this.readOption || exportedService.readOption).call(this, args, '--home', process.env.NODICS_HOME || '');
     return {
         rootDir: configuredHome ? path.resolve(configuredHome) : process.cwd(),
         failOnMissing: args.includes('--fail'),
         includeTests: args.includes('--include-tests'),
-        includeGenerated: args.includes('--include-generated') || readOption(args, '--scope', 'all') === 'generated',
-        scope: readOption(args, '--scope', 'all'),
-        moduleFilter: readCsvOption(args, '--module'),
-        layerFilter: readCsvOption(args, '--layer'),
-        reportLimit: Number(readOption(args, '--limit', '80'))
+        includeGenerated: args.includes('--include-generated') || (this.readOption || exportedService.readOption).call(this, args, '--scope', 'all') === 'generated',
+        scope: (this.readOption || exportedService.readOption).call(this, args, '--scope', 'all'),
+        moduleFilter: (this.readCsvOption || exportedService.readCsvOption).call(this, args, '--module'),
+        layerFilter: (this.readCsvOption || exportedService.readCsvOption).call(this, args, '--layer'),
+        reportLimit: Number((this.readOption || exportedService.readOption).call(this, args, '--limit', '80'))
     };
-}
+},
 
-function collectCoverage(options) {
+    /** Implements collectCoverage as an overrideable service operation. */
+    collectCoverage: function (options) {
     const files = [];
-    walk(options.rootDir, files, options.includeTests, options.includeGenerated, options.rootDir);
+    (this.walk || exportedService.walk).call(this, options.rootDir, files, options.includeTests, options.includeGenerated, options.rootDir);
 
     const report = {
         scope: options.scope,
@@ -285,7 +309,7 @@ function collectCoverage(options) {
     };
 
     files.forEach(filePath => {
-        if (!matchesScope(filePath, options)) {
+        if (!(this.matchesScope || exportedService.matchesScope).call(this, filePath, options)) {
             return;
         }
         const content = fs.readFileSync(filePath, 'utf8');
@@ -295,27 +319,28 @@ function collectCoverage(options) {
 
         report.filesChecked += 1;
         if (options.scope === 'generated') {
-            if (!hasGeneratedDocumentation(content)) {
-                report.filesMissingModuleDocs.push(relative(filePath, options.rootDir));
+            if (!(this.hasGeneratedDocumentation || exportedService.hasGeneratedDocumentation).call(this, content)) {
+                report.filesMissingModuleDocs.push((this.relative || exportedService.relative).call(this, filePath, options.rootDir));
             }
             return;
         }
-        if (!hasModuleDocumentation(content)) {
-            report.filesMissingModuleDocs.push(relative(filePath, options.rootDir));
+        if (!(this.hasModuleDocumentation || exportedService.hasModuleDocumentation).call(this, content)) {
+            report.filesMissingModuleDocs.push((this.relative || exportedService.relative).call(this, filePath, options.rootDir));
         }
 
-        findExportedMethods(content).forEach(method => {
+        (this.findExportedMethods || exportedService.findExportedMethods).call(this, content).forEach(method => {
             report.methodsChecked += 1;
-            if (!hasMethodDocumentation(content, method.index)) {
-                report.methodsMissingDocs.push(relative(filePath, options.rootDir) + '#' + method.name);
+            if (!(this.hasMethodDocumentation || exportedService.hasMethodDocumentation).call(this, content, method.index)) {
+                report.methodsMissingDocs.push((this.relative || exportedService.relative).call(this, filePath, options.rootDir) + '#' + method.name);
             }
         });
     });
 
     return report;
-}
+},
 
-function printReport(report, reportLimit) {
+    /** Implements printReport as an overrideable service operation. */
+    printReport: function (report, reportLimit) {
     console.log('Nodics documentation coverage');
     console.log('Scope                      : ' + report.scope);
     if (report.moduleFilter.length > 0) {
@@ -344,29 +369,24 @@ function printReport(report, reportLimit) {
             console.log('  ... ' + (report.methodsMissingDocs.length - reportLimit) + ' more');
         }
     }
-}
+},
 
-function hasMissingDocumentation(report) {
+    /** Implements hasMissingDocumentation as an overrideable service operation. */
+    hasMissingDocumentation: function (report) {
     return report.filesMissingModuleDocs.length > 0 || report.methodsMissingDocs.length > 0;
-}
+},
 
-function runCli(args) {
-    const options = createOptions(args);
-    const report = collectCoverage(options);
-    printReport(report, options.reportLimit);
-    if (options.failOnMissing && hasMissingDocumentation(report)) {
+    /** Implements runCli as an overrideable service operation. */
+    runCli: function (args) {
+    const options = (this.createOptions || exportedService.createOptions).call(this, args);
+    const report = (this.collectCoverage || exportedService.collectCoverage).call(this, options);
+    (this.printReport || exportedService.printReport).call(this, report, options.reportLimit);
+    if (options.failOnMissing && (this.hasMissingDocumentation || exportedService.hasMissingDocumentation).call(this, report)) {
         process.exitCode = 1;
     }
 }
+};
 
 if (require.main === module) {
-    runCli(process.argv.slice(2));
+    exportedService.runCli(process.argv.slice(2));
 }
-
-module.exports = {
-    collectCoverage: collectCoverage,
-    createOptions: createOptions,
-    hasMissingDocumentation: hasMissingDocumentation,
-    printReport: printReport,
-    runCli: runCli
-};

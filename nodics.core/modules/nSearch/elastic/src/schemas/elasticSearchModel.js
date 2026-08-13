@@ -11,7 +11,20 @@
 
 const _ = require('lodash');
 
-function invokeClient(target, method, parameters) {
+
+/**
+ * @module nodics.core/modules/nSearch/elastic/src/schemas/elasticSearchModel
+ * @description Defines nSearch schema metadata, model contracts, and generated capability settings.
+ * @layer schemas
+ * @owner nSearch
+ * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
+ */
+module.exports = {
+    default: {
+        /**
+         * Invokes promise-based and callback-based search client operations.
+         */
+        invokeClient: function (target, method, parameters) {
     if (target[method].constructor.name === 'AsyncFunction') {
         try {
             return Promise.resolve(target[method](parameters));
@@ -25,38 +38,11 @@ function invokeClient(target, method, parameters) {
             else resolve(response);
         });
     });
-}
-
-/**
- * @module nodics.core/modules/nSearch/elastic/src/schemas/elasticSearchModel
- * @description Defines nSearch schema metadata, model contracts, and generated capability settings.
- * @layer schemas
- * @owner nSearch
- * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
- */
-module.exports = {
-    /*
-        Default object which available in this class
-        - moduleName: moduleName,
-        - tntCode: tntCode,
-        - searchEngine: searchEngine,
-        - typeName: typeName,
-        - indexDef: indexDef
-    */
-    default: {
+},
 
         /**
-
-         * Executes define default do create index behavior.
-
-         *
-
-         * @param {*} searchModel Method input.
-
-         * @returns {*} Method result.
-
+         * Installs the default index creation operation.
          */
-
         defineDefaultDoCreateIndex: function (searchModel) { //Required pipeline to process this request
             searchModel.doCreateIndex = function (input) {
                 let _self = this;
@@ -68,7 +54,8 @@ module.exports = {
                             index: _self.indexDef.indexName.toLowerCase()
                         });
                         _self.LOG.debug('Creating index for indexName: ' + _self.indexDef.indexName.toLowerCase());
-                        invokeClient(_self.searchEngine.getConnection().indices, 'create', indexQuery)
+                        (searchModel.invokeClient || module.exports.default.invokeClient)
+                            .call(searchModel, _self.searchEngine.getConnection().indices, 'create', indexQuery)
                             .then(resolve).catch(reject);
                     } catch (error) {
                         reject(error);
@@ -78,17 +65,8 @@ module.exports = {
         },
 
         /**
-
-         * Executes define default do refresh behavior.
-
-         *
-
-         * @param {*} searchModel Method input.
-
-         * @returns {*} Method result.
-
+         * Installs the default index refresh operation.
          */
-
         defineDefaultDoRefresh: function (searchModel) { //Required pipeline to process this request
             searchModel.doRefresh = function (input) {
                 let _self = this;
@@ -101,7 +79,8 @@ module.exports = {
                         });
                         _self.LOG.debug('Executing refresh command with options:');
                         _self.LOG.debug(refreshQuery);
-                        invokeClient(_self.searchEngine.getConnection().indices, 'refresh', refreshQuery)
+                        (searchModel.invokeClient || module.exports.default.invokeClient)
+                            .call(searchModel, _self.searchEngine.getConnection().indices, 'refresh', refreshQuery)
                             .then(resolve).catch(reject);
                     } catch (error) {
                         reject(error);
@@ -111,17 +90,8 @@ module.exports = {
         },
 
         /**
-
-         * Executes define default do check health behavior.
-
-         *
-
-         * @param {*} searchModel Method input.
-
-         * @returns {*} Method result.
-
+         * Installs the default index health operation.
          */
-
         defineDefaultDoCheckHealth: function (searchModel) {
             searchModel.doCheckHealth = function (input) {
                 let _self = this;
@@ -134,7 +104,8 @@ module.exports = {
                         });
                         _self.LOG.debug('Executing health command with options');
                         _self.LOG.debug(healthCheckQuery);
-                        invokeClient(_self.searchEngine.getConnection().cluster, 'health', healthCheckQuery)
+                        (searchModel.invokeClient || module.exports.default.invokeClient)
+                            .call(searchModel, _self.searchEngine.getConnection().cluster, 'health', healthCheckQuery)
                             .then(resolve).catch(reject);
                     } catch (error) {
                         reject(error);
@@ -144,17 +115,8 @@ module.exports = {
         },
 
         /**
-
-         * Executes define default do exists behavior.
-
-         *
-
-         * @param {*} searchModel Method input.
-
-         * @returns {*} Method result.
-
+         * Installs the default document existence operation.
          */
-
         defineDefaultDoExists: function (searchModel) {
             searchModel.doExists = function (input) {
                 let _self = this;
@@ -185,11 +147,9 @@ module.exports = {
                 });
             };
         },
+
         /**
-         * Executes define default do get behavior.
-         *
-         * @param {*} searchModel Method input.
-         * @returns {*} Method result.
+         * Installs the default document retrieval operation.
          */
         defineDefaultDoGet: function (searchModel) {
             searchModel.doGet = function (input) { //Required pipeline to process this request
@@ -221,17 +181,8 @@ module.exports = {
         },
 
         /**
-
-         * Executes define default do search behavior.
-
-         *
-
-         * @param {*} searchModel Method input.
-
-         * @returns {*} Method result.
-
+         * Installs the default document search operation.
          */
-
         defineDefaultDoSearch: function (searchModel) { //Required pipeline to process this request
             searchModel.doSearch = function (input) {
                 let _self = this;
@@ -288,7 +239,8 @@ module.exports = {
                         }
                         _self.LOG.debug('Executing search command with options');
                         _self.LOG.debug(searchQuery);
-                        invokeClient(_self.searchEngine.getConnection(), 'search', searchQuery)
+                        (searchModel.invokeClient || module.exports.default.invokeClient)
+                            .call(searchModel, _self.searchEngine.getConnection(), 'search', searchQuery)
                             .then(resolve).catch(reject);
                     } catch (error) {
                         reject(error);
@@ -298,17 +250,8 @@ module.exports = {
         },
 
         /**
-
-         * Executes define default do save behavior.
-
-         *
-
-         * @param {*} searchModel Method input.
-
-         * @returns {*} Method result.
-
+         * Installs the default document save operation.
          */
-
         defineDefaultDoSave: function (searchModel) {
             searchModel.doSave = function (input) {
                 let _self = this;
@@ -325,7 +268,8 @@ module.exports = {
                         }
                         _self.LOG.debug('Executing save command with options');
                         _self.LOG.debug(putQuery);
-                        invokeClient(_self.searchEngine.getConnection(), 'index', putQuery)
+                        (searchModel.invokeClient || module.exports.default.invokeClient)
+                            .call(searchModel, _self.searchEngine.getConnection(), 'index', putQuery)
                             .then(resolve).catch(reject);
                     } catch (error) {
                         reject(error);
@@ -335,17 +279,8 @@ module.exports = {
         },
 
         /**
-
-         * Executes define default do bulk behavior.
-
-         *
-
-         * @param {*} searchModel Method input.
-
-         * @returns {*} Method result.
-
+         * Installs the default bulk operation.
          */
-
         defineDefaultDoBulk: function (searchModel) { //Required pipeline to process this request
             searchModel.doBulk = function (input) {
                 let _self = this;
@@ -372,17 +307,8 @@ module.exports = {
         },
 
         /**
-
-         * Executes define default do update behavior.
-
-         *
-
-         * @param {*} searchModel Method input.
-
-         * @returns {*} Method result.
-
+         * Installs the default document update operation.
          */
-
         defineDefaultDoUpdate: function (searchModel) {
             searchModel.doUpdate = function (input) {
                 let _self = this;
@@ -409,17 +335,8 @@ module.exports = {
         },
 
         /**
-
-         * Executes define default do remove behavior.
-
-         *
-
-         * @param {*} searchModel Method input.
-
-         * @returns {*} Method result.
-
+         * Installs the default document removal operation.
          */
-
         defineDefaultDoRemove: function (searchModel) { //Required pipeline to process this request
             searchModel.doRemove = function (input) {
                 let _self = this;
@@ -449,17 +366,8 @@ module.exports = {
         },
 
         /**
-
-         * Executes define default do remove by query behavior.
-
-         *
-
-         * @param {*} searchModel Method input.
-
-         * @returns {*} Method result.
-
+         * Installs the default query-based removal operation.
          */
-
         defineDefaultDoRemoveByQuery: function (searchModel) { //Required pipeline to process this request
             searchModel.doRemoveByQuery = function (input) {
                 let _self = this;
@@ -491,17 +399,8 @@ module.exports = {
         },
 
         /**
-
-         * Executes define default get schema behavior.
-
-         *
-
-         * @param {*} searchModel Method input.
-
-         * @returns {*} Method result.
-
+         * Installs the default mapping retrieval operation.
          */
-
         defineDefaultGetSchema: function (searchModel) {  //Required pipeline to process this request
             searchModel.doGetSchema = function (input) {
                 let _self = this;
@@ -512,7 +411,8 @@ module.exports = {
                         schemaQuery = _.merge(schemaQuery, {
                             index: _self.indexDef.indexName.toLowerCase()
                         });
-                        invokeClient(_self.searchEngine.getConnection().indices, 'getMapping', schemaQuery)
+                        (searchModel.invokeClient || module.exports.default.invokeClient)
+                            .call(searchModel, _self.searchEngine.getConnection().indices, 'getMapping', schemaQuery)
                             .then(resolve).catch(reject);
                     } catch (error) {
                         reject(error);
@@ -522,17 +422,8 @@ module.exports = {
         },
 
         /**
-
-         * Executes define default update schema behavior.
-
-         *
-
-         * @param {*} searchModel Method input.
-
-         * @returns {*} Method result.
-
+         * Installs the default mapping update operation.
          */
-
         defineDefaultUpdateSchema: function (searchModel) { //Required pipeline to process this request
             searchModel.doUpdateSchema = function (input) {
                 let _self = this;
@@ -544,7 +435,8 @@ module.exports = {
                             index: _self.indexDef.indexName.toLowerCase(),
                             properties: input.searchSchema.properties
                         });
-                        invokeClient(_self.searchEngine.getConnection().indices, 'putMapping', schemaQuery)
+                        (searchModel.invokeClient || module.exports.default.invokeClient)
+                            .call(searchModel, _self.searchEngine.getConnection().indices, 'putMapping', schemaQuery)
                             .then(resolve).catch(reject);
                     } catch (error) {
                         reject(error);
@@ -554,17 +446,8 @@ module.exports = {
         },
 
         /**
-
-         * Executes define default remove index behavior.
-
-         *
-
-         * @param {*} searchModel Method input.
-
-         * @returns {*} Method result.
-
+         * Installs the default index removal operation.
          */
-
         defineDefaultRemoveIndex: function (searchModel) {
             searchModel.doRemoveIndex = function (input) {
                 let _self = this;

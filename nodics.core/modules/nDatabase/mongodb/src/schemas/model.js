@@ -11,39 +11,6 @@
 
 const _ = require('lodash');
 
-function transactionOptions(input, schemaModel) {
-    if (typeof SERVICE === 'undefined' || !SERVICE.DefaultDatabaseTransactionService) {
-        return {};
-    }
-    return SERVICE.DefaultDatabaseTransactionService.operationOptions(
-        input.transactionContext, schemaModel.dataBase, schemaModel
-    );
-}
-
-function isMongoUpdateOperatorPayload(model) {
-    return model && Object.keys(model).some(key => key.indexOf('$') === 0);
-}
-
-function buildUpdateDocument(model) {
-    if (!isMongoUpdateOperatorPayload(model)) return { $set: model };
-    return Object.keys(model).reduce((updateDocument, key) => {
-        if (key.indexOf('$') === 0) {
-            updateDocument[key] = key === '$set'
-                ? Object.assign({}, updateDocument[key] || {}, model[key] || {})
-                : model[key];
-        } else {
-            updateDocument.$set = Object.assign({}, updateDocument.$set || {}, { [key]: model[key] });
-        }
-        return updateDocument;
-    }, {});
-}
-
-function mergeUpdatedSnapshot(snapshot, model) {
-    if (!isMongoUpdateOperatorPayload(model)) return _.merge(snapshot, model);
-    if (model.$set) _.merge(snapshot, model.$set);
-    if (model.$unset) Object.keys(model.$unset).forEach(key => _.unset(snapshot, key));
-    return snapshot;
-}
 
 /**
  * @module nodics.core/modules/nDatabase/mongodb/src/schemas/model
@@ -55,15 +22,58 @@ function mergeUpdatedSnapshot(snapshot, model) {
 module.exports = {
     default: {
         /**
-         * Retrieves items information.
-         *
-         * @param {*} input Method input.
-         * @returns {*} Method result.
+         * Builds transaction-aware MongoDB operation options.
+         */
+        transactionOptions: function (input, schemaModel) {
+    if (typeof SERVICE === 'undefined' || !SERVICE.DefaultDatabaseTransactionService) {
+        return {};
+    }
+    return SERVICE.DefaultDatabaseTransactionService.operationOptions(
+        input.transactionContext, schemaModel.dataBase, schemaModel
+    );
+},
+
+        /**
+         * Determines whether a model contains MongoDB update operators.
+         */
+        isMongoUpdateOperatorPayload: function (model) {
+    return model && Object.keys(model).some(key => key.indexOf('$') === 0);
+},
+
+        /**
+         * Builds the MongoDB update document for a model payload.
+         */
+        buildUpdateDocument: function (model) {
+    if (!this.isMongoUpdateOperatorPayload(model)) return { $set: model };
+    return Object.keys(model).reduce((updateDocument, key) => {
+        if (key.indexOf('$') === 0) {
+            updateDocument[key] = key === '$set'
+                ? Object.assign({}, updateDocument[key] || {}, model[key] || {})
+                : model[key];
+        } else {
+            updateDocument.$set = Object.assign({}, updateDocument.$set || {}, { [key]: model[key] });
+        }
+        return updateDocument;
+    }, {});
+},
+
+        /**
+         * Applies an update payload to a returned model snapshot.
+         */
+        mergeUpdatedSnapshot: function (snapshot, model) {
+    if (!this.isMongoUpdateOperatorPayload(model)) return _.merge(snapshot, model);
+    if (model.$set) _.merge(snapshot, model.$set);
+    if (model.$unset) Object.keys(model.$unset).forEach(key => _.unset(snapshot, key));
+    return snapshot;
+},
+
+        /**
+         * Retrieves models matching the requested MongoDB query.
          */
         getItems: function (input) {
             return new Promise((resolve, reject) => {
                 try {
-                    let operationOptions = transactionOptions(input, this);
+                    let operationOptions = this.transactionOptions(input, this);
                     let cursor = this.find(input.query, Object.assign({}, input.searchOptions || {}, operationOptions));
                     if (input.searchOptions && input.searchOptions.sort && !UTILS.isBlank(input.searchOptions.sort)) {
                         cursor = cursor.sort(input.searchOptions.sort);
@@ -106,20 +116,11 @@ module.exports = {
         },
 
         /**
-
-         * Updates items information.
-
-         *
-
-         * @param {*} input Method input.
-
-         * @returns {*} Method result.
-
+         * Creates or upserts models in MongoDB.
          */
-
         saveItems: function (input) {
             return new Promise((resolve, reject) => {
-                let operationOptions = transactionOptions(input, this);
+                let operationOptions = this.transactionOptions(input, this);
                 if (!input.model) {
                     reject(new CLASSES.NodicsError('ERR_MDL_00001'));
                 } else if (input.query && !UTILS.isBlank(input.query)) {
@@ -177,20 +178,11 @@ module.exports = {
         },
 
         /**
-
-         * Updates items information.
-
-         *
-
-         * @param {*} input Method input.
-
-         * @returns {*} Method result.
-
+         * Updates models matching the requested MongoDB query.
          */
-
         updateItems: function (input) {
             return new Promise((resolve, reject) => {
-                let operationOptions = transactionOptions(input, this);
+                let operationOptions = this.transactionOptions(input, this);
                 if (!input.model) {
                     reject(new CLASSES.NodicsError('ERR_MDL_00003'));
                 } else if (!input.query || UTILS.isBlank(input.query)) {
@@ -202,12 +194,12 @@ module.exports = {
                             if (error) {
                                 reject(new CLASSES.NodicsError(error, null, 'ERR_MDL_00000'));
                             } else {
-                                this.updateMany(input.query, buildUpdateDocument(input.model), Object.assign({}, this.dataBase.getOptions().modelUpdateOptions || {
+                                this.updateMany(input.query, this.buildUpdateDocument(input.model), Object.assign({}, this.dataBase.getOptions().modelUpdateOptions || {
                                     upsert: false,
                                     returnNewDocument: true
                                 }, operationOptions)).then(success => {
                                     response.forEach(element => {
-                                        mergeUpdatedSnapshot(element, input.model);
+                                        this.mergeUpdatedSnapshot(element, input.model);
                                     });
                                     success.models = response;
                                     resolve(success);
@@ -219,7 +211,7 @@ module.exports = {
                             }
                         });
                     } else {
-                        this.updateMany(input.query, buildUpdateDocument(input.model), Object.assign({}, this.dataBase.getOptions().modelUpdateOptions || {
+                        this.updateMany(input.query, this.buildUpdateDocument(input.model), Object.assign({}, this.dataBase.getOptions().modelUpdateOptions || {
                             upsert: false,
                             returnNewDocument: true
                         }, operationOptions)).then(success => {
@@ -235,20 +227,11 @@ module.exports = {
         },
 
         /**
-
-         * Removes or clears items information.
-
-         *
-
-         * @param {*} input Method input.
-
-         * @returns {*} Method result.
-
+         * Removes models matching the requested MongoDB query.
          */
-
         removeItems: function (input) {
             return new Promise((resolve, reject) => {
-                let operationOptions = transactionOptions(input, this);
+                let operationOptions = this.transactionOptions(input, this);
                 if (input.query && !UTILS.isBlank(input.query)) {
                     if (input.options && input.options.returnModified) {
                         this.find(input.query, Object.assign({}, input.searchOptions || {},

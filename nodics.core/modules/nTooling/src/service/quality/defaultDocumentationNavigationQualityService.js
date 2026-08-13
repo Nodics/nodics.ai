@@ -22,11 +22,16 @@ const path = require('path');
 
 const ignoredDirectories = new Set(['.git', 'node_modules', 'docs', 'gen', 'generated']);
 
-function toPosix(filePath) {
-    return filePath.split(path.sep).join('/');
-}
 
-function walkFiles(rootDir, currentDir, predicate, files) {
+let exportedService;
+module.exports = exportedService = {
+    /** Implements toPosix as an overrideable service operation. */
+    toPosix: function (filePath) {
+    return filePath.split(path.sep).join('/');
+},
+
+    /** Implements walkFiles as an overrideable service operation. */
+    walkFiles: function (rootDir, currentDir, predicate, files) {
     files = files || [];
     fs.readdirSync(currentDir, { withFileTypes: true }).forEach(entry => {
         if (entry.isDirectory() && ignoredDirectories.has(entry.name)) {
@@ -34,15 +39,16 @@ function walkFiles(rootDir, currentDir, predicate, files) {
         }
         const fullPath = path.join(currentDir, entry.name);
         if (entry.isDirectory()) {
-            walkFiles(rootDir, fullPath, predicate, files);
+            (this.walkFiles || exportedService.walkFiles).call(this, rootDir, fullPath, predicate, files);
         } else if (predicate(fullPath)) {
-            files.push(toPosix(path.relative(rootDir, fullPath)));
+            files.push((this.toPosix || exportedService.toPosix).call(this, path.relative(rootDir, fullPath)));
         }
     });
     return files;
-}
+},
 
-function extractLocalMarkdownLinks(content) {
+    /** Implements extractLocalMarkdownLinks as an overrideable service operation. */
+    extractLocalMarkdownLinks: function (content) {
     const links = [];
     const pattern = /(?<!!)\[[^\]]*\]\(([^)]+)\)/g;
     let match;
@@ -53,10 +59,11 @@ function extractLocalMarkdownLinks(content) {
         }
     }
     return links;
-}
+},
 
-function hasExactPathCase(rootDir, relativePath) {
-    const parts = toPosix(relativePath).split('/').filter(Boolean);
+    /** Implements hasExactPathCase as an overrideable service operation. */
+    hasExactPathCase: function (rootDir, relativePath) {
+    const parts = (this.toPosix || exportedService.toPosix).call(this, relativePath).split('/').filter(Boolean);
     let current = rootDir;
     for (const part of parts) {
         if (!fs.existsSync(current) || !fs.statSync(current).isDirectory()) {
@@ -68,27 +75,30 @@ function hasExactPathCase(rootDir, relativePath) {
         current = path.join(current, part);
     }
     return true;
-}
+},
 
-function resolveTarget(source, link) {
-    return toPosix(path.normalize(path.join(path.dirname(source), link)));
-}
+    /** Implements resolveTarget as an overrideable service operation. */
+    resolveTarget: function (source, link) {
+    return (this.toPosix || exportedService.toPosix).call(this, path.normalize(path.join(path.dirname(source), link)));
+},
 
-function collectPackageReadmes(rootDir) {
-    return walkFiles(rootDir, rootDir, filePath => path.basename(filePath) === 'package.json')
+    /** Implements collectPackageReadmes as an overrideable service operation. */
+    collectPackageReadmes: function (rootDir) {
+    return (this.walkFiles || exportedService.walkFiles).call(this, rootDir, rootDir, filePath => path.basename(filePath) === 'package.json')
         .filter(packagePath => packagePath !== 'package.json')
-        .map(packagePath => toPosix(path.join(path.dirname(packagePath), 'README.md')))
+        .map(packagePath => (this.toPosix || exportedService.toPosix).call(this, path.join(path.dirname(packagePath), 'README.md')))
         .filter(readmePath => fs.existsSync(path.join(rootDir, readmePath)))
         .sort();
-}
+},
 
-function collectNavigationReport(rootDir, policy) {
+    /** Implements collectNavigationReport as an overrideable service operation. */
+    collectNavigationReport: function (rootDir, policy) {
     if (policy && policy.enabled === false) {
         return {
             disabled: true,
             markdownFiles: 0,
             publicPages: 0,
-            packageReadmes: collectPackageReadmes(rootDir).length,
+            packageReadmes: (this.collectPackageReadmes || exportedService.collectPackageReadmes).call(this, rootDir).length,
             brokenLinks: [],
             caseMismatches: [],
             unreachablePages: [],
@@ -102,7 +112,7 @@ function collectNavigationReport(rootDir, policy) {
     const publicIndex = policy.publicIndex || 'publicDocs/README.md';
     const moduleCatalog = policy.moduleCatalog || 'publicDocs/reference/standards/module-catalog.md';
     const excluded = new Set(policy.excludedPublicPages || []);
-    const markdownFiles = [entryPoint].concat(walkFiles(
+    const markdownFiles = [entryPoint].concat((this.walkFiles || exportedService.walkFiles).call(this,
         rootDir,
         path.join(rootDir, publicRoot),
         filePath => filePath.endsWith('.md')
@@ -113,16 +123,16 @@ function collectNavigationReport(rootDir, policy) {
 
     markdownFiles.forEach(source => {
         const content = fs.readFileSync(path.join(rootDir, source), 'utf8');
-        const targets = extractLocalMarkdownLinks(content).map(link => ({
+        const targets = (this.extractLocalMarkdownLinks || exportedService.extractLocalMarkdownLinks).call(this, content).map(link => ({
             link,
-            target: resolveTarget(source, link)
+            target: (this.resolveTarget || exportedService.resolveTarget).call(this, source, link)
         }));
         graph.set(source, targets.map(item => item.target));
         targets.forEach(item => {
             const fullTarget = path.join(rootDir, item.target);
             if (!fs.existsSync(fullTarget)) {
                 brokenLinks.push({ source, target: item.link });
-            } else if (!hasExactPathCase(rootDir, item.target)) {
+            } else if (!(this.hasExactPathCase || exportedService.hasExactPathCase).call(this, rootDir, item.target)) {
                 caseMismatches.push({ source, target: item.link });
             }
         });
@@ -149,13 +159,13 @@ function collectNavigationReport(rootDir, policy) {
 
     const catalogContent = fs.existsSync(path.join(rootDir, moduleCatalog)) ?
         fs.readFileSync(path.join(rootDir, moduleCatalog), 'utf8') : '';
-    const catalogTargets = new Set(extractLocalMarkdownLinks(catalogContent).map(link => resolveTarget(moduleCatalog, link)));
-    const missingModuleReadmes = collectPackageReadmes(rootDir).filter(readmePath => !catalogTargets.has(readmePath));
+    const catalogTargets = new Set((this.extractLocalMarkdownLinks || exportedService.extractLocalMarkdownLinks).call(this, catalogContent).map(link => this.resolveTarget(moduleCatalog, link)));
+    const missingModuleReadmes = (this.collectPackageReadmes || exportedService.collectPackageReadmes).call(this, rootDir).filter(readmePath => !catalogTargets.has(readmePath));
 
     return {
         markdownFiles: markdownFiles.length,
         publicPages: publicPages.length,
-        packageReadmes: collectPackageReadmes(rootDir).length,
+        packageReadmes: (this.collectPackageReadmes || exportedService.collectPackageReadmes).call(this, rootDir).length,
         brokenLinks,
         caseMismatches,
         unreachablePages,
@@ -163,22 +173,25 @@ function collectNavigationReport(rootDir, policy) {
         missingRequiredEntryPoints,
         missingModuleReadmes
     };
-}
+},
 
-function hasFailures(report) {
+    /** Implements hasFailures as an overrideable service operation. */
+    hasFailures: function (report) {
     return ['brokenLinks', 'caseMismatches', 'unreachablePages', 'deadEndPages',
         'missingRequiredEntryPoints', 'missingModuleReadmes'].some(key => report[key].length > 0);
-}
+},
 
-function printItems(label, items) {
+    /** Implements printItems as an overrideable service operation. */
+    printItems: function (label, items) {
     if (items.length === 0) {
         return;
     }
     console.error(label + ':');
     items.forEach(item => console.error('  - ' + (typeof item === 'string' ? item : item.source + ' -> ' + item.target)));
-}
+},
 
-function printReport(report) {
+    /** Implements printReport as an overrideable service operation. */
+    printReport: function (report) {
     if (report.disabled === true) {
         console.log('\nSKIPPED: public documentation navigation');
         console.log('Reason: canonical public content is governed outside this repository.');
@@ -188,18 +201,11 @@ function printReport(report) {
     console.log('Markdown entry/public files : ' + report.markdownFiles);
     console.log('Governed public pages       : ' + report.publicPages);
     console.log('Cataloged module READMEs    : ' + (report.packageReadmes - report.missingModuleReadmes.length) + '/' + report.packageReadmes);
-    printItems('Broken local links', report.brokenLinks);
-    printItems('Path-case mismatches', report.caseMismatches);
-    printItems('Unreachable public pages', report.unreachablePages);
-    printItems('Pages without Continue navigation', report.deadEndPages);
-    printItems('Missing required entry points', report.missingRequiredEntryPoints);
-    printItems('Module READMEs missing from catalog', report.missingModuleReadmes);
+    (this.printItems || exportedService.printItems).call(this, 'Broken local links', report.brokenLinks);
+    (this.printItems || exportedService.printItems).call(this, 'Path-case mismatches', report.caseMismatches);
+    (this.printItems || exportedService.printItems).call(this, 'Unreachable public pages', report.unreachablePages);
+    (this.printItems || exportedService.printItems).call(this, 'Pages without Continue navigation', report.deadEndPages);
+    (this.printItems || exportedService.printItems).call(this, 'Missing required entry points', report.missingRequiredEntryPoints);
+    (this.printItems || exportedService.printItems).call(this, 'Module READMEs missing from catalog', report.missingModuleReadmes);
 }
-
-module.exports = {
-    collectNavigationReport,
-    extractLocalMarkdownLinks,
-    hasExactPathCase,
-    hasFailures,
-    printReport
 };

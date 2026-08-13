@@ -57,9 +57,7 @@ const requiredRootFiles = [
  * @param {string} filePath Absolute or workspace-relative filesystem path.
  * @returns {string} POSIX-style path relative to the workspace root.
  */
-function toRelative(filePath) {
-    return path.relative(rootPath, filePath).split(path.sep).join('/');
-}
+
 
 /**
  * Recursively walks the workspace while skipping generated and external folders.
@@ -67,56 +65,21 @@ function toRelative(filePath) {
  * @param {string} directory Directory to scan.
  * @param {Function} visitor Function invoked for every discovered entry.
  */
-function walk(directory, visitor) {
-    if (!fs.existsSync(directory)) return;
-    fs.readdirSync(directory, { withFileTypes: true })
-        .sort((left, right) => left.name.localeCompare(right.name))
-        .forEach(entry => {
-            if (entry.isDirectory() && ignoredDirectories.has(entry.name)) return;
-            let entryPath = path.join(directory, entry.name);
-            if (entry.isDirectory() && entryPath === path.join(rootPath, 'docs')) return;
-            visitor(entryPath, entry);
-            if (entry.isDirectory()) walk(entryPath, visitor);
-        });
-}
+
 
 /**
  * Finds all package-shaped directories in the workspace.
  *
  * @returns {string[]} Package directories sorted by relative path.
  */
-function findPackageDirectories() {
-    let directories = [];
-    if (fs.existsSync(path.join(rootPath, 'package.json'))) {
-        directories.push(rootPath);
-    }
-    walk(rootPath, (entryPath, entry) => {
-        if (!entry.isDirectory()) return;
-        if (fs.existsSync(path.join(entryPath, 'package.json'))) {
-            directories.push(entryPath);
-        }
-    });
-    return Array.from(new Set(directories)).sort((left, right) => toRelative(left).localeCompare(toRelative(right)));
-}
+
 
 /**
  * Finds all AGENTS.md files governed by the workspace instruction contract.
  *
  * @returns {string[]} AGENTS.md file paths sorted by relative path.
  */
-function findAgentFiles() {
-    let files = [];
-    let rootAgents = path.join(rootPath, 'AGENTS.md');
-    if (fs.existsSync(rootAgents)) {
-        files.push(rootAgents);
-    }
-    walk(rootPath, (entryPath, entry) => {
-        if (entry.isFile() && entry.name === 'AGENTS.md') {
-            files.push(entryPath);
-        }
-    });
-    return Array.from(new Set(files)).sort((left, right) => toRelative(left).localeCompare(toRelative(right)));
-}
+
 
 /**
  * Reads a UTF-8 file when it exists.
@@ -124,10 +87,7 @@ function findAgentFiles() {
  * @param {string} relativePath Workspace-relative path.
  * @returns {string} File content or an empty string.
  */
-function readRelative(relativePath) {
-    let filePath = path.join(rootPath, relativePath);
-    return fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf8') : '';
-}
+
 
 /**
  * Resolves AGENTS.md and global guidance references from an AGENTS.md file.
@@ -135,15 +95,7 @@ function readRelative(relativePath) {
  * @param {string} filePath AGENTS.md file path.
  * @returns {{reference: string, resolvedPath: string}[]} Resolved references.
  */
-function resolveAgentReferences(filePath) {
-    let content = fs.readFileSync(filePath, 'utf8');
-    return Array.from(content.matchAll(/`([^`]*(?:AGENTS\.md|nSetup\/llm\/ai-enablement-index\.md|llm\/ai-enablement-index\.md))`/g))
-        .map(match => match[1])
-        .map(reference => ({
-            reference,
-            resolvedPath: path.resolve(path.dirname(filePath), reference)
-        }));
-}
+
 
 /**
  * Checks whether one AGENTS.md file can reach another required guidance file.
@@ -153,18 +105,7 @@ function resolveAgentReferences(filePath) {
  * @param {Set<string>} visited Already visited files.
  * @returns {boolean} True when the target is reachable.
  */
-function canReachGuidance(sourcePath, targetPath, visited = new Set()) {
-    if (sourcePath === targetPath) return true;
-    if (visited.has(sourcePath)) return false;
-    visited.add(sourcePath);
 
-    return resolveAgentReferences(sourcePath).some(resolvedReference => {
-        if (resolvedReference.resolvedPath === targetPath) return true;
-        if (!fs.existsSync(resolvedReference.resolvedPath)) return false;
-        if (path.basename(resolvedReference.resolvedPath) !== 'AGENTS.md') return false;
-        return canReachGuidance(resolvedReference.resolvedPath, targetPath, visited);
-    });
-}
 
 /**
  * Records a validation failure.
@@ -172,37 +113,153 @@ function canReachGuidance(sourcePath, targetPath, visited = new Set()) {
  * @param {string[]} failures Mutable failure list.
  * @param {string} message Failure message.
  */
-function fail(failures, message) {
-    failures.push(message);
-}
+
 
 /**
  * Validates root-level canonical AI files and bridge files.
  *
  * @param {string[]} failures Mutable failure list.
  */
-function validateRootFiles(failures) {
+
+
+/**
+ * Validates package-level AI and human documentation entrypoints.
+ *
+ * @param {string[]} failures Mutable failure list.
+ */
+
+
+/**
+ * Validates that lowercase README names are not reintroduced anywhere.
+ *
+ * @param {string[]} failures Mutable failure list.
+ */
+
+
+/**
+ * Validates AGENTS.md inheritance links and canonical AI guidance references.
+ *
+ * @param {string[]} failures Mutable failure list.
+ */
+
+
+/**
+ * Runs AI governance validation and exits with a non-zero code on failure.
+ */
+
+
+
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements toRelative as an overrideable service operation. */
+    toRelative: function (filePath) {
+    return path.relative(rootPath, filePath).split(path.sep).join('/');
+},
+
+    /** Implements walk as an overrideable service operation. */
+    walk: function (directory, visitor) {
+    if (!fs.existsSync(directory)) return;
+    fs.readdirSync(directory, { withFileTypes: true })
+        .sort((left, right) => left.name.localeCompare(right.name))
+        .forEach(entry => {
+            if (entry.isDirectory() && ignoredDirectories.has(entry.name)) return;
+            let entryPath = path.join(directory, entry.name);
+            if (entry.isDirectory() && entryPath === path.join(rootPath, 'docs')) return;
+            visitor(entryPath, entry);
+            if (entry.isDirectory()) (this.walk || exportedService.walk).call(this, entryPath, visitor);
+        });
+},
+
+    /** Implements findPackageDirectories as an overrideable service operation. */
+    findPackageDirectories: function () {
+    let directories = [];
+    if (fs.existsSync(path.join(rootPath, 'package.json'))) {
+        directories.push(rootPath);
+    }
+    (this.walk || exportedService.walk).call(this, rootPath, (entryPath, entry) => {
+        if (!entry.isDirectory()) return;
+        if (fs.existsSync(path.join(entryPath, 'package.json'))) {
+            directories.push(entryPath);
+        }
+    });
+    return Array.from(new Set(directories)).sort((left, right) => (this.toRelative || exportedService.toRelative).call(this, left).localeCompare(this.toRelative(right)));
+},
+
+    /** Implements findAgentFiles as an overrideable service operation. */
+    findAgentFiles: function () {
+    let files = [];
+    let rootAgents = path.join(rootPath, 'AGENTS.md');
+    if (fs.existsSync(rootAgents)) {
+        files.push(rootAgents);
+    }
+    (this.walk || exportedService.walk).call(this, rootPath, (entryPath, entry) => {
+        if (entry.isFile() && entry.name === 'AGENTS.md') {
+            files.push(entryPath);
+        }
+    });
+    return Array.from(new Set(files)).sort((left, right) => (this.toRelative || exportedService.toRelative).call(this, left).localeCompare(this.toRelative(right)));
+},
+
+    /** Implements readRelative as an overrideable service operation. */
+    readRelative: function (relativePath) {
+    let filePath = path.join(rootPath, relativePath);
+    return fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf8') : '';
+},
+
+    /** Implements resolveAgentReferences as an overrideable service operation. */
+    resolveAgentReferences: function (filePath) {
+    let content = fs.readFileSync(filePath, 'utf8');
+    return Array.from(content.matchAll(/`([^`]*(?:AGENTS\.md|nSetup\/llm\/ai-enablement-index\.md|llm\/ai-enablement-index\.md))`/g))
+        .map(match => match[1])
+        .map(reference => ({
+            reference,
+            resolvedPath: path.resolve(path.dirname(filePath), reference)
+        }));
+},
+
+    /** Implements canReachGuidance as an overrideable service operation. */
+    canReachGuidance: function (sourcePath, targetPath, visited = new Set()) {
+    if (sourcePath === targetPath) return true;
+    if (visited.has(sourcePath)) return false;
+    visited.add(sourcePath);
+
+    return (this.resolveAgentReferences || exportedService.resolveAgentReferences).call(this, sourcePath).some(resolvedReference => {
+        if (resolvedReference.resolvedPath === targetPath) return true;
+        if (!fs.existsSync(resolvedReference.resolvedPath)) return false;
+        if (path.basename(resolvedReference.resolvedPath) !== 'AGENTS.md') return false;
+        return (this.canReachGuidance || exportedService.canReachGuidance).call(this, resolvedReference.resolvedPath, targetPath, visited);
+    });
+},
+
+    /** Implements fail as an overrideable service operation. */
+    fail: function (failures, message) {
+    failures.push(message);
+},
+
+    /** Implements validateRootFiles as an overrideable service operation. */
+    validateRootFiles: function (failures) {
     requiredRootFiles.forEach(relativePath => {
         if (!fs.existsSync(path.join(rootPath, relativePath))) {
-            fail(failures, 'Missing AI governance file: ' + relativePath);
+            (this.fail || exportedService.fail).call(this, failures, 'Missing AI governance file: ' + relativePath);
         }
     });
     if (fs.existsSync(path.join(rootPath, 'llm'))) {
-        fail(
+        (this.fail || exportedService.fail).call(this,
             failures,
             'Repository root must not contain a parallel llm directory; global AI guidance belongs in ' +
             globalGuidanceRoot
         );
     }
     if (fs.existsSync(path.join(rootPath, 'memory'))) {
-        fail(
+        (this.fail || exportedService.fail).call(this,
             failures,
             'Repository root must not contain a parallel memory directory; curated shared memory belongs in ' +
             globalGuidanceRoot + '/memory'
         );
     }
 
-    let rootAgents = readRelative('AGENTS.md');
+    let rootAgents = (this.readRelative || exportedService.readRelative).call(this, 'AGENTS.md');
     let normalizedRootAgents = rootAgents.toLowerCase();
     [
         'capabilities are sacred, implementations are negotiable',
@@ -215,7 +272,7 @@ function validateRootFiles(failures) {
         'standard module shape'
     ].forEach(clause => {
         if (!normalizedRootAgents.includes(clause)) {
-            fail(failures, 'Root AGENTS.md is missing required clause: ' + clause);
+            (this.fail || exportedService.fail).call(this, failures, 'Root AGENTS.md is missing required clause: ' + clause);
         }
     });
 
@@ -224,45 +281,41 @@ function validateRootFiles(failures) {
         '.github/copilot-instructions.md',
         '.cursor/rules/nodics-core.mdc'
     ].forEach(relativePath => {
-        let content = readRelative(relativePath);
+        let content = (this.readRelative || exportedService.readRelative).call(this, relativePath);
         if (!content.includes('AGENTS.md')) {
-            fail(failures, 'AI bridge must point to AGENTS.md: ' + relativePath);
+            (this.fail || exportedService.fail).call(this, failures, 'AI bridge must point to AGENTS.md: ' + relativePath);
         }
         if (!content.includes('root-to-leaf') && !content.includes('ancestor module `AGENTS.md`')) {
-            fail(failures, 'AI bridge must preserve root-to-leaf AGENTS.md guidance: ' + relativePath);
+            (this.fail || exportedService.fail).call(this, failures, 'AI bridge must preserve root-to-leaf AGENTS.md guidance: ' + relativePath);
         }
     });
 
     try {
-        let manifest = JSON.parse(readRelative(globalGuidanceManifest));
+        let manifest = JSON.parse((this.readRelative || exportedService.readRelative).call(this, globalGuidanceManifest));
         if (manifest.manifestSchemaVersion !== 1) {
-            fail(failures, 'AI manifest manifestSchemaVersion must be 1');
+            (this.fail || exportedService.fail).call(this, failures, 'AI manifest manifestSchemaVersion must be 1');
         }
         if (manifest.canonicalInstructionFile !== 'AGENTS.md') {
-            fail(failures, 'AI manifest canonicalInstructionFile must be AGENTS.md');
+            (this.fail || exportedService.fail).call(this, failures, 'AI manifest canonicalInstructionFile must be AGENTS.md');
         }
         if (manifest.humanReadmeFile !== 'README.md') {
-            fail(failures, 'AI manifest humanReadmeFile must be README.md');
+            (this.fail || exportedService.fail).call(this, failures, 'AI manifest humanReadmeFile must be README.md');
         }
     } catch (error) {
-        fail(failures, 'AI manifest must be valid JSON: ' + error.message);
+        (this.fail || exportedService.fail).call(this, failures, 'AI manifest must be valid JSON: ' + error.message);
     }
-}
+},
 
-/**
- * Validates package-level AI and human documentation entrypoints.
- *
- * @param {string[]} failures Mutable failure list.
- */
-function validatePackageFiles(failures) {
-    findPackageDirectories().forEach(directory => {
-        let relativePath = toRelative(directory) || '.';
+    /** Implements validatePackageFiles as an overrideable service operation. */
+    validatePackageFiles: function (failures) {
+    (this.findPackageDirectories || exportedService.findPackageDirectories).call(this, ).forEach(directory => {
+        let relativePath = (this.toRelative || exportedService.toRelative).call(this, directory) || '.';
         let readmeNames = fs.readdirSync(directory).filter(name => /^readme\.md$/i.test(name));
         if (readmeNames.length !== 1 || readmeNames[0] !== 'README.md') {
-            fail(failures, 'Package must contain exactly one uppercase README.md: ' + relativePath);
+            (this.fail || exportedService.fail).call(this, failures, 'Package must contain exactly one uppercase README.md: ' + relativePath);
         }
         if (!fs.existsSync(path.join(directory, 'AGENTS.md'))) {
-            fail(failures, 'Package is missing AGENTS.md: ' + relativePath);
+            (this.fail || exportedService.fail).call(this, failures, 'Package is missing AGENTS.md: ' + relativePath);
         }
         if (directory !== rootPath) {
             [
@@ -270,74 +323,64 @@ function validatePackageFiles(failures) {
                 'llm/examples/README.md'
             ].forEach(relativeFile => {
                 if (!fs.existsSync(path.join(directory, relativeFile))) {
-                    fail(failures, 'Package is missing mandatory AI/documentation file: ' + relativePath + '/' + relativeFile);
+                    (this.fail || exportedService.fail).call(this, failures, 'Package is missing mandatory AI/documentation file: ' + relativePath + '/' + relativeFile);
                 }
             });
         }
         if (directory !== rootPath && fs.existsSync(path.join(directory, 'docs'))) {
-            fail(
+            (this.fail || exportedService.fail).call(this,
                 failures,
                 'Package must not contain a parallel module docs directory; keep the local entry point in README.md ' +
                 'and detailed guidance in the canonical documentation content pack: ' + relativePath + '/docs'
             );
         }
     });
-}
+},
 
-/**
- * Validates that lowercase README names are not reintroduced anywhere.
- *
- * @param {string[]} failures Mutable failure list.
- */
-function validateReadmeCasing(failures) {
-    walk(rootPath, (entryPath, entry) => {
+    /** Implements validateReadmeCasing as an overrideable service operation. */
+    validateReadmeCasing: function (failures) {
+    (this.walk || exportedService.walk).call(this, rootPath, (entryPath, entry) => {
         if (entry.isFile() && entry.name === 'readme.md') {
-            fail(failures, 'Lowercase readme.md is not allowed: ' + toRelative(entryPath));
+            (this.fail || exportedService.fail).call(this, failures, 'Lowercase readme.md is not allowed: ' + this.toRelative(entryPath));
         }
     });
-}
+},
 
-/**
- * Validates AGENTS.md inheritance links and canonical AI guidance references.
- *
- * @param {string[]} failures Mutable failure list.
- */
-function validateAgentFiles(failures) {
+    /** Implements validateAgentFiles as an overrideable service operation. */
+    validateAgentFiles: function (failures) {
     let rootAgentsPath = path.join(rootPath, 'AGENTS.md');
     let globalGuidancePath = path.join(rootPath, globalGuidanceIndex);
-    findAgentFiles().forEach(filePath => {
+    (this.findAgentFiles || exportedService.findAgentFiles).call(this, ).forEach(filePath => {
         if (filePath === rootAgentsPath) return;
 
-        let relativePath = toRelative(filePath);
-        let resolvedReferences = resolveAgentReferences(filePath);
+        let relativePath = (this.toRelative || exportedService.toRelative).call(this, filePath);
+        let resolvedReferences = (this.resolveAgentReferences || exportedService.resolveAgentReferences).call(this, filePath);
 
         resolvedReferences.forEach(resolvedReference => {
             if (!fs.existsSync(resolvedReference.resolvedPath)) {
-                fail(
+                (this.fail || exportedService.fail).call(this,
                     failures,
                     'AGENTS.md reference must resolve: ' + relativePath + ' -> ' + resolvedReference.reference
                 );
             }
         });
 
-        if (!canReachGuidance(filePath, rootAgentsPath)) {
-            fail(failures, 'AGENTS.md must reach the root AI contract through the AGENTS.md chain: ' + relativePath);
+        if (!(this.canReachGuidance || exportedService.canReachGuidance).call(this, filePath, rootAgentsPath)) {
+            (this.fail || exportedService.fail).call(this, failures, 'AGENTS.md must reach the root AI contract through the AGENTS.md chain: ' + relativePath);
         }
-        if (!canReachGuidance(filePath, globalGuidancePath)) {
-            fail(failures, 'AGENTS.md must reach global ' + globalGuidanceRoot + ' guidance: ' + relativePath);
+        if (!(this.canReachGuidance || exportedService.canReachGuidance).call(this, filePath, globalGuidancePath)) {
+            (this.fail || exportedService.fail).call(this, failures, 'AGENTS.md must reach global ' + globalGuidanceRoot + ' guidance: ' + relativePath);
         }
     });
-}
+},
 
-/**
- * Runs AI governance validation and exits with a non-zero code on failure.
- */
-function run() {
+    /** Implements run as an overrideable service operation. */
+    run: function () {
     let failures = [];
-    validateRootFiles(failures);
-    validatePackageFiles(failures);
-    validateReadmeCasing(failures);
-    validateAgentFiles(failures);
+    (this.validateRootFiles || exportedService.validateRootFiles).call(this, failures);
+    (this.validatePackageFiles || exportedService.validatePackageFiles).call(this, failures);
+    (this.validateReadmeCasing || exportedService.validateReadmeCasing).call(this, failures);
+    (this.validateAgentFiles || exportedService.validateAgentFiles).call(this, failures);
 
     if (failures.length > 0) {
         console.error('Nodics AI governance validation failed:');
@@ -346,19 +389,8 @@ function run() {
     }
     console.log('Nodics AI governance validated');
 }
+};
 
 if (require.main === module) {
-    run();
+    exportedService.run();
 }
-
-module.exports = {
-    run,
-    validateRootFiles,
-    validatePackageFiles,
-    validateReadmeCasing,
-    validateAgentFiles,
-    canReachGuidance,
-    resolveAgentReferences,
-    findAgentFiles,
-    findPackageDirectories
-};

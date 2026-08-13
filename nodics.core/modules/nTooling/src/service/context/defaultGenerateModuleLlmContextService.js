@@ -37,14 +37,21 @@ const {
     scanModules
 } = require('./defaultModuleLlmContextUtilsService');
 
-function formatList(items, emptyText) {
+
+
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements formatList as an overrideable service operation. */
+    formatList: function (items, emptyText) {
     if (!items || items.length === 0) {
         return '- ' + emptyText;
     }
     return items.map(item => '- `' + item + '`').join('\n');
-}
+},
 
-function formatValue(value) {
+    /** Implements formatValue as an overrideable service operation. */
+    formatValue: function (value) {
     if (value === undefined || value === null || value === '') {
         return 'not defined';
     }
@@ -52,9 +59,10 @@ function formatValue(value) {
         return value.length ? value.join(', ') : 'none';
     }
     return String(value);
-}
+},
 
-function collectModuleFiles(module) {
+    /** Implements collectModuleFiles as an overrideable service operation. */
+    collectModuleFiles: function (module) {
     const ownedFiles = collectModuleOwnedFiles(module.path);
     return {
         sourceFiles: collectFiles(path.join(module.path, 'src'), filePath => filePath.endsWith('.js')),
@@ -63,9 +71,10 @@ function collectModuleFiles(module) {
         ownedFiles: ownedFiles,
         sourceFingerprint: createFilesFingerprint(ownedFiles)
     };
-}
+},
 
-function getFileArea(module, relativeFile) {
+    /** Implements getFileArea as an overrideable service operation. */
+    getFileArea: function (module, relativeFile) {
     const moduleRelativePath = relativeFile.slice(module.relativePath.length + 1);
     if (moduleRelativePath === 'nodics.js') {
         return 'module';
@@ -74,13 +83,15 @@ function getFileArea(module, relativeFile) {
         return 'metadata';
     }
     return moduleRelativePath.split('/')[0] || 'root';
-}
+},
 
-function isDocumentationRequired(module, relativeFile) {
+    /** Implements isDocumentationRequired as an overrideable service operation. */
+    isDocumentationRequired: function (module, relativeFile) {
     return relativeFile.endsWith('.js');
-}
+},
 
-function extractDescription(content) {
+    /** Implements extractDescription as an overrideable service operation. */
+    extractDescription: function (content) {
     const match = content.match(/@description\s+([^@]*?)(?=\n\s*\*\s*@|\*\/)/);
     if (!match) {
         return '';
@@ -90,9 +101,10 @@ function extractDescription(content) {
         .map(line => line.replace(/^\s*\*?\s?/, '').trim())
         .filter(Boolean)
         .join(' ');
-}
+},
 
-function findExportedMethods(content) {
+    /** Implements findExportedMethods as an overrideable service operation. */
+    findExportedMethods: function (content) {
     const methods = [];
     const exportIndex = content.indexOf('module.exports');
     if (exportIndex < 0) {
@@ -107,23 +119,25 @@ function findExportedMethods(content) {
         });
     }
     return methods;
-}
+},
 
-function hasMethodDocumentation(content, methodIndex) {
+    /** Implements hasMethodDocumentation as an overrideable service operation. */
+    hasMethodDocumentation: function (content, methodIndex) {
     const beforeMethod = content.slice(Math.max(0, methodIndex - 2000), methodIndex);
     const lastDocStart = beforeMethod.lastIndexOf('/**');
     const lastDocEnd = beforeMethod.lastIndexOf('*/');
     return lastDocStart >= 0 && lastDocEnd >= lastDocStart &&
         beforeMethod.slice(lastDocEnd + 2).trim().length === 0;
-}
+},
 
-function analyzeOwnedFile(module, relativeFile) {
-    const required = isDocumentationRequired(module, relativeFile);
+    /** Implements analyzeOwnedFile as an overrideable service operation. */
+    analyzeOwnedFile: function (module, relativeFile) {
+    const required = (this.isDocumentationRequired || exportedService.isDocumentationRequired).call(this, module, relativeFile);
     const absolutePath = path.join(rootPath, relativeFile);
     if (!required) {
         return {
             path: relativeFile,
-            area: getFileArea(module, relativeFile),
+            area: (this.getFileArea || exportedService.getFileArea).call(this, module, relativeFile),
             documentationStatus: 'inventory-only',
             purpose: 'Tracked as module-owned context; source JSDoc is not required for this file type.',
             documentationIssues: [],
@@ -141,8 +155,8 @@ function analyzeOwnedFile(module, relativeFile) {
     const documentationIssues = requiredTags
         .filter(tag => !fileDocumentation.includes(tag))
         .map(tag => 'add ' + tag);
-    const methods = findExportedMethods(content);
-    const documentedMethods = methods.filter(method => hasMethodDocumentation(content, method.index)).length;
+    const methods = (this.findExportedMethods || exportedService.findExportedMethods).call(this, content);
+    const documentedMethods = methods.filter(method => (this.hasMethodDocumentation || exportedService.hasMethodDocumentation).call(this, content, method.index)).length;
     if (documentedMethods < methods.length) {
         documentationIssues.push('add JSDoc for ' + (methods.length - documentedMethods) + ' exported method(s)');
     }
@@ -155,20 +169,22 @@ function analyzeOwnedFile(module, relativeFile) {
 
     return {
         path: relativeFile,
-        area: getFileArea(module, relativeFile),
+        area: (this.getFileArea || exportedService.getFileArea).call(this, module, relativeFile),
         documentationStatus: documentationStatus,
-        purpose: extractDescription(header) || 'Purpose is not documented; inspect the implementation and add a platform-level `@description`.',
+        purpose: (this.extractDescription || exportedService.extractDescription).call(this, header) || 'Purpose is not documented; inspect the implementation and add a platform-level `@description`.',
         documentationIssues: documentationIssues,
         exportedMethods: methods.length,
         documentedMethods: documentedMethods
     };
-}
+},
 
-function analyzeOwnedFiles(module, files) {
-    return files.ownedFiles.map(relativeFile => analyzeOwnedFile(module, relativeFile));
-}
+    /** Implements analyzeOwnedFiles as an overrideable service operation. */
+    analyzeOwnedFiles: function (module, files) {
+    return files.ownedFiles.map(relativeFile => (this.analyzeOwnedFile || exportedService.analyzeOwnedFile).call(this, module, relativeFile));
+},
 
-function summarizeFileDocumentation(fileInventory) {
+    /** Implements summarizeFileDocumentation as an overrideable service operation. */
+    summarizeFileDocumentation: function (fileInventory) {
     return fileInventory.reduce((summary, file) => {
         summary[file.documentationStatus] = (summary[file.documentationStatus] || 0) + 1;
         return summary;
@@ -178,13 +194,15 @@ function summarizeFileDocumentation(fileInventory) {
         undocumented: 0,
         'inventory-only': 0
     });
-}
+},
 
-function escapeTableValue(value) {
+    /** Implements escapeTableValue as an overrideable service operation. */
+    escapeTableValue: function (value) {
     return String(value || '').replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');
-}
+},
 
-function summarizeSchema(schemaObject) {
+    /** Implements summarizeSchema as an overrideable service operation. */
+    summarizeSchema: function (schemaObject) {
     let definition = schemaObject.definition || {};
     return {
         super: schemaObject.super || '',
@@ -205,11 +223,12 @@ function summarizeSchema(schemaObject) {
             };
         })
     };
-}
+},
 
-function createModuleContext(module, files, schemaGroups, fileInventory) {
+    /** Implements createModuleContext as an overrideable service operation. */
+    createModuleContext: function (module, files, schemaGroups, fileInventory) {
     let featureFolders = listFeatureFolders(module.path);
-    let documentation = summarizeFileDocumentation(fileInventory);
+    let documentation = (this.summarizeFileDocumentation || exportedService.summarizeFileDocumentation).call(this, fileInventory);
     let nodicsMetadata = module.packageJson.nodics || {};
     let schemaCount = Object.keys(schemaGroups).reduce((count, moduleName) => {
         return count + Object.keys(schemaGroups[moduleName] || {}).length;
@@ -228,13 +247,13 @@ function createModuleContext(module, files, schemaGroups, fileInventory) {
         '| Path | `' + module.relativePath + '` |',
         '| Kind | `' + getModuleKind(module) + '` |',
         '| Runtime | `' + getModuleRuntimeSummary(module) + '` |',
-        '| Index | `' + formatValue(module.index) + '` |',
-        '| Version | `' + formatValue(module.packageJson.version) + '` |',
-        '| Description | ' + formatValue(module.description) + ' |',
+        '| Index | `' + (this.formatValue || exportedService.formatValue).call(this, module.index) + '` |',
+        '| Version | `' + (this.formatValue || exportedService.formatValue).call(this, module.packageJson.version) + '` |',
+        '| Description | ' + (this.formatValue || exportedService.formatValue).call(this, module.description) + ' |',
         '',
         '## Module-Owned Folders',
         '',
-        formatList(featureFolders, 'No standard module feature folders were found.'),
+        (this.formatList || exportedService.formatList).call(this, featureFolders, 'No standard module feature folders were found.'),
         '',
         '## Source Summary',
         '',
@@ -250,15 +269,15 @@ function createModuleContext(module, files, schemaGroups, fileInventory) {
         '',
         '**Owned extension areas**',
         '',
-        formatList(nodicsMetadata.owns || [], 'No owned extension areas are declared in `package.json.nodics.owns`.'),
+        (this.formatList || exportedService.formatList).call(this, nodicsMetadata.owns || [], 'No owned extension areas are declared in `package.json.nodics.owns`.'),
         '',
         '**Required modules**',
         '',
-        formatList(module.packageJson.requiredModules || [], 'No required modules are declared.'),
+        (this.formatList || exportedService.formatList).call(this, module.packageJson.requiredModules || [], 'No required modules are declared.'),
         '',
         '**Contained modules**',
         '',
-        formatList(module.packageJson.modules || [], 'This package does not declare contained modules.'),
+        (this.formatList || exportedService.formatList).call(this, module.packageJson.modules || [], 'This package does not declare contained modules.'),
         '',
         '## Documentation Status',
         '',
@@ -271,7 +290,7 @@ function createModuleContext(module, files, schemaGroups, fileInventory) {
         '',
         '## Important Files',
         '',
-        formatList([
+        (this.formatList || exportedService.formatList).call(this, [
             getRelativeIfExists(module.path, 'AGENTS.md'),
             getRelativeIfExists(module.path, 'nodics.js'),
             getRelativeIfExists(module.path, 'package.json'),
@@ -283,7 +302,7 @@ function createModuleContext(module, files, schemaGroups, fileInventory) {
             getRelativeIfExists(module.path, 'src/router/routers.js')
         ].filter(Boolean), 'No standard important files were found.'),
         '',
-        ...createFileInventoryLines(fileInventory),
+        ...exportedService.createFileInventoryLines(fileInventory),
         '## Extension Contract',
         '',
         '- Treat this module as a replaceable layer in the Nodics hierarchy.',
@@ -292,9 +311,10 @@ function createModuleContext(module, files, schemaGroups, fileInventory) {
         '- Add human-authored LLM notes only for intent, boundaries, examples, and decisions that cannot be derived from source.',
         '- Use the file inventory above to find documented, partially documented, and undocumented source contracts; an inventory entry is not proof that documentation is complete.'
     ].join('\n') + '\n';
-}
+},
 
-function createFileInventoryLines(fileInventory) {
+    /** Implements createFileInventoryLines as an overrideable service operation. */
+    createFileInventoryLines: function (fileInventory) {
     const lines = [
         '## File Inventory',
         '',
@@ -306,14 +326,15 @@ function createFileInventoryLines(fileInventory) {
 
     fileInventory.forEach(file => {
         lines.push('| `' + file.path + '` | `' + file.area + '` | `' + file.documentationStatus + '` | ' +
-            file.documentedMethods + '/' + file.exportedMethods + ' | ' + escapeTableValue(file.purpose) + ' | ' +
-            escapeTableValue(file.documentationIssues.join('; ')) + ' |');
+            file.documentedMethods + '/' + file.exportedMethods + ' | ' + (this.escapeTableValue || exportedService.escapeTableValue).call(this, file.purpose) + ' | ' +
+            (this.escapeTableValue || exportedService.escapeTableValue).call(this, file.documentationIssues.join('; ')) + ' |');
     });
     lines.push('');
     return lines;
-}
+},
 
-function createSchemasContext(module, schemaGroups, loadError) {
+    /** Implements createSchemasContext as an overrideable service operation. */
+    createSchemasContext: function (module, schemaGroups, loadError) {
     let lines = [
         '# ' + module.name + ' Schema Context',
         '',
@@ -342,7 +363,7 @@ function createSchemasContext(module, schemaGroups, loadError) {
         lines.push('| Schema | Super | Model | Service | Router | Cache | Search | Event | Tenants | Properties |');
         lines.push('| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: |');
         Object.keys(schemaGroups[moduleName] || {}).sort().forEach(schemaName => {
-            let summary = summarizeSchema(schemaGroups[moduleName][schemaName] || {});
+            let summary = (this.summarizeSchema || exportedService.summarizeSchema).call(this, schemaGroups[moduleName][schemaName] || {});
             lines.push('| ' + [
                 '`' + schemaName + '`',
                 summary.super ? '`' + summary.super + '`' : '',
@@ -359,7 +380,7 @@ function createSchemasContext(module, schemaGroups, loadError) {
         lines.push('');
 
         Object.keys(schemaGroups[moduleName] || {}).sort().forEach(schemaName => {
-            let summary = summarizeSchema(schemaGroups[moduleName][schemaName] || {});
+            let summary = (this.summarizeSchema || exportedService.summarizeSchema).call(this, schemaGroups[moduleName][schemaName] || {});
             lines.push('### `' + moduleName + '.' + schemaName + '`');
             lines.push('');
             if (summary.properties.length === 0) {
@@ -376,9 +397,10 @@ function createSchemasContext(module, schemaGroups, loadError) {
     });
 
     return lines.join('\n');
-}
+},
 
-function createTestsContext(module, files) {
+    /** Implements createTestsContext as an overrideable service operation. */
+    createTestsContext: function (module, files) {
     let generatedTests = files.testFiles.filter(filePath => filePath.includes('/test/gen/'));
     let handAuthoredTests = files.testFiles.filter(filePath => !filePath.includes('/test/gen/'));
 
@@ -389,11 +411,11 @@ function createTestsContext(module, files) {
         '',
         '## Hand-Authored Tests',
         '',
-        formatList(handAuthoredTests, 'No hand-authored tests were found.'),
+        (this.formatList || exportedService.formatList).call(this, handAuthoredTests, 'No hand-authored tests were found.'),
         '',
         '## Generated Tests',
         '',
-        formatList(generatedTests, 'No generated tests were found. Run `npm run build` when schema/router generation is expected.'),
+        (this.formatList || exportedService.formatList).call(this, generatedTests, 'No generated tests were found. Run `npm run build` when schema/router generation is expected.'),
         '',
         '## Testing Rules',
         '',
@@ -402,10 +424,11 @@ function createTestsContext(module, files) {
         '- Project modules may add or override tests in a later layer when behavior intentionally differs.',
         '- Basic tests should avoid external dependency availability unless the active module explicitly owns that dependency.'
     ].join('\n') + '\n';
-}
+},
 
-function createManifest(module, files, schemaGroups, loadError, fileInventory) {
-    const documentation = summarizeFileDocumentation(fileInventory);
+    /** Implements createManifest as an overrideable service operation. */
+    createManifest: function (module, files, schemaGroups, loadError, fileInventory) {
+    const documentation = (this.summarizeFileDocumentation || exportedService.summarizeFileDocumentation).call(this, fileInventory);
     return JSON.stringify({
         contextVersion: 3,
         moduleName: module.name,
@@ -430,39 +453,37 @@ function createManifest(module, files, schemaGroups, loadError, fileInventory) {
         schemaLoadError: loadError || null,
         generatedBy: 'npm run llm:generate'
     }, null, 2) + '\n';
-}
+},
 
-function writeModuleContext(module) {
+    /** Implements writeModuleContext as an overrideable service operation. */
+    writeModuleContext: function (module) {
     let llmDirectory = path.join(module.path, 'llm');
     let generatedDirectory = path.join(llmDirectory, 'generated');
     ensureDirectory(generatedDirectory);
 
     let schemaResult = loadLocalSchemas(module.path);
-    let files = collectModuleFiles(module);
-    let fileInventory = analyzeOwnedFiles(module, files);
+    let files = (this.collectModuleFiles || exportedService.collectModuleFiles).call(this, module);
+    let fileInventory = (this.analyzeOwnedFiles || exportedService.analyzeOwnedFiles).call(this, module, files);
     let legacyFilesContextPath = path.join(generatedDirectory, 'files.md');
     if (fs.existsSync(legacyFilesContextPath)) {
         fs.unlinkSync(legacyFilesContextPath);
     }
-    fs.writeFileSync(path.join(generatedDirectory, 'module-context.md'), createModuleContext(module, files, schemaResult.schemas, fileInventory), 'utf8');
-    fs.writeFileSync(path.join(generatedDirectory, 'schemas.md'), createSchemasContext(module, schemaResult.schemas, schemaResult.error), 'utf8');
-    fs.writeFileSync(path.join(generatedDirectory, 'tests.md'), createTestsContext(module, files), 'utf8');
-    fs.writeFileSync(path.join(generatedDirectory, 'manifest.json'), createManifest(module, files, schemaResult.schemas, schemaResult.error, fileInventory), 'utf8');
-}
+    fs.writeFileSync(path.join(generatedDirectory, 'module-context.md'), (this.createModuleContext || exportedService.createModuleContext).call(this, module, files, schemaResult.schemas, fileInventory), 'utf8');
+    fs.writeFileSync(path.join(generatedDirectory, 'schemas.md'), (this.createSchemasContext || exportedService.createSchemasContext).call(this, module, schemaResult.schemas, schemaResult.error), 'utf8');
+    fs.writeFileSync(path.join(generatedDirectory, 'tests.md'), (this.createTestsContext || exportedService.createTestsContext).call(this, module, files), 'utf8');
+    fs.writeFileSync(path.join(generatedDirectory, 'manifest.json'), (this.createManifest || exportedService.createManifest).call(this, module, files, schemaResult.schemas, schemaResult.error, fileInventory), 'utf8');
+},
 
-function run() {
+    /** Implements run as an overrideable service operation. */
+    run: function () {
     let modules = scanModules();
     bootstrapSchemaGlobals(modules);
     let contextModules = modules.filter(module => !isNSetupModule(module));
-    contextModules.forEach(writeModuleContext);
+    contextModules.forEach(exportedService.writeModuleContext);
     console.log('Generated module LLM context for ' + contextModules.length + ' modules');
 }
+};
 
 if (require.main === module) {
-    run();
+    exportedService.run();
 }
-
-module.exports = {
-    run,
-    writeModuleContext
-};

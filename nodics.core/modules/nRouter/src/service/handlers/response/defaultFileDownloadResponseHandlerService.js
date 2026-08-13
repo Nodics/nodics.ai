@@ -23,15 +23,18 @@
  * @property {Object} success.mimeType Optional response MIME type.
  * @property {Object} success.cacheControl Optional cache-control header.
  */
-function toHttpStatus(value) {
+
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements toHttpStatus as an overrideable service operation. */
+    toHttpStatus: function (value) {
     let status = Number(value);
     if (!Number.isInteger(status) || status < 100 || status > 599) {
         return 500;
     }
     return status;
-}
-
-module.exports = {
+},
 
     /**
      * Initializes the file download response handler during service loading.
@@ -68,7 +71,7 @@ module.exports = {
      */
     handleSuccess: function (request, response, success) {
         if (!success || !success.filePath) {
-            this.handleError(request, response, this.normalizeError({
+            (this.handleError || exportedService.handleError).call(this, request, response, this.normalizeError({
                 code: 'ERR_SYS_00000',
                 responseCode: '500',
                 message: 'File download response is missing filePath'
@@ -81,8 +84,8 @@ module.exports = {
         if (success.cacheControl && response.set) {
             response.set('Cache-Control', success.cacheControl);
         }
-        let fileName = this.safeHeaderFileName(success.fileName || success.originalFileName || success.name);
-        let transferCallback = this.handleTransferCallback(request, response);
+        let fileName = (this.safeHeaderFileName || exportedService.safeHeaderFileName).call(this, success.fileName || success.originalFileName || success.name);
+        let transferCallback = (this.handleTransferCallback || exportedService.handleTransferCallback).call(this, request, response);
         if (fileName) {
             response.download(success.filePath, fileName, transferCallback);
         } else {
@@ -99,15 +102,15 @@ module.exports = {
      * @returns {void}
      */
     handleError: function (request, response, error) {
-        error = this.normalizeError(error);
+        error = (this.normalizeError || exportedService.normalizeError).call(this, error);
         if (this.LOG && this.LOG.error) {
             this.LOG.error(error);
         }
         if (response.headersSent) {
             return;
         }
-        response.status(toHttpStatus(error.responseCode));
-        response.json(this.publicError(error));
+        response.status((this.toHttpStatus || exportedService.toHttpStatus).call(this, error.responseCode));
+        response.json((this.publicError || exportedService.publicError).call(this, error));
     },
 
     /**
@@ -121,7 +124,7 @@ module.exports = {
     handleTransferCallback: function (request, response) {
         return error => {
             if (error) {
-                this.handleError(request, response, error);
+                (this.handleError || exportedService.handleError).call(this, request, response, error);
             }
         };
     },

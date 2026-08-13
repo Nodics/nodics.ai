@@ -31,7 +31,15 @@ const projectRootDir = path.resolve(process.env.NODICS_HOME || process.cwd());
  *
  * @returns {Object} Effective runtime options for `config.prepareBuild`.
  */
-function resolveRuntimeOptions() {
+
+
+/** Executes the governance report generator from the command line. */
+
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements resolveRuntimeOptions as an overrideable service operation. */
+    resolveRuntimeOptions: function () {
     const customHome = process.env.CUSTOM_HOME ? path.resolve(process.env.CUSTOM_HOME) : projectRootDir;
     const packagePath = path.join(projectRootDir, 'package.json');
     if (fs.existsSync(packagePath)) {
@@ -50,16 +58,18 @@ function resolveRuntimeOptions() {
         CUSTOM_HOME: customHome,
         MODULE_ROOTS: projectRootDir === customHome ? [projectRootDir] : [projectRootDir, customHome]
     });
-}
+},
 
-function toRelative(filePath) {
+    /** Implements toRelative as an overrideable service operation. */
+    toRelative: function (filePath) {
     if (!filePath) {
         return undefined;
     }
     return filePath.replace(NODICS.getNodicsHome(), '.');
-}
+},
 
-function getActiveOutputModule() {
+    /** Implements getActiveOutputModule as an overrideable service operation. */
+    getActiveOutputModule: function () {
     let moduleName = NODICS.getServerName && NODICS.getServerName();
     let moduleObject = moduleName ? NODICS.getRawModule(moduleName) : null;
     if (!moduleObject || !moduleObject.path) {
@@ -69,9 +79,10 @@ function getActiveOutputModule() {
         name: moduleName,
         path: moduleObject.path
     };
-}
+},
 
-function collectSchemaSummary(rawSchema) {
+    /** Implements collectSchemaSummary as an overrideable service operation. */
+    collectSchemaSummary: function (rawSchema) {
     let schemas = [];
     Object.keys(rawSchema || {}).forEach(moduleName => {
         Object.keys(rawSchema[moduleName] || {}).forEach(schemaName => {
@@ -89,9 +100,10 @@ function collectSchemaSummary(rawSchema) {
         });
     });
     return schemas;
-}
+},
 
-function collectRouterSummary(rawRouters) {
+    /** Implements collectRouterSummary as an overrideable service operation. */
+    collectRouterSummary: function (rawRouters) {
     let routes = [];
     Object.keys(rawRouters || {}).forEach(moduleName => {
         Object.keys(rawRouters[moduleName] || {}).forEach(groupName => {
@@ -120,9 +132,10 @@ function collectRouterSummary(rawRouters) {
         });
     });
     return routes;
-}
+},
 
-function scanDirectory(directory, suffix, callback) {
+    /** Implements scanDirectory as an overrideable service operation. */
+    scanDirectory: function (directory, suffix, callback) {
     if (!fs.existsSync(directory)) {
         return;
     }
@@ -130,33 +143,37 @@ function scanDirectory(directory, suffix, callback) {
         let filePath = path.join(directory, entry);
         let stat = fs.statSync(filePath);
         if (stat.isDirectory()) {
-            scanDirectory(filePath, suffix, callback);
+            (this.scanDirectory || exportedService.scanDirectory).call(this, filePath, suffix, callback);
         } else if (stat.isFile() && filePath.endsWith(suffix)) {
             callback(filePath);
         }
     });
-}
+},
 
-function readJsonIfExists(filePath) {
+    /** Implements readJsonIfExists as an overrideable service operation. */
+    readJsonIfExists: function (filePath) {
     if (!fs.existsSync(filePath)) {
         return null;
     }
     return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-}
+},
 
-function countFiles(directory, suffix) {
+    /** Implements countFiles as an overrideable service operation. */
+    countFiles: function (directory, suffix) {
     let count = 0;
-    scanDirectory(directory, suffix, () => {
+    (this.scanDirectory || exportedService.scanDirectory).call(this, directory, suffix, () => {
         count += 1;
     });
     return count;
-}
+},
 
-function normalizeModulePath(moduleObject) {
+    /** Implements normalizeModulePath as an overrideable service operation. */
+    normalizeModulePath: function (moduleObject) {
     return path.relative(projectRootDir, moduleObject.path).split(path.sep).join('/');
-}
+},
 
-function extractReadmeMaturity(modulePath) {
+    /** Implements extractReadmeMaturity as an overrideable service operation. */
+    extractReadmeMaturity: function (modulePath) {
     let readmePath = path.join(modulePath, 'README.md');
     if (!fs.existsSync(readmePath)) {
         return null;
@@ -164,9 +181,10 @@ function extractReadmeMaturity(modulePath) {
     let content = fs.readFileSync(readmePath, 'utf8');
     let match = content.match(/\*\*Maturity:\s*([^*]+)\*\*/i);
     return match ? match[1].trim() : null;
-}
+},
 
-function inferMaturity(moduleObject, evidence) {
+    /** Implements inferMaturity as an overrideable service operation. */
+    inferMaturity: function (moduleObject, evidence) {
     if (evidence.readmeMaturity) {
         return evidence.readmeMaturity;
     }
@@ -183,9 +201,10 @@ function inferMaturity(moduleObject, evidence) {
         return 'composition or metadata only';
     }
     return 'metadata-only; implementation evidence incomplete';
-}
+},
 
-function collectDependencyPackages(ownedDependencies, modulePath) {
+    /** Implements collectDependencyPackages as an overrideable service operation. */
+    collectDependencyPackages: function (ownedDependencies, modulePath) {
     return Object.keys(ownedDependencies || {}).filter(packageName => {
         let ownership = ownedDependencies[packageName] || {};
         let ownershipRoots = [].concat(ownership.owners || [], ownership.allowedConsumers || []);
@@ -197,20 +216,21 @@ function collectDependencyPackages(ownedDependencies, modulePath) {
         type: ownedDependencies[packageName].type,
         restricted: ownedDependencies[packageName].restricted === true
     }));
-}
+},
 
-function collectProviderCapabilityMaturitySummary(indexedModules, ownedDependencies) {
+    /** Implements collectProviderCapabilityMaturitySummary as an overrideable service operation. */
+    collectProviderCapabilityMaturitySummary: function (indexedModules, ownedDependencies) {
     return indexedModules.map(moduleObject => {
-        let modulePath = normalizeModulePath(moduleObject);
-        let packageJson = readJsonIfExists(path.join(moduleObject.path, 'package.json')) || {};
+        let modulePath = (this.normalizeModulePath || exportedService.normalizeModulePath).call(this, moduleObject);
+        let packageJson = (this.readJsonIfExists || exportedService.readJsonIfExists).call(this, path.join(moduleObject.path, 'package.json')) || {};
         let nodics = packageJson.nodics || {};
-        let dependencyPackages = collectDependencyPackages(ownedDependencies, modulePath);
+        let dependencyPackages = (this.collectDependencyPackages || exportedService.collectDependencyPackages).call(this, ownedDependencies, modulePath);
         let evidence = {
             readme: fs.existsSync(path.join(moduleObject.path, 'README.md')),
-            readmeMaturity: extractReadmeMaturity(moduleObject.path),
-            sourceFiles: countFiles(path.join(moduleObject.path, 'src'), '.js'),
-            testFiles: countFiles(path.join(moduleObject.path, 'test'), '.test.js'),
-            generatedTests: countFiles(path.join(moduleObject.path, 'test', 'gen'), '.test.js'),
+            readmeMaturity: (this.extractReadmeMaturity || exportedService.extractReadmeMaturity).call(this, moduleObject.path),
+            sourceFiles: (this.countFiles || exportedService.countFiles).call(this, path.join(moduleObject.path, 'src'), '.js'),
+            testFiles: (this.countFiles || exportedService.countFiles).call(this, path.join(moduleObject.path, 'test'), '.test.js'),
+            generatedTests: (this.countFiles || exportedService.countFiles).call(this, path.join(moduleObject.path, 'test', 'gen'), '.test.js'),
             generatedContext: fs.existsSync(path.join(moduleObject.path, 'llm', 'generated', 'manifest.json')),
             dependencyPackages: dependencyPackages
         };
@@ -225,13 +245,14 @@ function collectProviderCapabilityMaturitySummary(indexedModules, ownedDependenc
             providerBacked: dependencyPackages.some(item => String(item.type || '').includes('provider')) ||
                 String(moduleObject.name).toLowerCase().includes('provider') ||
                 (nodics.owns || []).includes('provider'),
-            maturity: inferMaturity(moduleObject, evidence),
+            maturity: (this.inferMaturity || exportedService.inferMaturity).call(this, moduleObject, evidence),
             evidence: evidence
         };
     }).sort((left, right) => left.modulePath.localeCompare(right.modulePath));
-}
+},
 
-function collectArtifactSummary() {
+    /** Implements collectArtifactSummary as an overrideable service operation. */
+    collectArtifactSummary: function () {
     let layerDefinitions = [
         { layer: 'service', folder: 'src/service', suffix: 'Service.js' },
         { layer: 'facade', folder: 'src/facade', suffix: 'Facade.js' },
@@ -247,19 +268,19 @@ function collectArtifactSummary() {
         };
         artifacts[key].contributions.push({
             sourceModule: moduleObject.name,
-            file: toRelative(filePath)
+            file: (this.toRelative || exportedService.toRelative).call(this, filePath)
         });
     }
     NODICS.getIndexedModules().forEach(moduleObject => {
         layerDefinitions.forEach(layerDefinition => {
             let directory = path.join(moduleObject.path, layerDefinition.folder);
-            scanDirectory(directory, layerDefinition.suffix, filePath => {
+            (this.scanDirectory || exportedService.scanDirectory).call(this, directory, layerDefinition.suffix, filePath => {
                 let name = path.basename(filePath, '.js');
                 addArtifact(layerDefinition.layer, name, moduleObject, filePath);
             });
         });
         let pipelineDirectory = path.join(moduleObject.path, 'src/pipelines');
-        scanDirectory(pipelineDirectory, 'Definition.js', filePath => {
+        (this.scanDirectory || exportedService.scanDirectory).call(this, pipelineDirectory, 'Definition.js', filePath => {
             addArtifact('pipeline', path.basename(filePath, '.js'), moduleObject, filePath);
         });
         let pipelineRegistryPath = path.join(pipelineDirectory, 'pipelines.js');
@@ -276,47 +297,50 @@ function collectArtifactSummary() {
         artifact.overridden = artifact.contributions.length > 1;
         return artifact;
     });
-}
+},
 
-function collectGeneratedSummary() {
+    /** Implements collectGeneratedSummary as an overrideable service operation. */
+    collectGeneratedSummary: function () {
     let generatedFiles = [];
     NODICS.getIndexedModules().forEach(moduleObject => {
         ['src/service/gen', 'src/facade/gen', 'src/controller/gen', 'test/gen'].forEach(relativePath => {
             let directory = path.join(moduleObject.path, relativePath);
-            scanDirectory(directory, '.js', filePath => {
+            (this.scanDirectory || exportedService.scanDirectory).call(this, directory, '.js', filePath => {
                 generatedFiles.push({
                     sourceModule: moduleObject.name,
-                    file: toRelative(filePath)
+                    file: (this.toRelative || exportedService.toRelative).call(this, filePath)
                 });
             });
         });
     });
     return generatedFiles;
-}
+},
 
-async function initialize() {
-    let options = resolveRuntimeOptions();
+    /** Implements initialize as an overrideable service operation. */
+    initialize: async function () {
+    let options = (this.resolveRuntimeOptions || exportedService.resolveRuntimeOptions).call(this, );
     await config.prepareBuild(options);
     await config.initUtilities(options);
     await config.loadModules();
-}
+},
 
-async function run() {
-    await initialize();
+    /** Implements run as an overrideable service operation. */
+    run: async function () {
+    await (this.initialize || exportedService.initialize).call(this, );
     let rawSchema = SERVICE.DefaultFilesLoaderService.loadSchemaFiles('/src/schemas/schemas.js', null);
     let rawRouters = SERVICE.DefaultFilesLoaderService.loadRouterFiles('/src/router/routers.js');
-    let schemas = collectSchemaSummary(rawSchema);
-    let routes = collectRouterSummary(rawRouters);
-    let artifacts = collectArtifactSummary();
-    let generatedFiles = collectGeneratedSummary();
-    let rootPackage = readJsonIfExists(path.join(projectRootDir, 'package.json')) || {};
+    let schemas = (this.collectSchemaSummary || exportedService.collectSchemaSummary).call(this, rawSchema);
+    let routes = (this.collectRouterSummary || exportedService.collectRouterSummary).call(this, rawRouters);
+    let artifacts = (this.collectArtifactSummary || exportedService.collectArtifactSummary).call(this, );
+    let generatedFiles = (this.collectGeneratedSummary || exportedService.collectGeneratedSummary).call(this, );
+    let rootPackage = (this.readJsonIfExists || exportedService.readJsonIfExists).call(this, path.join(projectRootDir, 'package.json')) || {};
     let ownedDependencies = rootPackage.nodics && rootPackage.nodics.dependencyGovernance ?
         rootPackage.nodics.dependencyGovernance.ownedDependencies || {} : {};
-    let providerCapabilityMaturity = collectProviderCapabilityMaturitySummary(
+    let providerCapabilityMaturity = (this.collectProviderCapabilityMaturitySummary || exportedService.collectProviderCapabilityMaturitySummary).call(this,
         Array.from(NODICS.getIndexedModules().values()),
         ownedDependencies
     );
-    let activeOutputModule = getActiveOutputModule();
+    let activeOutputModule = (this.getActiveOutputModule || exportedService.getActiveOutputModule).call(this, );
     let report = {
         generatedAt: new Date().toISOString(),
         environmentName: NODICS.getSelectedEnvironmentName ? NODICS.getSelectedEnvironmentName() : NODICS.getEnvironmentName(),
@@ -330,7 +354,7 @@ async function run() {
             name: moduleObject.name,
             index: moduleObject.index,
             parent: moduleObject.parent,
-            path: toRelative(moduleObject.path)
+            path: (this.toRelative || exportedService.toRelative).call(this, moduleObject.path)
         })),
         summary: {
             schemas: schemas.length,
@@ -357,27 +381,22 @@ async function run() {
     let reportTargetName = NODICS.getNodeName() || activeOutputModule.name;
     let outputPath = path.join(outputDirectory, reportTargetName + '.governance-report.json');
     fs.writeFileSync(outputPath, JSON.stringify(report, null, 2));
-    console.log('Generated governance report: ' + toRelative(outputPath));
+    console.log('Generated governance report: ' + (this.toRelative || exportedService.toRelative).call(this, outputPath));
     console.log('Schemas: ' + report.summary.schemas + ', Routes: ' + report.summary.routes + ', Artifacts: ' + report.summary.artifacts);
     console.log('Overrides - schema: ' + report.summary.schemaOverrides + ', route: ' + report.summary.routeOverrides + ', artifact: ' + report.summary.artifactOverrides);
     console.log('Provider/capability maturity entries: ' + report.summary.providerCapabilityMaturityEntries +
         ', provider-backed: ' + report.summary.providerBackedCapabilities);
-}
+},
 
-/** Executes the governance report generator from the command line. */
-function runCli() {
-    run().catch(error => {
+    /** Implements runCli as an overrideable service operation. */
+    runCli: function () {
+    (this.run || exportedService.run).call(this, ).catch(error => {
         console.error(error);
         process.exit(1);
     });
 }
-
-module.exports = {
-    collectProviderCapabilityMaturitySummary: collectProviderCapabilityMaturitySummary,
-    run: run,
-    runCli: runCli
 };
 
 if (require.main === module) {
-    runCli();
+    exportedService.runCli();
 }

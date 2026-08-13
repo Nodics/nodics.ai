@@ -43,7 +43,13 @@ const generatedFolderToOwnership = {
     test: 'test'
 };
 
-function hasChildren(module) {
+
+
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements hasChildren as an overrideable service operation. */
+    hasChildren: function (module) {
     let entries = fs.readdirSync(module.path, { withFileTypes: true });
     return entries.some(entry => {
         if (!entry.isDirectory()) {
@@ -53,9 +59,10 @@ function hasChildren(module) {
         return fs.existsSync(path.join(childPath, 'package.json')) &&
             fs.existsSync(path.join(childPath, 'nodics.js'));
     });
-}
+},
 
-function inferKind(module) {
+    /** Implements inferKind as an overrideable service operation. */
+    inferKind: function (module) {
     let relativePath = module.relativePath;
     let type = module.packageJson.type;
     let nodics = module.packageJson.nodics || {};
@@ -84,10 +91,10 @@ function inferKind(module) {
     if (relativePath.endsWith('Modules')) {
         return 'group';
     }
-    if (pathParts.length === 1 && hasChildren(module)) {
+    if (pathParts.length === 1 && (this.hasChildren || exportedService.hasChildren).call(this, module)) {
         return 'application';
     }
-    if (type === 'group' || (hasChildren(module) && !['router', 'publish', 'web'].includes(type))) {
+    if (type === 'group' || ((this.hasChildren || exportedService.hasChildren).call(this, module) && !['router', 'publish', 'web'].includes(type))) {
         return 'group';
     }
     if (type === 'publish') {
@@ -97,18 +104,20 @@ function inferKind(module) {
         return 'web';
     }
     return 'capability';
-}
+},
 
-function inferRuntime(packageJson, kind) {
+    /** Implements inferRuntime as an overrideable service operation. */
+    inferRuntime: function (packageJson, kind) {
     let currentRuntime = packageJson.nodics && packageJson.nodics.runtime ? packageJson.nodics.runtime : {};
     return Object.assign({}, currentRuntime, {
         router: currentRuntime.router === true || packageJson.type === 'router' || packageJson.type === 'web',
         publish: currentRuntime.publish === true || kind === 'publish' || packageJson.type === 'publish',
         web: currentRuntime.web === true || kind === 'web' || packageJson.type === 'web'
     });
-}
+},
 
-function inferOwns(module, kind) {
+    /** Implements inferOwns as an overrideable service operation. */
+    inferOwns: function (module, kind) {
     if (kind === 'setup') {
         return ['llm'];
     }
@@ -118,33 +127,35 @@ function inferOwns(module, kind) {
     let owns = listFeatureFolders(module.path)
         .map(folder => generatedFolderToOwnership[folder])
         .filter(Boolean);
-    if ((kind === 'group' || hasChildren(module)) && !owns.includes('composition')) {
+    if ((kind === 'group' || (this.hasChildren || exportedService.hasChildren).call(this, module)) && !owns.includes('composition')) {
         owns.unshift('composition');
     }
     if (!owns.includes('llm')) {
         owns.push('llm');
     }
     return Array.from(new Set(owns));
-}
+},
 
-function normalizeModule(module) {
+    /** Implements normalizeModule as an overrideable service operation. */
+    normalizeModule: function (module) {
     let packagePath = path.join(module.path, 'package.json');
     let packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
-    let kind = inferKind(module);
+    let kind = (this.inferKind || exportedService.inferKind).call(this, module);
     packageJson.nodics = Object.assign({}, packageJson.nodics || {}, {
         kind: kind,
-        runtime: inferRuntime(packageJson, kind),
+        runtime: (this.inferRuntime || exportedService.inferRuntime).call(this, packageJson, kind),
         runtimeModule: !['setup', 'tooling'].includes(kind),
         loadableByNodicsModuleLoader: !['setup', 'tooling'].includes(kind),
-        owns: inferOwns(module, kind)
+        owns: (this.inferOwns || exportedService.inferOwns).call(this, module, kind)
     });
     delete packageJson.nodics.moduleType;
     delete packageJson.type;
     delete packageJson.nodics.description;
     fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 4) + '\n', 'utf8');
-}
+},
 
-function run() {
+    /** Implements run as an overrideable service operation. */
+    run: function () {
     let rootPackage = JSON.parse(fs.readFileSync(path.join(rootPath, 'package.json'), 'utf8'));
     let modules = [{
         name: rootPackage.name,
@@ -153,17 +164,11 @@ function run() {
         relativePath: '.',
         packageJson: rootPackage
     }].concat(scanModules());
-    modules.forEach(normalizeModule);
+    modules.forEach(exportedService.normalizeModule);
     console.log('Normalized Nodics metadata for ' + modules.length + ' packages');
 }
+};
 
 if (require.main === module) {
-    run();
+    exportedService.run();
 }
-
-module.exports = {
-    run,
-    inferKind,
-    inferRuntime,
-    inferOwns
-};

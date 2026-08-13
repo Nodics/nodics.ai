@@ -28,24 +28,32 @@ const discoveryConfig = toolingProperties.tooling && toolingProperties.tooling.d
 const ignoredDirectories = new Set(discoveryConfig.ignoredDirectories || []);
 const ignoredFiles = new Set(discoveryConfig.ignoredFiles || []);
 
-function toPosix(filePath) {
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements toPosix as an overrideable service operation. */
+    toPosix: function (filePath) {
     return filePath.split(path.sep).join('/');
-}
+},
 
-function toRelative(filePath) {
-    return toPosix(path.relative(rootPath, filePath));
-}
+    /** Implements toRelative as an overrideable service operation. */
+    toRelative: function (filePath) {
+    return (this.toPosix || exportedService.toPosix).call(this, path.relative(rootPath, filePath));
+},
 
-function readJson(filePath) {
+    /** Implements readJson as an overrideable service operation. */
+    readJson: function (filePath) {
     return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-}
+},
 
-function isModuleDirectory(directory) {
+    /** Implements isModuleDirectory as an overrideable service operation. */
+    isModuleDirectory: function (directory) {
     return fs.existsSync(path.join(directory, 'nodics.js')) &&
         fs.existsSync(path.join(directory, 'package.json'));
-}
+},
 
-function scanModules(directory = rootPath, modules = []) {
+    /** Implements scanModules as an overrideable service operation. */
+    scanModules: function (directory = rootPath, modules = []) {
     if (!fs.existsSync(directory)) {
         return modules;
     }
@@ -60,34 +68,37 @@ function scanModules(directory = rootPath, modules = []) {
         }
 
         let entryPath = path.join(directory, entry.name);
-        if (isModuleDirectory(entryPath)) {
-            let packageJson = readJson(path.join(entryPath, 'package.json'));
+        if ((this.isModuleDirectory || exportedService.isModuleDirectory).call(this, entryPath)) {
+            let packageJson = (this.readJson || exportedService.readJson).call(this, path.join(entryPath, 'package.json'));
             modules.push({
                 name: packageJson.name || entry.name,
                 index: packageJson.index,
                 description: packageJson.description,
                 path: entryPath,
-                relativePath: toRelative(entryPath),
+                relativePath: (this.toRelative || exportedService.toRelative).call(this, entryPath),
                 packageJson: packageJson
             });
         }
-        scanModules(entryPath, modules);
+        (this.scanModules || exportedService.scanModules).call(this, entryPath, modules);
     });
 
     return modules.sort((left, right) => left.relativePath.localeCompare(right.relativePath));
-}
+},
 
-function ensureDirectory(directory) {
+    /** Implements ensureDirectory as an overrideable service operation. */
+    ensureDirectory: function (directory) {
     fs.mkdirSync(directory, { recursive: true });
-}
+},
 
-function removeDirectory(directory) {
+    /** Implements removeDirectory as an overrideable service operation. */
+    removeDirectory: function (directory) {
     if (fs.existsSync(directory)) {
         fs.rmSync(directory, { recursive: true, force: true });
     }
-}
+},
 
-function collectFiles(directory, matcher, files = []) {
+    /** Implements collectFiles as an overrideable service operation. */
+    collectFiles: function (directory, matcher, files = []) {
     if (!fs.existsSync(directory)) {
         return files;
     }
@@ -96,7 +107,7 @@ function collectFiles(directory, matcher, files = []) {
         let entryPath = path.join(directory, entry.name);
         if (entry.isDirectory()) {
             if (!ignoredDirectories.has(entry.name)) {
-                collectFiles(entryPath, matcher, files);
+                (this.collectFiles || exportedService.collectFiles).call(this, entryPath, matcher, files);
             }
             return;
         }
@@ -104,14 +115,15 @@ function collectFiles(directory, matcher, files = []) {
             return;
         }
         if (!matcher || matcher(entryPath)) {
-            files.push(toRelative(entryPath));
+            files.push((this.toRelative || exportedService.toRelative).call(this, entryPath));
         }
     });
 
     return files.sort();
-}
+},
 
-function collectModuleOwnedFiles(modulePath) {
+    /** Implements collectModuleOwnedFiles as an overrideable service operation. */
+    collectModuleOwnedFiles: function (modulePath) {
     const files = [];
     const ignoredModuleDirectories = new Set([
         ...ignoredDirectories,
@@ -130,13 +142,13 @@ function collectModuleOwnedFiles(modulePath) {
                     if (ignoredModuleDirectories.has(entry.name)) {
                         return;
                     }
-                    if (entryPath !== modulePath && isModuleDirectory(entryPath)) {
+                    if (entryPath !== modulePath && (this.isModuleDirectory || exportedService.isModuleDirectory).call(this, entryPath)) {
                         return;
                     }
                     if (entry.name === 'llm') {
                         const readmePath = path.join(entryPath, 'README.md');
                         if (fs.existsSync(readmePath)) {
-                            files.push(toRelative(readmePath));
+                            files.push((this.toRelative || exportedService.toRelative).call(this, readmePath));
                         }
                         return;
                     }
@@ -144,16 +156,17 @@ function collectModuleOwnedFiles(modulePath) {
                     return;
                 }
                 if (!ignoredFiles.has(entry.name)) {
-                    files.push(toRelative(entryPath));
+                    files.push((this.toRelative || exportedService.toRelative).call(this, entryPath));
                 }
             });
     }
 
     walk(modulePath);
     return files.sort();
-}
+},
 
-function createFilesFingerprint(relativeFiles) {
+    /** Implements createFilesFingerprint as an overrideable service operation. */
+    createFilesFingerprint: function (relativeFiles) {
     const hash = crypto.createHash('sha256');
     (relativeFiles || []).slice().sort().forEach(relativeFile => {
         const absolutePath = path.join(rootPath, relativeFile);
@@ -163,14 +176,16 @@ function createFilesFingerprint(relativeFiles) {
         hash.update('\0');
     });
     return hash.digest('hex');
-}
+},
 
-function getRelativeIfExists(modulePath, relativePath) {
+    /** Implements getRelativeIfExists as an overrideable service operation. */
+    getRelativeIfExists: function (modulePath, relativePath) {
     let targetPath = path.join(modulePath, relativePath);
-    return fs.existsSync(targetPath) ? toRelative(targetPath) : null;
-}
+    return fs.existsSync(targetPath) ? (this.toRelative || exportedService.toRelative).call(this, targetPath) : null;
+},
 
-function loadLocalSchemas(modulePath) {
+    /** Implements loadLocalSchemas as an overrideable service operation. */
+    loadLocalSchemas: function (modulePath) {
     let schemaPath = path.join(modulePath, 'src', 'schemas', 'schemas.js');
     if (!fs.existsSync(schemaPath)) {
         return {
@@ -191,9 +206,10 @@ function loadLocalSchemas(modulePath) {
             error: error.message
         };
     }
-}
+},
 
-function createEnumOptions(enumName, enumDefinition) {
+    /** Implements createEnumOptions as an overrideable service operation. */
+    createEnumOptions: function (enumName, enumDefinition) {
     if (!enumDefinition || !enumDefinition._options) {
         return undefined;
     }
@@ -204,9 +220,10 @@ function createEnumOptions(enumName, enumDefinition) {
         freez: enumDefinition._options.freez || false,
         endianness: enumDefinition._options.endianness
     };
-}
+},
 
-function bootstrapSchemaGlobals(modules = scanModules()) {
+    /** Implements bootstrapSchemaGlobals as an overrideable service operation. */
+    bootstrapSchemaGlobals: function (modules = (this.scanModules || exportedService.scanModules).call(this, )) {
     global.ENUMS = global.ENUMS || {};
     modules.forEach(module => {
         let enumPath = path.join(module.path, 'src', 'utils', 'enums.js');
@@ -218,13 +235,14 @@ function bootstrapSchemaGlobals(modules = scanModules()) {
         Object.keys(enumScript || {}).forEach(enumName => {
             let enumDefinition = enumScript[enumName];
             if (enumDefinition && enumDefinition.definition) {
-                global.ENUMS[enumName] = new Enum(enumDefinition.definition, createEnumOptions(enumName, enumDefinition));
+                global.ENUMS[enumName] = new Enum(enumDefinition.definition, (this.createEnumOptions || exportedService.createEnumOptions).call(this, enumName, enumDefinition));
             }
         });
     });
-}
+},
 
-function listFeatureFolders(modulePath) {
+    /** Implements listFeatureFolders as an overrideable service operation. */
+    listFeatureFolders: function (modulePath) {
     return [
         'config',
         'data',
@@ -240,15 +258,16 @@ function listFeatureFolders(modulePath) {
         'src/utils',
         'test'
     ].filter(relativePath => fs.existsSync(path.join(modulePath, relativePath)));
-}
+},
 
-function getModuleKind(module) {
+    /** Implements getModuleKind as an overrideable service operation. */
+    getModuleKind: function (module) {
     if (module.packageJson && module.packageJson.nodics && module.packageJson.nodics.kind) {
         return module.packageJson.nodics.kind;
     }
 
     let relativePath = module.relativePath;
-    if (isNSetupModule(module)) {
+    if ((this.isNSetupModule || exportedService.isNSetupModule).call(this, module)) {
         return 'setup';
     }
     let pathParts = relativePath.split('/');
@@ -267,42 +286,30 @@ function getModuleKind(module) {
         return 'template';
     }
     return 'capability';
-}
+},
 
-function isNSetupModule(module) {
+    /** Implements isNSetupModule as an overrideable service operation. */
+    isNSetupModule: function (module) {
     return module.name === 'nSetup' ||
         module.relativePath === 'modules/nSetup' ||
         module.relativePath.endsWith('/modules/nSetup');
-}
+},
 
-function getModuleRuntime(module) {
+    /** Implements getModuleRuntime as an overrideable service operation. */
+    getModuleRuntime: function (module) {
     if (module.packageJson && module.packageJson.nodics && module.packageJson.nodics.runtime) {
         return module.packageJson.nodics.runtime;
     }
     return {};
-}
+},
 
-function getModuleRuntimeSummary(module) {
-    let runtime = getModuleRuntime(module);
+    /** Implements getModuleRuntimeSummary as an overrideable service operation. */
+    getModuleRuntimeSummary: function (module) {
+    let runtime = (this.getModuleRuntime || exportedService.getModuleRuntime).call(this, module);
     let enabled = Object.keys(runtime).sort().filter(key => runtime[key] === true);
     return enabled.length ? enabled.join(', ') : 'none';
-}
+},
 
-module.exports = {
-    rootPath,
-    toRelative,
-    ensureDirectory,
-    removeDirectory,
-    collectFiles,
-    collectModuleOwnedFiles,
-    createFilesFingerprint,
-    getRelativeIfExists,
-    isNSetupModule,
-    getModuleKind,
-    getModuleRuntime,
-    getModuleRuntimeSummary,
-    listFeatureFolders,
-    loadLocalSchemas,
-    scanModules,
-    bootstrapSchemaGlobals
+    /** Implements rootPath as an overrideable service operation. */
+rootPath
 };

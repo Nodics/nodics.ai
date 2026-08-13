@@ -16,37 +16,27 @@
  * @owner nPublish
  * @override Project modules may add later routes for customer publishing capabilities.
  */
-const operation = (key, method, name, permission, tokenType = 'access') => ({
-    secured: true,
-    accessGroups: ['runtimeConfigAdminUserGroup'],
-    permission: permission,
-    authTokenTypes: [tokenType],
-    apiExposure: 'publicationLifecycle',
-    key: key,
-    method: method,
-    controller: 'DefaultPublicationLifecycleController',
-    operation: name
-});
+
 
 module.exports = {
     publish: {
         publicationLifecycle: {
-            create: operation('/publications', 'POST', 'create', 'publish.lifecycle.create'),
-            get: operation('/publications/:publicationCode', 'GET', 'get', 'publish.lifecycle.view'),
-            validate: operation('/publications/:publicationCode/validate', 'POST', 'validate', 'publish.lifecycle.validate'),
-            requestApproval: operation('/publications/:publicationCode/request-approval', 'POST', 'requestApproval', 'publish.lifecycle.requestApproval'),
-            approve: operation('/publications/:publicationCode/approve', 'POST', 'approve', 'publish.lifecycle.approve', 'service'),
-            reject: operation('/publications/:publicationCode/reject', 'POST', 'reject', 'publish.lifecycle.reject', 'service'),
-            activate: operation('/publications/:publicationCode/activate', 'POST', 'activate', 'publish.lifecycle.activate', 'service'),
-            retry: operation('/publications/:publicationCode/retry', 'POST', 'retry', 'publish.lifecycle.retry'),
-            rollback: operation('/publications/:publicationCode/rollback', 'POST', 'rollback', 'publish.lifecycle.rollback'),
-            withdraw: operation('/publications/:publicationCode/withdraw', 'POST', 'withdraw', 'publish.lifecycle.withdraw')
+            create: { secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'publish.lifecycle.create', authTokenTypes: ['access'], apiExposure: 'publicationLifecycle', key: '/publications', method: 'POST', controller: 'DefaultPublicationLifecycleController', operation: 'create' },
+            get: { secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'publish.lifecycle.view', authTokenTypes: ['access'], apiExposure: 'publicationLifecycle', key: '/publications/:publicationCode', method: 'GET', controller: 'DefaultPublicationLifecycleController', operation: 'get' },
+            validate: { secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'publish.lifecycle.validate', authTokenTypes: ['access'], apiExposure: 'publicationLifecycle', key: '/publications/:publicationCode/validate', method: 'POST', controller: 'DefaultPublicationLifecycleController', operation: 'validate' },
+            requestApproval: { secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'publish.lifecycle.requestApproval', authTokenTypes: ['access'], apiExposure: 'publicationLifecycle', key: '/publications/:publicationCode/request-approval', method: 'POST', controller: 'DefaultPublicationLifecycleController', operation: 'requestApproval' },
+            approve: { secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'publish.lifecycle.approve', authTokenTypes: ['service'], apiExposure: 'publicationLifecycle', key: '/publications/:publicationCode/approve', method: 'POST', controller: 'DefaultPublicationLifecycleController', operation: 'approve' },
+            reject: { secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'publish.lifecycle.reject', authTokenTypes: ['service'], apiExposure: 'publicationLifecycle', key: '/publications/:publicationCode/reject', method: 'POST', controller: 'DefaultPublicationLifecycleController', operation: 'reject' },
+            activate: { secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'publish.lifecycle.activate', authTokenTypes: ['service'], apiExposure: 'publicationLifecycle', key: '/publications/:publicationCode/activate', method: 'POST', controller: 'DefaultPublicationLifecycleController', operation: 'activate' },
+            retry: { secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'publish.lifecycle.retry', authTokenTypes: ['access'], apiExposure: 'publicationLifecycle', key: '/publications/:publicationCode/retry', method: 'POST', controller: 'DefaultPublicationLifecycleController', operation: 'retry' },
+            rollback: { secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'publish.lifecycle.rollback', authTokenTypes: ['access'], apiExposure: 'publicationLifecycle', key: '/publications/:publicationCode/rollback', method: 'POST', controller: 'DefaultPublicationLifecycleController', operation: 'rollback' },
+            withdraw: { secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'publish.lifecycle.withdraw', authTokenTypes: ['access'], apiExposure: 'publicationLifecycle', key: '/publications/:publicationCode/withdraw', method: 'POST', controller: 'DefaultPublicationLifecycleController', operation: 'withdraw' }
         },
         publicationOperations: {
-            diagnostics: operation('/publications/operations/diagnostics', 'GET', 'diagnostics', 'publish.operations.view'),
-            correlation: operation('/publications/operations/correlations/:correlationId', 'GET', 'correlation', 'publish.operations.view'),
-            reconcile: operation('/publications/operations/reconcile', 'POST', 'reconcile', 'publish.operations.reconcile'),
-            recover: operation('/publications/:publicationCode/recover', 'POST', 'recover', 'publish.operations.recover')
+            diagnostics: { secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'publish.operations.view', authTokenTypes: ['access'], apiExposure: 'publicationLifecycle', key: '/publications/operations/diagnostics', method: 'GET', controller: 'DefaultPublicationLifecycleController', operation: 'diagnostics' },
+            correlation: { secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'publish.operations.view', authTokenTypes: ['access'], apiExposure: 'publicationLifecycle', key: '/publications/operations/correlations/:correlationId', method: 'GET', controller: 'DefaultPublicationLifecycleController', operation: 'correlation' },
+            reconcile: { secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'publish.operations.reconcile', authTokenTypes: ['access'], apiExposure: 'publicationLifecycle', key: '/publications/operations/reconcile', method: 'POST', controller: 'DefaultPublicationLifecycleController', operation: 'reconcile' },
+            recover: { secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'publish.operations.recover', authTokenTypes: ['access'], apiExposure: 'publicationLifecycle', key: '/publications/:publicationCode/recover', method: 'POST', controller: 'DefaultPublicationLifecycleController', operation: 'recover' }
         }
     }
 };

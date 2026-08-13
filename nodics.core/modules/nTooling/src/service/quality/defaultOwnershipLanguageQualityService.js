@@ -78,22 +78,31 @@ const ownershipRules = [
     }
 ];
 
-function readOption(args, name, defaultValue) {
+
+
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements readOption as an overrideable service operation. */
+    readOption: function (args, name, defaultValue) {
     const prefix = name + '=';
     const match = (args || []).find(arg => arg.indexOf(prefix) === 0);
     return match ? match.slice(prefix.length) : defaultValue;
-}
+},
 
-function toRelative(filePath, rootDir) {
+    /** Implements toRelative as an overrideable service operation. */
+    toRelative: function (filePath, rootDir) {
     return path.relative(rootDir, filePath).split(path.sep).join('/');
-}
+},
 
-function isTextFile(filePath) {
+    /** Implements isTextFile as an overrideable service operation. */
+    isTextFile: function (filePath) {
     return textExtensions.has(path.extname(filePath));
-}
+},
 
-function shouldSkipFile(filePath, rootDir) {
-    const relativePath = toRelative(filePath, rootDir);
+    /** Implements shouldSkipFile as an overrideable service operation. */
+    shouldSkipFile: function (filePath, rootDir) {
+    const relativePath = (this.toRelative || exportedService.toRelative).call(this, filePath, rootDir);
     if (relativePath === 'package-lock.json') {
         return true;
     }
@@ -101,74 +110,80 @@ function shouldSkipFile(filePath, rootDir) {
         return true;
     }
     return false;
-}
+},
 
-function walk(directory, rootDir, files) {
+    /** Implements walk as an overrideable service operation. */
+    walk: function (directory, rootDir, files) {
     fs.readdirSync(directory, { withFileTypes: true }).forEach(entry => {
         const fullPath = path.join(directory, entry.name);
         if (entry.isDirectory()) {
             if (ignoredDirectories.has(entry.name)) {
                 return;
             }
-            walk(fullPath, rootDir, files);
+            (this.walk || exportedService.walk).call(this, fullPath, rootDir, files);
             return;
         }
-        if (entry.isFile() && isTextFile(fullPath) && !shouldSkipFile(fullPath, rootDir)) {
+        if (entry.isFile() && (this.isTextFile || exportedService.isTextFile).call(this, fullPath) && !this.shouldSkipFile(fullPath, rootDir)) {
             files.push(fullPath);
         }
     });
-}
+},
 
-function collectFiles(rootDir) {
+    /** Implements collectFiles as an overrideable service operation. */
+    collectFiles: function (rootDir) {
     const files = [];
     if (fs.existsSync(rootDir)) {
-        walk(rootDir, rootDir, files);
+        (this.walk || exportedService.walk).call(this, rootDir, rootDir, files);
     }
     return files.sort();
-}
+},
 
-function inspectLine(filePath, rootDir, line, lineNumber) {
+    /** Implements inspectLine as an overrideable service operation. */
+    inspectLine: function (filePath, rootDir, line, lineNumber) {
     if (negationPattern.test(line) || scannerFixturePattern.test(line)) {
         return [];
     }
     return ownershipRules
         .filter(rule => rule.pattern.test(line))
         .map(rule => ({
-            file: toRelative(filePath, rootDir),
+            file: (this.toRelative || exportedService.toRelative).call(this, filePath, rootDir),
             line: lineNumber,
             code: rule.code,
             severity: rule.severity,
             description: rule.description,
             text: line.trim()
         }));
-}
+},
 
-function inspectFiles(options) {
-    const files = collectFiles(options.rootDir);
+    /** Implements inspectFiles as an overrideable service operation. */
+    inspectFiles: function (options) {
+    const files = (this.collectFiles || exportedService.collectFiles).call(this, options.rootDir);
     const findings = [];
     files.forEach(filePath => {
         const content = fs.readFileSync(filePath, 'utf8');
         content.split(/\r?\n/).forEach((line, index) => {
-            findings.push.apply(findings, inspectLine(filePath, options.rootDir, line, index + 1));
+            findings.push.apply(findings, (this.inspectLine || exportedService.inspectLine).call(this, filePath, options.rootDir, line, index + 1));
         });
     });
     return {
         filesChecked: files.length,
         findings: findings
     };
-}
+},
 
-function createOptions(args) {
+    /** Implements createOptions as an overrideable service operation. */
+    createOptions: function (args) {
     args = args || [];
-    const configuredHome = readOption(args, '--home', process.env.NODICS_HOME || '');
-    const configuredRoot = readOption(args, '--root', configuredHome || '');
+    const configuredHome = (this.readOption || exportedService.readOption).call(this, args, '--home', process.env.NODICS_HOME || '');
+    const configuredRoot = (this.readOption || exportedService.readOption).call(this, args, '--root', configuredHome || '');
     return {
         rootDir: configuredRoot ? path.resolve(configuredRoot) : process.cwd(),
-        reportLimit: Number(readOption(args, '--limit', '80'))
+        reportLimit: Number((this.readOption || exportedService.readOption).call(this, args, '--limit', '80'))
     };
-}
+},
 
-function printReport(report, limit) {
+    /** Implements printReport as an overrideable service operation. */
+    printReport: function (report, limit) {
     console.log('Nodics ownership-language governance');
     console.log('Files checked              : ' + report.filesChecked);
     console.log('Findings                   : ' + report.findings.length);
@@ -181,26 +196,22 @@ function printReport(report, limit) {
             console.log('  ... ' + (report.findings.length - limit) + ' more');
         }
     }
-}
+},
 
-function runCli(args) {
-    const options = createOptions(args);
-    const report = inspectFiles(options);
-    printReport(report, options.reportLimit);
+    /** Implements runCli as an overrideable service operation. */
+    runCli: function (args) {
+    const options = (this.createOptions || exportedService.createOptions).call(this, args);
+    const report = (this.inspectFiles || exportedService.inspectFiles).call(this, options);
+    (this.printReport || exportedService.printReport).call(this, report, options.reportLimit);
     if (report.findings.length > 0) {
         process.exitCode = 1;
     }
-}
+},
+
+    /** Implements ownershipRules as an overrideable service operation. */
+ownershipRules
+};
 
 if (require.main === module) {
-    runCli(process.argv.slice(2));
+    exportedService.runCli(process.argv.slice(2));
 }
-
-module.exports = {
-    collectFiles,
-    createOptions,
-    inspectFiles,
-    inspectLine,
-    ownershipRules,
-    runCli
-};

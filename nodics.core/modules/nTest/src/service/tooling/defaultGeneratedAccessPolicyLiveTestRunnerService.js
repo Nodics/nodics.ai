@@ -33,15 +33,20 @@ const policyEnterprise = process.env.NODICS_TEST_POLICY_ENTERPRISE || process.en
 const policyToken = process.env.NODICS_TEST_POLICY_TOKEN || process.env.NODICS_TEST_CONTROL_TOKEN || token;
 const contextRoot = process.env.NODICS_TEST_CONTEXT_ROOT || process.env.NODICS_TEST_API_PREFIX || '/nodics';
 const restrictedUserGroup = process.env.NODICS_TEST_RESTRICTED_USER_GROUP || 'userGroup';
-const selectedModule = getArgValue('--module=');
-const selectedSchema = getArgValue('--schema=');
+const selectedModule = (this.getArgValue || exportedService.getArgValue).call(this, '--module=');
+const selectedSchema = (this.getArgValue || exportedService.getArgValue).call(this, '--schema=');
 const dryRunContract = process.argv.includes('--dry-run-contract');
 const runId = process.env.NODICS_TEST_RUN_ID || String(Date.now());
 
 /** Executes generated access-policy tests when invoked as a tooling command. */
-function runCli() {
-    validateGuard();
-    run().then(() => {
+
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements runCli as an overrideable service operation. */
+    runCli: function () {
+    (this.validateGuard || exportedService.validateGuard).call(this, );
+    (this.run || exportedService.run).call(this, ).then(() => {
         let mode = dryRunContract ? 'contract' : 'live';
         console.log(`\nGenerated access policy ${mode} tests passed`);
     }).catch(error => {
@@ -49,10 +54,11 @@ function runCli() {
         console.error(error && error.stack ? error.stack : error);
         process.exit(1);
     });
-}
+},
 
-async function run() {
-    let specs = collectSpecs();
+    /** Implements run as an overrideable service operation. */
+    run: async function () {
+    let specs = (this.collectSpecs || exportedService.collectSpecs).call(this, );
     let policySpec = specs.find(spec => spec.moduleName === 'dynamo' && spec.schemaName === 'schemaAccessPolicy');
     if (!policySpec) {
         throw new Error('schemaAccessPolicy generated CRUD spec not found. Run npm run build first.');
@@ -69,22 +75,24 @@ async function run() {
         throw new Error('No generated access policy specs found for the selected target. Run npm run build first.');
     }
 
-    for (const spec of specs.sort(compareSpecs)) {
-        validateSpecContract(spec);
+    for (const spec of specs.sort(exportedService.compareSpecs)) {
+        (this.validateSpecContract || exportedService.validateSpecContract).call(this, spec);
         if (!dryRunContract) {
-            await runLiveSpec(spec, policySpec);
+            await (this.runLiveSpec || exportedService.runLiveSpec).call(this, spec, policySpec);
         }
     }
-}
+},
 
-function collectSpecs() {
+    /** Implements collectSpecs as an overrideable service operation. */
+    collectSpecs: function () {
     return collectGeneratedTests(rootPath, [], {
         selectedType: 'crud',
         includeDestructive: true
-    }).map(testPath => requireGeneratedSpec(testPath));
-}
+    }).map(testPath => (this.requireGeneratedSpec || exportedService.requireGeneratedSpec).call(this, testPath));
+},
 
-function requireGeneratedSpec(testPath) {
+    /** Implements requireGeneratedSpec as an overrideable service operation. */
+    requireGeneratedSpec: function (testPath) {
     if (process.env.NODICS_TEST_VERBOSE_GENERATED_LOAD === 'true') {
         return require(testPath);
     }
@@ -95,9 +103,10 @@ function requireGeneratedSpec(testPath) {
     } finally {
         console.log = originalLog;
     }
-}
+},
 
-function validateSpecContract(spec) {
+    /** Implements validateSpecContract as an overrideable service operation. */
+    validateSpecContract: function (spec) {
     let actions = (spec.accessPolicyScenarios || []).map(scenario => scenario.policyAction).sort();
     ['create', 'delete', 'read', 'update'].forEach(action => {
         if (!actions.includes(action)) {
@@ -108,43 +117,46 @@ function validateSpecContract(spec) {
     if (!deleteScenario || deleteScenario.policy.propertyName !== '*') {
         throw new Error(`Generated delete access policy must be schema-level for ${spec.moduleName}.${spec.schemaName}`);
     }
-}
+},
 
-async function runLiveSpec(spec, policySpec) {
+    /** Implements runLiveSpec as an overrideable service operation. */
+    runLiveSpec: async function (spec, policySpec) {
     console.log(`\nRunning live access policy scenarios for ${spec.moduleName}.${spec.schemaName} ` +
         `(targetTenant=${tenant}, policyTenant=${policyTenant})`);
     let state = {};
-    await cleanupPolicies(spec, policySpec);
-    await runOptionalLifecycleStep(spec, 'cleanupBefore', state);
-    await runRequiredLifecycleStep(spec, 'create', state);
+    await (this.cleanupPolicies || exportedService.cleanupPolicies).call(this, spec, policySpec);
+    await (this.runOptionalLifecycleStep || exportedService.runOptionalLifecycleStep).call(this, spec, 'cleanupBefore', state);
+    await (this.runRequiredLifecycleStep || exportedService.runRequiredLifecycleStep).call(this, spec, 'create', state);
 
     try {
         for (const scenario of spec.accessPolicyScenarios) {
-            await runAccessPolicyScenario(spec, policySpec, scenario, state);
+            await (this.runAccessPolicyScenario || exportedService.runAccessPolicyScenario).call(this, spec, policySpec, scenario, state);
         }
     } finally {
-        await cleanupPolicies(spec, policySpec);
-        await runOptionalLifecycleStep(spec, 'delete', state);
+        await (this.cleanupPolicies || exportedService.cleanupPolicies).call(this, spec, policySpec);
+        await (this.runOptionalLifecycleStep || exportedService.runOptionalLifecycleStep).call(this, spec, 'delete', state);
     }
-}
+},
 
-async function runAccessPolicyScenario(spec, policySpec, scenario, state) {
-    let policyCode = createPolicyCode(spec, scenario);
-    await savePolicy(policySpec, spec, scenario, policyCode);
+    /** Implements runAccessPolicyScenario as an overrideable service operation. */
+    runAccessPolicyScenario: async function (spec, policySpec, scenario, state) {
+    let policyCode = (this.createPolicyCode || exportedService.createPolicyCode).call(this, spec, scenario);
+    await (this.savePolicy || exportedService.savePolicy).call(this, policySpec, spec, scenario, policyCode);
     try {
-        let request = replacePlaceholders(scenario.request, state);
-        let url = createUrl(spec, scenario.route, request.params || {});
-        let response = await executeRequest(scenario.route.method, url, request);
-        let body = await parseBody(response);
-        assertScenarioOutcome(spec, scenario, state, response, body);
+        let request = (this.replacePlaceholders || exportedService.replacePlaceholders).call(this, scenario.request, state);
+        let url = (this.createUrl || exportedService.createUrl).call(this, spec, scenario.route, request.params || {});
+        let response = await (this.executeRequest || exportedService.executeRequest).call(this, scenario.route.method, url, request);
+        let body = await (this.parseBody || exportedService.parseBody).call(this, response);
+        (this.assertScenarioOutcome || exportedService.assertScenarioOutcome).call(this, spec, scenario, state, response, body);
         console.log(`${scenario.name} ${spec.moduleName}.${spec.schemaName}: ${response.status}`);
     } finally {
-        await removePolicy(policySpec, policyCode);
+        await (this.removePolicy || exportedService.removePolicy).call(this, policySpec, policyCode);
     }
-}
+},
 
-async function savePolicy(policySpec, spec, scenario, policyCode) {
-    let route = findScenario(policySpec.scenarios, 'save').route;
+    /** Implements savePolicy as an overrideable service operation. */
+    savePolicy: async function (policySpec, spec, scenario, policyCode) {
+    let route = (this.findScenario || exportedService.findScenario).call(this, policySpec.scenarios, 'save').route;
     let policy = {
         code: policyCode,
         active: true,
@@ -160,20 +172,21 @@ async function savePolicy(policySpec, spec, scenario, policyCode) {
         status: 'ACTIVE',
         reason: 'Generated live access policy test ' + runId
     };
-    let response = await executeRequest(route.method, createUrl(policySpec, route, {}), {
-        headers: createPolicyHeaders(),
+    let response = await (this.executeRequest || exportedService.executeRequest).call(this, route.method, this.createUrl(policySpec, route, {}), {
+        headers: (this.createPolicyHeaders || exportedService.createPolicyHeaders).call(this, ),
         body: policy
     });
-    let body = await parseBody(response);
+    let body = await (this.parseBody || exportedService.parseBody).call(this, response);
     if (!response.ok) {
-        throw createHttpError(policySpec, { name: 'saveAccessPolicy', route }, response, body, 'Unable to create schema access policy');
+        throw (this.createHttpError || exportedService.createHttpError).call(this, policySpec, { name: 'saveAccessPolicy', route }, response, body, 'Unable to create schema access policy');
     }
-}
+},
 
-async function removePolicy(policySpec, policyCode) {
-    let scenario = findScenario(policySpec.scenarios, 'removeByCode') || findScenario(policySpec.scenarios, 'remove');
+    /** Implements removePolicy as an overrideable service operation. */
+    removePolicy: async function (policySpec, policyCode) {
+    let scenario = (this.findScenario || exportedService.findScenario).call(this, policySpec.scenarios, 'removeByCode') || this.findScenario(policySpec.scenarios, 'remove');
     let request = {
-        headers: createPolicyHeaders(),
+        headers: (this.createPolicyHeaders || exportedService.createPolicyHeaders).call(this, ),
         params: scenario.route.key.includes(':code') ? { code: policyCode } : {},
         body: scenario.route.key.includes(':code') ? {} : {
             options: {
@@ -184,90 +197,97 @@ async function removePolicy(policySpec, policyCode) {
             }
         }
     };
-    let response = await executeRequest(scenario.route.method, createUrl(policySpec, scenario.route, request.params), request);
-    let body = await parseBody(response);
-    if (!response.ok && !isMissing(response, body)) {
-        throw createHttpError(policySpec, scenario, response, body, 'Unable to remove schema access policy');
+    let response = await (this.executeRequest || exportedService.executeRequest).call(this, scenario.route.method, this.createUrl(policySpec, scenario.route, request.params), request);
+    let body = await (this.parseBody || exportedService.parseBody).call(this, response);
+    if (!response.ok && !(this.isMissing || exportedService.isMissing).call(this, response, body)) {
+        throw (this.createHttpError || exportedService.createHttpError).call(this, policySpec, scenario, response, body, 'Unable to remove schema access policy');
     }
-}
+},
 
-async function cleanupPolicies(spec, policySpec) {
+    /** Implements cleanupPolicies as an overrideable service operation. */
+    cleanupPolicies: async function (spec, policySpec) {
     for (const scenario of spec.accessPolicyScenarios || []) {
-        await removePolicy(policySpec, createPolicyCode(spec, scenario));
+        await (this.removePolicy || exportedService.removePolicy).call(this, policySpec, this.createPolicyCode(spec, scenario));
     }
-}
+},
 
-async function runRequiredLifecycleStep(spec, stepName, state) {
-    let step = findLifecycleStep(spec, stepName);
+    /** Implements runRequiredLifecycleStep as an overrideable service operation. */
+    runRequiredLifecycleStep: async function (spec, stepName, state) {
+    let step = (this.findLifecycleStep || exportedService.findLifecycleStep).call(this, spec, stepName);
     if (!step) {
         throw new Error(`Missing lifecycle step ${stepName} for ${spec.moduleName}.${spec.schemaName}`);
     }
-    let response = await executeLifecycleStep(spec, step, state);
+    let response = await (this.executeLifecycleStep || exportedService.executeLifecycleStep).call(this, spec, step, state);
     if (!response.response.ok) {
-        throw createHttpError(spec, step, response.response, response.body, `Lifecycle step ${stepName} failed`);
+        throw (this.createHttpError || exportedService.createHttpError).call(this, spec, step, response.response, response.body, `Lifecycle step ${stepName} failed`);
     }
-    let modelId = findFirstValue(response.body, '_id') || findFirstValue(response.body, 'id');
+    let modelId = (this.findFirstValue || exportedService.findFirstValue).call(this, response.body, '_id') || this.findFirstValue(response.body, 'id');
     if (modelId) {
         state.createdModelId = modelId;
     }
-    state.createdModel = replacePlaceholders(step.request.body || {}, state);
-}
+    state.createdModel = (this.replacePlaceholders || exportedService.replacePlaceholders).call(this, step.request.body || {}, state);
+},
 
-async function runOptionalLifecycleStep(spec, stepName, state) {
-    let step = findLifecycleStep(spec, stepName);
+    /** Implements runOptionalLifecycleStep as an overrideable service operation. */
+    runOptionalLifecycleStep: async function (spec, stepName, state) {
+    let step = (this.findLifecycleStep || exportedService.findLifecycleStep).call(this, spec, stepName);
     if (!step) {
         return;
     }
-    let response = await executeLifecycleStep(spec, step, state);
-    if (!response.response.ok && !isMissing(response.response, response.body)) {
-        throw createHttpError(spec, step, response.response, response.body, `Optional lifecycle step ${stepName} failed`);
+    let response = await (this.executeLifecycleStep || exportedService.executeLifecycleStep).call(this, spec, step, state);
+    if (!response.response.ok && !(this.isMissing || exportedService.isMissing).call(this, response.response, response.body)) {
+        throw (this.createHttpError || exportedService.createHttpError).call(this, spec, step, response.response, response.body, `Optional lifecycle step ${stepName} failed`);
     }
-}
+},
 
-async function executeLifecycleStep(spec, step, state) {
-    let request = replacePlaceholders(step.request, state);
-    let url = createUrl(spec, step.route, request.params || {});
-    let response = await executeRequest(step.route.method, url, request);
-    let body = await parseBody(response);
+    /** Implements executeLifecycleStep as an overrideable service operation. */
+    executeLifecycleStep: async function (spec, step, state) {
+    let request = (this.replacePlaceholders || exportedService.replacePlaceholders).call(this, step.request, state);
+    let url = (this.createUrl || exportedService.createUrl).call(this, spec, step.route, request.params || {});
+    let response = await (this.executeRequest || exportedService.executeRequest).call(this, step.route.method, url, request);
+    let body = await (this.parseBody || exportedService.parseBody).call(this, response);
     return {
         response: response,
         body: body
     };
-}
+},
 
-function assertScenarioOutcome(spec, scenario, state, response, body) {
+    /** Implements assertScenarioOutcome as an overrideable service operation. */
+    assertScenarioOutcome: function (spec, scenario, state, response, body) {
     if (scenario.expected.blocked) {
-        if (!isErrorResponse(response, body)) {
-            throw createHttpError(spec, scenario, response, body, 'Expected access policy to block request');
+        if (!(this.isErrorResponse || exportedService.isErrorResponse).call(this, response, body)) {
+            throw (this.createHttpError || exportedService.createHttpError).call(this, spec, scenario, response, body, 'Expected access policy to block request');
         }
         let code = body && body.code;
         if (code && code !== 'ERR_AUTH_00003') {
-            throw createHttpError(spec, scenario, response, body, 'Expected access policy authorization error');
+            throw (this.createHttpError || exportedService.createHttpError).call(this, spec, scenario, response, body, 'Expected access policy authorization error');
         }
         return;
     }
 
     if (!response.ok) {
-        throw createHttpError(spec, scenario, response, body, 'Expected access policy request to succeed');
+        throw (this.createHttpError || exportedService.createHttpError).call(this, spec, scenario, response, body, 'Expected access policy request to succeed');
     }
     if (scenario.expected.responseFiltering) {
-        assertResponseFiltered(spec, scenario, state, response, body);
+        (this.assertResponseFiltered || exportedService.assertResponseFiltered).call(this, spec, scenario, state, response, body);
     }
-}
+},
 
-function assertResponseFiltered(spec, scenario, state, response, body) {
+    /** Implements assertResponseFiltered as an overrideable service operation. */
+    assertResponseFiltered: function (spec, scenario, state, response, body) {
     let propertyName = scenario.policy.propertyName;
     let original = state.createdModel ? state.createdModel[propertyName] : undefined;
-    let filtered = findFirstValue(body, propertyName);
+    let filtered = (this.findFirstValue || exportedService.findFirstValue).call(this, body, propertyName);
     if (original === undefined) {
         return;
     }
     if (filtered === original) {
-        throw createHttpError(spec, scenario, response, body, `Expected ${propertyName} to be filtered`);
+        throw (this.createHttpError || exportedService.createHttpError).call(this, spec, scenario, response, body, `Expected ${propertyName} to be filtered`);
     }
-}
+},
 
-async function executeRequest(method, url, request) {
+    /** Implements executeRequest as an overrideable service operation. */
+    executeRequest: async function (method, url, request) {
     let headers = Object.assign({}, request.headers || {}, {
         Accept: 'application/json'
     });
@@ -280,9 +300,10 @@ async function executeRequest(method, url, request) {
         options.body = JSON.stringify(request.body);
     }
     return fetch(url, options);
-}
+},
 
-function createUrl(spec, route, params) {
+    /** Implements createUrl as an overrideable service operation. */
+    createUrl: function (spec, route, params) {
     let routeKey = route.key;
     let apiVersion = route.apiVersion || 'v0';
     let urlPrefix = spec.urlPrefix || spec.moduleName;
@@ -293,10 +314,11 @@ function createUrl(spec, route, params) {
         }
         return part;
     }).join('/');
-    return trimRight(baseUrl, '/') + trimRight(contextRoot, '/') + '/' + urlPrefix + '/' + apiVersion + resolvedRoute;
-}
+    return (this.trimRight || exportedService.trimRight).call(this, baseUrl, '/') + this.trimRight(contextRoot, '/') + '/' + urlPrefix + '/' + apiVersion + resolvedRoute;
+},
 
-async function parseBody(response) {
+    /** Implements parseBody as an overrideable service operation. */
+    parseBody: async function (response) {
     let text = await response.text();
     if (!text) {
         return null;
@@ -306,32 +328,35 @@ async function parseBody(response) {
     } catch (error) {
         return text;
     }
-}
+},
 
-function createHeaders() {
+    /** Implements createHeaders as an overrideable service operation. */
+    createHeaders: function () {
     return {
         Authorization: 'Bearer ' + token,
         tenant: tenant,
         'x-enterprise-code': enterprise
     };
-}
+},
 
-function createPolicyHeaders() {
+    /** Implements createPolicyHeaders as an overrideable service operation. */
+    createPolicyHeaders: function () {
     return {
         Authorization: 'Bearer ' + policyToken,
         tenant: policyTenant,
         'x-enterprise-code': policyEnterprise
     };
-}
+},
 
-function replacePlaceholders(value, state) {
+    /** Implements replacePlaceholders as an overrideable service operation. */
+    replacePlaceholders: function (value, state) {
     if (Array.isArray(value)) {
-        return value.map(item => replacePlaceholders(item, state));
+        return value.map(item => (this.replacePlaceholders || exportedService.replacePlaceholders).call(this, item, state));
     }
     if (value && typeof value === 'object') {
         let copy = {};
         Object.keys(value).forEach(key => {
-            copy[key] = replacePlaceholders(value[key], state);
+            copy[key] = (this.replacePlaceholders || exportedService.replacePlaceholders).call(this, value[key], state);
         });
         return copy;
     }
@@ -348,17 +373,20 @@ function replacePlaceholders(value, state) {
         .replaceAll('<runId>', runId)
         .replaceAll('<createdModelId>', state.createdModelId || '<createdModelId>')
         .replaceAll('<timestamp>', new Date().toISOString());
-}
+},
 
-function findScenario(scenarios, operation) {
+    /** Implements findScenario as an overrideable service operation. */
+    findScenario: function (scenarios, operation) {
     return (scenarios || []).find(scenario => scenario.operation === operation || scenario.name === operation);
-}
+},
 
-function findLifecycleStep(spec, name) {
+    /** Implements findLifecycleStep as an overrideable service operation. */
+    findLifecycleStep: function (spec, name) {
     return (spec.lifecycle || []).find(step => step.name === name);
-}
+},
 
-function createPolicyCode(spec, scenario) {
+    /** Implements createPolicyCode as an overrideable service operation. */
+    createPolicyCode: function (spec, scenario) {
     return [
         'ntest',
         'accesspolicy',
@@ -367,9 +395,10 @@ function createPolicyCode(spec, scenario) {
         scenario.policyAction,
         runId
     ].join('_').replace(/[^a-zA-Z0-9_-]/g, '_');
-}
+},
 
-function isMissing(response, body) {
+    /** Implements isMissing as an overrideable service operation. */
+    isMissing: function (response, body) {
     if (response.status === 404) {
         return true;
     }
@@ -392,16 +421,18 @@ function isMissing(response, body) {
         return true;
     }
     return false;
-}
+},
 
-function isErrorResponse(response, body) {
+    /** Implements isErrorResponse as an overrideable service operation. */
+    isErrorResponse: function (response, body) {
     return !response.ok ||
         (body && body.success === false) ||
         (body && typeof body.code === 'string' && body.code.startsWith('ERR_')) ||
         (body && Array.isArray(body.errors) && body.errors.length > 0);
-}
+},
 
-function findFirstValue(value, keyName) {
+    /** Implements findFirstValue as an overrideable service operation. */
+    findFirstValue: function (value, keyName) {
     if (!value || typeof value !== 'object') {
         return null;
     }
@@ -410,7 +441,7 @@ function findFirstValue(value, keyName) {
     }
     if (Array.isArray(value)) {
         for (const item of value) {
-            let found = findFirstValue(item, keyName);
+            let found = (this.findFirstValue || exportedService.findFirstValue).call(this, item, keyName);
             if (found !== null && found !== undefined) {
                 return found;
             }
@@ -418,15 +449,16 @@ function findFirstValue(value, keyName) {
         return null;
     }
     for (const key of Object.keys(value)) {
-        let found = findFirstValue(value[key], keyName);
+        let found = (this.findFirstValue || exportedService.findFirstValue).call(this, value[key], keyName);
         if (found !== null && found !== undefined) {
             return found;
         }
     }
     return null;
-}
+},
 
-function validateGuard() {
+    /** Implements validateGuard as an overrideable service operation. */
+    validateGuard: function () {
     if (dryRunContract) {
         return;
     }
@@ -469,9 +501,10 @@ function validateGuard() {
         console.error('Missing: ' + missing.join(', '));
         process.exit(1);
     }
-}
+},
 
-function createHttpError(spec, step, response, body, message) {
+    /** Implements createHttpError as an overrideable service operation. */
+    createHttpError: function (spec, step, response, body, message) {
     return new Error(JSON.stringify({
         message: message,
         moduleName: spec.moduleName,
@@ -481,31 +514,29 @@ function createHttpError(spec, step, response, body, message) {
         status: response.status,
         body: body
     }, null, 4));
-}
+},
 
-function compareSpecs(left, right) {
+    /** Implements compareSpecs as an overrideable service operation. */
+    compareSpecs: function (left, right) {
     return `${left.moduleName}.${left.schemaName}`.localeCompare(`${right.moduleName}.${right.schemaName}`);
-}
+},
 
-function getArgValue(prefix) {
+    /** Implements getArgValue as an overrideable service operation. */
+    getArgValue: function (prefix) {
     let arg = process.argv.find(item => item.startsWith(prefix));
     return arg ? arg.substring(prefix.length) : null;
-}
+},
 
-function trimRight(value, char) {
+    /** Implements trimRight as an overrideable service operation. */
+    trimRight: function (value, char) {
     let output = String(value || '');
     while (output.endsWith(char)) {
         output = output.substring(0, output.length - 1);
     }
     return output;
 }
-
-module.exports = {
-    collectSpecs: collectSpecs,
-    run: run,
-    runCli: runCli
 };
 
 if (require.main === module) {
-    runCli();
+    exportedService.runCli();
 }

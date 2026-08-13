@@ -11,7 +11,18 @@
 
 const { Kafka, logLevel } = require('kafkajs');
 
-function toBrokerList(connectionOptions) {
+
+/**
+ * @module nodics.core/modules/nEms/kafka/src/service/kafka/defaultKafkaClientService
+ * @description Implements nEms default kafka client service business behavior and extension logic.
+ * @layer service
+ * @owner nEms
+ * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
+ */
+let exportedService;
+module.exports = exportedService = {
+    /** Implements toBrokerList as an overrideable service operation. */
+    toBrokerList: function (connectionOptions) {
     if (connectionOptions.brokers instanceof Array && connectionOptions.brokers.length > 0) {
         return connectionOptions.brokers;
     }
@@ -19,9 +30,10 @@ function toBrokerList(connectionOptions) {
         return connectionOptions.kafkaHost.split(',').map(item => item.trim()).filter(item => item);
     }
     return [];
-}
+},
 
-function toRetryOptions(connectionOptions) {
+    /** Implements toRetryOptions as an overrideable service operation. */
+    toRetryOptions: function (connectionOptions) {
     let retryOptions = connectionOptions.connectRetryOptions || connectionOptions.retry || {};
     return {
         retries: retryOptions.retries,
@@ -30,9 +42,10 @@ function toRetryOptions(connectionOptions) {
         initialRetryTime: retryOptions.initialRetryTime || retryOptions.minTimeout,
         maxRetryTime: retryOptions.maxRetryTime || retryOptions.maxTimeout
     };
-}
+},
 
-function toMessageList(payload) {
+    /** Implements toMessageList as an overrideable service operation. */
+    toMessageList: function (payload) {
     let messages = payload.messages || payload.message;
     if (!(messages instanceof Array)) {
         messages = [messages];
@@ -53,16 +66,7 @@ function toMessageList(payload) {
             value: String(message)
         };
     });
-}
-
-/**
- * @module nodics.core/modules/nEms/kafka/src/service/kafka/defaultKafkaClientService
- * @description Implements nEms default kafka client service business behavior and extension logic.
- * @layer service
- * @owner nEms
- * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
- */
-module.exports = {
+},
 
     /**
      * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading.
@@ -105,7 +109,7 @@ module.exports = {
                 return;
             }
             try {
-                let brokers = toBrokerList(config.connectionOptions);
+                let brokers = (this.toBrokerList || exportedService.toBrokerList).call(this, config.connectionOptions);
                 if (brokers.length === 0) {
                     reject(new CLASSES.NodicsError('ERR_EMS_00003', 'Kafka brokers are not configured'));
                     return;
@@ -115,7 +119,7 @@ module.exports = {
                     brokers: brokers,
                     connectionTimeout: config.connectionOptions.connectTimeout,
                     requestTimeout: config.connectionOptions.requestTimeout,
-                    retry: toRetryOptions(config.connectionOptions),
+                    retry: (this.toRetryOptions || exportedService.toRetryOptions).call(this, config.connectionOptions),
                     logLevel: logLevel.NOTHING
                 });
                 let admin = kafka.admin();
@@ -218,7 +222,7 @@ module.exports = {
                 let publisher = SERVICE.DefaultEmsClientConfigurationService.getPublisher(payload.queue);
                 await publisher.publisher.send({
                     topic: payload.queue,
-                    messages: toMessageList(payload),
+                    messages: (this.toMessageList || exportedService.toMessageList).call(this, payload),
                     acks: payload.acks
                 });
                 resolve({

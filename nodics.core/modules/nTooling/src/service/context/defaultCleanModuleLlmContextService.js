@@ -25,7 +25,13 @@ const {
     scanModules
 } = require('./defaultModuleLlmContextUtilsService');
 
-function run() {
+
+
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements run as an overrideable service operation. */
+    run: function () {
     let modules = scanModules();
     let contextModules = modules.filter(module => !isNSetupModule(module));
     contextModules.forEach(module => {
@@ -33,11 +39,8 @@ function run() {
     });
     console.log('Cleaned generated module LLM context for ' + contextModules.length + ' modules');
 }
+};
 
 if (require.main === module) {
-    run();
+    exportedService.run();
 }
-
-module.exports = {
-    run
-};

@@ -113,26 +113,41 @@ const nodicsKindByGenerationKind = {
     node: 'node'
 };
 
-function readOption(args, name, defaultValue) {
+
+/**
+ * Creates the aggregate data-pack manifest required by every generated data boundary.
+ * @param {string} moduleName Generated module identity.
+ * @returns {string} Serialized empty manifest ready for future release sections.
+ */
+
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements readOption as an overrideable service operation. */
+    readOption: function (args, name, defaultValue) {
     const prefix = name + '=';
     const match = (args || []).find(arg => arg.indexOf(prefix) === 0);
     return match ? match.slice(prefix.length) : defaultValue;
-}
+},
 
-function toPosix(filePath) {
+    /** Implements toPosix as an overrideable service operation. */
+    toPosix: function (filePath) {
     return filePath.split(path.sep).join('/');
-}
+},
 
-function ensureDirectory(directory) {
+    /** Implements ensureDirectory as an overrideable service operation. */
+    ensureDirectory: function (directory) {
     fs.mkdirSync(directory, { recursive: true });
-}
+},
 
-function writeFile(filePath, content) {
-    ensureDirectory(path.dirname(filePath));
+    /** Implements writeFile as an overrideable service operation. */
+    writeFile: function (filePath, content) {
+    (this.ensureDirectory || exportedService.ensureDirectory).call(this, path.dirname(filePath));
     fs.writeFileSync(filePath, content, 'utf8');
-}
+},
 
-function blankObjectFile(modulePath, description) {
+    /** Implements blankObjectFile as an overrideable service operation. */
+    blankObjectFile: function (modulePath, description) {
     return copyrightHeader + '\n' +
         '/**\n' +
         ' * @module ' + modulePath + '\n' +
@@ -144,9 +159,10 @@ function blankObjectFile(modulePath, description) {
         'module.exports = {\n' +
         '\n' +
         '};\n';
-}
+},
 
-function lifecycleFile(moduleName, layer) {
+    /** Implements lifecycleFile as an overrideable service operation. */
+    lifecycleFile: function (moduleName, layer) {
     return copyrightHeader + '\n' +
         '/**\n' +
         ' * @module ' + moduleName + '/' + layer + '\n' +
@@ -158,9 +174,10 @@ function lifecycleFile(moduleName, layer) {
         'module.exports = {\n' +
         '\n' +
         '};\n';
-}
+},
 
-function propertiesFile(moduleName) {
+    /** Implements propertiesFile as an overrideable service operation. */
+    propertiesFile: function (moduleName) {
     return copyrightHeader + '\n' +
         '/**\n' +
         ' * @module ' + moduleName + '/config/properties\n' +
@@ -172,22 +189,19 @@ function propertiesFile(moduleName) {
         'module.exports = {\n' +
         '\n' +
         '};\n';
-}
+},
 
-/**
- * Creates the aggregate data-pack manifest required by every generated data boundary.
- * @param {string} moduleName Generated module identity.
- * @returns {string} Serialized empty manifest ready for future release sections.
- */
-function dataManifest(moduleName) {
+    /** Implements dataManifest as an overrideable service operation. */
+    dataManifest: function (moduleName) {
     return JSON.stringify({
         contractVersion: 2,
         module: moduleName,
         sections: {}
     }, null, 4) + '\n';
-}
+},
 
-function nodicsFile(moduleName) {
+    /** Implements nodicsFile as an overrideable service operation. */
+    nodicsFile: function (moduleName) {
     return copyrightHeader + '\n' +
         '/**\n' +
         ' * @module ' + moduleName + '\n' +
@@ -215,9 +229,10 @@ function nodicsFile(moduleName) {
         '        return Promise.resolve(true);\n' +
         '    }\n' +
         '};\n';
-}
+},
 
-function defaultSampleService(moduleName) {
+    /** Implements defaultSampleService as an overrideable service operation. */
+    defaultSampleService: function (moduleName) {
     return copyrightHeader + '\n' +
         '/**\n' +
         ' * @module ' + moduleName + '/src/service/defaultSampleService\n' +
@@ -245,13 +260,15 @@ function defaultSampleService(moduleName) {
         '        return Promise.resolve(true);\n' +
         '    }\n' +
         '};\n';
-}
+},
 
-function readme(title, description) {
+    /** Implements readme as an overrideable service operation. */
+    readme: function (title, description) {
     return '# ' + title + '\n\n' + description + '\n';
-}
+},
 
-function agentsReadme(moduleName, kind) {
+    /** Implements agentsReadme as an overrideable service operation. */
+    agentsReadme: function (moduleName, kind) {
     return [
         '# ' + moduleName + ' Agents',
         '',
@@ -267,9 +284,10 @@ function agentsReadme(moduleName, kind) {
         'Before implementing non-trivial behavior here, record the business outcome, owning layer, studied sources, current implementation, extension path, security/tenant/data/API/release impact, intended files, and validation route.',
         ''
     ].join('\n');
-}
+},
 
-function moduleReadme(moduleName, kind, description) {
+    /** Implements moduleReadme as an overrideable service operation. */
+    moduleReadme: function (moduleName, kind, description) {
     return [
         '# ' + moduleName,
         '',
@@ -280,33 +298,33 @@ function moduleReadme(moduleName, kind, description) {
         'For implementation rules, read this module `AGENTS.md` after the root-to-leaf ancestor `AGENTS.md` chain. For exact contracts and examples, read this module `llm/` guidance and the relevant global contracts under `modules/nSetup/llm`.',
         ''
     ].join('\n');
-}
+},
 
-function parseList(value, defaultValue) {
+    /** Implements parseList as an overrideable service operation. */
+    parseList: function (value, defaultValue) {
     if (!value) {
         return defaultValue;
     }
     return value.split(',').map(item => item.trim()).filter(Boolean);
-}
+},
 
-module.exports = {
     /**
      * Parses command-line arguments into generator options.
      * @param {string[]} args Command arguments.
      * @returns {Object} Generator options.
      */
     createOptions: function (args) {
-        const kind = readOption(args, '--kind', 'capability');
-        const name = readOption(args, '--name', '');
-        const targetPath = readOption(args, '--path', name);
+        const kind = (this.readOption || exportedService.readOption).call(this, args, '--kind', 'capability');
+        const name = (this.readOption || exportedService.readOption).call(this, args, '--name', '');
+        const targetPath = (this.readOption || exportedService.readOption).call(this, args, '--path', name);
         return {
             kind: kind,
             name: name,
             targetPath: targetPath ? path.resolve(process.cwd(), targetPath) : '',
-            index: readOption(args, '--index', ''),
-            groupName: readOption(args, '--groupName', ''),
-            description: readOption(args, '--description', ''),
-            owns: parseList(readOption(args, '--owns', ''), defaultOwnsByKind[kind] || defaultOwnsByKind.capability),
+            index: (this.readOption || exportedService.readOption).call(this, args, '--index', ''),
+            groupName: (this.readOption || exportedService.readOption).call(this, args, '--groupName', ''),
+            description: (this.readOption || exportedService.readOption).call(this, args, '--description', ''),
+            owns: (this.parseList || exportedService.parseList).call(this, this.readOption(args, '--owns', ''), defaultOwnsByKind[kind] || defaultOwnsByKind.capability),
             withSource: !args.includes('--no-src') && ['capability', 'provider', 'server', 'node'].includes(kind),
             withData: args.includes('--with-data') || ['environment'].includes(kind),
             withTest: !args.includes('--no-test') && ['capability', 'provider', 'server', 'node'].includes(kind)
@@ -386,26 +404,26 @@ module.exports = {
      * @returns {Object} Generation summary.
      */
     generate: function (options) {
-        this.validateOptions(options);
-        ensureDirectory(options.targetPath);
-        writeFile(path.join(options.targetPath, 'package.json'), JSON.stringify(this.createPackageJson(options), null, 4) + '\n');
-        writeFile(path.join(options.targetPath, 'nodics.js'), nodicsFile(options.name));
-        writeFile(path.join(options.targetPath, 'AGENTS.md'), agentsReadme(options.name, options.kind));
-        writeFile(path.join(options.targetPath, 'README.md'), moduleReadme(options.name, options.kind, options.description));
+        (this.validateOptions || exportedService.validateOptions).call(this, options);
+        (this.ensureDirectory || exportedService.ensureDirectory).call(this, options.targetPath);
+        (this.writeFile || exportedService.writeFile).call(this, path.join(options.targetPath, 'package.json'), JSON.stringify(this.createPackageJson(options), null, 4) + '\n');
+        (this.writeFile || exportedService.writeFile).call(this, path.join(options.targetPath, 'nodics.js'), this.nodicsFile(options.name));
+        (this.writeFile || exportedService.writeFile).call(this, path.join(options.targetPath, 'AGENTS.md'), this.agentsReadme(options.name, options.kind));
+        (this.writeFile || exportedService.writeFile).call(this, path.join(options.targetPath, 'README.md'), this.moduleReadme(options.name, options.kind, options.description));
         configFiles.forEach(relativePath => {
             const content = relativePath.endsWith('properties.js') ?
-                propertiesFile(options.name) :
-                lifecycleFile(options.name, relativePath.replace('.js', ''));
-            writeFile(path.join(options.targetPath, relativePath), content);
+                (this.propertiesFile || exportedService.propertiesFile).call(this, options.name) :
+                (this.lifecycleFile || exportedService.lifecycleFile).call(this, options.name, relativePath.replace('.js', ''));
+            (this.writeFile || exportedService.writeFile).call(this, path.join(options.targetPath, relativePath), content);
         });
         guidanceFiles.forEach(relativePath => {
-            writeFile(path.join(options.targetPath, relativePath),
-                readme(options.name + ' ' + path.basename(path.dirname(relativePath)), 'Generated documentation entry for ' + options.name + '.'));
+            (this.writeFile || exportedService.writeFile).call(this, path.join(options.targetPath, relativePath),
+                (this.readme || exportedService.readme).call(this, options.name + ' ' + path.basename(path.dirname(relativePath)), 'Generated documentation entry for ' + options.name + '.'));
         });
-        ensureDirectory(path.join(options.targetPath, 'llm/generated'));
+        (this.ensureDirectory || exportedService.ensureDirectory).call(this, path.join(options.targetPath, 'llm/generated'));
         if (options.kind === 'project') {
-            ensureDirectory(path.join(options.targetPath, 'modules'));
-            ensureDirectory(path.join(options.targetPath, 'envs'));
+            (this.ensureDirectory || exportedService.ensureDirectory).call(this, path.join(options.targetPath, 'modules'));
+            (this.ensureDirectory || exportedService.ensureDirectory).call(this, path.join(options.targetPath, 'envs'));
         }
         if (options.withSource) {
             const owns = new Set(options.owns);
@@ -413,21 +431,21 @@ module.exports = {
                 if (!owns.has(registryOwnership[relativePath])) {
                     return;
                 }
-                writeFile(path.join(options.targetPath, relativePath),
-                    blankObjectFile(options.name + '/' + toPosix(relativePath).replace(/\.js$/, ''), registryFiles[relativePath]));
+                (this.writeFile || exportedService.writeFile).call(this, path.join(options.targetPath, relativePath),
+                    (this.blankObjectFile || exportedService.blankObjectFile).call(this, options.name + '/' + this.toPosix(relativePath).replace(/\.js$/, ''), registryFiles[relativePath]));
             });
             if (owns.has('service')) {
-                writeFile(path.join(options.targetPath, 'src/service/defaultSampleService.js'), defaultSampleService(options.name));
+                (this.writeFile || exportedService.writeFile).call(this, path.join(options.targetPath, 'src/service/defaultSampleService.js'), this.defaultSampleService(options.name));
             }
         }
         if (options.withData) {
-            ensureDirectory(path.join(options.targetPath, 'data/init'));
-            ensureDirectory(path.join(options.targetPath, 'data/core'));
-            ensureDirectory(path.join(options.targetPath, 'data/sample'));
-            writeFile(path.join(options.targetPath, 'data/manifest.json'), dataManifest(options.name));
+            (this.ensureDirectory || exportedService.ensureDirectory).call(this, path.join(options.targetPath, 'data/init'));
+            (this.ensureDirectory || exportedService.ensureDirectory).call(this, path.join(options.targetPath, 'data/core'));
+            (this.ensureDirectory || exportedService.ensureDirectory).call(this, path.join(options.targetPath, 'data/sample'));
+            (this.writeFile || exportedService.writeFile).call(this, path.join(options.targetPath, 'data/manifest.json'), this.dataManifest(options.name));
         }
         if (options.withTest) {
-            ensureDirectory(path.join(options.targetPath, 'test'));
+            (this.ensureDirectory || exportedService.ensureDirectory).call(this, path.join(options.targetPath, 'test'));
         }
         return {
             name: options.name,
@@ -443,13 +461,13 @@ module.exports = {
      * @returns {void}
      */
     runCli: function (args) {
-        const options = this.createOptions(args || []);
-        const result = this.generate(options);
+        const options = (this.createOptions || exportedService.createOptions).call(this, args || []);
+        const result = (this.generate || exportedService.generate).call(this, options);
         console.log('Generated Nodics ' + result.kind + ' boundary: ' + result.name);
         console.log('Path: ' + result.path);
     }
 };
 
 if (require.main === module) {
-    module.exports.runCli(process.argv.slice(2));
+    exportedService.runCli(process.argv.slice(2));
 }

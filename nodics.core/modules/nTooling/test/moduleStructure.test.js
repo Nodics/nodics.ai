@@ -19,6 +19,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
+const acorn = require('acorn');
 
 const { scanModules, getModuleKind } = require('../src/service/context/defaultModuleLlmContextUtilsService');
 const { inferKind } = require('../src/service/context/defaultNormalizeModuleMetadataService');
@@ -111,6 +112,7 @@ modules.forEach(moduleObject => {
 
     validateLoaderManagedSource(moduleObject);
     validateStandardSourceStructure(moduleObject);
+    validateStrictRuntimeExports(moduleObject);
 });
 
 const customHierarchyFixtures = [
@@ -170,6 +172,23 @@ collectJavaScriptFiles(nToolingSrcPath).forEach(filePath => {
 
 function rootPathForFixture(relativePath) {
     return path.join(process.cwd(), relativePath);
+}
+
+/** Ensures non-constructor runtime behavior has no file-local function authority. */
+function validateStrictRuntimeExports(moduleObject) {
+    const sourcePath = path.join(moduleObject.path, 'src');
+    if (!fs.existsSync(sourcePath)) return;
+    collectJavaScriptFiles(sourcePath).forEach(filePath => {
+        const relativePath = path.relative(sourcePath, filePath).split(path.sep).join('/');
+        if (relativePath.startsWith('lib/') || relativePath.includes('/gen/') || relativePath.includes('/generated/')) return;
+        const program = acorn.parse(fs.readFileSync(filePath, 'utf8'), { ecmaVersion: 'latest', sourceType: 'script' });
+        const hidden = program.body.filter(node => node.type === 'FunctionDeclaration' ||
+            node.type === 'VariableDeclaration' && node.declarations.some(declaration => declaration.init &&
+                ['FunctionExpression', 'ArrowFunctionExpression'].includes(declaration.init.type)));
+        assert.strictEqual(hidden.length, 0,
+            'Runtime behavior must use mergeable object-export members, not top-level functions: ' +
+            moduleObject.relativePath + '/src/' + relativePath);
+    });
 }
 
 /**

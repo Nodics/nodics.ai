@@ -25,7 +25,11 @@ const rootPath = path.resolve(process.env.NODICS_HOME || process.cwd());
 const skippedDirectories = new Set(['.git', 'node_modules']);
 const destructiveTestTypes = new Set(['crud']);
 
-function isGeneratedTestPath(testPath, options = {}) {
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements isGeneratedTestPath as an overrideable service operation. */
+    isGeneratedTestPath: function (testPath, options = {}) {
     const selectedType = options.selectedType || null;
     const includeDestructive = !!options.includeDestructive;
     const parts = testPath.split(path.sep);
@@ -43,32 +47,34 @@ function isGeneratedTestPath(testPath, options = {}) {
         return false;
     }
     return testPath.endsWith('.test.js');
-}
+},
 
-function collectGeneratedTests(currentPath, tests = [], options = {}) {
+    /** Implements collectGeneratedTests as an overrideable service operation. */
+    collectGeneratedTests: function (currentPath, tests = [], options = {}) {
     const entries = fs.readdirSync(currentPath, { withFileTypes: true });
 
     entries.forEach((entry) => {
         const entryPath = path.join(currentPath, entry.name);
         if (entry.isDirectory()) {
             if (!skippedDirectories.has(entry.name)) {
-                collectGeneratedTests(entryPath, tests, options);
+                (this.collectGeneratedTests || exportedService.collectGeneratedTests).call(this, entryPath, tests, options);
             }
             return;
         }
 
-        if (isGeneratedTestPath(entryPath, options)) {
+        if ((this.isGeneratedTestPath || exportedService.isGeneratedTestPath).call(this, entryPath, options)) {
             tests.push(entryPath);
         }
     });
 
     return tests;
-}
+},
 
-function runCli() {
+    /** Implements runCli as an overrideable service operation. */
+    runCli: function () {
     const typeArg = process.argv.find((arg) => arg.startsWith('--type='));
     const selectedType = typeArg ? typeArg.substring('--type='.length) : null;
-    const tests = collectGeneratedTests(rootPath, [], {
+    const tests = (this.collectGeneratedTests || exportedService.collectGeneratedTests).call(this, rootPath, [], {
         selectedType: selectedType,
         includeDestructive: !!selectedType
     }).sort();
@@ -95,12 +101,8 @@ function runCli() {
     const typeText = selectedType ? ` for type ${selectedType}` : '';
     console.log(`\nGenerated tests passed${typeText}: ${tests.length}`);
 }
-
-module.exports = {
-    collectGeneratedTests: collectGeneratedTests,
-    isGeneratedTestPath: isGeneratedTestPath
 };
 
 if (require.main === module) {
-    runCli();
+    exportedService.runCli();
 }

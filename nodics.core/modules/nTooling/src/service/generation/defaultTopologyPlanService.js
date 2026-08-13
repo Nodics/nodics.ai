@@ -21,33 +21,42 @@ const structureGeneratorService = require('./defaultStructureGeneratorService');
  * @override Project tooling modules may replace or wrap topology planning while preserving no-write-by-default behavior and structure-audit compatibility.
  */
 
-function readOption(args, name, defaultValue) {
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements readOption as an overrideable service operation. */
+    readOption: function (args, name, defaultValue) {
     const prefix = name + '=';
     const match = (args || []).find(arg => arg.indexOf(prefix) === 0);
     return match ? match.slice(prefix.length) : defaultValue;
-}
+},
 
-function readCsv(args, name, defaultValue) {
-    const value = readOption(args, name, '');
+    /** Implements readCsv as an overrideable service operation. */
+    readCsv: function (args, name, defaultValue) {
+    const value = (this.readOption || exportedService.readOption).call(this, args, name, '');
     if (!value) {
         return defaultValue || [];
     }
     return value.split(',').map(item => item.trim()).filter(Boolean);
-}
+},
 
-function ensureArray(value, fallback) {
+    /** Implements ensureArray as an overrideable service operation. */
+    ensureArray: function (value, fallback) {
     return value && value.length > 0 ? value : fallback;
-}
+},
 
-function toPosix(filePath) {
+    /** Implements toPosix as an overrideable service operation. */
+    toPosix: function (filePath) {
     return filePath.split(path.sep).join('/');
-}
+},
 
-function upperCaseFirstChar(value) {
+    /** Implements upperCaseFirstChar as an overrideable service operation. */
+    upperCaseFirstChar: function (value) {
     return value ? value.charAt(0).toUpperCase() + value.slice(1) : value;
-}
+},
 
-function serverProperties(moduleName, activeGroups, activeModules) {
+    /** Implements serverProperties as an overrideable service operation. */
+    serverProperties: function (moduleName, activeGroups, activeModules) {
     return `/*
     Nodics - Enterprice Micro-Services Management Framework
 
@@ -73,30 +82,29 @@ module.exports = {
     }
 };
 `;
-}
+},
 
-module.exports = {
     /**
      * Parses topology planning arguments.
      * @param {string[]} args Command arguments.
      * @returns {Object} Topology options.
      */
     createOptions: function (args) {
-        const name = readOption(args, '--name', '');
-        const targetPath = readOption(args, '--path', name);
-        const modules = ensureArray(readCsv(args, '--modules', []), [name + 'Core']);
+        const name = (this.readOption || exportedService.readOption).call(this, args, '--name', '');
+        const targetPath = (this.readOption || exportedService.readOption).call(this, args, '--path', name);
+        const modules = (this.ensureArray || exportedService.ensureArray).call(this, this.readCsv(args, '--modules', []), [name + 'Core']);
         return {
             apply: (args || []).includes('--apply'),
             name: name,
-            groupName: readOption(args, '--groupName', ''),
+            groupName: (this.readOption || exportedService.readOption).call(this, args, '--groupName', ''),
             targetPath: targetPath ? path.resolve(process.cwd(), targetPath) : '',
-            baseIndex: readOption(args, '--index', '9000'),
+            baseIndex: (this.readOption || exportedService.readOption).call(this, args, '--index', '9000'),
             modules: modules,
-            providers: readCsv(args, '--providers', []),
-            envs: ensureArray(readCsv(args, '--envs', []), ['local']),
-            servers: ensureArray(readCsv(args, '--servers', []), [name + 'Server']),
-            nodes: readCsv(args, '--nodes', ['node0']),
-            activeGroups: readCsv(args, '--activeGroups', ['nodics.core', 'nodics.platform', 'modules'])
+            providers: (this.readCsv || exportedService.readCsv).call(this, args, '--providers', []),
+            envs: (this.ensureArray || exportedService.ensureArray).call(this, this.readCsv(args, '--envs', []), ['local']),
+            servers: (this.ensureArray || exportedService.ensureArray).call(this, this.readCsv(args, '--servers', []), [name + 'Server']),
+            nodes: (this.readCsv || exportedService.readCsv).call(this, args, '--nodes', ['node0']),
+            activeGroups: (this.readCsv || exportedService.readCsv).call(this, args, '--activeGroups', ['nodics.core', 'nodics.platform', 'modules'])
         };
     },
 
@@ -124,7 +132,7 @@ module.exports = {
      * @returns {Object} Topology plan.
      */
     createPlan: function (options) {
-        this.validateOptions(options);
+        (this.validateOptions || exportedService.validateOptions).call(this, options);
         const base = options.baseIndex;
         const entries = [];
         entries.push({
@@ -159,7 +167,7 @@ module.exports = {
                 index: base + '.3' + (envIndex + 1)
             });
             options.servers.forEach((serverName, serverIndex) => {
-                const scopedServerName = options.envs.length > 1 ? envName + upperCaseFirstChar(serverName) : serverName;
+                const scopedServerName = options.envs.length > 1 ? envName + (this.upperCaseFirstChar || exportedService.upperCaseFirstChar).call(this, serverName) : serverName;
                 const serverPath = path.join(envPath, scopedServerName);
                 entries.push({
                     kind: 'server',
@@ -211,7 +219,7 @@ module.exports = {
             structureGeneratorService.generate(structureGeneratorService.createOptions(args));
             if (entry.kind === 'server') {
                 fs.writeFileSync(path.join(entry.path, 'config', 'properties.js'),
-                    serverProperties(entry.name, entry.activeGroups, entry.activeModules), 'utf8');
+                    (this.serverProperties || exportedService.serverProperties).call(this, entry.name, entry.activeGroups, entry.activeModules), 'utf8');
             }
         });
         return plan;
@@ -229,7 +237,7 @@ module.exports = {
         console.log('Mode           : ' + (plan.apply ? 'apply' : 'plan-only'));
         console.log('\nHierarchy:');
         plan.entries.forEach(entry => {
-            console.log('  - [' + entry.kind + '] ' + entry.name + ' @ ' + toPosix(entry.path) + ' #' + entry.index);
+            console.log('  - [' + entry.kind + '] ' + entry.name + ' @ ' + (this.toPosix || exportedService.toPosix).call(this, entry.path) + ' #' + entry.index);
             if (entry.kind === 'server') {
                 console.log('    activeModules.groups  : ' + entry.activeGroups.join(', '));
                 console.log('    activeModules.modules : ' + entry.activeModules.join(', '));
@@ -248,15 +256,15 @@ module.exports = {
      * @returns {void}
      */
     runCli: function (args) {
-        const options = this.createOptions(args || []);
-        const plan = this.createPlan(options);
+        const options = (this.createOptions || exportedService.createOptions).call(this, args || []);
+        const plan = (this.createPlan || exportedService.createPlan).call(this, options);
         if (options.apply) {
-            this.applyPlan(plan);
+            (this.applyPlan || exportedService.applyPlan).call(this, plan);
         }
-        this.printPlan(plan);
+        (this.printPlan || exportedService.printPlan).call(this, plan);
     }
 };
 
 if (require.main === module) {
-    module.exports.runCli(process.argv.slice(2));
+    exportedService.runCli(process.argv.slice(2));
 }

@@ -23,7 +23,11 @@ const { spawn } = require('child_process');
 
 const rootPath = path.resolve(process.env.NODICS_HOME || process.cwd());
 
-function loadProjectDefaults() {
+
+let exportedService;
+module.exports = exportedService = {
+    /** Implements loadProjectDefaults as an overrideable service operation. */
+    loadProjectDefaults: function () {
     let envPath = path.join(rootPath, 'env.js');
     if (!fs.existsSync(envPath)) {
         return {};
@@ -31,9 +35,10 @@ function loadProjectDefaults() {
     delete require.cache[require.resolve(envPath)];
     let projectEnv = require(envPath);
     return projectEnv && projectEnv.defaultOptions ? projectEnv.defaultOptions : {};
-}
+},
 
-function findModulePath(moduleName, currentPath) {
+    /** Implements findModulePath as an overrideable service operation. */
+    findModulePath: function (moduleName, currentPath) {
     if (!moduleName || !fs.existsSync(currentPath)) {
         return undefined;
     }
@@ -49,16 +54,17 @@ function findModulePath(moduleName, currentPath) {
         if (!entry.isDirectory() || ['.git', 'node_modules', 'generated', 'temp'].includes(entry.name)) {
             continue;
         }
-        let result = findModulePath(moduleName, path.join(currentPath, entry.name));
+        let result = (this.findModulePath || exportedService.findModulePath).call(this, moduleName, path.join(currentPath, entry.name));
         if (result) {
             return result;
         }
     }
     return undefined;
-}
+},
 
-function resolveServerModulePath(serverName, environmentName) {
-    let defaults = loadProjectDefaults();
+    /** Implements resolveServerModulePath as an overrideable service operation. */
+    resolveServerModulePath: function (serverName, environmentName) {
+    let defaults = (this.loadProjectDefaults || exportedService.loadProjectDefaults).call(this, );
     let selectedServer = serverName || process.env.SERVER || process.env.S || defaults.defaultServer;
     let selectedEnvironment = environmentName || process.env.ENV || process.env.E || defaults.defaultEnvironment;
     if (!selectedServer) {
@@ -67,11 +73,11 @@ function resolveServerModulePath(serverName, environmentName) {
     if (!selectedEnvironment) {
         throw new Error('An environment must be selected with --environment, ENV, E, or defaultOptions.defaultEnvironment');
     }
-    let environmentPath = findModulePath(selectedEnvironment, rootPath);
+    let environmentPath = (this.findModulePath || exportedService.findModulePath).call(this, selectedEnvironment, rootPath);
     if (!environmentPath) {
         throw new Error('Unable to resolve environment module: ' + selectedEnvironment);
     }
-    let serverPath = findModulePath(selectedServer, environmentPath);
+    let serverPath = (this.findModulePath || exportedService.findModulePath).call(this, selectedServer, environmentPath);
     if (!serverPath) {
         throw new Error('Unable to resolve server module: ' + selectedServer);
     }
@@ -80,23 +86,26 @@ function resolveServerModulePath(serverName, environmentName) {
         throw new Error('Test report owner must be a server module: ' + selectedServer);
     }
     return serverPath;
-}
+},
 
-function resolveServerReportDir(serverName, environmentName) {
-    return path.join(resolveServerModulePath(serverName, environmentName), 'generated', 'test-reports');
-}
+    /** Implements resolveServerReportDir as an overrideable service operation. */
+    resolveServerReportDir: function (serverName, environmentName) {
+    return path.join((this.resolveServerModulePath || exportedService.resolveServerModulePath).call(this, serverName, environmentName), 'generated', 'test-reports');
+},
 
-function assertServerOwnedReportDir(reportDir, serverName, environmentName) {
-    let serverPath = path.resolve(resolveServerModulePath(serverName, environmentName));
+    /** Implements assertServerOwnedReportDir as an overrideable service operation. */
+    assertServerOwnedReportDir: function (reportDir, serverName, environmentName) {
+    let serverPath = path.resolve((this.resolveServerModulePath || exportedService.resolveServerModulePath).call(this, serverName, environmentName));
     let resolvedReportDir = path.resolve(reportDir);
     if (resolvedReportDir.indexOf(serverPath + path.sep) !== 0) {
         throw new Error('Test reports must be written under the selected server module: ' + serverPath);
     }
     return resolvedReportDir;
-}
+},
 
-function runCli() {
-    let args = parseArgs(process.argv.slice(2));
+    /** Implements runCli as an overrideable service operation. */
+    runCli: function () {
+    let args = (this.parseArgs || exportedService.parseArgs).call(this, process.argv.slice(2));
     if (!args.command.length) {
         console.error('Usage: npm run test:full:report -- --suite=<name> -- <command> [args...]');
         process.exit(1);
@@ -128,7 +137,7 @@ function runCli() {
     });
     child.on('close', code => {
         let endedAt = new Date();
-        let report = createReport({
+        let report = (this.createReport || exportedService.createReport).call(this, {
             suiteName: args.suiteName,
             command: args.command,
             output: output,
@@ -140,13 +149,14 @@ function runCli() {
                 SERVER: args.serverName
             })
         });
-        let reportPath = writeReport(report, args.reportDir);
+        let reportPath = (this.writeReport || exportedService.writeReport).call(this, report, args.reportDir);
         console.log('\nTest report:', path.relative(rootPath, reportPath));
         process.exit(code || 0);
     });
-}
+},
 
-function parseArgs(argv) {
+    /** Implements parseArgs as an overrideable service operation. */
+    parseArgs: function (argv) {
     let separatorIndex = argv.indexOf('--');
     let optionArgs = separatorIndex >= 0 ? argv.slice(0, separatorIndex) : argv;
     let command = separatorIndex >= 0 ? argv.slice(separatorIndex + 1) : [];
@@ -167,11 +177,11 @@ function parseArgs(argv) {
         }
     });
 
-    let defaults = loadProjectDefaults();
+    let defaults = (this.loadProjectDefaults || exportedService.loadProjectDefaults).call(this, );
     serverName = serverName || process.env.SERVER || process.env.S || defaults.defaultServer;
     environmentName = environmentName || process.env.ENV || process.env.E || defaults.defaultEnvironment;
-    reportDir = reportDir || process.env.NODICS_TEST_REPORT_DIR || resolveServerReportDir(serverName, environmentName);
-    reportDir = assertServerOwnedReportDir(reportDir, serverName, environmentName);
+    reportDir = reportDir || process.env.NODICS_TEST_REPORT_DIR || (this.resolveServerReportDir || exportedService.resolveServerReportDir).call(this, serverName, environmentName);
+    reportDir = (this.assertServerOwnedReportDir || exportedService.assertServerOwnedReportDir).call(this, reportDir, serverName, environmentName);
 
     return {
         suiteName: suiteName,
@@ -180,10 +190,11 @@ function parseArgs(argv) {
         reportDir: reportDir,
         command: command
     };
-}
+},
 
-function createReport(options) {
-    let parsed = parseOutput(options.output || '', {
+    /** Implements createReport as an overrideable service operation. */
+    createReport: function (options) {
+    let parsed = (this.parseOutput || exportedService.parseOutput).call(this, options.output || '', {
         fallbackModuleName: options.suiteName
     });
     return {
@@ -196,7 +207,7 @@ function createReport(options) {
         startedAt: options.startedAt.toISOString(),
         endedAt: options.endedAt.toISOString(),
         durationMs: options.endedAt.getTime() - options.startedAt.getTime(),
-        environment: createEnvironmentSummary(options.env || {}),
+        environment: (this.createEnvironmentSummary || exportedService.createEnvironmentSummary).call(this, options.env || {}),
         summary: parsed.summary,
         topology: parsed.topology,
         modules: parsed.modules,
@@ -204,9 +215,10 @@ function createReport(options) {
         tests: parsed.tests,
         failures: options.exitCode === 0 ? [] : parsed.failures
     };
-}
+},
 
-function parseOutput(output, options) {
+    /** Implements parseOutput as an overrideable service operation. */
+    parseOutput: function (output, options) {
     let lines = String(output || '').split(/\r?\n/);
     let suites = [];
     let tests = [];
@@ -234,17 +246,17 @@ function parseOutput(output, options) {
             tests.push({
                 name: path.basename(testPath),
                 path: testPath,
-                moduleName: inferModuleName(testPath),
+                moduleName: (this.inferModuleName || exportedService.inferModuleName).call(this, testPath),
                 status: 'PASSED'
             });
-            let moduleName = inferModuleName(testPath);
+            let moduleName = (this.inferModuleName || exportedService.inferModuleName).call(this, testPath);
             if (moduleName) {
                 modules.add(moduleName);
             }
         }
 
-        collectCountTests(line, tests, modules);
-        collectTopology(line, topology);
+        (this.collectCountTests || exportedService.collectCountTests).call(this, line, tests, modules);
+        (this.collectTopology || exportedService.collectTopology).call(this, line, topology);
 
         if (/failed|error/i.test(line) && !/0 failed/i.test(line)) {
             failures.push(line);
@@ -252,7 +264,7 @@ function parseOutput(output, options) {
     });
 
     topology.communication.forEach(item => {
-        let moduleName = inferModuleNameFromUrl(item);
+        let moduleName = (this.inferModuleNameFromUrl || exportedService.inferModuleNameFromUrl).call(this, item);
         tests.push({
             name: 'topology-communication',
             path: item,
@@ -266,7 +278,7 @@ function parseOutput(output, options) {
     });
     if (tests.length === 0 && suites.length > 0) {
         suites.forEach(suite => {
-            let moduleName = (options && options.fallbackModuleName) || inferModuleNameFromSuite(suite.name);
+            let moduleName = (options && options.fallbackModuleName) || (this.inferModuleNameFromSuite || exportedService.inferModuleNameFromSuite).call(this, suite.name);
             tests.push({
                 name: suite.name,
                 path: undefined,
@@ -294,24 +306,26 @@ function parseOutput(output, options) {
         tests: tests,
         failures: failures
     };
-}
+},
 
-function collectCountTests(line, tests, modules) {
+    /** Implements collectCountTests as an overrideable service operation. */
+    collectCountTests: function (line, tests, modules) {
     let generatedMatch = line.match(/^Generated tests passed(?:[^:]*): (\d+)/);
     if (generatedMatch) {
-        addAggregatedTests(tests, modules, 'generated', Number(generatedMatch[1]));
+        (this.addAggregatedTests || exportedService.addAggregatedTests).call(this, tests, modules, 'generated', Number(generatedMatch[1]));
     }
     let routeMatch = line.match(/^Route contract tests passed: (\d+)/);
     if (routeMatch) {
-        addAggregatedTests(tests, modules, 'route-contract', Number(routeMatch[1]));
+        (this.addAggregatedTests || exportedService.addAggregatedTests).call(this, tests, modules, 'route-contract', Number(routeMatch[1]));
     }
     let capabilityMatch = line.match(/^Capability behavior tests passed(?:[^:]*): (\d+)/);
     if (capabilityMatch) {
-        addAggregatedTests(tests, modules, 'capability-behavior', Number(capabilityMatch[1]));
+        (this.addAggregatedTests || exportedService.addAggregatedTests).call(this, tests, modules, 'capability-behavior', Number(capabilityMatch[1]));
     }
-}
+},
 
-function addAggregatedTests(tests, modules, name, count) {
+    /** Implements addAggregatedTests as an overrideable service operation. */
+    addAggregatedTests: function (tests, modules, name, count) {
     for (let index = 0; index < count; index++) {
         tests.push({
             name: name,
@@ -322,9 +336,10 @@ function addAggregatedTests(tests, modules, name, count) {
         });
     }
     modules.add(name);
-}
+},
 
-function collectTopology(line, topology) {
+    /** Implements collectTopology as an overrideable service operation. */
+    collectTopology: function (line, topology) {
     let modeMatch = line.match(/^Mode: (.+)$/);
     if (modeMatch) {
         topology.mode = modeMatch[1];
@@ -343,21 +358,23 @@ function collectTopology(line, topology) {
             communicationMatch[1].split(',').map(item => item.trim()).filter(Boolean)
         );
     }
-}
+},
 
-function createEnvironmentSummary(env) {
+    /** Implements createEnvironmentSummary as an overrideable service operation. */
+    createEnvironmentSummary: function (env) {
     return {
         nodicsEnv: env.NODICS_ENV || null,
         server: env.SERVER || env.S || null,
-        node: getRuntimeNodeName(env) || null,
+        node: (this.getRuntimeNodeName || exportedService.getRuntimeNodeName).call(this, env) || null,
         tenant: env.NODICS_TEST_TENANT || null,
         enterprise: env.NODICS_TEST_ENTERPRISE || null,
         policyTenant: env.NODICS_TEST_POLICY_TENANT || env.NODICS_TEST_CONTROL_TENANT || null,
         topologyMode: env.NODICS_TOPOLOGY_MODE || null
     };
-}
+},
 
-function getRuntimeNodeName(env) {
+    /** Implements getRuntimeNodeName as an overrideable service operation. */
+    getRuntimeNodeName: function (env) {
     if (env.NODICS_NODE) {
         return env.NODICS_NODE;
     }
@@ -368,9 +385,10 @@ function getRuntimeNodeName(env) {
         return env.NODE;
     }
     return undefined;
-}
+},
 
-function inferModuleName(testPath) {
+    /** Implements inferModuleName as an overrideable service operation. */
+    inferModuleName: function (testPath) {
     if (!testPath) {
         return undefined;
     }
@@ -380,20 +398,23 @@ function inferModuleName(testPath) {
         return parts[testIndex - 1];
     }
     return undefined;
-}
+},
 
-function inferModuleNameFromUrl(value) {
+    /** Implements inferModuleNameFromUrl as an overrideable service operation. */
+    inferModuleNameFromUrl: function (value) {
     let match = String(value || '').match(/\/nodics\/([^/]+)\//);
     return match ? match[1] : undefined;
-}
+},
 
-function inferModuleNameFromSuite(suiteName) {
+    /** Implements inferModuleNameFromSuite as an overrideable service operation. */
+    inferModuleNameFromSuite: function (suiteName) {
     let value = String(suiteName || '');
     let match = value.match(/^test:([^:\s]+)/);
     return match ? match[1] : undefined;
-}
+},
 
-function writeReport(report, reportDir) {
+    /** Implements writeReport as an overrideable service operation. */
+    writeReport: function (report, reportDir) {
     fs.mkdirSync(reportDir, { recursive: true });
     let safeSuiteName = String(report.suiteName || 'test').replace(/[^a-zA-Z0-9_-]/g, '_');
     let fileName = safeSuiteName + '-' + report.startedAt.replace(/[:.]/g, '-') + '.json';
@@ -401,15 +422,8 @@ function writeReport(report, reportDir) {
     fs.writeFileSync(reportPath, JSON.stringify(report, null, 4));
     return reportPath;
 }
-
-module.exports = {
-    createReport,
-    parseArgs,
-    parseOutput,
-    resolveServerReportDir,
-    assertServerOwnedReportDir
 };
 
 if (require.main === module) {
-    runCli();
+    exportedService.runCli();
 }

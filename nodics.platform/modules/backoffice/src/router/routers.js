@@ -17,9 +17,7 @@
  * @override Later active modules may extend or replace this registry through Nodics layering.
  */
 const contracts = require('../schemas/apiContracts');
-const successEnvelope = dataSchema => ({
-    type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: dataSchema }
-});
+
 
 module.exports = {
     backoffice: {
@@ -35,9 +33,9 @@ module.exports = {
                 operation: 'register',
                 requestBody: { required: true, content: { 'application/json': { schema: contracts.registrationBatch } } },
                 responses: { '200': { description: 'Runtime module leases registered', content: { 'application/json': {
-                    schema: successEnvelope({ type: 'object', required: ['instanceId', 'registeredModules'], properties: {
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: { type: 'object', required: ['instanceId', 'registeredModules'], properties: {
                         instanceId: { type: 'string' }, registeredModules: { type: 'integer', minimum: 1 }
-                    } })
+                    } } } })
                 } } } }
             },
             deregister: {
@@ -65,7 +63,7 @@ module.exports = {
                 help: { parameters: [{ name: 'project', in: 'query', required: true,
                     schema: { type: 'string', pattern: contracts.moduleName.pattern } }] },
                 responses: { '200': { description: 'Project-scoped durable functional-module registrations', content: { 'application/json': {
-                    schema: successEnvelope(contracts.functionalModuleCatalogueData)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.functionalModuleCatalogueData } })
                 } } } }
             },
             functionalModuleRegistrations: {
@@ -81,7 +79,7 @@ module.exports = {
                 help: { parameters: [{ name: 'project', in: 'query', required: true,
                     schema: { type: 'string', pattern: contracts.moduleName.pattern } }] },
                 responses: { '200': { description: 'Project-scoped registered functional modules', content: { 'application/json': {
-                    schema: successEnvelope(contracts.functionalModuleCatalogueData)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.functionalModuleCatalogueData } })
                 } } } }
             },
             functionalModuleDetail: {
@@ -99,7 +97,7 @@ module.exports = {
                     { name: 'project', in: 'query', required: true, schema: { type: 'string', pattern: contracts.moduleName.pattern } }
                 ] },
                 responses: { '200': { description: 'Durable functional-module registration detail', content: { 'application/json': {
-                    schema: successEnvelope(contracts.functionalModuleRegistration)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.functionalModuleRegistration } })
                 } } } }
             },
             registerFunctionalModule: {
@@ -109,7 +107,7 @@ module.exports = {
                 controller: 'DefaultBackofficeRegistryController', operation: 'registerFunctionalModule',
                 requestBody: { required: true, content: { 'application/json': { schema: contracts.functionalModuleLifecycleDecision } } },
                 responses: { '200': { description: 'Functional module registered for the project', content: { 'application/json': {
-                    schema: successEnvelope(contracts.functionalModuleRegistration)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.functionalModuleRegistration } })
                 } } } }
             },
             activateFunctionalModule: {
@@ -119,7 +117,7 @@ module.exports = {
                 controller: 'DefaultBackofficeRegistryController', operation: 'activateFunctionalModule',
                 requestBody: { required: true, content: { 'application/json': { schema: contracts.functionalModuleLifecycleDecision } } },
                 responses: { '200': { description: 'Registered functional module enabled for Axis', content: { 'application/json': {
-                    schema: successEnvelope(contracts.functionalModuleRegistration)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.functionalModuleRegistration } })
                 } } } }
             },
             deactivateFunctionalModule: {
@@ -129,7 +127,7 @@ module.exports = {
                 controller: 'DefaultBackofficeRegistryController', operation: 'deactivateFunctionalModule',
                 requestBody: { required: true, content: { 'application/json': { schema: contracts.functionalModuleLifecycleDecision } } },
                 responses: { '200': { description: 'Optional functional module disabled for Axis', content: { 'application/json': {
-                    schema: successEnvelope(contracts.functionalModuleRegistration)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.functionalModuleRegistration } })
                 } } } }
             },
             deregisterFunctionalModule: {
@@ -139,7 +137,7 @@ module.exports = {
                 controller: 'DefaultBackofficeRegistryController', operation: 'deregisterFunctionalModule',
                 requestBody: { required: true, content: { 'application/json': { schema: contracts.functionalModuleLifecycleDecision } } },
                 responses: { '200': { description: 'Optional functional module deregistered from the project', content: { 'application/json': {
-                    schema: successEnvelope(contracts.functionalModuleRegistration)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.functionalModuleRegistration } })
                 } } } }
             },
             publicBootstrap: {
@@ -154,7 +152,7 @@ module.exports = {
                 help: { parameters: [{ name: 'x-nodics-client-contract-version', in: 'header', required: true,
                     description: 'Positive Axis client contract version.', schema: { type: 'integer', minimum: 1 } }] },
                 responses: { '200': { description: 'Low-disclosure pre-authentication Axis bootstrap', content: { 'application/json': {
-                    schema: successEnvelope(contracts.publicBootstrapData)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.publicBootstrapData } })
                 } } } }
             },
             list: {
@@ -168,7 +166,7 @@ module.exports = {
                 controller: 'DefaultBackofficeRegistryController',
                 operation: 'list',
                 responses: { '200': { description: 'Authorized client-safe module leases', content: { 'application/json': {
-                    schema: successEnvelope(contracts.discoveryData)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.discoveryData } })
                 } } } }
             },
             bootstrap: {
@@ -184,7 +182,7 @@ module.exports = {
                 help: { parameters: [{ name: 'x-nodics-client-contract-version', in: 'header', required: false,
                     description: 'Positive BackOffice client contract version; defaults to the configured minimum.', schema: { type: 'integer', minimum: 1 } }] },
                 responses: { '200': { description: 'Authorized BackOffice client bootstrap', content: { 'application/json': {
-                    schema: successEnvelope(contracts.bootstrapData)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.bootstrapData } })
                 } } } }
             },
             diagnostics: {
@@ -198,7 +196,7 @@ module.exports = {
                 controller: 'DefaultBackofficeRegistryController',
                 operation: 'diagnostics',
                 responses: { '200': { description: 'Sanitized registry diagnostics', content: { 'application/json': {
-                    schema: successEnvelope(contracts.diagnosticsData)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.diagnosticsData } })
                 } } } }
             },
             adminList: {
@@ -210,7 +208,7 @@ module.exports = {
                     { name: 'offset', in: 'query', required: false, schema: { type: 'integer', minimum: 0 } },
                     { name: 'limit', in: 'query', required: false, schema: { type: 'integer', minimum: 1, maximum: 100 } }
                 ]) }, responses: { '200': { description: 'Bounded sanitized administrative module inventory', content: { 'application/json': {
-                    schema: successEnvelope(contracts.adminListData)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.adminListData } })
                 } } } }
             },
             adminDetail: {
@@ -218,7 +216,7 @@ module.exports = {
                 authTokenTypes: ['access'], apiExposure: 'serviceRegistry',
                 key: '/registry/admin/modules/:moduleName', method: 'GET', controller: 'DefaultBackofficeRegistryController', operation: 'adminDetail',
                 responses: { '200': { description: 'Sanitized administrative module detail', content: { 'application/json': {
-                    schema: successEnvelope(contracts.adminDetailData)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.adminDetailData } })
                 } } } }
             },
             refresh: {
@@ -226,7 +224,7 @@ module.exports = {
                 authTokenTypes: ['access'], apiExposure: 'serviceRegistry',
                 key: '/registry/admin/modules/:moduleName/refresh', method: 'POST', controller: 'DefaultBackofficeRegistryController', operation: 'refresh',
                 responses: { '202': { description: 'Existing availability and discovery observers refreshed', content: { 'application/json': {
-                    schema: successEnvelope(contracts.refreshData)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.refreshData } })
                 } } } }
             }
         },
@@ -242,7 +240,7 @@ module.exports = {
                 controller: 'DefaultBackofficeAxisPolicyController',
                 operation: 'get',
                 responses: { '200': { description: 'Effective client-safe Axis employee policy', content: { 'application/json': {
-                    schema: successEnvelope(contracts.axisPolicy)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.axisPolicy } })
                 } } } }
             },
             update: {
@@ -257,7 +255,7 @@ module.exports = {
                 operation: 'update',
                 requestBody: { required: true, content: { 'application/json': { schema: contracts.axisPolicyUpdate } } },
                 responses: { '200': { description: 'Revision-updated persistent Axis employee policy', content: { 'application/json': {
-                    schema: successEnvelope(contracts.axisPolicy)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.axisPolicy } })
                 } } } }
             }
         },
@@ -269,7 +267,7 @@ module.exports = {
                 cache: { enabled: false },
                 controller: 'DefaultBackofficeAxisInitializationController', operation: 'status',
                 responses: { '200': { description: 'Derived Axis initialization readiness', content: { 'application/json': {
-                    schema: successEnvelope({ type: 'object' })
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: { type: 'object' } } })
                 } } } }
             },
             initiateInitialization: {
@@ -285,7 +283,7 @@ module.exports = {
                     }
                 } } } },
                 responses: { '200': { description: 'Axis baseline submitted to normal approval', content: { 'application/json': {
-                    schema: successEnvelope({ type: 'object' })
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: { type: 'object' } } })
                 } } } }
             }
         },
@@ -329,7 +327,7 @@ module.exports = {
                 cache: { enabled: false },
                 controller: 'DefaultBackofficeLocalResetController', operation: 'status',
                 responses: { '200': { description: 'Governed Local reset readiness without data inspection', content: { 'application/json': {
-                    schema: successEnvelope({ type: 'object' })
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: { type: 'object' } } })
                 } } } }
             },
             executeLocalReset: {
@@ -345,7 +343,7 @@ module.exports = {
                     }
                 } } } },
                 responses: { '200': { description: 'Every configured owner acknowledged its bounded Local reset', content: { 'application/json': {
-                    schema: successEnvelope({ type: 'object' })
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: { type: 'object' } } })
                 } } } }
             }
         },
@@ -355,7 +353,7 @@ module.exports = {
                 authTokenTypes: ['access'], apiExposure: 'serviceRegistry',
                 key: '/contracts/:moduleName/current', method: 'GET', controller: 'DefaultBackofficeContractController', operation: 'current',
                 responses: { '200': { description: 'Current durable safe contract observation', content: { 'application/json': {
-                    schema: successEnvelope(contracts.contractCurrentData)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.contractCurrentData } })
                 } } } }
             },
             history: {
@@ -364,7 +362,7 @@ module.exports = {
                 key: '/contracts/:moduleName/history', method: 'GET', controller: 'DefaultBackofficeContractController', operation: 'history',
                 help: { parameters: [{ name: 'limit', in: 'query', required: false, schema: { type: 'integer', minimum: 1 } }] },
                 responses: { '200': { description: 'Bounded durable contract observation history', content: { 'application/json': {
-                    schema: successEnvelope(contracts.contractHistoryData)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.contractHistoryData } })
                 } } } }
             },
             compare: {
@@ -372,7 +370,7 @@ module.exports = {
                 authTokenTypes: ['access'], apiExposure: 'serviceRegistry',
                 key: '/contracts/:moduleName/:hash/compare', method: 'POST', controller: 'DefaultBackofficeContractController', operation: 'compare',
                 responses: { '200': { description: 'Candidate comparison with the active observation', content: { 'application/json': {
-                    schema: successEnvelope(contracts.contractComparisonData)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.contractComparisonData } })
                 } } } }
             },
             approve: {
@@ -381,7 +379,7 @@ module.exports = {
                 key: '/contracts/:moduleName/:hash/approve', method: 'POST', controller: 'DefaultBackofficeContractController', operation: 'approve',
                 requestBody: { required: true, content: { 'application/json': { schema: contracts.contractDecision } } },
                 responses: { '200': { description: 'Approved contract observation', content: { 'application/json': {
-                    schema: successEnvelope(contracts.contractDecisionData)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.contractDecisionData } })
                 } } } }
             },
             reject: {
@@ -390,7 +388,7 @@ module.exports = {
                 key: '/contracts/:moduleName/:hash/reject', method: 'POST', controller: 'DefaultBackofficeContractController', operation: 'reject',
                 requestBody: { required: true, content: { 'application/json': { schema: contracts.contractDecision } } },
                 responses: { '200': { description: 'Rejected contract observation', content: { 'application/json': {
-                    schema: successEnvelope(contracts.contractDecisionData)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.contractDecisionData } })
                 } } } }
             },
             rollback: {
@@ -399,7 +397,7 @@ module.exports = {
                 key: '/contracts/:moduleName/:hash/rollback', method: 'POST', controller: 'DefaultBackofficeContractController', operation: 'rollback',
                 requestBody: { required: true, content: { 'application/json': { schema: contracts.contractDecision } } },
                 responses: { '200': { description: 'Rolled-back active contract observation', content: { 'application/json': {
-                    schema: successEnvelope(contracts.contractDecisionData)
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.contractDecisionData } })
                 } } } }
             }
         }
