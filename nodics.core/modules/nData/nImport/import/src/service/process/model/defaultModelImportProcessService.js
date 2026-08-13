@@ -562,8 +562,10 @@ module.exports = {
     insertLocalSchemaModel: function (request, models) {
         let header = request.header;
         models = this.normalizeModelsForSchema(header, models);
-        return new Promise((resolve, reject) => {
-            SERVICE['Default' + header.options.schemaName.toUpperCaseFirstChar() + 'Service'][header.options.operation]({
+        let schemaService = SERVICE['Default' + header.options.schemaName.toUpperCaseFirstChar() + 'Service'];
+        return this.reconcileContentPackVersions(request, schemaService, models).then(reconciledModels => {
+            return new Promise((resolve, reject) => {
+                schemaService[header.options.operation]({
                 tenant: request.tenant,
                 authData: {
                     userGroups: header.options.userGroups
@@ -571,7 +573,7 @@ module.exports = {
                 options: request.options,
                 searchOptions: request.searchOptions,
                 query: header.query,
-                models: models,
+                models: reconciledModels,
                 suppressRetryErrorLog: request.suppressRetryErrorLog === true
             }).then(success => {
                 if (success && success.result && success.result.length > 0) {
@@ -590,7 +592,68 @@ module.exports = {
             }).catch(error => {
                 reject(new CLASSES.DataImportError(error));
             });
+            });
         });
+    },
+
+    /**
+     * Reconciles immutable content-pack records with the latest Staged revision.
+     *
+     * Source-controlled releases intentionally carry portable version zero
+     * records and cannot know a target database's current revision. Only a
+     * governed content-pack run may resolve that revision through the owning
+     * generated service. The subsequent save remains optimistic: a concurrent
+     * writer that advances the record after this read is rejected by the
+     * versioned persistence provider.
+     *
+     * @param {Object} request Active import request.
+     * @param {Object} schemaService Owning generated schema service.
+     * @param {Object[]} models Normalized release records.
+     * @returns {Promise<Object[]>} Records carrying the expected next revision.
+     */
+    reconcileContentPackVersions: function (request, schemaService, models) {
+        let header = request.header || {};
+        let options = header.options || {};
+        let isGovernedRelease = Boolean(request.importRun && request.importRun.contentPackCode);
+        let isVersionedSchema = Boolean(header.rawSchema && header.rawSchema.isVersionedEnabled === true);
+        if (!isGovernedRelease || !isVersionedSchema || !options.schemaName ||
+            !schemaService || typeof schemaService.get !== 'function') {
+            return Promise.resolve(models);
+        }
+        return Promise.all(models.map(model => {
+            let query = this.resolveImportModelQuery(header.query || {}, model);
+            return schemaService.get({
+                tenant: request.tenant,
+                authData: {
+                    userGroups: options.userGroups
+                },
+                query: query,
+                searchOptions: {
+                    limit: 1,
+                    sort: { versionId: -1 }
+                },
+                options: request.options
+            }).then(response => {
+                let existing = response && Array.isArray(response.result) ? response.result[0] : undefined;
+                if (existing && Number.isInteger(existing.versionId)) {
+                    model.versionId = existing.versionId + 1;
+                }
+                return model;
+            });
+        }));
+    },
+
+    /** Resolves `$property` import query placeholders from one release record. */
+    resolveImportModelQuery: function (query, model) {
+        return Object.keys(query || {}).reduce((resolved, propertyName) => {
+            let value = query[propertyName];
+            if (typeof value === 'string' && value.startsWith('$')) {
+                resolved[propertyName] = model[value.substring(1)];
+            } else {
+                resolved[propertyName] = value;
+            }
+            return resolved;
+        }, {});
     },
 
     /**
