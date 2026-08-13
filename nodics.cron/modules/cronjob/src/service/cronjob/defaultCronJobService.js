@@ -20,7 +20,6 @@ const _ = require('lodash');
  */
 module.exports = {
 
-    cronJobContainer: new CLASSES.CronJobContainer(),
     acceptingWork: true,
 
     /** Registers cron scheduling with lifecycle and readiness coordination. */
@@ -55,16 +54,26 @@ module.exports = {
     /** Stops accepting cron work and stops every process-owned schedule. */
     drainWorkload: function () {
         this.acceptingWork = false;
-        return this.cronJobContainer.stopAllJobs();
+        return this.getCronJobRuntimeService().stopAllJobs();
     },
 
     /**
-     * Returns the process-local cronjob container.
+     * Returns the effective process-local scheduler runtime service.
      *
-     * @returns {Object} Cronjob container instance.
+     * @returns {Object} Overrideable cronjob runtime service.
+     */
+    getCronJobRuntimeService: function () {
+        return SERVICE.DefaultCronJobRuntimeService;
+    },
+
+    /**
+     * Returns the process-local runtime service for legacy callers.
+     *
+     * @deprecated Use `getCronJobRuntimeService`.
+     * @returns {Object} Effective cronjob runtime service.
      */
     getCronJobContainer: function () {
-        return this.cronJobContainer;
+        return this.getCronJobRuntimeService();
     },
 
     // getTenantActiveJobs: function (tenants, jobCodes) {
@@ -154,7 +163,7 @@ module.exports = {
                 },
                 query: SERVICE.DefaultCronJobConfigurationService.getDefaultQuery()
             }, activeTenants.slice()).then(jobs => {
-                this.cronJobContainer.createJobs({
+                this.getCronJobRuntimeService().createJobs({
                     tenants: activeTenants,
                     definitions: jobs
                 }).then(success => {
@@ -191,7 +200,7 @@ module.exports = {
                 }, request.searchOptions),
                 query: _.merge(SERVICE.DefaultCronJobConfigurationService.getDefaultQuery(), request.query)
             }, [request.tenant]).then(jobs => {
-                this.cronJobContainer.createJobs({
+                this.getCronJobRuntimeService().createJobs({
                     tenant: request.tenant,
                     definitions: jobs
                 }).then(success => {
@@ -227,7 +236,7 @@ module.exports = {
                 }, request.searchOptions),
                 query: _.merge(SERVICE.DefaultCronJobConfigurationService.getDefaultQuery(), request.query)
             }, [request.tenant]).then(jobs => {
-                this.cronJobContainer.updateJobs({
+                this.getCronJobRuntimeService().updateJobs({
                     tenant: request.tenant,
                     definitions: jobs
                 }).then(success => {
@@ -264,7 +273,7 @@ module.exports = {
                 }, request.searchOptions),
                 query: _.merge(SERVICE.DefaultCronJobConfigurationService.getDefaultQuery(), request.query)
             }, [request.tenant]).then(jobs => {
-                this.cronJobContainer.runJobs({
+                this.getCronJobRuntimeService().runJobs({
                     tenant: request.tenant,
                     definitions: jobs
                 }).then(success => {
@@ -293,7 +302,7 @@ module.exports = {
     startJob: function (request) {
         let rejection = this.assertAcceptingWork();
         if (rejection) return rejection;
-        return this.cronJobContainer.startJobs(request.tenant, request.jobCodes);
+        return this.getCronJobRuntimeService().startJobs(request.tenant, request.jobCodes);
     },
 
     /**
@@ -303,7 +312,7 @@ module.exports = {
      * @returns {Promise<Object>} Aggregate stop result.
      */
     stopJob: function (request) {
-        return this.cronJobContainer.stopJobs(request.tenant, request.jobCodes);
+        return this.getCronJobRuntimeService().stopJobs(request.tenant, request.jobCodes);
     },
 
     /**
@@ -313,7 +322,7 @@ module.exports = {
      * @returns {Promise<Object>} Aggregate removal result.
      */
     removeJob: function (request) {
-        return this.cronJobContainer.removeJobs(request.tenant, request.jobCodes);
+        return this.getCronJobRuntimeService().removeJobs(request.tenant, request.jobCodes);
     },
 
     /**
@@ -323,7 +332,7 @@ module.exports = {
      * @returns {Promise<Object>} Aggregate pause result.
      */
     pauseJob: function (request) {
-        return this.cronJobContainer.pauseJobs(request.tenant, request.jobCodes);
+        return this.getCronJobRuntimeService().pauseJobs(request.tenant, request.jobCodes);
     },
 
     /**
@@ -333,7 +342,7 @@ module.exports = {
      * @returns {Promise<Object>} Aggregate resume result.
      */
     resumeJob: function (request) {
-        return this.cronJobContainer.resumeJobs(request.tenant, request.jobCodes);
+        return this.getCronJobRuntimeService().resumeJobs(request.tenant, request.jobCodes);
     },
 
     /**
@@ -349,7 +358,7 @@ module.exports = {
             _self.LOG.debug('Starting all active jobs on server start-up: ' + NODICS.getServerState());
             if (NODICS.getServerState() === 'started') {
                 _self.createAllJobs().then(response => {
-                    _self.cronJobContainer.startAllJobs().then(success => {
+                    _self.getCronJobRuntimeService().startAllJobs().then(success => {
                         _self.LOG.debug('triggered cronjob start process : ' + response);
                     }).catch(error => {
                         _self.LOG.error('Something went wrong while starting CronJobs : ', error);

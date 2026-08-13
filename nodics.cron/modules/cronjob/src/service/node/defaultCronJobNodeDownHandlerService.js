@@ -109,12 +109,12 @@ module.exports = {
                     job.tempNode = CONFIG.get('nodeId');
                     allJobCodes.push(job.code);
                 });
-                SERVICE.DefaultCronJobService.getCronJobContainer().createJobs({
+                SERVICE.DefaultCronJobService.getCronJobRuntimeService().createJobs({
                     tenant: request.tenant,
                     definitions: jobs
                 }).then(success => {
                     output.createJobs = success;
-                    SERVICE.DefaultCronJobService.getCronJobContainer().startAllJobs(allJobCodes, tenants).then(success => {
+                    SERVICE.DefaultCronJobService.getCronJobRuntimeService().startAllJobs(allJobCodes, tenants).then(success => {
                         output.startJobs = success;
                         resolve(output);
                     }).catch(error => {

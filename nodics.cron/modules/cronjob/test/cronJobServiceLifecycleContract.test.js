@@ -13,51 +13,48 @@ const assert = require('assert');
 
 /**
  * @module nodics.cron/modules/cronjob/test/cronJobServiceLifecycleContract.test
- * @description Validates cronjob service delegation to the runtime container for create, update, run, start, stop, remove, pause, and resume operations.
+ * @description Validates cronjob service delegation to the runtime service for
+ * create, update, run, start, stop, remove, pause, and resume operations.
  * @layer test
  * @owner cronjob
  * @override Project modules may add service lifecycle tests for custom scheduler behavior while preserving this base service-container contract.
  */
 
-const containerCalls = [];
+const runtimeCalls = [];
 
-function CronJobContainerStub() {
-    this.createJobs = function (input) {
-        containerCalls.push({ operation: 'createJobs', input });
+const cronJobRuntimeService = {
+    createJobs: function (input) {
+        runtimeCalls.push({ operation: 'createJobs', input });
         return Promise.resolve({ result: ['created'], failed: [] });
-    };
-    this.updateJobs = function (input) {
-        containerCalls.push({ operation: 'updateJobs', input });
+    },
+    updateJobs: function (input) {
+        runtimeCalls.push({ operation: 'updateJobs', input });
         return Promise.resolve({ result: ['updated'], failed: [] });
-    };
-    this.runJobs = function (input) {
-        containerCalls.push({ operation: 'runJobs', input });
+    },
+    runJobs: function (input) {
+        runtimeCalls.push({ operation: 'runJobs', input });
         return Promise.resolve({ result: ['ran'], failed: [] });
-    };
-    this.startJobs = function (tenant, jobCodes) {
-        containerCalls.push({ operation: 'startJobs', tenant, jobCodes });
+    },
+    startJobs: function (tenant, jobCodes) {
+        runtimeCalls.push({ operation: 'startJobs', tenant, jobCodes });
         return Promise.resolve({ result: ['started'], failed: [] });
-    };
-    this.stopJobs = function (tenant, jobCodes) {
-        containerCalls.push({ operation: 'stopJobs', tenant, jobCodes });
+    },
+    stopJobs: function (tenant, jobCodes) {
+        runtimeCalls.push({ operation: 'stopJobs', tenant, jobCodes });
         return Promise.resolve({ result: ['stopped'], failed: [] });
-    };
-    this.removeJobs = function (tenant, jobCodes) {
-        containerCalls.push({ operation: 'removeJobs', tenant, jobCodes });
+    },
+    removeJobs: function (tenant, jobCodes) {
+        runtimeCalls.push({ operation: 'removeJobs', tenant, jobCodes });
         return Promise.resolve({ result: ['removed'], failed: [] });
-    };
-    this.pauseJobs = function (tenant, jobCodes) {
-        containerCalls.push({ operation: 'pauseJobs', tenant, jobCodes });
+    },
+    pauseJobs: function (tenant, jobCodes) {
+        runtimeCalls.push({ operation: 'pauseJobs', tenant, jobCodes });
         return Promise.resolve({ result: ['paused'], failed: [] });
-    };
-    this.resumeJobs = function (tenant, jobCodes) {
-        containerCalls.push({ operation: 'resumeJobs', tenant, jobCodes });
+    },
+    resumeJobs: function (tenant, jobCodes) {
+        runtimeCalls.push({ operation: 'resumeJobs', tenant, jobCodes });
         return Promise.resolve({ result: ['resumed'], failed: [] });
-    };
-}
-
-global.CLASSES = {
-    CronJobContainer: CronJobContainerStub
+    }
 };
 
 global.NODICS = {
@@ -67,6 +64,7 @@ global.NODICS = {
 };
 
 global.SERVICE = {
+    DefaultCronJobRuntimeService: cronJobRuntimeService,
     DefaultCronJobConfigurationService: {
         getDefaultQuery: function () {
             return { active: true };
@@ -89,16 +87,16 @@ service.get = function (request) {
 global.SERVICE.DefaultCronJobService = service;
 
 async function assertLifecycleCall(operation, expectedContainerOperation) {
-    containerCalls.length = 0;
+    runtimeCalls.length = 0;
     await service[operation]({
         tenant: 'tenantA',
         jobCodes: ['jobA', 'jobB']
     });
 
-    assert.strictEqual(containerCalls.length, 1, `${operation} should call container once`);
-    assert.strictEqual(containerCalls[0].operation, expectedContainerOperation);
-    assert.strictEqual(containerCalls[0].tenant, 'tenantA');
-    assert.deepStrictEqual(containerCalls[0].jobCodes, ['jobA', 'jobB']);
+    assert.strictEqual(runtimeCalls.length, 1, `${operation} should call runtime service once`);
+    assert.strictEqual(runtimeCalls[0].operation, expectedContainerOperation);
+    assert.strictEqual(runtimeCalls[0].tenant, 'tenantA');
+    assert.deepStrictEqual(runtimeCalls[0].jobCodes, ['jobA', 'jobB']);
 }
 
 (async function run() {
@@ -108,20 +106,20 @@ async function assertLifecycleCall(operation, expectedContainerOperation) {
     assert.strictEqual(jobs[1].tenant, 'customTenant', 'getTenantsJobs should preserve explicit job tenant');
     assert.deepStrictEqual(getCalls[0].query, { code: 'jobA' });
 
-    containerCalls.length = 0;
+    runtimeCalls.length = 0;
     const createResult = await service.createJob({ tenant: 'tenantA', query: { code: 'jobA' } });
     assert.strictEqual(createResult.code, 'SUC_JOB_00000');
-    assert.strictEqual(containerCalls[0].operation, 'createJobs');
-    assert.strictEqual(containerCalls[0].input.tenant, 'tenantA');
-    assert.strictEqual(containerCalls[0].input.definitions.length, 2);
+    assert.strictEqual(runtimeCalls[0].operation, 'createJobs');
+    assert.strictEqual(runtimeCalls[0].input.tenant, 'tenantA');
+    assert.strictEqual(runtimeCalls[0].input.definitions.length, 2);
 
-    containerCalls.length = 0;
+    runtimeCalls.length = 0;
     await service.updateJob({ tenant: 'tenantA', query: { code: 'jobA' } });
-    assert.strictEqual(containerCalls[0].operation, 'updateJobs');
+    assert.strictEqual(runtimeCalls[0].operation, 'updateJobs');
 
-    containerCalls.length = 0;
+    runtimeCalls.length = 0;
     await service.runJob({ tenant: 'tenantA', query: { code: 'jobA' } });
-    assert.strictEqual(containerCalls[0].operation, 'runJobs');
+    assert.strictEqual(runtimeCalls[0].operation, 'runJobs');
 
     await assertLifecycleCall('startJob', 'startJobs');
     await assertLifecycleCall('stopJob', 'stopJobs');

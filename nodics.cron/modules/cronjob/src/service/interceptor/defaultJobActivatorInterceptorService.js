@@ -32,8 +32,8 @@ module.exports = {
                 let model = request.model;
                 if (model.active && model.state === ENUMS.CronJobState.NEW.key) {
                     model.tenant = request.tenant;
-                    SERVICE.DefaultCronJobService.getCronJobContainer().createJob(NODICS.getInternalAuthToken(model.tenant), model).then(success => {
-                        SERVICE.DefaultCronJobService.getCronJobContainer().startJobs(request.tenant, [model.code]).then(success => {
+                    SERVICE.DefaultCronJobService.getCronJobRuntimeService().createJob(NODICS.getInternalAuthToken(model.tenant), model).then(success => {
+                        SERVICE.DefaultCronJobService.getCronJobRuntimeService().startJobs(request.tenant, [model.code]).then(success => {
                             _self.LOG.info(success);
                         }).catch(error => {
                             _self.LOG.error(error);

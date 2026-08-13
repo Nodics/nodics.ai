@@ -79,7 +79,10 @@ reconciliation or compensation behavior.
 ## Lifecycle Commands
 
 CronJob supports create/register, update, run, start, stop, remove, pause, and
-resume through its owning controller, service, and process-local container.
+resume through its owning controller, orchestration service, and
+`DefaultCronJobRuntimeService`. The runtime service is the sole process-local
+tenant/job pool authority; later modules may override individual lifecycle
+members without replacing scheduler state or the per-job `CronJob` type.
 State-changing routes are secured command APIs: `POST` for create, run, start,
 stop, pause, and resume; `PATCH` for update; and `DELETE` for removal. Do not
 expose these operations through `GET` or place business logic in route handlers.

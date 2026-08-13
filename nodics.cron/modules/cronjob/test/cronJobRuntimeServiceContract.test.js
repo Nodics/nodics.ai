@@ -10,8 +10,9 @@
  */
 
 /**
- * @module nodics.cron/modules/cronjob/test/cronJobRuntimeContainerContract.test
- * @description Validates cronjob all-job startup, node ownership, temporary failover ownership, and runtime container lifecycle behavior.
+ * @module nodics.cron/modules/cronjob/test/cronJobRuntimeServiceContract.test
+ * @description Validates cronjob all-job startup, node ownership, temporary
+ * failover ownership, runtime-service lifecycle, and service customization.
  * @layer test
  * @owner cronjob
  * @override Project modules may add scheduler integration tests while preserving this deterministic container contract.
@@ -117,7 +118,6 @@ function FakeCronJob(definition) {
 
 global.CLASSES = {
     CronJob: FakeCronJob,
-    CronJobContainer: require('../src/lib/cronJobContainer'),
     CronJobError,
     NodicsError
 };
@@ -150,6 +150,10 @@ global.SERVICE = {
         }
     }
 };
+
+global.SERVICE.DefaultCronJobRuntimeService =
+    require('../src/service/cronjob/defaultCronJobRuntimeService');
+global.SERVICE.DefaultCronJobRuntimeService.LOG = logger;
 
 const cronJobService = require('../src/service/cronjob/defaultCronJobService');
 global.SERVICE.DefaultCronJobService = cronJobService;
@@ -197,6 +201,7 @@ cronJobService.get = function (request) {
 (async function run() {
     updateCalls.length = 0;
     fakeJobs.length = 0;
+    global.SERVICE.DefaultCronJobRuntimeService.jobPool = {};
 
     const allJobsResult = await cronJobService.createAllJobs(['tenantA', 'tenantB']);
 
@@ -208,11 +213,13 @@ cronJobService.get = function (request) {
     assert.strictEqual(fakeJobs[0].authToken, 'token-tenantA', 'container should inject tenant internal auth token into runtime job');
     assert.strictEqual(fakeJobs[1].authToken, 'token-tenantB', 'container should inject failover tenant internal auth token into runtime job');
 
-    let startResult = await cronJobService.getCronJobContainer().startJobs('tenantA', ['ownedJob']);
+    assert.strictEqual(cronJobService.getCronJobContainer(), cronJobService.getCronJobRuntimeService(),
+        'legacy container accessor should resolve the runtime service');
+    let startResult = await cronJobService.getCronJobRuntimeService().startJobs('tenantA', ['ownedJob']);
     assert.strictEqual(startResult.code, 'SUC_JOB_00000', 'startJobs should succeed for created jobs');
     assert.strictEqual(fakeJobs[0].active, true, 'startJobs should activate the runtime job');
 
-    let manualRunResult = await cronJobService.getCronJobContainer().runJobs({
+    let manualRunResult = await cronJobService.getCronJobRuntimeService().runJobs({
         tenant: 'tenantA',
         definitions: [Object.assign({}, tenantJobs.tenantA[0])]
     });
@@ -220,23 +227,32 @@ cronJobService.get = function (request) {
     assert.strictEqual(manualRunResult.failed.length, 0, 'manual run should not record failures for an active tenant-owned job');
     assert.strictEqual(fakeJobs[0].paused, false, 'manual run should resume the active tenant-owned job after the one-time execution is scheduled');
 
-    let pauseResult = await cronJobService.getCronJobContainer().pauseJobs('tenantA', ['ownedJob']);
+    let pauseResult = await cronJobService.getCronJobRuntimeService().pauseJobs('tenantA', ['ownedJob']);
     assert.strictEqual(pauseResult.code, 'SUC_JOB_00000', 'pauseJobs should succeed for created jobs');
     assert.strictEqual(fakeJobs[0].paused, true, 'pauseJobs should pause the runtime job');
 
-    let resumeResult = await cronJobService.getCronJobContainer().resumeJobs('tenantA', ['ownedJob']);
+    let resumeResult = await cronJobService.getCronJobRuntimeService().resumeJobs('tenantA', ['ownedJob']);
     assert.strictEqual(resumeResult.code, 'SUC_JOB_00000', 'resumeJobs should succeed for created jobs');
     assert.strictEqual(fakeJobs[0].paused, false, 'resumeJobs should resume the runtime job');
 
-    let stopResult = await cronJobService.getCronJobContainer().stopJobs('tenantA', ['ownedJob']);
+    let stopResult = await cronJobService.getCronJobRuntimeService().stopJobs('tenantA', ['ownedJob']);
     assert.strictEqual(stopResult.code, 'SUC_JOB_00000', 'stopJobs should succeed for created jobs');
     assert.strictEqual(fakeJobs[0].active, false, 'stopJobs should deactivate the runtime job');
 
-    let missingStart = await cronJobService.getCronJobContainer().startJobs('tenantA', ['missingJob']);
+    let missingStart = await cronJobService.getCronJobRuntimeService().startJobs('tenantA', ['missingJob']);
     assert.strictEqual(missingStart.code, 'SUC_JOB_00000', 'missing job lifecycle should remain idempotent and non-fatal');
     assert(missingStart.result[0].includes('not available'), 'missing job lifecycle should explain the missing runtime job');
 
-    console.log('CronJob runtime container contract validated: startup, ownership, failover, lifecycle');
+    const originalStartJobs = global.SERVICE.DefaultCronJobRuntimeService.startJobs;
+    global.SERVICE.DefaultCronJobRuntimeService.startJobs = function () {
+        return Promise.resolve({ customized: true });
+    };
+    assert.deepStrictEqual(await cronJobService.startJob({ tenant: 'tenantA', jobCodes: [] }), {
+        customized: true
+    }, 'cronjob service should dispatch through the effective runtime service member');
+    global.SERVICE.DefaultCronJobRuntimeService.startJobs = originalStartJobs;
+
+    console.log('CronJob runtime service contract validated: startup, ownership, failover, lifecycle, customization');
 })().catch((error) => {
     console.error(error);
     process.exit(1);

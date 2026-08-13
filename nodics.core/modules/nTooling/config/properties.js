@@ -411,7 +411,7 @@ module.exports = {
                 { node: 'nodics.cron/modules/cronjob/test/cronJobRouteContract.test.js' },
                 { node: 'nodics.cron/modules/cronjob/test/cronJobControllerRequestMapping.test.js' },
                 { node: 'nodics.cron/modules/cronjob/test/cronJobServiceLifecycleContract.test.js' },
-                { node: 'nodics.cron/modules/cronjob/test/cronJobRuntimeContainerContract.test.js' },
+                { node: 'nodics.cron/modules/cronjob/test/cronJobRuntimeServiceContract.test.js' },
                 { node: 'nodics.cron/modules/cronjob/test/cronJobEventHandlerContract.test.js' }
             ],
             ems: [

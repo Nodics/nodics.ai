@@ -64,7 +64,7 @@ module.exports = {
                     tenants.forEach(tenant => {
                         NODICS.removeActiveTenant(tenant);
                         if (SERVICE.DefaultCronJobService) {
-                            SERVICE.DefaultCronJobService.getCronJobContainer().removeAllJobs([tenant]).then(success => {
+                            SERVICE.DefaultCronJobService.getCronJobRuntimeService().removeAllJobs([tenant]).then(success => {
                                 _self.LOG.info('All job removed successfully for thenant: ' + tenant);
                             }).catch(error => {
                                 _self.LOG.error('Failed removing jobs for tenant: ' + tenant);

@@ -112,7 +112,7 @@ requireSuiteIncludes('workflow', [
 
 requireSuiteIncludes('cronjob', [
     'cronJobServiceLifecycleContract.test.js',
-    'cronJobRuntimeContainerContract.test.js',
+    'cronJobRuntimeServiceContract.test.js',
     'cronJobEventHandlerContract.test.js'
 ]);
 
@@ -137,7 +137,7 @@ requireSuiteIncludes('ems', [
     'nodics.core/modules/nData/nImport/import/test/importGovernanceLifecycleContract.test.js',
     'nodics.core/modules/nTooling/test/dependencyOwnershipContract.test.js',
     'nodics.core/modules/nTooling/test/releaseCheckCommandContract.test.js',
-    'nodics.cron/modules/cronjob/test/cronJobRuntimeContainerContract.test.js',
+    'nodics.cron/modules/cronjob/test/cronJobRuntimeServiceContract.test.js',
     'nodics.cron/modules/cronjob/test/cronJobEventHandlerContract.test.js',
     'nodics.core/modules/nEms/emsClient/test/messageTenantResolution.test.js',
     'nodics.core/modules/nEms/emsClient/test/emsMessageProcessContract.test.js'
