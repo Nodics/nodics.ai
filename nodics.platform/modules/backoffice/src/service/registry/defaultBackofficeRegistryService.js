@@ -178,6 +178,7 @@ module.exports = {
         request._runtimeCoordinates && request._runtimeCoordinates.environment,
       server: request._runtimeCoordinates && request._runtimeCoordinates.server,
       node: request._runtimeCoordinates && request._runtimeCoordinates.node,
+      runtimeRole: request._runtimeCoordinates && request._runtimeCoordinates.runtimeRole,
       projectCode: request._projectCode ? String(request._projectCode) : undefined,
       functionalModuleIdentity: request._functionalModuleIdentity ? String(request._functionalModuleIdentity) : undefined,
       version: String(registration.version || "unknown"),
@@ -279,6 +280,12 @@ module.exports = {
             environment: batch.environment,
             server: batch.server,
             node: batch.node,
+            runtimeRole: batch.runtimeRole
+              ? {
+                  code: String(batch.runtimeRole.code),
+                  publication: String(batch.runtimeRole.publication),
+                }
+              : undefined,
           },
         }),
       ),
@@ -964,7 +971,7 @@ module.exports = {
           "Required public bootstrap module is unavailable",
         );
       }
-      endpoints[entry[0]] = candidates[0].endpoint;
+      endpoints[entry[0]] = this.clientEndpoint(candidates[0]);
       if (selection.runtimeRole) endpointRoles[entry[0]] = selection.runtimeRole;
     });
     Object.entries(policy.optionalModules || {}).forEach((entry) => {
@@ -977,7 +984,7 @@ module.exports = {
         .filter((item) => !selection.environment || item.environment === selection.environment)
         .sort((left, right) => String(right.lastSeenAt || "").localeCompare(String(left.lastSeenAt || "")))[0];
       if (candidate) {
-        endpoints[entry[0]] = candidate.endpoint;
+        endpoints[entry[0]] = this.clientEndpoint(candidate);
         if (selection.runtimeRole) endpointRoles[entry[0]] = selection.runtimeRole;
       }
     });
@@ -1035,7 +1042,22 @@ module.exports = {
     (this.getConfiguration().clientSafeMetadata || []).forEach((name) => {
       if (instance[name] !== undefined) result[name] = instance[name];
     });
+    if (result.endpoint) result.endpoint = this.clientEndpoint(instance);
     return result;
+  },
+
+  /** Replaces only a configured browser-facing origin while retaining the registered module path. */
+  clientEndpoint: function (instance) {
+    let configured = (this.getConfiguration().clientEndpoints || {})[instance.server];
+    if (!configured) return instance.endpoint;
+    let registered = new URL(instance.endpoint);
+    let browser = new URL(configured);
+    if (!['http:', 'https:'].includes(browser.protocol) || browser.username || browser.password ||
+        browser.search || browser.hash || browser.pathname !== '/') {
+      throw new CLASSES.NodicsError('ERR_BOF_00000', 'Configured browser endpoint is invalid');
+    }
+    browser.pathname = registered.pathname;
+    return browser.toString().replace(/\/$/, '');
   },
 
   /** Removes every lease whose bounded expiry time has elapsed. */

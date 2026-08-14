@@ -1,0 +1,37 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+const { assertRouteContracts } = require('../../../nRouter/test/routerContractTestUtils');
+const routerConfig = require('../src/router/routers');
+
+/**
+ * @module nodics.foundation/modules/nEms/emsClient/test/emsClientRouteContract.test
+ * @description Validates EMS client route metadata for publish, register, and close operations.
+ * @layer test
+ * @owner nEms
+ * @override Project modules may add route contracts for custom EMS endpoints while preserving this base client route surface.
+ */
+
+const emsController = 'DefaultEmsClientController';
+const expectedRoutes = [
+    { key: '/publish', method: 'POST', controller: emsController, operation: 'publish', secured: true },
+    { key: '/register/consumer/:consumer', method: 'POST', controller: emsController, operation: 'registerConsumers', secured: true },
+    { key: '/register/consumers', method: 'POST', controller: emsController, operation: 'registerConsumers', secured: true },
+    { key: '/register/publisher/:publisher', method: 'POST', controller: emsController, operation: 'registerPublishers', secured: true },
+    { key: '/register/publishers', method: 'POST', controller: emsController, operation: 'registerPublishers', secured: true },
+    { key: '/close/consumer/:consumer', method: 'POST', controller: emsController, operation: 'closeConsumers', secured: true },
+    { key: '/close/consumers', method: 'POST', controller: emsController, operation: 'closeConsumers', secured: true },
+    { key: '/close/publisher/:publisher', method: 'POST', controller: emsController, operation: 'closePublishers', secured: true },
+    { key: '/close/publishers', method: 'POST', controller: emsController, operation: 'closePublishers', secured: true }
+];
+
+assertRouteContracts(routerConfig, expectedRoutes);
+console.log(`EMS client route contract validated: ${expectedRoutes.length} routes`);

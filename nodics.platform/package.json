@@ -13,7 +13,7 @@
   "nodics": {
     "kind": "group",
     "extends": [
-      "nodics.core"
+      "nodics.foundation"
     ],
     "runtimeModule": true,
     "loadableByNodicsModuleLoader": true,

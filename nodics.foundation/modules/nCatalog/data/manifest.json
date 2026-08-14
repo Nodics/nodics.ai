@@ -1,0 +1,50 @@
+{
+    "contractVersion": 2,
+    "module": "catalog",
+    "sections": {
+        "init": {
+            "kind": "DATA_RELEASE",
+            "dataType": "init",
+            "version": "1.0.3",
+            "description": "Catalog Framework init data",
+            "owningDomain": "catalog",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "PLATFORM",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "init/data/catalog/defaultCatalogData.js": "02c80282fba6ad8353980185319751760f51a00ff20a8eca3c4b91b773504f9a",
+                "init/headers/catalog/defaultCatalogHeader.js": "d35e7e5a2109d9fdf673ea3e6340b7a3067431ff9bfa689b0abd5a6b7b59d115"
+            }
+        },
+        "sample": {
+            "kind": "DATA_RELEASE",
+            "dataType": "sample",
+            "version": "1.0.3",
+            "description": "Catalog Framework sample data",
+            "owningDomain": "catalog",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "PLATFORM",
+            "environmentScope": [
+                "LOCAL",
+                "DEVELOPMENT",
+                "TEST"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "DELETE_EXPLICIT",
+            "files": {
+                "sample/data/samples/defaultSamplesCatalogData.js": "fb4d9754d21b501299f261114dfe2eed3031b9e19df04ad5b835b6f259edba5e",
+                "sample/headers/samples/defaultSamplesCatalogHeader.js": "a9204c7be80bf2ad15ac57420f2d744b92c07551bede05eb6eda0eea2b3a974e"
+            }
+        }
+    }
+}

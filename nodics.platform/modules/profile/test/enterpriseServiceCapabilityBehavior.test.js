@@ -80,7 +80,7 @@ global.UTILS = {
 };
 
 global.CLASSES = {
-    NodicsError: require(path.join(repositoryRoot, 'nodics.core/modules/nCommon/src/lib/nodicsError'))
+    NodicsError: require(path.join(repositoryRoot, 'nodics.foundation/modules/nCommon/src/lib/nodicsError'))
 };
 
 const enterpriseService = require('../src/service/enterprise/defaultEnterpriseService');

@@ -6,7 +6,7 @@ Use this README to understand what this module is for, which capability or compo
 
 For implementation rules, read this module `AGENTS.md` after the root-to-leaf ancestor `AGENTS.md` chain. For exact contracts and examples, read this module `llm/` guidance and the relevant global contracts under `modules/nSetup/llm`.
 
-## Phase 5 status
+## Capability status
 
 The testimonial vertical is implemented with provenance-safe candidates, immutable editorial versions, scoped consent and rights, customer confirmation, approval eligibility, sanitized projections, nPublish handoff, emergency hide, withdrawal, expiry, and reconciliation. Generated schema routers remain disabled; dedicated public, customer, and operator operations are owned by `engagementApi`.
 
@@ -22,4 +22,4 @@ This capability depends on engagementCore, nPublish through an adapter, WCMS pla
 
 ## Verification
 
-Run `node test/testimonialBoundaryContract.test.js` and `node test/testimonialLifecycleContract.test.js`; the target build also generates four schema contracts. Phase 5 additionally requires Engagement API, permission, Axis metadata, Kickoff runtime, LLM, and live acceptance checks.
+Run `node test/testimonialBoundaryContract.test.js` and `node test/testimonialLifecycleContract.test.js`; the target build also generates four schema contracts. Release qualification additionally covers Engagement API, permission, Axis metadata, Kickoff runtime, LLM, and live acceptance checks.

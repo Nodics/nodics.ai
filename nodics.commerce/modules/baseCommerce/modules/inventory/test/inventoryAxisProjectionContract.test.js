@@ -11,7 +11,7 @@
 'use strict';
 const assert = require('node:assert/strict');
 const schemas = require('../src/schemas/schemas').inventory;
-global.SERVICE = { DefaultBackofficeCapabilityDefinitionService: require('../../../../../../nodics.core/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService') };
+global.SERVICE = { DefaultBackofficeCapabilityDefinitionService: require('../../../../../../nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService') };
 const capability = require('../src/service/defaultInventoryBackofficeCapabilityService').getCapability();
 const navigation = capability.navigation;
 

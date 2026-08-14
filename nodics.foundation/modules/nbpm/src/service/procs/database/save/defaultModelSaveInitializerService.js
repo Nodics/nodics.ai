@@ -1,0 +1,91 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+const _ = require('lodash');
+
+/**
+ * @module nodics.foundation/modules/nbpm/src/service/procs/database/save/defaultModelSaveInitializerService
+ * @description Implements nbpm default model save initializer service business behavior and extension logic.
+ * @layer service
+ * @owner nbpm
+ * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
+ */
+module.exports = {
+    /**
+     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
+     * defined it that with Promise way
+     * @param {*} options 
+     */
+    init: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+
+    /**
+     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading. 
+     * defined it that with Promise way
+     * @param {*} options 
+     */
+    postInit: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+
+    /**
+
+     * Processes workflow process behavior.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} response Method input.
+
+     * @param {*} process Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    handleWorkflowProcess: function (request, response, process) {
+        try {
+            let schemaModel = request.schemaModel;
+            let savedModel = response.success.result;
+            if (!request.ignoreWorkflowEvent && response.success.result && schemaModel.workflows && Object.keys(schemaModel.workflows).length > 0) {
+                if (!savedModel.workflow || UTILS.isBlank(savedModel.workflow)) {
+                    this.LOG.error('item: ' + (savedModel.code || savedModel._id) + ' is not workflow compatable');
+                } else {
+                    let event = {
+                        tenant: request.tenant,
+                        event: 'initiateWorkflow',
+                        sourceName: schemaModel.moduleName,
+                        sourceId: CONFIG.get('nodeId'),
+                        target: 'workflow',
+                        state: "NEW",
+                        type: "SYNC",
+                        targetType: ENUMS.TargetType.MODULE.key,
+                        active: true
+                    };
+                    SERVICE.DefaultWorkflowEventService.publishWorkflowEvent(event, schemaModel, [savedModel]).then(success => {
+                        this.LOG.debug('Workflow associated successfully');
+                    }).catch(error => {
+                        this.LOG.error('While associating workflow : ', error);
+                    });
+                }
+            }
+        } catch (error) {
+            this.LOG.error('Facing issue while pushing workflow init event : ', error);
+        }
+        process.nextSuccess(request, response);
+    }
+};

@@ -24,7 +24,7 @@ const routers = require(path.join(root, 'modules/cms/src/router/routers')).cms.c
 const statusDefinitions = require(path.join(root, 'modules/cms/src/utils/statusDefinitions'));
 const service = require(path.join(root, 'modules/cms/src/service/designer/defaultCmsDesignerCompositionService'));
 const wcmsProperties = require(path.join(root, 'config/properties'));
-const authProperties = require(path.join(root, '../nodics.core/modules/nAuth/config/properties'));
+const authProperties = require(path.join(root, '../nodics.foundation/modules/nAuth/config/properties'));
 const profileGroups = require(path.join(root, '../nodics.platform/modules/profile/data/init/data/groups/defaultBootstrapUserGroupsData'));
 
 assert.strictEqual(wcmsProperties.apiExposure.categories.cmsAuthoring.enabled, true,

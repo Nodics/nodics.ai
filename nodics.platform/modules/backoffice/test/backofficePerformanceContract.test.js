@@ -71,7 +71,7 @@ global.SERVICE = {
     DefaultFunctionalModuleCatalogueService: {
         buildLeaseFunctionalModuleIndex: (batch) => Object.fromEntries(
             (batch.registrations || []).map(registration => [registration.moduleName,
-                registration.functionalModule && registration.functionalModule.identity || 'nodics.core']),
+                registration.functionalModule && registration.functionalModule.identity || 'nodics.foundation']),
         ),
         reconcileRuntimeBatch: (batch) => Promise.resolve((batch.registrations || []).map((registration) => ({
             functionalModule: registration.canonicalIdentity || registration.moduleName,

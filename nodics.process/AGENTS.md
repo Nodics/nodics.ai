@@ -4,7 +4,7 @@
 
 - Follow the repository AGENTS contract: `../AGENTS.md`.
 - Follow global AI/development guidance:
-  `../nodics.core/modules/nSetup/llm/ai-enablement-index.md`.
+  `../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 - Follow the coding and customization contract before moving workflow source,
   adding process APIs, or enabling the visual designer.
 - Read `llm/contracts/process-module-contract.md` and
@@ -16,7 +16,7 @@
 
 - Treat `nodics.process` as the functional module group for business process
   and workflow capability. It is a module group like `nodics.platform` and
-  `nodics.core`, not a direct runtime implementation module.
+  `nodics.foundation`, not a direct runtime implementation module.
 - Runtime source must live under child modules. The first standard capability
   is `modules/workflow`, which composes:
   - `modules/workflow/modules/flowSchema` for schemas and status definitions;

@@ -13,7 +13,7 @@ const assert = require('assert');
 const path = require('path');
 
 const root = require(path.resolve(__dirname, '../../package.json'));
-const foundation = require(path.resolve(__dirname, '../../nodics.core/modules/nLocalization/package.json'));
+const foundation = require(path.resolve(__dirname, '../../nodics.foundation/modules/nLocalization/package.json'));
 
 assert(root.workspaces.includes('nodics.localization'));
 assert.strictEqual(foundation.name, 'nLocalization');

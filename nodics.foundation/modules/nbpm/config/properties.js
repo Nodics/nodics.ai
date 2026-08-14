@@ -1,0 +1,101 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+/**
+ * @module nodics.foundation/modules/nbpm/config/properties
+ * @description Defines default nbpm configuration used during module startup and layering.
+ * @layer config
+ * @owner nbpm
+ * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
+ */
+module.exports = {
+
+    defaultErrorCodes: {
+        workflowError: 'ERR_WF_00000'
+    },
+    workflow: {
+        isCarrierReleased: true,
+        defaultCarrierType: 'FIXED',
+        carrierCodeStrategy2Hnadler: {
+            DEFAULT: 'DefaultCarrierCodeGeneratorService',
+            GROUPINTIME: 'DefaultDurationalCarrierCodeGeneratorService'
+        }
+    },
+    defaultWorkflowConfig: {
+        sourceBuilder: {
+            itemBuilder: 'DefaultSourceItemDataBuilderService',
+            carrierBuilder: 'DefaultSourceCarrierDataBuilderService',
+            codeStrategy: {
+                params: {
+                    pattern: 'YYYY_MM_DD_HH_MM_SS',
+                    delimiter: '_'
+                }
+            }
+        },
+        events: {
+            workflowCarrierAssigned: {//
+                active: true,
+                event: 'carrierAssigned',
+                listener: 'DefaultWorkflowCarrierAssignedEventListenerService.handleWorkflowCarrierAssignedEvent'
+            },
+            workflowCarrierReleased: {
+                active: true,
+                event: 'carrierReleased',
+                listener: 'DefaultWorkflowCarrierReleasedEventListenerService.handleWorkflowCarrierReleasedEvent'
+            },
+            workflowCarrierBlocked: {
+                active: true,
+                event: 'carrierBlocked',
+                listener: 'DefaultWorkflowCarrierBlockedEventListenerService.handleWorkflowCarrierBlockedEvent'
+            },
+            workflowCarrierPaused: {
+                active: true,
+                event: 'carrierPaused',
+                listener: 'DefaultWorkflowCarrierPausedEventListenerService.handleWorkflowCarrierPausedEvent'
+            },
+            workflowCarrierResumed: {
+                active: true,
+                event: 'carrierResumed',
+                listener: 'DefaultWorkflowCarrierResumedEventListenerService.handleWorkflowCarrierResumedEvent'
+            },
+            workflowCarrierUpdated: {//
+                active: true,
+                event: 'carrierUpdated',
+                listener: 'DefaultWorkflowCarrierUpdatedEventListenerService.handleWorkflowCarrierUpdatedEvent'
+            },
+            workflowErrorOccurred: {//
+                active: true,
+                event: 'errorOccurred',
+                listener: 'DefaultWorkflowErrorOccuredEventListenerService.handleWorkflowErrorOccuredEvent'
+            },
+            workflowChannelsEvaluated: {//
+                active: true,
+                event: 'channelsEvaluated',
+                listener: 'DefaultWorkflowChannelsEvaluatedEventListenerService.handleWorkflowChannelsEvaluatedEvent'
+            },
+            workflowActionPerformed: {//
+                active: true,
+                event: 'actionPerformed',
+                listener: 'DefaultWorkflowActionPerformedEventListenerService.handleWorkflowActionPerformedEvent'
+            },
+            workflowCarrierProcessed: {//
+                active: true,
+                event: 'carrierProcessed',
+                listener: 'DefaultWorkflowCarrierProcessedEventListenerService.handleWorkflowCarrierProcessedEvent'
+            },
+            workflowCarrierFilled: {
+                active: true,
+                event: 'carrierFilled',
+                listener: 'DefaultWorkflowCarrierFilledEventListenerService.handleWorkflowCarrierFilledEvent'
+            }
+        }
+    }
+};

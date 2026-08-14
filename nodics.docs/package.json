@@ -31,8 +31,7 @@
     "test": "npm run docs:check && npm run validate"
   },
   "files": [
-    "catalogue.json",
-    "content",
+    "docs",
     "data/core",
     "manifest"
   ]

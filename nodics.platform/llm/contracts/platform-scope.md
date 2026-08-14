@@ -2,7 +2,7 @@
 
 ## Initial target
 
-`nodics.platform extends nodics.core` and adds authenticated API composition,
+`nodics.platform extends nodics.foundation` and adds authenticated API composition,
 Profile integration, BackOffice registration/discovery, and governed
 documentation delivery.
 

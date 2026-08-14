@@ -276,7 +276,7 @@ nodics.platform/modules/profile/data/sample/tenant/
 
 The legacy `.xls` example is preserved as historical reference only; the
 validated spreadsheet path is `.xlsx`. The contract test
-`nodics.core/modules/nData/nImport/import/test/profileTenantLocalFileImportContract.test.js`
+`nodics.foundation/modules/nData/nImport/import/test/profileTenantLocalFileImportContract.test.js`
 proves header discovery, data-file prefix matching, file-type resolution,
 processor execution, and tenant schema dispatch metadata through the existing
 `nImport` local-import lifecycle.
@@ -286,7 +286,7 @@ processor execution, and tenant schema dispatch metadata through the existing
 Profile guidance covers people, NAAM-style identity management,
 authentication-facing data, authorization data, default auth token behavior,
 and password management while preserving the split between `nodics.platform/modules/profile`
-identity data and `nodics.core/modules/nAuth` security/token infrastructure.
+identity data and `nodics.foundation/modules/nAuth` security/token infrastructure.
 
 Profile owns people, groups, credentials, tenants, enterprises, and persisted
 identity state. `nAuth` owns framework security primitives, JWT/API-key
@@ -374,7 +374,7 @@ node nodics.assistant/modules/assistant/test/aiAssistantGovernedReadToolContract
 ## Continue
 
 - Core capability family: [nodics.platform](../README.md)
-- Authentication framework: [nAuth](../../nodics.core/modules/nAuth/README.md)
-- Token lifecycle: [nToken](../../nodics.core/modules/nToken/README.md)
-- Cache and distributed state: [nCache](../../nodics.core/modules/nCache/README.md)
+- Authentication framework: [nAuth](../../nodics.foundation/modules/nAuth/README.md)
+- Token lifecycle: [nToken](../../nodics.foundation/modules/nToken/README.md)
+- Cache and distributed state: [nCache](../../nodics.foundation/modules/nCache/README.md)
 - Capability maturity: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)

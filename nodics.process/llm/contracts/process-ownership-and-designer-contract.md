@@ -22,7 +22,7 @@ Process and Cron may share a runtime server to reduce operational overhead:
 flowchart TD
   Server["processServer"] --> Process["nodics.process"]
   Server --> Cron["nodics.cron"]
-  Process --> Core["nodics.core"]
+  Process --> Core["nodics.foundation"]
   Cron --> Core
   Process --> Trigger["Process trigger relationship"]
   Cron --> Schedule["Cron-owned schedule execution"]

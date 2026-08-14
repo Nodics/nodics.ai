@@ -199,6 +199,6 @@ module.exports = {
         allowedSchemes: ['http', 'https'],
         clientSafeMetadata: ['moduleName', 'displayName', 'parentModule', 'canonicalIdentity', 'instanceId',
             'environment', 'server', 'node', 'version', 'moduleKind',
-            'capabilities', 'clientCallable', 'endpoint', 'healthPath', 'state', 'lastSeenAt', 'backoffice']
+            'runtimeRole', 'capabilities', 'clientCallable', 'endpoint', 'healthPath', 'state', 'lastSeenAt', 'backoffice']
     }
 };

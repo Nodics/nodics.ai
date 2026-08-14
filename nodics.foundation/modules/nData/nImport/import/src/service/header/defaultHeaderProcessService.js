@@ -1,0 +1,162 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+const _ = require('lodash');
+
+/**
+ * @module nodics.foundation/modules/nData/nImport/import/src/service/header/defaultHeaderProcessService
+ * @description Implements nData default header process service business behavior and extension logic.
+ * @layer service
+ * @owner nData
+ * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
+ */
+module.exports = {
+    /**
+     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
+     * defined it that with Promise way
+     * @param {*} options 
+     */
+    init: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+
+    /**
+     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading. 
+     * defined it that with Promise way
+     * @param {*} options 
+     */
+    postInit: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+
+    /**
+
+     * Validates request rules.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} response Method input.
+
+     * @param {*} process Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    validateRequest: function (request, response, process) {
+        this.LOG.debug('Validating Header: ' + request.headerName + ' for processing');
+        if (!request.header) {
+            process.error(request, response, new CLASSES.DataImportError('ERR_IMP_00003', 'Invalid header parameter'));
+        } else {
+            process.nextSuccess(request, response);
+        }
+    },
+
+    /**
+
+     * Processes header files behavior.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} response Method input.
+
+     * @param {*} process Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    processHeaderFiles: function (request, response, process) {
+        this.LOG.debug('Triggering process to import all files for header');
+        try {
+            let header = request.header;
+            if (!UTILS.isBlank(header.dataFiles)) {
+                this.processFiles(request, response, {
+                    pendingFileList: Object.keys(header.dataFiles)
+                }).then(success => {
+                    process.nextSuccess(request, response);
+                }).catch(error => {
+                    process.error(request, response, error);
+                });
+            } else {
+                this.LOG.debug('There is no data to import for header : ' + request.headerName);
+                process.nextSuccess(request, response);
+            }
+        } catch (error) {
+            process.error(request, response, new CLASSES.DataImportError(error, 'Invalid header parameter'));
+        }
+    },
+
+    /**
+
+     * Processes files behavior.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} response Method input.
+
+     * @param {*} options Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    processFiles: function (request, response, options) {
+        let _self = this;
+        let header = request.header;
+        return new Promise((resolve, reject) => {
+            if (options.pendingFileList && options.pendingFileList.length > 0) {
+                let fileName = options.pendingFileList.shift(); //Actual Files group name
+                _self.LOG.debug('Processing file: ' + fileName + ' from header: ' + request.headerName);
+                let fileObj = header.dataFiles[fileName];
+                if (fileObj.list && fileObj.list.length > 0) {
+                    request.inputPath.fileName = fileName;
+                    request.inputPath.fileType = fileName.split('_').pop();
+                    request.outputPath.fileName = fileName;
+                    if (request.inputPath.fileType) {
+                        request.files = fileObj.list;
+                        SERVICE.DefaultPipelineService.start('dataFinalizerInitPipeline', request, {}).then(success => {
+                            _self.processFiles(request, response, options).then(success => {
+                                resolve(success);
+                            }).catch(error => {
+                                reject(error);
+                            });
+                        }).catch(error => {
+                            reject(error);
+                        });
+                    } else {
+                        reject(new CLASSES.DataImportError('ERR_IMP_00003', 'Could not found valid ext name for file: ' + fileName));
+                    }
+                } else {
+                    _self.processFiles(request, response, options).then(success => {
+                        resolve(success);
+                    }).catch(error => {
+                        reject(error);
+                    });
+                }
+            } else {
+                _self.LOG.debug('Done import for files for header : ' + request.headerName);
+                header.done = true;
+                resolve(true);
+            }
+        });
+    }
+};

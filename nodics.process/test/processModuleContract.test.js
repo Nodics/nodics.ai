@@ -43,13 +43,18 @@ function processPath(...segments) {
 
 assert.deepStrictEqual(
     packageJson.nodics.extends,
-    ['nodics.core'],
-    'nodics.process must extend nodics.core directly',
+    ['nodics.foundation'],
+    'nodics.process must extend nodics.foundation directly',
 );
 assert.strictEqual(
     packageJson.nodics.functionalModule.identity,
     'nodics.process',
     'functional module identity must remain nodics.process',
+);
+assert.strictEqual(
+    packageJson.nodics.functionalModule.protected,
+    true,
+    'nodics.process must remain registered when present because publishing approval cannot bootstrap without Process',
 );
 assert.deepStrictEqual(
     packageJson.requiredModules,

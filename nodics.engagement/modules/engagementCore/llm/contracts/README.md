@@ -5,7 +5,7 @@
 - Status: implemented core contracts; public routes and domain behavior remain inactive.
 - Owns: shared intake envelopes, lifecycle vocabulary, consent, assignment, audit, protection, form-definition contracts, and integration references.
 - Prohibits: review, feedback, testimonial, contact, provider-delivery, workflow-runtime, media-binary, or generic publication behavior.
-- Dependency boundary: Nodics Core contracts; it integrates with Process, Profile, Publish, WCMS/Media, Search, Cache, and Cron only through their owned boundaries.
+- Dependency boundary: Nodics Foundation contracts; it integrates with Process, Profile, Publish, WCMS/Media, Search, Cache, and Cron only through their owned boundaries.
 - Archived sources are read-only migration evidence and never current authority.
 - Later layers customize through governed configuration and loader-visible overrides without editing this framework package.
 - Security, tenant isolation, audit, failure/recovery, and generated-artifact tests are mandatory when implementation begins.

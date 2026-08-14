@@ -41,7 +41,7 @@ global.ENUMS = {
 
 const scopeGovernance = require("../src/service/identity/defaultPrincipalScopeGovernanceService");
 const schemaHandler = require(path.join(repositoryRoot,
-  "nodics.core/modules/nDatabase/database/src/service/schema/defaultDatabaseSchemaHandlerService"));
+  "nodics.foundation/modules/nDatabase/database/src/service/schema/defaultDatabaseSchemaHandlerService"));
 const profileSchemas = schemaHandler.applyNamedSchemaPolicies(
   "profile",
   require("../src/schemas/schemas").profile,

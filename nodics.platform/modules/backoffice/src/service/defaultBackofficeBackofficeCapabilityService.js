@@ -44,7 +44,7 @@ const capability = {
             "dashboard": {
                 "kind": "Framework guide",
                 "icon": "content",
-                "summary": "Core Nodics architecture, module layering, configuration-first extension, lifecycle, and customization guidance.",
+                "summary": "Foundational Nodics architecture, module layering, configuration-first extension, lifecycle, and customization guidance.",
                 "audiences": [
                     "architect",
                     "developer",
@@ -438,7 +438,7 @@ const capability = {
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
-                "import.core.run"
+                "import.release.view"
             ]
         },
         {

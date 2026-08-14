@@ -1,0 +1,95 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+const _ = require('lodash');
+
+/**
+ * @module nodics.foundation/modules/nNms/src/service/node/defaultNodeUpHandlerService
+ * @description Implements nNms default node up handler service business behavior and extension logic.
+ * @layer service
+ * @owner nNms
+ * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
+ */
+module.exports = {
+
+    /**
+    * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
+    * defined it that with Promise way
+    * @param {*} options 
+    */
+    init: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+
+    /**
+     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading. 
+     * defined it that with Promise way
+     * @param {*} options 
+     */
+    postInit: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+
+    /**
+
+     * Processes node up behavior.
+
+     *
+
+     * @param {*} event Method input.
+
+     * @param {*} callback Method input.
+
+     * @param {*} request Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    handleNodeUp: function (event, callback, request) {
+        event.moduleConfig = CONFIG.get('nodePingableModules')[event.target];
+        event.moduleName = event.target;
+        if (UTILS.isBlank(event.moduleConfig)) {
+            throw new Error('Invalid target or module not enabled for NMS: ' + event.target);
+        } else if (!event.localNode) {
+            throw new Error('Invalid localNode value');
+        } else if (!event.remoteNode) {
+            throw new Error('Invalid remoteNode value');
+        } else {
+            let nmsData = NODICS.getModule(event.moduleName).nms.nodes[event.remoteNode];
+            if (nmsData && nmsData.remoteData) {
+                event.remoteData = nmsData.remoteData;
+                SERVICE.DefaultPipelineService.start(event.moduleConfig.nodeUpHandler, event, {}).then(success => {
+                    delete nmsData.remoteData;
+                    delete nmsData.granted;
+                    delete nmsData.responsibleNode;
+                    callback(null, {
+                        success: true,
+                        code: 'SUC_EVNT_00000',
+                        message: 'Event processed successfuly'
+                    });
+                }).catch(error => {
+                    callback(error);
+                });
+            } else {
+                callback(null, {
+                    success: true,
+                    code: 'SUC_EVNT_00000',
+                    message: 'Nothing to release'
+                });
+            }
+        }
+    }
+};

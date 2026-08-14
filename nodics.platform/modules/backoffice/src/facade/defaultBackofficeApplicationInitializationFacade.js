@@ -16,6 +16,8 @@ module.exports = {
     /** Executes the documented bounded module operation. */
     postInit: function () { return Promise.resolve(true); },
     status: (profileCode, request) => SERVICE.DefaultBackofficeApplicationInitializationService.status(profileCode, request),
+    contentPackStatus: (profileCode, request) => SERVICE.DefaultBackofficeApplicationInitializationService.contentPackStatus(profileCode, request),
+    installContentPack: (profileCode, request) => SERVICE.DefaultBackofficeApplicationInitializationService.installContentPack(profileCode, request),
     initiate: (profileCode, request) => SERVICE.DefaultBackofficeApplicationInitializationService.initiate(profileCode, request),
     rollback: (profileCode, request) => SERVICE.DefaultBackofficeApplicationInitializationService.rollback(profileCode, request),
     retire: (profileCode, request) => SERVICE.DefaultBackofficeApplicationInitializationService.retire(profileCode, request)

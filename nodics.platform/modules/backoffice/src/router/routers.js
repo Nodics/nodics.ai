@@ -294,6 +294,18 @@ module.exports = {
                 key: '/applications/:profileCode/initialization', method: 'GET',
                 controller: 'DefaultBackofficeApplicationInitializationController', operation: 'status'
             },
+            applicationContentPackStatus: {
+                secured: true, accessGroups: ['userGroup'], permission: 'backoffice.application.initialization.view',
+                authTokenTypes: ['access'], apiExposure: 'serviceRegistry', cache: { enabled: false },
+                key: '/applications/:profileCode/initialization/content-pack', method: 'GET',
+                controller: 'DefaultBackofficeApplicationInitializationController', operation: 'contentPackStatus'
+            },
+            installApplicationContentPack: {
+                secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'backoffice.application.initialization.initiate',
+                authTokenTypes: ['access'], apiExposure: 'serviceRegistry', cache: { enabled: false },
+                key: '/applications/:profileCode/initialization/content-pack/install', method: 'POST',
+                controller: 'DefaultBackofficeApplicationInitializationController', operation: 'installContentPack'
+            },
             initiateApplicationInitialization: {
                 secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'backoffice.application.initialization.initiate',
                 authTokenTypes: ['access'], apiExposure: 'serviceRegistry', cache: { enabled: false },

@@ -30,6 +30,8 @@ module.exports = {
     },
     /** Executes the documented bounded module operation. */
     status: function (request, callback) { return this.invoke('status', request, callback); },
+    contentPackStatus: function (request, callback) { return this.invoke('contentPackStatus', request, callback); },
+    installContentPack: function (request, callback) { return this.invoke('installContentPack', request, callback); },
     /** Executes the documented bounded module operation. */
     initiate: function (request, callback) { return this.invoke('initiate', request, callback); },
     /** Executes the documented bounded module operation. */

@@ -6,7 +6,7 @@ Use this README to understand what this module is for, which capability or compo
 
 For implementation rules, read this module `AGENTS.md` after the root-to-leaf ancestor `AGENTS.md` chain. For exact contracts and examples, read this module `llm/` guidance and the relevant global contracts under `modules/nSetup/llm`.
 
-## Phase 8 status
+## Capability status
 
 The review foundation, public shopper evidence, and governed acquisition programme are implemented. Public projections are immutable-version based, sanitized, disclosure-aware, and visible only while published. Rating aggregates are deterministic, versioned, rebuildable, and reconciled from published projections. Solicitation is fulfillment/service-timed, opt-out and quiet-period aware, and prohibited from sentiment selection. Import and syndication are disabled by default and require origin, license, disclosure, target mapping, moderation, idempotency, and reconciliation evidence.
 
@@ -22,4 +22,4 @@ This capability depends on engagementCore and the provider-neutral engagementCom
 
 ## Verification
 
-Run the boundary and Phase 6/7 contracts, regenerate the engagement-server schemas, and validate Engagement API, permission, Kickoff, Axis, ownership, documentation, and LLM contracts.
+Run the boundary and lifecycle contracts, regenerate the engagement-server schemas, and validate Engagement API, permission, Kickoff, Axis, ownership, documentation, and LLM contracts.

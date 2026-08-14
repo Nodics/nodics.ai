@@ -20,8 +20,8 @@ const assert = require("assert");
 const schemas = require("../src/schemas/schemas").cms;
 const cmsNavigation = [
   require("../src/service/defaultCmsBackofficeCapabilityService").getCapability(),
-  require("../../../../nodics.core/modules/nCatalog/src/service/defaultCatalogBackofficeCapabilityService").getCapability(),
-  require("../../../../nodics.core/modules/nPublish/src/service/defaultPublishBackofficeCapabilityService").getCapability(),
+  require("../../../../nodics.foundation/modules/nCatalog/src/service/defaultCatalogBackofficeCapabilityService").getCapability(),
+  require("../../../../nodics.foundation/modules/nPublish/src/service/defaultPublishBackofficeCapabilityService").getCapability(),
 ].flatMap((capability) => capability.navigation);
 const validationService = require("../src/service/validation/defaultCmsContractValidationService");
 const interceptors = require("../src/interceptors/interceptors");
@@ -367,6 +367,25 @@ global.CONFIG = {
       }),
     (error) => error.code === "ERR_CMS_00095",
   );
+
+  let templateLookup;
+  global.SERVICE = {
+    DefaultCmsPageTemplateService: {
+      get: function (request) {
+        templateLookup = request;
+        return Promise.resolve({ result: [
+          { code: "documentation-template", active: true, versionId: 2 },
+          { code: "documentation-template", active: true, versionId: 1 },
+        ] });
+      },
+    },
+  };
+  await validationService.validateSlotDefinition({
+    tenant: "default",
+    model: { code: "documentation-slot", template: "documentation-template" },
+  });
+  assert.deepStrictEqual(templateLookup.searchOptions, { limit: 2, sort: { versionId: -1 } },
+    "Staged reference validation must resolve the latest immutable revision deterministically");
 
   global.SERVICE = {
     DefaultCmsPageService: matchingService("code", "home"),

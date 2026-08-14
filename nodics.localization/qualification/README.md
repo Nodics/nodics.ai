@@ -1,6 +1,7 @@
 # Localization qualification and release evidence
 
-This directory is the machine-readable Phase 8 release record. It does not replace runtime authority or human approval.
+This directory contains machine-readable release-qualification evidence. It
+does not replace runtime authority or human approval.
 
 `release-acceptance.json` separates repository-verifiable evidence from exercises that require the target customer topology and accountable owners. `CONDITIONALLY_READY` means the implementation may enter environment qualification; it does not authorize production release.
 

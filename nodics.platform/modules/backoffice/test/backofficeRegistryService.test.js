@@ -17,6 +17,7 @@
  * @override Project registry storage implementations must preserve these observed-state invariants.
  */
 const assert = require("assert");
+let clientEndpoints = {};
 
 global.CONFIG = {
   get: (key) =>
@@ -33,6 +34,7 @@ global.CONFIG = {
             keyPrefix: "registry:lease:",
           },
           modulePermissions: {},
+          clientEndpoints: clientEndpoints,
           compatibility: {
             registryContractVersion: 1,
             minimumClientContractVersion: 1,
@@ -61,6 +63,7 @@ global.CONFIG = {
             "environment",
             "server",
             "node",
+            "runtimeRole",
             "clientCallable",
             "endpoint",
             "state",
@@ -82,7 +85,7 @@ global.SERVICE = {
     reconcileRuntimeBatch: () => Promise.resolve([]),
     buildLeaseFunctionalModuleIndex: (batch) => Object.fromEntries(
       (batch.registrations || []).map(item => [item.moduleName,
-        item.functionalModule && item.functionalModule.identity || 'nodics.core']),
+        item.functionalModule && item.functionalModule.identity || 'nodics.foundation']),
     ),
     reconcileActiveRuntimeLeases: () => Promise.resolve(0),
   },
@@ -401,6 +404,10 @@ async function run() {
     engagement: "http://engagement:4340/nodics/engagement",
   });
   assert.deepStrictEqual(publicBootstrap.data.endpointRoles, { cms: "ONLINE" });
+  clientEndpoints = { wcmsOnlineServer: "https://axis-cms.example.com/" };
+  assert.strictEqual((await service.publicBootstrap({ headers: { "x-nodics-client-contract-version": "1" } })).data.endpoints.cms,
+    "https://axis-cms.example.com/nodics/cms", "Environment configuration may replace only the browser-facing origin");
+  clientEndpoints = {};
   assert.strictEqual(publicBootstrap.data.uiComposition.site, "axisCmsSite");
   assert.strictEqual(
     JSON.stringify(publicBootstrap).includes("instanceId"),

@@ -21,7 +21,7 @@ global.SERVICE = {
     }
 };
 
-const client = require('../../nodics.core/modules/nLocalization/src/service/defaultLocalizationClientService');
+const client = require('../../nodics.foundation/modules/nLocalization/src/service/defaultLocalizationClientService');
 
 (async () => {
     assert.strictEqual((await client.resolveContext({ requestedLocale: 'de' })).customerProvider, true);

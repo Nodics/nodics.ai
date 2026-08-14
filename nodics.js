@@ -14,10 +14,10 @@
  * @description Declares the nodics.ai framework repository boundary as a standard module-group-shaped package without making it a runtime module.
  * @layer framework-root
  * @owner nodics.ai
- * @override Do not add runtime behavior here. Functional modules such as nodics.core, nodics.localization, nodics.platform, nodics.wcms, nodics.cron, nodics.process, nodics.engagement, and nodics.docs own runtime behavior.
+ * @override Do not add runtime behavior here. Functional modules such as nodics.foundation, nodics.localization, nodics.platform, nodics.wcms, nodics.cron, nodics.process, nodics.engagement, and nodics.docs own runtime behavior.
  */
 const path = require('path');
-const nodicsCore = require('./nodics.core/nodics');
+const nodicsFoundation = require('./nodics.foundation/nodics');
 const frameworkPackage = require('./package.json');
 
 /**
@@ -26,14 +26,14 @@ const frameworkPackage = require('./package.json');
  * @param {Object} options Optional caller context.
  * @returns {Object} Effective lifecycle options for core tooling.
  */
-function resolveCoreLifecycleOptions(options) {
+function resolveFoundationLifecycleOptions(options) {
     const workspaceRoots = (frameworkPackage.workspaces || [])
         .map(workspaceName => path.resolve(__dirname, workspaceName));
     const customHome = process.env.CUSTOM_HOME || process.cwd();
     const moduleRoots = customHome === __dirname || workspaceRoots.includes(customHome) ?
         workspaceRoots : workspaceRoots.concat([customHome]);
     return Object.assign({
-        NODICS_HOME: path.resolve(__dirname, 'nodics.core'),
+        NODICS_HOME: path.resolve(__dirname, 'nodics.foundation'),
         CUSTOM_HOME: customHome,
         MODULE_ROOTS: Object.freeze(moduleRoots)
     }, options || {});
@@ -71,7 +71,7 @@ module.exports = {
      * @returns {Promise<boolean>} Resolves when generated artifacts are cleaned by core tooling.
      */
     cleanAll: function (options) {
-        return nodicsCore.cleanAll(resolveCoreLifecycleOptions(options));
+        return nodicsFoundation.cleanAll(resolveFoundationLifecycleOptions(options));
     },
 
     /**
@@ -84,6 +84,6 @@ module.exports = {
      * @returns {Promise<boolean>} Resolves when generated artifacts are rebuilt by core tooling.
      */
     buildAll: function (options) {
-        return nodicsCore.buildAll(resolveCoreLifecycleOptions(options));
+        return nodicsFoundation.buildAll(resolveFoundationLifecycleOptions(options));
     }
 };

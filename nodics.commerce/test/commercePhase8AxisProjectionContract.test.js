@@ -14,7 +14,7 @@
 const assert = require('node:assert/strict');
 const backofficeContract = require('../../nodics.platform/modules/backoffice/src/service/contract/defaultBackofficeContractService');
 global.SERVICE = global.SERVICE || {};
-SERVICE.DefaultBackofficeCapabilityDefinitionService = require('../../nodics.core/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService');
+SERVICE.DefaultBackofficeCapabilityDefinitionService = require('../../nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService');
 const providers = [
     '../modules/baseCommerce/modules/store/src/service/defaultStoreBackofficeCapabilityService',
     '../modules/baseCommerce/modules/product/src/service/defaultProductBackofficeCapabilityService',

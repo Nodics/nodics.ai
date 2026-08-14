@@ -3,7 +3,7 @@
 ## Inheritance
 
 - Follow the repository AGENTS contract: `../../../AGENTS.md`.
-- Follow global AI/development guidance from `../../../nodics.core/modules/nSetup/llm/ai-enablement-index.md`.
+- Follow global AI/development guidance from `../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 - Follow the process group contract: `../../AGENTS.md`.
 
 ## Module Work Rules

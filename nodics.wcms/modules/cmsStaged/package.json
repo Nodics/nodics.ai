@@ -1,6 +1,7 @@
 {
   "name": "cmsStaged",
   "version": "0.0.1",
+  "description": "Nodics CMS Staged runtime schema and versioning capability.",
   "index": "50.21",
   "private": true,
   "main": "nodics.js",
@@ -10,7 +11,7 @@
     "extends": ["cms"],
     "runtimeModule": true,
     "loadableByNodicsModuleLoader": true,
-    "owns": ["schemas", "configuration"],
+    "owns": ["schema", "configuration"],
     "runtime": { "router": false, "publish": true, "web": false },
     "displayName": "CMS Staged Versioning"
   }

@@ -15,7 +15,7 @@ const path = require('node:path');
 const contract = require('../src/service/contract/defaultBackofficeContractService');
 const root = path.resolve(__dirname, '../../../..');
 global.SERVICE = {
-    DefaultBackofficeCapabilityDefinitionService: require('../../../../nodics.core/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService')
+    DefaultBackofficeCapabilityDefinitionService: require('../../../../nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService')
 };
 const files = [];
 const visit = directory => fs.readdirSync(directory, { withFileTypes: true }).forEach(entry => {

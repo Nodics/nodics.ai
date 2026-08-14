@@ -1,3 +1,14 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
 import { readdir, readFile } from 'node:fs/promises';
 import { existsSync, readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -92,12 +103,12 @@ for (const [relativePath, expectedHash] of Object.entries(baseline.files ?? {}))
 }
 assert(manifest.pack === 'nodics.platform.axis', 'Axis documentation pack identity drifted');
 assert(
-  manifest.sourceAuthority === 'core/source/documentation',
+  manifest.sourceAuthority === 'docs/catalogue.json',
   'Axis documentation source must be owned by nodics.platform/modules/axis',
 );
 assert(
   manifest.migrationRegister ===
-    'core/source/documentation/migration-register.json',
+    'docs/migration-register.json',
   'Axis migration register path drifted',
 );
 assert(
@@ -124,11 +135,11 @@ assert(
 );
 
 const navigation = JSON.parse(
-  await readFile(resolve(root, 'data/core/source/documentation/navigation.json'), 'utf8'),
+  await readFile(resolve(root, 'docs/catalogue.json'), 'utf8'),
 );
 const migrationRegister = JSON.parse(
   await readFile(
-    resolve(root, 'data/core/source/documentation/migration-register.json'),
+    resolve(root, 'docs/migration-register.json'),
     'utf8',
   ),
 );
@@ -210,7 +221,7 @@ for (const page of navigation.pages) {
   );
 
   const canonical = await readFile(
-    resolve(root, 'data/core/source/documentation', page.source),
+    resolve(root, 'docs', page.source),
     'utf8',
   );
   assertDocumentationDepth(page.source, canonical);
@@ -237,7 +248,7 @@ for (const page of navigation.pages) {
   );
   assert(
     generatedComponents.includes(
-      `modules/axis/data/core/source/documentation/${page.source}`,
+      `modules/axis/docs/${page.source}`,
     ),
     `Generated components do not contain platform axis source path: ${page.source}`,
   );

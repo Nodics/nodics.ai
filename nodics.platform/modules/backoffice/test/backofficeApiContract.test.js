@@ -579,10 +579,23 @@ assert(
       environment: "resolvedByEnvModule",
       server: "runtimeComposition",
       node: null,
+      runtimeRole: { code: "WCMS_STAGED", publication: "STAGED" },
       registrations: [contentGroupRegistration, registration],
     },
     10,
   ),
+);
+assert.strictEqual(
+  service.validateRegistrationBatch(
+    {
+      instanceId: "runtime-1",
+      runtimeRole: { code: "WCMS_STAGED", publication: "STAGED", secret: "invalid" },
+      registrations: [registration],
+    },
+    10,
+  ),
+  false,
+  "runtime role projection must reject undeclared metadata",
 );
 assert.strictEqual(
   service.validateRegistrationBatch(

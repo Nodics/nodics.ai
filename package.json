@@ -64,21 +64,21 @@
         },
         "bcryptjs": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-security",
           "reason": "Password hashing support for profile and authentication services."
         },
         "body-parser": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-http",
           "reason": "HTTP request parsing for generated Express routers."
         },
         "busboy": {
           "owners": [
-            "nodics.core",
+            "nodics.foundation",
             "nodics.wcms"
           ],
           "type": "runtime-upload",
@@ -86,7 +86,7 @@
         },
         "clear-module": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-loader",
           "reason": "Module cache invalidation for configurable startup and test loading."
@@ -100,7 +100,7 @@
         },
         "csvtojson": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-import",
           "reason": "CSV data import conversion for governed initializer and data operations."
@@ -114,42 +114,42 @@
         },
         "exceljs": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-import-export",
           "reason": "Spreadsheet import/export support for data operations."
         },
         "express": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-http",
           "reason": "HTTP server and router runtime used by generated APIs."
         },
         "flatted": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-serialization",
           "reason": "Circular-safe serialization for framework diagnostics and object transport."
         },
         "fs-extra": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-filesystem",
           "reason": "File-system helpers for setup, import, export, and generated artifacts."
         },
         "jsonwebtoken": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-security",
           "reason": "JWT token generation and verification for service and human-token boundaries."
         },
         "lodash": {
           "owners": [
-            "nodics.core",
+            "nodics.foundation",
             "nodics.platform",
             "nodics.cron",
             "nodics.wcms"
@@ -159,181 +159,181 @@
         },
         "logform": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-logging",
           "reason": "Winston log formatting support."
         },
         "mongodb": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-database",
           "reason": "MongoDB adapter for schema, CRUD, repository, and initializer data operations."
         },
         "node-fetch": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-http-client",
           "reason": "HTTP client support for service communication and integration calls."
         },
         "object-sizeof": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-diagnostics",
           "reason": "Payload and object size diagnostics for framework utilities."
         },
         "require-from-string": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-loader",
           "reason": "Dynamic module loading from generated or composed source text."
         },
         "stream-json": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-import",
           "reason": "Streaming JSON import support for large governed data files."
         },
         "swagger-ui-dist": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-openapi",
           "reason": "Swagger UI assets for generated OpenAPI documentation."
         },
         "uuid": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-identity",
           "reason": "Unique identifier generation for records, processes, imports, and traces."
         },
         "winston": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-logging",
           "reason": "Framework logging runtime."
         },
         "xml-js": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "runtime-import-export",
           "reason": "XML conversion support for import/export operations."
         },
         "chai": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "test-framework",
           "reason": "Assertion library used by framework contract tests."
         },
         "mocha": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "test-framework",
           "reason": "Test runner used by framework contract tests."
         },
         "@elastic/elasticsearch": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "optional-provider-search",
           "reason": "Optional Elasticsearch provider adapter.",
           "restricted": true,
           "allowedConsumers": [
-            "nodics.core/modules/nSearch"
+            "nodics.foundation/modules/nSearch"
           ]
         },
         "hazelcast-client": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "optional-provider-cache",
           "reason": "Optional Hazelcast provider adapter.",
           "restricted": true,
           "allowedConsumers": [
-            "nodics.core/modules/nCache"
+            "nodics.foundation/modules/nCache"
           ]
         },
         "kafkajs": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "optional-provider-messaging",
           "reason": "Optional Kafka provider adapter.",
           "restricted": true,
           "allowedConsumers": [
-            "nodics.core/modules/nEms"
+            "nodics.foundation/modules/nEms"
           ]
         },
         "node-cache": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "optional-provider-cache",
           "reason": "Optional local in-memory cache provider.",
           "restricted": true,
           "allowedConsumers": [
-            "nodics.core/modules/nCache"
+            "nodics.foundation/modules/nCache"
           ]
         },
         "redis": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "optional-provider-cache",
           "reason": "Optional Redis cache/provider adapter.",
           "restricted": true,
           "allowedConsumers": [
-            "nodics.core/modules/nCache"
+            "nodics.foundation/modules/nCache"
           ]
         },
         "ioredis": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "optional-provider-cache",
           "reason": "Sentinel-aware Redis cache/provider adapter.",
           "restricted": true,
           "allowedConsumers": [
-            "nodics.core/modules/nCache"
+            "nodics.foundation/modules/nCache"
           ]
         },
         "stompit": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "optional-provider-messaging",
           "reason": "Optional STOMP messaging provider adapter.",
           "restricted": true,
           "allowedConsumers": [
-            "nodics.core/modules/nEms"
+            "nodics.foundation/modules/nEms"
           ]
         },
         "winston-elasticsearch": {
           "owners": [
-            "nodics.core"
+            "nodics.foundation"
           ],
           "type": "optional-provider-logging",
           "reason": "Optional Elasticsearch logging transport.",
           "restricted": true,
           "allowedConsumers": [
-            "nodics.core/modules/nLog"
+            "nodics.foundation/modules/nLog"
           ]
         }
       }
     }
   },
   "workspaces": [
-    "nodics.core",
+    "nodics.foundation",
     "nodics.localization",
     "nodics.platform",
     "nodics.cron",
@@ -345,21 +345,21 @@
     "nodics.engagement"
   ],
   "scripts": {
-    "check:syntax": "node nodics.core/modules/nTooling/bin/nodics-tool.js check:syntax",
-    "validate:root": "node nodics.core/modules/nTooling/bin/nodics-tool.js validate:root",
-    "clean": "node nodics.core/modules/nTooling/bin/nodics-tool.js clean",
-    "build": "node nodics.core/modules/nTooling/bin/nodics-tool.js build",
-    "llm:clean": "node nodics.core/modules/nTooling/bin/nodics-tool.js llm:clean",
-    "llm:generate": "node nodics.core/modules/nTooling/bin/nodics-tool.js llm:generate",
-    "llm:validate": "node nodics.core/modules/nTooling/bin/nodics-tool.js llm:validate",
-    "ai:validate": "node nodics.core/modules/nTooling/bin/nodics-tool.js ai:validate",
-    "ai:principle-audit": "node nodics.core/modules/nTooling/bin/nodics-tool.js ai:principle-audit",
-    "quality:docs": "node nodics.core/modules/nTooling/bin/nodics-tool.js quality:docs",
-    "quality:copyright": "node nodics.core/modules/nTooling/bin/nodics-tool.js quality:copyright",
-    "quality:ownership": "node nodics.core/modules/nTooling/bin/nodics-tool.js quality:ownership",
-    "structure:audit": "node nodics.core/modules/nTooling/bin/nodics-tool.js structure:audit",
-    "structure:generate": "node nodics.core/modules/nTooling/bin/nodics-tool.js structure:generate",
-    "structure:plan": "node nodics.core/modules/nTooling/bin/nodics-tool.js structure:plan",
+    "check:syntax": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js check:syntax",
+    "validate:root": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js validate:root",
+    "clean": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js clean",
+    "build": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js build",
+    "llm:clean": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js llm:clean",
+    "llm:generate": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js llm:generate",
+    "llm:validate": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js llm:validate",
+    "ai:validate": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js ai:validate",
+    "ai:principle-audit": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js ai:principle-audit",
+    "quality:docs": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js quality:docs",
+    "quality:copyright": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js quality:copyright",
+    "quality:ownership": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js quality:ownership",
+    "structure:audit": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js structure:audit",
+    "structure:generate": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js structure:generate",
+    "structure:plan": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js structure:plan",
     "generate:app": "npm run structure:generate -- --kind=project",
     "generate:group": "npm run structure:generate -- --kind=group",
     "generate:module": "npm run structure:generate -- --kind=capability",
@@ -367,17 +367,17 @@
     "generate:server": "npm run structure:generate -- --kind=server",
     "generate:node": "npm run structure:generate -- --kind=node",
     "generate:provider": "npm run structure:generate -- --kind=provider",
-    "module:metadata": "node nodics.core/modules/nTooling/bin/nodics-tool.js module:metadata",
-    "module:metadata:validate": "node nodics.core/modules/nTooling/bin/nodics-tool.js module:metadata:validate",
-    "release:check": "node nodics.core/modules/nTooling/bin/nodics-tool.js release:check",
-    "test:suite": "node nodics.core/modules/nTooling/bin/nodics-tool.js test:suite",
+    "module:metadata": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js module:metadata",
+    "module:metadata:validate": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js module:metadata:validate",
+    "release:check": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js release:check",
+    "test:suite": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js test:suite",
     "test:basic": "npm run test:suite -- test:suite --suite=basic",
     "test:full": "npm run test:suite -- test:suite --suite=full",
     "test:import": "npm run test:suite -- test:suite --suite=import",
     "test:topology:consolidated": "npm run test:suite -- test:suite --suite=topology-consolidated",
     "test:topology:modular": "npm run test:suite -- test:suite --suite=topology-modular",
     "test:report": "echo test:report pending nTooling reporter implementation",
-    "governance:report": "node nodics.core/modules/nTooling/bin/nodics-tool.js governance:report",
+    "governance:report": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js governance:report",
     "test:basic:report": "npm run test:suite -- test:suite --suite=basic --report && npm run test:report -- --suite=basic",
     "test:full:report": "npm run test:suite -- test:suite --suite=full --report && npm run test:report -- --suite=full",
     "test:import:report": "npm run test:suite -- test:suite --suite=import --report && npm run test:report -- --suite=import",

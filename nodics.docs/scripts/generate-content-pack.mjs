@@ -1,10 +1,24 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const cataloguePath = path.join(root, 'catalogue.json');
+const require = createRequire(import.meta.url);
+const applicationDocumentationContract = require('../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js');
+const cataloguePath = path.join(root, 'docs/catalogue.json');
 const dataRoot = path.join(root, 'data/core');
 const dataPath = path.join(dataRoot, 'data/documentation');
 const headerPath = path.join(dataRoot, 'headers/nodicsDocumentationContentPackHeader.js');
@@ -24,6 +38,12 @@ const copyrightHeader = `/*
 `;
 
 const catalogue = JSON.parse(fs.readFileSync(cataloguePath, 'utf8'));
+applicationDocumentationContract.validateCatalogue({
+  ownerRoot: root,
+  sourceDirectory: 'docs',
+  cataloguePath: 'docs/catalogue.json',
+  catalogue: { pack: 'nodics.docs', version: catalogue.release, documents: catalogue.documents },
+});
 const documents = catalogue.documents;
 
 function sha256(value) {
@@ -444,6 +464,12 @@ const files = {
       record1: { code: 'nodicsDocumentationArticleSlot', template: 'nodicsDocumentationArticleTemplate', name: 'article', minItems: 1, maxItems: 1, allowedComponentTypes: ['nodicsDocumentationArticleComponentType'], active: true },
     },
   ),
+  'data/core/data/documentation/nodicsDocumentationTemplateBootstrapData.js': jsModule(
+    'Nodics framework documentation template bootstrap without unresolved slot relations.',
+    {
+      record0: { code: 'nodicsDocumentationArticleTemplate', name: 'Nodics Documentation Article', renderer: 'documentation.template.article', contractVersion: 2, active: true },
+    },
+  ),
   'data/core/data/documentation/nodicsDocumentationTemplateData.js': jsModule(
     'Nodics framework documentation template.',
     {
@@ -462,7 +488,7 @@ const files = {
     'Generated Nodics framework documentation routes.',
     routeRecords,
   ),
-  'data/core/headers/nodicsDocumentationContentPackHeader.js': `${copyrightHeader}'use strict';\n\n/** @description Nodics core-import header for framework documentation. */\nmodule.exports = {\n  cms: {\n    nodicsDocumentationSiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSiteData' }, query: { code: '$code' } },\n    nodicsDocumentationTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTypeCodeData' }, query: { code: '$code' } },\n    nodicsDocumentationRendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationRendererData' }, query: { code: '$code' } },\n    nodicsDocumentationSlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSlotData' }, query: { code: '$code' } },\n    nodicsDocumentationTemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTemplateData' }, query: { code: '$code' } },\n    nodicsDocumentationComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationComponentData' }, query: { code: '$code' } },\n    nodicsDocumentationPageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationPageData' }, query: { code: '$code' } },\n    nodicsDocumentationRouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationRouteData' }, query: { code: '$code' } },\n  },\n};\n`,
+  'data/core/headers/nodicsDocumentationContentPackHeader.js': `${copyrightHeader}'use strict';\n\n/** @description Nodics foundation-import header for framework documentation. */\nmodule.exports = {\n  cms: {\n    nodicsDocumentationSiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSiteData' }, query: { code: '$code' } },\n    nodicsDocumentationTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTypeCodeData' }, query: { code: '$code' } },\n    nodicsDocumentationRendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationRendererData' }, query: { code: '$code' } },\n    nodicsDocumentationTemplateBootstrapData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTemplateBootstrapData' }, query: { code: '$code' } },\n    nodicsDocumentationSlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSlotData' }, query: { code: '$code' } },\n    nodicsDocumentationTemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTemplateData' }, query: { code: '$code' } },\n    nodicsDocumentationComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationComponentData' }, query: { code: '$code' } },\n    nodicsDocumentationPageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationPageData' }, query: { code: '$code' } },\n    nodicsDocumentationRouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationRouteData' }, query: { code: '$code' } },\n  },\n};\n`,
 };
 
 for (const [relativePath, content] of Object.entries(files)) {
@@ -475,36 +501,20 @@ const generatedHashes = Object.fromEntries(
     sha256(fs.readFileSync(path.join(root, relativePath))),
   ]),
 );
-const releaseChecksum = sha256(
-  Object.keys(generatedHashes)
-    .sort()
-    .map((fileName) => `${fileName}:${generatedHashes[fileName]}`)
-    .join('|'),
-);
-const documentationSection = {
-  kind: 'CONTENT_PACK',
+const documentationSection = applicationDocumentationContract.buildReleaseSection({
   contentPath: 'core',
-  pack: 'nodics.docs',
-  version: catalogue.release,
+  catalogue: { pack: 'nodics.docs', version: catalogue.release },
   owningDomain: 'documentation',
-  lifecycle: 'PUBLISHABLE',
-  destinationRole: 'WCMS_STAGED',
   environmentScope: ['ALL'],
   sensitivity: 'PUBLIC',
-  versioningPolicy: 'IMMUTABLE',
-  publicationPolicy: 'REQUIRED',
-  initialPublicationPolicy: 'ADMIN_INITIATED',
-  removalPolicy: 'UNPUBLISH_OR_RETIRE',
-  sourceMode: 'catalogue-markdown-source',
-  sourceAuthority: 'catalogue.json',
+  sourceAuthority: 'docs/catalogue.json',
   sites: ['nodicsDocumentationSite'],
   accessMode: 'PUBLIC',
   pages: sourcePages.length,
   components: Object.keys(componentRecords).length,
   routes: sourcePages.length,
-  releaseChecksum,
   generatedHashes,
-};
+});
 const previousManifest = fs.existsSync(manifestPath)
   ? JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
   : { contractVersion: 2, module: 'nodics.docs', sections: {} };

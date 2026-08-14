@@ -1,0 +1,117 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+const _ = require('lodash');
+
+/**
+ * @module nodics.foundation/modules/nCatalog/src/service/interceptors/defaultSubCatalogsResolveInterceptorService
+ * @description Implements nCatalog default sub catalogs resolve interceptor service business behavior and extension logic.
+ * @layer service
+ * @owner nCatalog
+ * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
+ */
+module.exports = {
+    /**
+     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
+     * defined it that with Promise way
+     * @param {*} options 
+     */
+    init: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+
+    /**
+     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading. 
+     * defined it that with Promise way
+     * @param {*} options 
+     */
+    postInit: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+
+    /**
+
+     * Retrieves sub catalogs information.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} response Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    loadSubCatalogs: function (request, response) {
+        return new Promise((resolve, reject) => {
+            this.fatchSubCatalog(request, response.success.result).then(success => {
+                resolve(success);
+            }).catch(error => {
+                reject(new CLASSES.NodicsError(error, 'while loading sub catalogs'));
+            });
+        });
+    },
+
+    /**
+
+     * Executes fatch sub catalog behavior.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} models Method input.
+
+     * @param {*} counter Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    fatchSubCatalog: function (request, models, counter = 0) {
+        return new Promise((resolve, reject) => {
+            if (models && counter < models.length) {
+                let model = models[counter];
+                let options = _.merge({}, request.options);
+                options.recursive = false; //Change it later
+                SERVICE.DefaultCatalogService.get({
+                    tenant: request.tenant,
+                    authData: request.authData,
+                    options: options,
+                    query: {
+                        superCatalog: model.code,
+                        active: true
+                    }
+                }).then(success => {
+                    if (success.result && success.result.length > 0) {
+                        model.subCatalogs = success.result;
+                    }
+                    this.fatchSubCatalog(request, models, ++counter).then(success => {
+                        resolve(success);
+                    }).catch(error => {
+                        reject(new CLASSES.NodicsError(error, 'while loading sub catalogs'));
+                    });
+                }).catch(error => {
+                    reject(new CLASSES.NodicsError(error, 'while loading sub catalogs'));
+                });
+            } else {
+                resolve(true);
+            }
+        });
+    }
+
+
+};

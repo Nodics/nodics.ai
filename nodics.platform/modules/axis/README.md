@@ -36,6 +36,13 @@ WCMS continues to own the target schemas, governed import execution, version
 resolution, publication manifests, and Online delivery. The frontend never
 loads these source files or writes either persistence boundary.
 
+The Axis baseline manifest also owns its client-safe publication review:
+included entity counts, Staged-to-Online scope, expected impact, recovery
+guidance, and the capabilities available after publication. nImport validates
+that immutable metadata and WCMS binds it to the qualified release checksum,
+publication identity, and Process workflow reference. Axis must refuse approval
+when that exact review projection is absent or mismatched.
+
 ## Verify
 
 ```bash

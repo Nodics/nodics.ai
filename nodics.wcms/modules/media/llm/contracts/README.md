@@ -46,7 +46,7 @@ extension point and must not learn media business meaning.
 1. The media download route is secured by router/auth configuration.
 2. `media` resolves the media code, validates access, and returns a bounded
    file descriptor.
-3. The route uses `fileDownloadResponseHandler` from `nodics.core/modules/nRouter`.
+3. The route uses `fileDownloadResponseHandler` from `nodics.foundation/modules/nRouter`.
 4. The shared handler owns HTTP attachment headers, filename sanitization, and
    safe transfer-error responses.
 

@@ -19,7 +19,7 @@
 
 const assert = require('assert');
 const path = require('path');
-const coreRoot = path.dirname(require.resolve('nodics.core/package.json'));
+const coreRoot = path.dirname(require.resolve('nodics.foundation/package.json'));
 const { assertRouteContracts } = require(path.join(coreRoot, 'modules/nRouter/test/routerContractTestUtils'));
 const authProperties = require(path.join(coreRoot, 'modules/nAuth/config/properties'));
 const mediaCapabilityService = require('../src/service/defaultMediaBackofficeCapabilityService');

@@ -1,6 +1,6 @@
 # Product Agent Contract
 
-- Follow `../../../../../AGENTS.md` and `../../../../../nodics.core/modules/nSetup/llm/ai-enablement-index.md`.
+- Follow `../../../../../AGENTS.md` and `../../../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 - Follow ancestor contracts and read local guidance.
 
 Product owns shared Product, Category, Variant/SKU identity, localized catalogue records,

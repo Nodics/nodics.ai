@@ -17,7 +17,7 @@ const platform = require('../nodics');
 
 assert.equal(manifest.nodics.code, 'nodics.platform');
 assert.equal(manifest.nodics.type, 'runtime-group');
-assert.equal(manifest.nodics.extends, 'nodics.core');
+assert.equal(manifest.nodics.extends, 'nodics.foundation');
 assert.deepEqual(manifest.nodics.modules, ['nodics.platform.api']);
 assert.equal(platform.descriptor.code, manifest.nodics.code);
 assert.equal(platform.descriptor.type, manifest.nodics.type);

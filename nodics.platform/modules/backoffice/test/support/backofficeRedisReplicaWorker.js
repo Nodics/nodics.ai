@@ -12,7 +12,7 @@
 const path = require('path');
 const repositoryRoot = path.resolve(__dirname, '../../../../..');
 const liveRedisClientFactory = require(path.join(repositoryRoot,
-    'nodics.core/modules/nCache/redisCache/test/support/liveRedisClientFactory'));
+    'nodics.foundation/modules/nCache/redisCache/test/support/liveRedisClientFactory'));
 
 /**
  * @module backoffice/test/support/backofficeRedisReplicaWorker

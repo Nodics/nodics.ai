@@ -4,7 +4,7 @@
 
 - Follow the repository AGENTS contract: `../AGENTS.md`.
 - Follow global AI/development guidance:
-  `../nodics.core/modules/nSetup/llm/ai-enablement-index.md`.
+  `../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 
 ## Module Work Rules
 
@@ -15,6 +15,8 @@
 - Platform consumes immutable releases; Axis never imports files from this repository directly.
 - Backend-importable framework documentation CMS data belongs here, not in
   frontend repositories.
+- Author canonical framework documentation under `docs/`; generated CMS
+  records remain under the governed `data/core` release tree.
 - Axis product documentation belongs to `nodics.platform/modules/axis`.
 - `nodics.axis` owns executable documentation renderers only; it must not own
   CMS catalog, Site, page, component, route, or documentation content-pack data.

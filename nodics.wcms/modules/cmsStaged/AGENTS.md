@@ -5,7 +5,7 @@
 - Follow the parent WCMS contract: `../../AGENTS.md`.
 - Follow the repository contract reached through that parent chain.
 - Follow global AI/development guidance:
-  `../../../nodics.core/modules/nSetup/llm/ai-enablement-index.md`.
+  `../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 
 ## Module Work Rules
 

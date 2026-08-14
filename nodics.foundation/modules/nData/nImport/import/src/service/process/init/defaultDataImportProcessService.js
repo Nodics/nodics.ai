@@ -1,0 +1,361 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+const util = require('util');
+const clearRequire = require('clear-module');
+
+/**
+ * @module nodics.foundation/modules/nData/nImport/import/src/service/process/init/defaultDataImportProcessService
+ * @description Implements nData default data import process service business behavior and extension logic.
+ * @layer service
+ * @owner nData
+ * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
+ */
+module.exports = {
+    /**
+     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
+     * defined it that with Promise way
+     * @param {*} options 
+     */
+    init: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+
+    /**
+     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading. 
+     * defined it that with Promise way
+     * @param {*} options 
+     */
+    postInit: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+
+    /**
+
+     * Validates request rules.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} response Method input.
+
+     * @param {*} process Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    validateRequest: function (request, response, process) {
+        this.LOG.debug('Validating request');
+        if (!request.inputPath) {
+            process.error(request, response, new CLASSES.DataImportError('ERR_IMP_00003', 'Please validate request. Mandate property inputPath not have valid value'));
+        } else {
+            process.nextSuccess(request, response);
+        }
+    },
+
+    /**
+
+     * Runs pre-processing logic for pare input path.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} response Method input.
+
+     * @param {*} process Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    prepareInputPath: function (request, response, process) {
+        this.LOG.debug('Preparing data import input path');
+        let rootPath = request.inputPath.rootPath;
+        if (request.inputPath.dataType) {
+            rootPath = rootPath + '/' + request.inputPath.dataType;
+        }
+        let path = {
+            rootPath: rootPath,
+            dataPath: request.inputPath.dataPath || rootPath + (request.inputPath.postFix ? '/' + request.inputPath.postFix : ''),
+            successPath: request.inputPath.successPath || rootPath + '/success',
+            errorPath: request.inputPath.errorPath || rootPath + '/error'
+        };
+        request.inputPath = path;
+        process.nextSuccess(request, response);
+    },
+
+    /**
+
+     * Retrieves data files information.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} response Method input.
+
+     * @param {*} process Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    loadDataFiles: function (request, response, process) {
+        this.LOG.debug('Loading list of files from Path to be imported');
+        SERVICE.DefaultImportUtilityService.getImportFiles(request.inputPath.dataPath).then(success => {
+            let files = {};
+            Object.keys(success).forEach(fileName => {
+                let filePath = success[fileName];
+                files[fileName] = {
+                    file: filePath,
+                    name: fileName,
+                    processed: [],
+                    done: false
+                };
+            });
+            request.dataFiles = files;
+            process.nextSuccess(request, response);
+        }).catch(error => {
+            process.error(request, response, error);
+        });
+    },
+
+    /**
+
+     * Processes data files behavior.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} response Method input.
+
+     * @param {*} process Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    processDataFiles: function (request, response, process) {
+        this.LOG.debug('Starting data import process');
+        try {
+            if (request.dataFiles && Object.keys(request.dataFiles).length > 0) {
+                this.processFiles(request, response, {
+                    phase: 0,
+                    phaseLimit: CONFIG.get('data').dataImportPhasesLimit || 5,
+                    pendingFiles: Object.keys(request.dataFiles)
+                }).then(success => {
+                    if (response.errors && response.errors.length > 0) {
+                        let error = new CLASSES.DataImportError('ERR_IMP_00010', 'Import processing completed with record-level errors');
+                        response.errors.forEach(importError => {
+                            if (typeof error.add === 'function') {
+                                error.add(importError);
+                            }
+                        });
+                        process.error(request, response, error);
+                    } else {
+                        process.nextSuccess(request, response);
+                    }
+                }).catch(error => {
+                    process.error(request, response, error);
+                });
+            } else {
+                this.LOG.debug('No data found to import from: ' + request.inputPath.dataPath);
+                process.nextSuccess(request, response);
+            }
+        } catch (error) {
+            process.error(request, response, new CLASSES.DataImportError(error));
+        }
+    },
+
+    /**
+
+     * Processes files behavior.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} response Method input.
+
+     * @param {*} options Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    processFiles: function (request, response, options) {
+        let _self = this;
+        return new Promise((resolve, reject) => {
+            try {
+                if (options.phase < options.phaseLimit) {
+                    if (options.pendingFiles && options.pendingFiles.length > 0) {
+                        let fileName = options.pendingFiles.shift();
+                        let fileObj = request.dataFiles[fileName];
+                        if (!fileObj.done || fileObj.done === false) {
+                            _self.LOG.debug('Processing file: ' + fileObj.file.replace(NODICS.getNodicsHome(), '.') + ' on phase: ' + (options.phase + 1));
+                            let fileData = require(fileObj.file);
+                            clearRequire(fileObj.file);
+                            SERVICE.DefaultPipelineService.start('processFileDataImportPipeline', {
+                                tenant: request.tenant,
+                                importRun: request.importRun,
+                                dataFiles: request.dataFiles,
+                                phase: options.phase,
+                                phaseLimit: options.phaseLimit,
+                                fileName: fileName,
+                                fileData: fileData,
+                                inputPath: request.inputPath,
+                                suppressRetryErrorLog: _self.shouldSuppressRetryErrorLog(request, options)
+                            }, {}).then(success => {
+                                fileObj.done = true;
+                                SERVICE.DefaultFileHandlerService.moveFile(
+                                    [fileObj.file],
+                                    request.inputPath.successPath
+                                ).then(success => {
+                                    _self.LOG.debug('File has been moved to success folder : ' + fileObj.file.replace(NODICS.getNodicsHome(), '.'));
+                                    _self.processNextFile(
+                                        request,
+                                        response,
+                                        options,
+                                        resolve,
+                                        reject
+                                    );
+                                }).catch(error => {
+                                    _self.LOG.error('Facing issue while moving file to success folder : ' + fileObj.file.replace(NODICS.getNodicsHome(), '.'));
+                                    _self.LOG.error(error);
+                                    reject(error);
+                                });
+                            }).catch(error => {
+                                if (options.phase >= options.phaseLimit - 1) {
+                                    _self.LOG.error('Import process failed due to error on file: ' + fileObj.file.replace(NODICS.getNodicsHome(), '.'));
+                                    reject(error);
+                                } else {
+                                    _self.processNextFile(request, response, options, resolve, reject);
+                                }
+                            });
+                        } else {
+                            _self.processNextFile(request, response, options, resolve, reject);
+                        }
+                    } else {
+                        resolve(true);
+                    }
+                } else {
+                    resolve(true);
+                }
+            } catch (error) {
+                reject(new CLASSES.NodicsError(error));
+            }
+        });
+    },
+
+    /**
+     * Resolves whether a file-level import pipeline error is an expected retry
+     * probe and should avoid error-level logging.
+     *
+     * @param {Object} request Import request with optional fail-fast policy.
+     * @param {Object} options Active retry phase state.
+     * @returns {boolean} True when the error is not from the final phase.
+     */
+    shouldSuppressRetryErrorLog: function (request, options) {
+        let headerOption = request && request.fileData && request.fileData.header &&
+            request.fileData.header.options && request.fileData.header.options.stopImportOnFailure;
+        if (headerOption === true) {
+            return false;
+        }
+        let dataConfig = typeof CONFIG !== 'undefined' && CONFIG && typeof CONFIG.get === 'function' ?
+            CONFIG.get('data') || {} : {};
+        if (dataConfig.stopImportOnFailure === true) {
+            return false;
+        }
+        if (!options || options.phase === undefined || options.phaseLimit === undefined) {
+            return false;
+        }
+        return options.phase < options.phaseLimit - 1;
+    },
+
+    /**
+
+     * Processes next file behavior.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} response Method input.
+
+     * @param {*} options Method input.
+
+     * @param {*} resolve Method input.
+
+     * @param {*} reject Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    processNextFile: function (request, response, options, resolve, reject) {
+        if (options.pendingFiles && options.pendingFiles.length <= 0) {
+            if (SERVICE.DefaultImportUtilityService.isImportPending(request.dataFiles)) {
+                options.phase = options.phase + 1;
+                options.pendingFiles = Object.keys(request.dataFiles);
+            } else {
+                options.phase = options.phaseLimit;
+            }
+        }
+        this.processFiles(request, response, options).then(success => {
+            resolve(success);
+        }).catch(error => {
+            reject(error);
+        });
+    },
+
+    /**
+
+     * Processes error end behavior.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} response Method input.
+
+     * @param {*} process Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    handleErrorEnd: function (request, response, process) {
+        let _self = this;
+        this.LOG.error('Request has been processed and got errors');
+        if (request.dataFiles && !UTILS.isBlank(request.dataFiles)) {
+            Object.keys(request.dataFiles).forEach(fileName => {
+                let fileObj = request.dataFiles[fileName];
+                if (!fileObj.done) {
+                    SERVICE.DefaultFileHandlerService.moveFile([fileObj.file], request.inputPath.errorPath).then(success => {
+                        _self.LOG.debug('File has been moved to error folder : ' + fileObj.file.replace(NODICS.getNodicsHome(), '.'));
+                    }).catch(error => {
+                        _self.LOG.error('Facing issue while moving file to error folder : ' + fileObj.file.replace(NODICS.getNodicsHome(), '.'));
+                        _self.LOG.error(error);
+                    });
+                }
+            });
+        }
+        SERVICE.DefaultPipelineService.handleErrorEnd(request, response, process);
+    }
+};

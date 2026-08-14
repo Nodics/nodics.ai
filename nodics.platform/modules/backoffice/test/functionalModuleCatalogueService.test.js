@@ -18,7 +18,8 @@
  */
 const assert = require('assert');
 
-global.CONFIG = { get: key => key === 'defaultTenant' ? 'default' : undefined };
+global.CONFIG = { get: key => key === 'defaultTenant' ? 'default' :
+    key === 'moduleIdentityAliases' ? { 'nodics.core': 'nodics.foundation' } : undefined };
 global.SERVICE = {};
 global.NODICS = { getEnvironmentName: () => 'example.project' };
 global.CLASSES = { NodicsError: class NodicsError extends Error {
@@ -31,14 +32,14 @@ const service = Object.assign({}, definition);
 const batch = {
     project: 'example.project', environment: 'localEnvironment', server: 'platformServer', node: null,
     registrations: [
-        { moduleName: 'nodics.core', version: '0.0.1', functionalModule: {
-            identity: 'nodics.core', displayName: 'Core', type: 'STANDARD', protected: true } },
-        { moduleName: 'nConfig', parentModule: 'nodics.core' },
-        { moduleName: 'nodics.platform', parentModule: 'nodics.core', version: '0.0.1', functionalModule: {
+        { moduleName: 'nodics.foundation', version: '0.0.1', functionalModule: {
+            identity: 'nodics.foundation', displayName: 'Foundation', type: 'STANDARD', protected: true } },
+        { moduleName: 'nConfig', parentModule: 'nodics.foundation' },
+        { moduleName: 'nodics.platform', parentModule: 'nodics.foundation', version: '0.0.1', functionalModule: {
             identity: 'nodics.platform', displayName: 'Platform', type: 'STANDARD', protected: true } },
         { moduleName: 'profile', parentModule: 'nodics.platform' },
         { moduleName: 'backoffice', parentModule: 'nodics.platform' },
-        { moduleName: 'nodics.wcms', parentModule: 'nodics.core', version: '0.0.1', functionalModule: {
+        { moduleName: 'nodics.wcms', parentModule: 'nodics.foundation', version: '0.0.1', functionalModule: {
             identity: 'nodics.wcms', displayName: 'WCMS', type: 'STANDARD', protected: true } },
         { moduleName: 'cms', parentModule: 'nodics.wcms' },
         { moduleName: 'media', parentModule: 'nodics.wcms' },
@@ -51,8 +52,10 @@ const batch = {
 async function run() {
     assert.deepStrictEqual(service.getQuery({ httpRequest: { query: { project: 'example.project' } } }), { project: 'example.project' });
     assert.deepStrictEqual(service.getBody({ httpRequest: { body: { reason: 'approved' } } }), { reason: 'approved' });
+    assert.strictEqual(service.normalizeFunctionalModule('nodics.core'), 'nodics.foundation');
+    assert.strictEqual(service.getCode('example.project', 'nodics.core'), 'example.project::nodics.foundation');
     let observations = service.buildObservations(batch);
-    assert.deepStrictEqual(observations.map(item => item.functionalModule), ['nodics.core', 'nodics.platform', 'nodics.wcms']);
+    assert.deepStrictEqual(observations.map(item => item.functionalModule), ['nodics.foundation', 'nodics.platform', 'nodics.wcms']);
     assert.deepStrictEqual(observations[0].technicalModules, ['nConfig']);
     assert.deepStrictEqual(observations[1].technicalModules, ['backoffice', 'profile']);
     assert.deepStrictEqual(observations[2].technicalModules, ['cms', 'media', 'wcms']);
@@ -67,6 +70,7 @@ async function run() {
     let updated;
     let existing;
     service.getRecord = async () => existing;
+    service.retireDuplicateLegacyRecords = async () => 0;
     service.saveRecord = async request => { saved = request.model; return { result: [request.model] }; };
     service.updateRecord = async request => { updated = request.model; return { result: { modifiedCount: 1 } }; };
     service.getPersistenceAuthData = authData => authData;
@@ -76,7 +80,7 @@ async function run() {
     assert.strictEqual(first.registrationState, 'REGISTERED');
     assert.strictEqual(first.catalogueRevision, 1);
     assert.strictEqual(first.required, true);
-    assert.strictEqual(first.code, 'example.project::nodics.core');
+    assert.strictEqual(first.code, 'example.project::nodics.foundation');
 
     existing = Object.assign({}, first, { registeredAt: new Date('2026-01-01T00:00:00Z') });
     saved = undefined;
@@ -86,8 +90,31 @@ async function run() {
     assert.strictEqual(renewed.catalogueRevision, 1, 'unchanged restart must not advance catalogue revision');
     assert.strictEqual(renewed.registeredAt.toISOString(), '2026-01-01T00:00:00.000Z');
 
+    existing = Object.assign({}, first, { code: 'example.project::nodics.core', functionalModule: 'nodics.core',
+        registeredAt: new Date('2026-01-01T00:00:00Z') });
+    updated = undefined;
+    let migrated = await service.reconcileObservation(observations[0], { tenant: 'default', authData: {} });
+    assert.strictEqual(updated.code, 'example.project::nodics.foundation');
+    assert.strictEqual(updated.functionalModule, 'nodics.foundation');
+    assert.strictEqual(migrated.catalogueRevision, 2, 'legacy identity migration must advance the catalogue revision');
+
+    const migrationService = Object.assign({}, definition);
+    let retiredRequest;
+    migrationService.getRecordForExactIdentity = async (project, identity) => identity === 'nodics.core' ? {
+        code: 'example.project::nodics.core', functionalModule: 'nodics.core', registrationState: 'REGISTERED',
+        enabled: true, runtimeState: 'ACTIVE', catalogueRevision: 4
+    } : undefined;
+    migrationService.updateRecord = async request => { retiredRequest = request; return { result: { modifiedCount: 1 } }; };
+    migrationService.getPersistenceAuthData = authData => authData;
+    let retired = await migrationService.retireDuplicateLegacyRecords('example.project', 'nodics.foundation',
+        { tenant: 'default', authData: {} }, first);
+    assert.strictEqual(retired, 1);
+    assert.strictEqual(retiredRequest.model.functionalModule, 'nodics.foundation');
+    assert.strictEqual(retiredRequest.model.registrationState, 'DEREGISTERED');
+    assert.strictEqual(retiredRequest.model.enabled, false);
+
     let requiredRequest = { body: { project: 'example.project', expectedRevision: 1, reason: 'not allowed' },
-        params: { functionalModule: 'nodics.core' }, authData: { tokenType: 'access', principalId: 'admin' } };
+        params: { functionalModule: 'nodics.foundation' }, authData: { tokenType: 'access', principalId: 'admin' } };
     await assert.rejects(() => service.deactivate(requiredRequest), /Required functional module/);
 
     existing = Object.assign({}, first, { code: 'example.project::nodics.process', functionalModule: 'nodics.process',

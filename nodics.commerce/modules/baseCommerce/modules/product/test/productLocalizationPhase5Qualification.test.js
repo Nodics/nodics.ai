@@ -108,7 +108,7 @@ test('bulk preflight rejects duplicates and missing mandatory locales while expo
 test('search cache keys and index partitions isolate tenant Store and locale and mutations enable invalidation', () => {
     global._ = { merge: (...values) => Object.assign({}, ...values) };
     global.UTILS = { generateHash: value => crypto.createHash('sha256').update(value).digest('hex') };
-    let cache = require('../../../../../../nodics.core/modules/nCache/cache/src/service/config/defaultCacheConfigurationService');
+    let cache = require('../../../../../../nodics.foundation/modules/nCache/cache/src/service/config/defaultCacheConfigurationService');
     let base = { searchModel: { indexName: 'productLocalized' }, tenant: 'default', options: {}, searchOptions: {},
         query: { storeCode: 'sampleStore', locale: 'en' } };
     let english = cache.createSearchKey(base);

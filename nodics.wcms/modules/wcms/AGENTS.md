@@ -5,7 +5,7 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 ## Inheritance
 
 - Follow the repository AGENTS contract: `../../AGENTS.md`.
-- Follow the parent WCMS contract and the `nodics.core` runtime contracts.
+- Follow the parent WCMS contract and the `nodics.foundation` runtime contracts.
 - If a deeper child module has its own `AGENTS.md`, follow that file for changes inside the child module.
 
 ## Module Work Rules

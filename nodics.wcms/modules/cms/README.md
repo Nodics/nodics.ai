@@ -14,6 +14,12 @@ catalogue, page, and recovery identifiers there. BackOffice discovers CMS
 operations from the existing effective System OpenAPI contract; it does not
 copy or edit CMS schema authority.
 
+Before a governed baseline approval, CMS projects the owning immutable
+release's validated publication-review metadata together with the exact release
+checksum, publication code, workflow reference, tenant, validation result, and
+Staged/Online scope. BackOffice clients render this projection and must not
+calculate a parallel diff or approve a mismatched workflow task.
+
 The default UI-composition identifiers are deliberately CMS-generic. Consumer
 or project modules contribute their own site, catalog, page, route, template,
 and content data instead of embedding application identity in reusable CMS.

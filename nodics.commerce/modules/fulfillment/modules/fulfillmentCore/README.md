@@ -1,3 +1,3 @@
 # Fulfillment Core
 
-Fulfillment Core is its named Commerce capability boundary. Phase 1 establishes identity and composition only. Archived gComm is reference-only.
+Fulfillment Core is its named Commerce capability boundary. Reusable contracts and behavior belong to this named capability boundary. Archived gComm is reference-only.

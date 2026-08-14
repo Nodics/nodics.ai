@@ -1,0 +1,73 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+/**
+ * @module nodics.foundation/modules/nValidator/nodics
+ * @description Registers the nValidator module lifecycle hooks and module-level startup behavior.
+ * @layer module
+ * @owner nValidator
+ * @override Projects may override lifecycle behavior through later active modules instead of modifying this module directly.
+ */
+module.exports = {
+    /**
+     * This function is used to initiate module loading process. If there is any functionalities, required to be executed on module loading. 
+     * defined it that with Promise way
+     * @param {*} options 
+     */
+    init: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+
+    /**
+     * This function is used to finalize module loading process. If there is any functionalities, required to be executed after module loading. 
+     * defined it that with Promise way
+     * @param {*} options 
+     */
+    postInit: function (options) {
+        return new Promise((resolve, reject) => {
+            this.LOG.debug('Collecting validator definitions');
+            let loadValidators = () => {
+                SERVICE.DefaultValidatorService.loadValidators().then(done => {
+                    resolve(done);
+                }).catch(error => {
+                    reject(error);
+                });
+            };
+            if (!SERVICE.DefaultInterceptorService || typeof SERVICE.DefaultInterceptorService.get !== 'function') {
+                this.LOG.warn('Persisted interceptor loading skipped; no interceptor model service is available');
+                loadValidators();
+                return;
+            }
+            SERVICE.DefaultInterceptorService.get({
+                tenant: CONFIG.get('defaultTenant') || 'default'
+            }).then(response => {
+                try {
+                    if (response.success && response.result.length > 0) {
+                        let interceptors = {};
+                        response.result.forEach(interceptor => {
+                            interceptors[interceptor.code] = interceptor;
+                        });
+                        SERVICE.DefaultInterceptorService.loadRawInterceptors(interceptors);
+                        SERVICE.DefaultDatabaseConfigurationService.setSchemaInterceptors({});
+                    }
+                    loadValidators();
+                } catch (error) {
+                    reject(error);
+                }
+            }).catch(error => {
+                reject(error);
+            });
+
+        });
+    },
+};

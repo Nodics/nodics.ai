@@ -66,7 +66,19 @@ module.exports = {
         return 0;
     },
     /** Creates the stable project-scoped functional registration key. */
-    getCode: function (project, functionalModule) { return String(project) + '::' + String(functionalModule); },
+    getCode: function (project, functionalModule) { return String(project) + '::' + this.normalizeFunctionalModule(functionalModule); },
+    /** Resolves deprecated functional identities to their canonical framework identity. */
+    normalizeFunctionalModule: function (functionalModule) {
+        let identity = String(functionalModule || '');
+        let aliases = CONFIG.get('moduleIdentityAliases') || {};
+        return String(aliases[identity] || identity);
+    },
+    /** Returns deprecated identities that resolve to one canonical functional identity. */
+    getLegacyFunctionalModules: function (functionalModule) {
+        let canonical = this.normalizeFunctionalModule(functionalModule);
+        let aliases = CONFIG.get('moduleIdentityAliases') || {};
+        return Object.keys(aliases).filter(identity => String(aliases[identity]) === canonical);
+    },
     /** Returns stable sorted unique string values. */
     uniqueSorted: function (values) { return Array.from(new Set((values || []).map(String))).sort(); },
     /** Returns whether two string lists represent the same governed value. */
@@ -88,7 +100,7 @@ module.exports = {
         let registrationsByName = new Map(registrations.map(item => [item.moduleName, item]));
         let roots = registrations.filter(item => item.functionalModule);
         return roots.map(root => {
-            let identity = root.functionalModule.identity;
+            let identity = this.normalizeFunctionalModule(root.functionalModule.identity);
             let technicalModules = registrations.filter(item => item.moduleName !== root.moduleName &&
                 this.resolveFunctionalRoot(item, registrationsByName) === root).map(item => item.moduleName);
             return {
@@ -110,23 +122,57 @@ module.exports = {
         registrations.forEach(registration => {
             let root = this.resolveFunctionalRoot(registration, registrationsByName);
             if (root && root.functionalModule && root.functionalModule.identity) {
-                index[registration.moduleName] = root.functionalModule.identity;
+                index[registration.moduleName] = this.normalizeFunctionalModule(root.functionalModule.identity);
             }
         });
         return index;
     },
     /** Loads one durable functional-module record. */
-    getRecord: async function (project, functionalModule, request) {
+    getRecordForExactIdentity: async function (project, functionalModule, request) {
         let tenant = this.getTenant(request);
-        let response = await this.getRecords({ tenant: tenant, authData: this.getPersistenceAuthData(request && request.authData),
-            query: { code: this.getCode(project, functionalModule) }, searchOptions: { limit: 1 } });
+        let response = await this.getRecords({ tenant: tenant,
+            authData: this.getPersistenceAuthData(request && request.authData),
+            query: { code: String(project) + '::' + String(functionalModule) }, searchOptions: { limit: 1 } });
         return this.getItems(response)[0];
+    },
+    /** Loads one durable functional-module record, including a deprecated identity during upgrade. */
+    getRecord: async function (project, functionalModule, request) {
+        let canonical = this.normalizeFunctionalModule(functionalModule);
+        let identities = [canonical].concat(this.getLegacyFunctionalModules(canonical));
+        for (let identity of identities) {
+            let record = await this.getRecordForExactIdentity(project, identity, request);
+            if (record) return record;
+        }
+        return undefined;
+    },
+    /** Retires duplicate deprecated catalogue rows when the canonical record already exists. */
+    retireDuplicateLegacyRecords: async function (project, functionalModule, request, canonicalRecord) {
+        if (!canonicalRecord || canonicalRecord.code !== this.getCode(project, functionalModule)) return 0;
+        let tenant = this.getTenant(request);
+        let authData = this.getPersistenceAuthData(request && request.authData);
+        let retired = 0;
+        for (let identity of this.getLegacyFunctionalModules(functionalModule)) {
+            let legacy = await this.getRecordForExactIdentity(project, identity, { tenant: tenant, authData: authData });
+            if (!legacy || legacy.code === canonicalRecord.code ||
+                (legacy.registrationState === 'DEREGISTERED' && legacy.functionalModule === functionalModule)) continue;
+            await this.updateRecord({ tenant: tenant, authData: authData, query: { code: legacy.code }, model: {
+                functionalModule: this.normalizeFunctionalModule(functionalModule), registrationState: 'DEREGISTERED',
+                enabled: false, runtimeState: 'OFFLINE', observedServers: [],
+                catalogueRevision: Number(legacy.catalogueRevision || 1) + 1,
+                updatedAt: new Date(), updatedBy: 'functional-identity-migrator'
+            } });
+            retired++;
+        }
+        return retired;
     },
     /** Reconciles one observed functional module without recreating durable registration on restart. */
     reconcileObservation: async function (observation, request) {
         let tenant = this.getTenant(request);
         let authData = this.getPersistenceAuthData(request && request.authData);
         let existing = await this.getRecord(observation.projectCode, observation.functionalModule, { tenant: tenant, authData: authData });
+        observation = Object.assign({}, observation, {
+            functionalModule: this.normalizeFunctionalModule(observation.functionalModule)
+        });
         let now = new Date();
         if (!existing) {
             let registrationState = observation.required ? 'REGISTERED' : 'AVAILABLE';
@@ -140,16 +186,21 @@ module.exports = {
             await this.saveRecord({ tenant: tenant, authData: authData, model: model });
             return model;
         }
+        await this.retireDuplicateLegacyRecords(observation.projectCode, observation.functionalModule,
+            { tenant: tenant, authData: authData }, existing);
         let observedServers = this.uniqueSorted((existing.observedServers || []).concat([observation.observedServer]));
         let desiredRegistrationState = observation.required ? 'REGISTERED' :
             existing.registrationState === 'DEREGISTERED' ? 'AVAILABLE' : existing.registrationState;
         let desiredEnabled = observation.required ? true : existing.enabled === true;
-        let changed = existing.registrationState !== desiredRegistrationState || existing.enabled !== desiredEnabled ||
+        let canonicalCode = this.getCode(observation.projectCode, observation.functionalModule);
+        let changed = existing.code !== canonicalCode || existing.functionalModule !== observation.functionalModule ||
+            existing.registrationState !== desiredRegistrationState || existing.enabled !== desiredEnabled ||
             existing.runtimeState !== 'ACTIVE' || existing.registeredVersion !== observation.registeredVersion ||
             existing.displayName !== observation.displayName || existing.required !== observation.required ||
             !this.sameList(existing.technicalModules, observation.technicalModules) ||
             !this.sameList(existing.observedServers, observedServers);
         let model = {
+            code: canonicalCode, functionalModule: observation.functionalModule,
             registrationState: desiredRegistrationState, enabled: desiredEnabled, runtimeState: 'ACTIVE',
             displayName: observation.displayName, registeredVersion: observation.registeredVersion,
             required: observation.required, technicalModules: observation.technicalModules,
@@ -201,7 +252,7 @@ module.exports = {
     projectClientSafe: function (record) {
         return {
             project: record.projectCode,
-            functionalModule: record.functionalModule,
+            functionalModule: this.normalizeFunctionalModule(record.functionalModule),
             displayName: record.displayName,
             registeredVersion: record.registeredVersion,
             registrationState: record.registrationState,

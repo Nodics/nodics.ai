@@ -11,7 +11,7 @@
 'use strict';
 const assert = require('node:assert/strict');
 global.SERVICE = global.SERVICE || {};
-SERVICE.DefaultBackofficeCapabilityDefinitionService = require('../../nodics.core/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService');
+SERVICE.DefaultBackofficeCapabilityDefinitionService = require('../../nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService');
 
 const owners = {
     store: '../modules/baseCommerce/modules/store',

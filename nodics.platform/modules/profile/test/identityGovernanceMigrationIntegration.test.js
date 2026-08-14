@@ -26,7 +26,7 @@ const os = require('os');
 const path = require('path');
 const repositoryRoot = path.resolve(__dirname, '../../../..');
 const integrationConfiguration = require(path.join(repositoryRoot,
-    'nodics.core/modules/nAuth/test/integration/authIntegrationTestConfiguration')).load();
+    'nodics.foundation/modules/nAuth/test/integration/authIntegrationTestConfiguration')).load();
 
 class NodicsError extends Error {
     constructor(code, message) { super(message || code && code.message || String(code)); this.code = typeof code === 'string' ? code : code && code.code; }
@@ -127,7 +127,7 @@ function wire(repository) {
     global.SERVICE = {
         DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ isSystem: true }) },
         DefaultAPIKeyCredentialService: require(path.join(repositoryRoot,
-            'nodics.core/modules/nAuth/src/service/identity/defaultAPIKeyCredentialService')),
+            'nodics.foundation/modules/nAuth/src/service/identity/defaultAPIKeyCredentialService')),
         DefaultUserGroupService: repository.service('userGroups'),
         DefaultEmployeeService: repository.service('employees'),
         DefaultCustomerService: repository.service('customers'),

@@ -41,6 +41,20 @@ module.exports = {
     publicationCode: function (descriptor) {
         return ['cmsBaseline', descriptor.code, descriptor.releaseVersion].join('_').replace(/[^A-Za-z0-9_-]/g, '_');
     },
+    /** Builds the client-safe review bound to the exact qualified release checksum and publication identity. */
+    review: function (descriptor, release, publication, request) {
+        if (!release.publicationReview) return undefined;
+        return Object.assign({}, release.publicationReview, {
+            releaseChecksum: release.checksum,
+            publicationCode: publication && publication.code || this.publicationCode(descriptor),
+            workflowRef: publication && (publication.workflowRef || (publication.state === 'PENDING_APPROVAL' &&
+                SERVICE.DefaultCmsPublicationWorkflowService.reference(publication))),
+            requestedBy: publication && publication.requestedBy,
+            requestedAt: publication && (publication.createdAt || publication.createdTime),
+            tenant: request.tenant,
+            validation: { status: 'PASSED', warnings: [] }
+        });
+    },
     /** Returns the exact release catalogue projection visible to this Staged runtime. */
     release: async function (descriptor, request) {
         if (descriptor.contentPackCode) {
@@ -114,10 +128,12 @@ module.exports = {
                 release.status === 'CURRENT' ? 'IMPORTED' : 'NOT_IMPORTED';
         return { baselineCode: descriptor.code, releaseCode: release.releaseCode, releaseVersion: release.version,
             releaseStatus: release.status, readiness: readiness,
+            review: this.review(descriptor, release, publication, request),
             publication: publication && { code: publication.code, state: publication.state, revision: publication.revision,
                 targetVersion: publication.targetVersion, previousOnlineVersion: publication.previousOnlineVersion,
                 sourceVersion: publication.sourceVersion, requestedBy: publication.requestedBy,
-                workflowRef: publication.workflowRef,
+                workflowRef: publication.workflowRef || (state === 'PENDING_APPROVAL' &&
+                    SERVICE.DefaultCmsPublicationWorkflowService.reference(publication)),
                 correlationId: publication.correlationId,
                 failureCode: state === 'FAILED' && lastAudit && lastAudit.details && lastAudit.details.failureCode },
             lineage: publication && { actor: publication.requestedBy,
@@ -170,7 +186,7 @@ module.exports = {
             publication = await SERVICE.DefaultPublicationLifecycleService.validate(Object.assign({}, actorRequest,
                 { publicationCode: publication.code, expectedRevision: publication.revision }));
         }
-        if (publication.state === 'VALIDATED') {
+        if (publication.state === 'VALIDATED' || publication.state === 'PENDING_APPROVAL') {
             publication = await SERVICE.DefaultPublicationLifecycleService.requestApproval(Object.assign({}, actorRequest,
                 { publicationCode: publication.code, expectedRevision: publication.revision }));
         }
@@ -179,7 +195,10 @@ module.exports = {
         return { baselineCode: descriptor.code, releaseCode: release.releaseCode, releaseVersion: descriptor.releaseVersion,
             releaseStatus: 'CURRENT',
             readiness: readiness,
+            review: this.review(descriptor, release, publication, request),
             publication: { code: publication.code, state: publication.state, revision: publication.revision,
+                workflowRef: publication.workflowRef || (publication.state === 'PENDING_APPROVAL' &&
+                    SERVICE.DefaultCmsPublicationWorkflowService.reference(publication)),
                 correlationId: publication.correlationId } };
     },
     /** Rolls an Online baseline back to its captured previous release through nPublish. */

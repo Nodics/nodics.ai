@@ -13,7 +13,7 @@ Core rule: capabilities are sacred, implementations are negotiable.
 AI tools and human technical leaders working on Nodics must not act as generic
 Node.js editors. Before working through deeper module guidance, use the
 canonical role stack in
-`nodics.core/modules/nSetup/llm/contracts/ai-role-and-responsibility-contract.md`.
+`nodics.foundation/modules/nSetup/llm/contracts/ai-role-and-responsibility-contract.md`.
 
 In short, every significant Nodics task must be reasoned through the combined
 posture of a Nodics delivery expert council: expert business analyst,
@@ -28,9 +28,9 @@ Read from the repository root toward the owning module before implementation:
 
 1. root `README.md` for human orientation;
 2. root `AGENTS.md` for repository-wide behavior;
-3. `nodics.core/modules/nSetup/llm/contracts/ai-role-and-responsibility-contract.md`
+3. `nodics.foundation/modules/nSetup/llm/contracts/ai-role-and-responsibility-contract.md`
    for the required AI role stack and responsibility lens;
-4. `nodics.core/modules/nSetup/llm/contracts/ai-coding-and-customization-contract.md`
+4. `nodics.foundation/modules/nSetup/llm/contracts/ai-coding-and-customization-contract.md`
    when source code, generated artifacts, module structure, configuration,
    status definitions, or tests may change;
 5. `.github/CONTRIBUTING.md` when source, tests, generated artifacts, or
@@ -39,7 +39,7 @@ Read from the repository root toward the owning module before implementation:
 7. the nearest owning module `README.md` and `AGENTS.md`;
 8. nearest module `llm/contracts`, `llm/examples`, and generated context when
    relevant;
-9. `nodics.core/modules/nSetup/llm/ai-enablement-index.md`;
+9. `nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`;
 10. the relevant nSetup `contracts`, `standards`, `playbooks`, `templates`,
    `examples`, or curated `memory` decisions for the active change.
 
@@ -75,7 +75,7 @@ implementation, build a depth-proportional context from Nodics itself:
 
 - root-to-leaf README/AGENTS chain;
 - relevant module `llm/contracts`, `llm/examples`, and generated context;
-- relevant `nodics.core/modules/nSetup/llm` contracts, standards, playbooks,
+- relevant `nodics.foundation/modules/nSetup/llm` contracts, standards, playbooks,
   and examples;
 - source, tests, schemas, routers, services, providers, interceptors,
   pipelines, data files, package metadata, topology, and configuration;
@@ -93,7 +93,7 @@ impact, assumptions, contradictions, intended files, and validation route.
 
 - Treat `nodics.ai` as the authoritative backend/framework repository root.
 - Keep standard Nodics backend functional module groups under this repository,
-  such as `nodics.core`, `nodics.platform`, `nodics.cron`, `nodics.wcms`,
+  such as `nodics.foundation`, `nodics.platform`, `nodics.cron`, `nodics.wcms`,
   `nodics.docs`, `nodics.process`, `nodics.commerce`, `nodics.communication`,
   and `nodics.engagement`.
 - Keep customer projects outside this repository. A reference customer project
@@ -102,7 +102,7 @@ impact, assumptions, contradictions, intended files, and validation route.
 - Keep customer/project documentation in the owning customer backend project.
   Project-specific setup, demo flows, sample data, project modules, custom API
   behavior, onboarding, and extension guidance belong in the owning customer
-  backend project using `data/core/source/documentation`,
+  backend project using authored `docs/`, generated
   `data/core/data/documentation`, `data/core/headers`, and the documentation
   section in `data/manifest.json`; they do not belong in `nodics.docs`,
   `nodics.platform/modules/axis`, or `nodics.axis`.
@@ -144,14 +144,14 @@ impact, assumptions, contradictions, intended files, and validation route.
 ## Documentation and LLM ownership
 
 - Repository-wide and tool-neutral framework principles live under
-  `nodics.core/modules/nSetup/llm/`.
+  `nodics.foundation/modules/nSetup/llm/`.
 - Do not create or restore a repository-root `llm/` directory. `nodics.ai` is
   the framework repository/module-group boundary, not a direct functionality
   owner or parallel LLM authority.
 - Module-local contracts live under each functional module group, for example
-  `nodics.core/llm/contracts/`.
+  `nodics.foundation/llm/contracts/`.
 - README files are concise human overviews. AGENTS files direct agent behavior.
-- Use permanent contracts and standards under `nodics.core/modules/nSetup/llm/`
+- Use permanent contracts and standards under `nodics.foundation/modules/nSetup/llm/`
   before broad source movement, runtime loader changes,
   dependency-resolution changes, or module skeleton changes.
 - Apply the documentation impact contract before creating, restructuring,
@@ -170,7 +170,7 @@ impact, assumptions, contradictions, intended files, and validation route.
   module, environment, server, node, tenant, provider, or runtime-governance
   layer before proposing framework source edits.
 - Before writing source code, follow
-  `nodics.core/modules/nSetup/llm/contracts/ai-coding-and-customization-contract.md`.
+  `nodics.foundation/modules/nSetup/llm/contracts/ai-coding-and-customization-contract.md`.
   Code must be loader-visible, export-friendly, properly placed, documented,
   formatted, configuration-first, status-definition aware, and proven through
   default plus customization evidence where applicable.
@@ -194,5 +194,5 @@ impact, assumptions, contradictions, intended files, and validation route.
   Frontend repositories own rendering and interaction, not persisted CMS,
   documentation, schema, permission, or initialization records.
 - Keep instructions portable and tool-neutral. Vendor adapters may reference
-  root `AGENTS.md` and `nodics.core/modules/nSetup/llm`, but must not become
+  root `AGENTS.md` and `nodics.foundation/modules/nSetup/llm`, but must not become
   the source of truth.

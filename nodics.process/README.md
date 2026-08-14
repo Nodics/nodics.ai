@@ -3,7 +3,7 @@
 `nodics.process` is the standard Nodics functional module group for governed
 business processes and workflows.
 
-It extends `nodics.core` and packages reusable process-definition,
+It extends `nodics.foundation` and packages reusable process-definition,
 workflow-definition, task, approval, instance, audit, runtime-lifecycle, and
 visual-design contracts. Axis may render process workspaces only from this
 module's BackOffice capability metadata and secured APIs; Axis must not become
@@ -20,7 +20,7 @@ kept under child modules:
   inspection, and future execution providers.
 - `modules/workflow/modules/flowApi` owns secured process HTTP APIs.
 
-The existing `nbpm` capability in `nodics.core` remains a compatibility
+The existing `nbpm` capability in `nodics.foundation` remains a compatibility
 reference until a focused migration proves load order, bootstrap, API exposure,
 and data compatibility.
 

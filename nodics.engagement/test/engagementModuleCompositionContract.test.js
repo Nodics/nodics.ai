@@ -18,7 +18,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const toolingCommandService = require('../../nodics.core/modules/nTooling/src/service/defaultToolingCommandService');
+const toolingCommandService = require('../../nodics.foundation/modules/nTooling/src/service/defaultToolingCommandService');
 
 const groupRoot = path.resolve(__dirname, '..');
 const groupPackage = JSON.parse(fs.readFileSync(path.join(groupRoot, 'package.json'), 'utf8'));
@@ -35,7 +35,7 @@ const expectedModules = [
 assert.strictEqual(groupPackage.name, 'nodics.engagement');
 assert.strictEqual(groupPackage.index, '90.99');
 assert.deepStrictEqual(groupPackage.requiredModules, expectedModules.map(item => item[0]));
-assert.deepStrictEqual(groupPackage.nodics.extends, ['nodics.core']);
+assert.deepStrictEqual(groupPackage.nodics.extends, ['nodics.foundation']);
 assert.strictEqual(groupPackage.nodics.functionalModule.identity, 'nodics.engagement');
 assert.strictEqual(groupPackage.nodics.kind, 'group');
 assert.strictEqual(groupPackage.nodics.runtime.router, false);

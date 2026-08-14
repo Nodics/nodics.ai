@@ -1,6 +1,6 @@
 # nodics.localization
 
-Standard protected functional-module group for the runtime localization authority. The group root is composition-only and extends `nodics.core`.
+Standard protected functional-module group for the runtime localization authority. The group root is composition-only and extends `nodics.foundation`.
 
 The active capability is split into two child boundaries:
 
@@ -9,4 +9,7 @@ The active capability is split into two child boundaries:
 
 CMS, Catalog/Product, and Communication continue to own their localized domain content. Axis is a management client, not translation authority.
 
-Phase 7 repository qualification runs through `npm run qualification:verify`. Phase 8 production acceptance is deliberately separate: `qualification/release-acceptance.json` remains `CONDITIONALLY_READY` until accountable owners attach live-environment evidence and the release authority approves it. The operational procedure is maintained in `nodicsRoot/docs/nodics-localization-operations-and-recovery-runbook.md`.
+Repository qualification runs through `npm run qualification:verify`.
+Environment-specific production acceptance remains a separate release-authority
+decision. Permanent operational and recovery guidance must remain module-owned;
+tracked documentation never depends on a local planning workspace.

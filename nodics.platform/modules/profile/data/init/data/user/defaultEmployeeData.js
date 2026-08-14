@@ -10,7 +10,7 @@
  */
 
 const crypto = require("crypto");
-const authSecurity = require("nodics.core/modules/nAuth/src/service/security/defaultAuthSecurityService");
+const authSecurity = require("nodics.foundation/modules/nAuth/src/service/security/defaultAuthSecurityService");
 const bootstrapConfig =
   typeof CONFIG !== "undefined"
     ? CONFIG

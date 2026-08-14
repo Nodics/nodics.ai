@@ -867,6 +867,15 @@ module.exports = {
       environment: { type: "string" },
       server: { type: "string" },
       node: { type: "string", nullable: true },
+      runtimeRole: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "publication"],
+        properties: {
+          code: { type: "string", minLength: 1, maxLength: 64 },
+          publication: { type: "string", minLength: 1, maxLength: 64 },
+        },
+      },
       registrations: { type: "array", minItems: 1, items: registration },
     },
   },

@@ -22,7 +22,7 @@
 const assert = require('assert');
 const path = require('path');
 const schemas = require('../src/schemas/schemas');
-const coreRoot = path.dirname(require.resolve('nodics.core/package.json'));
+const coreRoot = path.dirname(require.resolve('nodics.foundation/package.json'));
 
 const mediaModule = {
     rawSchema: schemas.media,

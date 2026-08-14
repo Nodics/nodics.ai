@@ -6,7 +6,7 @@ This file gives AI coding agents mandatory guidance for the Nodics WCMS media ca
 
 - Follow the repository AGENTS contract: `../../../AGENTS.md`.
 - Follow the framework contract: `../../AGENTS.md`.
-- Follow global AI/development guidance: `../../../nodics.core/modules/nSetup/llm/ai-enablement-index.md`.
+- Follow global AI/development guidance: `../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 
 ## Ownership
 
@@ -40,7 +40,7 @@ owns why that set is attached to a product.
 - Do not duplicate media storage under CMS, Product, Import, Documentation, Axis, or project modules.
 - Do not add a provider directly to a caller module. Add a provider implementation behind the `media` provider contract.
 - Do not place production provider credentials in `package.json`, sample data, tests, generated docs, or frontend repositories.
-- Do not add a new upload parser or router-level body parser from inside `media`. HTTP request parsing belongs to `nodics.core/modules/nRouter`; `media` may consume parsed file descriptors.
+- Do not add a new upload parser or router-level body parser from inside `media`. HTTP request parsing belongs to `nodics.foundation/modules/nRouter`; `media` may consume parsed file descriptors.
 - Domain modules must use the `media` reference lookup contract when they need to validate a `mediaCode` or `mediaSetCode`; they must not read generated media CRUD services directly as a shortcut.
 
 ## Configuration Contract

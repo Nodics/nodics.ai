@@ -19,7 +19,7 @@
         "kind": "group",
         "displayName": "Nodics Engagement",
         "extends": [
-            "nodics.core"
+            "nodics.foundation"
         ],
         "runtimeModule": true,
         "loadableByNodicsModuleLoader": true,

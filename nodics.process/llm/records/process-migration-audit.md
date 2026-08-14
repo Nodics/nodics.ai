@@ -2,7 +2,7 @@
 
 ## Current source inventory
 
-- Current modular framework contains `nodics.core/modules/nbpm`.
+- Current modular framework contains `nodics.foundation/modules/nbpm`.
 - Historical archive review found a broader workflow family for schema,
   workflow-core, workflow-api, and process behavior. Those archived paths are
   evidence only; they are not current source, runtime, or navigation authority.
@@ -22,7 +22,7 @@ schemas participate in workflow lifecycle behavior.
 The current evidence shows `nbpm` must remain in Core until compatibility is
 proved:
 
-- `nodics.core/nodics.js` calls
+- `nodics.foundation/nodics.js` calls
   `SERVICE.DefaultWorkflow2SchemaService.buildWorkflow2SchemaAssociations()`
   during initialization when init data is required.
 - `nbpm/src/schemas/schemas.js` contributes the `system.workflow2Schema`
@@ -69,13 +69,13 @@ bootstrap acceptance. Each migration slice must prove:
 
 | Area | Current owner | Current role | Future decision |
 | --- | --- | --- | --- |
-| `system.workflow2Schema` schema | `nodics.core/modules/nbpm` | Core bootstrap mapping from schema lifecycle to workflow behavior | Keep in Core until a compatibility adapter proves generated services and init flow can survive a move. |
-| `DefaultWorkflow2SchemaService.buildWorkflow2SchemaAssociations` | `nodics.core/modules/nbpm` plus generated Core service merge | Builds runtime associations after init data import | Must stay callable during Core startup. Add a guard before any migration. |
-| Workflow activity interceptors | `nodics.core/modules/nbpm` | Attach workflow events to schema save/update/remove behavior | Candidate for a Core bridge or a Process adapter only after schema lifecycle ownership is explicit. |
-| Workflow lifecycle pipelines | `nodics.core/modules/nbpm` | Mutate workflow carrier/item state for assigned, released, blocked, paused, resumed, updated, filled, processed, action-performed, channel-evaluated, and error events | Candidate future `flowCore`, but only after dependent modules and generated artifacts are mapped. |
-| Source carrier/item builders | `nodics.core/modules/nbpm` | Build carrier/item payloads from source schema records | Candidate future `flowCore` service, with a compatibility wrapper left in Core if schema integration remains Core-owned. |
-| Workflow events/listeners | `nodics.core/modules/nbpm` | Dispatch lifecycle transitions through nEvent/nPipeline | Candidate future `flowCore`, but must preserve event names, tenant/auth context, and pipeline contracts. |
-| Workflow-to-schema HTTP routes | `nodics.core/modules/nbpm` under `system` route family | Administrative mapping surface for workflow/schema association | Candidate future `flowApi` only if route compatibility or deprecation path is provided. |
+| `system.workflow2Schema` schema | `nodics.foundation/modules/nbpm` | Core bootstrap mapping from schema lifecycle to workflow behavior | Keep in Core until a compatibility adapter proves generated services and init flow can survive a move. |
+| `DefaultWorkflow2SchemaService.buildWorkflow2SchemaAssociations` | `nodics.foundation/modules/nbpm` plus generated Core service merge | Builds runtime associations after init data import | Must stay callable during Core startup. Add a guard before any migration. |
+| Workflow activity interceptors | `nodics.foundation/modules/nbpm` | Attach workflow events to schema save/update/remove behavior | Candidate for a Core bridge or a Process adapter only after schema lifecycle ownership is explicit. |
+| Workflow lifecycle pipelines | `nodics.foundation/modules/nbpm` | Mutate workflow carrier/item state for assigned, released, blocked, paused, resumed, updated, filled, processed, action-performed, channel-evaluated, and error events | Candidate future `flowCore`, but only after dependent modules and generated artifacts are mapped. |
+| Source carrier/item builders | `nodics.foundation/modules/nbpm` | Build carrier/item payloads from source schema records | Candidate future `flowCore` service, with a compatibility wrapper left in Core if schema integration remains Core-owned. |
+| Workflow events/listeners | `nodics.foundation/modules/nbpm` | Dispatch lifecycle transitions through nEvent/nPipeline | Candidate future `flowCore`, but must preserve event names, tenant/auth context, and pipeline contracts. |
+| Workflow-to-schema HTTP routes | `nodics.foundation/modules/nbpm` under `system` route family | Administrative mapping surface for workflow/schema association | Candidate future `flowApi` only if route compatibility or deprecation path is provided. |
 | `workflowCarrier` consumer contracts | WCMS and generated workflow artifacts | Downstream modules consume approved carrier shape | Must be catalogued before any schema/model rename. |
 | `nbpm` package identity `bpm` | Core runtime module | Low-index core capability loaded before standard functional module groups | Keep stable until replacement load order is proven in fresh and repeat bootstrap. |
 

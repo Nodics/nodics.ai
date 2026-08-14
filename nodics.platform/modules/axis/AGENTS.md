@@ -5,7 +5,7 @@
 - Follow the root Nodics contract: `../../../AGENTS.md`.
 - Follow the `nodics.platform` group contract: `../../AGENTS.md`.
 - Follow global guidance from
-  `../../../nodics.core/modules/nSetup/llm/ai-enablement-index.md`.
+  `../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 
 ## Capability Boundary
 
@@ -30,8 +30,8 @@
 
 - Backend-importable Axis records must be generated or authored here, never in
   `nodics.axis`.
-- The Axis documentation content pack is under `data/core/source/documentation`,
-  generated into `data/core`, and described by
+- The Axis documentation content pack is authored under `docs/`, generated
+  into `data/core`, and described by the
   documentation section in `data/manifest.json`.
 - CMS data may target WCMS schemas, but WCMS remains the CMS schema,
   persistence, delivery, and runtime authority.

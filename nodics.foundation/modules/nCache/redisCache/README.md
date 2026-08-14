@@ -1,0 +1,171 @@
+# redisCache
+
+**Maturity: Guarded provider.** Production use requires explicit connection,
+secret, TLS/topology, isolation, operations, and live release validation.
+
+The `redisCache` module implements the supported distributed cache adapter using Redis 6.2+ semantics.
+
+Use this module when cache state must be shared across Nodics nodes. Redis is the supported distributed cache path for shared item cache, API cache, search cache, auth/session acceleration, and other cross-process cache channels that require one shared backing store.
+
+## Capability
+
+The Redis adapter supports:
+
+- JSON serialization for stored values;
+- positive TTL values through Redis expiration;
+- explicit non-expiring entries when TTL is `0`;
+- standard cache miss errors;
+- atomic consume through Redis `GETDEL`;
+- tenant-aware storage keys;
+- explicit key deletion;
+- prefix cleanup through incremental `SCAN`;
+- Redis keyspace event subscription for configured expiration events.
+
+Because all nodes share Redis, Nodics does not need redundant peer invalidation events for ordinary distributed cache writes.
+
+## Runtime Flow
+
+1. The cache engine resolves a channel to the Redis engine.
+2. `DefaultRedisCacheEngineService.initCache` builds Redis client options from layered configuration.
+3. Supported options include direct `url`, socket host/port/TLS, database,
+   username, password, and client name, or Sentinel master discovery.
+4. The Redis client connects before the engine is exposed to cache channels.
+5. `DefaultRedisCacheService` performs put, get, consume, prefix flush, and key flush operations through the canonical cache key builder.
+6. Event registration configures `notify-keyspace-events` and subscribes to the configured database event channel.
+
+## Source Contracts
+
+- `src/service/engine/defaultRedisCacheEngineService.js` owns Redis client creation and event subscription.
+- `src/service/cache/defaultRedisCacheService.js` owns Redis put/get/consume/flush behavior.
+- `test/cacheRedisLive.test.js` owns optional live Redis qualification.
+- The provider participates in the generic cache contract owned by `nodics.foundation/modules/nCache/cache`.
+
+## Configuration
+
+Redis connection data must come from layered configuration or secret-backed runtime configuration. Do not hardcode Redis URLs, credentials, database numbers, TLS settings, or key prefixes in services.
+
+Typical engine options:
+
+```js
+{
+    engine: 'redis',
+    options: {
+        url: 'redis://127.0.0.1:6379',
+        database: 0,
+        prefix: 'profile',
+        ttl: 30
+    }
+}
+```
+
+For secured environments, keep credentials and TLS settings in governed configuration or secrets.
+
+Sentinel topology is opt-in and preserves the direct URL behavior when
+disabled. Every enabled topology requires a master name and one or more valid
+endpoints. Runtime and Sentinel authentication are separate:
+
+```js
+{
+    engine: 'redis',
+    options: {
+        database: 0,
+        username: process.env.REDIS_USERNAME,
+        password: process.env.REDIS_PASSWORD,
+        sentinel: {
+            enabled: true,
+            name: 'nodics',
+            endpoints: [
+                { host: 'sentinel-a', port: 26379 },
+                { host: 'sentinel-b', port: 26379 }
+            ],
+            username: process.env.REDIS_SENTINEL_USERNAME,
+            password: process.env.REDIS_SENTINEL_PASSWORD,
+            connectTimeout: 10000,
+            commandTimeout: 10000,
+            retryDelayMs: 250,
+            maximumRetryDelayMs: 5000,
+            tls: false
+        }
+    }
+}
+```
+
+Invalid or partial Sentinel configuration fails before client connection. The
+provider discovers the promoted primary and reconnects; security-sensitive
+channels still decide whether an individual request fails closed while the
+provider is unavailable.
+
+## Release Gate
+
+Live Redis qualification is optional during normal local development but mandatory for release pipelines that claim Redis support.
+
+Run a guarded live test with an isolated Redis endpoint:
+
+```bash
+NODICS_CACHE_REDIS_URL=redis://127.0.0.1:6379 npm run test:suite -- --suite=cache-redis-live
+```
+
+Release and CI pipelines should fail closed with:
+
+```bash
+NODICS_CACHE_REDIS_URL=redis://127.0.0.1:6379 npm run test:cache:release
+```
+
+The release command must use an isolated Redis endpoint. Never point the live gate at shared developer, staging, or production data.
+
+## Extension Path
+
+Projects may customize Redis behavior by:
+
+- contributing Redis engine/channel configuration in later modules;
+- overriding `DefaultRedisCacheEngineService` for advanced connection handling;
+- overriding `DefaultRedisCacheService` while preserving serialization, TTL, consume, and invalidation semantics;
+- adding live-provider tests for project-specific Redis topology.
+
+## Tests
+
+The generic cache adapter contract verifies Redis operation parity through a mocked Redis client. `cacheRedisLive.test.js` verifies the same behavior against a real Redis endpoint when `NODICS_CACHE_REDIS_URL` is supplied.
+
+Cross-module live-provider tests must obtain Redis clients through
+`test/support/liveRedisClientFactory.js`. This keeps direct Redis SDK ownership
+inside `redisCache` while allowing consumers to validate contracts against
+independent nCache-owned provider clients. The factory is test-only and must
+never become a production connection path.
+
+Run:
+
+```bash
+node nodics.foundation/modules/nCache/cache/test/cacheAdapterContract.test.js
+node nodics.foundation/modules/nCache/redisCache/test/redisSentinelConfigurationContract.test.js
+npm run test:suite -- --suite=cache-redis-live
+npm run quality:docs
+```
+
+## What To Avoid
+
+Avoid:
+
+- making Redis required for `npm run test:basic`;
+- using shared Redis data for release gates;
+- hardcoding Redis credentials or endpoints in source code;
+- using Redis without tenant-aware key prefixes;
+- replacing `GETDEL` atomic consume with non-atomic get/delete behavior;
+- using blocking key scans for prefix cleanup.
+
+## Operations, Recovery, And Performance
+
+Define Redis availability, persistence, backup, failover, eviction, memory,
+connection-pool, timeout, retry, TLS, and keyspace-notification expectations for
+the deployment. Monitor connection state, command latency, misses, evictions,
+memory pressure, `SCAN` cleanup duration, subscription failure, and reconnects.
+
+Retries must not turn `consume` into replayable behavior. Test provider outage,
+reconnect, atomic consume, concurrent access, tenant isolation, TTL boundaries,
+prefix cleanup, and restart/failover using an isolated environment.
+
+## Continue
+
+- Generic cache contract: [cache](../cache/README.md)
+- Release qualification: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)
+- Authentication use: [nAuth](../../nAuth/README.md)
+- Public guide: [How Cache Works](https://github.com/Nodics/nodics.docs)

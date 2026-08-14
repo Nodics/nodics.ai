@@ -1,0 +1,148 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+/**
+ * @module nodics.foundation/modules/nSearch/search/src/service/handlers/defaultSearchPropertiesValueHandlerService
+ * @description Implements nSearch default search properties value handler service business behavior and extension logic.
+ * @layer service
+ * @owner nSearch
+ * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
+ */
+module.exports = {
+    /**
+     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
+     * defined it that with Promise way
+     * @param {*} options 
+     */
+    init: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+
+    /**
+     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading. 
+     * defined it that with Promise way
+     * @param {*} options 
+     */
+    postInit: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+
+    /**
+
+     * Processes value providers behavior.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} count Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    processValueProviders: function (request, count = 0) {
+        return new Promise((resolve, reject) => {
+            let searchModel = request.header.local.searchModel;
+            let indexDef = searchModel.indexDef;
+            if (count < request.models.length && !UTILS.isBlank(indexDef.properties)) {
+                this.processPropertiesValueProvider({
+                    model: request.models[count],
+                    indexDef: indexDef,
+                    properties: Object.keys(indexDef.properties)
+                }).then(success => {
+                    this.processValueProviders(request, ++count).then(success => {
+                        resolve(true);
+                    }).catch(error => {
+                        reject(error);
+                    });
+                }).catch(error => {
+                    reject(error);
+                });
+            } else {
+                resolve(true);
+            }
+        });
+    },
+
+    /**
+
+     * Processes properties value provider behavior.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    processPropertiesValueProvider: function (request) {
+        return new Promise((resolve, reject) => {
+            if (request.properties && request.properties.length > 0) {
+                let propName = request.properties.shift();
+                let propDef = request.indexDef.properties[propName];
+                this.processValueProvider(request.model, propName, propDef).then(success => {
+                    this.processPropertiesValueProvider(request).then(success => {
+                        resolve(true);
+                    }).catch(error => {
+                        reject(error);
+                    });
+                }).catch(error => {
+                    reject(error);
+                });
+            } else {
+                resolve(true);
+            }
+        });
+    },
+
+    /**
+
+     * Processes value provider behavior.
+
+     *
+
+     * @param {*} model Method input.
+
+     * @param {*} propName Method input.
+
+     * @param {*} propDef Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    processValueProvider: function (model, propName, propDef) {
+        return new Promise((resolve, reject) => {
+            if (propDef.valueProvider) {
+                try {
+                    let valueProviderServiceName = propDef.valueProvider.substring(0, propDef.valueProvider.indexOf('.'));
+                    let valueProviderOperationName = propDef.valueProvider.substring(propDef.valueProvider.indexOf('.') + 1, propDef.valueProvider.length);
+                    SERVICE[valueProviderServiceName][valueProviderOperationName](model).then(value => {
+                        model[propName] = value;
+                        resolve(true);
+                    }).catch(error => {
+                        reject(error);
+                    });
+                } catch (error) {
+                    reject(new CLASSES.SearchError(error, null, 'ERR_SRCH_00010'));
+                }
+            } else {
+                resolve(true);
+            }
+        });
+    }
+};

@@ -276,14 +276,25 @@ module.exports = {
         if (!query || Object.keys(query).some(key => query[key] === undefined || query[key] === null || query[key] === '')) {
             throw this.error(code, message);
         }
+        let criteria = Object.assign({}, query);
         let response = await service.get({
             tenant: request.tenant,
             authData: request.authData,
             options: Object.assign({}, request.options || {}, { recursive: false }),
             query: query,
-            searchOptions: { limit: 2 }
+            searchOptions: { limit: 2, sort: { versionId: -1 } }
         });
-        if (this.items(response).length !== 1) throw this.error(code, message);
+        let matches = this.items(response).filter(item => Object.keys(criteria).every(key => {
+            let source = item && item._doc || item;
+            let actual = source && source[key] && source[key].code || source && source[key];
+            let expected = criteria[key] && criteria[key].code || criteria[key];
+            return actual === expected;
+        }));
+        // Staged CMS schemas retain multiple immutable revisions with the same
+        // business code. A reference is valid when at least one active exact
+        // revision exists; the descending version sort keeps lookup behavior
+        // deterministic without requiring an unversioned duplicate count of one.
+        if (matches.length < 1) throw this.error(code, message);
         return true;
     },
 

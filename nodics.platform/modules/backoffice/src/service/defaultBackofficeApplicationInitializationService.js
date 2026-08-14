@@ -68,12 +68,38 @@ module.exports = {
                 applicationCode: profile.applicationCode, siteCode: profile.siteCode,
                 allowedActions: authority.readiness === 'READY' ?
                     [].concat(authority.publication && authority.publication.previousOnlineVersion ? ['ROLLBACK'] : [], ['RETIRE']) :
-                    authority.readiness === 'RETIRED' || authority.readiness === 'ROLLED_BACK' ? [] : ['INITIALIZE'],
+                    ['INITIALIZE'],
                 readiness: authority.readiness, releaseCode: authority.releaseCode,
                 releaseVersion: authority.releaseVersion, releaseStatus: authority.releaseStatus,
                 publication: authority.publication, lineage: authority.lineage };
         });
     },
+    /** Reads or installs the profile-owned content pack through its fixed Staged target. */
+    invokeContentPack: function (operation, profileCode, request) {
+        let profile = this.profile(profileCode);
+        if (profile.type !== 'DOCUMENTATION_BUNDLE' || !profile.contentPackCode) {
+            throw new CLASSES.NodicsError('ERR_BOF_00084', 'Application profile does not own a documentation content pack');
+        }
+        if (operation === 'install') this.human(request);
+        let token = NODICS.getInternalAuthToken(request.tenant);
+        if (!token) throw new CLASSES.NodicsError('ERR_BOF_00083', 'Application initialization service authentication is unavailable');
+        let descriptor = SERVICE.DefaultModuleService.buildRequest({
+            moduleName: 'system',
+            connectionName: profile.target.connectionName,
+            connectionType: profile.target.connectionType || 'abstract',
+            methodName: operation === 'status' ? 'GET' : 'POST',
+            apiName: '/internal/content-packs/' + encodeURIComponent(profile.contentPackCode) +
+                (operation === 'install' ? '/imports' : ''),
+            timeoutMs: profile.target.timeoutMs,
+            maxAttempts: profile.target.maxAttempts,
+            idempotencyKey: operation === 'install' ? profile.code + ':content-pack:' +
+                String(request.correlationId || request.requestId || request.authData && request.authData.principalId) : undefined,
+            header: { Authorization: 'Bearer ' + token }
+        });
+        return SERVICE.DefaultModuleService.fetch(descriptor).then(response => response && (response.data || response.result || response));
+    },
+    contentPackStatus: function (profileCode, request) { return this.invokeContentPack('status', profileCode, request); },
+    installContentPack: function (profileCode, request) { return this.invokeContentPack('install', profileCode, request); },
     /** Executes the documented bounded module operation. */
     status: function (profileCode, request) { return this.invoke('status', profileCode, request); },
     /** Executes the documented bounded module operation. */

@@ -17,6 +17,12 @@
  * @override Projects may customize Process connection and approval policy while retaining Staged authority and bounded workflow context.
  */
 module.exports = {
+    /** Returns the Process-owned deterministic instance reference for compatibility projections. */
+    reference: function (publicationRequest) {
+        let crypto = require('crypto');
+        return 'cmsPublicationApproval-' + crypto.createHash('sha256')
+            .update(publicationRequest.code + ':' + String(publicationRequest.revision)).digest('hex').slice(0, 24);
+    },
     /** Starts or replays the Process approval instance for one publication. */
     requestApproval: function (publicationRequest, request) {
         let publication = (CONFIG.get('cms') || {}).publication || {};

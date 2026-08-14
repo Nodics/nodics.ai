@@ -4,7 +4,7 @@ Follow the root Nodics AI agent contract before changing this boundary:
 
 - root `README.md` explains the human/documentation route.
 - Follow the repository agent contract: `../AGENTS.md`.
-- Follow global AI/development guidance: `../nodics.core/modules/nSetup/llm/ai-enablement-index.md`.
+- Follow global AI/development guidance: `../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 - Read every applicable ancestor `AGENTS.md` from root to this module before editing.
 - Read this module `README.md`, `llm/contracts`, `llm/examples`, and generated context.
 

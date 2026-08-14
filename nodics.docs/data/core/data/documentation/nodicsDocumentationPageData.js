@@ -189,8 +189,8 @@ module.exports = {
     "active": true
   },
   "record7": {
-    "code": "nodicsDocsPagecoreOverview",
-    "name": "Core overview",
+    "code": "nodicsDocsPagefoundationOverview",
+    "name": "Foundation overview",
     "cmsSite": [
       "nodicsDocumentationSite"
     ],
@@ -205,7 +205,7 @@ module.exports = {
         "active": true
       },
       {
-        "target": "nodicsDocsComponentcoreOverview",
+        "target": "nodicsDocsComponentfoundationOverview",
         "slot": "article",
         "index": 10,
         "active": true

@@ -33,7 +33,7 @@
       "web": false
     },
     "extends": [
-      "nodics.core"
+      "nodics.foundation"
     ],
     "functionalModule": {
       "identity": "nodics.commerce",

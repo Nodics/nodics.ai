@@ -1,0 +1,29 @@
+{
+    "contractVersion": 2,
+    "module": "validator",
+    "sections": {
+        "init": {
+            "kind": "DATA_RELEASE",
+            "dataType": "init",
+            "version": "1.0.3",
+            "description": "Validation init data",
+            "owningDomain": "validator",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "PLATFORM",
+            "environmentScope": [
+                "LOCAL",
+                "DEVELOPMENT",
+                "TEST"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "DELETE_EXPLICIT",
+            "files": {
+                "init/data/validator/defaultSampleValidatorData.js": "e4bf81c278908668e1f396fed3e5e67361a224167894dd00c0fdb7ebd7784795",
+                "init/headers/validator/defaultSampleValidatorHeader.js": "3e5b9dfe84e16306146d8aebae8ccba060ac0c7167390cd4508b84cdc114130a"
+            }
+        }
+    }
+}

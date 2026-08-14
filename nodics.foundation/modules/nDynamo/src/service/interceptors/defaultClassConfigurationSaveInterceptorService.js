@@ -1,0 +1,84 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+const _ = require('lodash');
+
+/**
+ * @module nodics.foundation/modules/nDynamo/src/service/interceptors/defaultClassConfigurationSaveInterceptorService
+ * @description Implements nDynamo default class configuration save interceptor service business behavior and extension logic.
+ * @layer service
+ * @owner nDynamo
+ * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
+ */
+module.exports = {
+
+    /**
+     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
+     * defined it that with Promise way
+     * @param {*} options 
+     */
+    init: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+
+    /**
+     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading. 
+     * defined it that with Promise way
+     * @param {*} options 
+     */
+    postInit: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+    /**
+     * Validates if module active rules.
+     *
+     * @param {*} request Method input.
+     * @param {*} response Method input.
+     * @returns {*} Method result.
+     */
+    checkIfModuleActive: function (request, response) {
+        return new Promise((resolve, reject) => {
+            let moduleName = request.model.moduleName;
+            if (NODICS.isModuleActive(moduleName)) {
+                resolve(true);
+            } else {
+                reject(new CLASSES.NodicsError('ERR_SYS_00001', 'Invalid moduleName, it should not be null or inactive'));
+            }
+        });
+    },
+
+    /**
+
+     * Removes or clears body information.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} response Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    removeBody: function (request, response) {
+        return new Promise((resolve, reject) => {
+            if (response.model && response.model.result && response.model.result.body) {
+                delete response.model.result.body;
+            }
+            resolve(true);
+        });
+    }
+};

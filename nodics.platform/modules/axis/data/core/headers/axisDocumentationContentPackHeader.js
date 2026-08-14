@@ -11,7 +11,7 @@
 
 'use strict';
 
-/** @description Nodics core-import header for the Nodics Axis documentation content pack. */
+/** @description Nodics foundation-import header for the Nodics Axis documentation content pack. */
 module.exports = {
   cms: {
     axisDocumentationSiteData: {
@@ -41,21 +41,21 @@ module.exports = {
       },
       query: { code: '$code' },
     },
-    axisDocumentationSlotData: {
-      options: {
-        enabled: true,
-        schemaName: 'cmsSlotDefinition',
-        operation: 'saveAll',
-        dataFilePrefix: 'axisDocumentationSlotData',
-      },
-      query: { code: '$code' },
-    },
     axisDocumentationTemplateData: {
       options: {
         enabled: true,
         schemaName: 'cmsPageTemplate',
         operation: 'saveAll',
         dataFilePrefix: 'axisDocumentationTemplateData',
+      },
+      query: { code: '$code' },
+    },
+    axisDocumentationSlotData: {
+      options: {
+        enabled: true,
+        schemaName: 'cmsSlotDefinition',
+        operation: 'saveAll',
+        dataFilePrefix: 'axisDocumentationSlotData',
       },
       query: { code: '$code' },
     },

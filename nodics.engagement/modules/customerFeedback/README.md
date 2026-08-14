@@ -6,7 +6,7 @@ Use this README to understand what this module is for, which capability or compo
 
 For implementation rules, read this module `AGENTS.md` after the root-to-leaf ancestor `AGENTS.md` chain. For exact contracts and examples, read this module `llm/` guidance and the relevant global contracts under `modules/nSetup/llm`.
 
-## Phase 9 status
+## Capability status
 
 The feedback foundation is implemented with suggestions, complaints, experience feedback, survey responses, anonymous or identified intake, classification, assignment fields, optimistic lifecycle transitions, closed-loop follow-up, resolution versions, downstream owner handoffs, source-traceable insights with correction and deletion propagation, and transparent NPS, CSAT, CES, trend, and operational metric calculations.
 
@@ -22,4 +22,7 @@ This capability depends on engagementCore and the provider-neutral engagementCom
 
 ## Verification
 
-Phase 1 verifies metadata, folder ownership, deterministic index order, documentation discovery, and absence of premature source behavior. Later phases must update this README when real contracts are implemented.
+Verification covers metadata, folder ownership, deterministic index order,
+documentation discovery, active behavior contracts, API security, lifecycle
+transitions, insight correction/deletion propagation, and configuration
+override boundaries.

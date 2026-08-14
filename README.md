@@ -144,7 +144,7 @@ The separation matters because different people care about different parts:
 | Business administrator | Start Axis, log in, review Dashboard, Module Registry, Imports and Exports, WCMS, Media, and Documentation. |
 | DevOps or TechOps | Review prerequisites, runtime servers, public/private properties, ports, health, restart behavior, and data bootstrap. |
 | QA or tester | Use the local acceptance checklist, import lifecycle, module registry lifecycle, and route/API verification. |
-| AI contributor | Read `AGENTS.md`, then `nodics.core/modules/nSetup/llm/` before editing. Follow owner-first, customization-first, test-first contracts. |
+| AI contributor | Read `AGENTS.md`, then `nodics.foundation/modules/nSetup/llm/` before editing. Follow owner-first, customization-first, test-first contracts. |
 
 When a capability is planned but not yet fully implemented, document it through
 the framework documentation page **Future module documentation pattern**. That
@@ -169,7 +169,7 @@ comparison claims. The useful comparison is pattern-level:
 | --- | --- | --- |
 | Product landing page | A new evaluator needs to know what problem is solved before reading code. | This README explains business value, local proof, ownership, and next steps before the module inventory. |
 | Guided local demo | Developers need to see a working system before extending it. | `nodics.kickoff` composes framework servers and `nodics.axis` shows the BackOffice experience. |
-| Capability map | Architects and administrators need stable business names. | Functional modules such as Core, Platform, WCMS, Cron, and Docs are the business-readable capability layer. |
+| Capability map | Architects and administrators need stable business names. | Functional modules such as Foundation, Platform, WCMS, Cron, and Docs are the business-readable capability layer. |
 | Extension model | Partners need upgrade-safe customization. | Customer projects and customer extension modules load after framework modules without renaming standard functional identity. |
 | Governed content and data | Operations need repeatable setup and rollback. | Importable data releases, documentation packs, checksums, catalogs, sites, pages, routes, and media records are backend-owned. |
 | Operations and lifecycle guidance | Production teams need deployable, observable runtimes. | Runtime servers, properties, health, logs, module registry, imports, and acceptance checks are documented as contracts. |
@@ -189,7 +189,7 @@ runtime servers, and operations.
 
 ```mermaid
 flowchart TB
-  Framework["nodics.ai<br/>framework backend repository"] --> Core["nodics.core<br/>runtime foundation"]
+  Framework["nodics.ai<br/>framework backend repository"] --> Foundation["nodics.foundation<br/>runtime foundation"]
   Framework --> Platform["nodics.platform<br/>Profile, BackOffice, Axis backend data"]
   Framework --> WCMS["nodics.wcms<br/>CMS, WCMS, Media"]
   Framework --> Cron["nodics.cron<br/>scheduled jobs"]
@@ -199,7 +199,7 @@ flowchart TB
   Framework --> Docs["nodics.docs<br/>framework documentation"]
 
   Customer["customer project<br/>example: nodics.kickoff"] --> Runtime["environment/server runtime graph"]
-  Core --> Runtime
+  Foundation --> Runtime
   Platform --> Runtime
   WCMS --> Runtime
   Cron --> Runtime
@@ -258,7 +258,7 @@ nodics.ai/
     properties.js
     prescripts.js
     postscripts.js
-  nodics.core/
+  nodics.foundation/
   nodics.platform/
   nodics.cron/
   nodics.wcms/
@@ -271,7 +271,7 @@ nodics.ai/
 
 The current standard module groups are:
 
-- `nodics.core` — core runtime framework modules required by every Nodics
+- `nodics.foundation` — core runtime framework modules required by every Nodics
   server.
 - `nodics.platform` — Platform, Profile, BackOffice, and Axis backend
   capability metadata.
@@ -294,12 +294,12 @@ developers, tooling, and AI agents can navigate it consistently. Its
 `loadableByNodicsModuleLoader: false`; the root is not a runtime functional
 module. Root `config/` files are reserved for framework-repository governance
 metadata only. Runtime defaults belong in the owning functional module, such as
-`nodics.core`, `nodics.platform`, `nodics.wcms`, `nodics.cron`, or
+`nodics.foundation`, `nodics.platform`, `nodics.wcms`, `nodics.cron`, or
 `nodics.docs`, `nodics.process`, `nodics.commerce`, `nodics.communication`, or
 `nodics.engagement`.
 
 Repository-wide AI/developer guidance is intentionally not stored in a root
-`llm/` folder. The canonical guidance home is `nodics.core/modules/nSetup/llm/`,
+`llm/` folder. The canonical guidance home is `nodics.foundation/modules/nSetup/llm/`,
 with module-local `llm/` folders used only by the modules that own specific
 capabilities.
 
@@ -552,7 +552,7 @@ inheritance decides what actually loads.
 For example, the local Kickoff Platform server loads:
 
 ```text
-nodics.core
+nodics.foundation
 nodics.platform
 nodics.kickoff
 kickoffLocal

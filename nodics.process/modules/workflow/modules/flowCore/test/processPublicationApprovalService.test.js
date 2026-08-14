@@ -15,7 +15,12 @@ class NodicsError extends Error { constructor(code, message) { super(message); t
 global.CLASSES = { NodicsError: NodicsError };
 let existing;
 let startRequest;
+let definition = { code: 'cmsPublicationApproval', status: 'PUBLISHED' };
+let definitionInstallCount = 0;
 global.SERVICE = {
+    DefaultProcessDefinitionService: { get: async () => ({ result: definition ? [definition] : [] }) },
+    DefaultDataReleaseService: { execute: async () => { definitionInstallCount++; definition = { code: 'cmsPublicationApproval', status: 'PUBLISHED' }; } },
+    DefaultProcessTaskService: { get: async () => ({ result: [{ code: 'approval-task', status: 'OPEN' }] }) },
     DefaultProcessInstanceService: { get: async () => ({ result: existing ? [existing] : [] }) },
     DefaultProcessRuntimeLifecycleService: { startInstance: async request => { startRequest = request;
         return { data: { instance: { code: request.runtimeOperation.instanceCode } } }; } }
@@ -29,6 +34,9 @@ const request = { tenant: 'default', publicationApproval: { publicationCode: 'ho
     assert.strictEqual(startRequest.runtimeOperation.definitionCode, 'cmsPublicationApproval');
     assert.deepStrictEqual(Object.keys(startRequest.runtimeOperation.context).sort(), ['catalogCode', 'correlationId',
         'publicationCode', 'publicationRevision', 'siteCode', 'sourceVersion'].sort());
+    definition = undefined;
+    await service.ensureDefinition(request);
+    assert.strictEqual(definitionInstallCount, 1, 'missing mandatory definition must install through nImport');
     existing = { code: service.instanceCode('home-v2', 4), status: 'WAITING' };
     let replay = await service.start(request);
     assert.strictEqual(replay.data.replay, true);

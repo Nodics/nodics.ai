@@ -6,9 +6,9 @@ Use this README to understand what this module is for, which capability or compo
 
 For implementation rules, read this module `AGENTS.md` after the root-to-leaf ancestor `AGENTS.md` chain. For exact contracts and examples, read this module `llm/` guidance and the relevant global contracts under `modules/nSetup/llm`.
 
-## Phase 3 status
+## Capability status
 
-This package implements the secured Engagement API foundation. Phase 4 explicitly enables only active-form lookup and contact submission for anonymous access; customer, operator, and integration routes remain secured.
+This package implements the secured Engagement API foundation. Anonymous access is explicitly limited to active-form lookup and contact submission; customer, operator, and integration routes remain secured.
 
 ## Ownership
 
@@ -22,4 +22,4 @@ This capability depends on domain facades/services and engagementCore security c
 
 ## Verification
 
-Phase 3 verifies route authentication metadata, tenant and customer ownership checks, service-token boundaries, payload/query limits, strict DTO allow-lists, safe errors, fail-closed missing domain adapters, and later-layer anonymous-policy override behavior.
+Verification covers route authentication metadata, tenant and customer ownership checks, service-token boundaries, payload/query limits, strict DTO allow-lists, safe errors, fail-closed missing domain adapters, and later-layer anonymous-policy override behavior.

@@ -4,7 +4,7 @@
 
 - Follow the root Nodics contract: `../../../AGENTS.md`.
 - Follow the `nodics.platform` group contract: `../../AGENTS.md`.
-- Follow global guidance from `../../../nodics.core/modules/nSetup/llm/ai-enablement-index.md`.
+- Follow global guidance from `../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 - Extend BackOffice persistence access through layered
   `schemaPolicies.backoffice`; do not copy schemas or hardcode replacement
   access-group objects.

@@ -6,7 +6,7 @@ Use this README to understand what this module is for, which capability or compo
 
 For implementation rules, read this module `AGENTS.md` after the root-to-leaf ancestor `AGENTS.md` chain. For exact contracts and examples, read this module `llm/` guidance and the relevant global contracts under `modules/nSetup/llm`.
 
-## Phase 1C status
+## Capability status
 
 This package is the active one-way adapter from Engagement intents to the separately owned `nodics.communication` contract. It builds declared, bounded context and returns content-free delivery correlation. The standard Engagement server loads Communication first.
 
@@ -22,4 +22,4 @@ This capability consumes the validated `nodics.communication` contract. If Commu
 
 ## Verification
 
-Phase 1C verifies one-way dependency, declared context, stable idempotency, content-free outcomes, provider failure isolation, Communication-before-Engagement runtime order, and no domain-state mutation.
+Verification covers one-way dependency, declared context, stable idempotency, content-free outcomes, provider failure isolation, Communication-before-Engagement runtime order, and no domain-state mutation.

@@ -1,0 +1,49 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+/**
+ * @module nodics.foundation/modules/nEms/emsClient/src/utils/statusDefinitions
+ * @description Provides shared nEms utility exports for status definitions.
+ * @layer utils
+ * @owner nEms
+ * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
+ */
+module.exports = {
+    SUC_EMS_00000: {
+        code: '200',
+        message: 'Successfully processed'
+    },
+
+    ERR_EMS_00000: {
+        code: '400',
+        message: 'Failed due to internal error'
+    },
+    ERR_EMS_00001: {
+        code: '400',
+        message: 'Failed to publish message'
+    },
+    ERR_EMS_00002: {
+        code: '400',
+        message: 'Invalid or null payload'
+    },
+    ERR_EMS_00003: {
+        code: '503',
+        message: 'Not able to establish connection',
+    },
+    ERR_EMS_00004: {
+        code: '400',
+        message: 'Invalid configuration',
+    },
+    ERR_EMS_00005: {
+        code: '500',
+        message: 'Failed converting message from XML to JSON'
+    }
+};

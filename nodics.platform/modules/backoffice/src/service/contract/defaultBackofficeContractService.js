@@ -824,6 +824,7 @@ module.exports = {
       "environment",
       "server",
       "node",
+      "runtimeRole",
       "registrations",
     ];
     let moduleNames = batch.registrations.map(
@@ -834,6 +835,15 @@ module.exports = {
       (batch.project === undefined || this.isString(batch.project)) &&
       (batch.environment === undefined || this.isString(batch.environment)) &&
       (batch.server === undefined || this.isString(batch.server)) &&
+      (batch.runtimeRole === undefined ||
+        (batch.runtimeRole &&
+          typeof batch.runtimeRole === "object" &&
+          !Array.isArray(batch.runtimeRole) &&
+          !Object.keys(batch.runtimeRole).some(
+            (key) => !["code", "publication"].includes(key),
+          ) &&
+          this.isString(batch.runtimeRole.code, 64) &&
+          this.isString(batch.runtimeRole.publication, 64))) &&
       (batch.node === undefined ||
         batch.node === null ||
         this.isString(batch.node)) &&

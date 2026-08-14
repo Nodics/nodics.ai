@@ -1,7 +1,7 @@
 # Nodics Platform
 
 `nodics.platform` is an independently versioned backend runtime group extending
-`nodics.core`. It will host authenticated platform APIs, Profile integration,
+`nodics.foundation`. It will host authenticated platform APIs, Profile integration,
 BackOffice registration/discovery, documentation import/delivery, and other
 explicitly approved platform capabilities.
 

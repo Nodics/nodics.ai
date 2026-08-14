@@ -10,7 +10,7 @@
  */
 
 const assert = require('assert');
-const { assertRouteContracts, flattenRoutes } = require('../../../../nodics.core/modules/nRouter/test/routerContractTestUtils');
+const { assertRouteContracts, flattenRoutes } = require('../../../../nodics.foundation/modules/nRouter/test/routerContractTestUtils');
 const capabilityService = require('../src/service/defaultCronjobBackofficeCapabilityService');
 const routerConfig = require('../src/router/routers');
 
@@ -49,7 +49,7 @@ flattenRoutes(routerConfig).forEach(route => {
         assert.strictEqual(route.permission, cronJobLifecyclePermission, 'CronJob lifecycle mutation routes must declare governed permission');
     }
 });
-const authProperties = require('../../../../nodics.core/modules/nAuth/config/properties');
+const authProperties = require('../../../../nodics.foundation/modules/nAuth/config/properties');
 assert(
     authProperties.identityGovernance.permissionCatalog.includes(cronJobLifecyclePermission),
     'CronJob lifecycle permission must be present in the identity catalog',

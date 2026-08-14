@@ -20,7 +20,7 @@
  */
 const assert = require('assert');
 
-const authProperties = require('../../nodics.core/modules/nAuth/config/properties');
+const authProperties = require('../../nodics.foundation/modules/nAuth/config/properties');
 const routers = require('../modules/workflow/modules/flowApi/src/router/routers');
 
 const permissionCatalog = new Set(authProperties.identityGovernance.permissionCatalog);

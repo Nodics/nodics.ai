@@ -98,12 +98,12 @@ module.exports = {
     "active": true
   },
   "record7": {
-    "code": "nodicsDocsRoutecoreOverview",
+    "code": "nodicsDocsRoutefoundationOverview",
     "site": "nodicsDocumentationSite",
-    "path": "/docs/framework/core-overview",
+    "path": "/docs/framework/foundation-overview",
     "locale": "en",
     "channel": "web",
-    "page": "nodicsDocsPagecoreOverview",
+    "page": "nodicsDocsPagefoundationOverview",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
     "accessMode": "PUBLIC",

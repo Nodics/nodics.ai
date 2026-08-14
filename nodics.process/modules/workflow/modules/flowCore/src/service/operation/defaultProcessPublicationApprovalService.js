@@ -20,6 +20,38 @@ module.exports = {
         return 'cmsPublicationApproval-' + crypto.createHash('sha256')
             .update(publicationCode + ':' + String(publicationRevision)).digest('hex').slice(0, 24);
     },
+    /** Ensures the framework-owned approval definition through the governed nImport contribution installer. */
+    ensureDefinition: async function (request) {
+        let definition = await SERVICE.DefaultProcessDefinitionService.get({ tenant: request.tenant,
+            query: { code: 'cmsPublicationApproval' }, searchOptions: { limit: 1 }, authData: request.authData })
+            .then(response => response && response.result && response.result[0]);
+        if (definition) return definition;
+        await SERVICE.DefaultDataReleaseService.execute({ tenant: request.tenant, authData: request.authData,
+            releaseRequest: { dataType: 'init', releaseCodes: ['cms:cmsPublicationApproval'],
+                expectedReleases: { 'cms:cmsPublicationApproval': '1.0.0' } } });
+        definition = await SERVICE.DefaultProcessDefinitionService.get({ tenant: request.tenant,
+            query: { code: 'cmsPublicationApproval' }, searchOptions: { limit: 1 }, authData: request.authData })
+            .then(response => response && response.result && response.result[0]);
+        if (!definition) throw new CLASSES.NodicsError('ERR_PROCESS_00002', 'CMS publication approval definition installation failed');
+        return definition;
+    },
+    /** Repairs only a missing human task for an existing waiting publication instance. */
+    repairWaitingTask: async function (request, instance) {
+        let lifecycle = SERVICE.DefaultProcessRuntimeLifecycleService;
+        let taskResponse = await SERVICE.DefaultProcessTaskService.get({ tenant: request.tenant,
+            query: { instanceCode: instance.code, status: { $in: ['OPEN', 'CLAIMED', 'ESCALATED'] } },
+            searchOptions: { limit: 1 }, authData: request.authData });
+        let existingTask = taskResponse && taskResponse.result && taskResponse.result[0];
+        if (existingTask || instance.status !== 'WAITING' || !instance.currentNode) return existingTask;
+        let version = await lifecycle.requireVersion(request, instance.definitionCode, instance.version);
+        let node = lifecycle.findNode(version.graph || {}, instance.currentNode);
+        if (!node || node.type !== 'TASK') {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00013', 'Waiting publication instance is not positioned at a human task');
+        }
+        return lifecycle.createTaskForNode(request, instance, node, {
+            taskCode: (instance.code + '-' + node.code).slice(0, 128)
+        });
+    },
     /** Starts or returns the existing approval instance for one immutable publication request. */
     start: async function (request) {
         let input = request.publicationApproval || request.runtimeOperation || {};
@@ -27,10 +59,14 @@ module.exports = {
             !Number.isInteger(Number(input.publicationRevision)) || !input.sourceVersion || !input.correlationId) {
             throw new CLASSES.NodicsError('ERR_PROCESS_00001', 'Publication approval request is invalid');
         }
+        await this.ensureDefinition(request);
         let instanceCode = this.instanceCode(input.publicationCode, Number(input.publicationRevision));
         let existing = await SERVICE.DefaultProcessInstanceService.get({ tenant: request.tenant, query: { code: instanceCode },
             searchOptions: { limit: 1 }, authData: request.authData }).then(response => response && response.result && response.result[0]);
-        if (existing) return { code: 'SUC_PROCESS_00007', data: { instance: existing, replay: true } };
+        if (existing) {
+            let task = await this.repairWaitingTask(request, existing);
+            return { code: 'SUC_PROCESS_00007', data: { instance: existing, task: task, replay: true } };
+        }
         let context = {
             publicationCode: input.publicationCode,
             publicationRevision: Number(input.publicationRevision),

@@ -19,7 +19,7 @@ const core = require('../modules/localizationCore/package.json');
 const api = require('../modules/localizationApi/package.json');
 
 assert.strictEqual(group.nodics.kind, 'group');
-assert.deepStrictEqual(group.nodics.extends, ['nodics.core']);
+assert.deepStrictEqual(group.nodics.extends, ['nodics.foundation']);
 assert.deepStrictEqual(group.requiredModules, ['localizationCore', 'localizationApi']);
 assert.strictEqual(group.nodics.functionalModule.identity, 'nodics.localization');
 assert.strictEqual(group.nodics.functionalModule.protected, true);

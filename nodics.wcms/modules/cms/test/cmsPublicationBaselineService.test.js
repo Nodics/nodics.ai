@@ -21,9 +21,19 @@ let releaseStatus = 'NOT_INSTALLED';
 let lifecycle;
 let operations = [];
 global.SERVICE = {
+    DefaultCmsPublicationWorkflowService: {
+        reference: value => 'workflow-' + value.code + '-' + value.revision
+    },
     DefaultDataReleaseService: {
         getCatalogue: async () => ({ data: [{ releaseCode: 'axis:axisBaseline', version: '1.0.0',
             destinationRole: 'WCMS_STAGED', lifecycle: 'PUBLISHABLE', initialPublicationPolicy: 'ADMIN_INITIATED',
+            checksum: 'release-checksum', publicationReview: {
+                title: 'Publish Axis', summary: 'Review Axis', sourceRole: 'WCMS_STAGED', targetRole: 'WCMS_ONLINE',
+                siteCode: 'axisCmsSite', catalogCode: 'axisContentCatalog', impactMessage: 'Axis becomes available.',
+                rollbackMessage: 'Restore the prior release when available.', entities: [{ type: 'page', label: 'Pages',
+                    total: 1, added: 1, updated: 0, unchanged: 0, removed: 0 }],
+                postPublicationCapabilities: [{ title: 'Open Axis', description: 'Use Axis.' }]
+            },
             status: releaseStatus }] }),
         execute: async request => { operations.push(['install', request.releaseRequest]); releaseStatus = 'CURRENT'; return {}; }
     },
@@ -52,6 +62,9 @@ const request = { tenant: 'default', authData: { principalId: 'platform-service'
     const initiated = await service.initiate('axis', request);
     assert.strictEqual(initiated.releaseCode, 'axis:axisBaseline');
     assert.strictEqual(initiated.publication.state, 'PENDING_APPROVAL');
+    assert.strictEqual(initiated.review.releaseChecksum, 'release-checksum');
+    assert.strictEqual(initiated.review.publicationCode, 'cmsBaseline_axis_1_0_0');
+    assert.strictEqual(initiated.review.validation.status, 'PASSED');
     assert.deepStrictEqual(operations.map(item => item[0]), ['install', 'create', 'validate', 'requestApproval']);
     assert.strictEqual(operations[1][1].rootType, 'site');
     assert.strictEqual(operations[1][1].rootCode, 'axisCmsSite');
@@ -60,12 +73,14 @@ const request = { tenant: 'default', authData: { principalId: 'platform-service'
         'baseline initiation must never approve or deploy Online');
     const replay = await service.initiate('axis', request);
     assert.strictEqual(replay.publication.state, 'PENDING_APPROVAL');
+    assert.strictEqual(replay.publication.workflowRef, 'workflow-cmsBaseline_axis_1_0_0-2');
     assert.strictEqual(operations.filter(item => item[0] === 'install').length, 1);
-    assert.strictEqual(operations.filter(item => item[0] === 'requestApproval').length, 1);
+    assert.strictEqual(operations.filter(item => item[0] === 'requestApproval').length, 2);
     lifecycle = Object.assign({}, lifecycle, { state: 'FAILED', revision: 3 });
     const retried = await service.initiate('axis', request);
     assert.strictEqual(retried.publication.state, 'PENDING_APPROVAL');
     assert.strictEqual(operations.filter(item => item[0] === 'retry').length, 1);
+    assert.strictEqual(operations.filter(item => item[0] === 'requestApproval').length, 3);
     const status = await service.status('axis', request);
     assert.strictEqual(status.readiness, 'PUBLICATION_PENDING');
     publication.runtimeRole = 'ONLINE';

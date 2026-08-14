@@ -1,0 +1,126 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+const path = require('path');
+const { spawnSync } = require('child_process');
+
+/**
+ * @module nTooling/service/command/defaultNodicsLifecycleCommandService
+ * @description Runs root Nodics lifecycle commands through governed tooling so package.json exposes a small command façade while build and clean gates stay source-controlled.
+ * @layer tooling
+ * @owner nTooling
+ * @override Project tooling modules may replace lifecycle command definitions through standard tooling command override governance.
+ */
+module.exports = {
+    /** Returns true when lifecycle commands target the non-runtime framework repository root. @param {Object} context Tooling context. @returns {boolean} True for nodics.ai. */
+    isFrameworkRepository: function (context) {
+        const packageJson = require(path.join(context.home, 'package.json'));
+        return packageJson.nodics && packageJson.nodics.runtimeModule === false;
+    },
+
+    /**
+     * Spawns a child command inside the selected Nodics project home.
+     *
+     * @param {Object} context Tooling command context.
+     * @param {string} command Executable name.
+     * @param {string[]} args Executable arguments.
+     * @returns {void}
+     */
+    spawn: function (context, command, args, environment) {
+        const result = spawnSync(command, args, {
+            cwd: context.home,
+            env: Object.assign({}, process.env, { NODICS_HOME: context.home }, environment || {}),
+            stdio: 'inherit'
+        });
+        if (result.error) {
+            throw result.error;
+        }
+        if (result.status !== 0) {
+            throw new Error('Nodics lifecycle command failed with exit code ' + result.status + ': ' + command + ' ' + args.join(' '));
+        }
+    },
+
+    /**
+     * Executes a Nodics runtime function in an isolated process.
+     *
+     * @param {Object} context Tooling command context.
+     * @param {string} method Runtime method name.
+     * @returns {void}
+     */
+    runNodicsMethod: function (context, method) {
+        if (this.isFrameworkRepository(context)) {
+            this.spawn(context, process.execPath, [
+                path.join(__dirname, 'defaultRepositoryBuildCompositionService.js'), method, context.home
+            ]);
+            return;
+        }
+        this.spawn(context, process.execPath, ['-e',
+            'Promise.resolve(require("./nodics").' + method + '()).catch(error => { console.error(error); process.exit(1); })'
+        ]);
+    },
+
+    /**
+     * Executes another governed Nodics tooling command.
+     *
+     * @param {Object} context Tooling command context.
+     * @param {string[]} args Tool command arguments.
+     * @returns {void}
+     */
+    runTool: function (context, args) {
+        const toolPath = path.join(context.frameworkHome, 'nodics.foundation', 'modules', 'nTooling', 'bin', 'nodics-tool.js');
+        if (this.isFrameworkRepository(context) && ['docs:openapi', 'governance:report'].includes(args[0])) {
+            const compositionService = require('./defaultRepositoryBuildCompositionService');
+            const composition = compositionService.create();
+            try {
+                this.spawn(context, process.execPath, [toolPath].concat(args), {
+                    CUSTOM_HOME: composition.root,
+                    S: composition.serverName,
+                    E: composition.environmentName
+                });
+            } finally {
+                compositionService.remove(composition);
+            }
+            return;
+        }
+        this.spawn(context, process.execPath, [toolPath].concat(args));
+    },
+
+    /**
+     * Runs a configured lifecycle step.
+     *
+     * @param {Object} context Tooling command context.
+     * @param {Object} step Lifecycle step.
+     * @returns {void}
+     */
+    runStep: function (context, step) {
+        if (step.tool) {
+            this.runTool(context, step.tool);
+            return;
+        }
+        if (step.nodicsMethod) {
+            this.runNodicsMethod(context, step.nodicsMethod);
+            return;
+        }
+        throw new Error('Invalid Nodics lifecycle step: ' + JSON.stringify(step));
+    },
+
+    /**
+     * Runs the lifecycle command declared in nTooling properties.
+     *
+     * @param {Object} context Tooling command context.
+     * @returns {Promise<boolean>} Resolves when the lifecycle command passes.
+     */
+    run: async function (context) {
+        const steps = context.command.steps || [];
+        steps.forEach(step => this.runStep(context, step));
+        return true;
+    }
+};

@@ -19,6 +19,10 @@ global.CLASSES = { NodicsError };
 global.CONFIG = { get: key => key === 'backofficeApplicationInitialization' ? { profiles: { nexus: {
     code: 'nexus', type: 'WEBSITE_BUNDLE', owner: 'nexusData', applicationCode: 'nexus', siteCode: 'nexusCorporateSite',
     baselineCode: 'nexus', target: { moduleName: 'cms', connectionName: 'wcmsStaged', connectionType: 'abstract' }
+}, frameworkdocs: {
+    code: 'frameworkdocs', type: 'DOCUMENTATION_BUNDLE', owner: 'nodics.docs', applicationCode: 'axis',
+    siteCode: 'nodicsDocumentationSite', baselineCode: 'frameworkdocs', contentPackCode: 'nodicsDocumentation',
+    target: { moduleName: 'cms', connectionName: 'wcmsStaged', connectionType: 'abstract' }
 } } } : undefined };
 global.NODICS = { getInternalAuthToken: () => 'service-token' };
 global.SERVICE = { DefaultModuleService: {
@@ -37,5 +41,30 @@ global.SERVICE = { DefaultModuleService: {
     assert.throws(() => service.status('../unsafe', { tenant: 'default', authData: {} }), error => error.code === 'ERR_BOF_00080');
     assert.strictEqual(routes.applicationInitializationStatus.permission, 'backoffice.application.initialization.view');
     assert.strictEqual(routes.initiateApplicationInitialization.permission, 'backoffice.application.initialization.initiate');
+    let contentPackRequest;
+    SERVICE.DefaultModuleService.fetch = async request => {
+        contentPackRequest = request;
+        return { data: { code: 'nodicsDocumentation', state: 'NOT_INSTALLED' } };
+    };
+    assert.strictEqual((await service.contentPackStatus('frameworkdocs', { tenant: 'default', authData: { principalId: 'admin' } })).state,
+        'NOT_INSTALLED');
+    assert.strictEqual(contentPackRequest.connectionName, 'wcmsStaged');
+    assert.strictEqual(contentPackRequest.moduleName, 'system');
+    assert.strictEqual(contentPackRequest.apiName, '/internal/content-packs/nodicsDocumentation');
+    await service.installContentPack('frameworkdocs', { tenant: 'default', requestId: 'request-1', authData: { principalId: 'admin' } });
+    assert.strictEqual(contentPackRequest.methodName, 'POST');
+    assert.strictEqual(contentPackRequest.apiName, '/internal/content-packs/nodicsDocumentation/imports');
+    assert.throws(() => service.installContentPack('frameworkdocs', { tenant: 'default', authData: { principalId: 'svc', tokenType: 'service' } }),
+        error => error.code === 'ERR_BOF_00082');
+    assert.strictEqual(routes.applicationContentPackStatus.permission, 'backoffice.application.initialization.view');
+    assert.strictEqual(routes.installApplicationContentPack.permission, 'backoffice.application.initialization.initiate');
+    SERVICE.DefaultModuleService.fetch = async () => ({ data: { readiness: 'ROLLED_BACK', releaseCode: 'nexusData:nexusCorporateSite',
+        releaseVersion: '1.0.0', releaseStatus: 'CURRENT' } });
+    assert.deepStrictEqual((await service.status('nexus', { tenant: 'default', authData: { principalId: 'admin' } })).allowedActions,
+        ['INITIALIZE'], 'A rolled-back release must advertise its governed resubmission path');
+    SERVICE.DefaultModuleService.fetch = async () => ({ data: { readiness: 'RETIRED', releaseCode: 'nexusData:nexusCorporateSite',
+        releaseVersion: '1.0.0', releaseStatus: 'CURRENT' } });
+    assert.deepStrictEqual((await service.status('nexus', { tenant: 'default', authData: { principalId: 'admin' } })).allowedActions,
+        ['INITIALIZE'], 'A retired release must advertise its governed re-publication path');
     console.log('BackOffice application initialization contract validated');
 })().catch(error => { console.error(error); process.exit(1); });

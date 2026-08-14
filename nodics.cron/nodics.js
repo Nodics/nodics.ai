@@ -13,7 +13,7 @@
 
 /**
  * @module nodics.cron/nodics
- * @description Declares the cron functional module lifecycle hooks that participate in a server runtime after nodics.core has initialized.
+ * @description Declares the cron functional module lifecycle hooks that participate in a server runtime after nodics.foundation has initialized.
  * @layer module
  * @owner nodics.cron
  * @override Customer cron extensions should override lifecycle behavior through their own module layer, not by editing this framework module.

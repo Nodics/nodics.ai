@@ -1,0 +1,201 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+const _ = require('lodash');
+
+/**
+ * @module nodics.foundation/modules/nEms/emsClient/src/service/proc/defaultMessageProcessService
+ * @description Implements nEms default message process service business behavior and extension logic.
+ * @layer service
+ * @owner nEms
+ * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
+ */
+module.exports = {
+    /**
+     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
+     * defined it that with Promise way
+     * @param {*} options 
+     */
+    init: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+
+    /**
+     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading. 
+     * defined it that with Promise way
+     * @param {*} options 
+     */
+    postInit: function (options) {
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    },
+
+    /**
+
+     * Validates request rules.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} response Method input.
+
+     * @param {*} process Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    validateRequest: function (request, response, process) {
+        this.LOG.debug('Validating message handler request');
+        if (!request.queue) {
+            process.error(request, response, new CLASSES.NodicsError('ERR_EMS_00000', 'Invalid queue detail'));
+        } else if (!request.message) {
+            process.error(request, response, new CLASSES.NodicsError('ERR_EMS_00000', 'Invalid queue detail'));
+        } else {
+            process.nextSuccess(request, response);
+        }
+    },
+
+    /**
+
+     * Processes message behavior.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} response Method input.
+
+     * @param {*} process Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    processMessage: function (request, response, process) {
+        this.LOG.debug('Applying message translator');
+        let queue = request.queue;
+        let messageHandlerPipeline = CONFIG.get('emsClient').messageHandlers[queue.options.messageHandler] || 'jsonMessageHandler';
+        if (messageHandlerPipeline) {
+            SERVICE.DefaultPipelineService.start(messageHandlerPipeline, {
+                queue: queue,
+                message: request.message
+            }, {}).then(success => {
+                if (success.success) {
+                    request.message = success.result;
+                    process.nextSuccess(request, response);
+                } else {
+                    this.LOG.error('Faild on converting message to JSON format');
+                    process.error(request, response, new CLASSES.NodicsError('ERR_EMS_00000', 'Faild on converting message to JSON format : ' + queue.name));
+                }
+            }).catch(error => {
+                this.LOG.error('Failed to publish message : ' + queue.name + ' : ERROR is ', error);
+                process.error(request, response, new CLASSES.NodicsError('ERR_EMS_00000', 'Failed to convert message for queue : ' + queue.name));
+            });
+        } else {
+            process.error(request, response, new CLASSES.NodicsError('ERR_EMS_00000', 'Invalid message handller: ' + queue.options.messageHandler));
+        }
+    },
+
+    /**
+
+     * Validates data rules.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} response Method input.
+
+     * @param {*} process Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    validateData: function (request, response, process) {
+        let queue = request.queue;
+        let message = request.message;
+        let header = queue.options.header || {};
+        if (queue.options.tenantRestricted) {
+            message.tenant = header.tenant;
+        } else {
+            message.tenant = message.tenant || header.tenant;
+        }
+        if (!message.tenant && (queue.options.systemQueue || queue.options.defaultTenantFallback)) {
+            message.tenant = CONFIG.get('defaultTenant') || 'default';
+        }
+        if (!message.tenant) {
+            process.error(request, response, new CLASSES.NodicsError('ERR_EMS_00000', 'Tenant is required for queue: ' + queue.name));
+        } else {
+            process.nextSuccess(request, response);
+        }
+    },
+
+    /**
+
+     * Processes event behavior.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} response Method input.
+
+     * @param {*} process Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    publishEvent: function (request, response, process) {
+        let queue = request.queue;
+        let message = request.message;
+        this.LOG.debug('Pushing event recieved message from  : ' + queue.name);
+        let event = {
+            tenant: message.tenant,
+            event: queue.options.eventName || queue.name,
+            sourceName: queue.options.source,
+            sourceId: CONFIG.get('nodeId'),
+            target: queue.options.target,
+            nodeId: queue.options.nodeId,
+            state: "NEW",
+            type: queue.options.eventType,
+            active: true,
+            header: queue.options.header,
+            data: message
+        };
+        if (queue.options.target && !NODICS.isModuleActive(queue.options.target)) {
+            SERVICE.DefaultEventService.publish(event).then(success => {
+                this.LOG.debug('Message published successfully');
+                process.nextSuccess(request, response);
+            }).catch(error => {
+                this.LOG.error('Message publishing failed: ', error);
+                process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_EMS_00001'));
+            });
+        } else {
+            SERVICE.DefaultEventService.handleEvent({
+                tenant: event.tenant,
+                event: event
+            }).then(success => {
+                this.LOG.debug('Message published successfully');
+                process.nextSuccess(request, response);
+            }).catch(error => {
+                this.LOG.error('Message publishing failed: ', error);
+                process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_EMS_00001'));
+            });
+        }
+    }
+};
