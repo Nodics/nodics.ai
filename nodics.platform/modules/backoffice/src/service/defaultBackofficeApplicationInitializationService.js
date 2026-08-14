@@ -98,7 +98,9 @@ module.exports = {
         });
         return SERVICE.DefaultModuleService.fetch(descriptor).then(response => response && (response.data || response.result || response));
     },
+    /** Returns the documentation content-pack status from the profile's Staged authority. */
     contentPackStatus: function (profileCode, request) { return this.invokeContentPack('status', profileCode, request); },
+    /** Installs the documentation content pack through the profile's governed Staged authority. */
     installContentPack: function (profileCode, request) { return this.invokeContentPack('install', profileCode, request); },
     /** Executes the documented bounded module operation. */
     status: function (profileCode, request) { return this.invoke('status', profileCode, request); },

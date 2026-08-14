@@ -30,7 +30,9 @@ module.exports = {
     },
     /** Executes the documented bounded module operation. */
     status: function (request, callback) { return this.invoke('status', request, callback); },
+    /** Returns the profile-owned documentation content-pack installation status. */
     contentPackStatus: function (request, callback) { return this.invoke('contentPackStatus', request, callback); },
+    /** Installs the profile-owned documentation content pack through its Staged authority. */
     installContentPack: function (request, callback) { return this.invoke('installContentPack', request, callback); },
     /** Executes the documented bounded module operation. */
     initiate: function (request, callback) { return this.invoke('initiate', request, callback); },

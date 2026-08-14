@@ -26,9 +26,13 @@ module.exports = {
     getCoreCatalogue: function (request, callback) { return this.getTypedCatalogue(request, callback, 'core'); },
     /** Returns the authorized Sample data-release catalogue. */
     getSampleCatalogue: function (request, callback) { return this.getTypedCatalogue(request, callback, 'sample'); },
+    /** Returns the initialization profiles visible to the authenticated administrator. */
     getInitializationProfiles: function (request, callback) { return this.respond(FACADE.DefaultDataReleaseFacade.getInitializationProfiles(request), callback); },
+    /** Returns one authorized initialization profile and its current release readiness. */
     getInitializationProfile: function (request, callback) { return this.respond(FACADE.DefaultDataReleaseFacade.getInitializationProfile(request), callback); },
+    /** Validates an initialization profile without installing any release. */
     validateInitializationProfile: function (request, callback) { return this.respond(FACADE.DefaultDataReleaseFacade.validateInitializationProfile(request), callback); },
+    /** Installs an authorized initialization profile through the governed release service. */
     installInitializationProfile: function (request, callback) { return this.respond(FACADE.DefaultDataReleaseFacade.installInitializationProfile(request), callback); },
     /** Normalizes a fixed route-owned catalogue type and delegates discovery. */
     getTypedCatalogue: function (request, callback, dataType) {
