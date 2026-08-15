@@ -91,6 +91,40 @@ test('reverse lifecycle preview exposes cancellation return and refund customer 
     assert(refund.downstreamOwners.includes('payment'));
 });
 
+test('reverse lifecycle preview exposes exchange replacement and appeal policy depth', async () => {
+    const exchange = await service.preview({
+        tenant: 'default',
+        ownerId: 'customer-1',
+        orderCode: 'order-1',
+        payload: { requestType: 'EXCHANGE', replacementProductCode: 'agoraCashmereCardigan', evidence: { quantity: '1', returnMethod: 'STORE_RETURN' } },
+        correlationId: 'corr-exchange'
+    });
+    const replacement = await service.preview({
+        tenant: 'default',
+        ownerId: 'customer-1',
+        orderCode: 'order-1',
+        payload: { requestType: 'REPLACEMENT', evidence: { quantity: '1', returnMethod: 'PICKUP', preferredResolution: 'SHIP_REPLACEMENT' } },
+        correlationId: 'corr-replacement'
+    });
+    const appeal = await service.preview({
+        tenant: 'default',
+        ownerId: 'customer-1',
+        orderCode: 'order-1',
+        payload: { requestType: 'APPEAL', appealReferenceCode: 'order-1:return:1', appealReason: 'Inspection evidence missing' },
+        correlationId: 'corr-appeal'
+    });
+
+    assert.equal(exchange.replacementSelectionRequired, true);
+    assert.match(exchange.rmaCode, /^order-1:RMA:/);
+    assert(exchange.downstreamOwners.includes('inventory'));
+    assert.equal(replacement.inspectionRequired, true);
+    assert.equal(replacement.replacementSelectionRequired, true);
+    assert.match(replacement.rmaCode, /^order-1:RMA:/);
+    assert.equal(appeal.appealEvidenceRequired, true);
+    assert.equal(appeal.itemSelectionRequired, false);
+    assert(appeal.reasonCodes.includes('RETURN_REJECTED'));
+});
+
 test('reverse lifecycle create persists structured item return refund and reconciliation evidence', async () => {
     const result = await service.create({
         tenant: 'default',
@@ -228,4 +262,6 @@ test('Order BackOffice capability declares operator actions for cancellation ret
     assert(returns.lifecycleActions.some(action => action.id === 'record-disposition' && action.inputFields.some(field => field.name === 'disposition' && field.type === 'SELECT')));
     assert(refunds.lifecycleActions.some(action => action.id === 'approve' && action.inputFields.some(field => field.name === 'refundAmount')));
     assert(refunds.lifecycleActions.every(action => action.ownerModule === 'order'));
+    assert(capability.navigation.some(item => item.id === 'order-exchanges' && item.summary.includes('exchange and replacement')));
+    assert(capability.navigation.some(item => item.id === 'order-appeals' && item.presentation.fixedFilters[0].value === 'APPEAL'));
 });

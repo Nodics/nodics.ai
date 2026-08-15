@@ -21,5 +21,11 @@ module.exports = {
         return Object.assign({}, request, { tenant, ownerId, authData });
     },
     preview: function (request) { return SERVICE.DefaultPromotionCustomerApiService.preview(this.applyContext(request)); },
-    apply: function (request) { return SERVICE.DefaultPromotionCustomerApiService.apply(this.applyContext(request)); }
+    apply: function (request) { return SERVICE.DefaultPromotionCustomerApiService.apply(this.applyContext(request)); },
+    reverse: function (request) {
+        const authData = request.authData || {};
+        const tenant = authData.tenant || request.tenant;
+        if (!tenant) throw new Error('Authenticated tenant is required for promotion reversal');
+        return SERVICE.DefaultPromotionCustomerApiService.reverse(Object.assign({}, request, { tenant, authData }));
+    }
 };

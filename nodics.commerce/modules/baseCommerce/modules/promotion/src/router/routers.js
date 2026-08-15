@@ -17,6 +17,9 @@ module.exports = {
         customer: {
             preview: { key: '/customer/promotions/preview', method: 'POST', controller: 'DefaultPromotionApiController.preview', secured: true, permission: 'commerce.promotion.own' },
             apply: { key: '/customer/promotions/apply', method: 'POST', controller: 'DefaultPromotionApiController.apply', secured: true, permission: 'commerce.promotion.own' }
+        },
+        internal: {
+            reverse: { key: '/internal/promotions/redemptions/:redemptionCode/reverse', method: 'POST', controller: 'DefaultPromotionApiController.reverse', secured: true, permission: 'commerce.promotion.redeem' }
         }
     }
 };

@@ -61,6 +61,38 @@ module.exports = {
                 reconciliationSupported: true,
                 rejectionAppealSupported: true,
                 downstreamOwners: ['order', 'payment', 'workflow']
+            },
+            EXCHANGE: {
+                eligible: true,
+                reasonCodes: ['SIZE_OR_EXPECTATION_MISMATCH', 'WRONG_ITEM', 'DAMAGED_ITEM'],
+                itemSelectionRequired: true,
+                quantitySelectionRequired: true,
+                returnMethods: ['PICKUP', 'DROP_OFF', 'STORE_RETURN'],
+                rmaRequired: true,
+                replacementSelectionRequired: true,
+                inspectionRequired: true,
+                rejectionAppealSupported: true,
+                downstreamOwners: ['order', 'fulfillment', 'inventory', 'payment', 'workflow']
+            },
+            REPLACEMENT: {
+                eligible: true,
+                reasonCodes: ['DAMAGED_ITEM', 'WRONG_ITEM', 'MISSING_PART'],
+                itemSelectionRequired: true,
+                quantitySelectionRequired: true,
+                returnMethods: ['PICKUP', 'DROP_OFF', 'STORE_RETURN'],
+                rmaRequired: true,
+                replacementSelectionRequired: true,
+                inspectionRequired: true,
+                rejectionAppealSupported: true,
+                downstreamOwners: ['order', 'fulfillment', 'inventory', 'workflow']
+            },
+            APPEAL: {
+                eligible: true,
+                reasonCodes: ['CANCELLATION_REJECTED', 'RETURN_REJECTED', 'REFUND_DELAYED', 'REFUND_REJECTED'],
+                itemSelectionRequired: false,
+                quantitySelectionRequired: false,
+                appealEvidenceRequired: true,
+                downstreamOwners: ['order', 'workflow']
             }
         };
         return policies[requestType] || { eligible: false, reasonCodes: [], downstreamOwners: ['order'] };
@@ -78,6 +110,10 @@ module.exports = {
             returnMethod: evidence.returnMethod || input.returnMethod,
             refundMethod: evidence.refundMethod || input.refundMethod || 'ORIGINAL_PAYMENT',
             customerComment: evidence.customerComment || evidence.comment || input.comment,
+            replacementProductCode: evidence.replacementProductCode || input.replacementProductCode,
+            preferredResolution: evidence.preferredResolution || input.preferredResolution,
+            appealReferenceCode: evidence.appealReferenceCode || input.appealReferenceCode,
+            appealReason: evidence.appealReason || input.appealReason,
             rmaCode: evidence.rmaCode,
             returnTrackingStatus: evidence.returnTrackingStatus || 'NOT_STARTED',
             inspectionStatus: evidence.inspectionStatus || 'PENDING',
@@ -101,9 +137,10 @@ module.exports = {
 
     /** Evaluates lifecycle request prerequisites. @param {Object} request Request. @returns {Promise<Object>} Immutable preview. */
     preview: async function (request) {
-        if (!request.orderCode || !['CANCELLATION', 'RETURN', 'REFUND'].includes(request.payload.requestType)) throw new Error('Order and lifecycle request type are required');
+        if (!request.orderCode || !['CANCELLATION', 'RETURN', 'REFUND', 'EXCHANGE', 'REPLACEMENT', 'APPEAL'].includes(request.payload.requestType)) throw new Error('Order and lifecycle request type are required');
         const policy = this.policyFor(request.payload.requestType);
         const evidence = this.evidence(request);
+        const requiresRma = ['RETURN', 'EXCHANGE', 'REPLACEMENT'].includes(request.payload.requestType);
         const preview = {
             tenant: request.tenant,
             ownerId: request.ownerId,
@@ -116,9 +153,12 @@ module.exports = {
             reasonCodes: policy.reasonCodes,
             itemSelectionRequired: policy.itemSelectionRequired === true,
             quantitySelectionRequired: policy.quantitySelectionRequired === true,
+            replacementSelectionRequired: policy.replacementSelectionRequired === true,
+            appealEvidenceRequired: policy.appealEvidenceRequired === true,
+            inspectionRequired: policy.inspectionRequired === true,
             returnMethods: policy.returnMethods || [],
             refundMethods: policy.refundMethods || ['ORIGINAL_PAYMENT'],
-            rmaCode: request.payload.requestType === 'RETURN' ? evidence.rmaCode || `${request.orderCode}:RMA:${Date.now()}` : undefined,
+            rmaCode: requiresRma ? evidence.rmaCode || `${request.orderCode}:RMA:${Date.now()}` : undefined,
             refundPreview: this.refundPreview(request, evidence),
             downstreamOwners: policy.downstreamOwners,
             rejectionAppealSupported: policy.rejectionAppealSupported === true,

@@ -15,12 +15,13 @@
 module.exports = {
     applyHttp: function (request) {
         const httpRequest = request.httpRequest || {};
-        return Object.assign({}, request, { payload: httpRequest.body || {}, query: httpRequest.query || {} });
+        return Object.assign({}, request, { payload: httpRequest.body || {}, query: httpRequest.query || {}, redemptionCode: httpRequest.params && httpRequest.params.redemptionCode });
     },
     invoke: async function (request, method) {
         const data = await FACADE.DefaultPromotionApiFacade[method](this.applyHttp(request || {}));
         return { status: 200, data: data };
     },
     preview: function (request) { return this.invoke(request, 'preview'); },
-    apply: function (request) { return this.invoke(request, 'apply'); }
+    apply: function (request) { return this.invoke(request, 'apply'); },
+    reverse: function (request) { return this.invoke(request, 'reverse'); }
 };
