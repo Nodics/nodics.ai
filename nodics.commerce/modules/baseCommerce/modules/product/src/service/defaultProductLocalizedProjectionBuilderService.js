@@ -26,6 +26,12 @@ module.exports = {
             slug: localized.slug, seo: localized.seo, localizedAttributes: localized.attributes,
             classificationValues: localized.classificationValues,
             categoryCodes: input.categoryCodes || [], variantCodes: input.variantCodes || [] };
+        if (Array.isArray(input.variants) && input.variants.length > 0) {
+            payload.variantSkuMap = input.variants.reduce((map, variant) => {
+                if (variant && variant.code && variant.sku) map[variant.code] = variant.sku;
+                return map;
+            }, {});
+        }
         if (input.customerSummaries && input.customerSummaries.price) payload.price = input.customerSummaries.price;
         if (input.customerSummaries && input.customerSummaries.availability) payload.availability = input.customerSummaries.availability;
         let source = { tenant: request.tenant, productCode: input.product.code, storeCode: input.storeCode,

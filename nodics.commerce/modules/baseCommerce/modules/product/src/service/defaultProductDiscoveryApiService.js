@@ -33,6 +33,7 @@ module.exports = {
             tenant: request.tenant,
             loginId: 'productDiscovery',
             principalType: 'service',
+            userGroups: ['serviceAccountUserGroup'],
             groups: ['serviceAccountUserGroup']
         });
     },

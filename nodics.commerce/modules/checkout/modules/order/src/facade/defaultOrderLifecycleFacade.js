@@ -16,7 +16,8 @@ module.exports = {
     /** Enriches an operation with trusted principal context. @param {string} operation Operation. @param {Object} request Request. @returns {Promise<Object>} Result. */
     invoke: function (operation, request) {
         const auth = request.authData || {}; request.tenant = auth.tenant || request.tenant;
-        request.actorId = auth.principalId || auth.code || request.actorId; request.ownerId = auth.principalId || auth.code || request.ownerId;
+        const principalId = auth.principalId || auth.code || auth.loginId;
+        request.actorId = principalId || request.actorId; request.ownerId = principalId || request.ownerId;
         if (!request.tenant || !request.actorId) return Promise.reject(new Error('Authenticated tenant and principal are required'));
         return SERVICE.DefaultOrderLifecycleApiService[operation](request);
     },

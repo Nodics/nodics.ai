@@ -49,3 +49,13 @@ test('Checkout payment selection supports card, wallet, and cash-on-delivery met
     assert.equal(recorded.status, 'AUTHORIZED');
     assert.equal(recorded.evidence.providerRequired, false);
 });
+
+test('Checkout placement requests internal Cart calculation evidence for reservation', async () => {
+    let calculateRequest;
+    global.SERVICE.DefaultCartApiService = { calculate: async request => { calculateRequest = request; return { entries: [] }; } };
+    const created = ports.create();
+    const request = { tenant: 'default', ownerId: 'customer-1', payload: { cartCode: 'cart-1', expectedCartRevision: '1', calculationCode: 'calc-1' } };
+    await created.calculateCart(request);
+    assert.equal(calculateRequest.internalUse, true);
+    assert.equal(calculateRequest.cartCode, 'cart-1');
+});

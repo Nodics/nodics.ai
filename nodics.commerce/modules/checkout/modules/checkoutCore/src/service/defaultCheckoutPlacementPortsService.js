@@ -14,10 +14,29 @@
 /** @module checkoutCore/src/service/defaultCheckoutPlacementPortsService @description Binds placement orchestration to generated domain repositories and owner services. @layer service @owner checkoutCore */
 module.exports = {
     unwrap: response => response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response,
+    serviceAuthData: function (request) {
+        return Object.assign({}, request.authData || {}, {
+            principalId: 'commerceCheckoutPlacementService',
+            code: 'commerceCheckoutPlacementService',
+            loginId: 'commerceCheckoutPlacementService',
+            principalType: 'service',
+            userGroups: ['serviceAccountUserGroup'],
+            groups: ['serviceAccountUserGroup']
+        });
+    },
+    persistenceModel: function (model) {
+        const now = new Date();
+        return Object.assign({}, model, {
+            active: model.active !== undefined ? model.active : true,
+            created: model.created instanceof Date ? model.created : now,
+            updated: now,
+            occurredAt: model.occurredAt instanceof Date ? model.occurredAt : now
+        });
+    },
     /** Reads a bounded generated projection. @param {Object} service Service. @param {string} tenant Tenant. @param {Object} query Query. @param {Object} authData Auth context. @param {number} limit Limit. @returns {Promise<Array>} Records. */
     get: function (service, tenant, query, authData, limit) { return service.get({ tenant, authData, query: Object.assign({ tenant }, query), pageSize: limit || 20 }).then(this.unwrap).then(value => Array.isArray(value) ? value : value ? [value] : []); },
     /** Persists an owner model. @param {Object} service Service. @param {string} tenant Tenant. @param {Object} model Model. @param {Object} authData Auth context. @returns {Promise<Object>} Stored model. */
-    save: function (service, tenant, model, authData) { return service.save({ tenant, authData, model }).then(this.unwrap); },
+    save: function (service, tenant, model, authData) { return service.save({ tenant, authData, model: this.persistenceModel(model) }).then(this.unwrap); },
     /** Applies an optimistic owner update. @param {Object} service Service. @param {string} tenant Tenant. @param {Object} model Current model. @param {Object} patch Patch. @param {Object} authData Auth context. @returns {Promise<Object>} Updated model. */
     update: function (service, tenant, model, patch, authData) { return service.update({ tenant, authData, query: { tenant, code: model.code, revision: model.revision }, model: { $set: patch } }).then(this.unwrap); },
     /** Selects a Payment-owned customer payment method service. @param {Object} request Checkout request. @param {Object} calculation Cart calculation. @returns {Object} Prepared method. */
@@ -43,20 +62,20 @@ module.exports = {
             idempotencyKey: method.idempotencyKey,
             correlationId: method.correlationId,
             evidence: { methodCode: method.methodCode, providerRequired: false }
-        }, request.authData);
+        }, this.serviceAuthData(request));
     },
     /** Creates placement and compensation ports. @returns {Object} Owner-delegating placement ports. */
     create: function () {
         const self = this;
         return {
-            findPlacement: async (tenant, idempotencyKey) => (await self.get(SERVICE.DefaultCheckoutCheckpointService, tenant, { idempotencyKey, status: 'COMPLETED' }, undefined, 1))[0],
-            calculateCart: request => SERVICE.DefaultCartApiService.calculate(Object.assign({}, request, { cartCode: request.payload.cartCode, ownerId: request.ownerId, payload: { expectedRevision: request.payload.expectedCartRevision, calculationCode: request.payload.calculationCode } })),
+            findPlacement: async request => (await self.get(SERVICE.DefaultCheckoutCheckpointService, request.tenant, { ownerId: request.ownerId, idempotencyKey: request.idempotencyKey, status: 'COMPLETED' }, request.authData, 1))[0],
+            calculateCart: request => SERVICE.DefaultCartApiService.calculate(Object.assign({}, request, { internalUse: true, cartCode: request.payload.cartCode, ownerId: request.ownerId, payload: { expectedRevision: request.payload.expectedCartRevision, calculationCode: request.payload.calculationCode } })),
             reserveInventory: async (request, calculation) => {
                 const reservations = [];
                 for (const entry of calculation.entries) {
                     const candidate = (entry.availability.candidates || [])[0]; if (!candidate) throw new Error('No warehouse candidate');
                     const model = SERVICE.DefaultInventoryReservationPolicyService.prepare({ tenant: request.tenant, quantity: entry.quantity, ownerType: 'ORDER', ownerCode: request.payload.orderCode, idempotencyKey: request.idempotencyKey + ':inventory:' + entry.code, correlationId: request.correlationId }, { tenant: request.tenant, warehouseCode: candidate.warehouseCode, sku: entry.sku, revision: candidate.revision }, SERVICE.DefaultExactAmountService);
-                    reservations.push(await self.save(SERVICE.DefaultInventoryReservationService, request.tenant, Object.assign({ code: request.payload.orderCode + ':' + entry.code, revision: 0 }, model), request.authData));
+                    reservations.push(await self.save(SERVICE.DefaultInventoryReservationService, request.tenant, Object.assign({ code: request.payload.orderCode + ':' + entry.code, revision: 0 }, model), self.serviceAuthData(request)));
                 }
                 return reservations;
             },
@@ -65,19 +84,20 @@ module.exports = {
                 if (method.methodCode === 'CASH_ON_DELIVERY') return self.recordOfflineAuthorization(request, method);
                 if (!(CONFIG.get('stripeProvider') || {}).enabled) throw new Error('Reference payment sandbox is disabled');
                 return SERVICE.DefaultPaymentExecutionService.execute(Object.assign({ operation: 'AUTHORIZE' }, method), SERVICE.DefaultStripeSandboxAdapterService, {
-                    find: async (tenant, key) => (await self.get(SERVICE.DefaultPaymentTransactionEntryService, tenant, { idempotencyKey: key }, request.authData, 1))[0],
-                    record: model => self.save(SERVICE.DefaultPaymentTransactionEntryService, request.tenant, Object.assign({ code: request.payload.orderCode + ':authorization', orderCode: request.payload.orderCode, revision: 0 }, model), request.authData)
+                    find: async (tenant, key) => (await self.get(SERVICE.DefaultPaymentTransactionEntryService, tenant, { idempotencyKey: key }, self.serviceAuthData(request), 1))[0],
+                    record: model => self.save(SERVICE.DefaultPaymentTransactionEntryService, request.tenant, Object.assign({ code: request.payload.orderCode + ':authorization', ownerId: request.ownerId, orderCode: request.payload.orderCode, revision: 0 }, model), self.serviceAuthData(request))
                 });
             },
             createOrder: async (request, calculation, reservations, authorization) => {
                 const model = { code: request.payload.orderCode, tenant: request.tenant, ownerId: request.ownerId, cartCode: request.payload.cartCode, status: 'PLACED', revision: 0, idempotencyKey: request.idempotencyKey, correlationId: request.correlationId, currency: calculation.currency, totalAmount: calculation.totalAmount, evidence: { calculationCode: calculation.code, reservationCodes: reservations.map(value => value.code), paymentReference: authorization.providerReference } };
-                const order = await self.save(SERVICE.DefaultCommerceOrderService, request.tenant, model, request.authData);
+                const serviceAuthData = self.serviceAuthData(request);
+                const order = await self.save(SERVICE.DefaultCommerceOrderService, request.tenant, model, serviceAuthData);
                 for (const entry of calculation.entries) {
-                    await self.save(SERVICE.DefaultCommerceOrderEntryService, request.tenant, { code: order.code + ':' + entry.code, tenant: request.tenant, ownerId: request.ownerId, orderCode: order.code, cartCode: request.payload.cartCode, status: 'PLACED', revision: 0, idempotencyKey: request.idempotencyKey + ':order-entry:' + entry.code, correlationId: request.correlationId, productCode: entry.productCode, sku: entry.sku, quantity: entry.quantity, unitAmount: entry.unitAmount, evidence: { lineAmount: entry.lineAmount, pricingDecisionCode: entry.pricingDecisionCode, promotionDecisionCode: entry.promotionDecisionCode, taxDecisionCode: entry.taxDecisionCode } }, request.authData);
+                    await self.save(SERVICE.DefaultCommerceOrderEntryService, request.tenant, { code: order.code + ':' + entry.code, tenant: request.tenant, ownerId: request.ownerId, orderCode: order.code, cartCode: request.payload.cartCode, status: 'PLACED', revision: 0, idempotencyKey: request.idempotencyKey + ':order-entry:' + entry.code, correlationId: request.correlationId, productCode: entry.productCode, sku: entry.sku, quantity: entry.quantity, unitAmount: entry.unitAmount, evidence: { lineAmount: entry.lineAmount, pricingDecisionCode: entry.pricingDecisionCode, promotionDecisionCode: entry.promotionDecisionCode, taxDecisionCode: entry.taxDecisionCode } }, serviceAuthData);
                 }
                 return order;
             },
-            releaseFulfillment: (request, order) => self.save(SERVICE.DefaultConsignmentService, request.tenant, { code: order.code + ':1', tenant: request.tenant, orderCode: order.code, ownerId: request.ownerId, status: 'READY', revision: 0, idempotencyKey: request.idempotencyKey + ':fulfillment', correlationId: request.correlationId, currency: order.currency, totalAmount: order.totalAmount }, request.authData),
+            releaseFulfillment: (request, order) => self.save(SERVICE.DefaultConsignmentService, request.tenant, { code: order.code + ':1', tenant: request.tenant, orderCode: order.code, ownerId: request.ownerId, status: 'READY', revision: 0, idempotencyKey: request.idempotencyKey + ':fulfillment', correlationId: request.correlationId, currency: order.currency, totalAmount: order.totalAmount }, self.serviceAuthData(request)),
             complete: (checkpoint, result) => self.save(SERVICE.DefaultCheckoutCheckpointService, checkpoint.tenant, { code: result.order.code, tenant: checkpoint.tenant, ownerId: checkpoint.ownerId, cartCode: result.order.cartCode, status: 'COMPLETED', revision: 0, idempotencyKey: checkpoint.idempotencyKey, correlationId: checkpoint.correlationId, evidence: { completed: checkpoint.completed, orderCode: result.order.code } }, checkpoint.authData),
             compensate: async (checkpoint, error, request) => {
                 const outcomes = [];

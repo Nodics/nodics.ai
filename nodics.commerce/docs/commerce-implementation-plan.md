@@ -43,7 +43,7 @@ The storefront must not read Staged catalog records. Home, PLP/search, and PDP a
 4. Configure Discovery index, source mix, field mapping, query profile, facet profile, ranking profile, and publication policy.
 5. Configure Commerce Search rules for product boost, bury, and pin.
 6. Render Home/PLP/PDP in `nodics.agora` from WCMS/content template structure and Product Discovery APIs.
-7. Enable authenticated customer cart creation, cart item updates, calculation, checkout placement, and order confirmation.
+7. Enable authenticated customer cart creation, cart item add/update/remove, calculation, checkout placement, and order confirmation.
 8. Enable order detail/history and reverse lifecycle actions: cancellation, return, refund.
 9. Expose backoffice visibility through Axis workbenches, driven by backend capability metadata.
 10. Add acceptance automation for route surface, search-backed discovery, checkout, order read, lifecycle preview/create.
@@ -67,13 +67,31 @@ The storefront must not read Staged catalog records. Home, PLP/search, and PDP a
 - Product discovery/PDP now returns metadata proving search-index backed delivery.
 - Commerce Search owns Product boost/bury/pin rules and Axis capability metadata.
 - Agora consumes shipping and return methods and submits structured lifecycle evidence.
-- Kickoff acceptance validates route surface, search-backed discovery, checkout, order read, cancellation and return preview.
+- Kickoff live acceptance validates route surface, operational Online restoration for Product/Pricing/Inventory/Tax, search-backed discovery, customer-safe discovery/PDP/cart projection shape, generated secured customer registration/authentication, cart mutation, checkout placement, order read, cancellation, return, refund, and non-owner cart/order rejection.
 - Reverse lifecycle preview now includes eligibility, reason options, RMA, refund preview, downstream owner hints, and appeal support.
+- Agora blocks live checkout placement until customer authentication succeeds; anonymous users may still browse and build a local cart before sign-in.
+- Customer Cart and Order APIs keep owner filters on every read, but use framework-safe access-denied responses for non-owned resources instead of leaking generic runtime failures.
+- Customer Order and reverse lifecycle APIs use service credentials only behind owner-bounded operational queries so public tokens never require direct operational-schema access.
+
+## Runtime acceptance commands
+
+Run these before declaring Commerce/Agora journey readiness:
+
+```bash
+# Backend Commerce focused contract suite
+node --test nodics.commerce/modules/baseCommerce/modules/pricing/test/pricingPublicationContract.test.js nodics.commerce/modules/baseCommerce/modules/inventory/test/inventoryPublicationContract.test.js nodics.commerce/modules/baseCommerce/modules/tax/test/taxPublicationContract.test.js nodics.commerce/modules/checkout/modules/cart/test/cartCustomerApiContract.test.js nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutCustomerApiContract.test.js nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutPaymentMethodSelectionContract.test.js nodics.commerce/modules/checkout/modules/checkoutCore/test/orderPlacementContract.test.js nodics.commerce/modules/checkout/modules/order/test/orderCustomerApiContract.test.js nodics.commerce/modules/checkout/modules/order/test/orderReverseLifecycleDepthContract.test.js nodics.commerce/modules/baseCommerce/modules/product/test/productDiscoveryApiContract.test.js nodics.commerce/modules/baseCommerce/modules/product/test/productLocalizedSearchPublicationContract.test.js nodics.commerce/modules/baseCommerce/modules/pricing/test/customerPriceSummaryContract.test.js nodics.commerce/modules/baseCommerce/modules/inventory/test/customerAvailabilitySummaryContract.test.js nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/test/commerceSearchRankingContract.test.js
+
+# Kickoff data/publication/customer runtime contracts
+node --test modules/agoraData/test/agoraDataContentContract.test.mjs test/agoraCommerceDataAcceptanceContract.test.mjs test/agoraCommercePublicationAcceptanceContract.test.mjs test/agoraCommerceAcceptanceContract.test.mjs test/agoraProductCatalogReleaseExecutionContract.test.js
+
+# Live local runtime publication + storefront journey
+npm run acceptance:agora-commerce-publication && npm run acceptance:agora-commerce
+```
 
 ## Remaining production gates
 
-- Run local acceptance with actual configured customer credentials.
-- Confirm Product publication from Staged to Online and indexing against a live search engine.
+- Wire the above backend, Kickoff, Agora, and Axis commands into CI with generated ephemeral customer credentials and optionally with externally supplied customer credentials.
+- Confirm Product publication from Staged to Online and indexing against a live search engine on every Commerce release candidate.
 - Validate Payment refund execution and reconciliation with provider-specific adapters.
 - Validate Fulfillment return shipment/receipt/inspection/disposition with real logistics providers.
 - Connect Axis detail panels and actions to backend maker-checker operations where required.

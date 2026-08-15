@@ -53,6 +53,7 @@ const projections = [
     { code: 'agoraLinenWrapDress|agoraMainStore|en', tenant: 'default', productCode: 'agoraLinenWrapDress', storeCode: 'agoraMainStore', locale: 'en', status: 'CURRENT',
         payload: { code: 'agoraLinenWrapDress', name: 'Linen Wrap Dress', description: 'Linen dress', slug: 'linen-wrap-dress', seo: { title: 'Linen' },
             localizedAttributes: { material: 'linen' }, categoryCodes: ['agoraWomen'], variantCodes: ['agoraLinenWrapDressNaturalS'],
+            variantSkuMap: { agoraLinenWrapDressNaturalS: 'AGORA-DRESS-S' },
             price: { currency: 'USD', unitAmount: '129.00', priceRowCode: 'internalPriceRow' },
             availability: { available: true, status: 'IN_STOCK', warehouseCode: 'internalWarehouse' }, inventory: { available: 12 }, sku: 'AGORA-DRESS-S' } },
     { code: 'agoraOxfordShirt|agoraMainStore|en', tenant: 'default', productCode: 'agoraOxfordShirt', storeCode: 'agoraMainStore', locale: 'en', status: 'CURRENT',
@@ -187,6 +188,7 @@ test('customer discovery lists Product cards with safe price and availability bu
     assert.equal(response.data.products[0].availability.warehouseCode, undefined);
     assert.equal(response.data.products[0].inventory, undefined);
     assert.equal(response.data.products[0].sku, undefined);
+    assert.equal(response.data.products[0].variantSkuMap, undefined);
     assert.equal(searchRequests[0].indexName, 'productLocalized');
     assert.equal(configurationRequests[0].ownerType, 'PRODUCT');
     assert.equal(configurationRequests[0].authData.principalType, 'service');
@@ -266,6 +268,7 @@ test('customer PDP resolves one Product detail through Product search projection
     assert.equal(response.data.product.availability, undefined);
     assert.equal(response.data.product.inventory, undefined);
     assert.equal(response.data.product.sku, undefined);
+    assert.equal(response.data.product.variantSkuMap, undefined);
     assert.equal(searchRequests[0].query.productCode, 'agoraOxfordShirt');
     assert.equal(response.data.discovery.source, 'SEARCH_INDEX');
     assert.equal(response.data.discovery.indexName, 'productLocalized');
@@ -304,6 +307,7 @@ test('operator publication orchestration reads persisted Product records and wri
     assert.deepEqual(new Set(indexedProjections.map(item => item.searchOptions.analyzer)), new Set(['arabic', 'standard']));
     assert(indexedProjections.every(item => item.model.payload.inventory === undefined));
     assert(indexedProjections.every(item => item.model.payload.sku === undefined));
+    assert(indexedProjections.every(item => item.model.payload.variantSkuMap && Object.keys(item.model.payload.variantSkuMap).length === 1));
     assert(indexedProjections.every(item => item.model.payload.price && item.model.payload.price.currency === 'USD'));
     assert(indexedProjections.every(item => item.model.payload.availability && item.model.payload.availability.status === 'IN_STOCK'));
     assert.equal(response.data.projectionSnapshots, undefined);

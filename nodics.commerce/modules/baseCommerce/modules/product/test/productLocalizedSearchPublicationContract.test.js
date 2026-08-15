@@ -84,6 +84,7 @@ test('sample release publishes one isolated nSearch document for English and Ara
     });
     assert(indexed.every(item => item.model.tenant === 'default' && item.model.storeCode === 'sampleStore'));
     assert(indexed.every(item => item.model.payload.sku === undefined && item.model.payload.inventory === undefined));
+    assert(indexed.every(item => item.model.payload.variantSkuMap.sampleRunningShoeBlue42 === 'SAMPLE-RUN-BLUE-42'));
     assert(indexed.every(item => item.model.payload.price.currency === 'USD' && item.model.payload.price.unitAmount === '89.00'));
     assert(indexed.every(item => item.model.payload.availability.status === 'IN_STOCK'));
 });

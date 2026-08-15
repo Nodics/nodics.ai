@@ -14,7 +14,7 @@
 /** @module checkoutCore/src/service/defaultOrderPlacementService @description Coordinates idempotent placement checkpoints and compensations through domain ports. @layer service @owner checkoutCore */
 module.exports = { place: async function (request, ports) {
     if (!request || !request.tenant || !request.idempotencyKey || !ports) throw new Error('Tenant, idempotency key, and ports are required');
-    const existing = await ports.findPlacement(request.tenant, request.idempotencyKey); if (existing) return existing;
+    const existing = await ports.findPlacement(request); if (existing) return existing;
     const checkpoint = { tenant: request.tenant, ownerId: request.ownerId, authData: request.authData, idempotencyKey: request.idempotencyKey, correlationId: request.correlationId, completed: [], results: {} };
     try {
         const calculation = await ports.calculateCart(request); checkpoint.results.calculation = calculation; checkpoint.completed.push('CALCULATED');

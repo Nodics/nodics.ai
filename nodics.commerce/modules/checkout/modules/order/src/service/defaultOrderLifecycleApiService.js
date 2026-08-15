@@ -15,6 +15,22 @@
 module.exports = {
     /** Resolves the lifecycle repository adapter. @returns {Object} Repository service. */
     repository: function () { return SERVICE.DefaultOrderLifecycleRepositoryService; },
+    /** Builds service credentials for owner-bounded operational lifecycle persistence. @param {Object} request Request. @returns {Object} Service auth data. */
+    serviceAuthData: function (request) {
+        return Object.assign({}, request.authData || {}, {
+            principalId: 'commerceOrderLifecycleApiService',
+            code: 'commerceOrderLifecycleApiService',
+            loginId: 'commerceOrderLifecycleApiService',
+            principalType: 'service',
+            userGroups: ['serviceAccountUserGroup'],
+            groups: ['serviceAccountUserGroup']
+        });
+    },
+    /** Adds operational persistence fields expected by generated schemas. @param {Object} model Lifecycle model. @returns {Object} Persistable model. */
+    persistenceModel: function (model) {
+        const now = new Date();
+        return Object.assign({ active: true, created: now, updated: now, occurredAt: model.occurredAt || now }, model);
+    },
     /** Resolves the default customer-facing policy for one reverse lifecycle type. @param {string} requestType Lifecycle type. @returns {Object} Policy summary. */
     policyFor: function (requestType) {
         const policies = {
@@ -113,16 +129,17 @@ module.exports = {
     /** Idempotently creates a lifecycle request. @param {Object} request Request. @returns {Promise<Object>} Persisted request. */
     create: async function (request) {
         if (!request.idempotencyKey) throw new Error('Idempotency-Key is required');
-        const matches = await this.repository().list(request.tenant, { ownerId: request.ownerId, idempotencyKey: request.idempotencyKey }, request.authData, 1);
+        const serviceAuth = this.serviceAuthData(request);
+        const matches = await this.repository().list(request.tenant, { ownerId: request.ownerId, idempotencyKey: request.idempotencyKey }, serviceAuth, 1);
         if (matches && matches[0]) return matches[0];
         const preview = await this.preview(request);
         const evidence = this.evidence(request);
         if (preview.rmaCode && !evidence.rmaCode) evidence.rmaCode = preview.rmaCode;
         if (preview.refundPreview) evidence.refundPreview = preview.refundPreview;
-        return this.repository().save(request.tenant, Object.assign({}, preview, { code: request.payload.code, revision: 0, idempotencyKey: request.idempotencyKey, status: 'SUBMITTED', evidence: evidence }), request.authData);
+        return this.repository().save(request.tenant, this.persistenceModel(Object.assign({}, preview, { code: request.payload.code, revision: 0, idempotencyKey: request.idempotencyKey, status: 'SUBMITTED', evidence: evidence })), serviceAuth);
     },
     /** Lists customer-owned lifecycle requests. @param {Object} request Request. @returns {Promise<Array>} Results. */
-    listOwn: function (request) { return this.repository().list(request.tenant, { ownerId: request.ownerId, orderCode: request.orderCode }, request.authData, request.query.limit); },
+    listOwn: function (request) { return this.repository().list(request.tenant, { ownerId: request.ownerId, orderCode: request.orderCode }, this.serviceAuthData(request), request.query.limit); },
     /** Lists bounded operator lifecycle requests. @param {Object} request Request. @returns {Promise<Array>} Results. */
     list: function (request) { return this.repository().list(request.tenant, {}, request.authData, request.query.limit); },
     /** Applies an approved maker-checker action. @param {Object} request Request. @returns {Promise<Object>} Updated request. */

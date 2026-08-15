@@ -16,10 +16,38 @@ const crypto = require('node:crypto');
 module.exports = {
     /** Unwraps generated service responses. @param {*} response Service response. @returns {*} Unwrapped value. */
     unwrap: function (response) { return response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response; },
+    /** Removes backend-only evidence from public customer calculation responses. @param {*} value Calculation value. @returns {*} Customer-safe clone. */
+    redactCustomerCalculation: function redactCustomerCalculation(value) {
+        if (Array.isArray(value)) return value.map(item => redactCustomerCalculation(item));
+        if (!value || typeof value !== 'object') return value;
+        const forbidden = { priceRowCode: true, warehouseCode: true, supplierCost: true, internalOnly: true, candidates: true };
+        return Object.keys(value).reduce((target, key) => {
+            if (!forbidden[key]) target[key] = redactCustomerCalculation(value[key]);
+            return target;
+        }, {});
+    },
 
     /** Returns effective Cart defaults. @returns {Object} Cart API policy. */
     policy: function () {
         return ((CONFIG.get('cart') || {}).customerApi) || {};
+    },
+
+    /** Builds a customer-safe access denial without leaking cart ownership. @returns {Error} Access denial. */
+    accessDeniedError: function () {
+        return typeof CLASSES !== 'undefined' && CLASSES.NodicsError ?
+            new CLASSES.NodicsError('ERR_AUTH_00003', 'current user do not have access to this resource') :
+            new Error('Customer Cart not found');
+    },
+
+    /** Builds service-account authorization context for internal Product variant SKU lookup. @param {Object} request Request. @returns {Object} Service authorization data. */
+    serviceAuthData: function (request) {
+        return Object.assign({}, request.authData || {}, {
+            tenant: request.tenant,
+            loginId: 'cartSkuResolution',
+            principalType: 'service',
+            userGroups: ['serviceAccountUserGroup'],
+            groups: ['serviceAccountUserGroup']
+        });
     },
 
     /** Creates a stable cart code. @param {Object} request Request. @returns {string} Cart code. */
@@ -40,6 +68,7 @@ module.exports = {
             jurisdiction: payload.jurisdiction || policy.defaultJurisdiction || 'US',
             currency: payload.currency || policy.defaultCurrency || 'USD',
             status: 'ACTIVE',
+            active: true,
             revision: 0,
             correlationId: request.correlationId || request.requestId || this.cartCode(request)
         };
@@ -51,21 +80,45 @@ module.exports = {
         if (payload.sku) return payload.sku;
         if (!payload.variantCode) return undefined;
         let service = SERVICE.DefaultProductVariantService;
-        if (!service || typeof service.get !== 'function') return undefined;
+        if (service && typeof service.get === 'function') {
+            let response = await service.get({
+                tenant: request.tenant,
+                authData: this.serviceAuthData(request),
+                query: {
+                    tenant: request.tenant,
+                    code: payload.variantCode,
+                    productCode: payload.productCode,
+                    status: 'ACTIVE'
+                },
+                searchOptions: { pageSize: 1, pageNumber: 1 }
+            });
+            let result = this.unwrap(response);
+            let variant = Array.isArray(result) ? result[0] : result;
+            if (variant && variant.sku) return variant.sku;
+        }
+        return this.resolveSkuFromSearchProjection(request);
+    },
+
+    /** Resolves SKU from an internal Online Product search projection field that is not exposed by public PDP/PLP. @param {Object} request Request. @returns {Promise<string|undefined>} Resolved SKU. */
+    resolveSkuFromSearchProjection: async function (request) {
+        let payload = request.payload || {}, service = SERVICE.DefaultProductSearchProjectionService;
+        if (!service || typeof service.get !== 'function' || !payload.productCode || !payload.variantCode) return undefined;
+        let query = { tenant: request.tenant, productCode: payload.productCode, status: 'CURRENT' };
+        if (request.storeCode) query.storeCode = request.storeCode;
+        if (request.locale) query.locale = request.locale;
         let response = await service.get({
             tenant: request.tenant,
-            authData: request.authData,
-            query: {
-                tenant: request.tenant,
-                code: payload.variantCode,
-                productCode: payload.productCode,
-                status: 'ACTIVE'
-            },
-            searchOptions: { pageSize: 1, pageNumber: 1 }
+            authData: this.serviceAuthData(request),
+            query,
+            searchOptions: { pageSize: 5, pageNumber: 1 }
         });
         let result = this.unwrap(response);
-        let variant = Array.isArray(result) ? result[0] : result;
-        return variant && variant.sku;
+        let projections = Array.isArray(result) ? result : result ? [result] : [];
+        for (let projection of projections) {
+            let sku = projection && projection.payload && projection.payload.variantSkuMap && projection.payload.variantSkuMap[payload.variantCode];
+            if (sku) return sku;
+        }
+        return undefined;
     },
 
     /** Builds a Cart Entry model from a customer request. @param {Object} request Request. @returns {Promise<Object>} Entry model. */
@@ -83,6 +136,7 @@ module.exports = {
             sku: sku,
             quantity: String(payload.quantity),
             status: 'ACTIVE',
+            active: true,
             revision: 0,
             correlationId: request.correlationId || request.requestId || request.cartCode
         };
@@ -93,7 +147,7 @@ module.exports = {
         let response = await SERVICE.DefaultCartService.get({ tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, code: request.cartCode, ownerId: request.ownerId }, pageSize: 1 });
         let result = this.unwrap(response);
         let cart = Array.isArray(result) ? result[0] : result;
-        if (!cart) throw new Error('Customer Cart not found');
+        if (!cart) throw this.accessDeniedError();
         return cart;
     },
 
@@ -124,7 +178,9 @@ module.exports = {
 
     /** Adds an active entry to a customer-owned Cart. @param {Object} request Request. @returns {Promise<Object>} Cart response. */
     addEntry: async function (request) {
-        await this.loadCart(request);
+        let cart = await this.loadCart(request);
+        request.storeCode = request.storeCode || cart.storeCode;
+        request.locale = request.locale || cart.locale;
         let entry = await this.entryModel(request);
         await SERVICE.DefaultCartEntryService.save({ tenant: request.tenant, authData: request.authData, model: entry }).then(this.unwrap);
         return this.read(request);
@@ -135,7 +191,7 @@ module.exports = {
         let payload = request.payload || {};
         if (!request.entryCode || !payload.quantity) throw new Error('Entry code and quantity are required');
         await this.loadCart(request);
-        let model = { tenant: request.tenant, code: request.entryCode, ownerId: request.ownerId, cartCode: request.cartCode, quantity: String(payload.quantity), status: 'ACTIVE' };
+        let model = { tenant: request.tenant, code: request.entryCode, ownerId: request.ownerId, cartCode: request.cartCode, quantity: String(payload.quantity), status: 'ACTIVE', active: true };
         if (SERVICE.DefaultCartEntryService.update) await SERVICE.DefaultCartEntryService.update({ tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, code: request.entryCode, ownerId: request.ownerId, cartCode: request.cartCode }, model }).then(this.unwrap);
         else await SERVICE.DefaultCartEntryService.save({ tenant: request.tenant, authData: request.authData, model }).then(this.unwrap);
         return this.read(request);
@@ -145,26 +201,28 @@ module.exports = {
     removeEntry: async function (request) {
         if (!request.entryCode) throw new Error('Entry code is required');
         await this.loadCart(request);
-        let model = { tenant: request.tenant, code: request.entryCode, ownerId: request.ownerId, cartCode: request.cartCode, status: 'REMOVED' };
+        let model = { tenant: request.tenant, code: request.entryCode, ownerId: request.ownerId, cartCode: request.cartCode, status: 'REMOVED', active: true };
         if (SERVICE.DefaultCartEntryService.update) await SERVICE.DefaultCartEntryService.update({ tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, code: request.entryCode, ownerId: request.ownerId, cartCode: request.cartCode }, model }).then(this.unwrap);
         else await SERVICE.DefaultCartEntryService.save({ tenant: request.tenant, authData: request.authData, model }).then(this.unwrap);
         return this.read(request);
     },
 
     /** Starts the governed Cart calculation pipeline. @param {Object} request Tenant-scoped calculation request. @returns {Promise<Object>} Calculation response. */
-    calculate: function (request) { return SERVICE.DefaultPipelineService.start('commerceCartCalculationPipeline', request, {}); },
+    calculate: function (request) {
+        return SERVICE.DefaultPipelineService.start('commerceCartCalculationPipeline', request, {}).then(result => request.internalUse === true ? result : this.redactCustomerCalculation(result));
+    },
     /** Loads an owned Cart and persists an exact calculation snapshot. @param {Object} request Tenant and customer request. @returns {Promise<Object>} Stored calculation. */
     calculateDirect: async function (request) {
         const carts = await SERVICE.DefaultCartService.get({ tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, code: request.cartCode, ownerId: request.ownerId }, pageSize: 1 }).then(this.unwrap);
         const cart = Array.isArray(carts) ? carts[0] : carts;
-        if (!cart) throw new Error('Customer Cart not found');
+        if (!cart) throw this.accessDeniedError();
         if (request.payload.expectedRevision !== undefined && Number(request.payload.expectedRevision) !== Number(cart.revision)) throw new Error('Cart revision conflict');
         const entriesResponse = await SERVICE.DefaultCartEntryService.get({ tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, cartCode: cart.code, ownerId: request.ownerId, status: 'ACTIVE' }, pageSize: 500 }).then(this.unwrap);
         const entries = Array.isArray(entriesResponse) ? entriesResponse : [];
         if (entries.length > Number(((CONFIG.get('commerce') || {}).operations || {}).limits.maximumCartEntries || 500)) throw new Error('Cart entry limit exceeded');
         const result = await SERVICE.DefaultCartCalculationEngineService.calculate(Object.assign({}, cart, { entries, correlationId: request.correlationId || request.requestId }), SERVICE.DefaultCommerceCalculationPortsService.create(cart));
         const sourceHash = crypto.createHash('sha256').update(JSON.stringify(result)).digest('hex');
-        const model = Object.assign({}, result, { code: request.payload.calculationCode, ownerId: request.ownerId, cartRevision: cart.revision, status: 'CURRENT', revision: 0, sourceHash, calculatedAt: new Date() });
+        const model = Object.assign({}, result, { code: request.payload.calculationCode, ownerId: request.ownerId, cartRevision: cart.revision, status: 'CURRENT', active: true, revision: 0, sourceHash, calculatedAt: new Date() });
         return SERVICE.DefaultCartCalculationService.save({ tenant: request.tenant, authData: request.authData, model }).then(this.unwrap);
     }
 };

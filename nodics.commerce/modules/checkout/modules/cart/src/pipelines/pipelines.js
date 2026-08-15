@@ -16,8 +16,6 @@ module.exports = { commerceCartCalculationPipeline: {
     startNode: 'validate', hardStop: true, handleError: 'handleError',
     nodes: {
         validate: { type: 'function', handler: 'DefaultCartCalculationPipelineService.validate', success: 'calculate' },
-        calculate: { type: 'function', handler: 'DefaultCartCalculationPipelineService.calculate', success: 'successEnd' },
-        successEnd: { type: 'function', handler: 'DefaultCartCalculationPipelineService.successEnd' },
-        handleError: { type: 'function', handler: 'DefaultCartCalculationPipelineService.handleError' }
+        calculate: { type: 'function', handler: 'DefaultCartCalculationPipelineService.calculate', success: 'successEnd' }
     }
 } };

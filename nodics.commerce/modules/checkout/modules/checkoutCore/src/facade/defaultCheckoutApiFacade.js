@@ -12,9 +12,19 @@
 /* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
 'use strict';
 /** @module checkoutCore/src/facade/defaultCheckoutApiFacade @description Enforces customer tenant and ownership context for placement. @layer facade @owner checkoutCore */
-module.exports = { place: function (request) {
-    const auth = request.authData || {}; request.tenant = auth.tenant || request.tenant;
-    request.ownerId = auth.principalId || auth.code || request.ownerId; request.correlationId = request.correlationId || request.requestId;
-    if (!request.tenant || !request.ownerId) return Promise.reject(new Error('Authenticated tenant and customer are required'));
-    return SERVICE.DefaultCheckoutApiService.place(request);
-} };
+module.exports = {
+    applyContext: function (request) {
+        const auth = request.authData || {};
+        if (!auth.userGroups && Array.isArray(auth.groups)) auth.userGroups = auth.groups;
+        if (!auth.userGroups && (auth.principalId || auth.code || auth.loginId || request.ownerId)) auth.userGroups = ['customerUserGroup'];
+        if (!auth.groups && Array.isArray(auth.userGroups)) auth.groups = auth.userGroups;
+        auth.principalType = auth.principalType || 'customer';
+        request.authData = auth;
+        request.tenant = auth.tenant || request.tenant;
+        request.ownerId = auth.principalId || auth.code || auth.loginId || request.ownerId;
+        request.correlationId = request.correlationId || request.requestId;
+        if (!request.tenant || !request.ownerId) throw new Error('Authenticated tenant and customer are required');
+        return request;
+    },
+    place: function (request) { return Promise.resolve().then(() => SERVICE.DefaultCheckoutApiService.place(this.applyContext(request))); }
+};

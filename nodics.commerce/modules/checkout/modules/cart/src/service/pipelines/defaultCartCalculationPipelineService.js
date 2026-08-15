@@ -20,7 +20,7 @@ module.exports = {
     },
     /** Executes authoritative calculation. @param {Object} request Request. @param {Object} response Response. @param {Object} process Pipeline control. @returns {void} */
     calculate: function (request, response, process) {
-        SERVICE.DefaultCartApiService.calculateDirect(request).then(result => { response.result = result; process.nextSuccess(request, response); }).catch(error => process.error(request, response, error));
+        SERVICE.DefaultCartApiService.calculateDirect(request).then(result => { response.success = result; process.nextSuccess(request, response); }).catch(error => process.error(request, response, error));
     },
     /** Completes the successful pipeline. @param {Object} request Request. @param {Object} response Response. @param {Object} process Pipeline control. @returns {void} */
     successEnd: function (request, response, process) { process.stop(request, response, response.result); },

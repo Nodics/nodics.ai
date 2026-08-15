@@ -26,21 +26,34 @@ const controller = require('../src/controller/defaultOrderCustomerApiController'
 const facade = require('../src/facade/defaultOrderCustomerApiFacade');
 const service = require('../src/service/defaultOrderCustomerApiService');
 
+let calls;
+
 function installGlobals() {
+    calls = [];
+    delete global.CLASSES;
     global.FACADE = { DefaultOrderCustomerApiFacade: facade };
     global.SERVICE = {
         DefaultOrderCustomerApiService: service,
         DefaultCommerceOrderService: {
-            get: async request => ({ result: [
-                { code: 'order-1', tenant: request.tenant, ownerId: 'customer-1', cartCode: 'cart-1', status: 'PLACED', revision: 0, currency: 'USD', totalAmount: '141.00', correlationId: 'corr-1' },
-                { code: 'order-2', tenant: request.tenant, ownerId: 'customer-2', cartCode: 'cart-2', status: 'PLACED', revision: 0, currency: 'USD', totalAmount: '50.00', correlationId: 'corr-2' }
-            ].filter(item => item.ownerId === request.query.ownerId && (!request.query.code || item.code === request.query.code)) })
+            get: async request => {
+                calls.push({ service: 'order', request });
+                return { result: [
+                    { code: 'order-1', tenant: request.tenant, ownerId: 'customer-1', cartCode: 'cart-1', status: 'PLACED', revision: 0, currency: 'USD', totalAmount: '141.00', correlationId: 'corr-1' },
+                    { code: 'order-2', tenant: request.tenant, ownerId: 'customer-2', cartCode: 'cart-2', status: 'PLACED', revision: 0, currency: 'USD', totalAmount: '50.00', correlationId: 'corr-2' }
+                ].filter(item => item.ownerId === request.query.ownerId && (!request.query.code || item.code === request.query.code)) };
+            }
         },
         DefaultCommerceOrderEntryService: {
-            get: async request => ({ result: [{ code: 'order-1:entry-1', tenant: request.tenant, ownerId: request.query.ownerId, orderCode: request.query.orderCode, productCode: 'agoraLinenWrapDress', quantity: '1', status: 'PLACED' }] })
+            get: async request => {
+                calls.push({ service: 'entry', request });
+                return { result: [{ code: 'order-1:entry-1', tenant: request.tenant, ownerId: request.query.ownerId, orderCode: request.query.orderCode, productCode: 'agoraLinenWrapDress', quantity: '1', status: 'PLACED' }] };
+            }
         },
         DefaultOrderLifecycleRequestService: {
-            get: async request => ({ result: [{ code: 'order-1:CANCELLATION', tenant: request.tenant, ownerId: request.query.ownerId, orderCode: request.query.orderCode, requestType: 'CANCELLATION', status: 'SUBMITTED' }] })
+            get: async request => {
+                calls.push({ service: 'lifecycle', request });
+                return { result: [{ code: 'order-1:CANCELLATION', tenant: request.tenant, ownerId: request.query.ownerId, orderCode: request.query.orderCode, requestType: 'CANCELLATION', status: 'SUBMITTED' }] };
+            }
         }
     };
 }
@@ -60,9 +73,28 @@ test('Order customer API returns order detail with entries and lifecycle for aut
     assert.equal(response.data.order.code, 'order-1');
     assert.equal(response.data.entries[0].productCode, 'agoraLinenWrapDress');
     assert.equal(response.data.lifecycle[0].requestType, 'CANCELLATION');
+    assert(calls.every(call => call.request.query.ownerId === 'customer-1'));
+    assert(calls.every(call => call.request.authData.groups.includes('serviceAccountUserGroup')));
+    assert(calls.every(call => call.request.authData.userGroups.includes('serviceAccountUserGroup')));
 });
 
 test('Order customer API rejects missing authenticated owner and non-owned orders', async () => {
     await assert.rejects(() => controller.read({ httpRequest: { params: { orderCode: 'order-1' } } }), /Authenticated tenant and customer/);
     await assert.rejects(() => controller.read({ authData: { tenant: 'default', principalId: 'customer-1' }, httpRequest: { params: { orderCode: 'order-2' } } }), /Customer Order not found/);
+});
+
+test('Order customer API maps non-owned order reads to access denied when Nodics errors are available', async () => {
+    global.CLASSES = {
+        NodicsError: class NodicsError extends Error {
+            constructor(code, message) {
+                super(message);
+                this.code = code;
+            }
+        }
+    };
+
+    await assert.rejects(
+        () => controller.read({ authData: { tenant: 'default', principalId: 'customer-1' }, httpRequest: { params: { orderCode: 'order-2' } } }),
+        error => error.code === 'ERR_AUTH_00003'
+    );
 });

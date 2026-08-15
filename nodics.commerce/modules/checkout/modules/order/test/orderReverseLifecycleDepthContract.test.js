@@ -22,15 +22,22 @@ const test = require('node:test');
  */
 
 const service = require('../src/service/defaultOrderLifecycleApiService');
+const facade = require('../src/facade/defaultOrderLifecycleFacade');
 
 let saved;
+let auths;
 
 test.beforeEach(() => {
     saved = [];
+    auths = [];
     global.SERVICE = {
         DefaultOrderLifecycleRepositoryService: {
-            list: async () => [],
-            save: async (_tenant, model) => {
+            list: async (_tenant, _query, authData) => {
+                auths.push(authData);
+                return [];
+            },
+            save: async (_tenant, model, authData) => {
+                auths.push(authData);
                 saved.push(model);
                 return model;
             }
@@ -101,4 +108,30 @@ test('reverse lifecycle create persists structured item return refund and reconc
     assert.equal(saved[0].evidence.refundPreview.reconciliationRequired, true);
     assert.match(saved[0].evidence.rmaCode, /^order-1:RMA:/);
     assert.deepEqual(saved[0].evidence.productCodes, ['agoraLinenWrapDress']);
+    assert.equal(saved[0].active, true);
+    assert(saved[0].created instanceof Date);
+    assert(auths.every(authData => authData.groups.includes('serviceAccountUserGroup')));
+    assert(auths.every(authData => authData.userGroups.includes('serviceAccountUserGroup')));
+});
+
+test('reverse lifecycle facade resolves customer ownership from authenticated login id', async () => {
+    let captured;
+    global.SERVICE = {
+        DefaultOrderLifecycleApiService: {
+            preview: async request => {
+                captured = request;
+                return { ownerId: request.ownerId, actorId: request.actorId, tenant: request.tenant };
+            }
+        }
+    };
+
+    const result = await facade.preview({
+        authData: { tenant: 'default', loginId: 'customer@example.com' },
+        orderCode: 'order-1',
+        payload: { requestType: 'CANCELLATION' }
+    });
+
+    assert.equal(result.ownerId, 'customer@example.com');
+    assert.equal(result.actorId, 'customer@example.com');
+    assert.equal(captured.tenant, 'default');
 });

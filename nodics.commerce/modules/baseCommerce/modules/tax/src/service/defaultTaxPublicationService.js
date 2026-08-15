@@ -1,0 +1,36 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+'use strict';
+/** @module tax/src/service/defaultTaxPublicationService @description Restores Tax operational policy records into Online runtime boundaries. @layer service @owner tax */
+module.exports = {
+    records: value => Array.isArray(value) ? value : value && typeof value === 'object' ? Object.values(value) : [],
+    persistenceModel: function (record) {
+        let now = new Date();
+        return Object.assign({}, record, {
+            active: record.active !== undefined ? record.active : true,
+            created: record.created instanceof Date ? record.created : now,
+            updated: now
+        });
+    },
+    restoreOperational: async function (request, input) {
+        let taxPolicies = this.records(input.taxPolicies);
+        if (taxPolicies.length === 0) throw new Error('Tax policies are required for Tax restoration');
+        let restored = [];
+        for (let record of taxPolicies) {
+            if (!record || record.tenant !== request.tenant || !record.code) throw new Error('Tax restoration record escaped its tenant boundary');
+            let model = this.persistenceModel(record);
+            await SERVICE.DefaultTaxPolicyService.save({ tenant: request.tenant, authData: request.authData, model }).then(response => response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response);
+            restored.push(model.code);
+        }
+        return { tenant: request.tenant, restored: restored.length, taxPolicies: restored };
+    }
+};

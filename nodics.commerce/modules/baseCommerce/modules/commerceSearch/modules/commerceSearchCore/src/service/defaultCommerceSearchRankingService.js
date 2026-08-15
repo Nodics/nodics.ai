@@ -50,6 +50,7 @@ module.exports = {
             tenant: request.tenant,
             loginId: 'commerceSearchRanking',
             principalType: 'service',
+            userGroups: ['serviceAccountUserGroup'],
             groups: ['serviceAccountUserGroup']
         });
     },

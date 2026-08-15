@@ -48,6 +48,7 @@ module.exports = {
             tenant: request.tenant,
             loginId: 'productSearchPublication',
             principalType: 'service',
+            userGroups: ['serviceAccountUserGroup'],
             groups: ['serviceAccountUserGroup']
         });
     },
