@@ -135,6 +135,30 @@ module.exports = {
         };
     },
 
+    /** Builds owner-specific automation plan entries without executing downstream domains. @param {Object} request Request. @param {Object} policy Policy. @param {Object} evidence Evidence. @returns {Array} Plan entries. */
+    automationPlan: function (request, policy, evidence) {
+        const requestType = request.payload.requestType;
+        const plan = [];
+        if (requestType === 'CANCELLATION') {
+            plan.push({ step: 'reservation-release', owner: 'inventory', trigger: 'before fulfillment release', customerVisibleState: 'Cancellation requested' });
+        }
+        if (['RETURN', 'EXCHANGE', 'REPLACEMENT'].includes(requestType)) {
+            plan.push({ step: 'return-logistics', owner: 'fulfillment', trigger: evidence.returnMethod || 'RETURN_METHOD_REQUIRED', customerVisibleState: 'Return method selected' });
+            plan.push({ step: 'inspection-disposition', owner: 'fulfillment+inventory', trigger: 'return received', customerVisibleState: 'Return received for inspection' });
+        }
+        if (['EXCHANGE', 'REPLACEMENT'].includes(requestType)) {
+            plan.push({ step: 'replacement-reservation', owner: 'inventory', trigger: evidence.replacementProductCode || evidence.preferredResolution || 'REPLACEMENT_SELECTION_REQUIRED', customerVisibleState: 'Replacement selection received' });
+            plan.push({ step: 'exchange-shipment', owner: 'fulfillment', trigger: 'replacement stock reserved', customerVisibleState: 'Replacement shipment preparation' });
+        }
+        if (['RETURN', 'REFUND', 'EXCHANGE'].includes(requestType)) {
+            plan.push({ step: 'refund-reconciliation', owner: 'payment', trigger: evidence.refundMethod || 'ORIGINAL_PAYMENT', customerVisibleState: 'Refund review in progress' });
+        }
+        if (requestType === 'APPEAL' || policy.rejectionAppealSupported === true) {
+            plan.push({ step: 'appeal-sla-review', owner: 'workflow+order', trigger: evidence.appealReferenceCode || 'REJECTION_OR_DELAY', customerVisibleState: requestType === 'APPEAL' ? 'Appeal submitted' : 'Appeal available if rejected' });
+        }
+        return plan;
+    },
+
     /** Evaluates lifecycle request prerequisites. @param {Object} request Request. @returns {Promise<Object>} Immutable preview. */
     preview: async function (request) {
         if (!request.orderCode || !['CANCELLATION', 'RETURN', 'REFUND', 'EXCHANGE', 'REPLACEMENT', 'APPEAL'].includes(request.payload.requestType)) throw new Error('Order and lifecycle request type are required');
@@ -160,6 +184,7 @@ module.exports = {
             refundMethods: policy.refundMethods || ['ORIGINAL_PAYMENT'],
             rmaCode: requiresRma ? evidence.rmaCode || `${request.orderCode}:RMA:${Date.now()}` : undefined,
             refundPreview: this.refundPreview(request, evidence),
+            automationPlan: this.automationPlan(request, policy, evidence),
             downstreamOwners: policy.downstreamOwners,
             rejectionAppealSupported: policy.rejectionAppealSupported === true,
             correlationId: request.correlationId || request.requestId

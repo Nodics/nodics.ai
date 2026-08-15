@@ -539,6 +539,11 @@ module.exports = {
                     default: 'ACTIVE',
                     description: 'Reference lifecycle status',
                 },
+                evidence: {
+                    type: 'object',
+                    required: false,
+                    description: 'Media-owned approval, activation, rollback, and target-usage evidence for governed references',
+                },
             },
         },
     },

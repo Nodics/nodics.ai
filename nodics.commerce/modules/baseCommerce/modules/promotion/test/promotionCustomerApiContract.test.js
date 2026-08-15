@@ -56,7 +56,7 @@ function installGlobals() {
             }
         },
         DefaultCouponService: {
-            get: async request => ({ result: coupons.filter(item => item.tenant === request.query.tenant && item.promotionCode === request.query.promotionCode && item.tokenHash === request.query.tokenHash) }),
+            get: async request => ({ result: coupons.filter(item => item.tenant === request.query.tenant && (!request.query.code || item.code === request.query.code) && (!request.query.promotionCode || item.promotionCode === request.query.promotionCode) && (!request.query.tokenHash || item.tokenHash === request.query.tokenHash)) }),
             update: async request => {
                 const index = coupons.findIndex(item => item.code === request.query.code && item.tenant === request.query.tenant);
                 if (index >= 0) coupons[index] = request.model;
@@ -169,10 +169,31 @@ test('Promotion apply consumes coupon and budget state with idempotency evidence
 });
 
 test('Promotion reversal marks applied redemption as reversed idempotently', async () => {
+    promotions = [{
+        tenant: 'default',
+        code: 'welcome10',
+        status: 'ACTIVE',
+        priority: 10,
+        revision: 2,
+        conditions: { minimumSubtotal: '100.00' },
+        actions: { discountAmount: '10.00', reasonCode: 'WELCOME' },
+        budget: { limit: '100.00', spent: '30.00' }
+    }];
+    coupons = [{
+        code: 'coupon-row-1',
+        tenant: 'default',
+        promotionCode: 'welcome10',
+        tokenHash: service.hashToken('default', 'SAVE10'),
+        status: 'REDEEMED',
+        maxUses: 1,
+        usedCount: 1,
+        revision: 0
+    }];
     redemptions = [{
         code: 'redemption-1',
         tenant: 'default',
         promotionCode: 'welcome10',
+        couponCode: 'coupon-row-1',
         ownerId: 'customer-1',
         targetType: 'CART',
         targetCode: 'cart1',
@@ -197,7 +218,15 @@ test('Promotion reversal marks applied redemption as reversed idempotently', asy
     assert.equal(result.data.reversed, true);
     assert.equal(result.data.redemption.status, 'REVERSED');
     assert.equal(result.data.redemption.reversalReasonCode, 'CART_CHANGED');
+    assert.equal(result.data.compensation.couponReleased, true);
+    assert.equal(result.data.compensation.budgetReleased, true);
+    assert.equal(result.data.compensation.budgetSpent, '20');
+    assert.equal(coupons[0].usedCount, 0);
+    assert.equal(coupons[0].status, 'ACTIVE');
+    assert.equal(promotions[0].budget.spent, '20');
     assert.equal(second.data.idempotent, true);
+    assert.equal(coupons[0].usedCount, 0);
+    assert.equal(promotions[0].budget.spent, '20');
 });
 
 test('Promotion customer API rejects unauthenticated ownership context', async () => {

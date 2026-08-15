@@ -13,7 +13,10 @@ const readiness = require('../src/service/defaultOrderLifecycleOperationalReadin
 test('Order lifecycle operational readiness covers audit security SLA observability and release gates', () => {
     const contract = readiness.contract();
     assert.equal(contract.ownerModule, 'order');
-    assert.deepEqual(contract.lifecycleTypes, ['CANCELLATION', 'RETURN', 'REFUND']);
+    assert.deepEqual(contract.lifecycleTypes, ['CANCELLATION', 'RETURN', 'REFUND', 'EXCHANGE', 'REPLACEMENT', 'APPEAL']);
+    assert(contract.automationPlan.ownerSteps.includes('replacement-reservation'));
+    assert(contract.automationPlan.ownerSteps.includes('appeal-sla-review'));
+    assert(contract.automationPlan.customerSafeFields.includes('customerVisibleState'));
     assert(contract.audit.requiredFields.includes('beforeStatus'));
     assert.equal(contract.audit.downstreamEvidenceRequired, true);
     assert.equal(contract.security.customerOwnsOnly, true);

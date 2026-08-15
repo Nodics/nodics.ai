@@ -85,9 +85,12 @@ test('reverse lifecycle preview exposes cancellation return and refund customer 
     assert.deepEqual(returnPreview.returnMethods, ['PICKUP', 'DROP_OFF', 'STORE_RETURN']);
     assert.match(returnPreview.rmaCode, /^order-1:RMA:/);
     assert.equal(returnPreview.refundPreview.status, 'REQUIRES_BACKOFFICE_CALCULATION');
+    assert(returnPreview.automationPlan.some(step => step.step === 'return-logistics' && step.owner === 'fulfillment'));
+    assert(returnPreview.automationPlan.some(step => step.step === 'inspection-disposition' && step.owner === 'fulfillment+inventory'));
     assert.equal(refund.requiresApproval, true);
     assert.equal(refund.refundPreview.amount, '12.00');
     assert.equal(refund.refundPreview.reconciliationRequired, true);
+    assert(refund.automationPlan.some(step => step.step === 'refund-reconciliation' && step.owner === 'payment'));
     assert(refund.downstreamOwners.includes('payment'));
 });
 
@@ -116,6 +119,8 @@ test('reverse lifecycle preview exposes exchange replacement and appeal policy d
 
     assert.equal(exchange.replacementSelectionRequired, true);
     assert.match(exchange.rmaCode, /^order-1:RMA:/);
+    assert(exchange.automationPlan.some(step => step.step === 'replacement-reservation' && step.owner === 'inventory'));
+    assert(exchange.automationPlan.some(step => step.step === 'exchange-shipment' && step.owner === 'fulfillment'));
     assert(exchange.downstreamOwners.includes('inventory'));
     assert.equal(replacement.inspectionRequired, true);
     assert.equal(replacement.replacementSelectionRequired, true);
@@ -123,6 +128,7 @@ test('reverse lifecycle preview exposes exchange replacement and appeal policy d
     assert.equal(appeal.appealEvidenceRequired, true);
     assert.equal(appeal.itemSelectionRequired, false);
     assert(appeal.reasonCodes.includes('RETURN_REJECTED'));
+    assert(appeal.automationPlan.some(step => step.step === 'appeal-sla-review' && step.owner === 'workflow+order'));
 });
 
 test('reverse lifecycle create persists structured item return refund and reconciliation evidence', async () => {
@@ -151,6 +157,7 @@ test('reverse lifecycle create persists structured item return refund and reconc
     assert.equal(saved[0].evidence.quantity, '2');
     assert.equal(saved[0].evidence.returnMethod, 'PICKUP');
     assert.equal(saved[0].evidence.refundPreview.reconciliationRequired, true);
+    assert(saved[0].automationPlan.some(step => step.step === 'return-logistics'));
     assert.match(saved[0].evidence.rmaCode, /^order-1:RMA:/);
     assert.deepEqual(saved[0].evidence.productCodes, ['agoraLinenWrapDress']);
     assert.equal(saved[0].active, true);

@@ -17,7 +17,12 @@ module.exports = {
     contract: function () {
         return Object.freeze({
             ownerModule: 'order',
-            lifecycleTypes: ['CANCELLATION', 'RETURN', 'REFUND'],
+            lifecycleTypes: ['CANCELLATION', 'RETURN', 'REFUND', 'EXCHANGE', 'REPLACEMENT', 'APPEAL'],
+            automationPlan: {
+                ownerSteps: ['reservation-release', 'return-logistics', 'inspection-disposition', 'replacement-reservation', 'exchange-shipment', 'refund-reconciliation', 'appeal-sla-review'],
+                executionOwners: ['order', 'inventory', 'fulfillment', 'payment', 'workflow'],
+                customerSafeFields: ['step', 'owner', 'trigger', 'customerVisibleState']
+            },
             audit: {
                 requiredFields: ['actorId', 'actionCode', 'occurredAt', 'beforeStatus', 'afterStatus', 'correlationId'],
                 downstreamEvidenceRequired: true

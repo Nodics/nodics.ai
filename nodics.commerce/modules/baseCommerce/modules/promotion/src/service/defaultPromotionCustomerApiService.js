@@ -100,6 +100,52 @@ module.exports = {
             model
         }) || model;
     },
+    releaseCoupon: async function (request, redemption) {
+        if (!redemption.couponCode) return undefined;
+        const coupon = await this.getOne(SERVICE.DefaultCouponService, {
+            tenant: request.tenant,
+            authData: request.authData,
+            query: { tenant: request.tenant, code: redemption.couponCode },
+            pageSize: 1
+        });
+        if (!coupon) return undefined;
+        const usedCount = Math.max(0, Number(coupon.usedCount || 0) - 1);
+        const model = Object.assign({}, coupon, {
+            usedCount,
+            status: coupon.status === 'REDEEMED' && usedCount < Number(coupon.maxUses || 1) ? 'ACTIVE' : coupon.status,
+            revision: Number(coupon.revision || 0) + 1
+        });
+        return this.updateOrSave(SERVICE.DefaultCouponService, {
+            tenant: request.tenant,
+            authData: request.authData,
+            query: { tenant: request.tenant, code: coupon.code },
+            model
+        }) || model;
+    },
+    releaseBudget: async function (request, redemption) {
+        const promotion = await this.getOne(SERVICE.DefaultPromotionService, {
+            tenant: request.tenant,
+            authData: request.authData,
+            query: { tenant: request.tenant, code: redemption.promotionCode },
+            pageSize: 1
+        });
+        if (!promotion || !promotion.budget) return undefined;
+        const exact = this.exact();
+        const spent = exact.normalize(String(promotion.budget.spent || '0.00'));
+        const discountAmount = exact.normalize(String(redemption.discountAmount || '0.00'));
+        let nextSpent = exact.add ? exact.add(spent, discountAmount.startsWith('-') ? discountAmount.slice(1) : `-${discountAmount}`) : String(Number(spent) - Number(discountAmount));
+        if (exact.compare ? exact.compare(nextSpent, '0') < 0 : Number(nextSpent) < 0) nextSpent = '0';
+        const model = Object.assign({}, promotion, {
+            budget: Object.assign({}, promotion.budget, { spent: nextSpent }),
+            revision: Number(promotion.revision || 0) + 1
+        });
+        return this.updateOrSave(SERVICE.DefaultPromotionService, {
+            tenant: request.tenant,
+            authData: request.authData,
+            query: { tenant: request.tenant, code: promotion.code },
+            model
+        }) || model;
+    },
     persistDecision: async function (request, decision) {
         const model = Object.assign({ code: ['discountDecision', decision.promotionCode, decision.targetCode].join(':'), decidedAt: request.now || new Date().toISOString() }, decision);
         if (SERVICE.DefaultDiscountDecisionService && SERVICE.DefaultDiscountDecisionService.save) {
@@ -175,6 +221,8 @@ module.exports = {
         const redemption = await this.getOne(SERVICE.DefaultPromotionRedemptionService, { tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, code }, pageSize: 1 });
         if (!redemption) throw new Error('Promotion redemption was not found');
         if (redemption.status === 'REVERSED') return { reversed: true, redemption, idempotent: true };
+        const releasedCoupon = await this.releaseCoupon(request, redemption);
+        const releasedPromotion = await this.releaseBudget(request, redemption);
         const model = Object.assign({}, redemption, {
             status: 'REVERSED',
             reversalReasonCode: request.payload && request.payload.reasonCode || 'REVERSAL_REQUESTED',
@@ -187,6 +235,17 @@ module.exports = {
             query: { tenant: request.tenant, code },
             model
         });
-        return { reversed: true, redemption: updated || model, idempotent: false };
+        return {
+            reversed: true,
+            redemption: updated || model,
+            idempotent: false,
+            compensation: {
+                couponReleased: Boolean(releasedCoupon),
+                budgetReleased: Boolean(releasedPromotion),
+                couponCode: releasedCoupon && releasedCoupon.code,
+                promotionCode: releasedPromotion && releasedPromotion.code,
+                budgetSpent: releasedPromotion && releasedPromotion.budget && releasedPromotion.budget.spent
+            }
+        };
     }
 };
