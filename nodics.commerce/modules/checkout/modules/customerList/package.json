@@ -1,0 +1,20 @@
+{
+  "name": "customerList",
+  "version": "0.0.1",
+  "index": "70.23",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Customer-owned wishlist and compare-list capability.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Customer List",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": ["configuration", "schema", "service", "facade", "controller", "router", "test", "llm"],
+    "runtime": {
+      "router": true,
+      "publish": false,
+      "web": false
+    }
+  }
+}

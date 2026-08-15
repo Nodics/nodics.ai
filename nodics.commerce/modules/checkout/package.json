@@ -8,6 +8,7 @@
   "requiredModules": [
     "checkoutCore",
     "cart",
+    "customerList",
     "order"
   ],
   "nodics": {
