@@ -142,12 +142,57 @@ module.exports = {
     listOwn: function (request) { return this.repository().list(request.tenant, { ownerId: request.ownerId, orderCode: request.orderCode }, this.serviceAuthData(request), request.query.limit); },
     /** Lists bounded operator lifecycle requests. @param {Object} request Request. @returns {Promise<Array>} Results. */
     list: function (request) { return this.repository().list(request.tenant, {}, request.authData, request.query.limit); },
+    /** Returns true when an action is supported by Order lifecycle orchestration. @param {string} actionCode Action code. @returns {boolean} Supported flag. */
+    isSupportedAction: function (actionCode) {
+        return ['APPROVE', 'REJECT', 'RETRY', 'RECONCILE', 'MARK_RECEIVED', 'MARK_INSPECTED', 'DISPOSITION'].includes(actionCode);
+    },
+    /** Resolves the next lifecycle status for an operator action. @param {string} actionCode Action code. @returns {string} Status. */
+    actionStatus: function (actionCode) {
+        return { APPROVE: 'APPROVED', REJECT: 'REJECTED', RETRY: 'RETRY_PENDING', RECONCILE: 'RECONCILING', MARK_RECEIVED: 'RETURN_RECEIVED', MARK_INSPECTED: 'INSPECTED', DISPOSITION: 'DISPOSITION_RECORDED' }[actionCode];
+    },
+    /** Invokes downstream owner services for approved operator lifecycle actions. @param {Object} request Operator request. @param {Object} record Lifecycle record. @returns {Promise<Object>} Downstream evidence. */
+    downstreamActionEvidence: async function (request, record) {
+        const evidence = {}, payload = request.payload || {}, recordEvidence = record.evidence || {};
+        if (record.requestType === 'REFUND' && ['APPROVE', 'RECONCILE'].includes(request.actionCode) && SERVICE.DefaultPaymentRefundExecutionService && typeof SERVICE.DefaultPaymentRefundExecutionService.executeRefund === 'function') {
+            evidence.payment = await SERVICE.DefaultPaymentRefundExecutionService.executeRefund({
+                tenant: request.tenant,
+                ownerId: record.ownerId,
+                orderCode: record.orderCode,
+                cartCode: record.cartCode,
+                idempotencyKey: payload.refundIdempotencyKey || [record.code, request.actionCode, 'refund'].join(':'),
+                payload: {
+                    amount: payload.refundAmount || (recordEvidence.refundPreview && recordEvidence.refundPreview.amount),
+                    currency: payload.currency || (recordEvidence.refundPreview && recordEvidence.refundPreview.currency),
+                    providerToken: payload.providerToken || 'tok_test_refund'
+                },
+                correlationId: request.correlationId || request.requestId,
+                authData: request.authData
+            });
+        }
+        if (record.requestType === 'RETURN' && ['MARK_RECEIVED', 'MARK_INSPECTED', 'DISPOSITION'].includes(request.actionCode) && SERVICE.DefaultFulfillmentReturnExecutionService) {
+            const fulfillmentRequest = {
+                tenant: request.tenant,
+                ownerId: record.ownerId,
+                orderCode: record.orderCode,
+                cartCode: record.cartCode,
+                actorId: request.actorId,
+                idempotencyKey: payload.fulfillmentIdempotencyKey || [record.code, request.actionCode, 'fulfillment'].join(':'),
+                payload: Object.assign({}, payload, { rmaCode: payload.rmaCode || recordEvidence.rmaCode }),
+                correlationId: request.correlationId || request.requestId,
+                authData: request.authData
+            };
+            if (request.actionCode === 'MARK_RECEIVED') evidence.fulfillment = await SERVICE.DefaultFulfillmentReturnExecutionService.recordReceipt(fulfillmentRequest);
+            else evidence.fulfillment = await SERVICE.DefaultFulfillmentReturnExecutionService.recordInspection(fulfillmentRequest);
+        }
+        return evidence;
+    },
     /** Applies an approved maker-checker action. @param {Object} request Request. @returns {Promise<Object>} Updated request. */
     action: async function (request) {
         const record = await this.repository().get(request.tenant, request.requestCode, request.authData);
         if (!record) throw new Error('Lifecycle request not found');
         if (record.ownerId === request.actorId) throw new Error('Maker-checker separation is required');
-        if (!['APPROVE', 'REJECT', 'RETRY', 'RECONCILE'].includes(request.actionCode)) throw new Error('Unsupported lifecycle action');
-        return this.repository().update(request.tenant, record, { status: request.actionCode === 'APPROVE' ? 'APPROVED' : request.actionCode === 'REJECT' ? 'REJECTED' : request.actionCode === 'RETRY' ? 'RETRY_PENDING' : 'RECONCILING', revision: Number(record.revision || 0) + 1, evidence: Object.assign({}, record.evidence, { lastActionBy: request.actorId, reason: request.payload.reason }) }, request.authData);
+        if (!this.isSupportedAction(request.actionCode)) throw new Error('Unsupported lifecycle action');
+        const downstream = await this.downstreamActionEvidence(request, record);
+        return this.repository().update(request.tenant, record, { status: this.actionStatus(request.actionCode), revision: Number(record.revision || 0) + 1, evidence: Object.assign({}, record.evidence, { lastActionBy: request.actorId, reason: request.payload.reason, downstream }) }, request.authData);
     }
 };

@@ -23,23 +23,34 @@ const test = require('node:test');
 
 const service = require('../src/service/defaultOrderLifecycleApiService');
 const facade = require('../src/facade/defaultOrderLifecycleFacade');
+const backofficeCapability = require('../src/service/defaultOrderBackofficeCapabilityService');
 
 let saved;
 let auths;
+let storedLifecycle;
+let lifecycleUpdates;
 
 test.beforeEach(() => {
     saved = [];
     auths = [];
+    storedLifecycle = [];
+    lifecycleUpdates = [];
     global.SERVICE = {
         DefaultOrderLifecycleRepositoryService: {
             list: async (_tenant, _query, authData) => {
                 auths.push(authData);
-                return [];
+                return storedLifecycle;
             },
             save: async (_tenant, model, authData) => {
                 auths.push(authData);
                 saved.push(model);
                 return model;
+            },
+            get: async (_tenant, code) => storedLifecycle.find(item => item.code === code),
+            update: async (_tenant, record, patch) => {
+                const updated = Object.assign({}, record, patch);
+                lifecycleUpdates.push(updated);
+                return updated;
             }
         }
     };
@@ -134,4 +145,87 @@ test('reverse lifecycle facade resolves customer ownership from authenticated lo
     assert.equal(result.ownerId, 'customer@example.com');
     assert.equal(result.actorId, 'customer@example.com');
     assert.equal(captured.tenant, 'default');
+});
+
+test('reverse lifecycle operator approve executes Payment-owned refund and records downstream evidence', async () => {
+    let refundRequest;
+    storedLifecycle = [{
+        code: 'order-1:refund:1',
+        tenant: 'default',
+        ownerId: 'customer-1',
+        orderCode: 'order-1',
+        requestType: 'REFUND',
+        status: 'SUBMITTED',
+        revision: 0,
+        evidence: { refundPreview: { amount: '12.00', currency: 'USD' } }
+    }];
+    global.SERVICE.DefaultPaymentRefundExecutionService = {
+        executeRefund: async request => {
+            refundRequest = request;
+            return { status: 'REFUND_SUCCEEDED', reconciliationRequired: false };
+        }
+    };
+
+    const result = await service.action({
+        tenant: 'default',
+        actorId: 'operator-1',
+        requestCode: 'order-1:refund:1',
+        actionCode: 'APPROVE',
+        payload: {},
+        authData: { groups: ['employeeUserGroup'] },
+        correlationId: 'corr-approve-refund'
+    });
+
+    assert.equal(result.status, 'APPROVED');
+    assert.equal(refundRequest.orderCode, 'order-1');
+    assert.equal(refundRequest.payload.amount, '12.00');
+    assert.equal(lifecycleUpdates[0].evidence.downstream.payment.status, 'REFUND_SUCCEEDED');
+});
+
+test('reverse lifecycle operator return actions call Fulfillment-owned receipt and inspection services', async () => {
+    const calls = [];
+    storedLifecycle = [{
+        code: 'order-1:return:1',
+        tenant: 'default',
+        ownerId: 'customer-1',
+        orderCode: 'order-1',
+        requestType: 'RETURN',
+        status: 'SUBMITTED',
+        revision: 0,
+        evidence: { rmaCode: 'RMA-1' }
+    }];
+    global.SERVICE.DefaultFulfillmentReturnExecutionService = {
+        recordReceipt: async request => {
+            calls.push({ operation: 'receipt', request });
+            return { status: 'RECEIVED' };
+        },
+        recordInspection: async request => {
+            calls.push({ operation: 'inspection', request });
+            return { status: 'INSPECTED', evidence: { disposition: request.payload.disposition } };
+        }
+    };
+
+    await service.action({ tenant: 'default', actorId: 'operator-1', requestCode: 'order-1:return:1', actionCode: 'MARK_RECEIVED', payload: {}, authData: {}, correlationId: 'corr-receipt' });
+    const inspected = await service.action({ tenant: 'default', actorId: 'operator-1', requestCode: 'order-1:return:1', actionCode: 'DISPOSITION', payload: { disposition: 'RESTOCK' }, authData: {}, correlationId: 'corr-inspection' });
+
+    assert.deepEqual(calls.map(call => call.operation), ['receipt', 'inspection']);
+    assert.equal(calls[0].request.payload.rmaCode, 'RMA-1');
+    assert.equal(inspected.status, 'DISPOSITION_RECORDED');
+    assert.equal(lifecycleUpdates[1].evidence.downstream.fulfillment.evidence.disposition, 'RESTOCK');
+});
+
+test('Order BackOffice capability declares operator actions for cancellation return and refund', () => {
+    global.SERVICE.DefaultBackofficeCapabilityDefinitionService = {
+        capability: input => input,
+        workbench: input => input
+    };
+
+    const capability = backofficeCapability.getCapability();
+    const returns = capability.navigation.find(item => item.id === 'order-returns');
+    const refunds = capability.navigation.find(item => item.id === 'order-refunds');
+
+    assert(returns.lifecycleActions.some(action => action.id === 'mark-received' && action.operationRoute.includes('MARK_RECEIVED')));
+    assert(returns.lifecycleActions.some(action => action.id === 'record-disposition' && action.inputFields.some(field => field.name === 'disposition' && field.type === 'SELECT')));
+    assert(refunds.lifecycleActions.some(action => action.id === 'approve' && action.inputFields.some(field => field.name === 'refundAmount')));
+    assert(refunds.lifecycleActions.every(action => action.ownerModule === 'order'));
 });

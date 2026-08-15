@@ -20,6 +20,9 @@ module.exports = {
         if (!request || !request.tenant || !request.idempotencyKey || !['AUTHORIZE', 'CAPTURE', 'VOID', 'REFUND'].includes(request.operation)) throw new Error('Invalid sandbox payment request');
         if (typeof request.providerToken !== 'string' || !request.providerToken.startsWith('tok_test_')) throw new Error('Sandbox token required');
         const reference = 'sim_' + crypto.createHash('sha256').update([request.tenant, request.operation, request.idempotencyKey].join(':')).digest('hex').slice(0, 24);
-        return Object.freeze({ reference, status: { AUTHORIZE: 'AUTHORIZED', CAPTURE: 'CAPTURED', VOID: 'VOIDED', REFUND: 'REFUNDED' }[request.operation], sandbox: true });
+        let status = { AUTHORIZE: 'AUTHORIZED', CAPTURE: 'CAPTURED', VOID: 'VOIDED', REFUND: 'REFUNDED' }[request.operation];
+        if (request.operation === 'REFUND' && request.providerToken.includes('_delay')) status = 'REFUND_PENDING';
+        if (request.operation === 'REFUND' && request.providerToken.includes('_fail')) status = 'REFUND_FAILED';
+        return Object.freeze({ reference, status, sandbox: true });
     }
 };
