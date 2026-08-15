@@ -77,9 +77,12 @@ without exposing sensitive configuration.
 boundary.
 
 `GET /nodics/system/v0/contract/openapi` returns the machine-readable OpenAPI
-contract generated under the active server or node `generated/openapi`
-directory. It is a public documentation route only when the `openApiContract`
-exposure category is enabled.
+contract for the active runtime boundary. In a live runtime it is built from the
+already-loaded effective router and schema registries so generated files cannot
+make the served contract stale. When runtime contract services are unavailable,
+the service may fall back to the rebuildable artifact under the active server or
+node `generated/openapi` directory. It is a public documentation route only when
+the `openApiContract` exposure category is enabled.
 
 `GET /nodics/system/v0/contract/openapi/internal` returns that same authoritative
 effective contract through the secured internal-service-token and

@@ -20,7 +20,7 @@
 module.exports = {
     /** Returns whether an optional validity window contains the decision time. */
     effective: function (record, now) {
-        let time = (now || new Date()).getTime();
+        let time = now instanceof Date ? now.getTime() : now ? new Date(now).getTime() : new Date().getTime();
         return (!record.validFrom || new Date(record.validFrom).getTime() <= time) && (!record.validTo || new Date(record.validTo).getTime() > time);
     },
 

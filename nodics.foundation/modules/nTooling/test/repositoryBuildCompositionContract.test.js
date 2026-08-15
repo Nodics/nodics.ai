@@ -21,6 +21,8 @@ const composition = compositionService.create();
 try {
     assert(compositionService.runtimeGroups.includes('nodics.localization'),
         'Repository builds must regenerate Localization schema artifacts after clean');
+    assert(compositionService.runtimeGroups.includes('nodics.discovery'),
+        'Repository builds must regenerate Discovery schema artifacts after clean');
     assert(composition.root.startsWith(require('os').tmpdir()), 'Composition must be outside framework source');
     assert.strictEqual(compositionService.validate(composition), true);
     const serverPackagePath = path.join(composition.serverRoot, 'package.json');

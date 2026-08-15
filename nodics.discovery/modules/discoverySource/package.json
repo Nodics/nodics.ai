@@ -1,0 +1,16 @@
+{
+    "name": "discoverySource",
+    "version": "0.0.1",
+    "index": "65.20",
+    "private": true,
+    "main": "nodics.js",
+    "description": "Discovery source provider capability.",
+    "nodics": {
+        "kind": "capability",
+        "displayName": "Discovery Source",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": ["configuration", "schema", "service", "test", "llm"],
+        "runtime": { "router": false, "publish": false, "web": false }
+    }
+}

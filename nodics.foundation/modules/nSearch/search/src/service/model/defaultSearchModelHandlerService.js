@@ -284,7 +284,9 @@ module.exports = {
     registerSearchModels: function (defaultSearchModelDef, modelSchema) {
         if (defaultSearchModelDef) {
             Object.keys(defaultSearchModelDef).forEach(element => {
-                defaultSearchModelDef[element](modelSchema);
+                if (element.indexOf('defineDefault') === 0 && typeof defaultSearchModelDef[element] === 'function') {
+                    defaultSearchModelDef[element](modelSchema);
+                }
             });
         }
     },

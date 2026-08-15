@@ -20,7 +20,7 @@
  * route contract responses differently while preserving the service contract.
  *
  * @property {Object} SERVICE.DefaultApiContractService Service that resolves
- * generated contract artifacts.
+ * effective runtime contracts and rebuildable documentation artifacts.
  */
 module.exports = {
 
@@ -49,7 +49,7 @@ module.exports = {
     },
 
     /**
-     * Returns the generated OpenAPI contract for the active server or node.
+     * Returns the effective OpenAPI contract for the active server or node.
      *
      * @param {Object} request Nodics request context.
      * @returns {Promise<Object>} Promise resolving to a Nodics response envelope.

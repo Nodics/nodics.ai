@@ -11,8 +11,8 @@
 
 /**
  * @module system/controller/DefaultApiContractController
- * @description Controller for exposing generated API contracts from the active
- * server or node module context.
+ * @description Controller for exposing effective API contracts from the active
+ * runtime boundary.
  * @layer controller
  * @owner system
  * @override Project modules may override this controller in a later-loaded module
@@ -20,7 +20,7 @@
  * without changing Nodics foundation code.
  *
  * @property {Object} FACADE.DefaultApiContractFacade Facade responsible for
- * retrieving generated API contract artifacts.
+ * retrieving effective API contracts.
  */
 module.exports = {
 
@@ -49,7 +49,7 @@ module.exports = {
     },
 
     /**
-     * Returns the generated OpenAPI contract for the active server or node.
+     * Returns the effective OpenAPI contract for the active server or node.
      *
      * @param {Object} request Nodics request context.
      * @param {Function} [callback] Optional Node-style callback used by controller pipeline execution.

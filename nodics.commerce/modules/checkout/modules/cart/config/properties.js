@@ -11,7 +11,16 @@
 
 /** @module cart/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner cart */
 module.exports = {
-    cart: { enabled: true },
+    cart: {
+        enabled: true,
+        customerApi: {
+            defaultStoreCode: 'agoraMainStore',
+            defaultChannelCode: 'web',
+            defaultLocale: 'en',
+            defaultJurisdiction: 'US',
+            defaultCurrency: 'USD'
+        }
+    },
     schemaPolicies: { cart: {
         operational: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },
         tenantOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },

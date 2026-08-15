@@ -1,0 +1,16 @@
+{
+    "name": "discoveryMapping",
+    "version": "0.0.1",
+    "index": "65.30",
+    "private": true,
+    "main": "nodics.js",
+    "description": "Discovery mapping capability.",
+    "nodics": {
+        "kind": "capability",
+        "displayName": "Discovery Mapping",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": ["configuration", "schema", "service", "test", "llm"],
+        "runtime": { "router": false, "publish": false, "web": false }
+    }
+}

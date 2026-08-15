@@ -11,7 +11,16 @@
 
 /** @module inventory/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner inventory */
 module.exports = {
-    inventory: { enabled: true },
+    inventory: {
+        enabled: true,
+        customerSummary: {
+            enabled: true,
+            maximumProductsPerRequest: 100,
+            includeQuantity: false,
+            inStockStatus: 'IN_STOCK',
+            outOfStockStatus: 'OUT_OF_STOCK'
+        }
+    },
     schemaPolicies: { inventory: {
         operational: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },
         tenantOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },

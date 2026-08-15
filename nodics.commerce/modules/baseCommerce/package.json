@@ -11,7 +11,8 @@
     "pricing",
     "tax",
     "promotion",
-    "inventory"
+    "inventory",
+    "commerceSearch"
   ],
   "nodics": {
     "kind": "group",

@@ -26,7 +26,7 @@ module.exports = { cart: {
         totalAmount: { type: 'string', required: false }, correlationId: { type: 'string', required: true }
     } }),
     cartEntry: Object.assign({ super: 'base', model: true, schemaPolicies: ['customerOwned'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: Object.assign({}, evidence, {
-        productCode: { type: 'string', required: true }, sku: { type: 'string', required: true },
+        productCode: { type: 'string', required: true }, variantCode: { type: 'string', required: false }, sku: { type: 'string', required: true },
         quantity: { type: 'string', required: true }, status: { type: 'string', required: true, enum: ['ACTIVE', 'REMOVED'] }
     }) }),
     cartCalculation: Object.assign({ super: 'base', model: true, schemaPolicies: ['customerOwned'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: Object.assign({}, evidence, {

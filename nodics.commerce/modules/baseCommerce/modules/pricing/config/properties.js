@@ -11,7 +11,17 @@
 
 /** @module pricing/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner pricing */
 module.exports = {
-    pricing: { enabled: true },
+    pricing: {
+        enabled: true,
+        customerSummary: {
+            enabled: true,
+            defaultCurrency: 'USD',
+            defaultQuantity: '1',
+            maximumProductsPerRequest: 100,
+            includeEvidence: false,
+            missingPriceBehavior: 'omit'
+        }
+    },
     schemaPolicies: { pricing: {
         operational: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },
         tenantOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },

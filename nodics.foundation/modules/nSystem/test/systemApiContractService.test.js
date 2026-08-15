@@ -138,7 +138,7 @@ const service = require('../src/service/contract/defaultApiContractService');
     assert.strictEqual(nodeResponse.metadata.moduleName, nodeName);
     assert.strictEqual(nodeResponse.metadata.artifactPath, path.relative(path.dirname(serverPath), path.join(serverContractDirectory, nodeName + '.openapi.json')));
 
-    activeNodeName = 'runtimeNode';
+    activeNodeName = null;
     global.SERVICE.DefaultOpenapiContractGeneratorService = { createDocument: input => {
         assert.strictEqual(input.rawRouters.runtime, true);
         assert.strictEqual(input.rawSchema.runtime, true);
@@ -146,6 +146,12 @@ const service = require('../src/service/contract/defaultApiContractService');
     } };
     global.SERVICE.DefaultRouterConfigurationService = { getRawRouters: () => ({ runtime: true }) };
     global.SERVICE.DefaultDatabaseConfigurationService = { getRawSchema: () => ({ runtime: true }) };
+    let runtimePreferredResponse = await service.getOpenApiContract({});
+    assert.strictEqual(runtimePreferredResponse.data.info.title, 'Runtime Contract');
+    assert.strictEqual(runtimePreferredResponse.metadata.moduleName, serverName);
+    assert.strictEqual(runtimePreferredResponse.metadata.artifactPath, 'runtime-effective');
+
+    activeNodeName = 'runtimeNode';
     let runtimeResponse = await service.getOpenApiContract({});
     assert.strictEqual(runtimeResponse.data.info.title, 'Runtime Contract');
     assert.strictEqual(runtimeResponse.metadata.artifactPath, 'runtime-effective');

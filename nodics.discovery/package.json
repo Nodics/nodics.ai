@@ -1,0 +1,49 @@
+{
+    "name": "nodics.discovery",
+    "version": "0.0.1",
+    "index": "65.99",
+    "private": true,
+    "main": "nodics.js",
+    "description": "Nodics Discovery module group.",
+    "requiredModules": [
+        "discoveryConfig",
+        "discoverySource",
+        "discoveryMapping",
+        "discoveryProjection",
+        "discoveryPublication",
+        "discoveryQuery",
+        "discoveryRanking",
+        "discoveryRuntime"
+    ],
+    "nodics": {
+        "kind": "group",
+        "displayName": "Nodics Discovery",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": [
+            "composition",
+            "configuration",
+            "test",
+            "llm"
+        ],
+        "runtime": {
+            "router": false,
+            "publish": false,
+            "web": false
+        },
+        "extends": [
+            "nodics.foundation"
+        ],
+        "functionalModule": {
+            "identity": "nodics.discovery",
+            "displayName": "Discovery",
+            "type": "STANDARD",
+            "protected": false
+        }
+    },
+    "scripts": {
+        "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
+        "test:contract": "for file in test/*.test.js modules/*/test/*.test.js; do node \"$file\" || exit 1; done",
+        "test": "npm run check:syntax && npm run test:contract"
+    }
+}

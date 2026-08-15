@@ -30,6 +30,27 @@ module.exports = {
                 en: 'standard',
                 ar: 'arabic'
             }
+        },
+        discovery: {
+            defaultStoreCode: 'defaultStore',
+            defaultLocale: 'en',
+            maximumPageSize: 100,
+            defaultPageSize: 24,
+            allowTenantQuery: false,
+            searchIndexName: 'productLocalized',
+            rankingFailureBehavior: 'omit',
+            cardFields: ['productCode', 'name', 'slug', 'summary', 'categoryCodes', 'variantCodes', 'seo', 'localizedAttributes', 'price', 'availability'],
+            detailFields: ['productCode', 'name', 'slug', 'summary', 'description', 'categoryCodes', 'variantCodes', 'seo', 'localizedAttributes', 'mediaText', 'price', 'availability'],
+            filterableFields: ['categoryCodes'],
+            exposedSorts: ['relevance', 'name-asc', 'name-desc']
+        },
+        publication: {
+            defaultStoreCode: 'defaultStore',
+            maximumBatchSize: 100,
+            searchEnrichment: {
+                pricing: { enabled: true, serviceName: 'DefaultCustomerPriceSummaryService', defaultCurrency: 'USD', defaultQuantity: '1', missingBehavior: 'omit' },
+                inventory: { enabled: true, serviceName: 'DefaultCustomerAvailabilitySummaryService', missingBehavior: 'omit' }
+            }
         }
     },
     schemaPolicies: { product: {

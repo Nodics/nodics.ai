@@ -22,6 +22,16 @@ module.exports = {
         return SERVICE.DefaultProductLocalizationPolicyService.policy();
     },
 
+    /** Prepares a mutable persistence model with required base metadata for generated Mongo validators. */
+    persistenceModel: function (request, projection) {
+        let now = request.now ? new Date(request.now) : new Date();
+        return Object.assign({}, projection, {
+            active: projection.active !== undefined ? projection.active : true,
+            created: projection.created instanceof Date ? projection.created : now,
+            updated: now
+        });
+    },
+
     /** Publishes one Product into deterministic locale-specific persistence and nSearch projections. */
     publish: async function (request, input) {
         if (!input || !input.product || !input.storeCode) throw new Error('Product and Store are required for localized search publication');
@@ -30,13 +40,19 @@ module.exports = {
             .map(item => SERVICE.DefaultProductLocalizationPolicyService.canonicalize(item.locale))));
         let projections = [];
         try {
+            let customerSummaries = SERVICE.DefaultProductSearchEnrichmentService && typeof SERVICE.DefaultProductSearchEnrichmentService.enrich === 'function'
+                ? await SERVICE.DefaultProductSearchEnrichmentService.enrich(request, input) : {};
             for (let locale of locales) {
-                let projection = SERVICE.DefaultProductLocalizedProjectionBuilderService.build(request, Object.assign({}, input, { locale: locale }));
-                await SERVICE.DefaultProductSearchProjectionService.save({ tenant: request.tenant, authData: request.authData, model: projection });
+                let projection = SERVICE.DefaultProductLocalizedProjectionBuilderService.build(request, Object.assign({}, input, {
+                    locale: locale,
+                    customerSummaries: customerSummaries
+                }));
+                let model = this.persistenceModel(request, projection);
+                await SERVICE.DefaultProductSearchProjectionService.save({ tenant: request.tenant, authData: request.authData, model: model });
                 await SERVICE.DefaultProductSearchProjectionService.doSave({ tenant: request.tenant,
-                    moduleName: 'product', indexName: this.policy().searchIndexName, model: projection,
+                    moduleName: 'product', indexName: this.policy().searchIndexName, model: model,
                     searchOptions: { analyzer: (this.policy().analyzerByLocale || {})[locale] } });
-                projections.push(projection);
+                projections.push(model);
             }
         } catch (error) {
             try { await this.withdraw(request, { productCode: input.product.code, storeCode: input.storeCode }); } catch (compensationError) {
@@ -57,11 +73,11 @@ module.exports = {
             if (snapshot.tenant !== request.tenant || snapshot.productCode !== input.productCode || snapshot.storeCode !== input.storeCode) {
                 throw new Error('Search restoration projection escaped its tenant Product or Store boundary');
             }
-            let model = Object.assign({}, snapshot, { status: 'CURRENT', projectedAt: request.now || new Date().toISOString() });
+            let model = this.persistenceModel(request, Object.assign({}, snapshot, { status: 'CURRENT',
+                projectedAt: request.now ? new Date(request.now) : new Date() }));
             await SERVICE.DefaultProductSearchProjectionService.save({ tenant: request.tenant, authData: request.authData, model: model });
             await SERVICE.DefaultProductSearchProjectionService.doSave({ tenant: request.tenant, moduleName: 'product',
-                indexName: this.policy().searchIndexName, model: model,
-                searchOptions: { analyzer: (this.policy().analyzerByLocale || {})[model.locale] } });
+                indexName: this.policy().searchIndexName, model: model, searchOptions: { analyzer: (this.policy().analyzerByLocale || {})[model.locale] } });
             restored.push(model);
         }
         return restored;
@@ -75,8 +91,8 @@ module.exports = {
         let query = { tenant: request.tenant, productCode: input.productCode, storeCode: input.storeCode };
         await SERVICE.DefaultProductSearchProjectionService.update({ tenant: request.tenant,
             authData: request.authData, query: query, model: { status: 'WITHDRAWN' } });
-        await SERVICE.DefaultProductSearchProjectionService.doRemoveByQuery({ tenant: request.tenant,
-            moduleName: 'product', indexName: this.policy().searchIndexName, query: query });
+        await SERVICE.DefaultProductSearchProjectionService.doRemoveByQuery({ tenant: request.tenant, moduleName: 'product',
+            indexName: this.policy().searchIndexName, query: query });
         return { status: 'WITHDRAWN', productCode: input.productCode, storeCode: input.storeCode };
     }
 };

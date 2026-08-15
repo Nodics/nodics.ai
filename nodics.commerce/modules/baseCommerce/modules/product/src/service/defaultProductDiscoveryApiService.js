@@ -1,0 +1,245 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+'use strict';
+
+/**
+ * @module product/service/defaultProductDiscoveryApiService
+ * @description Projects Product search projections into customer-safe Home, PLP/Search, and PDP responses.
+ * @layer service
+ * @owner product
+ * @override Later modules may alter card/detail projection fields through configuration or service override while preserving Product-only data ownership.
+ */
+module.exports = {
+    /** Initializes the service lifecycle. @returns {Promise<boolean>} Initialization result. */
+    init: function () { return Promise.resolve(true); },
+    /** Completes the service lifecycle. @returns {Promise<boolean>} Initialization result. */
+    postInit: function () { return Promise.resolve(true); },
+
+    /** Returns the effective Product discovery policy. @returns {Object} Policy. */
+    policy: function () { return ((CONFIG.get('product') || {}).discovery) || {}; },
+
+    /** Returns a bounded integer option. @param {*} value Candidate value. @param {number} fallback Fallback. @param {number} minimum Minimum. @param {number} maximum Maximum. @returns {number} Bounded number. */
+    boundedInteger: function (value, fallback, minimum, maximum) {
+        let next = Number(value || fallback);
+        if (!Number.isInteger(next) || next < minimum) return fallback;
+        return Math.min(next, maximum);
+    },
+
+    /** Resolves the Discovery index configuration requested by the storefront or layered defaults. @param {Object} request Request. @returns {Promise<Object|undefined>} Index configuration. */
+    indexConfiguration: async function (request) {
+        if (request.indexConfiguration) return request.indexConfiguration;
+        if (!SERVICE.DefaultDiscoveryConfigurationResolverService || typeof SERVICE.DefaultDiscoveryConfigurationResolverService.resolveIndexConfiguration !== 'function') return undefined;
+        return SERVICE.DefaultDiscoveryConfigurationResolverService.resolveIndexConfiguration({
+            tenant: request.tenant,
+            ownerType: 'PRODUCT',
+            indexCode: request.query && (request.query.indexCode || request.query.indexConfigurationCode),
+            storeCode: request.storeCode,
+            locale: request.locale,
+            authData: request.authData
+        });
+    },
+
+    /** Builds response metadata proving Product discovery is served from governed Discovery/search configuration. @param {Object} request Request. @param {Object|undefined} configuration Index configuration. @returns {Object} Metadata. */
+    discoveryMetadata: function (request, configuration) {
+        let policy = this.policy();
+        return {
+            source: 'SEARCH_INDEX',
+            flow: ['DATA_FOLDER', 'COMMERCE_STAGED', 'COMMERCE_ONLINE', 'SEARCH_INDEX', 'STOREFRONT_API'],
+            indexConfigurationCode: configuration && configuration.code || request.query && (request.query.indexCode || request.query.indexConfigurationCode),
+            sourceMixCode: configuration && configuration.sourceMixCode,
+            fieldMappingCode: configuration && configuration.fieldMappingCode,
+            queryProfileCode: configuration && configuration.queryProfileCode,
+            facetProfileCode: configuration && configuration.facetProfileCode,
+            rankingProfileCode: configuration && configuration.rankingProfileCode || request.query && request.query.rankingProfileCode,
+            indexName: configuration && configuration.indexName || policy.searchIndexName || 'productLocalized',
+            storeCode: request.storeCode,
+            locale: request.locale
+        };
+    },
+
+    /** Builds the tenant, Store, locale, category, text, and status filter for projection search. @param {Object} request Nodics request. @returns {Object} Provider-neutral query. */
+    query: function (request) {
+        let input = request.query || {}, query = {
+            tenant: request.tenant, storeCode: request.storeCode, locale: request.locale, status: 'CURRENT'
+        };
+        if (input.categoryCode) query['payload.categoryCodes.keyword'] = input.categoryCode;
+        if (request.productCode) query.productCode = request.productCode;
+        if (input.q) query.text = String(input.q).trim();
+        return query;
+    },
+
+    /** Builds bounded search options. @param {Object} request Nodics request. @returns {Object} Search options. */
+    searchOptions: function (request) {
+        let policy = this.policy(), input = request.query || {}, maximum = Number(policy.maximumPageSize || 100);
+        if (SERVICE.DefaultDiscoveryQueryBuilderService && typeof SERVICE.DefaultDiscoveryQueryBuilderService.options === 'function') {
+            return SERVICE.DefaultDiscoveryQueryBuilderService.options(request, {
+                pageSizeLimit: maximum,
+                sorts: [
+                    { code: 'name-asc', sort: { 'payload.name': 1 } },
+                    { code: 'name-desc', sort: { 'payload.name': -1 } }
+                ]
+            });
+        }
+        return {
+            pageSize: this.boundedInteger(input.pageSize || input.limit, Number(policy.defaultPageSize || 24), 1, maximum),
+            pageNumber: this.boundedInteger(input.page, 1, 1, 10000),
+            sort: this.sort(input.sort)
+        };
+    },
+
+    /** Maps public sort aliases to provider-neutral sort instructions. @param {string} requested Requested sort. @returns {Object|undefined} Sort. */
+    sort: function (requested) {
+        if (requested === 'name-asc') return { 'payload.name': 1 };
+        if (requested === 'name-desc') return { 'payload.name': -1 };
+        return undefined;
+    },
+
+    /** Executes the Product search projection query through generated nSearch behavior when available. @param {Object} request Nodics request. @param {Object} query Query. @param {Object} searchOptions Search options. @returns {Promise<Array>} Projection records. */
+    search: async function (request, query, searchOptions) {
+        let service = SERVICE.DefaultProductSearchProjectionService;
+        if (!service) throw new Error('Product search projection service is unavailable');
+        let policy = this.policy();
+        let searchRequest = {
+            tenant: request.tenant, authData: request.authData, moduleName: 'product',
+            indexName: request.indexConfiguration && request.indexConfiguration.indexName || policy.searchIndexName || 'productLocalized',
+            query: query, searchOptions: searchOptions, options: {}
+        };
+        if (typeof service.doSearch === 'function') return this.records(await service.doSearch(searchRequest));
+        return this.records(await service.get(searchRequest));
+    },
+
+    /** Extracts records from generated service, nSearch, or adapter result shapes. @param {*} response Service response. @returns {Array} Records. */
+    records: function (response) {
+        if (Array.isArray(response)) return response;
+        if (response && Array.isArray(response.result)) return response.result;
+        if (response && response.data && Array.isArray(response.data)) return response.data;
+        if (response && response.data && Array.isArray(response.data.result)) return response.data.result;
+        let hits = this.findHits(response, 0);
+        if (hits) {
+            return hits.hits.map(hit => hit._source || hit.source || hit);
+        }
+        return [];
+    },
+
+    /** Finds an Elasticsearch-compatible hits envelope within wrapped nSearch pipeline responses. @param {*} value Candidate value. @param {number} depth Current recursion depth. @returns {Object|undefined} Hits envelope. */
+    findHits: function (value, depth) {
+        if (!value || depth > 6 || typeof value !== 'object') return undefined;
+        if (value.hits && Array.isArray(value.hits.hits)) return value.hits;
+        for (let key of ['result', 'data', 'body', 'response', 'payload']) {
+            let found = this.findHits(value[key], depth + 1);
+            if (found) return found;
+        }
+        return undefined;
+    },
+
+    /** Whitelists customer-safe price fields. @param {Object} price Indexed price summary. @returns {Object|undefined} Price summary. */
+    price: function (price) {
+        if (!price) return undefined;
+        return { currency: price.currency, unitAmount: price.unitAmount };
+    },
+
+    /** Whitelists customer-safe availability fields. @param {Object} availability Indexed availability summary. @returns {Object|undefined} Availability summary. */
+    availability: function (availability) {
+        if (!availability) return undefined;
+        return { available: availability.available === true, status: availability.status };
+    },
+
+    /** Projects one search projection into a customer-safe card. @param {Object} projection Product search projection. @returns {Object} Card. */
+    card: function (projection) {
+        let payload = projection.payload || {};
+        return {
+            productCode: projection.productCode || payload.code,
+            name: payload.name,
+            slug: payload.slug,
+            summary: payload.description,
+            categoryCodes: payload.categoryCodes || [],
+            variantCodes: payload.variantCodes || [],
+            seo: payload.seo,
+            localizedAttributes: payload.localizedAttributes || {},
+            price: this.price(payload.price),
+            availability: this.availability(payload.availability)
+        };
+    },
+
+    /** Projects one search projection into a customer-safe PDP detail. @param {Object} projection Product search projection. @returns {Object} Detail. */
+    detailProjection: function (projection) {
+        let card = this.card(projection), payload = projection.payload || {};
+        return Object.assign({}, card, {
+            description: payload.description,
+            mediaText: payload.mediaText || {},
+            gallery: payload.gallery || payload.media || [],
+            variants: payload.variants || [],
+            relatedProductCodes: payload.relatedProductCodes || []
+        });
+    },
+
+    /** Builds customer-safe facet summaries from returned Product cards. @param {Array} products Product cards. @returns {Object} Facet summary. */
+    facets: function (products) {
+        let categories = new Map(), availability = new Map();
+        (products || []).forEach(product => {
+            (product.categoryCodes || []).forEach(code => categories.set(code, (categories.get(code) || 0) + 1));
+            let status = product.availability && product.availability.status;
+            if (status) availability.set(status, (availability.get(status) || 0) + 1);
+        });
+        return {
+            categories: Array.from(categories.entries()).map(entry => ({ code: entry[0], count: entry[1] })),
+            availability: Array.from(availability.entries()).map(entry => ({ code: entry[0], count: entry[1] }))
+        };
+    },
+
+    /** Applies optional Commerce Search ranking without exposing rule internals. @param {Object} request Request. @param {Array} products Product cards. @returns {Promise<Array>} Ranked cards. */
+    rank: async function (request, products) {
+        let service = SERVICE.DefaultCommerceSearchRankingService;
+        if (!service || typeof service.rank !== 'function') return products;
+        try {
+            return await service.rank(request, products);
+        } catch (error) {
+            if (((CONFIG.get('product') || {}).discovery || {}).rankingFailureBehavior === 'error') throw error;
+            return products;
+        }
+    },
+
+    /** Lists customer-safe Product cards. @param {Object} request Nodics request. @returns {Promise<Object>} Product card response. */
+    list: async function (request) {
+        request.indexConfiguration = await this.indexConfiguration(request);
+        let searchOptions = this.searchOptions(request), records = await this.search(request, this.query(request), searchOptions);
+        let products = records.map(this.card.bind(this));
+        return {
+            tenant: request.tenant, storeCode: request.storeCode, locale: request.locale,
+            page: searchOptions.pageNumber, pageSize: searchOptions.pageSize,
+            products: await this.rank(request, products),
+            facets: this.facets(products),
+            discovery: this.discoveryMetadata(request, request.indexConfiguration)
+        };
+    },
+
+    /** Resolves one customer-safe Product detail. @param {Object} request Nodics request. @returns {Promise<Object>} Product detail response. */
+    detail: async function (request) {
+        if (!request.productCode || !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(String(request.productCode))) {
+            throw new Error('Product code is invalid');
+        }
+        request.indexConfiguration = await this.indexConfiguration(request);
+        let records = await this.search(request, this.query(request), { limit: 2, pageSize: 2, pageNumber: 1 });
+        if (records.length !== 1) {
+            let error = new Error('Product is unavailable');
+            error.statusCode = records.length === 0 ? 404 : 409;
+            throw error;
+        }
+        let product = this.detailProjection(records[0]);
+        return {
+            tenant: request.tenant, storeCode: request.storeCode, locale: request.locale,
+            product: product,
+            relatedProducts: [],
+            discovery: this.discoveryMetadata(request, request.indexConfiguration)
+        };
+    }
+};

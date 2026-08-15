@@ -127,8 +127,10 @@ The generator initializes Nodics through the build-style module hierarchy, loads
 
 Runtime API documentation is exposed through `nSystem`:
 
-- `GET /nodics/system/v0/contract/openapi` returns the generated contract for
-  the active server or node when `openApiContract` exposure is enabled.
+- `GET /nodics/system/v0/contract/openapi` returns the effective runtime
+  contract for the active server or node when `openApiContract` exposure is
+  enabled, falling back to the rebuildable generated artifact only when runtime
+  contract services are unavailable.
 - `GET /nodics/system/v0/contract/swagger` returns interactive Swagger UI for
   that same active contract when `openApiContract` exposure is enabled.
 

@@ -41,6 +41,24 @@ module.exports = {
 },
 
         /**
+         * Converts Nodics plain field filters into Elasticsearch query DSL while
+         * preserving callers that already provide DSL.
+         */
+        normalizeQuery: function (query) {
+            if (!query || _.isEmpty(query)) return { match_all: {} };
+            const dslKeys = ['bool', 'term', 'terms', 'match', 'multi_match', 'range', 'exists', 'ids', 'query_string', 'simple_query_string'];
+            if (dslKeys.some(key => Object.prototype.hasOwnProperty.call(query, key))) return query;
+            return {
+                bool: {
+                    filter: Object.keys(query).map(name => {
+                        const value = query[name];
+                        return Array.isArray(value) ? { terms: { [name]: value } } : { term: { [name]: value } };
+                    })
+                }
+            };
+        },
+
+        /**
          * Installs the default index creation operation.
          */
         defineDefaultDoCreateIndex: function (searchModel) { //Required pipeline to process this request
@@ -56,7 +74,15 @@ module.exports = {
                         _self.LOG.debug('Creating index for indexName: ' + _self.indexDef.indexName.toLowerCase());
                         (searchModel.invokeClient || module.exports.default.invokeClient)
                             .call(searchModel, _self.searchEngine.getConnection().indices, 'create', indexQuery)
-                            .then(resolve).catch(reject);
+                            .then(resolve).catch(error => {
+                                let errorType = error && error.meta && error.meta.body && error.meta.body.error && error.meta.body.error.type;
+                                if (errorType === 'resource_already_exists_exception') {
+                                    _self.LOG.warn('Search index already exists for indexName: ' + _self.indexDef.indexName.toLowerCase());
+                                    resolve({ acknowledged: true, alreadyExists: true, index: _self.indexDef.indexName.toLowerCase() });
+                                } else {
+                                    reject(error);
+                                }
+                            });
                     } catch (error) {
                         reject(error);
                     }
@@ -229,12 +255,10 @@ module.exports = {
                                 };
                             }
                         } else if (input.q) {
-                            searchQuery.type = _self.indexDef.typeName.toLowerCase();
                             searchQuery.q = input.q;
                         } else {
-                            searchQuery.type = _self.indexDef.typeName.toLowerCase();
                             searchQuery.body = {
-                                query: input.query || {}
+                                query: (searchModel.normalizeQuery || module.exports.default.normalizeQuery)(input.query)
                             };
                         }
                         _self.LOG.debug('Executing search command with options');
@@ -377,9 +401,8 @@ module.exports = {
                         removeQuery = _.merge(removeQuery, input.options || {});
                         removeQuery = _.merge(removeQuery, {
                             index: _self.indexDef.indexName.toLowerCase(),
-                            type: _self.indexDef.typeName.toLowerCase(),
                             body: {
-                                query: input.query
+                                query: (searchModel.normalizeQuery || module.exports.default.normalizeQuery)(input.query)
                             }
                         });
                         _self.LOG.debug('Executing remove command with options');

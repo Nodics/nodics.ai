@@ -1,0 +1,28 @@
+{
+  "name": "commerceSearch",
+  "version": "0.0.1",
+  "index": "70.17",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Commerce Search module group.",
+  "requiredModules": [
+    "commerceSearchCore"
+  ],
+  "nodics": {
+    "kind": "group",
+    "displayName": "Commerce Search",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "composition",
+      "configuration",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  }
+}

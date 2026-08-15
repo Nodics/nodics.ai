@@ -176,8 +176,24 @@ async function assertOperation(operation, input, expectedClientOperation, expect
         size: 10,
         from: 2,
         index: 'enterpriseindex',
-        type: 'enterprisetype',
         q: 'code:ENT-1'
+    });
+
+    await assertOperation('doSearch', {
+        query: { tenant: 'default', productCode: 'ENT-1' }
+    }, 'search', {
+        size: 10,
+        index: 'enterpriseindex',
+        body: {
+            query: {
+                bool: {
+                    filter: [
+                        { term: { tenant: 'default' } },
+                        { term: { productCode: 'ENT-1' } }
+                    ]
+                }
+            }
+        }
     });
 
     await assertOperation('doSearch', {
@@ -185,7 +201,6 @@ async function assertOperation(operation, input, expectedClientOperation, expect
     }, 'search', {
         size: 10,
         index: 'enterpriseindex',
-        type: 'enterprisetype',
         body: {
             query: { match: { code: 'ENT-1' } }
         }
@@ -227,13 +242,12 @@ async function assertOperation(operation, input, expectedClientOperation, expect
     });
 
     await assertOperation('doRemoveByQuery', {
-        query: { term: { active: false } }
+        query: { active: false }
     }, 'deleteByQuery', {
         refresh: true,
         index: 'enterpriseindex',
-        type: 'enterprisetype',
         body: {
-            query: { term: { active: false } }
+            query: { bool: { filter: [{ term: { active: false } }] } }
         }
     });
 

@@ -1,0 +1,28 @@
+{
+  "name": "commerceSearchCore",
+  "version": "0.0.1",
+  "index": "70.16",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Commerce Search Core capability.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Commerce Search Core",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "schema",
+      "service",
+      "search",
+      "data",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": true,
+      "publish": false,
+      "web": false
+    }
+  }
+}

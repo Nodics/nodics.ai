@@ -1,0 +1,16 @@
+{
+    "name": "discoveryRanking",
+    "version": "0.0.1",
+    "index": "65.70",
+    "private": true,
+    "main": "nodics.js",
+    "description": "Discovery ranking capability.",
+    "nodics": {
+        "kind": "capability",
+        "displayName": "Discovery Ranking",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": ["configuration", "schema", "service", "test", "llm"],
+        "runtime": { "router": false, "publish": false, "web": false }
+    }
+}

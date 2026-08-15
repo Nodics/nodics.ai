@@ -18,6 +18,7 @@ module.exports = {
         if (!request || !request.tenant || !input || !input.product || input.product.tenant !== request.tenant || !input.storeCode) {
             throw new Error('Tenant-scoped Product and Store are required');
         }
+        let projectedAt = request.now ? new Date(request.now) : new Date();
         let resolved = SERVICE.DefaultProductLocalizationPolicyService.resolve(request, input.localizations, input.locale);
         if (!resolved.value) throw new Error('Ready Product localization is required for search projection');
         let localized = resolved.value;
@@ -25,14 +26,16 @@ module.exports = {
             slug: localized.slug, seo: localized.seo, localizedAttributes: localized.attributes,
             classificationValues: localized.classificationValues,
             categoryCodes: input.categoryCodes || [], variantCodes: input.variantCodes || [] };
+        if (input.customerSummaries && input.customerSummaries.price) payload.price = input.customerSummaries.price;
+        if (input.customerSummaries && input.customerSummaries.availability) payload.availability = input.customerSummaries.availability;
         let source = { tenant: request.tenant, productCode: input.product.code, storeCode: input.storeCode,
             locale: resolved.resolvedLocale, productRevision: input.product.revision,
             localizationRevision: localized.revision, payload: payload };
-        return Object.freeze({ code: [input.product.code, input.storeCode, resolved.resolvedLocale].join('|'),
+        return { code: [input.product.code, input.storeCode, resolved.resolvedLocale].join('|'),
             tenant: request.tenant, productCode: input.product.code, storeCode: input.storeCode,
             locale: resolved.resolvedLocale, payload: Object.freeze(payload),
             sourceHash: crypto.createHash('sha256').update(JSON.stringify(source)).digest('hex'),
-            status: 'CURRENT', projectedAt: request.now || new Date().toISOString(),
-            requestedLocale: resolved.requestedLocale, fallbackUsed: resolved.fallbackUsed });
+            status: 'CURRENT', projectedAt: projectedAt,
+            requestedLocale: resolved.requestedLocale, fallbackUsed: resolved.fallbackUsed };
     }
 };

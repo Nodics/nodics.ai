@@ -1,0 +1,16 @@
+{
+    "name": "discoveryQuery",
+    "version": "0.0.1",
+    "index": "65.60",
+    "private": true,
+    "main": "nodics.js",
+    "description": "Discovery query capability.",
+    "nodics": {
+        "kind": "capability",
+        "displayName": "Discovery Query",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": ["configuration", "service", "test", "llm"],
+        "runtime": { "router": false, "publish": false, "web": false }
+    }
+}

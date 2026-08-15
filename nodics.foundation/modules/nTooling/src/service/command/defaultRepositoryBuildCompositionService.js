@@ -25,7 +25,7 @@ const crypto = require('crypto');
 module.exports = {
     runtimeGroups: Object.freeze([
         'nodics.foundation', 'nodics.platform', 'nodics.cron', 'nodics.wcms', 'nodics.localization',
-        'nodics.process', 'nodics.commerce', 'nodics.communication', 'nodics.engagement'
+        'nodics.process', 'nodics.discovery', 'nodics.commerce', 'nodics.communication', 'nodics.engagement'
     ]),
 
     /** Writes one generated composition file. @param {string} filePath Target. @param {string|Object} value Content. @returns {void} */

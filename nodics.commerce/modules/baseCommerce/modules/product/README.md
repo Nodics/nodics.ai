@@ -25,12 +25,22 @@ generated `productSearchProjection` schema service and delegates provider-specif
 indexing to nSearch. Locale analyzer aliases remain layered configuration; Product
 does not bind itself to Elasticsearch, OpenSearch, or another search provider.
 
+`DefaultProductDiscoveryApiService` exposes customer-safe Home, PLP/Search, and
+PDP projections from `productSearchProjection`. It requires tenant, Store, and
+locale context, uses Product's `productLocalized` nSearch boundary, and returns
+only allowlisted card/detail fields. It deliberately excludes price, inventory,
+SKU, supplier, provider, and operator audit data because those belong to other
+Commerce authorities or backoffice operations.
+
 `DefaultProductLocalizedPublicationLifecycleService` provides the complete operator
 lifecycle. Preview creates no writes. Stage persists readiness and projection evidence
 without changing the online index. Publish synchronizes all ready locales and supersedes
 prior evidence. Rollback withdraws the current tenant/Product/Store partition, restores a
 previous evidenced projection set, and appends a new rollback publication instead of
 rewriting history. Partial indexing failures invoke scoped withdrawal compensation.
+`DefaultProductCatalogPublicationOrchestrationService` loads persisted Products,
+localizations, and variants for one Store and invokes the same Product search publication
+boundary so projects do not duplicate publication rules.
 
 Bulk language files continue through nImport and nExport. Product contributes the schemas,
 sample release, and `DefaultProductLocalizationBulkService` preflight rules: maximum batch
@@ -48,5 +58,5 @@ Operational boundaries:
 
 Run `node --test nodics.commerce/modules/baseCommerce/modules/product/test/productLocalizationContract.test.js`
 and `node --test nodics.commerce/modules/baseCommerce/modules/product/test/productLocalizedSearchPublicationContract.test.js`
-plus `productLocalizationPhase5Qualification.test.js` with the generated schema and nSearch
-pipeline tests after changes. Archived gComm is reference-only.
+plus `productDiscoveryApiContract.test.js` and `productLocalizationPhase5Qualification.test.js`
+with the generated schema and nSearch pipeline tests after changes. Archived gComm is reference-only.

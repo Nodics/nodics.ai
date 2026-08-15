@@ -22,6 +22,7 @@ const test = require('node:test');
 const properties = require('../config/properties');
 const localization = require('../src/service/defaultProductLocalizationPolicyService');
 const builder = require('../src/service/defaultProductLocalizedProjectionBuilderService');
+const enrichment = require('../src/service/defaultProductSearchEnrichmentService');
 const staging = require('../src/service/defaultProductPublicationPolicyService');
 const publication = require('../src/service/defaultProductSearchPublicationService');
 const indexes = require('../src/search/indexes');
@@ -37,7 +38,14 @@ global.CONFIG = { get: key => key === 'product' ? properties.product : undefined
 global.SERVICE = {
     DefaultProductLocalizationPolicyService: localization,
     DefaultProductLocalizedProjectionBuilderService: builder,
+    DefaultProductSearchEnrichmentService: enrichment,
     DefaultProductPublicationPolicyService: staging,
+    DefaultCustomerPriceSummaryService: {
+        summarize: async request => ({ [request.productCodes[0]]: { currency: request.currency, unitAmount: '89.00' } })
+    },
+    DefaultCustomerAvailabilitySummaryService: {
+        summarize: async request => ({ [request.products[0].productCode]: { available: true, status: 'IN_STOCK' } })
+    },
     DefaultProductSearchProjectionService: {
         save: async request => persisted.push(request),
         doSave: async request => indexed.push(request),
@@ -60,19 +68,24 @@ test.beforeEach(() => {
 
 test('sample release publishes one isolated nSearch document for English and Arabic', async () => {
     let result = await publication.publish(request, { product: product, localizations: localizations,
-        storeCode: 'sampleStore', categoryCodes: ['sampleFootwear'], variantCodes: ['sampleRunningShoeBlue42'] });
+        storeCode: 'sampleStore', categoryCodes: ['sampleFootwear'], variantCodes: ['sampleRunningShoeBlue42'],
+        variants: [{ code: 'sampleRunningShoeBlue42', sku: 'SAMPLE-RUN-BLUE-42' }] });
 
     assert.equal(result.publication.localization.complete, true);
     assert.deepEqual(result.projections.map(item => item.locale).sort(), ['ar', 'en']);
+    assert(result.projections.every(item => item.projectedAt instanceof Date));
+    assert(result.projections.every(item => Object.isExtensible(item)));
     assert.equal(persisted.length, 2);
+    assert(persisted.every(item => item.model.active === true && item.model.created instanceof Date && item.model.updated instanceof Date));
     assert.equal(indexed.length, 2);
     assert(indexed.every(item => item.moduleName === 'product' && item.indexName === 'productLocalized'));
     assert.deepEqual(Object.fromEntries(indexed.map(item => [item.model.locale, item.searchOptions.analyzer])), {
         en: 'standard', ar: 'arabic'
     });
     assert(indexed.every(item => item.model.tenant === 'default' && item.model.storeCode === 'sampleStore'));
-    assert(indexed.every(item => item.model.payload.sku === undefined && item.model.payload.price === undefined &&
-        item.model.payload.inventory === undefined));
+    assert(indexed.every(item => item.model.payload.sku === undefined && item.model.payload.inventory === undefined));
+    assert(indexed.every(item => item.model.payload.price.currency === 'USD' && item.model.payload.price.unitAmount === '89.00'));
+    assert(indexed.every(item => item.model.payload.availability.status === 'IN_STOCK'));
 });
 
 test('publication fails closed before persistence when tenant or required locale readiness is invalid', async () => {

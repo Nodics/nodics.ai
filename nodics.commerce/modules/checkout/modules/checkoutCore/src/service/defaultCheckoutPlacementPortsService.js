@@ -20,6 +20,31 @@ module.exports = {
     save: function (service, tenant, model, authData) { return service.save({ tenant, authData, model }).then(this.unwrap); },
     /** Applies an optimistic owner update. @param {Object} service Service. @param {string} tenant Tenant. @param {Object} model Current model. @param {Object} patch Patch. @param {Object} authData Auth context. @returns {Promise<Object>} Updated model. */
     update: function (service, tenant, model, patch, authData) { return service.update({ tenant, authData, query: { tenant, code: model.code, revision: model.revision }, model: { $set: patch } }).then(this.unwrap); },
+    /** Selects a Payment-owned customer payment method service. @param {Object} request Checkout request. @param {Object} calculation Cart calculation. @returns {Object} Prepared method. */
+    preparePaymentMethod: function (request, calculation) {
+        const base = { tenant: request.tenant, providerToken: request.payload.providerToken, amount: calculation.totalAmount, currency: calculation.currency, idempotencyKey: request.idempotencyKey + ':payment', correlationId: request.correlationId };
+        if (request.payload.paymentMethod === 'WALLET') return SERVICE.DefaultWalletPaymentMethodService.prepare(base);
+        if (request.payload.paymentMethod === 'CASH_ON_DELIVERY') return SERVICE.DefaultCashOnDeliveryPaymentMethodService.prepare(Object.assign({}, base, { acceptTerms: true }));
+        return SERVICE.DefaultCardPaymentMethodService.prepare(base);
+    },
+    /** Records a non-provider payment authorization for methods that do not expose external credentials. @param {Object} request Checkout request. @param {Object} method Prepared method. @returns {Promise<Object>} Transaction entry. */
+    recordOfflineAuthorization: function (request, method) {
+        return this.save(SERVICE.DefaultPaymentTransactionEntryService, request.tenant, {
+            code: request.payload.orderCode + ':authorization',
+            tenant: request.tenant,
+            ownerId: request.ownerId,
+            orderCode: request.payload.orderCode,
+            cartCode: request.payload.cartCode,
+            status: 'AUTHORIZED',
+            revision: 0,
+            operation: 'AUTHORIZE',
+            amount: method.amount,
+            currency: method.currency,
+            idempotencyKey: method.idempotencyKey,
+            correlationId: method.correlationId,
+            evidence: { methodCode: method.methodCode, providerRequired: false }
+        }, request.authData);
+    },
     /** Creates placement and compensation ports. @returns {Object} Owner-delegating placement ports. */
     create: function () {
         const self = this;
@@ -36,7 +61,8 @@ module.exports = {
                 return reservations;
             },
             authorizePayment: async (request, calculation) => {
-                const method = SERVICE.DefaultCardPaymentMethodService.prepare({ tenant: request.tenant, providerToken: request.payload.providerToken, amount: calculation.totalAmount, currency: calculation.currency, idempotencyKey: request.idempotencyKey + ':payment', correlationId: request.correlationId });
+                const method = self.preparePaymentMethod(request, calculation);
+                if (method.methodCode === 'CASH_ON_DELIVERY') return self.recordOfflineAuthorization(request, method);
                 if (!(CONFIG.get('stripeProvider') || {}).enabled) throw new Error('Reference payment sandbox is disabled');
                 return SERVICE.DefaultPaymentExecutionService.execute(Object.assign({ operation: 'AUTHORIZE' }, method), SERVICE.DefaultStripeSandboxAdapterService, {
                     find: async (tenant, key) => (await self.get(SERVICE.DefaultPaymentTransactionEntryService, tenant, { idempotencyKey: key }, request.authData, 1))[0],

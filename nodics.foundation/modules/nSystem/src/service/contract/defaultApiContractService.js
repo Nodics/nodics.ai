@@ -23,7 +23,7 @@ const SWAGGER_ASSET_CONTENT_TYPES = {
 
 /**
  * @module system/service/DefaultApiContractService
- * @description Resolves generated API contract artifacts from the active server module while preserving node-specific contract identity.
+ * @description Resolves the live runtime API contract from effective routers and schemas, with generated artifacts retained as rebuildable documentation fallback.
  * @layer service
  * @owner system
  * @override Project modules may override this service to change contract
@@ -62,7 +62,7 @@ module.exports = {
     },
 
     /**
-     * Returns the generated OpenAPI contract for the active server or node target.
+     * Returns the effective OpenAPI contract for the active server or node target.
      *
      * @param {Object} request Nodics request context.
      * @returns {Promise<Object>} Promise resolving to the Nodics response envelope.
@@ -74,6 +74,21 @@ module.exports = {
             let contractContext;
             try {
                 contractContext = this.resolveOpenApiContractContext();
+                let runtimeContract = this.tryBuildRuntimeOpenApiContract();
+                if (runtimeContract) {
+                    resolve({
+                        code: 'SUC_SYS_00001',
+                        data: runtimeContract,
+                        metadata: {
+                            contractType: 'openapi',
+                            contentType: 'application/json; charset=utf-8',
+                            rawResponse: true,
+                            moduleName: contractContext.moduleName,
+                            artifactPath: 'runtime-effective'
+                        }
+                    });
+                    return;
+                }
                 fs.readFile(contractContext.filePath, 'utf8', (error, contents) => {
                     if (error) {
                         if (error.code === 'ENOENT') {
@@ -119,6 +134,15 @@ module.exports = {
                 reject(this.enrichError(error, contractContext, 'OpenAPI contract resolution failed'));
             }
         });
+    },
+
+    /** Attempts to build the live runtime OpenAPI contract when runtime services are available. */
+    tryBuildRuntimeOpenApiContract: function () {
+        try {
+            return this.buildRuntimeOpenApiContract();
+        } catch (error) {
+            return null;
+        }
     },
 
     /** Builds the same governed OpenAPI document from already-loaded effective runtime schemas and routers when no generated file is present. */
