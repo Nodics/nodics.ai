@@ -249,6 +249,46 @@ module.exports = {
             if (request.actionCode === 'MARK_RECEIVED') evidence.fulfillment = await SERVICE.DefaultFulfillmentReturnExecutionService.recordReceipt(fulfillmentRequest);
             else evidence.fulfillment = await SERVICE.DefaultFulfillmentReturnExecutionService.recordInspection(fulfillmentRequest);
         }
+        if (['EXCHANGE', 'REPLACEMENT'].includes(record.requestType) && request.actionCode === 'APPROVE') {
+            const replacementRequest = {
+                tenant: request.tenant,
+                ownerId: record.ownerId,
+                orderCode: record.orderCode,
+                actorId: request.actorId,
+                idempotencyKey: payload.inventoryIdempotencyKey || [record.code, request.actionCode, 'replacement'].join(':'),
+                payload: Object.assign({}, payload, {
+                    productCodes: payload.productCodes || recordEvidence.productCodes,
+                    replacementProductCode: payload.replacementProductCode || recordEvidence.replacementProductCode,
+                    preferredResolution: payload.preferredResolution || recordEvidence.preferredResolution
+                }),
+                correlationId: request.correlationId || request.requestId,
+                authData: request.authData
+            };
+            if (SERVICE.DefaultInventoryReplacementReservationService && typeof SERVICE.DefaultInventoryReplacementReservationService.reserveReplacement === 'function') {
+                evidence.inventory = await SERVICE.DefaultInventoryReplacementReservationService.reserveReplacement(replacementRequest);
+            }
+            if (SERVICE.DefaultFulfillmentExchangeShipmentService && typeof SERVICE.DefaultFulfillmentExchangeShipmentService.createExchangeShipment === 'function') {
+                evidence.fulfillment = await SERVICE.DefaultFulfillmentExchangeShipmentService.createExchangeShipment(Object.assign({}, replacementRequest, {
+                    idempotencyKey: payload.fulfillmentIdempotencyKey || [record.code, request.actionCode, 'exchangeShipment'].join(':')
+                }));
+            }
+        }
+        if (record.requestType === 'APPEAL' && request.actionCode === 'APPROVE' && SERVICE.DefaultWorkflowAppealSlaService && typeof SERVICE.DefaultWorkflowAppealSlaService.startAppealReview === 'function') {
+            evidence.workflow = await SERVICE.DefaultWorkflowAppealSlaService.startAppealReview({
+                tenant: request.tenant,
+                ownerId: record.ownerId,
+                orderCode: record.orderCode,
+                requestCode: record.code,
+                actorId: request.actorId,
+                idempotencyKey: payload.workflowIdempotencyKey || [record.code, request.actionCode, 'appealSla'].join(':'),
+                payload: Object.assign({}, payload, {
+                    appealReferenceCode: payload.appealReferenceCode || recordEvidence.appealReferenceCode,
+                    appealReason: payload.appealReason || recordEvidence.appealReason
+                }),
+                correlationId: request.correlationId || request.requestId,
+                authData: request.authData
+            });
+        }
         return evidence;
     },
     /** Applies an approved maker-checker action. @param {Object} request Request. @returns {Promise<Object>} Updated request. */

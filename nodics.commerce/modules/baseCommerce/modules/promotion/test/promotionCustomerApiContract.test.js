@@ -27,8 +27,10 @@ const exact = require('../../pricing/src/service/defaultExactAmountService');
 let promotionRequests;
 let promotions;
 let coupons;
+let couponBatches;
 let decisions;
 let redemptions;
+let budgetLedger;
 
 function installGlobals() {
     promotionRequests = [];
@@ -37,8 +39,10 @@ function installGlobals() {
         { tenant: 'default', code: 'inactive', status: 'INACTIVE', priority: 99, revision: 1, actions: { discountAmount: '99.00' } }
     ];
     coupons = [];
+    couponBatches = [];
     decisions = [];
     redemptions = [];
+    budgetLedger = [];
     global.SERVICE = {
         DefaultPromotionCustomerApiService: service,
         DefaultPromotionSimulationService: simulation,
@@ -56,10 +60,32 @@ function installGlobals() {
             }
         },
         DefaultCouponService: {
-            get: async request => ({ result: coupons.filter(item => item.tenant === request.query.tenant && (!request.query.code || item.code === request.query.code) && (!request.query.promotionCode || item.promotionCode === request.query.promotionCode) && (!request.query.tokenHash || item.tokenHash === request.query.tokenHash)) }),
+            get: async request => ({ result: coupons.filter(item => item.tenant === request.query.tenant && (!request.query.code || item.code === request.query.code) && (!request.query.promotionCode || item.promotionCode === request.query.promotionCode) && (!request.query.batchCode || item.batchCode === request.query.batchCode) && (!request.query.tokenHash || item.tokenHash === request.query.tokenHash)) }),
+            save: async request => {
+                coupons.push(request.model);
+                return { result: request.model };
+            },
             update: async request => {
                 const index = coupons.findIndex(item => item.code === request.query.code && item.tenant === request.query.tenant);
                 if (index >= 0) coupons[index] = request.model;
+                return { result: request.model };
+            }
+        },
+        DefaultCouponBatchService: {
+            save: async request => {
+                couponBatches.push(request.model);
+                return { result: request.model };
+            },
+            get: async request => ({ result: couponBatches.filter(item => item.tenant === request.query.tenant && (!request.query.code || item.code === request.query.code)) }),
+            update: async request => {
+                const index = couponBatches.findIndex(item => item.code === request.query.code && item.tenant === request.query.tenant);
+                if (index >= 0) couponBatches[index] = request.model;
+                return { result: request.model };
+            }
+        },
+        DefaultPromotionBudgetLedgerService: {
+            save: async request => {
+                budgetLedger.push(request.model);
                 return { result: request.model };
             }
         },
@@ -166,6 +192,46 @@ test('Promotion apply consumes coupon and budget state with idempotency evidence
     assert.equal(coupons[0].usedCount, 1);
     assert.equal(coupons[0].status, 'ACTIVE');
     assert.equal(promotions[0].budget.spent, '15');
+    assert.equal(budgetLedger.length, 1);
+    assert.equal(budgetLedger[0].mutationType, 'COMMIT');
+    assert.equal(budgetLedger[0].beforeSpent, '5');
+    assert.equal(budgetLedger[0].afterSpent, '15');
+});
+
+test('Promotion coupon batch operations generate reserve and release coupon rows', async () => {
+    const created = await service.createCouponBatch({
+        tenant: 'default',
+        ownerId: 'operator-1',
+        payload: {
+            promotionCode: 'welcome10',
+            batchCode: 'welcome10-batch-1',
+            couponCodes: ['SAVE10', 'SAVE11'],
+            maxUses: 1,
+            sourceReference: 'axis-import-1'
+        },
+        authData: { principalId: 'operator-1' },
+        idempotencyKey: 'batch-idem-1'
+    });
+    const reserved = await service.setCouponBatchReservation({
+        tenant: 'default',
+        payload: { batchCode: 'welcome10-batch-1', reservedFor: 'campaign-1' },
+        authData: { principalId: 'operator-1' }
+    }, 'RESERVED');
+
+    assert.equal(created.batch.status, 'GENERATED');
+    assert.equal(created.coupons.length, 2);
+    assert.equal(coupons[0].batchCode, 'welcome10-batch-1');
+    assert.equal(couponBatches[0].issuedCount, 2);
+    assert.equal(reserved.batch.status, 'RESERVED');
+    assert.equal(couponBatches[0].reservedCount, 2);
+    assert(coupons.every(coupon => coupon.status === 'RESERVED'));
+    const released = await service.setCouponBatchReservation({
+        tenant: 'default',
+        payload: { batchCode: 'welcome10-batch-1' },
+        authData: { principalId: 'operator-1' }
+    }, 'ACTIVE');
+    assert.equal(released.batch.status, 'RELEASED');
+    assert(coupons.every(coupon => coupon.status === 'ACTIVE'));
 });
 
 test('Promotion reversal marks applied redemption as reversed idempotently', async () => {
@@ -224,6 +290,10 @@ test('Promotion reversal marks applied redemption as reversed idempotently', asy
     assert.equal(coupons[0].usedCount, 0);
     assert.equal(coupons[0].status, 'ACTIVE');
     assert.equal(promotions[0].budget.spent, '20');
+    assert.equal(budgetLedger.length, 1);
+    assert.equal(budgetLedger[0].mutationType, 'RELEASE');
+    assert.equal(budgetLedger[0].beforeSpent, '30');
+    assert.equal(budgetLedger[0].afterSpent, '20');
     assert.equal(second.data.idempotent, true);
     assert.equal(coupons[0].usedCount, 0);
     assert.equal(promotions[0].budget.spent, '20');

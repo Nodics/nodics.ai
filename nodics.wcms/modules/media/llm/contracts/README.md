@@ -155,6 +155,17 @@ mutate Product, CMS, import, export, or customer business records. Business
 owners reference `mediaCode`/`mediaSetCode` and keep their own publishing,
 placement, merchandising, and lifecycle authority.
 
+The secured media-reference lifecycle routes are:
+
+- `POST /nodics/media/v0/references/{referenceCode}/approve`;
+- `POST /nodics/media/v0/references/{referenceCode}/activate`;
+- `POST /nodics/media/v0/references/{referenceCode}/deactivate`.
+
+All require `media.reference.lifecycle.manage`. These operations capture
+approval, rights, checksum, production-use, deactivation, and rollback evidence
+on media-owned `mediaReference` records only. They must not update Product, CMS,
+import, export, or customer business records.
+
 The OOTB local provider default leaves `media.storage.providers.local.basePath`
 empty and uses `fallbackRelativeBasePath: 'temp/media'`. That means local upload
 bytes resolve under the active `NODICS.getServerPath()` by default, for example

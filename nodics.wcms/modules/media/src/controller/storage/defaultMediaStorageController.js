@@ -297,6 +297,39 @@ module.exports = {
             return FACADE.DefaultMediaStorageFacade.setPrimaryMediaSetEntry(input);
         }
     },
+    /** Approves one media reference for target usage. */
+    approveMediaReference: function (request, callback) {
+        let body = request && request.httpRequest && request.httpRequest.body || {};
+        let params = request && request.httpRequest && request.httpRequest.params || {};
+        let input = Object.assign({}, body, params, { tenant: request && request.tenant, authData: request && request.authData });
+        if (callback) {
+            FACADE.DefaultMediaStorageFacade.approveMediaReference(input).then(success => callback(null, success)).catch(error => callback(error));
+        } else {
+            return FACADE.DefaultMediaStorageFacade.approveMediaReference(input);
+        }
+    },
+    /** Activates one approved media reference. */
+    activateMediaReference: function (request, callback) {
+        let body = request && request.httpRequest && request.httpRequest.body || {};
+        let params = request && request.httpRequest && request.httpRequest.params || {};
+        let input = Object.assign({}, body, params, { tenant: request && request.tenant, authData: request && request.authData });
+        if (callback) {
+            FACADE.DefaultMediaStorageFacade.activateMediaReference(input).then(success => callback(null, success)).catch(error => callback(error));
+        } else {
+            return FACADE.DefaultMediaStorageFacade.activateMediaReference(input);
+        }
+    },
+    /** Deactivates one media reference while retaining rollback evidence. */
+    deactivateMediaReference: function (request, callback) {
+        let body = request && request.httpRequest && request.httpRequest.body || {};
+        let params = request && request.httpRequest && request.httpRequest.params || {};
+        let input = Object.assign({}, body, params, { tenant: request && request.tenant, authData: request && request.authData });
+        if (callback) {
+            FACADE.DefaultMediaStorageFacade.deactivateMediaReference(input).then(success => callback(null, success)).catch(error => callback(error));
+        } else {
+            return FACADE.DefaultMediaStorageFacade.deactivateMediaReference(input);
+        }
+    },
     /**
      * Resolves a safe provider storage location for a media descriptor.
      *

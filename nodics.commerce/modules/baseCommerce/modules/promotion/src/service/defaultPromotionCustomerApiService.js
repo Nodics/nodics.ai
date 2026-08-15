@@ -56,6 +56,87 @@ module.exports = {
     redemptionCode: function (request, promotion, targetCode) {
         return ['promotionRedemption', crypto.createHash('sha1').update(this.idempotencyKey(request, promotion, targetCode)).digest('hex')].join(':');
     },
+    couponBatchCode: function (request) {
+        return request.payload && request.payload.batchCode || ['couponBatch', crypto.createHash('sha1').update([request.tenant, request.payload && request.payload.promotionCode, request.idempotencyKey || request.requestId || Date.now()].join(':')).digest('hex')].join(':');
+    },
+    persistBudgetLedger: async function (request, input) {
+        if (!SERVICE.DefaultPromotionBudgetLedgerService || !SERVICE.DefaultPromotionBudgetLedgerService.save) return undefined;
+        const model = {
+            code: ['promotionBudgetLedger', crypto.createHash('sha1').update([request.tenant, input.promotionCode, input.mutationType, input.idempotencyKey, input.afterSpent].join(':')).digest('hex')].join(':'),
+            tenant: request.tenant,
+            promotionCode: input.promotionCode,
+            mutationType: input.mutationType,
+            amount: input.amount,
+            beforeSpent: input.beforeSpent,
+            afterSpent: input.afterSpent,
+            targetCode: input.targetCode,
+            idempotencyKey: input.idempotencyKey,
+            actorId: request.actorId || request.ownerId || request.authData && (request.authData.principalId || request.authData.loginId),
+            correlationId: request.correlationId || request.requestId,
+            occurredAt: request.now || new Date().toISOString()
+        };
+        return this.unwrap(await SERVICE.DefaultPromotionBudgetLedgerService.save({ tenant: request.tenant, authData: request.authData, model }));
+    },
+    createCouponBatch: async function (request) {
+        const payload = request.payload || {};
+        if (!payload.promotionCode) throw new Error('Promotion code is required for coupon batch');
+        const tokens = Array.isArray(payload.couponCodes) ? payload.couponCodes : [];
+        const batch = {
+            code: this.couponBatchCode(request),
+            tenant: request.tenant,
+            promotionCode: payload.promotionCode,
+            status: 'GENERATED',
+            issuedCount: tokens.length,
+            reservedCount: 0,
+            tokenHashPolicy: payload.tokenHashPolicy || 'TENANT_UPPERCASE_SHA256',
+            sourceReference: payload.sourceReference,
+            revision: 0
+        };
+        if (SERVICE.DefaultCouponBatchService && SERVICE.DefaultCouponBatchService.save) {
+            await SERVICE.DefaultCouponBatchService.save({ tenant: request.tenant, authData: request.authData, model: batch });
+        }
+        const coupons = [];
+        for (const token of tokens) {
+            const model = {
+                code: [batch.code, crypto.createHash('sha1').update(String(token)).digest('hex')].join(':'),
+                tenant: request.tenant,
+                promotionCode: payload.promotionCode,
+                batchCode: batch.code,
+                tokenHash: this.hashToken(request.tenant, token),
+                status: 'ACTIVE',
+                maxUses: Number(payload.maxUses || 1),
+                usedCount: 0,
+                revision: 0
+            };
+            coupons.push(model);
+            if (SERVICE.DefaultCouponService && SERVICE.DefaultCouponService.save) {
+                await SERVICE.DefaultCouponService.save({ tenant: request.tenant, authData: request.authData, model });
+            }
+        }
+        return { batch, coupons };
+    },
+    setCouponBatchReservation: async function (request, status) {
+        const payload = request.payload || {};
+        const batchCode = payload.batchCode || request.batchCode;
+        if (!batchCode) throw new Error('Coupon batch code is required');
+        const batch = await this.getOne(SERVICE.DefaultCouponBatchService, { tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, code: batchCode }, pageSize: 1 });
+        if (!batch) throw new Error('Coupon batch was not found');
+        const coupons = this.unwrap(await SERVICE.DefaultCouponService.get({ tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, batchCode }, pageSize: 1000 })) || [];
+        const couponRows = Array.isArray(coupons) ? coupons : [coupons];
+        let reservedCount = 0;
+        for (const coupon of couponRows) {
+            const model = Object.assign({}, coupon, {
+                status,
+                reservedFor: status === 'RESERVED' ? payload.reservedFor || request.ownerId : undefined,
+                revision: Number(coupon.revision || 0) + 1
+            });
+            if (status === 'RESERVED') reservedCount += 1;
+            await this.updateOrSave(SERVICE.DefaultCouponService, { tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, code: coupon.code }, model });
+        }
+        const updatedBatch = Object.assign({}, batch, { status: status === 'RESERVED' ? 'RESERVED' : 'RELEASED', reservedCount, revision: Number(batch.revision || 0) + 1 });
+        await this.updateOrSave(SERVICE.DefaultCouponBatchService, { tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, code: batch.code }, model: updatedBatch });
+        return { batch: updatedBatch, coupons: couponRows.map(coupon => Object.assign({}, coupon, { status })) };
+    },
     loadCoupon: async function (request, promotion) {
         const couponCode = request.payload && request.payload.couponCode;
         if (!couponCode) return undefined;
@@ -93,12 +174,14 @@ module.exports = {
         const nextSpent = exact.add ? exact.add(spent, amount) : String(Number(spent) + Number(amount));
         if (exact.compare ? exact.compare(nextSpent, limit) > 0 : Number(nextSpent) > Number(limit)) throw new Error('Promotion budget exhausted');
         const model = Object.assign({}, promotion, { budget: Object.assign({}, promotion.budget, { spent: nextSpent }), revision: Number(promotion.revision || 0) + 1 });
-        return this.updateOrSave(SERVICE.DefaultPromotionService, {
+        const updated = await this.updateOrSave(SERVICE.DefaultPromotionService, {
             tenant: request.tenant,
             authData: request.authData,
             query: { tenant: request.tenant, code: promotion.code },
             model
         }) || model;
+        await this.persistBudgetLedger(request, { promotionCode: promotion.code, mutationType: 'COMMIT', amount, beforeSpent: spent, afterSpent: nextSpent, targetCode: request.payload && request.payload.cartCode || request.ownerId, idempotencyKey: this.idempotencyKey(request, promotion, request.payload && request.payload.cartCode || request.ownerId) });
+        return updated;
     },
     releaseCoupon: async function (request, redemption) {
         if (!redemption.couponCode) return undefined;
@@ -139,12 +222,14 @@ module.exports = {
             budget: Object.assign({}, promotion.budget, { spent: nextSpent }),
             revision: Number(promotion.revision || 0) + 1
         });
-        return this.updateOrSave(SERVICE.DefaultPromotionService, {
+        const updated = await this.updateOrSave(SERVICE.DefaultPromotionService, {
             tenant: request.tenant,
             authData: request.authData,
             query: { tenant: request.tenant, code: promotion.code },
             model
         }) || model;
+        await this.persistBudgetLedger(request, { promotionCode: promotion.code, mutationType: 'RELEASE', amount: discountAmount, beforeSpent: spent, afterSpent: nextSpent, targetCode: redemption.targetCode, idempotencyKey: redemption.idempotencyKey || [redemption.code, 'release'].join(':') });
+        return updated;
     },
     persistDecision: async function (request, decision) {
         const model = Object.assign({ code: ['discountDecision', decision.promotionCode, decision.targetCode].join(':'), decidedAt: request.now || new Date().toISOString() }, decision);

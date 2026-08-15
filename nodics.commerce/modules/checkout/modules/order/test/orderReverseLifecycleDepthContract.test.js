@@ -255,6 +255,66 @@ test('reverse lifecycle operator return actions call Fulfillment-owned receipt a
     assert.equal(lifecycleUpdates[1].evidence.downstream.fulfillment.evidence.disposition, 'RESTOCK');
 });
 
+test('reverse lifecycle operator exchange approval calls Inventory and Fulfillment owner hooks', async () => {
+    const calls = [];
+    storedLifecycle = [{
+        code: 'order-1:exchange:1',
+        tenant: 'default',
+        ownerId: 'customer-1',
+        orderCode: 'order-1',
+        requestType: 'EXCHANGE',
+        status: 'SUBMITTED',
+        revision: 0,
+        evidence: { productCodes: ['agoraLinenWrapDress'], replacementProductCode: 'agoraCashmereCardigan', preferredResolution: 'SHIP_REPLACEMENT' }
+    }];
+    global.SERVICE.DefaultInventoryReplacementReservationService = {
+        reserveReplacement: async request => {
+            calls.push({ operation: 'inventory', request });
+            return { status: 'RESERVED', reservationCode: 'reservation-1' };
+        }
+    };
+    global.SERVICE.DefaultFulfillmentExchangeShipmentService = {
+        createExchangeShipment: async request => {
+            calls.push({ operation: 'fulfillment', request });
+            return { status: 'SHIPMENT_CREATED', shipmentCode: 'shipment-1' };
+        }
+    };
+
+    const result = await service.action({ tenant: 'default', actorId: 'operator-1', requestCode: 'order-1:exchange:1', actionCode: 'APPROVE', payload: {}, authData: {}, correlationId: 'corr-exchange-approve' });
+
+    assert.deepEqual(calls.map(call => call.operation), ['inventory', 'fulfillment']);
+    assert.equal(calls[0].request.payload.replacementProductCode, 'agoraCashmereCardigan');
+    assert.equal(calls[1].request.idempotencyKey, 'order-1:exchange:1:APPROVE:exchangeShipment');
+    assert.equal(result.evidence.downstream.inventory.status, 'RESERVED');
+    assert.equal(result.evidence.downstream.fulfillment.status, 'SHIPMENT_CREATED');
+});
+
+test('reverse lifecycle operator appeal approval calls Workflow SLA owner hook', async () => {
+    let workflowRequest;
+    storedLifecycle = [{
+        code: 'order-1:appeal:1',
+        tenant: 'default',
+        ownerId: 'customer-1',
+        orderCode: 'order-1',
+        requestType: 'APPEAL',
+        status: 'SUBMITTED',
+        revision: 0,
+        evidence: { appealReferenceCode: 'order-1:return:1', appealReason: 'Inspection evidence missing' }
+    }];
+    global.SERVICE.DefaultWorkflowAppealSlaService = {
+        startAppealReview: async request => {
+            workflowRequest = request;
+            return { status: 'SLA_STARTED', taskCode: 'appeal-task-1' };
+        }
+    };
+
+    const result = await service.action({ tenant: 'default', actorId: 'operator-1', requestCode: 'order-1:appeal:1', actionCode: 'APPROVE', payload: {}, authData: {}, correlationId: 'corr-appeal-approve' });
+
+    assert.equal(workflowRequest.payload.appealReferenceCode, 'order-1:return:1');
+    assert.equal(workflowRequest.idempotencyKey, 'order-1:appeal:1:APPROVE:appealSla');
+    assert.equal(result.evidence.downstream.workflow.status, 'SLA_STARTED');
+});
+
 test('Order BackOffice capability declares operator actions for cancellation return and refund', () => {
     global.SERVICE.DefaultBackofficeCapabilityDefinitionService = {
         capability: input => input,

@@ -207,6 +207,27 @@ module.exports = {
             data: SERVICE.DefaultMediaSetEntryManagementService.setPrimaryEntry(request)
         });
     },
+    /** Approves one governed media reference through the media lifecycle authority. */
+    approveMediaReference: function (request) {
+        return SERVICE.DefaultMediaLifecycleCoordinationService.approveReference(request).then(result => ({
+            code: 'SUC_MED_00019',
+            data: result
+        }));
+    },
+    /** Activates one approved media reference through the media lifecycle authority. */
+    activateMediaReference: function (request) {
+        return SERVICE.DefaultMediaLifecycleCoordinationService.activateReference(request).then(result => ({
+            code: 'SUC_MED_00020',
+            data: result
+        }));
+    },
+    /** Deactivates one media reference through the media lifecycle authority. */
+    deactivateMediaReference: function (request) {
+        return SERVICE.DefaultMediaLifecycleCoordinationService.deactivateReference(request).then(result => ({
+            code: 'SUC_MED_00021',
+            data: result
+        }));
+    },
     /**
      * Resolves a provider-neutral storage location descriptor.
      *

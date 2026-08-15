@@ -787,6 +787,14 @@ media owns reusable set-entry operations for the logical set itself:
 | Reorder entries | `POST /nodics/media/v0/sets/{mediaSetCode}/entries/reorder`             | `media.set.manage` | Assign set-entry positions from an ordered entry-code list.                                                        |
 | Set primary     | `POST /nodics/media/v0/sets/{mediaSetCode}/entries/{entryCode}/primary` | `media.set.manage` | Mark one generic primary entry for the set and clear sibling primary flags.                                        |
 
+Media also owns operator lifecycle actions for `mediaReference` trace records:
+
+| Operation            | Route                                                   | Permission                         | Purpose                                                                                 |
+| -------------------- | ------------------------------------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------- |
+| Approve reference    | `POST /nodics/media/v0/references/{referenceCode}/approve`    | `media.reference.lifecycle.manage` | Capture rights, checksum, reviewer, and usage evidence before production activation.    |
+| Activate reference   | `POST /nodics/media/v0/references/{referenceCode}/activate`   | `media.reference.lifecycle.manage` | Mark an approved reference as production-usable without mutating the owning domain.     |
+| Deactivate reference | `POST /nodics/media/v0/references/{referenceCode}/deactivate` | `media.reference.lifecycle.manage` | Withdraw production usage and retain rollback/recovery evidence for the owner module.   |
+
 `mediaSetEntry` can carry reusable variant selection fields such as
 `variantRole`, `localeCode`, `channelCode`, `deviceCode`, `breakpointCode`,
 `fallbackEntryCode`, `primary`, `width`, `height`, `position`, and `status`.

@@ -233,6 +233,36 @@ module.exports = {
                 controller: 'DefaultMediaStorageController',
                 operation: 'setPrimaryMediaSetEntry'
             },
+            approveMediaReference: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'media.reference.lifecycle.manage',
+                apiExposure: 'mediaManagement',
+                key: '/references/:referenceCode/approve',
+                method: 'POST',
+                controller: 'DefaultMediaStorageController',
+                operation: 'approveMediaReference'
+            },
+            activateMediaReference: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'media.reference.lifecycle.manage',
+                apiExposure: 'mediaManagement',
+                key: '/references/:referenceCode/activate',
+                method: 'POST',
+                controller: 'DefaultMediaStorageController',
+                operation: 'activateMediaReference'
+            },
+            deactivateMediaReference: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'media.reference.lifecycle.manage',
+                apiExposure: 'mediaManagement',
+                key: '/references/:referenceCode/deactivate',
+                method: 'POST',
+                controller: 'DefaultMediaStorageController',
+                operation: 'deactivateMediaReference'
+            },
             resolveStorageLocation: {
                 secured: true,
                 accessGroups: ['userGroup'],
