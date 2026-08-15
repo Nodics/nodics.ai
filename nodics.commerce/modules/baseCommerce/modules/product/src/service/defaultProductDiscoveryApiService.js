@@ -27,6 +27,16 @@ module.exports = {
     /** Returns the effective Product discovery policy. @returns {Object} Policy. */
     policy: function () { return ((CONFIG.get('product') || {}).discovery) || {}; },
 
+    /** Builds service-account authorization context for internal Discovery configuration lookup. @param {Object} request Request. @returns {Object} Service authorization data. */
+    serviceAuthData: function (request) {
+        return Object.assign({}, request.authData || {}, {
+            tenant: request.tenant,
+            loginId: 'productDiscovery',
+            principalType: 'service',
+            groups: ['serviceAccountUserGroup']
+        });
+    },
+
     /** Returns a bounded integer option. @param {*} value Candidate value. @param {number} fallback Fallback. @param {number} minimum Minimum. @param {number} maximum Maximum. @returns {number} Bounded number. */
     boundedInteger: function (value, fallback, minimum, maximum) {
         let next = Number(value || fallback);
@@ -38,14 +48,19 @@ module.exports = {
     indexConfiguration: async function (request) {
         if (request.indexConfiguration) return request.indexConfiguration;
         if (!SERVICE.DefaultDiscoveryConfigurationResolverService || typeof SERVICE.DefaultDiscoveryConfigurationResolverService.resolveIndexConfiguration !== 'function') return undefined;
-        return SERVICE.DefaultDiscoveryConfigurationResolverService.resolveIndexConfiguration({
-            tenant: request.tenant,
-            ownerType: 'PRODUCT',
-            indexCode: request.query && (request.query.indexCode || request.query.indexConfigurationCode),
-            storeCode: request.storeCode,
-            locale: request.locale,
-            authData: request.authData
-        });
+        try {
+            return await SERVICE.DefaultDiscoveryConfigurationResolverService.resolveIndexConfiguration({
+                tenant: request.tenant,
+                ownerType: 'PRODUCT',
+                indexCode: request.query && (request.query.indexCode || request.query.indexConfigurationCode),
+                storeCode: request.storeCode,
+                locale: request.locale,
+                authData: this.serviceAuthData(request)
+            });
+        } catch (error) {
+            if (this.policy().configurationFailureBehavior === 'error') throw error;
+            return undefined;
+        }
     },
 
     /** Builds response metadata proving Product discovery is served from governed Discovery/search configuration. @param {Object} request Request. @param {Object|undefined} configuration Index configuration. @returns {Object} Metadata. */

@@ -189,6 +189,9 @@ test('customer discovery lists Product cards with safe price and availability bu
     assert.equal(response.data.products[0].sku, undefined);
     assert.equal(searchRequests[0].indexName, 'productLocalized');
     assert.equal(configurationRequests[0].ownerType, 'PRODUCT');
+    assert.equal(configurationRequests[0].authData.principalType, 'service');
+    assert.equal(configurationRequests[0].authData.loginId, 'productDiscovery');
+    assert.deepEqual(configurationRequests[0].authData.groups, ['serviceAccountUserGroup']);
     assert.equal(response.data.discovery.source, 'SEARCH_INDEX');
     assert.deepEqual(response.data.discovery.flow, ['DATA_FOLDER', 'COMMERCE_STAGED', 'COMMERCE_ONLINE', 'SEARCH_INDEX', 'STOREFRONT_API']);
     assert.equal(response.data.discovery.indexConfigurationCode, 'agoraProductDiscoveryIndex');
@@ -198,6 +201,21 @@ test('customer discovery lists Product cards with safe price and availability bu
     assert.deepEqual(searchRequests[0].query, {
         tenant: 'default', storeCode: 'agoraMainStore', locale: 'en', status: 'CURRENT', 'payload.categoryCodes.keyword': 'agoraWomen'
     });
+});
+
+test('customer discovery fails open when secured Discovery configuration lookup is unavailable', async () => {
+    global.SERVICE.DefaultDiscoveryConfigurationResolverService.resolveIndexConfiguration = async () => {
+        throw new Error('Discovery index configuration is secured');
+    };
+    let response = await discoveryController.list({
+        tenant: 'default',
+        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', categoryCode: 'agoraWomen', pageSize: '12' } }
+    });
+
+    assert.equal(response.data.products.length, 1);
+    assert.equal(searchRequests[0].indexName, 'productLocalized');
+    assert.equal(response.data.discovery.indexName, 'productLocalized');
+    assert.equal(response.data.discovery.indexConfigurationCode, undefined);
 });
 
 test('customer discovery resolves default tenant for public storefront requests', async () => {
