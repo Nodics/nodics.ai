@@ -534,6 +534,31 @@ const navigationLifecycleAction = {
       maxLength: 512,
       pattern: "^/(?!/)",
     },
+    httpMethod: { enum: ["GET", "POST", "PUT", "PATCH", "DELETE"] },
+    inputFields: {
+      type: "array",
+      maxItems: 16,
+      items: {
+        type: "object",
+        additionalProperties: false,
+        required: ["name", "label", "type"],
+        properties: {
+          name: { type: "string", minLength: 1, maxLength: 128 },
+          label: { type: "string", minLength: 1, maxLength: 128 },
+          type: { enum: ["TEXT", "MULTILINE", "SELECT", "JSON", "HIDDEN"] },
+          required: { type: "boolean" },
+          options: {
+            type: "array",
+            uniqueItems: true,
+            maxItems: 32,
+            items: { type: "string", minLength: 1, maxLength: 256 },
+          },
+          valueFromRecord: { type: "string", minLength: 1, maxLength: 128 },
+          defaultValue: { type: "string", minLength: 1, maxLength: 4000 },
+          maximumLength: { type: "integer", minimum: 1, maximum: 4000 },
+        },
+      },
+    },
     order: { type: "integer" },
   },
 };

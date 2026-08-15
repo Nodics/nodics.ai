@@ -289,6 +289,16 @@ assert(
             ownerModule: "cms",
             handlerAction: "DefaultCmsLifecycleService.activate",
             operationRoute: "/records/lifecycle",
+            httpMethod: "PATCH",
+            inputFields: [
+              {
+                name: "reason",
+                label: "Reason",
+                type: "MULTILINE",
+                required: false,
+                maximumLength: 512,
+              },
+            ],
             targetStatuses: ["DRAFT"],
           },
         ],
@@ -399,6 +409,27 @@ assert.strictEqual(
   }),
   false,
   "external lifecycle operation routes must fail registration",
+);
+assert.strictEqual(
+  service.validateBackofficeMetadata({
+    navigation: [
+      {
+        id: "unsafe-method",
+        label: "Unsafe method",
+        lifecycleActions: [
+          {
+            id: "unsafe-method",
+            label: "Unsafe method",
+            intent: "EXECUTE",
+            operationRoute: "/records/lifecycle",
+            httpMethod: "TRACE",
+          },
+        ],
+      },
+    ],
+  }),
+  false,
+  "unsupported lifecycle HTTP methods must fail registration",
 );
 assert.strictEqual(
   service.validateBackofficeMetadata({

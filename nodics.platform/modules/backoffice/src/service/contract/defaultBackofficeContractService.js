@@ -342,6 +342,7 @@ module.exports = {
               "ownerModule",
               "handlerAction",
               "operationRoute",
+              "httpMethod",
               "inputFields",
               "order",
             ].includes(key),
@@ -364,6 +365,8 @@ module.exports = {
           !this.isString(action.handlerAction, 128)) ||
         (action.operationRoute !== undefined &&
           !this.isSafePath(action.operationRoute)) ||
+        (action.httpMethod !== undefined &&
+          !["GET", "POST", "PUT", "PATCH", "DELETE"].includes(action.httpMethod)) ||
         (action.inputFields !== undefined &&
           (!Array.isArray(action.inputFields) ||
             action.inputFields.length > 16 ||

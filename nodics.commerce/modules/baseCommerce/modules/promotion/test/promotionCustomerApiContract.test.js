@@ -156,11 +156,16 @@ test('Promotion BackOffice capability exposes builder lifecycle coupon budget an
     assert.equal(builder.permission, 'commerce.promotion.manage');
     assert.equal(builder.moduleName, 'promotion');
     assert.equal(builder.schemaName, 'promotion');
-    assert.equal(action('saveDraft').operationRoute, '/backoffice/promotions/drafts');
+    assert.equal(action('saveDraft').operationRoute, '/backoffice/promotions/drafts/:promotionCode');
+    assert.equal(action('saveDraft').httpMethod, 'PATCH');
     assert.equal(action('approvePromotion').permission, 'commerce.promotion.approve');
+    assert.equal(action('approvePromotion').inputFields.some(field => field.name === 'checklist' && field.type === 'JSON'), true);
     assert.equal(action('createCouponBatch').operationRoute, '/backoffice/promotions/:promotionCode/coupon-batches');
-    assert.equal(action('budgetLedger').intent, 'READ_BUDGET_LEDGER');
+    assert.equal(action('createCouponBatch').inputFields.some(field => field.name === 'couponCodes' && field.type === 'JSON'), true);
+    assert.equal(action('budgetLedger').intent, 'VALIDATE');
+    assert.equal(action('budgetLedger').httpMethod, 'GET');
     assert.equal(action('analytics').permission, 'commerce.promotion.read');
+    assert.equal(action('analytics').httpMethod, 'GET');
 });
 
 test('Promotion preview returns eligibility without redemption mutation', async () => {
