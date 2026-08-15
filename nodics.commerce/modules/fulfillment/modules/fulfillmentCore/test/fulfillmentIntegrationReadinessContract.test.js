@@ -18,6 +18,8 @@ test('Fulfillment integration readiness requires carrier warehouse and dispositi
     assert(contract.carrierEvents.includes('LABEL_CREATED'));
     assert(contract.warehouseEvents.includes('DISPOSITION_RECORDED'));
     assert(contract.disposition.allowedValues.includes('REJECT_RETURN'));
+    assert.deepEqual(contract.liveCertification.requiredFields, ['liveEvidenceReference', 'certifiedAt', 'certifiedBy', 'productionTrafficApproved']);
+    assert.equal(contract.liveCertification.productionTrafficApprovalRequired, true);
     assert(contract.customerSafety.neverExpose.includes('warehouseBin'));
     assert(!contract.customerSafety.exposeOnly.includes('supplierCost'));
 });
@@ -29,7 +31,11 @@ test('Fulfillment integration readiness rejects carrier declarations without sec
         supportedEvents: ['LABEL_CREATED', 'DELIVERED'],
         webhookSignatureValidation: true,
         idempotencyRequired: true,
-        secretSource: 'RUNTIME_CONFIGURATION'
+        secretSource: 'RUNTIME_CONFIGURATION',
+        liveEvidenceReference: 'CERT-FUL-001',
+        certifiedAt: '2026-08-15T10:00:00.000Z',
+        certifiedBy: 'fulfillment-ops',
+        productionTrafficApproved: true
     }), { ready: true, missing: [] });
     assert.deepEqual(readiness.validateAdapter({
         providerCode: 'unsafe',
@@ -38,6 +44,16 @@ test('Fulfillment integration readiness rejects carrier declarations without sec
         secretSource: 'SOURCE_CODE'
     }), {
         ready: false,
-        missing: ['supportedReturnMethods.DROP_OFF', 'supportedEvents.DELIVERED', 'webhookSignatureValidation', 'idempotencyRequired', 'secretSource']
+        missing: [
+            'supportedReturnMethods.DROP_OFF',
+            'supportedEvents.DELIVERED',
+            'webhookSignatureValidation',
+            'idempotencyRequired',
+            'secretSource',
+            'liveEvidenceReference',
+            'certifiedAt',
+            'certifiedBy',
+            'productionTrafficApproved'
+        ]
     });
 });

@@ -34,6 +34,11 @@ module.exports = {
                 failedStatuses: ['REFUND_FAILED', 'PROVIDER_REJECTED'],
                 ownerService: 'DefaultPaymentReconciliationService'
             },
+            liveCertification: {
+                requiredFields: ['liveEvidenceReference', 'certifiedAt', 'certifiedBy', 'productionTrafficApproved'],
+                certificationAuthority: 'BACKOFFICE_OPERATOR_WITH_PAYMENT_PERMISSION',
+                productionTrafficApprovalRequired: true
+            },
             customerSafety: {
                 neverExpose: ['providerSecret', 'rawCardNumber', 'cvv', 'webhookSigningSecret', 'supplierCost'],
                 exposeOnly: ['status', 'method', 'amount', 'currency', 'reconciliationRequired']
@@ -49,6 +54,10 @@ module.exports = {
         if (adapter.webhookSignatureValidation !== true) missing.push('webhookSignatureValidation');
         if (adapter.idempotencyRequired !== true) missing.push('idempotencyRequired');
         if (adapter.secretSource !== 'RUNTIME_CONFIGURATION') missing.push('secretSource');
+        if (!adapter.liveEvidenceReference) missing.push('liveEvidenceReference');
+        if (!adapter.certifiedAt) missing.push('certifiedAt');
+        if (!adapter.certifiedBy) missing.push('certifiedBy');
+        if (adapter.productionTrafficApproved !== true) missing.push('productionTrafficApproved');
         return Object.freeze({ ready: missing.length === 0, missing });
     }
 };

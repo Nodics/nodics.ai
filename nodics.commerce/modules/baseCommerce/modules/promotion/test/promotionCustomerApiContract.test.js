@@ -89,9 +89,18 @@ test.beforeEach(installGlobals);
 
 test('Promotion customer routes expose secured preview and apply permissions', () => {
     assert.equal(routers.promotion.customer.preview.key, '/customer/promotions/preview');
+    assert.equal(routers.promotion.customer.preview.controller, 'DefaultPromotionApiController');
+    assert.equal(routers.promotion.customer.preview.operation, 'preview');
+    assert.deepEqual(routers.promotion.customer.preview.authTokenTypes, ['access']);
+    assert.deepEqual(routers.promotion.customer.preview.accessGroups, ['customerUserGroup']);
+    assert.equal(routers.promotion.customer.preview.apiExposure, 'commerceCustomer');
     assert.equal(routers.promotion.customer.apply.method, 'POST');
     assert.equal(routers.promotion.customer.apply.permission, 'commerce.promotion.own');
     assert.equal(routers.promotion.internal.reverse.key, '/internal/promotions/redemptions/:redemptionCode/reverse');
+    assert.equal(routers.promotion.internal.reverse.controller, 'DefaultPromotionApiController');
+    assert.equal(routers.promotion.internal.reverse.operation, 'reverse');
+    assert.deepEqual(routers.promotion.internal.reverse.authTokenTypes, ['internal']);
+    assert.deepEqual(routers.promotion.internal.reverse.accessGroups, ['serviceAccountUserGroup']);
     assert.equal(routers.promotion.internal.reverse.permission, 'commerce.promotion.redeem');
 });
 

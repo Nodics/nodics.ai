@@ -30,6 +30,11 @@ module.exports = {
                 allowedValues: ['RESTOCK', 'REFURBISH', 'SCRAP', 'REJECT_RETURN'],
                 inventoryAdjustmentRequiredFor: ['RESTOCK', 'SCRAP', 'REFURBISH']
             },
+            liveCertification: {
+                requiredFields: ['liveEvidenceReference', 'certifiedAt', 'certifiedBy', 'productionTrafficApproved'],
+                certificationAuthority: 'BACKOFFICE_OPERATOR_WITH_FULFILLMENT_PERMISSION',
+                productionTrafficApprovalRequired: true
+            },
             customerSafety: {
                 neverExpose: ['warehouseBin', 'supplierCost', 'internalCarrierCredential', 'inspectionPrivateNote'],
                 exposeOnly: ['rmaCode', 'returnMethod', 'trackingStatus', 'receivedQuantity', 'disposition', 'refundEligible']
@@ -46,6 +51,10 @@ module.exports = {
         if (adapter.webhookSignatureValidation !== true) missing.push('webhookSignatureValidation');
         if (adapter.idempotencyRequired !== true) missing.push('idempotencyRequired');
         if (adapter.secretSource !== 'RUNTIME_CONFIGURATION') missing.push('secretSource');
+        if (!adapter.liveEvidenceReference) missing.push('liveEvidenceReference');
+        if (!adapter.certifiedAt) missing.push('certifiedAt');
+        if (!adapter.certifiedBy) missing.push('certifiedBy');
+        if (adapter.productionTrafficApproved !== true) missing.push('productionTrafficApproved');
         return Object.freeze({ ready: missing.length === 0, missing });
     }
 };

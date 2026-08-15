@@ -15,11 +15,11 @@
 module.exports = {
     promotion: {
         customer: {
-            preview: { key: '/customer/promotions/preview', method: 'POST', controller: 'DefaultPromotionApiController.preview', secured: true, permission: 'commerce.promotion.own' },
-            apply: { key: '/customer/promotions/apply', method: 'POST', controller: 'DefaultPromotionApiController.apply', secured: true, permission: 'commerce.promotion.own' }
+            preview: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'commerce.promotion.own', apiExposure: 'commerceCustomer', key: '/customer/promotions/preview', method: 'POST', controller: 'DefaultPromotionApiController', operation: 'preview' },
+            apply: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'commerce.promotion.own', apiExposure: 'commerceCustomer', key: '/customer/promotions/apply', method: 'POST', controller: 'DefaultPromotionApiController', operation: 'apply' }
         },
         internal: {
-            reverse: { key: '/internal/promotions/redemptions/:redemptionCode/reverse', method: 'POST', controller: 'DefaultPromotionApiController.reverse', secured: true, permission: 'commerce.promotion.redeem' }
+            reverse: { secured: true, authTokenTypes: ['internal'], accessGroups: ['serviceAccountUserGroup'], permission: 'commerce.promotion.redeem', apiExposure: 'internal', key: '/internal/promotions/redemptions/:redemptionCode/reverse', method: 'POST', controller: 'DefaultPromotionApiController', operation: 'reverse' }
         }
     }
 };

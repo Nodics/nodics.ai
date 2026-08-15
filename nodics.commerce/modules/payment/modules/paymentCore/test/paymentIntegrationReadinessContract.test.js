@@ -18,6 +18,8 @@ test('Payment integration readiness requires webhook signatures idempotency and 
     assert.equal(contract.webhook.replayProtectionRequired, true);
     assert(contract.webhook.requiredEvents.includes('REFUND_SUCCEEDED'));
     assert(contract.reconciliation.delayedStatuses.includes('REFUND_PENDING'));
+    assert.deepEqual(contract.liveCertification.requiredFields, ['liveEvidenceReference', 'certifiedAt', 'certifiedBy', 'productionTrafficApproved']);
+    assert.equal(contract.liveCertification.productionTrafficApprovalRequired, true);
     assert(contract.customerSafety.neverExpose.includes('rawCardNumber'));
     assert(!contract.customerSafety.exposeOnly.includes('providerSecret'));
 });
@@ -28,7 +30,11 @@ test('Payment integration readiness rejects non-production provider declarations
         supportedOperations: ['AUTHORIZE', 'CAPTURE', 'REFUND'],
         webhookSignatureValidation: true,
         idempotencyRequired: true,
-        secretSource: 'RUNTIME_CONFIGURATION'
+        secretSource: 'RUNTIME_CONFIGURATION',
+        liveEvidenceReference: 'CERT-PAY-001',
+        certifiedAt: '2026-08-15T10:00:00.000Z',
+        certifiedBy: 'payments-ops',
+        productionTrafficApproved: true
     }), { ready: true, missing: [] });
     assert.deepEqual(readiness.validateAdapter({
         providerCode: 'unsafe',
@@ -36,6 +42,15 @@ test('Payment integration readiness rejects non-production provider declarations
         secretSource: 'SOURCE_CODE'
     }), {
         ready: false,
-        missing: ['supportedOperations.REFUND', 'webhookSignatureValidation', 'idempotencyRequired', 'secretSource']
+        missing: [
+            'supportedOperations.REFUND',
+            'webhookSignatureValidation',
+            'idempotencyRequired',
+            'secretSource',
+            'liveEvidenceReference',
+            'certifiedAt',
+            'certifiedBy',
+            'productionTrafficApproved'
+        ]
     });
 });
