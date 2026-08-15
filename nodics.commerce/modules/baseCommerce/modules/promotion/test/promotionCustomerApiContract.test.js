@@ -20,6 +20,7 @@ const routers = require('../src/router/routers');
 const controller = require('../src/controller/defaultPromotionApiController');
 const facade = require('../src/facade/defaultPromotionApiFacade');
 const service = require('../src/service/defaultPromotionCustomerApiService');
+const backofficeCapability = require('../src/service/defaultPromotionBackofficeCapabilityService');
 const simulation = require('../src/service/defaultPromotionSimulationService');
 const decision = require('../src/service/defaultPromotionDecisionService');
 const exact = require('../../pricing/src/service/defaultExactAmountService');
@@ -45,6 +46,10 @@ function installGlobals() {
     budgetLedger = [];
     global.SERVICE = {
         DefaultPromotionCustomerApiService: service,
+        DefaultBackofficeCapabilityDefinitionService: {
+            capability: value => value,
+            workbench: value => value
+        },
         DefaultPromotionSimulationService: simulation,
         DefaultPromotionDecisionService: decision,
         DefaultExactAmountService: exact,
@@ -52,6 +57,10 @@ function installGlobals() {
             get: async request => {
                 promotionRequests.push(request);
                 return { result: promotions.filter(item => item.tenant === request.query.tenant && (!request.query.status || item.status === request.query.status) && (!request.query.code || item.code === request.query.code)) };
+            },
+            save: async request => {
+                promotions.push(request.model);
+                return { result: request.model };
             },
             update: async request => {
                 const index = promotions.findIndex(item => item.code === request.query.code && item.tenant === request.query.tenant);
@@ -87,7 +96,8 @@ function installGlobals() {
             save: async request => {
                 budgetLedger.push(request.model);
                 return { result: request.model };
-            }
+            },
+            get: async request => ({ result: budgetLedger.filter(item => item.tenant === request.query.tenant && (!request.query.promotionCode || item.promotionCode === request.query.promotionCode)) })
         },
         DefaultDiscountDecisionService: {
             save: async request => {
@@ -128,6 +138,29 @@ test('Promotion customer routes expose secured preview and apply permissions', (
     assert.deepEqual(routers.promotion.internal.reverse.authTokenTypes, ['internal']);
     assert.deepEqual(routers.promotion.internal.reverse.accessGroups, ['serviceAccountUserGroup']);
     assert.equal(routers.promotion.internal.reverse.permission, 'commerce.promotion.redeem');
+    assert.equal(routers.promotion.backoffice.saveDraft.key, '/backoffice/promotions/drafts');
+    assert.equal(routers.promotion.backoffice.saveDraft.permission, 'commerce.promotion.manage');
+    assert.equal(routers.promotion.backoffice.approve.permission, 'commerce.promotion.approve');
+    assert.equal(routers.promotion.backoffice.createCouponBatch.key, '/backoffice/promotions/:promotionCode/coupon-batches');
+    assert.equal(routers.promotion.backoffice.reserveCouponBatch.key, '/backoffice/promotions/coupon-batches/:batchCode/reserve');
+    assert.equal(routers.promotion.backoffice.budgetLedger.method, 'GET');
+    assert.equal(routers.promotion.backoffice.analytics.apiExposure, 'commerceManagement');
+});
+
+test('Promotion BackOffice capability exposes builder lifecycle coupon budget and analytics routes', () => {
+    const capability = backofficeCapability.getCapability();
+    const builder = capability.navigation.find(item => item.id === 'promotions-builder');
+    const action = code => builder.lifecycleActions.find(item => item.handlerAction === code);
+
+    assert.equal(builder.route, '/commerce/promotions');
+    assert.equal(builder.permission, 'commerce.promotion.manage');
+    assert.equal(builder.moduleName, 'promotion');
+    assert.equal(builder.schemaName, 'promotion');
+    assert.equal(action('saveDraft').operationRoute, '/backoffice/promotions/drafts');
+    assert.equal(action('approvePromotion').permission, 'commerce.promotion.approve');
+    assert.equal(action('createCouponBatch').operationRoute, '/backoffice/promotions/:promotionCode/coupon-batches');
+    assert.equal(action('budgetLedger').intent, 'READ_BUDGET_LEDGER');
+    assert.equal(action('analytics').permission, 'commerce.promotion.read');
 });
 
 test('Promotion preview returns eligibility without redemption mutation', async () => {
@@ -232,6 +265,81 @@ test('Promotion coupon batch operations generate reserve and release coupon rows
     }, 'ACTIVE');
     assert.equal(released.batch.status, 'RELEASED');
     assert(coupons.every(coupon => coupon.status === 'ACTIVE'));
+});
+
+test('Promotion Builder operator workflow saves approves schedules coupons and analytics', async () => {
+    promotions = [];
+    const draft = await controller.saveDraft({
+        authData: { tenant: 'default', principalId: 'maker-1' },
+        httpRequest: {
+            body: {
+                code: 'builder10',
+                name: 'Builder 10',
+                priority: 30,
+                conditions: { minimumSubtotal: '100.00', productCodes: ['agoraLinenWrapDress'] },
+                actions: { discountAmount: '10.00', reasonCode: 'BUILDER10' },
+                budget: { limit: '100.00', spent: '0.00' }
+            }
+        }
+    });
+    const submitted = await controller.submitPromotion({
+        authData: { tenant: 'default', principalId: 'maker-1' },
+        httpRequest: { params: { promotionCode: 'builder10' }, body: { conflictCheck: 'PASSED' } }
+    });
+    await assert.rejects(() => controller.approvePromotion({
+        authData: { tenant: 'default', principalId: 'maker-1' },
+        httpRequest: { params: { promotionCode: 'builder10' }, body: {} }
+    }), /Maker-checker separation/);
+    const approved = await controller.approvePromotion({
+        authData: { tenant: 'default', principalId: 'checker-1' },
+        httpRequest: { params: { promotionCode: 'builder10' }, body: { checklist: ['eligibility reviewed', 'budget reviewed'] } }
+    });
+    const scheduled = await controller.schedulePromotion({
+        authData: { tenant: 'default', principalId: 'checker-1' },
+        httpRequest: { params: { promotionCode: 'builder10' }, body: { validFrom: '2026-08-16T00:00:00.000Z', validTo: '2026-09-01T00:00:00.000Z' } }
+    });
+    const batch = await controller.createCouponBatch({
+        authData: { tenant: 'default', principalId: 'operator-1' },
+        httpRequest: { params: { promotionCode: 'builder10' }, body: { batchCode: 'builder10-batch', couponCodes: ['BUILDER10A', 'BUILDER10B'] } }
+    });
+    const reserved = await controller.reserveCouponBatch({
+        authData: { tenant: 'default', principalId: 'operator-1' },
+        httpRequest: { params: { batchCode: 'builder10-batch' }, body: { reservedFor: 'launch-window' } }
+    });
+    budgetLedger = [
+        { tenant: 'default', promotionCode: 'builder10', mutationType: 'COMMIT', amount: '10.00' },
+        { tenant: 'default', promotionCode: 'builder10', mutationType: 'RELEASE', amount: '2.00' }
+    ];
+    redemptions = [
+        { tenant: 'default', promotionCode: 'builder10', status: 'APPLIED' },
+        { tenant: 'default', promotionCode: 'builder10', status: 'REVERSED' }
+    ];
+    const ledger = await controller.budgetLedger({
+        authData: { tenant: 'default', principalId: 'operator-1' },
+        httpRequest: { params: { promotionCode: 'builder10' }, query: {} }
+    });
+    const analytics = await controller.analytics({
+        authData: { tenant: 'default', principalId: 'operator-1' },
+        httpRequest: { params: { promotionCode: 'builder10' }, query: {} }
+    });
+
+    assert.equal(draft.data.promotion.status, 'DRAFT');
+    assert.equal(submitted.data.promotion.status, 'SUBMITTED');
+    assert.equal(submitted.data.promotion.approval.submittedBy, 'maker-1');
+    assert.equal(approved.data.promotion.status, 'APPROVED');
+    assert.equal(approved.data.promotion.approval.approvedBy, 'checker-1');
+    assert.equal(scheduled.data.promotion.status, 'SCHEDULED');
+    assert.equal(scheduled.data.promotion.validFrom, '2026-08-16T00:00:00.000Z');
+    assert.equal(batch.data.batch.promotionCode, 'builder10');
+    assert.equal(batch.data.coupons.length, 2);
+    assert.equal(reserved.data.batch.status, 'RESERVED');
+    assert.equal(ledger.data.entries.length, 2);
+    assert.equal(analytics.data.redemptionCount, 2);
+    assert.equal(analytics.data.appliedCount, 1);
+    assert.equal(analytics.data.reversedCount, 1);
+    assert.equal(analytics.data.couponIssuedCount, 2);
+    assert.equal(analytics.data.couponReservedCount, 2);
+    assert.equal(analytics.data.budgetExposure, '8');
 });
 
 test('Promotion reversal marks applied redemption as reversed idempotently', async () => {

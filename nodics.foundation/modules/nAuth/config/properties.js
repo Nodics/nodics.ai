@@ -274,6 +274,8 @@ module.exports = {
       "commerce.pricing.read",
       "commerce.tax.read",
       "commerce.promotion.read",
+      "commerce.promotion.manage",
+      "commerce.promotion.approve",
       "commerce.inventory.read",
       "commerce.cart.read",
       "commerce.cart.own",

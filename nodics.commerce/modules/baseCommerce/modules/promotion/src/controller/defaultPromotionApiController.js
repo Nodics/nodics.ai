@@ -15,7 +15,8 @@
 module.exports = {
     applyHttp: function (request) {
         const httpRequest = request.httpRequest || {};
-        return Object.assign({}, request, { payload: httpRequest.body || {}, query: httpRequest.query || {}, redemptionCode: httpRequest.params && httpRequest.params.redemptionCode });
+        const params = httpRequest.params || {};
+        return Object.assign({}, request, { payload: httpRequest.body || {}, query: httpRequest.query || {}, redemptionCode: params.redemptionCode, promotionCode: params.promotionCode, batchCode: params.batchCode });
     },
     invoke: async function (request, method) {
         const data = await FACADE.DefaultPromotionApiFacade[method](this.applyHttp(request || {}));
@@ -23,5 +24,16 @@ module.exports = {
     },
     preview: function (request) { return this.invoke(request, 'preview'); },
     apply: function (request) { return this.invoke(request, 'apply'); },
-    reverse: function (request) { return this.invoke(request, 'reverse'); }
+    reverse: function (request) { return this.invoke(request, 'reverse'); },
+    saveDraft: function (request) { return this.invoke(request, 'saveDraft'); },
+    submitPromotion: function (request) { return this.invoke(request, 'submitPromotion'); },
+    approvePromotion: function (request) { return this.invoke(request, 'approvePromotion'); },
+    schedulePromotion: function (request) { return this.invoke(request, 'schedulePromotion'); },
+    suspendPromotion: function (request) { return this.invoke(request, 'suspendPromotion'); },
+    archivePromotion: function (request) { return this.invoke(request, 'archivePromotion'); },
+    createCouponBatch: function (request) { return this.invoke(request, 'createCouponBatch'); },
+    reserveCouponBatch: function (request) { return this.invoke(request, 'reserveCouponBatch'); },
+    releaseCouponBatch: function (request) { return this.invoke(request, 'releaseCouponBatch'); },
+    budgetLedger: function (request) { return this.invoke(request, 'budgetLedger'); },
+    analytics: function (request) { return this.invoke(request, 'analytics'); }
 };

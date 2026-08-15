@@ -115,6 +115,112 @@ module.exports = {
         }
         return { batch, coupons };
     },
+    saveDraft: async function (request) {
+        const payload = request.payload || {};
+        if (!payload.code && !request.promotionCode) throw new Error('Promotion code is required for draft save');
+        const code = request.promotionCode || payload.code;
+        const existing = await this.getOne(SERVICE.DefaultPromotionService, { tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, code }, pageSize: 1 });
+        const model = Object.assign({}, existing || {}, payload, {
+            code,
+            tenant: request.tenant,
+            status: payload.status || existing && existing.status || 'DRAFT',
+            priority: Number(payload.priority !== undefined ? payload.priority : existing && existing.priority || 0),
+            conditions: payload.conditions || existing && existing.conditions || {},
+            actions: payload.actions || existing && existing.actions || {},
+            budget: payload.budget || existing && existing.budget,
+            approval: Object.assign({}, existing && existing.approval, payload.approval, {
+                lastEditedBy: request.actorId,
+                lastEditedAt: request.now || new Date().toISOString()
+            }),
+            revision: Number(existing && existing.revision || payload.revision || 0) + (existing ? 1 : 0)
+        });
+        const saved = await this.updateOrSave(SERVICE.DefaultPromotionService, {
+            tenant: request.tenant,
+            authData: request.authData,
+            query: existing ? { tenant: request.tenant, code } : undefined,
+            model
+        }) || model;
+        return { promotion: saved, builderState: 'DRAFT_SAVED' };
+    },
+    loadPromotion: async function (request) {
+        const code = request.promotionCode || request.payload && request.payload.promotionCode || request.payload && request.payload.code;
+        if (!code) throw new Error('Promotion code is required');
+        const promotion = await this.getOne(SERVICE.DefaultPromotionService, { tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, code }, pageSize: 1 });
+        if (!promotion) throw new Error('Promotion was not found');
+        return promotion;
+    },
+    transitionPromotion: async function (request) {
+        const payload = request.payload || {};
+        const promotion = await this.loadPromotion(request);
+        if (request.actionCode === 'APPROVE' && promotion.approval && promotion.approval.submittedBy && promotion.approval.submittedBy === request.actorId) {
+            throw new Error('Maker-checker separation is required for promotion approval');
+        }
+        const now = request.now || new Date().toISOString();
+        const approvalPatch = Object.assign({}, promotion.approval, {
+            lastAction: request.actionCode,
+            lastActionBy: request.actorId,
+            lastActionAt: now,
+            reasonCode: payload.reasonCode || promotion.approval && promotion.approval.reasonCode,
+            conflictCheck: payload.conflictCheck || promotion.approval && promotion.approval.conflictCheck || 'NOT_RUN'
+        });
+        if (request.actionCode === 'SUBMIT') {
+            approvalPatch.submittedBy = request.actorId;
+            approvalPatch.submittedAt = now;
+        }
+        if (request.actionCode === 'APPROVE') {
+            approvalPatch.approvedBy = request.actorId;
+            approvalPatch.approvedAt = now;
+            approvalPatch.checklist = payload.checklist || approvalPatch.checklist || ['eligibility reviewed', 'budget reviewed', 'coupon policy reviewed'];
+        }
+        const model = Object.assign({}, promotion, {
+            status: request.targetStatus,
+            validFrom: payload.validFrom || promotion.validFrom,
+            validTo: payload.validTo || promotion.validTo,
+            approval: approvalPatch,
+            revision: Number(promotion.revision || 0) + 1
+        });
+        const updated = await this.updateOrSave(SERVICE.DefaultPromotionService, {
+            tenant: request.tenant,
+            authData: request.authData,
+            query: { tenant: request.tenant, code: promotion.code },
+            model
+        }) || model;
+        return { promotion: updated, actionCode: request.actionCode, builderState: [request.actionCode, 'COMPLETE'].join('_') };
+    },
+    listFromService: async function (service, request) {
+        if (!service || !service.get) return [];
+        const result = this.unwrap(await service.get(request));
+        return Array.isArray(result) ? result : result ? [result] : [];
+    },
+    budgetLedger: async function (request) {
+        const promotionCode = request.promotionCode || request.payload && request.payload.promotionCode;
+        if (!promotionCode) throw new Error('Promotion code is required for budget ledger');
+        const entries = await this.listFromService(SERVICE.DefaultPromotionBudgetLedgerService, { tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, promotionCode }, pageSize: Number(request.query && request.query.pageSize || 100) });
+        return { promotionCode, entries };
+    },
+    analytics: async function (request) {
+        const promotionCode = request.promotionCode || request.payload && request.payload.promotionCode;
+        if (!promotionCode) throw new Error('Promotion code is required for analytics');
+        const redemptions = await this.listFromService(SERVICE.DefaultPromotionRedemptionService, { tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, promotionCode }, pageSize: 1000 });
+        const ledger = await this.listFromService(SERVICE.DefaultPromotionBudgetLedgerService, { tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, promotionCode }, pageSize: 1000 });
+        const coupons = await this.listFromService(SERVICE.DefaultCouponService, { tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, promotionCode }, pageSize: 1000 });
+        const applied = redemptions.filter(item => item.status === 'APPLIED').length;
+        const reversed = redemptions.filter(item => item.status === 'REVERSED').length;
+        const committedAmount = ledger.filter(item => item.mutationType === 'COMMIT').reduce((sum, item) => sum + Number(item.amount || 0), 0);
+        const releasedAmount = ledger.filter(item => item.mutationType === 'RELEASE').reduce((sum, item) => sum + Number(item.amount || 0), 0);
+        return {
+            promotionCode,
+            redemptionCount: redemptions.length,
+            appliedCount: applied,
+            reversedCount: reversed,
+            couponIssuedCount: coupons.length,
+            couponReservedCount: coupons.filter(item => item.status === 'RESERVED').length,
+            couponRedeemedCount: coupons.filter(item => item.status === 'REDEEMED').length,
+            budgetCommitted: this.exact().normalize(String(committedAmount)),
+            budgetReleased: this.exact().normalize(String(releasedAmount)),
+            budgetExposure: this.exact().normalize(String(committedAmount - releasedAmount))
+        };
+    },
     setCouponBatchReservation: async function (request, status) {
         const payload = request.payload || {};
         const batchCode = payload.batchCode || request.batchCode;

@@ -23,7 +23,7 @@ module.exports = {
     /** Builds the backend operation route for one lifecycle action code. */
     actionRoute:function(actionCode){return '/operator/order-lifecycle/:requestCode/actions/'+actionCode;},
     /** Builds one Order-owned operator action definition. */
-    action:function(options){return Object.assign({permission:'commerce.lifecycle.act',ownerModule:'order',operationRoute:this.actionRoute(options.actionCode),inputFields:[this.requestCodeInput(),this.reasonInput()],targetStatuses:['SUBMITTED','APPROVED','RETRY_PENDING','RECONCILING'],featureState:'ACTIVE'},options,{actionCode:undefined});},
+    action:function(options){let actionCode=options.actionCode;let model=Object.assign({permission:'commerce.lifecycle.act',ownerModule:'order',handlerAction:actionCode,operationRoute:this.actionRoute(actionCode),inputFields:[this.requestCodeInput(),this.reasonInput()],targetStatuses:['SUBMITTED','APPROVED','RETRY_PENDING','RECONCILING'],featureState:'ACTIVE'},options);delete model.actionCode;return model;},
     /** Returns standard operator lifecycle action definitions. */
     lifecycleActions:function(scope){
         let actions=[
