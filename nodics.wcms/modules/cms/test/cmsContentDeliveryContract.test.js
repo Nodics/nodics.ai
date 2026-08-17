@@ -38,6 +38,8 @@ assert.strictEqual(schemas.cms.cmsTypeCode2Renderer.definition.deprecated.defaul
 assert(schemas.cms.cmsTypeCode2Renderer.definition.replacementRenderer);
 assert(schemas.cms.cmsComponent.definition.properties, 'component delivery properties must be an explicit schema contract');
 assert.strictEqual(schemas.cms.cmsComponent.definition.accessMode.default, 'AUTHENTICATED');
+assert.deepStrictEqual(schemas.cms.cmsComponent.definition.accessMode.enum, ['PUBLIC', 'AUTHENTICATED', 'CUSTOMER']);
+assert.deepStrictEqual(schemas.cms.cmsPageRoute.definition.accessMode.enum, ['PUBLIC', 'AUTHENTICATED', 'CUSTOMER']);
 assert(schemas.cms.cmsComponentMedia.definition.componentMediaCode, 'CMS must own structured component media associations');
 assert(schemas.cms.cmsComponentMedia.definition.componentCode, 'CMS component medias must point to a CMS component');
 assert(schemas.cms.cmsComponentMedia.definition.mediaCode, 'CMS component medias may point to one media media item');
@@ -116,19 +118,32 @@ global.SERVICE = {
         delivery: { defaultLocale: 'en', defaultChannel: 'web', maxDepth: 3, maxComponents: 4 }
     } : undefined };
     const data = {
-        routes: [{ site: 'site', path: '/home', locale: 'en', channel: 'web', page: 'home', routeType: 'PAGE', deliveryState: 'ONLINE', accessMode: 'PUBLIC' }],
-        pages: [{ code: 'home', name: 'Home', typeCode: 'homePage', template: 'main', internalNote: 'hidden' }],
-        details: [{ code: 'homeHero', source: 'home', target: 'hero', slot: 'main', index: 0, active: true }],
+        routes: [
+            { site: 'site', path: '/home', locale: 'en', channel: 'web', page: 'home', routeType: 'PAGE', deliveryState: 'ONLINE', accessMode: 'PUBLIC' },
+            { site: 'site', path: '/account', locale: 'en', channel: 'web', page: 'account', routeType: 'PAGE', deliveryState: 'ONLINE', accessMode: 'CUSTOMER' }
+        ],
+        pages: [
+            { code: 'home', name: 'Home', typeCode: 'homePage', template: 'main', internalNote: 'hidden' },
+            { code: 'account', name: 'Account', typeCode: 'accountPage', template: 'main', internalNote: 'hidden' }
+        ],
+        details: [
+            { code: 'homeHero', source: 'home', target: 'hero', slot: 'main', index: 0, active: true },
+            { code: 'accountPanelPlacement', source: 'account', target: 'accountPanel', slot: 'main', index: 0, active: true }
+        ],
         components: [{ code: 'hero', typeCode: 'heroType', accessMode: 'PUBLIC', active: true,
-            properties: { title: 'Hello' }, secret: 'hidden' }],
+            properties: { title: 'Hello' }, secret: 'hidden' },
+        { code: 'accountPanel', typeCode: 'accountPanelType', accessMode: 'CUSTOMER', active: true,
+            properties: { title: 'Customer account' }, secret: 'hidden' }],
         componentMedia: [{ code: 'heroBackground', componentMediaCode: 'heroBackground', componentCode: 'hero',
             mediaSetCode: 'heroBackgroundSet', mediaType: 'IMAGE', role: 'background', slot: 'default',
             position: 0, altText: 'Hero background', storageKey: 'hidden', active: true }],
         templates: [{ code: 'main', renderer: 'template.main', contractVersion: 1 }],
         rendererMappings: [
             { code: 'homePage', renderer: 'page.home', contractVersion: 1, channels: ['web'] },
+            { code: 'accountPage', renderer: 'page.account', contractVersion: 1, channels: ['web'] },
             { code: 'heroType', renderer: 'component.hero', contractVersion: 2,
-                channels: ['web', 'mobile-webview'], deprecated: true, replacementRenderer: 'component.hero-v2' }
+                channels: ['web', 'mobile-webview'], deprecated: true, replacementRenderer: 'component.hero-v2' },
+            { code: 'accountPanelType', renderer: 'component.account-panel', contractVersion: 1, channels: ['web'] }
         ]
     };
     const matches = (model, query) => Object.keys(query).every(key => {
@@ -183,6 +198,16 @@ global.SERVICE = {
     assert.strictEqual(response.result.page.components[0].media[0].storageKey, undefined);
     assert.strictEqual(response.result.page.internalNote, undefined);
     assert.strictEqual(response.result.page.components[0].secret, undefined);
+    await assert.rejects(delivery.resolvePage({ tenant: 'tenant-a', authData: {}, options: {}, router: { publicAccess: true },
+        delivery: { site: 'site', path: '/account', locale: 'en', channel: 'web', accessMode: 'CUSTOMER' } }),
+    error => error.code === 'ERR_CMS_00087');
+    let customerResponse = await delivery.resolvePage({ tenant: 'tenant-a',
+        authData: { tokenType: 'storefront_context' }, options: {}, router: { publicAccess: true },
+        delivery: { site: 'site', path: '/account', locale: 'en', channel: 'web', accessMode: 'CUSTOMER' } });
+    assert.strictEqual(customerResponse.result.page.code, 'account');
+    assert.strictEqual(customerResponse.result.page.components[0].code, 'accountPanel');
+    assert.strictEqual(customerResponse.result.page.components[0].renderer, 'component.account-panel');
+    assert.strictEqual(customerResponse.result.page.components[0].accessMode, undefined);
     data.components[0].accessMode = 'AUTHENTICATED';
     await assert.rejects(delivery.resolvePage({ tenant: 'tenant-a', authData: {}, options: {}, router: { publicAccess: true },
         delivery: { site: 'site', path: '/home', locale: 'en', channel: 'web' } }),

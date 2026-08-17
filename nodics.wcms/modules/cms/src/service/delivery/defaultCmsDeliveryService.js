@@ -27,9 +27,9 @@ module.exports = {
     /** Resolves one route into a versioned client-safe page graph. */
     resolvePage: async function (request) {
         let context = this.normalizeContext(request);
-        let isPublic = request.router && request.router.publicAccess === true;
-        if ((((CONFIG.get('cms') || {}).publication || {}).enabled) === true) return this.resolvePublishedManifest(request, context, isPublic);
-        let route = await this.resolveRoute(request, context, isPublic);
+        let accessMode = this.resolveAccessMode(request);
+        if ((((CONFIG.get('cms') || {}).publication || {}).enabled) === true) return this.resolvePublishedManifest(request, context, accessMode);
+        let route = await this.resolveRoute(request, context, accessMode);
         if (route.routeType === 'REDIRECT') {
             return { result: { contractVersion: 1, type: 'REDIRECT', path: context.path, redirectPath: route.redirectPath } };
         }
@@ -38,7 +38,7 @@ module.exports = {
         let templateCode = this.codeOf(page.template);
         let template = templateCode ? await this.getSingle(SERVICE.DefaultCmsPageTemplateService, request,
             { code: templateCode, active: true }, 'ERR_CMS_00089') : undefined;
-        let graph = await this.resolveGraph(request, [page.code], isPublic ? 'PUBLIC' : 'AUTHENTICATED', context.locale);
+        let graph = await this.resolveGraph(request, [page.code], accessMode, context.locale);
         return {
             result: {
                 contractVersion: 1,
@@ -51,15 +51,23 @@ module.exports = {
         };
     },
 
+    /** Resolves the requested CMS delivery access boundary. */
+    resolveAccessMode: function (request) {
+        if (request.router && request.router.publicAccess === true &&
+            !(request.authData && request.authData.tokenType === 'storefront_context')) return 'PUBLIC';
+        let accessMode = String(request.delivery && request.delivery.accessMode || 'AUTHENTICATED').toUpperCase();
+        return ['PUBLIC', 'AUTHENTICATED', 'CUSTOMER'].includes(accessMode) ? accessMode : 'AUTHENTICATED';
+    },
+
     /** Resolves an exact locale route before the configured legacy default route. */
-    resolveRoute: async function (request, context, isPublic) {
+    resolveRoute: async function (request, context, accessMode) {
         let localization = this.localizationPolicy();
         let locales = [context.locale];
         if (localization.legacyRouteLocale && localization.legacyRouteLocale !== context.locale) locales.push(localization.legacyRouteLocale);
         for (let locale of locales) {
             let models = await this.getMany(SERVICE.DefaultCmsPageRouteService, request, {
                 site: context.site, path: context.path, locale: locale, channel: context.channel,
-                deliveryState: 'ONLINE', accessMode: isPublic ? 'PUBLIC' : 'AUTHENTICATED', active: true
+                deliveryState: 'ONLINE', accessMode: accessMode, active: true
             });
             if (models.length > 1) throw this.error('ERR_CMS_00087', 'content identity is ambiguous');
             if (models.length === 1) return models[0];
@@ -68,10 +76,10 @@ module.exports = {
     },
 
     /** Resolves delivery exclusively through the configured immutable Online manifest authority. */
-    resolvePublishedManifest: async function (request, context, isPublic) {
+    resolvePublishedManifest: async function (request, context, accessMode) {
         let pointer = await this.getSingle(SERVICE.DefaultCmsOnlinePublicationPointerService, request, {
             site: context.site, path: context.path, locale: context.locale, channel: context.channel,
-            accessMode: isPublic ? 'PUBLIC' : 'AUTHENTICATED', active: true
+            accessMode: accessMode, active: true
         }, 'ERR_CMS_00090');
         let manifest = await this.getSingle(SERVICE.DefaultCmsPublicationManifestService, request,
             { code: pointer.manifestCode, active: true }, 'ERR_CMS_00091');
@@ -79,7 +87,7 @@ module.exports = {
         if (snapshot && snapshot.contractVersion === 2 && snapshot.bundleType === 'SITE') {
             let matches = (snapshot.routes || []).filter(route => route.site === context.site && route.path === context.path &&
                 route.locale === context.locale && route.channel === context.channel &&
-                route.accessMode === (isPublic ? 'PUBLIC' : 'AUTHENTICATED'));
+                route.accessMode === accessMode);
             if (matches.length !== 1) throw this.error('ERR_CMS_00091', 'published bundle route is missing or ambiguous');
             snapshot = matches[0];
         }

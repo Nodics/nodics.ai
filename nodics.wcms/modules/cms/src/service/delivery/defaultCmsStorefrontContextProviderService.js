@@ -69,7 +69,8 @@ module.exports = {
         request.authData = { tokenType: 'storefront_context', principalId: 'storefront:' + result.storefrontCode,
             tenant: result.tenantCode, entCode: result.enterpriseCode, enterpriseCode: result.enterpriseCode };
         request.delivery = Object.assign({}, request.delivery || {}, {
-            site: result.context.site, locale: result.context.locale, channel: result.context.channel
+            site: result.context.site, locale: result.context.locale, channel: result.context.channel,
+            accessMode: result.context.accessMode || result.accessMode || request.delivery && request.delivery.accessMode
         });
         return request;
     },

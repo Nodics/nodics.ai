@@ -446,7 +446,7 @@ module.exports = {
                     type: 'string',
                     required: true,
                     default: 'AUTHENTICATED',
-                    enum: ['PUBLIC', 'AUTHENTICATED'],
+                    enum: ['PUBLIC', 'AUTHENTICATED', 'CUSTOMER'],
                     description: 'Fail-closed component delivery boundary; public pages may contain only PUBLIC components'
                 }
             }
@@ -628,7 +628,7 @@ module.exports = {
                 routeType: { type: 'string', required: true, default: 'PAGE', enum: ['PAGE', 'ALIAS', 'REDIRECT'], description: 'Route resolution behavior' },
                 redirectPath: { type: 'string', required: false, description: 'Safe relative redirect target for REDIRECT routes' },
                 deliveryState: { type: 'string', required: true, default: 'DRAFT', enum: ['DRAFT', 'ONLINE'], description: 'Fail-closed delivery activation state; workflow publishing may govern transition later' },
-                accessMode: { type: 'string', required: true, default: 'AUTHENTICATED', enum: ['PUBLIC', 'AUTHENTICATED'], description: 'Required delivery access boundary' }
+                accessMode: { type: 'string', required: true, default: 'AUTHENTICATED', enum: ['PUBLIC', 'AUTHENTICATED', 'CUSTOMER'], description: 'Required delivery access boundary' }
             },
             indexes: {
                 composite: {
