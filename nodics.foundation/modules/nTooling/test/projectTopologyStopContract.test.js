@@ -30,6 +30,15 @@ const topologyScript = path.join(
     'nodics.foundation/modules/nTooling/src/service/project/defaultProjectTopologyService.mjs'
 );
 
+const topologySource = fs.readFileSync(topologyScript, 'utf8');
+
+assert(topologySource.includes('detached: true'),
+    'Runtime commands should be spawned as process groups so wrapper and server children can be stopped together');
+assert(topologySource.includes('process.kill(-pid, signal)'),
+    'Topology stop should signal the runtime process group before falling back to the direct child PID');
+assert(topologySource.includes('Supervisor exited but runtime ports are still listening'),
+    'External stop should wait for runtime ports to close before reporting success');
+
 function reservePort() {
     return new Promise((resolve, reject) => {
         const server = net.createServer();

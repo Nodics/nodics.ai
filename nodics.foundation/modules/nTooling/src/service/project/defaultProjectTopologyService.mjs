@@ -60,6 +60,30 @@ export const frontendRuntimes = Object.freeze(readTopology().frontendRuntimes);
 const sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 const healthUrl = runtime => `http://127.0.0.1:${String(runtime.port)}${runtime.readyPath || '/nodics/system/v0/health/ready'}`;
 
+function signalRuntimeProcess(pid, signal) {
+  if (!Number.isInteger(pid)) return false;
+  try {
+    process.kill(-pid, signal);
+    return true;
+  } catch {}
+  try {
+    process.kill(pid, signal);
+    return true;
+  } catch { return false; }
+}
+
+async function findListeningPorts(ports) {
+  const listening = [];
+  for (const port of ports) if (await portListening(port)) listening.push(port);
+  return listening;
+}
+
+async function childrenStillActive(children) {
+  if (children.some(entry => entry.child.exitCode === null)) return true;
+  const ports = children.map(entry => entry.runtime.port).filter(port => Number.isInteger(port));
+  return (await findListeningPorts(ports)).length > 0;
+}
+
 /** Returns whether a local TCP port currently accepts connections. */
 export function portListening(port) {
   return new Promise(resolve => {
@@ -161,10 +185,17 @@ async function start(includeFrontends) {
     if (stopping) return;
     stopping = true;
     process.stdout.write(`[topology] stopping ${topology.environment} after ${signal}\n`);
-    for (const entry of [...children].reverse()) if (entry.child.exitCode === null) entry.child.kill('SIGTERM');
+    for (const entry of [...children].reverse()) signalRuntimeProcess(entry.child.pid, 'SIGTERM');
     const deadline = Date.now() + 15000;
-    while (children.some(entry => entry.child.exitCode === null) && Date.now() < deadline) await sleep(250);
-    for (const entry of children) if (entry.child.exitCode === null) entry.child.kill('SIGKILL');
+    while (await childrenStillActive(children) && Date.now() < deadline) await sleep(250);
+    for (const entry of children) signalRuntimeProcess(entry.child.pid, 'SIGKILL');
+    const killDeadline = Date.now() + 5000;
+    while (await childrenStillActive(children) && Date.now() < killDeadline) await sleep(250);
+    const busyPorts = await findListeningPorts(children.map(entry => entry.runtime.port).filter(port => Number.isInteger(port)));
+    if (busyPorts.length > 0) {
+      process.stderr.write(`[topology] WARN ${topology.environment} stopped with runtime ports still listening: ${busyPorts.join(', ')}\n`);
+      return;
+    }
     try { fs.unlinkSync(topology.statePath); } catch {}
   };
   process.on('SIGINT', () => stop('SIGINT').then(() => process.exit(0)));
@@ -178,7 +209,7 @@ async function start(includeFrontends) {
       const args = runtime.args || ['run', runtime.script];
       const logPath = path.join(topology.stateDirectory, `${runtime.code}.log`);
       const log = fs.openSync(logPath, 'a');
-      const child = spawn(command, args, { cwd, env: process.env, stdio: ['ignore', log, log] });
+      const child = spawn(command, args, { cwd, env: process.env, stdio: ['ignore', log, log], detached: true });
       children.push({ runtime, child });
       persist();
       child.once('exit', code => {
@@ -218,9 +249,13 @@ async function stop() {
     return;
   }
   process.kill(state.supervisorPid, 'SIGTERM');
-  const deadline = Date.now() + 20000;
-  while (isOwnedSupervisor(state) && Date.now() < deadline) await sleep(250);
-  if (isOwnedSupervisor(state)) throw new Error(`Supervisor PID ${String(state.supervisorPid)} did not stop within 20 seconds`);
+  const deadline = Date.now() + 45000;
+  const recordedPorts = (state.children || []).map(child => child.port).filter(port => Number.isInteger(port));
+  while ((isOwnedSupervisor(state) || (await findListeningPorts(recordedPorts)).length > 0) && Date.now() < deadline) await sleep(250);
+  if (isOwnedSupervisor(state)) throw new Error(`Supervisor PID ${String(state.supervisorPid)} did not stop within 45 seconds`);
+  const busyPorts = await findListeningPorts(recordedPorts);
+  if (busyPorts.length > 0) throw new Error(`Supervisor exited but runtime ports are still listening: ${busyPorts.join(', ')}`);
+  try { fs.unlinkSync(topology.statePath); } catch {}
   process.stdout.write(`[topology] ${topology.environment} supervisor stopped\n`);
 }
 
