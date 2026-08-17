@@ -468,7 +468,8 @@ module.exports = {
             releaseCode: rawModule.name + ':' + sectionCode,
             sectionCode: sectionCode,
             moduleName: rawModule.name,
-            displayName: rawModule.metaData && rawModule.metaData.nodics && rawModule.metaData.nodics.displayName || rawModule.name,
+            displayName: manifest.displayName ||
+                rawModule.metaData && rawModule.metaData.nodics && rawModule.metaData.nodics.displayName || rawModule.name,
             parentModule: rawModule.parent,
             canonicalIdentity: rawModule.canonicalIdentity || rawModule.name,
             dataType: dataType,
@@ -596,7 +597,8 @@ module.exports = {
             releaseCode: rawModule.name + ':' + sectionCode,
             sectionCode: sectionCode,
             moduleName: rawModule.name,
-            displayName: rawModule.metaData && rawModule.metaData.nodics && rawModule.metaData.nodics.displayName || rawModule.name,
+            displayName: manifest.displayName ||
+                rawModule.metaData && rawModule.metaData.nodics && rawModule.metaData.nodics.displayName || rawModule.name,
             parentModule: rawModule.parent,
             canonicalIdentity: rawModule.canonicalIdentity || rawModule.name,
             dataType: dataType,

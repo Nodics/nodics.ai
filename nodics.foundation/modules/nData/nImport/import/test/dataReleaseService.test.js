@@ -34,6 +34,7 @@ let files = {};
 fs.writeFileSync(path.join(root, 'data', 'manifest.json'), JSON.stringify({
     contractVersion: 2, module: 'testModule', sections: { core: {
         kind: 'DATA_RELEASE', dataType: 'core', version: '1.1.0',
+        displayName: 'Test Core Release',
         description: 'Test core release',
         owningDomain: 'test.domain', lifecycle: 'PUBLISHABLE', destinationRole: 'WCMS_STAGED',
         environmentScope: ['LOCAL'], sensitivity: 'PUBLIC', versioningPolicy: 'IMMUTABLE',
@@ -114,7 +115,7 @@ const routers = require('../src/router/routers');
 
     let catalogue = await service.getCatalogue({ tenant: 'default', dataType: 'core' });
     assert.strictEqual(catalogue.data.length, 1);
-    assert.strictEqual(catalogue.data[0].displayName, 'Test Module');
+    assert.strictEqual(catalogue.data[0].displayName, 'Test Core Release');
     assert.strictEqual(catalogue.data[0].initialPublicationPolicy, 'ADMIN_INITIATED');
     assert.strictEqual(catalogue.data[0].publicationReview.entities[0].added, 2);
     assert.strictEqual(catalogue.data[0].publicationReview.postPublicationCapabilities[0].title, 'Open workspace');
