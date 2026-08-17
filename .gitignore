@@ -7,4 +7,10 @@ temp/
 .DS_Store
 .env
 .env.local
+
+# Generated process outputs. Keep these reproducible from source definitions.
 **/llm/generated/
+**/generated/
+**/src/controller/gen/
+**/src/facade/gen/
+**/src/service/gen/
