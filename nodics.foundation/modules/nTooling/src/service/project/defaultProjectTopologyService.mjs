@@ -203,7 +203,20 @@ async function stop() {
   const topology = readTopology();
   const state = readState();
   if (!state) { process.stdout.write('[topology] no generated supervisor state exists\n'); return; }
-  if (!isOwnedSupervisor(state)) throw new Error('Generated state is stale or does not identify this checkout supervisor; refusing to signal any PID.');
+  if (!isOwnedSupervisor(state)) {
+    const recordedPorts = new Set(
+      [...(state.children || []).map(child => child.port), ...selectRuntimes(true).map(runtime => runtime.port)]
+        .filter(port => Number.isInteger(port))
+    );
+    const busyPorts = [];
+    for (const port of recordedPorts) if (await portListening(port)) busyPorts.push(port);
+    if (busyPorts.length > 0) {
+      throw new Error(`Generated state is stale or does not identify this checkout supervisor; refusing to signal any PID. Listening ports require explicit resolution: ${busyPorts.join(', ')}`);
+    }
+    try { fs.unlinkSync(topology.statePath); } catch {}
+    process.stdout.write(`[topology] removed stale ${topology.environment} supervisor state; no declared runtime ports are listening\n`);
+    return;
+  }
   process.kill(state.supervisorPid, 'SIGTERM');
   const deadline = Date.now() + 20000;
   while (isOwnedSupervisor(state) && Date.now() < deadline) await sleep(250);
