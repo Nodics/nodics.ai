@@ -1,0 +1,12 @@
+{
+  "contractVersion": 1,
+  "solutionDigest": "not-a-digest",
+  "planDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "builder": { "engineVersion": "0.1.0", "contractVersion": 1, "mode": "WORKSPACE" },
+  "packages": [{ "code": "nodics.commerce", "version": "0.0.1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "source": "WORKSPACE" }],
+  "templates": [{ "code": "customer.backend", "version": "0.1.0", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "source": "WORKSPACE" }],
+  "artifacts": [],
+  "effectiveGraphs": { "backend": { "nodes": ["nodics.commerce"], "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" }, "frontend": { "nodes": ["agora.commerce"], "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" } },
+  "dataPacks": [],
+  "qualification": { "state": "NOT_RUN", "verifiedAt": "2026-08-16T07:00:00.000Z", "evidenceDigest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "gates": ["contracts"] }
+}

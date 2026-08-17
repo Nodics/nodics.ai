@@ -18,6 +18,7 @@
       "controller",
       "router",
       "search",
+      "utility",
       "data",
       "test",
       "llm"

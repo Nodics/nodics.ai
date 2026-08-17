@@ -1,0 +1,16 @@
+{
+  "contractVersion": 1,
+  "planId": "builder-plan-0123456789abcdef",
+  "createdAt": "2026-08-16T06:00:00.000Z",
+  "expiresAt": "2026-08-17T06:00:00.000Z",
+  "solutionDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "catalogueDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "builderVersion": "0.1.0",
+  "approval": { "required": true, "state": "PENDING" },
+  "resolvedCapabilities": [{ "code": "nodics.commerce", "version": "0.0.1", "descriptorDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "selectionReason": "EXPLICIT" }],
+  "backendGraph": { "nodes": ["nodics.commerce"], "edges": [] },
+  "frontendGraph": { "nodes": ["agora.commerce"], "edges": [] },
+  "operations": [{ "sequence": 1, "operation": "CREATE_FILE", "targetRoot": "BACKEND", "targetPath": "/Users/customer/project.js", "ownership": "GENERATED", "precondition": "ABSENT", "sourceDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" }],
+  "excludedCapabilityAssertions": [],
+  "qualification": { "commands": ["npm test"], "expectedEvidence": ["contracts"] }
+}

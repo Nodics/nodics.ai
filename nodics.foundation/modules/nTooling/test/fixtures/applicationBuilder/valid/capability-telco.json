@@ -1,0 +1,16 @@
+{
+  "contractVersion": 1,
+  "code": "telco",
+  "kind": "DOMAIN",
+  "owner": "nodics.accelerators",
+  "version": "0.0.1",
+  "packageMetadata": { "packageName": "telco", "moduleRoot": "nodics.accelerators/modules/telco", "metadataDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
+  "backend": { "packages": ["telcoCatalog", "telcoSubscription", "telcoProvisioning"], "publicApiCategories": ["customer", "operator"], "lifecycleAuthorities": ["order", "workflow", "telcoProvisioning"] },
+  "frontend": { "packages": ["nodics.agora"], "compositionEntries": ["src/composition/telco.ts"], "routes": ["/telco"], "rendererKeys": ["agora.telco.product-card"] },
+  "dependencies": { "requires": ["nodics.commerce"], "extends": ["electronics"], "conflictsWith": [], "optional": ["nodics.engagement"] },
+  "dataPacks": ["agora.common", "agora.telco"],
+  "topologyRoles": ["PLATFORM", "PROCESS", "COMMERCE", "AXIS", "AGORA"],
+  "compatibility": { "nodicsRange": ">=0.0.1 <1.0.0", "contractRange": "1.x", "deprecated": false },
+  "qualification": { "tests": ["nodics.accelerators/modules/telco/test/telcoContract.test.js"], "journeys": ["telco.device-plan-provisioning"] },
+  "integrity": { "descriptorDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "artifactDigests": { "src/composition/telco.ts": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" } }
+}

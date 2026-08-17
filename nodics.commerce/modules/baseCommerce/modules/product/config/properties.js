@@ -49,7 +49,8 @@ module.exports = {
             maximumBatchSize: 100,
             searchEnrichment: {
                 pricing: { enabled: true, serviceName: 'DefaultCustomerPriceSummaryService', defaultCurrency: 'USD', defaultQuantity: '1', missingBehavior: 'omit' },
-                inventory: { enabled: true, serviceName: 'DefaultCustomerAvailabilitySummaryService', missingBehavior: 'omit' }
+                inventory: { enabled: true, serviceName: 'DefaultCustomerAvailabilitySummaryService', missingBehavior: 'omit' },
+                domains: { enabled: true, contributors: {}, missingBehavior: 'omit' }
             }
         }
     },

@@ -83,6 +83,22 @@ module.exports = {
         return result[input.product.code];
     },
 
+    /** Resolves active module-contributed domain projection enrichments without Product depending on any accelerator. */
+    domains: async function (request, input) {
+        let policy = this.enrichmentPolicy('domains');
+        if (policy.enabled === false) return {};
+        let result = {};
+        for (let code of Object.keys(policy.contributors || {}).sort()) {
+            let contribution = policy.contributors[code] || {}, service = SERVICE[contribution.serviceName];
+            if (!service || typeof service.enrich !== 'function') {
+                if (contribution.required === true) throw new Error('Missing Product domain enrichment service: ' + contribution.serviceName);
+                continue;
+            }
+            Object.assign(result, await service.enrich(request, input));
+        }
+        return result;
+    },
+
     /** Returns customer-safe summaries for search projection payload. @param {Object} request Request. @param {Object} input Publication input. @returns {Promise<Object>} Enrichment. */
     enrich: async function (request, input) {
         let result = {};
@@ -97,6 +113,9 @@ module.exports = {
             if (availability) result.availability = availability;
         } catch (error) {
             if (this.enrichmentPolicy('inventory').missingBehavior === 'error') throw error;
+        }
+        try { Object.assign(result, await this.domains(request, input)); } catch (error) {
+            if (this.enrichmentPolicy('domains').missingBehavior === 'error') throw error;
         }
         return result;
     }

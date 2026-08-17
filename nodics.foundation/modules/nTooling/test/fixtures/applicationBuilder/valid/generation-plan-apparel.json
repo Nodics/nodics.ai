@@ -1,0 +1,22 @@
+{
+  "contractVersion": 1,
+  "planId": "builder-plan-0123456789abcdef",
+  "createdAt": "2026-08-16T06:00:00.000Z",
+  "expiresAt": "2026-08-17T06:00:00.000Z",
+  "solutionDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "catalogueDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "builderVersion": "0.1.0",
+  "approval": { "required": true, "state": "PENDING" },
+  "resolvedCapabilities": [
+    { "code": "nodics.commerce", "version": "0.0.1", "descriptorDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "selectionReason": "EXPLICIT" },
+    { "code": "apparel", "version": "0.0.1", "descriptorDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "selectionReason": "EXPLICIT" }
+  ],
+  "backendGraph": { "nodes": ["nodics.commerce", "apparel"], "edges": [{ "from": "apparel", "to": "nodics.commerce", "relation": "EXTENDS" }] },
+  "frontendGraph": { "nodes": ["agora.commerce", "agora.apparel"], "edges": [{ "from": "agora.apparel", "to": "agora.commerce", "relation": "EXTENDS" }] },
+  "operations": [
+    { "sequence": 1, "operation": "CREATE_DIRECTORY", "targetRoot": "BACKEND", "targetPath": "modules/customer.apparel", "ownership": "GENERATED", "precondition": "ABSENT", "sourceDigest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" },
+    { "sequence": 2, "operation": "CREATE_FILE", "targetRoot": "DATA", "targetPath": "modules/customer.apparel/data/README.md", "ownership": "CUSTOMER_OWNED", "precondition": "ABSENT", "sourceDigest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" }
+  ],
+  "excludedCapabilityAssertions": ["electronics", "telco"],
+  "qualification": { "commands": ["npm test", "npm run topology:status"], "expectedEvidence": ["backend.graph", "frontend.composition", "generated.self-test"] }
+}

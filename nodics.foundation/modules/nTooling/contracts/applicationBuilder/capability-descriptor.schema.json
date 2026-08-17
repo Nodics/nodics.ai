@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nodics.com/application-builder/v1/capability-descriptor.schema.json",
+  "title": "Nodics Application Builder capability descriptor",
+  "description": "Solution-composition facts that reference authoritative Nodics package metadata.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contractVersion", "code", "kind", "owner", "version", "packageMetadata", "backend", "frontend", "dependencies", "dataPacks", "topologyRoles", "compatibility", "qualification", "integrity"],
+  "properties": {
+    "contractVersion": { "const": 1 },
+    "code": { "$ref": "#/$defs/capabilityCode" },
+    "kind": { "enum": ["PLATFORM", "COMMERCE", "DOMAIN", "EXPERIENCE", "DATA_PACK", "INTEGRATION", "TOOLING"] },
+    "owner": { "$ref": "#/$defs/capabilityCode" },
+    "version": { "$ref": "#/$defs/version" },
+    "packageMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["packageName", "moduleRoot", "metadataDigest"],
+      "properties": {
+        "packageName": { "$ref": "#/$defs/capabilityCode" },
+        "moduleRoot": { "$ref": "#/$defs/safeRelativePath" },
+        "metadataDigest": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "backend": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["packages", "publicApiCategories", "lifecycleAuthorities"],
+      "properties": {
+        "packages": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/capabilityCode" } },
+        "publicApiCategories": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/capabilityCode" } },
+        "lifecycleAuthorities": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/capabilityCode" } }
+      }
+    },
+    "frontend": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["packages", "compositionEntries", "routes", "rendererKeys"],
+      "properties": {
+        "packages": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/capabilityCode" } },
+        "compositionEntries": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/safeRelativePath" } },
+        "routes": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^/" } },
+        "rendererKeys": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/capabilityCode" } }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requires", "extends", "conflictsWith", "optional"],
+      "properties": {
+        "requires": { "$ref": "#/$defs/capabilityList" },
+        "extends": { "$ref": "#/$defs/capabilityList" },
+        "conflictsWith": { "$ref": "#/$defs/capabilityList" },
+        "optional": { "$ref": "#/$defs/capabilityList" }
+      }
+    },
+    "dataPacks": { "$ref": "#/$defs/capabilityList" },
+    "topologyRoles": { "type": "array", "uniqueItems": true, "items": { "enum": ["PLATFORM", "WCMS_STAGED", "WCMS_ONLINE", "PROCESS", "ENGAGEMENT", "COMMERCE", "AXIS", "NEXUS", "AGORA"] } },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodicsRange", "contractRange"],
+      "properties": {
+        "nodicsRange": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "contractRange": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "deprecated": { "type": "boolean", "default": false },
+        "replacement": { "$ref": "#/$defs/capabilityCode" }
+      }
+    },
+    "qualification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tests", "journeys"],
+      "properties": {
+        "tests": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/safeRelativePath" } },
+        "journeys": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/capabilityCode" } }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["descriptorDigest", "artifactDigests"],
+      "properties": {
+        "descriptorDigest": { "$ref": "#/$defs/sha256" },
+        "artifactDigests": { "type": "object", "minProperties": 1, "propertyNames": { "$ref": "#/$defs/safeRelativePath" }, "additionalProperties": { "$ref": "#/$defs/sha256" } }
+      }
+    }
+  },
+  "$defs": {
+    "capabilityCode": { "type": "string", "pattern": "^[a-z][A-Za-z0-9._-]{1,127}$" },
+    "capabilityList": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/capabilityCode" } },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$" },
+    "sha256": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "safeRelativePath": { "type": "string", "minLength": 1, "maxLength": 512, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)[A-Za-z0-9._/-]+$" }
+  }
+}

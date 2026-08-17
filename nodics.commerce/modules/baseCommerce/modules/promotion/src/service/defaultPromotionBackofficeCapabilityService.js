@@ -12,11 +12,26 @@
 /* Nodics source-available software. See root LICENSE. */
 /** @module promotion/service/DefaultPromotionBackofficeCapabilityService @description Publishes the Promotion-owned BackOffice workspaces. @layer service @owner promotion */
 module.exports = {
+    /**
+     * Executes `init` as a loader-visible operation owned by this module.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     init: function () {
         SERVICE.DefaultModuleRegistrationAgentService.registerBackofficeCapabilityProvider('promotion', this);
         return Promise.resolve(true);
     },
+    /**
+     * Executes `postInit` as a loader-visible operation owned by this module.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     postInit: function () { return Promise.resolve(true); },
+    /**
+     * Executes `getCapability` as a loader-visible operation owned by this module.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     getCapability: function () {
         let d = SERVICE.DefaultBackofficeCapabilityDefinitionService;
         let promotionCodeInput = { name: 'promotionCode', label: 'Promotion code', type: 'HIDDEN', required: true, valueFromRecord: 'code', maximumLength: 128 };

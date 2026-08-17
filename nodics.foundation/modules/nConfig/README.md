@@ -140,6 +140,38 @@ safe context such as token type, tenant, operation, correlation id, reason code,
 or status. Do not log generated token values, raw passwords, API keys, cookies,
 authorization headers, private keys, or usable connection credentials.
 
+File log storage is controlled by `log.storage`, independently from business
+media storage. This lets product media use S3/CDN while runtime logs remain on
+local server storage or a NAS mount.
+
+```js
+module.exports = {
+    log: {
+        storage: {
+            defaultProvider: 'local',
+            providers: {
+                local: {
+                    enabled: true,
+                    basePath: '',
+                    fallbackRelativeBasePath: 'temp/logs'
+                },
+                nas: {
+                    enabled: false,
+                    basePath: '/mnt/nodics-logs'
+                }
+            },
+            layout: '{environment}/{server}/{node}/{yyyy}/{mm}/{dd}/{filename}'
+        }
+    }
+};
+```
+
+If the selected provider `basePath` is absolute, Nodics writes logs beneath that
+operations-owned path. If it is relative, or omitted, Nodics resolves it beneath
+the active server path. This preserves local first-start behavior while allowing
+environment, server, or node layers to move logs to a shared operational
+location. Do not use `media.storage` to control log placement.
+
 ## Pre And Post Startup Scripts
 
 `config/prescripts.js` and `config/postscripts.js` are startup extension

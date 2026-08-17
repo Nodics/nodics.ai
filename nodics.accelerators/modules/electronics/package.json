@@ -1,0 +1,27 @@
+{
+    "name": "electronics",
+    "index": "92.39",
+    "description": "Reusable Electronics accelerator composition boundary.",
+    "main": "nodics.js",
+    "version": "0.0.1",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "nodics": {
+        "kind": "group",
+        "displayName": "Electronics",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": [
+            "composition",
+            "configuration",
+            "llm"
+        ],
+        "runtime": {
+            "router": false,
+            "publish": false,
+            "web": false
+        },
+        "extends": ["nodics.commerce"]
+    },
+    "scripts": {}
+}

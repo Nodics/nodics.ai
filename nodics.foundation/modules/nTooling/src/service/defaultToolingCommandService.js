@@ -391,7 +391,9 @@ module.exports = {
             '@nTooling/mcp-governance': path.join(toolingModulePath, 'src', 'service', 'command', 'defaultMcpGovernanceCommandService.js'),
             '@nTooling/mcp-validate': path.join(toolingModulePath, 'src', 'service', 'command', 'defaultMcpValidationCommandService.js'),
             '@nTooling/mcp-runtime-context': path.join(toolingModulePath, 'src', 'service', 'command', 'defaultMcpRuntimeContextCommandService.js'),
-            '@nTooling/mcp-mutation-plan': path.join(toolingModulePath, 'src', 'service', 'command', 'defaultMcpMutationPlanCommandService.js')
+            '@nTooling/mcp-mutation-plan': path.join(toolingModulePath, 'src', 'service', 'command', 'defaultMcpMutationPlanCommandService.js'),
+            '@nTooling/application-builder': path.join(toolingModulePath, 'src', 'service', 'command', 'defaultApplicationBuilderCommandService.js'),
+            '@nTooling/project': path.join(toolingModulePath, 'src', 'service', 'command', 'defaultProjectCommandService.js')
         };
     },
 

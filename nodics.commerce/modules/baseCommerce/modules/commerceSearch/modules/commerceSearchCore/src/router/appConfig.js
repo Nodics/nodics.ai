@@ -9,5 +9,84 @@
 
  */
 
-/** @module commerceSearchCore/src/router/appConfig @description Reserves Commerce Search Core API application hooks. @layer router @owner commerceSearchCore */
-module.exports = { commerceSearchCoreApi: { initSession: app => app, initLogger: app => app, initCache: app => app, initBodyParser: app => app, initHeaders: app => app, initErrorRoutes: app => app, initExtras: app => app } };
+/**
+ * @module commerceSearchCore/src/router/appConfig
+ * @description Reserves Commerce Search Core API application hooks.
+ * @layer router
+ * @owner commerceSearchCore
+ * @override Later modules may extend application bootstrap hooks through the
+ * router application configuration contract.
+ */
+module.exports = {
+    commerceSearchCoreApi: {
+        /**
+         * Initializes request session handling for the Commerce Search Core API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initSession: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes request logging for the Commerce Search Core API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initLogger: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes cache middleware for the Commerce Search Core API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initCache: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes body parsing for the Commerce Search Core API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initBodyParser: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes response headers for the Commerce Search Core API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initHeaders: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes error routes for the Commerce Search Core API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initErrorRoutes: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes additional extension hooks for the Commerce Search Core API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initExtras: function (app) {
+            return app;
+        }
+    }
+};

@@ -10,7 +10,7 @@
         "displayName": "Discovery Projection",
         "runtimeModule": true,
         "loadableByNodicsModuleLoader": true,
-        "owns": ["configuration", "schema", "service", "test", "llm"],
+        "owns": ["configuration", "schema", "service", "search", "test", "llm"],
         "runtime": { "router": false, "publish": false, "web": false }
     }
 }

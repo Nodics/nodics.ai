@@ -13,6 +13,13 @@
 /** @module pricing/src/service/defaultPricingPublicationService @description Restores Pricing operational records into Online runtime boundaries. @layer service @owner pricing */
 module.exports = {
     records: value => Array.isArray(value) ? value : value && typeof value === 'object' ? Object.values(value) : [],
+    /**
+     * Executes `normalizeDateField` as a loader-visible operation owned by this module.
+     * @param {*} model Value defined by the owning module contract.
+     * @param {*} field Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     normalizeDateField: function (model, field) {
         if (!Object.prototype.hasOwnProperty.call(model, field) || model[field] instanceof Date) return;
         if (model[field] === undefined || model[field] === null || model[field] === '') {
@@ -22,6 +29,12 @@ module.exports = {
         model[field] = new Date(model[field]);
         if (Number.isNaN(model[field].getTime())) delete model[field];
     },
+    /**
+     * Executes `persistenceModel` as a loader-visible operation owned by this module.
+     * @param {*} record Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     persistenceModel: function (record) {
         let now = new Date();
         let model = Object.assign({}, record, {
@@ -33,6 +46,14 @@ module.exports = {
         this.normalizeDateField(model, 'validTo');
         return model;
     },
+    /**
+     * Executes `saveAll` as a loader-visible operation owned by this module.
+     * @param {*} service Value defined by the owning module contract.
+     * @param {*} request Value defined by the owning module contract.
+     * @param {*} records Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     saveAll: async function (service, request, records) {
         let restored = [];
         for (let record of records) {
@@ -43,6 +64,13 @@ module.exports = {
         }
         return restored;
     },
+    /**
+     * Executes `restoreOperational` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @param {*} input Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     restoreOperational: async function (request, input) {
         let priceBooks = this.records(input.priceBooks), priceRows = this.records(input.priceRows);
         if (priceBooks.length === 0 || priceRows.length === 0) throw new Error('Price books and price rows are required for Pricing restoration');

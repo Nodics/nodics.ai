@@ -9,7 +9,85 @@
 
  */
 
-/* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
 'use strict';
-/** @module order/src/router/appConfig @description Reserves Order lifecycle API application hooks. @layer router @owner order */
-module.exports = { orderLifecycle: { initSession: app => app, initLogger: app => app, initCache: app => app, initBodyParser: app => app, initHeaders: app => app, initErrorRoutes: app => app, initExtras: app => app } };
+/**
+ * @module order/src/router/appConfig
+ * @description Reserves Order lifecycle API application hooks.
+ * @layer router
+ * @owner order
+ * @override Later modules may extend application bootstrap hooks through the
+ * router application configuration contract.
+ */
+module.exports = {
+    orderLifecycle: {
+        /**
+         * Initializes request session handling for the Order lifecycle API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initSession: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes request logging for the Order lifecycle API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initLogger: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes cache middleware for the Order lifecycle API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initCache: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes body parsing for the Order lifecycle API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initBodyParser: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes response headers for the Order lifecycle API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initHeaders: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes error routes for the Order lifecycle API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initErrorRoutes: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes additional extension hooks for the Order lifecycle API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initExtras: function (app) {
+            return app;
+        }
+    }
+};

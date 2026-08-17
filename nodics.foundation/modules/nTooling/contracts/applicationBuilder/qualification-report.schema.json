@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nodics.com/application-builder/v1/qualification-report.schema.json",
+  "title": "Nodics Application Builder qualification report",
+  "description": "Auditable evidence produced when a generated Builder output is qualified.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contractVersion", "qualificationId", "createdAt", "solutionDigest", "planDigest", "catalogueDigest", "projectCode", "scope", "state", "gates", "evidence", "evidenceDigest", "lockUpdate"],
+  "properties": {
+    "contractVersion": { "const": 1 },
+    "qualificationId": { "type": "string", "pattern": "^builder-qualification-[a-f0-9]{16,64}$" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "solutionDigest": { "$ref": "#/$defs/sha256" },
+    "planDigest": { "$ref": "#/$defs/sha256" },
+    "catalogueDigest": { "$ref": "#/$defs/sha256" },
+    "projectCode": { "$ref": "#/$defs/code" },
+    "scope": { "enum": ["GENERATED_SKELETON", "REFERENCE_WORKSPACE", "FULL_GENERATED_APPLICATION"] },
+    "state": { "enum": ["PASSED", "FAILED"] },
+    "gates": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/capabilityCode" }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["gate", "kind", "state", "summary", "digest"],
+        "properties": {
+          "gate": { "$ref": "#/$defs/capabilityCode" },
+          "kind": { "enum": ["ARTIFACT", "COMMAND", "REFERENCE_DOCUMENT", "SEMANTIC"] },
+          "state": { "enum": ["PASSED", "FAILED"] },
+          "summary": { "type": "string", "minLength": 1, "maxLength": 500 },
+          "command": { "type": "string", "minLength": 1, "maxLength": 500 },
+          "source": { "$ref": "#/$defs/safeRelativePath" },
+          "digest": { "$ref": "#/$defs/sha256" }
+        }
+      }
+    },
+    "evidenceDigest": { "$ref": "#/$defs/sha256" },
+    "lockUpdate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "verifiedAt", "evidenceDigest", "gates", "scope", "reportPath"],
+      "properties": {
+        "state": { "enum": ["PASSED", "FAILED"] },
+        "verifiedAt": { "type": "string", "format": "date-time" },
+        "evidenceDigest": { "$ref": "#/$defs/sha256" },
+        "gates": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/capabilityCode" }
+        },
+        "scope": { "enum": ["GENERATED_SKELETON", "REFERENCE_WORKSPACE", "FULL_GENERATED_APPLICATION"] },
+        "reportPath": { "$ref": "#/$defs/safeRelativePath" }
+      }
+    }
+  },
+  "$defs": {
+    "code": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]{1,127}$" },
+    "capabilityCode": { "type": "string", "pattern": "^[a-z][A-Za-z0-9._-]{1,127}$" },
+    "sha256": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "safeRelativePath": { "type": "string", "minLength": 1, "maxLength": 512, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)[A-Za-z0-9._/-]+$" }
+  }
+}

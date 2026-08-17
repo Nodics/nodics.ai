@@ -119,6 +119,21 @@ module.exports = {
                 'privateKey'
             ]
         },
+        storage: {
+            defaultProvider: 'local',
+            providers: {
+                local: {
+                    enabled: true,
+                    basePath: '',
+                    fallbackRelativeBasePath: 'temp/logs'
+                },
+                nas: {
+                    enabled: false,
+                    basePath: '/mnt/nodics-logs'
+                }
+            },
+            layout: '{filename}'
+        },
         transports: {
             console: {
                 consoleTransport: {

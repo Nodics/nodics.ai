@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nodics.com/application-builder/v1/generation-plan.schema.json",
+  "title": "Nodics Application Builder generation plan",
+  "description": "Immutable, reviewable and non-executable-by-default plan for generating a customer application.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contractVersion", "planId", "createdAt", "expiresAt", "solutionDigest", "catalogueDigest", "builderVersion", "approval", "resolvedCapabilities", "backendGraph", "frontendGraph", "operations", "excludedCapabilityAssertions", "qualification"],
+  "properties": {
+    "contractVersion": { "const": 1 },
+    "planId": { "type": "string", "pattern": "^builder-plan-[a-f0-9]{16,64}$" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "expiresAt": { "type": "string", "format": "date-time" },
+    "solutionDigest": { "$ref": "#/$defs/sha256" },
+    "catalogueDigest": { "$ref": "#/$defs/sha256" },
+    "builderVersion": { "$ref": "#/$defs/version" },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "state"],
+      "properties": {
+        "required": { "const": true },
+        "state": { "enum": ["PENDING", "APPROVED", "REJECTED", "EXPIRED"] },
+        "approvedPlanDigest": { "$ref": "#/$defs/sha256" },
+        "approvedAt": { "type": "string", "format": "date-time" },
+        "approvalReference": { "type": "string", "minLength": 1, "maxLength": 200 }
+      }
+    },
+    "resolvedCapabilities": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "version", "descriptorDigest", "selectionReason"],
+        "properties": {
+          "code": { "$ref": "#/$defs/capabilityCode" },
+          "version": { "$ref": "#/$defs/version" },
+          "descriptorDigest": { "$ref": "#/$defs/sha256" },
+          "selectionReason": { "enum": ["EXPLICIT", "REQUIRED", "EXTENDED", "OPTIONAL_APPROVED"] }
+        }
+      }
+    },
+    "backendGraph": { "$ref": "#/$defs/graph" },
+    "frontendGraph": { "$ref": "#/$defs/graph" },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sequence", "operation", "targetRoot", "targetPath", "ownership", "precondition", "sourceDigest"],
+        "properties": {
+          "sequence": { "type": "integer", "minimum": 1 },
+          "operation": { "enum": ["CREATE_DIRECTORY", "CREATE_FILE", "UPDATE_GENERATED_FILE", "REGISTER_DEPENDENCY"] },
+          "targetRoot": { "enum": ["BACKEND", "STOREFRONT", "DATA", "EVIDENCE"] },
+          "targetPath": { "$ref": "#/$defs/safeRelativePath" },
+          "ownership": { "enum": ["GENERATED", "GENERATED_EXTENSIBLE", "CUSTOMER_OWNED"] },
+          "precondition": { "enum": ["ABSENT", "LOCKED_HASH_MATCH", "GENERATED_REGION_MATCH", "DIRECTORY_EXISTS"] },
+          "previousDigest": { "$ref": "#/$defs/sha256" },
+          "sourceDigest": { "$ref": "#/$defs/sha256" },
+          "templateCoordinate": { "type": "string", "minLength": 1, "maxLength": 240 }
+        }
+      }
+    },
+    "excludedCapabilityAssertions": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/capabilityCode" } },
+    "qualification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commands", "expectedEvidence"],
+      "properties": {
+        "commands": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1, "maxLength": 500 } },
+        "expectedEvidence": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/capabilityCode" } }
+      }
+    }
+  },
+  "$defs": {
+    "capabilityCode": { "type": "string", "pattern": "^[a-z][A-Za-z0-9._-]{1,127}$" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$" },
+    "sha256": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "safeRelativePath": { "type": "string", "minLength": 1, "maxLength": 512, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)[A-Za-z0-9._/-]+$" },
+    "graph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodes", "edges"],
+      "properties": {
+        "nodes": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/capabilityCode" } },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["from", "to", "relation"],
+            "properties": {
+              "from": { "$ref": "#/$defs/capabilityCode" },
+              "to": { "$ref": "#/$defs/capabilityCode" },
+              "relation": { "enum": ["REQUIRES", "EXTENDS", "CONTRIBUTES"] }
+            }
+          }
+        }
+      }
+    }
+  }
+}

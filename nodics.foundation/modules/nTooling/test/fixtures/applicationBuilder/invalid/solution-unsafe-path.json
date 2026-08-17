@@ -1,0 +1,14 @@
+{
+  "contractVersion": 1,
+  "identity": { "solutionCode": "unsafePath", "customerCode": "reference", "projectCode": "unsafePath" },
+  "environment": { "mode": "WORKSPACE", "class": "LOCAL" },
+  "capabilities": { "selected": ["nodics.commerce"], "domains": [] },
+  "commerce": { "stores": ["mainStore"], "catalogs": ["mainCatalog"], "locales": ["en"], "currencies": ["USD"] },
+  "topology": { "backendRuntimes": ["PLATFORM", "COMMERCE"], "frontends": ["AGORA"] },
+  "experience": { "storefront": "AGORA", "composition": "commerce", "routes": ["/"], "rendererKeys": [] },
+  "security": { "authentication": "PASSWORD", "authorization": "BACKEND_OWNED", "session": "BEARER", "corsOrigins": [], "publicApiCategories": ["customer"] },
+  "integrations": [],
+  "data": { "packs": [], "customerOwnedRoots": ["../../outside"] },
+  "qualification": { "profile": "CONTRACT", "journeys": ["commerce.discovery"], "freshDatabaseRequired": false },
+  "decisions": { "unresolved": [], "assumptions": [] }
+}

@@ -1,5 +1,7 @@
 # Customer List Agent Contract
 
+- Follow the repository contract at `../../../../../AGENTS.md`.
+- Follow global guidance at `../../../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 - Follow the repository, Commerce, and Checkout ancestor contracts before edits.
 - Customer List owns only customer-scoped wishlist and compare-list intent.
 - Do not copy Product, Pricing, Promotion, Search, Profile, Cart, Order, or

@@ -1,0 +1,14 @@
+{
+  "contractVersion": 1,
+  "identity": { "solutionCode": "referenceElectronics", "customerCode": "reference", "projectCode": "referenceElectronics" },
+  "environment": { "mode": "WORKSPACE", "class": "LOCAL" },
+  "capabilities": { "selected": ["nodics.commerce", "electronics"], "domains": ["ELECTRONICS"], "excluded": ["apparel", "telco"] },
+  "commerce": { "stores": ["mainStore"], "catalogs": ["electronicsProductCatalog", "electronicsContentCatalog"], "locales": ["en"], "currencies": ["USD"] },
+  "topology": { "backendRuntimes": ["PLATFORM", "WCMS_STAGED", "WCMS_ONLINE", "COMMERCE"], "frontends": ["AXIS", "AGORA"] },
+  "experience": { "storefront": "AGORA", "composition": "electronics", "routes": ["/", "/electronics"], "rendererKeys": ["agora.electronics.product-card"] },
+  "security": { "authentication": "PASSWORD", "authorization": "BACKEND_OWNED", "session": "BEARER", "corsOrigins": ["http://127.0.0.1:3300"], "publicApiCategories": ["customer"] },
+  "integrations": [],
+  "data": { "packs": ["agora.common", "agora.electronics"], "customerOwnedRoots": ["modules/agora.common/data", "modules/agora.electronics/data"] },
+  "qualification": { "profile": "LOCAL_END_TO_END", "journeys": ["electronics.warranty-checkout"], "freshDatabaseRequired": true },
+  "decisions": { "unresolved": [], "assumptions": [] }
+}

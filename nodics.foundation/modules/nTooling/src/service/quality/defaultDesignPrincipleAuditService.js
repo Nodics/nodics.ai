@@ -123,6 +123,31 @@ const corePrefix = fs.existsSync(path.join(rootPath, 'nodics.foundation')) ? 'no
 
 
 /**
+ * Returns framework-owned source files currently governed by the strict
+ * mergeable service export style check.
+ *
+ * @returns {string[]} Repository-relative source file paths.
+ */
+
+
+/**
+ * Reads a JavaScript source file for style governance.
+ *
+ * @param {string} relativePath Repository-relative source file path.
+ * @returns {string} Source file content.
+ */
+
+
+/**
+ * Validates that governed service files avoid non-mergeable function styles.
+ *
+ * @param {string[]} failures Mutable failure list.
+ * @param {string[]} [relativePaths] Repository-relative source file paths.
+ * @returns {void}
+ */
+
+
+/**
  * Runs the design-principle audit.
  *
  * @returns {string[]} Validation failures.
@@ -138,219 +163,283 @@ const corePrefix = fs.existsSync(path.join(rootPath, 'nodics.foundation')) ? 'no
 
 
 
+const serviceExportStylePatterns = [
+    {
+        name: 'shorthand object method',
+        pattern: /^\s{4}[A-Za-z_$][A-Za-z0-9_$]*\s*\([^)]*\)\s*\{/
+    },
+    {
+        name: 'top-level named function',
+        pattern: /^function\s+[A-Za-z_$][A-Za-z0-9_$]*\s*\(/
+    },
+    {
+        name: 'arrow function member',
+        pattern: /\b[A-Za-z_$][A-Za-z0-9_$]*\s*:\s*(\([^)]*\)|[A-Za-z_$][A-Za-z0-9_$]*)\s*=>/
+    },
+    {
+        name: 'ESM function/default object export',
+        pattern: /^\s*export\s+(default\s+)?(async\s+)?function\s+|^\s*export\s+default\s+\{/
+    }
+];
+
 let exportedService;
 module.exports = exportedService = {
     /** Implements read as an overrideable service operation. */
     read: function (relativePath) {
-    return fs.readFileSync(path.join(rootPath, relativePath), 'utf8');
-},
+        return fs.readFileSync(path.join(rootPath, relativePath), 'utf8');
+    },
 
     /** Implements corePath as an overrideable service operation. */
     corePath: function (relativePath) {
-    return corePrefix + relativePath;
-},
+        return corePrefix + relativePath;
+    },
 
     /** Implements fail as an overrideable service operation. */
     fail: function (failures, message) {
-    failures.push(message);
-},
+        failures.push(message);
+    },
 
     /** Implements requireClauses as an overrideable service operation. */
     requireClauses: function (failures, relativePath, clauses) {
-    let content = '';
-    try {
-        content = (this.read || exportedService.read).call(this, relativePath);
-    } catch (error) {
-        (this.fail || exportedService.fail).call(this, failures, 'Missing principle audit file: ' + relativePath);
-        return;
-    }
-    clauses.forEach(clause => {
-        if (!content.includes(clause)) {
-            (this.fail || exportedService.fail).call(this, failures, relativePath + ' is missing principle audit clause: ' + clause);
+        let content = '';
+        try {
+            content = (this.read || exportedService.read).call(this, relativePath);
+        } catch (error) {
+            (this.fail || exportedService.fail).call(this, failures, 'Missing principle audit file: ' + relativePath);
+            return;
         }
-    });
-},
+        clauses.forEach(clause => {
+            if (!content.includes(clause)) {
+                (this.fail || exportedService.fail).call(this, failures, relativePath + ' is missing principle audit clause: ' + clause);
+            }
+        });
+    },
 
     /** Implements readScripts as an overrideable service operation. */
     readScripts: function (failures) {
-    try {
-        return JSON.parse((this.read || exportedService.read).call(this, 'package.json')).scripts || {};
-    } catch (error) {
-        (this.fail || exportedService.fail).call(this, failures, 'package.json must be readable JSON: ' + error.message);
-        return {};
-    }
-},
+        try {
+            return JSON.parse((this.read || exportedService.read).call(this, 'package.json')).scripts || {};
+        } catch (error) {
+            (this.fail || exportedService.fail).call(this, failures, 'package.json must be readable JSON: ' + error.message);
+            return {};
+        }
+    },
 
     /** Implements readToolingProperties as an overrideable service operation. */
     readToolingProperties: function (failures) {
-    try {
-        return require(path.join(rootPath, (this.corePath || exportedService.corePath).call(this, 'modules/nTooling/config/properties.js'))).tooling || {};
-    } catch (error) {
-        (this.fail || exportedService.fail).call(this, failures, 'nTooling properties must be readable: ' + error.message);
-        return {};
-    }
-},
+        try {
+            return require(path.join(rootPath, (this.corePath || exportedService.corePath).call(this, 'modules/nTooling/config/properties.js'))).tooling || {};
+        } catch (error) {
+            (this.fail || exportedService.fail).call(this, failures, 'nTooling properties must be readable: ' + error.message);
+            return {};
+        }
+    },
 
     /** Implements auditCommandGates as an overrideable service operation. */
     auditCommandGates: function (failures) {
-    const scripts = (this.readScripts || exportedService.readScripts).call(this, failures);
-    const tooling = (this.readToolingProperties || exportedService.readToolingProperties).call(this, failures);
-    [
-        'ai:validate',
-        'ai:principle-audit',
-        'llm:validate',
-        'quality:docs',
-        'quality:copyright',
-        'quality:ownership',
-        'test:basic',
-        'test:full',
-        'test:topology:consolidated',
-        'test:topology:modular',
-        'governance:report',
-        'build'
-    ].forEach(scriptName => {
-        if (!scripts[scriptName]) {
-            (this.fail || exportedService.fail).call(this, failures, 'Missing principle audit command gate: ' + scriptName);
+        const scripts = (this.readScripts || exportedService.readScripts).call(this, failures);
+        const tooling = (this.readToolingProperties || exportedService.readToolingProperties).call(this, failures);
+        [
+            'ai:validate',
+            'ai:principle-audit',
+            'llm:validate',
+            'quality:docs',
+            'quality:copyright',
+            'quality:ownership',
+            'test:basic',
+            'test:full',
+            'test:topology:consolidated',
+            'test:topology:modular',
+            'governance:report',
+            'build'
+        ].forEach(scriptName => {
+            if (!scripts[scriptName]) {
+                (this.fail || exportedService.fail).call(this, failures, 'Missing principle audit command gate: ' + scriptName);
+            }
+        });
+        if (scripts.build && !scripts.build.includes('nodics-tool.js build')) {
+            (this.fail || exportedService.fail).call(this, failures, 'build must delegate to the governed nTooling lifecycle command');
         }
-    });
-    if (scripts.build && !scripts.build.includes('nodics-tool.js build')) {
-        (this.fail || exportedService.fail).call(this, failures, 'build must delegate to the governed nTooling lifecycle command');
-    }
-    const buildSteps = (((tooling.commands || {}).build || {}).steps || []);
-    const llmGenerateIndex = buildSteps.findIndex(step => (step.tool || []).includes('llm:generate'));
-    const principleAuditIndex = buildSteps.findIndex(step => (step.tool || []).includes('ai:principle-audit'));
-    const includesGovernanceReport = buildSteps.some(step => (step.tool || []).includes('governance:report'));
-    if (llmGenerateIndex === -1) {
-        (this.fail || exportedService.fail).call(this, failures, 'nTooling build lifecycle must generate LLM context before generated-context audit');
-    }
-    if (principleAuditIndex === -1) {
-        (this.fail || exportedService.fail).call(this, failures, 'nTooling build lifecycle must include ai:principle-audit after generated LLM context is available');
-    }
-    if (llmGenerateIndex !== -1 && principleAuditIndex !== -1 && principleAuditIndex < llmGenerateIndex) {
-        (this.fail || exportedService.fail).call(this, failures, 'nTooling build lifecycle must run llm:generate before ai:principle-audit');
-    }
-    if (!includesGovernanceReport) {
-        (this.fail || exportedService.fail).call(this, failures, 'nTooling build lifecycle must keep governance:report in the generated-artifact gate');
-    }
-},
+        const buildSteps = (((tooling.commands || {}).build || {}).steps || []);
+        const llmGenerateIndex = buildSteps.findIndex(step => (step.tool || []).includes('llm:generate'));
+        const principleAuditIndex = buildSteps.findIndex(step => (step.tool || []).includes('ai:principle-audit'));
+        const includesGovernanceReport = buildSteps.some(step => (step.tool || []).includes('governance:report'));
+        if (llmGenerateIndex === -1) {
+            (this.fail || exportedService.fail).call(this, failures, 'nTooling build lifecycle must generate LLM context before generated-context audit');
+        }
+        if (principleAuditIndex === -1) {
+            (this.fail || exportedService.fail).call(this, failures, 'nTooling build lifecycle must include ai:principle-audit after generated LLM context is available');
+        }
+        if (llmGenerateIndex !== -1 && principleAuditIndex !== -1 && principleAuditIndex < llmGenerateIndex) {
+            (this.fail || exportedService.fail).call(this, failures, 'nTooling build lifecycle must run llm:generate before ai:principle-audit');
+        }
+        if (!includesGovernanceReport) {
+            (this.fail || exportedService.fail).call(this, failures, 'nTooling build lifecycle must keep governance:report in the generated-artifact gate');
+        }
+    },
 
     /** Implements auditAiGovernance as an overrideable service operation. */
     auditAiGovernance: function (failures, validator = aiGovernanceValidationService) {
-    validator.validateRootFiles(failures);
-    validator.validatePackageFiles(failures);
-    validator.validateReadmeCasing(failures);
-    validator.validateAgentFiles(failures);
-},
+        validator.validateRootFiles(failures);
+        validator.validatePackageFiles(failures);
+        validator.validateReadmeCasing(failures);
+        validator.validateAgentFiles(failures);
+    },
 
     /** Implements auditPrincipleContracts as an overrideable service operation. */
     auditPrincipleContracts: function (failures) {
-    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/contracts/nodics-principles.md'), [
-        'capabilities are sacred, implementations are negotiable',
-        'AI Role And Responsibility Boundary',
-        'Pre-Implementation Framework Study Gate',
-        'Strict Nodics Coding Principles',
-        'provide default capabilities',
-        'root `package.json` is the only npm dependency installation authority',
-        'Security, access control, validation, audit, rollback, diagnostics, and test'
-    ]);
-    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/standards/module-standard.md'), [
-        'Module `package.json` files must not declare `dependencies` or',
-        '`nodics.dependencyGovernance.ownedDependencies` metadata'
-    ]);
-    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/nodics-principles.md'), [
-        'compatibility pointer',
-        'modules/nSetup/llm/contracts/nodics-principles.md',
-        'Do not add or maintain separate principles here'
-    ]);
-    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/playbooks/change-gate-contract.md'), [
-        '## Gate 1A: Implementation Readiness',
-        '## Gate 4: Periodic Platform Audit',
-        'module structure and naming standards',
-        'duplicate or parallel runtime mechanisms',
-        'runtime activation, audit, rollback, and diagnostics',
-        'Do not use repository `temp` or the refactor-only',
-        'active server/node generated-report location'
-    ]);
-    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/contracts/developer-implementation-contract.md'), [
-        'AI Expert-Council Responsibility',
-        'Pre-Implementation Study And Readiness',
-        'security, access, validation, audit, rollback, diagnostics, and test',
-        'Apply `integration-governance-contract.md`'
-    ]);
-    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/contracts/human-maintainability-contract.md'), [
-        'understandable, diagnosable, safely changeable, and',
-        'AI-generated code has no special exemption'
-    ]);
-},
+        (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/contracts/nodics-principles.md'), [
+            'capabilities are sacred, implementations are negotiable',
+            'AI Role And Responsibility Boundary',
+            'Pre-Implementation Framework Study Gate',
+            'Strict Nodics Coding Principles',
+            'provide default capabilities',
+            'root `package.json` is the only npm dependency installation authority',
+            'Security, access control, validation, audit, rollback, diagnostics, and test'
+        ]);
+        (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/standards/module-standard.md'), [
+            'Module `package.json` files must not declare `dependencies` or',
+            '`nodics.dependencyGovernance.ownedDependencies` metadata'
+        ]);
+        (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/nodics-principles.md'), [
+            'compatibility pointer',
+            'modules/nSetup/llm/contracts/nodics-principles.md',
+            'Do not add or maintain separate principles here'
+        ]);
+        (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/playbooks/change-gate-contract.md'), [
+            '## Gate 1A: Implementation Readiness',
+            '## Gate 4: Periodic Platform Audit',
+            'module structure and naming standards',
+            'duplicate or parallel runtime mechanisms',
+            'runtime activation, audit, rollback, and diagnostics',
+            'Do not use repository `temp` or the refactor-only',
+            'active server/node generated-report location'
+        ]);
+        (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/contracts/developer-implementation-contract.md'), [
+            'AI Expert-Council Responsibility',
+            'Pre-Implementation Study And Readiness',
+            'security, access, validation, audit, rollback, diagnostics, and test',
+            'Apply `integration-governance-contract.md`'
+        ]);
+        (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/contracts/human-maintainability-contract.md'), [
+            'understandable, diagnosable, safely changeable, and',
+            'AI-generated code has no special exemption'
+        ]);
+    },
 
     /** Implements auditLlmGuidance as an overrideable service operation. */
     auditLlmGuidance: function (failures) {
-    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/ai-enablement-index.md'), [
-        'root-to-leaf README/AGENTS chain',
-        'AI Role And Study Gate',
-        'Framework-maintainer mode',
-        'Application-developer mode',
-        'prompts/runtime-governance-prompt.md',
-        'contracts/integration-governance-contract.md'
-    ]);
-    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/prompts/runtime-governance-prompt.md'), [
-        'preview before mutation',
-        'rollback through the owning service',
-        'Do not add a parallel activation channel'
-    ]);
-    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/prompts/refactor-prompt.md'), [
-        'without changing platform capability',
-        'do not create a second loader'
-    ]);
-    (this.requireClauses || exportedService.requireClauses).call(this, failures, this.corePath('modules/nSetup/llm/prompts/testing-prompt.md'), [
-        'later-loaded project modules can override behavior',
-        'separate live'
-    ]);
-},
+        (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/ai-enablement-index.md'), [
+            'root-to-leaf README/AGENTS chain',
+            'AI Role And Study Gate',
+            'Framework-maintainer mode',
+            'Application-developer mode',
+            'prompts/runtime-governance-prompt.md',
+            'contracts/integration-governance-contract.md'
+        ]);
+        (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/prompts/runtime-governance-prompt.md'), [
+            'preview before mutation',
+            'rollback through the owning service',
+            'Do not add a parallel activation channel'
+        ]);
+        (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/prompts/refactor-prompt.md'), [
+            'without changing platform capability',
+            'do not create a second loader'
+        ]);
+        (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/prompts/testing-prompt.md'), [
+            'later-loaded project modules can override behavior',
+            'separate live'
+        ]);
+    },
 
     /** Implements auditGeneratedContextEntrypoints as an overrideable service operation. */
     auditGeneratedContextEntrypoints: function (failures) {
-    [
-        'nodics.foundation/modules/nConfig',
-        'nodics.foundation/modules/nCommon',
-        'nodics.foundation/modules/nTooling',
-        'nodics.foundation/modules/nDynamo',
-        'nodics.foundation/modules/nData/nImport/import',
-        'nodics.platform/modules/profile'
-    ].forEach(modulePath => {
         [
-            'llm/generated/manifest.json',
-            'llm/generated/module-context.md'
-        ].forEach(relativeFile => {
-            const fullPath = path.join(rootPath, modulePath, relativeFile);
-            if (!fs.existsSync(fullPath)) {
-                (this.fail || exportedService.fail).call(this, failures, 'Missing generated context entrypoint: ' + modulePath + '/' + relativeFile);
-            }
+            'nodics.foundation/modules/nConfig',
+            'nodics.foundation/modules/nCommon',
+            'nodics.foundation/modules/nTooling',
+            'nodics.foundation/modules/nDynamo',
+            'nodics.foundation/modules/nData/nImport/import',
+            'nodics.platform/modules/profile'
+        ].forEach(modulePath => {
+            [
+                'llm/generated/manifest.json',
+                'llm/generated/module-context.md'
+            ].forEach(relativeFile => {
+                const fullPath = path.join(rootPath, modulePath, relativeFile);
+                if (!fs.existsSync(fullPath)) {
+                    (this.fail || exportedService.fail).call(this, failures, 'Missing generated context entrypoint: ' + modulePath + '/' + relativeFile);
+                }
+            });
         });
-    });
-},
+    },
+
+    /** Implements getServiceExportStyleGovernancePaths as an overrideable service operation. */
+    getServiceExportStyleGovernancePaths: function () {
+        return [
+            'nodics.foundation/modules/nTooling/src/service/project/defaultProjectRuntimeStartService.js',
+            'nodics.foundation/modules/nTooling/src/service/project/defaultProjectFrameworkLinkService.js',
+            'nodics.foundation/modules/nTooling/src/service/command/defaultProjectCommandService.js',
+            'nodics.foundation/modules/nTooling/src/service/quality/defaultDesignPrincipleAuditService.js',
+            'nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/router/appConfig.js',
+            'nodics.commerce/modules/baseCommerce/modules/product/src/router/appConfig.js',
+            'nodics.commerce/modules/checkout/modules/cart/src/router/appConfig.js',
+            'nodics.commerce/modules/checkout/modules/checkoutCore/src/router/appConfig.js',
+            'nodics.commerce/modules/checkout/modules/order/src/router/appConfig.js',
+            'nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/router/appConfig.js',
+            'nodics.engagement/modules/engagementApi/src/router/appConfig.js',
+            'nodics.js'
+        ];
+    },
+
+    /** Implements readSourceForStyleGovernance as an overrideable service operation. */
+    readSourceForStyleGovernance: function (relativePath) {
+        return fs.readFileSync(path.join(rootPath, relativePath), 'utf8');
+    },
+
+    /** Implements auditServiceExportStyle as an overrideable service operation. */
+    auditServiceExportStyle: function (failures, relativePaths) {
+        const governedPaths = relativePaths || (this.getServiceExportStyleGovernancePaths || exportedService.getServiceExportStyleGovernancePaths).call(this);
+        governedPaths.forEach(relativePath => {
+            let content = '';
+            try {
+                content = (this.readSourceForStyleGovernance || exportedService.readSourceForStyleGovernance).call(this, relativePath);
+            } catch (error) {
+                (this.fail || exportedService.fail).call(this, failures, 'Missing source export style governance file: ' + relativePath);
+                return;
+            }
+            content.split(/\r?\n/).forEach((line, index) => {
+                serviceExportStylePatterns.forEach(pattern => {
+                    if (pattern.pattern.test(line)) {
+                        (this.fail || exportedService.fail).call(this, failures, relativePath + ':' + (index + 1) + ' uses ' + pattern.name + '; use mergeable `methodName: function (...)` service members instead.');
+                    }
+                });
+            });
+        });
+    },
 
     /** Implements audit as an overrideable service operation. */
     audit: function () {
-    const failures = [];
-    (this.auditAiGovernance || exportedService.auditAiGovernance).call(this, failures);
-    (this.auditCommandGates || exportedService.auditCommandGates).call(this, failures);
-    (this.auditPrincipleContracts || exportedService.auditPrincipleContracts).call(this, failures);
-    (this.auditLlmGuidance || exportedService.auditLlmGuidance).call(this, failures);
-    (this.auditGeneratedContextEntrypoints || exportedService.auditGeneratedContextEntrypoints).call(this, failures);
-    return failures;
-},
+        const failures = [];
+        (this.auditAiGovernance || exportedService.auditAiGovernance).call(this, failures);
+        (this.auditCommandGates || exportedService.auditCommandGates).call(this, failures);
+        (this.auditPrincipleContracts || exportedService.auditPrincipleContracts).call(this, failures);
+        (this.auditLlmGuidance || exportedService.auditLlmGuidance).call(this, failures);
+        (this.auditGeneratedContextEntrypoints || exportedService.auditGeneratedContextEntrypoints).call(this, failures);
+        (this.auditServiceExportStyle || exportedService.auditServiceExportStyle).call(this, failures);
+        return failures;
+    },
 
     /** Implements run as an overrideable service operation. */
     run: function () {
-    const failures = (this.audit || exportedService.audit).call(this, );
-    if (failures.length > 0) {
-        console.error('Nodics design-principle audit failed:');
-        failures.forEach(failure => console.error('- ' + failure));
-        process.exit(1);
+        const failures = (this.audit || exportedService.audit).call(this);
+        if (failures.length > 0) {
+            console.error('Nodics design-principle audit failed:');
+            failures.forEach(failure => console.error('- ' + failure));
+            process.exit(1);
+        }
+        console.log('Nodics design-principle audit validated');
     }
-    console.log('Nodics design-principle audit validated');
-}
 };
 
 if (require.main === module) {

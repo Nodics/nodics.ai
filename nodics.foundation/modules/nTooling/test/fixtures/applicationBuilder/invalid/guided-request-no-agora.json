@@ -1,0 +1,15 @@
+{
+  "contractVersion": 1,
+  "project": {
+    "projectCode": "acmeMobile",
+    "customerCode": "acme"
+  },
+  "preset": "telco",
+  "market": {
+    "country": "AE",
+    "locale": "en-AE",
+    "currency": "AED"
+  },
+  "frontends": ["AXIS"],
+  "sampleData": true
+}

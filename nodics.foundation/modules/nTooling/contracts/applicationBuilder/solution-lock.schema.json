@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nodics.com/application-builder/v1/solution-lock.schema.json",
+  "title": "Nodics Application Builder solution lock",
+  "description": "Reproducibility, provenance and last-qualification record for a generated customer application.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contractVersion", "solutionDigest", "planDigest", "builder", "packages", "templates", "artifacts", "effectiveGraphs", "dataPacks", "qualification"],
+  "properties": {
+    "contractVersion": { "const": 1 },
+    "solutionDigest": { "$ref": "#/$defs/sha256" },
+    "planDigest": { "$ref": "#/$defs/sha256" },
+    "builder": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["engineVersion", "contractVersion", "mode"],
+      "properties": {
+        "engineVersion": { "$ref": "#/$defs/version" },
+        "contractVersion": { "const": 1 },
+        "mode": { "enum": ["WORKSPACE", "REGISTRY"] }
+      }
+    },
+    "packages": { "$ref": "#/$defs/lockedCoordinates" },
+    "templates": { "$ref": "#/$defs/lockedCoordinates" },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "ownership", "digest"],
+        "properties": {
+          "path": { "$ref": "#/$defs/safeRelativePath" },
+          "ownership": { "enum": ["GENERATED", "GENERATED_EXTENSIBLE", "CUSTOMER_OWNED"] },
+          "digest": { "$ref": "#/$defs/sha256" },
+          "generatedRegionDigest": { "$ref": "#/$defs/sha256" }
+        }
+      }
+    },
+    "effectiveGraphs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["backend", "frontend"],
+      "properties": {
+        "backend": { "$ref": "#/$defs/lockedGraph" },
+        "frontend": { "$ref": "#/$defs/lockedGraph" }
+      }
+    },
+    "dataPacks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "version", "manifestDigest"],
+        "properties": {
+          "code": { "$ref": "#/$defs/capabilityCode" },
+          "version": { "$ref": "#/$defs/version" },
+          "manifestDigest": { "$ref": "#/$defs/sha256" }
+        }
+      }
+    },
+    "qualification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "verifiedAt", "evidenceDigest", "gates"],
+      "properties": {
+        "state": { "enum": ["NOT_RUN", "PASSED", "FAILED", "STALE"] },
+        "verifiedAt": { "type": "string", "format": "date-time" },
+        "evidenceDigest": { "$ref": "#/$defs/sha256" },
+        "gates": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/capabilityCode" } },
+        "scope": { "enum": ["GENERATED_SKELETON", "REFERENCE_WORKSPACE", "FULL_GENERATED_APPLICATION"] },
+        "reportPath": { "$ref": "#/$defs/safeRelativePath" }
+      }
+    }
+  },
+  "$defs": {
+    "capabilityCode": { "type": "string", "pattern": "^[a-z][A-Za-z0-9._-]{1,127}$" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$" },
+    "sha256": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "safeRelativePath": { "type": "string", "minLength": 1, "maxLength": 512, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)[A-Za-z0-9._/-]+$" },
+    "lockedCoordinates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "version", "digest", "source"],
+        "properties": {
+          "code": { "$ref": "#/$defs/capabilityCode" },
+          "version": { "$ref": "#/$defs/version" },
+          "digest": { "$ref": "#/$defs/sha256" },
+          "source": { "enum": ["WORKSPACE", "REGISTRY"] }
+        }
+      }
+    },
+    "lockedGraph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodes", "digest"],
+      "properties": {
+        "nodes": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/capabilityCode" } },
+        "digest": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}

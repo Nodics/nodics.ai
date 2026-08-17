@@ -17,6 +17,7 @@ const splt = require('triple-beam').SPLAT;
 const utils = require('../utils/utils');
 const logform = require('logform');
 const flatted = require('flatted');
+const path = require('path');
 
 /**
  * @module config/service/DefaultLoggerService
@@ -152,7 +153,7 @@ module.exports = {
                     if (channel === 'console') {
                         transport = this.createConsoleTransport(labelName, transportConfig);
                     } else if (channel === 'file') {
-                        transport = this.createFileTransport(labelName, transportConfig);
+                        transport = this.createFileTransport(labelName, transportConfig, logConfig);
                     } else if (channel === 'elastic') {
                         transport = this.createElasticTransport(labelName, transportConfig);
                     }
@@ -328,9 +329,10 @@ module.exports = {
      *
      * @param {string} labelName Logger label.
      * @param {Object} config File transport configuration.
+     * @param {Object} logConfig Effective layered log configuration.
      * @returns {Object} Winston file transport.
      */
-    createFileTransport: function (labelName, config) {
+    createFileTransport: function (labelName, config, logConfig) {
         let _self = this;
         let options = _.merge({}, config.options);
         options.label = labelName;
@@ -353,8 +355,131 @@ module.exports = {
                 return `${info.timestamp}  ${info.level}: [${info.label}] ${info.message}`;
             })
         );
-        options.filename = NODICS.getServerPath() + '/temp/logs/' + options.filename;
+        options.filename = this.resolveLogFileName(options.filename, logConfig);
         return new winston.transports.File(options);
+    },
+
+    /**
+     * Resolves the final file transport target from independent log storage policy.
+     *
+     * @param {string} fileName Configured transport filename.
+     * @param {Object} logConfig Effective layered log configuration.
+     * @returns {string} Absolute log file path.
+     */
+    resolveLogFileName: function (fileName, logConfig) {
+        let storage = this.resolveLogStorageConfiguration(logConfig);
+        let layout = storage.layout || '{filename}';
+        let relativePath = this.applyLogStorageLayout(layout, fileName);
+        if (path.isAbsolute(relativePath)) {
+            throw new Error('Log filename layout must resolve to a provider-relative path');
+        }
+        let target = path.resolve(storage.rootPath, relativePath);
+        if (target !== storage.rootPath && !target.startsWith(storage.rootPath + path.sep)) {
+            throw new Error('Log filename layout escapes the configured log storage root');
+        }
+        return target;
+    },
+
+    /**
+     * Resolves configured log storage provider without coupling logs to media storage.
+     *
+     * @param {Object} logConfig Effective layered log configuration.
+     * @returns {Object} Resolved log storage provider.
+     */
+    resolveLogStorageConfiguration: function (logConfig) {
+        logConfig = logConfig || (typeof CONFIG !== 'undefined' && CONFIG && CONFIG.get ? CONFIG.get('log') : {}) || {};
+        let storage = logConfig.storage || {};
+        let providers = storage.providers || {};
+        let providerCode = storage.defaultProvider || 'local';
+        let provider = providers[providerCode] || (providerCode === 'local' ? { enabled: true, fallbackRelativeBasePath: 'temp/logs' } : undefined);
+        if (!provider || provider.enabled !== true) {
+            throw new Error('Invalid log storage provider: ' + providerCode);
+        }
+        let configuredPath = provider.basePath;
+        let fallback = provider.fallbackRelativeBasePath || 'temp/logs';
+        let rawPath = configuredPath || fallback;
+        let rootPath = path.isAbsolute(rawPath) ? path.resolve(rawPath) : path.resolve(path.join(this.resolveServerRoot(), rawPath));
+        return {
+            providerCode: providerCode,
+            provider: Object.assign({}, provider),
+            rootPath: rootPath,
+            layout: storage.layout || '{filename}'
+        };
+    },
+
+    /**
+     * Applies safe path variables to the configured log layout.
+     *
+     * @param {string} layout Provider-relative layout.
+     * @param {string} fileName Transport filename.
+     * @returns {string} Provider-relative log path.
+     */
+    applyLogStorageLayout: function (layout, fileName) {
+        let now = new Date();
+        let values = {
+            filename: this.cleanLogPath(fileName || 'nodics.log'),
+            environment: this.cleanLogPath(this.resolveRuntimeName('environment')),
+            server: this.cleanLogPath(this.resolveRuntimeName('server')),
+            node: this.cleanLogPath(this.resolveRuntimeName('node')),
+            yyyy: String(now.getUTCFullYear()),
+            mm: String(now.getUTCMonth() + 1).padStart(2, '0'),
+            dd: String(now.getUTCDate()).padStart(2, '0')
+        };
+        let resolved = String(layout || '{filename}').replace(/\{([a-zA-Z0-9_]+)\}/g, (match, token) => {
+            return values[token] || 'unknown';
+        });
+        return this.cleanLogPath(resolved);
+    },
+
+    /**
+     * Resolves environment, server, and node labels for log layouts.
+     *
+     * @param {string} kind Runtime label kind.
+     * @returns {string} Runtime label.
+     */
+    resolveRuntimeName: function (kind) {
+        if (kind === 'environment') {
+            if (typeof NODICS !== 'undefined' && NODICS.getSelectedEnvironmentName) return NODICS.getSelectedEnvironmentName();
+            if (typeof NODICS !== 'undefined' && NODICS.getEnvironmentName) return NODICS.getEnvironmentName();
+            return 'environment';
+        }
+        if (kind === 'server') {
+            if (typeof NODICS !== 'undefined' && NODICS.getSelectedServerName) return NODICS.getSelectedServerName();
+            if (typeof NODICS !== 'undefined' && NODICS.getServerName) return NODICS.getServerName();
+            return path.basename(this.resolveServerRoot()) || 'server';
+        }
+        if (kind === 'node') {
+            if (typeof NODICS !== 'undefined' && NODICS.getNodeName) return NODICS.getNodeName();
+            if (typeof CONFIG !== 'undefined' && CONFIG && CONFIG.get) return CONFIG.get('nodeId') || 'node0';
+            return 'node0';
+        }
+        return kind;
+    },
+
+    /**
+     * Resolves active server root with safe fallback for isolated tests.
+     *
+     * @returns {string} Absolute server root.
+     */
+    resolveServerRoot: function () {
+        if (typeof NODICS !== 'undefined' && NODICS.getServerPath) return NODICS.getServerPath();
+        return process.cwd();
+    },
+
+    /**
+     * Sanitizes provider-relative log path segments.
+     *
+     * @param {string} value Raw path.
+     * @returns {string} Safe provider-relative path.
+     */
+    cleanLogPath: function (value) {
+        let segments = String(value || 'unknown').replace(/\\/g, '/').split('/').filter(segment => segment !== '');
+        let cleaned = segments.map(segment => {
+            let safe = segment.replace(/[^a-zA-Z0-9._-]/g, '-');
+            if (!safe || safe === '.' || safe === '..') return 'unknown';
+            return safe;
+        });
+        return cleaned.length ? cleaned.join('/') : 'unknown';
     },
 
     /**

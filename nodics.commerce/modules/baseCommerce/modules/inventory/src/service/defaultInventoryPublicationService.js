@@ -13,6 +13,12 @@
 /** @module inventory/src/service/defaultInventoryPublicationService @description Restores Inventory operational records into Online runtime boundaries. @layer service @owner inventory */
 module.exports = {
     records: value => Array.isArray(value) ? value : value && typeof value === 'object' ? Object.values(value) : [],
+    /**
+     * Executes `persistenceModel` as a loader-visible operation owned by this module.
+     * @param {*} record Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     persistenceModel: function (record) {
         let now = new Date();
         return Object.assign({}, record, {
@@ -21,6 +27,14 @@ module.exports = {
             updated: now
         });
     },
+    /**
+     * Executes `saveAll` as a loader-visible operation owned by this module.
+     * @param {*} service Value defined by the owning module contract.
+     * @param {*} request Value defined by the owning module contract.
+     * @param {*} records Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     saveAll: async function (service, request, records) {
         let restored = [];
         for (let record of records) {
@@ -31,6 +45,13 @@ module.exports = {
         }
         return restored;
     },
+    /**
+     * Executes `restoreOperational` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @param {*} input Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     restoreOperational: async function (request, input) {
         let warehouses = this.records(input.warehouses), inventoryBalances = this.records(input.inventoryBalances);
         if (warehouses.length === 0 || inventoryBalances.length === 0) throw new Error('Warehouses and inventory balances are required for Inventory restoration');

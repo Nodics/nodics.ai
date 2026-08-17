@@ -11,3 +11,7 @@ data files, and publish immutable manifest sections with
 `OPTIONAL_AXIS_INITIATED` installation, `WCMS_STAGED` destination and required
 publication. Never treat source Markdown, generated CMS records, or a frontend
 renderer as interchangeable authorities.
+
+Use [application-builder.md](application-builder.md) for the non-runtime
+Application Builder authorities, validation rules, deterministic planning, and
+customer-data ownership boundary.

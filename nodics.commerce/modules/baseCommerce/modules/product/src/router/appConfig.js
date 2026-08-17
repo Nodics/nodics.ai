@@ -9,5 +9,84 @@
 
  */
 
-/** @module product/src/router/appConfig @description Reserves Product API application hooks. @layer router @owner product */
-module.exports = { productApi: { initSession: app => app, initLogger: app => app, initCache: app => app, initBodyParser: app => app, initHeaders: app => app, initErrorRoutes: app => app, initExtras: app => app } };
+/**
+ * @module product/src/router/appConfig
+ * @description Reserves Product API application hooks.
+ * @layer router
+ * @owner product
+ * @override Later modules may extend application bootstrap hooks through the
+ * router application configuration contract.
+ */
+module.exports = {
+    productApi: {
+        /**
+         * Initializes request session handling for the Product API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initSession: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes request logging for the Product API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initLogger: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes cache middleware for the Product API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initCache: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes body parsing for the Product API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initBodyParser: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes response headers for the Product API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initHeaders: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes error routes for the Product API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initErrorRoutes: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes additional extension hooks for the Product API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initExtras: function (app) {
+            return app;
+        }
+    }
+};

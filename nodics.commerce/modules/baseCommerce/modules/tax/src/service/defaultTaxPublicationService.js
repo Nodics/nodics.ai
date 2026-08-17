@@ -13,6 +13,12 @@
 /** @module tax/src/service/defaultTaxPublicationService @description Restores Tax operational policy records into Online runtime boundaries. @layer service @owner tax */
 module.exports = {
     records: value => Array.isArray(value) ? value : value && typeof value === 'object' ? Object.values(value) : [],
+    /**
+     * Executes `persistenceModel` as a loader-visible operation owned by this module.
+     * @param {*} record Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     persistenceModel: function (record) {
         let now = new Date();
         return Object.assign({}, record, {
@@ -21,6 +27,13 @@ module.exports = {
             updated: now
         });
     },
+    /**
+     * Executes `restoreOperational` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @param {*} input Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     restoreOperational: async function (request, input) {
         let taxPolicies = this.records(input.taxPolicies);
         if (taxPolicies.length === 0) throw new Error('Tax policies are required for Tax restoration');

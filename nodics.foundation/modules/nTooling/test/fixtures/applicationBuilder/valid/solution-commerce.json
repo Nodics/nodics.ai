@@ -1,0 +1,14 @@
+{
+  "contractVersion": 1,
+  "identity": { "solutionCode": "referenceCommerce", "customerCode": "reference", "projectCode": "referenceCommerce" },
+  "environment": { "mode": "WORKSPACE", "class": "LOCAL", "deploymentShape": "MODULAR_PROCESSES" },
+  "capabilities": { "selected": ["nodics.commerce"], "domains": [], "excluded": ["apparel", "electronics", "telco"] },
+  "commerce": { "stores": ["mainStore"], "catalogs": ["mainProductCatalog", "mainContentCatalog"], "locales": ["en"], "currencies": ["USD"], "markets": ["AE"] },
+  "topology": { "backendRuntimes": ["PLATFORM", "COMMERCE"], "frontends": ["AGORA"] },
+  "experience": { "storefront": "AGORA", "composition": "commerce", "routes": ["/", "/products"], "rendererKeys": ["commerce.product.card"], "themeCode": "referenceTheme" },
+  "security": { "authentication": "PASSWORD", "authorization": "BACKEND_OWNED", "session": "BEARER", "corsOrigins": ["http://127.0.0.1:3300"], "publicApiCategories": ["customer"] },
+  "integrations": [],
+  "data": { "packs": ["agora.common"], "customerOwnedRoots": ["modules/agora.common/data"], "sampleData": true },
+  "qualification": { "profile": "LOCAL_END_TO_END", "journeys": ["commerce.discovery", "commerce.checkout"], "freshDatabaseRequired": true, "browserRequired": true },
+  "decisions": { "unresolved": [], "assumptions": ["Local adapters are used for external providers."] }
+}

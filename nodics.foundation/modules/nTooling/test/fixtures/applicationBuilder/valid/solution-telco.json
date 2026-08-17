@@ -1,0 +1,14 @@
+{
+  "contractVersion": 1,
+  "identity": { "solutionCode": "referenceTelco", "customerCode": "reference", "projectCode": "referenceTelco" },
+  "environment": { "mode": "WORKSPACE", "class": "LOCAL" },
+  "capabilities": { "selected": ["nodics.commerce", "telco"], "domains": ["TELCO"], "excluded": ["apparel"] },
+  "commerce": { "stores": ["mainStore"], "catalogs": ["telcoProductCatalog", "telcoContentCatalog"], "locales": ["en"], "currencies": ["USD"] },
+  "topology": { "backendRuntimes": ["PLATFORM", "WCMS_STAGED", "WCMS_ONLINE", "PROCESS", "COMMERCE"], "frontends": ["AXIS", "AGORA"] },
+  "experience": { "storefront": "AGORA", "composition": "telco", "routes": ["/", "/telco"], "rendererKeys": ["agora.telco.product-card"] },
+  "security": { "authentication": "PASSWORD", "authorization": "BACKEND_OWNED", "session": "BEARER", "corsOrigins": ["http://127.0.0.1:3300"], "publicApiCategories": ["customer"] },
+  "integrations": [{ "code": "localProvisioning", "kind": "PROVISIONING", "certificationState": "LOCAL_ADAPTER", "required": true }],
+  "data": { "packs": ["agora.common", "agora.telco"], "customerOwnedRoots": ["modules/agora.common/data", "modules/agora.telco/data"] },
+  "qualification": { "profile": "LOCAL_END_TO_END", "journeys": ["telco.device-plan-provisioning"], "freshDatabaseRequired": true },
+  "decisions": { "unresolved": [], "assumptions": ["Provisioning uses a deterministic local adapter."] }
+}

@@ -16,17 +16,41 @@ const crypto = require('node:crypto');
 /** @module promotion/src/service/defaultPromotionCustomerApiService @description Provides bounded customer promotion eligibility, preview, redemption, and reversal evidence. @layer service @owner promotion */
 module.exports = {
     unwrap: response => response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response,
+    /**
+     * Executes `hashToken` as a loader-visible operation owned by this module.
+     * @param {*} tenant Value defined by the owning module contract.
+     * @param {*} couponCode Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     hashToken: function (tenant, couponCode) {
         return crypto.createHash('sha256').update([tenant, String(couponCode || '').trim().toUpperCase()].join('|')).digest('hex');
     },
+    /**
+     * Executes `exact` as a loader-visible operation owned by this module.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     exact: function () {
         return SERVICE.DefaultExactAmountService || { normalize: value => Number(value || 0).toFixed(2) };
     },
+    /**
+     * Executes `promotions` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     promotions: async function (request) {
         const response = await SERVICE.DefaultPromotionService.get({ tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, status: 'ACTIVE' }, pageSize: 100 });
         const result = this.unwrap(response);
         return Array.isArray(result) ? result : result ? [result] : [];
     },
+    /**
+     * Executes `context` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     context: function (request) {
         const payload = request.payload || {};
         return {
@@ -39,26 +63,69 @@ module.exports = {
             cartCode: payload.cartCode
         };
     },
+    /**
+     * Executes `getOne` as a loader-visible operation owned by this module.
+     * @param {*} service Value defined by the owning module contract.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     getOne: async function (service, request) {
         if (!service || !service.get) return undefined;
         const result = this.unwrap(await service.get(request));
         return Array.isArray(result) ? result[0] : result;
     },
+    /**
+     * Executes `updateOrSave` as a loader-visible operation owned by this module.
+     * @param {*} service Value defined by the owning module contract.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     updateOrSave: async function (service, request) {
         if (!service) return undefined;
         if (service.update && request.query) return this.unwrap(await service.update(request));
         if (service.save) return this.unwrap(await service.save(request));
         return undefined;
     },
+    /**
+     * Executes `idempotencyKey` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @param {*} promotion Value defined by the owning module contract.
+     * @param {*} targetCode Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     idempotencyKey: function (request, promotion, targetCode) {
         return request.idempotencyKey || request.payload && request.payload.idempotencyKey || [request.tenant, request.ownerId, promotion.code, targetCode].join(':');
     },
+    /**
+     * Executes `redemptionCode` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @param {*} promotion Value defined by the owning module contract.
+     * @param {*} targetCode Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     redemptionCode: function (request, promotion, targetCode) {
         return ['promotionRedemption', crypto.createHash('sha1').update(this.idempotencyKey(request, promotion, targetCode)).digest('hex')].join(':');
     },
+    /**
+     * Executes `couponBatchCode` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     couponBatchCode: function (request) {
         return request.payload && request.payload.batchCode || ['couponBatch', crypto.createHash('sha1').update([request.tenant, request.payload && request.payload.promotionCode, request.idempotencyKey || request.requestId || Date.now()].join(':')).digest('hex')].join(':');
     },
+    /**
+     * Executes `persistBudgetLedger` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @param {*} input Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     persistBudgetLedger: async function (request, input) {
         if (!SERVICE.DefaultPromotionBudgetLedgerService || !SERVICE.DefaultPromotionBudgetLedgerService.save) return undefined;
         const model = {
@@ -77,6 +144,12 @@ module.exports = {
         };
         return this.unwrap(await SERVICE.DefaultPromotionBudgetLedgerService.save({ tenant: request.tenant, authData: request.authData, model }));
     },
+    /**
+     * Executes `createCouponBatch` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     createCouponBatch: async function (request) {
         const payload = request.payload || {};
         if (!payload.promotionCode) throw new Error('Promotion code is required for coupon batch');
@@ -115,6 +188,12 @@ module.exports = {
         }
         return { batch, coupons };
     },
+    /**
+     * Executes `saveDraft` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     saveDraft: async function (request) {
         const payload = request.payload || {};
         if (!payload.code && !request.promotionCode) throw new Error('Promotion code is required for draft save');
@@ -142,6 +221,12 @@ module.exports = {
         }) || model;
         return { promotion: saved, builderState: 'DRAFT_SAVED' };
     },
+    /**
+     * Executes `loadPromotion` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     loadPromotion: async function (request) {
         const code = request.promotionCode || request.payload && request.payload.promotionCode || request.payload && request.payload.code;
         if (!code) throw new Error('Promotion code is required');
@@ -149,6 +234,12 @@ module.exports = {
         if (!promotion) throw new Error('Promotion was not found');
         return promotion;
     },
+    /**
+     * Executes `transitionPromotion` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     transitionPromotion: async function (request) {
         const payload = request.payload || {};
         const promotion = await this.loadPromotion(request);
@@ -187,17 +278,36 @@ module.exports = {
         }) || model;
         return { promotion: updated, actionCode: request.actionCode, builderState: [request.actionCode, 'COMPLETE'].join('_') };
     },
+    /**
+     * Executes `listFromService` as a loader-visible operation owned by this module.
+     * @param {*} service Value defined by the owning module contract.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     listFromService: async function (service, request) {
         if (!service || !service.get) return [];
         const result = this.unwrap(await service.get(request));
         return Array.isArray(result) ? result : result ? [result] : [];
     },
+    /**
+     * Executes `budgetLedger` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     budgetLedger: async function (request) {
         const promotionCode = request.promotionCode || request.payload && request.payload.promotionCode;
         if (!promotionCode) throw new Error('Promotion code is required for budget ledger');
         const entries = await this.listFromService(SERVICE.DefaultPromotionBudgetLedgerService, { tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, promotionCode }, pageSize: Number(request.query && request.query.pageSize || 100) });
         return { promotionCode, entries };
     },
+    /**
+     * Executes `analytics` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     analytics: async function (request) {
         const promotionCode = request.promotionCode || request.payload && request.payload.promotionCode;
         if (!promotionCode) throw new Error('Promotion code is required for analytics');
@@ -221,6 +331,13 @@ module.exports = {
             budgetExposure: this.exact().normalize(String(committedAmount - releasedAmount))
         };
     },
+    /**
+     * Executes `setCouponBatchReservation` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @param {*} status Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     setCouponBatchReservation: async function (request, status) {
         const payload = request.payload || {};
         const batchCode = payload.batchCode || request.batchCode;
@@ -243,6 +360,13 @@ module.exports = {
         await this.updateOrSave(SERVICE.DefaultCouponBatchService, { tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, code: batch.code }, model: updatedBatch });
         return { batch: updatedBatch, coupons: couponRows.map(coupon => Object.assign({}, coupon, { status })) };
     },
+    /**
+     * Executes `loadCoupon` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @param {*} promotion Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     loadCoupon: async function (request, promotion) {
         const couponCode = request.payload && request.payload.couponCode;
         if (!couponCode) return undefined;
@@ -257,6 +381,13 @@ module.exports = {
         if (Number(coupon.usedCount || 0) >= Number(coupon.maxUses || 1)) throw new Error('Coupon usage limit exceeded');
         return coupon;
     },
+    /**
+     * Executes `consumeCoupon` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @param {*} coupon Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     consumeCoupon: async function (request, coupon) {
         if (!coupon) return undefined;
         const usedCount = Number(coupon.usedCount || 0) + 1;
@@ -272,6 +403,14 @@ module.exports = {
             model
         });
     },
+    /**
+     * Executes `consumeBudget` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @param {*} promotion Value defined by the owning module contract.
+     * @param {*} amount Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     consumeBudget: async function (request, promotion, amount) {
         if (!promotion.budget) return promotion;
         const exact = this.exact();
@@ -289,6 +428,13 @@ module.exports = {
         await this.persistBudgetLedger(request, { promotionCode: promotion.code, mutationType: 'COMMIT', amount, beforeSpent: spent, afterSpent: nextSpent, targetCode: request.payload && request.payload.cartCode || request.ownerId, idempotencyKey: this.idempotencyKey(request, promotion, request.payload && request.payload.cartCode || request.ownerId) });
         return updated;
     },
+    /**
+     * Executes `releaseCoupon` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @param {*} redemption Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     releaseCoupon: async function (request, redemption) {
         if (!redemption.couponCode) return undefined;
         const coupon = await this.getOne(SERVICE.DefaultCouponService, {
@@ -311,6 +457,13 @@ module.exports = {
             model
         }) || model;
     },
+    /**
+     * Executes `releaseBudget` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @param {*} redemption Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     releaseBudget: async function (request, redemption) {
         const promotion = await this.getOne(SERVICE.DefaultPromotionService, {
             tenant: request.tenant,
@@ -337,6 +490,13 @@ module.exports = {
         await this.persistBudgetLedger(request, { promotionCode: promotion.code, mutationType: 'RELEASE', amount: discountAmount, beforeSpent: spent, afterSpent: nextSpent, targetCode: redemption.targetCode, idempotencyKey: redemption.idempotencyKey || [redemption.code, 'release'].join(':') });
         return updated;
     },
+    /**
+     * Executes `persistDecision` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @param {*} decision Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     persistDecision: async function (request, decision) {
         const model = Object.assign({ code: ['discountDecision', decision.promotionCode, decision.targetCode].join(':'), decidedAt: request.now || new Date().toISOString() }, decision);
         if (SERVICE.DefaultDiscountDecisionService && SERVICE.DefaultDiscountDecisionService.save) {
@@ -344,6 +504,15 @@ module.exports = {
         }
         return model;
     },
+    /**
+     * Executes `persistRedemption` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @param {*} promotion Value defined by the owning module contract.
+     * @param {*} coupon Value defined by the owning module contract.
+     * @param {*} decision Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     persistRedemption: async function (request, promotion, coupon, decision) {
         const targetCode = decision.targetCode;
         const model = {
@@ -368,6 +537,12 @@ module.exports = {
         }
         return model;
     },
+    /**
+     * Executes `preview` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     preview: async function (request) {
         const promotions = await this.promotions(request);
         const simulation = SERVICE.DefaultPromotionSimulationService.simulate({ tenant: request.tenant, context: this.context(request), now: request.now }, promotions);
@@ -377,6 +552,12 @@ module.exports = {
             redemptionStateMutation: 'NONE'
         });
     },
+    /**
+     * Executes `apply` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     apply: async function (request) {
         const preview = await this.preview(request);
         const selected = preview.selected[0];
@@ -406,6 +587,12 @@ module.exports = {
             redemptionStateMutation: 'COMMITTED'
         });
     },
+    /**
+     * Executes `reverse` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     reverse: async function (request) {
         const code = request.redemptionCode || request.payload && request.payload.redemptionCode;
         if (!code) throw new Error('Promotion redemption code is required for reversal');

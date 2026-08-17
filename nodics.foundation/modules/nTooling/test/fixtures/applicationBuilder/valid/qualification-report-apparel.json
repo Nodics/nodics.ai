@@ -1,0 +1,27 @@
+{
+  "contractVersion": 1,
+  "qualificationId": "builder-qualification-0123456789abcdef",
+  "createdAt": "2026-08-16T07:00:00.000Z",
+  "solutionDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "planDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "catalogueDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "projectCode": "referenceApparel",
+  "scope": "REFERENCE_WORKSPACE",
+  "state": "PASSED",
+  "gates": ["backend.graph", "frontend.composition", "generated.self-test", "reference.workspace.nine-runtimes"],
+  "evidence": [
+    { "gate": "backend.graph", "kind": "ARTIFACT", "state": "PASSED", "summary": "Generated backend graph matches.", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111" },
+    { "gate": "frontend.composition", "kind": "ARTIFACT", "state": "PASSED", "summary": "Generated frontend composition matches.", "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222" },
+    { "gate": "generated.self-test", "kind": "COMMAND", "state": "PASSED", "summary": "Generated self-test passed.", "command": "npm test", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333" },
+    { "gate": "reference.workspace.nine-runtimes", "kind": "REFERENCE_DOCUMENT", "state": "PASSED", "summary": "Fresh database nine-runtime reference passed.", "source": "nodics-multi-domain-qualification-evidence-2026-08-15.md", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444" }
+  ],
+  "evidenceDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+  "lockUpdate": {
+    "state": "PASSED",
+    "verifiedAt": "2026-08-16T07:00:00.000Z",
+    "evidenceDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+    "gates": ["backend.graph", "frontend.composition", "generated.self-test", "reference.workspace.nine-runtimes"],
+    "scope": "REFERENCE_WORKSPACE",
+    "reportPath": "qualification/builder-qualification-report.json"
+  }
+}

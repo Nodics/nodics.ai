@@ -10,3 +10,6 @@ generates records below its `data/staged/wcms` release, and exposes optional
 installation only through Axis. Import targets Staged; nPublish controls Online
 visibility. A repeated immutable release produces the same checksum, while a
 changed payload under the same version is rejected.
+
+Use [application-builder.md](application-builder.md) for read-only discovery,
+solution validation, and approval-required planning command examples.

@@ -12,8 +12,24 @@
 'use strict';
 /** @module tax/src/facade/defaultTaxPublicationFacade @description Enforces tenant context before Tax publication ingestion. @layer facade @owner tax */
 module.exports = {
+    /**
+     * Executes `init` as a loader-visible operation owned by this module.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     init: function () { return Promise.resolve(true); },
+    /**
+     * Executes `postInit` as a loader-visible operation owned by this module.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     postInit: function () { return Promise.resolve(true); },
+    /**
+     * Executes `restoreOperational` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
     restoreOperational: function (request) {
         let auth = request.authData || {};
         request.tenant = auth.tenant || request.tenant;

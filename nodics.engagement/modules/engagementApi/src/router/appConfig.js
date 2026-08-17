@@ -9,10 +9,83 @@
 
  */
 'use strict';
-/** @module engagementApi/src/router/appConfig @description Reserves Engagement API application registration hooks. @layer router @owner engagementApi @override Later modules may extend bootstrap hooks without weakening route security. */
-module.exports = { engagement: {
-    /** Handles init session within the module-owned contract. */
-    initSession: function (app) {}, initLogger: function (app) {}, initCache: function (app) {},
-    /** Handles init body parser within the module-owned contract. */
-    initBodyParser: function (app) {}, initHeaders: function (app) {}, initErrorRoutes: function (app) {}, initExtras: function (app) {}
-} };
+/**
+ * @module engagementApi/src/router/appConfig
+ * @description Reserves Engagement API application registration hooks.
+ * @layer router
+ * @owner engagementApi
+ * @override Later modules may extend bootstrap hooks without weakening route security.
+ */
+module.exports = {
+    engagement: {
+        /**
+         * Initializes request session handling for the Engagement API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initSession: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes request logging for the Engagement API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initLogger: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes cache middleware for the Engagement API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initCache: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes body parsing for the Engagement API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initBodyParser: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes response headers for the Engagement API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initHeaders: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes error routes for the Engagement API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initErrorRoutes: function (app) {
+            return app;
+        },
+
+        /**
+         * Initializes additional extension hooks for the Engagement API application.
+         *
+         * @param {Object} app Express-compatible application instance.
+         * @returns {Object} The supplied application instance.
+         */
+        initExtras: function (app) {
+            return app;
+        }
+    }
+};

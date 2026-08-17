@@ -115,7 +115,7 @@ module.exports = {
         let space = ' ';
         NODICS.getIndexedModules().forEach((obj, key) => {
             let spaces = maxLength - obj.name.length;
-            this.LOG.info('  ' + (counter < 10 ? '0' + counter : counter) + '  ' + obj.name + space.repeat(spaces) + ' : ' + key);
+            this.LOG.info('  ' + (counter < 10 ? '0' + counter : counter) + '  module=' + obj.name + space.repeat(spaces) + ' index=' + key);
             activeModules.push(obj.name);
             counter++;
         });

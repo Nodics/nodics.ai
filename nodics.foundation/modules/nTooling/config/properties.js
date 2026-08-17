@@ -250,7 +250,20 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nTooling/test/syntaxCheckQualityService.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/llmChangeAcceptanceContract.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/mcpReadOnlyGovernanceContract.test.js' },
-                { node: 'nodics.foundation/modules/nTooling/test/copyrightHeaderGovernance.test.js' }
+                { node: 'nodics.foundation/modules/nTooling/test/copyrightHeaderGovernance.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/projectCommandServiceContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderSchemaContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderGuidedContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderAnswersTemplateContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderQuestionnaireContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderDryRunContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderPlanningContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderGenerationContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderMultiDomainGenerationContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderQualificationContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderEndToEndJourneyContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderUpgradeContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderSafetyAcceptanceContract.test.js' }
             ],
             governance: [
                 { node: 'nodics.foundation/modules/nConfig/test/layeredCustomizationContract.test.js' },
@@ -509,6 +522,130 @@ module.exports = {
                     { npmRun: ['test:full'] }
                 ]
             },
+            'qualification:security-boundary': {
+                description: 'Run framework-owned automated local security boundary contracts.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/quality/defaultFrameworkQualificationEvidenceService.js',
+                arguments: ['security-boundary']
+            },
+            'qualification:publishing-capacity': {
+                description: 'Run framework-owned bounded publication capacity contracts.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/quality/defaultFrameworkQualificationEvidenceService.js',
+                arguments: ['publishing-capacity']
+            },
+            'qualification:publishing-soak': {
+                description: 'Run framework-owned sustained publication reliability contracts.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/quality/defaultFrameworkQualificationEvidenceService.js',
+                arguments: ['publishing-soak']
+            },
+            'qualification:publishing-interruption-contracts': {
+                description: 'Run framework-owned publication interruption and reconciliation contracts.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/quality/defaultFrameworkQualificationEvidenceService.js',
+                arguments: ['publishing-interruption-contracts']
+            },
+            'project:validate': {
+                description: 'Validate a generated or reference project contract from nodics.project.json.',
+                handler: '@nTooling/project',
+                operation: 'validate'
+            },
+            'project:run': {
+                description: 'Run a project-declared command through nodics.project.json without encoding script paths in package aliases.',
+                handler: '@nTooling/project',
+                operation: 'run'
+            },
+            'project:topology': {
+                description: 'Run a manifest-declared project local topology command from framework-owned tooling.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectTopologyService.mjs'
+            },
+            'project:container': {
+                description: 'Run a manifest-declared project container environment profile from framework-owned tooling.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectContainerEnvironmentService.mjs'
+            },
+            'project:container-resilience': {
+                description: 'Run manifest-declared backup, verification, and restore operations for a project container environment.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectContainerResilienceService.mjs'
+            },
+            'project:container-qualification': {
+                description: 'Run manifest-declared container acceptance, qualification, resilience, and soak evidence.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectContainerQualificationService.mjs'
+            },
+            'project:documentation-content': {
+                description: 'Generate or validate project documentation content packs from project-owned documentation facts.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectDocumentationContentService.mjs'
+            },
+            'project:data-manifests': {
+                description: 'Generate project data-pack manifests from project-owned domain and pack facts.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectDataManifestService.mjs'
+            },
+            'project:functional-journey-acceptance': {
+                description: 'Run project functional journey acceptance using project manifest facts and framework-owned orchestration.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectFunctionalJourneyAcceptanceService.mjs'
+            },
+            'project:capability-registry-acceptance': {
+                description: 'Run project capability registry acceptance using project manifest facts and framework-owned assertions.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectCapabilityRegistryAcceptanceService.mjs'
+            },
+            'project:guided-initialization-acceptance': {
+                description: 'Run project guided initialization acceptance using project manifest facts and framework-owned assertions.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectGuidedInitializationAcceptanceService.mjs'
+            },
+            'project:deployment-qualification': {
+                description: 'Create or execute project deployment qualification evidence from framework-owned qualification orchestration.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectDeploymentQualificationService.mjs'
+            },
+            'project:configure-framework': {
+                description: 'Synchronize project-local generated framework links from project-owned dependency facts.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectFrameworkLinkService.js'
+            },
+            'project:runtime-start': {
+                description: 'Start a project-declared Nodics runtime server using framework-owned startup mechanics.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectRuntimeStartService.js'
+            },
+            'project:local-bootstrap-acceptance': {
+                description: 'Run project local bootstrap acceptance using framework-owned orchestration and project facts.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectLocalBootstrapAcceptanceService.mjs'
+            },
+            'project:agora-commerce-acceptance': {
+                description: 'Run project Agora commerce customer journey acceptance through framework-owned tooling.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectAgoraCommerceAcceptanceService.mjs'
+            },
+            'project:agora-commerce-data-acceptance': {
+                description: 'Run project Agora commerce staged data acceptance through framework-owned tooling.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectAgoraCommerceDataAcceptanceService.mjs'
+            },
+            'project:agora-commerce-publication-acceptance': {
+                description: 'Run project Agora commerce staged-to-online publication acceptance through framework-owned tooling.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectAgoraCommercePublicationAcceptanceService.mjs'
+            },
+            'project:agora-commerce-live-qualification': {
+                description: 'Run the project Agora commerce live qualification chain through framework-owned tooling.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectAgoraCommerceLiveQualificationService.mjs'
+            },
+            'project:editorial-live-journey-acceptance': {
+                description: 'Run project editorial live journey acceptance through framework-owned tooling.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectEditorialLiveJourneyAcceptanceService.mjs'
+            },
             'test:suite': {
                 description: 'Run a configured Nodics test suite by name from tooling-owned suite configuration.',
                 handler: 'src/service/command/defaultTestSuiteCommandService.js'
@@ -605,6 +742,89 @@ module.exports = {
                 description: 'Create guarded mutation or generation plans without executing writes by default.',
                 handler: '@nTooling/mcp-mutation-plan',
                 service: 'defaultMcpMutationGuardService'
+            },
+            'builder:discover': {
+                description: 'Discover a deterministic read-only Application Builder capability catalogue from explicit repository roots.',
+                handler: '@nTooling/application-builder',
+                operation: 'discover',
+                catalogueService: 'defaultApplicationBuilderCatalogueService'
+            },
+            'builder:guide': {
+                description: 'Convert beginner-facing answers into a governed Builder solution, approval-required plan, and optional review workspace.',
+                handler: '@nTooling/application-builder',
+                operation: 'guide',
+                catalogueService: 'defaultApplicationBuilderCatalogueService',
+                guidedService: 'defaultApplicationBuilderGuidedService'
+            },
+            'builder:answers-template': {
+                description: 'Create a valid beginner guided answers document from simple flags and optionally include a dry-run result.',
+                handler: '@nTooling/application-builder',
+                operation: 'answers-template',
+                catalogueService: 'defaultApplicationBuilderCatalogueService',
+                guidedService: 'defaultApplicationBuilderGuidedService'
+            },
+            'builder:questionnaire': {
+                description: 'Ask beginner Builder questions one at a time, create guided answers, and optionally include a dry-run result.',
+                handler: '@nTooling/application-builder',
+                operation: 'questionnaire',
+                catalogueService: 'defaultApplicationBuilderCatalogueService',
+                guidedService: 'defaultApplicationBuilderGuidedService'
+            },
+            'builder:dry-run': {
+                description: 'Show a beginner-readable Application Builder plan from guided answers without writing review or application files.',
+                handler: '@nTooling/application-builder',
+                operation: 'dry-run',
+                catalogueService: 'defaultApplicationBuilderCatalogueService',
+                guidedService: 'defaultApplicationBuilderGuidedService'
+            },
+            'builder:validate': {
+                description: 'Validate an Application Builder solution against structural, dependency, topology, frontend, and data-pack contracts.',
+                handler: '@nTooling/application-builder',
+                operation: 'validate',
+                catalogueService: 'defaultApplicationBuilderCatalogueService',
+                planningService: 'defaultApplicationBuilderPlanningService'
+            },
+            'builder:plan': {
+                description: 'Emit an immutable approval-required Application Builder generation plan without writing customer application files.',
+                handler: '@nTooling/application-builder',
+                operation: 'plan',
+                catalogueService: 'defaultApplicationBuilderCatalogueService',
+                planningService: 'defaultApplicationBuilderPlanningService'
+            },
+            'builder:approve': {
+                description: 'Bind an explicit approval reference to an unexpired immutable Application Builder plan.',
+                handler: '@nTooling/application-builder',
+                operation: 'approve',
+                catalogueService: 'defaultApplicationBuilderCatalogueService',
+                generationService: 'defaultApplicationBuilderGenerationService'
+            },
+            'builder:generate': {
+                description: 'Generate a minimal customer application from an approved plan into an explicit absent absolute output root.',
+                handler: '@nTooling/application-builder',
+                operation: 'generate',
+                catalogueService: 'defaultApplicationBuilderCatalogueService',
+                generationService: 'defaultApplicationBuilderGenerationService'
+            },
+            'builder:qualify': {
+                description: 'Qualify a generated Builder output through governed evidence gates and update its solution lock.',
+                handler: '@nTooling/application-builder',
+                operation: 'qualify',
+                catalogueService: 'defaultApplicationBuilderCatalogueService',
+                qualificationService: 'defaultApplicationBuilderQualificationService'
+            },
+            'builder:release-manifest': {
+                description: 'Create a digest-bound local Builder release manifest from an approved target plan.',
+                handler: '@nTooling/application-builder',
+                operation: 'release-manifest',
+                catalogueService: 'defaultApplicationBuilderCatalogueService',
+                upgradeService: 'defaultApplicationBuilderUpgradeService'
+            },
+            'builder:upgrade-plan': {
+                description: 'Compare a current generated solution lock with a target Builder release and emit a non-mutating upgrade plan.',
+                handler: '@nTooling/application-builder',
+                operation: 'upgrade-plan',
+                catalogueService: 'defaultApplicationBuilderCatalogueService',
+                upgradeService: 'defaultApplicationBuilderUpgradeService'
             },
             'debug:clean': {
                 description: 'Run Nodics clean under the debugger and break on startup.',

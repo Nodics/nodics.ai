@@ -41,12 +41,25 @@ module.exports = {
     repository: function (request) {
         const self = this, authData = this.serviceAuthData(request);
         return {
+            /**
+             * Executes `find` as a loader-visible operation owned by this module.
+             * @param {*} tenant Value defined by the owning module contract.
+             * @param {*} idempotencyKey Value defined by the owning module contract.
+             * @returns {*} Result defined by the owning module contract.
+             * @override Later-loaded modules may replace this member through the standard merge contract.
+             */
             find: function (tenant, idempotencyKey) {
                 return SERVICE.DefaultPaymentTransactionService.get({ tenant, authData, query: { tenant, idempotencyKey, operation: 'REFUND' }, pageSize: 1 }).then(response => {
                     const result = response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response;
                     return Array.isArray(result) ? result[0] : result;
                 });
             },
+            /**
+             * Executes `record` as a loader-visible operation owned by this module.
+             * @param {*} model Value defined by the owning module contract.
+             * @returns {*} Result defined by the owning module contract.
+             * @override Later-loaded modules may replace this member through the standard merge contract.
+             */
             record: function (model) {
                 return SERVICE.DefaultPaymentTransactionService.save({ tenant: model.tenant, authData, model: self.persistenceModel(model) }).then(response => response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response);
             }
