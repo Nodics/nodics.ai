@@ -355,7 +355,7 @@ module.exports = {
     rendererPolicy: function () {
         let configured = typeof CONFIG !== 'undefined' && CONFIG.get ? (CONFIG.get('cms') || {}).renderer : {};
         return Object.assign({
-            keyPattern: '^[a-z][a-z0-9]*(\\.[a-z][a-z0-9-]*)+$',
+            keyPattern: '^[a-z][A-Za-z0-9]*(\\.[A-Za-z][A-Za-z0-9-]*)+$',
             prohibitedSchemes: ['http:', 'https:', 'javascript:', 'data:', 'file:']
         }, configured || {});
     },

@@ -46,7 +46,7 @@ module.exports = {
             apiName: '/context/introspect', bootstrapTenant: 'default', preferLocal: true, requestTimeoutMs: 1000,
             maximumAttempts: 1, maximumResponseBytes: 32768 },
         renderer: {
-            keyPattern: '^[a-z][a-z0-9]*(\\.[a-z][a-z0-9-]*)+$',
+            keyPattern: '^[a-z][A-Za-z0-9]*(\\.[A-Za-z][A-Za-z0-9-]*)+$',
             prohibitedSchemes: ['http:', 'https:', 'javascript:', 'data:', 'file:']
         },
         mediaReference: {

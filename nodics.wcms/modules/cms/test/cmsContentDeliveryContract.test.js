@@ -85,7 +85,9 @@ global.SERVICE = {
 
 (async () => {
     await validation.validateRenderer({ model: { renderer: 'component.hero-banner' } });
+    await validation.validateRenderer({ model: { renderer: 'agora.heroBanner' } });
     await assert.rejects(validation.validateRenderer({ model: { renderer: 'https://host/view.js' } }), error => error.code === 'CMS_RENDERER_KEY_INVALID');
+    await assert.rejects(validation.validateRenderer({ model: { renderer: 'agora/heroBanner' } }), error => error.code === 'CMS_RENDERER_KEY_INVALID');
     let route = { model: { path: '//account///profile', routeType: 'PAGE' } };
     await validation.validateRoute(route);
     assert.strictEqual(route.model.path, '/account/profile');
