@@ -324,11 +324,11 @@ module.exports = {
 
     /** Keeps execution scoped to releases that can change state. */
     executablePlan: function (plan, operationReleases) {
-        let executableModules = new Set((operationReleases || [])
+        let executableReleases = new Set((operationReleases || [])
             .filter(release => ['NOT_INSTALLED', 'UPDATE_AVAILABLE', 'FAILED'].includes(release.status))
-            .map(release => release.moduleName));
+            .map(release => release.releaseCode));
         return Object.assign({}, plan, {
-            releases: plan.releases.filter(release => executableModules.has(release.moduleName))
+            releases: plan.releases.filter(release => executableReleases.has(release.releaseCode))
         });
     },
 

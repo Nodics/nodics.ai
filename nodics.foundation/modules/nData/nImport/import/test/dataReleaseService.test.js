@@ -188,6 +188,18 @@ const routers = require('../src/router/routers');
         releaseRequest: { dataType: 'core', modules: ['testModule'], expectedReleases: { testModule: '1.1.0' } }
     }), /already current/);
 
+    const mixedSectionPlan = {
+        releases: [
+            { moduleName: 'multiSectionModule', releaseCode: 'multiSectionModule:current' },
+            { moduleName: 'multiSectionModule', releaseCode: 'multiSectionModule:next' }
+        ]
+    };
+    const executableSectionPlan = service.executablePlan(mixedSectionPlan, [
+        { moduleName: 'multiSectionModule', releaseCode: 'multiSectionModule:current', status: 'CURRENT' },
+        { moduleName: 'multiSectionModule', releaseCode: 'multiSectionModule:next', status: 'NOT_INSTALLED' }
+    ]);
+    assert.deepStrictEqual(executableSectionPlan.releases.map(release => release.releaseCode), ['multiSectionModule:next']);
+
     await assert.rejects(() => service.preflight({
         tenant: 'default',
         releaseRequest: { dataType: 'core', modules: ['testModule'], expectedReleases: { testModule: '1.0.0' } }
