@@ -64,6 +64,33 @@ async function validatesFirstInstallPreservesPortableInitialRevision() {
     assert.strictEqual(result[0].versionId, 0);
 }
 
+async function validatesGuidedDataReleaseUsesNextStoredRevision() {
+    let reads = 0;
+    const guidedRequest = request({
+        importRun: {
+            runId: 'guided-core-run',
+            dataReleases: [{
+                releaseCode: 'nexus.web:corporate',
+                version: '1.0.0'
+            }]
+        },
+        dataReleasePlan: [{
+            releaseCode: 'nexus.web:corporate',
+            version: '1.0.0'
+        }]
+    });
+    const models = [{ code: 'nexusHomePage', versionId: 0 }];
+    const result = await service.reconcileContentPackVersions(guidedRequest, {
+        get: function () {
+            reads += 1;
+            return Promise.resolve({ result: [{ versionId: 2 }] });
+        }
+    }, models);
+
+    assert.strictEqual(reads, 1);
+    assert.strictEqual(result[0].versionId, 3);
+}
+
 async function validatesOrdinaryImportsRetainStrictCallerRevision() {
     let reads = 0;
     const ordinaryRequest = request({ importRun: { runId: 'ordinary-import' } });
@@ -80,6 +107,7 @@ async function validatesOrdinaryImportsRetainStrictCallerRevision() {
 
 validatesGovernedReleaseUsesNextStoredRevision()
     .then(validatesFirstInstallPreservesPortableInitialRevision)
+    .then(validatesGuidedDataReleaseUsesNextStoredRevision)
     .then(validatesOrdinaryImportsRetainStrictCallerRevision)
     .then(() => {
         console.log('Content-pack version reconciliation validated');

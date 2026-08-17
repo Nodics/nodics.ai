@@ -614,7 +614,7 @@ module.exports = {
     reconcileContentPackVersions: function (request, schemaService, models) {
         let header = request.header || {};
         let options = header.options || {};
-        let isGovernedRelease = Boolean(request.importRun && request.importRun.contentPackCode);
+        let isGovernedRelease = this.isGovernedContentPackRun(request);
         let isVersionedSchema = Boolean(header.rawSchema && header.rawSchema.isVersionedEnabled === true);
         if (!isGovernedRelease || !isVersionedSchema || !options.schemaName ||
             !schemaService || typeof schemaService.get !== 'function') {
@@ -641,6 +641,23 @@ module.exports = {
                 return model;
             });
         }));
+    },
+
+    /**
+     * Detects immutable release-driven imports that own portable source revisions.
+     *
+     * Content-pack imports identify themselves with contentPackCode. Guided data-release setup
+     * carries the same immutable release contract through dataReleasePlan/importRun.dataReleases.
+     *
+     * @param {Object} request Active import request.
+     * @returns {boolean} True when the import is governed by a declared immutable release.
+     */
+    isGovernedContentPackRun: function (request) {
+        let importRun = request && request.importRun || {};
+        if (importRun.contentPackCode) return true;
+        if (Array.isArray(importRun.dataReleases) && importRun.dataReleases.length > 0) return true;
+        if (Array.isArray(request && request.dataReleasePlan) && request.dataReleasePlan.length > 0) return true;
+        return false;
     },
 
     /** Resolves `$property` import query placeholders from one release record. */
