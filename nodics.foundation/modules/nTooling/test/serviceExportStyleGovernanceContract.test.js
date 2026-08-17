@@ -24,6 +24,12 @@ const designPrincipleAuditService = require('../src/service/quality/defaultDesig
 
 const failures = [];
 designPrincipleAuditService.auditServiceExportStyle.call({
+    /**
+     * Supplies focused source fixtures for service export style governance.
+     *
+     * @param {string} relativePath Fixture source path.
+     * @returns {string} Fixture source content.
+     */
     readSourceForStyleGovernance: function (relativePath) {
         if (relativePath === 'validService.js') {
             return [
@@ -51,6 +57,14 @@ designPrincipleAuditService.auditServiceExportStyle.call({
             '};'
         ].join('\n');
     },
+
+    /**
+     * Records a style governance failure in the target collection.
+     *
+     * @param {string[]} target Mutable failure collection.
+     * @param {string} message Failure message.
+     * @returns {void}
+     */
     fail: function (target, message) {
         target.push(message);
     }
