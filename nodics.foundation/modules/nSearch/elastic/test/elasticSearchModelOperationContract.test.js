@@ -245,6 +245,7 @@ async function assertOperation(operation, input, expectedClientOperation, expect
         query: { active: false }
     }, 'deleteByQuery', {
         refresh: true,
+        conflicts: 'proceed',
         index: 'enterpriseindex',
         body: {
             query: { bool: { filter: [{ term: { active: false } }] } }

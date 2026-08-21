@@ -28,6 +28,9 @@ module.exports = {
             mediaManagement: {
                 enabled: true
             },
+            mediaDelivery: {
+                enabled: true
+            },
             cmsAuthoring: {
                 enabled: true
             }

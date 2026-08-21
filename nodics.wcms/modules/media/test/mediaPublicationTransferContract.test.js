@@ -43,13 +43,45 @@ class NodicsError extends Error { constructor(code, message) { super(message || 
     global.SERVICE.DefaultMediaService.get = async () => ({ result: [] });
     let imported = await service.importReferenced(assets, { tenant: 'default', authData: {}, transactionContext: { id: 'tx' } });
     assert.strictEqual(imported[0].code, 'hero');
-    assert.strictEqual(saved.transactionContext.id, 'tx');
+    assert.strictEqual(saved.transactionContext, undefined);
     assert.strictEqual(saved.files[0].buffer.equals(buffer), true);
     assert.strictEqual(saved.businessPurpose, 'CMS_PUBLICATION');
     assert.strictEqual(saved.ownerType, 'CMS_PUBLICATION_ASSET');
     assert.strictEqual(saved.ownerReference, checksum);
     assert.strictEqual(saved.reusable, true);
     assert(saved.retentionUntil instanceof Date);
+    let productAsset = Object.assign({}, assets[0], {
+        code: 'productHero',
+        businessPurpose: 'AGORA_PRODUCT_PRIMARY_IMAGE',
+        ownerType: 'PRODUCT',
+        ownerReference: 'linenWrapDress',
+        reusable: false
+    });
+    await service.importReferenced([productAsset], { tenant: 'default', authData: {}, transactionContext: { id: 'tx' } });
+    assert.strictEqual(saved.mediaCode, 'productHero');
+    assert.strictEqual(saved.businessPurpose, 'AGORA_PRODUCT_PRIMARY_IMAGE');
+    assert.strictEqual(saved.ownerType, 'PRODUCT');
+    assert.strictEqual(saved.ownerReference, 'linenWrapDress');
+    assert.strictEqual(saved.reusable, false);
+    let refreshed = false;
+    global.SERVICE.DefaultMediaService.get = async request => request.query.code === 'hero'
+        ? { result: [{ code: 'hero', checksum: 'stale-online-checksum' }] }
+        : { result: [] };
+    global.SERVICE.DefaultMediaUploadService.upload = async request => {
+        refreshed = true;
+        saved = request;
+        return { code: request.mediaCode, checksum: checksum };
+    };
+    imported = await service.importReferenced(assets, { tenant: 'default', authData: {} });
+    assert.strictEqual(imported[0].code, 'hero');
+    assert.strictEqual(refreshed, true);
+    assert.strictEqual(saved.mediaCode, 'hero');
+    assert.strictEqual(saved.files[0].buffer.equals(buffer), true);
+    global.SERVICE.DefaultMediaService.get = async () => ({ result: [
+        { code: 'hero', checksum: 'first' },
+        { code: 'hero', checksum: 'second' }
+    ] });
+    await assert.rejects(service.importReferenced(assets, { tenant: 'default' }), error => error.code === 'ERR_MED_00015');
     let corrupt = Object.assign({}, assets[0], { contentBase64: Buffer.from('wrong').toString('base64'), sizeBytes: 5 });
     await assert.rejects(service.importReferenced([corrupt], { tenant: 'default' }), error => error.code === 'ERR_MED_00014');
 

@@ -24,6 +24,7 @@ module.exports = {
         let localized = resolved.value;
         let payload = { code: input.product.code, name: localized.name, description: localized.description,
             slug: localized.slug, seo: localized.seo, localizedAttributes: localized.attributes,
+            media: localized.media || {},
             classificationValues: localized.classificationValues,
             categoryCodes: input.categoryCodes || [], variantCodes: input.variantCodes || [] };
         if (Array.isArray(input.variants) && input.variants.length > 0) {

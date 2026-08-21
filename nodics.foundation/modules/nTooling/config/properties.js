@@ -641,6 +641,11 @@ module.exports = {
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/project/defaultProjectAgoraCommerceLiveQualificationService.mjs'
             },
+            'project:agora-cms-media-seed': {
+                description: 'Seed project Agora CMS and product media assets into WCMS Staged through media-owned upload APIs.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectAgoraCmsMediaSeedService.mjs'
+            },
             'project:editorial-live-journey-acceptance': {
                 description: 'Run project editorial live journey acceptance through framework-owned tooling.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',

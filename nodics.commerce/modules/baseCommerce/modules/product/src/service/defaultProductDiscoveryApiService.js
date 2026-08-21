@@ -68,7 +68,7 @@ module.exports = {
     discoveryMetadata: function (request, configuration) {
         let policy = this.policy();
         return {
-            source: 'SEARCH_INDEX',
+            source: request.discoveryServedFrom || 'SEARCH_INDEX',
             flow: ['DATA_FOLDER', 'COMMERCE_STAGED', 'COMMERCE_ONLINE', 'SEARCH_INDEX', 'STOREFRONT_API'],
             indexConfigurationCode: configuration && configuration.code || request.query && (request.query.indexCode || request.query.indexConfigurationCode),
             sourceMixCode: configuration && configuration.sourceMixCode,
@@ -85,10 +85,13 @@ module.exports = {
     /** Builds the tenant, Store, locale, category, text, and status filter for projection search. @param {Object} request Nodics request. @returns {Object} Provider-neutral query. */
     query: function (request) {
         let input = request.query || {}, query = {
-            tenant: request.tenant, storeCode: request.storeCode, locale: request.locale, status: 'CURRENT'
+            'tenant.keyword': request.tenant,
+            'storeCode.keyword': request.storeCode,
+            'locale.keyword': request.locale,
+            'status.keyword': 'CURRENT'
         };
         if (input.categoryCode) query['payload.categoryCodes.keyword'] = input.categoryCode;
-        if (request.productCode) query.productCode = request.productCode;
+        if (request.productCode) query['productCode.keyword'] = request.productCode;
         if (input.q) query.text = String(input.q).trim();
         return query;
     },
@@ -125,12 +128,64 @@ module.exports = {
         if (!service) throw new Error('Product search projection service is unavailable');
         let policy = this.policy();
         let searchRequest = {
-            tenant: request.tenant, authData: request.authData, moduleName: 'product',
+            tenant: request.tenant, authData: this.serviceAuthData(request), moduleName: 'product',
             indexName: request.indexConfiguration && request.indexConfiguration.indexName || policy.searchIndexName || 'productLocalized',
             query: query, searchOptions: searchOptions, options: {}
         };
-        if (typeof service.doSearch === 'function') return this.records(await service.doSearch(searchRequest));
-        return this.records(await service.get(searchRequest));
+        if (typeof service.doSearch === 'function') {
+            let records = this.records(await service.doSearch(searchRequest));
+            if (records.length > 0 || query.text || policy.projectionStoreFallback === false) return records;
+        }
+        request.discoveryServedFrom = 'PROJECTION_STORE_FALLBACK';
+        return this.projectionStoreRecords(Object.assign({}, searchRequest, {
+            query: this.projectionStoreQuery(query)
+        }));
+    },
+
+    /** Converts exact nSearch keyword filters back to persisted projection fields for fallback reads. @param {Object} query nSearch query. @returns {Object} Mongo projection query. */
+    projectionStoreQuery: function (query) {
+        let mapped = {};
+        Object.keys(query || {}).forEach(key => {
+            if (key === 'text') return;
+            let target = key.endsWith('.keyword') ? key.slice(0, -8) : key;
+            mapped[target] = query[key];
+        });
+        return mapped;
+    },
+
+    /** Reads published Product search projections from the owned projection store as a bounded fallback when nSearch is empty. @param {Object} request Read request. @returns {Promise<Array>} Projection records. */
+    projectionStoreRecords: async function (request) {
+        if (SERVICE.DefaultProductSearchProjectionService && typeof SERVICE.DefaultProductSearchProjectionService.get === 'function') {
+            let response = await SERVICE.DefaultProductSearchProjectionService.get(request);
+            let records = this.records(response);
+            if (records.length > 0) return records;
+        }
+        let model = request.schemaModel || (global.NODICS && NODICS.getModels &&
+            NODICS.getModels(request.moduleName || 'product', request.tenant).ProductSearchProjectionModel);
+        if (!model || typeof model.find !== 'function') return [];
+        let options = request.searchOptions || {}, pageSize = this.boundedInteger(options.pageSize || options.limit, Number(this.policy().defaultPageSize || 24), 1, Number(this.policy().maximumPageSize || 100));
+        let pageNumber = this.boundedInteger(options.pageNumber || options.page, 1, 1, 10000);
+        let query = model.find(request.query || {});
+        if (options.sort && typeof query.sort === 'function') query = query.sort(options.sort);
+        if (typeof query.skip === 'function') query = query.skip((pageNumber - 1) * pageSize);
+        if (typeof query.limit === 'function') query = query.limit(pageSize);
+        if (typeof query.lean === 'function') query = query.lean();
+        if (typeof query.exec === 'function') {
+            let records = await query.exec();
+            if (Array.isArray(records) && records.length > 0) return records;
+        }
+        if (query && typeof query.then === 'function') {
+            let records = await query;
+            if (Array.isArray(records) && records.length > 0) return records;
+        }
+        if (model.collection && typeof model.collection.find === 'function') {
+            let cursor = model.collection.find(request.query || {});
+            if (options.sort && typeof cursor.sort === 'function') cursor = cursor.sort(options.sort);
+            if (typeof cursor.skip === 'function') cursor = cursor.skip((pageNumber - 1) * pageSize);
+            if (typeof cursor.limit === 'function') cursor = cursor.limit(pageSize);
+            if (typeof cursor.toArray === 'function') return cursor.toArray();
+        }
+        return Array.isArray(query) ? query : [];
     },
 
     /** Extracts records from generated service, nSearch, or adapter result shapes. @param {*} response Service response. @returns {Array} Records. */
@@ -169,6 +224,83 @@ module.exports = {
         return { available: availability.available === true, status: availability.status };
     },
 
+    /** Resolves the configured media delivery authority exposed to browser clients. @returns {string} Delivery base URL. */
+    mediaDeliveryBaseUrl: function () {
+        let value = this.policy().mediaDeliveryBaseUrl || '/nodics/media/v0/content';
+        return String(value).replace(/\/+$/g, '');
+    },
+
+    /** Builds a public/session-scoped media delivery URL without exposing provider storage coordinates. @param {string} mediaCode Media code. @returns {string|undefined} Delivery URL. */
+    mediaDeliveryUrl: function (mediaCode) {
+        return mediaCode ? this.mediaDeliveryBaseUrl() + '/' + encodeURIComponent(mediaCode) : undefined;
+    },
+
+    /** Resolves a client-safe product media descriptor. @param {*} candidate Media code or descriptor. @param {string} role Role. @param {string|undefined} altText Alternate text. @returns {Object|undefined} Media descriptor. */
+    mediaDescriptor: function (candidate, role, altText) {
+        if (!candidate) return undefined;
+        if (typeof candidate === 'string') {
+            if (/^https?:\/\//.test(candidate) || candidate.charAt(0) === '/') {
+                return { role: role, url: candidate, deliveryUrl: candidate, publicUrl: candidate, altText: altText };
+            }
+            return {
+                code: candidate,
+                mediaCode: candidate,
+                role: role,
+                deliveryUrl: this.mediaDeliveryUrl(candidate),
+                publicUrl: this.mediaDeliveryUrl(candidate),
+                altText: altText
+            };
+        }
+        if (typeof candidate !== 'object') return undefined;
+        let code = candidate.mediaCode || candidate.code;
+        let directUrl = candidate.deliveryUrl || candidate.publicUrl || candidate.url || candidate.image;
+        let descriptor = {
+            code: code,
+            mediaCode: code,
+            role: candidate.role || role,
+            name: candidate.name,
+            description: candidate.description,
+            formatCode: candidate.formatCode,
+            mimeType: candidate.mimeType,
+            sizeBytes: candidate.sizeBytes,
+            extension: candidate.extension,
+            access: candidate.access,
+            businessPurpose: candidate.businessPurpose,
+            ownerType: candidate.ownerType,
+            ownerReference: candidate.ownerReference,
+            deliveryUrl: directUrl || this.mediaDeliveryUrl(code),
+            publicUrl: candidate.publicUrl || directUrl || this.mediaDeliveryUrl(code),
+            altText: candidate.altText || altText
+        };
+        Object.keys(descriptor).forEach(key => descriptor[key] === undefined && delete descriptor[key]);
+        return descriptor.deliveryUrl || descriptor.mediaCode ? descriptor : undefined;
+    },
+
+    /** Resolves customer-safe product media metadata and render URLs. @param {Object} payload Indexed product payload. @returns {Object} Media projection. */
+    media: function (payload) {
+        let productMedia = payload.media || {};
+        let primary = this.mediaDescriptor(productMedia.primary || productMedia.primaryImage, 'primary', productMedia.primaryAlt || payload.name);
+        let gallery = (productMedia.gallery || [])
+            .map(item => this.mediaDescriptor(item, 'gallery', productMedia.primaryAlt || payload.name))
+            .filter(Boolean);
+        if (primary && !gallery.some(item => item.mediaCode && item.mediaCode === primary.mediaCode)) gallery.unshift(primary);
+        return {
+            primary: primary,
+            gallery: gallery
+        };
+    },
+
+    /** Resolves the primary customer-safe product visual URL. @param {Object} payload Indexed product payload. @returns {string|undefined} Product visual URL. */
+    image: function (payload) {
+        let primary = this.media(payload).primary;
+        return primary && primary.deliveryUrl;
+    },
+
+    /** Resolves the customer-safe product visual gallery URLs. @param {Object} payload Indexed product payload. @returns {Array} Product visual gallery. */
+    gallery: function (payload) {
+        return this.media(payload).gallery.map(item => item.deliveryUrl).filter(Boolean);
+    },
+
     /** Projects one search projection into a customer-safe card. @param {Object} projection Product search projection. @returns {Object} Card. */
     card: function (projection) {
         let payload = projection.payload || {};
@@ -181,8 +313,12 @@ module.exports = {
             variantCodes: payload.variantCodes || [],
             seo: payload.seo,
             localizedAttributes: payload.localizedAttributes || {},
+            media: this.media(payload),
             price: this.price(payload.price),
-            availability: this.availability(payload.availability)
+            availability: this.availability(payload.availability),
+            apparel: payload.apparel,
+            electronics: payload.electronics,
+            telco: payload.telco
         };
     },
 
@@ -191,8 +327,6 @@ module.exports = {
         let card = this.card(projection), payload = projection.payload || {};
         return Object.assign({}, card, {
             description: payload.description,
-            mediaText: payload.mediaText || {},
-            gallery: payload.gallery || payload.media || [],
             variants: payload.variants || [],
             relatedProductCodes: payload.relatedProductCodes || []
         });

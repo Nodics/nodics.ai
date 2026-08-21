@@ -182,6 +182,27 @@ module.exports = {
         return response && Array.isArray(response.result) ? response.result : [];
     },
 
+    /** Resolves a public delivery URL for a media code without exposing provider storage details. */
+    mediaDeliveryUrl: function (mediaCode) {
+        let settings = this.settings();
+        let baseUrl = String(settings.mediaDeliveryBaseUrl || '/nodics/media/v0/content').replace(/\/+$/g, '');
+        return mediaCode ? baseUrl + '/' + encodeURIComponent(mediaCode) : undefined;
+    },
+
+    /** Loads safe media metadata for component-media associations. */
+    resolveMediaMetadata: async function (request, mediaCodes) {
+        let codes = Array.from(new Set([].concat(mediaCodes || []).filter(Boolean)));
+        if (!codes.length || !SERVICE.DefaultMediaService) return {};
+        let rows = await this.getMany(SERVICE.DefaultMediaService, request, { code: { $in: codes }, active: true });
+        return rows.reduce((result, media) => {
+            result[media.code] = this.pickDefined(media, ['code', 'name', 'description', 'folderCode', 'formatCode',
+                'mimeType', 'sizeBytes', 'extension', 'access', 'businessPurpose', 'ownerType', 'ownerReference', 'reusable', 'status']);
+            result[media.code].deliveryUrl = this.mediaDeliveryUrl(media.code);
+            result[media.code].publicUrl = result[media.code].deliveryUrl;
+            return result;
+        }, {});
+    },
+
     /** Resolves ordered CMS-owned media associations for resolved components. */
     resolveComponentMedia: async function (request, componentCodes, locale) {
         if (!SERVICE.DefaultCmsComponentMediaService) return {};
@@ -192,9 +213,10 @@ module.exports = {
         references = SERVICE.DefaultCmsContentLocalizationService ?
             SERVICE.DefaultCmsContentLocalizationService.selectMedia(references, locale) : references;
         references.sort((left, right) => (left.position || 0) - (right.position || 0));
+        let mediaByCode = await this.resolveMediaMetadata(request, references.map(item => item.mediaCode));
         return references.reduce((result, item) => {
             result[item.componentCode] = result[item.componentCode] || [];
-            result[item.componentCode].push(this.projectComponentMedia(item));
+            result[item.componentCode].push(this.projectComponentMedia(item, mediaByCode[item.mediaCode]));
             return result;
         }, {});
     },
@@ -223,9 +245,15 @@ module.exports = {
     },
 
     /** Projects client-safe CMS media-association fields without storage authority. */
-    projectComponentMedia: function (reference) {
-        return this.pickDefined(reference, ['componentMediaCode', 'mediaCode', 'mediaSetCode', 'mediaType',
+    projectComponentMedia: function (reference, media) {
+        let projected = this.pickDefined(reference, ['componentMediaCode', 'mediaCode', 'mediaSetCode', 'mediaType',
             'role', 'slot', 'localeCode', 'position', 'altText', 'caption']);
+        if (media) projected.media = media;
+        if (reference.mediaCode && !projected.deliveryUrl) {
+            projected.deliveryUrl = media && media.deliveryUrl || this.mediaDeliveryUrl(reference.mediaCode);
+            projected.publicUrl = projected.deliveryUrl;
+        }
+        return projected;
     },
 
     /** Copies only defined allowlisted fields into a detached object. */

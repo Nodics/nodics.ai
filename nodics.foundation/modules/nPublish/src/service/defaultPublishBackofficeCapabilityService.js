@@ -100,6 +100,38 @@ const capability = {
             ]
         },
         {
+            "id": "publishing-approval-tasks",
+            "parentId": "publishing",
+            "label": "Approval Tasks",
+            "route": "/process/tasks",
+            "icon": "tasks",
+            "order": 295,
+            "group": {
+                "id": "content",
+                "label": "Content and Experience",
+                "order": 200
+            },
+            "perspectives": [
+                "operations",
+                "content"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "help": {
+                "summary": "Review human workflow tasks that approve or reject governed publication requests.",
+                "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
+                "documentationFragment": "publishing-approval-tasks"
+            },
+            "featureState": "ACTIVE",
+            "requiredPermissions": [
+                "process.backoffice.view"
+            ],
+            "parentModuleName": "publish"
+        },
+        {
             "id": "publishing-audit",
             "parentId": "publishing",
             "label": "Publishing Audit",

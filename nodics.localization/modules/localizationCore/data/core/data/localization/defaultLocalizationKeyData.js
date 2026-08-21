@@ -18,6 +18,7 @@
  */
 module.exports = {
     record0: {
+        active: true,
         code: 'common.action.save',
         namespace: 'common',
         key: 'action.save',
@@ -29,6 +30,7 @@ module.exports = {
         overrideScopes: ['STANDARD', 'PROJECT', 'TENANT']
     },
     record1: {
+        active: true,
         code: 'common.action.cancel',
         namespace: 'common',
         key: 'action.cancel',

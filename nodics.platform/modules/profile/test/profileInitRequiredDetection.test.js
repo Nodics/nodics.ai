@@ -31,7 +31,7 @@ function createService() {
     });
 }
 
-function configureDatabase(collections, enterpriseResponse) {
+function configureDatabase(collections, enterpriseResponse, employeeResponse) {
     global.SERVICE = {
         DefaultDatabaseConfigurationService: {
             getTenantDatabase: function () {
@@ -52,22 +52,36 @@ function configureDatabase(collections, enterpriseResponse) {
                     getItems: function () {
                         return Promise.resolve(enterpriseResponse);
                     }
+                },
+                EmployeeModel: {
+                    getItems: function () {
+                        return Promise.resolve(employeeResponse);
+                    }
                 }
             };
         }
     };
+    global.CONFIG = {
+        get: function (key) {
+            if (key === 'defaultAuthDetail') return { loginId: 'admin' };
+            if (key === 'defaultTenant') return 'default';
+            if (key === 'profileModuleName') return 'profile';
+            return undefined;
+        }
+    };
 }
 
-async function isInitRequired(collections, enterpriseResponse) {
-    configureDatabase(collections, enterpriseResponse);
+async function isInitRequired(collections, enterpriseResponse, employeeResponse) {
+    configureDatabase(collections, enterpriseResponse, employeeResponse);
     return createService().isInitRequired();
 }
 
 (async function () {
     assert.strictEqual(await isInitRequired([], undefined), true);
-    assert.strictEqual(await isInitRequired(['EnterpriseModel'], { result: [{ code: 'default' }] }), false);
+    assert.strictEqual(await isInitRequired(['EnterpriseModel'], { result: [{ code: 'default' }] }, { result: [{ loginId: 'admin' }] }), false);
     assert.strictEqual(await isInitRequired(['EnterpriseModel'], { result: [] }), true);
-    assert.strictEqual(await isInitRequired(['EnterpriseModel'], [{ code: 'default' }]), false);
+    assert.strictEqual(await isInitRequired(['EnterpriseModel'], [{ code: 'default' }], [{ loginId: 'admin' }]), false);
+    assert.strictEqual(await isInitRequired(['EnterpriseModel'], [{ code: 'default' }], []), true);
 })().catch(error => {
     console.error(error);
     process.exit(1);

@@ -20,7 +20,7 @@ module.exports = {
     profile: {
         defaultTenantCsv: {
             options: {
-                enabled: true,
+                enabled: false,
                 moduleName: 'profile',
                 schemaName: 'tenant',
                 operation: 'saveAll',

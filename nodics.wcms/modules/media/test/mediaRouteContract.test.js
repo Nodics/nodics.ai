@@ -47,6 +47,7 @@ const expectedRoutes = [
     { key: '/references/:referenceCode/deactivate', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'deactivateMediaReference', secured: true, permission: 'media.reference.lifecycle.manage' },
     { key: '/storage/location', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'resolveStorageLocation', secured: true, permission: 'media.storage.location.resolve' },
     { key: '/storage/upload', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'uploadMedia', secured: true, permission: 'media.upload.create' },
+    { key: '/publication/target/assets/import', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'importPublishedMediaAssets', secured: true, permissionConfig: 'authSecurity.internalToken.routePermission' },
     { key: '/download/:mediaCode', method: 'GET', controller: 'DefaultMediaStorageController', operation: 'downloadMediaContent', secured: true, permission: 'media.content.download' },
     { key: '/references/media/validate', method: 'POST', controller: 'DefaultMediaReferenceLookupController', operation: 'validate', secured: true, permissionConfig: 'authSecurity.internalToken.routePermission' }
 ];
@@ -57,18 +58,26 @@ const downloadRoute = routes.find(route => route.key === '/download/:mediaCode')
 assert(contentRoute, 'media content route must be registered');
 assert(downloadRoute, 'media download route must be registered');
 assert.strictEqual(contentRoute.responseHandler, 'mediaContentResponseHandler', 'inline media content must remain on media content handler');
-assert.strictEqual(contentRoute.secured, true, 'inline content route must require authenticated media delivery');
+assert.strictEqual(contentRoute.secured, true, 'inline content route must still pass through governed media delivery');
 assert.strictEqual(contentRoute.permission, 'media.content.read', 'inline content route must use governed media read permission');
-assert.notStrictEqual(contentRoute.publicAccess, true, 'inline content route must not be anonymously public');
+assert.strictEqual(contentRoute.publicAccess, true, 'inline content route must be browser-readable for PUBLIC media');
+assert.strictEqual(contentRoute.apiExposure, 'mediaDelivery', 'inline content route must not depend on media management exposure');
 assert.strictEqual(downloadRoute.responseHandler, 'fileDownloadResponseHandler', 'download media content must reuse nRouter file-download response handler');
+const publicationImportRoute = routes.find(route => route.key === '/publication/target/assets/import');
+assert(publicationImportRoute, 'media publication import route must be registered');
+assert.strictEqual(publicationImportRoute.apiExposure, 'moduleInternal', 'media publication import must remain internal only');
+assert.deepStrictEqual(publicationImportRoute.authTokenTypes, ['service'], 'media publication import must require service token authentication');
+assert.strictEqual(publicationImportRoute.bodyParserHandler, 'mediaPublicationBodyParserHandler', 'media publication import must use bounded publication body parsing');
 assert.strictEqual(
     mediaCapabilityService.getCapability().discovery.openApiPath,
     '/nodics/system/v0/contract/openapi/internal',
     'media BackOffice discovery must use the central System OpenAPI contract endpoint'
 );
 routes.forEach(route => {
-    assert(['mediaManagement', 'moduleInternal'].includes(route.apiExposure), route.key + ' must be intentionally exposure-gated');
-    assert.notStrictEqual(route.publicAccess, true, route.key + ' must not be public');
+    assert(['mediaManagement', 'mediaDelivery', 'moduleInternal'].includes(route.apiExposure), route.key + ' must be intentionally exposure-gated');
+    if (route.key !== '/content/:mediaCode') {
+        assert.notStrictEqual(route.publicAccess, true, route.key + ' must not be public');
+    }
     if (route.permission) {
         assert(
             authProperties.identityGovernance.permissionCatalog.includes(route.permission),

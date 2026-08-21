@@ -38,6 +38,7 @@ module.exports = {
      */
     deliver: async function (request) {
         request = request || {};
+        request.tenant = this.resolveTenant(request);
         let mediaCode = this.resolveMediaCode(request);
         let policy = this.policy();
         if (policy.enabled !== true) {
@@ -65,8 +66,24 @@ module.exports = {
             fileName: source.fileName || media.originalFileName || media.storedFileName || media.code,
             mimeType: media.mimeType || source.mimeType,
             cacheControl: policy.cacheControl,
+            responseHeaders: policy.responseHeaders,
             contentDisposition: this.resolveContentDisposition(request, policy)
         };
+    },
+
+    /**
+     * Resolves the tenant used for media metadata lookup.
+     *
+     * Public inline media requests can be served without an authenticated
+     * principal, so they may reach delivery without a request tenant. The
+     * effective tenant is still resolved before metadata lookup while access
+     * policy remains enforced by validateAccess.
+     *
+     * @param {Object} request Delivery request.
+     * @returns {string} Tenant code.
+     */
+    resolveTenant: function (request) {
+        return request && request.tenant || CONFIG.get('defaultTenant') || 'default';
     },
 
     /**
@@ -177,6 +194,10 @@ module.exports = {
             privateAccessEnabled: delivery.privateAccessEnabled !== false,
             maximumResults: delivery.maximumResults || 2,
             cacheControl: delivery.cacheControl || 'public, max-age=3600',
+            responseHeaders: delivery.responseHeaders || {
+                'Cross-Origin-Resource-Policy': 'cross-origin',
+                'Access-Control-Allow-Origin': '*'
+            },
             contentDisposition: delivery.contentDisposition || 'inline'
         };
     },

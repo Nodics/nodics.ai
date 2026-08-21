@@ -18,6 +18,7 @@
  */
 module.exports = {
     record0: {
+        active: true,
         code: 'STANDARD.default.en.common.action.save',
         namespace: 'common',
         key: 'action.save',
@@ -31,6 +32,7 @@ module.exports = {
         auditTrail: [{ toState: 'APPROVED', actor: 'system', reason: 'Initial runtime bundle seed' }]
     },
     record1: {
+        active: true,
         code: 'STANDARD.default.en.common.action.cancel',
         namespace: 'common',
         key: 'action.cancel',
@@ -44,6 +46,7 @@ module.exports = {
         auditTrail: [{ toState: 'APPROVED', actor: 'system', reason: 'Initial runtime bundle seed' }]
     },
     record2: {
+        active: true,
         code: 'STANDARD.default.ar.common.action.save',
         namespace: 'common',
         key: 'action.save',
@@ -57,6 +60,7 @@ module.exports = {
         auditTrail: [{ toState: 'APPROVED', actor: 'system', reason: 'Initial runtime bundle seed' }]
     },
     record3: {
+        active: true,
         code: 'STANDARD.default.ar.common.action.cancel',
         namespace: 'common',
         key: 'action.cancel',

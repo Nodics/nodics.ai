@@ -400,6 +400,7 @@ module.exports = {
                         let removeQuery = _.merge({}, _self.searchEngine.getOptions().removeOptions || {});
                         removeQuery = _.merge(removeQuery, input.options || {});
                         removeQuery = _.merge(removeQuery, {
+                            conflicts: removeQuery.conflicts || 'proceed',
                             index: _self.indexDef.indexName.toLowerCase(),
                             body: {
                                 query: (searchModel.normalizeQuery || module.exports.default.normalizeQuery)(input.query)
@@ -407,13 +408,9 @@ module.exports = {
                         });
                         _self.LOG.debug('Executing remove command with options');
                         _self.LOG.debug(removeQuery);
-                        _self.searchEngine.getConnection().deleteByQuery(removeQuery, function (error, response) {
-                            if (error) {
-                                reject(error);
-                            } else {
-                                resolve(response);
-                            }
-                        });
+                        (searchModel.invokeClient || module.exports.default.invokeClient)
+                            .call(searchModel, _self.searchEngine.getConnection(), 'deleteByQuery', removeQuery)
+                            .then(resolve).catch(reject);
                     } catch (error) {
                         reject(error);
                     }

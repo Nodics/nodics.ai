@@ -19,7 +19,7 @@
             "removalPolicy": "RETAIN",
             "files": {
                 "init/data/content/defaultCmsSiteData.js": "e8542694fba0b563ad046cba914be5d0383abf76e06fdfb120016f68b4e2f869",
-                "init/data/content/defaultCmsTypeCodeData.js": "b57d863ec9d289178f6ce83beb7eb1a8d0f8ceef0c0e9e097daf3735a7e78438",
+                "init/data/content/defaultCmsTypeCodeData.js": "0d64b77b282e053fb5d93e8d808e9420cac60a8371ba22bbe6318be76b85d254",
                 "init/data/user/defaultCmsEmployeeData.js": "81fb143ca6bbeb4b04f19cbe47d26740aa6db0645539a90433cf0b7ea82dbe8e",
                 "init/data/user/defaultCmsUserGroupsData.js": "bddc554e2d1356c78beceaaf7ee15e898ee446e24042bb9041d16e6eb43c74d7",
                 "init/headers/content/defaultCmsSiteDataHeader.js": "b0daf33d33d54111905735913b0eb1c90fafa1b18a3005206a9edf9c38253387",

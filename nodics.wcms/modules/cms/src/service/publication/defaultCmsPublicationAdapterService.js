@@ -55,8 +55,10 @@ module.exports = {
     },
     /** Loads active models and collapses version history to exact latest identities. */
     loadLatest: async function (serviceName, request, query) {
+        let maximum = Number(this.settings().maxDependencies || 500);
         let response = await this.service(serviceName).get({ tenant: request.tenant, authData: request.authData,
-            query: Object.assign({ active: true }, query), searchOptions: { sort: { versionId: -1 } } });
+            query: Object.assign({ active: true }, query), searchOptions: { limit: maximum, pageSize: maximum,
+                sort: { versionId: -1 } } });
         return this.latestByCode(this.items(response));
     },
     /** Converts one model into a frozen dependency identity. */

@@ -89,6 +89,22 @@ module.exports = {
         code: '200',
         message: 'Media storage provider summary resolved successfully'
     },
+    SUC_MED_00019: {
+        code: '200',
+        message: 'Media storage provider saved successfully'
+    },
+    SUC_MED_00020: {
+        code: '200',
+        message: 'Media storage provider activated successfully'
+    },
+    SUC_MED_00021: {
+        code: '200',
+        message: 'Media storage provider deactivated successfully'
+    },
+    SUC_MED_00022: {
+        code: '200',
+        message: 'Published media assets imported successfully'
+    },
     ERR_MED_00001: {
         code: '400',
         message: 'Invalid media request'

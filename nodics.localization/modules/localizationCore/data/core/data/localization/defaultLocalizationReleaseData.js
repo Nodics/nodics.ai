@@ -18,6 +18,7 @@
  */
 module.exports = {
     record0: {
+        active: true,
         code: '0a3f590a4a907627',
         version: '0a3f590a4a907627',
         locale: 'en',
@@ -31,6 +32,7 @@ module.exports = {
         createdAt: new Date('2026-08-11T00:00:00.000Z')
     },
     record1: {
+        active: true,
         code: 'b6effe65a8ebf79c',
         version: 'b6effe65a8ebf79c',
         locale: 'ar',

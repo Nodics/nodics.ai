@@ -53,6 +53,7 @@ const projections = [
     { code: 'agoraLinenWrapDress|agoraMainStore|en', tenant: 'default', productCode: 'agoraLinenWrapDress', storeCode: 'agoraMainStore', locale: 'en', status: 'CURRENT',
         payload: { code: 'agoraLinenWrapDress', name: 'Linen Wrap Dress', description: 'Linen dress', slug: 'linen-wrap-dress', seo: { title: 'Linen' },
             localizedAttributes: { material: 'linen' }, categoryCodes: ['agoraWomen'], variantCodes: ['agoraLinenWrapDressNaturalS'],
+            media: { primaryImage: 'agora-owned-product-linen-wrap-dress-primary', primaryAlt: 'Linen wrap dress' },
             variantSkuMap: { agoraLinenWrapDressNaturalS: 'AGORA-DRESS-S' },
             price: { currency: 'USD', unitAmount: '129.00', priceRowCode: 'internalPriceRow' },
             availability: { available: true, status: 'IN_STOCK', warehouseCode: 'internalWarehouse' }, inventory: { available: 12 }, sku: 'AGORA-DRESS-S' } },
@@ -117,10 +118,10 @@ function installGlobals() {
         DefaultProductSearchProjectionService: {
             doSearch: async request => {
                 searchRequests.push(request);
-                let rows = projections.filter(item => item.tenant === request.query.tenant &&
-                item.storeCode === request.query.storeCode && item.locale === request.query.locale &&
-                    item.status === request.query.status);
-            if (request.query.productCode) rows = rows.filter(item => item.productCode === request.query.productCode);
+                let rows = projections.filter(item => item.tenant === request.query['tenant.keyword'] &&
+                item.storeCode === request.query['storeCode.keyword'] && item.locale === request.query['locale.keyword'] &&
+                    item.status === request.query['status.keyword']);
+            if (request.query['productCode.keyword']) rows = rows.filter(item => item.productCode === request.query['productCode.keyword']);
             if (request.query['payload.categoryCodes.keyword']) rows = rows.filter(item => item.payload.categoryCodes.includes(request.query['payload.categoryCodes.keyword']));
                 return { result: rows };
             },
@@ -150,6 +151,26 @@ function installGlobals() {
                     item.status === request.query.status && request.query.productCode.$in.includes(item.productCode)) };
             }
         }
+    };
+    global.NODICS = {
+        getModels: () => ({
+            ProductSearchProjectionModel: {
+                find: query => {
+                    let rows = projections.filter(item => Object.keys(query).every(key => {
+                        let actual = key.split('.').reduce((value, segment) => value && value[segment], item);
+                        if (Array.isArray(actual)) return actual.includes(query[key]);
+                        return actual === query[key];
+                    }));
+                    return {
+                        sort: function () { return this; },
+                        skip: function (count) { rows = rows.slice(count); return this; },
+                        limit: function (count) { rows = rows.slice(0, count); return this; },
+                        lean: function () { return this; },
+                        exec: async function () { return rows; }
+                    };
+                }
+            }
+        })
     };
     global.FACADE = {
         DefaultProductDiscoveryApiFacade: discoveryFacade,
@@ -184,6 +205,10 @@ test('customer discovery lists Product cards with safe price and availability bu
     assert.equal(response.data.products[0].name, 'Linen Wrap Dress');
     assert.deepEqual(response.data.products[0].price, { currency: 'USD', unitAmount: '129.00' });
     assert.deepEqual(response.data.products[0].availability, { available: true, status: 'IN_STOCK' });
+    assert.equal(response.data.products[0].media.primary.mediaCode, 'agora-owned-product-linen-wrap-dress-primary');
+    assert.equal(response.data.products[0].media.primary.deliveryUrl, '/nodics/media/v0/content/agora-owned-product-linen-wrap-dress-primary');
+    assert.equal(response.data.products[0].media.primary.altText, 'Linen wrap dress');
+    assert.equal(response.data.products[0].image, undefined);
     assert.equal(response.data.products[0].price.priceRowCode, undefined);
     assert.equal(response.data.products[0].availability.warehouseCode, undefined);
     assert.equal(response.data.products[0].inventory, undefined);
@@ -201,7 +226,7 @@ test('customer discovery lists Product cards with safe price and availability bu
     assert.equal(response.data.discovery.fieldMappingCode, 'agoraProductDiscoveryFieldMapping');
     assert.equal(response.data.discovery.rankingProfileCode, 'agoraProductRankingProfile');
     assert.deepEqual(searchRequests[0].query, {
-        tenant: 'default', storeCode: 'agoraMainStore', locale: 'en', status: 'CURRENT', 'payload.categoryCodes.keyword': 'agoraWomen'
+        'tenant.keyword': 'default', 'storeCode.keyword': 'agoraMainStore', 'locale.keyword': 'en', 'status.keyword': 'CURRENT', 'payload.categoryCodes.keyword': 'agoraWomen'
     });
 });
 
@@ -226,9 +251,24 @@ test('customer discovery resolves default tenant for public storefront requests'
     });
 
     assert.equal(response.data.tenant, 'default');
-    assert.equal(searchRequests[0].query.tenant, 'default');
-    assert.equal(searchRequests[0].query.storeCode, 'agoraMainStore');
-    assert.equal(searchRequests[0].query.locale, 'en');
+    assert.equal(searchRequests[0].query['tenant.keyword'], 'default');
+    assert.equal(searchRequests[0].query['storeCode.keyword'], 'agoraMainStore');
+    assert.equal(searchRequests[0].query['locale.keyword'], 'en');
+});
+
+test('customer discovery falls back to Product projection store when browse search index is empty', async () => {
+    global.SERVICE.DefaultProductSearchProjectionService.doSearch = async request => {
+        searchRequests.push(request);
+        return { result: [] };
+    };
+    let response = await discoveryController.list({
+        tenant: 'default',
+        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', categoryCode: 'agoraWomen', pageSize: '12' } }
+    });
+
+    assert.equal(response.data.products.length, 1);
+    assert.equal(response.data.products[0].productCode, 'agoraLinenWrapDress');
+    assert.equal(response.data.discovery.source, 'PROJECTION_STORE_FALLBACK');
 });
 
 test('customer discovery extracts nested nSearch Elasticsearch hits', () => {
@@ -269,7 +309,7 @@ test('customer PDP resolves one Product detail through Product search projection
     assert.equal(response.data.product.inventory, undefined);
     assert.equal(response.data.product.sku, undefined);
     assert.equal(response.data.product.variantSkuMap, undefined);
-    assert.equal(searchRequests[0].query.productCode, 'agoraOxfordShirt');
+    assert.equal(searchRequests[0].query['productCode.keyword'], 'agoraOxfordShirt');
     assert.equal(response.data.discovery.source, 'SEARCH_INDEX');
     assert.equal(response.data.discovery.indexName, 'productLocalized');
 });

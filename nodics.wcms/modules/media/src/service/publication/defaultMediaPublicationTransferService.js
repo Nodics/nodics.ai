@@ -54,7 +54,7 @@ module.exports = {
                 formatCode: media.formatCode, originalFileName: media.originalFileName, mimeType: media.mimeType,
                 sizeBytes: buffer.length, checksum: media.checksum, checksumAlgorithm: algorithm, access: media.access,
                 businessPurpose: media.businessPurpose, ownerType: media.ownerType, enterpriseCode: media.enterpriseCode,
-                ownerReference: media.ownerReference, reusable: media.reusable === true, contentBase64: buffer.toString('base64') });
+                ownerReference: media.ownerReference, reusable: media.reusable !== false, contentBase64: buffer.toString('base64') });
         }
         return assets;
     },
@@ -75,18 +75,19 @@ module.exports = {
                 throw new CLASSES.NodicsError('ERR_MED_00014', 'Published media payload integrity validation failed');
             }
             let existing = this.items(await SERVICE.DefaultMediaService.get({ tenant: request.tenant, authData: request.authData,
-                transactionContext: request.transactionContext, query: { code: asset.code }, searchOptions: { limit: 2 } }));
-            if (existing.length) {
-                if (existing.length !== 1 || existing[0].checksum !== asset.checksum) throw new CLASSES.NodicsError('ERR_MED_00015', 'Online media identity conflict');
+                query: { code: asset.code }, searchOptions: { limit: 2 } }));
+            if (existing.length > 1) throw new CLASSES.NodicsError('ERR_MED_00015', 'Online media identity conflict');
+            if (existing.length === 1 && existing[0].checksum === asset.checksum) {
                 imported.push(existing[0]);
                 continue;
             }
             imported.push(await SERVICE.DefaultMediaUploadService.upload({ tenant: request.tenant, authData: request.authData,
-                transactionContext: request.transactionContext, mediaCode: asset.code, name: asset.name,
+                mediaCode: asset.code, name: asset.name,
                 description: asset.description, folderCode: asset.folderCode, formatCode: asset.formatCode,
-                enterpriseCode: asset.enterpriseCode, businessPurpose: 'CMS_PUBLICATION', ownerType: 'CMS_PUBLICATION_ASSET',
-                ownerReference: asset.checksum, reusable: true,
-                retentionUntil: new Date(Date.now() + Number(policy.retentionDays || 7) * 86400000),
+                enterpriseCode: asset.enterpriseCode, businessPurpose: asset.businessPurpose || 'CMS_PUBLICATION',
+                ownerType: asset.ownerType || 'CMS_PUBLICATION_ASSET',
+                ownerReference: asset.ownerReference || asset.checksum, reusable: asset.reusable !== false,
+                retentionUntil: asset.retentionUntil || new Date(Date.now() + Number(policy.retentionDays || 7) * 86400000),
                 files: [{ fieldName: 'publication', originalFileName: asset.originalFileName,
                     mimeType: asset.mimeType, sizeBytes: buffer.length, buffer: buffer }] }));
         }

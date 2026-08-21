@@ -255,6 +255,22 @@ module.exports = {
         }));
     },
     /**
+     * Imports checksum-verified path-free publication assets into the target runtime.
+     *
+     * @param {Object} request Publication asset import request.
+     * @returns {Promise<Object>} Imported media descriptors.
+     */
+    importPublishedMediaAssets: function (request) {
+        let assets = request.mediaAssets || request.assets || [];
+        return SERVICE.DefaultMediaPublicationTransferService.importReferenced(assets, request).then(media => ({
+            code: 'SUC_MED_00022',
+            data: {
+                imported: media.length,
+                media: media
+            }
+        }));
+    },
+    /**
      * Resolves an authorized media content delivery descriptor.
      *
      * @param {Object} request Delivery request.

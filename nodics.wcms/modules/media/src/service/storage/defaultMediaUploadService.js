@@ -99,6 +99,7 @@ module.exports = {
             authData: request.authData,
             transactionContext: request.transactionContext,
             moduleName: 'media',
+            query: { code: mediaCode },
             model: media
         });
         return this.firstResult(response) || media;

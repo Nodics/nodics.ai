@@ -50,4 +50,35 @@ assert.strictEqual(model.enabled, true);
 assert.strictEqual(model.ratio, 1.5);
 assert.strictEqual(model.name, 'Nexus');
 
+global.NODICS = {
+    getModule: function () {
+        return {};
+    },
+    getModules: function () {
+        return {
+            catalog: { rawSchema: {} },
+            promotion: {
+                rawSchema: {
+                    promotion: {
+                        definition: {
+                            validFrom: { type: 'date' },
+                            revision: { type: 'int' }
+                        }
+                    }
+                }
+            }
+        };
+    }
+};
+
+const resolvedSchema = service.resolveRawSchema('composedPromotionHeader', 'promotion');
+assert(resolvedSchema, 'schema fallback should resolve active-module raw schema');
+const [resolvedModel] = service.normalizeModelsForSchema({ rawSchema: resolvedSchema }, [{
+    validFrom: '2026-01-01T00:00:00.000Z',
+    revision: '0'
+}]);
+assert(resolvedModel.validFrom instanceof Date);
+assert.strictEqual(resolvedModel.validFrom.toISOString(), '2026-01-01T00:00:00.000Z');
+assert.strictEqual(resolvedModel.revision, 0);
+
 console.log('Import scalar normalization contract validated');

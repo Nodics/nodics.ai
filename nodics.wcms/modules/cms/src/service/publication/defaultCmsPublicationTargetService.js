@@ -213,6 +213,30 @@ module.exports = {
             authData: request.authData, protectedMediaCodes: Array.from(protectedCodes),
             dryRun: input.dryRun !== false, now: input.now });
     },
+    /** Creates a stable delivery-scope identity for route-level pointer comparison. */
+    scopeIdentity: function (scope) {
+        return [scope.site, scope.path, scope.locale, scope.channel, scope.accessMode].join('|');
+    },
+    /** Deactivates active site pointers that are outside the restored site-bundle manifest. */
+    deactivateOutsideBundleScope: async function (manifest, request) {
+        if (!manifest.snapshot || manifest.snapshot.contractVersion !== 2) return 0;
+        let targetScopes = new Set([].concat(manifest.snapshot.routes || []).map(scope => this.scopeIdentity(scope)));
+        let pointers = await this.manifests().getSitePointers(manifest.snapshot.site, request);
+        let count = 0;
+        for (let pointer of pointers) {
+            if (targetScopes.has(this.scopeIdentity(pointer))) continue;
+            let response = await SERVICE.DefaultCmsOnlinePublicationPointerService.update({ tenant: request.tenant, authData: request.authData,
+                transactionContext: request.transactionContext,
+                query: { code: pointer.code, revision: Number(pointer.revision || 0) },
+                model: { active: false, revision: Number(pointer.revision || 0) + 1,
+                    correlationId: request.correlationId || request.requestId } });
+            if (this.manifests().affected(response) !== 1) {
+                throw new CLASSES.NodicsError('CMS_PUBLICATION_POINTER_CONFLICT', 'CMS Online pointer revision conflict');
+            }
+            count += 1;
+        }
+        return count;
+    },
     /** Restores a release already imported into this Online target. */
     rollback: async function (request) {
         this.assertOnlineRuntime();
@@ -220,17 +244,8 @@ module.exports = {
         let manifest = await this.manifests().getManifest(input.manifestCode, request);
         if (!manifest) throw new CLASSES.NodicsError('CMS_PUBLICATION_MANIFEST_MISSING', 'Rollback manifest is not deployed on the Online target');
         this.applyCorrelation(request, input, manifest);
-        if (manifest.snapshot && manifest.snapshot.contractVersion === 2) {
-            let pointers = await this.manifests().getSitePointers(manifest.snapshot.site, request);
-            let identity = scope => [scope.site, scope.path, scope.locale, scope.channel, scope.accessMode].join('|');
-            let currentScopes = pointers.map(identity).sort();
-            let targetScopes = (manifest.snapshot.routes || []).map(identity).sort();
-            if (currentScopes.length && JSON.stringify(currentScopes) !== JSON.stringify(targetScopes)) {
-                throw new CLASSES.NodicsError('CMS_PUBLICATION_BUNDLE_ROLLBACK_SCOPE_CONFLICT',
-                    'Site bundle rollback requires matching route scope; use explicit unpublish or retire for route changes');
-            }
-        }
         let committed = await this.transaction(request, async transactionRequest => {
+            await this.deactivateOutsideBundleScope(manifest, transactionRequest);
             let activation = await this.manifests().activate(manifest, transactionRequest);
             await this.recordReceipt('ROLLBACK', manifest, activation, transactionRequest);
             let event = await SERVICE.DefaultCmsPublicationOutboxService.enqueue('ROLLBACK', manifest, transactionRequest);

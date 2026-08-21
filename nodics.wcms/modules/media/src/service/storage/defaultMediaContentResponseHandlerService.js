@@ -41,6 +41,7 @@ module.exports = {
     handleSuccess: function (request, response, success) {
         if (success.mimeType && response.type) response.type(success.mimeType);
         if (success.cacheControl && response.set) response.set('Cache-Control', success.cacheControl);
+        this.applyResponseHeaders(response, success.responseHeaders);
         if (this.isAttachment(success) && typeof response.download === 'function') {
             return response.download(
                 success.filePath,
@@ -52,6 +53,23 @@ module.exports = {
             response.set('Content-Disposition', success.contentDisposition + '; filename="' + this.safeHeaderFileName(success.fileName) + '"');
         }
         response.sendFile(success.filePath, this.handleTransferCallback(request, response));
+    },
+
+    /**
+     * Applies media-owned delivery headers after access validation.
+     *
+     * @param {Object} response Express response.
+     * @param {Object} headers Header map.
+     * @returns {void}
+     */
+    applyResponseHeaders: function (response, headers) {
+        if (!headers || !response || typeof response.set !== 'function') return;
+        Object.keys(headers).forEach(headerName => {
+            let value = headers[headerName];
+            if (value !== undefined && value !== null && value !== false) {
+                response.set(headerName, String(value));
+            }
+        });
     },
 
     /**

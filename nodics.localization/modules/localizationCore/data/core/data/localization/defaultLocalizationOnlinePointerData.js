@@ -18,6 +18,7 @@
  */
 module.exports = {
     record0: {
+        active: true,
         code: 'axisCmsSite.web.en',
         locale: 'en',
         scopeCode: 'axisCmsSite',
@@ -26,6 +27,7 @@ module.exports = {
         revision: 0
     },
     record1: {
+        active: true,
         code: 'axisCmsSite.web.ar',
         locale: 'ar',
         scopeCode: 'axisCmsSite',

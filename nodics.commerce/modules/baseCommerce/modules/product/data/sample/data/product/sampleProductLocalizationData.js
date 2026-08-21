@@ -15,12 +15,12 @@ module.exports = {
         code: 'sampleRunningShoe-en', tenant: 'default', productCode: 'sampleRunningShoe', locale: 'en',
         name: 'Nodics Running Shoe', description: 'A lightweight sample running shoe.', slug: 'nodics-running-shoe',
         seo: { title: 'Nodics Running Shoe', description: 'Lightweight running shoe' },
-        mediaText: { primaryAlt: 'Blue Nodics running shoe' }, status: 'READY', revision: 1, active: true
+        media: { primaryAlt: 'Blue Nodics running shoe' }, status: 'READY', revision: 1, active: true
     },
     record1: {
         code: 'sampleRunningShoe-ar', tenant: 'default', productCode: 'sampleRunningShoe', locale: 'ar',
         name: 'حذاء نوديكس للجري', description: 'حذاء جري تجريبي خفيف الوزن.', slug: 'nodics-running-shoe-ar',
         seo: { title: 'حذاء نوديكس للجري', description: 'حذاء جري خفيف الوزن' },
-        mediaText: { primaryAlt: 'حذاء نوديكس أزرق للجري' }, status: 'READY', revision: 1, active: true
+        media: { primaryAlt: 'حذاء نوديكس أزرق للجري' }, status: 'READY', revision: 1, active: true
     }
 };

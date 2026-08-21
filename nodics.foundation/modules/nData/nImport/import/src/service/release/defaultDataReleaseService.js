@@ -31,7 +31,8 @@ module.exports = {
     /** Returns the client-safe release catalogue for the active runtime and tenant. */
     getCatalogue: async function (request) {
         let tenant = this.resolveTenant(request);
-        let releases = this.discoverReleases(request && request.dataType);
+        let releases = this.discoverReleases(request && request.dataType)
+            .filter(release => release.invalidManifest === true || this.isDestinationCompatible(release));
         let installations = await this.getInstallations(tenant);
         let byCode = Object.fromEntries(installations.map(item => [item.code, item]));
         return {
@@ -649,11 +650,23 @@ module.exports = {
     },
 
     /** Returns durable current installation projections for one tenant. */
-    getInstallations: function (tenant) {
+    getInstallations: async function (tenant) {
         let installationService = SERVICE.DefaultDataInstallationService;
-        if (!installationService || typeof installationService.get !== 'function') return Promise.resolve([]);
-        return installationService.get({ tenant: tenant, query: {}, searchOptions: { limit: 1000 } })
-            .then(result => result && result.result || []);
+        if (!installationService || typeof installationService.get !== 'function') return [];
+        let pageSize = 500;
+        let pageNumber = 1;
+        let installations = [];
+        while (true) {
+            let result = await installationService.get({
+                tenant: tenant,
+                query: {},
+                searchOptions: { pageSize: pageSize, pageNumber: pageNumber }
+            });
+            let page = result && result.result || [];
+            installations = installations.concat(page);
+            if (page.length < pageSize) return installations;
+            pageNumber += 1;
+        }
     },
 
     /** Records RUNNING, CURRENT, or FAILED state through the generated model service. */

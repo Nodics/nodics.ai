@@ -68,6 +68,31 @@ module.exports = {
     },
 
     /**
+     * Resolves whether the configured bootstrap employee is available after a
+     * local reset or partial initialization.
+     *
+     * @param {string} profileModuleName Profile module owning identity models.
+     * @param {string} defaultTenant Tenant code used for bootstrap identity.
+     * @returns {Promise<boolean>} Resolves true when the configured employee exists.
+     */
+    hasBootstrapEmployee: function (profileModuleName, defaultTenant) {
+        let defaultAuthDetail = CONFIG.get('defaultAuthDetail') || {};
+        let loginId = defaultAuthDetail.loginId;
+        if (!loginId) return Promise.resolve(true);
+        let models = NODICS.getModels(profileModuleName, defaultTenant);
+        if (!models || !models.EmployeeModel || typeof models.EmployeeModel.getItems !== 'function') {
+            return Promise.resolve(false);
+        }
+        return models.EmployeeModel.getItems({
+            tenant: defaultTenant,
+            query: { loginId: loginId }
+        }).then(success => {
+            let employees = UTILS.isArray(success) ? success : success.result;
+            return Boolean(employees && employees.length > 0);
+        });
+    },
+
+    /**
 
      * Validates init required rules.
 
@@ -93,7 +118,16 @@ module.exports = {
                         tenant: defaultTenant
                     }).then(success => {
                         let enterprises = UTILS.isArray(success) ? success : success.result;
-                        resolve(!enterprises || enterprises.length <= 0);
+                        if (!enterprises || enterprises.length <= 0) {
+                            resolve(true);
+                            return;
+                        }
+                        _self.hasBootstrapEmployee(profileModuleName, defaultTenant).then(hasEmployee => {
+                            if (!hasEmployee) _self.LOG.info('System requires initial data because bootstrap identity is missing');
+                            resolve(!hasEmployee);
+                        }).catch(error => {
+                            reject(error);
+                        });
                     }).catch(error => {
                         reject(error);
                     });

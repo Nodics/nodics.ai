@@ -38,9 +38,10 @@ module.exports = {
             defaultPageSize: 24,
             allowTenantQuery: false,
             searchIndexName: 'productLocalized',
+            mediaDeliveryBaseUrl: '/nodics/media/v0/content',
             rankingFailureBehavior: 'omit',
-            cardFields: ['productCode', 'name', 'slug', 'summary', 'categoryCodes', 'variantCodes', 'seo', 'localizedAttributes', 'price', 'availability'],
-            detailFields: ['productCode', 'name', 'slug', 'summary', 'description', 'categoryCodes', 'variantCodes', 'seo', 'localizedAttributes', 'mediaText', 'price', 'availability'],
+            cardFields: ['productCode', 'name', 'slug', 'summary', 'categoryCodes', 'variantCodes', 'seo', 'localizedAttributes', 'media', 'price', 'availability'],
+            detailFields: ['productCode', 'name', 'slug', 'summary', 'description', 'categoryCodes', 'variantCodes', 'seo', 'localizedAttributes', 'media', 'price', 'availability'],
             filterableFields: ['categoryCodes'],
             exposedSorts: ['relevance', 'name-asc', 'name-desc']
         },

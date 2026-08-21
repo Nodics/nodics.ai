@@ -19,30 +19,37 @@
 module.exports = {
     record0: {
         code: 'headerComponentType',
+        kind: 'COMPONENT',
         active: true,
     },
     record1: {
         code: 'mainComponentType',
+        kind: 'COMPONENT',
         active: true,
     },
     record2: {
         code: 'footerComponentType',
+        kind: 'COMPONENT',
         active: true,
     },
     record3: {
         code: 'paragraphComponentType',
+        kind: 'COMPONENT',
         active: true,
     },
     record4: {
         code: 'htmlComponentType',
+        kind: 'COMPONENT',
         active: true,
     },
     record5: {
         code: 'textComponentType',
+        kind: 'COMPONENT',
         active: true
     },
     record6: {
         code: 'imageTextComponentType',
+        kind: 'COMPONENT',
         active: true,
         mediaSchema: {
             allowedReferenceTypes: ['MEDIA', 'MEDIA_SET'],
@@ -58,6 +65,7 @@ module.exports = {
     },
     record7: {
         code: 'imageComponentType',
+        kind: 'COMPONENT',
         active: true,
         mediaSchema: {
             allowedReferenceTypes: ['MEDIA', 'MEDIA_SET'],
@@ -70,6 +78,7 @@ module.exports = {
     },
     record8: {
         code: 'imagesComponentType',
+        kind: 'COMPONENT',
         active: true,
         mediaSchema: {
             allowedReferenceTypes: ['MEDIA', 'MEDIA_SET'],
@@ -79,18 +88,22 @@ module.exports = {
     },
     record9: {
         code: 'menuComponentType',
+        kind: 'COMPONENT',
         active: true
     },
     record10: {
         code: 'menuLinkComponentType',
+        kind: 'COMPONENT',
         active: true
     },
     record11: {
         code: 'navigationalComponentType',
+        kind: 'COMPONENT',
         active: true
     },
     record12: {
         code: 'logoComponentType',
+        kind: 'COMPONENT',
         active: true
     },
     record13: {
@@ -110,18 +123,22 @@ module.exports = {
     },
     record16: {
         code: 'titleComponentType',
+        kind: 'COMPONENT',
         active: true,
     },
     record17: {
         code: 'buttonComponentType',
+        kind: 'COMPONENT',
         active: true,
     },
     record18: {
         code: 'headerStickyComponentType',
+        kind: 'COMPONENT',
         active: true,
     },
     record19: {
         code: 'homePageBannerComponentType',
+        kind: 'COMPONENT',
         active: true,
         mediaSchema: {
             allowedReferenceTypes: ['MEDIA', 'MEDIA_SET'],
@@ -138,6 +155,7 @@ module.exports = {
     },
     record20: {
         code: 'homePageSectionComponentType',
+        kind: 'COMPONENT',
         active: true,
     },
 };

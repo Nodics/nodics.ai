@@ -55,7 +55,8 @@ fs.writeFileSync(path.join(root, 'data', 'manifest.json'), JSON.stringify({
 global.CONFIG = { get: key => key === 'data' ? {
     dataReleases: {
         allowedContractVersions: [1, 2], maximumFilesPerRelease: 10, maximumModulesPerRun: 5,
-        allowDowngrade: false,
+        allowDowngrade: false, destinationEnforced: true, environmentClass: 'LOCAL',
+        allowedDestinationRoles: ['WCMS_STAGED'],
         initializationProfiles: { testFoundation: { enabled: true, label: 'Test foundation',
             description: 'Install the test foundation.', completionMessage: 'The test foundation is ready.',
             steps: [{ dataType: 'init' }, { dataType: 'core' }] } },
@@ -76,7 +77,13 @@ let importAttempts = 0;
 let failNextImport = false;
 global.SERVICE = {
     DefaultDataInstallationService: {
-        get: request => Promise.resolve({ result: installations.filter(item => !request.query.code || item.code === request.query.code) }),
+        get: request => {
+            let matched = installations.filter(item => !request.query.code || item.code === request.query.code);
+            let pageSize = request.searchOptions && request.searchOptions.pageSize || 10;
+            let pageNumber = request.searchOptions && request.searchOptions.pageNumber || 1;
+            let skip = pageSize * (pageNumber - 1);
+            return Promise.resolve({ result: matched.slice(skip, skip + pageSize) });
+        },
         save: request => { installations.push(request.model); return Promise.resolve(request.model); },
         update: request => {
             let index = installations.findIndex(item => item.code === request.query.code);
@@ -120,6 +127,10 @@ const routers = require('../src/router/routers');
     assert.strictEqual(catalogue.data[0].publicationReview.entities[0].added, 2);
     assert.strictEqual(catalogue.data[0].publicationReview.postPublicationCapabilities[0].title, 'Open workspace');
     assert.strictEqual(catalogue.data[0].status, 'NOT_INSTALLED');
+    assert.strictEqual(service.isDestinationCompatible(catalogue.data[0]), true);
+    assert.strictEqual(service.isDestinationCompatible(Object.assign({}, catalogue.data[0], {
+        destinationRole: 'PROCESS'
+    })), false);
 
     let profiles = await service.getInitializationProfiles({ tenant: 'default' });
     assert.strictEqual(profiles.data.length, 1);
@@ -170,6 +181,18 @@ const routers = require('../src/router/routers');
         httpRequest: { params: { profileCode: 'testFoundation' } } }, true);
     assert(profileExecution.data.results.every(result => result.skipped === true));
 
+    catalogue = await service.getCatalogue({ tenant: 'default', dataType: 'core' });
+    assert.strictEqual(catalogue.data[0].status, 'CURRENT');
+    assert.strictEqual(catalogue.data[0].installedVersion, '1.1.0');
+
+    installations.unshift(...Array.from({ length: 12 }, (item, index) => ({
+        code: 'testEnvironment:default:noise' + index + ':core',
+        releaseCode: 'noise' + index + ':core',
+        dataType: 'core',
+        version: '1.0.0',
+        checksum: 'noise',
+        status: 'CURRENT'
+    })));
     catalogue = await service.getCatalogue({ tenant: 'default', dataType: 'core' });
     assert.strictEqual(catalogue.data[0].status, 'CURRENT');
     assert.strictEqual(catalogue.data[0].installedVersion, '1.1.0');

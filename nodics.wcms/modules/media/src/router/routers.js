@@ -331,18 +331,38 @@ module.exports = {
                 },
                 responses: { '200': { description: 'Stored media metadata descriptor' } }
             },
+            importPublishedMediaAssets: {
+                secured: true,
+                authTokenTypes: ['service'],
+                accessGroups: ['userGroup'],
+                permissionConfig: 'authSecurity.internalToken.routePermission',
+                apiExposure: 'moduleInternal',
+                bodyParserHandler: 'mediaPublicationBodyParserHandler',
+                key: '/publication/target/assets/import',
+                method: 'POST',
+                controller: 'DefaultMediaStorageController',
+                operation: 'importPublishedMediaAssets',
+                help: {
+                    requestType: 'internalService',
+                    message: 'Imports checksum-verified path-free media assets into a publication target runtime.',
+                    method: 'POST',
+                    url: 'http://host:port/nodics/media/v0/publication/target/assets/import'
+                },
+                responses: { '200': { description: 'Imported media publication assets' } }
+            },
             deliverMediaContent: {
                 secured: true,
                 permission: 'media.content.read',
                 accessGroups: ['userGroup'],
-                apiExposure: 'mediaManagement',
+                publicAccess: true,
+                apiExposure: 'mediaDelivery',
                 key: '/content/:mediaCode',
                 method: 'GET',
                 controller: 'DefaultMediaStorageController',
                 operation: 'deliverMediaContent',
                 responseHandler: 'mediaContentResponseHandler',
                 help: {
-                    requestType: 'authenticatedMediaDelivery',
+                    requestType: 'publicMediaDelivery',
                     message: 'Delivers media content by media code after media access policy validation.',
                     method: 'GET',
                     url: 'http://host:port/nodics/media/v0/content/{mediaCode}'

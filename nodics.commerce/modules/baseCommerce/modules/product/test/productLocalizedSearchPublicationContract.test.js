@@ -109,6 +109,17 @@ test('withdrawal updates and removes only the tenant Product and Store partition
     assert.equal(removed[0].indexName, 'productLocalized');
 });
 
+test('store replacement withdraws the full current tenant Store partition before restore', async () => {
+    let result = await publication.replaceStore(request, { storeCode: 'sampleStore' });
+    let query = { tenant: 'default', storeCode: 'sampleStore', status: 'CURRENT' };
+
+    assert.equal(result.status, 'WITHDRAWN');
+    assert.deepEqual(updated[0].query, query);
+    assert.deepEqual(updated[0].model, { status: 'WITHDRAWN' });
+    assert.deepEqual(removed[0].query, query);
+    assert.equal(removed[0].indexName, 'productLocalized');
+});
+
 test('Product contributes a provider-neutral tenant Store and locale partitioned index', () => {
     let definition = indexes.product.productLocalized;
     assert.equal(definition.schemaName, 'productSearchProjection');

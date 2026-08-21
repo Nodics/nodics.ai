@@ -11,14 +11,19 @@
  */
 
 import { spawn } from "node:child_process";
+import crypto from "node:crypto";
+import fs from "node:fs/promises";
+import { createRequire } from "node:module";
 import { setTimeout as delay } from "node:timers/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
+const require = createRequire(import.meta.url);
 const projectRoot = process.env.NODICS_PROJECT_ROOT || process.cwd();
 const platformUrl = process.env.NODICS_PLATFORM_URL || "http://127.0.0.1:4300";
 const commerceStagedUrl = process.env.NODICS_COMMERCE_STAGED_URL || "http://127.0.0.1:4352";
 const commerceOnlineUrl = process.env.NODICS_COMMERCE_ONLINE_URL || process.env.NODICS_COMMERCE_URL || "http://127.0.0.1:4350";
+const wcmsOnlineUrl = process.env.NODICS_WCMS_ONLINE_URL || "http://127.0.0.1:4314";
 const axisOrigin = process.env.AXIS_ORIGIN || "http://127.0.0.1:3100";
 const managed = [];
 
@@ -80,8 +85,10 @@ async function ensureRuntime(label, port, script, baseUrl) {
     const child = spawn("npm", ["run", script], {
       cwd: projectRoot,
       env: process.env,
+      detached: true,
       stdio: ["ignore", "pipe", "pipe"],
     });
+    child.exitPromise = new Promise((resolve) => child.once("close", resolve));
     child.stdout.on("data", (chunk) => process.stdout.write(`[${label}] ${chunk}`));
     child.stderr.on("data", (chunk) => process.stderr.write(`[${label}] ${chunk}`));
     managed.push(child);
@@ -127,10 +134,55 @@ async function authenticateEmployee() {
   throw lastError || new Error("Platform employee authentication returned no token");
 }
 
+async function authenticateServicePrincipal() {
+  const suppliedToken = process.env.NODICS_SERVICE_PRINCIPAL_AUTH_TOKEN;
+  if (suppliedToken) return { Authorization: `Bearer ${suppliedToken}` };
+  const suppliedApiKey = process.env.NODICS_SERVICE_API_KEY || process.env.NODICS_API_KEY;
+  const projectServiceApiKey = function () {
+    try {
+      const properties = require(path.join(projectRoot, "envs", "kickoffLocal", "config", "properties.js"));
+      return properties?.bootstrapIdentity?.serviceApiKey;
+    } catch {
+      return undefined;
+    }
+  }();
+  const apiKey = suppliedApiKey || projectServiceApiKey;
+  if (!apiKey) {
+    throw new Error("NODICS_SERVICE_API_KEY is required when the project bootstrap service API key is not available");
+  }
+  return { "x-api-key": apiKey };
+}
+
+async function authenticateService(servicePrincipalHeaders) {
+  const suppliedToken = process.env.NODICS_SERVICE_AUTH_TOKEN || process.env.NODICS_INTERNAL_AUTH_TOKEN;
+  if (suppliedToken) return { Authorization: `Bearer ${suppliedToken}` };
+  const tenant = process.env.NODICS_TENANT || "default";
+  const result = await request(platformUrl, `/nodics/profile/v0/auth/token/${encodeURIComponent(tenant)}`, {
+    method: "GET",
+    headers: {
+      ...servicePrincipalHeaders,
+      Origin: axisOrigin,
+      "x-enterprise-code": process.env.NODICS_ENTERPRISE_CODE || "default",
+      "x-nodics-runtime-instance": "agora-commerce-publication-acceptance",
+      "x-nodics-modules": "media,product,pricing,inventory,tax",
+    },
+  });
+  const authToken = result?.authToken || result?.result?.authToken || result?.data?.authToken || result?.data?.result?.authToken;
+  if (!authToken) {
+    throw new Error(`Platform internal service authentication returned no token: ${JSON.stringify(result)}`);
+  }
+  return { Authorization: `Bearer ${authToken}` };
+}
+
 async function dataRecords(relativePath) {
   const module = await import(pathToFileURL(path.join(projectRoot, "modules", "agora.common", "modules", "agoraCommonData", relativePath)).href);
   const records = module.default || module;
   return Object.values(records);
+}
+
+async function assetRecords() {
+  const module = await import(pathToFileURL(path.join(projectRoot, "modules", "agora.common", "modules", "agoraCommonData", "assets", "agora-cms-media", "assetManifest.js")).href);
+  return module.default || module;
 }
 
 async function validatePublicationContract(headers) {
@@ -188,6 +240,7 @@ async function restoreOnline(headers, publication) {
     headers,
     body: JSON.stringify({
       storeCode: publication.storeCode,
+      replaceStore: true,
       projectionSnapshots: publication.summary.projectionSnapshots,
     }),
   });
@@ -228,7 +281,116 @@ async function restoreOperationalOnline(headers) {
   log(`restored Online operational Pricing (${pricingCount}), Inventory (${inventoryCount}), and Tax (${taxCount}) records`);
 }
 
-async function validateDiscovery(headers, storeCode) {
+function absoluteDeliveryUrl(deliveryUrl) {
+  if (!deliveryUrl) return undefined;
+  if (/^https?:\/\//i.test(deliveryUrl)) return deliveryUrl;
+  return `${wcmsOnlineUrl}${deliveryUrl.startsWith("/") ? "" : "/"}${deliveryUrl}`;
+}
+
+async function deliveryAvailable(deliveryUrl, headers) {
+  if (!deliveryUrl) return false;
+  try {
+    const response = await fetch(absoluteDeliveryUrl(deliveryUrl), { headers });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
+function mimeTypeOf(fileName) {
+  const extension = path.extname(String(fileName || "")).toLowerCase();
+  if (extension === ".png") return "image/png";
+  if (extension === ".webp") return "image/webp";
+  if (extension === ".gif") return "image/gif";
+  if (extension === ".svg") return "image/svg+xml";
+  return "image/jpeg";
+}
+
+async function productMediaPublicationAsset(asset) {
+  const filePath = path.join(projectRoot, "modules", "agora.common", "modules", "agoraCommonData", "assets", "agora-cms-media", "files", asset.fileName);
+  const buffer = await fs.readFile(filePath);
+  const checksumAlgorithm = "sha256";
+  return {
+    code: asset.mediaCode,
+    name: asset.name || asset.mediaCode,
+    description: asset.description || asset.name || asset.mediaCode,
+    folderCode: asset.folderCode || "productAssets",
+    formatCode: asset.formatCode || "original",
+    originalFileName: asset.fileName,
+    mimeType: asset.mimeType || mimeTypeOf(asset.fileName),
+    sizeBytes: buffer.length,
+    checksum: crypto.createHash(checksumAlgorithm).update(buffer).digest("hex"),
+    checksumAlgorithm,
+    access: "PUBLIC",
+    businessPurpose: asset.businessPurpose || "AGORA_PRODUCT_PRIMARY_IMAGE",
+    ownerType: asset.ownerType || "PRODUCT",
+    enterpriseCode: asset.enterpriseCode,
+    ownerReference: asset.ownerCode || asset.ownerReference || asset.mediaCode,
+    reusable: asset.reusable === true,
+    contentBase64: buffer.toString("base64"),
+  };
+}
+
+async function importPublishedProductMediaAssets(assets, headers) {
+  const batchSize = 8;
+  if (assets.length > batchSize) {
+    const results = [];
+    for (let index = 0; index < assets.length; index += batchSize) {
+      results.push(await importPublishedProductMediaAssets(assets.slice(index, index + batchSize), headers));
+    }
+    return results;
+  }
+  const response = await fetch(`${wcmsOnlineUrl}/nodics/media/v0/publication/target/assets/import`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      ...headers,
+    },
+    body: JSON.stringify({ mediaAssets: assets }),
+  });
+  const text = await response.text();
+  if (!response.ok) {
+    throw new Error(`/nodics/media/v0/publication/target/assets/import returned HTTP ${response.status}: ${text}`);
+  }
+  return text ? JSON.parse(text) : undefined;
+}
+
+async function publishProductMedia(deliveryHeaders, publicationHeaders, products) {
+  const discoveredMediaCodes = Array.from(new Set(products
+    .map((product) => product.media?.primary?.mediaCode)
+    .filter(Boolean)));
+  if (discoveredMediaCodes.length === 0) {
+    throw new Error("Product discovery returned no product media codes to publish");
+  }
+  const assetsByCode = new Map((await assetRecords())
+    .filter((asset) => asset.ownerType === "PRODUCT")
+    .map((asset) => [asset.mediaCode, asset]));
+  const missingAssets = discoveredMediaCodes.filter((mediaCode) => !assetsByCode.has(mediaCode));
+  if (missingAssets.length > 0) {
+    throw new Error(`Product media assets are missing from agoraCommonData asset manifest: ${missingAssets.join(", ")}`);
+  }
+  const mediaCodes = Array.from(new Set([...assetsByCode.keys()])).sort();
+  const publicationAssets = [];
+  for (const mediaCode of mediaCodes) {
+    const deliveryUrl = `/nodics/media/v0/content/${encodeURIComponent(mediaCode)}`;
+    if (await deliveryAvailable(deliveryUrl, deliveryHeaders)) continue;
+    publicationAssets.push(await productMediaPublicationAsset(assetsByCode.get(mediaCode)));
+  }
+  if (publicationAssets.length > 0) {
+    await importPublishedProductMediaAssets(publicationAssets, publicationHeaders);
+  }
+  const stillMissing = [];
+  for (const mediaCode of mediaCodes) {
+    const deliveryUrl = `/nodics/media/v0/content/${encodeURIComponent(mediaCode)}`;
+    if (!(await deliveryAvailable(deliveryUrl, deliveryHeaders))) stillMissing.push(mediaCode);
+  }
+  if (stillMissing.length > 0) {
+    throw new Error(`WCMS Online product media delivery is still unavailable after publication: ${stillMissing.join(", ")}`);
+  }
+  log(`verified ${mediaCodes.length} product media delivery URLs on WCMS Online${publicationAssets.length ? `; published ${publicationAssets.length} missing media assets` : ""}`);
+}
+
+async function validateDiscovery(headers, serviceHeaders, storeCode) {
   const locale = process.env.NODICS_STOREFRONT_LOCALE || "en";
   const body = await request(commerceOnlineUrl, `/nodics/product/v0/customer/products/discovery?storeCode=${encodeURIComponent(storeCode)}&locale=${encodeURIComponent(locale)}&pageSize=12`, {
     headers,
@@ -242,6 +404,11 @@ async function validateDiscovery(headers, storeCode) {
   if (!first.productCode || !first.name || first.sku || first.warehouseCode || first.priceRowCode) {
     throw new Error(`Product discovery returned an unsafe or incomplete card: ${JSON.stringify(first)}`);
   }
+  const missingMedia = products.filter((product) => !product.media?.primary?.mediaCode || !product.media?.primary?.deliveryUrl);
+  if (missingMedia.length > 0) {
+    throw new Error(`Product discovery returned cards without renderable media: ${missingMedia.map((product) => product.productCode).join(", ")}`);
+  }
+  await publishProductMedia(headers, serviceHeaders, products);
   const detailBody = await request(commerceOnlineUrl, `/nodics/product/v0/customer/products/${encodeURIComponent(first.productCode)}?storeCode=${encodeURIComponent(storeCode)}&locale=${encodeURIComponent(locale)}`, {
     headers,
   });
@@ -253,20 +420,41 @@ async function validateDiscovery(headers, storeCode) {
 }
 
 async function cleanup() {
-  for (const child of managed.reverse()) child.kill("SIGTERM");
+  for (const child of managed.reverse()) {
+    if (!child.pid || child.exitCode !== null) continue;
+    try {
+      process.kill(-child.pid, "SIGTERM");
+    } catch {
+      child.kill("SIGTERM");
+    }
+    await Promise.race([
+      child.exitPromise,
+      delay(Number(process.env.NODICS_ACCEPTANCE_SHUTDOWN_TIMEOUT_MS || 5000)).then(() => {
+        if (child.exitCode !== null) return;
+        try {
+          process.kill(-child.pid, "SIGKILL");
+        } catch {
+          child.kill("SIGKILL");
+        }
+      }),
+    ]);
+  }
 }
 
 async function run() {
   try {
     await ensureRuntime("Platform", portOf(platformUrl, 4300), "start:platform", platformUrl);
+    await ensureRuntime("WCMSOnline", portOf(wcmsOnlineUrl, 4314), "start:wcms:online", wcmsOnlineUrl);
     await ensureRuntime("CommerceStaged", portOf(commerceStagedUrl, 4352), "start:commerce:staged", commerceStagedUrl);
     await ensureRuntime("CommerceOnline", portOf(commerceOnlineUrl, 4350), "start:commerce", commerceOnlineUrl);
     const employeeHeaders = await authenticateEmployee();
+    const servicePrincipalHeaders = await authenticateServicePrincipal();
+    const serviceHeaders = await authenticateService(servicePrincipalHeaders);
     await validatePublicationContract(employeeHeaders);
     const publication = await publishSearch(employeeHeaders);
     await restoreOnline(employeeHeaders, publication);
     await restoreOperationalOnline(employeeHeaders);
-    await validateDiscovery(employeeHeaders, publication.storeCode);
+    await validateDiscovery(employeeHeaders, serviceHeaders, publication.storeCode);
     log("Agora Commerce publication acceptance passed");
   } finally {
     await cleanup();

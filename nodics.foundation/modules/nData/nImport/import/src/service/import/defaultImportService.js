@@ -350,6 +350,7 @@ module.exports = {
                 return;
             }
             errors = errors.concat(this.validateFinalizedFileQueryPlaceholders(request, fileName, fileData));
+            errors = errors.concat(this.validateFinalizedFileSchemaProperties(request, fileName, fileData));
         });
         if (request.importRun) {
             request.importRun.validationErrors = errors;
@@ -357,6 +358,99 @@ module.exports = {
             request.importRun.summary.validationErrors = request.importRun.validationErrors.length;
         }
         return errors;
+    },
+
+    /**
+     * Validates generic schema-backed media import records against selected schema
+     * properties before any persistence write is attempted.
+     *
+     * @param {Object} request Import request.
+     * @param {string} fileName Finalized file name.
+     * @param {Object} fileData Finalized import payload.
+     * @returns {Object[]} Validation errors.
+     */
+    validateFinalizedFileSchemaProperties: function (request, fileName, fileData) {
+        let errors = [];
+        let header = fileData && fileData.header || {};
+        let options = header.options || {};
+        if (options.genericSchemaImport !== true || !options.moduleName || !options.schemaName) {
+            return errors;
+        }
+        let rawSchema = this.resolveRawSchema(options.moduleName, options.schemaName);
+        if (!rawSchema || !rawSchema.definition) {
+            return errors;
+        }
+        let models = fileData && fileData.models || {};
+        let definition = rawSchema.definition || {};
+        let allowedProperties = new Set(Object.keys(definition));
+        let queryRequiredProperties = new Set(this.extractRequiredQueryProperties(header.query || {}));
+        let requiredProperties = this.requiredSchemaProperties(definition)
+            .filter(propertyName => !queryRequiredProperties.has(propertyName));
+        Object.keys(models).forEach((recordKey, index) => {
+            let model = models[recordKey] || {};
+            Object.keys(model).forEach(propertyName => {
+                if (!allowedProperties.has(propertyName)) {
+                    errors.push(this.createFinalizedValidationError({
+                        code: 'ERR_IMP_VALIDATE_00009',
+                        message: 'Import file contains property "' + propertyName + '" that is not defined on selected schema "' + options.schemaName + '"',
+                        fileName: fileName,
+                        recordKey: recordKey,
+                        schemaName: options.schemaName,
+                        indexName: options.indexName,
+                        operation: options.operation,
+                        propertyName: propertyName,
+                        rowNumber: index + 1,
+                        tenant: request && request.tenant
+                    }));
+                }
+            });
+            requiredProperties.forEach(propertyName => {
+                let value = this.resolveModelValue(model, propertyName);
+                if (value === undefined || value === null || value === '') {
+                    errors.push(this.createFinalizedValidationError({
+                        code: 'ERR_IMP_VALIDATE_00010',
+                        message: 'Import record is missing mandatory schema property "' + propertyName + '" for selected schema "' + options.schemaName + '"',
+                        fileName: fileName,
+                        recordKey: recordKey,
+                        schemaName: options.schemaName,
+                        indexName: options.indexName,
+                        operation: options.operation,
+                        propertyName: propertyName,
+                        rowNumber: index + 1,
+                        tenant: request && request.tenant
+                    }));
+                }
+            });
+        });
+        return errors;
+    },
+
+    /**
+     * Resolves raw schema metadata from the active Nodics module registry.
+     *
+     * @param {string} moduleName Owning module name.
+     * @param {string} schemaName Schema name.
+     * @returns {Object|undefined} Raw schema metadata.
+     */
+    resolveRawSchema: function (moduleName, schemaName) {
+        if (typeof NODICS === 'undefined' || !NODICS || typeof NODICS.getModule !== 'function') {
+            return undefined;
+        }
+        let moduleObject = NODICS.getModule(moduleName);
+        return moduleObject && moduleObject.rawSchema && moduleObject.rawSchema[schemaName];
+    },
+
+    /**
+     * Returns required user-editable schema properties for generic imports.
+     *
+     * @param {Object} definition Raw schema definition.
+     * @returns {string[]} Required property names.
+     */
+    requiredSchemaProperties: function (definition) {
+        return Object.keys(definition || {}).filter(propertyName => {
+            let property = definition[propertyName] || {};
+            return property.required === true && property.readOnly !== true;
+        });
     },
 
     /**
@@ -555,6 +649,12 @@ module.exports = {
      * @returns {string} Repair hint.
      */
     createValidationHowToFix: function (error) {
+        if (error && error.code === 'ERR_IMP_VALIDATE_00009' && error.propertyName) {
+            return 'Remove "' + error.propertyName + '" from the file or choose a schema that defines this property.';
+        }
+        if (error && error.code === 'ERR_IMP_VALIDATE_00010' && error.propertyName) {
+            return 'Add a valid value for mandatory schema property "' + error.propertyName + '".';
+        }
         if (error && error.propertyName) {
             return 'Add a valid value for "' + error.propertyName + '" because this save/update operation uses it to identify the record.';
         }

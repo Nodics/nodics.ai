@@ -75,6 +75,7 @@ class NodicsError extends Error {
             status: 'READY'
         }
     ];
+    const mediaLookupRequests = [];
     const privatePath = path.join(serverPath, 'temp/media/media/utility/default/default/customerDocument/2026/07/kyc-doc.pdf');
     fs.mkdirSync(path.dirname(privatePath), { recursive: true });
     fs.writeFileSync(privatePath, Buffer.from('pdf'));
@@ -98,6 +99,7 @@ class NodicsError extends Error {
         DefaultLocalMediaStorageProviderService: localProviderService,
         DefaultMediaService: {
             get: async function (request) {
+                mediaLookupRequests.push(request);
                 return { result: mediaRows.filter(row => row.code === request.query.code && request.query.status.$in.includes(row.status)) };
             }
         }
@@ -108,6 +110,8 @@ class NodicsError extends Error {
     assert.strictEqual(publicDelivery.filePath, mediaPath);
     assert.strictEqual(publicDelivery.mimeType, 'image/png');
     assert.strictEqual(publicDelivery.contentDisposition, 'inline');
+    assert.strictEqual(publicDelivery.responseHeaders['Cross-Origin-Resource-Policy'], 'cross-origin');
+    assert.strictEqual(mediaLookupRequests[0].tenant, 'default');
 
     const originalDeliveryEnabled = properties.media.delivery.enabled;
     properties.media.delivery.enabled = false;
@@ -171,9 +175,12 @@ class NodicsError extends Error {
     assert.strictEqual(downloadedName, 'kyc.pdf');
 
     let sentFilePath;
+    let inlineHeaders = {};
     contentResponseHandler.handleSuccess({}, {
         type: function () { },
-        set: function () { },
+        set: function (headerName, value) {
+            inlineHeaders[headerName] = value;
+        },
         sendFile: function (filePath, callback) {
             sentFilePath = filePath;
             assert.strictEqual(typeof callback, 'function');
@@ -181,6 +188,8 @@ class NodicsError extends Error {
         }
     }, publicDelivery);
     assert.strictEqual(sentFilePath, mediaPath);
+    assert.strictEqual(inlineHeaders['Cross-Origin-Resource-Policy'], 'cross-origin');
+    assert.strictEqual(inlineHeaders['Access-Control-Allow-Origin'], '*');
 
     let transferErrorStatus;
     let transferErrorPayload;

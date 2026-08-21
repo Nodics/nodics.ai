@@ -121,6 +121,7 @@ global.SERVICE = {
     assert.strictEqual(genericHeader.profile.generic_profile_tenant.options.schemaName, 'tenant');
     assert.strictEqual(genericHeader.profile.generic_profile_tenant.options.operation, 'saveAll');
     assert.strictEqual(genericHeader.profile.generic_profile_tenant.options.dataFilePrefix, 'tenantImportData');
+    assert.strictEqual(genericHeader.profile.generic_profile_tenant.options.genericSchemaImport, true);
     assert.deepStrictEqual(genericHeader.profile.generic_profile_tenant.options.tenants, ['default']);
     assert.deepStrictEqual(genericHeader.profile.generic_profile_tenant.query, { code: '$code' });
     fs.rmSync(genericWorkspace, { recursive: true, force: true });

@@ -28,6 +28,7 @@ module.exports = {
             maxDepth: 12,
             maxComponents: 500,
             cacheTtl: 30000,
+            mediaDeliveryBaseUrl: '/nodics/media/v0/content',
             cacheResourceNames: ['resolvePublicPage', 'resolveAuthenticatedPage'],
             publicAccessGroups: ['userGroup'],
             authenticatedAccessGroups: ['userGroup'],

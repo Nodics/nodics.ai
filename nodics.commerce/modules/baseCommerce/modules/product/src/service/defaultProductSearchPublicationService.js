@@ -83,6 +83,19 @@ module.exports = {
         return restored;
     },
 
+    /** Withdraws all current projections for one tenant and Store when a full replacement was approved. */
+    replaceStore: async function (request, input) {
+        if (!request || !request.tenant || !input || !input.storeCode) {
+            throw new Error('Tenant and Store are required for search store replacement');
+        }
+        let query = { tenant: request.tenant, storeCode: input.storeCode, status: 'CURRENT' };
+        await SERVICE.DefaultProductSearchProjectionService.update({ tenant: request.tenant,
+            authData: request.authData, query: query, model: { status: 'WITHDRAWN' } });
+        await SERVICE.DefaultProductSearchProjectionService.doRemoveByQuery({ tenant: request.tenant, moduleName: 'product',
+            indexName: this.policy().searchIndexName, query: query });
+        return { status: 'WITHDRAWN', storeCode: input.storeCode };
+    },
+
     /** Withdraws persisted and indexed projections for one tenant-scoped Product and Store. */
     withdraw: async function (request, input) {
         if (!request || !request.tenant || !input || !input.productCode || !input.storeCode) {

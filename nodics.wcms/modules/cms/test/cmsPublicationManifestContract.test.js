@@ -84,6 +84,13 @@ const data = {
     slots: [{ code: 'main-main', versionId: 1, active: true, template: 'main', name: 'main' }],
     manifests: [], pointers: [], receipts: [], outbox: []
 };
+for (let index = 1; index < 12; index += 1) {
+    data.details.push({ code: 'home-section-' + index, versionId: 1, active: true,
+        source: 'home', target: 'section-' + index, slot: 'main', index: index });
+    data.components.push({ code: 'section-' + index, versionId: 1, active: true, typeCode: 'heroType',
+        renderer: 'component.section', rendererContractVersion: 1, rendererChannels: ['web'],
+        rendererDeprecated: false, properties: { title: 'Section ' + index } });
+}
 const matches = (model, query) => Object.keys(query || {}).every(key => {
     let expected = query[key];
     if (expected && expected.$in) return expected.$in.includes(model[key]);
@@ -92,7 +99,11 @@ const matches = (model, query) => Object.keys(query || {}).every(key => {
 });
 const transactionContexts = [];
 const generated = list => ({
-    get: async request => ({ result: list.filter(item => matches(item, request.query)) }),
+    get: async request => {
+        let matched = list.filter(item => matches(item, request.query));
+        let limit = request.searchOptions && (request.searchOptions.limit || request.searchOptions.pageSize) || 10;
+        return { result: matched.slice(0, Number(limit)) };
+    },
     save: async request => {
         if (request.transactionContext) transactionContexts.push(request.transactionContext);
         list.push(Object.assign({}, request.model)); return { result: [request.model] };
@@ -165,6 +176,8 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     let dependencies = await adapter.resolveDependencies(publication, root, request);
     assert(dependencies.some(item => item.schema === 'cmsPage' && item.code === 'home' && item.version === '3'));
     assert(dependencies.some(item => item.schema === 'cmsComponent' && item.code === 'hero' && item.version === '4'));
+    assert(dependencies.some(item => item.schema === 'cmsComponent' && item.code === 'section-11' && item.version === '1'),
+        'publication dependency resolution must not truncate component graphs at the generated-service default page size');
     assert(dependencies.some(item => item.schema === 'cmsTypeCode' && item.code === 'heroType'));
     assert(dependencies.some(item => item.schema === 'cmsComponentLocalization' && item.code === 'hero-en'));
     assert(dependencies.some(item => item.schema === 'cmsComponentLocalization' && item.code === 'hero-ar'));
@@ -190,6 +203,8 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
 
     publication.dependencies = dependencies;
     let manifest = await manifests.persist(publication, request);
+    assert.strictEqual(manifest.snapshot.page.components.length, 12,
+        'publication manifest must freeze every active component detail beyond the default generated-service page size');
     assert.strictEqual(manifest.snapshot.page.components[0].code, 'hero');
     assert.strictEqual(manifest.snapshot.page.components[0].active, true);
     assert.strictEqual(manifest.snapshot.page.components[0].properties.title, 'Hello');

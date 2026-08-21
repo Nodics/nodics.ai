@@ -13,6 +13,14 @@
 import { spawn } from "node:child_process";
 
 const projectRoot = process.env.NODICS_PROJECT_ROOT || process.cwd();
+const requiredRuntimeHealthUrls = Object.freeze([
+  "http://127.0.0.1:4300/nodics/system/v0/health/ready",
+  "http://127.0.0.1:4312/nodics/system/v0/health/ready",
+  "http://127.0.0.1:4314/nodics/system/v0/health/ready",
+  "http://127.0.0.1:4330/nodics/system/v0/health/ready",
+  "http://127.0.0.1:4340/nodics/system/v0/health/ready",
+  "http://127.0.0.1:4350/nodics/system/v0/health/ready",
+]);
 
 function run(command, args, options = {}) {
   return new Promise((resolve, reject) => {
@@ -29,10 +37,29 @@ function run(command, args, options = {}) {
   });
 }
 
+async function isHealthyRuntime(url) {
+  try {
+    const response = await fetch(url, { redirect: "error" });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
+async function ensureTopologyReady() {
+  const readiness = await Promise.all(requiredRuntimeHealthUrls.map(isHealthyRuntime));
+  if (readiness.every(Boolean)) {
+    console.log("[agora-commerce-live-qualification] local topology is already running and healthy; skipping port-availability preflight");
+    return;
+  }
+  console.log("[agora-commerce-live-qualification] local topology is not fully ready; running port-availability preflight");
+  await run("npm", ["run", "topology:preflight"]);
+}
+
 async function main() {
   console.log("[agora-commerce-live-qualification] expected flow: data folder -> Staged schemas -> Online schemas -> search indexing -> Agora frontend");
-  console.log("[agora-commerce-live-qualification] starting local topology preflight");
-  await run("npm", ["run", "topology:preflight"]);
+  console.log("[agora-commerce-live-qualification] validating local topology readiness");
+  await ensureTopologyReady();
   console.log("[agora-commerce-live-qualification] validating staged agoraCommonData release contracts");
   await run("npm", ["run", "test:agora-commerce"]);
   console.log("[agora-commerce-live-qualification] validating staged data import acceptance");

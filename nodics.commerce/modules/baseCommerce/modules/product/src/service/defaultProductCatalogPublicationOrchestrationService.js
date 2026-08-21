@@ -135,6 +135,9 @@ module.exports = {
         let snapshots = Array.isArray(input.projectionSnapshots) ? input.projectionSnapshots : [];
         if (!storeCode) throw new Error('Store code is required for Product search restoration');
         if (snapshots.length === 0) throw new Error('Projection snapshots are required for Product search restoration');
+        if (input.replaceStore === true) {
+            await SERVICE.DefaultProductSearchPublicationService.replaceStore(request, { storeCode: storeCode });
+        }
         let results = [];
         for (let snapshot of snapshots) {
             let productCode = snapshot.productCode;

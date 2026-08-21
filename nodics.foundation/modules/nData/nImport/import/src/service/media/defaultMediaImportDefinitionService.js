@@ -153,6 +153,7 @@ module.exports = {
             tenants: [request.tenant || CONFIG.get('defaultTenant') || 'default'],
             dataFilePrefix: request.dataFilePrefix ? this.safeSegment(request.dataFilePrefix, 'Invalid data file prefix') : this.defaultDataFilePrefix(targetName),
             query: request.query || this.defaultQuery(),
+            genericSchemaImport: Boolean(schemaName),
             allowedExtensions: []
         };
     },
@@ -270,6 +271,7 @@ module.exports = {
             operation: definition.operation || (definition.schemaName ? 'saveAll' : undefined),
             tenants: this.resolveTenants(definition, request),
             dataFilePrefix: definition.dataFilePrefix,
+            genericSchemaImport: definition.genericSchemaImport === true,
             finalizeData: true
         });
         if (!options.indexName) {

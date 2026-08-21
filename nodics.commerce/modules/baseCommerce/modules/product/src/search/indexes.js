@@ -24,7 +24,7 @@ module.exports = {
             idPropertyName: 'code',
             tenantPropertyName: 'tenant',
             partitionProperties: ['tenant', 'storeCode', 'locale'],
-            cache: { enabled: true, ttl: 300 },
+            cache: { enabled: false, ttl: 300 },
             properties: {
                 productCode: { enabled: true, type: 'keyword' },
                 storeCode: { enabled: true, type: 'keyword' },

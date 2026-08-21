@@ -90,11 +90,31 @@ module.exports = {
         this.LOG.debug('Loading raw schema for header');
         let header = request.header;
         if (header.options.schemaName) {
-            let targetModule = NODICS.getModule(header.options.moduleName);
-            header.rawSchema = targetModule && targetModule.rawSchema && targetModule.rawSchema[header.options.schemaName];
+            header.rawSchema = this.resolveRawSchema(header.options.moduleName, header.options.schemaName);
             header.localSchemaAvailable = Boolean(header.rawSchema);
         }
         process.nextSuccess(request, response);
+    },
+
+    /**
+     * Resolves the raw schema for a model import target.
+     *
+     * @param {string} moduleName Header module name.
+     * @param {string} schemaName Header schema name.
+     * @returns {Object|undefined} Resolved raw schema.
+     */
+    resolveRawSchema: function (moduleName, schemaName) {
+        let targetModule = NODICS.getModule(moduleName);
+        let directSchema = targetModule && targetModule.rawSchema && targetModule.rawSchema[schemaName];
+        if (directSchema) return directSchema;
+        let modules = typeof NODICS.getModules === 'function' ? NODICS.getModules() : {};
+        let matchedSchema;
+        _.each(modules || {}, moduleObject => {
+            if (!matchedSchema && moduleObject && moduleObject.rawSchema && moduleObject.rawSchema[schemaName]) {
+                matchedSchema = moduleObject.rawSchema[schemaName];
+            }
+        });
+        return matchedSchema;
     },
 
     /**
@@ -562,8 +582,10 @@ module.exports = {
     insertLocalSchemaModel: function (request, models) {
         let header = request.header;
         models = this.normalizeModelsForSchema(header, models);
-        let schemaService = SERVICE['Default' + header.options.schemaName.toUpperCaseFirstChar() + 'Service'];
-        return this.reconcileContentPackVersions(request, schemaService, models).then(reconciledModels => {
+        return this.ensureLocalSchemaService(request).then(schemaService => {
+            return this.reconcileContentPackVersions(request, schemaService, models);
+        }).then(reconciledModels => {
+            let schemaService = SERVICE['Default' + header.options.schemaName.toUpperCaseFirstChar() + 'Service'];
             return new Promise((resolve, reject) => {
                 schemaService[header.options.operation]({
                 tenant: request.tenant,
@@ -594,6 +616,167 @@ module.exports = {
             });
             });
         });
+    },
+
+    /**
+     * Ensures a generated schema service exists for an active local import target.
+     *
+     * Some runtime compositions activate optional accelerator schemas without
+     * pre-generating their runtime service artifact. Import must create the
+     * same local model/service contract used by schema activation instead of
+     * failing with an opaque JavaScript `undefined.saveAll` error.
+     *
+     * @param {Object} request Import request carrying the current header.
+     * @returns {Promise<Object>} Resolved generated schema service.
+     * @throws {CLASSES.DataImportError} When the local schema cannot be activated.
+     */
+    ensureLocalSchemaService: function (request) {
+        let header = request.header;
+        let schemaName = header.options.schemaName;
+        let serviceName = 'Default' + schemaName.toUpperCaseFirstChar() + 'Service';
+        let operation = header.options.operation;
+        let schemaService = SERVICE[serviceName];
+        if (schemaService && typeof schemaService[operation] === 'function') {
+            return Promise.resolve(schemaService);
+        }
+        if (!header.rawSchema) {
+            return Promise.reject(new CLASSES.DataImportError('ERR_IMP_00003',
+                'Target schema service operation not found: ' + serviceName + '.' + operation));
+        }
+        return this.ensureLocalSchemaModel(request).then(() => {
+            return this.ensureRuntimeSchemaService(request);
+        }).then(() => {
+            schemaService = SERVICE[serviceName];
+            if (!schemaService || typeof schemaService[operation] !== 'function') {
+                throw new CLASSES.DataImportError('ERR_IMP_00003',
+                    'Target schema service operation not found after generation: ' + serviceName + '.' + operation);
+            }
+            return schemaService;
+        }).catch(error => {
+            throw new CLASSES.DataImportError(error, 'Target schema runtime generation failed for import: ' +
+                header.options.moduleName + '.' + schemaName, 'ERR_IMP_00003');
+        });
+    },
+
+    /**
+     * Ensures the active local module has a database model for the import
+     * schema. This is intentionally scoped to the current import schema; it does
+     * not activate routers, facades, or any externally exposed API contract.
+     *
+     * @param {Object} request Import request carrying the current header.
+     * @returns {Promise<boolean>} Resolved when the model is available.
+     */
+    ensureLocalSchemaModel: function (request) {
+        let header = request.header;
+        let moduleName = header.options.moduleName;
+        let schemaName = header.options.schemaName;
+        let modelName = UTILS.createModelName(schemaName);
+        let existingModels = NODICS.getModels(moduleName, request.tenant);
+        if (existingModels && existingModels[modelName]) {
+            return Promise.resolve(true);
+        }
+        let moduleObject = NODICS.getModule(moduleName);
+        if (!moduleObject || !moduleObject.rawSchema || !moduleObject.rawSchema[schemaName] ||
+            !SERVICE.DefaultDatabaseModelHandlerService || !SERVICE.DefaultDatabaseConfigurationService) {
+            return Promise.reject(new CLASSES.DataImportError('ERR_IMP_00003',
+                'Target schema model not available for import: ' + moduleName + '.' + schemaName));
+        }
+        if (!moduleObject.models) {
+            moduleObject.models = {};
+        }
+        if (!moduleObject.models[request.tenant]) {
+            moduleObject.models[request.tenant] = {};
+        }
+        return SERVICE.DefaultDatabaseModelHandlerService.buildModel({
+            tntCode: request.tenant,
+            moduleName: moduleName,
+            schemaName: schemaName,
+            moduleObject: moduleObject,
+            dataBase: SERVICE.DefaultDatabaseConfigurationService.getTenantDatabase(moduleName, request.tenant),
+            schemas: [schemaName]
+        });
+    },
+
+    /**
+     * Ensures a runtime schema service exists and is registered in SERVICE.
+     *
+     * @param {Object} request Import request carrying the current header.
+     * @returns {Promise<boolean>} Resolved when the service is available.
+     */
+    ensureRuntimeSchemaService: function (request) {
+        let header = request.header;
+        let moduleName = header.options.moduleName;
+        let schemaName = header.options.schemaName;
+        let modelName = UTILS.createModelName(schemaName);
+        let serviceName = 'Default' + schemaName.toUpperCaseFirstChar() + 'Service';
+        let operation = header.options.operation;
+        let schemaService = SERVICE[serviceName];
+        if (schemaService && typeof schemaService[operation] === 'function') {
+            return Promise.resolve(true);
+        }
+        if (!SERVICE.DefaultPipelineService) {
+            return Promise.reject(new CLASSES.DataImportError('ERR_IMP_00003',
+                'Runtime pipeline service is unavailable for import: ' + serviceName));
+        }
+        SERVICE[serviceName] = this.createRuntimeSchemaService(moduleName, modelName);
+        return Promise.resolve(true);
+    },
+
+    /**
+     * Creates an import-scoped schema service that delegates to the standard
+     * Nodics generated-service persistence pipelines.
+     *
+     * @param {string} moduleName Owning module name.
+     * @param {string} modelName Runtime model name.
+     * @returns {Object} Runtime schema service.
+     */
+    createRuntimeSchemaService: function (moduleName, modelName) {
+        return {
+            /**
+             * Executes generated get pipeline for an import-scoped runtime schema.
+             *
+             * @param {Object} request Generated service request.
+             * @returns {Promise<Object>} Pipeline response.
+             */
+            get: function (request) {
+                request.schemaModel = NODICS.getModels(moduleName, request.tenant)[modelName];
+                request.moduleName = request.moduleName || moduleName;
+                return SERVICE.DefaultPipelineService.start('modelsGetInitializerPipeline', request, {});
+            },
+            /**
+             * Executes generated save pipeline for one import-scoped runtime record.
+             *
+             * @param {Object} request Generated service request.
+             * @returns {Promise<Object>} Pipeline response.
+             */
+            save: function (request) {
+                request.schemaModel = NODICS.getModels(moduleName, request.tenant)[modelName];
+                request.moduleName = request.moduleName || moduleName;
+                return SERVICE.DefaultPipelineService.start('modelSaveInitializerPipeline', request, {});
+            },
+            /**
+             * Executes generated save-all pipeline for import-scoped runtime records.
+             *
+             * @param {Object} request Generated service request.
+             * @returns {Promise<Object>} Pipeline response.
+             */
+            saveAll: function (request) {
+                request.schemaModel = NODICS.getModels(moduleName, request.tenant)[modelName];
+                request.moduleName = request.moduleName || moduleName;
+                return SERVICE.DefaultPipelineService.start('modelsSaveInitializerPipeline', request, {});
+            },
+            /**
+             * Executes generated remove pipeline for import-scoped runtime records.
+             *
+             * @param {Object} request Generated service request.
+             * @returns {Promise<Object>} Pipeline response.
+             */
+            remove: function (request) {
+                request.schemaModel = NODICS.getModels(moduleName, request.tenant)[modelName];
+                request.moduleName = request.moduleName || moduleName;
+                return SERVICE.DefaultPipelineService.start('modelsRemoveInitializerPipeline', request, {});
+            }
+        };
     },
 
     /**

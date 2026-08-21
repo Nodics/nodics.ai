@@ -84,8 +84,10 @@ async function ensureRuntime(label, port, script, baseUrl) {
     const child = spawn("npm", ["run", script], {
       cwd: projectRoot,
       env: process.env,
+      detached: true,
       stdio: ["ignore", "pipe", "pipe"],
     });
+    child.exitPromise = new Promise((resolve) => child.once("close", resolve));
     child.stdout.on("data", (chunk) => process.stdout.write(`[${label}] ${chunk}`));
     child.stderr.on("data", (chunk) => process.stderr.write(`[${label}] ${chunk}`));
     managed.push(child);
@@ -456,7 +458,25 @@ async function exerciseCustomerCheckout(cartSmoke, customer) {
 }
 
 async function cleanup() {
-  for (const child of managed.reverse()) child.kill("SIGTERM");
+  for (const child of managed.reverse()) {
+    if (!child.pid || child.exitCode !== null) continue;
+    try {
+      process.kill(-child.pid, "SIGTERM");
+    } catch {
+      child.kill("SIGTERM");
+    }
+    await Promise.race([
+      child.exitPromise,
+      delay(Number(process.env.NODICS_ACCEPTANCE_SHUTDOWN_TIMEOUT_MS || 5000)).then(() => {
+        if (child.exitCode !== null) return;
+        try {
+          process.kill(-child.pid, "SIGKILL");
+        } catch {
+          child.kill("SIGKILL");
+        }
+      }),
+    ]);
+  }
 }
 
 async function run() {

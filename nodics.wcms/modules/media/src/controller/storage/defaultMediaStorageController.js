@@ -371,6 +371,25 @@ module.exports = {
         }
     },
     /**
+     * Imports path-free media publication assets through the internal publication boundary.
+     *
+     * @param {Object} request Nodics request wrapper.
+     * @param {Function} callback Optional callback used by router pipeline.
+     * @returns {Promise<Object>|void} Imported media response.
+     */
+    importPublishedMediaAssets: function (request, callback) {
+        let body = request && request.httpRequest && request.httpRequest.body || {};
+        let input = Object.assign({}, body, {
+            tenant: request && request.tenant,
+            authData: request && request.authData
+        });
+        if (callback) {
+            FACADE.DefaultMediaStorageFacade.importPublishedMediaAssets(input).then(success => callback(null, success)).catch(error => callback(error));
+        } else {
+            return FACADE.DefaultMediaStorageFacade.importPublishedMediaAssets(input);
+        }
+    },
+    /**
      * Delivers authorized media content by media code.
      *
      * @param {Object} request Nodics request wrapper.
@@ -378,8 +397,16 @@ module.exports = {
      * @returns {Promise<Object>|void} File response descriptor or callback result.
      */
     deliverMediaContent: function (request, callback) {
-        let params = request && request.httpRequest && request.httpRequest.params || request && request.params || {};
-        let query = request && request.httpRequest && request.httpRequest.query || request && request.query || {};
+        let params = Object.assign(
+            {},
+            request && request.params || {},
+            request && request.httpRequest && request.httpRequest.params || {}
+        );
+        let query = Object.assign(
+            {},
+            request && request.query || {},
+            request && request.httpRequest && request.httpRequest.query || {}
+        );
         let input = {
             tenant: request && request.tenant,
             authData: request && request.authData,
@@ -400,8 +427,16 @@ module.exports = {
      * @returns {Promise<Object>|void} File response descriptor or callback result.
      */
     downloadMediaContent: function (request, callback) {
-        let params = request && request.httpRequest && request.httpRequest.params || request && request.params || {};
-        let query = request && request.httpRequest && request.httpRequest.query || request && request.query || {};
+        let params = Object.assign(
+            {},
+            request && request.params || {},
+            request && request.httpRequest && request.httpRequest.params || {}
+        );
+        let query = Object.assign(
+            {},
+            request && request.query || {},
+            request && request.httpRequest && request.httpRequest.query || {}
+        );
         let input = {
             tenant: request && request.tenant,
             authData: request && request.authData,

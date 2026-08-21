@@ -22,9 +22,15 @@ const axisOrigin = process.env.AXIS_ORIGIN || "http://127.0.0.1:3100";
 const executeInstall = process.env.NODICS_STOREFRONT_COMMERCE_DATA_EXECUTE === "true";
 const managed = [];
 const require = createRequire(import.meta.url);
-const composition = require("../config/agora-domain-composition").resolve();
-const groupByPack = Object.freeze({ agoraApparelData: "agora.apparel", agoraElectronicsData: "agora.electronics", agoraTelcoData: "agora.telco" });
-const requiredReleaseCodes = Object.freeze(composition.projectPacks.flatMap((pack) => {
+const composition = require(path.join(projectRoot, "config", "agora-domain-composition.js")).resolve();
+const groupByPack = Object.freeze({
+  agoraCommonData: "agora.common",
+  agoraApparelData: "agora.apparel",
+  agoraElectronicsData: "agora.electronics",
+  agoraTelcoData: "agora.telco"
+});
+const storefrontPacks = Object.freeze(["agoraCommonData", ...composition.projectPacks]);
+const requiredReleaseCodes = Object.freeze(storefrontPacks.flatMap((pack) => {
   const manifest = require(path.join(projectRoot, "modules", groupByPack[pack], "modules", pack, "data", "manifest.json"));
   return Object.entries(manifest.sections)
     .filter(([, section]) => section.destinationRole === "COMMERCE_STAGED")
@@ -89,8 +95,10 @@ async function ensureRuntime(label, port, script, baseUrl) {
     const child = spawn("npm", ["run", script], {
       cwd: projectRoot,
       env: process.env,
+      detached: true,
       stdio: ["ignore", "pipe", "pipe"],
     });
+    child.exitPromise = new Promise((resolve) => child.once("close", resolve));
     child.stdout.on("data", (chunk) => process.stdout.write(`[${label}] ${chunk}`));
     child.stderr.on("data", (chunk) => process.stderr.write(`[${label}] ${chunk}`));
     managed.push(child);
@@ -242,7 +250,25 @@ async function installIfExplicitlyEnabled(headers, routes, releaseRequest) {
 }
 
 async function cleanup() {
-  for (const child of managed.reverse()) child.kill("SIGTERM");
+  for (const child of managed.reverse()) {
+    if (!child.pid || child.exitCode !== null) continue;
+    try {
+      process.kill(-child.pid, "SIGTERM");
+    } catch {
+      child.kill("SIGTERM");
+    }
+    await Promise.race([
+      child.exitPromise,
+      delay(Number(process.env.NODICS_ACCEPTANCE_SHUTDOWN_TIMEOUT_MS || 5000)).then(() => {
+        if (child.exitCode !== null) return;
+        try {
+          process.kill(-child.pid, "SIGKILL");
+        } catch {
+          child.kill("SIGKILL");
+        }
+      }),
+    ]);
+  }
 }
 
 async function run() {

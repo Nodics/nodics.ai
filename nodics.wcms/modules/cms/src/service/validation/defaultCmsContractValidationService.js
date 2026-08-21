@@ -45,13 +45,15 @@ module.exports = {
         let model = request.model || {};
         let components = this.items(await SERVICE.DefaultCmsComponentService.get({ tenant: request.tenant, authData: request.authData,
             query: { code: model.componentCode, active: true }, searchOptions: { limit: 2 } }));
-        if (components.length !== 1) throw this.error('ERR_CMS_00109', 'CMS localization component is unavailable');
-        let typeCode = components[0].typeCode && components[0].typeCode.code || components[0].typeCode;
+        if (components.length < 1) throw this.error('ERR_CMS_00109', 'CMS localization component is unavailable');
+        let component = components.sort((left, right) => (right.versionId || 0) - (left.versionId || 0))[0];
+        let typeCode = component.typeCode && component.typeCode.code || component.typeCode;
         let types = this.items(await SERVICE.DefaultCmsTypeCodeService.get({ tenant: request.tenant, authData: request.authData,
             query: { code: typeCode, kind: 'COMPONENT', active: true }, searchOptions: { limit: 2 } }));
-        if (types.length !== 1) throw this.error('ERR_CMS_00109', 'CMS localization type contract is unavailable');
-        SERVICE.DefaultCmsContentLocalizationService.validateTypeContract(types[0]);
-        SERVICE.DefaultCmsContentLocalizationService.validateVariant(model, types[0], components[0]);
+        if (types.length < 1) throw this.error('ERR_CMS_00109', 'CMS localization type contract is unavailable');
+        let typeContract = types.sort((left, right) => (right.versionId || 0) - (left.versionId || 0))[0];
+        SERVICE.DefaultCmsContentLocalizationService.validateTypeContract(typeContract);
+        SERVICE.DefaultCmsContentLocalizationService.validateVariant(model, typeContract, component);
         return true;
     },
 
@@ -226,9 +228,18 @@ module.exports = {
             tenant: request.tenant,
             authData: request.authData,
             query: { code: model.componentCode, active: true },
-            searchOptions: { limit: 2 }
+            searchOptions: { limit: 2, sort: { versionId: -1 } }
         });
-        if (this.items(response).length !== 1) throw this.error('ERR_CMS_00094', 'CMS component for media association is unavailable');
+        let matches = this.items(response).filter(item => {
+            let source = item && item._doc || item;
+            let code = source && source.code && source.code.code || source && source.code;
+            return code === model.componentCode;
+        });
+        // Staged CMS schemas retain immutable revisions for the same business
+        // component code. A media association is valid when at least one active
+        // component revision exists; requiring a single active document breaks
+        // valid release upgrades and prevents media publication.
+        if (matches.length < 1) throw this.error('ERR_CMS_00094', 'CMS component for media association is unavailable');
         return true;
     },
 
