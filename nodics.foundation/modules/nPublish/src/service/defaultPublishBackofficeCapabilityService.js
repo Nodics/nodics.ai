@@ -169,7 +169,7 @@ const capability = {
             "label": "Scheduled Publications",
             "route": "/publishing/scheduled",
             "icon": "workflow",
-            "order": 296,
+            "order": 340,
             "group": {
                 "id": "publishing",
                 "label": "Publishing",
@@ -199,7 +199,7 @@ const capability = {
             "label": "Online Publications",
             "route": "/publishing/online",
             "icon": "workflow",
-            "order": 315,
+            "order": 350,
             "group": {
                 "id": "publishing",
                 "label": "Publishing",
@@ -229,7 +229,7 @@ const capability = {
             "label": "Publication Dependencies",
             "route": "/publishing/dependencies",
             "icon": "workflow",
-            "order": 316,
+            "order": 360,
             "group": {
                 "id": "publishing",
                 "label": "Publishing",
@@ -256,10 +256,10 @@ const capability = {
         },
         {
             "id": "publishing-failures-recovery",
-            "label": "Failures and Recovery",
+            "label": "Failures & Recovery",
             "route": "/publishing/failures",
             "icon": "workflow",
-            "order": 317,
+            "order": 370,
             "group": {
                 "id": "publishing",
                 "label": "Publishing",
@@ -286,10 +286,10 @@ const capability = {
         },
         {
             "id": "withdrawals-rollbacks",
-            "label": "Withdrawals and Rollbacks",
+            "label": "Withdrawals & Rollbacks",
             "route": "/publishing/withdrawals-rollbacks",
             "icon": "workflow",
-            "order": 318,
+            "order": 380,
             "group": {
                 "id": "publishing",
                 "label": "Publishing",
@@ -319,7 +319,7 @@ const capability = {
             "label": "Publishing Configuration",
             "route": "/publishing/configuration",
             "icon": "workflow",
-            "order": 330,
+            "order": 390,
             "group": {
                 "id": "publishing",
                 "label": "Publishing",

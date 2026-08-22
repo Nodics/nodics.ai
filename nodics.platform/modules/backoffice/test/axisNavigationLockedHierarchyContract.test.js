@@ -70,7 +70,7 @@ const expected = {
     'editorial-space': ['Editorial Workspace', 'Editorial Content', 'Article Editor', 'Editorial Review and Approval', 'Languages and Localization', 'Authors', 'Taxonomy', 'Series', 'Featured and Special Content', 'Corrections and Governance', 'Content Type Policies', 'Editorial Calendar', 'Editorial Preview and Distribution', 'Editorial History and Insights'],
     'process-and-automations': ['Operations Workspace', 'Workflow Management', 'Pipeline Management', 'Cron Job Management', 'Triggers and Relationships', 'Automation Monitoring', 'Advanced Configuration'],
     documentation: ['Framework', 'Swaggers', 'Nodics Axis', 'Nodics Kickoff'],
-    publishing: ['Publishing Workspace', 'Publication Requests', 'Approval Queue', 'Scheduled Publications', 'Publication Manifests', 'Staged-to-Online Operations', 'Online Publications', 'Publication Dependencies', 'Failures and Recovery', 'Withdrawals and Rollbacks', 'Publishing History', 'Publishing Audit', 'Publishing Configuration']
+    publishing: ['Publishing Workspace', 'Publication Requests', 'Approval Queue', 'Staged-to-Online Operations', 'Publication Manifests', 'Publishing History', 'Publishing Audit', 'Scheduled Publications', 'Online Publications', 'Publication Dependencies', 'Failures & Recovery', 'Withdrawals & Rollbacks', 'Publishing Configuration']
 };
 
 const rootLabelsByGroup = {};
