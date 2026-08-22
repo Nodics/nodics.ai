@@ -914,6 +914,10 @@ module.exports = {
         catalogue: catalogue,
         availability: availability,
         uiComposition: this.selectUiComposition(catalogue, availability),
+        applicationInitializationProfiles: SERVICE.DefaultBackofficeApplicationInitializationService &&
+          typeof SERVICE.DefaultBackofficeApplicationInitializationService.profiles === "function"
+          ? SERVICE.DefaultBackofficeApplicationInitializationService.profiles(request)
+          : [],
         documentationSources: this.buildDocumentationSources(
           catalogue,
           request && request.authData,
