@@ -14,7 +14,19 @@ const assert = require('node:assert/strict');
 const service = require('../src/service/defaultBackofficeApplicationInitializationService');
 const routes = require('../src/router/routers').backoffice.applicationInitialization;
 
-class NodicsError extends Error { constructor(code, message) { super(message); this.code = code; } }
+class NodicsError extends Error {
+    constructor(code, message) {
+        if (code && typeof code === 'object') {
+            super(code.message);
+            this.code = code.code;
+            this.metadata = code.metadata;
+            this.causes = code.causes;
+        } else {
+            super(message);
+            this.code = code;
+        }
+    }
+}
 global.CLASSES = { NodicsError };
 global.CONFIG = { get: key => key === 'backofficeApplicationInitialization' ? { profiles: { nexus: {
     code: 'nexus', type: 'WEBSITE_BUNDLE', owner: 'nexusData', applicationCode: 'nexus', siteCode: 'nexusCorporateSite',
@@ -70,5 +82,29 @@ global.SERVICE = { DefaultModuleService: {
         releaseVersion: '0.0.0', releaseStatus: 'UPDATE_AVAILABLE', publication: { state: 'ONLINE', previousOnlineVersion: 'v0' } } });
     assert.deepStrictEqual((await service.status('nexus', { tenant: 'default', authData: { principalId: 'admin' } })).allowedActions,
         ['INITIALIZE', 'ROLLBACK', 'RETIRE'], 'An Online baseline with changed source must expose governed refresh without hiding recovery actions');
+    SERVICE.DefaultModuleService.fetch = async () => {
+        let error = new Error('CMS baseline release qualification failed');
+        error.code = 'CMS_BASELINE_RELEASE_INVALID';
+        error.responseCode = '409';
+        throw error;
+    };
+    await assert.rejects(service.initiate('nexus', { tenant: 'default', requestId: 'request-2',
+        authData: { principalId: 'admin' } }), error => {
+        assert.strictEqual(error.code, 'ERR_BOF_00085');
+        assert.strictEqual(error.metadata.targetCode, 'CMS_BASELINE_RELEASE_INVALID');
+        assert.strictEqual(error.metadata.targetMessage, 'CMS baseline release qualification failed');
+        assert.strictEqual(error.metadata.targetResponseCode, '409');
+        assert.match(error.message, /nexus baseline nexus/);
+        return true;
+    });
+    SERVICE.DefaultModuleService.fetch = async () => {
+        throw new Error('Transport target returned an invalid release');
+    };
+    await assert.rejects(service.initiate('nexus', { tenant: 'default', requestId: 'request-3',
+        authData: { principalId: 'admin' } }), error => {
+        assert.strictEqual(error.code, 'ERR_BOF_00085');
+        assert.match(error.message, /Transport target returned an invalid release/);
+        return true;
+    });
     console.log('BackOffice application initialization contract validated');
 })().catch(error => { console.error(error); process.exit(1); });

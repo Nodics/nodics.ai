@@ -91,6 +91,28 @@ module.exports = {
         }
         return principal;
     },
+    /** Preserves sanitized target-side diagnostics for operators without exposing request credentials. */
+    targetDiagnostic: function (error, profile) {
+        let source = error && (error.data || error.result || error.response || error);
+        let targetCode = String(source && (source.code || source.errorCode) || error && error.code || 'UNKNOWN_TARGET_ERROR');
+        let targetMessage = String(source && source.message || error && error.message || 'Unknown target error');
+        let targetResponseCode = source && source.responseCode ? String(source.responseCode) : undefined;
+        return new CLASSES.NodicsError({
+            code: 'ERR_BOF_00085',
+            message: 'Application initialization target failed for profile ' +
+                profile.code + ' baseline ' + profile.baselineCode + ' on ' + profile.target.moduleName +
+                ': ' + targetCode + ' - ' + targetMessage,
+            metadata: {
+                targetCode: targetCode,
+                targetMessage: targetMessage,
+                targetResponseCode: targetResponseCode,
+                profileCode: profile.code,
+                baselineCode: profile.baselineCode,
+                targetModuleName: profile.target.moduleName
+            },
+            causes: source && source.remoteResponse ? [source.remoteResponse] : undefined
+        });
+    },
     /** Invokes only the profile-owned fixed Staged baseline endpoint. */
     /** Executes the documented bounded module operation. */
     invoke: function (operation, profileCode, request) {
@@ -99,25 +121,23 @@ module.exports = {
         let token = NODICS.getInternalAuthToken(request.tenant);
         if (!token) throw new CLASSES.NodicsError('ERR_BOF_00083', 'Application initialization service authentication is unavailable');
         let input = request.applicationInitialization || {};
+        let correlationId = input.correlationId || request.correlationId || request.requestId;
         let body = operation !== 'status' ? { requestedBy: principal, reason: input.reason,
-            correlationId: request.correlationId || request.requestId } : undefined;
+            correlationId: correlationId } : undefined;
         let suffix = operation === 'status' ? '' : '/' + operation;
         let descriptor = SERVICE.DefaultModuleService.buildRequest({ moduleName: profile.target.moduleName,
             connectionName: profile.target.connectionName, connectionType: profile.target.connectionType || 'abstract',
             methodName: operation === 'status' ? 'GET' : 'POST',
             apiName: '/publication/baselines/' + encodeURIComponent(profile.baselineCode) + suffix,
             requestBody: body, timeoutMs: profile.target.timeoutMs, maxAttempts: profile.target.maxAttempts,
-            idempotencyKey: operation !== 'status' ? profile.code + ':' + operation + ':' + String(request.correlationId || request.requestId || principal) : undefined,
+            idempotencyKey: operation !== 'status' ? profile.code + ':' + operation + ':' + String(correlationId || principal) : undefined,
             header: { Authorization: 'Bearer ' + token } });
         return SERVICE.DefaultModuleService.fetch(descriptor).catch(error => {
-            let message = error && error.message ? String(error.message) : String(error && error.code || 'Unknown target error');
-            let diagnostic = new Error('Application initialization target failed for profile ' +
-                profile.code + ' baseline ' + profile.baselineCode + ' on ' + profile.target.moduleName + ': ' + message);
-            diagnostic.code = 'ERR_BOF_00083';
-            throw diagnostic;
+            throw this.targetDiagnostic(error, profile);
         }).then(response => {
             let authority = response && (response.data || response.result || response) || {};
-            let updateAvailable = authority.readiness === 'READY' && authority.releaseStatus === 'UPDATE_AVAILABLE';
+            let updateAvailable = authority.readiness === 'READY' &&
+                ['UPDATE_AVAILABLE', 'FAILED'].includes(authority.releaseStatus);
             return { profileCode: profile.code, type: profile.type, owner: profile.owner,
                 applicationCode: profile.applicationCode, siteCode: profile.siteCode,
                 profile: this.describe(profile),

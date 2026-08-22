@@ -105,6 +105,14 @@ module.exports = {
         index: 0,
         handler: 'DefaultCmsComponentDetailInterceptorService.setCompDetailSourceForPage'
     },
+    retireObsoleteCmsPageComponentDetails: {
+        type: 'schema',
+        item: 'cmsPage',
+        trigger: 'preSave',
+        active: 'true',
+        index: 5,
+        handler: 'DefaultCmsComponentDetailInterceptorService.retireObsoletePageComponentDetails'
+    },
     generateCmsComponentDetailSourceForComponent: {
         type: 'schema',
         item: 'cmsComponent',

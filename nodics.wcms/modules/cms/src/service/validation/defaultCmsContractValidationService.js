@@ -84,6 +84,17 @@ module.exports = {
             query: { source: model.source, slot: model.slot, index: model.index, active: true }
         });
         let conflicts = response && Array.isArray(response.result) ? response.result.filter(item => item.code !== model.code) : [];
+        delete model.allowCmsAssociationReplacement;
+        if (conflicts.length &&
+            SERVICE.DefaultCmsComponentDetailService && typeof SERVICE.DefaultCmsComponentDetailService.update === 'function') {
+            await Promise.all(conflicts.map(conflict => SERVICE.DefaultCmsComponentDetailService.update({
+                tenant: request.tenant,
+                authData: request.authData,
+                query: { code: conflict.code },
+                model: { $set: { active: false } }
+            })));
+            conflicts = [];
+        }
         if (conflicts.length) throw this.error('CMS_ASSOCIATION_POSITION_CONFLICT', 'slot position is already occupied for this source');
         return true;
     },

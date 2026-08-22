@@ -20,6 +20,7 @@ const statusDefinitions = require(path.join(root, 'modules/cms/src/utils/statusD
 const initialTypes = require(path.join(root, 'modules/cms/data/init/data/content/defaultCmsTypeCodeData'));
 const sampleHeaderComponents = require(path.join(root, 'modules/cms/data/sample/data/components/sampleHeaderCmsComponentData'));
 const validation = require(path.join(root, 'modules/cms/src/service/validation/defaultCmsContractValidationService'));
+const componentDetailInterceptor = require(path.join(root, 'modules/cms/src/service/interceptors/defaultCmsComponentDetailInterceptorService'));
 
 assert.strictEqual(Object.keys(initialTypes).length, new Set(Object.keys(initialTypes)).size);
 assert(Object.values(initialTypes).some(item => item.code === 'menuLinkComponentType'));
@@ -67,7 +68,8 @@ assert.strictEqual(statusDefinitions.ERR_CMS_00093.code, '422');
 global.CONFIG = { get: () => undefined };
 global.SERVICE = {
     DefaultCmsComponentDetailService: {
-        get: () => Promise.resolve({ result: [] })
+        get: () => Promise.resolve({ result: [] }),
+        update: () => Promise.resolve({ result: true })
     },
     DefaultCmsComponentMediaService: {
         get: () => Promise.resolve({ result: [] })
@@ -93,6 +95,31 @@ global.SERVICE = {
     assert.strictEqual(route.model.path, '/account/profile');
     await assert.rejects(validation.validateRoute({ model: { path: 'https://host/path', routeType: 'PAGE' } }), error => error.code === 'CMS_ROUTE_PATH_INVALID');
     await validation.validateAssociation({ tenant: 'tenant-a', model: { source: 'page', target: 'hero', index: 0 }, options: {} });
+    let retiredCodes = [];
+    global.SERVICE.DefaultCmsComponentDetailService.get = () => Promise.resolve({ result: [
+        { code: 'home2OldHero', source: 'home', target: 'oldHero', slot: 'main', index: 0, active: true },
+        { code: 'home2NewHero', source: 'home', target: 'newHero', slot: 'main', index: 0, active: true }
+    ] });
+    global.SERVICE.DefaultCmsComponentDetailService.update = request => {
+        retiredCodes.push(request.query.code);
+        assert.deepStrictEqual(request.model, { $set: { active: false } });
+        return Promise.resolve({ result: true });
+    };
+    await componentDetailInterceptor.retireObsoletePageComponentDetails({ tenant: 'tenant-a', authData: {},
+        model: { code: 'home', cmsComponents: [{ code: 'home2NewHero', target: 'newHero', slot: 'main', index: 0 }] } }, {});
+    assert.deepStrictEqual(retiredCodes, ['home2OldHero']);
+    retiredCodes = [];
+    global.SERVICE.DefaultCmsComponentDetailService.get = () => Promise.resolve({ result: [
+        { code: 'home2OldHero', source: 'home', target: 'oldHero', slot: 'main', index: 0, active: true }
+    ] });
+    await validation.validateAssociation({ tenant: 'tenant-a', options: { allowCmsAssociationReplacement: true },
+        model: { code: 'home2NewHero', source: 'home', target: 'newHero', slot: 'main', index: 0 } });
+    assert.deepStrictEqual(retiredCodes, ['home2OldHero']);
+    retiredCodes = [];
+    await validation.validateAssociation({ tenant: 'tenant-a',
+        model: { code: 'home2NewHero', source: 'home', target: 'newHero', slot: 'main', index: 0,
+            allowCmsAssociationReplacement: true } });
+    assert.deepStrictEqual(retiredCodes, ['home2OldHero']);
     await validation.validateComponentMedia({ tenant: 'tenant-a', authData: {}, model: {
         code: 'hero-primary-media',
         componentMediaCode: 'hero-primary-media',

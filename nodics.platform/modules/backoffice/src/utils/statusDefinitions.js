@@ -44,6 +44,7 @@ module.exports = {
     ERR_BOF_00081: { code: '404', message: 'Application initialization profile is unavailable' },
     ERR_BOF_00082: { code: '403', message: 'Application initialization requires a human administrator' },
     ERR_BOF_00083: { code: '503', message: 'Application initialization target is unavailable' },
+    ERR_BOF_00085: { code: '409', message: 'Application initialization target rejected the request' },
     ERR_BOF_00000: { code: '400', message: 'Invalid module registration' },
     ERR_BOF_00090: { code: '400', message: 'Local reset target boundary exceeded' },
     ERR_BOF_00091: { code: '503', message: 'Local reset provider is unavailable' },

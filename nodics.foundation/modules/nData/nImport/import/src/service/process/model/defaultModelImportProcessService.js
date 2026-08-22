@@ -586,13 +586,17 @@ module.exports = {
             return this.reconcileContentPackVersions(request, schemaService, models);
         }).then(reconciledModels => {
             let schemaService = SERVICE['Default' + header.options.schemaName.toUpperCaseFirstChar() + 'Service'];
+            let options = Object.assign({}, request.options || {});
+            if (this.isGovernedContentPackRun(request)) {
+                options.allowCmsAssociationReplacement = true;
+            }
             return new Promise((resolve, reject) => {
                 schemaService[header.options.operation]({
                 tenant: request.tenant,
                 authData: {
                     userGroups: header.options.userGroups
                 },
-                options: request.options,
+                options: options,
                 searchOptions: request.searchOptions,
                 query: header.query,
                 models: reconciledModels,

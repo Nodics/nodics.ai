@@ -72,10 +72,56 @@ module.exports = {
             if (model.cmsComponents && model.cmsComponents.length > 0) {
                 model.cmsComponents.forEach(detail => {
                     if (!detail.source) detail.source = model.code;
+                    if (request.options && request.options.allowCmsAssociationReplacement === true) {
+                        detail.allowCmsAssociationReplacement = true;
+                    }
                 });
             }
             resolve(true);
         });
+    },
+
+    /**
+     * Retires active page component placements that are no longer present in an incoming page definition.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {Object} request.model CMS page model being saved.
+     * @param {Object} response Interceptor response context.
+     * @returns {Promise<boolean>} Resolves after obsolete component details are marked inactive.
+     * @sideEffects Updates existing `cmsComponentDetail` records for the same page source.
+     */
+    retireObsoletePageComponentDetails: async function (request, response) {
+        let model = request.model || {};
+        if (!model.code || !Array.isArray(model.cmsComponents) || model.cmsComponents.length === 0 ||
+            !SERVICE.DefaultCmsComponentDetailService || typeof SERVICE.DefaultCmsComponentDetailService.get !== 'function' ||
+            typeof SERVICE.DefaultCmsComponentDetailService.update !== 'function') {
+            return true;
+        }
+        let incomingCodes = model.cmsComponents.reduce((codes, detail) => {
+            if (!detail.source) detail.source = model.code;
+            if (request.options && request.options.allowCmsAssociationReplacement === true) {
+                detail.allowCmsAssociationReplacement = true;
+            }
+            let target = String(detail.target || '');
+            let code = detail.code || (target ? detail.source + '2' + target.charAt(0).toUpperCase() + target.slice(1) : undefined);
+            if (code) codes[code] = true;
+            return codes;
+        }, {});
+        let responseData = await SERVICE.DefaultCmsComponentDetailService.get({
+            tenant: request.tenant,
+            authData: request.authData,
+            options: Object.assign({}, request.options || {}, { recursive: false }),
+            query: { source: model.code, active: true }
+        });
+        let existing = responseData && Array.isArray(responseData.result) ? responseData.result : [];
+        let obsolete = existing.filter(detail => detail && detail.code && !incomingCodes[detail.code]);
+        await Promise.all(obsolete.map(detail => SERVICE.DefaultCmsComponentDetailService.update({
+            tenant: request.tenant,
+            authData: request.authData,
+            query: { code: detail.code },
+            model: { $set: { active: false } }
+        })));
+        return true;
     },
 
     /**

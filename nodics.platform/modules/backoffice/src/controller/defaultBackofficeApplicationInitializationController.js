@@ -16,7 +16,7 @@ module.exports = {
         let params = request.httpRequest && request.httpRequest.params || {};
         let body = request.httpRequest && request.httpRequest.body || {};
         request.profileCode = params.profileCode;
-        request.applicationInitialization = { reason: body.reason };
+        request.applicationInitialization = { reason: body.reason, correlationId: body.correlationId };
         request.correlationId = body.correlationId || request.correlationId || request.requestId;
         return request;
     },
