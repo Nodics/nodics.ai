@@ -21,6 +21,53 @@ module.exports = {
     init: function () { return Promise.resolve(true); },
     /** Executes the documented bounded module operation. */
     postInit: function () { return Promise.resolve(true); },
+    /** Returns every configured application initialization profile as a client-safe catalogue. */
+    profiles: function () {
+        let profiles = ((CONFIG.get('backofficeApplicationInitialization') || {}).profiles || {});
+        return Object.keys(profiles).filter(code => (profiles[code].presentation || {}).visible !== false).sort((left, right) => {
+            let leftOrder = Number((profiles[left].presentation || {}).order || 1000);
+            let rightOrder = Number((profiles[right].presentation || {}).order || 1000);
+            return leftOrder === rightOrder ? left.localeCompare(right) : leftOrder - rightOrder;
+        }).map(code => this.describe(profiles[code])).filter(Boolean);
+    },
+    /** Projects one configured profile without exposing transport internals or credentials. */
+    describe: function (profile) {
+        if (!profile || !profile.code) return undefined;
+        let presentation = profile.presentation || {};
+        let dataPackages = [].concat(profile.dataPackages || []).map(pack => ({
+            code: String(pack.code || ''),
+            kind: String(pack.kind || 'DATA'),
+            required: pack.required !== false,
+            trigger: String(pack.trigger || (pack.required === false ? 'USER' : 'ACTIVATION'))
+        })).filter(pack => pack.code);
+        if (profile.contentPackCode) dataPackages.push({
+            code: String(profile.contentPackCode),
+            kind: 'CONTENT_PACK',
+            required: true,
+            trigger: 'USER'
+        });
+        return {
+            code: String(profile.code),
+            title: String(presentation.title || profile.code),
+            kind: String(presentation.kind || (profile.type === 'DOCUMENTATION_BUNDLE' ? 'DOCUMENTATION' : 'PROJECT')),
+            category: String(presentation.category || (profile.type === 'DOCUMENTATION_BUNDLE' ? 'documentation' : 'accelerator')),
+            summary: String(presentation.summary || ''),
+            order: Number(presentation.order || 1000),
+            type: String(profile.type),
+            owner: String(profile.owner),
+            applicationCode: String(profile.applicationCode),
+            siteCode: String(profile.siteCode),
+            baselineCode: String(profile.baselineCode),
+            contentPackCode: profile.contentPackCode ? String(profile.contentPackCode) : undefined,
+            requiredServers: [].concat(presentation.requiredServers || ['Platform', 'WCMS Staged', 'WCMS Online', 'Process']),
+            dataPackages: dataPackages,
+            activationPolicy: Object.assign({
+                approvalRequiredForOnline: true,
+                requiredDataTrigger: profile.type === 'DOCUMENTATION_BUNDLE' ? 'USER' : 'ACTIVATION',
+                sampleDataTrigger: 'USER'
+            }, presentation.activationPolicy || {})
+        };
+    },
     /** Returns the immutable configured application profile. */
     /** Executes the documented bounded module operation. */
     profile: function (code) {
@@ -66,6 +113,7 @@ module.exports = {
             let authority = response && (response.data || response.result || response) || {};
             return { profileCode: profile.code, type: profile.type, owner: profile.owner,
                 applicationCode: profile.applicationCode, siteCode: profile.siteCode,
+                profile: this.describe(profile),
                 allowedActions: authority.readiness === 'READY' ?
                     [].concat(authority.publication && authority.publication.previousOnlineVersion ? ['ROLLBACK'] : [], ['RETIRE']) :
                     ['INITIALIZE'],

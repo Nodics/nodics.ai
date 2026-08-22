@@ -28,6 +28,13 @@ module.exports = {
         if (!callback) return promise;
         promise.then(result => callback(null, result)).catch(callback);
     },
+    /** Returns the configured client-safe application initialization catalogue. */
+    profiles: function (request, callback) {
+        let promise = FACADE.DefaultBackofficeApplicationInitializationFacade.profiles(request)
+            .then(data => ({ code: 'SUC_BOF_00021', data: data }));
+        if (!callback) return promise;
+        promise.then(result => callback(null, result)).catch(callback);
+    },
     /** Executes the documented bounded module operation. */
     status: function (request, callback) { return this.invoke('status', request, callback); },
     /** Returns the profile-owned documentation content-pack installation status. */

@@ -288,6 +288,12 @@ module.exports = {
             }
         },
         applicationInitialization: {
+            applicationInitializationProfiles: {
+                secured: true, accessGroups: ['userGroup'], permission: 'backoffice.application.initialization.view',
+                authTokenTypes: ['access'], apiExposure: 'serviceRegistry', cache: { enabled: false },
+                key: '/applications/initialization/profiles', method: 'GET',
+                controller: 'DefaultBackofficeApplicationInitializationController', operation: 'profiles'
+            },
             applicationInitializationStatus: {
                 secured: true, accessGroups: ['userGroup'], permission: 'backoffice.application.initialization.view',
                 authTokenTypes: ['access'], apiExposure: 'serviceRegistry', cache: { enabled: false },
