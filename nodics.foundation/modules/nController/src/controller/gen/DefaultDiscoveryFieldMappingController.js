@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultDiscoveryFieldMappingFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'discoveryFieldMapping';
+        if (callback) {
+            FACADE.DefaultDiscoveryFieldMappingFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultDiscoveryFieldMappingFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'discoveryFieldMapping';
+        if (callback) {
+            FACADE.DefaultDiscoveryFieldMappingFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultDiscoveryFieldMappingFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultDiscoveryFieldMappingFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'discoveryFieldMapping';
+        if (callback) {
+            FACADE.DefaultDiscoveryFieldMappingFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultDiscoveryFieldMappingFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultProductLocalizationFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'productLocalization';
+        if (callback) {
+            FACADE.DefaultProductLocalizationFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultProductLocalizationFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'productLocalization';
+        if (callback) {
+            FACADE.DefaultProductLocalizationFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultProductLocalizationFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultProductLocalizationFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'productLocalization';
+        if (callback) {
+            FACADE.DefaultProductLocalizationFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultProductLocalizationFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

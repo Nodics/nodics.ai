@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultMediaFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'media';
+        if (callback) {
+            FACADE.DefaultMediaFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultMediaFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'media';
+        if (callback) {
+            FACADE.DefaultMediaFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultMediaFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultMediaFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'media';
+        if (callback) {
+            FACADE.DefaultMediaFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultMediaFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

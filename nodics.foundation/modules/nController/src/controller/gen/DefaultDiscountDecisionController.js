@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultDiscountDecisionFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'discountDecision';
+        if (callback) {
+            FACADE.DefaultDiscountDecisionFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultDiscountDecisionFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'discountDecision';
+        if (callback) {
+            FACADE.DefaultDiscountDecisionFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultDiscountDecisionFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultDiscountDecisionFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'discountDecision';
+        if (callback) {
+            FACADE.DefaultDiscountDecisionFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultDiscountDecisionFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

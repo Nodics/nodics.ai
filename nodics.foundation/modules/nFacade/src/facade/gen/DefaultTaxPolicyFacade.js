@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultTaxPolicyService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultTaxPolicyService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultTaxPolicyService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultTaxPolicyService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultTaxPolicyService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultTaxPolicyService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultTaxPolicyService.remove(request);

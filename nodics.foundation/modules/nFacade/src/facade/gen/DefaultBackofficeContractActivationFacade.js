@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultBackofficeContractActivationService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultBackofficeContractActivationService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultBackofficeContractActivationService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultBackofficeContractActivationService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultBackofficeContractActivationService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultBackofficeContractActivationService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultBackofficeContractActivationService.remove(request);

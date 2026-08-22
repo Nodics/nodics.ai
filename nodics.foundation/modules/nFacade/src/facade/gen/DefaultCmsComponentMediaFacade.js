@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultCmsComponentMediaService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultCmsComponentMediaService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultCmsComponentMediaService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultCmsComponentMediaService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultCmsComponentMediaService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultCmsComponentMediaService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultCmsComponentMediaService.remove(request);

@@ -13,6 +13,6 @@
 'use strict';
 /** @module fulfillmentCore/src/router/routers @description Exposes customer-safe Fulfillment delivery and return method policy. @layer router @owner fulfillmentCore */
 module.exports = { fulfillmentCore: { customer: {
-    shippingMethods: { secured: false, publicAccess: true, accessGroups: ['userGroup'], permission: 'commerce.shipping.methods.read', apiExposure: 'commerceCustomer', key: '/customer/shipping/methods', method: 'GET', controller: 'DefaultFulfillmentCustomerApiController', operation: 'shippingMethods' },
-    returnMethods: { secured: false, publicAccess: true, accessGroups: ['userGroup'], permission: 'commerce.return.methods.read', apiExposure: 'commerceCustomer', key: '/customer/returns/methods', method: 'GET', controller: 'DefaultFulfillmentCustomerApiController', operation: 'returnMethods' }
+    shippingMethods: { secured: false, publicAccess: true, accessGroups: ['userGroup'], permission: 'commerce.shipping.methods.read', apiExposure: 'commerceCustomer', key: '/customer/shipping/methods', method: 'GET', controller: 'DefaultFulfillmentCustomerController', operation: 'shippingMethods' },
+    returnMethods: { secured: false, publicAccess: true, accessGroups: ['userGroup'], permission: 'commerce.return.methods.read', apiExposure: 'commerceCustomer', key: '/customer/returns/methods', method: 'GET', controller: 'DefaultFulfillmentCustomerController', operation: 'returnMethods' }
 } } };

@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/mediareference/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultMediaReferenceController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/mediareference/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultMediaReferenceController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/mediareference/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultMediaReferenceController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/mediareference/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultMediaReferenceController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

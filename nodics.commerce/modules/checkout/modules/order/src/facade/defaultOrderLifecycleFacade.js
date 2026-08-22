@@ -19,7 +19,7 @@ module.exports = {
         const principalId = auth.principalId || auth.code || auth.loginId;
         request.actorId = principalId || request.actorId; request.ownerId = principalId || request.ownerId;
         if (!request.tenant || !request.actorId) return Promise.reject(new Error('Authenticated tenant and principal are required'));
-        return SERVICE.DefaultOrderLifecycleApiService[operation](request);
+        return SERVICE.DefaultOrderLifecycleOperationService[operation](request);
     },
     /** Previews an owned lifecycle request. @param {Object} request Request. @returns {Promise<Object>} Preview. */
     preview: function (request) { return this.invoke('preview', request); },

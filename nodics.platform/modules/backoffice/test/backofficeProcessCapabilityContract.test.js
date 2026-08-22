@@ -45,7 +45,7 @@ for (const entry of processCapability.navigation) {
   );
   assert.strictEqual(
     entry.group.id,
-    "business-process-automation",
+    "process-and-automations",
     `${entry.id} must stay under Process and Automation group`,
   );
   assert(

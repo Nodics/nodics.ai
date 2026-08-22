@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultCustomerReviewVersionFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'customerReviewVersion';
+        if (callback) {
+            FACADE.DefaultCustomerReviewVersionFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCustomerReviewVersionFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'customerReviewVersion';
+        if (callback) {
+            FACADE.DefaultCustomerReviewVersionFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCustomerReviewVersionFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultCustomerReviewVersionFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'customerReviewVersion';
+        if (callback) {
+            FACADE.DefaultCustomerReviewVersionFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCustomerReviewVersionFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

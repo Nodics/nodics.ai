@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/editorialarticle/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultEditorialArticleController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/editorialarticle/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultEditorialArticleController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/editorialarticle/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultEditorialArticleController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/editorialarticle/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultEditorialArticleController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

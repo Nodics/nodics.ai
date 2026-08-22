@@ -28,14 +28,14 @@ const capability = {
     "navigation": [
         {
             "id": "publishing",
-            "label": "Publishing",
+            "label": "Publishing Workspace",
             "route": "/publishing",
             "icon": "workflow",
             "order": 280,
             "group": {
-                "id": "content",
-                "label": "Content and Experience",
-                "order": 200
+                "id": "publishing",
+                "label": "Publishing",
+                "order": 1700
             },
             "perspectives": [
                 "operations",
@@ -53,7 +53,7 @@ const capability = {
                 "schemaName": "publicationRequest"
             },
             "help": {
-                "summary": "Review and manage governed publication from staged authoring content to online delivery state.",
+                "summary": "Review ready-for-review changes, validation/approval required, scheduled/publishing, failed/partial, live-with-new-changes, recently completed, withdrawn, and rollback states.",
                 "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
                 "documentationFragment": "publishing"
             },
@@ -64,15 +64,14 @@ const capability = {
         },
         {
             "id": "publishing-requests",
-            "parentId": "publishing",
-            "label": "Publishing Requests",
+            "label": "Publication Requests",
             "route": "/publishing/requests",
             "icon": "workflow",
             "order": 290,
             "group": {
-                "id": "content",
-                "label": "Content and Experience",
-                "order": 200
+                "id": "publishing",
+                "label": "Publishing",
+                "order": 1700
             },
             "perspectives": [
                 "operations",
@@ -101,15 +100,14 @@ const capability = {
         },
         {
             "id": "publishing-approval-tasks",
-            "parentId": "publishing",
-            "label": "Approval Tasks",
+            "label": "Approval Queue",
             "route": "/process/tasks",
             "icon": "tasks",
             "order": 295,
             "group": {
-                "id": "content",
-                "label": "Content and Experience",
-                "order": 200
+                "id": "publishing",
+                "label": "Publishing",
+                "order": 1700
             },
             "perspectives": [
                 "operations",
@@ -128,20 +126,18 @@ const capability = {
             "featureState": "ACTIVE",
             "requiredPermissions": [
                 "process.backoffice.view"
-            ],
-            "parentModuleName": "publish"
+            ]
         },
         {
             "id": "publishing-audit",
-            "parentId": "publishing",
             "label": "Publishing Audit",
             "route": "/publishing/audit",
             "icon": "workflow",
             "order": 320,
             "group": {
-                "id": "content",
-                "label": "Content and Experience",
-                "order": 200
+                "id": "publishing",
+                "label": "Publishing",
+                "order": 1700
             },
             "perspectives": [
                 "operations",
@@ -164,6 +160,186 @@ const capability = {
                 "documentationFragment": "publishing-audit"
             },
             "featureState": "ACTIVE",
+            "requiredPermissions": [
+                "cms.backoffice.view"
+            ]
+        },
+        {
+            "id": "scheduled-publications",
+            "label": "Scheduled Publications",
+            "route": "/publishing/scheduled",
+            "icon": "workflow",
+            "order": 296,
+            "group": {
+                "id": "publishing",
+                "label": "Publishing",
+                "order": 1700
+            },
+            "perspectives": [
+                "operations",
+                "content"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise",
+                "site",
+                "catalog"
+            ],
+            "help": {
+                "summary": "Planned upcoming, approval, paused, missed, executing, completed, and cancelled scheduled-publication workspace."
+            },
+            "featureState": "DISABLED",
+            "requiredPermissions": [
+                "cms.backoffice.view"
+            ]
+        },
+        {
+            "id": "online-publications",
+            "label": "Online Publications",
+            "route": "/publishing/online",
+            "icon": "workflow",
+            "order": 315,
+            "group": {
+                "id": "publishing",
+                "label": "Publishing",
+                "order": 1700
+            },
+            "perspectives": [
+                "operations",
+                "content"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise",
+                "site",
+                "catalog"
+            ],
+            "help": {
+                "summary": "Planned live, live-with-changes, scheduled replacement, expiring, withdrawn, superseded, receipt, comparison, and dependency workspace."
+            },
+            "featureState": "DISABLED",
+            "requiredPermissions": [
+                "cms.backoffice.view"
+            ]
+        },
+        {
+            "id": "publication-dependencies",
+            "label": "Publication Dependencies",
+            "route": "/publishing/dependencies",
+            "icon": "workflow",
+            "order": 316,
+            "group": {
+                "id": "publishing",
+                "label": "Publishing",
+                "order": 1700
+            },
+            "perspectives": [
+                "operations",
+                "content"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise",
+                "site",
+                "catalog"
+            ],
+            "help": {
+                "summary": "Planned satisfied, missing, invalid, conflict, unavailable, manifest, and follow-up dependency workspace."
+            },
+            "featureState": "DISABLED",
+            "requiredPermissions": [
+                "cms.backoffice.view"
+            ]
+        },
+        {
+            "id": "publishing-failures-recovery",
+            "label": "Failures and Recovery",
+            "route": "/publishing/failures",
+            "icon": "workflow",
+            "order": 317,
+            "group": {
+                "id": "publishing",
+                "label": "Publishing",
+                "order": 1700
+            },
+            "perspectives": [
+                "operations",
+                "content"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise",
+                "site",
+                "catalog"
+            ],
+            "help": {
+                "summary": "Planned validation, approval, transfer, verification, partial deployment, projection, reconciliation, retry, rollback, and acknowledgement workspace."
+            },
+            "featureState": "DISABLED",
+            "requiredPermissions": [
+                "cms.backoffice.view"
+            ]
+        },
+        {
+            "id": "withdrawals-rollbacks",
+            "label": "Withdrawals and Rollbacks",
+            "route": "/publishing/withdrawals-rollbacks",
+            "icon": "workflow",
+            "order": 318,
+            "group": {
+                "id": "publishing",
+                "label": "Publishing",
+                "order": 1700
+            },
+            "perspectives": [
+                "operations",
+                "content"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise",
+                "site",
+                "catalog"
+            ],
+            "help": {
+                "summary": "Planned withdrawal request, approval, scheduling, history, rollback candidate, execution, and verification workspace."
+            },
+            "featureState": "DISABLED",
+            "requiredPermissions": [
+                "cms.backoffice.view"
+            ]
+        },
+        {
+            "id": "publishing-configuration",
+            "label": "Publishing Configuration",
+            "route": "/publishing/configuration",
+            "icon": "workflow",
+            "order": 330,
+            "group": {
+                "id": "publishing",
+                "label": "Publishing",
+                "order": 1700
+            },
+            "perspectives": [
+                "operations",
+                "content"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise",
+                "site",
+                "catalog"
+            ],
+            "help": {
+                "summary": "Planned restricted publishable-domain, adapter, version-provider, target, approval, scheduling, dependency, retry, recovery, retention, verification, event, and projection policy workspace."
+            },
+            "featureState": "DISABLED",
             "requiredPermissions": [
                 "cms.backoffice.view"
             ]

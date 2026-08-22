@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultEngagementAssignmentFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'engagementAssignment';
+        if (callback) {
+            FACADE.DefaultEngagementAssignmentFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultEngagementAssignmentFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'engagementAssignment';
+        if (callback) {
+            FACADE.DefaultEngagementAssignmentFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultEngagementAssignmentFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultEngagementAssignmentFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'engagementAssignment';
+        if (callback) {
+            FACADE.DefaultEngagementAssignmentFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultEngagementAssignmentFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

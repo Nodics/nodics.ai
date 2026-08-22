@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultTestimonialCandidateFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'testimonialCandidate';
+        if (callback) {
+            FACADE.DefaultTestimonialCandidateFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultTestimonialCandidateFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'testimonialCandidate';
+        if (callback) {
+            FACADE.DefaultTestimonialCandidateFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultTestimonialCandidateFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultTestimonialCandidateFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'testimonialCandidate';
+        if (callback) {
+            FACADE.DefaultTestimonialCandidateFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultTestimonialCandidateFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

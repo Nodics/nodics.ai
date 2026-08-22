@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/cmscomponent/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsComponentController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/cmscomponent/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsComponentController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/cmscomponent/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultCmsComponentController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/cmscomponent/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsComponentController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

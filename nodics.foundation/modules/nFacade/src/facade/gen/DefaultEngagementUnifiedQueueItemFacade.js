@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultEngagementUnifiedQueueItemService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultEngagementUnifiedQueueItemService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultEngagementUnifiedQueueItemService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultEngagementUnifiedQueueItemService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultEngagementUnifiedQueueItemService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultEngagementUnifiedQueueItemService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultEngagementUnifiedQueueItemService.remove(request);

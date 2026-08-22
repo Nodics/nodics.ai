@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/cronjob/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCronJobController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/cronjob/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultCronJobController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/cronjob/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultCronJobController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/cronjob/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCronJobController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

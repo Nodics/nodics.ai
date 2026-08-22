@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultDiscoveryPublicationPolicyFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'discoveryPublicationPolicy';
+        if (callback) {
+            FACADE.DefaultDiscoveryPublicationPolicyFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultDiscoveryPublicationPolicyFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'discoveryPublicationPolicy';
+        if (callback) {
+            FACADE.DefaultDiscoveryPublicationPolicyFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultDiscoveryPublicationPolicyFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultDiscoveryPublicationPolicyFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'discoveryPublicationPolicy';
+        if (callback) {
+            FACADE.DefaultDiscoveryPublicationPolicyFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultDiscoveryPublicationPolicyFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

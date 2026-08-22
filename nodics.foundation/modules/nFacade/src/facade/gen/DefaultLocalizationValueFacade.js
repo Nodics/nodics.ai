@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultLocalizationValueService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultLocalizationValueService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultLocalizationValueService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultLocalizationValueService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultLocalizationValueService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultLocalizationValueService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultLocalizationValueService.remove(request);

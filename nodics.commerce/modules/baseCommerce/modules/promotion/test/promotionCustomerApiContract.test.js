@@ -17,9 +17,9 @@ const test = require('node:test');
 /** @module promotion/test/promotionCustomerApiContract @description Verifies customer promotion preview and apply contracts. @layer test @owner promotion */
 
 const routers = require('../src/router/routers');
-const controller = require('../src/controller/defaultPromotionApiController');
-const facade = require('../src/facade/defaultPromotionApiFacade');
-const service = require('../src/service/defaultPromotionCustomerApiService');
+const controller = require('../src/controller/defaultPromotionController');
+const facade = require('../src/facade/defaultPromotionFacade');
+const service = require('../src/service/defaultPromotionOperationService');
 const backofficeCapability = require('../src/service/defaultPromotionBackofficeCapabilityService');
 const simulation = require('../src/service/defaultPromotionSimulationService');
 const decision = require('../src/service/defaultPromotionDecisionService');
@@ -45,7 +45,7 @@ function installGlobals() {
     redemptions = [];
     budgetLedger = [];
     global.SERVICE = {
-        DefaultPromotionCustomerApiService: service,
+        DefaultPromotionOperationService: service,
         DefaultBackofficeCapabilityDefinitionService: {
             capability: value => value,
             workbench: value => value
@@ -118,14 +118,14 @@ function installGlobals() {
             }
         }
     };
-    global.FACADE = { DefaultPromotionApiFacade: facade };
+    global.FACADE = { DefaultPromotionFacade: facade };
 }
 
 test.beforeEach(installGlobals);
 
 test('Promotion customer routes expose secured preview and apply permissions', () => {
     assert.equal(routers.promotion.customer.preview.key, '/customer/promotions/preview');
-    assert.equal(routers.promotion.customer.preview.controller, 'DefaultPromotionApiController');
+    assert.equal(routers.promotion.customer.preview.controller, 'DefaultPromotionController');
     assert.equal(routers.promotion.customer.preview.operation, 'preview');
     assert.deepEqual(routers.promotion.customer.preview.authTokenTypes, ['access']);
     assert.deepEqual(routers.promotion.customer.preview.accessGroups, ['customerUserGroup']);
@@ -133,7 +133,7 @@ test('Promotion customer routes expose secured preview and apply permissions', (
     assert.equal(routers.promotion.customer.apply.method, 'POST');
     assert.equal(routers.promotion.customer.apply.permission, 'commerce.promotion.own');
     assert.equal(routers.promotion.internal.reverse.key, '/internal/promotions/redemptions/:redemptionCode/reverse');
-    assert.equal(routers.promotion.internal.reverse.controller, 'DefaultPromotionApiController');
+    assert.equal(routers.promotion.internal.reverse.controller, 'DefaultPromotionController');
     assert.equal(routers.promotion.internal.reverse.operation, 'reverse');
     assert.deepEqual(routers.promotion.internal.reverse.authTokenTypes, ['internal']);
     assert.deepEqual(routers.promotion.internal.reverse.accessGroups, ['serviceAccountUserGroup']);
@@ -170,7 +170,7 @@ test('Promotion BackOffice capability exposes builder lifecycle coupon budget an
 
 test('Promotion preview returns eligibility without redemption mutation', async () => {
     const result = await controller.preview({
-        authData: { tenant: 'default', principalId: 'customer-1' },
+        authData: { tenant: 'default', loginId: 'customer-1' },
         httpRequest: { body: { cartCode: 'cart1', subtotal: '129.00', productCodes: ['agoraLinenWrapDress'], currency: 'USD' } }
     });
 
@@ -179,6 +179,9 @@ test('Promotion preview returns eligibility without redemption mutation', async 
     assert.equal(result.data.redemptionStateMutation, 'NONE');
     assert.equal(result.data.selected[0].code, 'welcome10');
     assert.equal(promotionRequests[0].query.status, 'ACTIVE');
+    assert.deepEqual(promotionRequests[0].authData.userGroups, ['serviceAccountUserGroup']);
+    assert.deepEqual(promotionRequests[0].authData.groups, ['serviceAccountUserGroup']);
+    assert.equal(facade.applyContext({ authData: { tenant: 'default', loginId: 'customer-1' } }).ownerId, 'customer-1');
 });
 
 test('Promotion apply produces bounded decision evidence and persists redemption state', async () => {

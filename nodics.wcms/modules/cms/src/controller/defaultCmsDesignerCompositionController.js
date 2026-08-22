@@ -77,5 +77,8 @@ module.exports = {
     assignNavigation: function (request, callback) { return this.invoke('assignNavigation', request, callback); },
 
     /** Validates whether a draft is ready to enter publication governance. */
-    validatePublishReadiness: function (request, callback) { return this.invoke('validatePublishReadiness', request, callback); }
+    validatePublishReadiness: function (request, callback) { return this.invoke('validatePublishReadiness', request, callback); },
+
+    /** Submits a saved Page Designer draft route to CMS/nPublish governance. */
+    submitForPublication: function (request, callback) { return this.invoke('submitForPublication', request, callback); }
 };

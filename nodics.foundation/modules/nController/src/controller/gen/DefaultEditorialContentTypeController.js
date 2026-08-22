@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultEditorialContentTypeFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'editorialContentType';
+        if (callback) {
+            FACADE.DefaultEditorialContentTypeFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultEditorialContentTypeFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'editorialContentType';
+        if (callback) {
+            FACADE.DefaultEditorialContentTypeFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultEditorialContentTypeFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultEditorialContentTypeFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'editorialContentType';
+        if (callback) {
+            FACADE.DefaultEditorialContentTypeFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultEditorialContentTypeFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultPaymentInstrumentReferenceService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultPaymentInstrumentReferenceService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultPaymentInstrumentReferenceService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultPaymentInstrumentReferenceService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultPaymentInstrumentReferenceService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultPaymentInstrumentReferenceService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultPaymentInstrumentReferenceService.remove(request);

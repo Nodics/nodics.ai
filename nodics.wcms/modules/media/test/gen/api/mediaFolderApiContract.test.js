@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/mediafolder/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultMediaFolderController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/mediafolder/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultMediaFolderController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/mediafolder/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultMediaFolderController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/mediafolder/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultMediaFolderController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

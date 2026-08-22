@@ -104,7 +104,9 @@ const capability = {
     "navigation": [
         {
             "id": "my-work",
-            "label": "My Work",
+            "parentId": "workflow-management",
+            "parentModuleName": "flowCore",
+            "label": "My Tasks and Approvals",
             "route": "/workspace/my-work",
             "icon": "workflow",
             "order": 100,
@@ -242,7 +244,7 @@ const capability = {
             "group": {
                 "id": "documentation",
                 "label": "Documentation",
-                "order": 650
+                "order": 1600
             },
             "perspectives": [
                 "operations"
@@ -252,11 +254,10 @@ const capability = {
                 "tenant",
                 "enterprise"
             ],
-            "featureState": "ACTIVE"
+            "featureState": "HIDDEN"
         },
         {
             "id": "documentation-framework",
-            "parentId": "documentation",
             "label": "Framework",
             "route": "/docs/framework",
             "icon": "content",
@@ -264,7 +265,7 @@ const capability = {
             "group": {
                 "id": "documentation",
                 "label": "Documentation",
-                "order": 650
+                "order": 1600
             },
             "perspectives": [
                 "operations"
@@ -278,7 +279,6 @@ const capability = {
         },
         {
             "id": "documentation-swaggers",
-            "parentId": "documentation",
             "label": "Swaggers",
             "route": "/docs/swaggers",
             "icon": "reference",
@@ -286,7 +286,7 @@ const capability = {
             "group": {
                 "id": "documentation",
                 "label": "Documentation",
-                "order": 650
+                "order": 1600
             },
             "perspectives": [
                 "operations"
@@ -299,7 +299,221 @@ const capability = {
             "featureState": "ACTIVE"
         },
         {
+            "id": "documentation-nodics-kickoff",
+            "label": "Nodics Kickoff",
+            "route": "/docs/nodics-kickoff",
+            "icon": "content",
+            "order": 140,
+            "group": {
+                "id": "documentation",
+                "label": "Documentation",
+                "order": 1600
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "ACTIVE"
+        },
+        {
+            "id": "runtime-operations",
+            "label": "Runtime Operations",
+            "route": "/system-integrations#runtime-operations",
+            "icon": "operations",
+            "order": 91,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "modules-capabilities",
+            "label": "Modules and Capabilities",
+            "route": "/registry",
+            "icon": "registry",
+            "order": 100,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "featureState": "ACTIVE",
+            "requiredPermissions": [
+                "backoffice.registry.view"
+            ]
+        },
+        {
+            "id": "configuration-environments",
+            "label": "Configuration and Environments",
+            "route": "/administration/configuration",
+            "icon": "settings",
+            "order": 115,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "integrations-connections",
+            "label": "Integrations and Connections",
+            "route": "/operations/integrations",
+            "icon": "module",
+            "order": 125,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "apis-webhooks-events",
+            "label": "APIs, Webhooks, and Events",
+            "route": "/operations/events",
+            "icon": "module",
+            "order": 135,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "data-exchange",
+            "label": "Data Exchange",
+            "route": "/operations/imports-exports",
+            "icon": "import",
+            "order": 145,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "ACTIVE",
+            "requiredPermissions": [
+                "import.release.view"
+            ]
+        },
+        {
+            "id": "schema-data-administration",
+            "label": "Schema and Data Administration",
+            "route": "/schema-workbench",
+            "icon": "schema",
+            "order": 155,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "ACTIVE",
+            "requiredPermissions": [
+                "system.schema.workbench.view"
+            ]
+        },
+        {
+            "id": "operational-monitoring-recovery",
+            "label": "Operational Monitoring and Recovery",
+            "route": "/operations/operational-failures",
+            "icon": "health",
+            "order": 165,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "platform-policies-reference",
+            "label": "Platform Policies and Reference Settings",
+            "route": "/administration/policies-reference",
+            "icon": "settings",
+            "order": 175,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
             "id": "schema-workbench",
+            "parentId": "schema-data-administration",
             "label": "Schema Workbench",
             "route": "/schema-workbench",
             "icon": "schema",
@@ -307,7 +521,7 @@ const capability = {
             "group": {
                 "id": "system-integrations",
                 "label": "System & Integrations",
-                "order": 150
+                "order": 100
             },
             "perspectives": [
                 "operations"
@@ -329,14 +543,14 @@ const capability = {
         },
         {
             "id": "system-integrations",
-            "label": "Dashboard",
+            "label": "System Workspace",
             "route": "/system-integrations",
             "icon": "operations",
             "order": 90,
             "group": {
                 "id": "system-integrations",
                 "label": "System & Integrations",
-                "order": 150
+                "order": 100
             },
             "perspectives": [
                 "operations"
@@ -347,7 +561,7 @@ const capability = {
                 "enterprise"
             ],
             "help": {
-                "summary": "Review system capabilities, runtime registry status, integration workspaces, and governed operational entry points from one dashboard.",
+                "summary": "Review overall runtime status, modules requiring attention, failed integration/data-exchange operations, warnings, and authorized operational quick links.",
                 "documentationRoute": "/docs/reference/backoffice",
                 "documentationFragment": "system-integrations"
             },
@@ -358,6 +572,7 @@ const capability = {
         },
         {
             "id": "registry",
+            "parentId": "modules-capabilities",
             "label": "Module Registry",
             "route": "/registry",
             "icon": "registry",
@@ -365,7 +580,7 @@ const capability = {
             "group": {
                 "id": "system-integrations",
                 "label": "System & Integrations",
-                "order": 150
+                "order": 100
             },
             "perspectives": [
                 "operations"
@@ -385,7 +600,121 @@ const capability = {
             ]
         },
         {
+            "id": "overall-runtime-status",
+            "parentId": "system-integrations",
+            "label": "Overall Runtime Status",
+            "route": "/system-integrations",
+            "icon": "operations",
+            "order": 901,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "ACTIVE",
+            "requiredPermissions": [
+                "backoffice.registry.view"
+            ]
+        },
+        {
+            "id": "modules-requiring-attention",
+            "parentId": "system-integrations",
+            "label": "Nodes and Modules Requiring Attention",
+            "route": "/system-integrations#attention",
+            "icon": "health",
+            "order": 902,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "failed-integration-data-exchange",
+            "parentId": "system-integrations",
+            "label": "Failed Integration and Data-exchange Operations",
+            "route": "/system-integrations#failed-operations",
+            "icon": "validation",
+            "order": 903,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "security-configuration-warnings",
+            "parentId": "system-integrations",
+            "label": "Security and Configuration Warnings",
+            "route": "/system-integrations#warnings",
+            "icon": "security",
+            "order": 904,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
+            "id": "authorized-operational-quick-links",
+            "parentId": "system-integrations",
+            "label": "Authorized Operational Quick Links",
+            "route": "/system-integrations#quick-links",
+            "icon": "link",
+            "order": 905,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "DISABLED"
+        },
+        {
             "id": "module-health",
+            "parentId": "modules-capabilities",
             "label": "Module Health",
             "route": "/operations/module-health",
             "icon": "health",
@@ -393,7 +722,7 @@ const capability = {
             "group": {
                 "id": "system-integrations",
                 "label": "System & Integrations",
-                "order": 150
+                "order": 100
             },
             "perspectives": [
                 "operations"
@@ -414,14 +743,15 @@ const capability = {
         },
         {
             "id": "imports-exports",
-            "label": "Imports and Exports",
+            "parentId": "data-exchange",
+            "label": "Import and Export Workspace",
             "route": "/operations/imports-exports",
             "icon": "import",
             "order": 120,
             "group": {
                 "id": "system-integrations",
                 "label": "System & Integrations",
-                "order": 150
+                "order": 100
             },
             "perspectives": [
                 "operations"
@@ -443,14 +773,15 @@ const capability = {
         },
         {
             "id": "integrations",
-            "label": "Integrations",
+            "parentId": "integrations-connections",
+            "label": "Integration Workspace",
             "route": "/operations/integrations",
             "icon": "module",
             "order": 130,
             "group": {
                 "id": "system-integrations",
                 "label": "System & Integrations",
-                "order": 150
+                "order": 100
             },
             "perspectives": [
                 "operations"
@@ -463,6 +794,7 @@ const capability = {
         },
         {
             "id": "events",
+            "parentId": "apis-webhooks-events",
             "label": "Events",
             "route": "/operations/events",
             "icon": "module",
@@ -470,7 +802,7 @@ const capability = {
             "group": {
                 "id": "system-integrations",
                 "label": "System & Integrations",
-                "order": 150
+                "order": 100
             },
             "perspectives": [
                 "operations"
@@ -483,14 +815,15 @@ const capability = {
         },
         {
             "id": "audit-trail",
-            "label": "Audit Trail",
+            "parentId": "operational-monitoring-recovery",
+            "label": "Operational Audit",
             "route": "/operations/audit-trail",
             "icon": "module",
             "order": 150,
             "group": {
                 "id": "system-integrations",
                 "label": "System & Integrations",
-                "order": 150
+                "order": 100
             },
             "perspectives": [
                 "operations"
@@ -503,6 +836,7 @@ const capability = {
         },
         {
             "id": "operational-failures",
+            "parentId": "operational-monitoring-recovery",
             "label": "Operational Failures",
             "route": "/operations/operational-failures",
             "icon": "module",
@@ -510,7 +844,7 @@ const capability = {
             "group": {
                 "id": "system-integrations",
                 "label": "System & Integrations",
-                "order": 150
+                "order": 100
             },
             "perspectives": [
                 "operations"
@@ -523,6 +857,7 @@ const capability = {
         },
         {
             "id": "axis-configuration",
+            "parentId": "configuration-environments",
             "label": "Axis Configuration",
             "route": "/administration/axis-configuration",
             "icon": "settings",
@@ -530,7 +865,7 @@ const capability = {
             "group": {
                 "id": "system-integrations",
                 "label": "System & Integrations",
-                "order": 150
+                "order": 100
             },
             "perspectives": [
                 "operations"
@@ -543,6 +878,7 @@ const capability = {
         },
         {
             "id": "module-configuration",
+            "parentId": "configuration-environments",
             "label": "Module Configuration",
             "route": "/administration/module-configuration",
             "icon": "settings",
@@ -550,7 +886,7 @@ const capability = {
             "group": {
                 "id": "system-integrations",
                 "label": "System & Integrations",
-                "order": 150
+                "order": 100
             },
             "perspectives": [
                 "operations"
@@ -563,6 +899,7 @@ const capability = {
         },
         {
             "id": "localization",
+            "parentId": "platform-policies-reference",
             "label": "Localization",
             "route": "/administration/localization",
             "icon": "settings",
@@ -570,7 +907,7 @@ const capability = {
             "group": {
                 "id": "system-integrations",
                 "label": "System & Integrations",
-                "order": 150
+                "order": 100
             },
             "perspectives": [
                 "operations"
@@ -583,6 +920,7 @@ const capability = {
         },
         {
             "id": "units",
+            "parentId": "platform-policies-reference",
             "label": "Units",
             "route": "/administration/units",
             "icon": "settings",
@@ -590,7 +928,7 @@ const capability = {
             "group": {
                 "id": "system-integrations",
                 "label": "System & Integrations",
-                "order": 150
+                "order": 100
             },
             "perspectives": [
                 "operations"
@@ -603,6 +941,7 @@ const capability = {
         },
         {
             "id": "security-policies",
+            "parentId": "platform-policies-reference",
             "label": "Security Policies",
             "route": "/administration/security-policies",
             "icon": "settings",
@@ -610,7 +949,7 @@ const capability = {
             "group": {
                 "id": "system-integrations",
                 "label": "System & Integrations",
-                "order": 150
+                "order": 100
             },
             "perspectives": [
                 "operations"
@@ -623,14 +962,16 @@ const capability = {
         },
         {
             "id": "themes-branding",
+            "parentId": "cms-themes-branding",
+            "parentModuleName": "cms",
             "label": "Themes and Branding",
             "route": "/administration/themes-branding",
             "icon": "settings",
             "order": 230,
             "group": {
-                "id": "system-integrations",
-                "label": "System & Integrations",
-                "order": 150
+                "id": "content",
+                "label": "Content and Experience",
+                "order": 200
             },
             "perspectives": [
                 "operations"
@@ -643,6 +984,7 @@ const capability = {
         },
         {
             "id": "system-information",
+            "parentId": "runtime-operations",
             "label": "System Information",
             "route": "/administration/system-information",
             "icon": "settings",
@@ -650,7 +992,7 @@ const capability = {
             "group": {
                 "id": "system-integrations",
                 "label": "System & Integrations",
-                "order": 150
+                "order": 100
             },
             "perspectives": [
                 "operations"
@@ -664,6 +1006,26 @@ const capability = {
     ]
 };
 
+function normalizeNavigationHierarchy(contract) {
+    contract.navigation.forEach(item => {
+        if (!item.group) return;
+        if (item.group.id === 'workspace') {
+            item.group = {
+                id: 'process-and-automations',
+                label: 'Process and Automations',
+                order: 1500
+            };
+        } else if (item.group.id === 'system-integrations') {
+            item.group.label = 'System and Integrations';
+            item.group.order = 100;
+        } else if (item.group.id === 'documentation') {
+            item.group.label = 'Documentation';
+            item.group.order = 1600;
+        }
+    });
+    return contract;
+}
+
 module.exports = {
     /** Registers this module BackOffice capability provider. */
     init: function () {
@@ -673,5 +1035,5 @@ module.exports = {
     /** Completes provider lifecycle initialization. */
     postInit: function () { return Promise.resolve(true); },
     /** Returns this module owned BackOffice capability contract. */
-    getCapability: function () { return JSON.parse(JSON.stringify(capability)); }
+    getCapability: function () { return normalizeNavigationHierarchy(JSON.parse(JSON.stringify(capability))); }
 };

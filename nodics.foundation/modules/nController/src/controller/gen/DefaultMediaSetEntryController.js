@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultMediaSetEntryFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'mediaSetEntry';
+        if (callback) {
+            FACADE.DefaultMediaSetEntryFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultMediaSetEntryFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'mediaSetEntry';
+        if (callback) {
+            FACADE.DefaultMediaSetEntryFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultMediaSetEntryFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultMediaSetEntryFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'mediaSetEntry';
+        if (callback) {
+            FACADE.DefaultMediaSetEntryFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultMediaSetEntryFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

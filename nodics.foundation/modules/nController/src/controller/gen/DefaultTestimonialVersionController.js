@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultTestimonialVersionFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'testimonialVersion';
+        if (callback) {
+            FACADE.DefaultTestimonialVersionFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultTestimonialVersionFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'testimonialVersion';
+        if (callback) {
+            FACADE.DefaultTestimonialVersionFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultTestimonialVersionFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultTestimonialVersionFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'testimonialVersion';
+        if (callback) {
+            FACADE.DefaultTestimonialVersionFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultTestimonialVersionFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

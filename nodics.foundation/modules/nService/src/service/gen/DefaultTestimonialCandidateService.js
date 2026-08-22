@@ -36,6 +36,27 @@ module.exports = {
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelsGetInitializerPipeline', request, {});
     },
+    safeSearch: function (request) {
+        let moduleName = request.moduleName || 'testimonial';
+        request.schemaModel = NODICS.getModels(moduleName, request.tenant).TestimonialCandidateModel;
+        request.moduleName = moduleName;
+        request.schemaName = request.schemaName || 'testimonialCandidate';
+        request.generatedServiceName = 'DefaultTestimonialCandidateService';
+        if (!SERVICE.DefaultSchemaSafeQueryService || typeof SERVICE.DefaultSchemaSafeQueryService.searchGenerated !== 'function') {
+            return Promise.reject(new CLASSES.NodicsError('ERR_DBS_00004', 'Generated safe search service is not available'));
+        }
+        return SERVICE.DefaultSchemaSafeQueryService.searchGenerated(request);
+    },
+    capabilities: function (request) {
+        let moduleName = request.moduleName || 'testimonial';
+        request.schemaModel = NODICS.getModels(moduleName, request.tenant).TestimonialCandidateModel;
+        request.moduleName = moduleName;
+        request.schemaName = request.schemaName || 'testimonialCandidate';
+        if (!SERVICE.DefaultSchemaUtilityService || typeof SERVICE.DefaultSchemaUtilityService.capabilitiesGenerated !== 'function') {
+            return Promise.reject(new CLASSES.NodicsError('ERR_DBS_00004', 'Generated schema utility service is not available'));
+        }
+        return SERVICE.DefaultSchemaUtilityService.capabilitiesGenerated(request);
+    },
     getById: function (id, tenant) {
         return this.get({
             tenant: tenant,
@@ -69,6 +90,16 @@ module.exports = {
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).TestimonialCandidateModel;
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelsRemoveInitializerPipeline', request, {});
+    },
+    deleteImpact: function (request) {
+        let moduleName = request.moduleName || 'testimonial';
+        request.schemaModel = NODICS.getModels(moduleName, request.tenant).TestimonialCandidateModel;
+        request.moduleName = moduleName;
+        request.schemaName = request.schemaName || 'testimonialCandidate';
+        if (!SERVICE.DefaultSchemaUtilityService || typeof SERVICE.DefaultSchemaUtilityService.deleteImpactGenerated !== 'function') {
+            return Promise.reject(new CLASSES.NodicsError('ERR_DBS_00004', 'Generated schema utility service is not available'));
+        }
+        return SERVICE.DefaultSchemaUtilityService.deleteImpactGenerated(request);
     },
     removeById: function (ids, tenant) {
         return this.remove({

@@ -171,7 +171,7 @@ async function ensureStorefrontCustomer(employeeHeaders, credentials, scope = "p
     });
     log(`storefront ${scope} customer ${credentials.loginId} registered for local acceptance`);
   } catch (error) {
-    if (!String(error.message || error).match(/exist|duplicate|already/i)) throw error;
+    if (!String(error.message || error).match(/exist|duplicate|already/i) && credentials.generated) throw error;
     log(`storefront ${scope} customer ${credentials.loginId} already exists`);
   }
 }
@@ -206,9 +206,15 @@ async function validateCommerceContract(headers) {
     "/nodics/order/v0/customer/orders",
     "/nodics/order/v0/customer/orders/{orderCode}/lifecycle/preview",
     "/nodics/order/v0/customer/orders/{orderCode}/lifecycle",
+    "/nodics/customerList/v0/customer/lists/{listType}",
+    "/nodics/customerList/v0/customer/lists/{listType}/entries",
+    "/nodics/customerList/v0/customer/lists/{listType}/entries/{entryCode}",
+    "/nodics/promotion/v0/customer/promotions/preview",
+    "/nodics/promotion/v0/customer/promotions/apply",
+    "/nodics/promotion/v0/backoffice/promotions/drafts",
   ];
   const effectiveCommercePaths = Object.keys(paths)
-    .filter((route) => /\/(product|cart|checkoutCore|fulfillmentCore|order)\//.test(route))
+    .filter((route) => /\/(product|cart|checkoutCore|fulfillmentCore|order|customerList|promotion)\//.test(route))
     .sort();
   for (const route of required) {
     if (!paths[route]) {
@@ -312,6 +318,81 @@ async function exerciseCustomerCart(headers) {
     productCode: primaryProductCode,
     variantCode: primaryVariantCode,
   };
+}
+
+async function exerciseCustomerLists(headers) {
+  const productCode = process.env.NODICS_STOREFRONT_PRODUCT_CODE || "agoraLinenWrapDress";
+  const variantCode = process.env.NODICS_STOREFRONT_VARIANT_CODE || "agoraLinenWrapDressNaturalS";
+  const storeCode = process.env.NODICS_STOREFRONT_STORE_CODE || "agoraMainStore";
+  const locale = process.env.NODICS_STOREFRONT_LOCALE || "en";
+  const touched = [];
+  for (const listType of ["WISHLIST", "COMPARE"]) {
+    const added = dataOf(await request(commerceUrl, `/nodics/customerList/v0/customer/lists/${encodeURIComponent(listType)}/entries`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ productCode, variantCode, storeCode, locale }),
+    }));
+    const entry = added?.entries?.find((item) => item.productCode === productCode && item.variantCode === variantCode);
+    if (!entry?.code) throw new Error(`Customer ${listType} add returned unexpected response: ${JSON.stringify(added)}`);
+    const read = dataOf(await request(commerceUrl, `/nodics/customerList/v0/customer/lists/${encodeURIComponent(listType)}?storeCode=${encodeURIComponent(storeCode)}&locale=${encodeURIComponent(locale)}`, { headers }));
+    if (!read?.entries?.some((item) => item.code === entry.code)) throw new Error(`Customer ${listType} read did not include added entry: ${JSON.stringify(read)}`);
+    touched.push(`${listType}:${entry.code}`);
+  }
+  log(`customer wishlist and compare smoke passed for ${touched.length} entries`);
+}
+
+async function ensureAcceptancePromotion(employeeHeaders) {
+  const code = process.env.NODICS_STOREFRONT_PROMOTION_CODE || `agoraAcceptanceWelcome10`;
+  const promotion = dataOf(await request(commerceUrl, "/nodics/promotion/v0/backoffice/promotions/drafts", {
+    method: "PUT",
+    headers: employeeHeaders,
+    body: JSON.stringify({
+      code,
+      name: "Agora Acceptance Welcome 10",
+      status: "ACTIVE",
+      priority: 50,
+      conditions: { minimumSubtotal: "100.00" },
+      actions: { discountAmount: "10.00", reasonCode: "ACCEPTANCE10" },
+      revision: 0,
+    }),
+  }));
+  const saved = promotion?.promotion || {};
+  const updatedExisting = saved.acknowledged === true && Number(saved.matchedCount || 0) > 0;
+  if (!updatedExisting && (saved.code !== code || saved.status !== "ACTIVE")) {
+    throw new Error(`Promotion draft save returned unexpected response: ${JSON.stringify(promotion)}`);
+  }
+  return { code };
+}
+
+async function exerciseCustomerPromotions(headers, promotion) {
+  const cartCode = `promotion_cart_${randomUUID()}`;
+  const payload = {
+    cartCode,
+    currency: process.env.NODICS_STOREFRONT_CURRENCY || "USD",
+    subtotal: "150.00",
+    entries: [{
+      productCode: process.env.NODICS_STOREFRONT_PRODUCT_CODE || "agoraLinenWrapDress",
+      quantity: 1,
+      totalPrice: "150.00",
+    }],
+  };
+  const preview = dataOf(await request(commerceUrl, "/nodics/promotion/v0/customer/promotions/preview", {
+    method: "POST",
+    headers,
+    body: JSON.stringify(payload),
+  }));
+  if (!preview?.selected?.some((item) => item.code === promotion.code) || preview.redemptionStateMutation !== "NONE") {
+    throw new Error(`Promotion preview returned unexpected response: ${JSON.stringify(preview)}`);
+  }
+  const applied = dataOf(await request(commerceUrl, "/nodics/promotion/v0/customer/promotions/apply", {
+    method: "POST",
+    headers,
+    body: JSON.stringify(payload),
+  }));
+  if (!applied?.applied || applied.redemptionStateMutation !== "COMMITTED" || !applied?.redemption?.code) {
+    throw new Error(`Promotion apply returned unexpected response: ${JSON.stringify(applied)}`);
+  }
+  log(`customer promotion preview/apply smoke passed for ${promotion.code}`);
 }
 
 async function expectReadRejected(headers, path, label) {
@@ -486,9 +567,12 @@ async function run() {
     const employeeHeaders = await authenticateEmployee();
     await validateCommerceContract(employeeHeaders);
     await exerciseProductDiscovery(employeeHeaders);
+    const acceptancePromotion = await ensureAcceptancePromotion(employeeHeaders);
     const primaryCredentials = storefrontCustomerCredentials("PRIMARY");
     await ensureStorefrontCustomer(employeeHeaders, primaryCredentials, "primary");
     const primaryCustomer = await authenticateCustomer(primaryCredentials, "primary");
+    await exerciseCustomerLists(primaryCustomer.headers);
+    await exerciseCustomerPromotions(primaryCustomer.headers, acceptancePromotion);
     const cartSmoke = await exerciseCustomerCart(primaryCustomer.headers);
     const checkoutSmoke = await exerciseCustomerCheckout(cartSmoke, primaryCustomer);
     const secondaryCredentials = storefrontCustomerCredentials("SECONDARY");

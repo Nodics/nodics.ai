@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultEngagementDeliveryAttemptFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'engagementDeliveryAttempt';
+        if (callback) {
+            FACADE.DefaultEngagementDeliveryAttemptFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultEngagementDeliveryAttemptFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'engagementDeliveryAttempt';
+        if (callback) {
+            FACADE.DefaultEngagementDeliveryAttemptFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultEngagementDeliveryAttemptFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultEngagementDeliveryAttemptFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'engagementDeliveryAttempt';
+        if (callback) {
+            FACADE.DefaultEngagementDeliveryAttemptFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultEngagementDeliveryAttemptFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

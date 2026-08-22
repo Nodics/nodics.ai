@@ -66,7 +66,10 @@ module.exports = {
             controller: 'DefaultCmsDesignerCompositionController', operation: 'assignNavigation' },
         validatePublishReadiness: { secured: true, accessGroups: ['userGroup'], permission: 'cms.backoffice.manage',
             apiExposure: 'cmsAuthoring', key: '/designer/composition/publish-readiness', method: 'POST',
-            controller: 'DefaultCmsDesignerCompositionController', operation: 'validatePublishReadiness' }
+            controller: 'DefaultCmsDesignerCompositionController', operation: 'validatePublishReadiness' },
+        submitForPublication: { secured: true, accessGroups: ['userGroup'], permission: 'cms.backoffice.manage',
+            apiExposure: 'cmsAuthoring', key: '/designer/composition/publication-request', method: 'POST',
+            controller: 'DefaultCmsDesignerCompositionController', operation: 'submitForPublication' }
     },
     cmsMigration: {
         previewMigration: { secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'cms.migration.preview', key: '/migration/preview', method: 'POST', controller: 'DefaultCmsMigrationController', operation: 'previewMigration' },

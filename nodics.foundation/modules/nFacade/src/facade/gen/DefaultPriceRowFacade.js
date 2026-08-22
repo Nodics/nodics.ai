@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultPriceRowService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultPriceRowService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultPriceRowService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultPriceRowService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultPriceRowService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultPriceRowService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultPriceRowService.remove(request);

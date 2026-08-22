@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultWorkflow2SchemaService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultWorkflow2SchemaService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultWorkflow2SchemaService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultWorkflow2SchemaService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultWorkflow2SchemaService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultWorkflow2SchemaService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultWorkflow2SchemaService.remove(request);

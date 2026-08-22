@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/editorialarticlelocalization/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultEditorialArticleLocalizationController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/editorialarticlelocalization/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultEditorialArticleLocalizationController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/editorialarticlelocalization/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultEditorialArticleLocalizationController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/editorialarticlelocalization/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultEditorialArticleLocalizationController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

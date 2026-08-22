@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultCustomerReviewMigrationFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'customerReviewMigration';
+        if (callback) {
+            FACADE.DefaultCustomerReviewMigrationFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCustomerReviewMigrationFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'customerReviewMigration';
+        if (callback) {
+            FACADE.DefaultCustomerReviewMigrationFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCustomerReviewMigrationFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultCustomerReviewMigrationFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'customerReviewMigration';
+        if (callback) {
+            FACADE.DefaultCustomerReviewMigrationFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCustomerReviewMigrationFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

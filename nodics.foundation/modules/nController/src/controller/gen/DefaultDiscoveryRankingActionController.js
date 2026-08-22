@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultDiscoveryRankingActionFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'discoveryRankingAction';
+        if (callback) {
+            FACADE.DefaultDiscoveryRankingActionFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultDiscoveryRankingActionFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'discoveryRankingAction';
+        if (callback) {
+            FACADE.DefaultDiscoveryRankingActionFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultDiscoveryRankingActionFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultDiscoveryRankingActionFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'discoveryRankingAction';
+        if (callback) {
+            FACADE.DefaultDiscoveryRankingActionFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultDiscoveryRankingActionFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

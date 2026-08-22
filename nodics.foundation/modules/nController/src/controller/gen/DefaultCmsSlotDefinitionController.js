@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultCmsSlotDefinitionFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'cmsSlotDefinition';
+        if (callback) {
+            FACADE.DefaultCmsSlotDefinitionFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCmsSlotDefinitionFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'cmsSlotDefinition';
+        if (callback) {
+            FACADE.DefaultCmsSlotDefinitionFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCmsSlotDefinitionFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultCmsSlotDefinitionFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'cmsSlotDefinition';
+        if (callback) {
+            FACADE.DefaultCmsSlotDefinitionFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCmsSlotDefinitionFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

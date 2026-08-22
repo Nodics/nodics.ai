@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultCmsPublicationManifestFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'cmsPublicationManifest';
+        if (callback) {
+            FACADE.DefaultCmsPublicationManifestFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCmsPublicationManifestFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'cmsPublicationManifest';
+        if (callback) {
+            FACADE.DefaultCmsPublicationManifestFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCmsPublicationManifestFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultCmsPublicationManifestFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'cmsPublicationManifest';
+        if (callback) {
+            FACADE.DefaultCmsPublicationManifestFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCmsPublicationManifestFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

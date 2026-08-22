@@ -12,9 +12,12 @@
 'use strict';
 /** @module apparelProduct/service/defaultApparelProductSearchEnrichmentService @description Contributes Apparel records to Product search publication. @layer service @owner apparelProduct */
 module.exports = {
+    /** Initializes the Apparel product search enrichment provider. */
     init: function () { return Promise.resolve(true); },
+    /** Completes Apparel product search enrichment provider startup. */
     postInit: function () { return Promise.resolve(true); },
 
+    /** Normalizes generated-service or model responses into a record array. */
     records: function (response) {
         if (Array.isArray(response)) return response;
         if (response && Array.isArray(response.result)) return response.result;
@@ -22,10 +25,12 @@ module.exports = {
         return [];
     },
 
+    /** Resolves the generated model name for a schema code. */
     modelName: function (schemaName) {
         return schemaName.charAt(0).toUpperCase() + schemaName.slice(1) + 'Model';
     },
 
+    /** Reads enrichment records from the generated service or model fallback. */
     read: async function (request, options) {
         let query = Object.assign({ tenant: request.tenant }, options.query || {});
         let service = SERVICE[options.serviceName];
@@ -40,6 +45,7 @@ module.exports = {
         return [];
     },
 
+    /** Projects Apparel-specific attributes into the product search document. */
     enrich: async function (request, input) {
         let styles = await this.read(request, {
             moduleName: 'apparelProduct',

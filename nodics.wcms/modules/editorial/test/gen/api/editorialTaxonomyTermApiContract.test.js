@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/editorialtaxonomyterm/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultEditorialTaxonomyTermController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/editorialtaxonomyterm/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultEditorialTaxonomyTermController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/editorialtaxonomyterm/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultEditorialTaxonomyTermController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/editorialtaxonomyterm/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultEditorialTaxonomyTermController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

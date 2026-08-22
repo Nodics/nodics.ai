@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultTestimonialConsentService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultTestimonialConsentService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultTestimonialConsentService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultTestimonialConsentService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultTestimonialConsentService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultTestimonialConsentService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultTestimonialConsentService.remove(request);

@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultContactCorrespondenceFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'contactCorrespondence';
+        if (callback) {
+            FACADE.DefaultContactCorrespondenceFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultContactCorrespondenceFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'contactCorrespondence';
+        if (callback) {
+            FACADE.DefaultContactCorrespondenceFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultContactCorrespondenceFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultContactCorrespondenceFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'contactCorrespondence';
+        if (callback) {
+            FACADE.DefaultContactCorrespondenceFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultContactCorrespondenceFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

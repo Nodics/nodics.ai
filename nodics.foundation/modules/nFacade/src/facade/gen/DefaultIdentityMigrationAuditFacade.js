@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultIdentityMigrationAuditService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultIdentityMigrationAuditService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultIdentityMigrationAuditService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultIdentityMigrationAuditService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultIdentityMigrationAuditService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultIdentityMigrationAuditService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultIdentityMigrationAuditService.remove(request);

@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultCmsPublicationEventOutboxService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultCmsPublicationEventOutboxService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultCmsPublicationEventOutboxService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultCmsPublicationEventOutboxService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultCmsPublicationEventOutboxService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultCmsPublicationEventOutboxService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultCmsPublicationEventOutboxService.remove(request);

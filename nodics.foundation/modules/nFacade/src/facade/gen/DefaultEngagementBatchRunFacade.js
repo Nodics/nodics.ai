@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultEngagementBatchRunService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultEngagementBatchRunService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultEngagementBatchRunService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultEngagementBatchRunService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultEngagementBatchRunService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultEngagementBatchRunService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultEngagementBatchRunService.remove(request);

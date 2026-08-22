@@ -13,5 +13,5 @@
 'use strict';
 /** @module checkoutCore/src/router/routers @description Declares secured idempotent customer placement API. @layer router @owner checkoutCore */
 module.exports = { checkoutCore: { customer: {
-    place: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'commerce.checkout.place', apiExposure: 'commerceCustomer', key: '/customer/checkouts/place', method: 'POST', controller: 'DefaultCheckoutApiController', operation: 'place' }
+    place: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'commerce.checkout.place', apiExposure: 'commerceCustomer', key: '/customer/checkouts/place', method: 'POST', controller: 'DefaultCheckoutCustomerController', operation: 'place' }
 } } };

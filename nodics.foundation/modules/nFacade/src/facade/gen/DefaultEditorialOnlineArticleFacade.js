@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultEditorialOnlineArticleService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultEditorialOnlineArticleService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultEditorialOnlineArticleService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultEditorialOnlineArticleService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultEditorialOnlineArticleService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultEditorialOnlineArticleService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultEditorialOnlineArticleService.remove(request);

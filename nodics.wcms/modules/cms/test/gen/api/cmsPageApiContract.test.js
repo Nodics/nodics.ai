@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/cmspage/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsPageController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/cmspage/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsPageController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/cmspage/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultCmsPageController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/cmspage/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsPageController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

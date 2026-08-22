@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultCmsComponentDetailFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'cmsComponentDetail';
+        if (callback) {
+            FACADE.DefaultCmsComponentDetailFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCmsComponentDetailFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'cmsComponentDetail';
+        if (callback) {
+            FACADE.DefaultCmsComponentDetailFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCmsComponentDetailFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultCmsComponentDetailFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'cmsComponentDetail';
+        if (callback) {
+            FACADE.DefaultCmsComponentDetailFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCmsComponentDetailFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

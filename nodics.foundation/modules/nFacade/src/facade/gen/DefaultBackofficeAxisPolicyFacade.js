@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultBackofficeAxisPolicyService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultBackofficeAxisPolicyService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultBackofficeAxisPolicyService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultBackofficeAxisPolicyService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultBackofficeAxisPolicyService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultBackofficeAxisPolicyService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultBackofficeAxisPolicyService.remove(request);

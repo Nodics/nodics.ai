@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultTestimonialConsentFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'testimonialConsent';
+        if (callback) {
+            FACADE.DefaultTestimonialConsentFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultTestimonialConsentFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'testimonialConsent';
+        if (callback) {
+            FACADE.DefaultTestimonialConsentFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultTestimonialConsentFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultTestimonialConsentFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'testimonialConsent';
+        if (callback) {
+            FACADE.DefaultTestimonialConsentFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultTestimonialConsentFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

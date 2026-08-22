@@ -23,6 +23,12 @@
  * @property {Object} common.schemaIndexes Schema index refresh routes.
  * @property {Object} common.schemaValidation Schema validator refresh routes.
  * @property {Object} common.schemaWorkbench Client-safe schema discovery routes.
+ *
+ * @note Schema Workbench routes must remain generic safety/projection
+ * contracts. Do not add screen-specific or schema-specific routes such as
+ * `/schema/workbench/catalog/records`; Axis should use generated CRUD and
+ * domain APIs by default, with Workbench routes only filling generic browser
+ * safety gaps.
  */
 module.exports = {
     common: {

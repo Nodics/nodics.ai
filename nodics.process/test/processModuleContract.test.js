@@ -121,9 +121,9 @@ assert.deepStrictEqual(
     'Axis Process navigation must stay compact and focused on business process automation workspaces',
 );
 assert(
-    capability.navigation.every((item) => item.group.id === 'business-process-automation' &&
-        item.group.label === 'Process & Automation'),
-    'process navigation must stay in the Process & Automation group',
+    capability.navigation.every((item) => item.group.id === 'process-and-automations' &&
+        item.group.label === 'Process and Automations'),
+    'process navigation must stay in the Process and Automations group',
 );
 assert.strictEqual(
     properties.process.designer.enabled,

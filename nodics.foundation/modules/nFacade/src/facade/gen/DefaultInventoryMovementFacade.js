@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultInventoryMovementService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultInventoryMovementService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultInventoryMovementService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultInventoryMovementService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultInventoryMovementService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultInventoryMovementService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultInventoryMovementService.remove(request);

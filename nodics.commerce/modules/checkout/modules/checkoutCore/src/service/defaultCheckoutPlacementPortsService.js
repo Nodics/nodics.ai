@@ -51,6 +51,18 @@ module.exports = {
     save: function (service, tenant, model, authData) { return service.save({ tenant, authData, model: this.persistenceModel(model) }).then(this.unwrap); },
     /** Applies an optimistic owner update. @param {Object} service Service. @param {string} tenant Tenant. @param {Object} model Current model. @param {Object} patch Patch. @param {Object} authData Auth context. @returns {Promise<Object>} Updated model. */
     update: function (service, tenant, model, patch, authData) { return service.update({ tenant, authData, query: { tenant, code: model.code, revision: model.revision }, model: { $set: patch } }).then(this.unwrap); },
+    /** Retires the customer Cart intake after successful Order placement. @param {Object} request Checkout request. @returns {Promise<Object>} Retirement evidence. */
+    closeCart: async function (request) {
+        const authData = this.serviceAuthData(request);
+        const carts = await this.get(SERVICE.DefaultCartService, request.tenant, { code: request.payload.cartCode, ownerId: request.ownerId }, authData, 1);
+        const cart = carts[0];
+        const entries = await this.get(SERVICE.DefaultCartEntryService, request.tenant, { cartCode: request.payload.cartCode, ownerId: request.ownerId, status: 'ACTIVE' }, authData, 500);
+        for (const entry of entries) {
+            await this.update(SERVICE.DefaultCartEntryService, request.tenant, entry, { status: 'REMOVED', active: false }, authData);
+        }
+        if (cart) await this.update(SERVICE.DefaultCartService, request.tenant, cart, { status: 'PLACED', active: false }, authData);
+        return { cartCode: request.payload.cartCode, cartClosed: Boolean(cart), orderedEntryCount: entries.length };
+    },
     /** Selects a Payment-owned customer payment method service. @param {Object} request Checkout request. @param {Object} calculation Cart calculation. @returns {Object} Prepared method. */
     preparePaymentMethod: function (request, calculation) {
         const base = { tenant: request.tenant, providerToken: request.payload.providerToken, amount: calculation.totalAmount, currency: calculation.currency, idempotencyKey: request.idempotencyKey + ':payment', correlationId: request.correlationId };
@@ -81,7 +93,7 @@ module.exports = {
         const self = this;
         return {
             findPlacement: async request => (await self.get(SERVICE.DefaultCheckoutCheckpointService, request.tenant, { ownerId: request.ownerId, idempotencyKey: request.idempotencyKey, status: 'COMPLETED' }, request.authData, 1))[0],
-            calculateCart: request => SERVICE.DefaultCartApiService.calculate(Object.assign({}, request, { internalUse: true, cartCode: request.payload.cartCode, ownerId: request.ownerId, payload: { expectedRevision: request.payload.expectedCartRevision, calculationCode: request.payload.calculationCode } })),
+            calculateCart: request => SERVICE.DefaultCartOperationService.calculate(Object.assign({}, request, { internalUse: true, cartCode: request.payload.cartCode, ownerId: request.ownerId, payload: { expectedRevision: request.payload.expectedCartRevision, calculationCode: request.payload.calculationCode } })),
             reserveInventory: async (request, calculation) => {
                 const reservations = [];
                 for (const entry of calculation.entries) {
@@ -110,7 +122,10 @@ module.exports = {
                 return order;
             },
             releaseFulfillment: (request, order) => self.save(SERVICE.DefaultConsignmentService, request.tenant, { code: order.code + ':1', tenant: request.tenant, orderCode: order.code, ownerId: request.ownerId, status: 'READY', revision: 0, idempotencyKey: request.idempotencyKey + ':fulfillment', correlationId: request.correlationId, currency: order.currency, totalAmount: order.totalAmount }, self.serviceAuthData(request)),
-            complete: (checkpoint, result) => self.save(SERVICE.DefaultCheckoutCheckpointService, checkpoint.tenant, { code: result.order.code, tenant: checkpoint.tenant, ownerId: checkpoint.ownerId, cartCode: result.order.cartCode, status: 'COMPLETED', revision: 0, idempotencyKey: checkpoint.idempotencyKey, correlationId: checkpoint.correlationId, evidence: { completed: checkpoint.completed, orderCode: result.order.code } }, checkpoint.authData),
+            complete: async (checkpoint, result) => {
+                const cartClosure = await self.closeCart({ tenant: checkpoint.tenant, ownerId: checkpoint.ownerId, authData: checkpoint.authData, payload: { cartCode: result.order.cartCode, orderCode: result.order.code } });
+                return self.save(SERVICE.DefaultCheckoutCheckpointService, checkpoint.tenant, { code: result.order.code, tenant: checkpoint.tenant, ownerId: checkpoint.ownerId, cartCode: result.order.cartCode, status: 'COMPLETED', revision: 0, idempotencyKey: checkpoint.idempotencyKey, correlationId: checkpoint.correlationId, evidence: { completed: checkpoint.completed, orderCode: result.order.code, cartClosure } }, checkpoint.authData);
+            },
             compensate: async (checkpoint, error, request) => {
                 const outcomes = [];
                 for (const reservation of checkpoint.results.reservation || []) {

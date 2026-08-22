@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultContactHandoffService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultContactHandoffService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultContactHandoffService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultContactHandoffService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultContactHandoffService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultContactHandoffService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultContactHandoffService.remove(request);

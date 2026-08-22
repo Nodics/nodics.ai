@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultMediaFolderService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultMediaFolderService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultMediaFolderService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultMediaFolderService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultMediaFolderService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultMediaFolderService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultMediaFolderService.remove(request);

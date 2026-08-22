@@ -13,12 +13,12 @@
 
 const assert = require('node:assert/strict');
 const test = require('node:test');
-const facade = require('../src/facade/defaultCheckoutApiFacade');
+const facade = require('../src/facade/defaultCheckoutCustomerFacade');
 
 test('Checkout customer API resolves owner from authenticated customer login id', async () => {
     let placed;
     global.SERVICE = {
-        DefaultCheckoutApiService: {
+        DefaultCheckoutOperationService: {
             place: async request => {
                 placed = request;
                 return { order: { code: request.payload.orderCode, ownerId: request.ownerId } };

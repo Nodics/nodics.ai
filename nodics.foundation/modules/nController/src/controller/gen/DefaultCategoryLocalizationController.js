@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultCategoryLocalizationFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'categoryLocalization';
+        if (callback) {
+            FACADE.DefaultCategoryLocalizationFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCategoryLocalizationFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'categoryLocalization';
+        if (callback) {
+            FACADE.DefaultCategoryLocalizationFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCategoryLocalizationFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultCategoryLocalizationFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'categoryLocalization';
+        if (callback) {
+            FACADE.DefaultCategoryLocalizationFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCategoryLocalizationFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

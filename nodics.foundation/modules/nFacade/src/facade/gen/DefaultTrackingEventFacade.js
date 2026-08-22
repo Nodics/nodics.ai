@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultTrackingEventService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultTrackingEventService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultTrackingEventService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultTrackingEventService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultTrackingEventService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultTrackingEventService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultTrackingEventService.remove(request);

@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultEditorialArticleTaxonomyFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'editorialArticleTaxonomy';
+        if (callback) {
+            FACADE.DefaultEditorialArticleTaxonomyFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultEditorialArticleTaxonomyFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'editorialArticleTaxonomy';
+        if (callback) {
+            FACADE.DefaultEditorialArticleTaxonomyFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultEditorialArticleTaxonomyFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultEditorialArticleTaxonomyFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'editorialArticleTaxonomy';
+        if (callback) {
+            FACADE.DefaultEditorialArticleTaxonomyFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultEditorialArticleTaxonomyFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

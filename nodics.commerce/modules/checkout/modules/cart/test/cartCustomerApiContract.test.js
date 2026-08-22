@@ -24,13 +24,14 @@ const test = require('node:test');
 const properties = require('../config/properties');
 const routers = require('../src/router/routers');
 const pipelines = require('../src/pipelines/pipelines');
-const controller = require('../src/controller/defaultCartApiController');
-const facade = require('../src/facade/defaultCartApiFacade');
-const service = require('../src/service/defaultCartApiService');
+const controller = require('../src/controller/defaultCartCustomerController');
+const facade = require('../src/facade/defaultCartCustomerFacade');
+const service = require('../src/service/defaultCartOperationService');
 const calculationPipelineService = require('../src/service/pipelines/defaultCartCalculationPipelineService');
 const calculationPorts = require('../src/service/defaultCommerceCalculationPortsService');
 const exact = require('../../../../baseCommerce/modules/pricing/src/service/defaultExactAmountService');
 const pricingDecision = require('../../../../baseCommerce/modules/pricing/src/service/defaultPricingDecisionService');
+const priceSelection = require('../../../../baseCommerce/modules/pricing/src/service/defaultPriceSelectionService');
 const inventorySourcing = require('../../../../baseCommerce/modules/inventory/src/service/defaultInventorySourcingService');
 const promotionDecision = require('../../../../baseCommerce/modules/promotion/src/service/defaultPromotionDecisionService');
 const taxDecision = require('../../../../baseCommerce/modules/tax/src/service/defaultTaxDecisionEngineService');
@@ -48,7 +49,7 @@ function installGlobals() {
     delete global.CLASSES;
     global.CONFIG = { get: key => key === 'cart' ? properties.cart : undefined };
     global.SERVICE = {
-        DefaultCartApiService: service,
+        DefaultCartOperationService: service,
         DefaultCartService: {
             save: async request => {
                 let existing = carts.find(item => item.code === request.model.code);
@@ -102,7 +103,7 @@ function installGlobals() {
         },
         DefaultCommerceCalculationPortsService: calculationPorts
     };
-    global.FACADE = { DefaultCartApiFacade: facade };
+    global.FACADE = { DefaultCartCustomerFacade: facade };
 }
 
 test.beforeEach(installGlobals);
@@ -125,7 +126,7 @@ test('Cart calculation pipeline preserves framework error terminal to avoid recu
 test('Cart calculation pipeline writes framework success payload for downstream checkout', async () => {
     const response = {};
     const expected = { code: 'calc-1', entries: [] };
-    global.SERVICE.DefaultCartApiService = { calculateDirect: async () => expected };
+    global.SERVICE.DefaultCartOperationService = { calculateDirect: async () => expected };
     await new Promise((resolve, reject) => {
         calculationPipelineService.calculate({}, response, {
             nextSuccess: () => {
@@ -156,6 +157,66 @@ test('Cart calculation API redacts backend-only evidence unless called internall
     assert.equal(JSON.stringify(customer).includes('warehouseCode'), false);
     const internal = await service.calculate({ internalUse: true });
     assert.equal(internal, raw);
+});
+
+test('Cart customer facade uses customer-owned direct calculation snapshots', async () => {
+    let called;
+    global.SERVICE.DefaultCartOperationService = {
+        calculateDirect: async request => {
+            called = request;
+            return { code: 'calc-cart1', status: 'CURRENT' };
+        },
+        calculate: async () => {
+            throw new Error('generic calculation pipeline must not handle customer cart calculation route');
+        }
+    };
+    const response = await facade.calculate({
+        authData: { tenant: 'default', principalId: 'customer-1' },
+        cartCode: 'cart1',
+        payload: { calculationCode: 'calc-cart1' }
+    });
+    assert.equal(response.code, 'calc-cart1');
+    assert.equal(called.ownerId, 'customer-1');
+    assert.equal(called.tenant, 'default');
+});
+
+test('Cart customer calculation creates stable snapshot code when browser payload omits calculationCode', async () => {
+    global.SERVICE.DefaultCartCalculationEngineService = {
+        calculate: async cart => ({
+            tenant: cart.tenant,
+            cartCode: cart.code,
+            entries: [{
+                productCode: 'agoraLinenWrapDress',
+                priceDecision: { unitAmount: '129.00', priceRowCode: 'internal-row' },
+                availability: { available: true, candidates: [{ warehouseCode: 'internal-warehouse' }] }
+            }]
+        })
+    };
+    global.SERVICE.DefaultCartCalculationService = {
+        save: async request => ({ result: request.model })
+    };
+    carts.push({ code: 'cartPreview', tenant: 'default', ownerId: 'customer-1', revision: 2, currency: 'USD' });
+    const calculated = await service.calculateDirect({
+        tenant: 'default',
+        ownerId: 'customer-1',
+        cartCode: 'cartPreview',
+        authData: { tenant: 'default', principalId: 'customer-1' },
+        payload: { expectedRevision: 2 }
+    });
+    assert.equal(calculated.code, 'calc-cartPreview-2');
+    assert.equal(calculated.cartRevision, 2);
+    assert.equal(JSON.stringify(calculated).includes('priceRowCode'), false);
+    assert.equal(JSON.stringify(calculated).includes('warehouseCode'), false);
+    const internal = await service.calculateDirect({
+        tenant: 'default',
+        ownerId: 'customer-1',
+        cartCode: 'cartPreview',
+        authData: { tenant: 'default', principalId: 'customer-1' },
+        payload: { expectedRevision: 2 },
+        internalUse: true
+    });
+    assert.equal(JSON.stringify(internal).includes('priceRowCode'), true);
+    assert.equal(JSON.stringify(internal).includes('warehouseCode'), true);
 });
 
 test('Cart customer API creates a cart and manages active entries for the authenticated owner', async () => {
@@ -223,13 +284,25 @@ test('Cart calculation ports read owner services with internal service groups', 
     let ownerRequests = [];
     global.SERVICE.DefaultExactAmountService = exact;
     global.SERVICE.DefaultPricingDecisionService = pricingDecision;
+    global.SERVICE.DefaultPriceSelectionService = priceSelection;
+    global.SERVICE.DefaultPriceBookService = {
+        get: async request => {
+            ownerRequests.push({ service: 'priceBook', request });
+            return { result: [{ tenant: 'default', code: 'retailUsd', currency: 'USD', status: 'ACTIVE' }] };
+        }
+    };
     global.SERVICE.DefaultInventorySourcingService = inventorySourcing;
     global.SERVICE.DefaultPromotionDecisionService = promotionDecision;
     global.SERVICE.DefaultTaxDecisionEngineService = taxDecision;
     global.SERVICE.DefaultPriceRowService = {
         get: async request => {
             ownerRequests.push({ service: 'price', request });
-            return { result: [{ tenant: 'default', code: 'price-1', productCode: 'agoraDress', unitAmount: '129.00', currency: 'USD', minQuantity: '1' }] };
+            return {
+                result: [
+                    { tenant: 'default', code: 'stale-price', productCode: 'agoraDress', unitAmount: '59.99', currency: 'USD', minQuantity: '1' },
+                    { tenant: 'default', code: 'active-price', priceBookCode: 'retailUsd', productCode: 'agoraDress', unitAmount: '129.00', currency: 'USD', minQuantity: '1', status: 'ACTIVE' }
+                ]
+            };
         }
     };
     global.SERVICE.DefaultInventoryBalanceService = {
@@ -253,11 +326,13 @@ test('Cart calculation ports read owner services with internal service groups', 
 
     let ports = calculationPorts.create({ tenant: 'default', code: 'cart1', jurisdiction: 'AE', correlationId: 'corr-1' });
     await ports.inventory({ tenant: 'default', sku: 'AGORA-DRESS-S', quantity: '1' });
-    await ports.pricing({ tenant: 'default', storeCode: 'agoraMainStore', productCode: 'agoraDress', quantity: '1', currency: 'USD' });
+    let price = await ports.pricing({ tenant: 'default', storeCode: 'agoraMainStore', productCode: 'agoraDress', quantity: '1', currency: 'USD' });
     await ports.promotion({ tenant: 'default', cartCode: 'cart1', subtotal: '129.00', currency: 'USD' });
     await ports.tax({ tenant: 'default', taxableAmount: '119.00', currency: 'USD' });
 
-    assert.deepEqual(ownerRequests.map(item => item.service).sort(), ['inventory', 'price', 'promotion', 'tax']);
+    assert.equal(price.priceRowCode, 'active-price');
+    assert.equal(price.unitAmount, '129');
+    assert.deepEqual(ownerRequests.map(item => item.service).sort(), ['inventory', 'price', 'priceBook', 'promotion', 'tax']);
     for (const item of ownerRequests) {
         assert.equal(item.request.authData.principalType, 'service');
         assert.deepEqual(item.request.authData.userGroups, ['serviceAccountUserGroup']);

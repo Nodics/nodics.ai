@@ -37,6 +37,16 @@ assert.equal(catalogue.product.navigation.length, 1, 'identical providers from m
 catalogue = registry.buildCatalogue(modules, 1, { permissions: ['pricing.read'] });
 assert.equal(catalogue.product.navigation.length, 0);
 assert.equal(catalogue.pricing.navigation.length, 0, 'cross-module descendants must be removed when the parent is unauthorized');
+catalogue = registry.buildCatalogue({
+    product: [{ backoffice: capability('product', [Object.assign(item('catalog', undefined, undefined, 'catalog.read'),
+        { group: { id: 'products-merchandising', label: 'Products and Merchandising', order: 500 } }),
+    item('products', 'catalog', undefined, 'catalog.read')]) }],
+    pricing: [{ backoffice: capability('pricing', [item('prices', 'products', 'product', 'pricing.read')]) }]
+}, 1, { permissions: ['catalog.read', 'pricing.read'] });
+assert.equal(catalogue.product.navigation.find(entry => entry.id === 'products').group.label,
+    'Products and Merchandising', 'same-module descendants must inherit the authorized parent group');
+assert.equal(catalogue.pricing.navigation.find(entry => entry.id === 'prices').group.label,
+    'Products and Merchandising', 'cross-module descendants must inherit the authorized parent group');
 let gated = registry.applyFunctionalModuleEligibility(modules, {
     governedModules: ['product', 'pricing'], eligibleModules: ['product']
 });

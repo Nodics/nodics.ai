@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultDiscoveryQueryProfileFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'discoveryQueryProfile';
+        if (callback) {
+            FACADE.DefaultDiscoveryQueryProfileFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultDiscoveryQueryProfileFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'discoveryQueryProfile';
+        if (callback) {
+            FACADE.DefaultDiscoveryQueryProfileFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultDiscoveryQueryProfileFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultDiscoveryQueryProfileFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'discoveryQueryProfile';
+        if (callback) {
+            FACADE.DefaultDiscoveryQueryProfileFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultDiscoveryQueryProfileFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

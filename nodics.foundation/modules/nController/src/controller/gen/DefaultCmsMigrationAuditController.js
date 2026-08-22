@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultCmsMigrationAuditFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'cmsMigrationAudit';
+        if (callback) {
+            FACADE.DefaultCmsMigrationAuditFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCmsMigrationAuditFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'cmsMigrationAudit';
+        if (callback) {
+            FACADE.DefaultCmsMigrationAuditFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCmsMigrationAuditFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultCmsMigrationAuditFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'cmsMigrationAudit';
+        if (callback) {
+            FACADE.DefaultCmsMigrationAuditFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCmsMigrationAuditFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

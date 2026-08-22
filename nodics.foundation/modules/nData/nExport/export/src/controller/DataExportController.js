@@ -46,5 +46,31 @@ module.exports = {
         } else {
             return FACADE.DataExportFacade.export(request);
         }
+    },
+
+    /**
+
+     * Returns governed export history projection.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @param {*} callback Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    history: function (request, callback) {
+        if (callback) {
+            FACADE.DataExportFacade.history(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DataExportFacade.history(request);
+        }
     }
 };

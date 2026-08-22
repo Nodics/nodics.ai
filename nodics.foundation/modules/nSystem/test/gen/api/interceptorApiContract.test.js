@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/interceptor/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultInterceptorController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/interceptor/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultInterceptorController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/interceptor/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultInterceptorController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/interceptor/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultInterceptorController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

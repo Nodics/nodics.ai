@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultIndexerService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultIndexerService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultIndexerService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultIndexerService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultIndexerService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultIndexerService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultIndexerService.remove(request);

@@ -93,6 +93,47 @@ module.exports = {
     },
 
     /**
+     * Executes bounded browser-safe schema search through the generated CRUD
+     * service. Unlike `POST /schemaName`, this operation never accepts raw
+     * database query operators from the browser.
+     * @param {*} request Method input.
+     * @param {*} callback Method input.
+     * @returns {*} Method result.
+     */
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'schmanm';
+        if (callback) {
+            FACADE.dsdName.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.dsdName.safeSearch(request);
+        }
+    },
+
+    /**
+     * Returns browser-safe generated schema capabilities.
+     * @param {*} request Method input.
+     * @param {*} callback Method input.
+     * @returns {*} Method result.
+     */
+    capabilities: function (request, callback) {
+        request.schemaName = 'schmanm';
+        if (callback) {
+            FACADE.dsdName.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.dsdName.capabilities(request);
+        }
+    },
+
+    /**
 
      * Removes or clears  information.
 
@@ -116,6 +157,27 @@ module.exports = {
             });
         } else {
             return FACADE.dsdName.remove(request);
+        }
+    },
+
+    /**
+     * Previews reference/restrict impact for a generated schema delete without
+     * mutating data.
+     * @param {*} request Method input.
+     * @param {*} callback Method input.
+     * @returns {*} Method result.
+     */
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'schmanm';
+        if (callback) {
+            FACADE.dsdName.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.dsdName.deleteImpact(request);
         }
     },
 

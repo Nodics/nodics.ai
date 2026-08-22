@@ -24,13 +24,13 @@ module.exports = {
             list: {
                 secured: false, publicAccess: true, accessGroups: ['userGroup'], apiExposure: 'commerceCustomer',
                 key: '/customer/products/discovery', method: 'GET',
-                controller: 'DefaultProductDiscoveryApiController', operation: 'list',
+                controller: 'DefaultProductDiscoveryController', operation: 'list',
                 help: { requestType: 'public', message: 'Lists customer-safe Product cards from the Product search projection.' }
             },
             detail: {
                 secured: false, publicAccess: true, accessGroups: ['userGroup'], apiExposure: 'commerceCustomer',
                 key: '/customer/products/:productCode', method: 'GET',
-                controller: 'DefaultProductDiscoveryApiController', operation: 'detail',
+                controller: 'DefaultProductDiscoveryController', operation: 'detail',
                 help: { requestType: 'public', message: 'Resolves one customer-safe Product detail projection.' }
             }
         },

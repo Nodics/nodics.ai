@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/tenant/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultTenantController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/tenant/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultTenantController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/tenant/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultTenantController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/tenant/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultTenantController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

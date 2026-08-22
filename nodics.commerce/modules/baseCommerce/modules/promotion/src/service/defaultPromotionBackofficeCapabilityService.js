@@ -44,15 +44,14 @@ module.exports = {
             navigation: [
                 d.workbench({
                     id: 'promotions',
-                    parentId: 'catalog-and-products',
-                    parentModuleName: 'product',
-                    label: 'Promotions',
+                    label: 'Promotion Workspace',
                     route: '/commerce/catalog/promotions',
                     moduleName: 'promotion',
                     schemaName: 'promotion',
-                    order: 150,
+                    order: 1300,
                     permission: 'commerce.promotion.read',
-                    summary: 'Manage promotion rules, coupons, and applied-discount evidence.',
+                    summary: 'Review promotion campaigns, discount rules, coupons, eligibility, stacking, schedules, budgets, evaluation, governance, and insights.',
+                    group: { id: 'promotions-discounts', label: 'Promotions and Discounts', order: 1300 },
                     presentation: {
                         defaultColumns: ['code', 'name', 'status', 'priority', 'validFrom', 'validTo', 'revision'],
                         hiddenFields: ['conditions', 'actions']
@@ -60,15 +59,14 @@ module.exports = {
                 }),
                 d.workbench({
                     id: 'promotions-builder',
-                    parentId: 'catalog-and-products',
-                    parentModuleName: 'product',
-                    label: 'Promotions Builder',
+                    label: 'Promotions',
                     route: '/commerce/promotions',
                     moduleName: 'promotion',
                     schemaName: 'promotion',
-                    order: 151,
+                    order: 1310,
                     permission: 'commerce.promotion.manage',
-                    summary: 'Compose, approve, schedule, coupon-budget and audit Promotion-owned campaigns.',
+                    summary: 'Compose, approve, schedule, coupon-budget and audit automatic, code-based, product, cart, order, shipping, and customer promotions.',
+                    group: { id: 'promotions-discounts', label: 'Promotions and Discounts', order: 1300 },
                     presentation: {
                         defaultColumns: ['code', 'name', 'status', 'priority', 'validFrom', 'validTo', 'revision'],
                         hiddenFields: ['conditions', 'actions', 'budget', 'approval', 'analytics']
@@ -86,6 +84,102 @@ module.exports = {
                         { id: 'promotion-budget-ledger', label: 'Budget ledger', intent: 'VALIDATE', permission: 'commerce.promotion.read', ownerModule: 'promotion', handlerAction: 'budgetLedger', operationRoute: '/backoffice/promotions/:promotionCode/budget-ledger', httpMethod: 'GET', inputFields: [promotionCodeInput], featureState: 'ACTIVE', order: 100 },
                         { id: 'promotion-analytics', label: 'Analytics', intent: 'VALIDATE', permission: 'commerce.promotion.read', ownerModule: 'promotion', handlerAction: 'analytics', operationRoute: '/backoffice/promotions/:promotionCode/analytics', httpMethod: 'GET', inputFields: [promotionCodeInput], featureState: 'ACTIVE', order: 110 }
                     ]
+                }),
+                d.workbench({
+                    id: 'discount-rules',
+                    label: 'Discount Rules',
+                    route: '/commerce/promotions/discount-rules',
+                    moduleName: 'promotion',
+                    schemaName: 'promotion',
+                    order: 1320,
+                    permission: 'commerce.promotion.read',
+                    summary: 'Planned percentage, fixed-amount, fixed-price, buy-X-get-Y, free-shipping, and bundle discount workspace.',
+                    group: { id: 'promotions-discounts', label: 'Promotions and Discounts', order: 1300 },
+                    featureState: 'DISABLED'
+                }),
+                d.workbench({
+                    id: 'coupons-promotion-codes',
+                    label: 'Coupons and Promotion Codes',
+                    route: '/commerce/promotions/coupons',
+                    moduleName: 'promotion',
+                    schemaName: 'promotion',
+                    order: 1330,
+                    permission: 'commerce.promotion.read',
+                    summary: 'Planned coupon and promotion-code workspace.',
+                    group: { id: 'promotions-discounts', label: 'Promotions and Discounts', order: 1300 },
+                    featureState: 'DISABLED'
+                }),
+                d.workbench({
+                    id: 'promotion-eligibility-qualification',
+                    label: 'Eligibility and Qualification',
+                    route: '/commerce/promotions/eligibility',
+                    moduleName: 'promotion',
+                    schemaName: 'promotion',
+                    order: 1340,
+                    permission: 'commerce.promotion.read',
+                    summary: 'Planned eligibility and qualification workspace.',
+                    group: { id: 'promotions-discounts', label: 'Promotions and Discounts', order: 1300 },
+                    featureState: 'DISABLED'
+                }),
+                d.workbench({
+                    id: 'promotion-stacking',
+                    label: 'Priority, Combination, and Stacking',
+                    route: '/commerce/promotions/stacking',
+                    moduleName: 'promotion',
+                    schemaName: 'promotion',
+                    order: 1350,
+                    permission: 'commerce.promotion.read',
+                    summary: 'Planned priority, combination, and stacking workspace.',
+                    group: { id: 'promotions-discounts', label: 'Promotions and Discounts', order: 1300 },
+                    featureState: 'DISABLED'
+                }),
+                d.workbench({
+                    id: 'promotion-schedules-budgets',
+                    label: 'Schedules and Budgets',
+                    route: '/commerce/promotions/schedules-budgets',
+                    moduleName: 'promotion',
+                    schemaName: 'promotion',
+                    order: 1360,
+                    permission: 'commerce.promotion.read',
+                    summary: 'Planned schedules and budgets workspace.',
+                    group: { id: 'promotions-discounts', label: 'Promotions and Discounts', order: 1300 },
+                    featureState: 'DISABLED'
+                }),
+                d.workbench({
+                    id: 'promotion-evaluation',
+                    label: 'Promotion Evaluation',
+                    route: '/commerce/promotions/evaluation',
+                    moduleName: 'promotion',
+                    schemaName: 'promotion',
+                    order: 1370,
+                    permission: 'commerce.promotion.read',
+                    summary: 'Planned promotion evaluation workspace.',
+                    group: { id: 'promotions-discounts', label: 'Promotions and Discounts', order: 1300 },
+                    featureState: 'DISABLED'
+                }),
+                d.workbench({
+                    id: 'promotion-governance',
+                    label: 'Promotion Governance',
+                    route: '/commerce/promotions/governance',
+                    moduleName: 'promotion',
+                    schemaName: 'promotion',
+                    order: 1380,
+                    permission: 'commerce.promotion.read',
+                    summary: 'Planned promotion governance workspace.',
+                    group: { id: 'promotions-discounts', label: 'Promotions and Discounts', order: 1300 },
+                    featureState: 'DISABLED'
+                }),
+                d.workbench({
+                    id: 'promotion-insights',
+                    label: 'Promotion Insights',
+                    route: '/commerce/promotions/insights',
+                    moduleName: 'promotion',
+                    schemaName: 'promotion',
+                    order: 1390,
+                    permission: 'commerce.promotion.read',
+                    summary: 'Planned promotion insights workspace.',
+                    group: { id: 'promotions-discounts', label: 'Promotions and Discounts', order: 1300 },
+                    featureState: 'DISABLED'
                 })
             ]
         });

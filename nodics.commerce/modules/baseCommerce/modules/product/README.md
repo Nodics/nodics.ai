@@ -25,7 +25,7 @@ generated `productSearchProjection` schema service and delegates provider-specif
 indexing to nSearch. Locale analyzer aliases remain layered configuration; Product
 does not bind itself to Elasticsearch, OpenSearch, or another search provider.
 
-`DefaultProductDiscoveryApiService` exposes customer-safe Home, PLP/Search, and
+`DefaultProductDiscoveryService` exposes customer-safe Home, PLP/Search, and
 PDP projections from `productSearchProjection`. It requires tenant, Store, and
 locale context, uses Product's `productLocalized` nSearch boundary, and returns
 only allowlisted card/detail fields. It deliberately excludes price, inventory,

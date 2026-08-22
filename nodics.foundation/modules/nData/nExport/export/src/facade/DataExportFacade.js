@@ -32,5 +32,21 @@ module.exports = {
 
     export: function (request) {
         return SERVICE.DataExportService.export(request);
+    },
+
+    /**
+
+     * Returns governed export history projection.
+
+     *
+
+     * @param {*} request Method input.
+
+     * @returns {*} Method result.
+
+     */
+
+    history: function (request) {
+        return SERVICE.DataExportService.history(request);
     }
 };

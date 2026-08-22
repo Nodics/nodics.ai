@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultCustomerReviewAcquisitionEventService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultCustomerReviewAcquisitionEventService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultCustomerReviewAcquisitionEventService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultCustomerReviewAcquisitionEventService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultCustomerReviewAcquisitionEventService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultCustomerReviewAcquisitionEventService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultCustomerReviewAcquisitionEventService.remove(request);

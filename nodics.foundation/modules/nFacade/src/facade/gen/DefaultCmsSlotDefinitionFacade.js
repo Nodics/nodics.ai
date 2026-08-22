@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultCmsSlotDefinitionService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultCmsSlotDefinitionService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultCmsSlotDefinitionService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultCmsSlotDefinitionService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultCmsSlotDefinitionService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultCmsSlotDefinitionService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultCmsSlotDefinitionService.remove(request);

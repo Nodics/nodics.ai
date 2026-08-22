@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultCustomerReviewAuthenticityEvidenceFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'customerReviewAuthenticityEvidence';
+        if (callback) {
+            FACADE.DefaultCustomerReviewAuthenticityEvidenceFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCustomerReviewAuthenticityEvidenceFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'customerReviewAuthenticityEvidence';
+        if (callback) {
+            FACADE.DefaultCustomerReviewAuthenticityEvidenceFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCustomerReviewAuthenticityEvidenceFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultCustomerReviewAuthenticityEvidenceFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'customerReviewAuthenticityEvidence';
+        if (callback) {
+            FACADE.DefaultCustomerReviewAuthenticityEvidenceFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCustomerReviewAuthenticityEvidenceFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

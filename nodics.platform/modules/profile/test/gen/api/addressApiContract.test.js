@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/address/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultAddressController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/address/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultAddressController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/address/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultAddressController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/address/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultAddressController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

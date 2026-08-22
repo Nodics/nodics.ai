@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultEditorialTaxonomyTermService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultEditorialTaxonomyTermService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultEditorialTaxonomyTermService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultEditorialTaxonomyTermService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultEditorialTaxonomyTermService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultEditorialTaxonomyTermService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultEditorialTaxonomyTermService.remove(request);

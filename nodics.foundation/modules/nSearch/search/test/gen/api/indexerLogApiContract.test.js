@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/indexerlog/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultIndexerLogController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/indexerlog/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultIndexerLogController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/indexerlog/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultIndexerLogController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/indexerlog/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultIndexerLogController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

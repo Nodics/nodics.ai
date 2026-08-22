@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultProcessAuditEventFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'processAuditEvent';
+        if (callback) {
+            FACADE.DefaultProcessAuditEventFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultProcessAuditEventFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'processAuditEvent';
+        if (callback) {
+            FACADE.DefaultProcessAuditEventFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultProcessAuditEventFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultProcessAuditEventFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'processAuditEvent';
+        if (callback) {
+            FACADE.DefaultProcessAuditEventFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultProcessAuditEventFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

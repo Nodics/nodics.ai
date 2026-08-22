@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/usergroup/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultUserGroupController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/usergroup/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultUserGroupController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/usergroup/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultUserGroupController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/usergroup/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultUserGroupController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

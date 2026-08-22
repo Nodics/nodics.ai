@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultInventoryReservationService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultInventoryReservationService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultInventoryReservationService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultInventoryReservationService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultInventoryReservationService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultInventoryReservationService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultInventoryReservationService.remove(request);

@@ -14,7 +14,7 @@ const capability = {
     "enabled": true,
     "capabilityId": "customer-engagement-customerReview",
     "displayName": "Customer Reviews",
-    "category": "customer-experience",
+    "category": "organization",
     "icon": "feedback",
     "contractVersion": 1,
     "minimumClientContractVersion": 1,
@@ -27,7 +27,7 @@ const capability = {
     "navigation": [
         {
             "id": "customer-reviews",
-            "parentId": "customer-engagement",
+            "parentId": "reviews-reputation",
             "label": "Customer Reviews",
             "route": "/engagement/customer-reviews",
             "icon": "rate_review",
@@ -135,7 +135,7 @@ const capability = {
         },
         {
             "id": "review-moderation",
-            "parentId": "customer-engagement",
+            "parentId": "reviews-reputation",
             "label": "Review Moderation",
             "route": "/engagement/review-moderation",
             "icon": "policy",
@@ -182,7 +182,7 @@ const capability = {
         },
         {
             "id": "review-responses",
-            "parentId": "customer-engagement",
+            "parentId": "reviews-reputation",
             "label": "Business Responses",
             "route": "/engagement/review-responses",
             "icon": "forum",
@@ -225,7 +225,7 @@ const capability = {
         },
         {
             "id": "review-abuse",
-            "parentId": "customer-engagement",
+            "parentId": "reviews-reputation",
             "label": "Review Abuse & Appeals",
             "route": "/engagement/review-abuse",
             "icon": "report",
@@ -269,7 +269,7 @@ const capability = {
         },
         {
             "id": "review-publications",
-            "parentId": "customer-engagement",
+            "parentId": "reviews-reputation",
             "label": "Published Reviews",
             "route": "/engagement/review-publications",
             "icon": "public",
@@ -317,7 +317,7 @@ const capability = {
         },
         {
             "id": "review-aggregates",
-            "parentId": "customer-engagement",
+            "parentId": "reviews-reputation",
             "label": "Rating Aggregates",
             "route": "/engagement/review-aggregates",
             "icon": "analytics",
@@ -366,7 +366,7 @@ const capability = {
         },
         {
             "id": "review-requests",
-            "parentId": "customer-engagement",
+            "parentId": "reviews-reputation",
             "label": "Review Requests",
             "route": "/engagement/review-requests",
             "icon": "outgoing_mail",
@@ -412,7 +412,7 @@ const capability = {
         },
         {
             "id": "review-syndication",
-            "parentId": "customer-engagement",
+            "parentId": "reviews-reputation",
             "label": "Review Syndication",
             "route": "/engagement/review-syndication",
             "icon": "sync_alt",

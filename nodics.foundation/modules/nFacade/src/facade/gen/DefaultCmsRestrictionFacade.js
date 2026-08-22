@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultCmsRestrictionService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultCmsRestrictionService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultCmsRestrictionService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultCmsRestrictionService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultCmsRestrictionService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultCmsRestrictionService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultCmsRestrictionService.remove(request);

@@ -101,6 +101,20 @@ module.exports = {
     },
 
     /**
+     * Resolves the shared safe-query translator used by Schema Workbench.
+     * Workbench must not own a separate browser query framework; generated CRUD
+     * and schema-driven BackOffice screens should converge on this reusable
+     * nDatabase contract.
+     * @returns {Object|undefined} Shared schema safe-query service.
+     */
+    schemaSafeQueryService: function () {
+        if (typeof SERVICE !== 'undefined' && SERVICE.DefaultSchemaSafeQueryService && SERVICE.DefaultSchemaSafeQueryService !== this) {
+            return SERVICE.DefaultSchemaSafeQueryService;
+        }
+        return undefined;
+    },
+
+    /**
      * Resolves the active schema-owning module and its effective schemas.
      * API modules may expose a public prefix for a semantic module whose schemas
      * are contributed by another implementation module. Schema Workbench follows
@@ -614,6 +628,11 @@ module.exports = {
      * @returns {Object} Generated read input.
      */
     buildSearchInput: function (body, descriptor) {
+        let safeQueryService = this.schemaSafeQueryService();
+        if (safeQueryService && typeof safeQueryService.buildSearchInput === 'function') {
+            return safeQueryService.buildSearchInput(body, descriptor);
+        }
+        body = this.normalizeSearchBody(body);
         let workbenchConfig = CONFIG.get('schemaWorkbench') || {};
         let capabilities = descriptor.queryCapabilities;
         let search = typeof body.search === 'string' ? body.search.trim() : '';
@@ -663,11 +682,32 @@ module.exports = {
     },
 
     /**
+     * Accepts both the original direct Workbench search body and the Axis
+     * client envelope `{ query: ... }` so browser-visible filters and search
+     * text cannot be silently bypassed by a transport shape mismatch.
+     * @param {Object|undefined} body Request body.
+     * @returns {Object} Normalized bounded search body.
+     */
+    normalizeSearchBody: function (body) {
+        if (!body || typeof body !== 'object' || Array.isArray(body)) {
+            return {};
+        }
+        if (body.query && typeof body.query === 'object' && !Array.isArray(body.query)) {
+            return body.query;
+        }
+        return body;
+    },
+
+    /**
      * Builds an inclusive record projection from descriptor-safe fields.
      * @param {Object} descriptor Client-safe Workbench descriptor.
      * @returns {Object} Generated service projection.
      */
     buildRecordProjection: function (descriptor) {
+        let safeQueryService = this.schemaSafeQueryService();
+        if (safeQueryService && typeof safeQueryService.buildRecordProjection === 'function') {
+            return safeQueryService.buildRecordProjection(descriptor);
+        }
         let projection = { _id: 0 };
         let fieldNames = (descriptor.fields || []).filter((field) => field && field.name).map((field) => field.name);
         let presentationFields = [descriptor.displayProperty].concat(descriptor.displayProperties || []).filter((name) => {
@@ -697,6 +737,10 @@ module.exports = {
      * @returns {boolean} True when the field path is safe to request.
      */
     isSafeProjectionField: function (name) {
+        let safeQueryService = this.schemaSafeQueryService();
+        if (safeQueryService && typeof safeQueryService.isSafeProjectionField === 'function') {
+            return safeQueryService.isSafeProjectionField(name);
+        }
         if (typeof name !== 'string' || !name || name === '_id') {
             return false;
         }

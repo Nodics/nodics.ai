@@ -31,16 +31,14 @@ const capability = {
     "navigation": [
         {
             "id": "media-management",
-            "parentId": "cms",
-            "parentModuleName": "cms",
-            "label": "Media Management",
+            "label": "Media Workspace",
             "route": "/media",
             "icon": "media",
-            "order": 260,
+            "order": 300,
             "group": {
-                "id": "content",
-                "label": "Content and Experience",
-                "order": 200
+                "id": "media-management",
+                "label": "Media Management",
+                "order": 300
             },
             "perspectives": [
                 "operations"
@@ -51,7 +49,7 @@ const capability = {
                 "enterprise"
             ],
             "help": {
-                "summary": "Manage governed media files, folders, formats, sets, usage references, and delivery through media-owned lifecycle policies.",
+                "summary": "Review governed media overview, upload entry points, recent uploads, attention states, provider health, usage alerts, and lifecycle signals.",
                 "documentationRoute": "/docs/reference/media",
                 "documentationFragment": "what-media-means-in-nodics"
             },
@@ -61,16 +59,220 @@ const capability = {
             ]
         },
         {
-            "id": "media",
+            "id": "media-library",
+            "label": "Media Library",
+            "route": "/media/library",
+            "icon": "media",
+            "order": 310,
+            "group": {
+                "id": "media-management",
+                "label": "Media Management",
+                "order": 300
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "help": {
+                "summary": "Search, filter, upload, preview, inspect, download, retire, restore, and classify governed media assets.",
+                "documentationRoute": "/docs/reference/media",
+                "documentationFragment": "current-implementation-scope"
+            },
+            "featureState": "PREVIEW",
+            "requiredPermissions": [
+                "media.storage.policy.view"
+            ]
+        },
+        {
+            "id": "media-overview",
             "parentId": "media-management",
-            "label": "Media",
+            "label": "Media Overview",
+            "route": "/media#overview",
+            "icon": "dashboard",
+            "order": 261,
+            "group": {
+                "id": "media-management",
+                "label": "Media Management",
+                "order": 300
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "DISABLED",
+            "requiredPermissions": [
+                "media.storage.policy.view"
+            ]
+        },
+        {
+            "id": "upload-media",
+            "parentId": "media-management",
+            "label": "Upload Media",
+            "route": "/media#upload",
+            "icon": "upload",
+            "order": 262,
+            "group": {
+                "id": "media-management",
+                "label": "Media Management",
+                "order": 300
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "DISABLED",
+            "requiredPermissions": [
+                "media.storage.policy.view"
+            ]
+        },
+        {
+            "id": "recently-uploaded-media",
+            "parentId": "media-management",
+            "label": "Recently Uploaded",
+            "route": "/media#recently-uploaded",
+            "icon": "history",
+            "order": 263,
+            "group": {
+                "id": "media-management",
+                "label": "Media Management",
+                "order": 300
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "DISABLED",
+            "requiredPermissions": [
+                "media.storage.policy.view"
+            ]
+        },
+        {
+            "id": "media-needing-attention",
+            "parentId": "media-management",
+            "label": "Media Needing Attention",
+            "route": "/media#attention",
+            "icon": "validation",
+            "order": 264,
+            "group": {
+                "id": "media-management",
+                "label": "Media Management",
+                "order": 300
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "DISABLED",
+            "requiredPermissions": [
+                "media.storage.policy.view"
+            ]
+        },
+        {
+            "id": "inactive-retired-media",
+            "parentId": "media-management",
+            "label": "Inactive or Retired Media",
+            "route": "/media#inactive-retired",
+            "icon": "archive",
+            "order": 265,
+            "group": {
+                "id": "media-management",
+                "label": "Media Management",
+                "order": 300
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "DISABLED",
+            "requiredPermissions": [
+                "media.storage.policy.view"
+            ]
+        },
+        {
+            "id": "media-provider-health",
+            "parentId": "media-management",
+            "label": "Storage and Provider Health",
+            "route": "/media#provider-health",
+            "icon": "health",
+            "order": 266,
+            "group": {
+                "id": "media-management",
+                "label": "Media Management",
+                "order": 300
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "DISABLED",
+            "requiredPermissions": [
+                "media.storage.policy.view"
+            ]
+        },
+        {
+            "id": "media-lifecycle-alerts",
+            "parentId": "media-management",
+            "label": "Usage and Lifecycle Alerts",
+            "route": "/media#lifecycle-alerts",
+            "icon": "validation",
+            "order": 267,
+            "group": {
+                "id": "media-management",
+                "label": "Media Management",
+                "order": 300
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "DISABLED",
+            "requiredPermissions": [
+                "media.storage.policy.view"
+            ]
+        },
+        {
+            "id": "media",
+            "parentId": "media-library",
+            "label": "All Media",
             "route": "/media/items",
             "icon": "media",
             "order": 261,
             "group": {
-                "id": "content",
-                "label": "Content and Experience",
-                "order": 200
+                "id": "media-management",
+                "label": "Media Management",
+                "order": 300
             },
             "perspectives": [
                 "operations"
@@ -93,15 +295,14 @@ const capability = {
         },
         {
             "id": "media-folders",
-            "parentId": "media-management",
-            "label": "Media Folders",
+            "label": "Folders and Intake Policies",
             "route": "/media/folders",
             "icon": "folder",
-            "order": 262,
+            "order": 320,
             "group": {
-                "id": "content",
-                "label": "Content and Experience",
-                "order": 200
+                "id": "media-management",
+                "label": "Media Management",
+                "order": 300
             },
             "perspectives": [
                 "operations"
@@ -124,15 +325,14 @@ const capability = {
         },
         {
             "id": "media-sets",
-            "parentId": "media-management",
-            "label": "Media Sets",
+            "label": "Media Sets and Galleries",
             "route": "/media/sets",
             "icon": "gallery",
-            "order": 263,
+            "order": 340,
             "group": {
-                "id": "content",
-                "label": "Content and Experience",
-                "order": 200
+                "id": "media-management",
+                "label": "Media Management",
+                "order": 300
             },
             "perspectives": [
                 "operations"
@@ -154,15 +354,14 @@ const capability = {
         },
         {
             "id": "media-formats",
-            "parentId": "media-management",
-            "label": "Media Formats",
+            "label": "Formats and Variants",
             "route": "/media/formats",
             "icon": "format",
-            "order": 264,
+            "order": 330,
             "group": {
-                "id": "content",
-                "label": "Content and Experience",
-                "order": 200
+                "id": "media-management",
+                "label": "Media Management",
+                "order": 300
             },
             "perspectives": [
                 "operations"
@@ -185,15 +384,14 @@ const capability = {
         },
         {
             "id": "media-usage",
-            "parentId": "media-management",
-            "label": "Media Usage",
+            "label": "Usage and References",
             "route": "/media/usage",
             "icon": "reference",
-            "order": 265,
+            "order": 350,
             "group": {
-                "id": "content",
-                "label": "Content and Experience",
-                "order": 200
+                "id": "media-management",
+                "label": "Media Management",
+                "order": 300
             },
             "perspectives": [
                 "operations"
@@ -215,15 +413,14 @@ const capability = {
         },
         {
             "id": "storage-delivery",
-            "parentId": "media-management",
             "label": "Storage and Delivery",
             "route": "/media/storage-delivery",
             "icon": "storage",
-            "order": 266,
+            "order": 360,
             "group": {
-                "id": "content",
-                "label": "Content and Experience",
-                "order": 200
+                "id": "media-management",
+                "label": "Media Management",
+                "order": 300
             },
             "perspectives": [
                 "operations"

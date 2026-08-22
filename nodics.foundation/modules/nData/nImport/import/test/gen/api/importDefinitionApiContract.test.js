@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/importdefinition/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultImportDefinitionController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/importdefinition/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultImportDefinitionController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/importdefinition/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultImportDefinitionController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/importdefinition/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultImportDefinitionController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

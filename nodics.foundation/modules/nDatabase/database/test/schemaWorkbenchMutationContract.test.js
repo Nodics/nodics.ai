@@ -73,6 +73,7 @@ global.NODICS = {
 };
 global.UTILS = { createModelName: () => 'addressModel' };
 global.SERVICE = {
+    DefaultSchemaUtilityService: require('../src/service/schema/defaultSchemaUtilityService'),
     DefaultSchemaAccessHandlerService: { getAccessPoint: () => 10 },
     DefaultAddressService: {
         remove: input => {
@@ -105,6 +106,7 @@ global.CLASSES = {
 };
 
 const service = require('../src/service/schema/defaultSchemaWorkbenchService');
+global.SERVICE.DefaultSchemaWorkbenchService = service;
 const request = {
     moduleName: 'profile',
     tenant: 'default',
@@ -124,6 +126,16 @@ const request = {
     assert.strictEqual(inspected.schemaModel, schemaModel);
     assert.deepStrictEqual(inspected.query, { code: 'DXB' });
     assert.strictEqual(inspected.tenant, 'default');
+    let generatedImpact = await global.SERVICE.DefaultSchemaUtilityService.deleteImpactGenerated({
+        ...request,
+        moduleName: 'profile',
+        schemaName: 'address',
+        schemaModel: schemaModel,
+        utilityBody: { identity: { code: 'DXB' } }
+    });
+    assert.strictEqual(generatedImpact.data.blocked, false);
+    assert.strictEqual(inspected.schemaModel, schemaModel);
+    assert.deepStrictEqual(inspected.query, { code: 'DXB' });
 
     await service.deleteRecord({
         ...request,

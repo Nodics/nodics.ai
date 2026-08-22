@@ -62,6 +62,42 @@ module.exports = {
     },
 
     /**
+     * Executes schema-driven browser-safe search through the shared nDatabase
+     * safe-query translator and this generated service's normal get pipeline.
+     *
+     * @param {Object} request Generated service request.
+     * @returns {Promise<Object>} Paged generated service response.
+     */
+    safeSearch: function (request) {
+        let moduleName = request.moduleName || 'mdulnm';
+        request.schemaModel = NODICS.getModels(moduleName, request.tenant).mdlnm;
+        request.moduleName = moduleName;
+        request.schemaName = request.schemaName || 'schmanm';
+        request.generatedServiceName = 'srvcName';
+        if (!SERVICE.DefaultSchemaSafeQueryService || typeof SERVICE.DefaultSchemaSafeQueryService.searchGenerated !== 'function') {
+            return Promise.reject(new CLASSES.NodicsError('ERR_DBS_00004', 'Generated safe search service is not available'));
+        }
+        return SERVICE.DefaultSchemaSafeQueryService.searchGenerated(request);
+    },
+
+    /**
+     * Returns browser-safe generated schema capabilities.
+     *
+     * @param {Object} request Generated service request.
+     * @returns {Promise<Object>} Client-safe schema descriptor.
+     */
+    capabilities: function (request) {
+        let moduleName = request.moduleName || 'mdulnm';
+        request.schemaModel = NODICS.getModels(moduleName, request.tenant).mdlnm;
+        request.moduleName = moduleName;
+        request.schemaName = request.schemaName || 'schmanm';
+        if (!SERVICE.DefaultSchemaUtilityService || typeof SERVICE.DefaultSchemaUtilityService.capabilitiesGenerated !== 'function') {
+            return Promise.reject(new CLASSES.NodicsError('ERR_DBS_00004', 'Generated schema utility service is not available'));
+        }
+        return SERVICE.DefaultSchemaUtilityService.capabilitiesGenerated(request);
+    },
+
+    /**
      * Executes schema-driven get by id.
      *
      * @param {string} id Model id.
@@ -130,6 +166,23 @@ module.exports = {
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).mdlnm;
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelsRemoveInitializerPipeline', request, {});
+    },
+
+    /**
+     * Executes generated schema delete-impact preview without mutating data.
+     *
+     * @param {Object} request Generated service request.
+     * @returns {Promise<Object>} Safe delete-impact response.
+     */
+    deleteImpact: function (request) {
+        let moduleName = request.moduleName || 'mdulnm';
+        request.schemaModel = NODICS.getModels(moduleName, request.tenant).mdlnm;
+        request.moduleName = moduleName;
+        request.schemaName = request.schemaName || 'schmanm';
+        if (!SERVICE.DefaultSchemaUtilityService || typeof SERVICE.DefaultSchemaUtilityService.deleteImpactGenerated !== 'function') {
+            return Promise.reject(new CLASSES.NodicsError('ERR_DBS_00004', 'Generated schema utility service is not available'));
+        }
+        return SERVICE.DefaultSchemaUtilityService.deleteImpactGenerated(request);
     },
 
     /**

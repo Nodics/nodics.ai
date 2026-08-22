@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultDiscoveryIndexConfigurationService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultDiscoveryIndexConfigurationService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultDiscoveryIndexConfigurationService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultDiscoveryIndexConfigurationService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultDiscoveryIndexConfigurationService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultDiscoveryIndexConfigurationService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultDiscoveryIndexConfigurationService.remove(request);

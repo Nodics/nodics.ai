@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultWorkflow2SchemaFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'workflow2Schema';
+        if (callback) {
+            FACADE.DefaultWorkflow2SchemaFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultWorkflow2SchemaFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'workflow2Schema';
+        if (callback) {
+            FACADE.DefaultWorkflow2SchemaFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultWorkflow2SchemaFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultWorkflow2SchemaFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'workflow2Schema';
+        if (callback) {
+            FACADE.DefaultWorkflow2SchemaFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultWorkflow2SchemaFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

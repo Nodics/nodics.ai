@@ -14,7 +14,7 @@ const capability = {
     "enabled": true,
     "capabilityId": "customer-engagement-contactSubmission",
     "displayName": "Contact Submissions",
-    "category": "customer-experience",
+    "category": "organization",
     "icon": "feedback",
     "contractVersion": 1,
     "minimumClientContractVersion": 1,
@@ -33,9 +33,9 @@ const capability = {
             "icon": "inbox",
             "order": 510,
             "group": {
-                "id": "customer-experience",
-                "label": "Customer Experience",
-                "order": 300
+                "id": "organization",
+                "label": "Customers and Organisation",
+                "order": 400
             },
             "perspectives": [
                 "operations"
@@ -190,9 +190,9 @@ const capability = {
             "icon": "sync_problem",
             "order": 520,
             "group": {
-                "id": "customer-experience",
-                "label": "Customer Experience",
-                "order": 300
+                "id": "organization",
+                "label": "Customers and Organisation",
+                "order": 400
             },
             "perspectives": [
                 "operations"

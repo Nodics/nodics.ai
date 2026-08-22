@@ -65,8 +65,6 @@ const capability = {
     "navigation": [
         {
             "id": "documentation-nodics-axis",
-            "parentId": "documentation",
-            "parentModuleName": "backoffice",
             "label": "Nodics Axis",
             "route": "/docs/nodics-axis",
             "icon": "content",
@@ -74,7 +72,7 @@ const capability = {
             "group": {
                 "id": "documentation",
                 "label": "Documentation",
-                "order": 650
+                "order": 1600
             },
             "perspectives": [
                 "operations"

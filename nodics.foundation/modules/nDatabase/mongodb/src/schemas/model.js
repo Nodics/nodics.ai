@@ -41,17 +41,73 @@ module.exports = {
 },
 
         /**
+         * Resolves schema-declared date fields for generated MongoDB writes.
+         */
+        dateFieldNames: function () {
+    let definition = this.rawSchema && this.rawSchema.definition ? this.rawSchema.definition : {};
+    return Object.keys(definition).filter(key => {
+        let descriptor = definition[key] || {};
+        return String(descriptor.type || '').toLowerCase() === 'date';
+    });
+},
+
+        /**
+         * Coerces JSON date strings into BSON Date values for schema date fields.
+         */
+        normalizeDateValue: function (value) {
+    if (value instanceof Date) return value;
+    if (typeof value !== 'string') return value;
+    let trimmed = value.trim();
+    if (!trimmed) return value;
+    let parsed = Date.parse(trimmed);
+    return Number.isFinite(parsed) ? new Date(parsed) : value;
+},
+
+        /**
+         * Coerces schema-declared date properties in a plain object.
+         */
+        normalizeDateFields: function (model) {
+    if (!model || typeof model !== 'object' || Array.isArray(model)) return model;
+    let dateFields = this.dateFieldNames();
+    if (dateFields.length === 0) return model;
+    let normalized = Object.assign({}, model);
+    dateFields.forEach(field => {
+        if (Object.prototype.hasOwnProperty.call(normalized, field)) {
+            normalized[field] = this.normalizeDateValue(normalized[field]);
+        }
+    });
+    return normalized;
+},
+
+        /**
+         * Coerces schema-declared date fields in generated save and update payloads.
+         */
+        normalizeModelForWrite: function (model) {
+    if (!this.isMongoUpdateOperatorPayload(model)) return this.normalizeDateFields(model);
+    let normalized = Object.assign({}, model);
+    if (normalized.$set && typeof normalized.$set === 'object' && !Array.isArray(normalized.$set)) {
+        normalized.$set = this.normalizeDateFields(normalized.$set);
+    }
+    let dateFields = this.dateFieldNames();
+    Object.keys(normalized).forEach(key => {
+        if (key.indexOf('$') !== 0 && dateFields.indexOf(key) >= 0) normalized[key] = this.normalizeDateValue(normalized[key]);
+    });
+    return normalized;
+},
+
+        /**
          * Builds the MongoDB update document for a model payload.
          */
         buildUpdateDocument: function (model) {
-    if (!this.isMongoUpdateOperatorPayload(model)) return { $set: model };
-    return Object.keys(model).reduce((updateDocument, key) => {
+    let normalizedModel = this.normalizeModelForWrite(model);
+    if (!this.isMongoUpdateOperatorPayload(normalizedModel)) return { $set: normalizedModel };
+    return Object.keys(normalizedModel).reduce((updateDocument, key) => {
         if (key.indexOf('$') === 0) {
             updateDocument[key] = key === '$set'
-                ? Object.assign({}, updateDocument[key] || {}, model[key] || {})
-                : model[key];
+                ? Object.assign({}, updateDocument[key] || {}, normalizedModel[key] || {})
+                : normalizedModel[key];
         } else {
-            updateDocument.$set = Object.assign({}, updateDocument.$set || {}, { [key]: model[key] });
+            updateDocument.$set = Object.assign({}, updateDocument.$set || {}, { [key]: normalizedModel[key] });
         }
         return updateDocument;
     }, {});
@@ -79,31 +135,27 @@ module.exports = {
                         cursor = cursor.sort(input.searchOptions.sort);
                     }
                     if (input.transactionContext) {
-                        cursor.toArray((error, result) => {
-                            if (error) {
-                                reject(new CLASSES.NodicsError(error, null, 'ERR_MDL_00000'));
-                            } else {
+                        cursor.toArray().then(result => {
+                            resolve({
+                                options: input.searchOptions,
+                                query: input.query,
+                                count: result.length,
+                                result: result
+                            });
+                        }).catch(error => {
+                            reject(new CLASSES.NodicsError(error, null, 'ERR_MDL_00000'));
+                        });
+                    } else {
+                        this.countDocuments(input.query).then(count => {
+                            cursor.toArray().then(result => {
                                 resolve({
                                     options: input.searchOptions,
                                     query: input.query,
-                                    count: result.length,
+                                    count: count,
                                     result: result
                                 });
-                            }
-                        });
-                    } else {
-                        cursor.count().then(count => {
-                            cursor.toArray((error, result) => {
-                                if (error) {
-                                    reject(new CLASSES.NodicsError(error, null, 'ERR_MDL_00000'));
-                                } else {
-                                    resolve({
-                                        options: input.searchOptions,
-                                        query: input.query,
-                                        count: count,
-                                        result: result
-                                    });
-                                }
+                            }).catch(error => {
+                                reject(new CLASSES.NodicsError(error, null, 'ERR_MDL_00000'));
                             });
                         }).catch(error => {
                             reject(new CLASSES.NodicsError(error, 'While executing count operation', 'ERR_MDL_00000'));
@@ -125,6 +177,7 @@ module.exports = {
                     reject(new CLASSES.NodicsError('ERR_MDL_00001'));
                 } else if (input.query && !UTILS.isBlank(input.query)) {
                     try {
+                        input.model = this.normalizeModelForWrite(input.model);
                         this.findOneAndUpdate(input.query,
                             {
                                 $set: input.model
@@ -150,6 +203,7 @@ module.exports = {
                     }
                 } else {
                     try {
+                        input.model = this.normalizeModelForWrite(input.model);
                         SERVICE.DefaultModelValidatorService.validateMandate(input.model, this.rawSchema).then((success) => {
                             return SERVICE.DefaultModelValidatorService.validateDataType(input.model, this.rawSchema);
                         }).then((success) => {

@@ -46,7 +46,8 @@ module.exports = {
                 },
                 operations: ['validateDraftComposition', 'saveDraftComposition', 'addSection', 'updateSection', 'deleteSection',
                     'reorderSection', 'addComponent', 'updateComponent', 'deleteComponent', 'reorderComponent',
-                    'associateMedia', 'detachMedia', 'assignRoute', 'assignNavigation', 'validatePublishReadiness'],
+                    'associateMedia', 'detachMedia', 'assignRoute', 'assignNavigation', 'validatePublishReadiness',
+                    'submitForPublication'],
                 rules: {
                     catalogFirst: true,
                     arbitrarySlots: true,
@@ -187,6 +188,68 @@ module.exports = {
         return { result: Object.assign({ valid: true, status: 'READY_TO_PUBLISH' }, evidence) };
     },
 
+    /** Submits one saved Page Designer route version to CMS/nPublish governance. */
+    submitForPublication: async function (request) {
+        let draft = this.normalizeDraft(request.cmsDesigner || request.body || {});
+        let readiness = await this.validatePublishReadiness(Object.assign({}, request, { cmsDesigner: draft }));
+        let routeIntent = this.routeIntent(draft);
+        let route = await this.resolveSavedRouteVersion(request, routeIntent);
+        let sourceVersion = route.versionId === undefined ? route.revision : route.versionId;
+        if (sourceVersion === undefined || sourceVersion === null) {
+            throw this.error('ERR_CMS_00106', 'Saved CMS route version is required before submitting to Publishing');
+        }
+        let publicationCode = ['cms', route.site, route.code, sourceVersion].filter(Boolean).join('-');
+        let publication = {
+            code: publicationCode,
+            domain: 'cms',
+            rootType: 'pageRoute',
+            rootCode: route.code,
+            sourceVersion: String(sourceVersion),
+            siteCode: route.site,
+            catalogCode: draft.catalogCode
+        };
+        let lifecycle = this.service('DefaultPublicationLifecycleService');
+        let created = await lifecycle.create(Object.assign({}, request, {
+            publication: publication,
+            reason: 'Axis Page Designer submit to Publishing'
+        }));
+        let validated = await lifecycle.validate(Object.assign({}, request, {
+            publicationCode: created.code,
+            expectedRevision: created.revision,
+            reason: 'Axis Page Designer publish-readiness validation'
+        }));
+        let pending = await lifecycle.requestApproval(Object.assign({}, request, {
+            publicationCode: validated.code,
+            expectedRevision: validated.revision,
+            reason: 'Axis Page Designer request approval'
+        }));
+        return { result: { status: pending.state || 'PENDING_APPROVAL',
+            publication: pending, readiness: readiness.result,
+            route: { code: route.code, site: route.site, path: route.path,
+                locale: route.locale, channel: route.channel, versionId: route.versionId } } };
+    },
+
+    /** Resolves the exact saved route version for a Page Designer draft. */
+    resolveSavedRouteVersion: async function (request, routeIntent) {
+        let routes = await this.safeGet('DefaultCmsPageRouteService', request, {
+            code: routeIntent.code,
+            active: true
+        });
+        if (!routes.length) {
+            routes = await this.safeGet('DefaultCmsPageRouteService', request, {
+                site: routeIntent.site,
+                path: routeIntent.path,
+                locale: routeIntent.locale,
+                channel: routeIntent.channel,
+                active: true
+            });
+        }
+        if (!routes.length) throw this.error('ERR_CMS_00106', 'Save the CMS route before submitting the draft to Publishing');
+        routes = routes.filter(route => route.code === routeIntent.code || route.path === routeIntent.path);
+        if (!routes.length) throw this.error('ERR_CMS_00106', 'Saved CMS route does not match the draft route intent');
+        return routes.sort((left, right) => Number(right.versionId || right.revision || 0) - Number(left.versionId || left.revision || 0))[0];
+    },
+
     /** Normalizes the complete Catalog-first draft envelope. */
     normalizeDraft: function (input) {
         let draft = input && typeof input === 'object' && !Array.isArray(input) ? input : {};
@@ -300,7 +363,7 @@ module.exports = {
         if (SERVICE.DefaultCmsContentLocalizationService) {
             SERVICE.DefaultCmsContentLocalizationService.validateTypeContract(typeCode);
             component.localizations.forEach(localization => SERVICE.DefaultCmsContentLocalizationService.validateVariant(
-                localization, typeCode, component));
+                Object.assign({ componentCode: component.code }, localization), typeCode, component));
         }
         if (Array.isArray(slot.allowedComponentTypes) && slot.allowedComponentTypes.length &&
             !slot.allowedComponentTypes.includes(component.typeCode)) {
@@ -340,12 +403,12 @@ module.exports = {
         return {
             code: draft.page.code,
             name: draft.page.name,
+            active: true,
             cmsSite: [draft.siteCode],
             typeCode: draft.page.typeCode,
             template: draft.templateCode,
             renderer: draft.page.renderer,
-            cmsComponents: draft.sections.flatMap(section => section.components.map(component =>
-                this.sectionCode(draft.page.code, section, component)))
+            cmsComponents: []
         };
     },
 
@@ -353,6 +416,7 @@ module.exports = {
     componentModel: function (component) {
         return {
             code: component.code,
+            active: true,
             typeCode: component.typeCode,
             renderer: component.renderer,
             properties: component.properties,
@@ -369,6 +433,7 @@ module.exports = {
             locale: localization.locale,
             properties: localization.properties,
             seo: localization.seo,
+            active: true,
             status: localization.status || 'DRAFT'
         };
     },
@@ -380,6 +445,7 @@ module.exports = {
             source: draft.page.code,
             target: component.code,
             slot: section.slot,
+            active: true,
             index: Number.isInteger(Number(section.index)) ? Number(section.index) : sectionIndex + componentIndex
         };
     },
@@ -397,6 +463,7 @@ module.exports = {
             role: safe.role || 'primary',
             slot: safe.slot || 'default',
             localeCode: safe.localeCode,
+            active: true,
             position: Number.isInteger(Number(safe.position)) ? Number(safe.position) : index,
             altText: safe.altText,
             caption: safe.caption
@@ -417,6 +484,7 @@ module.exports = {
             routeType: route.routeType || 'PAGE',
             redirectPath: route.redirectPath,
             deliveryState: route.deliveryState || 'DRAFT',
+            active: true,
             accessMode: route.accessMode || 'AUTHENTICATED'
         };
     },
@@ -438,6 +506,7 @@ module.exports = {
             externalUrl: navigation.externalUrl,
             position: Number.isInteger(Number(navigation.position)) ? Number(navigation.position) : 100,
             status: navigation.status || 'ACTIVE',
+            active: true,
             locale: navigation.locale || 'default',
             channel: navigation.channel || 'web',
             restrictions: Array.isArray(navigation.restrictions) ? navigation.restrictions : []
@@ -476,8 +545,14 @@ module.exports = {
     /** Saves one record through an existing generated service. */
     saveRecord: async function (serviceName, request, model) {
         let service = this.service(serviceName);
-        let response = await service.save({ tenant: request.tenant, authData: request.authData, model: model });
-        return this.firstResult(response) || model;
+        try {
+            let response = await service.save({ tenant: request.tenant, authData: request.authData, model: model });
+            return this.firstResult(response) || model;
+        } catch (error) {
+            let message = serviceName + ' failed to save ' + (model && model.code ? model.code : 'draft record') +
+                ': ' + (error && error.message ? error.message : error);
+            throw this.error('ERR_CMS_00100', message);
+        }
     },
 
     /** Removes one record through an existing generated service. */
@@ -696,16 +771,19 @@ module.exports = {
             maximumReferenceLookupItems: 100,
             requireNavigationForPublish: false,
             draftDefaults: {
-                catalogCode: 'documentationContentCatalog',
-                siteCode: 'axisDocumentationSite',
-                templateCode: 'articleTemplate',
-                pageTypeCode: 'documentationPageType',
-                pageRenderer: 'axis.documentationPage',
-                routePath: '/docs/home',
-                slots: ['navigation', 'article', 'relatedResources']
+                accessMode: 'PUBLIC',
+                catalogCode: 'nexusContentCatalog',
+                siteCode: 'nexusCorporateSite',
+                templateCode: 'nexusCorporatePageTemplate',
+                pageTypeCode: 'nexusCorporateStandardPageType',
+                pageRenderer: 'nexus.page.standard',
+                routePath: '/axis-e2e/content-designer-draft',
+                slots: ['main']
             },
             componentKinds: [
-                { label: 'Hero banner', typeCode: 'heroBannerComponentType', renderer: 'axis.heroBanner' },
+                { label: 'Nexus hero', typeCode: 'nexusPageHeroType', renderer: 'nexus.hero' },
+                { label: 'Nexus content section', typeCode: 'nexusContentSectionType', renderer: 'nexus.contentSection' },
+                { label: 'Nexus card grid', typeCode: 'nexusCardGridType', renderer: 'nexus.cardGrid' },
                 { label: 'Rich text', typeCode: 'richTextComponentType', renderer: 'axis.richText' },
                 { label: 'Image card', typeCode: 'imageCardComponentType', renderer: 'axis.imageCard' },
                 { label: 'Media gallery', typeCode: 'mediaGalleryComponentType', renderer: 'axis.mediaGallery' },

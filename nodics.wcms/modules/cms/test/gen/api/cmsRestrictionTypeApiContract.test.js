@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/cmsrestrictiontype/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsRestrictionTypeController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/cmsrestrictiontype/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsRestrictionTypeController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/cmsrestrictiontype/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultCmsRestrictionTypeController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/cmsrestrictiontype/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsRestrictionTypeController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

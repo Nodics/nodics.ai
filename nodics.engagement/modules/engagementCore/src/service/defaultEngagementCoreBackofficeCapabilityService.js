@@ -14,7 +14,7 @@ const capability = {
     "enabled": true,
     "capabilityId": "customer-engagement",
     "displayName": "Customer Engagement",
-    "category": "customer-experience",
+    "category": "organization",
     "icon": "feedback",
     "contractVersion": 1,
     "minimumClientContractVersion": 1,
@@ -31,14 +31,14 @@ const capability = {
     "navigation": [
         {
             "id": "customer-engagement",
-            "label": "Customer Engagement",
+            "label": "Customer Service and Engagement",
             "route": "/engagement",
             "icon": "feedback",
-            "order": 500,
+            "order": 460,
             "group": {
-                "id": "customer-experience",
-                "label": "Customer Experience",
-                "order": 300
+                "id": "organization",
+                "label": "Customers and Organisation",
+                "order": 400
             },
             "perspectives": [
                 "operations"
@@ -54,6 +54,89 @@ const capability = {
             ],
             "help": {
                 "summary": "Operate governed customer submissions, approvals, publication decisions, and recovery through Engagement-owned contracts."
+            }
+        },
+        {
+            "id": "reviews-reputation",
+            "label": "Reviews and Reputation",
+            "route": "/engagement#reviews-reputation",
+            "icon": "rate_review",
+            "order": 470,
+            "group": {
+                "id": "organization",
+                "label": "Customers and Organisation",
+                "order": 400
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise",
+                "site"
+            ],
+            "featureState": "ACTIVE",
+            "requiredPermissions": [
+                "engagement.backoffice.view"
+            ],
+            "help": {
+                "summary": "Moderate reviews, responses, reports, appeals, ratings, requests, and publication evidence through Engagement-owned contracts."
+            }
+        },
+        {
+            "id": "testimonials-advocacy",
+            "label": "Testimonials and Advocacy",
+            "route": "/engagement#testimonials-advocacy",
+            "icon": "format_quote",
+            "order": 480,
+            "group": {
+                "id": "organization",
+                "label": "Customers and Organisation",
+                "order": 400
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise",
+                "site"
+            ],
+            "featureState": "ACTIVE",
+            "requiredPermissions": [
+                "engagement.backoffice.view"
+            ],
+            "help": {
+                "summary": "Govern testimonial candidates, editorial versions, consent, rights, scheduling, attribution, and expiry."
+            }
+        },
+        {
+            "id": "engagement-insights",
+            "label": "Engagement Insights",
+            "route": "/engagement#insights",
+            "icon": "dashboard",
+            "order": 495,
+            "group": {
+                "id": "organization",
+                "label": "Customers and Organisation",
+                "order": 400
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "ACTIVE",
+            "requiredPermissions": [
+                "engagement.operations.read"
+            ],
+            "help": {
+                "summary": "Review workload, SLA, feedback, complaints, review trends, sentiment evidence, overdue work, and resolution performance."
             }
         },
         {
@@ -145,7 +228,7 @@ const capability = {
         },
         {
             "id": "engagement-dashboards",
-            "parentId": "customer-engagement",
+            "parentId": "engagement-insights",
             "label": "Engagement Dashboards",
             "route": "/engagement/dashboards",
             "icon": "dashboard",
@@ -267,7 +350,8 @@ const capability = {
         },
         {
             "id": "engagement-privacy",
-            "parentId": "customer-engagement",
+            "parentId": "privacy-customer-rights",
+            "parentModuleName": "profile",
             "label": "Privacy Operations",
             "route": "/engagement/privacy",
             "icon": "privacy_tip",

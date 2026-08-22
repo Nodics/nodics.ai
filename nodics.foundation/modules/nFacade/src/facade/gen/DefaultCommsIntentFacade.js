@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultCommsIntentService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultCommsIntentService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultCommsIntentService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultCommsIntentService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultCommsIntentService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultCommsIntentService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultCommsIntentService.remove(request);

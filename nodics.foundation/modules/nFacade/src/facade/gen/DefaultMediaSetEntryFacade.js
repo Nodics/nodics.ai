@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultMediaSetEntryService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultMediaSetEntryService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultMediaSetEntryService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultMediaSetEntryService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultMediaSetEntryService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultMediaSetEntryService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultMediaSetEntryService.remove(request);

@@ -77,6 +77,59 @@ const expected = {
             "mutation": false
         },
         {
+            "name": "safeSearch",
+            "route": {
+                "routerName": "safeSearch",
+                "key": "/editorialcontenttype/safe-search",
+                "method": "post",
+                "apiVersion": "v0",
+                "controller": "DefaultEditorialContentTypeController",
+                "operation": "safeSearch",
+                "secured": true
+            },
+            "request": {
+                "headers": {
+                    "Authorization": "Bearer <token>",
+                    "tenant": "<activeTenant>",
+                    "x-enterprise-code": "<enterpriseCode>"
+                },
+                "params": {},
+                "query": {
+                    "recursive": false
+                },
+                "body": {
+                    "options": {},
+                    "query": {}
+                }
+            },
+            "mutation": false
+        },
+        {
+            "name": "capabilities",
+            "route": {
+                "routerName": "capabilities",
+                "key": "/editorialcontenttype/capabilities",
+                "method": "get",
+                "apiVersion": "v0",
+                "controller": "DefaultEditorialContentTypeController",
+                "operation": "capabilities",
+                "secured": true
+            },
+            "request": {
+                "headers": {
+                    "Authorization": "Bearer <token>",
+                    "tenant": "<activeTenant>",
+                    "x-enterprise-code": "<enterpriseCode>"
+                },
+                "params": {},
+                "query": {
+                    "recursive": false
+                },
+                "body": {}
+            },
+            "mutation": false
+        },
+        {
             "name": "getById",
             "route": {
                 "routerName": "getById",
@@ -127,6 +180,34 @@ const expected = {
                     "recursive": false
                 },
                 "body": {}
+            },
+            "mutation": false
+        },
+        {
+            "name": "deleteImpact",
+            "route": {
+                "routerName": "deleteImpact",
+                "key": "/editorialcontenttype/delete-impact",
+                "method": "post",
+                "apiVersion": "v0",
+                "controller": "DefaultEditorialContentTypeController",
+                "operation": "deleteImpact",
+                "secured": true
+            },
+            "request": {
+                "headers": {
+                    "Authorization": "Bearer <token>",
+                    "tenant": "<activeTenant>",
+                    "x-enterprise-code": "<enterpriseCode>"
+                },
+                "params": {},
+                "query": {
+                    "recursive": false
+                },
+                "body": {
+                    "options": {},
+                    "query": {}
+                }
             },
             "mutation": false
         },

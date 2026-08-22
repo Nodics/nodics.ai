@@ -84,6 +84,55 @@ module.exports = {
     },
 
     /**
+     * Returns governed export history by projecting generated export media.
+     * Media remains the storage and download authority; nExport owns the
+     * export-run projection shown to BackOffice clients.
+     *
+     * @param {Object} request History request.
+     * @returns {Promise<Object>} Export history records.
+     */
+    history: async function (request) {
+        if (!SERVICE.DefaultMediaService || typeof SERVICE.DefaultMediaService.get !== 'function') {
+            throw new CLASSES.NodicsError('ERR_EXP_00001', 'media service is required for export history');
+        }
+        let config = this.getConfiguration();
+        let mediaConfig = config.media || {};
+        let query = this.getHistoryQuery(request, mediaConfig);
+        let response = await SERVICE.DefaultMediaService.get({
+            tenant: request.tenant,
+            authData: request.authData,
+            query: query,
+            searchOptions: {
+                limit: this.resolveHistoryLimit(request),
+                skip: this.resolveHistorySkip(request),
+                sort: { updatedAt: -1, createdAt: -1, code: -1 },
+                projection: {
+                    code: 1,
+                    name: 1,
+                    description: 1,
+                    folderCode: 1,
+                    formatCode: 1,
+                    originalFileName: 1,
+                    mimeType: 1,
+                    extension: 1,
+                    sizeBytes: 1,
+                    checksum: 1,
+                    checksumAlgorithm: 1,
+                    enterpriseCode: 1,
+                    ownerReference: 1,
+                    status: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                },
+            },
+        });
+        return {
+            code: 'SUC_SYS_00000',
+            data: this.items(response).map((media) => this.projectHistoryMedia(media)),
+        };
+    },
+
+    /**
      * Normalizes and validates the browser-safe export request.
      *
      * @param {Object} request Runtime request.
@@ -403,6 +452,64 @@ module.exports = {
             code: source.code,
             accessUrl: source.accessUrl,
             originalFileName: source.originalFileName,
+        };
+    },
+
+    /** Builds a safe export-history media query. */
+    getHistoryQuery: function (request, mediaConfig) {
+        let input = (request.httpRequest && (request.httpRequest.query || request.httpRequest.body)) || request.query || {};
+        let query = {
+            folderCode: mediaConfig.folderCode || 'exportFiles',
+            formatCode: mediaConfig.formatCode || 'exportFile',
+        };
+        let enterpriseCode = this.safeOptionalCode(input.enterpriseCode) || this.resolveEnterpriseCode(request);
+        if (enterpriseCode) query.enterpriseCode = enterpriseCode;
+        let mediaCode = this.safeOptionalCode(input.mediaCode);
+        if (mediaCode) query.code = mediaCode;
+        return query;
+    },
+
+    /** Resolves bounded export-history page size. */
+    resolveHistoryLimit: function (request) {
+        let input = (request.httpRequest && request.httpRequest.query) || request.query || {};
+        let limit = Number(input.limit || 50);
+        if (!Number.isInteger(limit) || limit < 1) return 50;
+        return Math.min(limit, 100);
+    },
+
+    /** Resolves bounded export-history skip. */
+    resolveHistorySkip: function (request) {
+        let input = (request.httpRequest && request.httpRequest.query) || request.query || {};
+        let skip = Number(input.skip || 0);
+        if (!Number.isInteger(skip) || skip < 0) return 0;
+        return Math.min(skip, 10000);
+    },
+
+    /** Projects one generated export media record into the shared run summary shape. */
+    projectHistoryMedia: function (media) {
+        let source = media || {};
+        let createdAt = source.updatedAt || source.createdAt;
+        return {
+            runId: source.code,
+            status: source.status || 'COMPLETED',
+            dataType: 'export',
+            modules: ['export', source.ownerReference || source.name || source.originalFileName].filter(Boolean),
+            requestedBy: 'nExport',
+            createdAt: createdAt instanceof Date ? createdAt.toISOString() : createdAt,
+            summary: {
+                recordsRead: 1,
+                recordsSucceeded: 1,
+                recordsFailed: 0,
+            },
+            media: {
+                code: source.code,
+                originalFileName: source.originalFileName || source.name,
+                mimeType: source.mimeType,
+                extension: source.extension,
+                sizeBytes: source.sizeBytes,
+                checksum: source.checksum,
+                checksumAlgorithm: source.checksumAlgorithm,
+            },
         };
     },
 

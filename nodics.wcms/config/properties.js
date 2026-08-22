@@ -41,16 +41,18 @@ module.exports = {
             maximumReferenceLookupItems: 100,
             requireNavigationForPublish: false,
             draftDefaults: {
-                catalogCode: 'documentationContentCatalog',
-                siteCode: 'axisDocumentationSite',
-                templateCode: 'articleTemplate',
-                pageTypeCode: 'documentationPageType',
-                pageRenderer: 'axis.documentationPage',
-                routePath: '/docs/home',
-                slots: ['navigation', 'article', 'relatedResources']
+                catalogCode: 'nexusContentCatalog',
+                siteCode: 'nexusCorporateSite',
+                templateCode: 'nexusCorporatePageTemplate',
+                pageTypeCode: 'nexusCorporateStandardPageType',
+                pageRenderer: 'nexus.page.standard',
+                routePath: '/axis-e2e/content-designer-draft',
+                slots: ['main']
             },
             componentKinds: [
-                { label: 'Hero banner', typeCode: 'heroBannerComponentType', renderer: 'axis.heroBanner' },
+                { label: 'Nexus hero', typeCode: 'nexusPageHeroType', renderer: 'nexus.hero' },
+                { label: 'Nexus content section', typeCode: 'nexusContentSectionType', renderer: 'nexus.contentSection' },
+                { label: 'Nexus card grid', typeCode: 'nexusCardGridType', renderer: 'nexus.cardGrid' },
                 { label: 'Rich text', typeCode: 'richTextComponentType', renderer: 'axis.richText' },
                 { label: 'Image card', typeCode: 'imageCardComponentType', renderer: 'axis.imageCard' },
                 { label: 'Media gallery', typeCode: 'mediaGalleryComponentType', renderer: 'axis.mediaGallery' },

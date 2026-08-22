@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/principalscopeassignment/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultPrincipalScopeAssignmentController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/principalscopeassignment/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultPrincipalScopeAssignmentController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/principalscopeassignment/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultPrincipalScopeAssignmentController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/principalscopeassignment/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultPrincipalScopeAssignmentController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

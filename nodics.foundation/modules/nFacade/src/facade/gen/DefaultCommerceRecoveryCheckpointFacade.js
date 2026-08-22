@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultCommerceRecoveryCheckpointService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultCommerceRecoveryCheckpointService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultCommerceRecoveryCheckpointService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultCommerceRecoveryCheckpointService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultCommerceRecoveryCheckpointService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultCommerceRecoveryCheckpointService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultCommerceRecoveryCheckpointService.remove(request);

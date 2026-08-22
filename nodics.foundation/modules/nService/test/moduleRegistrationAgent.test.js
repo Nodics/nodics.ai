@@ -22,7 +22,8 @@ let contributor;
 let requests = [];
 global.CONFIG = { get: key => ({
     backofficeRegistration: { enabled: true, moduleName: 'backoffice', heartbeatIntervalMs: 10000,
-        retryIntervalMs: 5000, maxModulesPerRegistration: 512, requestTimeoutMs: 20 },
+        retryIntervalMs: 5000, maxModulesPerRegistration: 512, requestTimeoutMs: 20,
+        connectionName: 'default' },
     backofficeCapabilities: { cms: { enabled: true, capabilityId: 'content-management', contractVersion: 1,
         minimumClientContractVersion: 1, requiredPermissions: ['cms.backoffice.view'] } },
     runtimeRole: { code: 'WCMS_STAGED', publication: 'STAGED' },
@@ -60,6 +61,8 @@ async function run() {
     assert.strictEqual(contributor.ready(), true, 'ready hook must not await BackOffice network traffic');
     await new Promise(resolve => setTimeout(resolve, 5));
     assert.strictEqual(requests.length, 1, 'one bounded runtime batch should register all active modules');
+    assert.strictEqual(requests[0].connectionName, 'default',
+        'registration agent must honor an explicit BackOffice connection without creating a duplicate server alias');
     assert.strictEqual(requests[0].header.Authorization, 'Bearer service-token');
     assert(requests[0].header['Idempotency-Key']);
     assert.deepStrictEqual(requests[0].requestBody.runtimeRole,

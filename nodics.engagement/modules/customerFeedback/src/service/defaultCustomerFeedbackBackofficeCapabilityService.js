@@ -14,7 +14,7 @@ const capability = {
     "enabled": true,
     "capabilityId": "customer-engagement-customerFeedback",
     "displayName": "Customer Feedback",
-    "category": "customer-experience",
+    "category": "organization",
     "icon": "feedback",
     "contractVersion": 1,
     "minimumClientContractVersion": 1,

@@ -32,6 +32,18 @@ module.exports = {
         });
     },
 
+    /** Fails closed when nSearch reports per-document save failures inside a successful pipeline response. */
+    assertSearchSaveSucceeded: function (response, model) {
+        let errors = response && Array.isArray(response.errors) ? response.errors :
+            response && response.result && Array.isArray(response.result.errors) ? response.result.errors : [];
+        if (errors.length === 0) return;
+        let detail = errors.map(error => error && (error.message || error.code) || String(error)).join('; ');
+        let error = new Error('Product search projection indexing failed for ' + model.code + ': ' + detail);
+        error.code = 'ERR_PRODUCT_SEARCH_INDEX_0001';
+        error.errors = errors;
+        throw error;
+    },
+
     /** Publishes one Product into deterministic locale-specific persistence and nSearch projections. */
     publish: async function (request, input) {
         if (!input || !input.product || !input.storeCode) throw new Error('Product and Store are required for localized search publication');
@@ -49,9 +61,9 @@ module.exports = {
                 }));
                 let model = this.persistenceModel(request, projection);
                 await SERVICE.DefaultProductSearchProjectionService.save({ tenant: request.tenant, authData: request.authData, model: model });
-                await SERVICE.DefaultProductSearchProjectionService.doSave({ tenant: request.tenant,
+                this.assertSearchSaveSucceeded(await SERVICE.DefaultProductSearchProjectionService.doSave({ tenant: request.tenant,
                     moduleName: 'product', indexName: this.policy().searchIndexName, model: model,
-                    searchOptions: { analyzer: (this.policy().analyzerByLocale || {})[locale] } });
+                    searchOptions: { analyzer: (this.policy().analyzerByLocale || {})[locale] } }), model);
                 projections.push(model);
             }
         } catch (error) {
@@ -76,8 +88,8 @@ module.exports = {
             let model = this.persistenceModel(request, Object.assign({}, snapshot, { status: 'CURRENT',
                 projectedAt: request.now ? new Date(request.now) : new Date() }));
             await SERVICE.DefaultProductSearchProjectionService.save({ tenant: request.tenant, authData: request.authData, model: model });
-            await SERVICE.DefaultProductSearchProjectionService.doSave({ tenant: request.tenant, moduleName: 'product',
-                indexName: this.policy().searchIndexName, model: model, searchOptions: { analyzer: (this.policy().analyzerByLocale || {})[model.locale] } });
+            this.assertSearchSaveSucceeded(await SERVICE.DefaultProductSearchProjectionService.doSave({ tenant: request.tenant, moduleName: 'product',
+                indexName: this.policy().searchIndexName, model: model, searchOptions: { analyzer: (this.policy().analyzerByLocale || {})[model.locale] } }), model);
             restored.push(model);
         }
         return restored;

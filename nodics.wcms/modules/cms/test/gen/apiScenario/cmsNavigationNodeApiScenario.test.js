@@ -77,6 +77,59 @@ const expected = {
             "mutation": false
         },
         {
+            "name": "safeSearch",
+            "route": {
+                "routerName": "safeSearch",
+                "key": "/cmsnavigationnode/safe-search",
+                "method": "post",
+                "apiVersion": "v0",
+                "controller": "DefaultCmsNavigationNodeController",
+                "operation": "safeSearch",
+                "secured": true
+            },
+            "request": {
+                "headers": {
+                    "Authorization": "Bearer <token>",
+                    "tenant": "<activeTenant>",
+                    "x-enterprise-code": "<enterpriseCode>"
+                },
+                "params": {},
+                "query": {
+                    "recursive": false
+                },
+                "body": {
+                    "options": {},
+                    "query": {}
+                }
+            },
+            "mutation": false
+        },
+        {
+            "name": "capabilities",
+            "route": {
+                "routerName": "capabilities",
+                "key": "/cmsnavigationnode/capabilities",
+                "method": "get",
+                "apiVersion": "v0",
+                "controller": "DefaultCmsNavigationNodeController",
+                "operation": "capabilities",
+                "secured": true
+            },
+            "request": {
+                "headers": {
+                    "Authorization": "Bearer <token>",
+                    "tenant": "<activeTenant>",
+                    "x-enterprise-code": "<enterpriseCode>"
+                },
+                "params": {},
+                "query": {
+                    "recursive": false
+                },
+                "body": {}
+            },
+            "mutation": false
+        },
+        {
             "name": "getById",
             "route": {
                 "routerName": "getById",
@@ -127,6 +180,34 @@ const expected = {
                     "recursive": false
                 },
                 "body": {}
+            },
+            "mutation": false
+        },
+        {
+            "name": "deleteImpact",
+            "route": {
+                "routerName": "deleteImpact",
+                "key": "/cmsnavigationnode/delete-impact",
+                "method": "post",
+                "apiVersion": "v0",
+                "controller": "DefaultCmsNavigationNodeController",
+                "operation": "deleteImpact",
+                "secured": true
+            },
+            "request": {
+                "headers": {
+                    "Authorization": "Bearer <token>",
+                    "tenant": "<activeTenant>",
+                    "x-enterprise-code": "<enterpriseCode>"
+                },
+                "params": {},
+                "query": {
+                    "recursive": false
+                },
+                "body": {
+                    "options": {},
+                    "query": {}
+                }
             },
             "mutation": false
         },

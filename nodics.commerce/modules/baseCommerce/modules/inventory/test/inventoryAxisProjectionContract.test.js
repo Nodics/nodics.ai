@@ -16,11 +16,40 @@ const capability = require('../src/service/defaultInventoryBackofficeCapabilityS
 const navigation = capability.navigation;
 
 assert.equal(capability.category, 'commerce');
-assert.equal(navigation.length, 5);
-assert.deepEqual(navigation.map(item => item.id), ['inventory-operations', 'inventory-warehouses', 'inventory-balances', 'inventory-reservations', 'inventory-movements']);
-assert.deepEqual(navigation.map(item => item.workbenchTarget.schemaName), ['inventoryBalance', 'warehouse', 'inventoryBalance', 'inventoryReservation', 'inventoryMovement']);
+assert.equal(navigation.length, 14);
+assert.deepEqual(navigation.map(item => item.id), [
+    'inventory-operations',
+    'stock-availability',
+    'inventory-balances',
+    'stock-operations',
+    'receiving-replenishment',
+    'inventory-warehouses',
+    'stock-transfers',
+    'inventory-reservations',
+    'inventory-sourcing',
+    'stock-counts-reconciliation',
+    'returns-stock-disposition',
+    'inventory-movements',
+    'inventory-exceptions-recovery',
+    'inventory-planning-insights'
+]);
+assert.deepEqual(navigation.filter(item => item.featureState === 'DISABLED').map(item => item.id), [
+    'stock-operations',
+    'receiving-replenishment',
+    'stock-transfers',
+    'inventory-sourcing',
+    'stock-counts-reconciliation',
+    'returns-stock-disposition',
+    'inventory-exceptions-recovery',
+    'inventory-planning-insights'
+]);
+assert.deepEqual(navigation.map(item => item.workbenchTarget.schemaName), ['inventoryBalance', 'inventoryBalance', 'inventoryBalance', 'inventoryMovement', 'inventoryMovement', 'warehouse', 'inventoryMovement', 'inventoryReservation', 'inventoryBalance', 'inventoryMovement', 'inventoryMovement', 'inventoryMovement', 'inventoryMovement', 'inventoryBalance']);
 assert(navigation.every(item => item.workbenchTarget.moduleName === 'inventory'));
 assert(navigation.every(item => item.workbenchPresentation.defaultColumns.length >= 5));
+assert(navigation.find(item => item.id === 'inventory-operations').lifecycleActions.some(action => action.id === 'receive-stock' && action.operationRoute === '/operator/inventory/balances/:balanceCode/actions/RECEIVE'));
+assert(navigation.find(item => item.id === 'inventory-balances').lifecycleActions.some(action => action.id === 'adjust-stock' && action.ownerModule === 'inventory'));
+assert(navigation.find(item => item.id === 'inventory-balances').lifecycleActions.every(action => action.permission === 'commerce.inventory.operate'));
+assert.equal(navigation.find(item => item.id === 'inventory-warehouses').lifecycleActions, undefined);
 assert.deepEqual(schemas.inventoryBalance.backoffice.operations, ['search', 'read']);
 assert.deepEqual(schemas.inventoryReservation.backoffice.operations, ['search', 'read']);
 assert.deepEqual(schemas.inventoryMovement.backoffice.operations, ['search', 'read']);

@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultPublicationAuditService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultPublicationAuditService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultPublicationAuditService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultPublicationAuditService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultPublicationAuditService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultPublicationAuditService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultPublicationAuditService.remove(request);

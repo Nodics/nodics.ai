@@ -87,6 +87,7 @@ module.exports = {
         });
         this.removeCrossModuleOrphans(catalogue);
         this.validateUniqueNavigation(catalogue);
+        this.inheritNavigationGroups(catalogue);
         return catalogue;
     },
 
@@ -134,5 +135,40 @@ module.exports = {
                 owners.set(item.id, moduleName);
             }));
         return true;
+    },
+
+    /** Projects the effective business group from an authorized parent onto children that intentionally inherit placement. */
+    inheritNavigationGroups: function (catalogue) {
+        let byId = new Map();
+        let byModuleAndId = new Map();
+        Object.entries(catalogue).forEach(([moduleName, metadata]) =>
+            (metadata.navigation || []).forEach(item => {
+                byId.set(item.id, item);
+                byModuleAndId.set(moduleName + ':' + item.id, item);
+            }));
+        let resolveGroup = (moduleName, item, visiting) => {
+            if (!item || item.group) return item && item.group;
+            if (!item.parentId) return undefined;
+            let key = moduleName + ':' + item.id;
+            if (visiting.has(key)) return undefined;
+            visiting.add(key);
+            let parent = item.parentModuleName ?
+                byModuleAndId.get(item.parentModuleName + ':' + item.parentId) :
+                byModuleAndId.get(moduleName + ':' + item.parentId) || byId.get(item.parentId);
+            return resolveGroup(item.parentModuleName || moduleName, parent, visiting);
+        };
+        Object.entries(catalogue).forEach(([moduleName, metadata]) => {
+            if (!Array.isArray(metadata.navigation)) return;
+            let changed = false;
+            let navigation = metadata.navigation.map(item => {
+                if (item.group || !item.parentId) return item;
+                let group = resolveGroup(moduleName, item, new Set());
+                if (!group) return item;
+                changed = true;
+                return Object.assign({}, item, { group: group });
+            });
+            if (changed) catalogue[moduleName] = Object.assign({}, metadata, { navigation: navigation });
+        });
+        return catalogue;
     }
 };

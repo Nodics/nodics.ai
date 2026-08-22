@@ -21,7 +21,7 @@ const test = require('node:test');
  * @owner order
  */
 
-const service = require('../src/service/defaultOrderLifecycleApiService');
+const service = require('../src/service/defaultOrderLifecycleOperationService');
 const facade = require('../src/facade/defaultOrderLifecycleFacade');
 const backofficeCapability = require('../src/service/defaultOrderBackofficeCapabilityService');
 
@@ -169,7 +169,7 @@ test('reverse lifecycle create persists structured item return refund and reconc
 test('reverse lifecycle facade resolves customer ownership from authenticated login id', async () => {
     let captured;
     global.SERVICE = {
-        DefaultOrderLifecycleApiService: {
+        DefaultOrderLifecycleOperationService: {
             preview: async request => {
                 captured = request;
                 return { ownerId: request.ownerId, actorId: request.actorId, tenant: request.tenant };

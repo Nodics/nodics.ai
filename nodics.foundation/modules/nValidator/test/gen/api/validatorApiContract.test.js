@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/validator/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultValidatorController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/validator/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultValidatorController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/validator/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultValidatorController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/validator/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultValidatorController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

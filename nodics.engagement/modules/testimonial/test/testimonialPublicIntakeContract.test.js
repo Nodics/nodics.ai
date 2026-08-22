@@ -10,7 +10,7 @@
  */
 const assert = require('assert');
 const policy = require('../src/service/defaultTestimonialPolicyService');
-const api = require('../src/service/defaultTestimonialApiService');
+const api = require('../src/service/defaultTestimonialOperationService');
 let savedCandidate;
 global.SERVICE = {
     DefaultTestimonialPolicyService: policy,

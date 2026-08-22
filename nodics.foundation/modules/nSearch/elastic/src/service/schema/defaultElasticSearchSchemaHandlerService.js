@@ -224,14 +224,25 @@ module.exports = {
             let schemaDef = {
                 properties: {}
             };
+            let toMapping = function (propObj) {
+                let mapping = { type: propObj.type || 'text' };
+                ['dynamic', 'fields', 'properties', 'analyzer', 'search_analyzer', 'normalizer', 'format'].forEach(key => {
+                    if (propObj[key] !== undefined) mapping[key] = propObj[key];
+                });
+                if (propObj.enabled !== undefined && mapping.type === 'object') mapping.enabled = propObj.enabled;
+                if (mapping.properties && !UTILS.isBlank(mapping.properties)) {
+                    Object.keys(mapping.properties).forEach(name => {
+                        mapping.properties[name] = toMapping(mapping.properties[name]);
+                    });
+                }
+                return mapping;
+            };
             let properties = Object.keys(options.indexDef.properties);
             if (options.indexDef.properties && properties.length > 0) {
                 for (let count = 0; count < properties.length; count++) {
                     let propName = properties[count];
                     let propObj = options.indexDef.properties[propName];
-                    schemaDef.properties[propName] = {
-                        type: propObj.type || 'text'
-                    };
+                    schemaDef.properties[propName] = toMapping(propObj);
                 }
             }
             resolve(schemaDef);

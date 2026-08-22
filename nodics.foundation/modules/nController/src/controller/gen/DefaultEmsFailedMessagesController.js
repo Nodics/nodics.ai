@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultEmsFailedMessagesFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'emsFailedMessages';
+        if (callback) {
+            FACADE.DefaultEmsFailedMessagesFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultEmsFailedMessagesFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'emsFailedMessages';
+        if (callback) {
+            FACADE.DefaultEmsFailedMessagesFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultEmsFailedMessagesFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultEmsFailedMessagesFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'emsFailedMessages';
+        if (callback) {
+            FACADE.DefaultEmsFailedMessagesFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultEmsFailedMessagesFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

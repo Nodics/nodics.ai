@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultCommsTemplateVersionFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'commsTemplateVersion';
+        if (callback) {
+            FACADE.DefaultCommsTemplateVersionFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCommsTemplateVersionFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'commsTemplateVersion';
+        if (callback) {
+            FACADE.DefaultCommsTemplateVersionFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCommsTemplateVersionFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultCommsTemplateVersionFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'commsTemplateVersion';
+        if (callback) {
+            FACADE.DefaultCommsTemplateVersionFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCommsTemplateVersionFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

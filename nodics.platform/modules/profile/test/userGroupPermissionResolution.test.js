@@ -125,9 +125,33 @@ let runtimeViewerGroup = Object.values(userGroupsData).find(
 let platformAdminGroup = Object.values(userGroupsData).find(
   (group) => group.code === "adminGroup",
 );
+let commerceOperatorGroup = Object.values(userGroupsData).find(
+  (group) => group.code === "commerceOperatorUserGroup",
+);
+let customerGroup = Object.values(userGroupsData).find(
+  (group) => group.code === "customerUserGroup",
+);
 assert(
   runtimeAdminGroup,
   "Default runtime config admin group should be seeded",
+);
+assert(
+  customerGroup,
+  "Default customer group should be seeded",
+);
+[
+  "commerce.cart.own",
+  "commerce.checkout.place",
+  "commerce.order.own.read",
+  "commerce.customerList.own",
+  "commerce.promotion.own",
+  "commerce.lifecycle.own.create",
+].forEach((permission) =>
+  assert(
+    customerGroup.permissions.includes(permission),
+    "Default customers must include Agora Commerce ownership permission: " +
+      permission,
+  ),
 );
 assert(
   platformAdminGroup.permissions.includes("system.schema.workbench.view"),
@@ -141,6 +165,16 @@ assert(
   platformAdminGroup.permissions.includes("backoffice.registry.refresh"),
   "Default platform administrators should be allowed to request a bounded module-health refresh",
 );
+["commerce.promotion.manage", "commerce.promotion.approve", "commerce.inventory.operate"].forEach((permission) => {
+  assert(
+    platformAdminGroup.permissions.includes(permission),
+    "Default platform administrators should be allowed to manage governed Commerce operations: " + permission,
+  );
+  assert(
+    commerceOperatorGroup.permissions.includes(permission),
+    "Default commerce operators should be allowed to manage governed Commerce operations: " + permission,
+  );
+});
 [
 ].forEach((permission) =>
   assert(

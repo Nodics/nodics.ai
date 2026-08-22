@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultCartDiagnosticFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'cartDiagnostic';
+        if (callback) {
+            FACADE.DefaultCartDiagnosticFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCartDiagnosticFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'cartDiagnostic';
+        if (callback) {
+            FACADE.DefaultCartDiagnosticFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCartDiagnosticFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultCartDiagnosticFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'cartDiagnostic';
+        if (callback) {
+            FACADE.DefaultCartDiagnosticFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCartDiagnosticFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

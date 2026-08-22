@@ -16,9 +16,9 @@
 const assert = require('node:assert/strict');
 const path = require('node:path');
 const root = path.resolve(__dirname, '../modules');
-const feedback = require(path.join(root, 'customerFeedback/src/service/defaultCustomerFeedbackApiService'));
-const review = require(path.join(root, 'customerReview/src/service/defaultCustomerReviewApiService'));
-const operations = require(path.join(root, 'engagementCore/src/service/defaultEngagementOperationsApiService'));
+const feedback = require(path.join(root, 'customerFeedback/src/service/defaultCustomerFeedbackOperationService'));
+const review = require(path.join(root, 'customerReview/src/service/defaultCustomerReviewOperationService'));
+const operations = require(path.join(root, 'engagementCore/src/service/defaultEngagementOperationService'));
 
 const input = { status: 'RECEIVED', limit: 25, offset: 10, page: 2, pageSize: 25, sort: '-submittedAt' };
 const expected = { status: 'RECEIVED' };

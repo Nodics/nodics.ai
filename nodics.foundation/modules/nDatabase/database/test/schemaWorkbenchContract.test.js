@@ -21,6 +21,8 @@
  */
 
 const assert = require('assert');
+const routerDefinitions = require('../src/router/routers');
+const generatedRouterDefinitions = require('../../../nRouter/src/router/routers');
 
 const profileModule = {
     rawSchema: {
@@ -211,6 +213,7 @@ global.CONFIG = {
 };
 let lastSearchInput;
 global.SERVICE = {
+    DefaultSchemaSafeQueryService: require('../src/service/schema/defaultSchemaSafeQueryService'),
     DefaultSchemaAccessHandlerService: {
         getAccessPoint: (authData) => (authData.userGroups.includes('adminGroup') ? 10 : 0),
     },
@@ -243,8 +246,86 @@ global.CLASSES = {
 };
 
 const service = require('../src/service/schema/defaultSchemaWorkbenchService');
+global.SERVICE.DefaultSchemaWorkbenchService = service;
 
 (async function () {
+    assert(
+        generatedRouterDefinitions.default.commonGetterOperation.safeSearch,
+        'Generated schema CRUD must expose a browser-safe search route template',
+    );
+    assert.deepStrictEqual(
+        {
+            key: generatedRouterDefinitions.default.commonGetterOperation.safeSearch.key,
+            method: generatedRouterDefinitions.default.commonGetterOperation.safeSearch.method,
+            operation: generatedRouterDefinitions.default.commonGetterOperation.safeSearch.operation,
+        },
+        {
+            key: '/schemaName/safe-search',
+            method: 'POST',
+            operation: 'safeSearch',
+        },
+        'Generated schema CRUD safe search must be generic per schema and must not use Workbench-specific or screen-specific route patterns',
+    );
+    assert(
+        generatedRouterDefinitions.default.commonGetterOperation.safeSearch.help.message.includes('generic admin/schema-driven tooling only')
+        && generatedRouterDefinitions.default.commonGetterOperation.safeSearch.help.message.includes('Use module-owned domain APIs for business journeys'),
+        'Generated safe-search Swagger/help text must warn developers that it is not a business API',
+    );
+    assert.deepStrictEqual(
+        {
+            key: generatedRouterDefinitions.default.commonGetterOperation.capabilities.key,
+            method: generatedRouterDefinitions.default.commonGetterOperation.capabilities.method,
+            operation: generatedRouterDefinitions.default.commonGetterOperation.capabilities.operation,
+        },
+        {
+            key: '/schemaName/capabilities',
+            method: 'GET',
+            operation: 'capabilities',
+        },
+        'Generated schema CRUD utility APIs must expose capabilities generically per schema, not through Schema Workbench route sprawl',
+    );
+    assert(
+        generatedRouterDefinitions.default.commonGetterOperation.capabilities.help.message.includes('generic admin/schema-driven tooling only')
+        && generatedRouterDefinitions.default.commonGetterOperation.capabilities.help.message.includes('use module-owned domain APIs for business journeys'),
+        'Generated capabilities Swagger/help text must warn developers that it is not a business API',
+    );
+    assert.deepStrictEqual(
+        {
+            key: generatedRouterDefinitions.default.commonRemoveOperations.deleteImpact.key,
+            method: generatedRouterDefinitions.default.commonRemoveOperations.deleteImpact.method,
+            operation: generatedRouterDefinitions.default.commonRemoveOperations.deleteImpact.operation,
+        },
+        {
+            key: '/schemaName/delete-impact',
+            method: 'POST',
+            operation: 'deleteImpact',
+        },
+        'Generated schema CRUD utility APIs must expose delete-impact generically per schema, not through Schema Workbench route sprawl',
+    );
+    assert(
+        generatedRouterDefinitions.default.commonRemoveOperations.deleteImpact.help.message.includes('generic admin/schema-driven tooling only')
+        && generatedRouterDefinitions.default.commonRemoveOperations.deleteImpact.help.message.includes('use module-owned lifecycle APIs'),
+        'Generated delete-impact Swagger/help text must warn developers that it is not a business lifecycle API',
+    );
+    let workbenchRoutes = routerDefinitions.common.schemaWorkbench;
+    let allowedWorkbenchRouteKeys = [
+        '/schema/workbench',
+        '/schema/workbench/:schema',
+        '/schema/workbench/:schema/records',
+        '/schema/workbench/:schema/delete-impact',
+        '/schema/workbench/:schema/record',
+        '/schema/workbench/:schema/bulk',
+        '/schema/workbench/:schema/aggregate',
+    ];
+    assert.deepStrictEqual(
+        Object.values(workbenchRoutes).map((route) => route.key).sort(),
+        allowedWorkbenchRouteKeys.slice().sort(),
+        'Schema Workbench must not grow screen-specific or schema-specific API routes without an explicit architecture decision',
+    );
+    assert(
+        Object.values(workbenchRoutes).every((route) => /^\/schema\/workbench(\/:schema)?(\/(records|delete-impact|record|bulk|aggregate))?$/.test(route.key)),
+        'Schema Workbench route keys must remain generic by schema placeholder; custom projects must not inherit per-screen route sprawl',
+    );
     let request = {
         moduleName: 'profile',
         authData: { userGroups: ['adminGroup'] },
@@ -559,6 +640,75 @@ const service = require('../src/service/schema/defaultSchemaWorkbenchService');
             code: 1,
         },
         'record projection must include configured display identity fields used by relationship pickers without accepting secret presentation fields',
+    );
+    assert.deepStrictEqual(
+        service.buildSearchInput(
+            {
+                query: {
+                    search: 'DXB',
+                    filters: {
+                        operator: 'AND',
+                        items: [
+                            {
+                                field: 'code',
+                                operator: 'EQUALS',
+                                value: 'DXB',
+                            },
+                        ],
+                    },
+                    pageNumber: 1,
+                    pageSize: 10,
+                    sort: { field: 'code', direction: 'ASC' },
+                },
+            },
+            descriptor,
+        ).query,
+        {
+            $and: [
+                { $or: [{ code: { $regex: 'DXB', $options: 'i' } }] },
+                { $and: [{ code: 'DXB' }] },
+            ],
+        },
+        'Schema Workbench must honor the Axis { query } envelope for search and fixed filters',
+    );
+    let generatedSafeSearch = await global.SERVICE.DefaultSchemaSafeQueryService.searchGenerated({
+        tenant: 'default',
+        authData: { userGroups: ['adminGroup'] },
+        moduleName: 'profile',
+        schemaName: 'address',
+        generatedServiceName: 'DefaultAddressService',
+        browserQuery: {
+            query: {
+                search: 'DXB',
+                pageNumber: 1,
+                pageSize: 10,
+                sort: { field: 'code', direction: 'ASC' },
+            },
+        },
+    });
+    assert.strictEqual(generatedSafeSearch.data.totalCount, 1);
+    assert.deepStrictEqual(
+        lastSearchInput.query,
+        { $or: [{ code: { $regex: 'DXB', $options: 'i' } }] },
+        'Generated CRUD safe search must translate browser-safe search into backend-owned generated read input',
+    );
+    assert.deepStrictEqual(
+        lastSearchInput.options,
+        { recursive: false },
+        'Generated CRUD safe search must keep generated read traversal bounded',
+    );
+    global.SERVICE.DefaultSchemaUtilityService = require('../src/service/schema/defaultSchemaUtilityService');
+    let generatedCapabilities = await global.SERVICE.DefaultSchemaUtilityService.capabilitiesGenerated({
+        tenant: 'default',
+        authData: { userGroups: ['adminGroup'] },
+        moduleName: 'profile',
+        schemaName: 'address',
+    });
+    assert.strictEqual(generatedCapabilities.data.schemaName, 'address');
+    assert.deepStrictEqual(
+        generatedCapabilities.data.queryCapabilities.searchableFields,
+        ['code'],
+        'Generated schema capabilities must expose the same browser-safe query contract Axis needs without calling the Workbench descriptor route',
     );
     assert.throws(
         () =>

@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultPaymentReconciliationFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'paymentReconciliation';
+        if (callback) {
+            FACADE.DefaultPaymentReconciliationFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultPaymentReconciliationFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'paymentReconciliation';
+        if (callback) {
+            FACADE.DefaultPaymentReconciliationFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultPaymentReconciliationFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultPaymentReconciliationFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'paymentReconciliation';
+        if (callback) {
+            FACADE.DefaultPaymentReconciliationFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultPaymentReconciliationFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

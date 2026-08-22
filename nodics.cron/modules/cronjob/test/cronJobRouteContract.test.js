@@ -67,8 +67,8 @@ assert.deepStrictEqual(
 );
 assert(
     capability.navigation.every((item) => item.route.startsWith('/cron') &&
-        item.group.id === 'business-process-automation' &&
-        item.group.label === 'Process & Automation'),
-    'cron navigation must stay under /cron in the Process & Automation group',
+        item.group.id === 'process-and-automations' &&
+        item.group.label === 'Process and Automations'),
+    'cron navigation must stay under /cron in the Process and Automations group',
 );
 console.log(`CronJob route contract validated: ${expectedRoutes.length} routes`);

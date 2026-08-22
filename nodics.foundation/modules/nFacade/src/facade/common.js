@@ -61,6 +61,26 @@ module.exports = {
     },
 
     /**
+     * Executes bounded browser-safe schema search.
+     *
+     * @param {*} request Method input.
+     * @returns {*} Method result.
+     */
+    safeSearch: function (request) {
+        return SERVICE.srvcName.safeSearch(request);
+    },
+
+    /**
+     * Returns browser-safe generated schema capabilities.
+     *
+     * @param {*} request Method input.
+     * @returns {*} Method result.
+     */
+    capabilities: function (request) {
+        return SERVICE.srvcName.capabilities(request);
+    },
+
+    /**
 
      * Retrieves by id information.
 
@@ -142,6 +162,16 @@ module.exports = {
 
     remove: function (request) {
         return SERVICE.srvcName.remove(request);
+    },
+
+    /**
+     * Previews reference/restrict impact for a generated schema delete.
+     *
+     * @param {*} request Method input.
+     * @returns {*} Method result.
+     */
+    deleteImpact: function (request) {
+        return SERVICE.srvcName.deleteImpact(request);
     },
 
     /**

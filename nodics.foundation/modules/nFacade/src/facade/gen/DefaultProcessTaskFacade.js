@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultProcessTaskService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultProcessTaskService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultProcessTaskService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultProcessTaskService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultProcessTaskService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultProcessTaskService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultProcessTaskService.remove(request);

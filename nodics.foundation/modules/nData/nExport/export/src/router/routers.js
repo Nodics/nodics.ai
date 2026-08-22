@@ -42,6 +42,26 @@ module.exports = {
                         query: 'Schema workbench query used to select records'
                     }
                 }
+            },
+            exportHistoryGet: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'export.run',
+                apiExposure: 'dataExport',
+                key: '/history',
+                method: 'GET',
+                controller: 'DataExportController',
+                operation: 'history',
+                help: {
+                    requestType: 'secured',
+                    message: 'Authorization: Bearer <token> header is preferred; nExport returns generated export history projected from media without exposing storage paths.',
+                    method: 'GET',
+                    url: 'http://host:port/nodics/export/v0/history',
+                    query: {
+                        limit: 'Optional maximum number of generated export records',
+                        skip: 'Optional offset for generated export records'
+                    }
+                }
             }
         }
     }

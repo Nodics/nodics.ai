@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultBackofficeAxisPolicyFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'backofficeAxisPolicy';
+        if (callback) {
+            FACADE.DefaultBackofficeAxisPolicyFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultBackofficeAxisPolicyFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'backofficeAxisPolicy';
+        if (callback) {
+            FACADE.DefaultBackofficeAxisPolicyFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultBackofficeAxisPolicyFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultBackofficeAxisPolicyFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'backofficeAxisPolicy';
+        if (callback) {
+            FACADE.DefaultBackofficeAxisPolicyFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultBackofficeAxisPolicyFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

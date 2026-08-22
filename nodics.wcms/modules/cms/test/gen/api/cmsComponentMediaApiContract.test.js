@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/cmscomponentmedia/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsComponentMediaController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/cmscomponentmedia/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsComponentMediaController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/cmscomponentmedia/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultCmsComponentMediaController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/cmscomponentmedia/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsComponentMediaController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

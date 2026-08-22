@@ -29,6 +29,14 @@ const profileGroups = require(path.join(root, '../nodics.platform/modules/profil
 
 assert.strictEqual(wcmsProperties.apiExposure.categories.cmsAuthoring.enabled, true,
     'WCMS must enable cmsAuthoring at module default so server config only carries topology deltas');
+assert.strictEqual(wcmsProperties.cms.designerAuthoring.draftDefaults.catalogCode, 'nexusContentCatalog',
+    'WCMS module default designer policy must point to an installed Nexus authoring catalog');
+assert.strictEqual(wcmsProperties.cms.designerAuthoring.draftDefaults.templateCode, 'nexusCorporatePageTemplate',
+    'WCMS module default designer policy must not point to stale documentation templates');
+assert.deepStrictEqual(wcmsProperties.cms.designerAuthoring.draftDefaults.slots, ['main'],
+    'WCMS module default designer policy must expose the Nexus template slot shape');
+assert(wcmsProperties.cms.designerAuthoring.componentKinds.some(kind => kind.typeCode === 'nexusPageHeroType'),
+    'WCMS module default designer policy must expose Nexus component kinds');
 assert(authProperties.identityGovernance.permissionCatalog.includes('cms.backoffice.manage'),
     'cms.backoffice.manage must be in the governed permission catalog');
 assert(profileGroups.record4.permissions.includes('cms.backoffice.manage'),
@@ -50,7 +58,8 @@ assert(profileGroups.record4.permissions.includes('cms.backoffice.manage'),
     ['detachMedia', 'POST', '/designer/composition/media/delete', 'cms.backoffice.manage'],
     ['assignRoute', 'PUT', '/designer/composition/route', 'cms.backoffice.manage'],
     ['assignNavigation', 'PUT', '/designer/composition/navigation', 'cms.backoffice.manage'],
-    ['validatePublishReadiness', 'POST', '/designer/composition/publish-readiness', 'cms.backoffice.manage']
+    ['validatePublishReadiness', 'POST', '/designer/composition/publish-readiness', 'cms.backoffice.manage'],
+    ['submitForPublication', 'POST', '/designer/composition/publication-request', 'cms.backoffice.manage']
 ].forEach(([operation, method, key, permission]) => {
     assert(routers[operation], operation + ' route must be registered');
     assert.strictEqual(routers[operation].secured, true, operation + ' must be secured');
@@ -68,30 +77,33 @@ assert(profileGroups.record4.permissions.includes('cms.backoffice.manage'),
 });
 
 const records = {
-    catalogs: [{ code: 'documentationContentCatalog', name: 'Documentation', catalogType: 'CONTENT', active: true }],
-    sites: [{ code: 'axisDocumentationSite', name: 'Axis Docs', catalog: 'documentationContentCatalog', active: true }],
-    templates: [{ code: 'articleTemplate', name: 'Article Template', renderer: 'axis.template.documentation-article', active: true }],
+    catalogs: [{ code: 'nexusContentCatalog', name: 'Nexus Content', catalogType: 'CONTENT', active: true }],
+    sites: [{ code: 'nexusCorporateSite', name: 'Nexus Corporate', catalog: 'nexusContentCatalog', active: true }],
+    templates: [{ code: 'nexusCorporatePageTemplate', name: 'Nexus Corporate Page', renderer: 'nexus.template.corporate', active: true }],
     slots: [
-        { code: 'articleNavigationSlot', template: 'articleTemplate', name: 'navigation', minItems: 0, maxItems: 3,
-            allowedComponentTypes: ['documentationNavigationComponentType'], active: true },
-        { code: 'articleBodySlot', template: 'articleTemplate', name: 'article', minItems: 1,
-            allowedComponentTypeGroups: ['documentationAuthoringGroup'], active: true },
-        { code: 'relatedSlot', template: 'articleTemplate', name: 'relatedResources', minItems: 0, maxItems: 5, active: true }
+        { code: 'nexusCorporateMainSlot', template: 'nexusCorporatePageTemplate', name: 'main', minItems: 1, maxItems: 20,
+            allowedComponentTypeGroups: ['nexusCorporateSectionGroup'], active: true }
     ],
     types: [
-        { code: 'documentationPageType', kind: 'PAGE', active: true },
-        { code: 'documentationNavigationComponentType', kind: 'COMPONENT', active: true },
+        { code: 'nexusCorporateStandardPageType', kind: 'PAGE', active: true },
+        { code: 'nexusPageHeroType', kind: 'COMPONENT', active: true,
+            propertySchema: {
+                title: { localized: true, requiredLocales: ['en'] },
+                body: { localized: true }
+            } },
+        { code: 'nexusContentSectionType', kind: 'COMPONENT', active: true },
         { code: 'richTextComponentType', kind: 'COMPONENT', active: true },
         { code: 'mediaCardComponentType', kind: 'COMPONENT', active: true }
     ],
-    groups: [{ code: 'documentationAuthoringGroup', componentTypeCodes: ['richTextComponentType', 'mediaCardComponentType'], active: true }],
+    groups: [{ code: 'nexusCorporateSectionGroup', componentTypeCodes: ['nexusPageHeroType', 'nexusContentSectionType'], active: true }],
     mediaFolders: [{ code: 'cmsAssets', name: 'CMS Assets', status: 'ACTIVE', access: 'PUBLIC', businessPurpose: 'cms-asset', reusable: true }],
     mediaFormats: [{ code: 'original', name: 'Original', status: 'ACTIVE' }],
-    navigationNodes: [{ code: 'nodicsDocumentation', name: 'Nodics Documentation', title: 'Nodics Documentation', site: 'axisDocumentationSite', nodeType: 'CONTAINER', status: 'ACTIVE' }],
+    navigationNodes: [{ code: 'nexusCorporateRoot', name: 'Nexus Corporate', title: 'Nexus Corporate', site: 'nexusCorporateSite', nodeType: 'CONTAINER', status: 'ACTIVE' }],
     routes: []
 };
 const saved = [];
 const removed = [];
+const publicationCalls = [];
 const matches = (model, query) => Object.keys(query).every(key => {
     if (key === 'active' && model[key] === undefined) return true;
     let expected = query[key];
@@ -119,8 +131,23 @@ global.SERVICE = {
     DefaultCmsPageService: generatedService([]),
     DefaultCmsComponentService: generatedService([]),
     DefaultCmsComponentDetailService: generatedService([]),
+    DefaultCmsComponentLocalizationService: generatedService([]),
     DefaultCmsComponentMediaService: generatedService([]),
     DefaultCmsDeliveryCacheInvalidationService: { invalidate: () => Promise.resolve(true) },
+    DefaultPublicationLifecycleService: {
+        create: request => {
+            publicationCalls.push(['create', request.publication]);
+            return Promise.resolve(Object.assign({ state: 'STAGED', revision: 0 }, request.publication));
+        },
+        validate: request => {
+            publicationCalls.push(['validate', request.publicationCode, request.expectedRevision]);
+            return Promise.resolve({ code: request.publicationCode, state: 'VALIDATED', revision: 1 });
+        },
+        requestApproval: request => {
+            publicationCalls.push(['requestApproval', request.publicationCode, request.expectedRevision]);
+            return Promise.resolve({ code: request.publicationCode, state: 'PENDING_APPROVAL', revision: 2 });
+        }
+    },
     DefaultMediaReferenceLookupService: {
         validateInternal: request => Promise.resolve({
             referenceType: request.body.referenceType,
@@ -131,19 +158,16 @@ global.SERVICE = {
 global.SERVICE.DefaultCmsContractValidationService = require(path.join(root, 'modules/cms/src/service/validation/defaultCmsContractValidationService'));
 
 const draft = {
-    catalogCode: 'documentationContentCatalog',
-    siteCode: 'axisDocumentationSite',
-    templateCode: 'articleTemplate',
-    page: { code: 'gettingStartedPage', name: 'Getting Started', typeCode: 'documentationPageType' },
+    catalogCode: 'nexusContentCatalog',
+    siteCode: 'nexusCorporateSite',
+    templateCode: 'nexusCorporatePageTemplate',
+    page: { code: 'gettingStartedPage', name: 'Getting Started', typeCode: 'nexusCorporateStandardPageType' },
     sections: [
-        { slot: 'navigation', index: 0, components: [{ code: 'gettingStartedNav', typeCode: 'documentationNavigationComponentType', accessMode: 'AUTHENTICATED' }] },
-        { slot: 'article', index: 0, components: [{ code: 'gettingStartedArticle', typeCode: 'richTextComponentType', properties: { markdown: '# Hello' },
-            media: [{ componentMediaCode: 'gettingStartedHeroMedia', mediaCode: 'heroMedia', mediaType: 'IMAGE', role: 'primary', position: 0 }] }] },
-        { slot: 'relatedResources', index: 0, components: [{ code: 'gettingStartedRelated', typeCode: 'mediaCardComponentType',
-            media: [{ componentMediaCode: 'gettingStartedRelatedSet', mediaSetCode: 'relatedSet', mediaType: 'IMAGE', role: 'gallery', position: 0 }] }] }
+        { slot: 'main', index: 0, components: [{ code: 'gettingStartedHero', typeCode: 'nexusPageHeroType', accessMode: 'AUTHENTICATED',
+            localizations: [{ locale: 'en', properties: { title: 'Getting Started', body: 'A governed localized draft.' }, status: 'DRAFT' }],
+            media: [{ componentMediaCode: 'gettingStartedHeroMedia', mediaCode: 'heroMedia', mediaType: 'IMAGE', role: 'primary', position: 0 }] }] }
     ],
-    route: { path: '/docs/getting-started', accessMode: 'AUTHENTICATED' },
-    navigation: { title: 'Getting Started', position: 10 }
+    route: { path: '/docs/getting-started', accessMode: 'AUTHENTICATED' }
 };
 
 (async () => {
@@ -152,22 +176,22 @@ const draft = {
     assert.strictEqual(model.result.rules.arbitrarySlots, true);
     assert.strictEqual(model.result.rules.frontendPersistence, false);
     assert(model.result.operations.includes('associateMedia'));
-    assert.strictEqual(model.result.defaults.draftDefaults.catalogCode, 'documentationContentCatalog',
+    assert.strictEqual(model.result.defaults.draftDefaults.catalogCode, 'nexusContentCatalog',
         'WCMS must publish designer draft defaults through the authoring model');
-    assert(model.result.defaults.componentKinds.some(kind => kind.typeCode === 'richTextComponentType'),
+    assert(model.result.defaults.componentKinds.some(kind => kind.typeCode === 'nexusPageHeroType'),
         'WCMS must publish component-kind options instead of forcing Axis to own backend type codes');
-    assert(model.result.metadata.contentCatalogs.some(catalog => catalog.code === 'documentationContentCatalog'),
+    assert(model.result.metadata.contentCatalogs.some(catalog => catalog.code === 'nexusContentCatalog'),
         'WCMS must expose live content catalog references for Axis Designer selection');
-    assert(model.result.metadata.sites.some(site => site.code === 'axisDocumentationSite' &&
-        site.catalogCode === 'documentationContentCatalog'), 'WCMS must expose live site references with catalog ownership');
-    assert(model.result.metadata.pageTemplates.some(template => template.code === 'articleTemplate'),
+    assert(model.result.metadata.sites.some(site => site.code === 'nexusCorporateSite' &&
+        site.catalogCode === 'nexusContentCatalog'), 'WCMS must expose live site references with catalog ownership');
+    assert(model.result.metadata.pageTemplates.some(template => template.code === 'nexusCorporatePageTemplate'),
         'WCMS must expose live page template references');
     assert.deepStrictEqual(model.result.metadata.slotDefinitions.map(slot => slot.name),
-        ['navigation', 'article', 'relatedResources'], 'WCMS must expose template slot definitions without hardcoding three slots');
-    assert(model.result.metadata.componentTypes.some(type => type.code === 'richTextComponentType'),
+        ['main'], 'WCMS must expose template slot definitions without hardcoding three slots');
+    assert(model.result.metadata.componentTypes.some(type => type.code === 'nexusPageHeroType'),
         'WCMS must expose live component type references');
     assert(model.result.metadata.componentTypeGroups.some(group =>
-        group.code === 'documentationAuthoringGroup' && group.componentTypeCodes.includes('mediaCardComponentType')),
+        group.code === 'nexusCorporateSectionGroup' && group.componentTypeCodes.includes('nexusPageHeroType')),
     'WCMS must expose live component type group references');
     assert(model.result.metadata.mediaFolders.some(folder => folder.code === 'cmsAssets' &&
         folder.businessPurpose === 'cms-asset'), 'WCMS must expose media folder references without making Axis own media policy');
@@ -175,26 +199,26 @@ const draft = {
         'WCMS must expose media format references for authoring guidance');
     assert(model.result.metadata.mediaTypes.includes('IMAGE'),
         'WCMS must expose media type options for media association guidance');
-    assert(model.result.metadata.navigationNodes.some(node => node.code === 'nodicsDocumentation' &&
-        node.siteCode === 'axisDocumentationSite'), 'WCMS must expose navigation parent references');
+    assert(model.result.metadata.navigationNodes.some(node => node.code === 'nexusCorporateRoot' &&
+        node.siteCode === 'nexusCorporateSite'), 'WCMS must expose navigation parent references');
     assert.deepStrictEqual(model.result.metadata.publicationReadiness.requiredDraftParts,
         ['catalogCode', 'siteCode', 'templateCode', 'page', 'sections', 'route'],
     'WCMS must expose publication readiness hints in the authoring model');
 
     let validation = await service.validateDraftComposition({ tenant: 'tenant-a', authData: {}, body: draft });
     assert.strictEqual(validation.result.status, 'VALID_DRAFT');
-    assert.deepStrictEqual(validation.result.template.slots, ['navigation', 'article', 'relatedResources']);
-    assert.strictEqual(validation.result.componentCount, 3);
+    assert.deepStrictEqual(validation.result.template.slots, ['main']);
+    assert.strictEqual(validation.result.componentCount, 1);
 
     let save = await service.saveDraftComposition({ tenant: 'tenant-a', authData: {}, body: draft });
     assert.strictEqual(save.result.status, 'DRAFT_SAVED');
     assert(saved.some(item => item.code === 'gettingStartedPage'), 'draft page must be saved through cmsPage');
-    assert(saved.some(item => item.source === 'gettingStartedPage' && item.slot === 'relatedResources'),
+    assert(saved.some(item => item.source === 'gettingStartedPage' && item.slot === 'main'),
         'arbitrary template slots must be persisted through cmsComponentDetail');
     assert(saved.some(item => item.componentMediaCode === 'gettingStartedHeroMedia' && item.mediaCode === 'heroMedia'),
         'media item references must be persisted through cmsComponentMedia');
 
-    records.routes.push({ code: 'existingRoute', site: 'axisDocumentationSite', path: '/docs/getting-started',
+    records.routes.push({ code: 'existingRoute', site: 'nexusCorporateSite', path: '/docs/getting-started',
         locale: 'default', channel: 'web', active: true });
     await assert.rejects(service.validateDraftComposition({ tenant: 'tenant-a', authData: {}, body: draft }),
         error => error.code === 'ERR_CMS_00105');
@@ -215,6 +239,16 @@ const draft = {
 
     let publishReady = await service.validatePublishReadiness({ tenant: 'tenant-a', authData: {}, body: draft });
     assert.strictEqual(publishReady.result.status, 'READY_TO_PUBLISH');
+    records.routes.push({ code: 'nexusCorporateSite-gettingStartedPage-route', site: 'nexusCorporateSite',
+        path: '/docs/getting-started', locale: 'default', channel: 'web', active: true, page: 'gettingStartedPage',
+        versionId: 7 });
+    let publication = await service.submitForPublication({ tenant: 'tenant-a', authData: {}, body: draft });
+    assert.strictEqual(publication.result.status, 'PENDING_APPROVAL');
+    assert.strictEqual(publicationCalls[0][1].rootType, 'pageRoute');
+    assert.strictEqual(publicationCalls[0][1].rootCode, 'nexusCorporateSite-gettingStartedPage-route');
+    assert.strictEqual(publicationCalls[0][1].sourceVersion, '7');
+    assert.deepStrictEqual(publicationCalls.map(item => item[0]), ['create', 'validate', 'requestApproval']);
+    records.routes.length = 0;
     let noRoute = JSON.parse(JSON.stringify(draft));
     delete noRoute.route;
     await assert.rejects(service.validatePublishReadiness({ tenant: 'tenant-a', authData: {}, body: noRoute }),

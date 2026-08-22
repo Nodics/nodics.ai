@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/emsfailedmessages/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultEmsFailedMessagesController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/emsfailedmessages/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultEmsFailedMessagesController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/emsfailedmessages/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultEmsFailedMessagesController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/emsfailedmessages/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultEmsFailedMessagesController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultEngagementRecoveryCheckpointFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'engagementRecoveryCheckpoint';
+        if (callback) {
+            FACADE.DefaultEngagementRecoveryCheckpointFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultEngagementRecoveryCheckpointFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'engagementRecoveryCheckpoint';
+        if (callback) {
+            FACADE.DefaultEngagementRecoveryCheckpointFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultEngagementRecoveryCheckpointFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultEngagementRecoveryCheckpointFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'engagementRecoveryCheckpoint';
+        if (callback) {
+            FACADE.DefaultEngagementRecoveryCheckpointFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultEngagementRecoveryCheckpointFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

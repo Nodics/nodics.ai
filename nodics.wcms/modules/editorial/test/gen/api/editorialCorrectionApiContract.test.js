@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/editorialcorrection/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultEditorialCorrectionController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/editorialcorrection/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultEditorialCorrectionController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/editorialcorrection/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultEditorialCorrectionController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/editorialcorrection/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultEditorialCorrectionController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

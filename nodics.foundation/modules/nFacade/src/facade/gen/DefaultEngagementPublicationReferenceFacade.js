@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultEngagementPublicationReferenceService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultEngagementPublicationReferenceService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultEngagementPublicationReferenceService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultEngagementPublicationReferenceService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultEngagementPublicationReferenceService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultEngagementPublicationReferenceService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultEngagementPublicationReferenceService.remove(request);

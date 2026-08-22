@@ -14,7 +14,7 @@ const capability = {
     "enabled": true,
     "capabilityId": "customer-engagement-testimonial",
     "displayName": "Testimonial Candidates",
-    "category": "customer-experience",
+    "category": "organization",
     "icon": "feedback",
     "contractVersion": 1,
     "minimumClientContractVersion": 1,
@@ -27,7 +27,7 @@ const capability = {
     "navigation": [
         {
             "id": "testimonial-candidates",
-            "parentId": "customer-engagement",
+            "parentId": "testimonials-advocacy",
             "label": "Testimonial Candidates",
             "route": "/engagement/testimonial-candidates",
             "icon": "format_quote",
@@ -70,7 +70,7 @@ const capability = {
         },
         {
             "id": "testimonial-editorial",
-            "parentId": "customer-engagement",
+            "parentId": "testimonials-advocacy",
             "label": "Editorial Versions",
             "route": "/engagement/testimonial-editorial",
             "icon": "edit_note",
@@ -113,7 +113,7 @@ const capability = {
         },
         {
             "id": "testimonial-consents",
-            "parentId": "customer-engagement",
+            "parentId": "testimonials-advocacy",
             "label": "Consent & Rights",
             "route": "/engagement/testimonial-consents",
             "icon": "verified_user",
@@ -158,7 +158,7 @@ const capability = {
         },
         {
             "id": "testimonial-publications",
-            "parentId": "customer-engagement",
+            "parentId": "testimonials-advocacy",
             "label": "Publication Calendar",
             "route": "/engagement/testimonial-publications",
             "icon": "event_available",

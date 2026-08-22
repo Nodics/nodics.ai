@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/cmstypecode2renderer/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsTypeCode2RendererController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/cmstypecode2renderer/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsTypeCode2RendererController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/cmstypecode2renderer/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultCmsTypeCode2RendererController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/cmstypecode2renderer/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsTypeCode2RendererController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/eventlistener/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultEventListenerController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/eventlistener/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultEventListenerController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/eventlistener/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultEventListenerController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/eventlistener/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultEventListenerController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

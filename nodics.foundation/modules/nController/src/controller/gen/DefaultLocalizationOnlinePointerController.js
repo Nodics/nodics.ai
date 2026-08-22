@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultLocalizationOnlinePointerFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'localizationOnlinePointer';
+        if (callback) {
+            FACADE.DefaultLocalizationOnlinePointerFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultLocalizationOnlinePointerFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'localizationOnlinePointer';
+        if (callback) {
+            FACADE.DefaultLocalizationOnlinePointerFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultLocalizationOnlinePointerFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultLocalizationOnlinePointerFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'localizationOnlinePointer';
+        if (callback) {
+            FACADE.DefaultLocalizationOnlinePointerFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultLocalizationOnlinePointerFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

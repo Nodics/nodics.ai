@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultCustomerFeedbackResolutionService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultCustomerFeedbackResolutionService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultCustomerFeedbackResolutionService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultCustomerFeedbackResolutionService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultCustomerFeedbackResolutionService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultCustomerFeedbackResolutionService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultCustomerFeedbackResolutionService.remove(request);

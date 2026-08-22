@@ -26,6 +26,24 @@ module.exports = {
     },
     /** Reads a bounded owner projection. @param {Object} service Generated owner service. @param {string} tenant Tenant code. @param {Object} query Owner query. @param {number} limit Result limit. @returns {Promise<Array>} Matching records. */
     list: function (service, tenant, query, limit, authData) { return service.get({ tenant, authData, query: Object.assign({ tenant }, query), pageSize: limit || 20 }).then(this.unwrap).then(items => Array.isArray(items) ? items : items ? [items] : []); },
+    /** Loads active Price Books through the Pricing owner boundary. @param {Object} request Pricing request. @param {Object} authData Internal auth data. @returns {Promise<Array>} Active Price Books. */
+    loadPriceBooks: function (request, authData) {
+        return this.list(SERVICE.DefaultPriceBookService, request.tenant, { currency: request.currency, status: 'ACTIVE' }, 100, authData);
+    },
+    /** Loads candidate Price Rows through the Pricing owner boundary. @param {Object} request Pricing request. @param {Object} authData Internal auth data. @returns {Promise<Array>} Candidate Price Rows. */
+    loadPriceRows: function (request, authData) {
+        return this.list(SERVICE.DefaultPriceRowService, request.tenant, { productCode: request.productCode, currency: request.currency }, 100, authData);
+    },
+    /** Selects a governed price row and returns replayable Pricing decision evidence. @param {Object} request Pricing request. @param {Object} cart Cart context. @param {Object} authData Internal auth data. @returns {Promise<Object>} Pricing decision. */
+    price: async function (request, cart, authData) {
+        if (!SERVICE.DefaultPriceSelectionService) throw new Error('Price selection service is required');
+        const exact = SERVICE.DefaultExactAmountService;
+        const books = await this.loadPriceBooks(request, authData);
+        const rows = await this.loadPriceRows(request, authData);
+        const selection = SERVICE.DefaultPriceSelectionService.select(request, books, rows, exact);
+        if (!selection.selected) throw new Error('No eligible price row');
+        return SERVICE.DefaultPricingDecisionService.decide(Object.assign({}, request, { calculationVersion: '1', correlationId: cart.correlationId }), selection.selected, exact);
+    },
     /** Creates Cart calculation ports backed by domain owners. @param {Object} cart Cart context. @returns {Object} Pricing, Inventory, Promotion and Tax ports. */
     create: function (cart) {
         const self = this; const exact = SERVICE.DefaultExactAmountService;
@@ -33,10 +51,7 @@ module.exports = {
         return {
             exact,
             pricing: async request => {
-                const rows = await self.list(SERVICE.DefaultPriceRowService, request.tenant, { productCode: request.productCode, currency: request.currency }, 100, authData);
-                const eligible = rows.filter(row => exact.compare(request.quantity, row.minQuantity) >= 0).sort((a, b) => exact.compare(b.minQuantity, a.minQuantity));
-                if (!eligible[0]) throw new Error('No eligible price row');
-                return SERVICE.DefaultPricingDecisionService.decide(Object.assign({}, request, { calculationVersion: '1', correlationId: cart.correlationId }), eligible[0], exact);
+                return self.price(request, cart, authData);
             },
             inventory: async request => {
                 const balances = await self.list(SERVICE.DefaultInventoryBalanceService, request.tenant, { sku: request.sku }, 100, authData);

@@ -12,15 +12,15 @@
 /** @module engagementApi/src/service/defaultEngagementDomainGatewayService @description Fail-closed port replaced by owning domain modules; prevents API-to-persistence coupling. @layer service @owner engagementApi @override Domain modules implement only the operations they own through later loader precedence. */
 module.exports = {
     /** Handles contact within the module-owned contract. */
-    contact: function (operation, request) { let service = typeof SERVICE !== 'undefined' && SERVICE.DefaultContactSubmissionApiService; return service && typeof service[operation] === 'function' ? service[operation](request) : this.unavailable(); },
+    contact: function (operation, request) { let service = typeof SERVICE !== 'undefined' && SERVICE.DefaultContactSubmissionOperationService; return service && typeof service[operation] === 'function' ? service[operation](request) : this.unavailable(); },
     /** Dispatches one request to the testimonial-owned API service. */
-    testimonial: function (operation, request) { let service = typeof SERVICE !== 'undefined' && SERVICE.DefaultTestimonialApiService; return service && typeof service[operation] === 'function' ? service[operation](request) : this.unavailable(); },
+    testimonial: function (operation, request) { let service = typeof SERVICE !== 'undefined' && SERVICE.DefaultTestimonialOperationService; return service && typeof service[operation] === 'function' ? service[operation](request) : this.unavailable(); },
     /** Dispatches one request to the customerReview-owned API service. */
-    review: function (operation, request) { let service = typeof SERVICE !== 'undefined' && SERVICE.DefaultCustomerReviewApiService; return service && typeof service[operation] === 'function' ? service[operation](request) : this.unavailable(); },
+    review: function (operation, request) { let service = typeof SERVICE !== 'undefined' && SERVICE.DefaultCustomerReviewOperationService; return service && typeof service[operation] === 'function' ? service[operation](request) : this.unavailable(); },
     /** Dispatches one request to the customerFeedback-owned API service. */
-    feedback: function (operation, request) { let service = typeof SERVICE !== 'undefined' && SERVICE.DefaultCustomerFeedbackApiService; return service && typeof service[operation] === 'function' ? service[operation](request) : this.unavailable(); },
+    feedback: function (operation, request) { let service = typeof SERVICE !== 'undefined' && SERVICE.DefaultCustomerFeedbackOperationService; return service && typeof service[operation] === 'function' ? service[operation](request) : this.unavailable(); },
     /** Dispatches one request to Engagement Core unified operations. */
-    operations: function (operation, request) { let service = typeof SERVICE !== 'undefined' && SERVICE.DefaultEngagementOperationsApiService; return service && typeof service[operation] === 'function' ? service[operation](request) : this.unavailable(); },
+    operations: function (operation, request) { let service = typeof SERVICE !== 'undefined' && SERVICE.DefaultEngagementOperationService; return service && typeof service[operation] === 'function' ? service[operation](request) : this.unavailable(); },
     /** Handles unavailable within the module-owned contract. */
     unavailable: function () { let error = new Error('engagement domain operation is unavailable'); error.code = 'ERR_ENG_API_00005'; return Promise.reject(error); },
     /** Handles get active form within the module-owned contract. */

@@ -22,18 +22,18 @@ const test = require('node:test');
  */
 
 const routers = require('../src/router/routers');
-const controller = require('../src/controller/defaultOrderCustomerApiController');
-const facade = require('../src/facade/defaultOrderCustomerApiFacade');
-const service = require('../src/service/defaultOrderCustomerApiService');
+const controller = require('../src/controller/defaultOrderCustomerController');
+const facade = require('../src/facade/defaultOrderCustomerFacade');
+const service = require('../src/service/defaultOrderOperationService');
 
 let calls;
 
 function installGlobals() {
     calls = [];
     delete global.CLASSES;
-    global.FACADE = { DefaultOrderCustomerApiFacade: facade };
+    global.FACADE = { DefaultOrderCustomerFacade: facade };
     global.SERVICE = {
-        DefaultOrderCustomerApiService: service,
+        DefaultOrderOperationService: service,
         DefaultCommerceOrderService: {
             get: async request => {
                 calls.push({ service: 'order', request });
@@ -62,7 +62,7 @@ test.beforeEach(installGlobals);
 
 test('Order customer routes expose customer-owned order read without catalog lifecycle leakage', () => {
     assert.equal(routers.order.customer.read.key, '/customer/orders/:orderCode');
-    assert.equal(routers.order.customer.read.controller, 'DefaultOrderCustomerApiController');
+    assert.equal(routers.order.customer.read.controller, 'DefaultOrderCustomerController');
     assert.equal(routers.order.customer.read.permission, 'commerce.order.own.read');
     assert.equal(routers.order.customer.listOwnOrders.key, '/customer/orders');
     assert(!routers.order.customer.read.key.includes('/catalog'));

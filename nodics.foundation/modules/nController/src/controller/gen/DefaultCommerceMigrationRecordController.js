@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultCommerceMigrationRecordFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'commerceMigrationRecord';
+        if (callback) {
+            FACADE.DefaultCommerceMigrationRecordFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCommerceMigrationRecordFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'commerceMigrationRecord';
+        if (callback) {
+            FACADE.DefaultCommerceMigrationRecordFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCommerceMigrationRecordFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultCommerceMigrationRecordFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'commerceMigrationRecord';
+        if (callback) {
+            FACADE.DefaultCommerceMigrationRecordFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCommerceMigrationRecordFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

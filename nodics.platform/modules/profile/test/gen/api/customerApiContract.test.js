@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/customer/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCustomerController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/customer/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultCustomerController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/customer/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultCustomerController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/customer/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCustomerController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultCommsVerificationChallengeService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultCommsVerificationChallengeService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultCommsVerificationChallengeService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultCommsVerificationChallengeService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultCommsVerificationChallengeService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultCommsVerificationChallengeService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultCommsVerificationChallengeService.remove(request);

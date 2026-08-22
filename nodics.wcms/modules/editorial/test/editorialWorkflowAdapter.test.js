@@ -33,6 +33,22 @@ const adapter = require('../src/service/defaultEditorialWorkflowAdapterService')
     assert.equal(adapter.applyDecision({ code: 'article', revision: 3 }, { articleRevision: 3, action: 'APPROVE' }).status, 'APPROVED');
     assert.throws(() => adapter.applyDecision({ code: 'article', revision: 4 }, { articleRevision: 3, action: 'APPROVE' }));
 
+    let reviewCalls = [];
+    global.SERVICE.DefaultProcessOperationsInspectionService = {
+        listTasks: () => Promise.resolve([{ code: 'task-1', instanceCode: 'editorial-article-r3', status: 'OPEN' }])
+    };
+    global.SERVICE.DefaultProcessRuntimeLifecycleService.claimTask = request => {
+        reviewCalls.push({ operation: 'claim', taskCode: request.taskCode });
+        return Promise.resolve({ taskCode: request.taskCode });
+    };
+    global.SERVICE.DefaultProcessRuntimeLifecycleService.completeTask = request => {
+        reviewCalls.push({ operation: 'complete', taskCode: request.taskCode, body: request.httpRequest.body });
+        return Promise.resolve({ taskCode: request.taskCode, status: 'COMPLETED' });
+    };
+    let reviewResult = await adapter.decideReview({ editorial: { article: { code: 'article', revision: 3, status: 'IN_REVIEW', workflowInstanceCode: 'editorial-article-r3' } }, httpRequest: { body: {} } }, 'APPROVE');
+    assert.equal(reviewResult.article.status, 'APPROVED');
+    assert.deepEqual(reviewCalls.map(item => item.operation), ['claim', 'complete']);
+
     let calls = [];
     let originalFetch = global.fetch;
     global.fetch = async (url, options) => {

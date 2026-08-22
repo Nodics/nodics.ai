@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultProcessDefinitionService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultProcessDefinitionService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultProcessDefinitionService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultProcessDefinitionService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultProcessDefinitionService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultProcessDefinitionService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultProcessDefinitionService.remove(request);

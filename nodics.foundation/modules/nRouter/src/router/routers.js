@@ -85,6 +85,49 @@ module.exports = {
                     }
                 }
             },
+            safeSearch: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                cache: {
+                    enabled: false,
+                    ttl: 20
+                },
+                key: '/schemaName/safe-search',
+                method: 'POST',
+                controller: 'DefaultctrlName',
+                operation: 'safeSearch',
+                help: {
+                    requestType: 'secured',
+                    message: 'Generated schema utility API for generic admin/schema-driven tooling only. Use module-owned domain APIs for business journeys; do not use this as a product, order, checkout, payment, fulfillment, promotion, engagement, or content lifecycle API.',
+                    method: 'POST',
+                    url: 'http://host:port/nodics/{moduleName}/schemaName/safe-search',
+                    body: {
+                        search: 'optional bounded text search',
+                        filters: 'optional bounded browser-safe filter group',
+                        pageNumber: 'optional page number, default is 1',
+                        pageSize: 'optional page size constrained by schema metadata',
+                        sort: 'optional { field, direction } using advertised sortable fields'
+                    }
+                }
+            },
+            capabilities: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                cache: {
+                    enabled: false,
+                    ttl: 60
+                },
+                key: '/schemaName/capabilities',
+                method: 'GET',
+                controller: 'DefaultctrlName',
+                operation: 'capabilities',
+                help: {
+                    requestType: 'secured',
+                    message: 'Generated schema utility API for generic admin/schema-driven tooling only. Returns browser-safe schema capabilities without exposing raw database contracts; use module-owned domain APIs for business journeys.',
+                    method: 'GET',
+                    url: 'http://host:port/nodics/{moduleName}/schemaName/capabilities',
+                }
+            },
             getById: {
                 secured: true,
                 accessGroups: ['userGroup'],
@@ -140,6 +183,23 @@ module.exports = {
                             returnModified: 'true/false'
                         },
                         query: 'query object'
+                    }
+                }
+            },
+            deleteImpact: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                key: '/schemaName/delete-impact',
+                method: 'POST',
+                controller: 'DefaultctrlName',
+                operation: 'deleteImpact',
+                help: {
+                    requestType: 'secured',
+                    message: 'Generated schema utility API for generic admin/schema-driven tooling only. Previews technical reference impact before generated delete; use module-owned lifecycle APIs for business cancellation, return, refund, deactivation, publishing, or other governed business operations.',
+                    method: 'POST',
+                    url: 'http://host:port/nodics/{moduleName}/schemaName/delete-impact',
+                    body: {
+                        identity: 'Required safe record identity using the schema primary/display field and optional concurrency field'
                     }
                 }
             },

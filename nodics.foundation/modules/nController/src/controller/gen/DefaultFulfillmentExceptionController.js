@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultFulfillmentExceptionFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'fulfillmentException';
+        if (callback) {
+            FACADE.DefaultFulfillmentExceptionFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultFulfillmentExceptionFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'fulfillmentException';
+        if (callback) {
+            FACADE.DefaultFulfillmentExceptionFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultFulfillmentExceptionFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultFulfillmentExceptionFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'fulfillmentException';
+        if (callback) {
+            FACADE.DefaultFulfillmentExceptionFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultFulfillmentExceptionFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

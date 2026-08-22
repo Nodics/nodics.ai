@@ -42,6 +42,11 @@ resolver.resolveIndexConfiguration({ tenant: 'default', ownerType: 'PRODUCT' }).
         assert.equal(capability.capabilityId, 'discovery-management');
         assert.equal(capability.navigation[0].route, '/discovery/config');
         assert.equal(capability.navigation[0].permission, 'discovery.config.read');
+        assert.deepEqual(capability.navigation[0].group, {
+            id: 'search-discovery',
+            label: 'Search and Discovery',
+            order: 600
+        });
         console.log('Discovery configuration contract validated');
     });
 });

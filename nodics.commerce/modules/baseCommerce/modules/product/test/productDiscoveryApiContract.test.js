@@ -23,11 +23,11 @@ const test = require('node:test');
 
 const properties = require('../config/properties');
 const routers = require('../src/router/routers');
-const discoveryController = require('../src/controller/defaultProductDiscoveryApiController');
+const discoveryController = require('../src/controller/defaultProductDiscoveryController');
 const publicationController = require('../src/controller/defaultProductPublicationController');
-const discoveryFacade = require('../src/facade/defaultProductDiscoveryApiFacade');
+const discoveryFacade = require('../src/facade/defaultProductDiscoveryFacade');
 const publicationFacade = require('../src/facade/defaultProductPublicationFacade');
-const discovery = require('../src/service/defaultProductDiscoveryApiService');
+const discovery = require('../src/service/defaultProductDiscoveryService');
 const orchestration = require('../src/service/defaultProductCatalogPublicationOrchestrationService');
 const localization = require('../src/service/defaultProductLocalizationPolicyService');
 const publicationPolicy = require('../src/service/defaultProductPublicationPolicyService');
@@ -82,7 +82,7 @@ function installGlobals() {
     configurationRequests = [];
     global.CONFIG = { get: key => key === 'product' ? properties.product : key === 'defaultTenant' ? 'default' : undefined };
     global.SERVICE = {
-        DefaultProductDiscoveryApiService: discovery,
+        DefaultProductDiscoveryService: discovery,
         DefaultProductCatalogPublicationOrchestrationService: orchestration,
         DefaultProductLocalizationPolicyService: localization,
         DefaultProductPublicationPolicyService: publicationPolicy,
@@ -118,11 +118,11 @@ function installGlobals() {
         DefaultProductSearchProjectionService: {
             doSearch: async request => {
                 searchRequests.push(request);
-                let rows = projections.filter(item => item.tenant === request.query['tenant.keyword'] &&
-                item.storeCode === request.query['storeCode.keyword'] && item.locale === request.query['locale.keyword'] &&
-                    item.status === request.query['status.keyword']);
-            if (request.query['productCode.keyword']) rows = rows.filter(item => item.productCode === request.query['productCode.keyword']);
-            if (request.query['payload.categoryCodes.keyword']) rows = rows.filter(item => item.payload.categoryCodes.includes(request.query['payload.categoryCodes.keyword']));
+                let rows = projections.filter(item => item.tenant === request.query.tenant &&
+                item.storeCode === request.query.storeCode && item.locale === request.query.locale &&
+                    item.status === request.query.status);
+            if (request.query.productCode) rows = rows.filter(item => item.productCode === request.query.productCode);
+            if (request.query['payload.categoryCodes']) rows = rows.filter(item => item.payload.categoryCodes.includes(request.query['payload.categoryCodes']));
                 return { result: rows };
             },
             save: async request => savedProjections.push(request),
@@ -173,7 +173,7 @@ function installGlobals() {
         })
     };
     global.FACADE = {
-        DefaultProductDiscoveryApiFacade: discoveryFacade,
+        DefaultProductDiscoveryFacade: discoveryFacade,
         DefaultProductPublicationFacade: publicationFacade
     };
 }
@@ -226,7 +226,7 @@ test('customer discovery lists Product cards with safe price and availability bu
     assert.equal(response.data.discovery.fieldMappingCode, 'agoraProductDiscoveryFieldMapping');
     assert.equal(response.data.discovery.rankingProfileCode, 'agoraProductRankingProfile');
     assert.deepEqual(searchRequests[0].query, {
-        'tenant.keyword': 'default', 'storeCode.keyword': 'agoraMainStore', 'locale.keyword': 'en', 'status.keyword': 'CURRENT', 'payload.categoryCodes.keyword': 'agoraWomen'
+        tenant: 'default', storeCode: 'agoraMainStore', locale: 'en', status: 'CURRENT', 'payload.categoryCodes': 'agoraWomen'
     });
 });
 
@@ -251,9 +251,9 @@ test('customer discovery resolves default tenant for public storefront requests'
     });
 
     assert.equal(response.data.tenant, 'default');
-    assert.equal(searchRequests[0].query['tenant.keyword'], 'default');
-    assert.equal(searchRequests[0].query['storeCode.keyword'], 'agoraMainStore');
-    assert.equal(searchRequests[0].query['locale.keyword'], 'en');
+    assert.equal(searchRequests[0].query.tenant, 'default');
+    assert.equal(searchRequests[0].query.storeCode, 'agoraMainStore');
+    assert.equal(searchRequests[0].query.locale, 'en');
 });
 
 test('customer discovery falls back to Product projection store when browse search index is empty', async () => {
@@ -268,6 +268,21 @@ test('customer discovery falls back to Product projection store when browse sear
 
     assert.equal(response.data.products.length, 1);
     assert.equal(response.data.products[0].productCode, 'agoraLinenWrapDress');
+    assert.equal(response.data.discovery.source, 'PROJECTION_STORE_FALLBACK');
+});
+
+test('customer discovery applies text search during projection-store fallback', async () => {
+    global.SERVICE.DefaultProductSearchProjectionService.doSearch = async request => {
+        searchRequests.push(request);
+        return { result: [] };
+    };
+    let response = await discoveryController.list({
+        tenant: 'default',
+        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', q: 'linen', pageSize: '12' } }
+    });
+
+    assert.deepEqual(response.data.products.map(item => item.productCode), ['agoraLinenWrapDress']);
+    assert.equal(searchRequests[0].query.text, 'linen');
     assert.equal(response.data.discovery.source, 'PROJECTION_STORE_FALLBACK');
 });
 
@@ -309,7 +324,7 @@ test('customer PDP resolves one Product detail through Product search projection
     assert.equal(response.data.product.inventory, undefined);
     assert.equal(response.data.product.sku, undefined);
     assert.equal(response.data.product.variantSkuMap, undefined);
-    assert.equal(searchRequests[0].query['productCode.keyword'], 'agoraOxfordShirt');
+    assert.equal(searchRequests[0].query.productCode, 'agoraOxfordShirt');
     assert.equal(response.data.discovery.source, 'SEARCH_INDEX');
     assert.equal(response.data.discovery.indexName, 'productLocalized');
 });

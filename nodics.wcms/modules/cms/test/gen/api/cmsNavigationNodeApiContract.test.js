@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/cmsnavigationnode/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsNavigationNodeController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/cmsnavigationnode/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsNavigationNodeController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/cmsnavigationnode/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultCmsNavigationNodeController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/cmsnavigationnode/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsNavigationNodeController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

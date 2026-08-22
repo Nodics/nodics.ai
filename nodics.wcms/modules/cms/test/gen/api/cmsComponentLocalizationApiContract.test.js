@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/cmscomponentlocalization/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsComponentLocalizationController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/cmscomponentlocalization/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsComponentLocalizationController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/cmscomponentlocalization/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultCmsComponentLocalizationController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/cmscomponentlocalization/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCmsComponentLocalizationController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

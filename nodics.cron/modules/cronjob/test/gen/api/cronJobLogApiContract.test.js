@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/cronjoblog/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCronJobLogController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/cronjoblog/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultCronJobLogController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/cronjoblog/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultCronJobLogController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/cronjoblog/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCronJobLogController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

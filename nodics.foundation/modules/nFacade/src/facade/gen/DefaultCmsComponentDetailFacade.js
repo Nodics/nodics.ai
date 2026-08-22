@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultCmsComponentDetailService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultCmsComponentDetailService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultCmsComponentDetailService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultCmsComponentDetailService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultCmsComponentDetailService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultCmsComponentDetailService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultCmsComponentDetailService.remove(request);

@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultCommerceCompatibilityRecordFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'commerceCompatibilityRecord';
+        if (callback) {
+            FACADE.DefaultCommerceCompatibilityRecordFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCommerceCompatibilityRecordFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'commerceCompatibilityRecord';
+        if (callback) {
+            FACADE.DefaultCommerceCompatibilityRecordFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCommerceCompatibilityRecordFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultCommerceCompatibilityRecordFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'commerceCompatibilityRecord';
+        if (callback) {
+            FACADE.DefaultCommerceCompatibilityRecordFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultCommerceCompatibilityRecordFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

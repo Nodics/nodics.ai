@@ -36,7 +36,7 @@ const model = require('../src/schemas/model').default;
 
 async function run() {
     let writes = [];
-    let context = {
+    let context = Object.assign({}, model, {
         dataBase: { getOptions: () => ({}) },
         updateMany: (query, update, options) => {
             writes.push({ query, update, options });
@@ -49,7 +49,7 @@ async function run() {
                 apiKey: 'legacy-secret'
             }])
         })
-    };
+    });
 
     await model.updateItems.call(context, {
         query: { code: 'runtimeConfigAdminUserGroup' },
@@ -88,6 +88,39 @@ async function run() {
         },
         $unset: { apiKey: 1 }
     });
+
+    let dateContext = Object.assign({}, context, {
+        rawSchema: {
+            definition: {
+                publishFrom: { type: 'date' },
+                publishUntil: { type: 'date' },
+                updatedBy: { type: 'string' }
+            }
+        }
+    });
+    await model.updateItems.call(dateContext, {
+        query: { code: 'article' },
+        model: {
+            publishFrom: '2026-09-15T00:00:00.000Z',
+            updatedBy: 'admin'
+        }
+    });
+    assert.ok(writes[3].update.$set.publishFrom instanceof Date);
+    assert.strictEqual(writes[3].update.$set.publishFrom.toISOString(), '2026-09-15T00:00:00.000Z');
+    assert.strictEqual(writes[3].update.$set.updatedBy, 'admin');
+
+    await model.updateItems.call(dateContext, {
+        query: { code: 'article' },
+        model: {
+            $set: {
+                publishUntil: '2026-12-20T00:00:00.000Z',
+                updatedBy: 'admin'
+            }
+        }
+    });
+    assert.ok(writes[4].update.$set.publishUntil instanceof Date);
+    assert.strictEqual(writes[4].update.$set.publishUntil.toISOString(), '2026-12-20T00:00:00.000Z');
+    assert.strictEqual(writes[4].update.$set.updatedBy, 'admin');
 
     let result = await model.updateItems.call(context, {
         query: { code: 'runtimeConfigAdminUserGroup' },

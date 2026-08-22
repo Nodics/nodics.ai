@@ -31,14 +31,14 @@ const capability = {
     "navigation": [
         {
             "id": "cronjob",
-            "label": "Cron jobs",
+            "label": "Cron Job Management",
             "route": "/cron",
             "icon": "cronjob",
-            "order": 530,
+            "order": 1530,
             "group": {
-                "id": "business-process-automation",
-                "label": "Process & Automation",
-                "order": 500
+                "id": "process-and-automations",
+                "label": "Process and Automations",
+                "order": 1500
             },
             "perspectives": [
                 "operations"
@@ -54,14 +54,16 @@ const capability = {
         },
         {
             "id": "job-triggers",
+            "parentId": "triggers-relationships",
+            "parentModuleName": "flowCore",
             "label": "Scheduled triggers",
             "route": "/cron/triggers",
             "icon": "cronjob",
             "order": 540,
             "group": {
-                "id": "business-process-automation",
-                "label": "Process & Automation",
-                "order": 500
+                "id": "process-and-automations",
+                "label": "Process and Automations",
+                "order": 1500
             },
             "perspectives": [
                 "operations"

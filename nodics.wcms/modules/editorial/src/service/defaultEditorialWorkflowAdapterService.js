@@ -162,7 +162,7 @@ module.exports = {
         if (!input.article && input.model) input.article = input.model;
         if (!input.article || input.article.status !== 'IN_REVIEW' || !input.article.workflowInstanceCode) throw new CLASSES.NodicsError('ERR_EDT_00002', 'Only an in-review Editorial article can receive a review decision');
         let listed = await this.listReviewTasks(request, input.article.workflowInstanceCode);
-        let items = listed && (listed.items || listed.result || listed.data && listed.data.items || listed.data) || [];
+        let items = Array.isArray(listed) ? listed : (listed && (listed.items || listed.result || listed.data && listed.data.items || listed.data) || []);
         let task = (Array.isArray(items) ? items : []).find(item => item && item.instanceCode === input.article.workflowInstanceCode && ['OPEN', 'CLAIMED', 'ESCALATED'].includes(item.status));
         if (!task) throw new CLASSES.NodicsError('ERR_EDT_00003', 'No open Editorial review task was found');
         if (task.status === 'OPEN') {

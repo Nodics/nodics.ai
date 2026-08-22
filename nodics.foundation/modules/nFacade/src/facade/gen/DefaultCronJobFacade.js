@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultCronJobService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultCronJobService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultCronJobService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultCronJobService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultCronJobService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultCronJobService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultCronJobService.remove(request);

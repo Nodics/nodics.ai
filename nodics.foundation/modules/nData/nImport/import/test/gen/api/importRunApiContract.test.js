@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/importrun/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultImportRunController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/importrun/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultImportRunController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/importrun/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultImportRunController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/importrun/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultImportRunController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

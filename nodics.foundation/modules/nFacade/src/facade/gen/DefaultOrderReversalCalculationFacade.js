@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultOrderReversalCalculationService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultOrderReversalCalculationService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultOrderReversalCalculationService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultOrderReversalCalculationService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultOrderReversalCalculationService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultOrderReversalCalculationService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultOrderReversalCalculationService.remove(request);

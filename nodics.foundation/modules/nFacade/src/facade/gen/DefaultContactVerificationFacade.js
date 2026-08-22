@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultContactVerificationService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultContactVerificationService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultContactVerificationService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultContactVerificationService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultContactVerificationService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultContactVerificationService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultContactVerificationService.remove(request);

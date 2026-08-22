@@ -77,6 +77,59 @@ const expected = {
             "mutation": false
         },
         {
+            "name": "safeSearch",
+            "route": {
+                "routerName": "safeSearch",
+                "key": "/cmsrestriction/safe-search",
+                "method": "post",
+                "apiVersion": "v0",
+                "controller": "DefaultCmsRestrictionController",
+                "operation": "safeSearch",
+                "secured": true
+            },
+            "request": {
+                "headers": {
+                    "Authorization": "Bearer <token>",
+                    "tenant": "<activeTenant>",
+                    "x-enterprise-code": "<enterpriseCode>"
+                },
+                "params": {},
+                "query": {
+                    "recursive": false
+                },
+                "body": {
+                    "options": {},
+                    "query": {}
+                }
+            },
+            "mutation": false
+        },
+        {
+            "name": "capabilities",
+            "route": {
+                "routerName": "capabilities",
+                "key": "/cmsrestriction/capabilities",
+                "method": "get",
+                "apiVersion": "v0",
+                "controller": "DefaultCmsRestrictionController",
+                "operation": "capabilities",
+                "secured": true
+            },
+            "request": {
+                "headers": {
+                    "Authorization": "Bearer <token>",
+                    "tenant": "<activeTenant>",
+                    "x-enterprise-code": "<enterpriseCode>"
+                },
+                "params": {},
+                "query": {
+                    "recursive": false
+                },
+                "body": {}
+            },
+            "mutation": false
+        },
+        {
             "name": "getById",
             "route": {
                 "routerName": "getById",
@@ -127,6 +180,34 @@ const expected = {
                     "recursive": false
                 },
                 "body": {}
+            },
+            "mutation": false
+        },
+        {
+            "name": "deleteImpact",
+            "route": {
+                "routerName": "deleteImpact",
+                "key": "/cmsrestriction/delete-impact",
+                "method": "post",
+                "apiVersion": "v0",
+                "controller": "DefaultCmsRestrictionController",
+                "operation": "deleteImpact",
+                "secured": true
+            },
+            "request": {
+                "headers": {
+                    "Authorization": "Bearer <token>",
+                    "tenant": "<activeTenant>",
+                    "x-enterprise-code": "<enterpriseCode>"
+                },
+                "params": {},
+                "query": {
+                    "recursive": false
+                },
+                "body": {
+                    "options": {},
+                    "query": {}
+                }
             },
             "mutation": false
         },

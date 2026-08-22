@@ -98,6 +98,26 @@ test('publication fails closed before persistence when tenant or required locale
     assert.equal(indexed.length, 0);
 });
 
+test('publication fails closed when nSearch reports document indexing failures', async () => {
+    let original = global.SERVICE.DefaultProductSearchProjectionService.doSave;
+    global.SERVICE.DefaultProductSearchProjectionService.doSave = async () => ({
+        code: 'SUC_SRCH_00000',
+        result: [],
+        errors: [{ code: 'ERR_SRCH_00003', message: 'Invalid data model to save' }]
+    });
+    try {
+        await assert.rejects(publication.publish(request, { product: product, localizations: localizations,
+            storeCode: 'sampleStore', categoryCodes: ['sampleFootwear'], variantCodes: ['sampleRunningShoeBlue42'],
+            variants: [{ code: 'sampleRunningShoeBlue42', sku: 'SAMPLE-RUN-BLUE-42' }] }), {
+            code: 'ERR_PRODUCT_SEARCH_INDEX_0001'
+        });
+        assert.equal(removed.length, 1);
+        assert.deepEqual(removed[0].query, { tenant: 'default', productCode: product.code, storeCode: 'sampleStore' });
+    } finally {
+        global.SERVICE.DefaultProductSearchProjectionService.doSave = original;
+    }
+});
+
 test('withdrawal updates and removes only the tenant Product and Store partition', async () => {
     let result = await publication.withdraw(request, { productCode: product.code, storeCode: 'sampleStore' });
     let query = { tenant: 'default', productCode: product.code, storeCode: 'sampleStore' };
@@ -126,4 +146,6 @@ test('Product contributes a provider-neutral tenant Store and locale partitioned
     assert.equal(definition.tenantPropertyName, 'tenant');
     assert.deepEqual(definition.partitionProperties, ['tenant', 'storeCode', 'locale']);
     assert.equal(definition.properties.payload.type, 'object');
+    assert.equal(definition.properties.payload.dynamic, false);
+    assert.equal(definition.properties.payload.properties.categoryCodes.type, 'keyword');
 });

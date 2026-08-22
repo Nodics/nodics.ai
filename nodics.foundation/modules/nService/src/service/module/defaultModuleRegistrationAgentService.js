@@ -169,6 +169,7 @@ module.exports = {
             if (modules.length > Number(config.maxModulesPerRegistration)) throw new Error('Active module registration limit exceeded');
             await SERVICE.DefaultModuleService.fetch(SERVICE.DefaultModuleService.buildRequest({
                 moduleName: config.moduleName,
+                connectionName: config.connectionName,
                 apiName: '/registry/instances',
                 methodName: 'PUT',
                 header: Object.assign({ 'Idempotency-Key': this.getInstanceId() }, header),

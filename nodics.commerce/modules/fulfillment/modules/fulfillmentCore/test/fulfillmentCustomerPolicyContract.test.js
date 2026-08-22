@@ -23,12 +23,12 @@ const test = require('node:test');
 
 const properties = require('../config/properties');
 const routers = require('../src/router/routers');
-const controller = require('../src/controller/defaultFulfillmentCustomerApiController');
-const service = require('../src/service/defaultFulfillmentCustomerApiService');
+const controller = require('../src/controller/defaultFulfillmentCustomerController');
+const service = require('../src/service/defaultFulfillmentOperationService');
 
 test.beforeEach(() => {
     global.CONFIG = { get: key => key === 'fulfillmentCore' ? properties.fulfillmentCore : undefined };
-    global.SERVICE = { DefaultFulfillmentCustomerApiService: service };
+    global.SERVICE = { DefaultFulfillmentOperationService: service };
 });
 
 test('Fulfillment customer routes expose shipping and return methods as customer-safe policy', () => {

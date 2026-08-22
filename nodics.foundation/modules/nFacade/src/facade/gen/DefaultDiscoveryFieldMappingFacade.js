@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultDiscoveryFieldMappingService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultDiscoveryFieldMappingService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultDiscoveryFieldMappingService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultDiscoveryFieldMappingService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultDiscoveryFieldMappingService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultDiscoveryFieldMappingService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultDiscoveryFieldMappingService.remove(request);

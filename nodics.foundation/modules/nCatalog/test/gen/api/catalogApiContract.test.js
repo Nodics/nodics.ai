@@ -38,6 +38,24 @@ const expected = {
             "secured": true
         },
         {
+            "routerName": "safeSearch",
+            "key": "/catalog/safe-search",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCatalogController",
+            "operation": "safeSearch",
+            "secured": true
+        },
+        {
+            "routerName": "capabilities",
+            "key": "/catalog/capabilities",
+            "method": "get",
+            "apiVersion": "v0",
+            "controller": "DefaultCatalogController",
+            "operation": "capabilities",
+            "secured": true
+        },
+        {
             "routerName": "getById",
             "key": "/catalog/id/:id",
             "method": "get",
@@ -62,6 +80,15 @@ const expected = {
             "apiVersion": "v0",
             "controller": "DefaultCatalogController",
             "operation": "remove",
+            "secured": true
+        },
+        {
+            "routerName": "deleteImpact",
+            "key": "/catalog/delete-impact",
+            "method": "post",
+            "apiVersion": "v0",
+            "controller": "DefaultCatalogController",
+            "operation": "deleteImpact",
             "secured": true
         },
         {

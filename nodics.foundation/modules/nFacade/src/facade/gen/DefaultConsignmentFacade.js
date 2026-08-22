@@ -33,6 +33,12 @@ module.exports = {
     get: function (request) {
         return SERVICE.DefaultConsignmentService.get(request);
     },
+    safeSearch: function (request) {
+        return SERVICE.DefaultConsignmentService.safeSearch(request);
+    },
+    capabilities: function (request) {
+        return SERVICE.DefaultConsignmentService.capabilities(request);
+    },
     getById: function (id, tenant) {
         return SERVICE.DefaultConsignmentService.getById(id, tenant);
     },
@@ -47,6 +53,9 @@ module.exports = {
     },
     remove: function (request) {
         return SERVICE.DefaultConsignmentService.remove(request);
+    },
+    deleteImpact: function (request) {
+        return SERVICE.DefaultConsignmentService.deleteImpact(request);
     },
     removeById: function (request) {
         return SERVICE.DefaultConsignmentService.remove(request);

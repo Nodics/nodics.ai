@@ -281,6 +281,58 @@ const routerConfig = require('../src/router/routers');
     assert.strictEqual(exportResult.data.provenance.onlineWriteAuthorization, false);
     assert.match(exportResult.data.provenance.checksum, /^[a-f0-9]{64}$/);
 
+    let mediaHistoryRequest;
+    global.SERVICE.DefaultMediaService = {
+        get: async function (request) {
+            mediaHistoryRequest = request;
+            return {
+                success: {
+                    result: [
+                        {
+                            code: 'tenant-export-test',
+                            name: 'tenant-export-test.csv',
+                            folderCode: 'exportFiles',
+                            formatCode: 'exportFile',
+                            originalFileName: 'tenant-export-test.csv',
+                            mimeType: 'text/csv',
+                            extension: 'csv',
+                            sizeBytes: 128,
+                            checksum: 'a'.repeat(64),
+                            checksumAlgorithm: 'SHA-256',
+                            enterpriseCode: 'default',
+                            status: 'READY',
+                            updatedAt: new Date('2026-08-21T10:00:00.000Z'),
+                        },
+                    ],
+                },
+            };
+        },
+    };
+    let historyResult = await global.SERVICE.DataExportService.history({
+        tenant: 'default',
+        authData: {
+            enterprise: {
+                code: 'default',
+            },
+        },
+        httpRequest: {
+            query: {
+                limit: '10',
+            },
+        },
+    });
+    assert.strictEqual(historyResult.code, 'SUC_SYS_00000');
+    assert.strictEqual(historyResult.data[0].runId, 'tenant-export-test');
+    assert.strictEqual(historyResult.data[0].dataType, 'export');
+    assert.strictEqual(historyResult.data[0].media.originalFileName, 'tenant-export-test.csv');
+    assert.strictEqual(historyResult.data[0].media.sizeBytes, 128);
+    assert.deepStrictEqual(mediaHistoryRequest.query, {
+        folderCode: 'exportFiles',
+        formatCode: 'exportFile',
+        enterpriseCode: 'default',
+    });
+    assert.strictEqual(mediaHistoryRequest.searchOptions.projection.storageKey, undefined);
+
     const jsonPayload = JSON.parse(global.SERVICE.DataExportService.renderJson(
         { moduleName: 'profile', schemaName: 'tenant' },
         [{ code: 'default' }],
@@ -299,6 +351,12 @@ const routerConfig = require('../src/router/routers');
     assert.strictEqual(exportRoute.operation, 'export');
     assert.strictEqual(exportRoute.permission, 'export.run');
     assert.strictEqual(exportRoute.apiExposure, 'dataExport');
+    const historyRoute = routerConfig.export.dataExport.exportHistoryGet;
+    assert.strictEqual(historyRoute.key, '/history');
+    assert.strictEqual(historyRoute.controller, 'DataExportController');
+    assert.strictEqual(historyRoute.operation, 'history');
+    assert.strictEqual(historyRoute.permission, 'export.run');
+    assert.strictEqual(historyRoute.apiExposure, 'dataExport');
 
     console.log('Data export capability behavior validated');
 })().catch((error) => {

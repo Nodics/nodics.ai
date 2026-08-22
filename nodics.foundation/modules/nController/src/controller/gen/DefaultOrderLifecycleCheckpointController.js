@@ -62,6 +62,31 @@ module.exports = {
             return FACADE.DefaultOrderLifecycleCheckpointFacade.get(request);
         }
     },
+    safeSearch: function (request, callback) {
+        request.browserQuery = request.httpRequest.body || {};
+        request.schemaName = 'orderLifecycleCheckpoint';
+        if (callback) {
+            FACADE.DefaultOrderLifecycleCheckpointFacade.safeSearch(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultOrderLifecycleCheckpointFacade.safeSearch(request);
+        }
+    },
+    capabilities: function (request, callback) {
+        request.schemaName = 'orderLifecycleCheckpoint';
+        if (callback) {
+            FACADE.DefaultOrderLifecycleCheckpointFacade.capabilities(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultOrderLifecycleCheckpointFacade.capabilities(request);
+        }
+    },
     remove: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
@@ -72,6 +97,19 @@ module.exports = {
             });
         } else {
             return FACADE.DefaultOrderLifecycleCheckpointFacade.remove(request);
+        }
+    },
+    deleteImpact: function (request, callback) {
+        request.utilityBody = request.httpRequest.body || {};
+        request.schemaName = 'orderLifecycleCheckpoint';
+        if (callback) {
+            FACADE.DefaultOrderLifecycleCheckpointFacade.deleteImpact(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultOrderLifecycleCheckpointFacade.deleteImpact(request);
         }
     },
     removeById: function (request, callback) {

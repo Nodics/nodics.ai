@@ -18,9 +18,9 @@ const test = require('node:test');
 
 const properties = require('../config/properties');
 const routers = require('../src/router/routers');
-const controller = require('../src/controller/defaultCustomerListApiController');
-const facade = require('../src/facade/defaultCustomerListApiFacade');
-const service = require('../src/service/defaultCustomerListApiService');
+const controller = require('../src/controller/defaultCustomerListCustomerController');
+const facade = require('../src/facade/defaultCustomerListCustomerFacade');
+const service = require('../src/service/defaultCustomerListOperationService');
 
 let lists;
 let entries;
@@ -30,7 +30,7 @@ function installGlobals() {
     entries = [];
     global.CONFIG = { get: key => key === 'customerList' ? properties.customerList : undefined };
     global.SERVICE = {
-        DefaultCustomerListApiService: service,
+        DefaultCustomerListOperationService: service,
         DefaultCustomerListService: {
             save: async request => {
                 let existing = lists.find(item => item.code === request.model.code);
@@ -67,7 +67,7 @@ function installGlobals() {
             })
         }
     };
-    global.FACADE = { DefaultCustomerListApiFacade: facade };
+    global.FACADE = { DefaultCustomerListCustomerFacade: facade };
 }
 
 test.beforeEach(installGlobals);
