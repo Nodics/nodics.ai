@@ -652,10 +652,10 @@ module.exports = {
     items.forEach((item) => {
       if (item.parentId) {
         let parentKey = String(item.parentModuleName || item.moduleName) + ":" + String(item.parentId);
-        if (!identities.has(parentKey)) {
+        if (!identities.has(parentKey) && item.featureState !== "DISABLED" && item.featureState !== "HIDDEN") {
           warnings.push({
             code: "BROKEN_PARENT",
-            severity: item.featureState === "DISABLED" || item.featureState === "HIDDEN" ? "INFO" : "WARNING",
+            severity: "WARNING",
             item: item.moduleName + ":" + item.id,
             message: "Navigation item references a parent that is not present in the effective composition.",
           });
@@ -665,12 +665,16 @@ module.exports = {
     Object.keys(routeOwners).sort().forEach((route) => {
       let owners = Array.from(new Set(routeOwners[route]));
       if (owners.length > 1) {
+        let ownerModules = Array.from(new Set(owners.map((owner) => String(owner).split(":")[0])));
+        let sameModuleAlias = ownerModules.length === 1;
         warnings.push({
-          code: "DUPLICATE_ROUTE",
-          severity: "WARNING",
+          code: sameModuleAlias ? "DUPLICATE_ROUTE_ALIAS" : "DUPLICATE_ROUTE",
+          severity: sameModuleAlias ? "INFO" : "WARNING",
           route: route,
           owners: owners,
-          message: "Multiple navigation items resolve to the same route; Axis chooses the deepest/most specific match.",
+          message: sameModuleAlias
+            ? "Multiple navigation entries in the same module share a route as a grouping shortcut; Axis chooses the deepest/most specific match."
+            : "Multiple navigation items resolve to the same route; Axis chooses the deepest/most specific match.",
         });
       }
     });
