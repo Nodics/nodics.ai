@@ -225,6 +225,9 @@ module.exports = {
         if (options.header) {
             _.merge(header, options.header);
         }
+        if (options.idempotencyKey) {
+            header['Idempotency-Key'] = options.idempotencyKey;
+        }
         header = this.normalizeHeaders(header);
         let url = SERVICE.DefaultRouterService.prepareUrl(options);
         if (!options.apiName.startsWith('/')) {
@@ -274,6 +277,9 @@ module.exports = {
         };
         if (options.header) {
             _.merge(header, options.header);
+        }
+        if (options.idempotencyKey) {
+            header['Idempotency-Key'] = options.idempotencyKey;
         }
         header = this.normalizeHeaders(header);
         let uri = options.uri;

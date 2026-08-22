@@ -69,6 +69,7 @@ global.CONFIG = { get: () => undefined };
 global.SERVICE = {
     DefaultCmsComponentDetailService: {
         get: () => Promise.resolve({ result: [] }),
+        remove: () => Promise.resolve({ result: true }),
         update: () => Promise.resolve({ result: true })
     },
     DefaultCmsComponentMediaService: {
@@ -100,9 +101,8 @@ global.SERVICE = {
         { code: 'home2OldHero', source: 'home', target: 'oldHero', slot: 'main', index: 0, active: true },
         { code: 'home2NewHero', source: 'home', target: 'newHero', slot: 'main', index: 0, active: true }
     ] });
-    global.SERVICE.DefaultCmsComponentDetailService.update = request => {
+    global.SERVICE.DefaultCmsComponentDetailService.remove = request => {
         retiredCodes.push(request.query.code);
-        assert.deepStrictEqual(request.model, { $set: { active: false } });
         return Promise.resolve({ result: true });
     };
     await componentDetailInterceptor.retireObsoletePageComponentDetails({ tenant: 'tenant-a', authData: {},

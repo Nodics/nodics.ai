@@ -94,7 +94,8 @@ module.exports = {
         let model = request.model || {};
         if (!model.code || !Array.isArray(model.cmsComponents) || model.cmsComponents.length === 0 ||
             !SERVICE.DefaultCmsComponentDetailService || typeof SERVICE.DefaultCmsComponentDetailService.get !== 'function' ||
-            typeof SERVICE.DefaultCmsComponentDetailService.update !== 'function') {
+            (typeof SERVICE.DefaultCmsComponentDetailService.remove !== 'function' &&
+                typeof SERVICE.DefaultCmsComponentDetailService.update !== 'function')) {
             return true;
         }
         let incomingCodes = model.cmsComponents.reduce((codes, detail) => {
@@ -115,13 +116,18 @@ module.exports = {
         });
         let existing = responseData && Array.isArray(responseData.result) ? responseData.result : [];
         let obsolete = existing.filter(detail => detail && detail.code && !incomingCodes[detail.code]);
-        await Promise.all(obsolete.map(detail => SERVICE.DefaultCmsComponentDetailService.update({
-            tenant: request.tenant,
-            authData: request.authData,
-            query: { code: detail.code },
-            model: { $set: { active: false } }
-        })));
+        await Promise.all(obsolete.map(detail => this.retireComponentDetail(request, detail.code)));
         return true;
+    },
+
+    /** Removes obsolete component placement records through the generated service boundary. */
+    retireComponentDetail: function (request, code) {
+        let service = SERVICE.DefaultCmsComponentDetailService;
+        let base = { tenant: request.tenant, authData: request.authData, query: { code: code } };
+        if (service && typeof service.remove === 'function') {
+            return service.remove(base);
+        }
+        return service.update(Object.assign({}, base, { model: { $set: { active: false } } }));
     },
 
     /**
