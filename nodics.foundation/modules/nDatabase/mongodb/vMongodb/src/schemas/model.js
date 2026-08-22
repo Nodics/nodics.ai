@@ -68,6 +68,7 @@ module.exports = {
                 }
                 try {
                     let customQuery = _.merge({}, query);
+                    delete customQuery.versionId;
                     let customOptions = _.merge(_.merge({}, searchOptions), {
                         limit: 1,
                         sort: { versionId: -1 },
