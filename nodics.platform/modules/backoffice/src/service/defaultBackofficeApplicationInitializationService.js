@@ -109,7 +109,13 @@ module.exports = {
             requestBody: body, timeoutMs: profile.target.timeoutMs, maxAttempts: profile.target.maxAttempts,
             idempotencyKey: operation !== 'status' ? profile.code + ':' + operation + ':' + String(request.correlationId || request.requestId || principal) : undefined,
             header: { Authorization: 'Bearer ' + token } });
-        return SERVICE.DefaultModuleService.fetch(descriptor).then(response => {
+        return SERVICE.DefaultModuleService.fetch(descriptor).catch(error => {
+            let message = error && error.message ? String(error.message) : String(error && error.code || 'Unknown target error');
+            let diagnostic = new Error('Application initialization target failed for profile ' +
+                profile.code + ' baseline ' + profile.baselineCode + ' on ' + profile.target.moduleName + ': ' + message);
+            diagnostic.code = 'ERR_BOF_00083';
+            throw diagnostic;
+        }).then(response => {
             let authority = response && (response.data || response.result || response) || {};
             return { profileCode: profile.code, type: profile.type, owner: profile.owner,
                 applicationCode: profile.applicationCode, siteCode: profile.siteCode,

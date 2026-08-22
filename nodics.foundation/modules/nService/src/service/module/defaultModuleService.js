@@ -366,8 +366,21 @@ module.exports = {
                 try {
                     let response = await requestPromise(requestUrl.uri, fetchOptions);
                     if (!response.ok) {
-                        let error = new Error('Remote module request failed with HTTP status ' + response.status);
+                        let errorBody;
+                        try {
+                            errorBody = requestUrl.json === false ? await response.text() : await response.json();
+                        } catch (parseError) {
+                            errorBody = undefined;
+                        }
+                        let remoteCode = errorBody && (errorBody.code || errorBody.responseCode);
+                        let remoteMessage = errorBody && (errorBody.message || errorBody.error || errorBody.reason);
+                        let error = new Error(remoteMessage || ('Remote module request failed with HTTP status ' + response.status));
                         error.status = response.status;
+                        if (remoteCode) error.code = remoteCode;
+                        if (remoteMessage) error.remoteMessage = remoteMessage;
+                        if (errorBody && typeof errorBody === 'object') {
+                            error.remoteResponse = CLASSES.NodicsError.cleanContext(errorBody);
+                        }
                         throw error;
                     }
                     let result = requestUrl.json === false ? await response.text() : await response.json();

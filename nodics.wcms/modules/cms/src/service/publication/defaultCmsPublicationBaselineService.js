@@ -104,8 +104,45 @@ module.exports = {
         }
         return publication;
     },
+    /** Ensures the status projection remains JSON response safe. */
+    safeProjection: function (projection) {
+        return JSON.parse(JSON.stringify(projection));
+    },
+    /** Returns a minimal read-only baseline status when rich lineage projection is unavailable. */
+    minimalStatus: async function (code, request, cause) {
+        this.assertStaged();
+        let descriptor = this.descriptor(code);
+        let release = await this.release(descriptor, request);
+        let publication = await this.publication(descriptor, request);
+        let state = publication && publication.state;
+        let readiness = state === 'ONLINE' ? 'READY' : state === 'WITHDRAWN' ? 'RETIRED' :
+            state === 'ROLLED_BACK' ? 'ROLLED_BACK' : state === 'REJECTED' ? 'REJECTED' :
+            state === 'FAILED' ? 'FAILED' : state ? 'PUBLICATION_PENDING' :
+                release.status === 'CURRENT' ? 'IMPORTED' : 'NOT_IMPORTED';
+        return this.safeProjection({ baselineCode: descriptor.code, releaseCode: release.releaseCode,
+            releaseVersion: release.version, releaseStatus: release.status, readiness: readiness,
+            publication: publication && { code: publication.code, state: publication.state, revision: publication.revision,
+                targetVersion: publication.targetVersion, previousOnlineVersion: publication.previousOnlineVersion,
+                sourceVersion: publication.sourceVersion, requestedBy: publication.requestedBy,
+                workflowRef: publication.workflowRef || (state === 'PENDING_APPROVAL' &&
+                    SERVICE.DefaultCmsPublicationWorkflowService.reference(publication)) },
+            lineage: publication && { actor: publication.requestedBy,
+                source: { releaseCode: release.releaseCode, releaseVersion: release.version,
+                    sourceVersion: publication.sourceVersion },
+                publication: { code: publication.code, workflowRef: publication.workflowRef,
+                    correlationId: publication.correlationId },
+                targetEvidenceError: cause && (cause.code || cause.message) || 'CMS_BASELINE_STATUS_PROJECTION_UNAVAILABLE' } });
+    },
     /** Derives a sanitized readiness projection from nImport and nPublish authorities. */
     status: async function (code, request) {
+        try {
+            return this.safeProjection(await this.statusProjection(code, request));
+        } catch (error) {
+            return this.minimalStatus(code, request, error);
+        }
+    },
+    /** Builds the full baseline status projection. */
+    statusProjection: async function (code, request) {
         this.assertStaged();
         let descriptor = this.descriptor(code);
         let release = await this.release(descriptor, request);
@@ -113,9 +150,16 @@ module.exports = {
         let state = publication && publication.state;
         let lastAudit = publication && Array.isArray(publication.auditTrail) && publication.auditTrail.length
             ? publication.auditTrail[publication.auditTrail.length - 1] : undefined;
-        let target = publication && publication.targetVersion &&
-            SERVICE.DefaultCmsPublicationVersionProviderService.getLineage
-            ? await SERVICE.DefaultCmsPublicationVersionProviderService.getLineage(publication, request) : undefined;
+        let target;
+        let targetEvidenceError;
+        if (publication && publication.targetVersion &&
+            SERVICE.DefaultCmsPublicationVersionProviderService.getLineage) {
+            try {
+                target = await SERVICE.DefaultCmsPublicationVersionProviderService.getLineage(publication, request);
+            } catch (error) {
+                targetEvidenceError = error && (error.code || error.message) || 'CMS_TARGET_EVIDENCE_UNAVAILABLE';
+            }
+        }
         let transitions = publication && [].concat(publication.auditTrail || []).map(entry => ({
             revision: entry.revision, fromState: entry.fromState, toState: entry.toState,
             actor: entry.actor, reason: entry.reason, correlationId: entry.correlationId,
@@ -139,9 +183,9 @@ module.exports = {
             lineage: publication && { actor: publication.requestedBy,
                 source: { releaseCode: release.releaseCode, releaseVersion: release.version,
                     sourceVersion: publication.sourceVersion },
-                publication: { code: publication.code, workflowRef: publication.workflowRef,
+            publication: { code: publication.code, workflowRef: publication.workflowRef,
                     correlationId: publication.correlationId, transitions: transitions },
-                target: target } };
+                target: target, targetEvidenceError: targetEvidenceError } };
     },
     /** Installs and submits one baseline without approving or deploying it. */
     initiate: async function (code, request) {

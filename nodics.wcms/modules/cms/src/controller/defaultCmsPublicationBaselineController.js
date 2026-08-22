@@ -25,6 +25,12 @@ module.exports = {
     invoke: function (operation, request, callback) {
         this.prepare(request);
         let promise = SERVICE.DefaultCmsPublicationBaselineService[operation](request.baselineCode, request)
+            .catch(error => {
+                if (operation === 'status' && SERVICE.DefaultCmsPublicationBaselineService.minimalStatus) {
+                    return SERVICE.DefaultCmsPublicationBaselineService.minimalStatus(request.baselineCode, request, error);
+                }
+                throw error;
+            })
             .then(data => ({ code: 'SUC_CMS_00000', data: data }));
         if (!callback) return promise;
         promise.then(result => callback(null, result)).catch(callback);
