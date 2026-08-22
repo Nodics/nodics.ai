@@ -595,6 +595,37 @@ const capability = {
             ]
         },
         {
+            "id": "navigation-composition",
+            "parentId": "modules-capabilities",
+            "label": "Navigation Composition",
+            "route": "/administration/navigation-composition",
+            "icon": "route",
+            "order": 105,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 100
+            },
+            "perspectives": [
+                "operations",
+                "administrator"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "help": {
+                "summary": "Inspect the effective Axis navigation composition resolved from BackOffice module defaults and governed override readiness.",
+                "documentationRoute": "/docs/reference/backoffice",
+                "documentationFragment": "navigation-composition"
+            },
+            "featureState": "PREVIEW",
+            "requiredPermissions": [
+                "backoffice.bootstrap.view"
+            ]
+        },
+        {
             "id": "registry",
             "parentId": "modules-capabilities",
             "label": "Module Registry",

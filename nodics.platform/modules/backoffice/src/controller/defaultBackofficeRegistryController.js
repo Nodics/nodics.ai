@@ -51,6 +51,8 @@ module.exports = {
     publicBootstrap: function (request, callback) { return this.execute('publicBootstrap', request, callback); },
     /** Handles authorized BackOffice client bootstrap requests. */
     bootstrap: function (request, callback) { return this.execute('bootstrap', request, callback); },
+    /** Handles authorized effective Axis navigation composition requests. */
+    effectiveNavigationComposition: function (request, callback) { return this.execute('effectiveNavigationComposition', request, callback); },
     /** Handles secured registry diagnostic requests. */
     diagnostics: function (request, callback) { return this.execute('diagnostics', request, callback); },
     /** Handles bounded administrative registry search. */

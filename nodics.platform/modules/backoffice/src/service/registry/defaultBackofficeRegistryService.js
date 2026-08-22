@@ -592,6 +592,149 @@ module.exports = {
       });
   },
 
+  /** Produces the current effective Axis navigation composition from module defaults plus governed fallback metadata. */
+  buildEffectiveNavigationComposition: function (catalogue, availability, authData, request) {
+    let crypto = require("crypto");
+    let permissions = (authData && authData.permissions) || [];
+    let warnings = [];
+    let routeOwners = {};
+    let parentKeys = new Set();
+    let items = [];
+    Object.keys(catalogue).sort().forEach((moduleName) => {
+      let metadata = catalogue[moduleName] || {};
+      let moduleAvailability =
+        availability && availability[moduleName] && availability[moduleName].state
+          ? availability[moduleName].state
+          : "UNKNOWN";
+      (metadata.navigation || []).forEach((item, index) => {
+        let required = [].concat(item.requiredPermissions || []);
+        if (
+          !permissions.includes("*") &&
+          !required.every((permission) => permissions.includes(permission))
+        ) {
+          return;
+        }
+        let route = String(item.route || "");
+        let identity = moduleName + ":" + String(item.id || "");
+        let sourceTrace = {
+          sourceType: "moduleDefault",
+          ownerModule: moduleName,
+          stableIdentity: identity,
+          overrideApplied: false,
+          editable: false,
+          lifecycleState: "PUBLISHED",
+        };
+        let nextItem = Object.assign({}, item, {
+          order: Number.isInteger(item.order) ? item.order : index,
+          moduleName: moduleName,
+          availability: moduleAvailability,
+          sourceTrace: sourceTrace,
+          routeOwner: {
+            ownerType: item.workbenchTarget
+              ? "WORKBENCH"
+              : route.indexOf("/docs") === 0
+                ? "CMS"
+                : "NATIVE_AXIS",
+            ownerModule: moduleName,
+          },
+        });
+        if (nextItem.parentId) {
+          parentKeys.add(String(nextItem.parentModuleName || moduleName) + ":" + String(nextItem.parentId));
+        }
+        if (route) {
+          routeOwners[route] = routeOwners[route] || [];
+          routeOwners[route].push(identity);
+        }
+        items.push(nextItem);
+      });
+    });
+    let identities = new Set(items.map((item) => item.moduleName + ":" + item.id));
+    items.forEach((item) => {
+      if (item.parentId) {
+        let parentKey = String(item.parentModuleName || item.moduleName) + ":" + String(item.parentId);
+        if (!identities.has(parentKey)) {
+          warnings.push({
+            code: "BROKEN_PARENT",
+            severity: item.featureState === "DISABLED" || item.featureState === "HIDDEN" ? "INFO" : "WARNING",
+            item: item.moduleName + ":" + item.id,
+            message: "Navigation item references a parent that is not present in the effective composition.",
+          });
+        }
+      }
+    });
+    Object.keys(routeOwners).sort().forEach((route) => {
+      let owners = Array.from(new Set(routeOwners[route]));
+      if (owners.length > 1) {
+        warnings.push({
+          code: "DUPLICATE_ROUTE",
+          severity: "WARNING",
+          route: route,
+          owners: owners,
+          message: "Multiple navigation items resolve to the same route; Axis chooses the deepest/most specific match.",
+        });
+      }
+    });
+    let groups = {};
+    items.forEach((item) => {
+      if (!item.group || !item.group.id) return;
+      let group = item.group;
+      groups[group.id] = groups[group.id] || {
+        id: group.id,
+        label: group.label,
+        labelKey: group.labelKey,
+        order: Number.isInteger(group.order) ? group.order : 0,
+        sourceTrace: {
+          sourceType: "moduleDefault",
+          ownerModule: item.moduleName,
+          overrideApplied: false,
+          editable: false,
+          lifecycleState: "PUBLISHED",
+        },
+      };
+    });
+    let canonical = JSON.stringify({
+      scope: {
+        projectCode: request && request._projectCode,
+        tenantCode: request && request.tenant,
+      },
+      groups: Object.values(groups).sort((left, right) => left.order - right.order || left.id.localeCompare(right.id)),
+      navigation: items.map((item) => ({
+        id: item.id,
+        moduleName: item.moduleName,
+        route: item.route,
+        order: item.order,
+        parentId: item.parentId,
+        group: item.group && item.group.id,
+        featureState: item.featureState,
+      })).sort((left, right) => left.moduleName.localeCompare(right.moduleName) || left.id.localeCompare(right.id)),
+    });
+    return {
+      contractVersion: 0,
+      version: 0,
+      checksum: crypto.createHash("sha256").update(canonical).digest("hex"),
+      lifecycleState: "PUBLISHED",
+      source: "MODULE_DEFAULTS",
+      fallbackActive: true,
+      fallbackReason: "Governed override composition persistence is not active; effective navigation is resolved from authorized module defaults.",
+      scope: {
+        projectCode: request && request._projectCode,
+        tenantCode: request && request.tenant,
+        enterpriseCode: authData && (authData.enterpriseCode || authData.entCode),
+      },
+      authoring: {
+        mode: "READ_ONLY_FOUNDATION",
+        draftSupported: false,
+        approvalRequired: true,
+        publishSupported: false,
+        rollbackSupported: false,
+      },
+      groups: Object.values(groups).sort((left, right) => left.order - right.order || left.id.localeCompare(right.id)),
+      navigation: items,
+      warnings: warnings,
+      generatedAt: new Date().toISOString(),
+    };
+  },
+
   /** Resolves and validates bounded administrative query parameters. */
   getAdminQuery: function (request) {
     let source =
@@ -887,6 +1030,12 @@ module.exports = {
       request && request.authData,
     );
     let availability = this.buildAvailability(effectiveModules);
+    let effectiveNavigationComposition = this.buildEffectiveNavigationComposition(
+      catalogue,
+      availability,
+      request && request.authData,
+      request,
+    );
     let configured = this.getConfiguration().compatibility || {};
     let status = this.getOverallCompatibilityStatus(catalogue);
     if (status !== "COMPATIBLE") {
@@ -915,6 +1064,7 @@ module.exports = {
         modules: effectiveModules,
         catalogue: catalogue,
         availability: availability,
+        effectiveNavigationComposition: effectiveNavigationComposition,
         uiComposition: this.selectUiComposition(catalogue, availability),
         applicationInitializationProfiles: SERVICE.DefaultBackofficeApplicationInitializationService &&
           typeof SERVICE.DefaultBackofficeApplicationInitializationService.profiles === "function"
@@ -927,6 +1077,33 @@ module.exports = {
         axisPolicy: axisPolicy,
         tenantCode: request.tenant,
       },
+    };
+  },
+
+  /** Returns the authorized effective Axis navigation composition without the full bootstrap payload. */
+  effectiveNavigationComposition: async function (request) {
+    let clientContractVersion = this.getClientContractVersion(request);
+    let result = await this.list(request);
+    let eligibility = SERVICE.DefaultFunctionalModuleCatalogueService &&
+      typeof SERVICE.DefaultFunctionalModuleCatalogueService.getPresentationEligibility === "function"
+      ? await SERVICE.DefaultFunctionalModuleCatalogueService.getPresentationEligibility(request)
+      : undefined;
+    let effectiveModules = SERVICE.DefaultBackofficeCapabilityRegistryService.applyFunctionalModuleEligibility(
+      result.data.modules, eligibility);
+    let catalogue = this.buildCatalogue(
+      effectiveModules,
+      clientContractVersion,
+      request && request.authData,
+    );
+    let availability = this.buildAvailability(effectiveModules);
+    return {
+      code: "SUC_BOF_00015",
+      data: this.buildEffectiveNavigationComposition(
+        catalogue,
+        availability,
+        request && request.authData,
+        request,
+      ),
     };
   },
 

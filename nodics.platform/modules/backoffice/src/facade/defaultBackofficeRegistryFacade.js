@@ -45,6 +45,8 @@ module.exports = {
     publicBootstrap: request => SERVICE.DefaultBackofficeRegistryService.publicBootstrap(request),
     /** Delegates authorized BackOffice client bootstrap. */
     bootstrap: request => SERVICE.DefaultBackofficeRegistryService.bootstrap(request),
+    /** Delegates authorized effective Axis navigation composition. */
+    effectiveNavigationComposition: request => SERVICE.DefaultBackofficeRegistryService.effectiveNavigationComposition(request),
     /** Delegates secured registry diagnostics. */
     diagnostics: request => SERVICE.DefaultBackofficeRegistryService.diagnostics(request),
     /** Delegates bounded administrative registry search. */

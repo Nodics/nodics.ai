@@ -185,6 +185,22 @@ module.exports = {
                     schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.bootstrapData } })
                 } } } }
             },
+            effectiveNavigationComposition: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'backoffice.bootstrap.view',
+                authTokenTypes: ['access'],
+                apiExposure: 'serviceRegistry',
+                key: '/navigation/composition/effective',
+                method: 'GET',
+                controller: 'DefaultBackofficeRegistryController',
+                operation: 'effectiveNavigationComposition',
+                help: { parameters: [{ name: 'x-nodics-client-contract-version', in: 'header', required: false,
+                    description: 'Positive BackOffice client contract version; defaults to the configured minimum.', schema: { type: 'integer', minimum: 1 } }] },
+                responses: { '200': { description: 'Authorized effective Axis navigation composition with source trace and fallback status', content: { 'application/json': {
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: { type: 'object' } } })
+                } } } }
+            },
             diagnostics: {
                 secured: true,
                 accessGroups: ['userGroup'],
