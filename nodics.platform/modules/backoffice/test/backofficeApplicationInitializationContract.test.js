@@ -66,5 +66,9 @@ global.SERVICE = { DefaultModuleService: {
         releaseVersion: '0.0.0', releaseStatus: 'CURRENT' } });
     assert.deepStrictEqual((await service.status('nexus', { tenant: 'default', authData: { principalId: 'admin' } })).allowedActions,
         ['INITIALIZE'], 'A retired release must advertise its governed re-publication path');
+    SERVICE.DefaultModuleService.fetch = async () => ({ data: { readiness: 'READY', releaseCode: 'nexusData:nexusCorporateSite',
+        releaseVersion: '0.0.0', releaseStatus: 'UPDATE_AVAILABLE', publication: { state: 'ONLINE', previousOnlineVersion: 'v0' } } });
+    assert.deepStrictEqual((await service.status('nexus', { tenant: 'default', authData: { principalId: 'admin' } })).allowedActions,
+        ['INITIALIZE', 'ROLLBACK', 'RETIRE'], 'An Online baseline with changed source must expose governed refresh without hiding recovery actions');
     console.log('BackOffice application initialization contract validated');
 })().catch(error => { console.error(error); process.exit(1); });

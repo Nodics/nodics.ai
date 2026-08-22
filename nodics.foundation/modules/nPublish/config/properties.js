@@ -29,7 +29,7 @@ module.exports = {
                 PENDING_APPROVAL: ['APPROVED', 'REJECTED'],
                 APPROVED: ['ACTIVATING'],
                 ACTIVATING: ['ONLINE', 'FAILED'],
-                ONLINE: ['ROLLING_BACK', 'WITHDRAWING'],
+                ONLINE: ['VALIDATING', 'ROLLING_BACK', 'WITHDRAWING'],
                 ROLLING_BACK: ['ROLLED_BACK', 'FAILED'],
                 WITHDRAWING: ['WITHDRAWN', 'FAILED'],
                 FAILED: ['VALIDATING'],

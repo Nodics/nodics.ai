@@ -117,11 +117,13 @@ module.exports = {
             throw diagnostic;
         }).then(response => {
             let authority = response && (response.data || response.result || response) || {};
+            let updateAvailable = authority.readiness === 'READY' && authority.releaseStatus === 'UPDATE_AVAILABLE';
             return { profileCode: profile.code, type: profile.type, owner: profile.owner,
                 applicationCode: profile.applicationCode, siteCode: profile.siteCode,
                 profile: this.describe(profile),
                 allowedActions: authority.readiness === 'READY' ?
-                    [].concat(authority.publication && authority.publication.previousOnlineVersion ? ['ROLLBACK'] : [], ['RETIRE']) :
+                    [].concat(updateAvailable ? ['INITIALIZE'] : [],
+                        authority.publication && authority.publication.previousOnlineVersion ? ['ROLLBACK'] : [], ['RETIRE']) :
                     ['INITIALIZE'],
                 readiness: authority.readiness, releaseCode: authority.releaseCode,
                 releaseVersion: authority.releaseVersion, releaseStatus: authority.releaseStatus,

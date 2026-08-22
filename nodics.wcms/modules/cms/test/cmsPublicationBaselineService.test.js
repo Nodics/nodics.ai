@@ -81,6 +81,13 @@ const request = { tenant: 'default', authData: { principalId: 'platform-service'
     assert.strictEqual(retried.publication.state, 'PENDING_APPROVAL');
     assert.strictEqual(operations.filter(item => item[0] === 'retry').length, 1);
     assert.strictEqual(operations.filter(item => item[0] === 'requestApproval').length, 3);
+    releaseStatus = 'UPDATE_AVAILABLE';
+    lifecycle = Object.assign({}, lifecycle, { state: 'ONLINE', revision: 5, targetVersion: 'previous-online' });
+    const refresh = await service.initiate('axis', request);
+    assert.strictEqual(refresh.publication.state, 'PENDING_APPROVAL');
+    assert.strictEqual(operations.filter(item => item[0] === 'install').length, 2);
+    assert.strictEqual(operations.filter(item => item[0] === 'validate').length, 2);
+    assert.strictEqual(operations.filter(item => item[0] === 'requestApproval').length, 4);
     const status = await service.status('axis', request);
     assert.strictEqual(status.readiness, 'PUBLICATION_PENDING');
     publication.runtimeRole = 'ONLINE';

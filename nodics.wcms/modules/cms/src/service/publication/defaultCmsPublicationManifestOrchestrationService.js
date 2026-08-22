@@ -165,7 +165,7 @@ module.exports = {
         if (mediaAssets.length) contentModel.mediaAssets = mediaAssets;
         let content = JSON.stringify(contentModel);
         let contentHash = crypto.createHash('sha256').update(content).digest('hex');
-        let code = publication.code + '_' + publication.sourceVersion;
+        let code = [publication.code, publication.sourceVersion, Number(publication.revision || 0)].join('_');
         let model = { code: code, active: true, publicationCode: publication.code, rootType: publication.rootType,
             rootCode: publication.rootCode, sourceVersion: publication.sourceVersion, dependencies: publication.dependencies,
             snapshot: snapshot, contentHash: contentHash, createdBy: publication.requestedBy ||

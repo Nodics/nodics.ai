@@ -194,6 +194,10 @@ module.exports = {
             publication = await SERVICE.DefaultPublicationLifecycleService.create(Object.assign({}, actorRequest,
                 { publication: publicationInput }));
         }
+        if (publication.state === 'ONLINE' && release.status !== 'CURRENT') {
+            publication = await SERVICE.DefaultPublicationLifecycleService.validate(Object.assign({}, actorRequest,
+                { publicationCode: publication.code, expectedRevision: publication.revision }));
+        }
         if (publication.state === 'FAILED') {
             publication = await SERVICE.DefaultPublicationLifecycleService.retry(Object.assign({}, actorRequest,
                 { publicationCode: publication.code, expectedRevision: publication.revision }));

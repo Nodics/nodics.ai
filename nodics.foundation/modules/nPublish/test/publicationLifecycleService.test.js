@@ -100,6 +100,17 @@ const request = (revision, extra) => Object.assign({ tenant: 'tenant-a', publica
     } }));
     assert.strictEqual(replay.state, 'ONLINE', 'approved workflow replay must return the existing Online release');
     assert.strictEqual(activated, 1, 'approved workflow replay must not deploy twice');
+    let refreshed = await service.validate(request(replay.revision));
+    assert.strictEqual(refreshed.state, 'VALIDATED', 'online refresh must revalidate without withdrawing the current target');
+    assert.strictEqual(activated, 1, 'online refresh preparation must not deploy before approval');
+    let refreshPending = await service.requestApproval(request(refreshed.revision));
+    assert.strictEqual(refreshPending.state, 'PENDING_APPROVAL', 'online refresh must still require approval before activation');
+    let refreshApproved = await service.approve(request(refreshPending.revision, { workflowEvidence: {
+        instanceCode: 'approval-instance-2', definitionCode: 'cmsPublicationApproval', version: 1
+    } }));
+    online = await service.activate(request(refreshApproved.revision));
+    assert.strictEqual(online.state, 'ONLINE');
+    assert.strictEqual(activated, 2, 'approved online refresh must activate exactly once');
 
     let rollback = await service.rollback(request(online.revision));
     assert.strictEqual(rollback.state, 'ROLLED_BACK');

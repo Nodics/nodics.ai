@@ -278,7 +278,7 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     let outboxCountBeforeLoss = data.outbox.length;
     await assert.rejects(provider.activate(lossPublication, request), error => error.code === 'SIMULATED_RESPONSE_LOSS');
     let recoveredLoss = await provider.activate(lossPublication, request);
-    assert.strictEqual(recoveredLoss.version, 'publish-home-response-loss_2');
+    assert.strictEqual(recoveredLoss.version, 'publish-home-response-loss_0_1');
     assert.strictEqual(data.pointers.length, pointerCountBeforeLoss, 'response-loss retry must reuse the committed pointer');
     assert.strictEqual(data.receipts.length, receiptCountBeforeLoss + 1, 'response-loss retry must reuse the committed receipt');
     assert.strictEqual(data.outbox.length, outboxCountBeforeLoss + 1, 'response-loss retry must reuse the committed outbox event');
