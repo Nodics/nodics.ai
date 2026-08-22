@@ -53,6 +53,14 @@ module.exports = {
     bootstrap: function (request, callback) { return this.execute('bootstrap', request, callback); },
     /** Handles authorized effective Axis navigation composition requests. */
     effectiveNavigationComposition: function (request, callback) { return this.execute('effectiveNavigationComposition', request, callback); },
+    /** Handles navigation composition authoring status requests. */
+    navigationCompositionAuthoringStatus: function (request, callback) { return this.execute('navigationCompositionAuthoringStatus', request, callback); },
+    /** Handles safe navigation composition preview validation requests. */
+    previewNavigationComposition: function (request, callback) { return this.execute('previewNavigationComposition', request, callback); },
+    /** Handles effective navigation composition export requests. */
+    exportNavigationComposition: function (request, callback) { return this.execute('exportNavigationComposition', request, callback); },
+    /** Handles import payload validation without persistence. */
+    validateNavigationCompositionImport: function (request, callback) { return this.execute('validateNavigationCompositionImport', request, callback); },
     /** Handles secured registry diagnostic requests. */
     diagnostics: function (request, callback) { return this.execute('diagnostics', request, callback); },
     /** Handles bounded administrative registry search. */

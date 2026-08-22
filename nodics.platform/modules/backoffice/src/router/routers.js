@@ -201,6 +201,62 @@ module.exports = {
                     schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: { type: 'object' } } })
                 } } } }
             },
+            navigationCompositionAuthoringStatus: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'backoffice.bootstrap.view',
+                authTokenTypes: ['access'],
+                apiExposure: 'serviceRegistry',
+                key: '/navigation/composition/authoring',
+                method: 'GET',
+                controller: 'DefaultBackofficeRegistryController',
+                operation: 'navigationCompositionAuthoringStatus',
+                responses: { '200': { description: 'Navigation composition authoring lifecycle capability status', content: { 'application/json': {
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: { type: 'object' } } })
+                } } } }
+            },
+            previewNavigationComposition: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'backoffice.bootstrap.view',
+                authTokenTypes: ['access'],
+                apiExposure: 'serviceRegistry',
+                key: '/navigation/composition/preview',
+                method: 'POST',
+                controller: 'DefaultBackofficeRegistryController',
+                operation: 'previewNavigationComposition',
+                responses: { '200': { description: 'Dry-run validation for a proposed navigation composition without persistence or publish side effects', content: { 'application/json': {
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: { type: 'object' } } })
+                } } } }
+            },
+            exportNavigationComposition: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'backoffice.bootstrap.view',
+                authTokenTypes: ['access'],
+                apiExposure: 'serviceRegistry',
+                key: '/navigation/composition/export',
+                method: 'GET',
+                controller: 'DefaultBackofficeRegistryController',
+                operation: 'exportNavigationComposition',
+                responses: { '200': { description: 'Export of the current effective navigation composition with checksum and source trace', content: { 'application/json': {
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: { type: 'object' } } })
+                } } } }
+            },
+            validateNavigationCompositionImport: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'backoffice.bootstrap.view',
+                authTokenTypes: ['access'],
+                apiExposure: 'serviceRegistry',
+                key: '/navigation/composition/import/validate',
+                method: 'POST',
+                controller: 'DefaultBackofficeRegistryController',
+                operation: 'validateNavigationCompositionImport',
+                responses: { '200': { description: 'Import payload validation without persistence, approval, or publication side effects', content: { 'application/json': {
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: { type: 'object' } } })
+                } } } }
+            },
             diagnostics: {
                 secured: true,
                 accessGroups: ['userGroup'],

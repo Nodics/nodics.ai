@@ -724,9 +724,17 @@ module.exports = {
       authoring: {
         mode: "READ_ONLY_FOUNDATION",
         draftSupported: false,
+        previewSupported: true,
+        exportSupported: true,
+        importValidationSupported: true,
         approvalRequired: true,
         publishSupported: false,
         rollbackSupported: false,
+        rbacBoundary: "BACKOFFICE_PERMISSION_GATED",
+        localizationSupported: "LABEL_KEY_FOUNDATION",
+        persistenceSupported: false,
+        directBrowserEditsAllowed: false,
+        reason: "Navigation authoring is exposed as safe preview/export/import-validation only until durable draft persistence, checker approval, and rollback are active.",
       },
       groups: Object.values(groups).sort((left, right) => left.order - right.order || left.id.localeCompare(right.id)),
       navigation: items,
@@ -1104,6 +1112,143 @@ module.exports = {
         request && request.authData,
         request,
       ),
+    };
+  },
+
+  /** Returns safe authoring lifecycle metadata for Axis without enabling direct browser edits. */
+  navigationCompositionAuthoringStatus: async function (request) {
+    let effective = await this.effectiveNavigationComposition(request);
+    return {
+      code: "SUC_BOF_00016",
+      data: Object.assign({}, effective.data.authoring || {}, {
+        lifecycle: ["DRAFT", "SUBMITTED", "APPROVED", "PUBLISHED", "SUPERSEDED", "REJECTED", "ROLLED_BACK"],
+        availableOperations: ["effective", "preview", "export", "importValidate"],
+        blockedOperations: ["createDraft", "updateDraft", "submit", "approve", "publish", "rollback"],
+        blockingReason: "Durable scoped composition persistence, creator/checker approval, audit query, and rollback execution are not active yet.",
+        scope: effective.data.scope,
+        checksum: effective.data.checksum,
+      }),
+    };
+  },
+
+  /** Validates a candidate composition using the current effective navigation as authority, without persistence. */
+  validateNavigationCompositionCandidate: function (candidate, effective) {
+    let issues = [];
+    let navigation = candidate && Array.isArray(candidate.navigation)
+      ? candidate.navigation
+      : effective.navigation || [];
+    let identities = new Set();
+    let routes = {};
+    navigation.forEach((item, index) => {
+      let id = item && item.id ? String(item.id) : "";
+      let moduleName = item && item.moduleName ? String(item.moduleName) : "";
+      let identity = moduleName + ":" + id;
+      if (!id || !moduleName) {
+        issues.push({ code: "MISSING_IDENTITY", severity: "ERROR", index: index, message: "Navigation items require stable moduleName and id." });
+        return;
+      }
+      identities.add(identity);
+      let route = item && item.route ? String(item.route) : "";
+      if (route && route.indexOf("/") !== 0) {
+        issues.push({ code: "INVALID_ROUTE", severity: "ERROR", item: identity, message: "Navigation routes must be application-relative unless an approved external-link contract is implemented." });
+      }
+      if (route) {
+        routes[route] = routes[route] || [];
+        routes[route].push(identity);
+      }
+      if (item && item.label && String(item.label).length > 80) {
+        issues.push({ code: "LONG_LABEL", severity: "WARNING", item: identity, message: "Navigation label exceeds the recommended enterprise rail length and must be browser-validated." });
+      }
+    });
+    navigation.forEach((item) => {
+      if (!item || !item.parentId) return;
+      let parentKey = String(item.parentModuleName || item.moduleName) + ":" + String(item.parentId);
+      if (!identities.has(parentKey)) {
+        issues.push({ code: "BROKEN_PARENT", severity: "ERROR", item: String(item.moduleName) + ":" + String(item.id), message: "Navigation item references a parent that is not present in the candidate composition." });
+      }
+    });
+    Object.keys(routes).sort().forEach((route) => {
+      let owners = Array.from(new Set(routes[route]));
+      if (owners.length > 1) {
+        issues.push({ code: "DUPLICATE_ROUTE", severity: "ERROR", route: route, owners: owners, message: "Candidate composition contains duplicate effective routes with different owners." });
+      }
+    });
+    return {
+      valid: issues.filter((issue) => issue.severity === "ERROR").length === 0,
+      issues: issues,
+      checkedAt: new Date().toISOString(),
+    };
+  },
+
+  /** Performs a dry-run navigation composition preview without persistence or publication side effects. */
+  previewNavigationComposition: async function (request) {
+    let effective = await this.effectiveNavigationComposition(request);
+    let body = request && (request.body || request.data || request.payload) || {};
+    let candidate = body.candidate || body.composition || body;
+    let validation = this.validateNavigationCompositionCandidate(candidate, effective.data);
+    await this.audit({
+      eventType: "backoffice.navigationComposition.preview",
+      outcome: validation.valid ? "valid" : "invalid",
+      issueCount: validation.issues.length,
+      checksum: effective.data.checksum,
+    });
+    return {
+      code: "SUC_BOF_00017",
+      data: {
+        mode: "DRY_RUN_ONLY",
+        persisted: false,
+        published: false,
+        approvalRequired: true,
+        effectiveChecksum: effective.data.checksum,
+        validation: validation,
+        impact: {
+          currentItemCount: (effective.data.navigation || []).length,
+          candidateItemCount: candidate && Array.isArray(candidate.navigation) ? candidate.navigation.length : (effective.data.navigation || []).length,
+        },
+      },
+    };
+  },
+
+  /** Exports the current effective composition with source trace and checksum. */
+  exportNavigationComposition: async function (request) {
+    let effective = await this.effectiveNavigationComposition(request);
+    await this.audit({
+      eventType: "backoffice.navigationComposition.export",
+      outcome: "exported",
+      checksum: effective.data.checksum,
+    });
+    return {
+      code: "SUC_BOF_00018",
+      data: {
+        exportedAt: new Date().toISOString(),
+        exportFormatVersion: 0,
+        composition: effective.data,
+      },
+    };
+  },
+
+  /** Validates an imported composition payload without creating drafts or changing runtime navigation. */
+  validateNavigationCompositionImport: async function (request) {
+    let effective = await this.effectiveNavigationComposition(request);
+    let body = request && (request.body || request.data || request.payload) || {};
+    let candidate = body.composition || body.candidate || body;
+    let validation = this.validateNavigationCompositionCandidate(candidate, effective.data);
+    await this.audit({
+      eventType: "backoffice.navigationComposition.importValidate",
+      outcome: validation.valid ? "valid" : "invalid",
+      issueCount: validation.issues.length,
+      checksum: effective.data.checksum,
+    });
+    return {
+      code: "SUC_BOF_00019",
+      data: {
+        mode: "VALIDATE_ONLY",
+        persisted: false,
+        published: false,
+        validation: validation,
+        effectiveChecksum: effective.data.checksum,
+        blockingReason: "Import approval/persistence is intentionally disabled until governed draft storage and checker approval are implemented.",
+      },
     };
   },
 

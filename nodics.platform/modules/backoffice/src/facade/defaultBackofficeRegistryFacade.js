@@ -47,6 +47,14 @@ module.exports = {
     bootstrap: request => SERVICE.DefaultBackofficeRegistryService.bootstrap(request),
     /** Delegates authorized effective Axis navigation composition. */
     effectiveNavigationComposition: request => SERVICE.DefaultBackofficeRegistryService.effectiveNavigationComposition(request),
+    /** Delegates navigation composition authoring status. */
+    navigationCompositionAuthoringStatus: request => SERVICE.DefaultBackofficeRegistryService.navigationCompositionAuthoringStatus(request),
+    /** Delegates safe navigation composition preview validation. */
+    previewNavigationComposition: request => SERVICE.DefaultBackofficeRegistryService.previewNavigationComposition(request),
+    /** Delegates effective navigation composition export. */
+    exportNavigationComposition: request => SERVICE.DefaultBackofficeRegistryService.exportNavigationComposition(request),
+    /** Delegates import payload validation without persistence. */
+    validateNavigationCompositionImport: request => SERVICE.DefaultBackofficeRegistryService.validateNavigationCompositionImport(request),
     /** Delegates secured registry diagnostics. */
     diagnostics: request => SERVICE.DefaultBackofficeRegistryService.diagnostics(request),
     /** Delegates bounded administrative registry search. */
