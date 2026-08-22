@@ -194,7 +194,7 @@ module.exports = exportedService = {
                 (this.assert || exportedService.assert).call(this, fs.existsSync(manifestPath), `Published data root is missing data/manifest.json: ${path.relative(repositoryRoot, folder)}`);
                 const packageMetadata = (this.readJson || exportedService.readJson).call(this, packagePath);
                 const manifest = (this.readJson || exportedService.readJson).call(this, manifestPath);
-                (this.assert || exportedService.assert).call(this, manifest.contractVersion === 2, `Aggregate data manifest must use contractVersion 2: ${path.relative(repositoryRoot, manifestPath)}`);
+                (this.assert || exportedService.assert).call(this, [0, 2].includes(manifest.contractVersion), `Aggregate data manifest must use contractVersion 0 or 2: ${path.relative(repositoryRoot, manifestPath)}`);
                 (this.assert || exportedService.assert).call(this, manifest.module === packageMetadata.name, `Aggregate data manifest module identity mismatch: ${path.relative(repositoryRoot, manifestPath)}`);
                 (this.assert || exportedService.assert).call(this, manifest.sections && typeof manifest.sections === 'object' && !Array.isArray(manifest.sections),
                     `Aggregate data manifest sections are invalid: ${path.relative(repositoryRoot, manifestPath)}`);

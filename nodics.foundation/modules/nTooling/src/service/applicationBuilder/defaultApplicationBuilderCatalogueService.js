@@ -78,7 +78,7 @@ module.exports = {
             throw new Error('nodics.exp apps catalogue is unavailable: ' + cataloguePath);
         }
         const catalogue = JSON.parse(fs.readFileSync(cataloguePath, 'utf8'));
-        if (catalogue.contractVersion !== 1 || catalogue.workspace !== 'nodics.exp' || !catalogue.apps) {
+        if (![0, 1].includes(catalogue.contractVersion) || catalogue.workspace !== 'nodics.exp' || !catalogue.apps) {
             throw new Error('Invalid nodics.exp apps catalogue: ' + cataloguePath);
         }
         return { root: resolved, catalogue: catalogue };

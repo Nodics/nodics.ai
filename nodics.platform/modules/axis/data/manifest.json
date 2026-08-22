@@ -136,12 +136,12 @@
       "files": {
         "init/data/axis/axisCmsComponentData.js": "597656722290058cd0255a8872c621e2e6ba494b062413a738afa2899e560f9d",
         "init/data/axis/axisCmsPageData.js": "597149b6828ee5952d0dbaa44f842fdb865cc26683b918e9a555f7698b7905f3",
-        "init/data/axis/axisCmsRendererData.js": "2b37167721d007902d984ffaeaeaec19063d28ab9d368795ae397009dc706a47",
+        "init/data/axis/axisCmsRendererData.js": "a52b98291538f487e01d568285c830dbfc2ab43fc81bdd62c67948138eb6fd9a",
         "init/data/axis/axisCmsRouteData.js": "602ded097f412a7cbf2bd614d734d0cfa43881cf7675b68f97be537ec0f20ee4",
         "init/data/axis/axisCmsSiteData.js": "0c07f8e294fd7ff8ce1f3df787e0cc5c60e52d010685677b5dbb499009d73929",
         "init/data/axis/axisCmsSlotData.js": "861d8021650e991409ee768692ad18eb5e7358699f962baa27bc15f58b901d10",
-        "init/data/axis/axisCmsTemplateData.js": "5c2f5924274f396a82885ba7fe9d9155352b61e08d2d9cd0df6922f2093e4f35",
-        "init/data/axis/axisCmsTypeCodeData.js": "7c8222dee467feeba5d90b593e1dd97a35e92dc97cec4d34c7a77844576a8249",
+        "init/data/axis/axisCmsTemplateData.js": "3d292bb081dc44f5e2ea446af4c3a67a2c8566ab860d554cefebadbc7b584325",
+        "init/data/axis/axisCmsTypeCodeData.js": "f07cb49e206240ee4701c34f83f07063d77570ebe5a454f82a03d082dcb9827d",
         "init/data/axis/axisContentCatalogData.js": "cb807a566daa82760e2fa2362a38783dae542b2ee5daaf426a21eb4d2c6ea4b2",
         "init/headers/axis/axisContentCatalogHeader.js": "ec398e034ae3a31f387787ef174e4050b5ac775cca6a0a29e2948b54897fe25e"
       }
@@ -172,16 +172,16 @@
       "pages": 17,
       "components": 18,
       "routes": 17,
-      "releaseChecksum": "640a7b9d545cf44f00d69f9f8d2c795ddc38c3c8988e7888d1f27971ff59f761",
+      "releaseChecksum": "91fcf5b42ceb6960f38993dbbb76ddf06c6b14bb4369d2703ba9533a5b842a90",
       "generatedHashes": {
-        "core/data/documentation/axisDocumentationComponentData.js": "206ecdcca81b263f143567650c9ae5721a603d25422145dc8d67ce889725f78d",
+        "core/data/documentation/axisDocumentationComponentData.js": "178454f6c177ba69141cbcbce4683315f0596c02c1563213e70deefd80e7b34d",
         "core/data/documentation/axisDocumentationPageData.js": "aae16acdb0be18fda84ea7208be5c4429780bd8d73408ecaba589076f6a4cf0b",
-        "core/data/documentation/axisDocumentationRendererData.js": "070b7190f78ca9e772023e1ce89c9451b881252bc13185e6d08b8278b45854f5",
+        "core/data/documentation/axisDocumentationRendererData.js": "fc783595269b5f1e423e594263f1dd30bd35bf6e048d51fb6028938aeef89a68",
         "core/data/documentation/axisDocumentationRouteData.js": "94d142a0c4b580611456b5da69b1aeb8022297f25cf932e8519ef0ae89baa66f",
         "core/data/documentation/axisDocumentationSiteData.js": "91b8c928ef77bf1708ee7732fb40034607c2a49970ea8b012647e3f2ba880120",
         "core/data/documentation/axisDocumentationSlotData.js": "f53ac3815485ce7299fea900cf462fb0d539098ab1790462580d443bc7f2f46f",
-        "core/data/documentation/axisDocumentationTemplateData.js": "c784486b09b4ed167fc9e1004b81dcad37e3ddd4e0afdfc94699736d11c91fb7",
-        "core/data/documentation/axisDocumentationTypeCodeData.js": "7ca9c4183acc1f291b6b21301e461a75dd2eef2a09d1e195c9b1a97c1d250a3d",
+        "core/data/documentation/axisDocumentationTemplateData.js": "88c5d2f77c302c48fef6aa5ec21d4a528f698b94eb72e2b5147127258e16f43b",
+        "core/data/documentation/axisDocumentationTypeCodeData.js": "f777fa4b2a0b1b018bcb44380d266e3e9f6ef49a6f972612b52e330724bda6a2",
         "core/headers/axisDocumentationContentPackHeader.js": "7543085fecd8b439e8a846dd8c72fde90a2fe82bd5e622a1ee3469121862804b"
       },
       "migrationRegister": "docs/migration-register.json"

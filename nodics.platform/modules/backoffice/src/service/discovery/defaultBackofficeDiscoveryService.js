@@ -116,7 +116,7 @@ module.exports = {
         return {
             moduleName: registration.moduleName,
             contractType: 'OPENAPI',
-            contractVersion: Number(registration.backoffice.discovery.contractVersion || 1),
+            contractVersion: Number(registration.backoffice.discovery.contractVersion !== undefined ? registration.backoffice.discovery.contractVersion : 1),
             operations: operations,
             schemas: schemas
         };

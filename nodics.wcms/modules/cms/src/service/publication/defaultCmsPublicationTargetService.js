@@ -162,7 +162,7 @@ module.exports = {
         let manifest = await this.manifests().getManifest(input.manifestCode, request);
         if (!manifest) return { status: 'MANIFEST_MISSING', manifestCode: input.manifestCode, repaired: false };
         this.applyCorrelation(request, input, manifest);
-        let scopes = manifest.snapshot && manifest.snapshot.contractVersion === 2 ? manifest.snapshot.routes : [manifest.snapshot];
+        let scopes = manifest.snapshot && [0, 2].includes(manifest.snapshot.contractVersion) ? manifest.snapshot.routes : [manifest.snapshot];
         if (!Array.isArray(scopes) || !scopes.length) throw new CLASSES.NodicsError('CMS_PUBLICATION_ROUTE_MISSING', 'CMS publication contains no delivery scope');
         let drift = [];
         for (let scope of scopes) {
@@ -219,7 +219,7 @@ module.exports = {
     },
     /** Deactivates active site pointers that are outside the restored site-bundle manifest. */
     deactivateOutsideBundleScope: async function (manifest, request) {
-        if (!manifest.snapshot || manifest.snapshot.contractVersion !== 2) return 0;
+        if (!manifest.snapshot || ![0, 2].includes(manifest.snapshot.contractVersion)) return 0;
         let targetScopes = new Set([].concat(manifest.snapshot.routes || []).map(scope => this.scopeIdentity(scope)));
         let pointers = await this.manifests().getSitePointers(manifest.snapshot.site, request);
         let count = 0;

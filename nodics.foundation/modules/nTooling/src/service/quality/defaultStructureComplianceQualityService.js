@@ -406,10 +406,10 @@ module.exports = exportedService = {
             '`data/manifest.json` must contain valid JSON.');
         return;
     }
-    if (manifest.contractVersion !== 2 || manifest.module !== moduleObject.packageJson.name ||
+    if (![0, 2].includes(manifest.contractVersion) || manifest.module !== moduleObject.packageJson.name ||
         !manifest.sections || typeof manifest.sections !== 'object' || Array.isArray(manifest.sections)) {
         (this.createFinding || exportedService.createFinding).call(this, report, 'error', moduleObject, 'invalid-data-manifest-envelope',
-            '`data/manifest.json` must use contractVersion 2, match package name, and declare a sections map.');
+            '`data/manifest.json` must use contractVersion 0 or 2, match package name, and declare a sections map.');
         return;
     }
     const supportedKinds = new Set(['DATA_RELEASE', 'CONTENT_PACK', 'SOURCE_CONTRIBUTION']);

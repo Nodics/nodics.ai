@@ -14,23 +14,25 @@
             "kind": "DATA_RELEASE",
             "dataType": "core",
             "version": "0.0.0",
-            "description": "Localization Core core data and initial published Axis runtime bundles",
+            "description": "Localization Core core data",
             "owningDomain": "localization",
             "lifecycle": "OPERATIONAL_VERSIONED",
             "destinationRole": "PLATFORM",
-            "environmentScope": ["ALL"],
+            "environmentScope": [
+                "ALL"
+            ],
             "sensitivity": "INTERNAL",
             "versioningPolicy": "IMMUTABLE",
             "publicationPolicy": "NONE",
             "initialPublicationPolicy": "NONE",
             "removalPolicy": "RETAIN",
             "files": {
-                "core/source/localization/common.json": "bd9257463ae63823234d54a43f78d741724109cfb8a031ad06b5b9d59a5852c9",
                 "core/data/localization/defaultLocalizationKeyData.js": "634c47a2d38731728a651e9ebb1057a79708b530c0b37c5d4040180eca3747ba",
-                "core/data/localization/defaultLocalizationValueData.js": "9f4146592c327e80b4837bdb99e445b680097ea481b3cbabf6b37b0f014416df",
+                "core/data/localization/defaultLocalizationOnlinePointerData.js": "c1861a42e1a7f835166096c0b344a26143c792f40ae0dc1741c781818ed6c017",
                 "core/data/localization/defaultLocalizationReleaseData.js": "992017fae9f1c6d9f2fbfec7489a7070c392a72e5d399c1c6c19e63eac9f9806",
-                "core/data/localization/defaultLocalizationOnlinePointerData.js": "8ae062396025603df467911a35efc740d127395d5b6dc29729407926e3c4a371",
-                "core/headers/localization/defaultLocalizationRuntimeHeader.js": "36cf8fe6bb0ec818330dcf1bd82d8696c527be5f4c8cd4d0f4911da424f3f637"
+                "core/data/localization/defaultLocalizationValueData.js": "9f4146592c327e80b4837bdb99e445b680097ea481b3cbabf6b37b0f014416df",
+                "core/headers/localization/defaultLocalizationRuntimeHeader.js": "36cf8fe6bb0ec818330dcf1bd82d8696c527be5f4c8cd4d0f4911da424f3f637",
+                "core/source/localization/common.json": "bd9257463ae63823234d54a43f78d741724109cfb8a031ad06b5b9d59a5852c9"
             }
         }
     }

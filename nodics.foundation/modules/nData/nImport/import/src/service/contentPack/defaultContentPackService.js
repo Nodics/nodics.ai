@@ -221,7 +221,7 @@ module.exports = {
     /** Resolves one configured content-pack section from the module-owned aggregate data manifest. */
     resolveManifestSection: function (context, manifestDocument) {
         if (!manifestDocument || !manifestDocument.sections) return manifestDocument;
-        if (manifestDocument.contractVersion !== 2 || typeof manifestDocument.sections !== 'object') {
+        if (![0, 2].includes(manifestDocument.contractVersion) || typeof manifestDocument.sections !== 'object') {
             throw this.createError('ERR_IMP_00003', 'Aggregate data manifest contract is unsupported');
         }
         let sectionName = context.source.manifestSection;
@@ -255,6 +255,9 @@ module.exports = {
         if (path.dirname(repositoryPath) !== parentPath) {
             throw this.createError('ERR_IMP_00003', 'Content-pack repository escapes the configured workspace');
         }
+        if (fs.existsSync(repositoryPath)) return repositoryPath;
+        let loadedModule = NODICS.getRawModule && NODICS.getRawModule(repositoryName);
+        if (loadedModule && loadedModule.path && fs.existsSync(loadedModule.path)) return loadedModule.path;
         return repositoryPath;
     },
 
@@ -294,7 +297,7 @@ module.exports = {
 
     /** Validates manifest identity, contract, files, and hashes. */
     validateManifest: function (context, manifest, fileRoot, repositoryPath) {
-        let allowedVersions = context.configuration.allowedContractVersions || [1];
+        let allowedVersions = context.configuration.allowedContractVersions || [0, 1];
         let expectedManifestPack = this.resolveExpectedManifestPack(context, repositoryPath);
         if (manifest.pack !== expectedManifestPack ||
             typeof manifest.version !== 'string' ||
@@ -410,6 +413,7 @@ module.exports = {
     validateUpdatePolicy: function (context, release, installedRelease) {
         if (!installedRelease) return;
         let policy = context.pack.updatePolicy || {};
+        if (this.isDevelopmentRelease(release.version)) return;
         let versionComparison = this.compareVersions(release.version, installedRelease.contentPackVersion);
         if (versionComparison < 0 && policy.allowDowngrade !== true) {
             throw this.createError('ERR_IMP_00003', 'Content-pack downgrade is not allowed');
@@ -420,6 +424,11 @@ module.exports = {
             policy.sameVersionContentChange !== 'ALLOW') {
             throw this.createError('ERR_IMP_00003', 'Content-pack release changed without a version change');
         }
+    },
+
+    /** Returns whether a content-pack release is the mutable pre-release development baseline. */
+    isDevelopmentRelease: function (version) {
+        return String(version || '') === '0.0.0';
     },
 
     /** Compares dotted numeric release versions. */

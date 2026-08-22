@@ -67,7 +67,7 @@ module.exports = {
      * @returns {void}
      */
     validateManifest: function (projectRoot, manifest) {
-        if (manifest.contractVersion !== 1) {
+        if (![0, 1].includes(manifest.contractVersion)) {
             throw new Error('Unsupported nodics.project.json contractVersion: ' + manifest.contractVersion);
         }
         if (!manifest.projectCode || !/^[a-zA-Z][a-zA-Z0-9._-]*$/.test(manifest.projectCode)) {

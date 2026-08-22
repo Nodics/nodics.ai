@@ -409,10 +409,10 @@ module.exports = {
         } catch (error) {
             throw this.error('ERR_IMP_00003', 'Aggregate data manifest JSON is invalid for module ' + rawModule.name);
         }
-        if (!manifest || manifest.contractVersion !== 2 || manifest.module !== rawModule.name ||
+        if (!manifest || ![0, 2].includes(manifest.contractVersion) || manifest.module !== rawModule.name ||
             !manifest.sections || typeof manifest.sections !== 'object' || Array.isArray(manifest.sections)) {
             throw this.error('ERR_IMP_00003', 'Aggregate data manifest is incompatible for module ' + rawModule.name +
-                '; verify contractVersion 2, module identity, and sections map');
+                '; verify contractVersion 0 or 2, module identity, and sections map');
         }
         return manifest;
     },
@@ -716,9 +716,11 @@ module.exports = {
         let status = 'NOT_INSTALLED';
         if (installed) {
             let comparison = this.compareVersions(release.version, installed.version);
-            status = comparison > 0 ? 'UPDATE_AVAILABLE' :
-                comparison < 0 ? 'DOWNGRADE_AVAILABLE' :
-                    release.checksum === installed.checksum ? 'CURRENT' : 'INVALID_RELEASE';
+            let developmentBaseline = this.isDevelopmentRelease(release.version);
+            status = developmentBaseline && release.checksum !== installed.checksum ? 'UPDATE_AVAILABLE' :
+                comparison > 0 ? 'UPDATE_AVAILABLE' :
+                    comparison < 0 ? 'DOWNGRADE_AVAILABLE' :
+                        release.checksum === installed.checksum ? 'CURRENT' : 'INVALID_RELEASE';
             if (installed.status === 'FAILED') status = 'FAILED';
         }
         if (running || installed && installed.status === 'RUNNING') status = 'RUNNING';
@@ -735,6 +737,7 @@ module.exports = {
     /** Enforces downgrade and same-version checksum policy. */
     validateUpgradePolicy: function (release, installed) {
         if (!installed) return true;
+        if (this.isDevelopmentRelease(release.version)) return true;
         let comparison = this.compareVersions(release.version, installed.version);
         if (comparison < 0 && this.configuration().allowDowngrade !== true) {
             throw this.error('ERR_IMP_00003', 'Data release downgrade is not allowed');
@@ -790,6 +793,11 @@ module.exports = {
     /** Resolves trusted tenant context with the established default fallback. */
     resolveTenant: function (request) {
         return request && request.tenant || CONFIG.get('defaultTenant') || 'default';
+    },
+
+    /** Returns whether a release is the mutable pre-release development baseline. */
+    isDevelopmentRelease: function (version) {
+        return String(version || '') === '0.0.0';
     },
 
     /** Compares strict three-part numeric release versions. */

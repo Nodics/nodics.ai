@@ -72,7 +72,7 @@ function visit(folder) {
                 module: packageMetadata.name,
                 sections: {}
             };
-            if (aggregate.contractVersion !== 2 || aggregate.module !== packageMetadata.name ||
+            if (![0, 2].includes(aggregate.contractVersion) || aggregate.module !== packageMetadata.name ||
                 !aggregate.sections || typeof aggregate.sections !== 'object') {
                 throw new Error('Aggregate data manifest is incompatible: ' + manifestPath);
             }
@@ -106,6 +106,11 @@ function visit(folder) {
                         if (requestedVersion && requestedVersion !== existing.version) {
                             section.version = requestedVersion;
                             aggregate.sections[dataType] = Object.assign({}, existing, section);
+                            changed = true;
+                            continue;
+                        }
+                        if (existing.version === '0.0.0') {
+                            aggregate.sections[dataType] = Object.assign({}, existing, section, { version: '0.0.0' });
                             changed = true;
                             continue;
                         }

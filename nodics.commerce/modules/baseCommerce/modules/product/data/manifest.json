@@ -1,30 +1,34 @@
 {
-  "contractVersion": 0,
-  "module": "product",
-  "sections": {
-    "sample": {
-      "kind": "DATA_RELEASE",
-      "dataType": "sample",
+    "contractVersion": 0,
+    "module": "product",
+    "sections": {
+        "sample": {
+            "kind": "DATA_RELEASE",
+            "dataType": "sample",
             "version": "0.0.0",
-            "description": "Product bilingual catalogue sample data",
+            "description": "Product sample data",
             "owningDomain": "product",
             "lifecycle": "PUBLISHABLE",
             "destinationRole": "COMMERCE_STAGED",
-            "environmentScope": ["LOCAL", "DEVELOPMENT", "TEST"],
+            "environmentScope": [
+                "LOCAL",
+                "DEVELOPMENT",
+                "TEST"
+            ],
             "sensitivity": "INTERNAL",
             "versioningPolicy": "IMMUTABLE",
             "publicationPolicy": "REQUIRED",
             "initialPublicationPolicy": "ADMIN_INITIATED",
             "removalPolicy": "UNPUBLISH_OR_RETIRE",
-      "files": {
-        "sample/data/product/sampleCategoryData.js": "744b2fb5f331c8c77d4bfbce1f7fd7607b8691e03c46d82be28dd54f1fee5c3e",
-        "sample/data/product/sampleCategoryLocalizationData.js": "d0087a81e8f6eea6eb9b73922e4209aeae173d256d386e5f776e732afcff25b4",
-        "sample/data/product/sampleProductData.js": "340119bc64bea7e77d67fea8fc46919ca6c9e93577da79e7ce9511d540ef0b39",
-        "sample/data/product/sampleProductLocalizationData.js": "f0d463e31a9f8c5e068dfbdd2a2e7711128e71a8fe5a294042baeb9a580d54f0",
-        "sample/data/product/sampleProductVariantData.js": "9f9e186dbb7f9614703eb98fc5dc15bd03d5e0a961818fbab275e6787b11102e",
-        "sample/data/product/sampleProductVariantLocalizationData.js": "b1c40a336eacb39771d87b1433087d8bf29367199923941af798d89681623318",
-        "sample/headers/product/sampleProductLocalizationDataHeader.js": "bdd3b6b75f13408310fdb1f6307cd1fdf519ee239f10620b9d1afcdb79955d92"
-      }
+            "files": {
+                "sample/data/product/sampleCategoryData.js": "744b2fb5f331c8c77d4bfbce1f7fd7607b8691e03c46d82be28dd54f1fee5c3e",
+                "sample/data/product/sampleCategoryLocalizationData.js": "d0087a81e8f6eea6eb9b73922e4209aeae173d256d386e5f776e732afcff25b4",
+                "sample/data/product/sampleProductData.js": "340119bc64bea7e77d67fea8fc46919ca6c9e93577da79e7ce9511d540ef0b39",
+                "sample/data/product/sampleProductLocalizationData.js": "c8ea6eeb5355302690b844a50a9c22db6724c9c67f2cfbc9330a76a90a2520cf",
+                "sample/data/product/sampleProductVariantData.js": "9f9e186dbb7f9614703eb98fc5dc15bd03d5e0a961818fbab275e6787b11102e",
+                "sample/data/product/sampleProductVariantLocalizationData.js": "b1c40a336eacb39771d87b1433087d8bf29367199923941af798d89681623318",
+                "sample/headers/product/sampleProductLocalizationDataHeader.js": "bdd3b6b75f13408310fdb1f6307cd1fdf519ee239f10620b9d1afcdb79955d92"
+            }
+        }
     }
-  }
 }

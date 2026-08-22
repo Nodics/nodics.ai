@@ -467,7 +467,7 @@ module.exports = {
     return availability;
   },
 
-  /** Resolves a positive client contract version from the request or configured minimum. */
+  /** Resolves a non-negative client contract version from the request or configured minimum. */
   getClientContractVersion: function (request) {
     let headers =
       (request &&
@@ -476,11 +476,13 @@ module.exports = {
       {};
     let configured = this.getConfiguration().compatibility || {};
     let value =
-      headers["x-nodics-client-contract-version"] ||
-      configured.minimumClientContractVersion ||
-      1;
+      headers["x-nodics-client-contract-version"] !== undefined
+        ? headers["x-nodics-client-contract-version"]
+        : configured.minimumClientContractVersion !== undefined
+          ? configured.minimumClientContractVersion
+          : 1;
     let version = Number(value);
-    if (!Number.isInteger(version) || version < 1)
+    if (!Number.isInteger(version) || version < 0)
       throw new CLASSES.NodicsError(
         "ERR_BOF_00000",
         "Invalid client contract version",
@@ -491,10 +493,10 @@ module.exports = {
   /** Evaluates one module catalogue contract against the requesting client version. */
   evaluateCompatibility: function (metadata, clientContractVersion) {
     let moduleContractVersion = Number(
-      (metadata && metadata.contractVersion) || 1,
+      (metadata && metadata.contractVersion !== undefined ? metadata.contractVersion : 1),
     );
     let minimumClientContractVersion = Number(
-      (metadata && metadata.minimumClientContractVersion) || 1,
+      (metadata && metadata.minimumClientContractVersion !== undefined ? metadata.minimumClientContractVersion : 1),
     );
     let status =
       clientContractVersion < minimumClientContractVersion
@@ -940,7 +942,7 @@ module.exports = {
         "Public bootstrap is disabled",
       );
     let clientContractVersion = this.getClientContractVersion(request);
-    let contractVersion = Number(policy.contractVersion || 1);
+    let contractVersion = Number(policy.contractVersion !== undefined ? policy.contractVersion : 1);
     if (clientContractVersion !== contractVersion) {
       throw new CLASSES.NodicsError(
         "ERR_BOF_00000",

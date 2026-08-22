@@ -671,7 +671,7 @@ module.exports = {
       ["contractVersion", "minimumClientContractVersion"].some(
         (key) =>
           metadata[key] !== undefined &&
-          (!Number.isInteger(metadata[key]) || metadata[key] < 1),
+          (!Number.isInteger(metadata[key]) || metadata[key] < 0),
       )
     )
       return false;
@@ -700,7 +700,7 @@ module.exports = {
             !metadata.discovery.openApiPath.startsWith("/"))) ||
         (metadata.discovery.contractVersion !== undefined &&
           (!Number.isInteger(metadata.discovery.contractVersion) ||
-            metadata.discovery.contractVersion < 1)))
+            metadata.discovery.contractVersion < 0)))
     )
       return false;
     if (

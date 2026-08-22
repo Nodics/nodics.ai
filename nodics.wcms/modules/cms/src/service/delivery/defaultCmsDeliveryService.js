@@ -84,7 +84,7 @@ module.exports = {
         let manifest = await this.getSingle(SERVICE.DefaultCmsPublicationManifestService, request,
             { code: pointer.manifestCode, active: true }, 'ERR_CMS_00091');
         let snapshot = manifest.snapshot;
-        if (snapshot && snapshot.contractVersion === 2 && snapshot.bundleType === 'SITE') {
+        if (snapshot && [0, 2].includes(snapshot.contractVersion) && snapshot.bundleType === 'SITE') {
             let matches = (snapshot.routes || []).filter(route => route.site === context.site && route.path === context.path &&
                 route.locale === context.locale && route.channel === context.channel &&
                 route.accessMode === accessMode);

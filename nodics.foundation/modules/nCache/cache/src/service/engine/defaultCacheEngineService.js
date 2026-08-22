@@ -296,7 +296,7 @@ module.exports = {
             let reason = engineOptions && engineOptions.disabledReason || 'Adapter metadata is missing or disabled';
             throw new CLASSES.CacheError('ERR_CACHE_00008', 'Cache adapter ' + engineName + ' cannot be activated: ' + reason);
         }
-        if (engineOptions.contractVersion !== undefined && engineOptions.contractVersion !== 1) {
+        if (engineOptions.contractVersion !== undefined && ![0, 1].includes(engineOptions.contractVersion)) {
             throw new CLASSES.CacheError('ERR_CACHE_00009', 'Unsupported cache adapter contract version for engine: ' + engineName);
         }
         let connectionHandler = SERVICE[engineOptions.connectionHandler];

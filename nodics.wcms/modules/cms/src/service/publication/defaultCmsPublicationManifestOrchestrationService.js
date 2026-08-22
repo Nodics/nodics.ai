@@ -237,7 +237,7 @@ module.exports = {
     },
     /** Atomically switches either one route or every route in one site manifest. */
     activate: async function (manifest, request) {
-        let scopes = manifest.snapshot && manifest.snapshot.contractVersion === 2 ? manifest.snapshot.routes : [manifest.snapshot];
+        let scopes = manifest.snapshot && [0, 2].includes(manifest.snapshot.contractVersion) ? manifest.snapshot.routes : [manifest.snapshot];
         if (!Array.isArray(scopes) || !scopes.length) throw new CLASSES.NodicsError('CMS_PUBLICATION_ROUTE_MISSING', 'CMS publication contains no delivery scope');
         let activations = [];
         for (let scope of scopes) activations.push(await this.activateScope(manifest, scope, request));
@@ -247,7 +247,7 @@ module.exports = {
     },
     /** Atomically disables every active pointer owned by one immutable manifest. */
     withdraw: async function (manifest, request) {
-        let scopes = manifest.snapshot && manifest.snapshot.contractVersion === 2 ? manifest.snapshot.routes : [manifest.snapshot];
+        let scopes = manifest.snapshot && [0, 2].includes(manifest.snapshot.contractVersion) ? manifest.snapshot.routes : [manifest.snapshot];
         if (!Array.isArray(scopes) || !scopes.length) throw new CLASSES.NodicsError('CMS_PUBLICATION_ROUTE_MISSING', 'CMS publication contains no delivery scope');
         let count = 0;
         for (let scope of scopes) {

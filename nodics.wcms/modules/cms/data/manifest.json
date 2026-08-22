@@ -11,7 +11,9 @@
             "owningDomain": "cms",
             "lifecycle": "REFERENCE",
             "destinationRole": "WCMS_STAGED",
-            "environmentScope": ["ALL"],
+            "environmentScope": [
+                "ALL"
+            ],
             "sensitivity": "INTERNAL",
             "versioningPolicy": "NONE",
             "publicationPolicy": "NONE",
@@ -58,7 +60,11 @@
             "owningDomain": "cms",
             "lifecycle": "PUBLISHABLE",
             "destinationRole": "WCMS_STAGED",
-            "environmentScope": ["LOCAL", "DEVELOPMENT", "TEST"],
+            "environmentScope": [
+                "LOCAL",
+                "DEVELOPMENT",
+                "TEST"
+            ],
             "sensitivity": "INTERNAL",
             "versioningPolicy": "IMMUTABLE",
             "publicationPolicy": "REQUIRED",
@@ -73,7 +79,7 @@
                 "sample/data/pages/sampleCmsPageData.js": "75b99a3e800fa02e61c01425245c39b469a1a33017d190a2a7df79458d5a551e",
                 "sample/data/pages/sampleCmsPageRouteData.js": "bcb5dbf1924935b9d78acf37370b45138e4f50be2f9c4454fe925c9ffb0a2687",
                 "sample/data/sites/sampleCmsSiteData.js": "73271906e66beec8b153941f25e756a00908b0e37327346d463bc6ccb3c860c3",
-                "sample/data/typeCodes/sampleTypeCode2RendererData.js": "04752785df8c1ea05020bc8a87b3be1cb058c1620a817dd88b46c34e3866d3bf",
+                "sample/data/typeCodes/sampleTypeCode2RendererData.js": "78711cccbbffc7a393ad196d554f7fbed5344ea143097923aa4c003ca2d6100a",
                 "sample/data/typeCodes/sampleTypeCodeData.js": "45ecc93a75e36797a181cba76038ad37c8519dc88f76a51dcd9001fdf78836fa",
                 "sample/headers/components/sampleCmsComponentDataHeader.js": "9abd59986412540d1b8da26f2d03635bdb4ccde52d6b56a7f077764c8b87efa6",
                 "sample/headers/components/sampleCmsComponentLocalizationDataHeader.js": "6411eeccb55f88e5cf658e38e1c8948fc4224e76dd493619081b56169d07d793",

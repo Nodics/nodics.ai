@@ -39,7 +39,7 @@ module.exports = {
             }
         },
         dataReleases: {
-            allowedContractVersions: [1, 2],
+            allowedContractVersions: [0, 1, 2],
             lifecycleMetadataRequired: false,
             contributions: [],
             installers: {},
@@ -65,7 +65,7 @@ module.exports = {
         },
         contentPacks: {
             enabled: false,
-            allowedContractVersions: [1, 2],
+            allowedContractVersions: [0, 1, 2],
             cleanupStaging: true,
             stagingDirectory: 'import/content-packs',
             packs: {

@@ -99,7 +99,7 @@ module.exports = {
                 timeoutMs: 30000,
                 maxAttempts: 3,
                 maxManifestBytes: 12582912,
-                supportedContractVersions: [1, 2]
+                supportedContractVersions: [0, 1, 2]
             },
             rootTypes: {
                 pageRoute: { schema: 'cmsPageRoute', service: 'DefaultCmsPageRouteService' },

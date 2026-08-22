@@ -70,7 +70,7 @@ module.exports = {
             throw new CLASSES.NodicsError('ERR_BOF_00000', 'Invalid Axis recent navigation policy');
         }
         return {
-            contractVersion: Number(configuration.contractVersion || 1),
+            contractVersion: Number(configuration.contractVersion !== undefined ? configuration.contractVersion : 1),
             screenLockEnabled: policy.screenLockEnabled,
             idleTimeoutSeconds: timeout,
             recentNavigationLimit: recentLimit
