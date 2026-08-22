@@ -130,7 +130,7 @@ const capability = {
             "id": "my-work",
             "parentId": "workflow-management",
             "parentModuleName": "flowCore",
-            "label": "My Tasks and Approvals",
+            "label": "My Tasks & Approvals",
             "route": "/workspace/my-work",
             "icon": "workflow",
             "order": 100,
@@ -473,7 +473,7 @@ const capability = {
         },
         {
             "id": "schema-data-administration",
-            "label": "Schema and Data Administration",
+            "label": "Schema & Data Administration",
             "route": "/schema-workbench",
             "icon": "schema",
             "order": 155,
@@ -768,7 +768,7 @@ const capability = {
         {
             "id": "imports-exports",
             "parentId": "data-exchange",
-            "label": "Import and Export Workspace",
+            "label": "Import & Export Workspace",
             "route": "/operations/imports-exports",
             "icon": "import",
             "order": 120,
@@ -1036,11 +1036,11 @@ function normalizeNavigationHierarchy(contract) {
         if (item.group.id === 'workspace') {
             item.group = {
                 id: 'process-and-automations',
-                label: 'Process and Automations',
+                label: 'Process & Automations',
                 order: 1500
             };
         } else if (item.group.id === 'system-integrations') {
-            item.group.label = 'System and Integrations';
+            item.group.label = 'System & Integrations';
             item.group.order = 100;
         } else if (item.group.id === 'documentation') {
             item.group.label = 'Documentation';
