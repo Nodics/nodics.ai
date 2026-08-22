@@ -228,8 +228,8 @@ module.exports = {
             let response = await SERVICE.DefaultCmsOnlinePublicationPointerService.update({ tenant: request.tenant, authData: request.authData,
                 transactionContext: request.transactionContext,
                 query: { code: pointer.code, revision: Number(pointer.revision || 0) },
-                model: { active: false, revision: Number(pointer.revision || 0) + 1,
-                    correlationId: request.correlationId || request.requestId } });
+                model: { $set: { active: false, revision: Number(pointer.revision || 0) + 1,
+                    correlationId: request.correlationId || request.requestId } } });
             if (this.manifests().affected(response) !== 1) {
                 throw new CLASSES.NodicsError('CMS_PUBLICATION_POINTER_CONFLICT', 'CMS Online pointer revision conflict');
             }
