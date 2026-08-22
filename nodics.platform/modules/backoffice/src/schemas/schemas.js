@@ -52,6 +52,47 @@ module.exports = {
                 }
             }
         },
+        backofficeFunctionalModuleActivationReceipt: {
+            super: 'base',
+            schemaPolicies: ['contractReader'],
+            model: true,
+            service: { enabled: true },
+            event: { enabled: false },
+            router: { enabled: false },
+            tenants: ['default'],
+            definition: {
+                projectCode: { type: 'string', required: true, description: 'Stable customer project identity' },
+                functionalModule: { type: 'string', required: true, description: 'Canonical functional-module identity' },
+                packageCode: { type: 'string', required: true, description: 'Activation data package or data-release code' },
+                classification: { type: 'string', required: true, description: 'Business classification such as core, init, runtime-default, or sample' },
+                owner: { type: 'string', required: true, description: 'Functional or technical owner of the data package' },
+                required: { type: 'bool', required: true, default: true, description: 'Whether activation requires this package to be imported' },
+                trigger: { type: 'string', required: true, description: 'ACTIVATION or USER trigger ownership' },
+                targetModule: { type: 'string', required: false, description: 'Business target module for operator visibility' },
+                targetServer: { type: 'string', required: false, description: 'Runtime target server for operator visibility' },
+                targetDatabase: { type: 'string', required: false, description: 'Runtime target database for operator visibility' },
+                operation: { type: 'string', required: true, description: 'Declared import operation family' },
+                dataType: { type: 'string', required: true, description: 'nImport data release type: init, core, or sample' },
+                status: { type: 'string', required: true, description: 'PLANNED, RUNNING, IMPORTED, FAILED, SKIPPED_USER_TRIGGERED, or DATA_LEFT_INTACT' },
+                executionMode: { type: 'string', required: true, description: 'Executor used for the receipt, such as NIMPORT_RELEASE or USER_TRIGGERED' },
+                message: { type: 'string', required: false, description: 'Bounded operator-facing receipt message' },
+                importRunId: { type: 'string', required: false, description: 'nImport run id when one was created' },
+                releaseStatus: { type: 'string', required: false, description: 'Data release status returned by nImport' },
+                revision: { type: 'int', required: true, default: 1, description: 'Optimistic receipt revision' },
+                lastAttemptAt: { type: 'date', required: true, description: 'Last import attempt or receipt update time' },
+                updatedAt: { type: 'date', required: true, description: 'Last durable receipt update time' },
+                updatedBy: { type: 'string', required: true, description: 'Principal or service that updated the receipt' },
+                correlationId: { type: 'string', required: false, description: 'Lifecycle request correlation id' }
+            },
+            indexes: {
+                individual: {
+                    activationReceiptCode: { name: 'code', enabled: true, options: { unique: true } },
+                    activationReceiptProject: { name: 'projectCode', enabled: true, options: { unique: false } },
+                    activationReceiptFunctionalModule: { name: 'functionalModule', enabled: true, options: { unique: false } },
+                    activationReceiptStatus: { name: 'status', enabled: true, options: { unique: false } }
+                }
+            }
+        },
         backofficeContractSnapshot: {
             super: 'base',
             schemaPolicies: ['contractReader'],

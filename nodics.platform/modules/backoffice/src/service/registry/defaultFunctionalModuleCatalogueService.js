@@ -35,10 +35,23 @@ module.exports = {
         if (!model) throw new Error('Functional-module catalogue model is unavailable');
         return model;
     },
+    /** Returns the durable activation receipt model generated from the BackOffice schema. */
+    getReceiptModel: function (tenant) {
+        let models = NODICS.getModels('backoffice', tenant);
+        let model = models && models.BackofficeFunctionalModuleActivationReceiptModel;
+        if (!model) throw new Error('Functional-module activation receipt model is unavailable');
+        return model;
+    },
     /** Executes a private schema query through the standard model pipeline. */
     getRecords: function (request) {
         request = Object.assign({}, request, { moduleName: 'backoffice' });
         request.schemaModel = this.getModel(request.tenant);
+        return SERVICE.DefaultPipelineService.start('modelsGetInitializerPipeline', request, {});
+    },
+    /** Executes a private activation receipt query through the standard model pipeline. */
+    getReceiptRecords: function (request) {
+        request = Object.assign({}, request, { moduleName: 'backoffice' });
+        request.schemaModel = this.getReceiptModel(request.tenant);
         return SERVICE.DefaultPipelineService.start('modelsGetInitializerPipeline', request, {});
     },
     /** Creates one private schema record through the standard model pipeline. */
@@ -51,6 +64,18 @@ module.exports = {
     updateRecord: function (request) {
         request = Object.assign({}, request, { moduleName: 'backoffice' });
         request.schemaModel = this.getModel(request.tenant);
+        return SERVICE.DefaultPipelineService.start('modelsUpdateInitializerPipeline', request, {});
+    },
+    /** Creates one durable activation receipt through the standard model pipeline. */
+    saveReceiptRecord: function (request) {
+        request = Object.assign({}, request, { moduleName: 'backoffice' });
+        request.schemaModel = this.getReceiptModel(request.tenant);
+        return SERVICE.DefaultPipelineService.start('modelSaveInitializerPipeline', request, {});
+    },
+    /** Updates one durable activation receipt through the standard model pipeline. */
+    updateReceiptRecord: function (request) {
+        request = Object.assign({}, request, { moduleName: 'backoffice' });
+        request.schemaModel = this.getReceiptModel(request.tenant);
         return SERVICE.DefaultPipelineService.start('modelsUpdateInitializerPipeline', request, {});
     },
     /** Extracts result arrays from model pipeline response envelopes. */
@@ -95,57 +120,110 @@ module.exports = {
             targetModule: String(item.targetModule || ''),
             targetServer: String(item.targetServer || ''),
             targetDatabase: String(item.targetDatabase || ''),
-            operation: String(item.operation || 'IMPORT')
+            operation: String(item.operation || 'IMPORT'),
+            dataType: String(item.dataType || this.inferActivationDataType(item))
         })).filter(item => item.code);
+    },
+    /** Infers the existing nImport release type from activation package metadata. */
+    inferActivationDataType: function (item) {
+        let operation = String(item.operation || '').toUpperCase();
+        let classification = String(item.classification || item.kind || '').toLowerCase();
+        if (operation.includes('SAMPLE') || classification.includes('sample')) return 'sample';
+        if (operation.includes('INIT') || classification.includes('init')) return 'init';
+        return 'core';
+    },
+    /** Creates the stable project-scoped activation receipt key. */
+    getReceiptKey: function (project, functionalModule, packageCode) {
+        return [String(project), this.normalizeFunctionalModule(functionalModule), String(packageCode)].join('::');
+    },
+    /** Loads durable receipt records for one project/module identity. */
+    getActivationReceipts: async function (project, functionalModule, request) {
+        let tenant = this.getTenant(request);
+        let response = await this.getReceiptRecords({ tenant: tenant,
+            authData: this.getPersistenceAuthData(request && request.authData),
+            query: { projectCode: String(project), functionalModule: this.normalizeFunctionalModule(functionalModule) },
+            searchOptions: { limit: 256, sort: { packageCode: 1 } } });
+        return this.getItems(response);
+    },
+    /** Loads durable receipts as a map by package code. */
+    getActivationReceiptMap: async function (project, functionalModule, request) {
+        let records = await this.getActivationReceipts(project, functionalModule, request).catch(() => []);
+        return Object.fromEntries(records.map(record => [record.packageCode, record]));
+    },
+    /** Upserts one durable activation receipt without exposing nImport internals to Axis. */
+    upsertActivationReceipt: async function (record, pack, status, context, details) {
+        details = details || {};
+        let tenant = this.getTenant(context && context.request);
+        let authData = this.getPersistenceAuthData(context && context.request && context.request.authData);
+        let now = new Date();
+        let receiptKey = this.getReceiptKey(record.projectCode, record.functionalModule, pack.code);
+        let existing = await this.getReceiptRecords({ tenant: tenant, authData: authData, query: { code: receiptKey },
+            searchOptions: { limit: 1 } }).then(response => this.getItems(response)[0]).catch(() => undefined);
+        let model = {
+            code: receiptKey, active: true, projectCode: record.projectCode,
+            functionalModule: this.normalizeFunctionalModule(record.functionalModule), packageCode: pack.code,
+            classification: pack.classification, owner: pack.owner, required: pack.required === true, trigger: pack.trigger,
+            targetModule: pack.targetModule, targetServer: pack.targetServer, targetDatabase: pack.targetDatabase,
+            operation: pack.operation, dataType: pack.dataType, status: status, executionMode: details.executionMode || 'NIMPORT_RELEASE',
+            message: String(details.message || ''), importRunId: details.importRunId, releaseStatus: details.releaseStatus,
+            revision: Number(existing && existing.revision || 0) + 1, lastAttemptAt: now, updatedAt: now,
+            updatedBy: context && context.actor || 'activation-data-service', correlationId: context && context.correlationId
+        };
+        if (existing) return this.updateReceiptRecord({ tenant: tenant, authData: authData, query: { code: receiptKey }, model: model }).then(() => Object.assign({}, existing, model));
+        return this.saveReceiptRecord({ tenant: tenant, authData: authData, model: model }).then(() => model);
     },
     /** Builds the client-safe activation-data plan and receipt projection for the current lifecycle action. */
     buildActivationDataPlan: function (record, action, context) {
+        context = context || {};
         let packages = this.getActivationDataPackages(record.functionalModule);
+        let receiptMap = context.receiptMap || {};
         let dependencies = [].concat(((this.getActivationDataConfiguration().modules || {})[record.functionalModule] || {}).dependencies || []).map(String);
         let dryRun = context && context.dryRun === true;
         let blockedReasons = [];
         if (['activate', 'dryRun'].includes(action) && record.registrationState !== 'REGISTERED') blockedReasons.push('MODULE_NOT_REGISTERED');
         if (['activate', 'dryRun'].includes(action) && record.runtimeState !== 'ACTIVE') blockedReasons.push('RUNTIME_NOT_ACTIVE');
         let receipts = packages.map(item => {
-            let status = 'NOT_APPLICABLE';
-            if (action === 'activate' || action === 'dryRun') {
-                if (item.required && item.trigger === 'ACTIVATION') {
-                    status = dryRun ? 'PLANNED' : 'PENDING_IMPORT_CONTRACT';
-                } else if (!item.required || item.trigger === 'USER') {
-                    status = 'SKIPPED_USER_TRIGGERED';
+            let persisted = receiptMap[item.code];
+            let status = persisted && persisted.status || 'NOT_APPLICABLE';
+            let message = persisted && persisted.message;
+            if (!persisted) {
+                if (action === 'activate' || action === 'dryRun') {
+                    if (item.required && item.trigger === 'ACTIVATION') {
+                        status = dryRun ? 'PLANNED' : 'PENDING_IMPORT';
+                    } else if (!item.required || item.trigger === 'USER') {
+                        status = 'SKIPPED_USER_TRIGGERED';
+                    }
+                } else if (action === 'deactivate' || action === 'deregister') {
+                    status = 'DATA_LEFT_INTACT';
                 }
-            } else if (action === 'deactivate' || action === 'deregister') {
-                status = 'DATA_LEFT_INTACT';
             }
             return Object.assign({}, item, {
-                receiptKey: [record.projectCode, record.functionalModule, item.code].join('::'),
-                status: status,
-                idempotent: true,
-                message: status === 'PENDING_IMPORT_CONTRACT'
-                    ? 'Required package is declared but import execution is not yet wired to nImport.'
+                receiptKey: this.getReceiptKey(record.projectCode, record.functionalModule, item.code),
+                status: status, idempotent: true,
+                executionMode: persisted && persisted.executionMode || (item.required && item.trigger === 'ACTIVATION' ? 'NIMPORT_RELEASE' : 'USER_TRIGGERED'),
+                releaseStatus: persisted && persisted.releaseStatus, importRunId: persisted && persisted.importRunId,
+                lastAttemptAt: persisted && persisted.lastAttemptAt, revision: persisted && persisted.revision,
+                message: message || (status === 'PENDING_IMPORT'
+                    ? 'Required package will be imported through the existing nImport data-release executor during activation.'
                     : status === 'PLANNED'
                         ? 'Dry-run preview only; no data will be changed.'
                         : status === 'SKIPPED_USER_TRIGGERED'
                             ? 'Optional/sample package must be triggered explicitly by the user.'
-                            : 'No data mutation is performed for this lifecycle action.'
+                            : status === 'DATA_LEFT_INTACT'
+                                ? 'Deactivation hides capabilities; imported data is left intact.'
+                                : 'No data mutation is required for this lifecycle action.')
             });
         });
-        let requiredPending = receipts.some(item => item.required && item.status === 'PENDING_IMPORT_CONTRACT');
+        let failed = receipts.some(item => item.required && item.status === 'FAILED');
+        let running = receipts.some(item => item.required && ['QUEUED', 'RUNNING', 'PENDING_IMPORT'].includes(item.status));
+        let requiredPending = receipts.some(item => item.required && item.status === 'PENDING_IMPORT');
         return {
-            action: action,
-            dryRun: dryRun,
-            executionMode: 'CONTRACT_ONLY',
-            readiness: blockedReasons.length ? 'BLOCKED' : requiredPending ? 'ACTIVE_DATA_PENDING' : 'READY',
-            preflight: {
-                runtimeActive: record.runtimeState === 'ACTIVE',
-                registered: record.registrationState === 'REGISTERED',
-                protectedModule: record.required === true,
-                dependencies: dependencies,
-                blockedReasons: blockedReasons
-            },
-            packages: packages,
-            receipts: receipts,
-            nextActions: [].concat(requiredPending ? ['WIRE_REQUIRED_DATA_IMPORT_EXECUTION'] : [],
+            action: action, dryRun: dryRun, executionMode: receipts.some(item => item.executionMode === 'NIMPORT_RELEASE') ? 'NIMPORT_RELEASE' : 'USER_TRIGGERED',
+            readiness: blockedReasons.length ? 'BLOCKED' : failed ? 'DATA_FAILED' : running || requiredPending ? 'DATA_RUNNING' : 'READY',
+            preflight: { runtimeActive: record.runtimeState === 'ACTIVE', registered: record.registrationState === 'REGISTERED',
+                protectedModule: record.required === true, dependencies: dependencies, blockedReasons: blockedReasons },
+            packages: packages, receipts: receipts,
+            nextActions: [].concat(failed ? ['RETRY_REQUIRED_DATA_IMPORT'] : [],
                 receipts.some(item => item.status === 'SKIPPED_USER_TRIGGERED') ? ['OPTIONAL_SAMPLE_DATA_USER_ACTION'] : [],
                 ['BROWSER_JOURNEY_VALIDATION'])
         };
@@ -337,6 +415,11 @@ module.exports = {
             activationData: this.buildActivationDataPlan(record, options.action || 'status', options)
         };
     },
+    /** Returns a client-safe projection enriched with durable activation receipt history. */
+    projectClientSafeWithReceipts: async function (record, options, request) {
+        let receiptMap = await this.getActivationReceiptMap(record.projectCode, record.functionalModule, request);
+        return this.projectClientSafe(record, Object.assign({}, options, { receiptMap: receiptMap }));
+    },
     /** Returns normalized HTTP or internal query parameters. */
     getQuery: function (request) { return request && (request.query || request.httpRequest && request.httpRequest.query) || {}; },
     /** Returns the normalized HTTP or internal request body. */
@@ -348,7 +431,11 @@ module.exports = {
         let tenant = this.getTenant(request);
         let response = await this.getRecords({ tenant: tenant, authData: this.getPersistenceAuthData(request.authData),
             query: { projectCode: project, registrationState: registrationState }, searchOptions: { limit: 256, sort: { functionalModule: 1 } } });
-        return { code: code, data: { project: project, items: this.getItems(response).map(item => this.projectClientSafe(item)) } };
+        let items = [];
+        for (let item of this.getItems(response)) {
+            items.push(await this.projectClientSafeWithReceipts(item, {}, request));
+        }
+        return { code: code, data: { project: project, items: items } };
     },
     /** Lists optional observed functional modules awaiting project registration. */
     listAvailable: function (request) { return this.listByState(request, 'AVAILABLE', 'SUC_BOF_00017'); },
@@ -381,7 +468,7 @@ module.exports = {
         let project = request.project || this.getQuery(request).project;
         let record = await this.getRecord(project, params.functionalModule, request);
         if (!record || record.registrationState === 'DEREGISTERED') throw new CLASSES.NodicsError('ERR_BOF_00000', 'Functional-module registration not found');
-        return { code: 'SUC_BOF_00019', data: this.projectClientSafe(record) };
+        return { code: 'SUC_BOF_00019', data: await this.projectClientSafeWithReceipts(record, {}, request) };
     },
     /** Resolves and validates a human administrative lifecycle request. */
     getLifecycleContext: function (request) {
@@ -396,7 +483,8 @@ module.exports = {
         }
         return { project: String(body.project), functionalModule: String(params.functionalModule),
             expectedRevision: Number(body.expectedRevision), reason: String(body.reason), actor: actor,
-            dryRun: body.dryRun === true, includeActivationData: body.includeActivationData !== false };
+            dryRun: body.dryRun === true, includeActivationData: body.includeActivationData !== false,
+            correlationId: String(body.correlationId || Date.now() + '-' + Math.random().toString(36).slice(2)) };
     },
     /** Applies one optimistic durable lifecycle transition without changing runtime composition. */
     transition: async function (request, action) {
@@ -407,9 +495,9 @@ module.exports = {
             throw new CLASSES.NodicsError('ERR_BOF_00000', 'Functional-module catalogue revision conflict');
         }
         if (context.dryRun === true) {
-            return { code: 'SUC_BOF_00020', data: this.projectClientSafe(existing, {
+            return { code: 'SUC_BOF_00020', data: await this.projectClientSafeWithReceipts(existing, {
                 action: 'dryRun', dryRun: true
-            }) };
+            }, request) };
         }
         if (existing.required === true && ['deactivate', 'deregister'].includes(action)) {
             throw new CLASSES.NodicsError('ERR_BOF_00000', 'Required functional module cannot be ' + action + 'd');
@@ -432,6 +520,7 @@ module.exports = {
         } else {
             throw new Error('Unsupported functional-module lifecycle action');
         }
+        if (action === 'activate') await this.executeRequiredActivationData(existing, context, request);
         let model = Object.assign({}, next, { catalogueRevision: context.expectedRevision + 1,
             updatedAt: new Date(), updatedBy: context.actor });
         let response = await this.updateRecord({ tenant: this.getTenant(request), authData: this.getPersistenceAuthData(request.authData),
@@ -443,7 +532,51 @@ module.exports = {
             moduleName: context.functionalModule, principalId: context.actor, revision: model.catalogueRevision,
             reason: context.reason
         });
-        return { code: 'SUC_BOF_00020', data: this.projectClientSafe(result, { action: action }) };
+        return { code: 'SUC_BOF_00020', data: await this.projectClientSafeWithReceipts(result, { action: action }, request) };
+    },
+    /** Executes required activation data packages through the existing nImport data-release executor. */
+    executeRequiredActivationData: async function (record, context, request) {
+        let releaseService = SERVICE.DefaultDataReleaseService;
+        if (!releaseService || typeof releaseService.preflight !== 'function' || typeof releaseService.execute !== 'function') {
+            throw new CLASSES.NodicsError('ERR_BOF_00000', 'nImport data-release executor is unavailable for required activation data');
+        }
+        let packages = this.getActivationDataPackages(record.functionalModule)
+            .filter(pack => pack.required === true && pack.trigger === 'ACTIVATION');
+        let grouped = packages.reduce((result, pack) => {
+            result[pack.dataType] = result[pack.dataType] || [];
+            result[pack.dataType].push(pack);
+            return result;
+        }, {});
+        for (let dataType of Object.keys(grouped)) {
+            let packs = grouped[dataType];
+            await Promise.all(packs.map(pack => this.upsertActivationReceipt(record, pack, 'RUNNING', Object.assign({}, context, { request: request }), {
+                message: 'Required activation data import is running through nImport.', releaseStatus: 'RUNNING'
+            })));
+            try {
+                let releaseRequest = { dataType: dataType, releaseCodes: packs.map(pack => pack.code) };
+                let operationRequest = Object.assign({}, request, { releaseRequest: releaseRequest });
+                let preflight = await releaseService.preflight(operationRequest);
+                let releases = preflight && preflight.data && preflight.data.releases || [];
+                let executable = releases.filter(release => ['NOT_INSTALLED', 'UPDATE_AVAILABLE', 'FAILED'].includes(release.status));
+                let result = executable.length === 0 ? preflight : await releaseService.execute(operationRequest);
+                let releaseByCode = Object.fromEntries(((result && result.data && result.data.releases) || releases).map(release => [release.releaseCode, release]));
+                let importRunId = result && result.data && result.data.importRun && result.data.importRun.runId;
+                await Promise.all(packs.map(pack => {
+                    let release = releaseByCode[pack.code] || {};
+                    let status = ['CURRENT', 'RUNNING'].includes(release.status) || executable.length === 0 ? 'IMPORTED' : String(release.status || 'IMPORTED');
+                    return this.upsertActivationReceipt(record, pack, status, Object.assign({}, context, { request: request }), {
+                        message: executable.length === 0 ? 'Required activation data release is already current.' : 'Required activation data imported through nImport.',
+                        importRunId: importRunId, releaseStatus: release.status || 'CURRENT'
+                    });
+                }));
+            } catch (error) {
+                await Promise.all(packs.map(pack => this.upsertActivationReceipt(record, pack, 'FAILED', Object.assign({}, context, { request: request }), {
+                    message: error && error.message || 'Required activation data import failed.', releaseStatus: 'FAILED'
+                }))).catch(() => false);
+                throw error;
+            }
+        }
+        return true;
     },
     /** Registers one optional functional module for the project. */
     register: function (request) { return this.transition(request, 'register'); },
