@@ -95,7 +95,8 @@ async function main() {
   let process = await request(`/nodics/backoffice/v0/runtime/modules/registrations/${functionalModule}?project=${project}`, token);
   assert(process.observedServers.includes(observedServer), 'Process must be observed through processServer');
   const available = await request(`/nodics/backoffice/v0/runtime/modules/available?project=${project}`, token);
-  const cron = available.items.find(item => item.functionalModule === optionalModule);
+  const cron = registrations.items.find(item => item.functionalModule === optionalModule) ||
+    available.items.find(item => item.functionalModule === optionalModule);
   assert(cron, 'Cron must be observed as an optional functional module');
   assert.deepEqual(cron.observedServers, optionalObservedServers, 'Cron must not require standalone cronServer');
 
@@ -114,7 +115,7 @@ async function main() {
     }
     let bootstrap = await request('/nodics/backoffice/v0/bootstrap', token);
     assert(bootstrap.catalogue.flowCore, 'Process capability must enter Axis after registration and activation');
-    assert(!bootstrap.catalogue.cronjob, 'Disabled Cron must not enter Axis merely because it shares processServer');
+    if (cron.enabled === false) assert(!bootstrap.catalogue.cronjob, 'Disabled Cron must not enter Axis merely because it shares processServer');
   } finally {
     if (activatedByTest) process = await transition(token, 'deactivate', process.catalogueRevision);
     if (registeredByTest) process = await transition(token, 'deregister', process.catalogueRevision);

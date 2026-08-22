@@ -108,7 +108,7 @@ module.exports = {
         let routes = Object.keys(models).filter(key => key.startsWith('cmsPageRoute:')).map(key => models[key])
             .filter(route => route.site === site.code).sort((left, right) => String(left.path).localeCompare(String(right.path)));
         if (!routes.length) throw new CLASSES.NodicsError('CMS_PUBLICATION_SITE_EMPTY', 'Frozen CMS site contains no routes');
-        return this.compactSiteSnapshot({ contractVersion: 0, bundleType: 'SITE', site: site.code,
+        return this.compactSiteSnapshot({ contractVersion: 2, bundleType: 'SITE', site: site.code,
             routes: routes.map(route => this.buildRouteSnapshot(models, route)) });
     },
     /** Stores repeated component subtrees once per site bundle while preserving route-local page contracts. */
@@ -257,7 +257,7 @@ module.exports = {
         if (current) {
             let response = await SERVICE.DefaultCmsOnlinePublicationPointerService.update({ tenant: request.tenant, authData: request.authData,
                 transactionContext: request.transactionContext,
-                query: { code: current.code, revision: Number(current.revision || 0) }, model: { $set: patch } });
+                query: { code: current.code, revision: Number(current.revision || 0) }, model: patch });
             if (this.affected(response) !== 1) throw new CLASSES.NodicsError('CMS_PUBLICATION_POINTER_CONFLICT', 'CMS Online pointer revision conflict');
         } else {
             let key = [scope.site, scope.path, scope.locale, scope.channel, scope.accessMode].join('|');
@@ -298,8 +298,8 @@ module.exports = {
             let response = await SERVICE.DefaultCmsOnlinePublicationPointerService.update({ tenant: request.tenant, authData: request.authData,
                 transactionContext: request.transactionContext,
                 query: { code: current.code, revision: Number(current.revision || 0) },
-                model: { $set: { active: false, revision: Number(current.revision || 0) + 1,
-                    correlationId: request.correlationId || request.requestId } } });
+                model: { active: false, revision: Number(current.revision || 0) + 1,
+                    correlationId: request.correlationId || request.requestId } });
             if (this.affected(response) !== 1) throw new CLASSES.NodicsError('CMS_PUBLICATION_POINTER_CONFLICT', 'CMS Online pointer revision conflict');
             count += 1;
         }

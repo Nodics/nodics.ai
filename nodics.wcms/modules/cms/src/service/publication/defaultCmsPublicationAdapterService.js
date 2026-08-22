@@ -39,6 +39,12 @@ module.exports = {
     /** Loads an exact immutable CMS version. */
     getVersion: async function (publication, request) {
         let descriptor = this.descriptor(publication.rootType);
+        if (String(publication.sourceVersion) === '0') {
+            let latest = await this.loadLatest(descriptor.service, request, { code: publication.rootCode });
+            let version = latest[0];
+            if (!version) throw this.error('CMS_PUBLICATION_VERSION_NOT_FOUND', 'CMS source version was not found');
+            return version;
+        }
         let response = await this.service(descriptor.service).get({ tenant: request.tenant, authData: request.authData,
             query: { code: publication.rootCode, versionId: Number(publication.sourceVersion), active: true }, searchOptions: { limit: 1 } });
         let version = this.items(response)[0];

@@ -109,6 +109,18 @@ module.exports = {
         let message = String(error && (error.message || error.code) || '');
         return /already current/i.test(message);
     },
+    /** Builds the delegated human publication context for baseline lifecycle operations. */
+    actorRequest: function (request, defaultReason) {
+        let input = request.baseline || {};
+        let requestedBy = String(input.requestedBy || '');
+        if (!/^[A-Za-z0-9][A-Za-z0-9@._:-]{0,255}$/.test(requestedBy)) {
+            throw new CLASSES.NodicsError('CMS_BASELINE_HUMAN_REQUIRED', 'A delegated human administrator identity is required');
+        }
+        return Object.assign({}, request, { authData: Object.assign({}, request.authData, {
+            principalId: requestedBy, delegatedBy: request.authData && (request.authData.principalId || request.authData.code)
+        }), reason: input.reason || defaultReason,
+        correlationId: input.correlationId || request.correlationId || request.requestId });
+    },
     /** Derives a sanitized readiness projection from nImport and nPublish authorities. */
     status: async function (code, request) {
         this.assertStaged();
@@ -159,10 +171,6 @@ module.exports = {
     initiate: async function (code, request) {
         this.assertStaged();
         let input = request.baseline || {};
-        let requestedBy = String(input.requestedBy || '');
-        if (!/^[A-Za-z0-9][A-Za-z0-9@._:-]{0,255}$/.test(requestedBy)) {
-            throw new CLASSES.NodicsError('CMS_BASELINE_HUMAN_REQUIRED', 'A delegated human administrator identity is required');
-        }
         let descriptor = this.descriptor(code);
         let release = await this.release(descriptor, request);
         if (release.status !== 'CURRENT' && release.sourceKind === 'CONTENT_PACK') {
@@ -183,10 +191,7 @@ module.exports = {
                 if (!this.isAlreadyCurrent(error)) throw error;
             }
         }
-        let actorRequest = Object.assign({}, request, { authData: Object.assign({}, request.authData, {
-            principalId: requestedBy, delegatedBy: request.authData && (request.authData.principalId || request.authData.code)
-        }), reason: input.reason || 'Administrator initiated CMS baseline publication',
-        correlationId: input.correlationId || request.correlationId || request.requestId });
+        let actorRequest = this.actorRequest(request, 'Administrator initiated CMS baseline publication');
         let publicationInput = { code: this.publicationCode(descriptor), domain: 'cms', rootType: descriptor.rootType,
             rootCode: descriptor.rootCode, sourceVersion: String(descriptor.sourceVersion),
             siteCode: descriptor.rootCode, catalogCode: input.catalogCode };
@@ -230,13 +235,14 @@ module.exports = {
     rollback: async function (code, request) {
         this.assertStaged();
         let descriptor = this.descriptor(code);
-        let publication = await this.publication(descriptor, request);
+        let actorRequest = this.actorRequest(request, 'Administrator rolled back CMS baseline publication');
+        let publication = await this.publication(descriptor, actorRequest);
         if (!publication || publication.state !== 'ONLINE' || !publication.previousOnlineVersion) {
             throw new CLASSES.NodicsError('CMS_BASELINE_ROLLBACK_UNAVAILABLE', 'CMS baseline has no previous Online release to restore');
         }
-        let rolledBack = await SERVICE.DefaultPublicationLifecycleService.rollback(Object.assign({}, request,
+        let rolledBack = await SERVICE.DefaultPublicationLifecycleService.rollback(Object.assign({}, actorRequest,
             { publicationCode: publication.code, expectedRevision: publication.revision }));
-        return this.status(code, request).then(status => Object.assign({}, status, { publication: {
+        return this.status(code, actorRequest).then(status => Object.assign({}, status, { publication: {
             code: rolledBack.code, state: rolledBack.state, revision: rolledBack.revision,
             correlationId: rolledBack.correlationId } }));
     },
@@ -244,14 +250,15 @@ module.exports = {
     retire: async function (code, request) {
         this.assertStaged();
         let descriptor = this.descriptor(code);
-        let publication = await this.onlinePublication(descriptor, request);
+        let actorRequest = this.actorRequest(request, 'Administrator retired CMS baseline publication');
+        let publication = await this.onlinePublication(descriptor, actorRequest);
         if (!publication || publication.state !== 'ONLINE') {
             throw new CLASSES.NodicsError('CMS_BASELINE_RETIREMENT_UNAVAILABLE',
                 'Only an Online CMS baseline can be retired; current state: ' + String(publication && publication.state || 'MISSING'));
         }
-        let retired = await SERVICE.DefaultPublicationLifecycleService.withdraw(Object.assign({}, request,
+        let retired = await SERVICE.DefaultPublicationLifecycleService.withdraw(Object.assign({}, actorRequest,
             { publicationCode: publication.code, expectedRevision: publication.revision }));
-        return this.status(code, request).then(status => Object.assign({}, status, { readiness: 'RETIRED', publication: {
+        return this.status(code, actorRequest).then(status => Object.assign({}, status, { readiness: 'RETIRED', publication: {
             code: retired.code, state: retired.state, revision: retired.revision,
             correlationId: retired.correlationId } }));
     }
