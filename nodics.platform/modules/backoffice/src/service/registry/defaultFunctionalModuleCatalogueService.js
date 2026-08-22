@@ -521,6 +521,7 @@ module.exports = {
             throw new Error('Unsupported functional-module lifecycle action');
         }
         if (action === 'activate') await this.executeRequiredActivationData(existing, context, request);
+        if (['deactivate', 'deregister'].includes(action)) await this.recordDataLeftIntact(existing, context, request);
         let model = Object.assign({}, next, { catalogueRevision: context.expectedRevision + 1,
             updatedAt: new Date(), updatedBy: context.actor });
         let response = await this.updateRecord({ tenant: this.getTenant(request), authData: this.getPersistenceAuthData(request.authData),
@@ -576,6 +577,16 @@ module.exports = {
                 throw error;
             }
         }
+        return true;
+    },
+    /** Records deactivation/deregistration data semantics without deleting imported data. */
+    recordDataLeftIntact: async function (record, context, request) {
+        let packages = this.getActivationDataPackages(record.functionalModule);
+        await Promise.all(packages.map(pack => this.upsertActivationReceipt(record, pack, 'DATA_LEFT_INTACT',
+            Object.assign({}, context, { request: request }), {
+                executionMode: pack.required && pack.trigger === 'ACTIVATION' ? 'NIMPORT_RELEASE' : 'USER_TRIGGERED',
+                message: 'Capability visibility changed; imported data was left intact for audit, rollback, or reactivation.'
+            })));
         return true;
     },
     /** Registers one optional functional module for the project. */
