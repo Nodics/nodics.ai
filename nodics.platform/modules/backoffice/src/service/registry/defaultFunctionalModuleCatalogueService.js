@@ -81,6 +81,75 @@ module.exports = {
     },
     /** Returns stable sorted unique string values. */
     uniqueSorted: function (values) { return Array.from(new Set((values || []).map(String))).sort(); },
+    /** Returns module activation-data configuration contributed through normal configuration layering. */
+    getActivationDataConfiguration: function () { return CONFIG.get('backofficeFunctionalModuleActivationData') || {}; },
+    /** Returns configured package descriptors for one functional module. */
+    getActivationDataPackages: function (functionalModule) {
+        let modules = this.getActivationDataConfiguration().modules || {};
+        return [].concat((modules[this.normalizeFunctionalModule(functionalModule)] || {}).dataPackages || []).map(item => ({
+            code: String(item.code || ''),
+            classification: String(item.classification || item.kind || 'core'),
+            owner: String(item.owner || functionalModule),
+            required: item.required !== false,
+            trigger: String(item.trigger || (item.required === false ? 'USER' : 'ACTIVATION')),
+            targetModule: String(item.targetModule || ''),
+            targetServer: String(item.targetServer || ''),
+            targetDatabase: String(item.targetDatabase || ''),
+            operation: String(item.operation || 'IMPORT')
+        })).filter(item => item.code);
+    },
+    /** Builds the client-safe activation-data plan and receipt projection for the current lifecycle action. */
+    buildActivationDataPlan: function (record, action, context) {
+        let packages = this.getActivationDataPackages(record.functionalModule);
+        let dependencies = [].concat(((this.getActivationDataConfiguration().modules || {})[record.functionalModule] || {}).dependencies || []).map(String);
+        let dryRun = context && context.dryRun === true;
+        let blockedReasons = [];
+        if (['activate', 'dryRun'].includes(action) && record.registrationState !== 'REGISTERED') blockedReasons.push('MODULE_NOT_REGISTERED');
+        if (['activate', 'dryRun'].includes(action) && record.runtimeState !== 'ACTIVE') blockedReasons.push('RUNTIME_NOT_ACTIVE');
+        let receipts = packages.map(item => {
+            let status = 'NOT_APPLICABLE';
+            if (action === 'activate' || action === 'dryRun') {
+                if (item.required && item.trigger === 'ACTIVATION') {
+                    status = dryRun ? 'PLANNED' : 'PENDING_IMPORT_CONTRACT';
+                } else if (!item.required || item.trigger === 'USER') {
+                    status = 'SKIPPED_USER_TRIGGERED';
+                }
+            } else if (action === 'deactivate' || action === 'deregister') {
+                status = 'DATA_LEFT_INTACT';
+            }
+            return Object.assign({}, item, {
+                receiptKey: [record.projectCode, record.functionalModule, item.code].join('::'),
+                status: status,
+                idempotent: true,
+                message: status === 'PENDING_IMPORT_CONTRACT'
+                    ? 'Required package is declared but import execution is not yet wired to nImport.'
+                    : status === 'PLANNED'
+                        ? 'Dry-run preview only; no data will be changed.'
+                        : status === 'SKIPPED_USER_TRIGGERED'
+                            ? 'Optional/sample package must be triggered explicitly by the user.'
+                            : 'No data mutation is performed for this lifecycle action.'
+            });
+        });
+        let requiredPending = receipts.some(item => item.required && item.status === 'PENDING_IMPORT_CONTRACT');
+        return {
+            action: action,
+            dryRun: dryRun,
+            executionMode: 'CONTRACT_ONLY',
+            readiness: blockedReasons.length ? 'BLOCKED' : requiredPending ? 'ACTIVE_DATA_PENDING' : 'READY',
+            preflight: {
+                runtimeActive: record.runtimeState === 'ACTIVE',
+                registered: record.registrationState === 'REGISTERED',
+                protectedModule: record.required === true,
+                dependencies: dependencies,
+                blockedReasons: blockedReasons
+            },
+            packages: packages,
+            receipts: receipts,
+            nextActions: [].concat(requiredPending ? ['WIRE_REQUIRED_DATA_IMPORT_EXECUTION'] : [],
+                receipts.some(item => item.status === 'SKIPPED_USER_TRIGGERED') ? ['OPTIONAL_SAMPLE_DATA_USER_ACTION'] : [],
+                ['BROWSER_JOURNEY_VALIDATION'])
+        };
+    },
     /** Returns whether two string lists represent the same governed value. */
     sameList: function (left, right) { return JSON.stringify(this.uniqueSorted(left)) === JSON.stringify(this.uniqueSorted(right)); },
     /** Resolves the nearest functional root for one observed runtime module. */
@@ -249,7 +318,8 @@ module.exports = {
         return changed;
     },
     /** Returns a client-safe functional-module registration projection. */
-    projectClientSafe: function (record) {
+    projectClientSafe: function (record, options) {
+        options = options || {};
         return {
             project: record.projectCode,
             functionalModule: this.normalizeFunctionalModule(record.functionalModule),
@@ -263,7 +333,8 @@ module.exports = {
             observedServers: this.uniqueSorted(record.observedServers),
             catalogueRevision: Number(record.catalogueRevision || 1),
             registeredAt: record.registeredAt,
-            lastObservedAt: record.lastObservedAt
+            lastObservedAt: record.lastObservedAt,
+            activationData: this.buildActivationDataPlan(record, options.action || 'status', options)
         };
     },
     /** Returns normalized HTTP or internal query parameters. */
@@ -324,7 +395,8 @@ module.exports = {
             throw new CLASSES.NodicsError('ERR_BOF_00000', 'Invalid functional-module lifecycle request');
         }
         return { project: String(body.project), functionalModule: String(params.functionalModule),
-            expectedRevision: Number(body.expectedRevision), reason: String(body.reason), actor: actor };
+            expectedRevision: Number(body.expectedRevision), reason: String(body.reason), actor: actor,
+            dryRun: body.dryRun === true, includeActivationData: body.includeActivationData !== false };
     },
     /** Applies one optimistic durable lifecycle transition without changing runtime composition. */
     transition: async function (request, action) {
@@ -333,6 +405,11 @@ module.exports = {
         if (!existing) throw new CLASSES.NodicsError('ERR_BOF_00000', 'Functional module is not available');
         if (Number(existing.catalogueRevision) !== context.expectedRevision) {
             throw new CLASSES.NodicsError('ERR_BOF_00000', 'Functional-module catalogue revision conflict');
+        }
+        if (context.dryRun === true) {
+            return { code: 'SUC_BOF_00020', data: this.projectClientSafe(existing, {
+                action: 'dryRun', dryRun: true
+            }) };
         }
         if (existing.required === true && ['deactivate', 'deregister'].includes(action)) {
             throw new CLASSES.NodicsError('ERR_BOF_00000', 'Required functional module cannot be ' + action + 'd');
@@ -366,7 +443,7 @@ module.exports = {
             moduleName: context.functionalModule, principalId: context.actor, revision: model.catalogueRevision,
             reason: context.reason
         });
-        return { code: 'SUC_BOF_00020', data: this.projectClientSafe(result) };
+        return { code: 'SUC_BOF_00020', data: this.projectClientSafe(result, { action: action }) };
     },
     /** Registers one optional functional module for the project. */
     register: function (request) { return this.transition(request, 'register'); },

@@ -20,6 +20,9 @@ module.exports = {
     backofficeApplicationInitialization: {
         profiles: {}
     },
+    backofficeFunctionalModuleActivationData: {
+        modules: {}
+    },
     schemaPolicies: {
         backoffice: {
             contractReader: {

@@ -716,7 +716,9 @@ const functionalModuleLifecycleDecision = {
   properties: {
     project: moduleName,
     expectedRevision: { type: "integer", minimum: 1 },
-    reason: { type: "string", minLength: 1, maxLength: 512 }
+    reason: { type: "string", minLength: 1, maxLength: 512 },
+    dryRun: { type: "boolean" },
+    includeActivationData: { type: "boolean" }
   }
 };
 const moduleLease = {
