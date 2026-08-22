@@ -72,6 +72,9 @@ module.exports = {
             if (model.cmsComponents && model.cmsComponents.length > 0) {
                 model.cmsComponents.forEach(detail => {
                     if (!detail.source) detail.source = model.code;
+                    if (!Array.isArray(detail.accessGroups)) {
+                        detail.accessGroups = Array.isArray(model.accessGroups) ? model.accessGroups.slice() : ['userGroup'];
+                    }
                     if (request.options && request.options.allowCmsAssociationReplacement === true) {
                         detail.allowCmsAssociationReplacement = true;
                     }
@@ -100,6 +103,9 @@ module.exports = {
         }
         let incomingCodes = model.cmsComponents.reduce((codes, detail) => {
             if (!detail.source) detail.source = model.code;
+            if (!Array.isArray(detail.accessGroups)) {
+                detail.accessGroups = Array.isArray(model.accessGroups) ? model.accessGroups.slice() : ['userGroup'];
+            }
             if (request.options && request.options.allowCmsAssociationReplacement === true) {
                 detail.allowCmsAssociationReplacement = true;
             }

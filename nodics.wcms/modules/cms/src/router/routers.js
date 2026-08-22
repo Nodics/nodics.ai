@@ -196,7 +196,8 @@ module.exports = {
                     requestedBy: { type: 'string', minLength: 1, maxLength: 256 },
                     reason: { type: 'string', maxLength: 1000 },
                     correlationId: { type: 'string', maxLength: 256 },
-                    catalogCode: { type: 'string', maxLength: 128 }
+                    catalogCode: { type: 'string', maxLength: 128 },
+                    forceRefresh: { type: 'boolean' }
                 }
             } } } }
         },

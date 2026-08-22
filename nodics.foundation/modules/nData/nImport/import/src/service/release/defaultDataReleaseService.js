@@ -213,7 +213,7 @@ module.exports = {
     execute: async function (request) {
         let plan = await this.preparePlan(request);
         let operationReleases = await this.operationReleases(plan, 'AVAILABLE');
-        plan = this.executablePlan(plan, operationReleases);
+        plan = this.executablePlan(plan, operationReleases, request.releaseRequest && request.releaseRequest.forceCurrent === true);
         if (plan.releases.length === 0) throw this.error('ERR_IMP_00003', 'Selected data releases are already current');
         let typePolicy = (this.configuration().types || {})[plan.dataType] || {};
         if (typePolicy.operatorExecution !== true) throw this.error('ERR_IMP_00002', 'Operator execution is disabled for this data release type');
@@ -324,9 +324,10 @@ module.exports = {
     },
 
     /** Keeps execution scoped to releases that can change state. */
-    executablePlan: function (plan, operationReleases) {
+    executablePlan: function (plan, operationReleases, forceCurrent) {
         let executableReleases = new Set((operationReleases || [])
-            .filter(release => ['NOT_INSTALLED', 'UPDATE_AVAILABLE', 'FAILED'].includes(release.status))
+            .filter(release => ['NOT_INSTALLED', 'UPDATE_AVAILABLE', 'FAILED'].includes(release.status) ||
+                forceCurrent === true && release.status === 'CURRENT' && this.isDevelopmentRelease(release.version))
             .map(release => release.releaseCode));
         return Object.assign({}, plan, {
             releases: plan.releases.filter(release => executableReleases.has(release.releaseCode))

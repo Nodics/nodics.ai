@@ -589,6 +589,11 @@ module.exports = {
             let options = Object.assign({}, request.options || {});
             if (this.isGovernedContentPackRun(request)) {
                 options.allowCmsAssociationReplacement = true;
+                options.replaceAllMatchesByQuery = true;
+                options.replaceArraysOnVersionMerge = true;
+                if (header.rawSchema && header.rawSchema.isVersionedEnabled === true) {
+                    options.versionedImport = true;
+                }
             }
             return new Promise((resolve, reject) => {
                 schemaService[header.options.operation]({

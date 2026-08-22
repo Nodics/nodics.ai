@@ -172,12 +172,13 @@ module.exports = {
             } catch (error) {
                 if (!this.isAlreadyCurrent(error)) throw error;
             }
-        } else if (release.status !== 'CURRENT') {
+        } else if (release.status !== 'CURRENT' || input.forceRefresh === true) {
             try {
                 await SERVICE.DefaultDataReleaseService.execute({ tenant: request.tenant, authData: request.authData,
                     correlationId: request.correlationId || request.requestId,
                     releaseRequest: { dataType: descriptor.dataType || 'init', releaseCodes: [descriptor.releaseCode],
-                        expectedReleases: { [descriptor.releaseCode]: descriptor.releaseVersion } } });
+                        expectedReleases: { [descriptor.releaseCode]: descriptor.releaseVersion },
+                        forceCurrent: input.forceRefresh === true } });
             } catch (error) {
                 if (!this.isAlreadyCurrent(error)) throw error;
             }
@@ -194,7 +195,7 @@ module.exports = {
             publication = await SERVICE.DefaultPublicationLifecycleService.create(Object.assign({}, actorRequest,
                 { publication: publicationInput }));
         }
-        if (publication.state === 'ONLINE' && release.status !== 'CURRENT') {
+        if (publication.state === 'ONLINE' && (release.status !== 'CURRENT' || input.forceRefresh === true)) {
             publication = await SERVICE.DefaultPublicationLifecycleService.validate(Object.assign({}, actorRequest,
                 { publicationCode: publication.code, expectedRevision: publication.revision }));
         }

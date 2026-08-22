@@ -140,12 +140,20 @@ module.exports = {
     saveSingleModel: function (request, response, model) {
         request.model = model;
         try {
+            let query = this.resolveModelQuery(request.originalQuery || {}, model);
+            if (request.options && request.options.versionedImport === true &&
+                request.schemaModel && request.schemaModel.rawSchema &&
+                request.schemaModel.rawSchema.isVersionedEnabled === true && model.versionId !== undefined) {
+                query.versionId = model.versionId;
+            }
             return SERVICE.DefaultPipelineService.start('modelSaveInitializerPipeline', {
                 tenant: request.tenant,
                 authData: request.authData,
                 schemaModel: request.schemaModel,
-                query: _.cloneDeep(request.originalQuery || {}),
+                query: query,
                 model: model,
+                options: request.options,
+                searchOptions: request.searchOptions,
                 suppressRetryErrorLog: request.suppressRetryErrorLog === true
             }, {}).then(success => {
                 if (!response.success) response.success = [];
@@ -158,6 +166,22 @@ module.exports = {
         } catch (error) {
             return Promise.reject(new CLASSES.NodicsError(error, null, 'ERR_SAVE_00000'));
         }
+    },
+
+    /**
+     * Resolves `$property` placeholders against the model currently being saved.
+     *
+     * @param {Object} query Bulk save query template.
+     * @param {Object} model Model being saved.
+     * @returns {Object} Concrete query for this model.
+     */
+    resolveModelQuery: function (query, model) {
+        return Object.keys(query || {}).reduce((resolved, propertyName) => {
+            let value = query[propertyName];
+            resolved[propertyName] = typeof value === 'string' && value.startsWith('$') ?
+                model[value.substring(1)] : _.cloneDeep(value);
+            return resolved;
+        }, {});
     },
 
     /**

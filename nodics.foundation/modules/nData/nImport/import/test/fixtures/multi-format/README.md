@@ -9,6 +9,8 @@ catalogs, or other business records during normal server startup.
 The fixture set intentionally covers the supported built-in import formats:
 
 - `records.js`
+- `records-array-base.js`
+- `records-array-update.js`
 - `records.json`
 - `records.csv`
 - `records.xlsx`

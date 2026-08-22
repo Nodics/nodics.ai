@@ -84,7 +84,10 @@ module.exports = {
             query: { source: model.source, slot: model.slot, index: model.index, active: true }
         });
         let conflicts = response && Array.isArray(response.result) ? response.result.filter(item => item.code !== model.code) : [];
+        let allowReplacement = model.allowCmsAssociationReplacement === true ||
+            request.options && request.options.allowCmsAssociationReplacement === true;
         delete model.allowCmsAssociationReplacement;
+        if (allowReplacement) conflicts = [];
         if (conflicts.length &&
             SERVICE.DefaultCmsComponentDetailService &&
             (typeof SERVICE.DefaultCmsComponentDetailService.remove === 'function' ||

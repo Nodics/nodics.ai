@@ -11,6 +11,7 @@
 
 /** @module backoffice/test/backofficeApplicationInitializationContract @description Protects profile qualification, human initiation, projection, and fixed Staged routing. */
 const assert = require('node:assert/strict');
+const controller = require('../src/controller/defaultBackofficeApplicationInitializationController');
 const service = require('../src/service/defaultBackofficeApplicationInitializationService');
 const routes = require('../src/router/routers').backoffice.applicationInitialization;
 
@@ -53,6 +54,23 @@ global.SERVICE = { DefaultModuleService: {
     assert.throws(() => service.status('../unsafe', { tenant: 'default', authData: {} }), error => error.code === 'ERR_BOF_00080');
     assert.strictEqual(routes.applicationInitializationStatus.permission, 'backoffice.application.initialization.view');
     assert.strictEqual(routes.initiateApplicationInitialization.permission, 'backoffice.application.initialization.initiate');
+    let prepared = controller.prepare({ requestId: 'request-controller', httpRequest: {
+        params: { profileCode: 'nexus' },
+        body: { forceRefresh: true, reason: 'Replay current development baseline', correlationId: 'corr-1' }
+    } });
+    assert.strictEqual(prepared.applicationInitialization.forceRefresh, true);
+    assert.strictEqual(prepared.correlationId, 'corr-1');
+    let initiateRequest;
+    SERVICE.DefaultModuleService.fetch = async request => {
+        initiateRequest = request;
+        return { data: { readiness: 'PUBLICATION_PENDING', releaseCode: 'nexusData:nexusCorporateSite',
+            releaseVersion: '0.0.0', releaseStatus: 'CURRENT', publication: { state: 'PENDING_APPROVAL' } } };
+    };
+    await service.initiate('nexus', { tenant: 'default', requestId: 'request-initiate',
+        applicationInitialization: { forceRefresh: true, reason: 'Replay current development baseline' },
+        authData: { principalId: 'admin' } });
+    assert.strictEqual(initiateRequest.requestBody.forceRefresh, true);
+    assert.strictEqual(routes.initiateApplicationInitialization.requestBody.content['application/json'].schema.properties.forceRefresh.type, 'boolean');
     let contentPackRequest;
     SERVICE.DefaultModuleService.fetch = async request => {
         contentPackRequest = request;

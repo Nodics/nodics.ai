@@ -20,6 +20,60 @@ const _ = require('lodash');
  */
 module.exports = {
     /**
+     * Merges JavaScript import model maps while treating arrays as complete
+     * field values. Lodash's default deep merge combines arrays by index, which
+     * leaves stale values behind during same-version data refreshes.
+     *
+     * @param {Object} current Existing merged models.
+     * @param {Object} incoming Models exported by the next data file.
+     * @returns {Object} Merged models.
+     */
+    mergeModel: function (current, incoming) {
+        return _.mergeWith(current || {}, incoming || {}, function (targetValue, sourceValue) {
+            if (Array.isArray(sourceValue)) {
+                return sourceValue;
+            }
+            return undefined;
+        });
+    },
+
+    /**
+     * Adds one JavaScript file export into the accumulated import map.
+     *
+     * Export keys such as `record0` are local to each file. Different files may
+     * reuse the same key for different business records, so duplicate keys must
+     * append unless both records declare the same business `code`.
+     *
+     * @param {Object} current Existing merged models.
+     * @param {Object} incoming Models exported by the next data file.
+     * @returns {Object} Merged model map.
+     */
+    mergeModels: function (current, incoming) {
+        let result = current || {};
+        Object.keys(incoming || {}).forEach(key => {
+            let model = incoming[key];
+            let existingCodeKey = model && model.code ? Object.keys(result).find(existingKey =>
+                result[existingKey] && result[existingKey].code === model.code) : undefined;
+            if (existingCodeKey) {
+                result[existingCodeKey] = this.mergeModel(result[existingCodeKey], model);
+                return;
+            }
+            if (!result[key]) {
+                result[key] = model;
+                return;
+            }
+            let nextKey = key;
+            let index = 1;
+            while (result[nextKey]) {
+                nextKey = key + '_' + index;
+                index++;
+            }
+            result[nextKey] = model;
+        });
+        return result;
+    },
+
+    /**
      * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
      * defined it that with Promise way
      * @param {*} options 
@@ -135,7 +189,7 @@ module.exports = {
             if (files.length > 0) {
                 let file = files.shift();
                 delete require.cache[require.resolve(file)];
-                models = _.merge(models, require(file));
+                models = _self.mergeModels(models, require(file));
                 _self.handleFiles(request, response, files, models).then(success => {
                     resolve(success);
                 }).catch(error => {

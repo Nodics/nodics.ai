@@ -123,7 +123,7 @@ module.exports = {
         let input = request.applicationInitialization || {};
         let correlationId = input.correlationId || request.correlationId || request.requestId;
         let body = operation !== 'status' ? { requestedBy: principal, reason: input.reason,
-            correlationId: correlationId } : undefined;
+            correlationId: correlationId, forceRefresh: input.forceRefresh === true ? true : undefined } : undefined;
         let suffix = operation === 'status' ? '' : '/' + operation;
         let descriptor = SERVICE.DefaultModuleService.buildRequest({ moduleName: profile.target.moduleName,
             connectionName: profile.target.connectionName, connectionType: profile.target.connectionType || 'abstract',

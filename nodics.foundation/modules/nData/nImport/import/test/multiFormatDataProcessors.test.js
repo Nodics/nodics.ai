@@ -149,6 +149,8 @@ function runProcessor(processor, files) {
 (async function () {
     let jsFile = path.join(fixtureRoot, 'records.js');
     let jsUpdatedFile = path.join(fixtureRoot, 'records-updated.js');
+    let jsArrayBaseFile = path.join(fixtureRoot, 'records-array-base.js');
+    let jsArrayUpdateFile = path.join(fixtureRoot, 'records-array-update.js');
     let jsonFile = path.join(fixtureRoot, 'records.json');
     let emptyJsonFile = path.join(fixtureRoot, 'empty-records.json');
     let jsonFileAfterEmpty = path.join(fixtureRoot, 'records-after-empty.json');
@@ -167,6 +169,16 @@ function runProcessor(processor, files) {
     let jsUpdatedRequest = await runProcessor(jsProcessor, [jsUpdatedFile]);
     assert.deepStrictEqual(pipelineCalls.map(call => call.models.map(model => model.code)), [['jsUpdated']]);
     assert.strictEqual(jsUpdatedRequest.importRun.summary.recordsRead, 1);
+
+    pipelineCalls = [];
+    let jsAppendedRequest = await runProcessor(jsProcessor, [jsFile, jsUpdatedFile]);
+    assert.deepStrictEqual(pipelineCalls.map(call => call.models.map(model => model.code)), [['jsOne', 'jsTwo', 'jsUpdated']]);
+    assert.strictEqual(jsAppendedRequest.importRun.summary.recordsRead, 3);
+
+    pipelineCalls = [];
+    let jsArrayRefreshRequest = await runProcessor(jsProcessor, [jsArrayBaseFile, jsArrayUpdateFile]);
+    assert.deepStrictEqual(pipelineCalls.map(call => call.models.map(model => model.productCodes)), [[['newOne', 'newTwo']]]);
+    assert.strictEqual(jsArrayRefreshRequest.importRun.summary.recordsRead, 1);
 
     pipelineCalls = [];
     let jsonRequest = await runProcessor(jsonProcessor, [jsonFile]);

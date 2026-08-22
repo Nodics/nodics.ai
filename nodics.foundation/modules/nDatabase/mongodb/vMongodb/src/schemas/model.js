@@ -52,6 +52,30 @@ module.exports = {
         },
 
         /**
+         * Builds the next persisted version from the previous one and the
+         * caller-provided model. Governed data refreshes treat arrays as
+         * complete field values; lodash's default array merge preserves old tail
+         * elements and can leak stale CMS/product relationships into the next
+         * published version.
+         *
+         * @param {Object} previous Latest persisted version.
+         * @param {Object} candidate Incoming candidate version.
+         * @param {Object} options Save options supplied by the caller.
+         * @returns {Object} Merged version candidate.
+         */
+        mergeNextVersion: function (previous, candidate, options) {
+            if (options && options.replaceArraysOnVersionMerge === true) {
+                return _.mergeWith(previous, candidate, function (targetValue, sourceValue) {
+                    if (Array.isArray(sourceValue)) {
+                        return sourceValue;
+                    }
+                    return undefined;
+                });
+            }
+            return _.merge(previous, candidate);
+        },
+
+        /**
          * Validates model rules.
          *
          * @param {*} query Method input.
@@ -59,7 +83,7 @@ module.exports = {
          * @param {*} model Method input.
          * @returns {*} Method result.
          */
-        validateModel: function (query, searchOptions, model) {
+        validateModel: function (query, searchOptions, model, options) {
             return new Promise((resolve, reject) => {
                 if (!model) {
                     reject(new CLASSES.NodicsError('ERR_MDL_00001'));
@@ -88,7 +112,7 @@ module.exports = {
                                 reject(new CLASSES.NodicsError('ERR_MDL_00004', model.versionId + ', it should be: ' + (preMoidel.versionId + 1)));
                             } else {
                                 model.versionId = preMoidel.versionId + 1;
-                                resolve({ model: _.merge(preMoidel, model), idempotentReplay: false });
+                                resolve({ model: this.mergeNextVersion(preMoidel, model, options), idempotentReplay: false });
                             }
                         } else {
                             if (model.versionId > 0) {
@@ -122,7 +146,7 @@ module.exports = {
             let _self = this;
             return new Promise((resolve, reject) => {
                 try {
-                    _self.validateModel(input.query, input.searchOptions, input.model).then(validation => {
+                    _self.validateModel(input.query, input.searchOptions, input.model, input.options).then(validation => {
                         let model = validation.model;
                         if (validation.idempotentReplay) {
                             resolve(model);

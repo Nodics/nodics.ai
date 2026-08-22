@@ -112,11 +112,21 @@ module.exports = {
                     let models = model[property];
                     if (propertyObject.enabled && models && ((UTILS.isObject(models) && !UTILS.isObjectId(models)) || UTILS.isArrayOfObject(models))) {
                         if (propertyObject.type === 'one') models = [models];
+                        if (request.options && request.options.allowCmsAssociationReplacement === true) {
+                            models.forEach(item => {
+                                if (item && !Array.isArray(item.accessGroups)) {
+                                    item.accessGroups = Array.isArray(model.accessGroups) ? model.accessGroups.slice() : ['userGroup'];
+                                }
+                            });
+                        }
+                        let nestedQuery = request.options && request.options.allowCmsAssociationReplacement === true &&
+                            models.every(item => item && item.code) ? { code: '$code' } : undefined;
                         SERVICE['Default' + propertyObject.schemaName.toUpperCaseFirstChar() + 'Service'].saveAll({
                             tenant: request.tenant,
                             authData: request.authData,
                             searchOptions: request.searchOptions,
                             options: request.options,
+                            query: nestedQuery,
                             models: models
                         }).then(success => {
                             if (success.result && success.result.length > 0) {

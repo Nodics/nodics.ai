@@ -178,26 +178,46 @@ module.exports = {
                 } else if (input.query && !UTILS.isBlank(input.query)) {
                     try {
                         input.model = this.normalizeModelForWrite(input.model);
-                        this.findOneAndUpdate(input.query,
-                            {
-                                $set: input.model
-                            },
+                        let updateDocument = { $set: input.model };
+                        let saveOne = () => this.findOneAndUpdate(input.query,
+                            updateDocument,
                             Object.assign({}, this.dataBase.getOptions().modelSaveOptions || {
                                 upsert: true,
                                 returnDocument: 'after'
-                            }, operationOptions)).then(result => {
-                                if (result && result.ok > 0 && result.value) {
-                                    resolve(result.value);
-                                } else if (result && result.ok > 0) {
-                                    resolve(_.merge({
-                                        _id: result.lastErrorObject.upserted
-                                    }, input.model));
-                                } else {
-                                    reject(new CLASSES.NodicsError('ERR_MDL_00005'));
+                            }, operationOptions));
+                        let resolveSaved = result => {
+                            if (result && result.ok > 0 && result.value) {
+                                resolve(result.value);
+                            } else if (result && result.ok > 0) {
+                                resolve(_.merge({
+                                    _id: result.lastErrorObject.upserted
+                                }, input.model));
+                            } else {
+                                reject(new CLASSES.NodicsError('ERR_MDL_00005'));
+                            }
+                        };
+                        if (input.options && input.options.replaceAllMatchesByQuery === true) {
+                            this.countDocuments(input.query).then(count => {
+                                if (count > 0) {
+                                    return this.updateMany(input.query, updateDocument, Object.assign({ upsert: false }, operationOptions)).then(() => {
+                                        return this.find(input.query, Object.assign({ limit: 1 }, operationOptions)).toArray();
+                                    }).then(result => {
+                                        if (result && result.length > 0) {
+                                            resolve(result[0]);
+                                        } else {
+                                            reject(new CLASSES.NodicsError('ERR_MDL_00005'));
+                                        }
+                                    });
                                 }
+                                return saveOne().then(resolveSaved);
                             }).catch(error => {
                                 reject(error);
                             });
+                        } else {
+                            saveOne().then(resolveSaved).catch(error => {
+                                reject(error);
+                            });
+                        }
                     } catch (error) {
                         reject(new CLASSES.NodicsError(error, 'While saving items', 'ERR_MDL_00000'));
                     }

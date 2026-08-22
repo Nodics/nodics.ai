@@ -19,7 +19,8 @@ const domains = [
   { code: 'electronics', title: 'Electronics', module: 'agoraElectronicsData' },
   { code: 'telco', title: 'Telco', module: 'agoraTelcoData' },
 ];
-const contentMarkers = ['ContentCatalog', 'PageData', 'RendererData', 'RouteData', 'SiteData', 'TypeCodeData', 'ContentHeader'];
+const contentMarkers = ['ContentCatalog', 'PageData', 'RendererData', 'RouteData', 'SiteData', 'TypeCodeData',
+  'SharedComponent', 'SharedMediaReference', 'SharedSlot', 'SharedTemplate', 'ContentHeader'];
 const digest = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 const section = (description, owningDomain, destinationRole, files) => ({ kind: 'DATA_RELEASE', dataType: 'sample', sourceRoot: 'staged', version: '0.0.0', description, owningDomain, lifecycle: 'PUBLISHABLE', destinationRole, environmentScope: ['LOCAL', 'LOCAL_PRODUCTION_SIMULATION'], sensitivity: 'PUBLIC', versioningPolicy: 'IMMUTABLE', publicationPolicy: 'REQUIRED', initialPublicationPolicy: 'ADMIN_INITIATED', removalPolicy: 'UNPUBLISH_OR_RETIRE', files });
 

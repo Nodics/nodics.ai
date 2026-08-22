@@ -159,7 +159,7 @@ module.exports = {
     resolveQuery: function (query, model) {
         let queryStr = {};
         _.each(query, (propertyValue, propertyName) => {
-            if (propertyName.indexOf(".") > 0 && propertyValue.startsWith('$')) {
+            if (propertyName.indexOf(".") > 0 && typeof propertyValue === 'string' && propertyValue.startsWith('$')) {
                 let properties = propertyName.split('.');
                 let value = model;
                 for (let element of properties) {
@@ -173,7 +173,7 @@ module.exports = {
                 if (value !== null && value !== undefined && value !== '') {
                     queryStr[propertyName] = value;
                 }
-            } else if (propertyValue.startsWith('$')) {
+            } else if (typeof propertyValue === 'string' && propertyValue.startsWith('$')) {
                 propertyValue = propertyValue.substring(1, propertyValue.length);
                 if (Object.prototype.hasOwnProperty.call(model, propertyValue) &&
                     model[propertyValue] !== null &&
