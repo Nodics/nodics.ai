@@ -528,6 +528,8 @@ module.exports = {
     componentIntent: function (input) {
         return {
             code: this.requiredCode(input.code || input.componentCode, 'component.code'),
+            versionId: Number.isInteger(Number(input.versionId)) ? Number(input.versionId) : undefined,
+            active: input.active !== false,
             typeCode: this.requiredCode(input.typeCode, 'component.typeCode'),
             renderer: input.renderer,
             properties: input.properties,

@@ -238,6 +238,12 @@ module.exports = {
         if (pointers.length > maximum) throw new CLASSES.NodicsError('CMS_PUBLICATION_MEDIA_RETENTION_BOUNDARY', 'CMS publication pointer retention boundary exceeded');
         return pointers;
     },
+    /** Resolves route-level and site-bundle delivery scopes from a manifest snapshot. */
+    deliveryScopes: function (manifest) {
+        let snapshot = manifest && manifest.snapshot;
+        if (snapshot && snapshot.bundleType === 'SITE' && Array.isArray(snapshot.routes)) return snapshot.routes;
+        return snapshot ? [snapshot] : [];
+    },
     /** Atomically switches one route scope to an immutable manifest. */
     activateScope: async function (manifest, scope, request) {
         let current = await this.getStoredPointer(scope, request);
@@ -270,7 +276,7 @@ module.exports = {
     },
     /** Atomically switches either one route or every route in one site manifest. */
     activate: async function (manifest, request) {
-        let scopes = manifest.snapshot && [0, 2].includes(manifest.snapshot.contractVersion) ? manifest.snapshot.routes : [manifest.snapshot];
+        let scopes = this.deliveryScopes(manifest);
         if (!Array.isArray(scopes) || !scopes.length) throw new CLASSES.NodicsError('CMS_PUBLICATION_ROUTE_MISSING', 'CMS publication contains no delivery scope');
         let activations = [];
         for (let scope of scopes) activations.push(await this.activateScope(manifest, scope, request));
@@ -280,7 +286,7 @@ module.exports = {
     },
     /** Atomically disables every active pointer owned by one immutable manifest. */
     withdraw: async function (manifest, request) {
-        let scopes = manifest.snapshot && [0, 2].includes(manifest.snapshot.contractVersion) ? manifest.snapshot.routes : [manifest.snapshot];
+        let scopes = this.deliveryScopes(manifest);
         if (!Array.isArray(scopes) || !scopes.length) throw new CLASSES.NodicsError('CMS_PUBLICATION_ROUTE_MISSING', 'CMS publication contains no delivery scope');
         let count = 0;
         for (let scope of scopes) {
