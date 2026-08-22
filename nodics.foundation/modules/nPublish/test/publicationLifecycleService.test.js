@@ -111,6 +111,15 @@ const request = (revision, extra) => Object.assign({ tenant: 'tenant-a', publica
     online = await service.activate(request(refreshApproved.revision));
     assert.strictEqual(online.state, 'ONLINE');
     assert.strictEqual(activated, 2, 'approved online refresh must activate exactly once');
+    let originalGetOnlineVersion = versionProvider.getOnlineVersion;
+    versionProvider.getOnlineVersion = async () => ({ partial: true, routeCount: 2 });
+    records.set('partial-site-refresh', { code: 'partial-site-refresh', domain: 'cms', state: 'APPROVED',
+        revision: 0, sourceVersion: '0' });
+    let partialSiteRefresh = await service.activate(request(0, { publicationCode: 'partial-site-refresh' }));
+    assert.strictEqual(partialSiteRefresh.state, 'ONLINE');
+    assert.strictEqual(partialSiteRefresh.previousOnlineVersion, undefined,
+        'partial site-bundle target evidence must not be stored as rollback version');
+    versionProvider.getOnlineVersion = originalGetOnlineVersion;
 
     let rollback = await service.rollback(request(online.revision));
     assert.strictEqual(rollback.state, 'ROLLED_BACK');

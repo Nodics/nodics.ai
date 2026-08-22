@@ -224,8 +224,10 @@ module.exports = {
             let adapter = this.getDomainAdapter(publication.domain);
             if (adapter.afterActivate) await adapter.afterActivate(publication, activation, request);
             let patch = { targetVersion: activation && activation.version || publication.sourceVersion };
-            let previousOnlineVersion = previous && (previous.version || previous);
-            if (previousOnlineVersion) patch.previousOnlineVersion = previousOnlineVersion;
+            let previousOnlineVersion = previous && (typeof previous === 'string' ? previous : previous.version);
+            if (previousOnlineVersion && typeof previousOnlineVersion === 'string') {
+                patch.previousOnlineVersion = previousOnlineVersion;
+            }
             return await this.transition(publication, 'ONLINE', Object.assign({}, request, { expectedRevision: publication.revision }),
                 patch, activation);
         } catch (error) {
