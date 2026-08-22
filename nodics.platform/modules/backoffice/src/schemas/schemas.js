@@ -73,7 +73,7 @@ module.exports = {
                 targetDatabase: { type: 'string', required: false, description: 'Runtime target database for operator visibility' },
                 operation: { type: 'string', required: true, description: 'Declared import operation family' },
                 dataType: { type: 'string', required: true, description: 'nImport data release type: init, core, or sample' },
-                status: { type: 'string', required: true, description: 'PLANNED, RUNNING, IMPORTED, FAILED, SKIPPED_USER_TRIGGERED, or DATA_LEFT_INTACT' },
+                status: { type: 'string', required: true, description: 'PLANNED, QUEUED, RUNNING, PENDING_IMPORT, WAITING_APPROVAL, IMPORTED, COMPLETED, RETRYABLE, FAILED, SKIPPED_USER_TRIGGERED, or DATA_LEFT_INTACT' },
                 executionMode: { type: 'string', required: true, description: 'Executor used for the receipt, such as NIMPORT_RELEASE or USER_TRIGGERED' },
                 message: { type: 'string', required: false, description: 'Bounded operator-facing receipt message' },
                 importRunId: { type: 'string', required: false, description: 'nImport run id when one was created' },

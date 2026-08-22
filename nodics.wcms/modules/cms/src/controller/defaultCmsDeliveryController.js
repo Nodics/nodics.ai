@@ -23,12 +23,17 @@ module.exports = {
     postInit: function () { return Promise.resolve(true); },
 
     /** Resolves query input through the CMS delivery facade. */
+    success: function (value) {
+        return { code: 'SUC_CMS_00000', result: value && value.result !== undefined ? value.result : value };
+    },
+
+    /** Resolves query input through the CMS delivery facade. */
     resolvePage: function (request, callback) {
         let query = request.httpRequest && request.httpRequest.query ? request.httpRequest.query : {};
         request.delivery = Object.assign({}, request.delivery || {}, query);
         let operation = FACADE.DefaultCmsDeliveryFacade.resolvePage(request);
         if (!callback) return operation;
-        operation.then(success => callback(null, success)).catch(error => callback(error));
+        operation.then(success => callback(null, this.success(success))).catch(error => callback(error));
     },
 
     /** Resolves a page path only after deriving Site, locale, channel, and authority from Storefront introspection. */
@@ -38,6 +43,6 @@ module.exports = {
         let operation = SERVICE.DefaultCmsStorefrontContextProviderService.apply(request)
             .then(() => FACADE.DefaultCmsDeliveryFacade.resolvePage(request));
         if (!callback) return operation;
-        operation.then(success => callback(null, success)).catch(error => callback(error));
+        operation.then(success => callback(null, this.success(success))).catch(error => callback(error));
     }
 };

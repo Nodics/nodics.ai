@@ -82,7 +82,7 @@ module.exports = {
                 return { code: component.code, typeCode: component.typeCode, active: component.active !== false, renderer: component.renderer,
                     rendererContractVersion: component.rendererContractVersion, rendererChannels: component.rendererChannels,
                     rendererDeprecated: component.rendererDeprecated, rendererReplacement: component.rendererReplacement,
-                    properties: resolved.properties, localization: resolved.localization,
+                    properties: this.deliveryProperties(resolved.properties), localization: resolved.localization,
                     media: componentMedia.map(reference => ({ componentMediaCode: reference.componentMediaCode,
                         mediaCode: reference.mediaCode, mediaSetCode: reference.mediaSetCode, mediaType: reference.mediaType,
                         role: reference.role, slot: reference.slot, localeCode: reference.localeCode,
@@ -108,8 +108,32 @@ module.exports = {
         let routes = Object.keys(models).filter(key => key.startsWith('cmsPageRoute:')).map(key => models[key])
             .filter(route => route.site === site.code).sort((left, right) => String(left.path).localeCompare(String(right.path)));
         if (!routes.length) throw new CLASSES.NodicsError('CMS_PUBLICATION_SITE_EMPTY', 'Frozen CMS site contains no routes');
-        return { contractVersion: 0, bundleType: 'SITE', site: site.code,
-            routes: routes.map(route => this.buildRouteSnapshot(models, route)) };
+        return this.compactSiteSnapshot({ contractVersion: 0, bundleType: 'SITE', site: site.code,
+            routes: routes.map(route => this.buildRouteSnapshot(models, route)) });
+    },
+    /** Stores repeated component subtrees once per site bundle while preserving route-local page contracts. */
+    compactSiteSnapshot: function (snapshot) {
+        if (!snapshot || snapshot.bundleType !== 'SITE' || !Array.isArray(snapshot.routes)) return snapshot;
+        let sharedComponents = {};
+        let identities = {};
+        let compactComponent = component => {
+            let model = Object.assign({}, component, {
+                components: [].concat(component.components || []).map(compactComponent)
+            });
+            let hash = crypto.createHash('sha256').update(JSON.stringify(model)).digest('hex').slice(0, 16);
+            let identity = [component.code || 'component', hash].join('_').replace(/[^A-Za-z0-9_-]/g, '_');
+            if (!identities[identity]) {
+                identities[identity] = true;
+                sharedComponents[identity] = model;
+            }
+            return { componentRef: identity };
+        };
+        let routes = snapshot.routes.map(route => Object.assign({}, route, {
+            page: Object.assign({}, route.page || {}, {
+                components: [].concat(route.page && route.page.components || []).map(compactComponent)
+            })
+        }));
+        return Object.assign({}, snapshot, { routes: routes, sharedComponents: sharedComponents });
     },
     /** Collects referenced concrete media identities from a detached snapshot. */
     collectMediaCodes: function (snapshot) {
@@ -122,6 +146,15 @@ module.exports = {
         };
         visit(snapshot);
         return Array.from(codes).sort();
+    },
+    /** Removes authoring/search-only payload from immutable delivery snapshots. */
+    deliveryProperties: function (properties) {
+        if (!properties || typeof properties !== 'object' || Array.isArray(properties)) return properties || {};
+        let blocked = new Set(['searchText', 'searchKeywords', 'indexText']);
+        return Object.keys(properties).reduce((result, key) => {
+            if (!blocked.has(key)) result[key] = properties[key];
+            return result;
+        }, {});
     },
     /** Persists one deterministic immutable publication manifest idempotently. */
     persist: async function (publication, request) {
@@ -218,7 +251,7 @@ module.exports = {
         if (current) {
             let response = await SERVICE.DefaultCmsOnlinePublicationPointerService.update({ tenant: request.tenant, authData: request.authData,
                 transactionContext: request.transactionContext,
-                query: { code: current.code, revision: Number(current.revision || 0) }, model: patch });
+                query: { code: current.code, revision: Number(current.revision || 0) }, model: { $set: patch } });
             if (this.affected(response) !== 1) throw new CLASSES.NodicsError('CMS_PUBLICATION_POINTER_CONFLICT', 'CMS Online pointer revision conflict');
         } else {
             let key = [scope.site, scope.path, scope.locale, scope.channel, scope.accessMode].join('|');
@@ -259,8 +292,8 @@ module.exports = {
             let response = await SERVICE.DefaultCmsOnlinePublicationPointerService.update({ tenant: request.tenant, authData: request.authData,
                 transactionContext: request.transactionContext,
                 query: { code: current.code, revision: Number(current.revision || 0) },
-                model: { active: false, revision: Number(current.revision || 0) + 1,
-                    correlationId: request.correlationId || request.requestId } });
+                model: { $set: { active: false, revision: Number(current.revision || 0) + 1,
+                    correlationId: request.correlationId || request.requestId } } });
             if (this.affected(response) !== 1) throw new CLASSES.NodicsError('CMS_PUBLICATION_POINTER_CONFLICT', 'CMS Online pointer revision conflict');
             count += 1;
         }

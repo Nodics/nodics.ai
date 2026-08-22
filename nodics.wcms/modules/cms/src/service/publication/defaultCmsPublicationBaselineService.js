@@ -104,6 +104,11 @@ module.exports = {
         }
         return publication;
     },
+    /** Returns whether a data-install/import failure is the idempotent already-current case. */
+    isAlreadyCurrent: function (error) {
+        let message = String(error && (error.message || error.code) || '');
+        return /already current/i.test(message);
+    },
     /** Derives a sanitized readiness projection from nImport and nPublish authorities. */
     status: async function (code, request) {
         this.assertStaged();
@@ -161,13 +166,21 @@ module.exports = {
         let descriptor = this.descriptor(code);
         let release = await this.release(descriptor, request);
         if (release.status !== 'CURRENT' && release.sourceKind === 'CONTENT_PACK') {
-            await SERVICE.DefaultContentPackService.importPack(Object.assign({}, request,
-                { packCode: descriptor.contentPackCode, correlationId: request.correlationId || request.requestId }));
+            try {
+                await SERVICE.DefaultContentPackService.importPack(Object.assign({}, request,
+                    { packCode: descriptor.contentPackCode, correlationId: request.correlationId || request.requestId }));
+            } catch (error) {
+                if (!this.isAlreadyCurrent(error)) throw error;
+            }
         } else if (release.status !== 'CURRENT') {
-            await SERVICE.DefaultDataReleaseService.execute({ tenant: request.tenant, authData: request.authData,
-                correlationId: request.correlationId || request.requestId,
-                releaseRequest: { dataType: descriptor.dataType || 'init', releaseCodes: [descriptor.releaseCode],
-                    expectedReleases: { [descriptor.releaseCode]: descriptor.releaseVersion } } });
+            try {
+                await SERVICE.DefaultDataReleaseService.execute({ tenant: request.tenant, authData: request.authData,
+                    correlationId: request.correlationId || request.requestId,
+                    releaseRequest: { dataType: descriptor.dataType || 'init', releaseCodes: [descriptor.releaseCode],
+                        expectedReleases: { [descriptor.releaseCode]: descriptor.releaseVersion } } });
+            } catch (error) {
+                if (!this.isAlreadyCurrent(error)) throw error;
+            }
         }
         let actorRequest = Object.assign({}, request, { authData: Object.assign({}, request.authData, {
             principalId: requestedBy, delegatedBy: request.authData && (request.authData.principalId || request.authData.code)

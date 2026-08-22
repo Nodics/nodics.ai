@@ -103,6 +103,30 @@ const capability = {
     ],
     "navigation": [
         {
+            "id": "setup-accelerators",
+            "label": "Setup & Accelerators",
+            "route": "/setup-accelerators",
+            "icon": "settings",
+            "order": 40,
+            "group": {
+                "id": "publishing",
+                "label": "Publishing",
+                "order": 1700
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "ACTIVE",
+            "help": {
+                "summary": "Initialize governed documentation and project accelerators before publishing them Online."
+            }
+        },
+        {
             "id": "my-work",
             "parentId": "workflow-management",
             "parentModuleName": "flowCore",

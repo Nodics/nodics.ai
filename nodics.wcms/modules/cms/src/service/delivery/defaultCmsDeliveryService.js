@@ -89,9 +89,35 @@ module.exports = {
                 route.locale === context.locale && route.channel === context.channel &&
                 route.accessMode === accessMode);
             if (matches.length !== 1) throw this.error('ERR_CMS_00091', 'published bundle route is missing or ambiguous');
-            snapshot = matches[0];
+            snapshot = this.expandSharedComponents(matches[0], manifest.snapshot && manifest.snapshot.sharedComponents);
         }
         return { result: snapshot };
+    },
+    /** Rehydrates compacted site-bundle component references for the selected delivery route. */
+    expandSharedComponents: function (route, sharedComponents) {
+        if (!sharedComponents || typeof sharedComponents !== 'object') return route;
+        let seen = new Set();
+        let expand = component => {
+            if (!component || typeof component !== 'object') return component;
+            if (!component.componentRef) {
+                return Object.assign({}, component, {
+                    components: [].concat(component.components || []).map(expand)
+                });
+            }
+            let ref = String(component.componentRef);
+            if (seen.has(ref)) throw this.error('ERR_CMS_00091', 'published component reference cycle detected');
+            let shared = sharedComponents[ref];
+            if (!shared || typeof shared !== 'object') throw this.error('ERR_CMS_00091', 'published component reference is missing');
+            seen.add(ref);
+            let expanded = Object.assign({}, shared, {
+                components: [].concat(shared.components || []).map(expand)
+            });
+            seen.delete(ref);
+            return expanded;
+        };
+        return Object.assign({}, route, { page: Object.assign({}, route.page || {}, {
+            components: [].concat(route.page && route.page.components || []).map(expand)
+        }) });
     },
 
     /** Validates and normalizes site, path, locale, and channel input. */
@@ -173,8 +199,8 @@ module.exports = {
     getMany: async function (service, request, query) {
         let settings = this.settings();
         let response = await service.get({
-            tenant: request.tenant,
-            authData: request.authData,
+            tenant: request.tenant || settings.defaultTenant || 'default',
+            authData: request.authData || { tokenType: 'service', principalId: 'cms-delivery' },
             options: Object.assign({}, request.options || {}, { recursive: false }),
             searchOptions: { pageSize: settings.maxComponents },
             query: query
@@ -235,9 +261,10 @@ module.exports = {
     projectComponent: function (component, association, componentMedia, variants, locale) {
         let result = this.pickDefined(component, ['code', 'typeCode', 'active', 'renderer', 'rendererContractVersion',
             'rendererChannels', 'rendererDeprecated', 'rendererReplacement', 'properties']);
+        result.properties = this.deliveryProperties(result.properties);
         if (SERVICE.DefaultCmsContentLocalizationService) {
             let resolved = SERVICE.DefaultCmsContentLocalizationService.resolve(component, variants, locale);
-            result.properties = resolved.properties;
+            result.properties = this.deliveryProperties(resolved.properties);
             result.localization = resolved.localization;
         }
         if (componentMedia && componentMedia.length) result.media = componentMedia;
@@ -261,6 +288,16 @@ module.exports = {
         let value = {};
         fields.forEach(field => { if (source[field] !== undefined) value[field] = _.cloneDeep(source[field]); });
         return value;
+    },
+
+    /** Removes authoring/search-only payload from client delivery contracts. */
+    deliveryProperties: function (properties) {
+        if (!properties || typeof properties !== 'object' || Array.isArray(properties)) return properties || {};
+        let blocked = new Set(['searchText', 'searchKeywords', 'indexText']);
+        return Object.keys(properties).reduce((result, key) => {
+            if (!blocked.has(key)) result[key] = properties[key];
+            return result;
+        }, {});
     },
 
     /** Normalizes a reference object or scalar into its stable code. */
