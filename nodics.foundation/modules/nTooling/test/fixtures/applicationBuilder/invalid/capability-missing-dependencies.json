@@ -1,9 +1,9 @@
 {
-  "contractVersion": 1,
+  "contractVersion": 0,
   "code": "telco",
   "kind": "DOMAIN",
   "owner": "nodics.accelerators",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "packageMetadata": { "packageName": "telco", "moduleRoot": "nodics.accelerators/modules/telco", "metadataDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
   "backend": { "packages": [], "publicApiCategories": [], "lifecycleAuthorities": [] },
   "frontend": { "packages": [], "compositionEntries": [], "routes": [], "rendererKeys": [] },

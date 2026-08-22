@@ -27,7 +27,7 @@ global.SERVICE = {
 };
 const service = require('../src/service/operation/defaultProcessPublicationApprovalService');
 const request = { tenant: 'default', publicationApproval: { publicationCode: 'home-v2', publicationRevision: 4,
-    sourceVersion: 'v2', siteCode: 'site', catalogCode: 'catalog', correlationId: 'correlation-1' } };
+    sourceVersion: '0', siteCode: 'site', catalogCode: 'catalog', correlationId: 'correlation-1' } };
 (async () => {
     let result = await service.start(request);
     assert.strictEqual(result.data.instance.code, service.instanceCode('home-v2', 4));

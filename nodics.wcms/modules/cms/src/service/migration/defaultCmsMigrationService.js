@@ -68,7 +68,7 @@ module.exports = {
             let target = mappings[renderer.renderer];
             let looksExecutable = /[\\/]|^(https?|javascript|data|file):/i.test(renderer.renderer || '');
             if (!target && looksExecutable) manualActions.push({ reason: 'RENDERER_MAPPING_REQUIRED', schema: 'cmsTypeCode2Renderer', code: renderer.code, renderer: renderer.renderer });
-            if (target && target !== renderer.renderer) changes.push({ schema: 'cmsTypeCode2Renderer', operation: 'UPDATE', code: renderer.code, from: { renderer: renderer.renderer, contractVersion: renderer.contractVersion }, to: { renderer: target, contractVersion: 1 } });
+            if (target && target !== renderer.renderer) changes.push({ schema: 'cmsTypeCode2Renderer', operation: 'UPDATE', code: renderer.code, from: { renderer: renderer.renderer, contractVersion: renderer.contractVersion }, to: { renderer: target, contractVersion: 0 } });
             return changes;
         }, []);
     },

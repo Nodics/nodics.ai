@@ -1,11 +1,11 @@
 {
-    "contractVersion": 2,
+    "contractVersion": 0,
     "module": "catalog",
     "sections": {
         "init": {
             "kind": "DATA_RELEASE",
             "dataType": "init",
-            "version": "1.0.3",
+            "version": "0.0.0",
             "description": "Catalog Framework init data",
             "owningDomain": "catalog",
             "lifecycle": "REFERENCE",
@@ -26,7 +26,7 @@
         "sample": {
             "kind": "DATA_RELEASE",
             "dataType": "sample",
-            "version": "1.0.3",
+            "version": "0.0.0",
             "description": "Catalog Framework sample data",
             "owningDomain": "catalog",
             "lifecycle": "REFERENCE",

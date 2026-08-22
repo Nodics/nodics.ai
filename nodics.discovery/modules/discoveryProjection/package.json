@@ -1,6 +1,6 @@
 {
     "name": "discoveryProjection",
-    "version": "0.0.1",
+    "version": "0.0.0",
     "index": "65.40",
     "private": true,
     "main": "nodics.js",

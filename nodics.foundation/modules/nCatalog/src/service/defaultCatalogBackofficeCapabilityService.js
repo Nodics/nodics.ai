@@ -16,8 +16,8 @@ const capability = {
     "displayName": "Content Catalogs",
     "category": "content",
     "icon": "content",
-    "contractVersion": 1,
-    "minimumClientContractVersion": 1,
+    "contractVersion": 0,
+    "minimumClientContractVersion": 0,
     "roles": [
         "UI_COMPOSITION_PROVIDER",
         "FUNCTIONAL_CAPABILITY_PROVIDER"

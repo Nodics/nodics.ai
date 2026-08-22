@@ -16,14 +16,14 @@ const capability = {
     "displayName": "BackOffice Registry",
     "category": "platform",
     "icon": "registry",
-    "contractVersion": 1,
-    "minimumClientContractVersion": 1,
+    "contractVersion": 0,
+    "minimumClientContractVersion": 0,
     "roles": [
         "CONTROL_PLANE_PROVIDER"
     ],
     "discovery": {
         "openApiPath": "/nodics/system/v0/contract/openapi/internal",
-        "contractVersion": 1
+        "contractVersion": 0
     },
     "requiredPermissions": [
         "backoffice.registry.view"

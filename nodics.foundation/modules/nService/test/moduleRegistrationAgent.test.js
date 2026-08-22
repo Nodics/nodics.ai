@@ -24,15 +24,15 @@ global.CONFIG = { get: key => ({
     backofficeRegistration: { enabled: true, moduleName: 'backoffice', heartbeatIntervalMs: 10000,
         retryIntervalMs: 5000, maxModulesPerRegistration: 512, requestTimeoutMs: 20,
         connectionName: 'default' },
-    backofficeCapabilities: { cms: { enabled: true, capabilityId: 'content-management', contractVersion: 1,
-        minimumClientContractVersion: 1, requiredPermissions: ['cms.backoffice.view'] } },
+    backofficeCapabilities: { cms: { enabled: true, capabilityId: 'content-management', contractVersion: 0,
+        minimumClientContractVersion: 0, requiredPermissions: ['cms.backoffice.view'] } },
     runtimeRole: { code: 'WCMS_STAGED', publication: 'STAGED' },
     defaultTenant: 'default'
 }[key]) };
 global.NODICS = {
     getActiveModules: () => ['cms', 'utility'],
     getRawModule: name => ({ parent: 'nodics.wcms', canonicalIdentity: 'nodics.wcms/modules/' + name,
-        metaData: { version: '1.0.0', prefix: name === 'cms' ? 'content' : undefined, nodics: Object.assign({
+        metaData: { version: '0.0.0', prefix: name === 'cms' ? 'content' : undefined, nodics: Object.assign({
             runtime: { router: name === 'cms' }, owns: ['router']
         }, name === 'cms' ? { displayName: 'Content Management' } : {}) } }),
     getEnvironmentName: () => 'envs', getSelectedEnvironmentName: () => 'local', getServerName: () => 'cmsServer', getNodeName: () => null,
@@ -76,8 +76,8 @@ async function run() {
     assert.strictEqual(requests[0].requestBody.registrations[0].endpoint, 'http://localhost:3040/nodics/content',
         'client-callable registration endpoint must follow the router prefix when a module declares one');
     let provider = { getCapability: () => ({ enabled: true, capabilityId: 'service-owned-content',
-        displayName: 'Service-owned content', category: 'content', icon: 'content', contractVersion: 1,
-        minimumClientContractVersion: 1, roles: ['FUNCTIONAL_CAPABILITY_PROVIDER'] }) };
+        displayName: 'Service-owned content', category: 'content', icon: 'content', contractVersion: 0,
+        minimumClientContractVersion: 0, roles: ['FUNCTIONAL_CAPABILITY_PROVIDER'] }) };
     assert.strictEqual(service.registerBackofficeCapabilityProvider('cms', provider), true);
     assert.strictEqual(service.buildRegistration('cms').backoffice.capabilityId, 'service-owned-content',
         'concrete module service must take precedence over legacy capability configuration');

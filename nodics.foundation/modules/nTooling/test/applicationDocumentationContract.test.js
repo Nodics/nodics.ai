@@ -18,7 +18,7 @@ const service = require('../src/service/defaultApplicationDocumentationContractS
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-app-docs-'));
 fs.mkdirSync(path.join(root, 'docs/pages'), { recursive: true });
 fs.writeFileSync(path.join(root, 'docs/pages/overview.md'), '# Overview\n\n## Verification\n\nSafe application documentation.\n');
-const catalogue = { pack: 'sample.application', version: '1.0.0', documents: [{ id: 'sample.overview', content: 'docs/pages/overview.md' }] };
+const catalogue = { pack: 'sample.application', version: '0.0.0', documents: [{ id: 'sample.overview', content: 'docs/pages/overview.md' }] };
 const validated = service.validateCatalogue({ ownerRoot: root, sourceDirectory: 'docs', cataloguePath: 'docs/catalogue.json', catalogue: catalogue });
 assert.strictEqual(validated.documents.length, 1);
 
@@ -30,7 +30,7 @@ assert.strictEqual(section.publicationPolicy, 'REQUIRED');
 assert.strictEqual(section.versioningPolicy, 'IMMUTABLE');
 
 assert.throws(() => service.validateCatalogue({ ownerRoot: root, sourceDirectory: 'data/docs', cataloguePath: 'data/docs/catalogue.json', catalogue: catalogue }), error => error.code === 'ERR_TOOL_DOC_00002');
-assert.throws(() => service.validateCatalogue({ ownerRoot: root, sourceDirectory: 'docs', cataloguePath: 'docs/catalogue.json', catalogue: { pack: 'sample', version: '1', documents: [{ id: 'sample.overview', content: '../outside.md' }] } }), error => error.code === 'ERR_TOOL_DOC_00001');
+assert.throws(() => service.validateCatalogue({ ownerRoot: root, sourceDirectory: 'docs', cataloguePath: 'docs/catalogue.json', catalogue: { pack: 'sample', version: '0', documents: [{ id: 'sample.overview', content: '../outside.md' }] } }), error => error.code === 'ERR_TOOL_DOC_00001');
 assert.throws(() => service.validateReleaseSection(Object.assign({}, section, { destinationRole: 'WCMS_ONLINE' })), error => error.code === 'ERR_TOOL_DOC_00007');
 
 fs.rmSync(root, { recursive: true, force: true });

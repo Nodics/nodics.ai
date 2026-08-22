@@ -52,7 +52,7 @@ const bridge = require('../src/service/publication/defaultWcmsPublicationWorkflo
 (async () => {
     let request = { tenant: 'tenant-a', authData: { principalId: 'approver-a' }, workflowCarrier: {
         code: 'carrier-a', items: [{ code: 'home', versionId: 3 }, { code: 'hero', versionId: 4 }], sourceDetail: { schemaName: 'cmsPage', publication: {
-            code: 'release-a', domain: 'cms', rootType: 'pageRoute', rootCode: 'home-route', sourceVersion: '2'
+            code: 'release-a', domain: 'cms', rootType: 'pageRoute', rootCode: 'home-route', sourceVersion: '0'
         } }
     } };
     let response = await bridge.publish(request);

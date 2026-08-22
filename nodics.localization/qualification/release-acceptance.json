@@ -1,5 +1,5 @@
 {
-    "contractVersion": 1,
+    "contractVersion": 0,
     "capability": "nodics.localization",
     "releaseCandidate": "phase-8",
     "executionScope": "LOCAL_ONLY",

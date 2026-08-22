@@ -14,7 +14,7 @@ const assert = require('assert');
 class NodicsError extends Error { constructor(code, message) { super(message || code); this.code = code; } }
 global.CLASSES = { NodicsError: NodicsError };
 const publication = { runtimeRole: 'STAGED', baselines: { documentation: {
-    contentPackCode: 'nodicsDocumentation', releaseVersion: '1.2.3', rootType: 'site',
+    contentPackCode: 'nodicsDocumentation', releaseVersion: '0.0.0', rootType: 'site',
     rootCode: 'nodicsDocumentationSite', sourceVersion: '0'
 } } };
 global.CONFIG = { get: key => key === 'cms' ? { publication: publication } : undefined };
@@ -25,7 +25,7 @@ let imported = 0;
 global.SERVICE = {
     DefaultContentPackService: {
         resolvePackContext: code => ({ code: code }),
-        inspectRelease: () => ({ available: true, version: '1.2.3', manifest: {
+        inspectRelease: () => ({ available: true, version: '0.0.0', manifest: {
             destinationRole: 'WCMS_STAGED', lifecycle: 'PUBLISHABLE',
             initialPublicationPolicy: 'ADMIN_INITIATED', sites: ['nodicsDocumentationSite']
         } }),
@@ -53,7 +53,7 @@ const request = { tenant: 'default', authData: { principalId: 'platform-service'
     assert.strictEqual(imported, 1);
     await service.initiate('documentation', request);
     assert.strictEqual(imported, 1, 'replay must not re-import a current immutable content pack');
-    publication.baselines.documentation.releaseVersion = '1.2.4';
+    publication.baselines.documentation.releaseVersion = '0.0.0';
     await assert.rejects(service.status('documentation', request),
         error => error.code === 'CMS_BASELINE_RELEASE_INVALID');
     publication.runtimeRole = 'ONLINE';

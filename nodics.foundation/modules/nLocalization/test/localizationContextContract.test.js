@@ -12,7 +12,7 @@
 const assert = require('assert');
 
 global.CONFIG = { get: () => ({
-    context: { contractVersion: 1, defaultChannel: 'web', rtlScripts: ['Arab', 'Hebr'] },
+    context: { contractVersion: 0, defaultChannel: 'web', rtlScripts: ['Arab', 'Hebr'] },
     limits: { maximumLocaleLength: 64, maximumFallbackLocales: 16, maximumScopePartLength: 128 }
 }) };
 global.ENUMS = { LOCALIZATION_CONTEXT_SOURCES: ['SITE_POLICY', 'PLATFORM_DEFAULT'] };
@@ -25,7 +25,7 @@ const scopeService = require('../src/service/defaultLocalizationScopeService');
 const context = contextService.create({
     tenant: 'tenant-a', site: 'store-a', requestedLocale: 'ar_AE', source: 'SITE_POLICY'
 }, {
-    supportedLocales: ['en', 'ar'], defaultLocale: 'en', fallbackLocales: ['en'], version: '7'
+    supportedLocales: ['en', 'ar'], defaultLocale: 'en', fallbackLocales: ['en'], version: '0'
 });
 
 assert.strictEqual(context.contractVersion, 1);
@@ -42,10 +42,10 @@ assert.throws(() => contextService.create({ tenant: 'a', source: 'REQUEST_PARAME
 
 assert.strictEqual(scopeService.bundleKey({
     tenant: 'tenant-a', scopeCode: 'store-a', channel: 'web', locale: 'en',
-    namespaces: ['validation', 'common'], releaseVersion: '12'
+    namespaces: ['validation', 'common'], releaseVersion: '0.0.0'
 }), 'tenant-a|store-a|web|en|common,validation|12');
 assert.throws(() => scopeService.bundleKey({
-    tenant: 'tenant|a', channel: 'web', locale: 'en', namespaces: ['common'], releaseVersion: '12'
+    tenant: 'tenant|a', channel: 'web', locale: 'en', namespaces: ['common'], releaseVersion: '0.0.0'
 }), error => error.code === 'ERR_L10N_00004');
 
 console.log('localizationContextContract.test.js passed');

@@ -19,7 +19,7 @@
 module.exports = {
     localizationCapabilities: {
         functionalModule: 'nodics.localization',
-        contractVersion: 1,
+        contractVersion: 0,
         children: ['localizationCore', 'localizationApi']
     }
 };

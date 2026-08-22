@@ -1,6 +1,6 @@
 {
     "name": "discoverySource",
-    "version": "0.0.1",
+    "version": "0.0.0",
     "index": "65.20",
     "private": true,
     "main": "nodics.js",

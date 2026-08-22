@@ -17,7 +17,7 @@ module.exports = {
     code: 'axisDocumentationArticleTemplate',
     name: 'Nodics Axis Documentation Article',
     renderer: 'documentation.template.article',
-    contractVersion: 2,
+    contractVersion: 0,
     slots: ['axisDocumentationNavigationSlot', 'axisDocumentationArticleSlot'],
     active: true,
   },

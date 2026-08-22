@@ -26,7 +26,7 @@ module.exports = {
     localization: {
         authority: {
             enabled: true,
-            contractVersion: 1,
+            contractVersion: 0,
             phase: 'REGISTRY_AND_BUNDLES',
             domain: 'localization',
             repositoryService: 'DefaultLocalizationRepositoryService',

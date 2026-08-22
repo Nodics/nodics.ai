@@ -19,9 +19,9 @@
  * @override Later Commerce modules may replace individual lookup methods through the standard service merge order.
  */
 const definitions = {
-    cancellation: { code: 'commerceOrderCancellation', version: '1', steps: ['ELIGIBILITY', 'APPROVAL_IF_REQUIRED', 'FULFILLMENT_INTENT', 'INVENTORY_DISPOSITION', 'PAYMENT_VOID_OR_REFUND', 'ORDER_PROJECTION'], makerChecker: true },
-    return: { code: 'commerceOrderReturn', version: '1', steps: ['ELIGIBILITY', 'APPROVAL_IF_REQUIRED', 'RETURN_LOGISTICS', 'RECEIPT_AND_INSPECTION', 'INVENTORY_DISPOSITION', 'PAYMENT_REFUND', 'ORDER_PROJECTION'], makerChecker: true },
-    refund: { code: 'commerceOrderRefund', version: '1', steps: ['ELIGIBILITY', 'APPROVAL_IF_REQUIRED', 'PAYMENT_REFUND', 'RECONCILIATION', 'ORDER_PROJECTION'], makerChecker: true }
+    cancellation: { code: 'commerceOrderCancellation', version: '0', steps: ['ELIGIBILITY', 'APPROVAL_IF_REQUIRED', 'FULFILLMENT_INTENT', 'INVENTORY_DISPOSITION', 'PAYMENT_VOID_OR_REFUND', 'ORDER_PROJECTION'], makerChecker: true },
+    return: { code: 'commerceOrderReturn', version: '0', steps: ['ELIGIBILITY', 'APPROVAL_IF_REQUIRED', 'RETURN_LOGISTICS', 'RECEIPT_AND_INSPECTION', 'INVENTORY_DISPOSITION', 'PAYMENT_REFUND', 'ORDER_PROJECTION'], makerChecker: true },
+    refund: { code: 'commerceOrderRefund', version: '0', steps: ['ELIGIBILITY', 'APPROVAL_IF_REQUIRED', 'PAYMENT_REFUND', 'RECONCILIATION', 'ORDER_PROJECTION'], makerChecker: true }
 };
 module.exports = {
     /** @returns {object} Defensive copy of all Order lifecycle workflow definitions. */

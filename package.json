@@ -1,6 +1,6 @@
 {
   "name": "nodics.ai",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "private": true,
   "description": "Nodics backend framework repository containing standard functional module groups.",
   "packageManager": "npm@11.6.2",

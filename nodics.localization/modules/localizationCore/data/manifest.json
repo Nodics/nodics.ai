@@ -1,10 +1,10 @@
 {
-    "contractVersion": 2,
+    "contractVersion": 0,
     "module": "localizationCore",
     "sections": {
         "localizationSource": {
             "kind": "SOURCE_CONTRIBUTION",
-            "version": "1.0.0",
+            "version": "0.0.0",
             "description": "Canonical common localization source contribution.",
             "files": {
                 "core/source/localization/common.json": "bd9257463ae63823234d54a43f78d741724109cfb8a031ad06b5b9d59a5852c9"
@@ -13,7 +13,7 @@
         "core": {
             "kind": "DATA_RELEASE",
             "dataType": "core",
-            "version": "1.0.1",
+            "version": "0.0.0",
             "description": "Localization Core core data and initial published Axis runtime bundles",
             "owningDomain": "localization",
             "lifecycle": "OPERATIONAL_VERSIONED",

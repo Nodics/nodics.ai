@@ -1,6 +1,6 @@
 {
   "name": "paypalProvider",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "index": "70.38",
   "private": true,
   "main": "nodics.js",

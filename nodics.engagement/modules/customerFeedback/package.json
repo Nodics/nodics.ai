@@ -3,7 +3,7 @@
     "index": "90.30",
     "description": "Customer feedback, complaint, survey, resolution, and insight capability.",
     "main": "nodics.js",
-    "version": "0.0.1",
+    "version": "0.0.0",
     "private": true,
     "license": "SEE LICENSE IN LICENSE",
     "nodics": {

@@ -1,6 +1,6 @@
 {
   "name": "nodics.cron",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "index": "80.99",
   "private": true,
   "description": "Nodics scheduled job runtime module group.",

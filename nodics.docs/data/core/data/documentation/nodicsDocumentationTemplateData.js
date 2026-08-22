@@ -17,7 +17,7 @@ module.exports = {
     "code": "nodicsDocumentationArticleTemplate",
     "name": "Nodics Documentation Article",
     "renderer": "documentation.template.article",
-    "contractVersion": 2,
+    "contractVersion": 0,
     "slots": [
       "nodicsDocumentationNavigationSlot",
       "nodicsDocumentationArticleSlot"

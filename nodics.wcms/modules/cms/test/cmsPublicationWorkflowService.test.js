@@ -23,7 +23,7 @@ global.SERVICE = { DefaultModuleService: { buildRequest: input => { descriptor =
     fetch: async () => ({ result: { instance: { code: 'approval-1' } } }) } };
 const service = require('../src/service/publication/defaultCmsPublicationWorkflowService');
 const request = { tenant: 'default', correlationId: 'correlation-1' };
-const publication = { code: 'home-v2', revision: 4, sourceVersion: 'v2', siteCode: 'site', catalogCode: 'catalog' };
+const publication = { code: 'home-v2', revision: 4, sourceVersion: '0', siteCode: 'site', catalogCode: 'catalog' };
 service.requestApproval(publication, request).then(result => {
     assert.strictEqual(result.instance.code, 'approval-1');
     assert.strictEqual(descriptor.connectionName, 'process');

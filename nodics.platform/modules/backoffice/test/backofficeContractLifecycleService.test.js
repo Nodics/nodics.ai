@@ -17,9 +17,9 @@
  */
 const assert = require('assert');
 const hash = 'a'.repeat(64);
-const active = { moduleName: 'cms', contractType: 'OPENAPI', contractVersion: 1, contractHash: 'b'.repeat(64),
+const active = { moduleName: 'cms', contractType: 'OPENAPI', contractVersion: 0, contractHash: 'b'.repeat(64),
     operations: [{ operationId: 'read' }], schemas: ['cmsPage'], state: 'ACTIVE', revision: 1, activationRevision: 4 };
-const candidate = { moduleName: 'cms', contractType: 'OPENAPI', contractVersion: 1, contractHash: hash,
+const candidate = { moduleName: 'cms', contractType: 'OPENAPI', contractVersion: 0, contractHash: hash,
     operations: [{ operationId: 'read' }, { operationId: 'create' }], schemas: ['cmsPage'], state: 'PENDING_APPROVAL',
     changeClassification: 'BREAKING', revision: 0 };
 let calls = [];

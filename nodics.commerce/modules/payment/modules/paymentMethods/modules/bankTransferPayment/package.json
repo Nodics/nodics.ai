@@ -1,6 +1,6 @@
 {
   "name": "bankTransferPayment",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "index": "70.34",
   "private": true,
   "main": "nodics.js",

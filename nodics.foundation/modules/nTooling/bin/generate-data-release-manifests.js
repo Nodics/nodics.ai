@@ -68,7 +68,7 @@ function visit(folder) {
             let dataRoot = path.join(folder, 'data');
             let manifestPath = path.join(dataRoot, 'manifest.json');
             let aggregate = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, 'utf8')) : {
-                contractVersion: 2,
+                contractVersion: 0,
                 module: packageMetadata.name,
                 sections: {}
             };
@@ -95,7 +95,7 @@ function visit(folder) {
                 let section = {
                     kind: 'DATA_RELEASE',
                     dataType: dataType,
-                    version: '1.0.0',
+                    version: '0.0.0',
                     description: (packageMetadata.nodics.displayName || packageMetadata.name) + ' ' + dataType + ' data',
                     files: files
                 };

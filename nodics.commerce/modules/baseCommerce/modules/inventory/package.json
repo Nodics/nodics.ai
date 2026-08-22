@@ -1,6 +1,6 @@
 {
   "name": "inventory",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "index": "70.15",
   "private": true,
   "main": "nodics.js",

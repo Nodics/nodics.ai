@@ -20,7 +20,7 @@ module.exports = {
     localization: {
         api: {
             enabled: true,
-            contractVersion: 1,
+            contractVersion: 0,
             phase: 'REGISTRY_AND_BUNDLES',
             maximumNamespaces: 50,
             maximumBundleKeys: 10000,

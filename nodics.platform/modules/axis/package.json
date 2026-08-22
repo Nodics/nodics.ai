@@ -3,7 +3,7 @@
   "index": "60.25",
   "description": "Backend-owned Axis product data, CMS composition, documentation content, and BackOffice capability metadata.",
   "main": "nodics.js",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "private": true,
   "license": "SEE LICENSE IN LICENSE",
   "nodics": {

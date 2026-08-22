@@ -19,7 +19,7 @@
 module.exports = {
     localization: {
         context: {
-            contractVersion: 1,
+            contractVersion: 0,
             defaultLocale: 'en',
             defaultChannel: 'web',
             rtlScripts: ['Arab', 'Hebr', 'Thaa', 'Nkoo', 'Adlm', 'Rohg', 'Syrc']

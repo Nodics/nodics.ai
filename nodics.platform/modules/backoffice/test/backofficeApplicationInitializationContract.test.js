@@ -28,7 +28,7 @@ global.NODICS = { getInternalAuthToken: () => 'service-token' };
 global.SERVICE = { DefaultModuleService: {
     buildRequest: request => request,
     fetch: async request => ({ data: { readiness: 'IMPORTED', releaseCode: 'nexusData:nexusCorporateSite',
-        releaseVersion: '1.0.0', releaseStatus: 'CURRENT' }, request })
+        releaseVersion: '0.0.0', releaseStatus: 'CURRENT' }, request })
 } };
 
 (async () => {
@@ -59,11 +59,11 @@ global.SERVICE = { DefaultModuleService: {
     assert.strictEqual(routes.applicationContentPackStatus.permission, 'backoffice.application.initialization.view');
     assert.strictEqual(routes.installApplicationContentPack.permission, 'backoffice.application.initialization.initiate');
     SERVICE.DefaultModuleService.fetch = async () => ({ data: { readiness: 'ROLLED_BACK', releaseCode: 'nexusData:nexusCorporateSite',
-        releaseVersion: '1.0.0', releaseStatus: 'CURRENT' } });
+        releaseVersion: '0.0.0', releaseStatus: 'CURRENT' } });
     assert.deepStrictEqual((await service.status('nexus', { tenant: 'default', authData: { principalId: 'admin' } })).allowedActions,
         ['INITIALIZE'], 'A rolled-back release must advertise its governed resubmission path');
     SERVICE.DefaultModuleService.fetch = async () => ({ data: { readiness: 'RETIRED', releaseCode: 'nexusData:nexusCorporateSite',
-        releaseVersion: '1.0.0', releaseStatus: 'CURRENT' } });
+        releaseVersion: '0.0.0', releaseStatus: 'CURRENT' } });
     assert.deepStrictEqual((await service.status('nexus', { tenant: 'default', authData: { principalId: 'admin' } })).allowedActions,
         ['INITIALIZE'], 'A retired release must advertise its governed re-publication path');
     console.log('BackOffice application initialization contract validated');

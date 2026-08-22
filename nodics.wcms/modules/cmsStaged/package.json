@@ -1,6 +1,6 @@
 {
   "name": "cmsStaged",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Nodics CMS Staged runtime schema and versioning capability.",
   "index": "50.21",
   "private": true,

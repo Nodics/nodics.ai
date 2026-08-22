@@ -16,15 +16,15 @@ const capability = {
     "displayName": "Profiles and Identity",
     "category": "core",
     "icon": "identity",
-    "contractVersion": 1,
-    "minimumClientContractVersion": 1,
+    "contractVersion": 0,
+    "minimumClientContractVersion": 0,
     "roles": [
         "AUTHENTICATION_PROVIDER",
         "FUNCTIONAL_CAPABILITY_PROVIDER"
     ],
     "discovery": {
         "openApiPath": "/nodics/system/v0/contract/openapi/internal",
-        "contractVersion": 1
+        "contractVersion": 0
     },
     "requiredPermissions": [
         "profile.backoffice.view"

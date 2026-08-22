@@ -1,11 +1,11 @@
 {
-  "contractVersion": 2,
+  "contractVersion": 0,
   "module": "auth",
   "sections": {
     "core": {
       "kind": "DATA_RELEASE",
       "dataType": "core",
-            "version": "1.0.0",
+            "version": "0.0.0",
             "description": "Authentication and Authorization core data",
             "owningDomain": "auth",
             "lifecycle": "REFERENCE",

@@ -16,14 +16,14 @@ const capability = {
     "displayName": "Cron Jobs",
     "category": "operations",
     "icon": "schedule",
-    "contractVersion": 1,
-    "minimumClientContractVersion": 1,
+    "contractVersion": 0,
+    "minimumClientContractVersion": 0,
     "roles": [
         "FUNCTIONAL_CAPABILITY_PROVIDER"
     ],
     "discovery": {
         "openApiPath": "/nodics/system/v0/contract/openapi/internal",
-        "contractVersion": 1
+        "contractVersion": 0
     },
     "requiredPermissions": [
         "cronjob.backoffice.view"

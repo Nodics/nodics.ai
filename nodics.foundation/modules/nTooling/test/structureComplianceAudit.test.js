@@ -31,7 +31,7 @@ function write(filePath, content) {
 function packageJson(name, kind, owns, extra) {
     return JSON.stringify(Object.assign({
         name: name,
-        version: '0.0.1',
+        version: '0.0.0',
         description: name + ' fixture module',
         index: '9000.0',
         main: 'nodics.js',

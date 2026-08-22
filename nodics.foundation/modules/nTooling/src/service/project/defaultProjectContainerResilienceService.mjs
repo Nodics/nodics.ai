@@ -129,7 +129,7 @@ function backup(profile) {
   archiveVolume(profile, profile.volumes.mediaStaged, path.join(directory, 'media-staged.tar.gz'));
   archiveVolume(profile, profile.volumes.mediaOnline, path.join(directory, 'media-online.tar.gz'));
   const files = fs.readdirSync(directory).filter(name => name !== 'manifest.json').sort();
-  const manifest = { contractVersion: 1, environment: profile.environment, backupId: id,
+  const manifest = { contractVersion: 0, environment: profile.environment, backupId: id,
     createdAt: new Date().toISOString(), consistency: 'MONGODB_LOGICAL_REDIS_SAVE_MEDIA_VOLUME_SNAPSHOT',
     files: files.map(name => ({ name, bytes: fs.statSync(path.join(directory, name)).size, sha256: sha256(path.join(directory, name)) })) };
   fs.writeFileSync(path.join(directory, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, { mode: 0o600 });
@@ -166,7 +166,7 @@ function restore(profile, id) {
     '--nsExclude', 'admin.*', '--nsExclude', 'config.*', '--nsExclude', 'local.*'],
     { binary: true, input: fs.readFileSync(path.join(directory, 'mongodb.archive.gz')) });
   composeRun(profile, ['up', '--detach', '--wait']);
-  console.log(JSON.stringify({ contractVersion: 1, environment: profile.environment, restoredBackupId: manifest.backupId }, null, 2));
+  console.log(JSON.stringify({ contractVersion: 0, environment: profile.environment, restoredBackupId: manifest.backupId }, null, 2));
 }
 
 const profile = readProfile(process.argv[2] || 'default');

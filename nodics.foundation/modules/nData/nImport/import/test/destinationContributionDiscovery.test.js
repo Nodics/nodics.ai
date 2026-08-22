@@ -29,7 +29,7 @@ function owner(name, sections) {
     const manifestSections = {};
     Object.entries(sections).forEach(([code, section]) => {
         manifestSections[code] = Object.assign({
-            kind: 'DATA_RELEASE', dataType: 'init', version: '1.0.0', description: code,
+            kind: 'DATA_RELEASE', dataType: 'init', version: '0.0.0', description: code,
             owningDomain: section.owningDomain, lifecycle: 'REFERENCE', destinationRole: section.destinationRole,
             environmentScope: ['LOCAL'], sensitivity: 'INTERNAL', versioningPolicy: 'NONE',
             publicationPolicy: 'NONE', initialPublicationPolicy: 'NONE', removalPolicy: 'RETAIN',
@@ -39,7 +39,7 @@ function owner(name, sections) {
         delete manifestSections[code].payloads;
     });
     fs.writeFileSync(path.join(ownerRoot, 'data', 'manifest.json'), JSON.stringify({
-        contractVersion: 2, module: name, sections: manifestSections
+        contractVersion: 0, module: name, sections: manifestSections
     }));
     owners[name] = { name: name, path: ownerRoot, canonicalIdentity: name, metaData: { nodics: { displayName: name } } };
 }

@@ -3,7 +3,7 @@
     "index": "60.20",
     "description": "Backend registry, discovery, catalogue, and bootstrap capability for the Nodics Axis administration experience.",
     "main": "nodics.js",
-    "version": "0.0.1",
+    "version": "0.0.0",
     "private": true,
     "license": "SEE LICENSE IN LICENSE",
     "nodics": {

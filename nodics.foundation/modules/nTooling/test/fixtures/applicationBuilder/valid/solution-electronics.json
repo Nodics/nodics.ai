@@ -1,5 +1,5 @@
 {
-  "contractVersion": 1,
+  "contractVersion": 0,
   "identity": { "solutionCode": "referenceElectronics", "customerCode": "reference", "projectCode": "referenceElectronics" },
   "environment": { "mode": "WORKSPACE", "class": "LOCAL" },
   "capabilities": { "selected": ["nodics.commerce", "electronics"], "domains": ["ELECTRONICS"], "excluded": ["apparel", "telco"] },

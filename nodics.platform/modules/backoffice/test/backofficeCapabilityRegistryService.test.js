@@ -18,7 +18,7 @@ global.SERVICE = {
 };
 const registry = require('../src/service/registry/defaultBackofficeCapabilityRegistryService');
 const capability = (id, navigation) => ({ enabled: true, capabilityId: id, displayName: id,
-    category: 'commerce', icon: 'commerce', contractVersion: 1, minimumClientContractVersion: 1,
+    category: 'commerce', icon: 'commerce', contractVersion: 0, minimumClientContractVersion: 0,
     roles: ['FUNCTIONAL_CAPABILITY_PROVIDER'], navigation: navigation });
 const item = (id, parentId, parentModuleName, permission) => Object.assign({ id: id, label: id,
     route: '/' + id, icon: 'commerce', order: 10, perspectives: ['business'], contexts: ['tenant'],

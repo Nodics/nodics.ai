@@ -87,7 +87,7 @@ module.exports = {
             engines: {
                 local: {
                     enabled: true,
-                    contractVersion: 1,
+                    contractVersion: 0,
                     connectionHandler: 'DefaultLocalCacheEngineService',
                     cacheHandler: 'DefaultLocalCacheService',
                     distributed: false,
@@ -113,7 +113,7 @@ module.exports = {
                 },
                 redis: {
                     enabled: false,
-                    contractVersion: 1,
+                    contractVersion: 0,
                     connectionHandler: 'DefaultRedisCacheEngineService',
                     cacheHandler: 'DefaultRedisCacheService',
                     distributed: true,
@@ -137,7 +137,7 @@ module.exports = {
                 },
                 hazelcast: {
                     enabled: false,
-                    contractVersion: 1,
+                    contractVersion: 0,
                     connectionHandler: 'DefaultHazelcastCacheEngineService',
                     cacheHandler: 'DefaultHazelcastCacheService',
                     distributed: true,

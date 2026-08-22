@@ -1,6 +1,6 @@
 {
   "name": "stripeProvider",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "index": "70.37",
   "private": true,
   "main": "nodics.js",

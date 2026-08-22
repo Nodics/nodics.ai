@@ -63,7 +63,7 @@ function createProject(port) {
         }
     }, null, 2) + '\n');
     fs.writeFileSync(path.join(projectRoot, 'generated/local-topology/processes.json'), JSON.stringify({
-        contractVersion: 1,
+        contractVersion: 0,
         environment: 'testLocal',
         projectRoot,
         supervisorPid: 999999,

@@ -37,7 +37,7 @@ const header = {
 
 const [model] = service.normalizeModelsForSchema(header, [{
     validatedAt: '2026-08-11T00:00:00.000Z',
-    version: '3',
+    version: '0',
     enabled: 'true',
     ratio: '1.5',
     name: 'Nexus'

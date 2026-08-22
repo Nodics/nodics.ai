@@ -68,7 +68,7 @@ function runSecurityBoundary() {
             state: result.status === 0 ? 'PASSED' : 'FAILED'
         };
     });
-    console.log(JSON.stringify({ contractVersion: 1, environmentClass: 'LOCAL', kind: 'AUTOMATED_SECURITY_BOUNDARY', evidence }, null, 2));
+    console.log(JSON.stringify({ contractVersion: 0, environmentClass: 'LOCAL', kind: 'AUTOMATED_SECURITY_BOUNDARY', evidence }, null, 2));
     return evidence.every(entry => entry.state === 'PASSED');
 }
 
@@ -92,7 +92,7 @@ function runPublishingCapacity() {
             exitCode: result.status ?? 1
         };
     });
-    console.log(JSON.stringify({ contractVersion: 1, environmentClass: 'LOCAL', kind: 'BOUNDED_CONTRACT_BASELINE', evidence }, null, 2));
+    console.log(JSON.stringify({ contractVersion: 0, environmentClass: 'LOCAL', kind: 'BOUNDED_CONTRACT_BASELINE', evidence }, null, 2));
     return evidence.every(entry => entry.state === 'PASSED');
 }
 
@@ -124,7 +124,7 @@ function runPublishingSoak() {
     const rssGrowthBytes = Math.max(0, process.memoryUsage().rss - rssBefore);
     const state = failures.length === 0 && durationMs <= maximumDurationMs && rssGrowthBytes <= maximumRssGrowthBytes ? 'PASSED' : 'FAILED';
     console.log(JSON.stringify({
-        contractVersion: 1,
+        contractVersion: 0,
         environmentClass: 'LOCAL',
         kind: 'SUSTAINED_CONTRACT_RELIABILITY',
         iterations,
@@ -165,7 +165,7 @@ function runPublishingInterruptionContracts() {
     });
 
     const report = {
-        contractVersion: 1,
+        contractVersion: 0,
         environment: 'kickoffDockerLocal',
         qualificationClass: 'AUTOMATED_INTERRUPTION_AND_RECONCILIATION_CONTRACTS',
         directBusinessDatabaseCrud: false,

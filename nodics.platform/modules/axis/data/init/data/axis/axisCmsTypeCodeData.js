@@ -25,26 +25,26 @@ const withAxisOwnership = records => {
 };
 
 module.exports = withAxisOwnership({
-    record0: { code: 'axisAuthenticationPageType', kind: 'PAGE', contractVersion: 1, active: true },
-    record1: { code: 'axisDashboardPageType', kind: 'PAGE', contractVersion: 1, active: true },
+    record0: { code: 'axisAuthenticationPageType', kind: 'PAGE', contractVersion: 0, active: true },
+    record1: { code: 'axisDashboardPageType', kind: 'PAGE', contractVersion: 0, active: true },
     record2: {
         code: 'axisBrandComponentType',
         kind: 'COMPONENT',
-        contractVersion: 1,
+        contractVersion: 0,
         propertySchema: { productName: 'string', tagline: 'string', logoAsset: 'string', displayMode: 'string' },
         active: true
     },
     record3: {
         code: 'axisMessageComponentType',
         kind: 'COMPONENT',
-        contractVersion: 1,
+        contractVersion: 0,
         propertySchema: { title: 'string', message: 'string', tone: 'string' },
         active: true
     },
     record4: {
         code: 'axisEmployeeLoginFormComponentType',
         kind: 'COMPONENT',
-        contractVersion: 1,
+        contractVersion: 0,
         propertySchema: { title: 'string', usernameLabel: 'string', usernamePlaceholder: 'string',
             passwordLabel: 'string', passwordPlaceholder: 'string', submitLabel: 'string' },
         active: true
@@ -52,7 +52,7 @@ module.exports = withAxisOwnership({
     record5: {
         code: 'axisEmployeeRecoveryFormComponentType',
         kind: 'COMPONENT',
-        contractVersion: 1,
+        contractVersion: 0,
         propertySchema: { title: 'string', identifierLabel: 'string', identifierPlaceholder: 'string',
             submitLabel: 'string', successMessage: 'string' },
         active: true
@@ -60,28 +60,28 @@ module.exports = withAxisOwnership({
     record6: {
         code: 'axisLinkComponentType',
         kind: 'COMPONENT',
-        contractVersion: 1,
+        contractVersion: 0,
         propertySchema: { label: 'string', route: 'string' },
         active: true
     },
     record7: {
         code: 'axisDashboardSummaryComponentType',
         kind: 'COMPONENT',
-        contractVersion: 1,
+        contractVersion: 0,
         propertySchema: { title: 'string', items: 'array', placeholder: 'boolean' },
         active: true
     },
     record8: {
         code: 'axisDashboardActionsComponentType',
         kind: 'COMPONENT',
-        contractVersion: 1,
+        contractVersion: 0,
         propertySchema: { title: 'string', actions: 'array', placeholder: 'boolean' },
         active: true
     },
     record9: {
         code: 'axisAuthenticationShowcaseComponentType',
         kind: 'COMPONENT',
-        contractVersion: 1,
+        contractVersion: 0,
         propertySchema: { eyebrow: 'string', title: 'string', message: 'string',
             highlights: 'array', logoAsset: 'string', backgroundAsset: 'string' },
         active: true
@@ -89,14 +89,14 @@ module.exports = withAxisOwnership({
     record10: {
         code: 'axisEmployeeLockFormComponentType',
         kind: 'COMPONENT',
-        contractVersion: 1,
+        contractVersion: 0,
         propertySchema: { title: 'string', employeeLabel: 'string', passwordLabel: 'string',
             passwordPlaceholder: 'string', submitLabel: 'string', signOutLabel: 'string' },
         active: true
     },
-    record11: { code: 'axisAssistantPageType', kind: 'PAGE', contractVersion: 1, active: true },
+    record11: { code: 'axisAssistantPageType', kind: 'PAGE', contractVersion: 0, active: true },
     record12: {
-        code: 'axisAssistantWorkspaceComponentType', kind: 'COMPONENT', contractVersion: 1,
+        code: 'axisAssistantWorkspaceComponentType', kind: 'COMPONENT', contractVersion: 0,
         propertySchema: { title: 'string', welcomeMessage: 'string', inputPlaceholder: 'string',
             submitLabel: 'string', stopLabel: 'string', emptyState: 'string',
             employeeLabel: 'string', assistantLabel: 'string', workingLabel: 'string',
@@ -114,9 +114,9 @@ module.exports = withAxisOwnership({
             cachedTokensLabel: 'string', reasoningTokensLabel: 'string',
             embeddingTokensLabel: 'string', reconciliationLabel: 'string' }, active: true
     },
-    record13: { code: 'axisSchemaWorkbenchPageType', kind: 'PAGE', contractVersion: 1, active: true },
+    record13: { code: 'axisSchemaWorkbenchPageType', kind: 'PAGE', contractVersion: 0, active: true },
     record14: {
-        code: 'axisSchemaWorkbenchComponentType', kind: 'COMPONENT', contractVersion: 1,
+        code: 'axisSchemaWorkbenchComponentType', kind: 'COMPONENT', contractVersion: 0,
         propertySchema: {
             title: 'string', introduction: 'string', schemaSearchLabel: 'string',
             schemaSearchPlaceholder: 'string', schemasLabel: 'string', recordsLabel: 'string',
@@ -152,9 +152,9 @@ module.exports = withAxisOwnership({
         },
         active: true
     },
-    record15: { code: 'axisMediaManagementPageType', kind: 'PAGE', contractVersion: 1, active: true },
+    record15: { code: 'axisMediaManagementPageType', kind: 'PAGE', contractVersion: 0, active: true },
     record16: {
-        code: 'axisMediaManagementWorkspaceComponentType', kind: 'COMPONENT', contractVersion: 1,
+        code: 'axisMediaManagementWorkspaceComponentType', kind: 'COMPONENT', contractVersion: 0,
         propertySchema: {
             title: 'string',
             introduction: 'string',
@@ -163,9 +163,9 @@ module.exports = withAxisOwnership({
         },
         active: true
     },
-    record17: { code: 'axisPlatformPageType', kind: 'PAGE', contractVersion: 1, active: true },
+    record17: { code: 'axisPlatformPageType', kind: 'PAGE', contractVersion: 0, active: true },
     record18: {
-        code: 'axisPlatformSummaryComponentType', kind: 'COMPONENT', contractVersion: 1,
+        code: 'axisPlatformSummaryComponentType', kind: 'COMPONENT', contractVersion: 0,
         propertySchema: {
             title: 'string',
             introduction: 'string',
@@ -176,7 +176,7 @@ module.exports = withAxisOwnership({
         active: true
     },
     record19: {
-        code: 'axisPlatformInitializeComponentType', kind: 'COMPONENT', contractVersion: 1,
+        code: 'axisPlatformInitializeComponentType', kind: 'COMPONENT', contractVersion: 0,
         propertySchema: {
             title: 'string',
             introduction: 'string',
@@ -187,7 +187,7 @@ module.exports = withAxisOwnership({
         active: true
     },
     record20: {
-        code: 'axisRuntimeModulesRegistryComponentType', kind: 'COMPONENT', contractVersion: 1,
+        code: 'axisRuntimeModulesRegistryComponentType', kind: 'COMPONENT', contractVersion: 0,
         propertySchema: {
             title: 'string',
             introduction: 'string',

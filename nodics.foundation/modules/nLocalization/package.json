@@ -3,7 +3,7 @@
     "index": "1.26",
     "description": "Shared stateless locale canonicalization, localization context, and provider-neutral localization client capability.",
     "main": "nodics.js",
-    "version": "0.0.1",
+    "version": "0.0.0",
     "private": true,
     "license": "SEE LICENSE IN LICENSE",
     "nodics": {

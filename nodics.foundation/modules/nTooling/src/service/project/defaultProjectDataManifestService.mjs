@@ -21,7 +21,7 @@ const domains = [
 ];
 const contentMarkers = ['ContentCatalog', 'PageData', 'RendererData', 'RouteData', 'SiteData', 'TypeCodeData', 'ContentHeader'];
 const digest = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
-const section = (description, owningDomain, destinationRole, files) => ({ kind: 'DATA_RELEASE', dataType: 'sample', sourceRoot: 'staged', version: '1.0.0', description, owningDomain, lifecycle: 'PUBLISHABLE', destinationRole, environmentScope: ['LOCAL', 'LOCAL_PRODUCTION_SIMULATION'], sensitivity: 'PUBLIC', versioningPolicy: 'IMMUTABLE', publicationPolicy: 'REQUIRED', initialPublicationPolicy: 'ADMIN_INITIATED', removalPolicy: 'UNPUBLISH_OR_RETIRE', files });
+const section = (description, owningDomain, destinationRole, files) => ({ kind: 'DATA_RELEASE', dataType: 'sample', sourceRoot: 'staged', version: '0.0.0', description, owningDomain, lifecycle: 'PUBLISHABLE', destinationRole, environmentScope: ['LOCAL', 'LOCAL_PRODUCTION_SIMULATION'], sensitivity: 'PUBLIC', versioningPolicy: 'IMMUTABLE', publicationPolicy: 'REQUIRED', initialPublicationPolicy: 'ADMIN_INITIATED', removalPolicy: 'UNPUBLISH_OR_RETIRE', files });
 
 const commonRoot = path.join(root, 'modules', 'agora.common', 'modules', 'agoraCommonData');
 const commonManifestPath = path.join(commonRoot, 'data', 'manifest.json');
@@ -50,7 +50,7 @@ for (const domain of domains) {
     const target = contentMarkers.some(marker => relative.includes(marker)) ? content : commerce;
     target[relative] = digest(path.join(packRoot, 'data', relative));
   }
-  const manifest = { contractVersion: 2, module: domain.module, sections: {
+  const manifest = { contractVersion: 0, module: domain.module, sections: {
     [`agora${domain.title}CommerceCatalog`]: section(`Agora ${domain.title} commerce catalog`, `agora.${domain.code}`, 'COMMERCE_STAGED', commerce),
     [`agora${domain.title}ContentCatalog`]: section(`Agora ${domain.title} content and renderer catalog`, `agora.${domain.code}.wcms`, 'WCMS_STAGED', content),
   } };

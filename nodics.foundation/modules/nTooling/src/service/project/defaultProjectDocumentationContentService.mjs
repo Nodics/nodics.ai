@@ -413,17 +413,17 @@ const files = {
   'data/core/data/documentation/kickoffDocumentationTypeCodeData.js': jsModule(
     'Nodics Kickoff documentation page and component types.',
     {
-      record0: { code: 'kickoffDocumentationArticlePageType', kind: 'PAGE', contractVersion: 2, active: true },
-      record1: { code: 'kickoffDocumentationArticleComponentType', kind: 'COMPONENT', contractVersion: 2, active: true },
-      record2: { code: 'kickoffDocumentationNavigationComponentType', kind: 'COMPONENT', contractVersion: 2, active: true },
+      record0: { code: 'kickoffDocumentationArticlePageType', kind: 'PAGE', contractVersion: 0, active: true },
+      record1: { code: 'kickoffDocumentationArticleComponentType', kind: 'COMPONENT', contractVersion: 0, active: true },
+      record2: { code: 'kickoffDocumentationNavigationComponentType', kind: 'COMPONENT', contractVersion: 0, active: true },
     },
   ),
   'data/core/data/documentation/kickoffDocumentationRendererData.js': jsModule(
     'Nodics Kickoff documentation renderer mappings consumed by Axis.',
     {
-      record0: { code: 'kickoffDocumentationArticlePageType', renderer: 'documentation.page.article', contractVersion: 2, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
-      record1: { code: 'kickoffDocumentationArticleComponentType', renderer: 'documentation.component.article', contractVersion: 2, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
-      record2: { code: 'kickoffDocumentationNavigationComponentType', renderer: 'documentation.component.navigation', contractVersion: 2, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
+      record0: { code: 'kickoffDocumentationArticlePageType', renderer: 'documentation.page.article', contractVersion: 0, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
+      record1: { code: 'kickoffDocumentationArticleComponentType', renderer: 'documentation.component.article', contractVersion: 0, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
+      record2: { code: 'kickoffDocumentationNavigationComponentType', renderer: 'documentation.component.navigation', contractVersion: 0, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
     },
   ),
   'data/core/data/documentation/kickoffDocumentationSlotData.js': jsModule(
@@ -436,7 +436,7 @@ const files = {
   'data/core/data/documentation/kickoffDocumentationTemplateData.js': jsModule(
     'Nodics Kickoff documentation template.',
     {
-      record0: { code: 'kickoffDocumentationArticleTemplate', name: 'Nodics Kickoff Documentation Article', renderer: 'documentation.template.article', contractVersion: 2, slots: ['kickoffDocumentationNavigationSlot', 'kickoffDocumentationArticleSlot'], active: true },
+      record0: { code: 'kickoffDocumentationArticleTemplate', name: 'Nodics Kickoff Documentation Article', renderer: 'documentation.template.article', contractVersion: 0, slots: ['kickoffDocumentationNavigationSlot', 'kickoffDocumentationArticleSlot'], active: true },
     },
   ),
   'data/core/data/documentation/kickoffDocumentationComponentData.js': jsModule(
@@ -480,9 +480,9 @@ const documentationSection = applicationDocumentationContract.buildReleaseSectio
 });
 const previousManifest = fs.existsSync(manifestPath)
   ? JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
-  : { contractVersion: 2, module: 'nodics.kickoff', sections: {} };
+  : { contractVersion: 0, module: 'nodics.kickoff', sections: {} };
 const manifest = {
-  contractVersion: 2,
+  contractVersion: 0,
   module: 'nodics.kickoff',
   sections: { ...(previousManifest.sections || {}), documentation: documentationSection },
 };

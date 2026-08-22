@@ -16,7 +16,7 @@ const migration = require('../src/service/migration/defaultCmsMigrationService')
 global.CONFIG = { get: key => key === 'cms' ? { migration: { version: 1, rendererMappings: { 'view/home.html': 'page.home' }, routeMappings: [] } } : undefined };
 
 let state = {
-    types: [{ code: 'pageType' }, { code: 'componentType', kind: 'COMPONENT', contractVersion: 1 }],
+    types: [{ code: 'pageType' }, { code: 'componentType', kind: 'COMPONENT', contractVersion: 0 }],
     renderers: [{ code: 'pageType', renderer: 'view/home.html' }],
     pages: [{ code: 'home', typeCode: 'pageType' }],
     components: [{ code: 'hero', typeCode: 'componentType' }],
@@ -31,8 +31,8 @@ assert(preview.manualActions.some(action => action.reason === 'ROUTE_MAPPING_REQ
 assert(!preview.changes.some(change => change.schema === 'cmsPageRoute'), 'routes must never be inferred from page codes');
 
 let migrated = {
-    types: [{ code: 'pageType', kind: 'PAGE', contractVersion: 1 }, { code: 'componentType', kind: 'COMPONENT', contractVersion: 1 }],
-    renderers: [{ code: 'pageType', renderer: 'page.home', contractVersion: 1 }],
+    types: [{ code: 'pageType', kind: 'PAGE', contractVersion: 0 }, { code: 'componentType', kind: 'COMPONENT', contractVersion: 0 }],
+    renderers: [{ code: 'pageType', renderer: 'page.home', contractVersion: 0 }],
     pages: state.pages,
     components: state.components,
     associations: [{ code: 'homeHero', source: 'home', target: 'hero', slot: 'default', index: 0 }],

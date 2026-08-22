@@ -1,11 +1,11 @@
 {
-    "contractVersion": 2,
+    "contractVersion": 0,
     "module": "editorial",
     "sections": {
         "init": {
             "kind": "DATA_RELEASE",
             "dataType": "init",
-            "version": "1.2.0",
+            "version": "0.0.0",
             "description": "Editorial-owned content-type foundations",
             "owningDomain": "editorial",
             "lifecycle": "REFERENCE",

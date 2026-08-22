@@ -178,7 +178,7 @@ async function start(includeFrontends) {
   fs.mkdirSync(topology.stateDirectory, { recursive: true });
   const children = [];
   let stopping = false;
-  const persist = () => fs.writeFileSync(topology.statePath, JSON.stringify({ contractVersion: 1, environment: topology.environment, projectRoot,
+  const persist = () => fs.writeFileSync(topology.statePath, JSON.stringify({ contractVersion: 0, environment: topology.environment, projectRoot,
     supervisorPid: process.pid, startedAt: new Date().toISOString(), includeFrontends, children: children.map(entry => ({ code: entry.runtime.code, pid: entry.child.pid, port: entry.runtime.port })) }, null, 2) + '\n');
 
   const stop = async signal => {

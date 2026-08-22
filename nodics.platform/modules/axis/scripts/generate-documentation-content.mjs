@@ -570,7 +570,7 @@ const documentationSection = applicationDocumentationContract.buildReleaseSectio
 });
 const previousManifest = fs.existsSync(manifestPath)
   ? JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
-  : { contractVersion: 2, module: 'axis', sections: {} };
+  : { contractVersion: 0, module: 'axis', sections: {} };
 const preservedSections = { ...(previousManifest.sections || {}) };
 if (
   preservedSections.core?.kind === 'DATA_RELEASE' &&
@@ -579,7 +579,7 @@ if (
   delete preservedSections.core;
 }
 const manifest = {
-  contractVersion: 2,
+  contractVersion: 0,
   module: 'axis',
   sections: { ...preservedSections, documentation: documentationSection },
 };

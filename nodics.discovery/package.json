@@ -1,6 +1,6 @@
 {
     "name": "nodics.discovery",
-    "version": "0.0.1",
+    "version": "0.0.0",
     "index": "65.99",
     "private": true,
     "main": "nodics.js",

@@ -23,7 +23,7 @@ module.exports = {
         locale: 'en',
         scopeCode: 'axisCmsSite',
         channel: 'web',
-        releaseVersion: '0a3f590a4a907627',
+        releaseVersion: '0',
         revision: 0
     },
     record1: {
@@ -32,7 +32,7 @@ module.exports = {
         locale: 'ar',
         scopeCode: 'axisCmsSite',
         channel: 'web',
-        releaseVersion: 'b6effe65a8ebf79c',
+        releaseVersion: '0',
         revision: 0
     }
 };

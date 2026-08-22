@@ -1,7 +1,7 @@
 {
   "pack": "nodics.platform.axis",
-  "version": "0.4.1",
-  "contractVersion": 1,
+  "version": "0.0.0",
+  "contractVersion": 0,
   "title": "Nodics Axis",
   "pages": [
     {

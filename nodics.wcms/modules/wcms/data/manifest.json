@@ -1,11 +1,11 @@
 {
-    "contractVersion": 2,
+    "contractVersion": 0,
     "module": "wcms",
     "sections": {
         "init": {
             "kind": "DATA_RELEASE",
             "dataType": "init",
-            "version": "1.0.4",
+            "version": "0.0.0",
             "description": "Web Content Management init data",
             "owningDomain": "wcms",
             "lifecycle": "OPERATIONAL_VERSIONED",

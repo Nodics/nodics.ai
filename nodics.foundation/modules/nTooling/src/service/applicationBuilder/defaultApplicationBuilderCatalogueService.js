@@ -293,7 +293,7 @@ module.exports = {
             metadataDigest: packageObject.metadataDigest
         }));
         const catalogue = {
-            contractVersion: 1,
+            contractVersion: 0,
             readOnly: true,
             repositories: Object.keys(roots).filter(code => roots[code]).sort()
                 .map(code => ({ code: code, root: roots[code] })),

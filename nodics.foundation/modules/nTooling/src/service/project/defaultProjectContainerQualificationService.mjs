@@ -210,7 +210,7 @@ async function runQualification(selected) {
       throw new Error('public and application/data network boundaries overlap');
     }
   });
-  console.log(JSON.stringify({ contractVersion: 1, environment: selected.environment, qualificationClass: selected.qualificationClass, evidence }, null, 2));
+  console.log(JSON.stringify({ contractVersion: 0, environment: selected.environment, qualificationClass: selected.qualificationClass, evidence }, null, 2));
   if (evidence.some(item => item.state !== 'PASSED')) process.exitCode = 1;
 }
 
@@ -259,7 +259,7 @@ async function runSoak(selected) {
     }
   }
   await Promise.all([controller(), ...Array.from({ length: concurrency }, readWorker)]);
-  const report = { contractVersion: 1, environment: selected.environment, qualificationClass: 'MIXED_SOAK',
+  const report = { contractVersion: 0, environment: selected.environment, qualificationClass: 'MIXED_SOAK',
     startedAt: startedAt.toISOString(), completedAt: new Date().toISOString(), durationSeconds, concurrency, requestIntervalMs,
     requests, errors, errorsByStatus, errorRate: requests ? errors / requests : 1, publicationRuns,
     latencyMs: { p50: Math.ceil(percentile(latencies, 0.5)), p95: Math.ceil(percentile(latencies, 0.95)), p99: Math.ceil(percentile(latencies, 0.99)) },
@@ -362,7 +362,7 @@ async function runResilienceQualification(selected) {
   }, 'AUTOMATED_STATIC_CONTRACT_ONLY');
   evidence.push({ id: 'redis-application-transparent-failover', state: sentinelContinuityCompleted ? 'PASSED' : 'FAILED', classification: 'LOCAL_PRODUCTION_SIMULATION', message: sentinelContinuityCompleted ? 'Sentinel-aware runtimes remained ready and completed authenticated publishing acceptance after replica promotion.' : 'Sentinel promotion continuity did not complete; no transparent-failover claim is permitted.' });
   evidence.push({ id: 'independent-penetration-and-human-accessibility', state: 'EXTERNAL_EVIDENCE_REQUIRED', classification: 'EXTERNAL', message: 'Automation does not replace independent penetration testing or assistive-technology review.' });
-  console.log(JSON.stringify({ contractVersion: 1, environment: selected.environment, qualificationClass: 'LOCAL_RECOVERY_SIMULATION', generatedAt: new Date().toISOString(), evidence }, null, 2));
+  console.log(JSON.stringify({ contractVersion: 0, environment: selected.environment, qualificationClass: 'LOCAL_RECOVERY_SIMULATION', generatedAt: new Date().toISOString(), evidence }, null, 2));
   if (evidence.some(item => item.state === 'FAILED')) process.exitCode = 1;
 }
 

@@ -40,7 +40,7 @@ module.exports = {
         return {
             multiRecordAtomic: transaction.multiRecordAtomic === true,
             contextPropagation: true,
-            contractVersion: 1,
+            contractVersion: 0,
             reason: transaction.reason
         };
     },

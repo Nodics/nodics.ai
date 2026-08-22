@@ -16,7 +16,7 @@ module.exports = {
   "record0": {
     "code": "nodicsDocumentationArticlePageType",
     "renderer": "documentation.page.article",
-    "contractVersion": 2,
+    "contractVersion": 0,
     "channels": [
       "web",
       "mobile-webview"
@@ -27,7 +27,7 @@ module.exports = {
   "record1": {
     "code": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
-    "contractVersion": 2,
+    "contractVersion": 0,
     "channels": [
       "web",
       "mobile-webview"
@@ -38,7 +38,7 @@ module.exports = {
   "record2": {
     "code": "nodicsDocumentationNavigationComponentType",
     "renderer": "documentation.component.navigation",
-    "contractVersion": 2,
+    "contractVersion": 0,
     "channels": [
       "web",
       "mobile-webview"

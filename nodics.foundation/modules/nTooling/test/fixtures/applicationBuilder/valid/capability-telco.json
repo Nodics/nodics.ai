@@ -1,9 +1,9 @@
 {
-  "contractVersion": 1,
+  "contractVersion": 0,
   "code": "telco",
   "kind": "DOMAIN",
   "owner": "nodics.accelerators",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "packageMetadata": { "packageName": "telco", "moduleRoot": "nodics.accelerators/modules/telco", "metadataDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
   "backend": { "packages": ["telcoCatalog", "telcoSubscription", "telcoProvisioning"], "publicApiCategories": ["customer", "operator"], "lifecycleAuthorities": ["order", "workflow", "telcoProvisioning"] },
   "frontend": { "packages": ["nodics.agora"], "compositionEntries": ["src/composition/telco.ts"], "routes": ["/telco"], "rendererKeys": ["agora.telco.product-card"] },

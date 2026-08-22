@@ -29,7 +29,7 @@ module.exports = withAxisOwnership({
         code: 'axisAuthenticationPageTemplate',
         name: 'Axis Authentication Page',
         renderer: 'axis.template.authentication',
-        contractVersion: 1,
+        contractVersion: 0,
         slots: ['axisAuthenticationShowcaseSlot', 'axisAuthenticationBrandSlot', 'axisAuthenticationIntroductionSlot', 'axisAuthenticationFormSlot',
             'axisAuthenticationAssistanceSlot', 'axisAuthenticationLegalSlot'],
         active: true
@@ -38,29 +38,29 @@ module.exports = withAxisOwnership({
         code: 'axisDashboardPageTemplate',
         name: 'Axis Dashboard Page',
         renderer: 'axis.template.dashboard',
-        contractVersion: 1,
+        contractVersion: 0,
         slots: ['axisDashboardWelcomeSlot', 'axisDashboardSummarySlot',
             'axisDashboardActionsSlot', 'axisDashboardActivitySlot', 'axisDashboardHelpSlot'],
         active: true
     },
     record2: {
         code: 'axisAssistantPageTemplate', name: 'Axis Assistant Workspace',
-        renderer: 'axis.template.assistant', contractVersion: 1,
+        renderer: 'axis.template.assistant', contractVersion: 0,
         slots: ['axisAssistantHeaderSlot', 'axisAssistantWorkspaceSlot'], active: true
     },
     record3: {
         code: 'axisSchemaWorkbenchPageTemplate', name: 'Axis Schema Workbench',
-        renderer: 'axis.template.schema-workbench', contractVersion: 1,
+        renderer: 'axis.template.schema-workbench', contractVersion: 0,
         slots: ['axisSchemaWorkbenchHeaderSlot', 'axisSchemaWorkbenchContentSlot'], active: true
     },
     record4: {
         code: 'axisMediaManagementPageTemplate', name: 'Axis Media Management',
-        renderer: 'axis.template.media-management', contractVersion: 1,
+        renderer: 'axis.template.media-management', contractVersion: 0,
         slots: ['axisMediaManagementWorkspaceSlot'], active: true
     },
     record5: {
         code: 'axisPlatformPageTemplate', name: 'Axis Platform Workspace',
-        renderer: 'axis.template.platform', contractVersion: 1,
+        renderer: 'axis.template.platform', contractVersion: 0,
         slots: ['axisPlatformContentSlot'], active: true
     }
 });

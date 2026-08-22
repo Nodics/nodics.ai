@@ -154,7 +154,7 @@ export function createReport(plan, localResults, options = {}) {
   const createdAt = (options.now ? options.now() : new Date()).toISOString();
   const results = localResults || plan.local.map((step) => Object.assign(sanitizeStep(step), { state: 'PLANNED' }));
   const report = {
-    contractVersion: 1,
+    contractVersion: 0,
     qualificationEnvironment: options.environmentName || 'kickoffLocal',
     createdAt,
     productionApproved: false,

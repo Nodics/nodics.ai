@@ -427,7 +427,7 @@ module.exports = {
     buildProvenance: function (request, payload, descriptor, recordCount) {
         return {
             contractType: 'NODICS_SCHEMA_EXPORT',
-            contractVersion: 1,
+            contractVersion: 0,
             moduleName: payload.moduleName,
             schemaName: payload.schemaName,
             schemaVersion: descriptor.contractVersion || descriptor.version || 1,

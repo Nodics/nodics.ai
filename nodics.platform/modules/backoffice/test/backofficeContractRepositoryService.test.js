@@ -68,7 +68,7 @@ global.CLASSES = { NodicsError: class NodicsError extends Error {} };
 const definition = require('../src/service/contract/defaultBackofficeContractRepositoryService');
 const repository = Object.assign({}, definition);
 
-const snapshot = (hash, classification, operations) => ({ moduleName: 'cms', contractType: 'OPENAPI', contractVersion: 1,
+const snapshot = (hash, classification, operations) => ({ moduleName: 'cms', contractType: 'OPENAPI', contractVersion: 0,
     hash: hash.repeat(64).slice(0, 64), operations: (operations || []).map(id => ({ operationId: id })), schemas: [],
     changeClassification: classification, discoveredAt: new Date(Date.now() + snapshots.length).toISOString() });
 

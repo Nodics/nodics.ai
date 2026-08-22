@@ -32,7 +32,7 @@ const service = Object.assign({}, definition, { _snapshots: new Map(), _inflight
 
 const registration = { moduleName: 'cms', instanceId: 'runtime-1', clientCallable: true,
     endpoint: 'https://cms.example/nodics/cms', backoffice: { discovery: {
-        openApiPath: '/nodics/system/v0/contract/openapi/internal', contractVersion: 1
+        openApiPath: '/nodics/system/v0/contract/openapi/internal', contractVersion: 0
     } } };
 const operation = (id, method, permissions) => ({ operationId: id, 'x-nodics': {
     moduleName: 'cms', schemaName: 'cmsPage', operation: method, permissions: permissions || []

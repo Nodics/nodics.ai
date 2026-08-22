@@ -101,13 +101,13 @@ function writeProperties(relativePath, properties) {
 protectedEnvironmentPropertyPaths.forEach(relativePath => writeProperties(relativePath, {}));
 fs.mkdirSync(path.join(fixtureRoot, 'customer.project/envs/local/data/init'), { recursive: true });
 fs.writeFileSync(path.join(fixtureRoot, 'customer.project/envs/local/data/manifest.json'), JSON.stringify({
-    contractVersion: 2,
+    contractVersion: 0,
     module: 'local',
     sections: {
         init: {
             kind: 'DATA_RELEASE',
             dataType: 'init',
-            version: '1.0.0',
+            version: '0.0.0',
             description: 'Explicitly governed local developer init data',
             files: {}
         }

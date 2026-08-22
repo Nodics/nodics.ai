@@ -194,7 +194,7 @@ module.exports = exportedService = {
     /** Implements dataManifest as an overrideable service operation. */
     dataManifest: function (moduleName) {
     return JSON.stringify({
-        contractVersion: 2,
+        contractVersion: 0,
         module: moduleName,
         sections: {}
     }, null, 4) + '\n';
@@ -376,7 +376,7 @@ module.exports = exportedService = {
             index: options.index,
             description: options.description || 'Generated Nodics ' + options.kind + ' boundary.',
             main: 'nodics.js',
-            version: '0.0.1',
+            version: '0.0.0',
             private: true,
             license: 'SEE LICENSE IN LICENSE',
             nodics: {

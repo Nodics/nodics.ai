@@ -1,5 +1,5 @@
 {
-  "contractVersion": 1,
+  "contractVersion": 0,
   "qualificationId": "builder-qualification-0123456789abcdef",
   "createdAt": "2026-08-16T07:00:00.000Z",
   "solutionDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",

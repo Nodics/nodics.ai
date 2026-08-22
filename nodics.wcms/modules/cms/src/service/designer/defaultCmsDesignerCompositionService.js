@@ -27,7 +27,7 @@ module.exports = {
     getAuthoringModel: async function (request) {
         return {
             result: {
-                contractVersion: 1,
+                contractVersion: 0,
                 hierarchy: ['Content Catalog', 'Site', 'Page Template', 'Page', 'Template Slots', 'Page Sections',
                     'Component Instances', 'Governed Media', 'Page Route', 'Navigation Node', 'Publishing'],
                 ownership: {

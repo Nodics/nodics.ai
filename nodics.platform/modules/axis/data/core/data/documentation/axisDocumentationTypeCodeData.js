@@ -16,13 +16,13 @@ module.exports = {
   record0: {
     code: 'axisDocumentationArticlePageType',
     kind: 'PAGE',
-    contractVersion: 2,
+    contractVersion: 0,
     active: true,
   },
   record1: {
     code: 'axisDocumentationArticleComponentType',
     kind: 'COMPONENT',
-    contractVersion: 2,
+    contractVersion: 0,
     propertySchema: {
       code: 'string',
       title: 'string',
@@ -42,7 +42,7 @@ module.exports = {
   record2: {
     code: 'axisDocumentationNavigationComponentType',
     kind: 'COMPONENT',
-    contractVersion: 2,
+    contractVersion: 0,
     propertySchema: {
       title: 'string',
       searchLabel: 'string',

@@ -22,7 +22,7 @@ assert.deepEqual(operations.retry(5, { maximumAttempts: 5 }), { attempt: 5, retr
 assert.equal(operations.retry(3, { maximumAttempts: 5, baseDelayMs: 100, maximumDelayMs: 1000 }).delayMs, 400);
 const checkpoint = operations.checkpoint({ tenant: 't1', workload: 'projection', partitionKey: 'p1', cursor: '50', processedCount: 50, failedCount: 0, correlationId: 'x' });
 assert.equal(checkpoint.status, 'CURRENT'); assert.equal(checkpoint.sourceHash.length, 64);
-assert.equal(operations.compatibility({ contractType: 'API', contractCode: 'cart', version: '1.0.0', major: 1 }, { contractCode: 'cart', version: '2.0.0', major: 2 }).compatibility, 'BREAKING');
+assert.equal(operations.compatibility({ contractType: 'API', contractCode: 'cart', version: '0.0.0', major: 1 }, { contractCode: 'cart', version: '0.0.0', major: 2 }).compatibility, 'BREAKING');
 const migration = operations.migration({ tenant: 't1', sourceModule: 'legacyCommerce', sourceSchema: 'Order', targetModule: 'order', targetSchema: 'commerceOrder', mappingVersion: '1' }, { code: 'o1', total: '10.00' });
 assert.equal(migration.strategy, 'DRY_RUN'); assert.equal(migration.status, 'VALIDATED');
 assert.equal(operations.migration({ tenant: 't1', sourceModule: 'legacyCommerce', sourceSchema: 'Order', targetModule: 'order', targetSchema: 'commerceOrder', mappingVersion: '1', errors: ['INVALID_STATUS'] }, { code: 'o2' }).status, 'QUARANTINED');

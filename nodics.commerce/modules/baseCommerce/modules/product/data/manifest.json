@@ -1,11 +1,11 @@
 {
-  "contractVersion": 2,
+  "contractVersion": 0,
   "module": "product",
   "sections": {
     "sample": {
       "kind": "DATA_RELEASE",
       "dataType": "sample",
-            "version": "1.0.0",
+            "version": "0.0.0",
             "description": "Product bilingual catalogue sample data",
             "owningDomain": "product",
             "lifecycle": "PUBLISHABLE",

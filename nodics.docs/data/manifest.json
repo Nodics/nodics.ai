@@ -1,12 +1,12 @@
 {
-  "contractVersion": 2,
+  "contractVersion": 0,
   "module": "nodics.docs",
   "sections": {
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "core",
       "pack": "nodics.docs",
-      "version": "0.16.1",
+      "version": "0.0.0",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",

@@ -181,7 +181,7 @@ async function preflight(profile) {
     id: 'native-local-isolation',
     state: profile.hostPorts.every(port => !profile.nativeIsolationPorts.includes(port)) ? 'PASSED' : 'FAILED'
   });
-  const result = { contractVersion: 1, environment: profile.environment, qualificationClass: profile.qualificationClass, checks };
+  const result = { contractVersion: 0, environment: profile.environment, qualificationClass: profile.qualificationClass, checks };
   console.log(JSON.stringify(result, null, 2));
   if (checks.some(check => ['FAILED', 'BUSY'].includes(check.state))) process.exitCode = 1;
 }

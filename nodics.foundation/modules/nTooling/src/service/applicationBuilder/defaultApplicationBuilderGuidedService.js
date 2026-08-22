@@ -129,7 +129,7 @@ module.exports = {
         const projectCode = options.projectCode || 'myCommerceApp';
         const customerCode = options.customerCode || 'myCustomer';
         const answers = {
-            contractVersion: 1,
+            contractVersion: 0,
             project: {
                 projectCode: projectCode,
                 customerCode: customerCode,
@@ -302,7 +302,7 @@ module.exports = {
             backendRuntimes.splice(4, 0, 'ENGAGEMENT');
         }
         return {
-            contractVersion: 1,
+            contractVersion: 0,
             identity: {
                 solutionCode: request.project.projectCode,
                 customerCode: request.project.customerCode,
@@ -385,7 +385,7 @@ module.exports = {
                     'Selected corporate website experience'
         }));
         return {
-            contractVersion: 1,
+            contractVersion: 0,
             dryRun: true,
             writePerformed: false,
             generatedApplication: false,
@@ -513,7 +513,7 @@ module.exports = {
             writeArtifact('generation-plan.json', JSON.stringify(plan, null, 2) + '\n');
             writeArtifact('beginner-summary.md', this.renderSummaryMarkdown(summary, solution, plan));
             writeArtifact('builder-guide-report.json', JSON.stringify({
-                contractVersion: 1,
+                contractVersion: 0,
                 createdAt: options.createdAt || options.now || new Date().toISOString(),
                 projectCode: solution.identity.projectCode,
                 workspaceRoot: reviewRoot,

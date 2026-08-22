@@ -246,7 +246,7 @@ assert.strictEqual(aliases['/alias'].get['x-nodics'].duplicateDeclarations.lengt
 
 assert.throws(() => generator.validateDocument({
     openapi: '3.0.3',
-    info: { title: 'Invalid', version: '1' },
+    info: { title: 'Invalid', version: '0' },
     paths: {
         '/one': { get: { operationId: 'same', responses: { 200: { description: 'ok' } } } },
         '/two': { get: { operationId: 'same', responses: { 200: { description: 'ok' } } } }
@@ -255,7 +255,7 @@ assert.throws(() => generator.validateDocument({
 
 assert.throws(() => generator.validateDocument({
     openapi: '3.0.3',
-    info: { title: 'Invalid reference', version: '1' },
+    info: { title: 'Invalid reference', version: '0' },
     paths: { '/one': { get: { operationId: 'one', responses: { 200: { '$ref': '#/components/responses/Missing' } } } } },
     components: { responses: {} }
 }), /Unresolved local reference/);

@@ -27,7 +27,7 @@ global.CLASSES = {
 global.CONFIG = {
     get: key => key === 'backofficeAxisPolicy' ? {
         code: 'axisEmployeeExperiencePolicy',
-        contractVersion: 1,
+        contractVersion: 0,
         screenLockEnabled: true,
         idleTimeoutSeconds: 900,
         minimumIdleTimeoutSeconds: 60,
@@ -67,7 +67,7 @@ const service = require(path.resolve(__dirname, '../src/service/policy/defaultAx
 (async () => {
     let fallback = await service.getEffective({ tenant: 'tenantA' });
     assert.deepStrictEqual(fallback, {
-        contractVersion: 1,
+        contractVersion: 0,
         screenLockEnabled: true,
         idleTimeoutSeconds: 900,
         recentNavigationLimit: 12,

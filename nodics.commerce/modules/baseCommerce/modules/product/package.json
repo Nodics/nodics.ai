@@ -1,6 +1,6 @@
 {
   "name": "product",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "index": "70.11",
   "private": true,
   "main": "nodics.js",

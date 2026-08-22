@@ -1,6 +1,6 @@
 {
   "name": "nodics.platform",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "index": "60.99",
   "private": true,
   "description": "Nodics platform module group.",

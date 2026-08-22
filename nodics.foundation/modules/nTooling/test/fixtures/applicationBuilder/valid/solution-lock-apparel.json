@@ -1,13 +1,13 @@
 {
-  "contractVersion": 1,
+  "contractVersion": 0,
   "solutionDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   "planDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-  "builder": { "engineVersion": "0.1.0", "contractVersion": 1, "mode": "WORKSPACE" },
+  "builder": { "engineVersion": "0.1.0", "contractVersion": 0, "mode": "WORKSPACE" },
   "packages": [
-    { "code": "nodics.commerce", "version": "0.0.1", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "source": "WORKSPACE" },
-    { "code": "apparel", "version": "0.0.1", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "source": "WORKSPACE" }
+    { "code": "nodics.commerce", "version": "0.0.0", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "source": "WORKSPACE" },
+    { "code": "apparel", "version": "0.0.0", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "source": "WORKSPACE" }
   ],
-  "templates": [{ "code": "customer.backend", "version": "0.1.0", "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "source": "WORKSPACE" }],
+  "templates": [{ "code": "customer.backend", "version": "0.0.0", "digest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "source": "WORKSPACE" }],
   "artifacts": [
     { "path": "backend/generated/module-index.json", "ownership": "GENERATED", "digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" },
     { "path": "backend/customer/README.md", "ownership": "CUSTOMER_OWNED", "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111" }
@@ -16,6 +16,6 @@
     "backend": { "nodes": ["nodics.commerce", "apparel"], "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222" },
     "frontend": { "nodes": ["agora.commerce", "agora.apparel"], "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333" }
   },
-  "dataPacks": [{ "code": "agora.apparel", "version": "0.0.1", "manifestDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444" }],
+  "dataPacks": [{ "code": "agora.apparel", "version": "0.0.0", "manifestDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444" }],
   "qualification": { "state": "PASSED", "verifiedAt": "2026-08-16T07:00:00.000Z", "evidenceDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "gates": ["contracts", "fresh.database", "browser"], "scope": "REFERENCE_WORKSPACE", "reportPath": "qualification/builder-qualification-report.json" }
 }

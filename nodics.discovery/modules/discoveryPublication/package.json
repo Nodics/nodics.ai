@@ -1,6 +1,6 @@
 {
     "name": "discoveryPublication",
-    "version": "0.0.1",
+    "version": "0.0.0",
     "index": "65.50",
     "private": true,
     "main": "nodics.js",

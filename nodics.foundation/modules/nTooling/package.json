@@ -3,7 +3,7 @@
     "index": "1.98",
     "description": "Non-runtime Nodics development, quality, generation, and command tooling.",
     "main": "nodics.js",
-    "version": "0.0.1",
+    "version": "0.0.0",
     "private": true,
     "license": "SEE LICENSE IN LICENSE",
     "nodics": {

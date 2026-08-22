@@ -83,7 +83,7 @@ const serverContract = {
     openapi: '3.0.3',
     info: {
         title: 'Server Contract',
-        version: '1.0.0'
+        version: '0.0.0'
     },
     paths: {}
 };
@@ -91,7 +91,7 @@ const nodeContract = {
     openapi: '3.0.3',
     info: {
         title: 'Node Contract',
-        version: '1.0.0'
+        version: '0.0.0'
     },
     paths: {}
 };
@@ -142,7 +142,7 @@ const service = require('../src/service/contract/defaultApiContractService');
     global.SERVICE.DefaultOpenapiContractGeneratorService = { createDocument: input => {
         assert.strictEqual(input.rawRouters.runtime, true);
         assert.strictEqual(input.rawSchema.runtime, true);
-        return { openapi: '3.0.3', info: { title: 'Runtime Contract', version: '1.0.0' }, paths: {} };
+        return { openapi: '3.0.3', info: { title: 'Runtime Contract', version: '0.0.0' }, paths: {} };
     } };
     global.SERVICE.DefaultRouterConfigurationService = { getRawRouters: () => ({ runtime: true }) };
     global.SERVICE.DefaultDatabaseConfigurationService = { getRawSchema: () => ({ runtime: true }) };

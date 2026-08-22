@@ -1,6 +1,6 @@
 {
   "name": "commsApi",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "index": "89.80",
   "private": true,
   "main": "nodics.js",

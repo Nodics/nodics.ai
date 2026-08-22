@@ -1,5 +1,5 @@
 {
-  "contractVersion": 1,
+  "contractVersion": 0,
   "identity": { "solutionCode": "referenceTelco", "customerCode": "reference", "projectCode": "referenceTelco" },
   "environment": { "mode": "WORKSPACE", "class": "LOCAL" },
   "capabilities": { "selected": ["nodics.commerce", "telco"], "domains": ["TELCO"], "excluded": ["apparel"] },

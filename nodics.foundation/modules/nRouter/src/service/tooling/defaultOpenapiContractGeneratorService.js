@@ -734,7 +734,7 @@ module.exports = exportedService = {
         openapi: '3.0.3',
         info: {
             title: 'Nodics API Contract',
-            version: '0.1.0',
+            version: '0.0.0',
             description: 'Generated from the active Nodics module hierarchy, effective schemas, and effective router definitions.'
         },
         servers: [

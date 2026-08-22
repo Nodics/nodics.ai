@@ -65,13 +65,13 @@ const request = (revision, extra) => Object.assign({ tenant: 'tenant-a', publica
 
 (async () => {
     let created = await service.create(Object.assign(request(undefined), { publication: {
-        code: 'page-home', domain: 'cms', rootType: 'page', rootCode: 'home', sourceVersion: 'v1'
+        code: 'page-home', domain: 'cms', rootType: 'page', rootCode: 'home', sourceVersion: '0'
     } }));
     assert.strictEqual(created.state, 'STAGED');
     assert.strictEqual(created.revision, 0);
     assert.strictEqual(created.auditTrail.length, 1);
     assert.strictEqual((await service.create(Object.assign(request(undefined), { publication: {
-        code: 'page-home', domain: 'cms', rootType: 'page', rootCode: 'home', sourceVersion: 'v1'
+        code: 'page-home', domain: 'cms', rootType: 'page', rootCode: 'home', sourceVersion: '0'
     } }))).code, 'page-home', 'create must be idempotent');
 
     let validated = await service.validate(request(0));
@@ -96,7 +96,7 @@ const request = (revision, extra) => Object.assign({ tenant: 'tenant-a', publica
     assert.strictEqual(activated, 1, 'online replay must not activate twice');
 
     let replay = await service.publishApproved(Object.assign(request(undefined), { publication: {
-        code: 'page-home', domain: 'cms', rootType: 'page', rootCode: 'home', sourceVersion: 'v1'
+        code: 'page-home', domain: 'cms', rootType: 'page', rootCode: 'home', sourceVersion: '0'
     } }));
     assert.strictEqual(replay.state, 'ONLINE', 'approved workflow replay must return the existing Online release');
     assert.strictEqual(activated, 1, 'approved workflow replay must not deploy twice');
@@ -117,7 +117,7 @@ const request = (revision, extra) => Object.assign({ tenant: 'tenant-a', publica
     await assert.rejects(service.approve(request(0, { publicationCode: 'invalid' })), /Invalid publication transition/);
     await assert.rejects(service.validate(request(9, { publicationCode: 'invalid' })), /revision conflict/);
 
-    records.set('failure', { code: 'failure', domain: 'cms', state: 'APPROVED', revision: 0, sourceVersion: 'bad' });
+    records.set('failure', { code: 'failure', domain: 'cms', state: 'APPROVED', revision: 0, sourceVersion: '0' });
     let originalActivate = versionProvider.activate;
     versionProvider.activate = async () => { throw new NodicsError('PROVIDER_FAILED', 'Provider failed'); };
     await assert.rejects(service.activate(request(0, { publicationCode: 'failure' })), /Provider failed/);
@@ -125,17 +125,17 @@ const request = (revision, extra) => Object.assign({ tenant: 'tenant-a', publica
     versionProvider.activate = originalActivate;
 
     records.set('activation-recovery', { code: 'activation-recovery', domain: 'cms', state: 'ACTIVATING', revision: 4,
-        sourceVersion: 'v2' });
+        sourceVersion: '0' });
     assert.strictEqual((await service.activate(request(4, { publicationCode: 'activation-recovery' }))).state, 'ONLINE',
         'activation retries must resume an in-progress provider operation');
 
     records.set('rollback-recovery', { code: 'rollback-recovery', domain: 'cms', state: 'ROLLING_BACK', revision: 7,
-        sourceVersion: 'v2', previousOnlineVersion: 'v1' });
+        sourceVersion: '0', previousOnlineVersion: '0' });
     assert.strictEqual((await service.rollback(request(7, { publicationCode: 'rollback-recovery' }))).state, 'ROLLED_BACK',
         'rollback retries must resume an in-progress provider operation');
 
     properties.lifecycle.maxDependencies = 0;
-    records.set('bounded', { code: 'bounded', domain: 'cms', state: 'STAGED', revision: 0, sourceVersion: 'v1' });
+    records.set('bounded', { code: 'bounded', domain: 'cms', state: 'STAGED', revision: 0, sourceVersion: '0' });
     await assert.rejects(service.validate(request(0, { publicationCode: 'bounded' })), /dependency boundary/);
     assert.strictEqual(records.get('bounded').state, 'FAILED');
     properties.lifecycle.maxDependencies = 10000;

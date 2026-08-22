@@ -1,6 +1,6 @@
 {
   "name": "nodics.docs",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "index": "95.99",
   "private": true,
   "main": "nodics.js",

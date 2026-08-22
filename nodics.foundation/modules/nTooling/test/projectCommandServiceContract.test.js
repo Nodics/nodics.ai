@@ -31,7 +31,7 @@ function createProject(manifestOverrides = {}) {
     );
     const manifest = Object.assign(
         {
-            contractVersion: 1,
+            contractVersion: 0,
             projectCode: 'duShop',
             tooling: {
                 scriptOwnership: {
@@ -55,7 +55,7 @@ service.validateManifest(validRoot, validManifest);
 assert.equal(service.runProjectCommand(validRoot, validManifest, 'hello', []), true);
 
 const forbiddenRoot = createProject({
-    contractVersion: 1,
+    contractVersion: 0,
     projectCode: 'duShop',
     tooling: {
         scriptOwnership: {
@@ -74,7 +74,7 @@ assert.throws(
 );
 
 const forbiddenDirectoryRoot = createProject({
-    contractVersion: 1,
+    contractVersion: 0,
     projectCode: 'duShop',
     tooling: {
         scriptOwnership: {

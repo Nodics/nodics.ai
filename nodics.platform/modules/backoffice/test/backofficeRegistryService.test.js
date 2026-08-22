@@ -37,11 +37,11 @@ global.CONFIG = {
           clientEndpoints: clientEndpoints,
           compatibility: {
             registryContractVersion: 1,
-            minimumClientContractVersion: 1,
+            minimumClientContractVersion: 0,
           },
           publicBootstrap: {
             enabled: true,
-            contractVersion: 1,
+            contractVersion: 0,
             requiredModules: {
               profile: "profile",
               cms: { moduleName: "cms", server: "wcmsOnlineServer", runtimeRole: "ONLINE" },
@@ -92,7 +92,7 @@ global.SERVICE = {
   DefaultAxisExperiencePolicyService: {
     getEffective: () =>
       Promise.resolve({
-        contractVersion: 1,
+        contractVersion: 0,
         screenLockEnabled: true,
         idleTimeoutSeconds: 900,
         recentNavigationLimit: 12,
@@ -195,7 +195,7 @@ async function run() {
     canonicalIdentity: "nodics.wcms/modules/cms",
     instanceId: "cms-1",
     endpoint: "http://cms:3040/nodics/cms",
-    version: "1.0.0",
+    version: "0.0.0",
     capabilities: ["router"],
     clientCallable: true,
     leaseTtlMs: 1000,
@@ -204,12 +204,12 @@ async function run() {
       capabilityId: "content-management",
       displayName: "Content",
       category: "content",
-      contractVersion: 2,
-      minimumClientContractVersion: 1,
+      contractVersion: 0,
+      minimumClientContractVersion: 0,
       roles: ["UI_COMPOSITION_PROVIDER"],
       discovery: {
         openApiPath: "/nodics/system/v0/contract/openapi/internal",
-        contractVersion: 1,
+        contractVersion: 0,
       },
       uiComposition: {
         site: "nodicsBackOffice",
@@ -678,14 +678,14 @@ async function run() {
   );
   assert.strictEqual(
     service.evaluateCompatibility(
-      { contractVersion: 2, minimumClientContractVersion: 2 },
+      { contractVersion: 0, minimumClientContractVersion: 0 },
       1,
     ).status,
     "INCOMPATIBLE",
   );
   assert.strictEqual(
     service.evaluateCompatibility(
-      { contractVersion: 2, minimumClientContractVersion: 1 },
+      { contractVersion: 0, minimumClientContractVersion: 0 },
       2,
     ).status,
     "COMPATIBLE",

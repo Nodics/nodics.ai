@@ -139,13 +139,13 @@ global.SERVICE = {
         componentMedia: [{ code: 'heroBackground', componentMediaCode: 'heroBackground', componentCode: 'hero',
             mediaSetCode: 'heroBackgroundSet', mediaType: 'IMAGE', role: 'background', slot: 'default',
             position: 0, altText: 'Hero background', storageKey: 'hidden', active: true }],
-        templates: [{ code: 'main', renderer: 'template.main', contractVersion: 1 }],
+        templates: [{ code: 'main', renderer: 'template.main', contractVersion: 0 }],
         rendererMappings: [
-            { code: 'homePage', renderer: 'page.home', contractVersion: 1, channels: ['web'] },
-            { code: 'accountPage', renderer: 'page.account', contractVersion: 1, channels: ['web'] },
-            { code: 'heroType', renderer: 'component.hero', contractVersion: 2,
+            { code: 'homePage', renderer: 'page.home', contractVersion: 0, channels: ['web'] },
+            { code: 'accountPage', renderer: 'page.account', contractVersion: 0, channels: ['web'] },
+            { code: 'heroType', renderer: 'component.hero', contractVersion: 0,
                 channels: ['web', 'mobile-webview'], deprecated: true, replacementRenderer: 'component.hero-v2' },
-            { code: 'accountPanelType', renderer: 'component.account-panel', contractVersion: 1, channels: ['web'] }
+            { code: 'accountPanelType', renderer: 'component.account-panel', contractVersion: 0, channels: ['web'] }
         ]
     };
     const matches = (model, query) => Object.keys(query).every(key => {
@@ -186,7 +186,7 @@ global.SERVICE = {
     assert.deepStrictEqual(response.result.page.templateContract, {
         code: 'main',
         renderer: 'template.main',
-        contractVersion: 1
+        contractVersion: 0
     });
     assert.strictEqual(response.result.page.components[0].code, 'hero');
     assert.strictEqual(response.result.page.components[0].active, true);

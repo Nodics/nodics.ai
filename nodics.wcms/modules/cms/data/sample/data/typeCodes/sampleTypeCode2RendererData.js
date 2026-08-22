@@ -46,7 +46,7 @@ module.exports = {
         code: 'homePageBannerComponentType',
         active: true,
         renderer: 'component.home-banner',
-        contractVersion: 1,
+        contractVersion: 0,
         channels: ['web']
     }
 };

@@ -71,12 +71,12 @@ async function validatesGuidedDataReleaseUsesNextStoredRevision() {
             runId: 'guided-core-run',
             dataReleases: [{
                 releaseCode: 'nexus.web:corporate',
-                version: '1.0.0'
+                version: '0.0.0'
             }]
         },
         dataReleasePlan: [{
             releaseCode: 'nexus.web:corporate',
-            version: '1.0.0'
+            version: '0.0.0'
         }]
     });
     const models = [{ code: 'nexusHomePage', versionId: 0 }];

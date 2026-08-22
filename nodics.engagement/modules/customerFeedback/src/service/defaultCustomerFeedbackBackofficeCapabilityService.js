@@ -16,8 +16,8 @@ const capability = {
     "displayName": "Customer Feedback",
     "category": "organization",
     "icon": "feedback",
-    "contractVersion": 1,
-    "minimumClientContractVersion": 1,
+    "contractVersion": 0,
+    "minimumClientContractVersion": 0,
     "roles": [
         "FUNCTIONAL_CAPABILITY_PROVIDER"
     ],

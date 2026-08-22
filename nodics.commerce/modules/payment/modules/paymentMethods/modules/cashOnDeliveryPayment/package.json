@@ -1,6 +1,6 @@
 {
   "name": "cashOnDeliveryPayment",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "index": "70.33",
   "private": true,
   "main": "nodics.js",

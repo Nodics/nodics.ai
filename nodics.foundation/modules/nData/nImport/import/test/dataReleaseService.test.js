@@ -32,8 +32,8 @@ let files = {};
     files[file] = crypto.createHash('sha256').update(fs.readFileSync(path.join(releaseRoot, file))).digest('hex');
 });
 fs.writeFileSync(path.join(root, 'data', 'manifest.json'), JSON.stringify({
-    contractVersion: 2, module: 'testModule', sections: { core: {
-        kind: 'DATA_RELEASE', dataType: 'core', version: '1.1.0',
+    contractVersion: 0, module: 'testModule', sections: { core: {
+        kind: 'DATA_RELEASE', dataType: 'core', version: '0.0.0',
         displayName: 'Test Core Release',
         description: 'Test core release',
         owningDomain: 'test.domain', lifecycle: 'PUBLISHABLE', destinationRole: 'WCMS_STAGED',
@@ -189,7 +189,7 @@ const routers = require('../src/router/routers');
         code: 'testEnvironment:default:noise' + index + ':core',
         releaseCode: 'noise' + index + ':core',
         dataType: 'core',
-        version: '1.0.0',
+        version: '0.0.0',
         checksum: 'noise',
         status: 'CURRENT'
     })));

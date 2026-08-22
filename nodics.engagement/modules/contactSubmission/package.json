@@ -3,7 +3,7 @@
     "index": "90.50",
     "description": "Customer contact and enquiry intake, routing, SLA, and resolution capability.",
     "main": "nodics.js",
-    "version": "0.0.1",
+    "version": "0.0.0",
     "private": true,
     "license": "SEE LICENSE IN LICENSE",
     "nodics": {

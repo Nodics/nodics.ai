@@ -444,17 +444,17 @@ const files = {
   'data/core/data/documentation/nodicsDocumentationTypeCodeData.js': jsModule(
     'Nodics framework documentation page and component types.',
     {
-      record0: { code: 'nodicsDocumentationArticlePageType', kind: 'PAGE', contractVersion: 2, active: true },
-      record1: { code: 'nodicsDocumentationArticleComponentType', kind: 'COMPONENT', contractVersion: 2, active: true },
-      record2: { code: 'nodicsDocumentationNavigationComponentType', kind: 'COMPONENT', contractVersion: 2, active: true },
+      record0: { code: 'nodicsDocumentationArticlePageType', kind: 'PAGE', contractVersion: 0, active: true },
+      record1: { code: 'nodicsDocumentationArticleComponentType', kind: 'COMPONENT', contractVersion: 0, active: true },
+      record2: { code: 'nodicsDocumentationNavigationComponentType', kind: 'COMPONENT', contractVersion: 0, active: true },
     },
   ),
   'data/core/data/documentation/nodicsDocumentationRendererData.js': jsModule(
     'Nodics framework documentation renderer mappings owned by Axis.',
     {
-      record0: { code: 'nodicsDocumentationArticlePageType', renderer: 'documentation.page.article', contractVersion: 2, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
-      record1: { code: 'nodicsDocumentationArticleComponentType', renderer: 'documentation.component.article', contractVersion: 2, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
-      record2: { code: 'nodicsDocumentationNavigationComponentType', renderer: 'documentation.component.navigation', contractVersion: 2, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
+      record0: { code: 'nodicsDocumentationArticlePageType', renderer: 'documentation.page.article', contractVersion: 0, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
+      record1: { code: 'nodicsDocumentationArticleComponentType', renderer: 'documentation.component.article', contractVersion: 0, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
+      record2: { code: 'nodicsDocumentationNavigationComponentType', renderer: 'documentation.component.navigation', contractVersion: 0, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
     },
   ),
   'data/core/data/documentation/nodicsDocumentationSlotData.js': jsModule(
@@ -467,13 +467,13 @@ const files = {
   'data/core/data/documentation/nodicsDocumentationTemplateBootstrapData.js': jsModule(
     'Nodics framework documentation template bootstrap without unresolved slot relations.',
     {
-      record0: { code: 'nodicsDocumentationArticleTemplate', name: 'Nodics Documentation Article', renderer: 'documentation.template.article', contractVersion: 2, active: true },
+      record0: { code: 'nodicsDocumentationArticleTemplate', name: 'Nodics Documentation Article', renderer: 'documentation.template.article', contractVersion: 0, active: true },
     },
   ),
   'data/core/data/documentation/nodicsDocumentationTemplateData.js': jsModule(
     'Nodics framework documentation template.',
     {
-      record0: { code: 'nodicsDocumentationArticleTemplate', name: 'Nodics Documentation Article', renderer: 'documentation.template.article', contractVersion: 2, slots: ['nodicsDocumentationNavigationSlot', 'nodicsDocumentationArticleSlot'], active: true },
+      record0: { code: 'nodicsDocumentationArticleTemplate', name: 'Nodics Documentation Article', renderer: 'documentation.template.article', contractVersion: 0, slots: ['nodicsDocumentationNavigationSlot', 'nodicsDocumentationArticleSlot'], active: true },
     },
   ),
   'data/core/data/documentation/nodicsDocumentationComponentData.js': jsModule(
@@ -517,9 +517,9 @@ const documentationSection = applicationDocumentationContract.buildReleaseSectio
 });
 const previousManifest = fs.existsSync(manifestPath)
   ? JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
-  : { contractVersion: 2, module: 'nodics.docs', sections: {} };
+  : { contractVersion: 0, module: 'nodics.docs', sections: {} };
 const manifest = {
-  contractVersion: 2,
+  contractVersion: 0,
   module: 'nodics.docs',
   sections: { ...(previousManifest.sections || {}), documentation: documentationSection },
 };

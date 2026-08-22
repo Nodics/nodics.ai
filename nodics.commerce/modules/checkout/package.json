@@ -1,6 +1,6 @@
 {
   "name": "checkout",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "index": "70.29",
   "private": true,
   "main": "nodics.js",

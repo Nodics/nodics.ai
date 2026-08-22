@@ -337,7 +337,7 @@ const routerConfig = require('../src/router/routers');
         { moduleName: 'profile', schemaName: 'tenant' },
         [{ code: 'default' }],
         { label: 'Tenant' },
-        { contractType: 'NODICS_SCHEMA_EXPORT', contractVersion: 1 },
+        { contractType: 'NODICS_SCHEMA_EXPORT', contractVersion: 0 },
     ));
     assert.strictEqual(jsonPayload.contract.contractType, 'NODICS_SCHEMA_EXPORT');
     assert.deepStrictEqual(jsonPayload.records, [{ code: 'default' }]);

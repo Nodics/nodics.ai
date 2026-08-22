@@ -39,21 +39,21 @@ function createFixture() {
     fs.writeFileSync(generatedFile, 'module.exports = {};\n');
     fs.writeFileSync(
         path.join(repository, 'package.json'),
-        JSON.stringify({ name: 'nodics.docs', version: '1.0.0' })
+        JSON.stringify({ name: 'nodics.docs', version: '0.0.0' })
     );
     let relativeFile = 'core/headers/contentHeader.js';
     let manifest = {
         kind: 'CONTENT_PACK',
         contentPath: 'core',
         pack: 'nodics.docs',
-        version: '1.0.0',
+        version: '0.0.0',
         generatedHashes: {
             [relativeFile]: digest(fs.readFileSync(generatedFile))
         }
     };
     fs.writeFileSync(
         path.join(repository, 'data/manifest.json'),
-        JSON.stringify({ contractVersion: 2, module: 'nodics.docs', sections: { documentation: manifest } })
+        JSON.stringify({ contractVersion: 0, module: 'nodics.docs', sections: { documentation: manifest } })
     );
     return {
         workspace,
@@ -260,7 +260,7 @@ function createHarness(fixture, enabled) {
             digest(fs.readFileSync(fixture.generatedFile));
         fs.writeFileSync(
             path.join(fixture.repository, 'data/manifest.json'),
-            JSON.stringify({ contractVersion: 2, module: 'nodics.docs', sections: { documentation: fixture.manifest } })
+            JSON.stringify({ contractVersion: 0, module: 'nodics.docs', sections: { documentation: fixture.manifest } })
         );
         await assert.rejects(
             harness.service.importPack({
@@ -273,7 +273,7 @@ function createHarness(fixture, enabled) {
         fixture.manifest.version = '1.1.0';
         fs.writeFileSync(
             path.join(fixture.repository, 'data/manifest.json'),
-            JSON.stringify({ contractVersion: 2, module: 'nodics.docs', sections: { documentation: fixture.manifest } })
+            JSON.stringify({ contractVersion: 0, module: 'nodics.docs', sections: { documentation: fixture.manifest } })
         );
         let update = await harness.service.getStatus({
             packCode: 'nodicsDocumentation',
@@ -297,7 +297,7 @@ function createHarness(fixture, enabled) {
         fixture.manifest.version = '0.9.0';
         fs.writeFileSync(
             path.join(fixture.repository, 'data/manifest.json'),
-            JSON.stringify({ contractVersion: 2, module: 'nodics.docs', sections: { documentation: fixture.manifest } })
+            JSON.stringify({ contractVersion: 0, module: 'nodics.docs', sections: { documentation: fixture.manifest } })
         );
         await assert.rejects(
             harness.service.importPack({

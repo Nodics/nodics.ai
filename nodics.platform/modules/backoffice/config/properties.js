@@ -44,7 +44,7 @@ module.exports = {
     },
     backofficeAxisPolicy: {
         code: 'axisEmployeeExperiencePolicy',
-        contractVersion: 1,
+        contractVersion: 0,
         screenLockEnabled: true,
         idleTimeoutSeconds: 900,
         minimumIdleTimeoutSeconds: 60,
@@ -75,11 +75,11 @@ module.exports = {
         modulePermissions: {},
         compatibility: {
             registryContractVersion: 1,
-            minimumClientContractVersion: 1
+            minimumClientContractVersion: 0
         },
         publicBootstrap: {
             enabled: true,
-            contractVersion: 1,
+            contractVersion: 0,
             requiredModules: {
                 profile: 'profile',
                 cms: {

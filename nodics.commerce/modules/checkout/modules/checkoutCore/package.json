@@ -1,5 +1,5 @@
 {
-  "name": "checkoutCore", "version": "0.0.1", "index": "70.20", "private": true,
+  "name": "checkoutCore", "version": "0.0.0", "index": "70.20", "private": true,
   "main": "nodics.js", "description": "Idempotent Checkout placement, checkpoint, compensation, and API capability.",
   "nodics": { "kind": "capability", "displayName": "Checkout Core", "runtimeModule": true,
     "loadableByNodicsModuleLoader": true,

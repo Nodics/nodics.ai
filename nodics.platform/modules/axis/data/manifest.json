@@ -1,11 +1,11 @@
 {
-  "contractVersion": 2,
+  "contractVersion": 0,
   "module": "axis",
   "sections": {
     "axisBaseline": {
       "kind": "DATA_RELEASE",
       "dataType": "init",
-      "version": "1.0.0",
+      "version": "0.0.0",
       "description": "Platform-owned Axis baseline experience for Staged installation and controlled publication",
       "owningDomain": "axis",
       "lifecycle": "PUBLISHABLE",
@@ -150,7 +150,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "core",
       "pack": "nodics.platform.axis",
-      "version": "0.4.1",
+      "version": "0.0.0",
       "owningDomain": "axis",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",

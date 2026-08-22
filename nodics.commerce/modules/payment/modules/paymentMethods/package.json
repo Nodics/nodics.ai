@@ -1,6 +1,6 @@
 {
   "name": "paymentMethods",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "index": "70.35",
   "private": true,
   "main": "nodics.js",

@@ -1,6 +1,6 @@
 {
   "name": "promotion",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "index": "70.14",
   "private": true,
   "main": "nodics.js",

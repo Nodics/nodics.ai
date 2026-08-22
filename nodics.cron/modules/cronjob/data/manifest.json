@@ -1,11 +1,11 @@
 {
-  "contractVersion": 2,
+  "contractVersion": 0,
   "module": "cronjob",
   "sections": {
     "core": {
       "kind": "DATA_RELEASE",
       "dataType": "core",
-            "version": "1.0.1",
+            "version": "0.0.0",
             "description": "Scheduled Jobs core data",
             "owningDomain": "cronjob",
             "lifecycle": "OPERATIONAL_VERSIONED",

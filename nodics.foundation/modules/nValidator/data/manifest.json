@@ -1,11 +1,11 @@
 {
-    "contractVersion": 2,
+    "contractVersion": 0,
     "module": "validator",
     "sections": {
         "init": {
             "kind": "DATA_RELEASE",
             "dataType": "init",
-            "version": "1.0.3",
+            "version": "0.0.0",
             "description": "Validation init data",
             "owningDomain": "validator",
             "lifecycle": "REFERENCE",

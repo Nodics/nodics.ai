@@ -16,14 +16,14 @@ const capability = {
     "displayName": "Business Processes and Workflows",
     "category": "operations",
     "icon": "workflow",
-    "contractVersion": 1,
-    "minimumClientContractVersion": 1,
+    "contractVersion": 0,
+    "minimumClientContractVersion": 0,
     "roles": [
         "FUNCTIONAL_CAPABILITY_PROVIDER"
     ],
     "discovery": {
         "openApiPath": "/nodics/system/v0/contract/openapi/internal",
-        "contractVersion": 1
+        "contractVersion": 0
     },
     "requiredPermissions": [
         "process.backoffice.view"

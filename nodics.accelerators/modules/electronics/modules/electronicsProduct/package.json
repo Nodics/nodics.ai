@@ -3,7 +3,7 @@
     "index": "92.31",
     "description": "Reusable Electronics Product semantics extending Commerce Product.",
     "main": "nodics.js",
-    "version": "0.0.1",
+    "version": "0.0.0",
     "private": true,
     "license": "SEE LICENSE IN LICENSE",
     "nodics": {

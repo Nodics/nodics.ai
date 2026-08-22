@@ -264,7 +264,7 @@ module.exports = {
             }
             const answers = await guidedService.runQuestionnaire(questionnaireOptions);
             result = {
-                contractVersion: 1,
+                contractVersion: 0,
                 operation: 'questionnaire',
                 writePerformed: false,
                 answers: answers,
@@ -286,7 +286,7 @@ module.exports = {
             const guidedService = this.resolveGuidedService(context);
             const answers = guidedService.createAnswersTemplate(this.readAnswerTemplateOptions(context.args));
             result = {
-                contractVersion: 1,
+                contractVersion: 0,
                 operation: 'answers-template',
                 writePerformed: false,
                 answers: answers,

@@ -116,7 +116,7 @@ module.exports = {
     settings: function () {
         return typeof CONFIG !== 'undefined' && CONFIG.get ?
             ((CONFIG.get('localization') || {}).context || {}) :
-            { contractVersion: 1, defaultLocale: 'en', defaultChannel: 'web', rtlScripts: ['Arab', 'Hebr', 'Thaa', 'Nkoo', 'Adlm', 'Rohg', 'Syrc'] };
+            { contractVersion: 0, defaultLocale: 'en', defaultChannel: 'web', rtlScripts: ['Arab', 'Hebr', 'Thaa', 'Nkoo', 'Adlm', 'Rohg', 'Syrc'] };
     },
 
     /** Returns effective input bounds. */

@@ -32,14 +32,14 @@ const service = Object.assign({}, definition);
 const batch = {
     project: 'example.project', environment: 'localEnvironment', server: 'platformServer', node: null,
     registrations: [
-        { moduleName: 'nodics.foundation', version: '0.0.1', functionalModule: {
+        { moduleName: 'nodics.foundation', version: '0.0.0', functionalModule: {
             identity: 'nodics.foundation', displayName: 'Foundation', type: 'STANDARD', protected: true } },
         { moduleName: 'nConfig', parentModule: 'nodics.foundation' },
-        { moduleName: 'nodics.platform', parentModule: 'nodics.foundation', version: '0.0.1', functionalModule: {
+        { moduleName: 'nodics.platform', parentModule: 'nodics.foundation', version: '0.0.0', functionalModule: {
             identity: 'nodics.platform', displayName: 'Platform', type: 'STANDARD', protected: true } },
         { moduleName: 'profile', parentModule: 'nodics.platform' },
         { moduleName: 'backoffice', parentModule: 'nodics.platform' },
-        { moduleName: 'nodics.wcms', parentModule: 'nodics.foundation', version: '0.0.1', functionalModule: {
+        { moduleName: 'nodics.wcms', parentModule: 'nodics.foundation', version: '0.0.0', functionalModule: {
             identity: 'nodics.wcms', displayName: 'WCMS', type: 'STANDARD', protected: true } },
         { moduleName: 'cms', parentModule: 'nodics.wcms' },
         { moduleName: 'media', parentModule: 'nodics.wcms' },

@@ -1,11 +1,11 @@
 {
-    "contractVersion": 2,
+    "contractVersion": 0,
     "module": "profile",
     "sections": {
         "init": {
             "kind": "DATA_RELEASE",
             "dataType": "init",
-            "version": "1.0.10",
+            "version": "0.0.0",
             "description": "Profile and Identity init data",
             "owningDomain": "profile",
             "lifecycle": "REFERENCE",
@@ -39,7 +39,7 @@
         "sample": {
             "kind": "DATA_RELEASE",
             "dataType": "sample",
-            "version": "1.0.7",
+            "version": "0.0.0",
             "description": "Profile and Identity sample data",
             "owningDomain": "profile",
             "lifecycle": "REFERENCE",

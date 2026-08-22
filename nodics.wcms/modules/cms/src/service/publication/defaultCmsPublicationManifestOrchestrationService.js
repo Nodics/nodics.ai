@@ -90,7 +90,7 @@ module.exports = {
                     slot: item.slot || 'default', index: Number(item.index || 0), components: build(component.code, ancestors) };
             });
         };
-        return { contractVersion: 1, site: route.site, path: route.path, locale: route.locale, channel: route.channel,
+        return { contractVersion: 0, site: route.site, path: route.path, locale: route.locale, channel: route.channel,
             accessMode: route.accessMode, page: { code: page.code, name: page.name, typeCode: page.typeCode,
                 template: page.template, renderer: page.renderer, rendererContractVersion: page.rendererContractVersion,
                 rendererChannels: page.rendererChannels, rendererDeprecated: page.rendererDeprecated,
@@ -108,7 +108,7 @@ module.exports = {
         let routes = Object.keys(models).filter(key => key.startsWith('cmsPageRoute:')).map(key => models[key])
             .filter(route => route.site === site.code).sort((left, right) => String(left.path).localeCompare(String(right.path)));
         if (!routes.length) throw new CLASSES.NodicsError('CMS_PUBLICATION_SITE_EMPTY', 'Frozen CMS site contains no routes');
-        return { contractVersion: 2, bundleType: 'SITE', site: site.code,
+        return { contractVersion: 0, bundleType: 'SITE', site: site.code,
             routes: routes.map(route => this.buildRouteSnapshot(models, route)) };
     },
     /** Collects referenced concrete media identities from a detached snapshot. */

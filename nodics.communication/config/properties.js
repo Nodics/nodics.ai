@@ -9,4 +9,4 @@
 
  */
 /** @module nodics.communication/config/properties @description Registers Communication capability metadata without exposing provider secrets. @layer config @owner nodics.communication @override Projects may refine presentation through layered configuration. */
-module.exports = { communication: { enabled: true, contractVersion: 1, providerNeutral: true } };
+module.exports = { communication: { enabled: true, contractVersion: 0, providerNeutral: true } };

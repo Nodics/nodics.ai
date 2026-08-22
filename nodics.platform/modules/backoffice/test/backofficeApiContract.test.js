@@ -217,8 +217,8 @@ assert(
     displayName: "Icon contract",
     category: "platform",
     icon: "module",
-    contractVersion: 1,
-    minimumClientContractVersion: 1,
+    contractVersion: 0,
+    minimumClientContractVersion: 0,
     roles: ["FUNCTIONAL_CAPABILITY_PROVIDER"],
     requiredPermissions: ["icon.read"],
     navigation: [

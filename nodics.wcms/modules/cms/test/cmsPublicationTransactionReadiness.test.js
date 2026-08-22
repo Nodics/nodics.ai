@@ -38,7 +38,7 @@ global.CONFIG = { get: key => key === 'cms' ? { publication: { transactionModule
 
     let scope;
     global.SERVICE.DefaultDatabaseTransactionService.capabilities = input => {
-        scope = input; return { multiRecordAtomic: true, contextPropagation: true, contractVersion: 1 };
+        scope = input; return { multiRecordAtomic: true, contextPropagation: true, contractVersion: 0 };
     };
     global.SERVICE.DefaultDatabaseTransactionService.execute = async (input, work) => {
         assert.deepStrictEqual(input, { tenant: 'tenant-a', moduleName: 'cms' });

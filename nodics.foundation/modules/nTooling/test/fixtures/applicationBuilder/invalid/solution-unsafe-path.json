@@ -1,5 +1,5 @@
 {
-  "contractVersion": 1,
+  "contractVersion": 0,
   "identity": { "solutionCode": "unsafePath", "customerCode": "reference", "projectCode": "unsafePath" },
   "environment": { "mode": "WORKSPACE", "class": "LOCAL" },
   "capabilities": { "selected": ["nodics.commerce"], "domains": [] },

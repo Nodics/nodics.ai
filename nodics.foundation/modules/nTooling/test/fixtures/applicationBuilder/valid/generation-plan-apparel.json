@@ -1,5 +1,5 @@
 {
-  "contractVersion": 1,
+  "contractVersion": 0,
   "planId": "builder-plan-0123456789abcdef",
   "createdAt": "2026-08-16T06:00:00.000Z",
   "expiresAt": "2026-08-17T06:00:00.000Z",
@@ -8,8 +8,8 @@
   "builderVersion": "0.1.0",
   "approval": { "required": true, "state": "PENDING" },
   "resolvedCapabilities": [
-    { "code": "nodics.commerce", "version": "0.0.1", "descriptorDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "selectionReason": "EXPLICIT" },
-    { "code": "apparel", "version": "0.0.1", "descriptorDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "selectionReason": "EXPLICIT" }
+    { "code": "nodics.commerce", "version": "0.0.0", "descriptorDigest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "selectionReason": "EXPLICIT" },
+    { "code": "apparel", "version": "0.0.0", "descriptorDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "selectionReason": "EXPLICIT" }
   ],
   "backendGraph": { "nodes": ["nodics.commerce", "apparel"], "edges": [{ "from": "apparel", "to": "nodics.commerce", "relation": "EXTENDS" }] },
   "frontendGraph": { "nodes": ["agora.commerce", "agora.apparel"], "edges": [{ "from": "agora.apparel", "to": "agora.commerce", "relation": "EXTENDS" }] },

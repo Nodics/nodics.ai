@@ -14,7 +14,7 @@ const assert = require('assert');
 class NodicsError extends Error { constructor(code, message) { super(message || code); this.code = code; } }
 global.CLASSES = { NodicsError: NodicsError };
 const publication = { runtimeRole: 'STAGED', baselines: { axis: { releaseCode: 'axis:axisBaseline',
-    releaseVersion: '1.0.0', rootType: 'site', rootCode: 'axisCmsSite', sourceVersion: '1' } } };
+    releaseVersion: '0.0.0', rootType: 'site', rootCode: 'axisCmsSite', sourceVersion: '0' } } };
 global.CONFIG = { get: key => key === 'cms' ? { publication: publication } : undefined };
 
 let releaseStatus = 'NOT_INSTALLED';
@@ -25,7 +25,7 @@ global.SERVICE = {
         reference: value => 'workflow-' + value.code + '-' + value.revision
     },
     DefaultDataReleaseService: {
-        getCatalogue: async () => ({ data: [{ releaseCode: 'axis:axisBaseline', version: '1.0.0',
+        getCatalogue: async () => ({ data: [{ releaseCode: 'axis:axisBaseline', version: '0.0.0',
             destinationRole: 'WCMS_STAGED', lifecycle: 'PUBLISHABLE', initialPublicationPolicy: 'ADMIN_INITIATED',
             checksum: 'release-checksum', publicationReview: {
                 title: 'Publish Axis', summary: 'Review Axis', sourceRole: 'WCMS_STAGED', targetRole: 'WCMS_ONLINE',

@@ -1,5 +1,5 @@
 {
-  "name": "cart", "version": "0.0.1", "index": "70.21", "private": true,
+  "name": "cart", "version": "0.0.0", "index": "70.21", "private": true,
   "main": "nodics.js", "description": "Customer-owned Cart, exact calculation, diagnostics, and API capability.",
   "nodics": { "kind": "capability", "displayName": "Cart", "runtimeModule": true,
     "loadableByNodicsModuleLoader": true,

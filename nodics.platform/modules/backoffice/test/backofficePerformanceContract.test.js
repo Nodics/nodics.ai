@@ -125,7 +125,7 @@ async function run() {
         records.set(moduleName + ':instance' + index, {
             moduleName,
             instanceId: 'instance' + index,
-            version: '1',
+            version: '0',
             moduleKind: 'capability',
             capabilities: ['service'],
             clientCallable: true,

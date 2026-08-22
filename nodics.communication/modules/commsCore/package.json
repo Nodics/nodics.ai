@@ -1,6 +1,6 @@
 {
   "name": "commsCore",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "index": "89.20",
   "private": true,
   "main": "nodics.js",

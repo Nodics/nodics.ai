@@ -80,7 +80,7 @@ const data = {
             componentCode: 'hero', mediaCode: 'hero-ar', mediaType: 'IMAGE', role: 'background', slot: 'main',
             localeCode: 'ar', position: 0, altText: 'Arabic hero' }
     ],
-    templates: [{ code: 'main', versionId: 1, active: true, name: 'Main', renderer: 'template.main', contractVersion: 1 }],
+    templates: [{ code: 'main', versionId: 1, active: true, name: 'Main', renderer: 'template.main', contractVersion: 0 }],
     slots: [{ code: 'main-main', versionId: 1, active: true, template: 'main', name: 'main' }],
     manifests: [], pointers: [], receipts: [], outbox: []
 };
@@ -136,7 +136,7 @@ global.SERVICE = {
         importReferenced: async assets => assets
     },
     DefaultDatabaseTransactionService: {
-        capabilities: () => ({ multiRecordAtomic: true, contextPropagation: true, contractVersion: 1 }),
+        capabilities: () => ({ multiRecordAtomic: true, contextPropagation: true, contractVersion: 0 }),
         execute: async (scope, work) => {
             assert.deepStrictEqual(scope, { tenant: 'tenant-a', moduleName: 'cms' });
             return work(Object.freeze({ transactionId: 'transaction-' + (transactionContexts.length + 1) }));
@@ -168,7 +168,7 @@ SERVICE.TestCmsTargetTransport = {
 properties.cms.publication.targetTransportProvider = 'TestCmsTargetTransport';
 properties.cms.publication.runtimeRole = 'STAGED';
 
-const publication = { code: 'publish-home', domain: 'cms', rootType: 'pageRoute', rootCode: 'home-route', sourceVersion: '2' };
+const publication = { code: 'publish-home', domain: 'cms', rootType: 'pageRoute', rootCode: 'home-route', sourceVersion: '0' };
 const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, correlationId: 'correlation-a' };
 
 (async () => {
@@ -190,7 +190,7 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
         reason: 'LOCALIZATION_NOT_READY'
     }, 'publication readiness must reject any frozen locale variant that is not READY');
     data.localizations[1].status = 'READY';
-    let missingDependency = dependencies.map(item => item.schema === 'cmsComponent' ? Object.assign({}, item, { version: '99' }) : item);
+    let missingDependency = dependencies.map(item => item.schema === 'cmsComponent' ? Object.assign({}, item, { version: '0' }) : item);
     assert.strictEqual((await adapter.validate(publication, root, request, missingDependency)).valid, false,
         'validation must fail closed when a frozen dependency version disappears');
     let originalMax = properties.cms.publication.maxDependencies;
@@ -223,7 +223,7 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     assert.deepStrictEqual(manifest.snapshot.page.templateContract, {
         code: 'main',
         renderer: 'template.main',
-        contractVersion: 1
+        contractVersion: 0
     });
     assert.strictEqual((await manifests.persist(publication, request)).code, manifest.code, 'manifest persistence must be idempotent');
 
@@ -294,7 +294,7 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     error => error.code === 'ERR_CMS_00090');
     properties.cms.publication.enabled = false;
 
-    let previous = Object.assign({}, manifest, { code: 'publish-home_1', sourceVersion: '1', contentHash: 'previous' });
+    let previous = Object.assign({}, manifest, { code: 'publish-home_1', sourceVersion: '0', contentHash: 'previous' });
     data.manifests.push(previous);
     let rolledBack = await provider.rollback(publication, previous.code, request);
     assert.strictEqual(rolledBack.version, previous.code);
@@ -372,7 +372,7 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     SERVICE.DefaultCmsPublicationDeploymentReceiptService.save = originalReceiptSave;
 
     data.pointers.splice(0);
-    const sitePublication = { code: 'publish-site-a', domain: 'cms', rootType: 'site', rootCode: 'site-a', sourceVersion: '1' };
+    const sitePublication = { code: 'publish-site-a', domain: 'cms', rootType: 'site', rootCode: 'site-a', sourceVersion: '0' };
     const siteRoot = await adapter.getVersion(sitePublication, request);
     sitePublication.dependencies = await adapter.resolveDependencies(sitePublication, siteRoot, request);
     const siteValidation = await adapter.validate(sitePublication, siteRoot, request, sitePublication.dependencies);

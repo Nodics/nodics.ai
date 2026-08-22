@@ -1,5 +1,5 @@
 {
-  "contractVersion": 1,
+  "contractVersion": 0,
   "identity": { "solutionCode": "referenceCombined", "customerCode": "reference", "projectCode": "referenceCombined", "displayName": "Reference Combined Commerce" },
   "environment": { "mode": "WORKSPACE", "class": "LOCAL", "deploymentShape": "MODULAR_PROCESSES" },
   "capabilities": { "selected": ["nodics.commerce", "apparel", "electronics", "telco"], "domains": ["APPAREL", "ELECTRONICS", "TELCO"], "excluded": [] },
