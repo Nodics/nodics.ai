@@ -36,6 +36,7 @@ const kickoffRoot = path.join(workspaceRoot, 'nodics.kickoff');
 const fixtureRoot = path.join(__dirname, 'fixtures', 'applicationBuilder', 'valid');
 const referenceEvidencePath = path.join(workspaceRoot, 'actionsRepo', 'Agora',
     'nodics-multi-domain-qualification-evidence-2026-08-15.md');
+const hasReferenceEvidence = fs.existsSync(referenceEvidencePath);
 const catalogue = catalogueService.discover({ framework: frameworkRoot, agora: agoraRoot, kickoff: kickoffRoot });
 const tempParent = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-builder-wp-b6-'));
 
@@ -62,10 +63,11 @@ try {
     assert.strictEqual(initialLock.qualification.scope, 'GENERATED_SKELETON',
         'Generated lock must state its initial scope honestly');
 
-    const result = qualificationService.qualify(approved, solution, catalogue, outputRoot, {
-        now: '2026-08-16T11:20:00.000Z',
-        referenceEvidencePath: referenceEvidencePath
-    });
+    const qualificationOptions = { now: '2026-08-16T11:20:00.000Z' };
+    if (hasReferenceEvidence) {
+        qualificationOptions.referenceEvidencePath = referenceEvidencePath;
+    }
+    const result = qualificationService.qualify(approved, solution, catalogue, outputRoot, qualificationOptions);
     assert.strictEqual(result.qualified, true, 'Qualification must pass for an intact generated output');
     assert.strictEqual(result.scope, 'FULL_GENERATED_APPLICATION',
         'Passing generated backend and storefront runtime probes must qualify full generated application scope');
@@ -76,8 +78,13 @@ try {
     assert(result.gates.includes('generated.handoff'), 'Qualification must include generated handoff evidence');
     assert(result.gates.includes('generated.self-test'), 'Qualification must include generated self-test evidence');
     assert(result.gates.includes('generated.runtime'), 'Qualification must include generated runtime evidence');
-    assert(result.gates.includes('reference.workspace.nine-runtimes'),
-        'Qualification must attach the fresh-database nine-runtime reference evidence');
+    if (hasReferenceEvidence) {
+        assert(result.gates.includes('reference.workspace.nine-runtimes'),
+            'Qualification must attach the fresh-database nine-runtime reference evidence');
+    } else {
+        assert(!result.gates.includes('reference.workspace.nine-runtimes'),
+            'Qualification must not invent missing reference workspace evidence');
+    }
     const report = JSON.parse(fs.readFileSync(path.join(outputRoot, result.reportPath), 'utf8'));
     assert.strictEqual(contractService.validateDocument('qualification', report).valid, true,
         'Qualification report must satisfy its schema');
@@ -130,10 +137,14 @@ try {
     const cliPlanPath = path.join(tempParent, 'cli-approved-plan.json');
     fs.writeFileSync(cliPlanPath, JSON.stringify(cliPlan, null, 2));
     const cli = path.join(frameworkRoot, 'nodics.foundation/modules/nTooling/bin/nodics-tool.js');
+    const cliArgs = [cli, 'builder:qualify', '--agora=' + agoraRoot, '--kickoff=' + kickoffRoot,
+        '--solution=' + path.join(fixtureRoot, 'solution-commerce.json'), '--plan=' + cliPlanPath,
+        '--output=' + cliOutput];
+    if (hasReferenceEvidence) {
+        cliArgs.push('--reference-evidence=' + referenceEvidencePath);
+    }
     const cliResult = JSON.parse(childProcess.execFileSync(process.execPath,
-        [cli, 'builder:qualify', '--agora=' + agoraRoot, '--kickoff=' + kickoffRoot,
-            '--solution=' + path.join(fixtureRoot, 'solution-commerce.json'), '--plan=' + cliPlanPath,
-            '--output=' + cliOutput, '--reference-evidence=' + referenceEvidencePath],
+        cliArgs,
         { cwd: frameworkRoot, encoding: 'utf8' }));
     assert.strictEqual(cliResult.qualified, true, 'Governed CLI must qualify generated Builder output');
 

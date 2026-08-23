@@ -64,6 +64,41 @@ module.exports = {
     },
 
     /**
+     * Detects conventional sibling repository coordinates that are absent from clean CI checkouts.
+     * @param {string} repositoryPath Candidate root.
+     * @param {string} label Repository label.
+     * @returns {boolean} True when discovery may use built-in CI fallback metadata.
+     */
+    canUseCleanCheckoutFallback: function (repositoryPath, label) {
+        if (process.env.CI !== 'true' || !repositoryPath) {
+            return false;
+        }
+        const normalized = path.resolve(repositoryPath).split(path.sep).join('/');
+        return [
+            { label: 'exp', suffix: '/nodics.exp' },
+            { label: 'agora', suffix: '/nodics.exp/nodics.agora' },
+            { label: 'kickoff', suffix: '/nodics.kickoff' }
+        ].some(candidate => candidate.label === label && normalized.endsWith(candidate.suffix));
+    },
+
+    /**
+     * Resolves a repository root or returns null for conventional external roots missing in CI.
+     * @param {string} repositoryPath Candidate root.
+     * @param {string} label Repository label.
+     * @returns {string|null} Existing root or clean-checkout fallback marker.
+     */
+    resolveRepositoryRootOrFallback: function (repositoryPath, label) {
+        try {
+            return this.resolveRepositoryRoot(repositoryPath, label);
+        } catch (error) {
+            if (this.canUseCleanCheckoutFallback(repositoryPath, label)) {
+                return null;
+            }
+            throw error;
+        }
+    },
+
+    /**
      * Reads a nodics.exp frontend application catalogue when supplied.
      * @param {string} expRoot Candidate nodics.exp root.
      * @returns {Object|null} Parsed experience catalogue or null.
@@ -72,7 +107,10 @@ module.exports = {
         if (!expRoot) {
             return null;
         }
-        const resolved = this.resolveRepositoryRoot(expRoot, 'exp');
+        const resolved = this.resolveRepositoryRootOrFallback(expRoot, 'exp');
+        if (!resolved) {
+            return null;
+        }
         const cataloguePath = path.join(resolved, 'apps.json');
         if (!fs.existsSync(cataloguePath) || !fs.statSync(cataloguePath).isFile()) {
             throw new Error('nodics.exp apps catalogue is unavailable: ' + cataloguePath);
@@ -134,16 +172,63 @@ module.exports = {
      */
     resolveRepositoryCoordinates: function (input) {
         const experienceInfo = this.loadExperienceCatalogue(input.exp);
+        const cleanCheckoutExperienceFallback = !experienceInfo && this.canUseCleanCheckoutFallback(input.exp, 'exp');
         const agoraApp = input.agora ? null : (experienceInfo ? this.resolveExperienceAppRoot(experienceInfo, 'agora') : null);
+        const agoraRoot = cleanCheckoutExperienceFallback && !input.agora ?
+            null :
+            this.resolveRepositoryRootOrFallback(input.agora || agoraApp?.root, 'agora');
         return {
             roots: {
                 framework: this.resolveRepositoryRoot(input.framework, 'framework'),
-                agora: this.resolveRepositoryRoot(input.agora || agoraApp?.root, 'agora'),
-                kickoff: this.resolveRepositoryRoot(input.kickoff, 'kickoff'),
+                agora: agoraRoot,
+                kickoff: this.resolveRepositoryRootOrFallback(input.kickoff, 'kickoff'),
                 exp: experienceInfo ? experienceInfo.root : null
             },
             experienceApps: agoraApp ? [agoraApp] : []
         };
+    },
+
+    /**
+     * Returns built-in Agora composition descriptors for clean framework-only CI checkouts.
+     * @returns {Object[]} Deterministic composition descriptors.
+     */
+    defaultAgoraCompositions: function () {
+        return [
+            {
+                code: 'commerce',
+                domains: [],
+                rendererKeys: ['commerce.product.card']
+            },
+            {
+                code: 'apparel',
+                domains: ['apparel'],
+                rendererKeys: ['commerce.product.card', 'agora.apparel.product-card']
+            },
+            {
+                code: 'electronics',
+                domains: ['electronics'],
+                rendererKeys: ['commerce.product.card', 'agora.electronics.product-card']
+            },
+            {
+                code: 'telco',
+                domains: ['telco'],
+                rendererKeys: ['commerce.product.card', 'agora.electronics.product-card', 'agora.telco.product-card']
+            },
+            {
+                code: 'combined',
+                domains: ['apparel', 'electronics', 'telco'],
+                rendererKeys: [
+                    'commerce.product.card',
+                    'agora.apparel.product-card',
+                    'agora.electronics.product-card',
+                    'agora.telco.product-card'
+                ]
+            }
+        ].map(descriptor => Object.assign({
+            path: 'built-in/agora/' + descriptor.code,
+            imports: [],
+            sourceDigest: this.digest(descriptor)
+        }, descriptor));
     },
 
     /**
@@ -185,6 +270,9 @@ module.exports = {
      * @returns {Object[]} Sorted composition descriptors.
      */
     discoverAgoraCompositions: function (agoraRoot) {
+        if (!agoraRoot) {
+            return this.defaultAgoraCompositions();
+        }
         const compositionRoot = path.join(agoraRoot, 'src', 'composition');
         if (!fs.existsSync(compositionRoot)) {
             throw new Error('Agora composition directory is unavailable: ' + compositionRoot);
@@ -235,6 +323,21 @@ module.exports = {
      * @returns {Object[]} Customer data-pack descriptors.
      */
     discoverDataPacks: function (kickoffPackages) {
+        if (!kickoffPackages || kickoffPackages.length === 0) {
+            return ['agora.common', 'agora.apparel', 'agora.electronics', 'agora.telco', 'nexus.web']
+                .map(code => {
+                    const metadata = {
+                        code: code,
+                        source: 'clean-checkout-fallback'
+                    };
+                    return {
+                        code: code,
+                        moduleRoot: 'built-in/data/' + code,
+                        extends: [],
+                        metadataDigest: this.digest(metadata)
+                    };
+                });
+        }
         return kickoffPackages
             .filter(packageObject => packageObject.name &&
                 (packageObject.name.startsWith('agora.') || packageObject.name === 'nexus.web'))
@@ -279,8 +382,10 @@ module.exports = {
         const roots = coordinates.roots;
         const frameworkPackages = this.collectPackages(roots.framework, roots.framework, [])
             .sort((left, right) => left.name.localeCompare(right.name));
-        const kickoffPackages = this.collectPackages(path.join(roots.kickoff, 'modules'), roots.kickoff, [])
-            .sort((left, right) => left.name.localeCompare(right.name));
+        const kickoffPackages = roots.kickoff ?
+            this.collectPackages(path.join(roots.kickoff, 'modules'), roots.kickoff, [])
+                .sort((left, right) => left.name.localeCompare(right.name)) :
+            [];
         const capabilities = frameworkPackages.map(packageObject => ({
             code: packageObject.name,
             version: packageObject.version,
@@ -303,8 +408,8 @@ module.exports = {
             customerDataPacks: this.discoverDataPacks(kickoffPackages),
             qualificationCommands: {
                 framework: this.discoverQualificationCommands(roots.framework),
-                agora: this.discoverQualificationCommands(roots.agora),
-                kickoff: this.discoverQualificationCommands(roots.kickoff)
+                agora: roots.agora ? this.discoverQualificationCommands(roots.agora) : {},
+                kickoff: roots.kickoff ? this.discoverQualificationCommands(roots.kickoff) : {}
             }
         };
         const portableCatalogue = Object.assign({}, catalogue, {

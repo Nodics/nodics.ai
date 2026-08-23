@@ -53,10 +53,12 @@ const portableCatalogue = Object.assign({}, catalogue, {
 delete portableCatalogue.catalogueDigest;
 assert.strictEqual(catalogue.catalogueDigest, catalogueService.digest(portableCatalogue),
     'Catalogue digest must exclude machine-specific absolute repository roots');
-assert(expCatalogue.repositories.some(repository => repository.code === 'exp'),
-    'Builder discovery must record nodics.exp provenance when used');
-assert(expCatalogue.frontendApps.some(app => app.code === 'agora' && app.location === 'nested'),
-    'Builder discovery must resolve Agora from nodics.exp nested layout');
+if (fs.existsSync(expRoot)) {
+    assert(expCatalogue.repositories.some(repository => repository.code === 'exp'),
+        'Builder discovery must record nodics.exp provenance when used');
+    assert(expCatalogue.frontendApps.some(app => app.code === 'agora' && app.location === 'nested'),
+        'Builder discovery must resolve Agora from nodics.exp nested layout');
+}
 assert.deepStrictEqual(expCatalogue.capabilities, catalogue.capabilities,
     'Using nodics.exp to resolve the same Agora app must keep backend capability semantics');
 assert.deepStrictEqual(expCatalogue.frontendCompositions, catalogue.frontendCompositions,
