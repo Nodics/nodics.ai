@@ -25,6 +25,7 @@ module.exports = {
     expirations: 0,
     rejected: 0,
   },
+  _navigationCompositionState: {},
 
   /** Starts lease expiry and registers shutdown cleanup with the central lifecycle. */
   init: function () {
@@ -92,6 +93,69 @@ module.exports = {
         this.LOG.error("BackOffice audit publication failed", error);
       return false;
     });
+  },
+
+  /** Returns a bounded scoped key for governed Axis navigation composition lifecycle state. */
+  getNavigationCompositionScopeKey: function (request, authData) {
+    let scope = {
+      tenantCode: request && request.tenant ? String(request.tenant) : "default",
+      projectCode: request && request._projectCode ? String(request._projectCode) : "default",
+      enterpriseCode: authData && (authData.enterpriseCode || authData.entCode)
+        ? String(authData.enterpriseCode || authData.entCode)
+        : "default",
+    };
+    return scope.tenantCode + ":" + scope.projectCode + ":" + scope.enterpriseCode;
+  },
+
+  /** Performs a JSON-safe clone for bounded navigation lifecycle state. */
+  cloneNavigationComposition: function (value) {
+    return JSON.parse(JSON.stringify(value || {}));
+  },
+
+  /** Builds the stable checksum used by effective, draft, publish, and rollback navigation lifecycle operations. */
+  computeNavigationCompositionChecksum: function (composition, request, authData) {
+    let crypto = require("crypto");
+    let canonical = JSON.stringify({
+      scopeKey: this.getNavigationCompositionScopeKey(request, authData),
+      groups: (composition.groups || [])
+        .map((group) => ({
+          id: group.id,
+          label: group.label,
+          labelKey: group.labelKey,
+          order: group.order,
+        }))
+        .sort((left, right) => String(left.id).localeCompare(String(right.id))),
+      navigation: (composition.navigation || [])
+        .map((item) => ({
+          moduleName: item.moduleName,
+          id: item.id,
+          label: item.label,
+          labelKey: item.labelKey,
+          route: item.route,
+          parentId: item.parentId,
+          parentModuleName: item.parentModuleName,
+          order: item.order,
+          group: item.group && item.group.id,
+          featureState: item.featureState,
+        }))
+        .sort((left, right) => String(left.moduleName).localeCompare(String(right.moduleName)) || String(left.id).localeCompare(String(right.id))),
+    });
+    return crypto.createHash("sha256").update(canonical).digest("hex");
+  },
+
+  /** Returns or initializes scoped navigation composition lifecycle state. */
+  getNavigationCompositionState: function (request) {
+    let authData = request && request.authData;
+    let scopeKey = this.getNavigationCompositionScopeKey(request, authData);
+    this._navigationCompositionState[scopeKey] = this._navigationCompositionState[scopeKey] || {
+      scopeKey: scopeKey,
+      version: 0,
+      draft: undefined,
+      published: undefined,
+      history: [],
+      updatedAt: new Date().toISOString(),
+    };
+    return this._navigationCompositionState[scopeKey];
   },
 
   /** Validates required identity fields and an approved endpoint scheme. */
@@ -594,7 +658,6 @@ module.exports = {
 
   /** Produces the current effective Axis navigation composition from module defaults plus governed fallback metadata. */
   buildEffectiveNavigationComposition: function (catalogue, availability, authData, request) {
-    let crypto = require("crypto");
     let permissions = (authData && authData.permissions) || [];
     let warnings = [];
     let routeOwners = {};
@@ -696,49 +759,82 @@ module.exports = {
         },
       };
     });
-    let canonical = JSON.stringify({
-      scope: {
-        projectCode: request && request._projectCode,
-        tenantCode: request && request.tenant,
-      },
-      groups: Object.values(groups).sort((left, right) => left.order - right.order || left.id.localeCompare(right.id)),
-      navigation: items.map((item) => ({
-        id: item.id,
-        moduleName: item.moduleName,
-        route: item.route,
-        order: item.order,
-        parentId: item.parentId,
-        group: item.group && item.group.id,
-        featureState: item.featureState,
-      })).sort((left, right) => left.moduleName.localeCompare(right.moduleName) || left.id.localeCompare(right.id)),
-    });
+    let state = this.getNavigationCompositionState(request);
+    let published = state.published && state.published.composition
+      ? this.cloneNavigationComposition(state.published.composition)
+      : undefined;
+    if (published) {
+      items = (published.navigation || []).map((item, index) => Object.assign({}, item, {
+        order: Number.isInteger(item.order) ? item.order : index,
+        sourceTrace: Object.assign({
+          sourceType: "governedOverride",
+          ownerModule: item.moduleName || "backoffice",
+          stableIdentity: String(item.moduleName || "backoffice") + ":" + String(item.id || ""),
+          overrideApplied: true,
+          editable: true,
+          lifecycleState: "PUBLISHED",
+        }, item.sourceTrace || {}, {
+          sourceType: "governedOverride",
+          overrideApplied: true,
+          editable: true,
+          lifecycleState: "PUBLISHED",
+        }),
+        routeOwner: item.routeOwner || {
+          ownerType: item.workbenchTarget ? "WORKBENCH" : String(item.route || "").indexOf("/docs") === 0 ? "CMS" : "NATIVE_AXIS",
+          ownerModule: item.moduleName || "backoffice",
+        },
+      }));
+      groups = {};
+      (published.groups || []).forEach((group) => {
+        groups[group.id] = Object.assign({}, group, {
+          sourceTrace: Object.assign({
+            sourceType: "governedOverride",
+            ownerModule: "backoffice",
+            overrideApplied: true,
+            editable: true,
+            lifecycleState: "PUBLISHED",
+          }, group.sourceTrace || {}, {
+            sourceType: "governedOverride",
+            overrideApplied: true,
+            editable: true,
+            lifecycleState: "PUBLISHED",
+          }),
+        });
+      });
+    }
+    let checksum = this.computeNavigationCompositionChecksum({
+      groups: Object.values(groups),
+      navigation: items,
+    }, request, authData);
     return {
       contractVersion: 0,
-      version: 0,
-      checksum: crypto.createHash("sha256").update(canonical).digest("hex"),
+      version: published ? state.version : 0,
+      checksum: checksum,
       lifecycleState: "PUBLISHED",
-      source: "MODULE_DEFAULTS",
-      fallbackActive: true,
-      fallbackReason: "Governed override composition persistence is not active; effective navigation is resolved from authorized module defaults.",
+      source: published ? "GOVERNED_COMPOSITION" : "MODULE_DEFAULTS",
+      fallbackActive: !published,
+      fallbackReason: published ? undefined : "No governed composition is published for this scope; effective navigation is resolved from authorized module defaults.",
       scope: {
         projectCode: request && request._projectCode,
         tenantCode: request && request.tenant,
         enterpriseCode: authData && (authData.enterpriseCode || authData.entCode),
       },
       authoring: {
-        mode: "READ_ONLY_FOUNDATION",
-        draftSupported: false,
+        mode: "GOVERNED_RUNTIME_LIFECYCLE",
+        draftSupported: true,
         previewSupported: true,
         exportSupported: true,
         importValidationSupported: true,
         approvalRequired: true,
-        publishSupported: false,
-        rollbackSupported: false,
+        publishSupported: true,
+        rollbackSupported: state.history.length > 0,
         rbacBoundary: "BACKOFFICE_PERMISSION_GATED",
         localizationSupported: "LABEL_KEY_FOUNDATION",
-        persistenceSupported: false,
+        persistenceSupported: "RUNTIME_SCOPED_FOUNDATION",
         directBrowserEditsAllowed: false,
-        reason: "Navigation authoring is exposed as safe preview/export/import-validation only until durable draft persistence, checker approval, and rollback are active.",
+        reason: "Navigation authoring supports governed draft, approval, publish-to-effective, and rollback in the BackOffice registry lifecycle. Durable database persistence can replace the runtime state without changing the API contract.",
+        draftState: state.draft && state.draft.lifecycleState,
+        publishedAt: state.published && state.published.publishedAt,
       },
       groups: Object.values(groups).sort((left, right) => left.order - right.order || left.id.localeCompare(right.id)),
       navigation: items,
@@ -1122,15 +1218,32 @@ module.exports = {
   /** Returns safe authoring lifecycle metadata for Axis without enabling direct browser edits. */
   navigationCompositionAuthoringStatus: async function (request) {
     let effective = await this.effectiveNavigationComposition(request);
+    let state = this.getNavigationCompositionState(request);
     return {
       code: "SUC_BOF_00016",
       data: Object.assign({}, effective.data.authoring || {}, {
         lifecycle: ["DRAFT", "SUBMITTED", "APPROVED", "PUBLISHED", "SUPERSEDED", "REJECTED", "ROLLED_BACK"],
-        availableOperations: ["effective", "preview", "export", "importValidate"],
-        blockedOperations: ["createDraft", "updateDraft", "submit", "approve", "publish", "rollback"],
-        blockingReason: "Durable scoped composition persistence, creator/checker approval, audit query, and rollback execution are not active yet.",
+        availableOperations: ["effective", "preview", "export", "importValidate", "createDraft", "submit", "approve", "publish", "rollback"],
+        blockedOperations: [],
+        blockingReason: undefined,
         scope: effective.data.scope,
         checksum: effective.data.checksum,
+        version: state.version,
+        draft: state.draft ? {
+          draftId: state.draft.draftId,
+          lifecycleState: state.draft.lifecycleState,
+          checksum: state.draft.checksum,
+          validation: state.draft.validation,
+          createdAt: state.draft.createdAt,
+          submittedAt: state.draft.submittedAt,
+          approvedAt: state.draft.approvedAt,
+        } : undefined,
+        rollbackCandidates: state.history.slice(-5).reverse().map((entry) => ({
+          version: entry.version,
+          checksum: entry.checksum,
+          publishedAt: entry.publishedAt,
+          lifecycleState: entry.lifecycleState,
+        })),
       }),
     };
   },
@@ -1182,6 +1295,113 @@ module.exports = {
       issues: issues,
       checkedAt: new Date().toISOString(),
     };
+  },
+
+  /** Creates or replaces a scoped governed navigation composition draft after safe validation. */
+  createNavigationCompositionDraft: async function (request) {
+    let effective = await this.effectiveNavigationComposition(request);
+    let body = request && (request.body || request.data || request.payload) || {};
+    let candidate = body.candidate || body.composition || body;
+    let validation = this.validateNavigationCompositionCandidate(candidate, effective.data);
+    if (!validation.valid)
+      throw new CLASSES.NodicsError("ERR_BOF_00000", "Navigation composition draft is invalid");
+    let state = this.getNavigationCompositionState(request);
+    let composition = {
+      groups: candidate.groups || effective.data.groups || [],
+      navigation: candidate.navigation || effective.data.navigation || [],
+    };
+    let checksum = this.computeNavigationCompositionChecksum(composition, request, request && request.authData);
+    state.version += 1;
+    state.draft = {
+      draftId: "nav-draft-" + state.version,
+      version: state.version,
+      lifecycleState: "DRAFT",
+      checksum: checksum,
+      composition: this.cloneNavigationComposition(composition),
+      validation: validation,
+      createdAt: new Date().toISOString(),
+      createdBy: request && request.authData && request.authData.userName,
+      reason: body.reason && String(body.reason).slice(0, 512),
+    };
+    state.updatedAt = state.draft.createdAt;
+    await this.audit({
+      eventType: "backoffice.navigationComposition.draft",
+      outcome: "created",
+      checksum: checksum,
+      issueCount: validation.issues.length,
+      version: state.version,
+    });
+    return { code: "SUC_BOF_00023", data: state.draft };
+  },
+
+  /** Moves the current scoped navigation draft into checker review. */
+  submitNavigationCompositionDraft: async function (request) {
+    let state = this.getNavigationCompositionState(request);
+    if (!state.draft || !["DRAFT", "REJECTED"].includes(state.draft.lifecycleState))
+      throw new CLASSES.NodicsError("ERR_BOF_00000", "Navigation composition draft is not submittable");
+    state.draft.lifecycleState = "SUBMITTED";
+    state.draft.submittedAt = new Date().toISOString();
+    state.draft.submittedBy = request && request.authData && request.authData.userName;
+    state.updatedAt = state.draft.submittedAt;
+    await this.audit({ eventType: "backoffice.navigationComposition.submit", outcome: "submitted", checksum: state.draft.checksum, version: state.draft.version });
+    return { code: "SUC_BOF_00024", data: state.draft };
+  },
+
+  /** Approves a submitted navigation draft without making it effective until publish is called. */
+  approveNavigationCompositionDraft: async function (request) {
+    let state = this.getNavigationCompositionState(request);
+    if (!state.draft || state.draft.lifecycleState !== "SUBMITTED")
+      throw new CLASSES.NodicsError("ERR_BOF_00000", "Navigation composition draft is not approvable");
+    state.draft.lifecycleState = "APPROVED";
+    state.draft.approvedAt = new Date().toISOString();
+    state.draft.approvedBy = request && request.authData && request.authData.userName;
+    state.updatedAt = state.draft.approvedAt;
+    await this.audit({ eventType: "backoffice.navigationComposition.approve", outcome: "approved", checksum: state.draft.checksum, version: state.draft.version });
+    return { code: "SUC_BOF_00025", data: state.draft };
+  },
+
+  /** Publishes the approved navigation draft to the effective composition used by Axis bootstrap. */
+  publishNavigationCompositionDraft: async function (request) {
+    let state = this.getNavigationCompositionState(request);
+    if (!state.draft || state.draft.lifecycleState !== "APPROVED")
+      throw new CLASSES.NodicsError("ERR_BOF_00000", "Navigation composition draft is not publishable");
+    if (state.published) {
+      state.published.lifecycleState = "SUPERSEDED";
+      state.history.push(this.cloneNavigationComposition(state.published));
+      state.history = state.history.slice(-20);
+    }
+    state.published = Object.assign({}, this.cloneNavigationComposition(state.draft), {
+      lifecycleState: "PUBLISHED",
+      publishedAt: new Date().toISOString(),
+      publishedBy: request && request.authData && request.authData.userName,
+    });
+    state.draft = undefined;
+    state.updatedAt = state.published.publishedAt;
+    await this.audit({ eventType: "backoffice.navigationComposition.publish", outcome: "published", checksum: state.published.checksum, version: state.published.version });
+    return { code: "SUC_BOF_00026", data: state.published };
+  },
+
+  /** Rolls back the effective navigation composition to the latest superseded published version. */
+  rollbackNavigationComposition: async function (request) {
+    let state = this.getNavigationCompositionState(request);
+    let rollbackTarget = state.history.pop();
+    if (!rollbackTarget)
+      throw new CLASSES.NodicsError("ERR_BOF_00000", "Navigation composition rollback candidate is unavailable");
+    if (state.published) {
+      let current = this.cloneNavigationComposition(state.published);
+      current.lifecycleState = "ROLLED_BACK";
+      current.rolledBackAt = new Date().toISOString();
+      current.rolledBackBy = request && request.authData && request.authData.userName;
+      state.history.push(current);
+    }
+    state.published = Object.assign({}, this.cloneNavigationComposition(rollbackTarget), {
+      lifecycleState: "PUBLISHED",
+      rolledBackAt: new Date().toISOString(),
+      rolledBackBy: request && request.authData && request.authData.userName,
+    });
+    state.updatedAt = state.published.rolledBackAt;
+    await this.audit({ eventType: "backoffice.navigationComposition.rollback", outcome: "rolledBack", checksum: state.published.checksum, version: state.published.version });
+    return { code: "SUC_BOF_00027", data: state.published };
   },
 
   /** Performs a dry-run navigation composition preview without persistence or publication side effects. */

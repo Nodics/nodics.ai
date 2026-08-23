@@ -61,6 +61,16 @@ module.exports = {
     exportNavigationComposition: function (request, callback) { return this.execute('exportNavigationComposition', request, callback); },
     /** Handles import payload validation without persistence. */
     validateNavigationCompositionImport: function (request, callback) { return this.execute('validateNavigationCompositionImport', request, callback); },
+    /** Handles governed navigation composition draft creation. */
+    createNavigationCompositionDraft: function (request, callback) { return this.execute('createNavigationCompositionDraft', request, callback); },
+    /** Handles governed navigation composition draft submission. */
+    submitNavigationCompositionDraft: function (request, callback) { return this.execute('submitNavigationCompositionDraft', request, callback); },
+    /** Handles governed navigation composition draft approval. */
+    approveNavigationCompositionDraft: function (request, callback) { return this.execute('approveNavigationCompositionDraft', request, callback); },
+    /** Handles governed navigation composition draft publication. */
+    publishNavigationCompositionDraft: function (request, callback) { return this.execute('publishNavigationCompositionDraft', request, callback); },
+    /** Handles governed navigation composition rollback. */
+    rollbackNavigationComposition: function (request, callback) { return this.execute('rollbackNavigationComposition', request, callback); },
     /** Handles secured registry diagnostic requests. */
     diagnostics: function (request, callback) { return this.execute('diagnostics', request, callback); },
     /** Handles bounded administrative registry search. */

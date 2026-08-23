@@ -55,6 +55,16 @@ module.exports = {
     exportNavigationComposition: request => SERVICE.DefaultBackofficeRegistryService.exportNavigationComposition(request),
     /** Delegates import payload validation without persistence. */
     validateNavigationCompositionImport: request => SERVICE.DefaultBackofficeRegistryService.validateNavigationCompositionImport(request),
+    /** Delegates governed navigation composition draft creation. */
+    createNavigationCompositionDraft: request => SERVICE.DefaultBackofficeRegistryService.createNavigationCompositionDraft(request),
+    /** Delegates governed navigation composition draft submission. */
+    submitNavigationCompositionDraft: request => SERVICE.DefaultBackofficeRegistryService.submitNavigationCompositionDraft(request),
+    /** Delegates governed navigation composition draft approval. */
+    approveNavigationCompositionDraft: request => SERVICE.DefaultBackofficeRegistryService.approveNavigationCompositionDraft(request),
+    /** Delegates governed navigation composition draft publication. */
+    publishNavigationCompositionDraft: request => SERVICE.DefaultBackofficeRegistryService.publishNavigationCompositionDraft(request),
+    /** Delegates governed navigation composition rollback. */
+    rollbackNavigationComposition: request => SERVICE.DefaultBackofficeRegistryService.rollbackNavigationComposition(request),
     /** Delegates secured registry diagnostics. */
     diagnostics: request => SERVICE.DefaultBackofficeRegistryService.diagnostics(request),
     /** Delegates bounded administrative registry search. */

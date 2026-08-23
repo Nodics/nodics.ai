@@ -257,6 +257,64 @@ module.exports = {
                     schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: { type: 'object' } } })
                 } } } }
             },
+            createNavigationCompositionDraft: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'backoffice.bootstrap.view',
+                authTokenTypes: ['access'],
+                apiExposure: 'serviceRegistry',
+                key: '/navigation/composition/draft',
+                method: 'POST',
+                controller: 'DefaultBackofficeRegistryController',
+                operation: 'createNavigationCompositionDraft',
+                responses: { '200': { description: 'Create or replace a governed Axis navigation composition draft after validation', content: { 'application/json': {
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: { type: 'object' } } })
+                } } } }
+            },
+            submitNavigationCompositionDraft: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'backoffice.bootstrap.view',
+                authTokenTypes: ['access'],
+                apiExposure: 'serviceRegistry',
+                key: '/navigation/composition/draft/submit',
+                method: 'POST',
+                controller: 'DefaultBackofficeRegistryController',
+                operation: 'submitNavigationCompositionDraft'
+            },
+            approveNavigationCompositionDraft: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'backoffice.bootstrap.view',
+                authTokenTypes: ['access'],
+                apiExposure: 'serviceRegistry',
+                key: '/navigation/composition/draft/approve',
+                method: 'POST',
+                controller: 'DefaultBackofficeRegistryController',
+                operation: 'approveNavigationCompositionDraft'
+            },
+            publishNavigationCompositionDraft: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'backoffice.bootstrap.view',
+                authTokenTypes: ['access'],
+                apiExposure: 'serviceRegistry',
+                key: '/navigation/composition/draft/publish',
+                method: 'POST',
+                controller: 'DefaultBackofficeRegistryController',
+                operation: 'publishNavigationCompositionDraft'
+            },
+            rollbackNavigationComposition: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'backoffice.bootstrap.view',
+                authTokenTypes: ['access'],
+                apiExposure: 'serviceRegistry',
+                key: '/navigation/composition/rollback',
+                method: 'POST',
+                controller: 'DefaultBackofficeRegistryController',
+                operation: 'rollbackNavigationComposition'
+            },
             diagnostics: {
                 secured: true,
                 accessGroups: ['userGroup'],
