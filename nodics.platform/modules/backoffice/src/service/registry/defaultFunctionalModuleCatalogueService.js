@@ -541,12 +541,13 @@ module.exports = {
     },
     /** Executes required activation data packages through the existing nImport data-release executor. */
     executeRequiredActivationData: async function (record, context, request) {
+        let packages = this.getActivationDataPackages(record.functionalModule)
+            .filter(pack => pack.required === true && pack.trigger === 'ACTIVATION');
+        if (!packages.length) return true;
         let releaseService = SERVICE.DefaultDataReleaseService;
         if (!releaseService || typeof releaseService.preflight !== 'function' || typeof releaseService.execute !== 'function') {
             throw new CLASSES.NodicsError('ERR_BOF_00000', 'nImport data-release executor is unavailable for required activation data');
         }
-        let packages = this.getActivationDataPackages(record.functionalModule)
-            .filter(pack => pack.required === true && pack.trigger === 'ACTIVATION');
         let grouped = packages.reduce((result, pack) => {
             result[pack.dataType] = result[pack.dataType] || [];
             result[pack.dataType].push(pack);

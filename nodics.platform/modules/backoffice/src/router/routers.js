@@ -455,7 +455,8 @@ module.exports = {
                 requestBody: { required: true, content: { 'application/json': { schema: {
                     type: 'object', additionalProperties: false, properties: {
                         reason: { type: 'string', maxLength: 1000 },
-                        correlationId: { type: 'string', maxLength: 256 }
+                        correlationId: { type: 'string', maxLength: 256 },
+                        forceRefresh: { type: 'boolean' }
                     }
                 } } } }
             },
