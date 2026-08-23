@@ -29,6 +29,12 @@ module.exports = {
     deploy: function (request, callback) { return this.invoke('deploy', request, callback); },
     /** Returns target-local Online release status. */
     getStatus: function (request, callback) { return this.invoke('getStatus', request, callback); },
+    /** Verifies target-local Online pointer state and records verification evidence. */
+    verifyOnline: function (request, callback) { return this.invoke('verifyOnline', request, callback); },
+    /** Detects same-scope Online collisions before activation. */
+    detectCollisions: function (request, callback) { return this.invoke('detectCollisions', request, callback); },
+    /** Builds a redacted publication support bundle. */
+    supportBundle: function (request, callback) { return this.invoke('supportBundle', request, callback); },
     /** Diagnoses target evidence and repairs only evidence gaps when pointers already agree. */
     reconcile: function (request, callback) { return this.invoke('reconcile', request, callback); },
     /** Runs reference-safe published-media retention through CMS and Media authorities. */

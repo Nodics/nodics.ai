@@ -48,6 +48,12 @@ module.exports = {
     deploy: function (payload, request) { return this.send('deploy', payload, request); },
     /** Reads target Online status for one release scope. */
     getStatus: function (payload, request) { return this.send('status', payload, request); },
+    /** Records target Online verification evidence for one release. */
+    verifyOnline: function (payload, request) { return this.send('verify-online', payload, request); },
+    /** Detects same-scope Online collisions before activation. */
+    detectCollisions: function (payload, request) { return this.send('collisions', payload, request); },
+    /** Builds a redacted target support bundle for one release. */
+    supportBundle: function (payload, request) { return this.send('support-bundle', payload, request); },
     /** Diagnoses and optionally repairs target-local evidence without changing delivery pointers. */
     reconcile: function (payload, request) { return this.send('reconcile', payload, request); },
     /** Rolls the Online target back to a previously deployed release. */

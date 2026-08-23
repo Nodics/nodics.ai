@@ -154,6 +154,89 @@ module.exports = {
         let pointer = await this.manifests().getPointer(input.scope || {}, request);
         return pointer && { version: pointer.manifestCode, previousOnlineVersion: pointer.previousManifestCode };
     },
+    /** Verifies that every delivery scope for a manifest is currently Online and records verification evidence. */
+    verifyOnline: async function (request) {
+        this.assertOnlineRuntime();
+        let input = request.cmsPublicationTarget || request;
+        if (!input.manifestCode) throw new CLASSES.NodicsError('CMS_PUBLICATION_MANIFEST_MISSING', 'CMS Online verification manifest is required');
+        let manifest = await this.manifests().getManifest(input.manifestCode, request);
+        if (!manifest) return { status: 'MANIFEST_MISSING', manifestCode: input.manifestCode, verified: false };
+        this.applyCorrelation(request, input, manifest);
+        let scopes = this.manifests().deliveryScopes(manifest);
+        let drift = [];
+        for (let scope of scopes) {
+            let pointer = await this.manifests().getStoredPointer(scope, request);
+            if (!pointer || pointer.active === false || pointer.manifestCode !== manifest.code) {
+                drift.push({ site: scope.site, path: scope.path, locale: scope.locale, channel: scope.channel,
+                    accessMode: scope.accessMode, state: !pointer ? 'MISSING' : pointer.active === false ? 'INACTIVE' : 'DIFFERENT_MANIFEST',
+                    manifestCode: pointer && pointer.manifestCode });
+            }
+        }
+        if (drift.length) return { status: 'POINTER_DRIFT', manifestCode: manifest.code, verified: false,
+            drift: drift, routeCount: scopes.length };
+        let committed = await this.transaction(request, async transactionRequest => {
+            let receipt = await this.recordReceipt('VERIFY', manifest, { version: manifest.code, routeCount: scopes.length }, transactionRequest);
+            return { receipt: receipt };
+        });
+        return { status: 'VERIFIED', manifestCode: manifest.code, verified: true,
+            receiptCode: committed.receipt && committed.receipt.code, routeCount: scopes.length,
+            correlationId: request.correlationId || request.requestId };
+    },
+    /** Detects active Online scope collisions before activation without changing pointers. */
+    detectCollisions: async function (request) {
+        this.assertOnlineRuntime();
+        let input = request.cmsPublicationTarget || request;
+        let manifest = input.manifest || (input.manifestCode && await this.manifests().getManifest(input.manifestCode, request));
+        if (!manifest) throw new CLASSES.NodicsError('CMS_PUBLICATION_MANIFEST_MISSING', 'CMS collision detection manifest is required');
+        this.applyCorrelation(request, input, manifest);
+        let scopes = this.manifests().deliveryScopes(manifest);
+        let collisions = [];
+        for (let scope of scopes) {
+            let pointer = await this.manifests().getStoredPointer(scope, request);
+            if (pointer && pointer.active !== false && pointer.manifestCode && pointer.manifestCode !== manifest.code) {
+                collisions.push({ site: scope.site, path: scope.path, locale: scope.locale, channel: scope.channel,
+                    accessMode: scope.accessMode, activeManifestCode: pointer.manifestCode,
+                    previousManifestCode: pointer.previousManifestCode, pointerCode: pointer.code });
+            }
+        }
+        return { status: collisions.length ? 'COLLISION_DETECTED' : 'CLEAR',
+            manifestCode: manifest.code, routeCount: scopes.length, collisionCount: collisions.length,
+            collisions: collisions };
+    },
+    /** Builds a redacted target-local support bundle for one publication manifest. */
+    supportBundle: async function (request) {
+        this.assertOnlineRuntime();
+        let input = request.cmsPublicationTarget || request;
+        if (!input.manifestCode) throw new CLASSES.NodicsError('CMS_PUBLICATION_MANIFEST_MISSING', 'CMS support bundle manifest is required');
+        let manifest = await this.manifests().getManifest(input.manifestCode, request);
+        if (!manifest) return { status: 'MANIFEST_MISSING', manifestCode: input.manifestCode };
+        this.applyCorrelation(request, input, manifest);
+        let status = await this.getStatus(Object.assign({}, request, { cmsPublicationTarget: { manifestCode: manifest.code } }));
+        let scopes = this.manifests().deliveryScopes(manifest);
+        let drift = [];
+        for (let scope of scopes) {
+            let pointer = await this.manifests().getStoredPointer(scope, request);
+            if (!pointer || pointer.active === false || pointer.manifestCode !== manifest.code) {
+                drift.push({ site: scope.site, path: scope.path, locale: scope.locale, channel: scope.channel,
+                    accessMode: scope.accessMode, state: !pointer ? 'MISSING' : pointer.active === false ? 'INACTIVE' : 'DIFFERENT_MANIFEST',
+                    manifestCode: pointer && pointer.manifestCode });
+            }
+        }
+        let verification = drift.length ? { status: 'POINTER_DRIFT', manifestCode: manifest.code, verified: false,
+            drift: drift, routeCount: scopes.length } : { status: 'VERIFIED', manifestCode: manifest.code, verified: true,
+            routeCount: scopes.length };
+        let collisions = await this.detectCollisions(Object.assign({}, request, { cmsPublicationTarget: { manifestCode: manifest.code } }));
+        return { status: 'READY', bundleType: 'CMS_PUBLICATION_SUPPORT', redacted: true,
+            generatedAt: new Date().toISOString(), publicationCode: manifest.publicationCode,
+            manifest: { code: manifest.code, rootType: manifest.rootType, rootCode: manifest.rootCode,
+                sourceVersion: manifest.sourceVersion, contentHash: manifest.contentHash,
+                correlationId: manifest.correlationId },
+            scope: scopes.map(scope => ({ site: scope.site, path: scope.path,
+                locale: scope.locale, channel: scope.channel, accessMode: scope.accessMode })),
+            diagnostics: { status: status, verification: verification, collisions: collisions },
+            redaction: { secrets: 'excluded', providerPaths: 'excluded', storageKeys: 'excluded',
+                tokens: 'excluded', rawStackTraces: 'excluded' } };
+    },
     /** Repairs missing receipt/outbox evidence only when every immutable manifest scope already owns the active Online pointer. */
     reconcile: async function (request) {
         this.assertOnlineRuntime();

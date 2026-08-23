@@ -49,7 +49,7 @@
             "removalPolicy": "RETAIN",
             "installer": "PROCESS_DEFINITION",
             "files": {
-                "init/data/process/cmsPublicationApprovalDefinitionData.js": "d5c1ef362d90b1526655d9d81079d05192e7df489705d721b1bb413e368d0830"
+                "init/data/process/cmsPublicationApprovalDefinitionData.js": "71967a2082250f146edab6af720f5fe36685a05c37348f19b0ed62abbea824bc"
             }
         },
         "sample": {

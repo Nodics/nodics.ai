@@ -43,7 +43,8 @@ assert.strictEqual(properties.bodyParserHandler.cmsPublicationBodyParserHandler,
     'DefaultCmsPublicationBodyParserHandlerService');
 assert.strictEqual(routes.cmsPublicationTarget.deployPublication.bodyParserHandler,
     'cmsPublicationBodyParserHandler');
-['deployPublication', 'getPublicationStatus', 'reconcilePublicationEvidence', 'rollbackPublication'].forEach(operation => {
+['deployPublication', 'getPublicationStatus', 'verifyPublicationOnline', 'detectPublicationCollisions',
+    'getPublicationSupportBundle', 'reconcilePublicationEvidence', 'rollbackPublication'].forEach(operation => {
     assert.strictEqual(routes.cmsPublicationTarget[operation].secured, true);
     assert.deepStrictEqual(routes.cmsPublicationTarget[operation].authTokenTypes, ['service']);
     assert.strictEqual(routes.cmsPublicationTarget[operation].permissionConfig, 'authSecurity.internalToken.routePermission');
@@ -161,6 +162,9 @@ const onTarget = async operation => {
 SERVICE.TestCmsTargetTransport = {
     deploy: (payload, targetRequest) => onTarget(() => target.deploy(Object.assign({}, targetRequest, { cmsPublicationTarget: payload }))),
     getStatus: (payload, targetRequest) => onTarget(() => target.getStatus(Object.assign({}, targetRequest, { cmsPublicationTarget: payload }))),
+    verifyOnline: (payload, targetRequest) => onTarget(() => target.verifyOnline(Object.assign({}, targetRequest, { cmsPublicationTarget: payload }))),
+    detectCollisions: (payload, targetRequest) => onTarget(() => target.detectCollisions(Object.assign({}, targetRequest, { cmsPublicationTarget: payload }))),
+    supportBundle: (payload, targetRequest) => onTarget(() => target.supportBundle(Object.assign({}, targetRequest, { cmsPublicationTarget: payload }))),
     reconcile: (payload, targetRequest) => onTarget(() => target.reconcile(Object.assign({}, targetRequest, { cmsPublicationTarget: payload }))),
     rollback: (payload, targetRequest) => onTarget(() => target.rollback(Object.assign({}, targetRequest, { cmsPublicationTarget: payload }))),
     withdraw: (payload, targetRequest) => onTarget(() => target.withdraw(Object.assign({}, targetRequest, { cmsPublicationTarget: payload })))
@@ -262,6 +266,16 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     assert(transactionContexts.length >= 2, 'Online pointer and receipt writes must use a governed transaction context');
     assert.strictEqual(transactionContexts.at(-1), transactionContexts.at(-2),
         'Online pointer and receipt writes must share one transaction context');
+    let verification = await SERVICE.TestCmsTargetTransport.verifyOnline({ manifestCode: manifest.code }, request);
+    assert.strictEqual(verification.status, 'VERIFIED');
+    assert(data.receipts.some(receipt => receipt.operation === 'VERIFY' && receipt.manifestCode === manifest.code),
+        'Online verification must attach a receipt to the deployed publication evidence');
+    let supportBundle = await SERVICE.TestCmsTargetTransport.supportBundle({ manifestCode: manifest.code }, request);
+    assert.strictEqual(supportBundle.status, 'READY');
+    assert.strictEqual(supportBundle.redacted, true);
+    assert.strictEqual(supportBundle.diagnostics.verification.status, 'VERIFIED');
+    assert.strictEqual(supportBundle.redaction.tokens, 'excluded');
+    assert.strictEqual((await SERVICE.TestCmsTargetTransport.detectCollisions({ manifestCode: manifest.code }, request)).status, 'CLEAR');
     assert.strictEqual((await provider.getOnlineVersion(publication, request)).version, manifest.code);
     assert.strictEqual((await provider.activate(publication, request)).version, manifest.code, 'activation replay must be idempotent');
 

@@ -150,6 +150,21 @@ module.exports = {
             apiExposure: 'moduleInternal', key: '/publication/target/status', method: 'POST',
             controller: 'DefaultCmsPublicationTargetController', operation: 'getStatus'
         },
+        verifyPublicationOnline: {
+            secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'], permissionConfig: 'authSecurity.internalToken.routePermission',
+            apiExposure: 'moduleInternal', key: '/publication/target/verify-online', method: 'POST',
+            controller: 'DefaultCmsPublicationTargetController', operation: 'verifyOnline'
+        },
+        detectPublicationCollisions: {
+            secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'], permissionConfig: 'authSecurity.internalToken.routePermission',
+            apiExposure: 'moduleInternal', key: '/publication/target/collisions', method: 'POST',
+            controller: 'DefaultCmsPublicationTargetController', operation: 'detectCollisions'
+        },
+        getPublicationSupportBundle: {
+            secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'], permissionConfig: 'authSecurity.internalToken.routePermission',
+            apiExposure: 'moduleInternal', key: '/publication/target/support-bundle', method: 'POST',
+            controller: 'DefaultCmsPublicationTargetController', operation: 'supportBundle'
+        },
         reconcilePublicationEvidence: {
             secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'], permissionConfig: 'authSecurity.internalToken.routePermission',
             apiExposure: 'moduleInternal', key: '/publication/target/reconcile', method: 'POST',
