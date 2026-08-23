@@ -35,6 +35,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
 
+      - name: Install release gate dependencies
+        run: npm ci
+
       - name: Print governed release gate
         run: npm run release:check
 
