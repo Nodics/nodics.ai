@@ -239,16 +239,16 @@ module.exports = {
                     schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: { type: 'object' } } })
                 } } } }
             },
-            exportNavigationComposition: {
+            getNavigationCompositionSnapshot: {
                 secured: true,
                 accessGroups: ['userGroup'],
                 permission: 'backoffice.bootstrap.view',
                 authTokenTypes: ['access'],
                 apiExposure: 'serviceRegistry',
-                key: '/navigation/composition/export',
+                key: '/navigation/composition/snapshot',
                 method: 'GET',
                 controller: 'DefaultBackofficeRegistryController',
-                operation: 'exportNavigationComposition',
+                operation: 'getNavigationCompositionSnapshot',
                 responses: { '200': { description: 'Export of the current effective navigation composition with checksum and source trace', content: { 'application/json': {
                     schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: { type: 'object' } } })
                 } } } }

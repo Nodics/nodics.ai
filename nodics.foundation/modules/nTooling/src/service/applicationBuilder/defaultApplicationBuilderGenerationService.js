@@ -188,7 +188,7 @@ module.exports = {
     frontendWiring: function (solution) {
         const frontends = solution.topology.frontends || [];
         return {
-            contractVersion: 0,
+            contractVersion: 1,
             orchestration: 'nodics.exp may coordinate workspaces and scripts only; app repositories remain separately owned.',
             generatedApps: {
                 agora: { selected: frontends.includes('AGORA'), repository: 'nodics.agora',
@@ -241,7 +241,7 @@ module.exports = {
         const domain = this.dataPackDomain(dataPack);
         const products = this.dataPackProducts(solution, dataPack);
         const base = {
-            contractVersion: 0,
+            contractVersion: 1,
             projectCode: projectCode,
             dataPack: dataPack,
             domain: domain,
@@ -457,7 +457,7 @@ module.exports = {
         }
         if (relativePath === 'builder-handoff.json') {
             return JSON.stringify({
-                contractVersion: 0,
+                contractVersion: 1,
                 project: {
                     projectCode: projectCode,
                     customerCode: solution.identity.customerCode,
@@ -605,7 +605,7 @@ module.exports = {
         if (relativePath === 'backend/src/starterData.js') {
             return "'use strict';\n\n" +
                 'const composition = ' + JSON.stringify({
-                    contractVersion: 0,
+                    contractVersion: 1,
                     projectCode: projectCode,
                     customerCode: solution.identity.customerCode,
                     displayName: displayName,
@@ -684,7 +684,7 @@ module.exports = {
                 "console.log('Generated backend API depth validated: " + projectCode + "');\n";
         }
         if (relativePath === 'backend/generated/' + projectCode + '-module-graph.json') {
-            return JSON.stringify({ contractVersion: 0, projectCode: projectCode,
+            return JSON.stringify({ contractVersion: 1, projectCode: projectCode,
                 capabilities: plan.backendGraph.nodes, edges: plan.backendGraph.edges,
                 runtimeRoles: solution.topology.backendRuntimes }, null, 2) + '\n';
         }
@@ -697,7 +697,7 @@ module.exports = {
             return JSON.stringify(resolved, null, 2) + '\n';
         }
         if (relativePath === 'storefront/generated/agora-composition.ts') {
-            const content = { contractVersion: 0, projectCode: projectCode,
+            const content = { contractVersion: 1, projectCode: projectCode,
                 composition: solution.experience.composition, routes: solution.experience.routes,
                 rendererKeys: solution.experience.rendererKeys, frontendGraph: plan.frontendGraph };
             return 'const composition = ' + JSON.stringify(content, null, 2) + ' as const;\n\nexport { composition };\nexport default composition;\n';
@@ -758,7 +758,7 @@ module.exports = {
             return "const http = require('http');\n" +
                 "const { page } = require('./pages');\n\n" +
                 'const composition = ' + JSON.stringify({
-                    contractVersion: 0,
+                    contractVersion: 1,
                     projectCode: projectCode,
                     composition: solution.experience.composition,
                     routes: solution.experience.routes,
@@ -944,10 +944,10 @@ module.exports = {
             });
             const generatedAt = options.now || new Date().toISOString();
             const lock = {
-                contractVersion: 0,
+                contractVersion: 1,
                 solutionDigest: plan.solutionDigest,
                 planDigest: plan.approval.approvedPlanDigest,
-                builder: { engineVersion: '0.1.0', contractVersion: 0, mode: solution.environment.mode },
+                builder: { engineVersion: '0.1.0', contractVersion: 1, mode: solution.environment.mode },
                 packages: plan.resolvedCapabilities.map(item => ({ code: item.code, version: item.version,
                     digest: item.descriptorDigest, source: solution.environment.mode })),
                 templates: [{ code: 'builder.minimal', version: '0.0.0',

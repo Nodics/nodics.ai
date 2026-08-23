@@ -1,8 +1,8 @@
 {
-  "contractVersion": 0,
+  "contractVersion": 1,
   "solutionDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   "planDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-  "builder": { "engineVersion": "0.1.0", "contractVersion": 0, "mode": "WORKSPACE" },
+  "builder": { "engineVersion": "0.1.0", "contractVersion": 1, "mode": "WORKSPACE" },
   "packages": [
     { "code": "nodics.commerce", "version": "0.0.0", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "source": "WORKSPACE" },
     { "code": "apparel", "version": "0.0.0", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "source": "WORKSPACE" }

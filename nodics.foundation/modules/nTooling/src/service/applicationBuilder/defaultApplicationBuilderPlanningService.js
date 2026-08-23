@@ -287,7 +287,7 @@ module.exports = {
         const planSeed = catalogueService.digest({ solutionDigest: solutionDigest, catalogueDigest: catalogue.catalogueDigest });
         const explicit = new Set(solution.capabilities.selected);
         const plan = {
-            contractVersion: 0,
+            contractVersion: 1,
             planId: 'builder-plan-' + planSeed.slice('sha256:'.length, 'sha256:'.length + 32),
             createdAt: createdAt,
             expiresAt: expiresAt,

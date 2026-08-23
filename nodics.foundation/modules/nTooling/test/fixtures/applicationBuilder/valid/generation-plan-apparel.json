@@ -1,5 +1,5 @@
 {
-  "contractVersion": 0,
+  "contractVersion": 1,
   "planId": "builder-plan-0123456789abcdef",
   "createdAt": "2026-08-16T06:00:00.000Z",
   "expiresAt": "2026-08-17T06:00:00.000Z",

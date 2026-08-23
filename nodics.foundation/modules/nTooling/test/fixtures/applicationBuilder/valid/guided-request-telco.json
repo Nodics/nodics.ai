@@ -1,5 +1,5 @@
 {
-  "contractVersion": 0,
+  "contractVersion": 1,
   "project": {
     "projectCode": "acmeMobile",
     "customerCode": "acme",

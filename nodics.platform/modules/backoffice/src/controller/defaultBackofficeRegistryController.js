@@ -61,6 +61,8 @@ module.exports = {
     previewNavigationComposition: function (request, callback) { return this.execute('previewNavigationComposition', request, callback); },
     /** Handles effective navigation composition export requests. */
     exportNavigationComposition: function (request, callback) { return this.execute('exportNavigationComposition', request, callback); },
+    /** Handles effective navigation composition snapshot requests. */
+    getNavigationCompositionSnapshot: function (request, callback) { return this.execute('getNavigationCompositionSnapshot', request, callback); },
     /** Handles import payload validation without persistence. */
     validateNavigationCompositionImport: function (request, callback) { return this.execute('validateNavigationCompositionImport', request, callback); },
     /** Handles governed navigation composition draft creation. */

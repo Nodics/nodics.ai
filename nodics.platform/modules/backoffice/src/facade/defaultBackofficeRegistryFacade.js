@@ -55,6 +55,8 @@ module.exports = {
     previewNavigationComposition: request => SERVICE.DefaultBackofficeRegistryService.previewNavigationComposition(request),
     /** Delegates effective navigation composition export. */
     exportNavigationComposition: request => SERVICE.DefaultBackofficeRegistryService.exportNavigationComposition(request),
+    /** Delegates effective navigation composition snapshot. */
+    getNavigationCompositionSnapshot: request => SERVICE.DefaultBackofficeRegistryService.getNavigationCompositionSnapshot(request),
     /** Delegates import payload validation without persistence. */
     validateNavigationCompositionImport: request => SERVICE.DefaultBackofficeRegistryService.validateNavigationCompositionImport(request),
     /** Delegates governed navigation composition draft creation. */

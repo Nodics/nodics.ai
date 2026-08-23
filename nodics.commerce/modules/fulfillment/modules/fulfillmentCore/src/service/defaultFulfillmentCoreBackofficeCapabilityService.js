@@ -12,11 +12,14 @@
 /* Nodics source-available software. See root LICENSE. */
 /** @module fulfillmentCore/service/DefaultFulfillmentCoreBackofficeCapabilityService @description Publishes Fulfillment-owned BackOffice operations, shipment, and return-receipt workspaces. @layer service @owner fulfillmentCore */
 module.exports = {
+    /** Registers Fulfillment Core as the BackOffice capability provider for fulfillment and shipping workspaces. */
     init: function () {
         SERVICE.DefaultModuleRegistrationAgentService.registerBackofficeCapabilityProvider('fulfillmentCore', this);
         return Promise.resolve(true);
     },
+    /** Completes the provider lifecycle after registration without additional startup work. */
     postInit: function () { return Promise.resolve(true); },
+    /** Returns the Fulfillment BackOffice capability descriptor, navigation entries, and presentations. */
     getCapability: function () {
         let d = SERVICE.DefaultBackofficeCapabilityDefinitionService;
         let consignmentColumns = { defaultColumns: ['code', 'orderCode', 'status', 'currency', 'totalAmount', 'revision', 'occurredAt'], hiddenFields: ['ownerId', 'idempotencyKey', 'correlationId', 'evidence'] };

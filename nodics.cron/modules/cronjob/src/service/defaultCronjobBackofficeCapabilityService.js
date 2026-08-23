@@ -31,7 +31,7 @@ const capability = {
     "navigation": [
         {
             "id": "cronjob",
-            "label": "Cron Job Management",
+            "label": "Cron jobs",
             "route": "/cron",
             "icon": "cronjob",
             "order": 1530,

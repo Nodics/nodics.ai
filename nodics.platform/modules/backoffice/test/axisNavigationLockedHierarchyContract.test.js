@@ -54,11 +54,11 @@ const providerFiles = [
 ];
 
 const expected = {
-    'system-integrations': ['System Workspace', 'Runtime Operations', 'Modules and Capabilities', 'Configuration and Environments', 'Integrations and Connections', 'APIs, Webhooks, and Events', 'Data Exchange', 'Schema and Data Administration', 'Operational Monitoring and Recovery', 'Platform Policies and Reference Settings'],
+    'system-integrations': ['System Workspace', 'Runtime Operations', 'Modules and Capabilities', 'Configuration and Environments', 'Integrations and Connections', 'APIs, Webhooks, and Events', 'Data Exchange', 'Schema & Data Administration', 'Operational Monitoring and Recovery', 'Platform Policies and Reference Settings'],
     content: ['Content Workspace', 'Websites and Content Catalogs', 'Page Designer', 'Pages and Routes', 'Components and Content Blocks', 'Templates and Layout', 'Navigation and Menus', 'Visibility and Experience Rules', 'Content Types and Rendering', 'Themes and Branding', 'Content Preview and Readiness', 'Content History and Insights'],
     'media-management': ['Media Workspace', 'Media Library', 'Folders and Intake Policies', 'Formats and Variants', 'Media Sets and Galleries', 'Usage and References', 'Storage and Delivery'],
     organization: ['Customer Workspace', 'Customers and Profiles', 'Segments and Audiences', 'Organisations and Business Accounts', 'Employees and Teams', 'Roles and Access', 'Customer Service and Engagement', 'Reviews and Reputation', 'Testimonials and Advocacy', 'Privacy and Customer Rights', 'Engagement Insights'],
-    'products-merchandising': ['Product Workspace', 'Product Information', 'Categories and Classification', 'Catalogs and Assortments', 'Pricing', 'Tax Configuration', 'Product Readiness'],
+    'products-merchandising': ['Product Workspace', 'Product Information', 'Categories & Classification', 'Catalogs & Assortments', 'Pricing', 'Tax Configuration', 'Product Readiness'],
     'search-discovery': ['Search Workspace', 'Search Experiences', 'Search Sources and Indexes', 'Query and Result Configuration', 'Facets and Filters', 'Search Merchandising and Ranking', 'Search Language and Relevance', 'Search Publication and Index Operations', 'Search Analytics and Optimization'],
     'inventory-operations': ['Inventory Workspace', 'Stock and Availability', 'Stock Operations', 'Receiving and Replenishment', 'Warehouses and Locations', 'Stock Transfers', 'Reservations and Allocations', 'Inventory Sourcing', 'Stock Counts and Reconciliation', 'Returns and Stock Disposition', 'Stock Movements and Audit', 'Inventory Exceptions and Recovery', 'Inventory Planning and Insights'],
     'orders-checkouts': ['Order and Checkout Workspace', 'Carts', 'Checkout Sessions', 'Checkout Validation', 'Checkout Placement', 'Orders', 'Order Details and Evidence', 'Order Placement Exceptions', 'Order and Checkout Insights'],
@@ -68,9 +68,9 @@ const expected = {
     'payment-operations': ['Payment Workspace', 'Payment Transactions', 'Authorizations', 'Captures', 'Voids and Reversals', 'Refund Execution', 'Payment Methods', 'Payment Providers', 'Reconciliation and Settlement', 'Disputes and Chargebacks', 'Payment Exceptions and Recovery', 'Payment Audit and Insights'],
     'promotions-discounts': ['Promotion Workspace', 'Promotions', 'Discount Rules', 'Coupons and Promotion Codes', 'Eligibility and Qualification', 'Priority, Combination, and Stacking', 'Schedules and Budgets', 'Promotion Evaluation', 'Promotion Governance', 'Promotion Insights'],
     'editorial-space': ['Editorial Workspace', 'Editorial Content', 'Article Editor', 'Editorial Review and Approval', 'Languages and Localization', 'Authors', 'Taxonomy', 'Series', 'Featured and Special Content', 'Corrections and Governance', 'Content Type Policies', 'Editorial Calendar', 'Editorial Preview and Distribution', 'Editorial History and Insights'],
-    'process-and-automations': ['Operations Workspace', 'Workflow Management', 'Pipeline Management', 'Cron Job Management', 'Triggers and Relationships', 'Automation Monitoring', 'Advanced Configuration'],
+    'process-and-automations': ['Operations Workspace', 'Workflow Management', 'Pipeline Management', 'Cron jobs', 'Triggers and Relationships', 'Automation Monitoring', 'Advanced Configuration'],
     documentation: ['Framework', 'Swaggers', 'Nodics Axis', 'Nodics Kickoff'],
-    publishing: ['Publishing Workspace', 'Publication Requests', 'Approval Queue', 'Staged-to-Online Operations', 'Publication Manifests', 'Publishing History', 'Publishing Audit', 'Scheduled Publications', 'Online Publications', 'Publication Dependencies', 'Failures & Recovery', 'Withdrawals & Rollbacks', 'Publishing Configuration']
+    publishing: ['Publishing Workspace', 'Publication Requests', 'Approval Queue', 'Staged-to-Online Operations', 'Publication Manifests', 'Publishing History', 'Publishing Audit', 'Scheduled Publications', 'Online Publications', 'Publication Dependencies', 'Failures & Recovery', 'Withdrawals & Rollbacks', 'Publishing Configuration', 'Setup & Accelerators']
 };
 
 const rootLabelsByGroup = {};

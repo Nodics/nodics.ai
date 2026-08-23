@@ -1467,6 +1467,11 @@ module.exports = {
     };
   },
 
+  /** Returns the current effective composition snapshot with source trace and checksum. */
+  getNavigationCompositionSnapshot: async function (request) {
+    return this.exportNavigationComposition(request);
+  },
+
   /** Validates an imported composition payload without creating drafts or changing runtime navigation. */
   validateNavigationCompositionImport: async function (request) {
     let effective = await this.effectiveNavigationComposition(request);

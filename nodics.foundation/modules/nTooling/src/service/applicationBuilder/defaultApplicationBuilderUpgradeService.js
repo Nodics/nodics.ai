@@ -55,7 +55,7 @@ module.exports = {
         }
         const createdAt = options.createdAt || new Date().toISOString();
         const manifest = {
-            contractVersion: 0,
+            contractVersion: 1,
             releaseId: 'builder-release-' + generationService.approvalDigest(plan)
                 .slice('sha256:'.length, 'sha256:'.length + 32),
             createdAt: createdAt,
@@ -155,7 +155,7 @@ module.exports = {
             dataPackDiff.added.length > 0 || dataPackDiff.removed.length > 0;
         const createdAt = options.createdAt || new Date().toISOString();
         return {
-            contractVersion: 0,
+            contractVersion: 1,
             upgradePlanId: 'builder-upgrade-' + catalogueService.digest({
                 from: currentLock.planDigest,
                 to: targetManifest.planDigest,

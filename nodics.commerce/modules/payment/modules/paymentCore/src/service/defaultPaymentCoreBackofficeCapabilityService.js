@@ -12,11 +12,14 @@
 /* Nodics source-available software. See root LICENSE. */
 /** @module paymentCore/service/DefaultPaymentCoreBackofficeCapabilityService @description Publishes Payment-owned BackOffice operations and reconciliation workspaces. @layer service @owner paymentCore */
 module.exports = {
+    /** Registers Payment Core as the BackOffice capability provider for payment and reconciliation workspaces. */
     init: function () {
         SERVICE.DefaultModuleRegistrationAgentService.registerBackofficeCapabilityProvider('paymentCore', this);
         return Promise.resolve(true);
     },
+    /** Completes the provider lifecycle after registration without additional startup work. */
     postInit: function () { return Promise.resolve(true); },
+    /** Returns the Payment BackOffice capability descriptor, navigation entries, and presentations. */
     getCapability: function () {
         let d = SERVICE.DefaultBackofficeCapabilityDefinitionService;
         let group = { id: 'payment-operations', label: 'Payment Operations', order: 1200 };

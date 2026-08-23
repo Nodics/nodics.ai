@@ -114,6 +114,37 @@ module.exports = {
 },
 
         /**
+         * Counts models through the active MongoDB adapter contract.
+         */
+        countMatchingItems: function (query, cursor) {
+    if (typeof this.countDocuments === 'function') {
+        return this.countDocuments(query);
+    }
+    if (cursor && typeof cursor.count === 'function') {
+        return cursor.count();
+    }
+    return Promise.resolve(0);
+},
+
+        /**
+         * Reads a MongoDB cursor through callback or promise style adapters.
+         */
+        cursorToArray: function (cursor) {
+    if (cursor && cursor.toArray && cursor.toArray.length > 0) {
+        return new Promise((resolve, reject) => {
+            cursor.toArray((error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    }
+    return cursor.toArray();
+},
+
+        /**
          * Applies an update payload to a returned model snapshot.
          */
         mergeUpdatedSnapshot: function (snapshot, model) {
@@ -135,7 +166,7 @@ module.exports = {
                         cursor = cursor.sort(input.searchOptions.sort);
                     }
                     if (input.transactionContext) {
-                        cursor.toArray().then(result => {
+                        this.cursorToArray(cursor).then(result => {
                             resolve({
                                 options: input.searchOptions,
                                 query: input.query,
@@ -146,8 +177,8 @@ module.exports = {
                             reject(new CLASSES.NodicsError(error, null, 'ERR_MDL_00000'));
                         });
                     } else {
-                        this.countDocuments(input.query).then(count => {
-                            cursor.toArray().then(result => {
+                        this.countMatchingItems(input.query, cursor).then(count => {
+                            this.cursorToArray(cursor).then(result => {
                                 resolve({
                                     options: input.searchOptions,
                                     query: input.query,

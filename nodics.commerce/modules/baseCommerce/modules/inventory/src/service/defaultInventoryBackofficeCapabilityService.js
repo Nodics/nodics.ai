@@ -12,24 +12,32 @@
 'use strict';
 /** @module inventory/src/service/defaultInventoryBackofficeCapabilityService @description Publishes Inventory-owned BackOffice navigation and operation actions. @layer service @owner inventory */
 module.exports = {
+    /** Registers Inventory as the BackOffice capability provider for inventory workspaces and actions. */
     init: function () {
         SERVICE.DefaultModuleRegistrationAgentService.registerBackofficeCapabilityProvider('inventory', this);
         return Promise.resolve(true);
     },
+    /** Completes the provider lifecycle after registration without additional startup work. */
     postInit: function () { return Promise.resolve(true); },
+    /** Returns the common balance-code input used by Inventory stock actions. */
     balanceCodeInput: function () {
         return { name: 'balanceCode', label: 'Balance code', type: 'TEXT', required: true, valueFromRecord: 'code', maximumLength: 160 };
     },
+    /** Returns the quantity input for Inventory stock actions with a safe default quantity. */
     quantityInput: function (defaultValue) {
         return { name: 'quantity', label: 'Quantity', type: 'TEXT', required: true, defaultValue: defaultValue || '1', maximumLength: 32 };
     },
+    /** Returns the optional reason or note input captured for Inventory movement evidence. */
     reasonInput: function () {
         return { name: 'reasonCode', label: 'Reason / note', type: 'MULTILINE', required: false, maximumLength: 512 };
     },
+    /** Returns the optional reference-code input linked to the current Inventory record. */
     referenceInput: function () {
         return { name: 'referenceCode', label: 'Reference code', type: 'TEXT', required: false, valueFromRecord: 'code', maximumLength: 160 };
     },
+    /** Builds the Inventory operation route for a governed stock action code. */
     actionRoute: function (actionCode) { return '/operator/inventory/balances/:balanceCode/actions/' + actionCode; },
+    /** Builds one governed Inventory stock lifecycle action descriptor. */
     stockAction: function (options) {
         const actionCode = options.actionCode;
         const model = Object.assign({
@@ -45,6 +53,7 @@ module.exports = {
         delete model.defaultQuantity;
         return model;
     },
+    /** Returns the active Inventory stock lifecycle actions exposed to BackOffice. */
     lifecycleActions: function () {
         return [
             this.stockAction({ id: 'receive-stock', label: 'Receive stock', intent: 'CREATE', actionCode: 'RECEIVE', defaultQuantity: '1', summary: 'Receive stock through Inventory-owned operation service and append movement evidence.', order: 10 }),
@@ -52,6 +61,7 @@ module.exports = {
             this.stockAction({ id: 'return-to-stock', label: 'Return to stock', intent: 'UPDATE', actionCode: 'RETURN', defaultQuantity: '1', summary: 'Record return-to-stock movement after return inspection/disposition authority approves restock.', order: 30 })
         ];
     },
+    /** Returns the Inventory BackOffice capability descriptor, navigation entries, presentations, and actions. */
     getCapability: function () {
         const d = SERVICE.DefaultBackofficeCapabilityDefinitionService;
         const actions = this.lifecycleActions();

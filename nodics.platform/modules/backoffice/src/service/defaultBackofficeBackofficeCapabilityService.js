@@ -1061,26 +1061,6 @@ const capability = {
     ]
 };
 
-function normalizeNavigationHierarchy(contract) {
-    contract.navigation.forEach(item => {
-        if (!item.group) return;
-        if (item.group.id === 'workspace') {
-            item.group = {
-                id: 'process-and-automations',
-                label: 'Process & Automations',
-                order: 1500
-            };
-        } else if (item.group.id === 'system-integrations') {
-            item.group.label = 'System & Integrations';
-            item.group.order = 100;
-        } else if (item.group.id === 'documentation') {
-            item.group.label = 'Documentation';
-            item.group.order = 1600;
-        }
-    });
-    return contract;
-}
-
 module.exports = {
     /** Registers this module BackOffice capability provider. */
     init: function () {
@@ -1089,6 +1069,26 @@ module.exports = {
     },
     /** Completes provider lifecycle initialization. */
     postInit: function () { return Promise.resolve(true); },
+    /** Normalizes BackOffice navigation groups into the governed Axis hierarchy. */
+    normalizeNavigationHierarchy: function (contract) {
+        contract.navigation.forEach(item => {
+            if (!item.group) return;
+            if (item.group.id === 'workspace') {
+                item.group = {
+                    id: 'process-and-automations',
+                    label: 'Process & Automations',
+                    order: 1500
+                };
+            } else if (item.group.id === 'system-integrations') {
+                item.group.label = 'System & Integrations';
+                item.group.order = 100;
+            } else if (item.group.id === 'documentation') {
+                item.group.label = 'Documentation';
+                item.group.order = 1600;
+            }
+        });
+        return contract;
+    },
     /** Returns this module owned BackOffice capability contract. */
-    getCapability: function () { return normalizeNavigationHierarchy(JSON.parse(JSON.stringify(capability))); }
+    getCapability: function () { return this.normalizeNavigationHierarchy(JSON.parse(JSON.stringify(capability))); }
 };

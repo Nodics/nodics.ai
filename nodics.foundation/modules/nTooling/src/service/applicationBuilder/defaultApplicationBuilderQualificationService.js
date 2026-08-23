@@ -274,7 +274,7 @@ module.exports = {
         const scope = fullGeneratedApplication ? 'FULL_GENERATED_APPLICATION' :
             options.referenceEvidencePath ? 'REFERENCE_WORKSPACE' : 'GENERATED_SKELETON';
         const report = {
-            contractVersion: 0,
+            contractVersion: 1,
             qualificationId: 'builder-qualification-' + seed.slice('sha256:'.length, 'sha256:'.length + 32),
             createdAt: createdAt,
             solutionDigest: lock.solutionDigest,
