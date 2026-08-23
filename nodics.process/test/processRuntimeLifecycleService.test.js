@@ -70,7 +70,15 @@ function createGeneratedService(store) {
 const graph = {
     nodes: [
         { code: 'start', type: 'START', name: 'Start' },
-        { code: 'review', type: 'TASK', name: 'Business Review', assignee: 'reviewQueue' },
+        { code: 'review', type: 'TASK', name: 'Business Review', assignee: 'reviewQueue', policy: {
+            assignmentPolicy: 'QUEUE',
+            escalationPolicy: { level1Assignee: 'seniorReviewQueue', escalateAfterHours: 24 },
+            slaHours: 24,
+            submitterMayApprove: false,
+            requiredApprovals: 1,
+            emergencyOverridePermission: 'process.task.emergencyOverride',
+            requireReasonOnReject: true
+        } },
         { code: 'approvalDecision', type: 'DECISION', name: 'Approval Decision' },
         { code: 'notify', type: 'ACTION', name: 'Notify Domain', action: { moduleName: 'nodics.process', operation: 'noop' } },
         { code: 'waitForAudit', type: 'TIMER', name: 'Wait for audit window', timer: { delayMs: 0, autoContinue: true } },
@@ -115,7 +123,7 @@ const runtimeService = require('../modules/workflow/modules/flowCore/src/service
         runtimeOperation: {
             definitionCode: 'contentApproval',
             instanceCode: 'contentApproval-001',
-            context: { businessKey: 'page-123' }
+            context: { businessKey: 'page-123', requestedBy: 'operator' }
         }
     });
     assert.strictEqual(started.code, 'SUC_PROCESS_00007');
@@ -125,6 +133,11 @@ const runtimeService = require('../modules/workflow/modules/flowCore/src/service
     assert.strictEqual(tasks.length, 1);
     assert.strictEqual(tasks[0].status, 'OPEN');
     assert.strictEqual(tasks[0].assignee, 'reviewQueue');
+    assert.strictEqual(tasks[0].assignmentPolicy, 'QUEUE');
+    assert.strictEqual(tasks[0].escalationPolicy.level1Assignee, 'seniorReviewQueue');
+    assert.strictEqual(tasks[0].approvalPolicy.submitterMayApprove, false);
+    assert.strictEqual(tasks[0].approvalPolicy.emergencyOverridePermission, 'process.task.emergencyOverride');
+    assert(tasks[0].dueAt, 'task SLA due date must be visible on the task');
     assert.strictEqual(auditEvents[0].eventType, 'process.instance.started');
     assert.strictEqual(auditEvents.some(event => event.eventType === 'process.node.entered' && event.metadata.nodeCode === 'review'), true);
     assert.strictEqual(auditEvents.some(event => event.eventType === 'process.task.created'), true);
@@ -154,6 +167,79 @@ const runtimeService = require('../modules/workflow/modules/flowCore/src/service
     assert.strictEqual(auditEvents.some(event => event.eventType === 'process.timer.observed'), true);
     assert.strictEqual(auditEvents.some(event => event.eventType === 'process.subProcess.referenced'), true);
     assert.strictEqual(auditEvents.some(event => event.eventType === 'process.instance.completed'), true);
+
+    let separated = await runtimeService.startInstance({
+        tenant: 'default',
+        authData: { loginId: 'operator' },
+        runtimeOperation: {
+            definitionCode: 'contentApproval',
+            instanceCode: 'contentApproval-002',
+            context: { businessKey: 'page-456', requestedBy: 'operator' }
+        }
+    });
+    await assert.rejects(
+        () => runtimeService.completeTask({
+            tenant: 'default',
+            authData: { loginId: 'operator' },
+            taskCode: separated.data.task.code,
+            runtimeOperation: { decision: { approved: true } }
+        }),
+        error => error.code === 'ERR_PROCESS_00012',
+    );
+
+    let multi = await runtimeService.startInstance({
+        tenant: 'default',
+        authData: { loginId: 'operator' },
+        runtimeOperation: {
+            definitionCode: 'contentApproval',
+            instanceCode: 'contentApproval-003',
+            context: { businessKey: 'page-789', requestedBy: 'author' }
+        }
+    });
+    let multiTask = tasks.find(task => task.code === multi.data.task.code);
+    multiTask.approvalPolicy.requiredApprovals = 2;
+    await assert.rejects(
+        () => runtimeService.completeTask({
+            tenant: 'default',
+            authData: { loginId: 'reviewer-one' },
+            taskCode: multi.data.task.code,
+            runtimeOperation: { decision: { approved: true, approvals: [{ actor: 'reviewer-one' }] } }
+        }),
+        error => error.code === 'ERR_PROCESS_00012',
+    );
+    let multiCompleted = await runtimeService.completeTask({
+        tenant: 'default',
+        authData: { loginId: 'reviewer-two' },
+        taskCode: multi.data.task.code,
+        runtimeOperation: { decision: { approved: true, approvals: [{ actor: 'reviewer-one' }, { actor: 'reviewer-two' }] } }
+    });
+    assert.strictEqual(multiCompleted.code, 'SUC_PROCESS_00008');
+
+    let emergency = await runtimeService.startInstance({
+        tenant: 'default',
+        authData: { loginId: 'operator' },
+        runtimeOperation: {
+            definitionCode: 'contentApproval',
+            instanceCode: 'contentApproval-004',
+            context: { businessKey: 'page-override', requestedBy: 'operator' }
+        }
+    });
+    await assert.rejects(
+        () => runtimeService.completeTask({
+            tenant: 'default',
+            authData: { loginId: 'operator', permissions: [] },
+            taskCode: emergency.data.task.code,
+            runtimeOperation: { decision: { approved: true, emergencyOverride: true } }
+        }),
+        error => error.code === 'ERR_PROCESS_00012',
+    );
+    let emergencyCompleted = await runtimeService.completeTask({
+        tenant: 'default',
+        authData: { loginId: 'operator', permissions: ['process.task.emergencyOverride'] },
+        taskCode: emergency.data.task.code,
+        runtimeOperation: { decision: { approved: true, emergencyOverride: true, reason: 'Production recovery' } }
+    });
+    assert.strictEqual(emergencyCompleted.code, 'SUC_PROCESS_00008');
 
     let detail = await runtimeService.getInstanceDetail({ tenant: 'default', instanceCode: 'contentApproval-001' });
     assert.strictEqual(detail.data.instance.code, 'contentApproval-001');

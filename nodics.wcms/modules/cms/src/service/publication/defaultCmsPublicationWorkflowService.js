@@ -42,6 +42,8 @@ module.exports = {
             catalogCode: publicationRequest.catalogCode,
             correlationId: publicationRequest.correlationId || request.correlationId || request.requestId
         };
+        let requestedBy = publicationRequest.requestedBy || request.authData && (request.authData.loginId || request.authData.principalId || request.authData.code);
+        if (requestedBy) payload.requestedBy = requestedBy;
         let descriptor = SERVICE.DefaultModuleService.buildRequest({ moduleName: target.moduleName,
             connectionName: target.connectionName, connectionType: target.connectionType || 'abstract', methodName: 'POST',
             apiName: '/instances/publication-approval', requestBody: payload, timeoutMs: target.timeoutMs,

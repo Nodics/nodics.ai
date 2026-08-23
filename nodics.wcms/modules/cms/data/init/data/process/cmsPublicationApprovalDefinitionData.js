@@ -24,10 +24,19 @@ module.exports = {
         ownerModule: 'cms',
         policy: {
             taskPermission: 'cms.publication.approve',
-            submitterMayApprove: true,
+            assignmentPolicy: 'QUEUE',
+            escalationPolicy: {
+                level1Assignee: 'cmsPublicationSeniorApprovalQueue',
+                level2Assignee: 'cmsPublicationGovernanceQueue',
+                escalateAfterHours: 24
+            },
+            slaHours: 24,
+            submitterMayApprove: false,
+            requiredApprovals: 1,
+            emergencyOverridePermission: 'cms.publication.emergencyOverride',
             requireReasonOnReject: true,
             maximumContextBytes: 65536,
-            contextAllowlist: ['publicationCode', 'sourceVersion', 'siteCode', 'catalogCode', 'correlationId']
+            contextAllowlist: ['publicationCode', 'sourceVersion', 'siteCode', 'catalogCode', 'correlationId', 'requestedBy']
         },
         graph: {
             nodes: [

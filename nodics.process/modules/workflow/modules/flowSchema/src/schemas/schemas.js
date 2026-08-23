@@ -209,6 +209,9 @@ module.exports = {
                 assignee: { type: 'string', required: false, description: 'Assigned user, group, or queue' },
                 status: { type: 'string', required: true, default: 'OPEN', enum: ['OPEN', 'CLAIMED', 'COMPLETED', 'CANCELLED', 'ESCALATED'], description: 'Human-task lifecycle state' },
                 dueAt: { type: 'date', required: false, description: 'Optional task due timestamp' },
+                assignmentPolicy: { type: 'string', required: false, description: 'Published workflow assignment policy applied to the task' },
+                escalationPolicy: { type: 'object', required: false, description: 'Published workflow escalation policy and fallback queue evidence' },
+                approvalPolicy: { type: 'object', required: false, description: 'Published approval policy including actor separation, multi-approver, rejection reason, and emergency override settings' },
                 decision: { type: 'object', required: false, description: 'Completed decision evidence captured from the human task' }
             }
         },

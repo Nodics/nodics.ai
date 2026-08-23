@@ -154,6 +154,61 @@ module.exports = {
         return String(prefix || 'process').slice(0, 48) + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
     },
 
+    /** Resolves policy attached to an immutable process version or task node. */
+    policyOf: function (version, node) {
+        return Object.assign({}, version && version.policy || {}, node && node.policy || {});
+    },
+
+    /** Builds task governance metadata from the immutable workflow policy. */
+    taskGovernance: function (version, node, body) {
+        let policy = this.policyOf(version, node);
+        let now = body && body.now ? new Date(body.now) : new Date();
+        let slaHours = Number(policy.slaHours || node && node.slaHours || 0);
+        let dueAt = body && body.dueAt || node && node.dueAt ||
+            (slaHours > 0 ? new Date(now.getTime() + Math.min(slaHours, 8760) * 3600000) : undefined);
+        return {
+            assignmentPolicy: policy.assignmentPolicy || node && node.assignmentPolicy || 'QUEUE',
+            escalationPolicy: policy.escalationPolicy || node && node.escalationPolicy || {},
+            approvalPolicy: {
+                submitterMayApprove: policy.submitterMayApprove === true,
+                requiredApprovals: Math.max(1, Math.min(Number(policy.requiredApprovals || 1), 25)),
+                emergencyOverridePermission: policy.emergencyOverridePermission,
+                requireReasonOnReject: policy.requireReasonOnReject === true
+            },
+            dueAt: dueAt
+        };
+    },
+
+    /** Enforces approval-task policy before a human task can advance. */
+    assertTaskCompletionPolicy: function (request, task, instance, version, node, body) {
+        let actor = this.getActor(request);
+        let policy = Object.assign({}, this.policyOf(version, node), task.approvalPolicy || {});
+        let decision = body && body.decision || {};
+        let submitter = instance && instance.context && (instance.context.requestedBy || instance.context.submittedBy || instance.context.createdBy);
+        let override = decision.emergencyOverride === true;
+        if (override && !policy.emergencyOverridePermission) {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Emergency override is not allowed for this task');
+        }
+        if (override && policy.emergencyOverridePermission) {
+            let permissions = [].concat(request && request.authData && request.authData.permissions || []);
+            if (!permissions.includes(policy.emergencyOverridePermission)) {
+                throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Emergency override permission is required for this task');
+            }
+        }
+        if (!override && policy.submitterMayApprove !== true && submitter && actor && submitter === actor) {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Submitter cannot approve this workflow task');
+        }
+        if (decision.approved === false && policy.requireReasonOnReject === true && !decision.reason) {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Approval rejection requires a reason');
+        }
+        let approvals = [].concat(decision.approvals || []).filter(Boolean);
+        let requiredApprovals = Math.max(1, Math.min(Number(policy.requiredApprovals || 1), 25));
+        if (!override && requiredApprovals > 1 && approvals.length < requiredApprovals) {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Workflow task requires multiple approvals');
+        }
+        return { actor: actor, override: override, requiredApprovals: requiredApprovals, approvals: approvals.length };
+    },
+
     /**
      * Loads a process definition aggregate.
      *
@@ -327,7 +382,8 @@ module.exports = {
      * @param {Object} body Runtime request body.
      * @returns {Promise<Object>} Saved task.
      */
-    createTaskForNode: async function (request, instance, node, body) {
+    createTaskForNode: async function (request, instance, node, body, version) {
+        let governance = this.taskGovernance(version, node, body || {});
         let taskModel = {
             code: body.taskCode || this.runtimeCode(instance.code + '-' + node.code),
             active: true,
@@ -336,14 +392,19 @@ module.exports = {
             nodeCode: node.code,
             assignee: body.assignee || node.assignee || (node.assignment && node.assignment.assignee),
             status: 'OPEN',
-            dueAt: body.dueAt
+            dueAt: governance.dueAt,
+            assignmentPolicy: governance.assignmentPolicy,
+            escalationPolicy: governance.escalationPolicy,
+            approvalPolicy: governance.approvalPolicy
         };
         let response = await this.taskService().save(this.serviceRequest(request, { model: taskModel }));
         await this.audit(request, {
             definitionCode: instance.definitionCode,
             instanceCode: instance.code,
             eventType: 'process.task.created',
-            metadata: { taskCode: taskModel.code, nodeCode: node.code, assignee: taskModel.assignee }
+            metadata: { taskCode: taskModel.code, nodeCode: node.code, assignee: taskModel.assignee,
+                assignmentPolicy: taskModel.assignmentPolicy, escalationPolicy: taskModel.escalationPolicy,
+                dueAt: taskModel.dueAt, approvalPolicy: taskModel.approvalPolicy }
         });
         return response.result || response;
     },
@@ -493,7 +554,7 @@ module.exports = {
                 model: { $set: { status: 'WAITING', currentNode: node.code } }
             }));
             let updatedInstance = Object.assign({}, instance, { status: 'WAITING', currentNode: node.code });
-            let task = await this.createTaskForNode(request, updatedInstance, node, body);
+            let task = await this.createTaskForNode(request, updatedInstance, node, body || {}, version);
             return { instance: updatedInstance, task: task };
         }
         if (node.type === 'DECISION') {
@@ -738,6 +799,7 @@ module.exports = {
         if (!['RUNNING', 'WAITING'].includes(instance.status)) throw new CLASSES.NodicsError('ERR_PROCESS_00013', 'Process instance transition is not allowed');
         let version = await this.requireVersion(request, instance.definitionCode, instance.version);
         let currentNode = this.findNode(version.graph || {}, task.nodeCode);
+        let policyEvidence = this.assertTaskCompletionPolicy(request, task, instance, version, currentNode, body);
         let nextNode = currentNode ? this.nextNode(version.graph || {}, currentNode.code, body) : undefined;
         let completedAt = new Date();
         await this.taskService().update(this.serviceRequest(request, {
@@ -748,7 +810,7 @@ module.exports = {
             definitionCode: instance.definitionCode,
             instanceCode: instance.code,
             eventType: 'process.task.completed',
-            metadata: { taskCode: task.code, nodeCode: task.nodeCode }
+            metadata: { taskCode: task.code, nodeCode: task.nodeCode, approvalPolicy: policyEvidence }
         });
         let nextState = await this.enterNode(request, instance, version, nextNode, body);
         return { code: 'SUC_PROCESS_00008', data: Object.assign({ task: Object.assign({}, task, { status: 'COMPLETED', completedAt: completedAt }) }, nextState) };
