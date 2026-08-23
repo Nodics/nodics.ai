@@ -39,6 +39,8 @@ module.exports = {
     activateFunctionalModule: request => SERVICE.DefaultFunctionalModuleCatalogueService.activate(request),
     /** Delegates optional functional-module Axis deactivation. */
     deactivateFunctionalModule: request => SERVICE.DefaultFunctionalModuleCatalogueService.deactivate(request),
+    /** Delegates optional functional-module activation rollback. */
+    rollbackFunctionalModule: request => SERVICE.DefaultFunctionalModuleCatalogueService.rollback(request),
     /** Delegates optional functional-module project deregistration. */
     deregisterFunctionalModule: request => SERVICE.DefaultFunctionalModuleCatalogueService.deregister(request),
     /** Delegates low-disclosure pre-authentication Axis discovery. */

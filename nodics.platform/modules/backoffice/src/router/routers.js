@@ -130,6 +130,16 @@ module.exports = {
                     schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.functionalModuleRegistration } })
                 } } } }
             },
+            rollbackFunctionalModule: {
+                secured: true, accessGroups: ['userGroup'], permission: 'backoffice.functionalModule.rollback',
+                authTokenTypes: ['access'], apiExposure: 'serviceRegistry',
+                key: '/runtime/modules/registrations/:functionalModule/rollback', method: 'POST',
+                controller: 'DefaultBackofficeRegistryController', operation: 'rollbackFunctionalModule',
+                requestBody: { required: true, content: { 'application/json': { schema: contracts.functionalModuleLifecycleDecision } } },
+                responses: { '200': { description: 'Optional functional module activation rolled back for Axis while imported data is retained', content: { 'application/json': {
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.functionalModuleRegistration } })
+                } } } }
+            },
             deregisterFunctionalModule: {
                 secured: true, accessGroups: ['userGroup'], permission: 'backoffice.functionalModule.deregister',
                 authTokenTypes: ['access'], apiExposure: 'serviceRegistry',

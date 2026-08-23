@@ -193,7 +193,7 @@ module.exports = {
                     } else if (!item.required || item.trigger === 'USER') {
                         status = 'SKIPPED_USER_TRIGGERED';
                     }
-                } else if (action === 'deactivate' || action === 'deregister') {
+                } else if (action === 'deactivate' || action === 'deregister' || action === 'rollback') {
                     status = 'DATA_LEFT_INTACT';
                 }
             }
@@ -210,7 +210,7 @@ module.exports = {
                         : status === 'SKIPPED_USER_TRIGGERED'
                             ? 'Optional/sample package must be triggered explicitly by the user.'
                             : status === 'DATA_LEFT_INTACT'
-                                ? 'Deactivation hides capabilities; imported data is left intact.'
+                                ? 'Capability rollback or deactivation hides capabilities; imported data is left intact.'
                                 : 'No data mutation is required for this lifecycle action.')
             });
         });
@@ -499,7 +499,7 @@ module.exports = {
                 action: 'dryRun', dryRun: true
             }, request) };
         }
-        if (existing.required === true && ['deactivate', 'deregister'].includes(action)) {
+        if (existing.required === true && ['deactivate', 'deregister', 'rollback'].includes(action)) {
             throw new CLASSES.NodicsError('ERR_BOF_00000', 'Required functional module cannot be ' + action + 'd');
         }
         let next = {};
@@ -517,11 +517,15 @@ module.exports = {
             next = { enabled: false };
         } else if (action === 'deregister') {
             next = { registrationState: existing.runtimeState === 'ACTIVE' ? 'AVAILABLE' : 'DEREGISTERED', enabled: false };
+        } else if (action === 'rollback') {
+            if (existing.registrationState !== 'REGISTERED') throw new CLASSES.NodicsError('ERR_BOF_00000', 'Functional module must be registered before rollback');
+            if (existing.enabled !== true) throw new CLASSES.NodicsError('ERR_BOF_00000', 'Functional module activation is not active');
+            next = { enabled: false };
         } else {
             throw new Error('Unsupported functional-module lifecycle action');
         }
         if (action === 'activate') await this.executeRequiredActivationData(existing, context, request);
-        if (['deactivate', 'deregister'].includes(action)) await this.recordDataLeftIntact(existing, context, request);
+        if (['deactivate', 'deregister', 'rollback'].includes(action)) await this.recordDataLeftIntact(existing, context, request);
         let model = Object.assign({}, next, { catalogueRevision: context.expectedRevision + 1,
             updatedAt: new Date(), updatedBy: context.actor });
         let response = await this.updateRecord({ tenant: this.getTenant(request), authData: this.getPersistenceAuthData(request.authData),
@@ -595,6 +599,8 @@ module.exports = {
     activate: function (request) { return this.transition(request, 'activate'); },
     /** Disables one optional functional module without changing its runtime. */
     deactivate: function (request) { return this.transition(request, 'deactivate'); },
+    /** Rolls back one optional functional module activation without deleting imported data. */
+    rollback: function (request) { return this.transition(request, 'rollback'); },
     /** Removes one optional functional module from the governed project catalogue. */
     deregister: function (request) { return this.transition(request, 'deregister'); }
 };

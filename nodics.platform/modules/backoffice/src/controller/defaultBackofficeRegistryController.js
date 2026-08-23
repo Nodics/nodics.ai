@@ -45,6 +45,8 @@ module.exports = {
     activateFunctionalModule: function (request, callback) { return this.execute('activateFunctionalModule', request, callback); },
     /** Handles optional functional-module Axis deactivation. */
     deactivateFunctionalModule: function (request, callback) { return this.execute('deactivateFunctionalModule', request, callback); },
+    /** Handles optional functional-module activation rollback. */
+    rollbackFunctionalModule: function (request, callback) { return this.execute('rollbackFunctionalModule', request, callback); },
     /** Handles optional functional-module project deregistration. */
     deregisterFunctionalModule: function (request, callback) { return this.execute('deregisterFunctionalModule', request, callback); },
     /** Handles low-disclosure pre-authentication Axis discovery requests. */
