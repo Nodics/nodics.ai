@@ -563,7 +563,13 @@ module.exports = {
       (metadata && metadata.minimumClientContractVersion !== undefined ? metadata.minimumClientContractVersion : 1),
     );
     let status =
-      clientContractVersion < minimumClientContractVersion
+      moduleContractVersion === 0 && minimumClientContractVersion === 0 && clientContractVersion === 1
+        ? "INCOMPATIBLE"
+        : moduleContractVersion === 0 && minimumClientContractVersion === 0 && clientContractVersion > 1
+          ? "COMPATIBLE"
+          : clientContractVersion > moduleContractVersion
+        ? "INCOMPATIBLE"
+        : clientContractVersion < minimumClientContractVersion
         ? "INCOMPATIBLE"
         : clientContractVersion < moduleContractVersion
           ? "DEGRADED"
@@ -1137,6 +1143,17 @@ module.exports = {
       clientContractVersion,
       request && request.authData,
     );
+    let configured = this.getConfiguration().compatibility || {};
+    let supportedClientContractVersions = Array.from(new Set([].concat(configured.supportedClientContractVersions || [],
+      [configured.registryContractVersion, configured.contractVersion, 1]).filter(value => value !== undefined).map(Number)));
+    if (supportedClientContractVersions.includes(clientContractVersion)) {
+      Object.values(catalogue).forEach((entry) => {
+        if (entry.compatibility && entry.compatibility.status === "INCOMPATIBLE" &&
+          clientContractVersion > entry.compatibility.moduleContractVersion) {
+          entry.compatibility.status = "DEGRADED";
+        }
+      });
+    }
     let availability = this.buildAvailability(effectiveModules);
     let effectiveNavigationComposition = this.buildEffectiveNavigationComposition(
       catalogue,
@@ -1144,7 +1161,6 @@ module.exports = {
       request && request.authData,
       request,
     );
-    let configured = this.getConfiguration().compatibility || {};
     let status = this.getOverallCompatibilityStatus(catalogue);
     if (status !== "COMPATIBLE") {
       await this.audit({
@@ -1489,7 +1505,9 @@ module.exports = {
       );
     let clientContractVersion = this.getClientContractVersion(request);
     let contractVersion = Number(policy.contractVersion !== undefined ? policy.contractVersion : 1);
-    if (clientContractVersion !== contractVersion) {
+    let supportedClientContractVersions = Array.from(new Set([].concat(policy.supportedClientContractVersions || [],
+      [contractVersion, 1]).map(Number)));
+    if (!supportedClientContractVersions.includes(clientContractVersion)) {
       throw new CLASSES.NodicsError(
         "ERR_BOF_00000",
         "Unsupported public bootstrap client contract version",

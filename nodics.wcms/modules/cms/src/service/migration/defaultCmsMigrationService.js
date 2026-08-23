@@ -56,7 +56,8 @@ module.exports = {
                 return changes;
             }
             let kind = inPages ? 'PAGE' : 'COMPONENT';
-            let version = this.getPolicy().version || 1;
+            let policy = this.getPolicy();
+            let version = policy.targetContractVersion !== undefined ? Number(policy.targetContractVersion) : 0;
             if (type.kind !== kind || type.contractVersion !== version) changes.push({ schema: 'cmsTypeCode', operation: 'UPDATE', code: type.code, from: { kind: type.kind, contractVersion: type.contractVersion }, to: { kind: kind, contractVersion: version } });
             return changes;
         }, []);

@@ -443,6 +443,12 @@ const capability = {
     ]
 };
 
+const defaultMediaHelp = {
+    summary: "Review governed media lifecycle operations through the nMedia-owned storage, policy, reference, publication, and delivery contracts.",
+    documentationRoute: "/docs/reference/media",
+    documentationFragment: "current-implementation-scope"
+};
+
 module.exports = {
     /** Registers this module BackOffice capability provider. */
     init: function () {
@@ -452,5 +458,9 @@ module.exports = {
     /** Completes provider lifecycle initialization. */
     postInit: function () { return Promise.resolve(true); },
     /** Returns this module owned BackOffice capability contract. */
-    getCapability: function () { return JSON.parse(JSON.stringify(capability)); }
+    getCapability: function () {
+        let result = JSON.parse(JSON.stringify(capability));
+        result.navigation = (result.navigation || []).map(entry => Object.assign({ help: defaultMediaHelp }, entry));
+        return result;
+    }
 };
