@@ -18,7 +18,8 @@
  */
 module.exports = {
     bodyParserHandler: {
-        mediaMultipartUploadBodyParserHandler: 'DefaultMediaMultipartUploadBodyParserHandlerService'
+        mediaMultipartUploadBodyParserHandler: 'DefaultMediaMultipartUploadBodyParserHandlerService',
+        mediaPublicationBodyParserHandler: 'DefaultMediaPublicationBodyParserHandlerService'
     },
     responseHandler: {
         mediaContentResponseHandler: 'DefaultMediaContentResponseHandlerService'
@@ -26,8 +27,9 @@ module.exports = {
     media: {
         publication: {
             maximumAssets: 100,
-            maximumAssetBytes: 4194304,
-            maximumTotalBytes: 4194304,
+            maximumAssetBytes: 52428800,
+            maximumTotalBytes: 104857600,
+            maximumPublicationRequestBytes: '64mb',
             retentionDays: 7,
             garbageCollectionBatchSize: 100
         },

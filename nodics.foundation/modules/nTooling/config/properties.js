@@ -646,6 +646,11 @@ module.exports = {
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/project/defaultProjectAgoraCmsMediaSeedService.mjs'
             },
+            'project:nexus-cms-media-seed': {
+                description: 'Seed project Nexus CMS, Editorial, and testimonial media assets into WCMS Staged through media-owned upload APIs.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectNexusCmsMediaSeedService.mjs'
+            },
             'project:editorial-live-journey-acceptance': {
                 description: 'Run project editorial live journey acceptance through framework-owned tooling.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
