@@ -36,7 +36,8 @@ module.exports = {
             emergencyOverridePermission: 'cms.publication.emergencyOverride',
             requireReasonOnReject: true,
             maximumContextBytes: 65536,
-            contextAllowlist: ['publicationCode', 'sourceVersion', 'siteCode', 'catalogCode', 'correlationId', 'requestedBy']
+            contextAllowlist: ['publicationCode', 'sourceVersion', 'tenantCode', 'enterpriseCode',
+                'environmentCode', 'profileCode', 'siteCode', 'catalogCode', 'correlationId', 'requestedBy']
         },
         graph: {
             nodes: [

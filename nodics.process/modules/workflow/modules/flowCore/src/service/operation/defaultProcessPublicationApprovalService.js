@@ -71,10 +71,16 @@ module.exports = {
             publicationCode: input.publicationCode,
             publicationRevision: Number(input.publicationRevision),
             sourceVersion: String(input.sourceVersion),
+            tenantCode: input.tenantCode && String(input.tenantCode),
+            enterpriseCode: input.enterpriseCode && String(input.enterpriseCode),
+            environmentCode: input.environmentCode && String(input.environmentCode),
+            profileCode: input.profileCode && String(input.profileCode),
             siteCode: input.siteCode && String(input.siteCode),
             catalogCode: input.catalogCode && String(input.catalogCode),
+            requestedBy: input.requestedBy && String(input.requestedBy),
             correlationId: String(input.correlationId)
         };
+        Object.keys(context).forEach(key => context[key] === undefined && delete context[key]);
         if (Buffer.byteLength(JSON.stringify(context), 'utf8') > 65536) {
             throw new CLASSES.NodicsError('ERR_PROCESS_00001', 'Publication approval context exceeds the allowed boundary');
         }

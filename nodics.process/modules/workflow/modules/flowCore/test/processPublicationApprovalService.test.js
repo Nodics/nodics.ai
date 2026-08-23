@@ -27,13 +27,18 @@ global.SERVICE = {
 };
 const service = require('../src/service/operation/defaultProcessPublicationApprovalService');
 const request = { tenant: 'default', publicationApproval: { publicationCode: 'home-v2', publicationRevision: 4,
-    sourceVersion: '0', siteCode: 'site', catalogCode: 'catalog', correlationId: 'correlation-1' } };
+    sourceVersion: '0', tenantCode: 'default', enterpriseCode: 'enterprise-a', environmentCode: 'local',
+    profileCode: 'nexus', siteCode: 'site', catalogCode: 'catalog', requestedBy: 'creator-a',
+    correlationId: 'correlation-1' } };
 (async () => {
     let result = await service.start(request);
     assert.strictEqual(result.data.instance.code, service.instanceCode('home-v2', 4));
     assert.strictEqual(startRequest.runtimeOperation.definitionCode, 'cmsPublicationApproval');
     assert.deepStrictEqual(Object.keys(startRequest.runtimeOperation.context).sort(), ['catalogCode', 'correlationId',
-        'publicationCode', 'publicationRevision', 'siteCode', 'sourceVersion'].sort());
+        'enterpriseCode', 'environmentCode', 'profileCode', 'publicationCode', 'publicationRevision', 'requestedBy',
+        'siteCode', 'sourceVersion', 'tenantCode'].sort());
+    assert.strictEqual(startRequest.runtimeOperation.context.tenantCode, 'default');
+    assert.strictEqual(startRequest.runtimeOperation.context.enterpriseCode, 'enterprise-a');
     definition = undefined;
     await service.ensureDefinition(request);
     assert.strictEqual(definitionInstallCount, 1, 'missing mandatory definition must install through nImport');

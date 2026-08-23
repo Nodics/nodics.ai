@@ -23,6 +23,27 @@ module.exports = {
         return 'cmsPublicationApproval-' + crypto.createHash('sha256')
             .update(publicationRequest.code + ':' + String(publicationRequest.revision)).digest('hex').slice(0, 24);
     },
+    /** Builds and validates the immutable publication approval scope. */
+    scope: function (publicationRequest, request) {
+        let auth = request && request.authData || {};
+        let tenantCode = request && request.tenant;
+        if (!tenantCode || publicationRequest.tenantCode && publicationRequest.tenantCode !== tenantCode ||
+            auth.tenant && auth.tenant !== tenantCode) {
+            throw new CLASSES.NodicsError('CMS_PUBLICATION_SCOPE_INVALID', 'CMS publication tenant scope is invalid');
+        }
+        let enterpriseCode = publicationRequest.enterpriseCode || auth.enterpriseCode || auth.entCode;
+        if (publicationRequest.enterpriseCode && auth.enterpriseCode && publicationRequest.enterpriseCode !== auth.enterpriseCode) {
+            throw new CLASSES.NodicsError('CMS_PUBLICATION_SCOPE_INVALID', 'CMS publication enterprise scope is invalid');
+        }
+        return {
+            tenantCode: tenantCode,
+            enterpriseCode: enterpriseCode,
+            environmentCode: publicationRequest.environmentCode || request.environment || request.environmentCode,
+            profileCode: publicationRequest.profileCode,
+            siteCode: publicationRequest.siteCode,
+            catalogCode: publicationRequest.catalogCode
+        };
+    },
     /** Starts or replays the Process approval instance for one publication. */
     requestApproval: function (publicationRequest, request) {
         let publication = (CONFIG.get('cms') || {}).publication || {};
@@ -34,12 +55,17 @@ module.exports = {
         }
         let token = NODICS.getInternalAuthToken(request.tenant);
         if (!token) throw new CLASSES.NodicsError('CMS_PUBLICATION_INTERNAL_AUTH_UNAVAILABLE', 'CMS publication workflow authentication is unavailable');
+        let scope = this.scope(publicationRequest, request);
         let payload = {
             publicationCode: publicationRequest.code,
             publicationRevision: publicationRequest.revision,
             sourceVersion: publicationRequest.sourceVersion,
-            siteCode: publicationRequest.siteCode,
-            catalogCode: publicationRequest.catalogCode,
+            tenantCode: scope.tenantCode,
+            enterpriseCode: scope.enterpriseCode,
+            environmentCode: scope.environmentCode,
+            profileCode: scope.profileCode,
+            siteCode: scope.siteCode,
+            catalogCode: scope.catalogCode,
             correlationId: publicationRequest.correlationId || request.correlationId || request.requestId
         };
         let requestedBy = publicationRequest.requestedBy || request.authData && (request.authData.loginId || request.authData.principalId || request.authData.code);

@@ -22,14 +22,25 @@ let descriptor;
 global.SERVICE = { DefaultModuleService: { buildRequest: input => { descriptor = input; return input; },
     fetch: async () => ({ result: { instance: { code: 'approval-1' } } }) } };
 const service = require('../src/service/publication/defaultCmsPublicationWorkflowService');
-const request = { tenant: 'default', correlationId: 'correlation-1' };
-const publication = { code: 'home-v2', revision: 4, sourceVersion: '0', siteCode: 'site', catalogCode: 'catalog' };
+const request = { tenant: 'default', environment: 'local', correlationId: 'correlation-1',
+    authData: { loginId: 'creator-a', tenant: 'default', enterpriseCode: 'enterprise-a' } };
+const publication = { code: 'home-v2', revision: 4, sourceVersion: '0', tenantCode: 'default',
+    enterpriseCode: 'enterprise-a', profileCode: 'nexus', siteCode: 'site', catalogCode: 'catalog' };
 service.requestApproval(publication, request).then(result => {
     assert.strictEqual(result.instance.code, 'approval-1');
     assert.strictEqual(descriptor.connectionName, 'process');
     assert.strictEqual(descriptor.apiName, '/instances/publication-approval');
     assert.strictEqual(descriptor.idempotencyKey, 'home-v2:4');
     assert.strictEqual(descriptor.header.Authorization, 'Bearer service-token');
+    assert.strictEqual(descriptor.requestBody.tenantCode, 'default');
+    assert.strictEqual(descriptor.requestBody.enterpriseCode, 'enterprise-a');
+    assert.strictEqual(descriptor.requestBody.environmentCode, 'local');
+    assert.strictEqual(descriptor.requestBody.profileCode, 'nexus');
+    assert.strictEqual(descriptor.requestBody.requestedBy, 'creator-a');
+    assert.throws(() => service.requestApproval(Object.assign({}, publication, { tenantCode: 'other' }), request),
+        /tenant scope is invalid/);
+    assert.throws(() => service.requestApproval(Object.assign({}, publication, { enterpriseCode: 'enterprise-b' }), request),
+        /enterprise scope is invalid/);
     role = 'ONLINE';
     assert.throws(() => service.requestApproval(publication, request), /only from CMS Staged/);
     console.log('CMS publication workflow submission validated');
