@@ -48,6 +48,13 @@ const expectedRoutes = [
     { key: '/storage/location', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'resolveStorageLocation', secured: true, permission: 'media.storage.location.resolve' },
     { key: '/storage/upload', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'uploadMedia', secured: true, permission: 'media.upload.create' },
     { key: '/publication/target/assets/import', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'importPublishedMediaAssets', secured: true, permissionConfig: 'authSecurity.internalToken.routePermission' },
+    { key: '/publication/artifacts/manifest', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'buildArtifactTransferManifest', secured: true, permission: 'media.publication.artifact.manage' },
+    { key: '/publication/artifacts/receipt', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'recordArtifactPublicationReceipt', secured: true, permissionConfig: 'authSecurity.internalToken.routePermission' },
+    { key: '/publication/topology/prod-dr/switch-roles', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'switchProdDrMediaRoles', secured: true, permissionConfig: 'authSecurity.internalToken.routePermission' },
+    { key: '/cleanup/candidates/preview', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'previewCleanupCandidates', secured: true, permission: 'media.cleanup.view' },
+    { key: '/cleanup/candidates/scan', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'scanCleanupCandidates', secured: true, permission: 'media.cleanup.manage' },
+    { key: '/cleanup/candidates/:candidateCode/mark-passive', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'markCleanupCandidatePassive', secured: true, permission: 'media.cleanup.manage' },
+    { key: '/cleanup/retention/run', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'runPassiveRetentionCleanup', secured: true, permissionConfig: 'authSecurity.internalToken.routePermission' },
     { key: '/download/:mediaCode', method: 'GET', controller: 'DefaultMediaStorageController', operation: 'downloadMediaContent', secured: true, permission: 'media.content.download' },
     { key: '/references/media/validate', method: 'POST', controller: 'DefaultMediaReferenceLookupController', operation: 'validate', secured: true, permissionConfig: 'authSecurity.internalToken.routePermission' }
 ];
@@ -63,6 +70,10 @@ assert.strictEqual(contentRoute.permission, 'media.content.read', 'inline conten
 assert.strictEqual(contentRoute.publicAccess, true, 'inline content route must be browser-readable for PUBLIC media');
 assert.strictEqual(contentRoute.apiExposure, 'mediaDelivery', 'inline content route must not depend on media management exposure');
 assert.strictEqual(downloadRoute.responseHandler, 'fileDownloadResponseHandler', 'download media content must reuse nRouter file-download response handler');
+const cleanupRetentionRoute = routes.find(route => route.key === '/cleanup/retention/run');
+assert(cleanupRetentionRoute, 'media cleanup retention job route must be registered');
+assert.strictEqual(cleanupRetentionRoute.apiExposure, 'moduleInternal', 'media cleanup retention job must remain internal only');
+assert.deepStrictEqual(cleanupRetentionRoute.authTokenTypes, ['service'], 'media cleanup retention job must require service token authentication');
 const publicationImportRoute = routes.find(route => route.key === '/publication/target/assets/import');
 assert(publicationImportRoute, 'media publication import route must be registered');
 assert.strictEqual(publicationImportRoute.apiExposure, 'moduleInternal', 'media publication import must remain internal only');

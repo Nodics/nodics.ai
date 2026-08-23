@@ -1,0 +1,25 @@
+{
+    "excludedPathSegments": [
+        "log",
+        "logs",
+        "tmp",
+        "temp",
+        "build",
+        "dist",
+        "coverage",
+        "node_modules",
+        ".git"
+    ],
+    "excludedExtensions": [
+        ".log",
+        ".tmp",
+        ".bak",
+        ".swp",
+        ".map"
+    ],
+    "requiresExplicitOverride": [
+        "AUDIT_FILE",
+        "OPERATIONAL_FILE"
+    ],
+    "policy": "Media artifacts with operational, temporary, local build, or audit-only purpose must not be published to Online unless an explicit governed override is recorded."
+}

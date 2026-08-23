@@ -31,7 +31,18 @@ module.exports = {
             maximumTotalBytes: 104857600,
             maximumPublicationRequestBytes: '64mb',
             retentionDays: 7,
-            garbageCollectionBatchSize: 100
+            garbageCollectionBatchSize: 100,
+            topology: {
+                policy: 'PRIMARY_ONLY',
+                activeLocationRole: 'ACTIVE_PROD_MEDIA_LOCATION',
+                replicationLocationRole: 'REPLICATION_PROD_MEDIA_LOCATION',
+                activeProviderCode: '',
+                replicationProviderCode: '',
+                replicationEnabled: false,
+                strictReplication: false,
+                retryDelaySeconds: 300,
+                maxRetryAttempts: 10
+            }
         },
         storage: {
             defaultProvider: 'local',

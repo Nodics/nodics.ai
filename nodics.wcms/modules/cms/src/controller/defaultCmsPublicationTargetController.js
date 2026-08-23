@@ -39,6 +39,10 @@ module.exports = {
     reconcile: function (request, callback) { return this.invoke('reconcile', request, callback); },
     /** Runs reference-safe published-media retention through CMS and Media authorities. */
     collectMediaGarbage: function (request, callback) { return this.invoke('collectMediaGarbage', request, callback); },
+    /** Replays failed media replication for one immutable manifest/package. */
+    reconcileMediaReplication: function (request, callback) { return this.invoke('reconcileMediaReplication', request, callback); },
+    /** Runs due pending media replication retries across immutable manifests. */
+    retryPendingMediaReplication: function (request, callback) { return this.invoke('retryPendingMediaReplication', request, callback); },
     /** Restores a previously deployed target release. */
     rollback: function (request, callback) { return this.invoke('rollback', request, callback); },
     /** Removes one deployed target release from Online delivery. */

@@ -21,7 +21,7 @@ const assert = require('assert');
 const schemas = require('../src/schemas/schemas');
 
 const mediaSchemas = schemas.media;
-['mediaFolder', 'mediaFormat', 'media', 'mediaSet', 'mediaSetEntry', 'mediaReference'].forEach((schemaName) => {
+['mediaFolder', 'mediaFormat', 'media', 'mediaSet', 'mediaSetEntry', 'mediaPlacement', 'mediaReplicationQueue', 'mediaPhysicalArtifact', 'mediaTransferManifest', 'mediaPublicationReceipt', 'mediaCleanupCandidate', 'mediaReference'].forEach((schemaName) => {
     assert(mediaSchemas[schemaName], schemaName + ' schema must exist');
     assert.strictEqual(mediaSchemas[schemaName].super, 'base', schemaName + ' must inherit the base schema explicitly for generated contracts');
     assert.strictEqual(mediaSchemas[schemaName].model, true, schemaName + ' must be a persisted model');
@@ -57,6 +57,16 @@ assert(mediaSchemas.mediaSetEntry.definition.mediaCode.required, 'mediaSetEntry.
     assert(mediaSchemas.mediaSetEntry.definition[fieldName], 'mediaSetEntry.' + fieldName + ' must support reusable variant selection');
 });
 assert.strictEqual(mediaSchemas.mediaSetEntry.definition.primary.type, 'bool', 'mediaSetEntry.primary must use Nodics bool schema type');
+assert(mediaSchemas.mediaPhysicalArtifact.definition.artifactClass.enum.includes('PRODUCT_ASSET'), 'mediaPhysicalArtifact must represent product/catalog artifacts');
+assert(mediaSchemas.mediaPhysicalArtifact.backoffice.excludedFields.includes('sourceStorageKey'), 'mediaPhysicalArtifact must hide source storage keys from Workbench');
+assert(mediaSchemas.mediaTransferManifest.definition.transportStrategy.enum.includes('STREAMING_TRANSFER'), 'mediaTransferManifest must support streaming transfer strategy');
+assert(mediaSchemas.mediaPublicationReceipt.definition.receiptType.enum.includes('PUBLICATION_AUDIT'), 'mediaPublicationReceipt must support audit receipts');
+assert(mediaSchemas.mediaCleanupCandidate.definition.mediaCode.required, 'mediaCleanupCandidate.mediaCode must identify the media artifact under cleanup review');
+assert(mediaSchemas.mediaCleanupCandidate.definition.artifactClass.enum.includes('PRODUCT_ASSET'), 'mediaCleanupCandidate must classify product assets generically');
+assert(mediaSchemas.mediaCleanupCandidate.definition.artifactClass.enum.includes('CMS_ASSET'), 'mediaCleanupCandidate must classify CMS assets without owning CMS business data');
+assert(mediaSchemas.mediaCleanupCandidate.definition.status.enum.includes('PASSIVE'), 'mediaCleanupCandidate must support passive marking before physical cleanup');
+assert(mediaSchemas.mediaCleanupCandidate.definition.status.enum.includes('CLEANED'), 'mediaCleanupCandidate must preserve cleaned audit state');
+assert.strictEqual(mediaSchemas.mediaCleanupCandidate.definition.status.searchOptions.enabled, true, 'mediaCleanupCandidate.status must be searchable through Schema Workbench');
 assert(mediaSchemas.mediaReference.definition.ownerModule.required, 'mediaReference.ownerModule must identify caller ownership');
 assert(mediaSchemas.mediaReference.definition.ownerSchema.required, 'mediaReference.ownerSchema must identify caller schema ownership');
 assert(mediaSchemas.mediaReference.definition.mediaSetCode, 'mediaReference must be able to reference a media set');

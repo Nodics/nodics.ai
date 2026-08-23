@@ -175,6 +175,16 @@ module.exports = {
             apiExposure: 'moduleInternal', key: '/publication/target/media/collect', method: 'POST',
             controller: 'DefaultCmsPublicationTargetController', operation: 'collectMediaGarbage'
         },
+        reconcilePublishedMediaReplication: {
+            secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'], permissionConfig: 'authSecurity.internalToken.routePermission',
+            apiExposure: 'moduleInternal', key: '/publication/target/media/reconcile-replication', method: 'POST',
+            controller: 'DefaultCmsPublicationTargetController', operation: 'reconcileMediaReplication'
+        },
+        retryPendingPublishedMediaReplication: {
+            secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'], permissionConfig: 'authSecurity.internalToken.routePermission',
+            apiExposure: 'moduleInternal', key: '/publication/target/media/retry-pending-replication', method: 'POST',
+            controller: 'DefaultCmsPublicationTargetController', operation: 'retryPendingMediaReplication'
+        },
         rollbackPublication: {
             secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'], permissionConfig: 'authSecurity.internalToken.routePermission',
             apiExposure: 'moduleInternal', key: '/publication/target/rollback', method: 'POST',

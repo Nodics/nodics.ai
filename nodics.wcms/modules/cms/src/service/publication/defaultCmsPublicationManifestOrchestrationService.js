@@ -160,12 +160,13 @@ module.exports = {
     persist: async function (publication, request) {
         let snapshot = await this.buildSnapshot(publication, request);
         let mediaCodes = this.collectMediaCodes(snapshot);
-        let mediaAssets = mediaCodes.length ? await SERVICE.DefaultMediaPublicationTransferService.exportReferenced(mediaCodes, request) : [];
+        let code = [publication.code, publication.sourceVersion, Number(publication.revision || 0)].join('_');
+        let mediaRequest = Object.assign({}, request, { publicationCode: publication.code, manifestCode: code });
+        let mediaAssets = mediaCodes.length ? await SERVICE.DefaultMediaPublicationTransferService.exportReferenced(mediaCodes, mediaRequest) : [];
         let contentModel = { dependencies: publication.dependencies, snapshot: snapshot };
         if (mediaAssets.length) contentModel.mediaAssets = mediaAssets;
         let content = JSON.stringify(contentModel);
         let contentHash = crypto.createHash('sha256').update(content).digest('hex');
-        let code = [publication.code, publication.sourceVersion, Number(publication.revision || 0)].join('_');
         let model = { code: code, active: true, publicationCode: publication.code, rootType: publication.rootType,
             rootCode: publication.rootCode, sourceVersion: publication.sourceVersion, dependencies: publication.dependencies,
             snapshot: snapshot, contentHash: contentHash, createdBy: publication.requestedBy ||

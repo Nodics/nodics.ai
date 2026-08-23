@@ -92,6 +92,43 @@ module.exports = {
     },
 
     /**
+     * Transfers media between provider locations through the provider
+     * abstraction. Providers can implement native copy/streaming; otherwise the
+     * registry safely falls back to bounded read plus target store.
+     *
+     * @param {Object} request Media transfer request.
+     * @returns {Promise<Object>} Target stored descriptor.
+     */
+    transfer: function (request) {
+        let sourceContext = this.resolveProvider({ providerCode: request.sourceProviderCode || request.providerCode });
+        let targetContext = this.resolveProvider({ providerCode: request.targetProviderCode || request.providerCode });
+        let transferRequest = Object.assign({}, request, {
+            sourceProviderCode: sourceContext.code,
+            sourceProvider: sourceContext.policy.provider,
+            targetProviderCode: targetContext.code,
+            providerCode: targetContext.code,
+            provider: targetContext.policy.provider,
+            storage: targetContext.policy.storage
+        });
+        if (sourceContext.service === targetContext.service && typeof targetContext.service.transfer === 'function') {
+            return targetContext.service.transfer(transferRequest);
+        }
+        if (!request.sourceStorageKey) {
+            return targetContext.service.store(transferRequest);
+        }
+        return sourceContext.service.read({
+            providerCode: sourceContext.code,
+            provider: sourceContext.policy.provider,
+            storage: sourceContext.policy.storage,
+            storageKey: request.sourceStorageKey,
+            maximumBytes: request.maximumBytes
+        }).then(buffer => targetContext.service.store(Object.assign({}, transferRequest, {
+            buffer: buffer,
+            sizeBytes: buffer.length
+        })));
+    },
+
+    /**
      * Removes media data through the active provider.
      *
      * @param {Object} request Media remove request.

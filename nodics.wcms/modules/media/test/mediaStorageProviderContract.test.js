@@ -99,6 +99,19 @@ class NodicsError extends Error {
         true,
         'relative local media storage must resolve under the active server runtime path'
     );
+
+    const transferred = await registryService.transfer(Object.assign({}, descriptor, {
+        sourceProviderCode: stored.providerCode,
+        sourceStorageKey: stored.storageKey,
+        targetProviderCode: stored.providerCode,
+        mediaCode: 'upload-1-replica',
+        maximumBytes: 128
+    }));
+    assert.strictEqual(transferred.providerCode, 'local');
+    assert.strictEqual(transferred.storageKey, 'data/import/default/default/tenant/2026/07/upload-1-replica.xlsx');
+    assert.strictEqual(transferred.absolutePath, undefined, 'transfer descriptors must not expose absolute filesystem paths');
+    assert.strictEqual(fs.readFileSync(transferred.internalAbsolutePath, 'utf8'), 'tenant,data\n');
+
     assert.strictEqual(
         rootResolverService.resolveLocalRoot({ provider: { basePath: path.join(workspace, 'configured-media-root') } }),
         path.join(workspace, 'configured-media-root'),

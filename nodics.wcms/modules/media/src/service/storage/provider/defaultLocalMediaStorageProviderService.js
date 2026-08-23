@@ -113,6 +113,50 @@ module.exports = {
     },
 
     /**
+     * Copies one local-provider media object into the target local placement.
+     * This is the native local implementation behind registry-level transfer;
+     * cloud or NAS providers may override with streaming, multipart, or
+     * provider-native copy semantics.
+     *
+     * @param {Object} request Media transfer request.
+     * @returns {Promise<Object>} Target stored descriptor.
+     */
+    transfer: function (request) {
+        try {
+            if (!request.sourceStorageKey) {
+                return this.store(request);
+            }
+            let sourceBasePath = this.resolveBasePath(request.sourceProvider || request.provider);
+            let sourceStorageKey = SERVICE.DefaultMediaStorageKeyService.assertSafeStorageKey(request.sourceStorageKey);
+            let sourceAbsolutePath = path.resolve(sourceBasePath, sourceStorageKey);
+            if (!sourceAbsolutePath.startsWith(sourceBasePath + path.sep) && sourceAbsolutePath !== sourceBasePath) {
+                throw new CLASSES.NodicsError('ERR_MED_00004', 'Unsafe media storage key');
+            }
+            let location = this.resolveLocation(request);
+            return fs.promises.stat(sourceAbsolutePath).then(stat => {
+                let maximum = Number(request.maximumBytes || 0);
+                if (maximum > 0 && stat.size > maximum) {
+                    throw new CLASSES.NodicsError('ERR_MED_00012', 'Media publication payload exceeds configured boundary');
+                }
+                if (sourceAbsolutePath === location.internalAbsolutePath) {
+                    return Object.assign({}, location, {
+                        sizeBytes: stat.size,
+                        fullPath: location.internalAbsolutePath
+                    });
+                }
+                return fs.promises.mkdir(path.dirname(location.internalAbsolutePath), { recursive: true })
+                    .then(() => fs.promises.copyFile(sourceAbsolutePath, location.internalAbsolutePath))
+                    .then(() => Object.assign({}, location, {
+                        sizeBytes: stat.size,
+                        fullPath: location.internalAbsolutePath
+                    }));
+            });
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
+
+    /**
      * Removes a local media file.
      *
      * @param {Object} request Media remove request.

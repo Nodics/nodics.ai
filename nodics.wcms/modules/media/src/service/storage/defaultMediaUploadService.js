@@ -50,6 +50,7 @@ module.exports = {
             moduleName: request.moduleName,
             schemaName: request.schemaName,
             indexName: request.indexName,
+            providerCode: request.providerCode,
             keyStrategy: request.keyStrategy,
             folderCode: request.folderCode || 'default',
             formatCode: request.formatCode || 'original',

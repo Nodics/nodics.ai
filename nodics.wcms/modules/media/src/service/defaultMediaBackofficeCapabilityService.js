@@ -412,6 +412,144 @@ const capability = {
             ]
         },
         {
+            "id": "media-placements",
+            "label": "Media Placements",
+            "route": "/media/placements",
+            "icon": "server",
+            "order": 355,
+            "group": {
+                "id": "media-management",
+                "label": "Media Management",
+                "order": 300
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "help": {
+                "summary": "Inspect physical placement evidence for logical media across active production and replication locations without exposing raw storage keys.",
+                "documentationRoute": "/docs/reference/media",
+                "documentationFragment": "active-and-replication-media-location-model"
+            },
+            "featureState": "PREVIEW",
+            "requiredPermissions": [
+                "media.storage.policy.view"
+            ],
+            "workbenchTarget": { "moduleName": "media", "schemaName": "mediaPlacement" }
+        },
+        {
+            "id": "media-replication",
+            "label": "Replication Queue",
+            "route": "/media/replication",
+            "icon": "sync",
+            "order": 356,
+            "group": {
+                "id": "media-management",
+                "label": "Media Management",
+                "order": 300
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "help": {
+                "summary": "Track failed, scheduled, escalated, and synchronized media replication obligations for production and DR targets.",
+                "documentationRoute": "/docs/reference/media",
+                "documentationFragment": "failed-replication-trigger"
+            },
+            "featureState": "PREVIEW",
+            "requiredPermissions": [
+                "media.storage.policy.view"
+            ],
+            "workbenchTarget": { "moduleName": "media", "schemaName": "mediaReplicationQueue" }
+        },
+        {
+            "id": "media-artifacts",
+            "label": "Physical Artifacts",
+            "route": "/media/artifacts",
+            "icon": "file",
+            "order": 352,
+            "group": { "id": "media-management", "label": "Media Management", "order": 300 },
+            "perspectives": ["operations"],
+            "contexts": ["environment", "tenant", "enterprise"],
+            "help": { "summary": "Review generic physical artifact identity, lifecycle, publishability, owner evidence, and provider placement without exposing raw storage keys.", "documentationRoute": "/docs/reference/media", "documentationFragment": "physical-artifact-model" },
+            "featureState": "PREVIEW",
+            "requiredPermissions": ["media.storage.policy.view"],
+            "workbenchTarget": { "moduleName": "media", "schemaName": "mediaPhysicalArtifact" }
+        },
+        {
+            "id": "media-transfer-manifests",
+            "label": "Transfer Manifests",
+            "route": "/media/transfer-manifests",
+            "icon": "sync",
+            "order": 353,
+            "group": { "id": "media-management", "label": "Media Management", "order": 300 },
+            "perspectives": ["operations"],
+            "contexts": ["environment", "tenant", "enterprise"],
+            "help": { "summary": "Review physical transfer manifests that bind publishable business data to required media artifacts for Staged, Online, and DR movement.", "documentationRoute": "/docs/reference/media", "documentationFragment": "transfer-manifest" },
+            "featureState": "PREVIEW",
+            "requiredPermissions": ["media.storage.policy.view"],
+            "workbenchTarget": { "moduleName": "media", "schemaName": "mediaTransferManifest" }
+        },
+        {
+            "id": "media-publication-receipts",
+            "label": "Publication Receipts",
+            "route": "/media/publication-receipts",
+            "icon": "receipt",
+            "order": 354,
+            "group": { "id": "media-management", "label": "Media Management", "order": 300 },
+            "perspectives": ["operations"],
+            "contexts": ["environment", "tenant", "enterprise"],
+            "help": { "summary": "Review target import, audit, replication, cleanup, and rollback receipts for physical media artifacts.", "documentationRoute": "/docs/reference/media", "documentationFragment": "publication-receipts" },
+            "featureState": "PREVIEW",
+            "requiredPermissions": ["media.storage.policy.view"],
+            "workbenchTarget": { "moduleName": "media", "schemaName": "mediaPublicationReceipt" }
+        },
+        {
+            "id": "media-cleanup-candidates",
+            "label": "Cleanup Candidates",
+            "route": "/media/cleanup-candidates",
+            "icon": "cleanup",
+            "order": 357,
+            "group": { "id": "media-management", "label": "Media Management", "order": 300 },
+            "perspectives": ["operations"],
+            "contexts": ["environment", "tenant", "enterprise"],
+            "help": {
+                "summary": "Review media cleanup candidates before passive marking or approved physical deletion across Staged, Online, and DR locations.",
+                "documentationRoute": "/docs/reference/media",
+                "documentationFragment": "media-cleanup-lifecycle"
+            },
+            "featureState": "PREVIEW",
+            "requiredPermissions": ["media.cleanup.view"],
+            "workbenchTarget": { "moduleName": "media", "schemaName": "mediaCleanupCandidate" }
+        },
+        {
+            "id": "media-cleanup-jobs",
+            "label": "Cleanup Jobs and Audit",
+            "route": "/media/cleanup-jobs",
+            "icon": "job",
+            "order": 358,
+            "group": { "id": "media-management", "label": "Media Management", "order": 300 },
+            "perspectives": ["operations"],
+            "contexts": ["environment", "tenant", "enterprise"],
+            "help": {
+                "summary": "Operate cleanup scans, passive retention jobs, approval evidence, and cleanup audit outcomes through governed Media APIs.",
+                "documentationRoute": "/docs/reference/media",
+                "documentationFragment": "media-cleanup-jobs"
+            },
+            "featureState": "PREVIEW",
+            "requiredPermissions": ["media.cleanup.view"],
+            "workbenchTarget": { "moduleName": "media", "schemaName": "mediaCleanupCandidate" }
+        },
+        {
             "id": "storage-delivery",
             "label": "Storage and Delivery",
             "route": "/media/storage-delivery",

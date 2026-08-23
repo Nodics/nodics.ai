@@ -271,6 +271,71 @@ module.exports = {
         }));
     },
     /**
+     * Replays checksum-verified publication assets to the replication location.
+     *
+     * @param {Object} request Publication replication request.
+     * @returns {Promise<Object>} Replication reconciliation result.
+     */
+    reconcilePublishedMediaReplication: function (request) {
+        let assets = request.mediaAssets || request.assets || [];
+        return SERVICE.DefaultMediaPublicationTransferService.reconcileReplication(assets, request).then(result => ({
+            code: 'SUC_MED_00023',
+            data: result
+        }));
+    },
+    /**
+     * Retries due generic media replication obligations from the media-owned queue.
+     *
+     * @param {Object} request Retry request.
+     * @returns {Promise<Object>} Retry result.
+     */
+    retryPendingMediaReplication: function (request) {
+        return SERVICE.DefaultMediaPublicationTransferService.retryPendingReplication(request).then(result => ({
+            code: 'SUC_MED_00024',
+            data: result
+        }));
+    },
+    /** Builds a generic physical media transfer manifest for publication. */
+    buildArtifactTransferManifest: function (request) {
+        return SERVICE.DefaultMediaArtifactPublicationService.buildTransferManifest(request).then(result => ({ code: 'SUC_MED_00029', data: result }));
+    },
+    /** Records a target import/publication receipt for physical media. */
+    recordArtifactPublicationReceipt: function (request) {
+        return SERVICE.DefaultMediaArtifactPublicationService.recordReceipt(request).then(result => ({ code: 'SUC_MED_00030', data: result }));
+    },
+    /** Resolves PROD/DR media role switch behavior without copying files directly. */
+    switchProdDrMediaRoles: function (request) {
+        return Promise.resolve({ code: 'SUC_MED_00031', data: SERVICE.DefaultMediaArtifactPublicationService.switchProdDrRoles(request) });
+    },
+    /** Returns dry-run cleanup candidates without persisting them. */
+    previewCleanupCandidates: function (request) {
+        return SERVICE.DefaultMediaCleanupLifecycleService.previewCandidates(request).then(result => ({
+            code: 'SUC_MED_00025',
+            data: result
+        }));
+    },
+    /** Scans and persists cleanup candidates for operator review. */
+    scanCleanupCandidates: function (request) {
+        return SERVICE.DefaultMediaCleanupLifecycleService.scanCandidates(request).then(result => ({
+            code: 'SUC_MED_00026',
+            data: result
+        }));
+    },
+    /** Marks one cleanup candidate passive without deleting physical media. */
+    markCleanupCandidatePassive: function (request) {
+        return SERVICE.DefaultMediaCleanupLifecycleService.markPassive(request).then(result => ({
+            code: 'SUC_MED_00027',
+            data: result
+        }));
+    },
+    /** Runs approved passive-retention physical cleanup. */
+    runPassiveRetentionCleanup: function (request) {
+        return SERVICE.DefaultMediaCleanupLifecycleService.runRetentionCleanup(request).then(result => ({
+            code: 'SUC_MED_00028',
+            data: result
+        }));
+    },
+    /**
      * Resolves an authorized media content delivery descriptor.
      *
      * @param {Object} request Delivery request.

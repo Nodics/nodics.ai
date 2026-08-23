@@ -108,7 +108,9 @@ module.exports = {
                 if (!SERVICE.DefaultMediaPublicationTransferService) {
                     throw new CLASSES.NodicsError('CMS_PUBLICATION_MEDIA_UNAVAILABLE', 'CMS Online media publication service is unavailable');
                 }
-                await SERVICE.DefaultMediaPublicationTransferService.importReferenced(input.manifest.mediaAssets, transactionRequest);
+                await SERVICE.DefaultMediaPublicationTransferService.importReferenced(input.manifest.mediaAssets,
+                    Object.assign({}, transactionRequest, { publicationCode: input.manifest.publicationCode,
+                        manifestCode: input.manifest.code }));
             }
             let manifest = await this.manifests().importManifest(input.manifest, transactionRequest);
             let activation = await this.manifests().activate(manifest, transactionRequest);
@@ -295,6 +297,61 @@ module.exports = {
         return SERVICE.DefaultMediaPublicationTransferService.collectGarbage({ tenant: request.tenant,
             authData: request.authData, protectedMediaCodes: Array.from(protectedCodes),
             dryRun: input.dryRun !== false, now: input.now });
+    },
+    /** Replays failed media replication for one immutable manifest/package. */
+    reconcileMediaReplication: async function (request) {
+        this.assertOnlineRuntime();
+        if (!SERVICE.DefaultMediaPublicationTransferService || !SERVICE.DefaultMediaPublicationTransferService.reconcileReplication) {
+            throw new CLASSES.NodicsError('CMS_PUBLICATION_MEDIA_UNAVAILABLE', 'CMS Online media replication service is unavailable');
+        }
+        let input = request.cmsPublicationTarget || request;
+        if (!input.manifestCode) throw new CLASSES.NodicsError('CMS_PUBLICATION_MANIFEST_MISSING', 'CMS media replication manifest is required');
+        let manifest = await this.manifests().getManifest(input.manifestCode, request);
+        if (!manifest) return { status: 'MANIFEST_MISSING', manifestCode: input.manifestCode, synchronized: 0 };
+        this.applyCorrelation(request, input, manifest);
+        return SERVICE.DefaultMediaPublicationTransferService.reconcileReplication(manifest.mediaAssets || [],
+            Object.assign({}, request, { publicationCode: manifest.publicationCode, manifestCode: manifest.code,
+                retryCount: input.retryCount || request.retryCount || 0 }));
+    },
+    /** Finds due media replication obligations and replays their immutable CMS packages. */
+    retryPendingMediaReplication: async function (request) {
+        this.assertOnlineRuntime();
+        if (!SERVICE.DefaultMediaReplicationQueueService || typeof SERVICE.DefaultMediaReplicationQueueService.get !== 'function') {
+            throw new CLASSES.NodicsError('CMS_PUBLICATION_MEDIA_UNAVAILABLE', 'CMS media replication queue service is unavailable');
+        }
+        let input = request.cmsPublicationTarget || request;
+        let maximum = Number(input.limit || ((((CONFIG.get('cms') || {}).publication || {}).mediaReplicationRetry || {}).maximumQueueRecords) || 25);
+        let statuses = input.statuses || ['REPLICATION_PENDING', 'REPLICATION_FAILED', 'REPLICATION_RETRY_SCHEDULED'];
+        let response = await SERVICE.DefaultMediaReplicationQueueService.get({ tenant: request.tenant,
+            authData: request.authData, query: { status: { $in: statuses } }, searchOptions: { limit: maximum } });
+        let rows = [].concat(response && response.result || []).filter(row => {
+            if (!row || !row.manifestCode) return false;
+            if (!row.nextRetryAt) return true;
+            return new Date(row.nextRetryAt).getTime() <= Date.now();
+        });
+        let manifestCodes = Array.from(new Set(rows.map(row => row.manifestCode)));
+        let result = { status: 'NO_PENDING_REPLICATION', scanned: rows.length, manifests: 0,
+            synchronized: 0, queued: 0, skipped: 0, escalated: 0, failures: [] };
+        for (let manifestCode of manifestCodes) {
+            try {
+                let replay = await this.reconcileMediaReplication(Object.assign({}, request, {
+                    cmsPublicationTarget: { manifestCode: manifestCode, retryCount: input.retryCount || 1 }
+                }));
+                result.manifests += 1;
+                result.synchronized += Number(replay.synchronized || 0);
+                result.queued += Number(replay.queued || 0);
+                result.skipped += Number(replay.skipped || 0);
+                result.escalated += Number(replay.escalated || 0);
+            } catch (error) {
+                result.failures.push({ manifestCode: manifestCode, failureCode: error && (error.code || error.name) || 'CMS_MEDIA_REPLICATION_RETRY_FAILED',
+                    failureMessage: String(error && error.message || error).slice(0, 500) });
+            }
+        }
+        if (result.failures.length) result.status = 'RETRY_PARTIAL_FAILURE';
+        else if (result.escalated) result.status = 'REPLICATION_ESCALATED';
+        else if (result.queued) result.status = 'REPLICATION_RETRY_SCHEDULED';
+        else if (result.manifests) result.status = 'REPLICATION_RETRY_COMPLETE';
+        return result;
     },
     /** Creates a stable delivery-scope identity for route-level pointer comparison. */
     scopeIdentity: function (scope) {

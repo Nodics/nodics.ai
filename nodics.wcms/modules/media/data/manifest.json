@@ -1,0 +1,75 @@
+{
+    "contractVersion": 0,
+    "module": "media",
+    "sections": {
+        "mediaReplicationRetryJob": {
+            "kind": "DATA_RELEASE",
+            "dataType": "init",
+            "version": "0.0.0",
+            "displayName": "Media Replication Retry Job",
+            "description": "Media-owned Cron job for retrying pending media replication obligations.",
+            "owningDomain": "media",
+            "lifecycle": "OPERATIONAL_VERSIONED",
+            "destinationRole": "CRON",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "IMMUTABLE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "installer": "CRON_JOB",
+            "files": {
+                "init/data/jobs/mediaReplicationRetryJobData.js": "c1b098d19823e41819ef2844c1545ea9d6cedf14bd4c0c152477cd52cab4b037",
+                "init/headers/jobs/mediaReplicationRetryJobHeader.js": "1ee97ce2dc31c46bdf9b0e1c15bc6c7bbc9eabf9a96eb50abbd3086683c509a7"
+            }
+        },
+        "mediaCleanupRetentionJob": {
+            "kind": "DATA_RELEASE",
+            "dataType": "init",
+            "version": "0.0.0",
+            "displayName": "Media Cleanup Retention Job",
+            "description": "Media-owned Cron job for approved passive-retention physical cleanup.",
+            "owningDomain": "media",
+            "lifecycle": "OPERATIONAL_VERSIONED",
+            "destinationRole": "CRON",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "IMMUTABLE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "installer": "CRON_JOB",
+            "files": {
+                "init/data/jobs/mediaCleanupRetentionJobData.js": "2161a84d393db5a001ab37f40d6f3fd415d4cc0b4946efcb13b5b4d0bcb54b58",
+                "init/headers/jobs/mediaCleanupRetentionJobHeader.js": "4435748f0f712da0d7b06f67d3cab68b0eede6b0407bf55e1dad6e3ba3fb07d2"
+            }
+        },
+        "mediaDataPackStandard": {
+            "kind": "DATA_RELEASE",
+            "dataType": "init",
+            "version": "0.0.0",
+            "displayName": "Media Data-Pack Standard",
+            "description": "Standard path-free media package structure and non-publishable artifact policy for content, product, docs, and accelerators.",
+            "owningDomain": "media",
+            "lifecycle": "REFERENCE_STANDARD",
+            "destinationRole": "ALL",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "IMMUTABLE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "installer": "DOCUMENTATION",
+            "files": {
+                "standard/data-pack-media-structure.md": "69dea2519b0cf1fca1337c2300b3f51831f00fc4b8860b40535cf6daeebfe24f",
+                "standard/non-publishable-media-policy.json": "c393f8c190b31bc3b5418f561869e64f1674b805d54da3cd9aff4aa4d46b6a1d"
+            }
+        }
+    }
+}

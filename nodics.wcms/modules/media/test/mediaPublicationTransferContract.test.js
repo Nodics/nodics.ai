@@ -21,8 +21,9 @@ class NodicsError extends Error { constructor(code, message) { super(message || 
     let buffer = Buffer.from('referenced-media');
     let checksum = crypto.createHash('sha256').update(buffer).digest('hex');
     global.CLASSES = { NodicsError };
-    global.CONFIG = { get: key => key === 'media' ? { publication: { maximumAssets: 2, maximumAssetBytes: 100,
-        maximumTotalBytes: 100, retentionDays: 7, garbageCollectionBatchSize: 10 } } : undefined };
+    let mediaConfig = { publication: { maximumAssets: 2, maximumAssetBytes: 100,
+        maximumTotalBytes: 100, retentionDays: 7, garbageCollectionBatchSize: 10 } };
+    global.CONFIG = { get: key => key === 'media' ? mediaConfig : undefined };
     global.SERVICE = {
         DefaultMediaService: {
             get: async request => request.query.code === 'hero' ? { result: [{ code: 'hero', active: true, status: 'READY',
@@ -84,6 +85,70 @@ class NodicsError extends Error { constructor(code, message) { super(message || 
     await assert.rejects(service.importReferenced(assets, { tenant: 'default' }), error => error.code === 'ERR_MED_00015');
     let corrupt = Object.assign({}, assets[0], { contentBase64: Buffer.from('wrong').toString('base64'), sizeBytes: 5 });
     await assert.rejects(service.importReferenced([corrupt], { tenant: 'default' }), error => error.code === 'ERR_MED_00014');
+
+    let placements = [];
+    let replicationRecords = [];
+    mediaConfig.publication.topology = { policy: 'PRIMARY_FIRST_WITH_DR_RECONCILIATION', replicationEnabled: true,
+        activeLocationRole: 'ACTIVE_PROD_MEDIA_LOCATION', replicationLocationRole: 'REPLICATION_PROD_MEDIA_LOCATION',
+        activeProviderCode: 'online-local', replicationProviderCode: 'dr-local', retryDelaySeconds: 1, maxRetryAttempts: 2 };
+    global.SERVICE.DefaultMediaService.get = async request => request.query.code === 'hero' && request.query.checksum === checksum
+        ? { result: [{ code: 'hero', checksum: checksum, providerCode: 'online-local', storageKey: 'active/hero.png' }] }
+        : { result: [] };
+    global.SERVICE.DefaultMediaStorageProviderRegistryService.transfer = async request => {
+        if (request.targetProviderCode === 'dr-down') throw new NodicsError('DR_DOWN', 'Replication location is unavailable');
+        assert.strictEqual(request.sourceProviderCode, 'online-local');
+        assert.strictEqual(request.sourceStorageKey, 'active/hero.png');
+        return { providerCode: request.targetProviderCode, storageKey: request.targetProviderCode + '/hero.png',
+            folderCode: request.folderCode, relativePath: request.providerCode + '/hero.png', access: 'PUBLIC',
+            originalFileName: request.originalFileName, fileName: 'hero.png', mimeType: request.mimeType,
+            sizeBytes: request.sizeBytes };
+    };
+    global.SERVICE.DefaultMediaPlacementService = { save: async request => {
+        placements.push(request.model); return { result: [request.model] };
+    } };
+    global.SERVICE.DefaultMediaReplicationQueueService = { save: async request => {
+        replicationRecords.push(request.model); return { result: [request.model] };
+    } };
+    await service.reconcileReplication(assets, { tenant: 'default', authData: {}, manifestCode: 'manifest-1' });
+    assert.strictEqual(placements[0].targetRole, 'REPLICATION_PROD_MEDIA_LOCATION');
+    assert.strictEqual(replicationRecords[0].status, 'REPLICATION_SYNCHRONIZED');
+    mediaConfig.publication.topology.replicationProviderCode = 'dr-down';
+    await service.reconcileReplication(assets, { tenant: 'default', authData: {}, manifestCode: 'manifest-1' });
+    assert.strictEqual(replicationRecords[1].status, 'REPLICATION_RETRY_SCHEDULED');
+    assert.strictEqual(replicationRecords[1].failureCode, 'DR_DOWN');
+    mediaConfig.publication.topology.replicationEnabled = false;
+
+    let genericTransfers = [];
+    let genericQueueRecords = [{
+        code: 'queue-product-hero', active: true, mediaCode: 'productHero', mediaChecksum: checksum,
+        checksumAlgorithm: 'sha256', ownerModule: 'product', ownerType: 'PRODUCT', ownerReference: 'linenWrapDress',
+        publicationType: 'PRODUCT', publicationCode: 'productPublication-1', manifestCode: 'productManifest-1',
+        activeLocationRole: 'ACTIVE_PROD_MEDIA_LOCATION', replicationLocationRole: 'REPLICATION_PROD_MEDIA_LOCATION',
+        activeProviderCode: 'online-local', replicationProviderCode: 'dr-local', sourceStorageKey: 'active/productHero.png',
+        retryCount: 0, status: 'REPLICATION_RETRY_SCHEDULED'
+    }];
+    global.SERVICE.DefaultMediaReplicationQueueService.get = async () => ({ result: genericQueueRecords });
+    global.SERVICE.DefaultMediaService.get = async request => request.query.code === 'productHero'
+        ? { result: [{ code: 'productHero', name: 'Product Hero', checksum: checksum, providerCode: 'online-local',
+            storageKey: 'active/productHero.png', folderCode: 'productAssets', formatCode: 'original',
+            originalFileName: 'productHero.png', mimeType: 'image/png', sizeBytes: buffer.length,
+            ownerType: 'PRODUCT', ownerReference: 'linenWrapDress', businessPurpose: 'AGORA_PRODUCT_PUBLICATION' }] }
+        : { result: [] };
+    global.SERVICE.DefaultMediaStorageProviderRegistryService.transfer = async request => {
+        genericTransfers.push(request);
+        return { providerCode: request.targetProviderCode, storageKey: 'dr/productHero.png', relativePath: 'dr/productHero.png', sizeBytes: request.sizeBytes };
+    };
+    replicationRecords = [];
+    placements = [];
+    let genericRetry = await service.retryPendingReplication({ tenant: 'default', authData: {}, now: '2026-08-23T00:00:00.000Z' });
+    assert.strictEqual(genericRetry.status, 'MEDIA_REPLICATION_RETRY_COMPLETE');
+    assert.strictEqual(genericRetry.synchronized, 1);
+    assert.strictEqual(genericTransfers[0].sourceProviderCode, 'online-local');
+    assert.strictEqual(genericTransfers[0].sourceStorageKey, 'active/productHero.png');
+    assert.strictEqual(genericTransfers[0].targetProviderCode, 'dr-local');
+    assert.strictEqual(replicationRecords[0].ownerModule, 'product');
+    assert.strictEqual(replicationRecords[0].publicationType, 'PRODUCT');
+    assert.strictEqual(replicationRecords[0].ownerReference, 'linenWrapDress');
 
     let deleted = [];
     global.SERVICE.DefaultMediaService.get = async () => ({ result: [

@@ -390,6 +390,115 @@ module.exports = {
         }
     },
     /**
+     * Replays path-free media publication assets to the replication target.
+     *
+     * @param {Object} request Nodics request wrapper.
+     * @param {Function} callback Optional callback used by router pipeline.
+     * @returns {Promise<Object>|void} Replication reconciliation response.
+     */
+    reconcilePublishedMediaReplication: function (request, callback) {
+        let body = request && request.httpRequest && request.httpRequest.body || {};
+        let input = Object.assign({}, body, {
+            tenant: request && request.tenant,
+            authData: request && request.authData
+        });
+        if (callback) {
+            FACADE.DefaultMediaStorageFacade.reconcilePublishedMediaReplication(input).then(success => callback(null, success)).catch(error => callback(error));
+        } else {
+            return FACADE.DefaultMediaStorageFacade.reconcilePublishedMediaReplication(input);
+        }
+    },
+    /**
+     * Retries due generic media replication obligations.
+     *
+     * @param {Object} request Nodics request wrapper.
+     * @param {Function} callback Optional callback used by router pipeline.
+     * @returns {Promise<Object>|void} Retry response.
+     */
+    retryPendingMediaReplication: function (request, callback) {
+        let body = request && request.httpRequest && request.httpRequest.body || {};
+        let input = Object.assign({}, body, {
+            tenant: request && request.tenant,
+            authData: request && request.authData
+        });
+        if (callback) {
+            FACADE.DefaultMediaStorageFacade.retryPendingMediaReplication(input).then(success => callback(null, success)).catch(error => callback(error));
+        } else {
+            return FACADE.DefaultMediaStorageFacade.retryPendingMediaReplication(input);
+        }
+    },
+    /** Builds a generic physical media transfer manifest. */
+    buildArtifactTransferManifest: function (request, callback) {
+        let body = request && request.httpRequest && request.httpRequest.body || {};
+        let input = Object.assign({}, body, { tenant: request && request.tenant, authData: request && request.authData });
+        if (callback) {
+            FACADE.DefaultMediaStorageFacade.buildArtifactTransferManifest(input).then(success => callback(null, success)).catch(error => callback(error));
+        } else {
+            return FACADE.DefaultMediaStorageFacade.buildArtifactTransferManifest(input);
+        }
+    },
+    /** Records a physical media publication receipt. */
+    recordArtifactPublicationReceipt: function (request, callback) {
+        let body = request && request.httpRequest && request.httpRequest.body || {};
+        let input = Object.assign({}, body, { tenant: request && request.tenant, authData: request && request.authData });
+        if (callback) {
+            FACADE.DefaultMediaStorageFacade.recordArtifactPublicationReceipt(input).then(success => callback(null, success)).catch(error => callback(error));
+        } else {
+            return FACADE.DefaultMediaStorageFacade.recordArtifactPublicationReceipt(input);
+        }
+    },
+    /** Resolves PROD/DR media role switch behavior. */
+    switchProdDrMediaRoles: function (request, callback) {
+        let body = request && request.httpRequest && request.httpRequest.body || {};
+        let input = Object.assign({}, body, { tenant: request && request.tenant, authData: request && request.authData });
+        if (callback) {
+            FACADE.DefaultMediaStorageFacade.switchProdDrMediaRoles(input).then(success => callback(null, success)).catch(error => callback(error));
+        } else {
+            return FACADE.DefaultMediaStorageFacade.switchProdDrMediaRoles(input);
+        }
+    },
+    /** Previews media cleanup candidates without persistence. */
+    previewCleanupCandidates: function (request, callback) {
+        let body = request && request.httpRequest && request.httpRequest.body || {};
+        let input = Object.assign({}, body, { tenant: request && request.tenant, authData: request && request.authData });
+        if (callback) {
+            FACADE.DefaultMediaStorageFacade.previewCleanupCandidates(input).then(success => callback(null, success)).catch(error => callback(error));
+        } else {
+            return FACADE.DefaultMediaStorageFacade.previewCleanupCandidates(input);
+        }
+    },
+    /** Scans and persists media cleanup candidates. */
+    scanCleanupCandidates: function (request, callback) {
+        let body = request && request.httpRequest && request.httpRequest.body || {};
+        let input = Object.assign({}, body, { tenant: request && request.tenant, authData: request && request.authData });
+        if (callback) {
+            FACADE.DefaultMediaStorageFacade.scanCleanupCandidates(input).then(success => callback(null, success)).catch(error => callback(error));
+        } else {
+            return FACADE.DefaultMediaStorageFacade.scanCleanupCandidates(input);
+        }
+    },
+    /** Marks one media cleanup candidate passive. */
+    markCleanupCandidatePassive: function (request, callback) {
+        let body = request && request.httpRequest && request.httpRequest.body || {};
+        let params = request && request.httpRequest && request.httpRequest.params || {};
+        let input = Object.assign({}, body, params, { tenant: request && request.tenant, authData: request && request.authData });
+        if (callback) {
+            FACADE.DefaultMediaStorageFacade.markCleanupCandidatePassive(input).then(success => callback(null, success)).catch(error => callback(error));
+        } else {
+            return FACADE.DefaultMediaStorageFacade.markCleanupCandidatePassive(input);
+        }
+    },
+    /** Runs approved passive-retention cleanup. */
+    runPassiveRetentionCleanup: function (request, callback) {
+        let body = request && request.httpRequest && request.httpRequest.body || {};
+        let input = Object.assign({}, body, { tenant: request && request.tenant, authData: request && request.authData });
+        if (callback) {
+            FACADE.DefaultMediaStorageFacade.runPassiveRetentionCleanup(input).then(success => callback(null, success)).catch(error => callback(error));
+        } else {
+            return FACADE.DefaultMediaStorageFacade.runPassiveRetentionCleanup(input);
+        }
+    },
+    /**
      * Delivers authorized media content by media code.
      *
      * @param {Object} request Nodics request wrapper.
