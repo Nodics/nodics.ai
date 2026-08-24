@@ -31,6 +31,16 @@ const util = require('util');
  */
 module.exports = {
     /**
+     * Returns true when a module may build local generated database models.
+     *
+     * @param {string} moduleName Module name to check.
+     * @returns {boolean} True when the module is active in this runtime.
+     */
+    isLocalActiveModule: function (moduleName) {
+        return !NODICS.isModuleActive || NODICS.isModuleActive(moduleName);
+    },
+
+    /**
      * Initializes the database model handler.
      *
      * @param {Object} options Startup options supplied by the module initializer.
@@ -165,6 +175,10 @@ module.exports = {
     buildModelsForModule: function (tntCode, moduleName) {
         let _self = this;
         return new Promise((resolve, reject) => {
+            if (!_self.isLocalActiveModule(moduleName)) {
+                resolve(true);
+                return;
+            }
             let moduleObject = NODICS.getModule(moduleName);
             if (moduleObject && moduleObject.rawSchema) {
                 if (!moduleObject.models) {

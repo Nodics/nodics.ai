@@ -174,7 +174,7 @@ module.exports = {
                             masterDatabase.setCollections(success.collections);
                             masterDatabase.setClient(success.client);
                             masterDatabase.setCapabilities(success.capabilities);
-                            if (testConfig.enabled && testConfig.uTest.enabled) {
+                            if (testConfig && testConfig.enabled && testConfig.uTest && testConfig.uTest.enabled) {
                                 testDatabase = new CLASSES.Database();
                                 if (dbConfig.test) {
                                     testDatabase.setName(moduleName);

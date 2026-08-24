@@ -22,6 +22,16 @@
  */
 module.exports = {
     /**
+     * Returns true when Schema Workbench may expose local schema descriptors.
+     *
+     * @param {string} moduleName Module name to check.
+     * @returns {boolean} True when the module is active locally.
+     */
+    isLocalActiveModule: function (moduleName) {
+        return !NODICS.isModuleActive || NODICS.isModuleActive(moduleName);
+    },
+
+    /**
      * Lists eligible model schemas visible to the caller.
      * @param {Object} request Authenticated Nodics request.
      * @returns {Promise<Object>} Client-safe descriptor collection.
@@ -124,7 +134,7 @@ module.exports = {
      */
     resolveSchemaModule: function (moduleName) {
         let moduleObject = NODICS.getModule(moduleName);
-        if (moduleObject && moduleObject.rawSchema) {
+        if (moduleObject && moduleObject.rawSchema && this.isLocalActiveModule(moduleName)) {
             return {
                 moduleName: moduleName,
                 moduleObject: moduleObject,
@@ -145,7 +155,8 @@ module.exports = {
             metadata.prefix;
         if (aliasedModuleName && aliasedModuleName !== moduleName) {
             let prefixedModule = NODICS.getModule(aliasedModuleName);
-            if (prefixedModule && prefixedModule.rawSchema) {
+            if (prefixedModule && prefixedModule.rawSchema && this.isLocalActiveModule(moduleName) &&
+                this.isLocalActiveModule(aliasedModuleName)) {
                 return {
                     moduleName: aliasedModuleName,
                     moduleObject: prefixedModule,
@@ -168,6 +179,9 @@ module.exports = {
     buildDescriptor: function (request, moduleObject, schemaName, moduleName) {
         let schema = moduleObject.rawSchema[schemaName];
         moduleName = moduleName || request.moduleName;
+        if (!this.isLocalActiveModule(moduleName)) {
+            return undefined;
+        }
         let workbenchConfig = CONFIG.get('schemaWorkbench') || {};
         let explicitConfig = schema && schema.backoffice;
         let discoverByDefault = workbenchConfig.discoverModelsByDefault !== false;

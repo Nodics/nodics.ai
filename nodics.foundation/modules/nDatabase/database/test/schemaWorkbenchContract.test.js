@@ -158,9 +158,9 @@ const workflowModule = {
     },
 };
 
-const flowApiModule = {
+const prefixedWorkflowModule = {
     metaData: {
-        name: 'flowApi',
+        name: 'prefixedWorkflow',
         prefix: 'workflow',
     },
 };
@@ -180,7 +180,7 @@ global.NODICS = {
     getModule: (name) => {
         if (name === 'profile') return profileModule;
         if (name === 'workflow') return workflowModule;
-        if (name === 'flowApi') return flowApiModule;
+        if (name === 'prefixedWorkflow') return prefixedWorkflowModule;
         if (name === 'paymentCore') return paymentCoreModule;
         return undefined;
     },
@@ -442,7 +442,7 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
     );
     assert.deepStrictEqual(denied.data.schemas, [], 'schemas without effective read access must not be disclosed');
     let workflowListedThroughApiModule = await service.list({
-        moduleName: 'flowApi',
+        moduleName: 'workflow',
         authData: { userGroups: ['adminGroup'] },
         httpRequest: {},
     });
@@ -458,7 +458,7 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
     );
     let workflowActionThroughApiModule = (
         await service.get({
-            moduleName: 'flowApi',
+            moduleName: 'workflow',
             authData: { userGroups: ['adminGroup'] },
             httpRequest: { params: { schema: 'workflowAction' } },
         })
@@ -466,7 +466,7 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
     assert.strictEqual(
         workflowActionThroughApiModule.moduleName,
         'workflow',
-        'Workbench descriptors must keep workflow as the schema-owning module when reached through flowApi',
+        'Workbench descriptors must keep workflow as the schema-owning module when reached through a prefixed workflow API surface',
     );
     let workflowListedThroughExplicitAlias = await service.list({
         moduleName: 'paymentCore',

@@ -27,6 +27,20 @@ const _ = require('lodash');
  */
 module.exports = {
     /**
+     * Returns true when a schema-owning module is active in the current runtime.
+     *
+     * `default` is the shared inheritance contract and is merged into active
+     * owners, but it is not assigned as an independent runtime schema owner.
+     *
+     * @param {string} moduleName Schema-owning module name.
+     * @returns {boolean} True when local persistence may be prepared.
+     */
+    isLocalActiveSchemaModule: function (moduleName) {
+        if (moduleName === 'default') return true;
+        return !NODICS.isModuleActive || NODICS.isModuleActive(moduleName);
+    },
+
+    /**
      * Initializes the database schema handler.
      *
      * @param {Object} options Startup options supplied by the module initializer.
@@ -67,6 +81,9 @@ module.exports = {
                 let modules = NODICS.getModules();
                 Object.keys(mergedSchema).forEach(function (key) {
                     if (key !== 'default') {
+                        if (!_self.isLocalActiveSchemaModule(key)) {
+                            return;
+                        }
                         let moduleObject = modules[key];
                         if (!moduleObject) {
                             _self.LOG.error('Module name : ' + key + ' is not valid. Please define a valide module name in schema');
@@ -162,18 +179,27 @@ module.exports = {
                 schema[runtimeSchema.moduleName] = _self.applyNamedSchemaPolicies(
                     runtimeSchema.moduleName, schema[runtimeSchema.moduleName]);
                 runtimeSchema = schema[runtimeSchema.moduleName][runtimeSchema.code];
+                if (!_self.isLocalActiveSchemaModule(runtimeSchema.moduleName)) {
+                    throw new CLASSES.NodicsError('ERR_DBS_00004',
+                        'Runtime schema module is not active in this runtime: ' + runtimeSchema.moduleName);
+                }
                 SERVICE.DefaultDatabaseConfigurationService.setRawSchema(SERVICE.DefaultFilesLoaderService.mergeRuntimeSchemaFiles(
                     SERVICE.DefaultDatabaseConfigurationService.getRawSchema(), schema
                 ));
                 if (runtimeSchema.moduleName === 'default') {
                     _.each(NODICS.getModules(), (moduleObject, moduleName) => {
-                        if (moduleObject.rawSchema) {
+                        if (_self.isLocalActiveSchemaModule(moduleName) && moduleObject.rawSchema) {
                             moduleObject.rawSchema = _.merge(moduleObject.rawSchema, schema);
                         }
                     });
                 } else {
                     let finalSchema = runtimeSchema;
-                    let moduleRawSchema = NODICS.getModule(runtimeSchema.moduleName).rawSchema;
+                    let moduleObject = NODICS.getModule(runtimeSchema.moduleName);
+                    let moduleRawSchema = moduleObject && moduleObject.rawSchema;
+                    if (!moduleRawSchema) {
+                        throw new CLASSES.NodicsError('ERR_DBS_00004',
+                            'Runtime schema module schemas are not available locally: ' + runtimeSchema.moduleName);
+                    }
                     if (runtimeSchema.super) {
                         if (!moduleRawSchema[runtimeSchema.super]) {
                             reject(new CLASSES.NodicsError('ERR_DBS_00000', 'Invalid super schema definition, could not found in current module'));
