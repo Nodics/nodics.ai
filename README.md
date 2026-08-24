@@ -262,14 +262,28 @@ preflight, and approval-gated execution modes:
 
 ```bash
 npx github:Nodics/nodics.installer --action=questionnaire
-npx github:Nodics/nodics.installer --action=plan --application-name="Acme Apparel" --workspace=/Users/me/Projects/nodicsRoot
-npx github:Nodics/nodics.installer --application-name="Acme Apparel" --action=preflight --workspace=/Users/me/Projects/nodicsRoot
-npx github:Nodics/nodics.installer --application-name="Acme Apparel" --action=execute --yes --execution-level=download
+npx github:Nodics/nodics.installer --action=doctor --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --workspace=/Users/me/Projects/NodicsCustomer
+npx github:Nodics/nodics.installer --action=plan --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --workspace=/Users/me/Projects/NodicsCustomer
+npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --action=execute --yes --execution-level=download --workspace=/Users/me/Projects/NodicsCustomer
 ```
 
 Execution levels are `download`, `install`, `preflight`, `start`, `initialize`,
 and `acceptance`. Execution never runs unless `--yes` is present. Setup evidence
 is written under `<workspace>/.nodics-installer/setup-evidence.json`.
+
+For the Acme example, the installer derives customer-owned runtime identity
+from the names supplied by the user:
+
+- backend project: `acme.project`;
+- customer modules: `acmeCore`, `acmeApi`, and `acmeInt`;
+- local environments: `acmeLocal` and `acmeDockerLocal`;
+- company site: `acme`;
+- commerce site: `acme-apparel`.
+
+`nodics.ai` remains the framework repository and `nodics.axis` remains the
+standard BackOffice application. The installer may use reference templates
+internally, but the generated customer project should not require a beginner to
+work inside Kickoff, Agora, or Nexus-named application folders.
 
 This installer is separate from `nodics.ai` and the named customer application
 project. That boundary is important: a command inside a customer project can
@@ -281,7 +295,7 @@ The installer should support two beginner journeys:
 
 | Journey | Beginner intent | Installer result |
 | --- | --- | --- |
-| Run Nodics locally | "I want to run my application locally." | Downloads the framework, Axis, a named application project, optional named application web app, selected accelerator data, then prepares and starts the local environment. |
+| Run Nodics locally | "I want to run my application locally." | Downloads the framework, Axis, a named backend application project, optional named company site, optional named commerce site, selected accelerator data, then prepares and starts the local environment. |
 | Create my own project | "I want deeper project scaffolding and module choices." | Uses the Application Builder flow to expand the named application into a governed customer project. |
 
 The current implementation focuses on **Run Nodics locally**. That path gives new
@@ -302,8 +316,8 @@ The minimum question set is:
    - Run Nodics locally with my named application.
    - Create my own Nodics customer project.
 2. What is the application name?
-   - Example: Acme Apparel.
-   - This becomes local folders such as `acme-apparel` and `acme-apparel.web`.
+   - Example: Acme.
+   - This becomes identity and evidence such as application code `acme`.
 3. Where should Nodics be installed?
    - Default workspace folder.
    - Custom absolute workspace folder.
@@ -317,22 +331,25 @@ The minimum question set is:
 6. Which standard application should be included?
    - Axis BackOffice.
    - No standard app.
-7. Should the customer web app be created?
-   - Yes, create `<application>.web`.
-   - No, backend and Axis only.
-8. Which starter business experience do you want?
+7. Should the company site be created?
+   - Yes, create a named company site such as `acme`.
+   - No, backend, Axis, and commerce site only.
+8. Should the commerce site be created?
+   - Yes, create a named commerce site such as `acme-apparel`.
+   - No, backend, Axis, and company site only.
+9. Which starter business experience do you want?
    - Common reference setup.
    - Apparel.
    - Electronics.
    - Telco.
    - Combined multi-domain reference.
-9. Do you want sample data?
+10. Do you want sample data?
    - Yes, install guided initialization and sample/reference data.
    - No, prepare a clean local runtime only.
-10. Should existing local data be preserved?
+11. Should existing local data be preserved?
    - Preserve local data.
    - Prepare for a fresh local run.
-11. What should the installer do now?
+12. What should the installer do now?
    - Print the setup plan only.
    - Download and install dependencies.
    - Download, install dependencies, run preflight, and start.
@@ -365,21 +382,26 @@ The plan for the named application journey is:
 3. Resolve the release/catalogue.
    - Read a versioned Nodics installer catalogue.
    - Select compatible repository URLs, branches, tags, or release manifests.
-   - Bind the selected framework, Axis, named application project, named
-     application web app, and accelerators into one setup plan.
+   - Bind the selected framework, Axis, named backend project, company site,
+     commerce site, and accelerators into one setup plan.
 4. Download or reuse repositories.
    - Fetch `nodics.ai` for framework modules and tooling.
-   - Fetch or create the named application project, for example `acme-apparel`.
+   - Fetch or create the named backend application project, for example
+     `acme.project`.
    - Fetch `nodics.axis` when Axis BackOffice is selected.
-   - Fetch or create the named application web app, for example
-     `acme-apparel.web`.
+   - Fetch or create the named company site, for example `acme`.
+   - Fetch or create the named commerce site, for example `acme-apparel`.
    - Preserve user changes in existing repositories. Never reset or overwrite a
      dirty checkout automatically.
 5. Configure the application project.
    - Copy `.env.example` to `.env` only when `.env` does not already exist.
    - Write or confirm `NODICS_FRAMEWORK_ROOT`.
    - Write or confirm `NODICS_APPLICATION_NAME`,
-     `NODICS_APPLICATION_CODE`, `NODICS_AXIS_ROOT`, and `NODICS_WEB_ROOT`.
+     `NODICS_APPLICATION_CODE`, `NODICS_AXIS_ROOT`,
+     `NODICS_COMPANY_SITE_ROOT`, and `NODICS_COMMERCE_SITE_ROOT`.
+   - Rename customer-owned template modules and environments from starter
+     identity to the application identity, for example `acmeCore`, `acmeApi`,
+     `acmeInt`, `acmeLocal`, and `acmeDockerLocal`.
    - Run `npm run configure:framework` from the named application project.
    - Explain that this creates machine-local links under `.nodics/framework/`.
 6. Install dependencies.
@@ -397,7 +419,7 @@ The plan for the named application journey is:
    - Start framework backend runtimes through the named application project
      commands.
    - Start Axis when BackOffice is selected.
-   - Start the named application web app when selected.
+   - Start the named company site and commerce site when selected.
    - Keep generated PID and log ownership under the project-generated topology
      folder, not in random global locations.
 9. Guide first initialization.
@@ -429,7 +451,8 @@ summary like:
 Nodics is running locally.
 
 Axis BackOffice:      http://localhost:3100
-Application web app:  http://localhost:3300
+Company site:         http://localhost:3200
+Commerce site:        http://localhost:3300
 Platform API:        http://localhost:4300
 WCMS Staged API:     http://localhost:4312
 WCMS Online API:     http://localhost:4314
@@ -660,11 +683,11 @@ For a new customer local environment, prefer starting with the standalone
 installer so the machine is checked before repositories are changed:
 
 ```bash
-npx github:Nodics/nodics.installer --application-name="Acme Apparel" --action=preflight --workspace=/Users/me/Projects/nodicsRoot
-npx github:Nodics/nodics.installer --application-name="Acme Apparel" --action=execute --yes --execution-level=download --workspace=/Users/me/Projects/nodicsRoot
-npx github:Nodics/nodics.installer --application-name="Acme Apparel" --action=execute --yes --execution-level=install --workspace=/Users/me/Projects/nodicsRoot
-npx github:Nodics/nodics.installer --application-name="Acme Apparel" --action=execute --yes --execution-level=preflight --workspace=/Users/me/Projects/nodicsRoot
-npx github:Nodics/nodics.installer --application-name="Acme Apparel" --action=execute --yes --execution-level=start --workspace=/Users/me/Projects/nodicsRoot
+npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --action=doctor --workspace=/Users/me/Projects/NodicsCustomer
+npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --action=execute --yes --execution-level=download --workspace=/Users/me/Projects/NodicsCustomer
+npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --action=execute --yes --execution-level=install --workspace=/Users/me/Projects/NodicsCustomer
+npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --action=execute --yes --execution-level=preflight --workspace=/Users/me/Projects/NodicsCustomer
+npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --action=execute --yes --execution-level=start --workspace=/Users/me/Projects/NodicsCustomer
 ```
 
 Some integrations are optional in local development. If a provider is disabled
