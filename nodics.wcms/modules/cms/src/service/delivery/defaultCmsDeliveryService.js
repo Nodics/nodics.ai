@@ -31,7 +31,7 @@ module.exports = {
         if ((((CONFIG.get('cms') || {}).publication || {}).enabled) === true) return this.resolvePublishedManifest(request, context, accessMode);
         let route = await this.resolveRoute(request, context, accessMode);
         if (route.routeType === 'REDIRECT') {
-            return { result: { contractVersion: 0, type: 'REDIRECT', path: context.path, redirectPath: route.redirectPath } };
+            return { result: { contractVersion: 1, type: 'REDIRECT', path: context.path, redirectPath: route.redirectPath } };
         }
         let pageCode = this.codeOf(route.page);
         let page = await this.getSingle(SERVICE.DefaultCmsPageService, request, { code: pageCode, active: true }, 'ERR_CMS_00088');
@@ -41,7 +41,7 @@ module.exports = {
         let graph = await this.resolveGraph(request, [page.code], accessMode, context.locale);
         return {
             result: {
-                contractVersion: 0,
+                contractVersion: 1,
                 site: context.site,
                 path: context.path,
                 locale: context.locale,

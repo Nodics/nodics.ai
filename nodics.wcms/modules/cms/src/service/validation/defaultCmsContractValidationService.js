@@ -87,8 +87,7 @@ module.exports = {
         let allowReplacement = model.allowCmsAssociationReplacement === true ||
             request.options && request.options.allowCmsAssociationReplacement === true;
         delete model.allowCmsAssociationReplacement;
-        if (allowReplacement) conflicts = [];
-        if (conflicts.length &&
+        if (conflicts.length && allowReplacement &&
             SERVICE.DefaultCmsComponentDetailService &&
             (typeof SERVICE.DefaultCmsComponentDetailService.remove === 'function' ||
                 typeof SERVICE.DefaultCmsComponentDetailService.update === 'function')) {
@@ -269,21 +268,25 @@ module.exports = {
                 body: { referenceType: referenceType, referenceCode: referenceCode }
             });
             if (result && result.referenceType === referenceType && result.code === referenceCode) return true;
-        } else if (SERVICE.DefaultModuleService && typeof NODICS !== 'undefined' && NODICS.getInternalAuthToken) {
+        } else if (SERVICE.DefaultModuleService && SERVICE.DefaultModuleService.invokeModule &&
+            typeof NODICS !== 'undefined' && NODICS.getInternalAuthToken) {
             let policy = this.mediaReferencePolicy();
             let token = NODICS.getInternalAuthToken(request.tenant);
             if (!token) throw this.error('ERR_CMS_00094', 'Media service token is unavailable');
-            let response = await SERVICE.DefaultModuleService.fetch(SERVICE.DefaultModuleService.buildRequest({
+            let result = await SERVICE.DefaultModuleService.invokeModule({
                 moduleName: policy.moduleName || 'media',
+                connectionName: policy.connectionName,
+                targetAuthority: policy.targetAuthority,
                 apiVersion: policy.apiVersion || 'v0',
                 apiName: policy.apiName || '/references/media/validate',
                 methodName: 'POST',
+                tenant: request.tenant,
                 requestBody: { referenceType: referenceType, referenceCode: referenceCode },
                 timeoutMs: Number(policy.requestTimeoutMs || 2000),
                 maxAttempts: Number(policy.maximumAttempts || 2),
-                header: { Authorization: 'Bearer ' + token }
-            }));
-            let result = response && (response.data || response.result);
+                header: { Authorization: 'Bearer ' + token },
+                responseSelector: response => response && (response.data || response.result)
+            });
             if (result && result.referenceType === referenceType && result.code === referenceCode) return true;
         }
         throw this.error('ERR_CMS_00094', 'media reference is unavailable for CMS component media');

@@ -19,14 +19,17 @@ global.CONFIG = { get: key => key === 'axis' ? { initialization: { baselineCode:
 global.NODICS = { getInternalAuthToken: tenant => tenant === 'default' ? 'internal-token' : undefined };
 let descriptor;
 global.SERVICE = { DefaultModuleService: {
-    buildRequest: value => { descriptor = value; return value; },
-    fetch: async value => ({ data: { readiness: value.methodName === 'POST' ? 'PUBLICATION_PENDING' : 'NOT_IMPORTED' } })
+    invokeModule: async value => {
+        descriptor = value;
+        return value.responseSelector({ data: { readiness: value.methodName === 'POST' ? 'PUBLICATION_PENDING' : 'NOT_IMPORTED' } });
+    }
 } };
 const service = require('../src/service/defaultAxisInitializationService');
 const request = { tenant: 'default', authData: { principalId: 'admin', tokenType: 'access' },
     correlationId: 'correlation-1', initialization: { reason: 'Initialize Axis' } };
 (async () => {
     assert.strictEqual((await service.status(request)).readiness, 'NOT_IMPORTED');
+    assert.deepStrictEqual(descriptor.targetAuthority, { runtimeRole: 'WCMS_STAGED' });
     assert.strictEqual(descriptor.connectionName, 'wcmsStaged');
     assert.strictEqual(descriptor.apiName, '/publication/baselines/axis');
     assert.strictEqual(descriptor.header.Authorization, 'Bearer internal-token');

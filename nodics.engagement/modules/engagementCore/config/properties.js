@@ -106,7 +106,7 @@ module.exports = {
             legalHoldOverridesExpiry: true,
             defaultRetentionDays: 365,
             maximumBatchSize: 100,
-            schedulerOwner: 'nodics.cron',
+            schedulerOwner: 'cronjob',
             executionOwner: 'domain'
         },
         providers: {

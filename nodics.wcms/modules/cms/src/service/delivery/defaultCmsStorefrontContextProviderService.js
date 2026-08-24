@@ -47,13 +47,14 @@ module.exports = {
         let policy = this.policy(), tenant = policy.bootstrapTenant || 'default';
         let token = global.NODICS && NODICS.getInternalAuthToken && NODICS.getInternalAuthToken(tenant);
         if (!token) return { active: false };
-        let descriptor = SERVICE.DefaultModuleService.buildRequest({ moduleName: policy.moduleName || 'storefront',
+        return SERVICE.DefaultModuleService.invokeModule({ moduleName: policy.moduleName || 'storefront',
+            connectionName: policy.connectionName, targetAuthority: policy.targetAuthority,
             apiVersion: policy.apiVersion || 'v0', apiName: policy.apiName || '/context/introspect', methodName: 'POST',
+            tenant: tenant,
             requestBody: Object.assign({ handle: handle, audience: 'cms' }, binding === undefined ? {} : { binding: binding }), header: { Authorization: 'Bearer ' + token },
             timeoutMs: Number(policy.requestTimeoutMs || 1000), maxAttempts: Number(policy.maximumAttempts || 1),
-            maxResponseBytes: Number(policy.maximumResponseBytes || 32768), followRedirects: false });
-        let response = await SERVICE.DefaultModuleService.fetch(descriptor);
-        return response && ((response.data && response.data.data) || response.data) || { active: false };
+            maxResponseBytes: Number(policy.maximumResponseBytes || 32768), followRedirects: false,
+            responseSelector: response => response && ((response.data && response.data.data) || response.data) || { active: false } });
     },
     /** Applies trusted CMS Site, locale, channel, tenant, and enterprise scope or fails closed. */
     apply: async function (request) {

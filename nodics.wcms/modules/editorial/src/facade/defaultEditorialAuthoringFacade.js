@@ -18,6 +18,6 @@ module.exports = {
     /** Requests changes for an in-review Editorial revision through Process task authority. */ reject: function (request) { return SERVICE.DefaultEditorialWorkflowAdapterService.decideReview(request, 'REJECT'); },
     /** Inspects Process-owned workflow detail. */ inspectWorkflow: function (request) { return SERVICE.DefaultEditorialWorkflowAdapterService.inspect(request); },
     /** Immediately publishes one approved revision through nPublish. */ publish: function (request) { return SERVICE.DefaultEditorialPublicationService.publishApproved(request); },
-    /** Schedules a future publication through Process/Cron metadata. */ schedule: function (request) { return SERVICE.DefaultEditorialScheduleService.schedule(request); },
+    /** Schedules a future publication through workflow/cronjob metadata. */ schedule: function (request) { return SERVICE.DefaultEditorialScheduleService.schedule(request); },
     /** Withdraws an Online release through nPublish authority. */ withdraw: function (request) { return SERVICE.DefaultPublicationLifecycleService.withdraw(Object.assign({}, request, { publicationCode: request.editorial.publicationCode, expectedRevision: request.editorial.expectedRevision })); }
 };

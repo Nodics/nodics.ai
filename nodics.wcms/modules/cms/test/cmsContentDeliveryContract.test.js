@@ -170,7 +170,7 @@ global.SERVICE = {
         rendererMappings: [
             { code: 'homePage', renderer: 'page.home', contractVersion: 0, channels: ['web'] },
             { code: 'accountPage', renderer: 'page.account', contractVersion: 0, channels: ['web'] },
-            { code: 'heroType', renderer: 'component.hero', contractVersion: 0,
+            { code: 'heroType', renderer: 'component.hero', contractVersion: 2,
                 channels: ['web', 'mobile-webview'], deprecated: true, replacementRenderer: 'component.hero-v2' },
             { code: 'accountPanelType', renderer: 'component.account-panel', contractVersion: 0, channels: ['web'] }
         ]

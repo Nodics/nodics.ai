@@ -61,8 +61,10 @@ global.FACADE = { DefaultCmsDeliveryFacade: { resolvePage: request => Promise.re
     properties.cms.storefrontContext.preferLocal = false;
     global.NODICS = { getInternalAuthToken: tenant => tenant === 'default' ? 'service-token' : null };
     SERVICE.DefaultModuleService = {
-        buildRequest: value => { descriptor = value; return value; },
-        fetch: () => Promise.resolve({ data: { data: contexts[apparelHandle] } })
+        invokeModule: value => {
+            descriptor = value;
+            return Promise.resolve(value.responseSelector({ data: { data: contexts[apparelHandle] } }));
+        }
     };
     let modular = { headers: { 'x-nodics-storefront-context': 'a'.repeat(43) }, delivery: { path: '/modular' } };
     await provider.apply(modular);

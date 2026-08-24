@@ -24,6 +24,6 @@ module.exports = {
     /** Requests changes for a submitted Editorial review. */ reject: function (request, callback) { return this.invoke('reject', request, callback); },
     /** Reads Process-owned workflow detail. */ inspectWorkflow: function (request, callback) { return this.invoke('inspectWorkflow', request, callback); },
     /** Immediately publishes an approved exact revision through nPublish. */ publish: function (request, callback) { return this.invoke('publish', request, callback); },
-    /** Creates Process/Cron scheduling metadata. */ schedule: function (request, callback) { return this.invoke('schedule', request, callback); },
+    /** Creates workflow/cronjob scheduling metadata. */ schedule: function (request, callback) { return this.invoke('schedule', request, callback); },
     /** Withdraws active Online projections. */ withdraw: function (request, callback) { return this.invoke('withdraw', request, callback); }
 };

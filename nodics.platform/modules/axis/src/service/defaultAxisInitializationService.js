@@ -40,14 +40,16 @@ module.exports = {
         if (!token) throw new CLASSES.NodicsError('AXIS_INITIALIZATION_INTERNAL_AUTH_UNAVAILABLE', 'Axis initialization authentication is unavailable');
         let body = operation === 'initiate' ? { requestedBy: principal, reason: request.initialization && request.initialization.reason,
             correlationId: request.correlationId || request.requestId } : undefined;
-        let descriptor = SERVICE.DefaultModuleService.buildRequest({ moduleName: target.moduleName,
+        return SERVICE.DefaultModuleService.invokeModule({ moduleName: target.moduleName,
             connectionName: target.connectionName, connectionType: target.connectionType || 'abstract',
+            targetAuthority: { runtimeRole: target.runtimeRole || 'WCMS_STAGED' },
             methodName: operation === 'initiate' ? 'POST' : 'GET',
             apiName: '/publication/baselines/' + encodeURIComponent(baselineCode) + (operation === 'initiate' ? '/initiate' : ''),
             requestBody: body, timeoutMs: target.timeoutMs, maxAttempts: target.maxAttempts,
             idempotencyKey: operation === 'initiate' ? baselineCode + ':' + String(request.correlationId || request.requestId || principal) : undefined,
-            header: { Authorization: 'Bearer ' + token } });
-        return SERVICE.DefaultModuleService.fetch(descriptor).then(response => response && (response.data || response.result || response));
+            header: { Authorization: 'Bearer ' + token },
+            responseSelector: response => response && (response.data || response.result || response)
+        });
     },
     /** Returns the backend-derived Axis initialization readiness projection. */
     status: function (request) { return this.invoke('status', request); },
