@@ -250,10 +250,10 @@ in spirit to mature platform installers. A first-time user should not need to
 clone several repositories manually, learn repository names, edit `.env` files,
 or understand runtime topology before seeing Nodics run locally.
 
-The intended first command is:
+The current development bootstrap command is:
 
 ```bash
-npx @nodics/installer
+npx github:Nodics/nodics.installer
 ```
 
 This installer is separate from `nodics.ai` and `nodics.kickoff`. That boundary
@@ -466,7 +466,7 @@ the source of truth once repositories exist locally.
 
 | Layer | Owns |
 | --- | --- |
-| `@nodics/installer` | First-machine bootstrap, beginner questions, repository download/reuse, setup plan, setup evidence, and orchestration. |
+| `nodics.installer` | First-machine bootstrap, beginner questions, repository download/reuse, setup plan, setup evidence, and orchestration. |
 | `nodics.ai` / `nTooling` | Framework-aware validation, project framework linking, topology, Docker Local, Application Builder planning, qualification, and upgrade-safe contracts. |
 | `nodics.kickoff` | Reference customer-project runtime composition, local environments, data packs, sample documentation, and acceptance aliases. |
 | `nodics.exp` | Frontend app catalogue, app fetch/status/verify tooling, and discovery of Axis, Nexus, Agora, and future apps. |
