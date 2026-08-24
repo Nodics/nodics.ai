@@ -39,8 +39,12 @@ assert(wcmsProperties.cms.designerAuthoring.componentKinds.some(kind => kind.typ
     'WCMS module default designer policy must expose Nexus component kinds');
 assert(authProperties.identityGovernance.permissionCatalog.includes('cms.backoffice.manage'),
     'cms.backoffice.manage must be in the governed permission catalog');
+assert(authProperties.identityGovernance.permissionCatalog.includes('cms.publication.emergencyOverride'),
+    'cms.publication.emergencyOverride must be in the governed permission catalog');
 assert(profileGroups.record4.permissions.includes('cms.backoffice.manage'),
     'content authors must receive explicit CMS authoring permission through profile data');
+assert(profileGroups.record1.permissions.includes('cms.publication.emergencyOverride'),
+    'admin operators must receive explicit CMS publication emergency override permission through profile data');
 
 [
     ['getAuthoringModel', 'GET', '/designer/composition/model', 'cms.backoffice.view'],
@@ -204,6 +208,19 @@ const draft = {
     assert.deepStrictEqual(model.result.metadata.publicationReadiness.requiredDraftParts,
         ['catalogCode', 'siteCode', 'templateCode', 'page', 'sections', 'route'],
     'WCMS must expose publication readiness hints in the authoring model');
+
+    const catalogService = global.SERVICE.DefaultCatalogService;
+    global.SERVICE.DefaultCatalogService = {
+        get: () => {
+            const error = new TypeError("Cannot read properties of undefined (reading 'models')");
+            error.stack = 'TypeError: Cannot read properties of undefined (reading \'models\')\n    at module.exports.getModels';
+            return Promise.reject(error);
+        }
+    };
+    model = await service.getAuthoringModel({});
+    assert(model.result.metadata.contentCatalogs.some(catalog => catalog.code === 'nexusContentCatalog'),
+        'WCMS Designer must derive catalog references from CMS sites when catalog metadata is remote');
+    global.SERVICE.DefaultCatalogService = catalogService;
 
     let validation = await service.validateDraftComposition({ tenant: 'tenant-a', authData: {}, body: draft });
     assert.strictEqual(validation.result.status, 'VALID_DRAFT');

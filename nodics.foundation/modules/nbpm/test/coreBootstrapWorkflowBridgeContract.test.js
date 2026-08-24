@@ -35,8 +35,12 @@ const processPackage = require(processPackagePath);
 const workflowPackage = require(path.join(repositoryRoot, 'nodics.process/modules/workflow/package.json'));
 
 assert(
-    coreBootstrap.includes('DefaultWorkflow2SchemaService.buildWorkflow2SchemaAssociations()'),
-    'Core bootstrap must keep the nbpm workflow-to-schema association call until a compatibility adapter replaces it',
+    coreBootstrap.includes("typeof SERVICE.DefaultWorkflow2SchemaService.buildWorkflow2SchemaAssociations !== 'function'"),
+    'Core bootstrap must skip workflow-to-schema association when workflow is not active in the current runtime',
+);
+assert(
+    coreBootstrap.includes('DefaultWorkflow2SchemaService.buildWorkflow2SchemaAssociations().then'),
+    'Core bootstrap must still execute workflow-to-schema association when the service is active in this runtime',
 );
 assert(
     schemas.system && schemas.system.workflow2Schema,

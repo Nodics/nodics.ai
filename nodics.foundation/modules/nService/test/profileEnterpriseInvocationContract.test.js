@@ -40,6 +40,13 @@ global.CONFIG = {
     }[key])
 };
 global.SERVICE = {
+    DefaultIdentityGovernanceService: {
+        getSystemAuthData: () => ({
+            isSystem: true,
+            userGroups: ['serviceAccountUserGroup'],
+            permissions: []
+        })
+    },
     DefaultModuleService: {
         invokeModule: options => {
             calls.push(options);
@@ -65,6 +72,11 @@ const handler = Object.assign({}, require('../src/service/enterprise/defaultEnte
     assert.strictEqual(calls[0].serviceName, 'DefaultEnterpriseService');
     assert.strictEqual(calls[0].operationName, 'get');
     assert.strictEqual(calls[0].apiName, '/enterprise');
+    assert.deepStrictEqual(calls[0].request.authData, {
+        isSystem: true,
+        userGroups: ['serviceAccountUserGroup'],
+        permissions: []
+    });
     assert.deepStrictEqual(calls[0].request.query, { code: 'enterprise-a' });
     assert.deepStrictEqual(calls[0].requestBody.query, { code: 'enterprise-a' });
 

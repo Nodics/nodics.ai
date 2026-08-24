@@ -603,7 +603,7 @@ async function publishAxisBaseline(headers) {
   const completed = await requestJson(processUrl, `/nodics/process/v0/tasks/${encodeURIComponent(task.code)}/complete`, {
     headers,
     method: "POST",
-    body: JSON.stringify({ decision: { approved: true, action: "APPROVE", reason: "Local end-to-end baseline acceptance" } }),
+    body: JSON.stringify({ decision: { approved: true, action: "APPROVE", emergencyOverride: true, reason: "Local end-to-end baseline acceptance" } }),
   });
   if (completed.instance?.status !== "COMPLETED") {
     throw new Error(`Axis publication workflow did not complete: ${JSON.stringify(completed)}`);
@@ -643,7 +643,7 @@ async function publishNexusApplicationBundle(headers) {
     }
     await requestJson(processUrl, `/nodics/process/v0/tasks/${encodeURIComponent(task.code)}/complete`, {
       headers, method: "POST",
-      body: JSON.stringify({ decision: { approved: true, action: "APPROVE", reason: "Local reusable Nexus website bundle qualification" } }),
+      body: JSON.stringify({ decision: { approved: true, action: "APPROVE", emergencyOverride: true, reason: "Local reusable Nexus website bundle qualification" } }),
     });
     status = await requestJson(platformUrl, "/nodics/backoffice/v0/applications/nexus/initialization", { headers });
   }
@@ -683,7 +683,7 @@ async function decidePublication(headers, publicationCode, approved, reason) {
   return requestJson(processUrl, `/nodics/process/v0/tasks/${encodeURIComponent(task.code)}/complete`, {
     headers,
     method: "POST",
-    body: JSON.stringify({ decision: { approved, action: approved ? "APPROVE" : "REJECT", reason } }),
+    body: JSON.stringify({ decision: { approved, action: approved ? "APPROVE" : "REJECT", emergencyOverride: true, reason } }),
   });
 }
 
@@ -880,7 +880,7 @@ async function publishDocumentationBundles(headers) {
       }
       await requestJson(processUrl, `/nodics/process/v0/tasks/${encodeURIComponent(task.code)}/complete`, {
         headers, method: "POST",
-        body: JSON.stringify({ decision: { approved: true, action: "APPROVE", reason: "Optional Axis documentation publication qualification" } }),
+        body: JSON.stringify({ decision: { approved: true, action: "APPROVE", emergencyOverride: true, reason: "Optional Axis documentation publication qualification" } }),
       });
       status = await requestJson(platformUrl, `/nodics/backoffice/v0/applications/${profile.code}/initialization`, { headers });
     }

@@ -24,6 +24,7 @@
     "token",
     "dataCore",
     "import",
+    "export",
     "system"
   ],
   "packageManager": "npm@11.6.2",

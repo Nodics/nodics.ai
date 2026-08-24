@@ -89,6 +89,7 @@ module.exports = {
       "commerce.payment.reconcile",
       "commerce.fulfillment.read",
       "commerce.fulfillment.return",
+      "cms.publication.emergencyOverride",
       "editorial.backoffice.read",
       "editorial.backoffice.manage",
       "editorial.workflow.submit",
@@ -323,6 +324,10 @@ module.exports = {
     permissions: [
       "auth.internal.token.read",
       "auth.internal.token.read.anyTenant",
+      "import.init.run",
+      "import.core.run",
+      "import.sample.run",
+      "import.release.validate",
       "engagement.review.request.create",
       "engagement.review.syndication.import",
       "communication.callback.receive",

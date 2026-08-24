@@ -281,6 +281,27 @@ const capability = {
             "featureState": "HIDDEN"
         },
         {
+            "id": "documentation-dashboard",
+            "label": "Dashboard",
+            "route": "/docs",
+            "icon": "content",
+            "order": 105,
+            "group": {
+                "id": "documentation",
+                "label": "Documentation",
+                "order": 1600
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "featureState": "ACTIVE"
+        },
+        {
             "id": "documentation-framework",
             "label": "Framework",
             "route": "/docs/framework",

@@ -11,9 +11,9 @@
 /**
  * @generated
  * @module generated/facade/DefaultProcessDefinitionFacade
- * @description Generated facade for schema `processDefinition` owned by module `flowSchema`. This file is recreated by clean/build from the effective schema and common facade template.
+ * @description Generated facade for schema `processDefinition` owned by module `workflow`. This file is recreated by clean/build from the effective schema and common facade template.
  * @layer facade
- * @owner flowSchema
+ * @owner workflow
  * @schema processDefinition
  * @model ProcessDefinitionModel
  * @sourceTemplate /src/facade/common.js

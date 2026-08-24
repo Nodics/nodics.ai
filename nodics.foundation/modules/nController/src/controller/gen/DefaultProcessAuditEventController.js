@@ -11,9 +11,9 @@
 /**
  * @generated
  * @module generated/controller/DefaultProcessAuditEventController
- * @description Generated controller for schema `processAuditEvent` owned by module `flowSchema`. This file is recreated by clean/build from the effective schema and common controller template.
+ * @description Generated controller for schema `processAuditEvent` owned by module `workflow`. This file is recreated by clean/build from the effective schema and common controller template.
  * @layer controller
- * @owner flowSchema
+ * @owner workflow
  * @schema processAuditEvent
  * @model ProcessAuditEventModel
  * @sourceTemplate /src/controller/common.js

@@ -593,8 +593,9 @@ module.exports = {
 
     /** Builds the client-safe backend metadata needed by Axis Designer forms. */
     authoringMetadata: async function (request) {
-        let catalogs = await this.safeGet('DefaultCatalogService', request, { catalogType: 'CONTENT', active: true });
         let sites = await this.safeGet('DefaultCmsSiteService', request, { active: true });
+        let catalogs = await this.safeOptionalGet('DefaultCatalogService', request, { catalogType: 'CONTENT', active: true });
+        if (catalogs.length === 0) catalogs = this.catalogsFromSites(sites);
         let templates = await this.safeGet('DefaultCmsPageTemplateService', request, { active: true });
         let slots = await this.safeGet('DefaultCmsSlotDefinitionService', request, { active: true });
         let typeCodes = await this.safeGet('DefaultCmsTypeCodeService', request, { active: true });
@@ -626,7 +627,30 @@ module.exports = {
     safeOptionalGet: async function (serviceName, request, query) {
         let service = typeof SERVICE !== 'undefined' && SERVICE ? SERVICE[serviceName] : null;
         if (!service || typeof service.get !== 'function') return [];
-        return this.safeGet(serviceName, request, query);
+        try {
+            return await this.safeGet(serviceName, request, query);
+        } catch (error) {
+            if (this.isMissingGeneratedModelRegistry(error)) return [];
+            throw error;
+        }
+    },
+
+    /** Returns true for optional metadata services whose generated model registry is absent in this runtime. */
+    isMissingGeneratedModelRegistry: function (error) {
+        let message = String(error && error.message || '');
+        let stack = String(error && error.stack || '');
+        return (/reading 'models'/.test(message) && /getModels/.test(stack)) ||
+            (/reading 'schemaName'/.test(message) && /ModelsRemoveInitializerService/.test(stack));
+    },
+
+    /** Derives minimal content-catalog references from CMS-owned sites when catalog metadata lives in another runtime. */
+    catalogsFromSites: function (sites) {
+        let byCode = {};
+        [].concat(sites || []).forEach(site => {
+            let code = this.codeOf(site.catalog || site.catalogCode || site.contentCatalog);
+            if (code && !byCode[code]) byCode[code] = { code: code, name: code, catalogType: 'CONTENT' };
+        });
+        return Object.values(byCode);
     },
 
     /** Returns a client-safe content catalog reference. */

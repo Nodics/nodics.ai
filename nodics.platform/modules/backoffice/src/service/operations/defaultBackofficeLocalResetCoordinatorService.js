@@ -51,7 +51,7 @@ module.exports = {
         return SERVICE.DefaultModuleService.invokeModule({ moduleName: provider.moduleName,
             connectionName: provider.connectionName, connectionType: provider.connectionType || 'abstract', methodName: 'POST',
             targetAuthority: provider.targetAuthority,
-            apiName: '/operations/local-reset', timeoutMs: provider.timeoutMs || 30000, maxAttempts: 1,
+            apiName: '/operations/local-reset', local: false, timeoutMs: provider.timeoutMs || 30000, maxAttempts: 1,
             requestBody: { confirmation: this.policy().confirmation, resetScope: 'LOCAL_ACCEPTANCE', reason: input.reason,
                 correlationId: request.correlationId }, header: { Authorization: 'Bearer ' + token },
             responseSelector: response => response && response.result });

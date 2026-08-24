@@ -243,6 +243,249 @@ Successful local startup gives you:
 - Documentation navigation for Framework, Swaggers, Nodics Axis, and Nodics
   Kickoff.
 
+## Nodics Installer beginner journey
+
+The target beginner experience is a small standalone Nodics Installer, similar
+in spirit to mature platform installers. A first-time user should not need to
+clone several repositories manually, learn repository names, edit `.env` files,
+or understand runtime topology before seeing Nodics run locally.
+
+The intended first command is:
+
+```bash
+npx @nodics/installer
+```
+
+This installer is separate from `nodics.ai` and `nodics.kickoff`. That boundary
+is important: a command inside Kickoff can only run after Kickoff and the
+framework have already been downloaded. The installer must work one step
+earlier, when the machine may have no Nodics source code at all.
+
+The installer should support two beginner journeys:
+
+| Journey | Beginner intent | Installer result |
+| --- | --- | --- |
+| Run Nodics locally | "I want to try Nodics with the reference project." | Downloads the framework, Kickoff, selected frontend apps, selected accelerator data, then prepares and starts the local reference environment. |
+| Create my own project | "I want my own project instead of Kickoff." | Uses the Application Builder flow to create a customer project, then prepares that project against the framework and selected apps. |
+
+The first implementation should focus on **Run Nodics locally**. That path gives
+new evaluators and developers a working product before they make project-design
+decisions.
+
+### What the installer asks
+
+Questions must use beginner language first. The user should be able to answer
+without knowing module names such as `nodics.foundation`, `nodics.platform`, or
+`nodics.wcms`.
+
+The minimum question set is:
+
+1. What do you want to do?
+   - Try Nodics locally with the reference Kickoff project.
+   - Create my own Nodics customer project.
+2. Where should Nodics be installed?
+   - Default workspace folder.
+   - Custom absolute workspace folder.
+3. How should repositories be downloaded?
+   - HTTPS clone.
+   - SSH clone.
+   - Use existing local repositories.
+4. Which local mode do you want?
+   - Direct Node.js local processes for the fastest developer loop.
+   - Docker Local for a more isolated production-simulation environment.
+5. Which applications do you want to run?
+   - Axis BackOffice.
+   - Nexus corporate site.
+   - Agora commerce storefront.
+6. Which starter business experience do you want?
+   - Common reference setup.
+   - Apparel.
+   - Electronics.
+   - Telco.
+   - Combined multi-domain reference.
+7. Do you want sample data?
+   - Yes, install guided initialization and sample/reference data.
+   - No, prepare a clean local runtime only.
+8. Should existing local data be preserved?
+   - Preserve local data.
+   - Prepare for a fresh local run.
+9. What should the installer do now?
+   - Print the setup plan only.
+   - Download and install dependencies.
+   - Download, install dependencies, run preflight, and start.
+   - Download, install dependencies, start, initialize data, and run acceptance.
+
+Later enterprise options should include proxy configuration, custom npm registry,
+private Git host, offline cache, selected release channel, and organization
+policy pack. Those options belong behind an advanced path so a beginner does not
+meet them on the first screen.
+
+### What the installer does step by step
+
+The installer must turn beginner answers into an explicit setup plan before it
+changes the machine. The default first action should be a dry run.
+
+The plan for the reference Kickoff journey is:
+
+1. Inspect the machine.
+   - Check operating system.
+   - Check Node.js and npm versions against repository engine constraints.
+   - Check Git availability.
+   - Check Docker only when Docker Local is selected.
+   - Check disk space and write access to the selected workspace.
+2. Resolve the selected workspace.
+   - Create the workspace only after approval.
+   - Refuse dangerous roots such as `/`, the user's home directory itself, or
+     protected source roots.
+   - Detect existing folders and report whether they are usable, dirty, missing,
+     or owned by a previous installer run.
+3. Resolve the release/catalogue.
+   - Read a versioned Nodics installer catalogue.
+   - Select compatible repository URLs, branches, tags, or release manifests.
+   - Bind the selected framework, Kickoff, frontend apps, and accelerators into
+     one setup plan.
+4. Download or reuse repositories.
+   - Fetch `nodics.ai` for framework modules and tooling.
+   - Fetch `nodics.kickoff` for the reference customer project.
+   - Fetch `nodics.exp` when frontend apps are selected.
+   - Fetch selected frontend apps from the `nodics.exp/apps.json` catalogue:
+     Axis, Nexus, Agora, and future registered apps.
+   - Preserve user changes in existing repositories. Never reset or overwrite a
+     dirty checkout automatically.
+5. Configure Kickoff.
+   - Copy `.env.example` to `.env` only when `.env` does not already exist.
+   - Write or confirm `NODICS_FRAMEWORK_ROOT`.
+   - Run `npm run configure:framework` from `nodics.kickoff`.
+   - Explain that this creates machine-local links under `.nodics/framework/`.
+6. Install dependencies.
+   - Use deterministic install commands where lockfiles require them.
+   - Install framework, project, and selected frontend dependencies in the
+     correct order.
+   - Capture versions and command results in setup evidence.
+7. Preflight the selected runtime.
+   - Run direct local topology preflight for Node local mode.
+   - Run Docker Local preflight for Docker mode.
+   - Check ports before starting anything.
+   - Explain busy ports in plain language and tell the user what owns them when
+     that can be determined safely.
+8. Start the selected topology.
+   - Start framework backend runtimes through Kickoff project commands.
+   - Start Axis when BackOffice is selected.
+   - Start Nexus when the corporate site is selected.
+   - Start Agora when storefront or accelerator journeys are selected.
+   - Keep generated PID and log ownership under the project-generated topology
+     folder, not in random global locations.
+9. Guide first initialization.
+   - Authenticate through local Platform.
+   - Discover available initialization profiles through backend APIs.
+   - Validate selected initialization and content/data releases before install.
+   - Install only through governed Nodics APIs, not direct database scripts.
+   - Keep Staged and Online publication boundaries visible.
+10. Run validation.
+    - Start with setup preflight for a quick check.
+    - Run guided initialization acceptance when sample/reference data is selected.
+    - Run local acceptance or Docker Local qualification only when the user chose
+      the longer validation path.
+11. Finish with a beginner summary.
+    - Print the URLs to open.
+    - Print the local account or the secure credentials file location.
+    - Print where logs are stored.
+    - Print what was installed, which accelerators are active, and which apps are
+      running.
+    - Print the next command to stop, restart, inspect status, or continue into
+      project creation.
+
+### What success looks like
+
+At the end of the first successful reference setup, the user should see a short
+summary like:
+
+```text
+Nodics is running locally.
+
+Axis BackOffice:      http://localhost:3100
+Nexus corporate site: http://localhost:3200
+Agora storefront:    http://localhost:3300
+Platform API:        http://localhost:4300
+WCMS Staged API:     http://localhost:4312
+WCMS Online API:     http://localhost:4314
+Process API:         http://localhost:4330
+Engagement API:      http://localhost:4340
+Commerce API:        http://localhost:4350
+
+Next:
+1. Open Axis.
+2. Sign in with the local credentials shown by the installer.
+3. Open Documentation.
+4. Open Module Registry.
+5. Open Imports and Exports if initialization is still pending.
+```
+
+The exact URLs depend on the selected local mode. Direct Node local and Docker
+Local may intentionally use different ports so both environments do not collide.
+
+### Evidence and safety rules
+
+The installer must leave behind a setup report in the selected workspace. That
+report should be safe to share internally and should not contain secret values.
+
+The report should include:
+
+- installer version;
+- selected journey;
+- selected local mode;
+- workspace path;
+- repositories, branches, tags, and commit SHAs;
+- selected apps;
+- selected accelerator or domain experience;
+- commands executed;
+- command result states;
+- generated local files;
+- credentials file path without exposing secret values;
+- service URLs;
+- validation results;
+- next commands.
+
+The installer must follow these safety rules:
+
+- dry-run plan before execution;
+- explicit confirmation before clone, install, reset, or start;
+- no destructive Git commands;
+- no automatic overwrite of dirty repositories;
+- no secrets printed into normal logs;
+- generated credentials stored with restrictive permissions where supported;
+- rollback only installer-created paths;
+- direct database access avoided for application initialization;
+- Docker Local reset requires an explicit destructive confirmation token;
+- production certification must never be claimed from local setup evidence.
+
+### How this relates to existing commands
+
+The installer is the first-machine bootstrapper. Existing Nodics commands remain
+the source of truth once repositories exist locally.
+
+| Layer | Owns |
+| --- | --- |
+| `@nodics/installer` | First-machine bootstrap, beginner questions, repository download/reuse, setup plan, setup evidence, and orchestration. |
+| `nodics.ai` / `nTooling` | Framework-aware validation, project framework linking, topology, Docker Local, Application Builder planning, qualification, and upgrade-safe contracts. |
+| `nodics.kickoff` | Reference customer-project runtime composition, local environments, data packs, sample documentation, and acceptance aliases. |
+| `nodics.exp` | Frontend app catalogue, app fetch/status/verify tooling, and discovery of Axis, Nexus, Agora, and future apps. |
+
+When the installer finishes, a developer can continue with normal project
+commands from `nodics.kickoff`, for example:
+
+```bash
+npm run topology:status
+npm run topology:stop
+npm run topology:start:all
+npm run acceptance:guided-initialization
+```
+
+For users who already cloned the repositories manually, a later Kickoff shortcut
+such as `npm run setup:local` may delegate to the same setup-plan logic. That
+shortcut is useful, but it cannot replace the standalone installer because it
+requires local source code to exist first.
+
 ## What this repository contains
 
 ```text

@@ -69,7 +69,7 @@ const expected = {
     'promotions-discounts': ['Promotion Workspace', 'Promotions', 'Discount Rules', 'Coupons and Promotion Codes', 'Eligibility and Qualification', 'Priority, Combination, and Stacking', 'Schedules and Budgets', 'Promotion Evaluation', 'Promotion Governance', 'Promotion Insights'],
     'editorial-space': ['Editorial Workspace', 'Editorial Content', 'Article Editor', 'Editorial Review and Approval', 'Languages and Localization', 'Authors', 'Taxonomy', 'Series', 'Featured and Special Content', 'Corrections and Governance', 'Content Type Policies', 'Editorial Calendar', 'Editorial Preview and Distribution', 'Editorial History and Insights'],
     'process-and-automations': ['Operations Workspace', 'Workflow Management', 'Pipeline Management', 'Cron jobs', 'Triggers and Relationships', 'Automation Monitoring', 'Advanced Configuration'],
-    documentation: ['Framework', 'Swaggers', 'Nodics Axis', 'Nodics Kickoff'],
+    documentation: ['Dashboard', 'Framework', 'Swaggers', 'Nodics Axis', 'Nodics Kickoff'],
     publishing: ['Publishing Workspace', 'Publication Requests', 'Approval Queue', 'Staged-to-Online Operations', 'Publication Manifests', 'Publishing History', 'Publishing Audit', 'Scheduled Publications', 'Online Publications', 'Publication Dependencies', 'Failures & Recovery', 'Withdrawals & Rollbacks', 'Publishing Configuration', 'Setup & Accelerators']
 };
 

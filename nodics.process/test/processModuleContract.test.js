@@ -28,6 +28,7 @@ const workflowPackage = require('../modules/workflow/package.json');
 
 const capability = require('../modules/workflow/src/service/defaultWorkflowBackofficeCapabilityService').getCapability();
 const rootDir = path.resolve(__dirname, '..');
+const frameworkRootDir = path.resolve(rootDir, '..');
 
 /**
  * Resolves a path under nodics.process.
@@ -102,6 +103,31 @@ assert(
         fs.existsSync(processPath(relativePath)),
         `Expected process artifact to exist under correct workflow module: ${relativePath}`,
     );
+});
+[
+    'ProcessDefinition',
+    'ProcessDefinitionVersion',
+    'ProcessInstance',
+    'ProcessTask',
+    'ProcessTrigger',
+    'ProcessIncident',
+    'ProcessAuditEvent'
+].forEach((schemaName) => {
+    [
+        path.join(frameworkRootDir, 'nodics.foundation/modules/nService/src/service/gen/Default' + schemaName + 'Service.js'),
+        path.join(frameworkRootDir, 'nodics.foundation/modules/nFacade/src/facade/gen/Default' + schemaName + 'Facade.js'),
+        path.join(frameworkRootDir, 'nodics.foundation/modules/nController/src/controller/gen/Default' + schemaName + 'Controller.js')
+    ].forEach((generatedPath) => {
+        const source = fs.readFileSync(generatedPath, 'utf8');
+        assert(
+            !source.includes('flowSchema') && !source.includes('flowApi') && !source.includes('flowCore'),
+            'Generated Process artifacts must not reference removed flow* modules: ' + generatedPath,
+        );
+        assert(
+            source.includes('@owner workflow') || source.includes("request.moduleName || 'workflow'"),
+            'Generated Process artifacts must be owned by the workflow module: ' + generatedPath,
+        );
+    });
 });
 assert.strictEqual(
     capability.capabilityId,

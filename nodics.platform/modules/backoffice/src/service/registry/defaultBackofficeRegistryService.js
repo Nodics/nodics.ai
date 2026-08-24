@@ -797,7 +797,7 @@ module.exports = {
   },
 
   /** Produces the current effective Axis navigation composition from module defaults plus governed fallback metadata. */
-  buildEffectiveNavigationComposition: function (catalogue, availability, authData, request) {
+  buildEffectiveNavigationComposition: function (catalogue, availability, authData, request, documentationPublication) {
     let permissions = (authData && authData.permissions) || [];
     let warnings = [];
     let routeOwners = {};
@@ -841,6 +841,7 @@ module.exports = {
             ownerModule: moduleName,
           },
         });
+        nextItem = this.applyDocumentationPublicationState(nextItem, documentationPublication);
         if (nextItem.parentId) {
           parentKeys.add(String(nextItem.parentModuleName || moduleName) + ":" + String(nextItem.parentId));
         }
@@ -904,26 +905,26 @@ module.exports = {
       ? this.cloneNavigationComposition(state.published.composition)
       : undefined;
     if (published) {
-      items = (published.navigation || []).map((item, index) => Object.assign({}, item, {
-        order: Number.isInteger(item.order) ? item.order : index,
-        sourceTrace: Object.assign({
-          sourceType: "governedOverride",
-          ownerModule: item.moduleName || "backoffice",
-          stableIdentity: String(item.moduleName || "backoffice") + ":" + String(item.id || ""),
-          overrideApplied: true,
-          editable: true,
-          lifecycleState: "PUBLISHED",
-        }, item.sourceTrace || {}, {
-          sourceType: "governedOverride",
-          overrideApplied: true,
-          editable: true,
-          lifecycleState: "PUBLISHED",
-        }),
-        routeOwner: item.routeOwner || {
-          ownerType: item.workbenchTarget ? "WORKBENCH" : String(item.route || "").indexOf("/docs") === 0 ? "CMS" : "NATIVE_AXIS",
-          ownerModule: item.moduleName || "backoffice",
-        },
-      }));
+      items = (published.navigation || []).map((item, index) => this.applyDocumentationPublicationState(Object.assign({}, item, {
+          order: Number.isInteger(item.order) ? item.order : index,
+          sourceTrace: Object.assign({
+            sourceType: "governedOverride",
+            ownerModule: item.moduleName || "backoffice",
+            stableIdentity: String(item.moduleName || "backoffice") + ":" + String(item.id || ""),
+            overrideApplied: true,
+            editable: true,
+            lifecycleState: "PUBLISHED",
+          }, item.sourceTrace || {}, {
+            sourceType: "governedOverride",
+            overrideApplied: true,
+            editable: true,
+            lifecycleState: "PUBLISHED",
+          }),
+          routeOwner: item.routeOwner || {
+            ownerType: item.workbenchTarget ? "WORKBENCH" : String(item.route || "").indexOf("/docs") === 0 ? "CMS" : "NATIVE_AXIS",
+            ownerModule: item.moduleName || "backoffice",
+          },
+        }), documentationPublication));
       groups = {};
       (published.groups || []).forEach((group) => {
         groups[group.id] = Object.assign({}, group, {
@@ -981,6 +982,59 @@ module.exports = {
       warnings: warnings,
       generatedAt: new Date().toISOString(),
     };
+  },
+
+  /** Keeps documentation product routes disabled until their publication owner is Online-ready. */
+  applyDocumentationPublicationState: function (item, publication) {
+    if (!item || !item.group || item.group.id !== "documentation") return item;
+    if (item.id === "documentation" || item.id === "documentation-dashboard") return item;
+    let route = String(item.route || "");
+    if (!route || route === "/docs") return item;
+    let state = publication && publication.byRoute && publication.byRoute[route];
+    let ready = state && state.ready === true;
+    if (!ready) {
+      return Object.assign({}, item, {
+        featureState: "DISABLED",
+        help: Object.assign({}, item.help || {}, {
+          summary: "Initialize and publish documentation from Dashboard before opening this documentation area."
+        })
+      });
+    }
+    return item;
+  },
+
+  /** Reads bounded documentation publication status for bootstrap navigation gating. */
+  buildDocumentationPublicationState: async function (sources, request) {
+    let result = { byRoute: {}, bySourceId: {} };
+    let service = SERVICE.DefaultBackofficeApplicationInitializationService;
+    if (!service || typeof service.status !== "function") return result;
+    let cmsSources = [].concat(sources || []).filter(source =>
+      source && source.type === "CMS" && source.initializationProfile && source.route);
+    await Promise.all(cmsSources.map(async source => {
+      try {
+        let status = await service.status(source.initializationProfile, request);
+        let state = {
+          readiness: status && status.readiness || "UNKNOWN",
+          ready: Boolean(status && status.readiness === "READY")
+        };
+        result.byRoute[String(source.route)] = state;
+        result.bySourceId[String(source.id)] = state;
+      } catch (error) {
+        let state = { readiness: "UNAVAILABLE", ready: false };
+        result.byRoute[String(source.route)] = state;
+        result.bySourceId[String(source.id)] = state;
+      }
+    }));
+    let cmsReady = cmsSources.length > 0 && cmsSources.every(source =>
+      result.bySourceId[String(source.id)] && result.bySourceId[String(source.id)].ready === true);
+    [].concat(sources || []).filter(source => source && source.type === "OPENAPI" && source.route)
+      .forEach(source => {
+        result.byRoute[String(source.route)] = {
+          readiness: cmsReady ? "READY" : "WAITING_FOR_DOCUMENTATION",
+          ready: cmsReady
+        };
+      });
+    return result;
   },
 
   /** Resolves and validates bounded administrative query parameters. */
@@ -1289,11 +1343,20 @@ module.exports = {
       });
     }
     let availability = this.buildAvailability(effectiveModules);
+    let documentationSources = this.buildDocumentationSources(
+      catalogue,
+      request && request.authData,
+    );
+    let documentationPublication = await this.buildDocumentationPublicationState(
+      documentationSources,
+      request,
+    );
     let effectiveNavigationComposition = this.buildEffectiveNavigationComposition(
       catalogue,
       availability,
       request && request.authData,
       request,
+      documentationPublication,
     );
     let status = this.getOverallCompatibilityStatus(catalogue);
     if (status !== "COMPATIBLE") {
@@ -1328,10 +1391,7 @@ module.exports = {
           typeof SERVICE.DefaultBackofficeApplicationInitializationService.profiles === "function"
           ? SERVICE.DefaultBackofficeApplicationInitializationService.profiles(request)
           : [],
-        documentationSources: this.buildDocumentationSources(
-          catalogue,
-          request && request.authData,
-        ),
+        documentationSources: documentationSources,
         axisPolicy: axisPolicy,
         tenantCode: request.tenant,
       },
@@ -1354,6 +1414,14 @@ module.exports = {
       request && request.authData,
     );
     let availability = this.buildAvailability(effectiveModules);
+    let documentationSources = this.buildDocumentationSources(
+      catalogue,
+      request && request.authData,
+    );
+    let documentationPublication = await this.buildDocumentationPublicationState(
+      documentationSources,
+      request,
+    );
     return {
       code: "SUC_BOF_00015",
       data: this.buildEffectiveNavigationComposition(
@@ -1361,6 +1429,7 @@ module.exports = {
         availability,
         request && request.authData,
         request,
+        documentationPublication,
       ),
     };
   },

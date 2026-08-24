@@ -21,7 +21,8 @@ const axisNavigation = axisCapability.navigation;
 const navigation = backofficeNavigation.concat(axisNavigation).sort((left, right) =>
     (left.order || 0) - (right.order || 0));
 const documentation = navigation.find(item => item.id === 'documentation');
-const documentationLinks = navigation.filter(item => item.parentId === 'documentation');
+const documentationLinks = navigation.filter(item =>
+    item.group && item.group.id === 'documentation' && item.featureState === 'ACTIVE');
 const sources = backofficeCapability.documentation
     .concat(axisCapability.documentation)
     .sort((left, right) => left.order - right.order);
@@ -32,26 +33,36 @@ assert.strictEqual(documentation.label, 'Nodics Documentation');
 assert.strictEqual(documentation.route, '/docs');
 assert.strictEqual(documentation.group.id, 'documentation');
 assert.strictEqual(documentation.group.label, 'Documentation');
-assert.strictEqual(documentation.group.order, 650);
-assert.strictEqual(documentation.featureState, 'ACTIVE');
+assert.strictEqual(documentation.group.order, 1600);
+assert.strictEqual(documentation.featureState, 'HIDDEN');
 assert.deepStrictEqual(documentation.contexts, ['environment', 'tenant', 'enterprise']);
 assert.strictEqual(documentation.requiredPermissions, undefined,
     'authenticated employees must not require an unrelated operational permission to read help');
 assert.deepStrictEqual(documentationLinks.map(item => item.id), [
+    'documentation-dashboard',
     'documentation-framework',
     'documentation-swaggers',
-    'documentation-nodics-axis'
+    'documentation-nodics-axis',
+    'documentation-nodics-kickoff'
 ]);
-assert.deepStrictEqual(documentationLinks.map(item => item.label), ['Framework', 'Swaggers', 'Nodics Axis']);
+assert.deepStrictEqual(documentationLinks.map(item => item.label), [
+    'Dashboard',
+    'Framework',
+    'Swaggers',
+    'Nodics Axis',
+    'Nodics Kickoff'
+]);
 assert.deepStrictEqual(documentationLinks.map(item => item.route), [
+    '/docs',
     '/docs/framework',
     '/docs/swaggers',
-    '/docs/nodics-axis'
+    '/docs/nodics-axis',
+    '/docs/nodics-kickoff'
 ]);
 assert.strictEqual(
-    axisNavigation.find(item => item.id === 'documentation-nodics-axis').parentModuleName,
-    'backoffice',
-    'Axis documentation navigation must mark its BackOffice-owned external parent'
+    axisNavigation.find(item => item.id === 'documentation-nodics-axis').group.id,
+    'documentation',
+    'Axis documentation navigation must remain grouped under BackOffice documentation'
 );
 assert(documentationLinks.every(item => item.group.id === 'documentation'),
     'documentation child links must remain grouped under the documentation navigation area');

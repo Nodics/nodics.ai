@@ -21,6 +21,7 @@
  */
 
 const assert = require('assert');
+const path = require('path');
 
 // @nodics-capability-behavior @nodics-area system
 global.CONFIG = {
@@ -97,6 +98,7 @@ global.FACADE = {
 
 const controller = require('../src/controller/DataExportController');
 const routerConfig = require('../src/router/routers');
+const foundationPackage = require(path.join(__dirname, '../../../../../package.json'));
 
 (async function () {
     let request = {
@@ -357,6 +359,10 @@ const routerConfig = require('../src/router/routers');
     assert.strictEqual(historyRoute.operation, 'history');
     assert.strictEqual(historyRoute.permission, 'export.run');
     assert.strictEqual(historyRoute.apiExposure, 'dataExport');
+    assert(
+        foundationPackage.requiredModules.includes('export'),
+        'Foundation must load the export capability directly so fresh runtimes expose /nodics/export/v0/export',
+    );
 
     console.log('Data export capability behavior validated');
 })().catch((error) => {

@@ -51,16 +51,32 @@ module.exports = {
     /** Executes the documented bounded module operation. */
     authorizes: function (request) { return Boolean(this._authority) && request.localResetAuthority === this._authority; },
     /** Executes the documented bounded module operation. */
+    isMissingModelRegistryError: function (error) {
+        let stack = String(error && error.stack || '');
+        let normalizedStack = stack.toLowerCase();
+        let message = String(error && error.message || '');
+        return (stack.includes('getModels') &&
+            (message.includes("reading 'models'") || message.includes('reading "models"'))) ||
+            (normalizedStack.includes('modelsremoveinitializerservice') &&
+            (message.includes("reading 'schemaName'") || message.includes('reading "schemaName"')));
+    },
+    /** Executes the documented bounded module operation. */
     reset: async function (request) {
         let providers = this.validate(request);
         let removed = [];
+        let skipped = [];
         for (let provider of providers) {
-            let response = await provider.service.remove({ tenant: request.tenant, authData: request.authData,
-                correlationId: request.correlationId, query: { _id: { $ne: null } }, options: { recursive: false },
-                localResetAuthority: this._authority });
-            removed.push({ service: provider.name, acknowledged: Boolean(response) });
+            try {
+                let response = await provider.service.remove({ tenant: request.tenant, authData: request.authData,
+                    correlationId: request.correlationId, query: { _id: { $ne: null } }, options: { recursive: false },
+                    localResetAuthority: this._authority });
+                removed.push({ service: provider.name, acknowledged: Boolean(response) });
+            } catch (error) {
+                if (!this.isMissingModelRegistryError(error)) throw error;
+                skipped.push({ service: provider.name, reason: 'MODEL_REGISTRY_MISSING' });
+            }
         }
         return { acknowledged: true, serviceCount: removed.length, services: removed.map(item => item.service),
-            correlationId: request.correlationId };
+            skippedServiceCount: skipped.length, skippedServices: skipped.map(item => item.service), correlationId: request.correlationId };
     }
 };

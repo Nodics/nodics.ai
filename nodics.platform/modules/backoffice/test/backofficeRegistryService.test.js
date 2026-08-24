@@ -896,6 +896,79 @@ async function run() {
     ["public-guide"],
     "documentation aggregation must permission-filter module-owned sources",
   );
+  let documentationComposition = service.buildEffectiveNavigationComposition(
+    {
+      backoffice: {
+        navigation: [
+          {
+            id: "documentation-dashboard",
+            label: "Dashboard",
+            route: "/docs",
+            group: { id: "documentation", label: "Documentation", order: 1600 },
+            featureState: "ACTIVE",
+          },
+          {
+            id: "documentation-framework",
+            label: "Framework",
+            route: "/docs/framework",
+            group: { id: "documentation", label: "Documentation", order: 1600 },
+            featureState: "ACTIVE",
+          },
+          {
+            id: "documentation-swaggers",
+            label: "Swaggers",
+            route: "/docs/swaggers",
+            group: { id: "documentation", label: "Documentation", order: 1600 },
+            featureState: "ACTIVE",
+          },
+        ],
+      },
+    },
+    { backoffice: { state: "UP" } },
+    { permissions: [] },
+    {},
+    {
+      byRoute: {
+        "/docs/framework": { ready: false },
+        "/docs/swaggers": { ready: false },
+      },
+    },
+  );
+  assert.strictEqual(
+    documentationComposition.navigation.find((item) => item.id === "documentation-dashboard").featureState,
+    "ACTIVE",
+    "documentation dashboard must remain reachable while documentation is being initialized",
+  );
+  assert(
+    documentationComposition.navigation
+      .filter((item) => item.route !== "/docs")
+      .every((item) => item.featureState === "DISABLED"),
+    "documentation product links must stay disabled until their publication source is Online-ready",
+  );
+  documentationComposition = service.buildEffectiveNavigationComposition(
+    {
+      backoffice: {
+        navigation: [
+          {
+            id: "documentation-framework",
+            label: "Framework",
+            route: "/docs/framework",
+            group: { id: "documentation", label: "Documentation", order: 1600 },
+            featureState: "ACTIVE",
+          },
+        ],
+      },
+    },
+    { backoffice: { state: "UP" } },
+    { permissions: [] },
+    {},
+    { byRoute: { "/docs/framework": { ready: true } } },
+  );
+  assert.strictEqual(
+    documentationComposition.navigation[0].featureState,
+    "ACTIVE",
+    "documentation product links must unlock once their publication source is Online-ready",
+  );
   await assert.rejects(() =>
     Promise.resolve().then(() =>
       service.bootstrap({

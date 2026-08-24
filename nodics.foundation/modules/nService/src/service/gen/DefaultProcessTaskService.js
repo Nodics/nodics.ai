@@ -11,9 +11,9 @@
 /**
  * @generated
  * @module generated/service/DefaultProcessTaskService
- * @description Generated service for schema `processTask` owned by module `flowSchema`. This file is recreated by clean/build from the effective schema and common service template.
+ * @description Generated service for schema `processTask` owned by module `workflow`. This file is recreated by clean/build from the effective schema and common service template.
  * @layer service
- * @owner flowSchema
+ * @owner workflow
  * @schema processTask
  * @model ProcessTaskModel
  * @sourceTemplate /src/service/common.js
@@ -31,13 +31,13 @@ module.exports = {
         });
     },
     get: function (request) {
-        let moduleName = request.moduleName || 'flowSchema';
+        let moduleName = request.moduleName || 'workflow';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).ProcessTaskModel;
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelsGetInitializerPipeline', request, {});
     },
     safeSearch: function (request) {
-        let moduleName = request.moduleName || 'flowSchema';
+        let moduleName = request.moduleName || 'workflow';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).ProcessTaskModel;
         request.moduleName = moduleName;
         request.schemaName = request.schemaName || 'processTask';
@@ -48,7 +48,7 @@ module.exports = {
         return SERVICE.DefaultSchemaSafeQueryService.searchGenerated(request);
     },
     capabilities: function (request) {
-        let moduleName = request.moduleName || 'flowSchema';
+        let moduleName = request.moduleName || 'workflow';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).ProcessTaskModel;
         request.moduleName = moduleName;
         request.schemaName = request.schemaName || 'processTask';
@@ -74,25 +74,25 @@ module.exports = {
         });
     },
     save: function (request) {
-        let moduleName = request.moduleName || 'flowSchema';
+        let moduleName = request.moduleName || 'workflow';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).ProcessTaskModel;
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelSaveInitializerPipeline', request, {});
     },
     saveAll: function (request) {
-        let moduleName = request.moduleName || 'flowSchema';
+        let moduleName = request.moduleName || 'workflow';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).ProcessTaskModel;
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelsSaveInitializerPipeline', request, {});
     },
     remove: function (request) {
-        let moduleName = request.moduleName || 'flowSchema';
+        let moduleName = request.moduleName || 'workflow';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).ProcessTaskModel;
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelsRemoveInitializerPipeline', request, {});
     },
     deleteImpact: function (request) {
-        let moduleName = request.moduleName || 'flowSchema';
+        let moduleName = request.moduleName || 'workflow';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).ProcessTaskModel;
         request.moduleName = moduleName;
         request.schemaName = request.schemaName || 'processTask';
@@ -114,13 +114,13 @@ module.exports = {
         });
     },
     update: function (request) {
-        let moduleName = request.moduleName || 'flowSchema';
+        let moduleName = request.moduleName || 'workflow';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).ProcessTaskModel;
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelsUpdateInitializerPipeline', request, {});
     },
     getSearchModel: function (request) {
-        let moduleName = request.moduleName || 'flowSchema';
+        let moduleName = request.moduleName || 'workflow';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).ProcessTaskModel;
         request.moduleName = moduleName;
         request.indexName = request.indexName ? request.indexName : request.schemaModel.indexName;

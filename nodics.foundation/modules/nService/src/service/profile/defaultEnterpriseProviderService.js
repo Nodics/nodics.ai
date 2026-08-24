@@ -87,6 +87,10 @@ module.exports = {
             let profileModuleName = CONFIG.get('profileModuleName') || 'profile';
             let lookupRequest = {
                 tenant: CONFIG.get('defaultTenant') || 'default',
+                authData: SERVICE.DefaultIdentityGovernanceService &&
+                    typeof SERVICE.DefaultIdentityGovernanceService.getSystemAuthData === 'function'
+                    ? SERVICE.DefaultIdentityGovernanceService.getSystemAuthData()
+                    : undefined,
                 options: {
                     recursive: true,
                 },

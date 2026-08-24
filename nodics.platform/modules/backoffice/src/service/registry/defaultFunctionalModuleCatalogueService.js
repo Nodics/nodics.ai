@@ -544,27 +544,25 @@ module.exports = {
         let packages = this.getActivationDataPackages(record.functionalModule)
             .filter(pack => pack.required === true && pack.trigger === 'ACTIVATION');
         if (!packages.length) return true;
-        let releaseService = SERVICE.DefaultDataReleaseService;
-        if (!releaseService || typeof releaseService.preflight !== 'function' || typeof releaseService.execute !== 'function') {
-            throw new CLASSES.NodicsError('ERR_BOF_00000', 'nImport data-release executor is unavailable for required activation data');
-        }
         let grouped = packages.reduce((result, pack) => {
-            result[pack.dataType] = result[pack.dataType] || [];
-            result[pack.dataType].push(pack);
+            let key = [pack.dataType, pack.targetServer || '', pack.targetModule || ''].join('::');
+            result[key] = result[key] || { dataType: pack.dataType, packs: [] };
+            result[key].packs.push(pack);
             return result;
         }, {});
-        for (let dataType of Object.keys(grouped)) {
-            let packs = grouped[dataType];
+        for (let groupKey of Object.keys(grouped)) {
+            let dataType = grouped[groupKey].dataType;
+            let packs = grouped[groupKey].packs;
             await Promise.all(packs.map(pack => this.upsertActivationReceipt(record, pack, 'RUNNING', Object.assign({}, context, { request: request }), {
                 message: 'Required activation data import is running through nImport.', releaseStatus: 'RUNNING'
             })));
             try {
                 let releaseRequest = { dataType: dataType, releaseCodes: packs.map(pack => pack.code) };
-                let operationRequest = Object.assign({}, request, { releaseRequest: releaseRequest });
-                let preflight = await releaseService.preflight(operationRequest);
+                let preflight = await this.runActivationDataReleaseOperation('preflight', releaseRequest, packs[0], request);
                 let releases = preflight && preflight.data && preflight.data.releases || [];
                 let executable = releases.filter(release => ['NOT_INSTALLED', 'UPDATE_AVAILABLE', 'FAILED'].includes(release.status));
-                let result = executable.length === 0 ? preflight : await releaseService.execute(operationRequest);
+                let result = executable.length === 0 ? preflight :
+                    await this.runActivationDataReleaseOperation('execute', releaseRequest, packs[0], request);
                 let releaseByCode = Object.fromEntries(((result && result.data && result.data.releases) || releases).map(release => [release.releaseCode, release]));
                 let importRunId = result && result.data && result.data.importRun && result.data.importRun.runId;
                 await Promise.all(packs.map(pack => {
@@ -583,6 +581,76 @@ module.exports = {
             }
         }
         return true;
+    },
+    /** Runs one activation-data nImport operation on the package target runtime. */
+    runActivationDataReleaseOperation: async function (mode, releaseRequest, pack, request) {
+        if (this.isLocalActivationDataTarget(pack)) {
+            let releaseService = SERVICE.DefaultDataReleaseService;
+            if (!releaseService || typeof releaseService.preflight !== 'function' || typeof releaseService.execute !== 'function') {
+                throw new CLASSES.NodicsError('ERR_BOF_00000', 'nImport data-release executor is unavailable for required activation data');
+            }
+            let operationRequest = Object.assign({}, request, { releaseRequest: releaseRequest });
+            return mode === 'preflight' ? releaseService.preflight(operationRequest) : releaseService.execute(operationRequest);
+        }
+        return this.runRemoteActivationDataReleaseOperation(mode, releaseRequest, pack, request);
+    },
+    /** Returns true when the activation-data package targets the current runtime. */
+    isLocalActivationDataTarget: function (pack) {
+        let targetServer = pack && pack.targetServer;
+        if (!targetServer) return true;
+        let currentServer = typeof NODICS !== 'undefined' && NODICS.getServerName && NODICS.getServerName();
+        return Boolean(currentServer && String(targetServer) === String(currentServer));
+    },
+    /** Resolves the runtime registry owner that should execute the remote data release. */
+    resolveActivationDataRuntimeOwner: async function (pack) {
+        let targetServer = pack && pack.targetServer;
+        if (!targetServer) throw new CLASSES.NodicsError('ERR_BOF_00000', 'Activation data target runtime is required');
+        let resolver = SERVICE.DefaultBackofficeRegistryService;
+        if (!resolver || typeof resolver.resolveRuntimeOwner !== 'function') {
+            throw new CLASSES.NodicsError('ERR_BOF_00000', 'Runtime registry resolver is unavailable for activation data');
+        }
+        let targetAuthority = { server: targetServer };
+        let owner = await resolver.resolveRuntimeOwner({
+            moduleName: 'system', connectionName: targetServer, targetAuthority: targetAuthority
+        });
+        if (!owner && pack.targetModule) {
+            owner = await resolver.resolveRuntimeOwner({
+                moduleName: pack.targetModule, connectionName: targetServer, targetAuthority: targetAuthority
+            });
+        }
+        if (!owner || !owner.endpoint) throw new CLASSES.NodicsError('ERR_BOF_00000',
+            'Activation data target runtime is unavailable: ' + targetServer);
+        return owner;
+    },
+    /** Builds the target runtime nImport URL from an observed runtime endpoint. */
+    buildActivationDataReleaseUrl: function (owner, dataType, mode) {
+        let endpoint = new URL(owner.endpoint);
+        let pathParts = endpoint.pathname.split('/').filter(Boolean);
+        let configured = CONFIG.get('servers') || {};
+        let contextRoot = pathParts[0] || configured.options && configured.options.contextRoot || 'nodics';
+        let suffix = mode === 'preflight' ? '/validate' : '/install';
+        return endpoint.origin + '/' + contextRoot + '/import/v0/' + dataType + suffix;
+    },
+    /** Calls the target runtime nImport route with an internal service token. */
+    runRemoteActivationDataReleaseOperation: async function (mode, releaseRequest, pack, request) {
+        let owner = await this.resolveActivationDataRuntimeOwner(pack);
+        let tenant = this.getTenant(request);
+        let token = typeof NODICS !== 'undefined' && NODICS.getInternalAuthToken && NODICS.getInternalAuthToken(tenant);
+        if (!token) throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Internal activation data token is unavailable');
+        let moduleService = SERVICE.DefaultModuleService;
+        if (!moduleService || typeof moduleService.buildExternalRequest !== 'function' || typeof moduleService.fetch !== 'function') {
+            throw new CLASSES.NodicsError('ERR_BOF_00000', 'Module transport is unavailable for activation data');
+        }
+        let uri = this.buildActivationDataReleaseUrl(owner, releaseRequest.dataType, mode);
+        let operationRequest = moduleService.buildExternalRequest({
+            uri: uri, methodName: 'POST',
+            header: { Authorization: 'Bearer ' + token },
+            requestBody: releaseRequest,
+            timeoutMs: Number((CONFIG.get('backofficeFunctionalModuleActivationData') || {}).timeoutMs || 30000),
+            maxAttempts: 1,
+            idempotencyKey: request && (request.correlationId || request.body && request.body.correlationId)
+        });
+        return moduleService.fetch(operationRequest);
     },
     /** Records deactivation/deregistration data semantics without deleting imported data. */
     recordDataLeftIntact: async function (record, context, request) {

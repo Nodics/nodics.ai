@@ -21,6 +21,9 @@ class NodicsError extends Error { constructor(code, message) { super(message || 
     global.NODICS = { getSelectedEnvironmentName: () => 'kickoffLocal', getInternalAuthToken: () => 'service-token' };
     global.SERVICE = { DefaultModuleService: {
         invokeModule: async descriptor => {
+            assert.strictEqual(descriptor.local, false);
+            assert.strictEqual(descriptor.apiName, '/operations/local-reset');
+            assert.deepStrictEqual(descriptor.targetAuthority, { runtimeRole: 'OWNER' });
             assert.strictEqual(descriptor.requestBody.resetScope, 'LOCAL_ACCEPTANCE');
             assert.strictEqual(descriptor.requestBody.reason, 'fresh acceptance verification');
             assert.strictEqual(descriptor.header.Authorization, 'Bearer service-token');

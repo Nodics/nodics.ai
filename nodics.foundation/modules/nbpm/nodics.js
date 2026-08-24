@@ -35,6 +35,12 @@ module.exports = {
      */
     postInit: function (options) {
         return new Promise((resolve, reject) => {
+            if (!SERVICE.DefaultWorkflow2SchemaService ||
+                typeof SERVICE.DefaultWorkflow2SchemaService.buildWorkflow2SchemaAssociations !== 'function') {
+                this.LOG.warn('Workflow-schema association loading skipped; workflow association service is not active in this runtime');
+                resolve(true);
+                return;
+            }
             this.LOG.debug('Updating schema and workflow association');
             SERVICE.DefaultWorkflow2SchemaService.buildWorkflow2SchemaAssociations().then(done => {
                 resolve(true);

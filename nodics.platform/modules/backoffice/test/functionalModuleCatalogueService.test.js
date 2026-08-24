@@ -183,6 +183,46 @@ async function run() {
     assert.strictEqual(runtimeUpdates[0].model.runtimeState, 'ACTIVE');
     assert.deepStrictEqual(runtimeUpdates[0].model.observedServers, ['local:processServer:default']);
 
+    let originalConfigGet = CONFIG.get;
+    let originalNodics = NODICS;
+    let resolvedOptions;
+    let transportOptions;
+    CONFIG.get = key => key === 'defaultTenant' ? 'default' :
+        key === 'backofficeFunctionalModuleActivationData' ? { timeoutMs: 1234 } :
+            key === 'servers' ? { options: { contextRoot: 'nodics' } } : originalConfigGet(key);
+    NODICS = {
+        getEnvironmentName: () => 'example.project',
+        getServerName: () => 'platformServer',
+        getInternalAuthToken: tenant => tenant === 'default' ? 'internal-token' : undefined
+    };
+    SERVICE.DefaultBackofficeRegistryService = {
+        resolveRuntimeOwner: async options => {
+            resolvedOptions = options;
+            return { moduleName: 'system', server: 'commerceServer', endpoint: 'http://localhost:4350/nodics/system' };
+        }
+    };
+    SERVICE.DefaultModuleService = {
+        buildExternalRequest: options => {
+            transportOptions = options;
+            return Object.assign({ built: true }, options);
+        },
+        fetch: async request => ({ code: 'SUC_IMP_00000', data: { requestUri: request.uri, releases: [
+            { releaseCode: 'baseCommerce:core-reference', status: 'CURRENT' }
+        ] } })
+    };
+    let remotePreflight = await service.runActivationDataReleaseOperation('preflight',
+        { dataType: 'core', releaseCodes: ['baseCommerce:core-reference'] },
+        { targetServer: 'commerceServer', targetModule: 'commerce' },
+        { tenant: 'default', body: { correlationId: 'activation-1' } });
+    assert.strictEqual(resolvedOptions.moduleName, 'system');
+    assert.strictEqual(resolvedOptions.connectionName, 'commerceServer');
+    assert.strictEqual(transportOptions.uri, 'http://localhost:4350/nodics/import/v0/core/validate');
+    assert.strictEqual(transportOptions.header.Authorization, 'Bearer internal-token');
+    assert.strictEqual(transportOptions.requestBody.releaseCodes[0], 'baseCommerce:core-reference');
+    assert.strictEqual(remotePreflight.data.releases[0].status, 'CURRENT');
+    CONFIG.get = originalConfigGet;
+    NODICS = originalNodics;
+
     console.log('Functional-module catalogue service validated');
 }
 
