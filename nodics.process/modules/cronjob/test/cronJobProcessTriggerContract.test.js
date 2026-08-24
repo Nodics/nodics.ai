@@ -10,11 +10,11 @@
  */
 
 /**
- * @module nodics.cron/modules/cronjob/test/cronJobProcessTriggerContract.test
+ * @module nodics.process/modules/cronjob/test/cronJobProcessTriggerContract.test
  * @description Validates Cron-owned scheduled jobs can hand off to Process-owned trigger execution without moving workflow ownership into Cron.
  * @layer test
  * @owner cronjob
- * @override Project modules may add custom trigger target tests while preserving this Process/Cron ownership boundary.
+ * @override Project modules may add custom trigger target tests while preserving this workflow/cronjob ownership boundary.
  */
 
 const assert = require('assert');

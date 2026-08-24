@@ -15,7 +15,7 @@ const capabilityService = require('../src/service/defaultCronjobBackofficeCapabi
 const routerConfig = require('../src/router/routers');
 
 /**
- * @module nodics.cron/cronjob/test/cronJobRouteContract.test
+ * @module nodics.process/cronjob/test/cronJobRouteContract.test
  * @description Validates cronjob route metadata for create, update, run, start, stop, remove, pause, and resume operations.
  * @layer test
  * @owner cronjob

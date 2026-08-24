@@ -224,6 +224,7 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nConfig/test/configurationValidation.test.js' },
                 { node: 'nodics.foundation/modules/nConfig/test/nonRuntimePackageDiscovery.test.js' },
                 { node: 'nodics.foundation/modules/nDatabase/database/test/tenantDatabaseConfigurationValidation.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/database/test/databaseConnectionHandlerRuntimeConfigContract.test.js' },
                 { tool: ['module:metadata:validate'] },
                 { suite: 'tooling' },
                 { node: 'nodics.foundation/modules/nTest/test/layeredTestDiscovery.test.js' },
@@ -421,11 +422,11 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nCache/redisCache/test/cacheRedisLive.test.js' }
             ],
             cronjob: [
-                { node: 'nodics.cron/modules/cronjob/test/cronJobRouteContract.test.js' },
-                { node: 'nodics.cron/modules/cronjob/test/cronJobControllerRequestMapping.test.js' },
-                { node: 'nodics.cron/modules/cronjob/test/cronJobServiceLifecycleContract.test.js' },
-                { node: 'nodics.cron/modules/cronjob/test/cronJobRuntimeServiceContract.test.js' },
-                { node: 'nodics.cron/modules/cronjob/test/cronJobEventHandlerContract.test.js' }
+                { node: 'nodics.process/modules/cronjob/test/cronJobRouteContract.test.js' },
+                { node: 'nodics.process/modules/cronjob/test/cronJobControllerRequestMapping.test.js' },
+                { node: 'nodics.process/modules/cronjob/test/cronJobServiceLifecycleContract.test.js' },
+                { node: 'nodics.process/modules/cronjob/test/cronJobRuntimeServiceContract.test.js' },
+                { node: 'nodics.process/modules/cronjob/test/cronJobEventHandlerContract.test.js' }
             ],
             ems: [
                 { node: 'nodics.foundation/modules/nEms/emsClient/test/emsClientRouteContract.test.js' },

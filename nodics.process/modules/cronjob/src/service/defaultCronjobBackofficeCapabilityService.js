@@ -55,7 +55,7 @@ const capability = {
         {
             "id": "job-triggers",
             "parentId": "triggers-relationships",
-            "parentModuleName": "flowCore",
+            "parentModuleName": "workflow",
             "label": "Scheduled triggers",
             "route": "/cron/triggers",
             "icon": "cronjob",

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module nodics.cron/modules/cronjob/test/cronJobConfigurationServiceContract.test
+ * @module nodics.process/modules/cronjob/test/cronJobConfigurationServiceContract.test
  * @description Validates Cron configuration caches for interceptors, validators, and default active-job query.
  * @layer test
  * @owner cronjob

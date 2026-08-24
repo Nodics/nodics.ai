@@ -6,6 +6,7 @@
   "description": "Nodics business process and workflow functional module group.",
   "main": "nodics.js",
   "requiredModules": [
+    "cronjob",
     "workflow"
   ],
   "nodics": {
@@ -36,7 +37,8 @@
   },
   "scripts": {
     "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
-    "test:contract": "node test/processModuleContract.test.js && node test/processApiRouteContract.test.js && node test/processPermissionCatalogContract.test.js && node modules/workflow/modules/flowSchema/test/gen/schema/processTriggerSchemaContract.test.js && node modules/workflow/modules/flowSchema/test/gen/schema/processIncidentSchemaContract.test.js && node test/processGraphValidationService.test.js && node test/processDefinitionLifecycleService.test.js && node test/processOperationsInspectionService.test.js && node test/processRuntimeLifecycleService.test.js && node test/processPublicationApprovalRecovery.test.js",
-    "test": "npm run check:syntax && npm run test:contract"
+    "test:cronjob": "node modules/cronjob/test/cronJobRouteContract.test.js && node modules/cronjob/test/cronJobControllerRequestMapping.test.js && node modules/cronjob/test/cronJobConfigurationServiceContract.test.js && node modules/cronjob/test/cronJobServiceLifecycleContract.test.js && node modules/cronjob/test/cronJobRuntimeServiceContract.test.js && node modules/cronjob/test/cronJobEventHandlerContract.test.js && node modules/cronjob/test/cronJobProcessTriggerContract.test.js",
+    "test:contract": "node test/processModuleContract.test.js && node test/processApiRouteContract.test.js && node test/processPermissionCatalogContract.test.js && node modules/workflow/test/gen/schema/processTriggerSchemaContract.test.js && node modules/workflow/test/gen/schema/processIncidentSchemaContract.test.js && node test/processGraphValidationService.test.js && node test/processDefinitionLifecycleService.test.js && node test/processOperationsInspectionService.test.js && node test/processRuntimeLifecycleService.test.js && node test/processPublicationApprovalRecovery.test.js",
+    "test": "npm run check:syntax && npm run test:cronjob && npm run test:contract"
   }
 }

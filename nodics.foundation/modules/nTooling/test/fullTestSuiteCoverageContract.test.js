@@ -137,8 +137,8 @@ requireSuiteIncludes('ems', [
     'nodics.foundation/modules/nData/nImport/import/test/importGovernanceLifecycleContract.test.js',
     'nodics.foundation/modules/nTooling/test/dependencyOwnershipContract.test.js',
     'nodics.foundation/modules/nTooling/test/releaseCheckCommandContract.test.js',
-    'nodics.cron/modules/cronjob/test/cronJobRuntimeServiceContract.test.js',
-    'nodics.cron/modules/cronjob/test/cronJobEventHandlerContract.test.js',
+    'nodics.process/modules/cronjob/test/cronJobRuntimeServiceContract.test.js',
+    'nodics.process/modules/cronjob/test/cronJobEventHandlerContract.test.js',
     'nodics.foundation/modules/nEms/emsClient/test/messageTenantResolution.test.js',
     'nodics.foundation/modules/nEms/emsClient/test/emsMessageProcessContract.test.js'
 ].forEach(requireFile);

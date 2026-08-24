@@ -61,7 +61,7 @@ const modules = [{
 const modernizedDescriptions = {
     'nodics.platform/modules/backoffice': ['Backend registry', 'discovery', 'Nodics Axis'],
     'nodics.platform/modules/profile': ['Identity and profile module', 'tenants', 'authentication'],
-    'nodics.cron/modules/cronjob': ['Scheduler capability', 'node ownership', 'event-driven execution'],
+    'nodics.process/modules/cronjob': ['Scheduler capability', 'node ownership', 'event-driven execution'],
     'nodics.foundation/modules/nData/nImport/import': ['Governed data import engine', 'diagnostics', 'rollback hooks'],
     'nodics.foundation/modules/nDynamo': ['Runtime control-plane module', 'activation', 'rollback'],
     'nodics.foundation/modules/nEms/emsClient': ['Event/message client capability', 'tenant-aware', 'EMS communication'],

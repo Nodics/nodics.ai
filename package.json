@@ -93,7 +93,7 @@
         },
         "cron": {
           "owners": [
-            "nodics.cron"
+            "nodics.process"
           ],
           "type": "runtime-scheduler",
           "reason": "Cron expression scheduling for the cronjob module."
@@ -151,7 +151,7 @@
           "owners": [
             "nodics.foundation",
             "nodics.platform",
-            "nodics.cron",
+            "nodics.process",
             "nodics.wcms"
           ],
           "type": "runtime-utility",
@@ -336,7 +336,6 @@
     "nodics.foundation",
     "nodics.localization",
     "nodics.platform",
-    "nodics.cron",
     "nodics.wcms",
     "nodics.docs",
     "nodics.process",

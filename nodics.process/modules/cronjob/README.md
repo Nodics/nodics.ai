@@ -178,8 +178,8 @@ environment.
 
 ## Continue
 
-- Core capability family: [nodics.platform](../README.md)
-- Profile and service identity: [profile](../profile/README.md)
-- Messaging and events: [nEms](../../nodics.foundation/modules/nEms/README.md)
-- Runtime module lifecycle: [nService](../../nodics.foundation/modules/nService/README.md)
+- Process capability family: [nodics.process](../../README.md)
+- Profile and service identity: [profile](../../../nodics.platform/modules/profile/README.md)
+- Messaging and events: [nEms](../../../nodics.foundation/modules/nEms/README.md)
+- Runtime module lifecycle: [nService](../../../nodics.foundation/modules/nService/README.md)
 - Capability maturity: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)

@@ -10,7 +10,7 @@
  */
 
 /**
- * @module nodics.cron/modules/cronjob/test/cronJobRuntimeServiceContract.test
+ * @module nodics.process/modules/cronjob/test/cronJobRuntimeServiceContract.test
  * @description Validates cronjob all-job startup, node ownership, temporary
  * failover ownership, runtime-service lifecycle, and service customization.
  * @layer test

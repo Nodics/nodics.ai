@@ -10,7 +10,7 @@
  */
 
 /**
- * @module nodics.cron/modules/cronjob/test/cronJobEventHandlerContract.test
+ * @module nodics.process/modules/cronjob/test/cronJobEventHandlerContract.test
  * @description Validates cronjob event-handler jobs build internal NEMS requests, update execution state, and persist optional job logs.
  * @layer test
  * @owner cronjob
