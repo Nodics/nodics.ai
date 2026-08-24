@@ -6,7 +6,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "core",
       "pack": "nodics.docs",
-      "version": "0.0.0",
+      "version": "0.16.1",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -28,7 +28,7 @@
       "pages": 41,
       "components": 42,
       "routes": 41,
-      "releaseChecksum": "ca369847ec3db3a2caa4b44c026df1c43760230467f011d6f7e8e0d017cdcf0e",
+      "releaseChecksum": "38927b3a08a2cb6d5e0937270cc17444e928be4dfb4d38466ca66527e0bff07c",
       "generatedHashes": {
         "core/data/documentation/nodicsDocumentationSiteData.js": "2c3a262be1c3d672c36c0f9f89dc9117c8b04297af1e1501491c1c7afc7e8089",
         "core/data/documentation/nodicsDocumentationTypeCodeData.js": "6883b47a173615b7ee8738af595a2858491a6fb0acede249e87ac6d0a06fd722",
@@ -36,8 +36,8 @@
         "core/data/documentation/nodicsDocumentationSlotData.js": "d4f874d520dae6b0256daf3e75cdd4f9e1e8e151729ce6f4122803a99011d6e2",
         "core/data/documentation/nodicsDocumentationTemplateBootstrapData.js": "9479fbf8958c8e9fe48d7752469080b85041cf488a2cdd340ba2ba841eb5d3fd",
         "core/data/documentation/nodicsDocumentationTemplateData.js": "9e2a160453f7f3308917d4869282df6a9932154cad2100427d1665d36a2db32a",
-        "core/data/documentation/nodicsDocumentationComponentData.js": "70efa1d8484dbc020fc0bbfaabac21410c709e774b1ed5a66cafb2df3530dccc",
-        "core/data/documentation/nodicsDocumentationPageData.js": "5ad6ee629b37412a5e6bd3d8a9af43ca2f375dadae54d0b633ae3e5899e57823",
+        "core/data/documentation/nodicsDocumentationComponentData.js": "9e9683975fc79ed3e2aefad96bab01429b751f501dba7526fd360168aa2fa371",
+        "core/data/documentation/nodicsDocumentationPageData.js": "29f7013877484f8db453c1bed95dac2be75301169c514edb138e32dc675ff6b3",
         "core/data/documentation/nodicsDocumentationRouteData.js": "804215b4f30a6164d4b146d22df9f438c824c2fc27e7382b63f04ff1a09f5a21",
         "core/headers/nodicsDocumentationContentPackHeader.js": "34b89b7bfece575f130f44b74404fb65d230a36bf3cbeea95c9bd4488691659f"
       }

@@ -12,13 +12,15 @@ the workflow engine or workflow persistence authority.
 `nodics.process` is a module group. Runtime implementation is intentionally
 kept under child modules:
 
-- `modules/workflow` composes the workflow capability.
-- `modules/workflow/modules/flowSchema` owns process schemas and status
-  definitions.
-- `modules/workflow/modules/flowCore` owns graph validation, definition
-  lifecycle, runtime instance lifecycle, task lifecycle, trigger metadata
-  inspection, and future execution providers.
-- `modules/workflow/modules/flowApi` owns secured process HTTP APIs.
+- `modules/workflow/src/schemas` owns process schemas.
+- `modules/workflow/src/utils` owns status definitions and process utility vocabulary.
+- `modules/workflow/src/service` owns graph validation, definition lifecycle,
+  runtime instance lifecycle, task lifecycle, trigger metadata inspection, and
+  future execution providers.
+- `modules/workflow/src/router`, `src/controller`, and `src/facade` own secured
+  process HTTP APIs.
+- `modules/cronjob` owns scheduled-job definitions, lifecycle services,
+  scheduler state, job routes, and Process trigger handoff.
 
 The existing `nbpm` capability in `nodics.foundation` remains a compatibility
 reference until a focused migration proves load order, bootstrap, API exposure,
@@ -27,8 +29,8 @@ and data compatibility.
 ## Ownership
 
 - `nodics.process` owns process/workflow definitions, runtime governance,
-  workflow API contracts, task/approval lifecycle, designer validation, and
-  process documentation.
+  workflow API contracts, scheduled-job orchestration, task/approval lifecycle,
+  designer validation, and process documentation.
 - Domain modules own domain actions. For example, Commerce owns order
   cancellation/refund behavior; Process may orchestrate the flow but must not
   implement the commerce action itself.

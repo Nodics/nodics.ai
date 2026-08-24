@@ -2,38 +2,39 @@
 
 This contract protects the Process direction while the framework is still
 modularising. It is written for human developers and AI tools before they touch
-Process, Cron, Axis, or customer overlay code.
+Process, cronjob, Axis, or customer overlay code.
 
 ## Roles
 
 | Role | Responsibility |
 | --- | --- |
-| `nodics.process` | Owns process definitions, versions, runtime instances, tasks, audit events, trigger relationships, graph validation, and workflow publication governance. |
-| `nodics.cron` | Owns cron job definitions, cron runtime state, schedule firing, retries, job history, and scheduler health. |
+| `workflow` | Owns process definitions, versions, runtime instances, tasks, audit events, trigger relationships, graph validation, and workflow publication governance. |
+| `cronjob` | Owns cron job definitions, cron runtime state, schedule firing, retries, job history, and scheduler health. |
 | Domain modules | Own domain actions and side effects such as order cancellation, media processing, customer onboarding, fulfilment, payment, notification, and compensation logic. |
 | `nodics.axis` | Renders authorized backend contracts. It may edit drafts through APIs, but it must not become a workflow registry, scheduler, or runtime engine. |
 | Customer modules | Extend or override standard Process behavior by layering services, validators, adapters, properties, and data packs without editing standard framework source. |
 
-## Process plus Cron topology
+## Process module topology
 
-Process and Cron may share a runtime server to reduce operational overhead:
+Workflow and cronjob may share a runtime server to reduce operational overhead:
 
 ```mermaid
 flowchart TD
   Server["processServer"] --> Process["nodics.process"]
-  Server --> Cron["nodics.cron"]
-  Process --> Core["nodics.foundation"]
-  Cron --> Core
-  Process --> Trigger["Process trigger relationship"]
-  Cron --> Schedule["Cron-owned schedule execution"]
+  Process --> Workflow["workflow"]
+  Process --> CronJob["cronjob"]
+  Workflow --> Core["nodics.foundation"]
+  CronJob --> Core
+  Workflow --> Trigger["Process trigger relationship"]
+  CronJob --> Schedule["Cronjob-owned schedule execution"]
 ```
 
 The shared server is only deployment composition. Ownership remains separate:
 
-- Process stores the relationship saying a process can be started by a
+- Workflow stores the relationship saying a process can be started by a
   schedule.
-- Cron stores and executes the actual schedule.
-- A governed integration calls Process APIs when a Cron job fires.
+- Cronjob stores and executes the actual schedule.
+- A governed integration calls workflow APIs when a cron job fires.
 - Axis shows the relationship in one console so business users do not need to
   understand the internal server graph.
 
@@ -62,13 +63,13 @@ semantics.
 
 | Change | Correct location |
 | --- | --- |
-| Process graph validation | `modules/workflow/modules/flowCore/src/service/designer` |
-| Definition draft/version lifecycle | `modules/workflow/modules/flowCore/src/service/definition` |
-| Runtime instance/task lifecycle | `modules/workflow/modules/flowCore/src/service/operation` |
-| Process API route/controller/facade | `modules/workflow/modules/flowApi/src` |
-| Process schemas/status/error definitions | `modules/workflow/modules/flowSchema/src` |
+| Process graph validation | `modules/workflow/src/service/designer` |
+| Definition draft/version lifecycle | `modules/workflow/src/service/definition` |
+| Runtime instance/task lifecycle | `modules/workflow/src/service/operation` |
+| Process API route/controller/facade | `modules/workflow/src` |
+| Process schemas/status/error definitions | `modules/workflow/src` |
 | Axis process UI | `nodics.axis/src/operations/processWorkflow` |
-| Cron job runtime | `nodics.cron` |
+| Cron job runtime | `modules/cronjob/src` |
 | Domain business action | The owning domain module, never `nodics.process` by default |
 | Customer override | Customer module that extends the framework module |
 
@@ -79,11 +80,11 @@ semantics.
   and archived-trigger mutation attempts.
 - Axis designer must let a user change draft graph JSON only through Process
   APIs, then refresh local state without requiring a browser page reload.
-- Cron controls shown inside the Process and Automation experience must call
-  Cron-owned routes and must remain subject to `cronjob.lifecycle.manage`.
+- Cronjob controls shown inside the Process and Automation experience must call
+  cronjob-owned routes and must remain subject to `cronjob.lifecycle.manage`.
 - Documentation for Process must be backend-owned by `nodics.process` and
   imported through WCMS content packs.
 - Fresh bootstrap acceptance must verify Process APIs, Axis Process routes,
-  Process documentation import, Process/Cron observed module composition,
-  Cron-to-Process trigger handoff, OpenAPI module metadata, and registry
+  Process documentation import, workflow/cronjob observed module composition,
+  Cronjob-to-Process trigger handoff, OpenAPI module metadata, and registry
   lifecycle.

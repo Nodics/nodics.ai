@@ -152,8 +152,8 @@ module.exports = {
             ['outbox-lease-and-startup-recovery', 'nodics.wcms/modules/cms/test/cmsPublicationOutboxReliability.test.js'],
             ['publication-workflow-orchestration', 'nodics.wcms/modules/cms/test/cmsPublicationWorkflowService.test.js'],
             ['wcms-publication-boundary', 'nodics.wcms/modules/wcms/test/wcmsPublicationWorkflowContract.test.js'],
-            ['process-decision-callback', 'nodics.process/modules/workflow/modules/flowCore/test/processPublicationDecisionCallback.test.js'],
-            ['process-publication-approval', 'nodics.process/modules/workflow/modules/flowCore/test/processPublicationApprovalService.test.js'],
+            ['process-decision-callback', 'nodics.process/modules/workflow/test/processPublicationDecisionCallback.test.js'],
+            ['process-publication-approval', 'nodics.process/modules/workflow/test/processPublicationApprovalService.test.js'],
             ['process-runtime-reconciliation', 'nodics.process/test/processRuntimeLifecycleService.test.js']
         ];
 

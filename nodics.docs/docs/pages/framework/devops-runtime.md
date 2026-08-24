@@ -28,10 +28,10 @@ flowchart LR
   Operator["Developer or operator"] --> Kickoff["nodics.kickoff scripts"]
   Kickoff --> Platform["Platform server<br/>4300"]
   Kickoff --> WCMS["WCMS server<br/>4310"]
-  Kickoff --> Cron["Cron server<br/>4320"]
+  Kickoff --> Process["Process server<br/>4330"]
   Platform --> MongoP["kickoffLocal DB"]
   WCMS --> MongoW["kickoffLocalWcms DB"]
-  Cron --> MongoC["kickoffLocalCron DB"]
+  Process --> MongoC["kickoffLocalProcess DB"]
   Axis["nodics.axis<br/>3100"] --> Platform
   Axis --> WCMS
 ```
@@ -205,7 +205,7 @@ the system from the outside before diving into source code.
 | Axis shows BackOffice registry unavailable | Platform/BackOffice | Is port `4300` reachable and did Platform finish startup? |
 | Documentation route shows recovery | WCMS/content pack owner | Is port `4310` reachable and was the docs pack imported? |
 | Module disappeared after register | Platform registry API and Axis refresh state | Did the operation response update persisted state and frontend cache? |
-| Cron is registered but unavailable | Cron runtime observation | Is the Cron server running and reporting `nodics.cron`? |
+| Process automation is registered but unavailable | Process runtime observation | Is processServer running and reporting `nodics.process` with `cronjob`? |
 | Import release is invalid | Content-pack manifest owner | Were source files changed without regenerating manifests? |
 | Media upload exposes path-like data | WCMS Media | Is the API returning storage internals instead of safe contracts? |
 

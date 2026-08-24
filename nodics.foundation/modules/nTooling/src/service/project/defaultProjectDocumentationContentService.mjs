@@ -480,9 +480,9 @@ const documentationSection = applicationDocumentationContract.buildReleaseSectio
 });
 const previousManifest = fs.existsSync(manifestPath)
   ? JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
-  : { contractVersion: 0, module: 'nodics.kickoff', sections: {} };
+  : { contractVersion: 2, module: 'nodics.kickoff', sections: {} };
 const manifest = {
-  contractVersion: 0,
+  contractVersion: 2,
   module: 'nodics.kickoff',
   sections: { ...(previousManifest.sections || {}), documentation: documentationSection },
 };

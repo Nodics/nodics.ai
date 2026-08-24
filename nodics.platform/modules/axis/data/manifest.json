@@ -1,5 +1,5 @@
 {
-  "contractVersion": 0,
+  "contractVersion": 2,
   "module": "axis",
   "sections": {
     "axisBaseline": {
@@ -172,9 +172,9 @@
       "pages": 17,
       "components": 18,
       "routes": 17,
-      "releaseChecksum": "91fcf5b42ceb6960f38993dbbb76ddf06c6b14bb4369d2703ba9533a5b842a90",
+      "releaseChecksum": "6d9b50b0dc56232ba91b75508bc0e949dfbf6572c97c2445adec889dbe22d115",
       "generatedHashes": {
-        "core/data/documentation/axisDocumentationComponentData.js": "178454f6c177ba69141cbcbce4683315f0596c02c1563213e70deefd80e7b34d",
+        "core/data/documentation/axisDocumentationComponentData.js": "a2eb328dd39be0f4ba51c85420e4466523e7e01defe9ed4cf2eb4033d2d56830",
         "core/data/documentation/axisDocumentationPageData.js": "aae16acdb0be18fda84ea7208be5c4429780bd8d73408ecaba589076f6a4cf0b",
         "core/data/documentation/axisDocumentationRendererData.js": "fc783595269b5f1e423e594263f1dd30bd35bf6e048d51fb6028938aeef89a68",
         "core/data/documentation/axisDocumentationRouteData.js": "94d142a0c4b580611456b5da69b1aeb8022297f25cf932e8519ef0ae89baa66f",

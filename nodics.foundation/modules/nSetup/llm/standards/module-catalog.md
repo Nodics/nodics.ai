@@ -35,15 +35,12 @@ This file gives AI agents and developers a first-pass map of important Nodics mo
 | --- | --- |
 | `nodics.platform/profile` | Enterprise, tenant, user, customer, employee, user group, permission, authentication, API-key, and mandatory identity bootstrap contracts. |
 | `nodics.platform/backoffice` | Module registry, discovery, catalogue, compatibility, availability summary, and registration lifecycle. |
-| `nodics.cron/cronjob` | Cron definitions, lifecycle operations, logs, node ownership, failover ownership, and event-driven execution. |
+| `nodics.process/cronjob` | Cron definitions, lifecycle operations, logs, node ownership, failover ownership, and event-driven execution. |
 | `nodics.wcms/cms` | CMS site, content catalog, page, route, template, component, renderer, restriction, and navigation contracts. |
 | `nodics.wcms/wcms` | Web content management module group defaults and WCMS composition contracts. |
 | `nodics.wcms/media` | Governed media folders, formats, assets, references, sets, uploads, delivery, and media lifecycle policies. |
 | `nodics.docs` | Framework-owned documentation data and documentation import ownership. |
-| `nodics.process/workflow` | Business process and workflow capability group. |
-| `nodics.process/workflow/flowSchema` | Process definition, version, instance, task, trigger, and audit schemas. |
-| `nodics.process/workflow/flowCore` | Process runtime services, lifecycle rules, execution, task handling, trigger behavior, and governance. |
-| `nodics.process/workflow/flowApi` | Process and workflow API/control-plane exposure for Axis and runtime integrations. |
+| `nodics.process/workflow` | Business process and workflow schemas, runtime services, lifecycle rules, execution, task handling, trigger behavior, governance, and API/control-plane exposure for Axis and runtime integrations. |
 
 ## Planned Or Project-Owned Domain Modules
 

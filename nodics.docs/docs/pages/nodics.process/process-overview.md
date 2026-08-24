@@ -46,15 +46,13 @@ Axis is the console. It is not the engine. The backend owns every state change.
 
 ## Where Process fits in Nodics
 
-`nodics.process` is a module group like `nodics.platform`, `nodics.wcms`, and
-`nodics.cron`. Runtime implementation lives under `modules/workflow`, and that
-capability is split into three technical modules:
+`nodics.process` is a module group like `nodics.platform` and `nodics.wcms`.
+Runtime implementation lives under child modules:
 
-| Layer | Module | Responsibility |
-| --- | --- | --- |
-| Schema | `flowSchema` | Process definitions, versions, instances, tasks, triggers, audit events, statuses, and errors. |
-| Core behavior | `flowCore` | Graph validation, definition lifecycle, runtime lifecycle, task movement, audit writing, and future execution providers. |
-| API | `flowApi` | Secured routes, controllers, facades, help metadata, permission contracts, and BackOffice-facing API projection. |
+| Module | Responsibility |
+| --- | --- |
+| `workflow` | Process definitions, versions, instances, tasks, triggers, audit events, statuses, graph validation, lifecycle services, secured APIs, and BackOffice-facing API projection. |
+| `cronjob` | Cron definitions, lifecycle operations, scheduler state, logs, node ownership, failover ownership, and event-driven execution. |
 
 This structure keeps the module customizable. A customer overlay can override a
 single assignment method, add a validation rule, or change SLA policy without
@@ -73,8 +71,8 @@ Process reduces cost and risk in three practical ways:
 
 This is especially important for partners who want one server topology for
 business process and automation. A `processServer` can compose
-`nodics.process`, `nodics.cron`, and `nodics.foundation`, while each module still
-keeps its own ownership boundary.
+`nodics.process` and `nodics.foundation`, while `workflow` and `cronjob` still
+keep their own ownership boundaries inside the Process group.
 
 ## Relationship with Cron
 
@@ -83,12 +81,12 @@ Process may reference scheduled triggers, but Cron owns job scheduling.
 ```mermaid
 flowchart TD
   Trigger["Process trigger metadata"] --> Reference["cronJobCode reference"]
-  Reference --> Cron["nodics.cron job lifecycle"]
+  Reference --> Cron["cronjob lifecycle"]
   Cron --> Fire["Schedule fires"]
   Fire --> Process["Start process instance"]
 ```
 
-The important rule: Process owns orchestration state; Cron owns scheduler state.
+The important rule: workflow owns orchestration state; cronjob owns scheduler state.
 Sharing a runtime server does not mean mixing responsibilities.
 
 ## Relationship with domain modules

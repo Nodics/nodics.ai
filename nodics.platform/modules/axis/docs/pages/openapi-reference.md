@@ -40,12 +40,12 @@ flowchart TD
   Project["Customer project runtime"] --> Server["Server instance"]
   Server --> Platform["nodics.platform"]
   Server --> WCMS["nodics.wcms"]
-  Server --> Cron["nodics.cron"]
+  Server --> Process["nodics.process"]
   Platform --> BackOffice["BackOffice APIs"]
   Platform --> Profile["Profile APIs"]
   WCMS --> CMS["CMS APIs"]
   WCMS --> Media["Media APIs"]
-  Cron --> Jobs["Cron job APIs"]
+  Process --> Jobs["Cron job APIs"]
   BackOffice --> Axis["Axis OpenAPI presentation"]
   Profile --> Axis
   CMS --> Axis

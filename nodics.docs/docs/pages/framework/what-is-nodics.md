@@ -163,7 +163,7 @@ contracts; the adopting project supplies the business-specific behavior and
 deployment decisions.
 
 The current reference workspace demonstrates this through `nodics.kickoff`,
-which starts local Platform, WCMS, and Cron servers, and through `nodics.axis`,
+which starts local Platform, WCMS, and Process servers, and through `nodics.axis`,
 which logs employees in and renders discovered workspaces and documentation.
 
 ## How to read Nodics if you are new
@@ -267,7 +267,7 @@ runtime. Nodics separates the major operational questions:
   discovery questions.
 - WCMS server answers site, catalog, page, component, route, media, and
   documentation delivery questions.
-- Cron server answers scheduled job questions.
+- Process server answers workflow and scheduled job questions.
 - Kickoff declares which framework modules the local customer project loads.
 - Axis is a frontend renderer and must not own backend data records.
 

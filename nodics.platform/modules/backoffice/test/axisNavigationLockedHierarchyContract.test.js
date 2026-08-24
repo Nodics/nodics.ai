@@ -48,15 +48,15 @@ const providerFiles = [
     'nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionBackofficeCapabilityService.js',
     'nodics.discovery/modules/discoveryConfig/src/service/defaultDiscoveryBackofficeCapabilityService.js',
     'nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/service/defaultCommerceSearchBackofficeCapabilityService.js',
-    'nodics.process/modules/workflow/modules/flowCore/src/service/defaultFlowCoreBackofficeCapabilityService.js',
-    'nodics.cron/modules/cronjob/src/service/defaultCronjobBackofficeCapabilityService.js',
+    'nodics.process/modules/workflow/src/service/defaultWorkflowBackofficeCapabilityService.js',
+    'nodics.process/modules/cronjob/src/service/defaultCronjobBackofficeCapabilityService.js',
     'nodics.foundation/modules/nPublish/src/service/defaultPublishBackofficeCapabilityService.js'
 ];
 
 const expected = {
     'system-integrations': ['System Workspace', 'Runtime Operations', 'Modules and Capabilities', 'Configuration and Environments', 'Integrations and Connections', 'APIs, Webhooks, and Events', 'Data Exchange', 'Schema & Data Administration', 'Operational Monitoring and Recovery', 'Platform Policies and Reference Settings'],
     content: ['Content Workspace', 'Websites and Content Catalogs', 'Page Designer', 'Pages and Routes', 'Components and Content Blocks', 'Templates and Layout', 'Navigation and Menus', 'Visibility and Experience Rules', 'Content Types and Rendering', 'Themes and Branding', 'Content Preview and Readiness', 'Content History and Insights'],
-    'media-management': ['Media Workspace', 'Media Library', 'Folders and Intake Policies', 'Formats and Variants', 'Media Sets and Galleries', 'Usage and References', 'Storage and Delivery'],
+    'media-management': ['Media Workspace', 'Media Library', 'Folders and Intake Policies', 'Formats and Variants', 'Media Sets and Galleries', 'Usage and References', 'Physical Artifacts', 'Transfer Manifests', 'Publication Receipts', 'Media Placements', 'Replication Queue', 'Cleanup Candidates', 'Cleanup Jobs and Audit', 'Storage and Delivery'],
     organization: ['Customer Workspace', 'Customers and Profiles', 'Segments and Audiences', 'Organisations and Business Accounts', 'Employees and Teams', 'Roles and Access', 'Customer Service and Engagement', 'Reviews and Reputation', 'Testimonials and Advocacy', 'Privacy and Customer Rights', 'Engagement Insights'],
     'products-merchandising': ['Product Workspace', 'Product Information', 'Categories & Classification', 'Catalogs & Assortments', 'Pricing', 'Tax Configuration', 'Product Readiness'],
     'search-discovery': ['Search Workspace', 'Search Experiences', 'Search Sources and Indexes', 'Query and Result Configuration', 'Facets and Filters', 'Search Merchandising and Ranking', 'Search Language and Relevance', 'Search Publication and Index Operations', 'Search Analytics and Optimization'],

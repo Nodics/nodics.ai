@@ -30,7 +30,7 @@ placement fields decide where a job may run; they do not create another module
 identity.
 
 Customer jobs belong in project modules. Reusable scheduler behavior belongs
-in `nodics.cron`. If a partner needs custom scheduling behavior, they may
+in `nodics.process/modules/cronjob`. If a partner needs custom scheduling behavior, they may
 create a customer extension module that loads after Cron and overrides the
 approved service contract.
 
@@ -131,45 +131,46 @@ When a project adds a scheduled job, follow this sequence:
 5. Register or import the job through governed data flow.
 6. Test manual run and scheduled execution with the same security and tenant
    context.
-7. Verify restart behavior by stopping and starting the Cron server.
+7. Verify restart behavior by stopping and starting processServer.
 8. Document support steps, alert thresholds, and reconciliation behavior.
 
 Do not pass executable code, raw URLs, filesystem paths, or untrusted handler
 names through job records. Job definitions should point to known backend
 contracts.
 
-## Registering Cron as an optional module
+## Registering Process automation as an optional module
 
-Core, Platform, and WCMS are mandatory in the Axis reference stack. Cron is
-optional. That means Axis may discover a live Cron server and show it as
-available to register. When a user registers and activates Cron, the project
+Core, Platform, and WCMS are mandatory in the Axis reference stack. Process is
+optional. That means Axis may discover a live processServer and show Process as
+available to register. When a user registers and activates Process, the project
 intent is stored in the BackOffice/runtime registry. Restarting the server
-should not ask again unless the state was removed.
+should not ask again unless the state was removed. Cronjob is a technical module
+inside that Process registration.
 
 The lifecycle is:
 
-1. Cron server starts and reports `nodics.cron` as live.
+1. processServer starts and reports `nodics.process` as live.
 2. BackOffice observes the runtime module catalogue.
-3. Axis shows Cron under available modules.
-4. A user registers Cron into the project.
-5. A user activates Cron.
-6. Cron-owned navigation, APIs, docs, and initialization data become visible
+3. Axis shows Process under available modules.
+4. A user registers Process into the project.
+5. A user activates Process.
+6. Cronjob-owned navigation, APIs, docs, and initialization data become visible
    according to permissions and content import state.
 7. Deactivation hides runtime availability without forgetting registration.
-8. Deregistration removes the project registration and returns Cron to the
+8. Deregistration removes the project registration and returns Process to the
    available state while the server remains live.
 
 ```mermaid
 sequenceDiagram
-  participant Cron as Cron server
+  participant Process as processServer
   participant BackOffice as BackOffice registry
   participant Axis as Axis module registry
-  Cron->>BackOffice: report nodics.cron runtime observation
+  Process->>BackOffice: report nodics.process runtime observation
   Axis->>BackOffice: request authorized module registry
-  BackOffice-->>Axis: nodics.cron available
-  Axis->>BackOffice: register nodics.cron
+  BackOffice-->>Axis: nodics.process available
+  Axis->>BackOffice: register nodics.process
   BackOffice-->>Axis: registered state
-  Axis->>BackOffice: activate nodics.cron
+  Axis->>BackOffice: activate nodics.process
   BackOffice-->>Axis: active state
 ```
 
@@ -285,12 +286,12 @@ Before Cron is considered ready beyond local demo use, verify:
 
 ## Verification
 
-For local verification, start the Cron runtime from the reference customer
-project and confirm that the functional module registry observes `nodics.cron`
-as an optional capability. Register it, activate it, deactivate it, and
-deregister it without refreshing the browser. After deregistration, Cron should
-return to the available list while the Cron server is still observed. Restart
-servers and confirm that durable registration state behaves as expected.
+For local verification, start processServer from the reference customer project
+and confirm that the functional module registry observes `nodics.process` with
+the `cronjob` technical module. Register it, activate it, deactivate it, and
+deregister it without refreshing the browser. After deregistration, Process
+should return to the available list while processServer is still observed.
+Restart servers and confirm that durable registration state behaves as expected.
 
 For job-level verification, test both manual and scheduled execution. A
 production-ready job must prove authorization, tenant context, duplicate-run

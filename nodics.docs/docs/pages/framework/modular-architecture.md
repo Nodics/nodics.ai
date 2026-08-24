@@ -15,7 +15,7 @@ first works and nobody can later tell which component owns the behavior.
 ## Functional modules and technical modules
 
 A functional module is the business-facing capability identity. Examples are
-`nodics.foundation`, `nodics.platform`, `nodics.wcms`, and `nodics.cron`. Axis and
+`nodics.foundation`, `nodics.platform`, `nodics.wcms`, and `nodics.process`. Axis and
 BackOffice talk about these capabilities at this level because business users
 do not need to manage every internal technical module.
 
@@ -30,8 +30,8 @@ experience unless a business capability genuinely needs to expose them.
 Repository dependencies only make code available. Runtime `extends`
 configuration decides what actually loads. A Platform server normally loads
 Core first, Platform second, then project and environment/server modules. A
-WCMS server loads Core, WCMS, and project modules. A Cron server loads Core,
-Cron, and project modules.
+WCMS server loads Core, WCMS, and project modules. A Process server loads Core,
+Process, workflow, cronjob, and project modules.
 
 The order matters because service override and merge behavior follow runtime
 load order and module indexes. Module hierarchy describes functional
@@ -71,7 +71,7 @@ Use this map when deciding where new code, data, or documentation should live.
 | Axis backend content | `nodics.ai/nodics.platform/modules/axis` | CMS records owned by the backend Axis module so the Axis frontend can render product documentation and shell experience | `nodics.platform/modules/axis` |
 | WCMS | `nodics.ai/nodics.wcms` | Content management runtime for sites, catalogs, pages, components, routes, and renderable content | `nodics.docs` |
 | Media | `nodics.ai/nodics.wcms/modules/media` | Governed media and asset lifecycle used by content experiences | `nodics.docs` |
-| Cron | `nodics.ai/nodics.cron` | Optional scheduled-job runtime capability | `nodics.docs` |
+| Process automation | `nodics.ai/nodics.process/modules/cronjob` | Optional scheduled-job runtime capability inside Process | `nodics.docs` |
 | Framework documentation | `nodics.ai/nodics.docs` | Backend content pack imported into WCMS; not a UI renderer | `nodics.docs` |
 | Axis frontend | `nodics.axis` | Browser renderer for BackOffice, WCMS, docs, and module-owned capabilities | `nodics.platform/modules/axis` for product docs |
 | Kickoff reference project | `nodics.kickoff` | Customer-style project that composes framework servers locally | `nodics.kickoff` |
@@ -88,21 +88,21 @@ flowchart TD
   Core["nodics.foundation<br/>mandatory framework foundation"]
   Platform["nodics.platform<br/>profile, backoffice, axis backend data"]
   WCMS["nodics.wcms<br/>cms, media, content delivery"]
-  Cron["nodics.cron<br/>cronjob runtime"]
+  Process["nodics.process<br/>workflow and cronjob runtime"]
   Kickoff["nodics.kickoff<br/>customer/reference project"]
   PlatformServer["kickoffLocal/platformServer"]
   WcmsServer["kickoffLocal/wcmsServer"]
-  CronServer["kickoffLocal/cronServer"]
+  ProcessServer["kickoffLocal/processServer"]
 
   Core --> Platform
   Core --> WCMS
-  Core --> Cron
+  Core --> Process
   Platform --> Kickoff
   WCMS --> Kickoff
-  Cron --> Kickoff
+  Process --> Kickoff
   Kickoff --> PlatformServer
   Kickoff --> WcmsServer
-  Kickoff --> CronServer
+  Kickoff --> ProcessServer
 ```
 
 This picture shows the concept, not a Git repository dependency tree. The
@@ -117,7 +117,7 @@ a separate process on day one. It explains the direction of travel: modules
 expose API/service contracts, persistence is hidden behind owning services,
 and shared infrastructure such as cache, search, and databases are reached
 through governed module contracts. A partner can begin with multiple runtimes
-on one machine and later distribute Platform, WCMS, Cron, Commerce, or other
+on one machine and later distribute Platform, WCMS, Process, Commerce, or other
 capabilities without changing the ownership model.
 
 ## Beginner reading path
@@ -171,7 +171,7 @@ runtime graph, not the parent directory name on one developer machine.
 ## DevOps and operator view
 
 DevOps teams should treat the server graph as deployment evidence. A production
-Platform server, WCMS server, or Cron server should declare exactly which
+Platform server, WCMS server, or Process server should declare exactly which
 functional modules and customer layers are active, which ports and database
 names it uses, and which properties are inherited versus overridden. That makes
 rollback and support much safer: an operator can compare two runtime graphs
@@ -328,7 +328,7 @@ database, verify that it lives in a backend-owned module or customer project
 and not in the frontend repository.
 
 For a local acceptance proof, start the reference Platform, WCMS, and optional
-Cron servers from the customer project, import the relevant data releases, and
+Process servers from the customer project, import the relevant data releases, and
 open Axis. The module registry should show high-level functional modules,
 documentation products should resolve from their owning content packs, and
 runtime health should reflect backend observation rather than local frontend

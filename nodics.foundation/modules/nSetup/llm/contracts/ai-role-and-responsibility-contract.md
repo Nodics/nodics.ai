@@ -63,7 +63,7 @@ It must consider:
   platform, WCMS, media, cron, docs, Axis backend support, a customer module, or
   another future module;
 - runtime server topology and whether the behavior belongs to platformServer,
-  wcmsServer, cronServer, a customer server, or a shared lower layer;
+  wcmsServer, processServer, a customer server, or a shared lower layer;
 - module extension, server inheritance, service override order, and generated
   artifact ownership as separate concepts;
 - security governance, permission boundaries, API exposure, route category
@@ -87,7 +87,7 @@ It must understand and preserve:
 
 - `nodics.ai` as the backend/framework repository root;
 - standard functional module identities such as `nodics.foundation`,
-  `nodics.platform`, `nodics.wcms`, `nodics.cron`, and `nodics.docs`;
+  `nodics.platform`, `nodics.wcms`, `nodics.process`, and `nodics.docs`;
 - customer projects as separate backend projects that can extend or compose
   framework capabilities without forcing a specific project name;
 - `nodics.axis` as the frontend renderer/application, not the owner of

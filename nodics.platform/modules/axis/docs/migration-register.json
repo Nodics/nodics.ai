@@ -56,8 +56,8 @@
       "canonicalSource": "docs/pages/architecture-and-ownership.md",
       "destinationRoute": "/docs/nodics-axis/architecture",
       "disposition": "migrated",
-      "sourceHash": "032e0d07ecf8d812bb415498f285ac983982b4d77d13cd8a447b0180b8dd45c2",
-      "wordCount": 2133,
+      "sourceHash": "8c071b12be2805045bc39c364dd78f8458a6e4e9d41fb5a46b8183ca90e65cdd",
+      "wordCount": 2134,
       "headings": [
         "Why this page matters",
         "Decision",
@@ -350,8 +350,8 @@
       "canonicalSource": "docs/pages/module-health.md",
       "destinationRoute": "/docs/nodics-axis/module-health",
       "disposition": "migrated",
-      "sourceHash": "fb7bd7b5017dee67587229952134b520a60b8f34f6dbcfe5c62f3dd532a720ec",
-      "wordCount": 1802,
+      "sourceHash": "67a1c691807ad45b997c17cab719d1c73005ac1452d4358ccb2b6655d183a2e5",
+      "wordCount": 1801,
       "headings": [
         "Why Module Health exists",
         "Purpose and ownership",
@@ -491,7 +491,7 @@
       "canonicalSource": "docs/pages/openapi-reference.md",
       "destinationRoute": "/docs/nodics-axis/openapi-reference",
       "disposition": "migrated",
-      "sourceHash": "0fdfc4c7e77dfbf0314247935a46823f3a125baee7f02991023d0f0bdc4d99ca",
+      "sourceHash": "43512fb8d6aa176e97ccf3a98db3dbfe932e6aec483462ab77fca53264aec2be",
       "wordCount": 927,
       "headings": [
         "Who this helps",

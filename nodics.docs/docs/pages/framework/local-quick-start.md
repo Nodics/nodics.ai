@@ -31,12 +31,12 @@ flowchart TB
   AI["nodics.ai<br/>framework modules"] --> Kickoff["nodics.kickoff<br/>reference customer project"]
   Kickoff --> Platform["Platform server<br/>4300"]
   Kickoff --> WCMS["WCMS server<br/>4310"]
-  Kickoff --> Cron["Cron server<br/>4320"]
+  Kickoff --> Process["Process server<br/>4330"]
   Axis["nodics.axis<br/>frontend 3100"] --> Platform
   Axis --> WCMS
   Platform --> Registry["BackOffice registry"]
   WCMS --> Content["CMS and documentation content"]
-  Cron --> Jobs["Cron runtime observation"]
+  Process --> Jobs["Process and cronjob runtime observation"]
 ```
 
 ## Business outcome of the quick start

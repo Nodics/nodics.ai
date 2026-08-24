@@ -54,7 +54,7 @@ flowchart TB
 
   Config --> Platform["nodics.platform"]
   Loader --> WCMS["nodics.wcms"]
-  Routing --> Cron["nodics.cron"]
+  Routing --> Process["nodics.process"]
   Services --> Future["future functional modules"]
 ```
 

@@ -192,8 +192,7 @@ flowchart TB
   Framework["nodics.ai<br/>framework backend repository"] --> Foundation["nodics.foundation<br/>runtime foundation"]
   Framework --> Platform["nodics.platform<br/>Profile, BackOffice, Axis backend data"]
   Framework --> WCMS["nodics.wcms<br/>CMS, WCMS, Media"]
-  Framework --> Cron["nodics.cron<br/>scheduled jobs"]
-  Framework --> Process["nodics.process<br/>business process and workflow"]
+  Framework --> Process["nodics.process<br/>business process, workflow, scheduled jobs"]
   Framework --> Communication["nodics.communication<br/>provider-neutral communication"]
   Framework --> Engagement["nodics.engagement<br/>customer engagement"]
   Framework --> Docs["nodics.docs<br/>framework documentation"]
@@ -202,7 +201,6 @@ flowchart TB
   Foundation --> Runtime
   Platform --> Runtime
   WCMS --> Runtime
-  Cron --> Runtime
   Process --> Runtime
   Docs --> Runtime
 
@@ -228,9 +226,8 @@ You can run:
   module registry, API discovery, and documentation-source registry;
 - **WCMS** for sites, content catalogs, pages, components, routes, media, and
   documentation content-pack delivery;
-- **Cron** for scheduled/background capability runtime;
-- **Process** for the governed business-process/workflow module boundary and
-  future process runtime APIs;
+- **Process and Automation** for governed business-process, workflow, and
+  scheduled/background capability runtime;
 - **Axis** for the browser BackOffice experience;
 - **Kickoff** as the reference customer project that composes the framework
   and contributes customer-owned documentation.
@@ -260,7 +257,6 @@ nodics.ai/
     postscripts.js
   nodics.foundation/
   nodics.platform/
-  nodics.cron/
   nodics.wcms/
   nodics.process/
   nodics.commerce/
@@ -277,9 +273,8 @@ The current standard module groups are:
   capability metadata.
 - `nodics.wcms` — CMS, WCMS, Media, content-pack import, and governed content
   delivery.
-- `nodics.cron` — Cron runtime and cron job capability modules.
-- `nodics.process` — business process, workflow, task, approval, instance,
-  audit, and visual-designer contracts.
+- `nodics.process` — business process, workflow, scheduled job, task,
+  approval, instance, audit, and visual-designer contracts.
 - `nodics.commerce` — store, product, pricing, tax, promotion, inventory,
   checkout, order, payment, provider, and fulfillment capability composition.
 - `nodics.communication` — provider-neutral templates, rendering, recipient
@@ -294,8 +289,8 @@ developers, tooling, and AI agents can navigate it consistently. Its
 `loadableByNodicsModuleLoader: false`; the root is not a runtime functional
 module. Root `config/` files are reserved for framework-repository governance
 metadata only. Runtime defaults belong in the owning functional module, such as
-`nodics.foundation`, `nodics.platform`, `nodics.wcms`, `nodics.cron`, or
-`nodics.docs`, `nodics.process`, `nodics.commerce`, `nodics.communication`, or
+`nodics.foundation`, `nodics.platform`, `nodics.wcms`, `nodics.docs`,
+`nodics.process`, `nodics.commerce`, `nodics.communication`, or
 `nodics.engagement`.
 
 Repository-wide AI/developer guidance is intentionally not stored in a root
@@ -344,8 +339,8 @@ flowchart TD
   Configure --> Install["Install project dependencies"]
   Install --> Platform["Start Platform server"]
   Platform --> WCMS["Start WCMS server"]
-  WCMS --> Cron["Start Cron server when needed"]
-  Cron --> Axis["Start Axis frontend"]
+  WCMS --> Process["Start Process and Automation when needed"]
+  Process --> Axis["Start Axis frontend"]
   Axis --> Login["Login as admin"]
   Login --> Docs["Open Documentation and Module Registry"]
 ```

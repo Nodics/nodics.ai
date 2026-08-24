@@ -168,7 +168,7 @@ Platform is healthy when:
 3. BackOffice bootstrap returns browser-safe authorized metadata.
 4. Core, Platform, and WCMS are mandatory active modules in the reference
    stack.
-5. Optional Cron appears only when a Cron runtime is observed.
+5. Optional Process automation appears only when processServer is observed.
 6. Registry lifecycle actions persist and update Axis without refresh.
 7. Unauthorized registry/API operations fail closed.
 8. Documentation-source registry exposes Framework, Swagger, Axis, and customer

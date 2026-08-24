@@ -4,7 +4,7 @@ The functional module registry is the Platform/BackOffice contract that tells
 Axis which high-level Nodics capabilities are known, registered, active, and
 safe to show to business users. It is intentionally focused on functional
 modules such as `nodics.foundation`, `nodics.platform`, `nodics.wcms`, and
-`nodics.cron`, not every small technical module inside those groups.
+`nodics.process`, not every small technical module inside those groups.
 
 For a beginner, the registry is like the application control panel. It does
 not download code and it does not hot-load a server process. It records the
@@ -52,8 +52,9 @@ stateDiagram-v2
 
 Core, Platform, and WCMS are mandatory for the local Axis journey. They should
 not be treated like optional modules that a business user can deregister from
-the same screen. Cron is optional, so it can be observed, registered,
-activated, deactivated, and deregistered.
+the same screen. Process is optional, so it can be observed, registered,
+activated, deactivated, and deregistered while exposing workflow and cronjob
+technical modules.
 
 ## Mandatory versus optional modules
 
@@ -63,7 +64,7 @@ understand every technical module that helped Core or WCMS start.
 | Module type | Example | User lifecycle |
 | --- | --- | --- |
 | Mandatory foundation | Core, Platform, WCMS | Installed and active by runtime contract; not deregisterable from Axis. |
-| Optional functional capability | Cron | Register, activate, deactivate, deregister. |
+| Optional functional capability | Process | Register, activate, deactivate, deregister. |
 | Technical module | `cronjob`, `media`, `profile` internals | Not shown as separate business registry cards unless exposed by an owning functional module. |
 | Customer extension | future customer Platform extension | Customizes the standard identity; does not create a new displayed Platform name by default. |
 
@@ -76,7 +77,7 @@ visibility, and WCMS-backed presentation.
 ## Business value
 
 For business users, the registry reduces confusion. Axis can show “Platform,”
-“WCMS,” or “Cron” as understandable capabilities instead of exposing dozens of
+“WCMS,” or “Process” as understandable capabilities instead of exposing dozens of
 technical internals such as validators, routers, cache providers, import
 processors, or individual schema modules.
 
@@ -85,20 +86,20 @@ mandatory capabilities, then add optional capabilities when there is a business
 reason. The decision is recorded in the database, so the project does not need
 manual reconfiguration after every restart.
 
-## Business example: deciding to enable Cron
+## Business example: deciding to enable Process automation
 
 A small customer may start with login, content, media, and documentation only.
-After a few weeks, the business asks for nightly cleanup of temporary media and
-scheduled export retries. Cron becomes useful. The project team starts a Cron
-runtime, Axis sees `nodics.cron` as available, and an authorized administrator
-registers and activates it.
+After a few weeks, the business asks for nightly cleanup of temporary media,
+scheduled export retries, and approval workflows. Process becomes useful. The
+project team starts `processServer`, Axis sees `nodics.process` as available,
+and an authorized administrator registers and activates it.
 
 The business decision is visible and reversible:
 
-1. Before registration, Cron is observed but not accepted by the project.
-2. After registration, the project remembers that Cron is part of its accepted
+1. Before registration, Process is observed but not accepted by the project.
+2. After registration, the project remembers that Process is part of its accepted
    capability set.
-3. After activation, Cron-owned operations can become available according to
+3. After activation, workflow and cronjob operations can become available according to
    permissions and data import state.
 4. Deactivation pauses the capability without forgetting the registration.
 5. Deregistration removes project intent while the runtime may still be
@@ -116,9 +117,9 @@ runtime. The registry records project authorization for a functional module
 that the runtime has already observed.
 
 That means a module can be visible as available only after a server starts and
-reports it. If the Cron server is not running, Platform cannot honestly present
-Cron as a live optional capability. If Cron is running but deregistered, Axis
-should show it under available modules with the Register action.
+reports it. If `processServer` is not running, Platform cannot honestly present
+Process as a live optional capability. If Process is running but deregistered,
+Axis should show it under available modules with the Register action.
 
 ```mermaid
 flowchart LR
@@ -190,13 +191,13 @@ activated, deactivated, or deregistered.
 
 ## Verification checklist
 
-- Start Platform, WCMS, and Cron from a fresh database.
+- Start Platform, WCMS, and Process from a fresh database.
 - Confirm Core, Platform, and WCMS are registered and active by default.
-- Confirm Cron appears as available when its runtime is live.
-- Register Cron and verify it moves to registered inactive or active according
+- Confirm Process appears as available when its runtime is live.
+- Register Process and verify it moves to registered inactive or active according
   to the operation response.
-- Activate, deactivate, and deregister Cron without refreshing the browser.
-- Confirm deregistered Cron returns to available while the Cron server remains
+- Activate, deactivate, and deregister Process without refreshing the browser.
+- Confirm deregistered Process returns to available while processServer remains
   observed.
 - Restart servers and confirm durable registration state is preserved.
 
@@ -204,14 +205,14 @@ activated, deactivated, or deregistered.
 
 | Scenario | Expected result |
 | --- | --- |
-| Fresh database with Platform and WCMS only | Core, Platform, and WCMS are active; Cron is not shown as live. |
-| Cron server starts | Cron appears as available optional module. |
-| User registers Cron | Cron moves out of available list and shows the next valid state without page refresh. |
-| User activates Cron | Cron shows active and exposes active-state actions without page refresh. |
-| User deactivates Cron | Cron remains registered but inactive. |
-| User deregisters Cron | Cron returns to available if the runtime is still observed. |
+| Fresh database with Platform and WCMS only | Core, Platform, and WCMS are active; Process is not shown as live. |
+| processServer starts | Process appears as available optional module with workflow and cronjob technical modules. |
+| User registers Process | Process moves out of available list and shows the next valid state without page refresh. |
+| User activates Process | Process shows active and exposes active-state actions without page refresh. |
+| User deactivates Process | Process remains registered but inactive. |
+| User deregisters Process | Process returns to available if the runtime is still observed. |
 | Servers restart | Mandatory state and registered optional state persist from database. |
-| Cron server stops | Registered state remains, but runtime observation should show unavailable or stale according to the API contract. |
+| processServer stops | Registered state remains, but runtime observation should show unavailable or stale according to the API contract. |
 
 ## Common mistakes
 

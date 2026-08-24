@@ -1,9 +1,9 @@
-# Process and Cron Shared Runtime
+# Process and Cronjob Shared Runtime
 
-Process and Cron can run together in one runtime server when a partner wants a
-smaller topology. This is useful for local development, small installations, or
-customers who want business process automation and scheduled jobs without
-running many microservice processes.
+Workflow and cronjob can run together in one runtime server when a partner
+wants a smaller topology. This is useful for local development, small
+installations, or customers who want business process automation and scheduled
+jobs without running many microservice processes.
 
 ## The key rule
 
@@ -15,8 +15,8 @@ Shared runtime does not mean shared ownership.
 | Published workflow versions | `nodics.process` |
 | Runtime instances and tasks | `nodics.process` |
 | Trigger relationship metadata | `nodics.process` |
-| Cron job definition | `nodics.cron` |
-| Scheduler firing and retries | `nodics.cron` |
+| Cron job definition | `nodics.process/modules/cronjob` |
+| Scheduler firing and retries | `nodics.process/modules/cronjob` |
 | Domain business action | Domain module |
 | UI rendering | `nodics.axis` |
 
@@ -26,16 +26,17 @@ Shared runtime does not mean shared ownership.
 flowchart LR
   ProcessServer["processServer"] --> Core["includes nodics.foundation"]
   ProcessServer --> Process["extends nodics.process"]
-  ProcessServer --> Cron["includes nodics.cron"]
-  Process --> Trigger["processTrigger metadata"]
-  Cron --> Job["cronJob execution"]
+  Process --> Workflow["loads workflow"]
+  Process --> CronJob["loads cronjob"]
+  Workflow --> Trigger["processTrigger metadata"]
+  CronJob --> Job["cronJob execution"]
   Trigger -.references.-> Job
 ```
 
 The trigger can reference a Cron job code. It does not become the Cron job.
-Cron still decides when the job fires. When a Cron-owned job wants to start a
-process, it declares a `jobDetail.processTrigger` target. The Cron trigger
-pipeline then calls the Process trigger executor with a service identity,
+Cronjob still decides when the job fires. When a cronjob-owned job wants to
+start a process, it declares a `jobDetail.processTrigger` target. The cronjob
+trigger pipeline then calls the Process trigger executor with a service identity,
 correlation id, schedule context, and job evidence. Process verifies the
 trigger is active, starts the workflow instance, and records audit events.
 
@@ -48,18 +49,18 @@ should support both without changing functional module identity.
 This keeps the mental model stable:
 
 - Process console shows workflows and automation relationships.
-- Cron console shows jobs and scheduler behavior.
+- Cronjob console shows jobs and scheduler behavior.
 - Axis can place both under "Business Process & Automation".
 - Backend ownership still protects maintainability.
 
 ## Safe lifecycle behavior
 
-Cron can be registered, activated, deactivated, and deregistered through the
-module registry. Process APIs should remain reachable even when Cron is
-deregistered, because Process definitions and tasks are not owned by Cron.
+Process can be registered, activated, deactivated, and deregistered through the
+module registry. Process APIs and cronjob controls are projected from the same
+functional module registration, while module ownership still remains separate.
 
-The local acceptance smoke proves this by exercising Process runtime first and
-then verifying the Cron registry lifecycle.
+The local acceptance smoke proves this by exercising Process registration and
+verifying that both `workflow` and `cronjob` appear as technical modules.
 
 ## Cron job handoff shape
 
@@ -85,8 +86,8 @@ automation.
 
 That shape keeps the responsibilities readable:
 
-- Cron reads the schedule and fires the job.
-- Cron passes `cronJobCode`, tenant, schedule expression, and correlation
+- Cronjob reads the schedule and fires the job.
+- Cronjob passes `cronJobCode`, tenant, schedule expression, and correlation
   evidence into Process.
 - Process loads the active trigger relationship.
 - Process starts the published workflow version.
@@ -107,5 +108,5 @@ with a dependency error instead of silently pretending the automation ran.
 
 ## Verification
 
-Prepare processServer, confirm both `nodics.process` and `nodics.cron` are observed once, execute a scheduled trigger with correlation evidence, and verify no standalone Cron listener is required.
+Prepare processServer, confirm `nodics.process` is observed once with `workflow` and `cronjob` technical modules, execute a scheduled trigger with correlation evidence, and verify no standalone cronjob listener is required.
 A beginner developer should confirm this shared runtime before adding another server.

@@ -181,27 +181,27 @@ does not infer expected cluster membership from previously observed nodes.
 
 ## Example incident
 
-Suppose Cron was added to a customer project. The Cron server starts and
-reports itself, but the business administrator has not registered the Cron
-functional module yet.
+Suppose Process automation was added to a customer project. processServer
+starts and reports itself, but the business administrator has not registered
+the Process functional module yet.
 
 Expected behavior:
 
-- Module Registry can show Cron as available to register.
+- Module Registry can show Process as available to register.
 - Module Health can show the runtime observation as live evidence.
-- Cron operation pages remain hidden or unavailable until the module is
+- Process and cronjob operation pages remain hidden or unavailable until the module is
   registered, active, and authorized.
-- Axis does not silently activate Cron because a runtime was observed.
+- Axis does not silently activate Process because a runtime was observed.
 
-Now suppose Cron is registered and active, but the Cron server is stopped.
+Now suppose Process is registered and active, but processServer is stopped.
 
 Expected behavior:
 
-- Module Registry still shows Cron as registered because registration is
+- Module Registry still shows Process as registered because registration is
   persisted project state.
-- Module Health shows Cron as stale, unavailable, or unknown based on backend
+- Module Health shows Process as stale, unavailable, or unknown based on backend
   evidence.
-- Axis does not remove Cron from the registry only because the server is down.
+- Axis does not remove Process from the registry only because the server is down.
 - A restart can restore runtime evidence without requiring registration again.
 
 This distinction is central to the Nodics lifecycle. Registration is project

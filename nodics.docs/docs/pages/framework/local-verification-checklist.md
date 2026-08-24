@@ -26,7 +26,7 @@ The checklist therefore verifies the full path:
 flowchart LR
   Source["Backend-owned source data"] --> Generate["Generated content pack"]
   Generate --> Validate["Checksum and release validation"]
-  Validate --> Runtime["Platform, WCMS, Cron runtime"]
+  Validate --> Runtime["Platform, WCMS, Process runtime"]
   Runtime --> Import["Axis import/install"]
   Import --> Render["Axis routes and documentation"]
   Render --> Evidence["Acceptance logs and visible UI"]
@@ -76,7 +76,7 @@ The reference ports are:
 | --- | --- | --- |
 | Platform | `http://localhost:4300` | `nodics.platform` through the customer project server |
 | WCMS | `http://localhost:4310` | `nodics.wcms` through the customer project server |
-| Cron | `http://localhost:4320` | `nodics.cron` through the customer project server |
+| Process and Automation | `http://localhost:4330` | `nodics.process` through the customer project server |
 | Axis | `http://localhost:3100` | `nodics.axis` frontend |
 
 ## Fast automated acceptance

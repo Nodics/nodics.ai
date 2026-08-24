@@ -7,8 +7,8 @@ Nodics loads active modules in index order. Lower-level framework modules provid
 The repository hierarchy includes:
 
 - `nodics.foundation`: framework capabilities required by every Nodics runtime.
-- product runtime repositories such as `nodics.platform`, `nodics.cron`,
-  `nodics.wcms`, and `nodics.process`, which functionally extend Core.
+- product runtime repositories such as `nodics.platform`, `nodics.wcms`, and
+  `nodics.process`, which functionally extend Core.
 - independently versioned domain capability repositories where a capability
   does not belong to Core or an existing runtime product.
 - customer projects, which compose product runtimes and add project-owned

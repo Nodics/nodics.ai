@@ -55,13 +55,13 @@
             "displayName": "Media Data-Pack Standard",
             "description": "Standard path-free media package structure and non-publishable artifact policy for content, product, docs, and accelerators.",
             "owningDomain": "media",
-            "lifecycle": "REFERENCE_STANDARD",
+            "lifecycle": "REFERENCE",
             "destinationRole": "ALL",
             "environmentScope": [
                 "ALL"
             ],
             "sensitivity": "INTERNAL",
-            "versioningPolicy": "IMMUTABLE",
+            "versioningPolicy": "NONE",
             "publicationPolicy": "NONE",
             "initialPublicationPolicy": "NONE",
             "removalPolicy": "RETAIN",

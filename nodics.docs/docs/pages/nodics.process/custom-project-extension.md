@@ -11,11 +11,11 @@ flowchart TD
   Server["customer processServer"] --> CustomerProcess["customer.process overlay"]
   CustomerProcess --> NodicsProcess["nodics.process"]
   NodicsProcess --> NodicsFoundation["nodics.foundation"]
-  Server --> NodicsCron["nodics.cron included in shared runtime"]
+  NodicsProcess --> NodicsCronJob["cronjob included in shared runtime"]
 ```
 
-The server can include Cron and Process together for operational simplicity,
-while ownership remains clear.
+The server can include workflow and cronjob together for operational
+simplicity, while ownership remains clear.
 
 ## What belongs in a customer extension
 

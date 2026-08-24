@@ -28,8 +28,6 @@ const functionalModule = config.functionalModule || 'nodics.process';
 const expectedFoundationModule = config.foundationModule || 'nodics.foundation';
 const retiredModule = config.retiredModule || 'nodics.core';
 const observedServer = config.observedServer || 'kickoffLocal:processServer:default';
-const optionalModule = config.optionalModule || 'nodics.cron';
-const optionalObservedServers = config.optionalObservedServers || ['kickoffLocal:processServer:default'];
 const unwrap = value => value?.result || value?.data || value;
 const delay = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 const restorableState = state => ({
@@ -94,11 +92,8 @@ async function main() {
     'The retired framework identity must not be exposed by the Axis functional-module registry');
   let process = await request(`/nodics/backoffice/v0/runtime/modules/registrations/${functionalModule}?project=${project}`, token);
   assert(process.observedServers.includes(observedServer), 'Process must be observed through processServer');
-  const available = await request(`/nodics/backoffice/v0/runtime/modules/available?project=${project}`, token);
-  const cron = registrations.items.find(item => item.functionalModule === optionalModule) ||
-    available.items.find(item => item.functionalModule === optionalModule);
-  assert(cron, 'Cron must be observed as an optional functional module');
-  assert.deepEqual(cron.observedServers, optionalObservedServers, 'Cron must not require standalone cronServer');
+  assert(process.technicalModules.includes('workflow'), 'Process must expose workflow as a child runtime module');
+  assert(process.technicalModules.includes('cronjob'), 'Process must expose cronjob as a child runtime module');
 
   const original = { registrationState: process.registrationState, enabled: process.enabled };
   const expectedRestored = restorableState(original);
@@ -114,8 +109,8 @@ async function main() {
       activatedByTest = true;
     }
     let bootstrap = await request('/nodics/backoffice/v0/bootstrap', token);
-    assert(bootstrap.catalogue.flowCore, 'Process capability must enter Axis after registration and activation');
-    if (cron.enabled === false) assert(!bootstrap.catalogue.cronjob, 'Disabled Cron must not enter Axis merely because it shares processServer');
+    assert(bootstrap.catalogue.workflow, 'Process capability must enter Axis after registration and activation');
+    assert(bootstrap.catalogue.cronjob, 'Cronjob capability must enter Axis through activated Process composition');
   } finally {
     if (activatedByTest) process = await transition(token, 'deactivate', process.catalogueRevision);
     if (registeredByTest) process = await transition(token, 'deregister', process.catalogueRevision);

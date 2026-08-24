@@ -95,13 +95,13 @@ Recent import history tests prove:
 
 ## Workflow Tests
 
-Workflow tests should preserve the three workflow submodule responsibilities:
+Workflow tests should preserve the internal workflow responsibilities:
 
-- `flowSchema` owns schema-driven workflow models, services, and generated CRUD/API tests.
-- `flowCore` owns workflow lifecycle behavior and service-to-pipeline contracts.
-- `flowApi` owns custom workflow API routes such as carrier initialization, carrier release/update, and action processing.
+- `src/schemas` owns schema-driven workflow models, services, and generated CRUD/API tests.
+- `src/service` owns workflow lifecycle behavior and service-to-pipeline contracts.
+- `src/router`, `src/controller`, and `src/facade` own custom workflow API routes such as carrier initialization, carrier release/update, and action processing.
 
-Do not move schema CRUD coverage into custom `flowApi` tests. When migrating Postman workflow requests, first decide whether an endpoint is schema-generated CRUD, custom API behavior, or inactive historical behavior that needs a governed compatibility decision.
+Do not mix schema CRUD coverage with custom workflow API tests. When migrating Postman workflow requests, first decide whether an endpoint is schema-generated CRUD, custom API behavior, or inactive historical behavior that needs a governed compatibility decision.
 
 ## CronJob Tests
 
@@ -113,7 +113,7 @@ CronJob tests should protect both the API lifecycle and the scheduler lifecycle 
 - lifecycle tests map start/stop/remove/pause/resume to the CronJob container.
 - full/integration tests may exercise live cron execution, node ownership, events, and distributed topology when the owning modules and external dependencies are active.
 
-Keep CronJob tests in `nodics.cron/modules/cronjob/test` unless a project module intentionally overrides the CronJob behavior in a later layer.
+Keep CronJob tests in `nodics.process/modules/cronjob/test` unless a project module intentionally overrides the CronJob behavior in a later layer.
 
 ## Search Tests
 

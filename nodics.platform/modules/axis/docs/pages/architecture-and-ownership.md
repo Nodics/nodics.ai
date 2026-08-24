@@ -78,8 +78,7 @@ Customer project A
     -> BackOffice A -> authorized module discovery
     -> WCMS A
     -> Media A
-    -> Cron A
-    -> Workflow A
+    -> Process A
     -> project A extensions
 
 Customer project B
@@ -105,14 +104,14 @@ flowchart LR
     Axis --> BackOffice["BackOffice module: authorized registry"]
     Axis --> WCMS["WCMS module: governed content"]
     Axis --> Media["Media module: assets and usage"]
-    Axis --> Cron["Cron module: schedules and job operations"]
+    Axis --> Process["Process module: workflows and scheduled jobs"]
     Axis --> Other["Other registered modules"]
 
     Profile --> DB1["Profile persistence"]
     BackOffice --> DB2["BackOffice registry persistence"]
     WCMS --> DB3["WCMS persistence"]
     Media --> DB4["Media persistence and storage policies"]
-    Cron --> DB5["Cron persistence"]
+    Process --> DB5["Process and cronjob persistence"]
 
     Axis -. "renders only" .-> BrowserState["Browser-safe view state"]
 ```
@@ -138,7 +137,7 @@ Axis must not:
 - reproduce authoritative validation or permission decisions;
 - execute workflows, pipelines, integrations, AI tools, or arbitrary scripts in
   the browser;
-- store service credentials, Cron credentials, database credentials, or module
+- store service credentials, cronjob credentials, database credentials, or module
   secrets;
 - create a second registry, schema authority, runtime loader, endpoint
   federation layer, or content ownership layer;
@@ -155,7 +154,7 @@ The partner wants one employee workspace where a merchandiser can edit content,
 an administrator can configure users, and an operator can check module health.
 
 Axis solves this by discovering what the project has enabled. If the project
-has Profile, WCMS, Media, and Cron, Axis shows the authorized pages for those
+has Profile, WCMS, Media, and Process, Axis shows the authorized pages for those
 capabilities. If Commerce is not registered, Commerce pages are not shown. If a
 user does not have a permission, the menu and direct route must not become a
 back door. The backend still rejects the request.
@@ -204,8 +203,8 @@ Safe behavior includes:
 - never invent a successful operation after a failed request;
 - make frontend rollback possible without changing persisted backend data.
 
-For example, if a new Axis release supports a Cron feature that the running
-Cron server does not yet expose, the page should say the capability is not
+For example, if a new Axis release supports a cronjob feature that the running
+processServer does not yet expose, the page should say the capability is not
 available for this runtime. It should not guess the endpoint, construct a URL
 from a label, or show a fake success.
 
@@ -215,7 +214,7 @@ connection. The panel saves job definitions through Cron-owned schema APIs and
 requests create, run, start, stop, pause, and resume through Cron-owned command
 routes. Axis does not own scheduler state, node eligibility, overlap policy,
 job execution, handler selection, retries, or job logs. Those remain inside
-`nodics.cron`.
+`nodics.process/modules/cronjob`.
 
 Cron lifecycle routes require the `cronjob.lifecycle.manage` permission. A
 button being visible in Axis is not enough; the backend still authorizes the

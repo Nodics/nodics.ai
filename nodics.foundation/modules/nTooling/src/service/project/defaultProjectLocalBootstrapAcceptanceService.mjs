@@ -965,7 +965,7 @@ async function verifyGovernedImportExportBoundary(headers) {
   const process = await requestJsonResponse(processUrl, "/nodics/export/v0/export", {
     headers,
     method: "POST",
-    body: JSON.stringify({ moduleName: "flowSchema", schemaName: "processDefinition", format: "json" }),
+    body: JSON.stringify({ moduleName: "workflow", schemaName: "processDefinition", format: "json" }),
   });
   if (process.status !== 403 || process.body?.code !== "ERR_AUTH_00003") {
     throw new Error(`Process export did not fail closed without governed media: ${JSON.stringify(process)}`);
@@ -1011,7 +1011,7 @@ async function runAxisSmoke() {
   if (!existsSync(resolve(axisRoot, "package.json"))) {
     throw new Error(`Axis repository not found at ${axisRoot}`);
   }
-  log("running Axis smoke with documentation and Process-composed Cron lifecycle gates");
+  log("running Axis smoke with documentation and Process-composed cronjob lifecycle gates");
   await new Promise((resolvePromise, rejectPromise) => {
     const child = spawn("npm", ["run", "smoke:live"], {
       cwd: axisRoot,
@@ -1107,11 +1107,6 @@ async function main() {
   requireModule(registry.registered, "nodics.foundation", "registered modules");
   requireModule(registry.registered, "nodics.platform", "registered modules");
   requireModule(registry.registered, "nodics.wcms", "registered modules");
-  requireModule(
-    [...registry.registered, ...registry.available],
-    "nodics.cron",
-    "observed modules",
-  );
   requireModule(
     [...registry.registered, ...registry.available],
     "nodics.process",

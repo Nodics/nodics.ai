@@ -8,10 +8,10 @@ own business action behavior.
 
 | Need | Owning place |
 | --- | --- |
-| Process schemas and status definitions | `nodics.process/modules/workflow/modules/flowSchema` |
-| Runtime lifecycle, validation, assignment, audit | `nodics.process/modules/workflow/modules/flowCore` |
-| HTTP routes, controllers, facades | `nodics.process/modules/workflow/modules/flowApi` |
-| Cron job definitions and scheduler execution | `nodics.cron` |
+| Process schemas and status definitions | `nodics.process/modules/workflow` |
+| Runtime lifecycle, validation, assignment, audit | `nodics.process/modules/workflow` |
+| HTTP routes, controllers, facades | `nodics.process/modules/workflow` |
+| Cron job definitions and scheduler execution | `nodics.process/modules/cronjob` |
 | Order, commerce, content, profile, media side effects | Owning domain module |
 | Customer-specific policy override | Customer module loaded after framework module |
 | Browser rendering and editor interactions | `nodics.axis` |

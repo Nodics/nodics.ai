@@ -915,7 +915,7 @@ module.exports = {
   },
   "record36": {
     "code": "nodicsDocsPageprocessProcessCronRuntime",
-    "name": "Process and Cron Shared Runtime",
+    "name": "Process and Cronjob Shared Runtime",
     "cmsSite": [
       "nodicsDocumentationSite"
     ],

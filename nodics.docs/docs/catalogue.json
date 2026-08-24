@@ -122,12 +122,12 @@
     },
     {
       "id": "cron.operations",
-      "functionalModule": "nodics.cron",
+      "functionalModule": "nodics.process",
       "technicalModule": "cronjob",
       "title": "Cron operations",
       "summary": "Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety.",
       "locale": "en",
-      "content": "docs/pages/nodics.cron/operations.md"
+      "content": "docs/pages/nodics.process/cronjob-operations.md"
     },
     {
       "id": "engagement.customer-reviews",
@@ -240,7 +240,7 @@
     {
       "id": "process.overview",
       "functionalModule": "nodics.process",
-      "technicalModule": "flowCore",
+      "technicalModule": "workflow",
       "title": "Business Process and Automation Overview",
       "summary": "Understand why nodics.process exists, how it helps business users, developers, and operators, and where it fits with Core, Cron, Platform, Axis, and customer modules.",
       "locale": "en",
@@ -250,7 +250,7 @@
     {
       "id": "process.runtime-lifecycle",
       "functionalModule": "nodics.process",
-      "technicalModule": "flowCore",
+      "technicalModule": "workflow",
       "title": "Runtime Instance and Task Lifecycle",
       "summary": "Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships.",
       "locale": "en",
@@ -260,7 +260,7 @@
     {
       "id": "process.incident-recovery",
       "functionalModule": "nodics.process",
-      "technicalModule": "flowCore",
+      "technicalModule": "workflow",
       "title": "Incident, Retry, and Compensation Operations",
       "summary": "Operate failed ACTION nodes through Process-owned incidents, bounded retries, dead-letter handling, and declarative domain-owned compensation.",
       "locale": "en",
@@ -270,7 +270,7 @@
     {
       "id": "process.first-workflow",
       "functionalModule": "nodics.process",
-      "technicalModule": "flowCore",
+      "technicalModule": "workflow",
       "title": "Build Your First Workflow",
       "summary": "Create a first Process workflow from START through TASK, DECISION, ACTION, TIMER, SUB_PROCESS, and END with beginner-safe examples.",
       "locale": "en",
@@ -280,7 +280,7 @@
     {
       "id": "process.first-human-task",
       "functionalModule": "nodics.process",
-      "technicalModule": "flowCore",
+      "technicalModule": "workflow",
       "title": "Build Your First Human Task Flow",
       "summary": "Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps.",
       "locale": "en",
@@ -290,7 +290,7 @@
     {
       "id": "process.business-value",
       "functionalModule": "nodics.process",
-      "technicalModule": "flowCore",
+      "technicalModule": "workflow",
       "title": "Business Value and Adoption Model",
       "summary": "Explain the business problems Process solves, how it lowers operating cost, and how business users should think about automation governance.",
       "locale": "en",
@@ -300,7 +300,7 @@
     {
       "id": "process.developer-customization",
       "functionalModule": "nodics.process",
-      "technicalModule": "flowCore",
+      "technicalModule": "workflow",
       "title": "Developer Customization Guide",
       "summary": "Show where developers extend Process behavior, where domain actions belong, and how customer modules customize safely.",
       "locale": "en",
@@ -310,7 +310,7 @@
     {
       "id": "process.action-adapters",
       "functionalModule": "nodics.process",
-      "technicalModule": "flowCore",
+      "technicalModule": "workflow",
       "title": "Action Adapter Contract",
       "summary": "Learn why ACTION nodes use registered declarative adapters and how customer and domain modules own business execution.",
       "locale": "en",
@@ -341,8 +341,8 @@
       "id": "process.process-cron-runtime",
       "functionalModule": "nodics.process",
       "technicalModule": "workflow",
-      "title": "Process and Cron Shared Runtime",
-      "summary": "Clarify how processServer can include Cron while Process and Cron keep separate ownership boundaries.",
+      "title": "Process and Cronjob Shared Runtime",
+      "summary": "Clarify how processServer can include workflow and cronjob while each module keeps a separate ownership boundary.",
       "locale": "en",
       "route": "/docs/framework/process/process-cron-runtime",
       "content": "docs/pages/nodics.process/process-cron-runtime.md"
@@ -350,7 +350,7 @@
     {
       "id": "process.scheduled-automation",
       "functionalModule": "nodics.process",
-      "technicalModule": "flowCore",
+      "technicalModule": "workflow",
       "title": "Scheduled Automation and Cron Triggers",
       "summary": "Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence.",
       "locale": "en",
@@ -360,7 +360,7 @@
     {
       "id": "process.visual-designer",
       "functionalModule": "nodics.process",
-      "technicalModule": "flowCore",
+      "technicalModule": "workflow",
       "title": "Visual Workflow Designer Contract",
       "summary": "Describe the backend-owned graph contract, Axis editor projection, and validation workflow for the visual designer.",
       "locale": "en",

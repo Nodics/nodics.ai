@@ -7,7 +7,8 @@ tested, and sustained.
 ## Runtime shape
 
 In local Kickoff, Process runs in the Business Process & Automation runtime.
-That server can include `nodics.process`, `nodics.cron`, and `nodics.foundation`.
+That server can include `nodics.process` and `nodics.foundation`; `nodics.process`
+loads the sibling `workflow` and `cronjob` modules.
 
 ```mermaid
 flowchart TB
@@ -15,14 +16,15 @@ flowchart TB
   Axis --> Wcms["WCMS server"]
   Axis --> ProcessServer["Process server"]
   ProcessServer --> Process["nodics.process"]
-  ProcessServer --> Cron["nodics.cron"]
+  Process --> Workflow["workflow"]
+  Process --> CronJob["cronjob"]
   ProcessServer --> Core["nodics.foundation"]
-  Process --> Mongo["Process database"]
-  Cron --> Mongo
+  Workflow --> Mongo["Process database"]
+  CronJob --> Mongo
 ```
 
 Sharing a runtime is a deployment decision, not an ownership merge. Process
-still owns process instances, tasks, triggers, and audit. Cron still owns job
+still owns process instances, tasks, triggers, and audit. Cronjob still owns job
 definitions, scheduler state, firing, retry, and job execution lifecycle.
 
 ## Fresh bootstrap evidence
@@ -51,7 +53,7 @@ states. Do not fake process data in the browser.
 
 If Process starts but trigger creation fails, check:
 
-1. `flowSchema` includes the `processTrigger` schema;
+1. `workflow` includes the `processTrigger` schema;
 2. generated trigger service/facade artifacts are loader-visible;
 3. route permissions exist in the identity catalog;
 4. the referenced definition exists and is safe to use;
@@ -71,14 +73,14 @@ instances. Always ask:
 
 ## Continue
 
-- [Process and Cron Shared Runtime](process-cron-runtime.md)
+- [Process and Cronjob Shared Runtime](process-cron-runtime.md)
 - [Developer Customization Guide](developer-customization.md)
 
 ## Deployment qualification evidence
 
 Before production promotion, capture the effective module graph, sanitized
 configuration source order, health and readiness results, imported release
-versions, database migration state, Process and Cron registration, queue or
+versions, database migration state, Process registration, queue or
 scheduler dependencies, and smoke-test correlation identifiers. Keep this
 evidence environment-specific and reproducible; a screenshot of listening ports
 is not a deployment record.
@@ -90,10 +92,10 @@ during recovery.
 
 ## Common mistakes
 
-- Starting a standalone Cron server when Cron is intentionally composed into Process.
+- Starting a standalone cronjob server when cronjob is intentionally composed into Process.
 - Treating a listening port as proof that persistence, imports, health, permissions, and recovery work.
 
 ## Verification
 
-Use the bounded fresh-bootstrap acceptance path, verify health and readiness, inspect error-level startup logs, confirm Process and Cron observation, and exercise restart and dependency-failure recovery.
+Use the bounded fresh-bootstrap acceptance path, verify health and readiness, inspect error-level startup logs, confirm Process observation with workflow and cronjob technical modules, and exercise restart and dependency-failure recovery.
 A beginner operator should follow the documented server order before changing topology.

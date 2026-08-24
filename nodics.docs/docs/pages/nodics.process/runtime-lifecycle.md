@@ -127,7 +127,7 @@ without storing secrets or large raw payloads.
 
 Scheduled automation is represented as Process trigger metadata. A trigger may
 reference a Cron job code, but actual scheduling, firing, retries, and job
-lifecycle stay in `nodics.cron`.
+lifecycle stay in `nodics.process/modules/cronjob`.
 
 This split helps a business user see automation relationships from the Process
 console while preserving module ownership:
@@ -135,7 +135,7 @@ console while preserving module ownership:
 | Concern | Owner |
 | --- | --- |
 | Trigger relationship to a process | `nodics.process` |
-| Cron expression, job enablement, scheduler runtime | `nodics.cron` |
+| Cron expression, job enablement, scheduler runtime | `nodics.process/modules/cronjob` |
 | Starting an instance when schedule fires | Process API called by authorized runtime integration |
 | Showing relationship in Axis | `nodics.axis` frontend projection |
 

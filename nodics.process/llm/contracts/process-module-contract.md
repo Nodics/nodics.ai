@@ -18,16 +18,16 @@ rollback.
   runtime source files. It must follow the same repository shape as the other
   standard groups: group root for composition/contracts/defaults, child modules
   under `modules/` for real runtime behavior.
-- The first process capability is `workflow`.
-  - `workflow` composes `flowSchema`, `flowCore`, and `flowApi`.
-  - `flowSchema` owns schema contracts and process status definitions.
-  - `flowCore` owns graph validation, lifecycle, versioning, and future
-    execution engine services.
-  - `flowApi` owns routers, controllers, facades, and secured API projection.
+- Standard process capabilities are `workflow` and `cronjob`. `workflow`
+  directly owns schema contracts, process status definitions, graph validation,
+  lifecycle, versioning, execution services, routers, controllers, facades, and
+  secured API projection. `cronjob` directly owns scheduled-job definitions,
+  schedule execution, scheduler state, lifecycle commands, and Process trigger
+  handoff.
 - Direct `nodics.process/src` runtime code is forbidden.
-- Process owns reusable process definition, workflow definition, transition,
-  task, approval, instance, audit, retry, compensation, visual-designer
-  validation, and publication lifecycle.
+- Process owns reusable process definition, workflow definition, scheduled-job,
+  transition, task, approval, instance, audit, retry, compensation,
+  visual-designer validation, and publication lifecycle.
 - Domain modules own domain commands and side effects. A workflow may call a
   domain action through a governed adapter, but Process must not contain order,
   payment, catalog, media, profile, telco, logistics, or customer-specific
@@ -115,6 +115,6 @@ Configuration belongs in layered properties. Stable lifecycle states, error
 codes, and process statuses belong in status definitions when runtime source is
 added.
 
-For Process/Cron topology, trigger ownership, visual-designer authority, and
-where-to-write rules, also follow
+For workflow/cronjob topology, trigger ownership, visual-designer authority,
+and where-to-write rules, also follow
 `llm/contracts/process-ownership-and-designer-contract.md`.
