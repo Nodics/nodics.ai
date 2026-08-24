@@ -612,10 +612,49 @@ model from a working system.
 Install the local platform dependencies used by the current reference runtime:
 
 - Node.js compatible with the repositories' `package.json` engine constraints.
-- npm.
+  The current framework package range is Node.js `>=22 <27`.
+- npm compatible with the repositories' `package.json` engine constraints. The
+  current framework package range is npm `>=10 <12`.
+- Git for cloning or updating framework, project, and frontend repositories.
 - MongoDB for runtime data.
 - Elasticsearch if search-backed capabilities are enabled.
 - Redis if Redis-backed cache/session behavior is enabled.
+- Docker Desktop only when Docker Local mode is selected.
+
+Beginner checks:
+
+```bash
+node --version
+npm --version
+git --version
+mongod --version
+mongosh --version
+redis-server --version
+docker --version
+```
+
+On macOS with Homebrew, a developer can usually install the basic local
+toolchain with:
+
+```bash
+brew install node git mongodb-community redis
+```
+
+Elasticsearch installation depends on the organization's approved package,
+Docker image, or managed developer setup. Use the approved company path when one
+exists. If search-backed modules are disabled in the selected local profile,
+Elasticsearch may not be required for the first framework startup.
+
+For a new customer local environment, prefer starting with the standalone
+installer so the machine is checked before repositories are changed:
+
+```bash
+npx github:Nodics/nodics.installer --action=preflight --workspace=/Users/me/Projects/nodicsRoot
+npx github:Nodics/nodics.installer --action=execute --yes --execution-level=download --workspace=/Users/me/Projects/nodicsRoot
+npx github:Nodics/nodics.installer --action=execute --yes --execution-level=install --workspace=/Users/me/Projects/nodicsRoot
+npx github:Nodics/nodics.installer --action=execute --yes --execution-level=preflight --workspace=/Users/me/Projects/nodicsRoot
+npx github:Nodics/nodics.installer --action=execute --yes --execution-level=start --workspace=/Users/me/Projects/nodicsRoot
+```
 
 Some integrations are optional in local development. If a provider is disabled
 in configuration, Nodics may log that the provider is not enabled; that is
