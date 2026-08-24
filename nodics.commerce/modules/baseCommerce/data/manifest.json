@@ -1,0 +1,30 @@
+{
+    "contractVersion": 0,
+    "module": "baseCommerce",
+    "sections": {
+        "core-reference": {
+            "kind": "DATA_RELEASE",
+            "dataType": "core",
+            "version": "0.0.0",
+            "displayName": "Commerce Core Reference",
+            "description": "Operational Commerce reference data required before customer-facing Commerce capabilities are activated.",
+            "owningDomain": "commerce",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "COMMERCE",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "core/data/store/baseCommercePointOfServiceData.js": "c04423dc78f7e5689736c8c5638ab25e50af70cda118769ed2db47e7b005b9ad",
+                "core/data/store/baseCommerceSalesChannelData.js": "fd84685c29aac02ae338fbce8ce15f4aad42bcfd2324fd98241db28e79878f57",
+                "core/data/store/baseCommerceStoreData.js": "e3450a0b2091ecefa9c54343b53536e5152b3377af03a0079dd5a47b6d9038a4",
+                "core/headers/store/baseCommerceCoreReferenceHeader.js": "3e510b7ad799c05311621e47d5d6495702936818f0df3422b3cdf9b173c7ec93"
+            }
+        }
+    }
+}
