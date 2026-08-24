@@ -1,0 +1,52 @@
+{
+    "contractVersion": 0,
+    "module": "commsCore",
+    "sections": {
+        "runtime-defaults": {
+            "kind": "DATA_RELEASE",
+            "dataType": "core",
+            "version": "0.0.0",
+            "displayName": "Communication Runtime Defaults",
+            "description": "Minimal provider-neutral Communication templates required before Communication capabilities are activated.",
+            "owningDomain": "communication",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "ENGAGEMENT",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "core/data/communication/commsRuntimeDefaultTemplateData.js": "a56bb680a03a32d1d8ae39711b60fc0e0fe4dd83089ec09e13ce77794b406a9e",
+                "core/data/communication/commsRuntimeDefaultTemplateVersionData.js": "2b24e7becdf0ec6fdab48cea001425d7e352cd17a42e90796df1207ebd7a1dff",
+                "core/headers/communication/commsRuntimeDefaultHeader.js": "2212cd18b16f16c26e97af8f938a951b56e6c159ee29eaad746904a86260ad0b"
+            }
+        },
+        "sample-templates": {
+            "kind": "DATA_RELEASE",
+            "dataType": "sample",
+            "version": "0.0.0",
+            "displayName": "Communication Sample Templates",
+            "description": "Optional local sample templates for engagement acknowledgement and consent flows.",
+            "owningDomain": "communication",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "ENGAGEMENT",
+            "environmentScope": [
+                "LOCAL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "sample/data/communication/commsSampleTemplateData.js": "e72f352ec967add7227ea5779f88bfe0e424fae38ec4b5fd87a75ab9a0b6cc90",
+                "sample/data/communication/commsSampleTemplateVersionData.js": "1f146f493cc71513e770b251379c0ff5482be59b954a6d464a61f71320bdfc39",
+                "sample/headers/communication/commsSampleTemplateHeader.js": "2b39140605322db13f5af333c774895cc841a4557173849cf674619165ed29a5"
+            }
+        }
+    }
+}

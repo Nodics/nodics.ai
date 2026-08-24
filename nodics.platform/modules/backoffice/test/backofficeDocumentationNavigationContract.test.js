@@ -66,6 +66,8 @@ assert.strictEqual(
 );
 assert(documentationLinks.every(item => item.group.id === 'documentation'),
     'documentation child links must remain grouped under the documentation navigation area');
+assert(documentationLinks.every(item => item.group.order === 1600),
+    'documentation child links must keep the top-level documentation group order');
 assert(documentationLinks.every(item => item.contexts.join('|') === 'environment|tenant|enterprise'),
     'documentation child links must keep the same context boundary as the documentation landing');
 assert(documentationLinks.every(item => item.featureState === 'ACTIVE'),

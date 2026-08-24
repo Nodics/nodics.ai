@@ -256,6 +256,18 @@ The current bootstrap command is:
 npx github:Nodics/nodics.installer
 ```
 
+For a reproducible release, pin the installer tag:
+
+```bash
+npx github:Nodics/nodics.installer#v0.7.0
+```
+
+After Nodics publishes the npm package, the equivalent registry command is:
+
+```bash
+npx @nodics/installer
+```
+
 That command asks guided questions when started from a normal terminal, then
 prints a dry-run setup plan. The installer also supports explicit plan,
 preflight, and approval-gated execution modes:
@@ -263,6 +275,7 @@ preflight, and approval-gated execution modes:
 ```bash
 npx github:Nodics/nodics.installer --action=questionnaire
 npx github:Nodics/nodics.installer --action=doctor --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --workspace=/Users/me/Projects/NodicsCustomer
+npx github:Nodics/nodics.installer --action=troubleshooting
 npx github:Nodics/nodics.installer --action=plan --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --workspace=/Users/me/Projects/NodicsCustomer
 npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --action=execute --yes --execution-level=download --workspace=/Users/me/Projects/NodicsCustomer
 ```
@@ -270,6 +283,12 @@ npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.p
 Execution levels are `download`, `install`, `preflight`, `start`, `initialize`,
 and `acceptance`. Execution never runs unless `--yes` is present. Setup evidence
 is written under `<workspace>/.nodics-installer/setup-evidence.json`.
+
+Treat setup health and business data health separately. `preflight` checks the
+machine and ports, `start` proves services become ready, `initialize` imports
+selected data packs, and `acceptance` validates the end-to-end local business
+path. A machine can be healthy even when a source data pack needs repair; the
+installer reports those data-pack failures with import artifacts and next steps.
 
 For the Acme example, the installer derives customer-owned runtime identity
 from the names supplied by the user:
