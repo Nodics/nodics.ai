@@ -15,18 +15,18 @@
  * @module nodics.process/test/processApiRouteContract
  * @description Protects Process API route ownership, permissions, exposure category, and route prefix.
  * @layer test
- * @owner flowApi
+ * @owner workflow
  * @override Later process APIs may add routes without weakening secured access or the /process route family.
  */
 const assert = require('assert');
 
-const flowApiPackage = require('../modules/workflow/modules/flowApi/package.json');
-const routers = require('../modules/workflow/modules/flowApi/src/router/routers');
-const processDefinitionRoutes = routers.flowApi.processDefinitions;
-const processOperationRoutes = routers.flowApi.processOperations;
+const workflowPackage = require('../modules/workflow/package.json');
+const routers = require('../modules/workflow/src/router/routers');
+const processDefinitionRoutes = routers.workflow.processDefinitions;
+const processOperationRoutes = routers.workflow.processOperations;
 
-assert.strictEqual(flowApiPackage.prefix, 'process');
-assert.strictEqual(flowApiPackage.nodics.runtime.router, true);
+assert.strictEqual(workflowPackage.prefix, 'process');
+assert.strictEqual(workflowPackage.nodics.runtime.router, true);
 
 [
     ['listDefinitions', 'GET', '/definitions', 'process.definition.read'],

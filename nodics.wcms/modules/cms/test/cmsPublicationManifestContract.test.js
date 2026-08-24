@@ -422,14 +422,17 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
         { moduleName: 'cms', connectionName: 'cmsOnline' });
     let transportDescriptor;
     SERVICE.DefaultModuleService = {
-        buildRequest: options => { transportDescriptor = options; return options; },
-        fetch: async () => ({ result: { version: 'target-v1' } })
+        invokeModule: async options => {
+            transportDescriptor = options;
+            return options.responseSelector({ result: { version: 'target-v1' } });
+        }
     };
     global.NODICS = { getInternalAuthToken: () => undefined };
     assert.throws(() => transport.deploy({ manifest: manifest }, request),
         error => error.code === 'CMS_PUBLICATION_INTERNAL_AUTH_UNAVAILABLE');
     NODICS.getInternalAuthToken = tenant => tenant === 'tenant-a' ? 'service-token' : undefined;
     assert.strictEqual((await transport.deploy({ manifest: manifest }, request)).version, 'target-v1');
+    assert.deepStrictEqual(transportDescriptor.targetAuthority, { runtimeRole: 'WCMS_ONLINE' });
     assert.strictEqual(transportDescriptor.connectionName, 'cmsOnline');
     assert.strictEqual(transportDescriptor.requestBody.tenant, 'tenant-a');
     assert.strictEqual(transportDescriptor.requestBody.correlationId, 'correlation-a');

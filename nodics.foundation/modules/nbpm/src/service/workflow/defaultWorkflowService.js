@@ -56,25 +56,27 @@ module.exports = {
 
      */
 
-    prepareURL: function (definition) {
+    prepareInvocation: function (definition) {
         let connectionType = 'abstract';
         let nodeId = CONFIG.get('nodeId');
         if (definition.targetNodeId) {
             connectionType = 'node';
             nodeId = definition.targetNodeId;
         }
-        return SERVICE.DefaultModuleService.buildRequest({
+        return {
             connectionType: connectionType,
             nodeId: nodeId,
             moduleName: CONFIG.get('workflowModuleName') || 'workflow',
-            methodName: 'put',
+            targetAuthority: CONFIG.get('workflowTargetAuthority') || { runtimeRole: 'PROCESS' },
+            methodName: 'PUT',
             apiName: '/item/init',
+            tenant: definition.tenant,
             requestBody: definition.requestBody,
             responseType: true,
             header: {
                 Authorization: 'Bearer ' + NODICS.getInternalAuthToken(definition.tenant)
             }
-        });
+        };
     },
 
     /**
@@ -92,25 +94,14 @@ module.exports = {
      */
 
     publishToWorkflow: function (itemDetails, tenant) {
-        return new Promise((resolve, reject) => {
-            if (NODICS.isModuleActive('workflow')) {
-                this.initializeWorkflows({
-                    items: itemDetails
-                }).then(success => {
-                    resolve(success);
-                }).catch(error => {
-                    reject(error);
-                });
-            } else {
-                SERVICE.DefaultModuleService.fetch(this.prepareURL({
-                    tenant: tenant,
-                    requestBody: itemDetails
-                })).then(success => {
-                    resolve(success);
-                }).catch(error => {
-                    reject(error);
-                });
-            }
-        });
+        if (NODICS.isModuleActive('workflow')) {
+            return this.initializeWorkflows({
+                items: itemDetails
+            });
+        }
+        return SERVICE.DefaultModuleService.invokeModule(this.prepareInvocation({
+            tenant: tenant,
+            requestBody: itemDetails
+        }));
     }
 };

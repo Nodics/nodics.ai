@@ -15,12 +15,16 @@ class NodicsError extends Error { constructor(code, message) { super(message); t
 global.CLASSES = { NodicsError: NodicsError };
 let role = 'STAGED';
 global.CONFIG = { get: key => key === 'cms' ? { publication: { runtimeRole: role, workflow: { target: {
-    moduleName: 'flowApi', connectionName: 'process', connectionType: 'abstract', timeoutMs: 1000, maxAttempts: 2
+    moduleName: 'workflow', connectionName: 'process', connectionType: 'abstract', timeoutMs: 1000, maxAttempts: 2
 } } } } : undefined };
 global.NODICS = { getInternalAuthToken: () => 'service-token' };
 let descriptor;
-global.SERVICE = { DefaultModuleService: { buildRequest: input => { descriptor = input; return input; },
-    fetch: async () => ({ result: { instance: { code: 'approval-1' } } }) } };
+global.SERVICE = { DefaultModuleService: {
+    invokeModule: async input => {
+        descriptor = input;
+        return input.responseSelector({ result: { instance: { code: 'approval-1' } } });
+    }
+} };
 const service = require('../src/service/publication/defaultCmsPublicationWorkflowService');
 const request = { tenant: 'default', environment: 'local', correlationId: 'correlation-1',
     authData: { loginId: 'creator-a', tenant: 'default', enterpriseCode: 'enterprise-a' } };
@@ -28,6 +32,7 @@ const publication = { code: 'home-v2', revision: 4, sourceVersion: '0', tenantCo
     enterpriseCode: 'enterprise-a', profileCode: 'nexus', siteCode: 'site', catalogCode: 'catalog' };
 service.requestApproval(publication, request).then(result => {
     assert.strictEqual(result.instance.code, 'approval-1');
+    assert.deepStrictEqual(descriptor.targetAuthority, { runtimeRole: 'PROCESS' });
     assert.strictEqual(descriptor.connectionName, 'process');
     assert.strictEqual(descriptor.apiName, '/instances/publication-approval');
     assert.strictEqual(descriptor.idempotencyKey, 'home-v2:4');

@@ -13,14 +13,14 @@
 
 /**
  * @module nodics.process/modules/workflow/nodics
- * @description Registers workflow capability lifecycle hooks and composes flowSchema, flowCore, and flowApi.
+ * @description Registers workflow module lifecycle hooks for schemas, services, and APIs.
  * @layer module
  * @owner workflow
  * @override Customer process overlays may extend workflow behavior through later active modules instead of modifying this module directly.
  */
 module.exports = {
     /**
-     * Initializes workflow capability composition.
+     * Initializes workflow module behavior.
      *
      * @returns {Promise<boolean>} Resolves when initialization is complete.
      */
@@ -29,7 +29,7 @@ module.exports = {
     },
 
     /**
-     * Runs post-initialization behavior after workflow technical modules are loaded.
+     * Runs post-initialization behavior after workflow module artifacts are loaded.
      *
      * @returns {Promise<boolean>} Resolves when post-initialization is complete.
      */

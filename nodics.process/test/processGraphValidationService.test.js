@@ -15,7 +15,7 @@
  * @module nodics.process/test/processGraphValidationService
  * @description Validates the backend-owned Nodics-native process graph contract before Axis visual designer integration.
  * @layer test
- * @owner flowCore
+ * @owner workflow
  * @override Later process modules may extend node kinds and policies without weakening backend validation.
  */
 const assert = require('assert');
@@ -43,7 +43,7 @@ global.CLASSES = {
     }
 };
 
-const validationService = require('../modules/workflow/modules/flowCore/src/service/designer/defaultProcessGraphValidationService');
+const validationService = require('../modules/workflow/src/service/designer/defaultProcessGraphValidationService');
 
 const validGraph = {
     nodes: [

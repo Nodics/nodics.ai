@@ -13,9 +13,15 @@
 
 /**
  * @module nodics.process/modules/workflow/config/properties
- * @description Reserves workflow capability-level configuration defaults.
+ * @description Defines workflow module configuration defaults.
  * @layer config
  * @owner workflow
  * @override Projects and customer overlays may extend workflow capability defaults through standard Nodics configuration layering.
  */
-module.exports = {};
+module.exports = {
+    process: {
+        definitionContributions: {
+            maximumDefinitionsPerContribution: 50
+        }
+    }
+};

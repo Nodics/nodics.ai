@@ -15,7 +15,7 @@
  * @module nodics.process/test/processOperationsInspectionService
  * @description Validates bounded runtime instance, task, and audit inspection behavior without requiring a live database.
  * @layer test
- * @owner flowCore
+ * @owner workflow
  * @override Customer process overlays may add filters or redaction without weakening safe limits or not-found semantics.
  */
 const assert = require('assert');
@@ -72,7 +72,7 @@ global.SERVICE = {
     DefaultProcessAuditEventService: createGeneratedService(auditEvents, captures)
 };
 
-const inspectionService = require('../modules/workflow/modules/flowCore/src/service/operation/defaultProcessOperationsInspectionService');
+const inspectionService = require('../modules/workflow/src/service/operation/defaultProcessOperationsInspectionService');
 
 (async function run() {
     let listedInstances = await inspectionService.listInstances({

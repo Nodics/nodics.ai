@@ -23,12 +23,10 @@ const path = require('path');
 
 const packageJson = require('../package.json');
 const properties = require('../config/properties');
+const cronjobPackage = require('../modules/cronjob/package.json');
 const workflowPackage = require('../modules/workflow/package.json');
-const flowSchemaPackage = require('../modules/workflow/modules/flowSchema/package.json');
-const flowCorePackage = require('../modules/workflow/modules/flowCore/package.json');
-const flowApiPackage = require('../modules/workflow/modules/flowApi/package.json');
 
-const capability = require('../modules/workflow/modules/flowCore/src/service/defaultFlowCoreBackofficeCapabilityService').getCapability();
+const capability = require('../modules/workflow/src/service/defaultWorkflowBackofficeCapabilityService').getCapability();
 const rootDir = path.resolve(__dirname, '..');
 
 /**
@@ -58,48 +56,47 @@ assert.strictEqual(
 );
 assert.deepStrictEqual(
     packageJson.requiredModules,
-    ['workflow'],
-    'nodics.process group must compose workflow instead of owning direct runtime code',
+    ['cronjob', 'workflow'],
+    'nodics.process group must compose cronjob and workflow instead of owning direct runtime code',
 );
 assert(
     !fs.existsSync(processPath('src')),
-    'nodics.process must not contain direct runtime src files; place runtime code under modules/workflow/modules/*',
+    'nodics.process must not contain direct runtime src files; place runtime code under modules/workflow',
 );
 assert.deepStrictEqual(
-    workflowPackage.requiredModules,
-    ['flowSchema', 'flowCore', 'flowApi'],
-    'workflow must compose archive-backed flowSchema, flowCore, and flowApi modules',
+    cronjobPackage.requiredModules || [],
+    [],
+    'cronjob must own scheduled-job artifacts directly without nested runtime modules',
+);
+assert.deepStrictEqual(
+    workflowPackage.requiredModules || [],
+    [],
+    'workflow must own its process artifacts directly without nested flow* modules',
 );
 assert.strictEqual(
-    flowSchemaPackage.nodics.runtime.router,
-    false,
-    'flowSchema must not expose HTTP routes',
-);
-assert.strictEqual(
-    flowCorePackage.nodics.runtime.router,
-    false,
-    'flowCore must not expose HTTP routes',
-);
-assert.strictEqual(
-    flowApiPackage.prefix,
+    workflowPackage.prefix,
     'process',
-    'flowApi must expose APIs under the /process route prefix',
+    'workflow must expose APIs under the /process route prefix',
 );
 assert.strictEqual(
-    flowApiPackage.nodics.runtime.router,
+    workflowPackage.nodics.runtime.router,
     true,
-    'flowApi must own process HTTP routes',
+    'workflow must own process HTTP routes',
+);
+assert(
+    !fs.existsSync(processPath('modules/workflow/modules')),
+    'workflow must not contain nested technical runtime modules',
 );
 [
     'llm/contracts/process-module-contract.md',
     'llm/contracts/process-ownership-and-designer-contract.md',
-    'modules/workflow/modules/flowSchema/src/schemas/schemas.js',
-    'modules/workflow/modules/flowSchema/src/utils/statusDefinitions.js',
-    'modules/workflow/modules/flowCore/src/service/designer/defaultProcessGraphValidationService.js',
-    'modules/workflow/modules/flowCore/src/service/definition/defaultProcessDefinitionLifecycleService.js',
-    'modules/workflow/modules/flowApi/src/router/routers.js',
-    'modules/workflow/modules/flowApi/src/controller/defaultProcessDefinitionController.js',
-    'modules/workflow/modules/flowApi/src/facade/defaultProcessDefinitionFacade.js'
+    'modules/workflow/src/schemas/schemas.js',
+    'modules/workflow/src/utils/statusDefinitions.js',
+    'modules/workflow/src/service/designer/defaultProcessGraphValidationService.js',
+    'modules/workflow/src/service/definition/defaultProcessDefinitionLifecycleService.js',
+    'modules/workflow/src/router/routers.js',
+    'modules/workflow/src/controller/defaultProcessDefinitionController.js',
+    'modules/workflow/src/facade/defaultProcessDefinitionFacade.js'
 ].forEach((relativePath) => {
     assert(
         fs.existsSync(processPath(relativePath)),
@@ -117,8 +114,19 @@ assert(
 );
 assert.deepStrictEqual(
     capability.navigation.map(item => item.label),
-    ['Processes', 'Workflows', 'Tasks', 'Scheduled triggers', 'Designer'],
-    'Axis Process navigation must stay compact and focused on business process automation workspaces',
+    [
+        'Operations Workspace',
+        'Workflow Management',
+        'Pipeline Management',
+        'Triggers and Relationships',
+        'Automation Monitoring',
+        'Advanced Configuration',
+        'Process Definitions',
+        'My Tasks and Approvals',
+        'Manual, Event, and Scheduled Triggers',
+        'Process Designer'
+    ],
+    'Axis Process navigation must stay business-journey oriented for automation workspaces',
 );
 assert(
     capability.navigation.every((item) => item.group.id === 'process-and-automations' &&

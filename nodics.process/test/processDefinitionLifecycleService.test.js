@@ -15,7 +15,7 @@
  * @module nodics.process/test/processDefinitionLifecycleService
  * @description Validates draft, validation, publish, archive, and delete behavior for Process definitions without requiring a live database.
  * @layer test
- * @owner flowCore
+ * @owner workflow
  * @override Customer process overlays may extend lifecycle policy while preserving draft-only mutation and immutable publish semantics.
  */
 const assert = require('assert');
@@ -81,12 +81,12 @@ function createGeneratedService(store) {
 }
 
 global.SERVICE = {
-    DefaultProcessGraphValidationService: require('../modules/workflow/modules/flowCore/src/service/designer/defaultProcessGraphValidationService'),
+    DefaultProcessGraphValidationService: require('../modules/workflow/src/service/designer/defaultProcessGraphValidationService'),
     DefaultProcessDefinitionService: createGeneratedService(definitions),
     DefaultProcessDefinitionVersionService: createGeneratedService(versions)
 };
 
-const lifecycleService = require('../modules/workflow/modules/flowCore/src/service/definition/defaultProcessDefinitionLifecycleService');
+const lifecycleService = require('../modules/workflow/src/service/definition/defaultProcessDefinitionLifecycleService');
 const validGraph = Object.freeze({
     nodes: [
         { code: 'start', type: 'START' },

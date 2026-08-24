@@ -9,7 +9,7 @@
 
  */
 
-/** @module editorial/service/DefaultEditorialScheduleService @description Contributes Editorial scheduling intent to Process/Cron without executing a scheduler. @layer service @owner editorial */
+/** @module editorial/service/DefaultEditorialScheduleService @description Contributes Editorial scheduling intent to workflow/cronjob without executing a scheduler. @layer service @owner editorial */
 module.exports = {
     /** Creates Process-owned trigger metadata for a future Editorial publication. */
     schedule: function (request) {

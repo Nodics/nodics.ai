@@ -52,13 +52,13 @@ assert(fs.existsSync(generatedFacadePath), 'Generated DefaultWorkflow2SchemaFaca
 assert(fs.existsSync(generatedControllerPath), 'Generated DefaultWorkflow2SchemaController must remain available');
 assert.deepStrictEqual(
     processPackage.requiredModules,
-    ['workflow'],
-    'nodics.process must compose workflow instead of absorbing nbpm directly',
+    ['cronjob', 'workflow'],
+    'nodics.process must compose cronjob and workflow instead of absorbing nbpm directly',
 );
 assert.deepStrictEqual(
-    workflowPackage.requiredModules,
-    ['flowSchema', 'flowCore', 'flowApi'],
-    'workflow must keep explicit flowSchema/flowCore/flowApi ownership before any nbpm migration',
+    workflowPackage.requiredModules || [],
+    [],
+    'workflow must own schemas, services, and APIs directly after Process hierarchy simplification',
 );
 
 console.log('NBPM Core bootstrap workflow bridge contract validated');

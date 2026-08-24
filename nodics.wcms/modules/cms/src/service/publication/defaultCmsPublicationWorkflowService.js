@@ -70,11 +70,14 @@ module.exports = {
         };
         let requestedBy = publicationRequest.requestedBy || request.authData && (request.authData.loginId || request.authData.principalId || request.authData.code);
         if (requestedBy) payload.requestedBy = requestedBy;
-        let descriptor = SERVICE.DefaultModuleService.buildRequest({ moduleName: target.moduleName,
-            connectionName: target.connectionName, connectionType: target.connectionType || 'abstract', methodName: 'POST',
+        return SERVICE.DefaultModuleService.invokeModule({ moduleName: target.moduleName,
+            connectionName: target.connectionName, connectionType: target.connectionType || 'abstract',
+            targetAuthority: { runtimeRole: target.runtimeRole || 'PROCESS' },
+            methodName: 'POST',
             apiName: '/instances/publication-approval', requestBody: payload, timeoutMs: target.timeoutMs,
             maxAttempts: target.maxAttempts, idempotencyKey: publicationRequest.code + ':' + publicationRequest.revision,
-            header: { Authorization: 'Bearer ' + token } });
-        return SERVICE.DefaultModuleService.fetch(descriptor).then(response => response && (response.result || response.data || response));
+            header: { Authorization: 'Bearer ' + token },
+            responseSelector: response => response && (response.result || response.data || response)
+        });
     }
 };

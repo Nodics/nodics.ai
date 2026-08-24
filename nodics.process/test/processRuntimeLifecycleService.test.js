@@ -15,7 +15,7 @@
  * @module nodics.process/test/processRuntimeLifecycleService
  * @description Validates backend-owned process instance start, task lifecycle, audit, and trigger metadata behavior without a live database.
  * @layer test
- * @owner flowCore
+ * @owner workflow
  * @override Customer process overlays may customize assignment or execution policy while preserving published-version runtime ownership and transition validation.
  */
 const assert = require('assert');
@@ -111,10 +111,10 @@ global.SERVICE = {
     DefaultProcessAuditEventService: createGeneratedService(auditEvents),
     DefaultProcessIncidentService: createGeneratedService(incidents),
     DefaultProcessTriggerService: createGeneratedService(triggers),
-    DefaultProcessActionAdapterRegistryService: require('../modules/workflow/modules/flowCore/src/service/operation/defaultProcessActionAdapterRegistryService')
+    DefaultProcessActionAdapterRegistryService: require('../modules/workflow/src/service/operation/defaultProcessActionAdapterRegistryService')
 };
 
-const runtimeService = require('../modules/workflow/modules/flowCore/src/service/operation/defaultProcessRuntimeLifecycleService');
+const runtimeService = require('../modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService');
 
 (async function run() {
     let started = await runtimeService.startInstance({

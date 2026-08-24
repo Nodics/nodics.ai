@@ -16,9 +16,9 @@ const sources = [
     ['localizationCore', 'nodics.localization/modules/localizationCore/src/service/defaultLocalizationCoreLocalizationContributionService.js'],
     ['commsCore', 'nodics.communication/modules/commsCore/src/service/defaultCommunicationLocalizationContributionService.js'],
     ['profile', 'nodics.platform/modules/profile/src/service/defaultProfileLocalizationContributionService.js'],
-    ['flowCore', 'nodics.process/modules/workflow/modules/flowCore/src/service/defaultProcessLocalizationContributionService.js'],
+    ['workflow', 'nodics.process/modules/workflow/src/service/defaultProcessLocalizationContributionService.js'],
     ['engagementCore', 'nodics.engagement/modules/engagementCore/src/service/defaultEngagementLocalizationContributionService.js'],
-    ['cronjob', 'nodics.cron/modules/cronjob/src/service/defaultCronjobLocalizationContributionService.js']
+    ['cronjob', 'nodics.process/modules/cronjob/src/service/defaultCronjobLocalizationContributionService.js']
 ];
 sources.forEach(([owner, file]) => {
     let contribution = require(path.join(root, file)).getLocalizationContribution();

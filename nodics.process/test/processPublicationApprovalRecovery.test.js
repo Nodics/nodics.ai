@@ -16,7 +16,7 @@ const assert = require('assert');
 global.CLASSES = { NodicsError: class NodicsError extends Error {} };
 global.SERVICE = {};
 
-const approval = require('../modules/workflow/modules/flowCore/src/service/operation/defaultProcessPublicationApprovalService');
+const approval = require('../modules/workflow/src/service/operation/defaultProcessPublicationApprovalService');
 
 const instance = {
     code: 'cmsPublicationApproval-test',

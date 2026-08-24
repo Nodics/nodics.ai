@@ -35,14 +35,17 @@ module.exports = {
         if (!internalToken) {
             throw new CLASSES.NodicsError('CMS_PUBLICATION_INTERNAL_AUTH_UNAVAILABLE', 'CMS publication internal authentication is unavailable');
         }
-        let descriptor = SERVICE.DefaultModuleService.buildRequest({ moduleName: target.moduleName,
-            connectionName: target.connectionName, connectionType: target.connectionType || 'abstract', nodeId: target.nodeId, methodName: 'POST',
+        return SERVICE.DefaultModuleService.invokeModule({ moduleName: target.moduleName,
+            connectionName: target.connectionName, connectionType: target.connectionType || 'abstract',
+            targetAuthority: { runtimeRole: target.runtimeRole || 'WCMS_ONLINE' },
+            nodeId: target.nodeId, methodName: 'POST',
             apiName: '/publication/target/' + operation, requestBody: Object.assign({ tenant: request.tenant,
                 correlationId: request.correlationId || request.requestId }, payload),
             timeoutMs: target.timeoutMs, maxAttempts: target.maxAttempts,
             idempotencyKey: payload.operationKey || payload.manifest && payload.manifest.code || payload.manifestCode,
-            header: { Authorization: 'Bearer ' + internalToken } });
-        return SERVICE.DefaultModuleService.fetch(descriptor).then(response => response && response.result);
+            header: { Authorization: 'Bearer ' + internalToken },
+            responseSelector: response => response && response.result
+        });
     },
     /** Deploys one immutable release package. */
     deploy: function (payload, request) { return this.send('deploy', payload, request); },

@@ -73,11 +73,14 @@ const bridge = require('../src/service/publication/defaultWcmsPublicationWorkflo
     }, runtimeRole: 'STAGED' } } : undefined };
     global.NODICS = { getInternalAuthToken: tenant => 'internal-' + tenant };
     SERVICE.DefaultModuleService = {
-        buildRequest: options => options,
-        fetch: descriptor => { outbound = descriptor; return Promise.resolve({ version: 'target-release-a' }); }
+        invokeModule: options => {
+            outbound = options;
+            return Promise.resolve(options.responseSelector({ result: { version: 'target-release-a' } }));
+        }
     };
     const transport = require('../../cms/src/service/publication/defaultCmsPublicationModuleTransportService');
     await transport.deploy({ manifest: { code: 'release-a' } }, { tenant: 'tenant-a' });
+    assert.deepStrictEqual(outbound.targetAuthority, { runtimeRole: 'WCMS_ONLINE' });
     assert.strictEqual(outbound.connectionType, 'server');
     assert.strictEqual(outbound.moduleName, 'cms');
     assert.strictEqual(outbound.connectionName, 'cmsOnline');

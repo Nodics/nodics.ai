@@ -21,10 +21,10 @@
 const assert = require('assert');
 
 const authProperties = require('../../nodics.foundation/modules/nAuth/config/properties');
-const routers = require('../modules/workflow/modules/flowApi/src/router/routers');
+const routers = require('../modules/workflow/src/router/routers');
 
 const permissionCatalog = new Set(authProperties.identityGovernance.permissionCatalog);
-const routeGroups = [routers.flowApi.processDefinitions, routers.flowApi.processOperations];
+const routeGroups = [routers.workflow.processDefinitions, routers.workflow.processOperations];
 const missing = [];
 
 routeGroups.forEach(group => {
