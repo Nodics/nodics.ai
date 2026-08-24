@@ -256,11 +256,13 @@ The current bootstrap command is:
 npx github:Nodics/nodics.installer
 ```
 
-That command prints a dry-run setup plan. The installer also supports guided
-questions, preflight checks, and approval-gated execution:
+That command asks guided questions when started from a normal terminal, then
+prints a dry-run setup plan. The installer also supports explicit plan,
+preflight, and approval-gated execution modes:
 
 ```bash
 npx github:Nodics/nodics.installer --action=questionnaire
+npx github:Nodics/nodics.installer --action=plan --application-name="Acme Apparel" --workspace=/Users/me/Projects/nodicsRoot
 npx github:Nodics/nodics.installer --application-name="Acme Apparel" --action=preflight --workspace=/Users/me/Projects/nodicsRoot
 npx github:Nodics/nodics.installer --application-name="Acme Apparel" --action=execute --yes --execution-level=download
 ```
