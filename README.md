@@ -250,11 +250,24 @@ in spirit to mature platform installers. A first-time user should not need to
 clone several repositories manually, learn repository names, edit `.env` files,
 or understand runtime topology before seeing Nodics run locally.
 
-The current development bootstrap command is:
+The current bootstrap command is:
 
 ```bash
 npx github:Nodics/nodics.installer
 ```
+
+That command prints a dry-run setup plan. The installer also supports guided
+questions, preflight checks, and approval-gated execution:
+
+```bash
+npx github:Nodics/nodics.installer --action=questionnaire
+npx github:Nodics/nodics.installer --action=preflight --workspace=/Users/me/Projects/nodicsRoot
+npx github:Nodics/nodics.installer --action=execute --yes --execution-level=download
+```
+
+Execution levels are `download`, `install`, `preflight`, `start`, `initialize`,
+and `acceptance`. Execution never runs unless `--yes` is present. Setup evidence
+is written under `<workspace>/.nodics-installer/setup-evidence.json`.
 
 This installer is separate from `nodics.ai` and `nodics.kickoff`. That boundary
 is important: a command inside Kickoff can only run after Kickoff and the
@@ -268,9 +281,11 @@ The installer should support two beginner journeys:
 | Run Nodics locally | "I want to try Nodics with the reference project." | Downloads the framework, Kickoff, selected frontend apps, selected accelerator data, then prepares and starts the local reference environment. |
 | Create my own project | "I want my own project instead of Kickoff." | Uses the Application Builder flow to create a customer project, then prepares that project against the framework and selected apps. |
 
-The first implementation should focus on **Run Nodics locally**. That path gives
-new evaluators and developers a working product before they make project-design
-decisions.
+The current implementation focuses on **Run Nodics locally**. That path gives new
+evaluators and developers a working product before they make project-design
+decisions. The custom project journey remains documented but intentionally
+blocked until the reference setup path is stable enough to become its reusable
+base.
 
 ### What the installer asks
 
