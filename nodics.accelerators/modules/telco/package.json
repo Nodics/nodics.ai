@@ -3,6 +3,11 @@
     "index": "92.69",
     "description": "Reusable Telco accelerator composing Electronics devices with subscription commerce.",
     "main": "nodics.js",
+    "requiredModules": [
+        "telcoCatalog",
+        "telcoSubscription",
+        "telcoProvisioning"
+    ],
     "version": "0.0.0",
     "private": true,
     "license": "SEE LICENSE IN LICENSE",

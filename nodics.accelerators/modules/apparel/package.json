@@ -3,6 +3,9 @@
     "index": "92.19",
     "description": "Reusable Apparel accelerator composition boundary.",
     "main": "nodics.js",
+    "requiredModules": [
+        "apparelProduct"
+    ],
     "version": "0.0.0",
     "private": true,
     "license": "SEE LICENSE IN LICENSE",

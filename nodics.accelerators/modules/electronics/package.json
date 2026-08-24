@@ -3,6 +3,9 @@
     "index": "92.39",
     "description": "Reusable Electronics accelerator composition boundary.",
     "main": "nodics.js",
+    "requiredModules": [
+        "electronicsProduct"
+    ],
     "version": "0.0.0",
     "private": true,
     "license": "SEE LICENSE IN LICENSE",
