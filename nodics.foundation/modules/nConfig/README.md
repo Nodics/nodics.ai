@@ -245,22 +245,55 @@ then loaded by deterministic dotted `index` order.
 modules are loaded in the current runtime and may contribute configuration,
 schemas, routers, services, pipelines, data, tests, and lifecycle behavior.
 
+Module-level runtime ownership is the active loader contract. Group packages
+still load as availability and configuration/default containers, but they do
+not recursively activate every child capability as a local owner. The runtime
+loads explicit `activeModules.modules`, selected server/root/node modules, and
+true local `requiredModules`.
+
+An explicit `activeModules.modules` entry may select any runtime-loadable
+package, including customer content/data packs, as long as the package does not
+opt out through `nodics.runtimeModule: false` or
+`nodics.loadableByNodicsModuleLoader: false`. Group-selected children must be
+made explicit through `activeModules.modules`, selector syntax, or a true local
+`requiredModules` dependency; broad group membership is not runtime activation.
+
+Local persistence and mutable operational exposure follow the same active
+module boundary. Only locally active modules may receive effective `rawSchema`,
+build generated database models/collections, expose schema-generated routers,
+produce generated schema artifacts, or appear in mutable Schema Workbench
+descriptors. The shared `default` schema contract remains available for
+inheritance by active modules, but inactive or remote-owned modules must be
+called through module-service/API paths instead of becoming local persistence
+authorities.
+
 `servers.*` entries are endpoint coordinates. They describe where a local or
 remote module can be reached by HTTP/node communication, but they must not
 activate the module locally. For example, a modular workflow server may define
 `servers.profile` so it can call the profile process without loading the profile
 module into the workflow process.
 
+Cross-runtime service calls should use the shared `DefaultModuleService`
+invocation boundary. `invokeModule(...)` calls the local `SERVICE.*` operation
+when the target module is active in this process and the requested
+`targetAuthority` matches the current runtime authority. If the module is
+inactive locally, or the same module name belongs to another target authority
+such as WCMS Online or Process, the call requires a configured remote endpoint,
+adds the tenant-scoped internal service token by default, and calls the target
+module API through the governed module HTTP transport. Until Runtime Registry is
+introduced, `servers.*` remains the bootstrap/fallback endpoint source for
+remote targets.
+
 Server and node names are local to their validated parent topology. Their
 parentage and canonical identity come from the complete physical ancestry
-discovered by the module loader. For example, `cronServer` may exist under both
+discovered by the module loader. For example, `processServer` may exist under both
 `localEnvironment` and `developmentEnvironment`; the derived canonical identities remain distinct
 without storing handwritten parent or canonical identifiers.
 
 Use explicit environment selection for deterministic execution:
 
 ```bash
-ENV=localEnvironment SERVER=cronServer NODE=schedulerNode0 node -e 'require("./nodics").start()'
+ENV=localEnvironment SERVER=processServer NODE=schedulerNode0 node -e 'require("./nodics").start()'
 ```
 
 When an interactive terminal supplies only an ambiguous server name, startup

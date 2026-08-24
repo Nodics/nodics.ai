@@ -169,6 +169,7 @@ global.SERVICE = {
         : undefined,
     getDiagnostics: () => ({ attempts: 1, successes: 1 }),
   },
+  DefaultRuntimeRegistryResolverService: require("../../../../nodics.foundation/modules/nService/src/service/module/defaultRuntimeRegistryResolverService"),
 };
 global.CLASSES = { NodicsError: class NodicsError extends Error {} };
 
@@ -197,6 +198,14 @@ async function run() {
     endpoint: "http://cms:3040/nodics/cms",
     version: "0.0.0",
     capabilities: ["router"],
+    authorityClaims: [
+      {
+        kind: "schema",
+        moduleName: "cms",
+        claimName: "cmsPage",
+        authorityContext: "wcms.content",
+      },
+    ],
     clientCallable: true,
     leaseTtlMs: 1000,
     backoffice: {
@@ -250,16 +259,33 @@ async function run() {
   });
   assert.strictEqual(first.data.moduleName, "cms");
   assert.strictEqual(first.data.backoffice.capabilityId, "content-management");
+  let resolvedOwner = await service.resolveRuntimeOwner({
+    moduleName: "cms",
+    targetAuthority: { server: "wcmsOnlineServer" },
+  });
+  assert.strictEqual(resolvedOwner, undefined, "uncoordinated direct registrations must not satisfy a server authority they did not publish");
   await service.register({
     body: registration,
     authData: identity,
     _runtimeCoordinates: { environment: "kickoffLocal", server: "wcmsOnlineServer", node: "default" },
   });
+  resolvedOwner = await service.resolveRuntimeOwner({
+    moduleName: "cms",
+    targetAuthority: { server: "wcmsOnlineServer" },
+  });
+  assert.strictEqual(resolvedOwner.endpoint, "http://cms:3040/nodics/cms");
+  assert.strictEqual(resolvedOwner.server, "wcmsOnlineServer");
+  assert.strictEqual(resolvedOwner.authorityClaims[0].authorityKey, "schema:cms:cmsPage@wcms.content");
   assert.strictEqual(
     store._instances.size,
     1,
     "lease renewal must be idempotent",
   );
+  let runtimeSnapshot = await service.runtimeRegistrySnapshot({ authData: { permissions: ["backoffice.registry.view"] } });
+  assert.strictEqual(runtimeSnapshot.data.ownerCount, 1);
+  assert.strictEqual(runtimeSnapshot.data.owners[0].moduleName, "cms");
+  assert.strictEqual(runtimeSnapshot.data.owners[0].authorityClaims[0].authorityKey, "schema:cms:cmsPage@wcms.content");
+  assert.strictEqual(SERVICE.DefaultRuntimeRegistryResolverService.getSnapshot().owners[0].moduleName, "cms");
   assert.strictEqual(service._metrics.renewals, 1);
 
   let list = await service.list({
@@ -391,6 +417,12 @@ async function run() {
     body: Object.assign({}, registration, {
       instanceId: "cms-staged-1",
       endpoint: "http://cms-staged:4312/nodics/cms",
+      authorityClaims: [{
+        kind: "schema",
+        moduleName: "cms",
+        claimName: "cmsPage",
+        authorityContext: "wcms.content.staged",
+      }],
     }),
     authData: Object.assign({}, identity, { runtimeInstanceId: "cms-staged-1" }),
     _runtimeCoordinates: { environment: "kickoffLocal", server: "wcmsStagedServer", node: "default" },
@@ -472,13 +504,13 @@ async function run() {
           clientCallable: false,
         },
         {
-          moduleName: "flowCore",
-          displayName: "Process Runtime Core",
+          moduleName: "workflow",
+          displayName: "Workflow",
           parentModule: "nodics.process",
-          canonicalIdentity: "nodics.process/modules/workflow/modules/flowCore",
+          canonicalIdentity: "nodics.process/modules/workflow",
           instanceId: "runtime-1",
           clientCallable: false,
-          capabilities: ["service"],
+          capabilities: ["schema", "service", "router"],
         },
         {
           moduleName: "media",
@@ -517,7 +549,7 @@ async function run() {
     authData: {
       tokenType: "service",
       runtimeInstanceId: "runtime-1",
-      modules: ["nodics.wcms", "cms", "nodics.process", "flowCore", "media"],
+      modules: ["nodics.wcms", "cms", "nodics.process", "workflow", "media"],
       userGroups: ["serviceAccountUserGroup"],
     },
   });
@@ -626,7 +658,7 @@ async function run() {
     authData: { permissions: ["cms.backoffice.view"] },
   });
   assert.strictEqual(
-    list.data.modules.flowCore,
+    list.data.modules.workflow,
     undefined,
     "non-API modules must not appear in client discovery",
   );
@@ -661,6 +693,7 @@ async function run() {
     5,
     "diagnostics must retain all active module leases",
   );
+  assert.strictEqual(diagnostics.data.runtimeRegistry.ownerCount, 1);
   assert.strictEqual(diagnostics.data.contracts.pendingApprovals, 1);
   assert.deepStrictEqual(diagnosticsAuthData.userGroups, [
     "runtimeConfigAdminUserGroup",
@@ -706,12 +739,12 @@ async function run() {
   assert(Array.isArray(bootstrap.data.documentationSources));
   assert.strictEqual(bootstrap.data.tenantCode, "default");
   assert.strictEqual(
-    bootstrap.data.modules.flowCore,
+    bootstrap.data.modules.workflow,
     undefined,
     "bootstrap must never expose modules that are not browser callable",
   );
   assert.strictEqual(
-    bootstrap.data.catalogue.flowCore,
+    bootstrap.data.catalogue.workflow,
     undefined,
     "bootstrap catalogue must contain only authorized BackOffice-discoverable modules",
   );
@@ -871,6 +904,42 @@ async function run() {
       }),
     ),
   );
+
+  let duplicateAuthorityRegistration = Object.assign({}, registration, {
+    instanceId: "cms-authority-owner-1",
+    leaseTtlMs: 10000,
+    authorityClaims: [{
+      kind: "schema",
+      moduleName: "cms",
+      claimName: "cmsPage",
+      authorityContext: "wcms.duplicate",
+    }],
+  });
+  await service.register({
+    body: duplicateAuthorityRegistration,
+    authData: {
+      tokenType: "service",
+      runtimeInstanceId: "cms-authority-owner-1",
+      modules: ["cms"],
+      userGroups: ["serviceAccountUserGroup"],
+    },
+    _runtimeCoordinates: { environment: "kickoffLocal", server: "authorityOwnerServer", node: "default" },
+  });
+  await assert.rejects(() =>
+    service.register({
+      body: Object.assign({}, duplicateAuthorityRegistration, { instanceId: "cms-2" }),
+      authData: {
+        tokenType: "service",
+        runtimeInstanceId: "cms-2",
+        modules: ["cms"],
+        userGroups: ["serviceAccountUserGroup"],
+      },
+      _runtimeCoordinates: { environment: "kickoffLocal", server: "otherWcmsServer", node: "default" },
+    }),
+    /ERR_BOF_00000/,
+    "unrelated runtimes must not claim the same schema authority context",
+  );
+
   assert(
     auditEvents.some(
       (event) => event.eventType === "backoffice.registry.registration",

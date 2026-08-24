@@ -64,44 +64,33 @@ module.exports = {
             try {
                 let profileModuleName = CONFIG.get('profileModuleName') || 'profile';
                 let defaultTenant = CONFIG.get('defaultTenant') || 'default';
-                if (NODICS.isModuleActive(profileModuleName)) {
-                    SERVICE.DefaultEnterpriseService.get({
+                SERVICE.DefaultModuleService.invokeModule({
+                    moduleName: profileModuleName,
+                    serviceName: 'DefaultEnterpriseService',
+                    operationName: 'get',
+                    apiName: '/enterprise',
+                    methodName: 'POST',
+                    request: {
                         tenant: defaultTenant,
                         options: {
                             recursive: true,
                         },
-                    }).then(success => {
-                        if (success.success || success.result.length > 0) {
-                            resolve(success.result);
-                        } else {
-                            _self.LOG.error('Could not found any active enterprises currently');
-                            reject(new CLASSES.NodicsError('ERR_ENT_00001', 'Could not found any active enterprises currently'));
-                        }
-                    }).catch(error => {
-                        reject(new CLASSES.NodicsError(error, null, 'ERR_ENT_00001'));
-                    });
-                } else {
-                    let requestUrl = SERVICE.DefaultModuleService.buildRequest({
-                        moduleName: profileModuleName,
-                        methodName: 'POST',
-                        apiName: '/enterprise',
-                        requestBody: {},
-                        responseType: true,
-                        header: {
-                            Authorization: 'Bearer ' + NODICS.getInternalAuthToken(defaultTenant),
-                            recursive: true
-                        }
-                    });
-                    try {
-                        SERVICE.DefaultModuleService.fetch(requestUrl).then(response => {
-                            resolve(response.result || []);
-                        }).catch(error => {
-                            reject(new CLASSES.NodicsError(error, null, 'ERR_ENT_00001'));
-                        });
-                    } catch (error) {
-                        reject(new CLASSES.NodicsError(error, null, 'ERR_ENT_00001'));
+                    },
+                    requestBody: {},
+                    responseType: true,
+                    header: {
+                        recursive: true
                     }
-                }
+                }).then(success => {
+                    if (success.success || success.result.length > 0) {
+                        resolve(success.result);
+                    } else {
+                        _self.LOG.error('Could not found any active enterprises currently');
+                        reject(new CLASSES.NodicsError('ERR_ENT_00001', 'Could not found any active enterprises currently'));
+                    }
+                }).catch(error => {
+                    reject(new CLASSES.NodicsError(error, null, 'ERR_ENT_00001'));
+                });
             } catch (error) {
                 reject(new CLASSES.NodicsError(error, null, 'ERR_ENT_00001'));
             }

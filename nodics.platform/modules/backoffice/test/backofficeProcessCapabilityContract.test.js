@@ -18,7 +18,7 @@
 const assert = require("assert");
 const service = require("../src/service/contract/defaultBackofficeContractService");
 
-const processCapability = require("../../../../nodics.process/modules/workflow/modules/flowCore/src/service/defaultFlowCoreBackofficeCapabilityService")
+const processCapability = require("../../../../nodics.process/modules/workflow/src/service/defaultWorkflowBackofficeCapabilityService")
   .getCapability();
 
 assert(
@@ -53,11 +53,15 @@ for (const entry of processCapability.navigation) {
       entry.help?.documentationRoute?.startsWith("/docs/framework/process/"),
     `${entry.id} must point to process/workflow documentation`,
   );
-  assert.strictEqual(
-    entry.featureState,
-    "PREVIEW",
-    `${entry.id} must stay PREVIEW until process APIs are implemented`,
+  assert(
+    ["PREVIEW", "DISABLED"].includes(entry.featureState),
+    `${entry.id} must stay explicitly gated until process APIs are implemented`,
   );
 }
+
+["pipeline-management", "automation-monitoring", "automation-advanced-configuration"].forEach((id) => {
+  const entry = processCapability.navigation.find((item) => item.id === id);
+  assert.strictEqual(entry.featureState, "DISABLED", `${id} must stay disabled while planned`);
+});
 
 console.log("BackOffice process capability contract passed");

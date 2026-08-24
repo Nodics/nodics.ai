@@ -815,6 +815,36 @@ module.exports = {
       discoveryRequested: { type: "boolean" },
     },
   },
+  runtimeRegistrySnapshotData: {
+    type: "object",
+    required: ["generatedAt", "ownerCount", "owners"],
+    properties: {
+      generatedAt: { type: "string", format: "date-time" },
+      ownerCount: { type: "integer", minimum: 0 },
+      owners: {
+        type: "array",
+        items: {
+          type: "object",
+          required: ["moduleName", "instanceId", "endpoint", "state"],
+          properties: {
+            moduleName: moduleName,
+            connectionName: { type: "string" },
+            instanceId: { type: "string" },
+            environment: { type: "string" },
+            server: { type: "string" },
+            node: { type: "string" },
+            runtimeRole: { type: "object" },
+            endpoint: { type: "string" },
+            state: { type: "string" },
+            lastSeenAt: { type: "string", format: "date-time" },
+            expiresAt: { type: "integer" },
+            clientCallable: { type: "boolean" },
+            authorityClaims: { type: "array", items: { type: "object" } },
+          },
+        },
+      },
+    },
+  },
   contractDecision: contractDecision,
   navigationGroup: navigationGroup,
   navigationBadgeProvider: navigationBadgeProvider,
@@ -1021,6 +1051,13 @@ module.exports = {
     properties: {
       activeModuleLeases: { type: "integer", minimum: 0 },
       metrics: { type: "object" },
+      runtimeRegistry: {
+        type: "object",
+        properties: {
+          ownerCount: { type: "integer", minimum: 0 },
+          generatedAt: { type: "string", format: "date-time" },
+        },
+      },
       store: { type: "object" },
       discovery: { type: "object" },
       availability: {

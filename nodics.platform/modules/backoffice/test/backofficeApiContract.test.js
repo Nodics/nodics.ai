@@ -26,8 +26,8 @@ const repositoryRoot = path.resolve(__dirname, "../../../..");
 const capabilities = [
   require(path.join(repositoryRoot, "nodics.platform/modules/profile/src/service/defaultProfileBackofficeCapabilityService")).getCapability(),
   require(path.join(repositoryRoot, "nodics.wcms/modules/cms/src/service/defaultCmsBackofficeCapabilityService")).getCapability(),
-  require(path.join(repositoryRoot, "nodics.cron/modules/cronjob/src/service/defaultCronjobBackofficeCapabilityService")).getCapability(),
-  require(path.join(repositoryRoot, "nodics.process/modules/workflow/modules/flowCore/src/service/defaultFlowCoreBackofficeCapabilityService")).getCapability(),
+  require(path.join(repositoryRoot, "nodics.process/modules/cronjob/src/service/defaultCronjobBackofficeCapabilityService")).getCapability(),
+  require(path.join(repositoryRoot, "nodics.process/modules/workflow/src/service/defaultWorkflowBackofficeCapabilityService")).getCapability(),
   require(path.join(repositoryRoot, "nodics.wcms/modules/media/src/service/defaultMediaBackofficeCapabilityService")).getCapability(),
   require("../src/service/defaultBackofficeBackofficeCapabilityService").getCapability(),
 ];

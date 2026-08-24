@@ -33,6 +33,8 @@ module.exports = {
     deregister: function (request, callback) { return this.execute('deregister', request, callback); },
     /** Handles client-safe registry discovery requests. */
     list: function (request, callback) { return this.execute('list', request, callback); },
+    /** Handles service-to-service Runtime Registry owner snapshot requests. */
+    getRuntimeRegistrySnapshot: function (request, callback) { return this.execute('getRuntimeRegistrySnapshot', request, callback); },
     /** Handles project-scoped functional-module catalogue requests. */
     availableFunctionalModules: function (request, callback) { return this.execute('availableFunctionalModules', request, callback); },
     /** Handles project-scoped registered functional-module catalogue requests. */

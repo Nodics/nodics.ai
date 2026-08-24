@@ -84,36 +84,37 @@ module.exports = {
      */
     loadEnterprise: function (request) {
         return new Promise((resolve, reject) => {
-            if (request.moduleName === CONFIG.get('profileModuleName')) {
-                SERVICE.DefaultEnterpriseService.get({
-                    tenant: CONFIG.get('defaultTenant') || 'default',
-                    options: {
-                        recursive: true,
-                    },
-                    query: {
-                        code: request.entCode
-                    }
-                }).then(response => {
-                    if (response && response.result.length > 0) {
-                        resolve(response.result[0]);
-                    } else {
-                        reject(new CLASSES.NodicsError('ERR_ENT_00000'));
-                    }
-                }).catch(error => {
-                    reject(new CLASSES.NodicsError(error));
-                });
-            } else {
-                let requestUrl = this.prepareURL(request);
-                SERVICE.DefaultModuleService.fetch(requestUrl).then(response => {
-                    if (response.result && response.result.length > 0) {
-                        resolve(response.result[0]);
-                    } else {
-                        reject(new CLASSES.NodicsError('ERR_ENT_00000'));
-                    }
-                }).catch(error => {
-                    reject(new CLASSES.NodicsError(error));
-                });
-            }
+            let profileModuleName = CONFIG.get('profileModuleName') || 'profile';
+            let lookupRequest = {
+                tenant: CONFIG.get('defaultTenant') || 'default',
+                options: {
+                    recursive: true,
+                },
+                query: {
+                    code: request.entCode
+                }
+            };
+            SERVICE.DefaultModuleService.invokeModule({
+                moduleName: profileModuleName,
+                serviceName: 'DefaultEnterpriseService',
+                operationName: 'get',
+                apiName: '/enterprise',
+                methodName: 'POST',
+                request: lookupRequest,
+                requestBody: {
+                    options: lookupRequest.options,
+                    query: lookupRequest.query
+                },
+                responseType: true
+            }).then(response => {
+                if (response.result && response.result.length > 0) {
+                    resolve(response.result[0]);
+                } else {
+                    reject(new CLASSES.NodicsError('ERR_ENT_00000'));
+                }
+            }).catch(error => {
+                reject(new CLASSES.NodicsError(error));
+            });
         });
 
     }

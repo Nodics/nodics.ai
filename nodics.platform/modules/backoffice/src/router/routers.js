@@ -66,6 +66,20 @@ module.exports = {
                     schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.functionalModuleCatalogueData } })
                 } } } }
             },
+            runtimeRegistrySnapshot: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'backoffice.registry.view',
+                authTokenTypes: ['access', 'service'],
+                apiExposure: 'serviceRegistry',
+                key: '/runtime/registry/snapshot',
+                method: 'GET',
+                controller: 'DefaultBackofficeRegistryController',
+                operation: 'getRuntimeRegistrySnapshot',
+                responses: { '200': { description: 'Service-safe Runtime Registry owner snapshot', content: { 'application/json': {
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.runtimeRegistrySnapshotData } })
+                } } } }
+            },
             functionalModuleRegistrations: {
                 secured: true,
                 accessGroups: ['userGroup'],

@@ -32,6 +32,10 @@ global.CONFIG = { get: key => ({
 global.NODICS = {
     getActiveModules: () => ['cms', 'utility'],
     getRawModule: name => ({ parent: 'nodics.wcms', canonicalIdentity: 'nodics.wcms/modules/' + name,
+        rawSchema: name === 'cms' ? {
+            cmsPage: { model: true, service: { enabled: true }, authorityContext: 'wcms.content' },
+            cmsHelper: { model: false, service: { enabled: false } }
+        } : {},
         metaData: { version: '0.0.0', prefix: name === 'cms' ? 'content' : undefined, nodics: Object.assign({
             runtime: { router: name === 'cms' }, owns: ['router']
         }, name === 'cms' ? { displayName: 'Content Management' } : {}) } }),
@@ -73,6 +77,17 @@ async function run() {
     assert.strictEqual(requests[0].requestBody.registrations[0].parentModule, 'nodics.wcms');
     assert.strictEqual(requests[0].requestBody.registrations[0].canonicalIdentity, 'nodics.wcms/modules/cms');
     assert.strictEqual(requests[0].requestBody.registrations[0].backoffice.capabilityId, 'content-management');
+    assert.deepStrictEqual(requests[0].requestBody.registrations[0].authorityClaims, [{
+        kind: 'schema',
+        moduleName: 'cms',
+        claimName: 'cmsPage',
+        authorityContext: 'wcms.content'
+    }, {
+        kind: 'service',
+        moduleName: 'cms',
+        claimName: 'cmsPage',
+        authorityContext: 'wcms.content'
+    }]);
     assert.strictEqual(requests[0].requestBody.registrations[0].endpoint, 'http://localhost:3040/nodics/content',
         'client-callable registration endpoint must follow the router prefix when a module declares one');
     let provider = { getCapability: () => ({ enabled: true, capabilityId: 'service-owned-content',

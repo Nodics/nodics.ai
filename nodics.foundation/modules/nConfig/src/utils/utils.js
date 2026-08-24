@@ -400,7 +400,7 @@ module.exports = {
             }
             let allPromise = [];
             _.each(NODICS.getModules(), (moduleObject, moduleName) => {
-                if (moduleObject.rawSchema) {
+                if (moduleObject.rawSchema && (!NODICS.isModuleActive || NODICS.isModuleActive(moduleName))) {
                     _.each(moduleObject.rawSchema, (schemaObject, schemaName) => {
                         if ((options.type === 'service' && schemaObject.service && schemaObject.service.enabled) ||
                             (options.type === 'router' && schemaObject.router && schemaObject.router.enabled)) {

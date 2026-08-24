@@ -48,12 +48,13 @@ module.exports = {
     invokeProvider: function (provider, request, input) {
         let token = NODICS.getInternalAuthToken(request.tenant);
         if (!token) throw new CLASSES.NodicsError('ERR_BOF_00097', 'Local reset service authentication is unavailable');
-        let descriptor = SERVICE.DefaultModuleService.buildRequest({ moduleName: provider.moduleName,
+        return SERVICE.DefaultModuleService.invokeModule({ moduleName: provider.moduleName,
             connectionName: provider.connectionName, connectionType: provider.connectionType || 'abstract', methodName: 'POST',
+            targetAuthority: provider.targetAuthority,
             apiName: '/operations/local-reset', timeoutMs: provider.timeoutMs || 30000, maxAttempts: 1,
             requestBody: { confirmation: this.policy().confirmation, resetScope: 'LOCAL_ACCEPTANCE', reason: input.reason,
-                correlationId: request.correlationId }, header: { Authorization: 'Bearer ' + token } });
-        return SERVICE.DefaultModuleService.fetch(descriptor).then(response => response && response.result);
+                correlationId: request.correlationId }, header: { Authorization: 'Bearer ' + token },
+            responseSelector: response => response && response.result });
     },
     /** Executes the documented bounded module operation. */
     status: async function () {

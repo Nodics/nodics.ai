@@ -129,7 +129,7 @@ const capability = {
         {
             "id": "my-work",
             "parentId": "workflow-management",
-            "parentModuleName": "flowCore",
+            "parentModuleName": "workflow",
             "label": "My Tasks & Approvals",
             "route": "/workspace/my-work",
             "icon": "workflow",

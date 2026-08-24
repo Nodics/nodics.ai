@@ -125,14 +125,15 @@ module.exports = {
         let body = operation !== 'status' ? { requestedBy: principal, reason: input.reason,
             correlationId: correlationId, forceRefresh: input.forceRefresh === true ? true : undefined } : undefined;
         let suffix = operation === 'status' ? '' : '/' + operation;
-        let descriptor = SERVICE.DefaultModuleService.buildRequest({ moduleName: profile.target.moduleName,
+        return SERVICE.DefaultModuleService.invokeModule({ moduleName: profile.target.moduleName,
             connectionName: profile.target.connectionName, connectionType: profile.target.connectionType || 'abstract',
+            targetAuthority: { runtimeRole: profile.target.runtimeRole || 'WCMS_STAGED' },
             methodName: operation === 'status' ? 'GET' : 'POST',
             apiName: '/publication/baselines/' + encodeURIComponent(profile.baselineCode) + suffix,
             requestBody: body, timeoutMs: profile.target.timeoutMs, maxAttempts: profile.target.maxAttempts,
             idempotencyKey: operation !== 'status' ? profile.code + ':' + operation + ':' + String(correlationId || principal) : undefined,
-            header: { Authorization: 'Bearer ' + token } });
-        return SERVICE.DefaultModuleService.fetch(descriptor).catch(error => {
+            header: { Authorization: 'Bearer ' + token }
+        }).catch(error => {
             throw this.targetDiagnostic(error, profile);
         }).then(response => {
             let authority = response && (response.data || response.result || response) || {};
@@ -159,10 +160,11 @@ module.exports = {
         if (operation === 'install') this.human(request);
         let token = NODICS.getInternalAuthToken(request.tenant);
         if (!token) throw new CLASSES.NodicsError('ERR_BOF_00083', 'Application initialization service authentication is unavailable');
-        let descriptor = SERVICE.DefaultModuleService.buildRequest({
+        return SERVICE.DefaultModuleService.invokeModule({
             moduleName: 'system',
             connectionName: profile.target.connectionName,
             connectionType: profile.target.connectionType || 'abstract',
+            targetAuthority: { runtimeRole: profile.target.runtimeRole || 'WCMS_STAGED' },
             methodName: operation === 'status' ? 'GET' : 'POST',
             apiName: '/internal/content-packs/' + encodeURIComponent(profile.contentPackCode) +
                 (operation === 'install' ? '/imports' : ''),
@@ -170,9 +172,9 @@ module.exports = {
             maxAttempts: profile.target.maxAttempts,
             idempotencyKey: operation === 'install' ? profile.code + ':content-pack:' +
                 String(request.correlationId || request.requestId || request.authData && request.authData.principalId) : undefined,
-            header: { Authorization: 'Bearer ' + token }
+            header: { Authorization: 'Bearer ' + token },
+            responseSelector: response => response && (response.data || response.result || response)
         });
-        return SERVICE.DefaultModuleService.fetch(descriptor).then(response => response && (response.data || response.result || response));
     },
     /** Returns the documentation content-pack status from the profile's Staged authority. */
     contentPackStatus: function (profileCode, request) { return this.invokeContentPack('status', profileCode, request); },

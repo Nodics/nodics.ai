@@ -27,6 +27,8 @@ module.exports = {
     deregister: request => SERVICE.DefaultBackofficeRegistryService.deregister(request),
     /** Delegates client-safe discovery. */
     list: request => SERVICE.DefaultBackofficeRegistryService.list(request),
+    /** Delegates secured Runtime Registry owner snapshot projection. */
+    getRuntimeRegistrySnapshot: request => SERVICE.DefaultBackofficeRegistryService.runtimeRegistrySnapshot(request),
     /** Delegates durable functional-module catalogue discovery. */
     availableFunctionalModules: request => SERVICE.DefaultFunctionalModuleCatalogueService.listAvailable(request),
     /** Delegates durable registered functional-module catalogue discovery. */

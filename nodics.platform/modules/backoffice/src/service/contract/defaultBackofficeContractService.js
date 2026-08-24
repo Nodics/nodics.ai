@@ -757,6 +757,7 @@ module.exports = {
       "runtime",
       "functionalModule",
       "backoffice",
+      "authorityClaims",
     ];
     return (
       !Object.keys(registration).some((key) => !allowed.includes(key)) &&
@@ -808,8 +809,27 @@ module.exports = {
           this.isString(registration.functionalModule.displayName, 160) &&
           ["STANDARD", "EXTENSION"].includes(registration.functionalModule.type) &&
           typeof registration.functionalModule.protected === "boolean")) &&
+      this.validateAuthorityClaims(registration.authorityClaims, registration.moduleName) &&
       this.validateBackofficeMetadata(registration.backoffice)
     );
+  },
+  /** Validates bounded schema/service authority claims carried by module registration. */
+  validateAuthorityClaims: function (authorityClaims, moduleName) {
+    if (authorityClaims === undefined) return true;
+    if (!Array.isArray(authorityClaims) || authorityClaims.length > 512) return false;
+    let modulePattern = new RegExp(contracts.moduleName.pattern);
+    let claimPattern = /^[A-Za-z][A-Za-z0-9_.-]{0,255}$/;
+    return authorityClaims.every((claim) =>
+      claim &&
+      typeof claim === "object" &&
+      !Array.isArray(claim) &&
+      !Object.keys(claim).some((key) =>
+        !["kind", "moduleName", "claimName", "authorityContext"].includes(key)) &&
+      ["schema", "service"].includes(claim.kind) &&
+      claim.moduleName === moduleName &&
+      modulePattern.test(claim.moduleName || "") &&
+      claimPattern.test(claim.claimName || "") &&
+      claimPattern.test(claim.authorityContext || ""));
   },
   /** Validates one bounded runtime registration batch and its stable instance identity. */
   validateRegistrationBatch: function (batch, limit) {

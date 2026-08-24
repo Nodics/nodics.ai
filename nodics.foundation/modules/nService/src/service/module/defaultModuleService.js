@@ -87,7 +87,8 @@ module.exports = {
         this._circuits = this._circuits || new Map();
         this._diagnostics = this._diagnostics || {
             requests: 0, successes: 0, failures: 0, timeouts: 0, retries: 0, circuitRejected: 0,
-            totalLatencyMs: 0, lastFailureAt: null
+            totalLatencyMs: 0, lastFailureAt: null,
+            moduleInvocation: { local: 0, runtimeRegistry: 0, staticFallback: 0, lastResolution: null }
         };
         return this._agents;
     },
@@ -113,6 +114,30 @@ module.exports = {
             averageLatencyMs: this._diagnostics.requests ? Math.round(this._diagnostics.totalLatencyMs / this._diagnostics.requests) : 0,
             circuits: circuits
         });
+    },
+
+    /** Records a sanitized local/remote module invocation routing decision. */
+    recordInvocationResolution: function (options, resolution) {
+        this._diagnostics = this._diagnostics || {
+            requests: 0, successes: 0, failures: 0, timeouts: 0, retries: 0, circuitRejected: 0,
+            totalLatencyMs: 0, lastFailureAt: null
+        };
+        let moduleDiagnostics = this._diagnostics.moduleInvocation = this._diagnostics.moduleInvocation ||
+            { local: 0, runtimeRegistry: 0, staticFallback: 0, lastResolution: null };
+        let source = resolution && resolution.source || 'unknown';
+        if (moduleDiagnostics[source] !== undefined) moduleDiagnostics[source]++;
+        moduleDiagnostics.lastResolution = {
+            resolvedAt: new Date().toISOString(),
+            source: source,
+            moduleName: options.moduleName,
+            connectionName: this.getModuleConnectionName(options),
+            apiName: options.apiName,
+            methodName: options.methodName || 'POST',
+            instanceId: resolution && resolution.instanceId,
+            server: resolution && resolution.server,
+            node: resolution && resolution.node,
+            runtimeRole: resolution && resolution.runtimeRole
+        };
     },
 
     /** Resolves the logical module or origin circuit partition for a request. */
@@ -158,6 +183,266 @@ module.exports = {
         let method = String(requestUrl.method || 'GET').toUpperCase();
         return ['GET', 'HEAD', 'OPTIONS'].includes(method) || Boolean(requestUrl.idempotencyKey ||
             (requestUrl.headers && (requestUrl.headers['Idempotency-Key'] || requestUrl.headers['idempotency-key'])));
+    },
+
+    /**
+     * Returns true when the requested target module is active in this process.
+     *
+     * @param {string} moduleName Target module name.
+     * @returns {boolean} True when local service invocation is allowed.
+     */
+    isLocalModuleActive: function (moduleName) {
+        return Boolean(moduleName && (!NODICS.isModuleActive || NODICS.isModuleActive(moduleName)));
+    },
+
+    /**
+     * Resolves the configured connection name used for remote module calls.
+     *
+     * @param {Object} options Invocation options.
+     * @returns {string} Connection alias or target module name.
+     */
+    getModuleConnectionName: function (options) {
+        return options.connectionName || options.moduleName;
+    },
+
+    /** Returns the current runtime coordinates that can be compared with a target authority. */
+    getCurrentRuntimeAuthority: function () {
+        return {
+            environment: NODICS.getSelectedEnvironmentName && NODICS.getSelectedEnvironmentName(),
+            server: NODICS.getServerName && NODICS.getServerName(),
+            node: NODICS.getNodeName && NODICS.getNodeName(),
+            runtimeRole: CONFIG.get('runtimeRole')
+        };
+    },
+
+    /** Normalizes runtime role metadata into comparable uppercase tokens. */
+    runtimeRoleTokens: function (role) {
+        let tokens = [];
+        if (!role) return tokens;
+        if (typeof role === 'string') {
+            tokens.push(role);
+        } else if (typeof role === 'object' && !Array.isArray(role)) {
+            ['code', 'publication', 'runtimeRole'].forEach(key => {
+                if (role[key]) tokens.push(role[key]);
+            });
+        }
+        return tokens.map(token => String(token).toUpperCase()).filter(Boolean);
+    },
+
+    /**
+     * Returns true when a requested target authority is served by this runtime.
+     *
+     * `targetAuthority` describes the intended owner, such as WCMS Online or
+     * Process. Runtime Registry will eventually make this comparison lease-backed;
+     * for now it uses current runtime coordinates and configured runtime role.
+     */
+    isCurrentRuntimeAuthority: function (targetAuthority) {
+        if (!targetAuthority) return true;
+        let authority = typeof targetAuthority === 'string' ? { runtimeRole: targetAuthority } : targetAuthority;
+        let current = this.getCurrentRuntimeAuthority();
+        if (authority.environment && String(authority.environment) !== String(current.environment || '')) return false;
+        if (authority.server && String(authority.server) !== String(current.server || '')) return false;
+        if (authority.node && String(authority.node) !== String(current.node || '')) return false;
+        if (authority.runtimeRole || authority.code || authority.publication) {
+            let requestedTokens = this.runtimeRoleTokens(authority.runtimeRole || authority);
+            if (authority.code) requestedTokens = requestedTokens.concat(this.runtimeRoleTokens({ code: authority.code }));
+            if (authority.publication) requestedTokens = requestedTokens.concat(this.runtimeRoleTokens({ publication: authority.publication }));
+            let currentTokens = this.runtimeRoleTokens(current.runtimeRole);
+            return requestedTokens.some(token => currentTokens.includes(token));
+        }
+        return true;
+    },
+
+    /**
+     * Returns the prepared module endpoint pool used by router URL generation.
+     *
+     * @returns {Object|undefined} Module endpoint pool.
+     */
+    getModulesPool: function () {
+        if (SERVICE.DefaultModulesConfigurationService &&
+            typeof SERVICE.DefaultModulesConfigurationService.isAvailableModuleConfig === 'function') {
+            return SERVICE.DefaultModulesConfigurationService;
+        }
+        if (SERVICE.DefaultRouterService && typeof SERVICE.DefaultRouterService.getModulesPool === 'function') {
+            return SERVICE.DefaultRouterService.getModulesPool();
+        }
+        return undefined;
+    },
+
+    /**
+     * Returns true when an inactive target has a configured remote endpoint.
+     *
+     * @param {Object} options Invocation options.
+     * @returns {boolean} True when the connection alias is available.
+     */
+    isModuleEndpointAvailable: function (options) {
+        let pool = this.getModulesPool();
+        let connectionName = this.getModuleConnectionName(options);
+        return Boolean(pool && typeof pool.isAvailableModuleConfig === 'function' &&
+            pool.isAvailableModuleConfig(connectionName));
+    },
+
+    /** Resolves a live runtime owner from Runtime Registry when a provider is available. */
+    resolveRuntimeOwner: function (options) {
+        let resolver = SERVICE.DefaultRuntimeRegistryResolverService;
+        if (!resolver || typeof resolver.resolveOwner !== 'function') return Promise.resolve(undefined);
+        return Promise.resolve(resolver.resolveOwner(options));
+    },
+
+    /**
+     * Builds the standard internal authorization header for remote module calls.
+     *
+     * @param {Object} options Invocation options.
+     * @returns {Object} Authorization header or an empty map.
+     * @throws {CLASSES.NodicsError} When internal auth is required but missing.
+     */
+    buildInternalAuthorizationHeader: function (options) {
+        let header = options.header || {};
+        if (header.Authorization || header.authorization || header.authToken) {
+            return {};
+        }
+        let request = options.request || options.requestBody || {};
+        let tenant = options.tenant || request.tenant || CONFIG.get('defaultTenant') || 'default';
+        let token = options.authToken;
+        if (!token && typeof NODICS.getInternalAuthToken === 'function') {
+            token = NODICS.getInternalAuthToken(tenant);
+        }
+        if (token) {
+            return { Authorization: 'Bearer ' + token };
+        }
+        if (options.requireInternalAuth === false) {
+            return {};
+        }
+        throw new CLASSES.NodicsError('ERR_TNT_00002',
+            'Internal service token is unavailable for remote module: ' + options.moduleName);
+    },
+
+    /** Builds a request directly against a Runtime Registry owner endpoint. */
+    buildRuntimeRegistryRequest: function (options, owner, header) {
+        let apiName = options.apiName || '';
+        if (!apiName.startsWith('/')) apiName = '/' + apiName;
+        let endpoint = String(owner.endpoint || '').replace(/\/+$/, '');
+        let url = new URL(endpoint);
+        let path = url.pathname.replace(/\/+$/, '');
+        let moduleSegment = '/' + options.moduleName;
+        if (!path.endsWith(moduleSegment)) {
+            let contextRoot = options.contextRoot || CONFIG.get('contextRoot') || 'nodics';
+            url.pathname = path + '/' + String(contextRoot).replace(/^\/+|\/+$/g, '') + moduleSegment;
+        }
+        let base = url.toString().replace(/\/+$/, '');
+        return {
+            method: options.methodName || 'GET',
+            uri: base + '/' + (options.apiVersion || 'v0') + apiName,
+            headers: this.normalizeHeaders(_.merge({
+                'content-type': options.contentType || CONFIG.get('defaultContentType')
+            }, header || {})),
+            body: options.requestBody || {},
+            json: options.responseType || true,
+            timeoutMs: options.timeoutMs,
+            maxAttempts: options.maxAttempts,
+            maxResponseBytes: options.maxResponseBytes,
+            followRedirects: options.followRedirects,
+            idempotencyKey: options.idempotencyKey,
+            nodicsContext: {
+                layer: 'runtime-registry',
+                moduleName: options.moduleName,
+                connectionName: options.connectionName || options.moduleName,
+                methodName: options.methodName || 'GET',
+                apiName: options.apiName,
+                instanceId: owner.instanceId,
+                runtimeRole: owner.runtimeRole
+            }
+        };
+    },
+
+    /**
+     * Invokes a local service operation for an active target module.
+     *
+     * @param {Object} options Invocation options.
+     * @param {string} options.serviceName Local SERVICE name.
+     * @param {string} options.operationName Local operation name.
+     * @param {Object} [options.request] Local request object.
+     * @returns {Promise<*>} Local service response.
+     */
+    invokeLocalModule: function (options) {
+        let serviceName = options.serviceName;
+        let operationName = options.operationName || options.operation;
+        let service = serviceName && SERVICE[serviceName];
+        if (!service || typeof service[operationName] !== 'function') {
+            throw new CLASSES.NodicsError('ERR_TNT_00001',
+                'Local module service is not available: ' + options.moduleName + '.' + (serviceName || 'unknown') + '.' + (operationName || 'unknown'));
+        }
+        this.recordInvocationResolution(options, { source: 'local' });
+        return Promise.resolve(service[operationName](options.request || options.requestBody || {}));
+    },
+
+    /**
+     * Invokes an inactive target module through the configured module-service API.
+     *
+     * @param {Object} options Invocation options.
+     * @param {string} options.moduleName Target module.
+     * @param {string} options.apiName Remote API path.
+     * @returns {Promise<*>} Remote response.
+     */
+    invokeRemoteModule: function (options) {
+        if (!options.apiName) {
+            throw new CLASSES.NodicsError('ERR_TNT_00003',
+                'Remote module API path is required for: ' + options.moduleName);
+        }
+        let header = _.merge(
+            {},
+            this.buildInternalAuthorizationHeader(options),
+            options.header || {}
+        );
+        let requestOptions = _.merge({}, options, {
+            methodName: options.methodName || 'POST',
+            requestBody: options.requestBody !== undefined ? options.requestBody : (options.request || {}),
+            header: header
+        });
+        return this.resolveRuntimeOwner(options).then(owner => {
+            if (owner && owner.endpoint) {
+                this.recordInvocationResolution(options, Object.assign({ source: 'runtimeRegistry' }, owner));
+                return this.buildRuntimeRegistryRequest(requestOptions, owner, header);
+            }
+            if (!this.isModuleEndpointAvailable(options)) {
+                throw new CLASSES.NodicsError('ERR_TNT_00002',
+                    'Remote module endpoint is unavailable: ' + this.getModuleConnectionName(options));
+            }
+            this.recordInvocationResolution(options, { source: 'staticFallback' });
+            return this.buildRequest(requestOptions);
+        }).then(requestUrl => this.fetch(requestUrl)).then(response => {
+            if (typeof options.responseSelector === 'function') {
+                return options.responseSelector(response);
+            }
+            return response;
+        });
+    },
+
+    /**
+     * Invokes a module operation through the correct local or remote path.
+     *
+     * Active target modules use the local service implementation when the
+     * requested authority belongs to this runtime. Inactive modules, or active
+     * modules owned by a different target authority, are called remotely through
+     * `DefaultModuleService.buildRequest/fetch`.
+     *
+     * @param {Object} options Invocation options.
+     * @param {string} options.moduleName Target module.
+     * @returns {Promise<*>} Local or remote operation response.
+     */
+    invokeModule: function (options) {
+        try {
+            if (!options || !options.moduleName) {
+                throw new CLASSES.NodicsError('ERR_TNT_00003', 'Module invocation requires moduleName');
+            }
+            if (this.isLocalModuleActive(options.moduleName) && options.local !== false &&
+                this.isCurrentRuntimeAuthority(options.targetAuthority)) {
+                return this.invokeLocalModule(options);
+            }
+            return this.invokeRemoteModule(options);
+        } catch (error) {
+            return Promise.reject(error);
+        }
     },
 
     /** Classifies configured transient statuses and network failures. */

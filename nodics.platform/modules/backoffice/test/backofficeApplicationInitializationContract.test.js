@@ -36,12 +36,12 @@ global.CONFIG = { get: key => key === 'backofficeApplicationInitialization' ? { 
     code: 'frameworkdocs', type: 'DOCUMENTATION_BUNDLE', owner: 'nodics.docs', applicationCode: 'axis',
     siteCode: 'nodicsDocumentationSite', baselineCode: 'frameworkdocs', contentPackCode: 'nodicsDocumentation',
     target: { moduleName: 'cms', connectionName: 'wcmsStaged', connectionType: 'abstract' }
-} } } : undefined };
+	} } } : undefined };
 global.NODICS = { getInternalAuthToken: () => 'service-token' };
+let moduleInvocationHandler = async request => ({ data: { readiness: 'IMPORTED', releaseCode: 'nexusData:nexusCorporateSite',
+    releaseVersion: '0.0.0', releaseStatus: 'CURRENT' }, request });
 global.SERVICE = { DefaultModuleService: {
-    buildRequest: request => request,
-    fetch: async request => ({ data: { readiness: 'IMPORTED', releaseCode: 'nexusData:nexusCorporateSite',
-        releaseVersion: '0.0.0', releaseStatus: 'CURRENT' }, request })
+    invokeModule: request => moduleInvocationHandler(request)
 } };
 
 (async () => {
@@ -61,7 +61,7 @@ global.SERVICE = { DefaultModuleService: {
     assert.strictEqual(prepared.applicationInitialization.forceRefresh, true);
     assert.strictEqual(prepared.correlationId, 'corr-1');
     let initiateRequest;
-    SERVICE.DefaultModuleService.fetch = async request => {
+    moduleInvocationHandler = async request => {
         initiateRequest = request;
         return { data: { readiness: 'PUBLICATION_PENDING', releaseCode: 'nexusData:nexusCorporateSite',
             releaseVersion: '0.0.0', releaseStatus: 'CURRENT', publication: { state: 'PENDING_APPROVAL' } } };
@@ -69,16 +69,18 @@ global.SERVICE = { DefaultModuleService: {
     await service.initiate('nexus', { tenant: 'default', requestId: 'request-initiate',
         applicationInitialization: { forceRefresh: true, reason: 'Replay current development baseline' },
         authData: { principalId: 'admin' } });
+    assert.deepStrictEqual(initiateRequest.targetAuthority, { runtimeRole: 'WCMS_STAGED' });
     assert.strictEqual(initiateRequest.requestBody.forceRefresh, true);
     assert.strictEqual(routes.initiateApplicationInitialization.requestBody.content['application/json'].schema.properties.forceRefresh.type, 'boolean');
     let contentPackRequest;
-    SERVICE.DefaultModuleService.fetch = async request => {
+    moduleInvocationHandler = async request => {
         contentPackRequest = request;
-        return { data: { code: 'nodicsDocumentation', state: 'NOT_INSTALLED' } };
+        return request.responseSelector({ data: { code: 'nodicsDocumentation', state: 'NOT_INSTALLED' } });
     };
     assert.strictEqual((await service.contentPackStatus('frameworkdocs', { tenant: 'default', authData: { principalId: 'admin' } })).state,
         'NOT_INSTALLED');
     assert.strictEqual(contentPackRequest.connectionName, 'wcmsStaged');
+    assert.deepStrictEqual(contentPackRequest.targetAuthority, { runtimeRole: 'WCMS_STAGED' });
     assert.strictEqual(contentPackRequest.moduleName, 'system');
     assert.strictEqual(contentPackRequest.apiName, '/internal/content-packs/nodicsDocumentation');
     await service.installContentPack('frameworkdocs', { tenant: 'default', requestId: 'request-1', authData: { principalId: 'admin' } });
@@ -88,19 +90,19 @@ global.SERVICE = { DefaultModuleService: {
         error => error.code === 'ERR_BOF_00082');
     assert.strictEqual(routes.applicationContentPackStatus.permission, 'backoffice.application.initialization.view');
     assert.strictEqual(routes.installApplicationContentPack.permission, 'backoffice.application.initialization.initiate');
-    SERVICE.DefaultModuleService.fetch = async () => ({ data: { readiness: 'ROLLED_BACK', releaseCode: 'nexusData:nexusCorporateSite',
+    moduleInvocationHandler = async () => ({ data: { readiness: 'ROLLED_BACK', releaseCode: 'nexusData:nexusCorporateSite',
         releaseVersion: '0.0.0', releaseStatus: 'CURRENT' } });
     assert.deepStrictEqual((await service.status('nexus', { tenant: 'default', authData: { principalId: 'admin' } })).allowedActions,
         ['INITIALIZE'], 'A rolled-back release must advertise its governed resubmission path');
-    SERVICE.DefaultModuleService.fetch = async () => ({ data: { readiness: 'RETIRED', releaseCode: 'nexusData:nexusCorporateSite',
+    moduleInvocationHandler = async () => ({ data: { readiness: 'RETIRED', releaseCode: 'nexusData:nexusCorporateSite',
         releaseVersion: '0.0.0', releaseStatus: 'CURRENT' } });
     assert.deepStrictEqual((await service.status('nexus', { tenant: 'default', authData: { principalId: 'admin' } })).allowedActions,
         ['INITIALIZE'], 'A retired release must advertise its governed re-publication path');
-    SERVICE.DefaultModuleService.fetch = async () => ({ data: { readiness: 'READY', releaseCode: 'nexusData:nexusCorporateSite',
+    moduleInvocationHandler = async () => ({ data: { readiness: 'READY', releaseCode: 'nexusData:nexusCorporateSite',
         releaseVersion: '0.0.0', releaseStatus: 'UPDATE_AVAILABLE', publication: { state: 'ONLINE', previousOnlineVersion: 'v0' } } });
     assert.deepStrictEqual((await service.status('nexus', { tenant: 'default', authData: { principalId: 'admin' } })).allowedActions,
         ['INITIALIZE', 'ROLLBACK', 'RETIRE'], 'An Online baseline with changed source must expose governed refresh without hiding recovery actions');
-    SERVICE.DefaultModuleService.fetch = async () => {
+    moduleInvocationHandler = async () => {
         let error = new Error('CMS baseline release qualification failed');
         error.code = 'CMS_BASELINE_RELEASE_INVALID';
         error.responseCode = '409';
@@ -115,7 +117,7 @@ global.SERVICE = { DefaultModuleService: {
         assert.match(error.message, /nexus baseline nexus/);
         return true;
     });
-    SERVICE.DefaultModuleService.fetch = async () => {
+    moduleInvocationHandler = async () => {
         throw new Error('Transport target returned an invalid release');
     };
     await assert.rejects(service.initiate('nexus', { tenant: 'default', requestId: 'request-3',

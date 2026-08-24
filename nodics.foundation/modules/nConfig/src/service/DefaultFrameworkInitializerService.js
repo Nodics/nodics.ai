@@ -332,6 +332,69 @@ module.exports = {
     },
 
     /**
+     * Adds one module to the active list when metadata marks it loadable in the current runtime.
+     *
+     * Explicit server activation accepts every runtime-loadable package kind so
+     * customer data/content packs can be selected without becoming group
+     * children. Plain group activation remains limited to standard always-
+     * loadable kinds or publish-enabled modules.
+     *
+     * @param {Object} prop Effective startup properties controlling optional runtime kinds.
+     * @param {string} moduleName Module name to add.
+     * @param {string[]} modules Mutable active module list.
+     * @param {Object} [options] Activation options.
+     * @param {boolean} [options.explicit=false] True when the module was named directly by runtime configuration.
+     * @returns {boolean} True when the module was added.
+     */
+    addRuntimeActiveModule: function (prop, moduleName, modules, options) {
+        options = options || {};
+        moduleName = this.normalizeModuleIdentity(moduleName);
+        if (!moduleName || modules.includes(moduleName)) return false;
+        let moduleObject = NODICS.getRawModule(moduleName);
+        if (!moduleObject) this.failConfiguration('active module references unknown module: ' + moduleName);
+        if (moduleName === (prop.dynamoModuleName || 'dynamo') && !prop.dynamoEnabled) return false;
+        let metadata = this.getModuleNodicsMetadata(moduleObject);
+        if ((options.explicit && metadata.runtimeModule !== false && metadata.loadableByNodicsModuleLoader !== false) ||
+            (utils.isPublishModule(moduleObject.metaData) && prop.publishEnabled) ||
+            utils.isAlwaysLoadableModule(moduleObject.metaData)) {
+            modules.push(moduleName);
+            return true;
+        }
+        return false;
+    },
+
+    /**
+     * Adds a group package without recursively activating every child capability.
+     *
+     * Selector syntax such as `group:selector` remains an explicit local module
+     * selection mechanism. Plain group activation only
+     * loads the group package itself so it can contribute configuration/defaults.
+     *
+     * @param {Object} prop Effective startup properties.
+     * @param {string} groupName Group module name, optionally followed by a selector.
+     * @param {string[]} modules Mutable active module list.
+     * @returns {void}
+     */
+    prepareModuleLevelActiveGroup: function (prop, groupName, modules) {
+        if (!groupName) return;
+        let moduleName = groupName;
+        let selector = null;
+        if (moduleName.indexOf(':') > 0) {
+            selector = moduleName.substring(moduleName.indexOf(':') + 1);
+            moduleName = moduleName.substring(0, moduleName.indexOf(':'));
+        }
+        moduleName = this.normalizeModuleIdentity(moduleName);
+        let moduleObject = NODICS.getRawModule(moduleName);
+        if (!moduleObject) this.failConfiguration('activeModules.groups references unknown module: ' + moduleName);
+        this.addRuntimeActiveModule(prop, moduleName, modules);
+        if (selector && moduleObject.metaData[selector] && moduleObject.metaData[selector].length > 0) {
+            moduleObject.metaData[selector].forEach(childName => {
+                this.addRuntimeActiveModule(prop, childName, modules, { explicit: true });
+            });
+        }
+    },
+
+    /**
      * Resolves active modules from nodics.foundation, configured groups/modules, selected node, parents, and dependencies.
      *
      * @returns {string[]} Active module names that should participate in startup.
@@ -344,13 +407,12 @@ module.exports = {
             let prop = _.merge({}, props, serverProperties);
             this.LOG = logger.createLogger('DefaultModuleInitializerService', prop.log);
             let moduleGroups = this.getConfiguredActiveModuleGroups(serverProperties);
-            moduleGroups.forEach((groupName) => {
-                utils.prepareActiveModuleList(prop, groupName, modules);
+            moduleGroups.forEach(groupName => this.prepareModuleLevelActiveGroup(prop, groupName, modules));
+            [NODICS.getServerRootName(), NODICS.getServerName(), NODICS.getNodeName()].filter(Boolean).forEach(moduleName => {
+                this.addRuntimeActiveModule(prop, moduleName, modules, { explicit: true });
             });
             this.getConfiguredActiveModuleNames(serverProperties).forEach(moduleName => {
-                if (!modules.includes(moduleName)) {
-                    modules.push(moduleName);
-                }
+                this.addRuntimeActiveModule(prop, moduleName, modules, { explicit: true });
             });
             modules.forEach(moduleName => {
                 this.resolveModuleHierarchy(moduleName);

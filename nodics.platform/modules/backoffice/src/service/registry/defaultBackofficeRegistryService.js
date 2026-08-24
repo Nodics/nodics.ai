@@ -250,6 +250,9 @@ module.exports = {
       capabilities: Array.isArray(registration.capabilities)
         ? registration.capabilities.map(String)
         : [],
+      authorityClaims: Array.isArray(registration.authorityClaims)
+        ? registration.authorityClaims.map((claim) => this.normalizeAuthorityClaim(claim))
+        : [],
       clientCallable: registration.clientCallable === true,
       backoffice: registration.backoffice
         ? JSON.parse(JSON.stringify(registration.backoffice))
@@ -267,6 +270,7 @@ module.exports = {
       lastSeenAt: new Date(now).toISOString(),
       expiresAt: now + leaseTtlMs,
     };
+    await this.assertAuthorityClaimsAvailable(observed, key);
     await store.set(key, observed, leaseTtlMs);
     if (SERVICE.DefaultBackofficeDiscoveryService)
       SERVICE.DefaultBackofficeDiscoveryService.scheduleDiscovery(
@@ -277,6 +281,7 @@ module.exports = {
       SERVICE.DefaultBackofficeAvailabilityService.scheduleObservation(
         observed,
       );
+    await this.refreshRuntimeRegistrySnapshot();
     existing ? this._metrics.renewals++ : this._metrics.registrations++;
     if (request._batchOutcomes)
       request._batchOutcomes.push(existing ? "renewed" : "registered");
@@ -358,6 +363,7 @@ module.exports = {
       let activeEntries = await this.getStore().values();
       await SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases(
         activeEntries.map(entry => entry.value), [batch.project], { authData: authData });
+      await this.refreshRuntimeRegistrySnapshot(activeEntries.map(entry => entry.value));
       return this.audit({
         eventType: "backoffice.registry.registration",
         outcome: outcomes.every((outcome) => outcome === "renewed")
@@ -376,6 +382,64 @@ module.exports = {
         },
       }));
     });
+  },
+
+  /** Normalizes one schema/service authority claim and derives its stable authority key. */
+  normalizeAuthorityClaim: function (claim) {
+    let normalized = {
+      kind: String(claim.kind),
+      moduleName: String(claim.moduleName),
+      claimName: String(claim.claimName),
+      authorityContext: String(claim.authorityContext)
+    };
+    normalized.authorityKey = normalized.kind + ":" + normalized.moduleName + ":" +
+      normalized.claimName + "@" + normalized.authorityContext;
+    return normalized;
+  },
+
+  /** Returns the logical runtime authority key for duplicate-owner validation. */
+  getLogicalRuntimeAuthorityKey: function (instance) {
+    let role = instance.runtimeRole || {};
+    return [
+      instance.projectCode || "",
+      instance.environment || "",
+      instance.server || "",
+      typeof role === "string" ? role : [role.code || "", role.publication || ""].join("/")
+    ].join(":");
+  },
+
+  /** Rejects duplicate authority claims from unrelated logical runtimes. */
+  assertAuthorityClaimsAvailable: async function (candidate, candidateStoreKey) {
+    let claims = candidate.authorityClaims || [];
+    if (claims.length === 0) return true;
+    let candidateAuthority = this.getLogicalRuntimeAuthorityKey(candidate);
+    let entries = await this.getStore().values();
+    for (let entry of entries) {
+      if (entry.key === candidateStoreKey) continue;
+      let existing = entry.value;
+      if (existing.expiresAt && existing.expiresAt <= Date.now()) continue;
+      let existingAuthority = this.getLogicalRuntimeAuthorityKey(existing);
+      if (existingAuthority === candidateAuthority) continue;
+      let existingClaims = existing.authorityClaims || [];
+      let duplicate = claims.find((claim) =>
+        existingClaims.some((existingClaim) => existingClaim.authorityKey === claim.authorityKey));
+      if (duplicate) {
+        this._metrics.rejected++;
+        await this.audit({
+          eventType: "backoffice.registry.registration",
+          outcome: "rejected",
+          reasonCode: "DUPLICATE_AUTHORITY_CLAIM",
+          moduleName: candidate.moduleName,
+          instanceId: candidate.instanceId,
+          authorityKey: duplicate.authorityKey,
+        });
+        throw new CLASSES.NodicsError(
+          "ERR_BOF_00000",
+          "Duplicate runtime authority claim: " + duplicate.authorityKey,
+        );
+      }
+    }
+    return true;
   },
 
   /** Validates that a service token is bound to the runtime instance and every declared module. */
@@ -450,6 +514,7 @@ module.exports = {
       let remaining = await this.getStore().values();
       await SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases(
         remaining.map(entry => entry.value), Array.from(affectedProjects), { authData: request.authData });
+      await this.refreshRuntimeRegistrySnapshot(remaining.map(entry => entry.value));
     }
     await this.audit({
       eventType: "backoffice.registry.deregistration",
@@ -529,6 +594,75 @@ module.exports = {
           };
     });
     return availability;
+  },
+
+  /** Resolves one callable runtime owner from active observed leases for module-service routing. */
+  resolveRuntimeOwner: async function (options) {
+    await this.expireStale();
+    let leases = (await this.getStore().values()).map((entry) => entry.value);
+    let resolver = SERVICE.DefaultRuntimeRegistryResolverService;
+    if (resolver && typeof resolver.resolveFromOwners === "function") {
+      return resolver.resolveFromOwners(options, leases);
+    }
+    return leases
+      .filter((item) => item.moduleName === options.moduleName)
+      .filter((item) => item.clientCallable === true && item.endpoint)
+      .filter((item) => item.state === "UP")
+      .sort((left, right) =>
+        String(right.lastSeenAt || "").localeCompare(String(left.lastSeenAt || "")),
+      )[0];
+  },
+
+  /** Builds a service-to-service Runtime Registry owner projection. */
+  buildRuntimeRegistrySnapshot: async function () {
+    await this.expireStale();
+    let leases = (await this.getStore().values()).map((entry) => entry.value);
+    let owners = leases
+      .filter((instance) => instance.clientCallable === true && instance.endpoint)
+      .filter((instance) => !instance.expiresAt || instance.expiresAt > Date.now())
+      .sort((left, right) =>
+        String(left.moduleName).localeCompare(String(right.moduleName)) ||
+        String(left.instanceId || "").localeCompare(String(right.instanceId || "")))
+      .map((instance) => ({
+        moduleName: instance.moduleName,
+        connectionName: instance.server || instance.moduleName,
+        instanceId: instance.instanceId,
+        environment: instance.environment,
+        server: instance.server,
+        node: instance.node,
+        runtimeRole: instance.runtimeRole,
+        endpoint: instance.endpoint,
+        state: instance.state,
+        lastSeenAt: instance.lastSeenAt,
+        expiresAt: instance.expiresAt,
+        clientCallable: instance.clientCallable,
+        authorityClaims: (instance.authorityClaims || []).map((claim) => ({
+          kind: claim.kind,
+          moduleName: claim.moduleName,
+          claimName: claim.claimName,
+          authorityContext: claim.authorityContext,
+          authorityKey: claim.authorityKey,
+        })),
+      }));
+    return { generatedAt: new Date().toISOString(), ownerCount: owners.length, owners: owners };
+  },
+
+  /** Refreshes the in-process Runtime Registry resolver snapshot after lease changes. */
+  refreshRuntimeRegistrySnapshot: async function (activeLeases) {
+    let resolver = SERVICE.DefaultRuntimeRegistryResolverService;
+    if (!resolver || typeof resolver.refreshSnapshot !== "function") return false;
+    let leases = activeLeases || (await this.getStore().values()).map((entry) => entry.value);
+    resolver.refreshSnapshot(leases
+      .filter((instance) => instance.clientCallable === true && instance.endpoint)
+      .filter((instance) => !instance.expiresAt || instance.expiresAt > Date.now()));
+    return true;
+  },
+
+  /** Returns the current Runtime Registry snapshot for already-running runtimes. */
+  runtimeRegistrySnapshot: async function (request) {
+    SERVICE.DefaultBackofficeAdministrativeSecurityService.validate(request);
+    let snapshot = await this.buildRuntimeRegistrySnapshot();
+    return { code: "SUC_BOF_00002", data: snapshot };
   },
 
   /** Resolves a non-negative client contract version from the request or configured minimum. */
@@ -1581,10 +1715,15 @@ module.exports = {
     await this.expireStale();
     let activeModuleLeases = await this.getStore().size();
     let repository = SERVICE.DefaultBackofficeContractRepositoryService;
+    let runtimeRegistry = await this.buildRuntimeRegistrySnapshot();
     let data = {
       activeModuleLeases: activeModuleLeases,
       activeInstances: activeModuleLeases,
       metrics: Object.assign({}, this._metrics),
+      runtimeRegistry: {
+        ownerCount: runtimeRegistry.ownerCount,
+        generatedAt: runtimeRegistry.generatedAt,
+      },
       store: this.getStore().diagnostics(),
       discovery: SERVICE.DefaultBackofficeDiscoveryService
         ? SERVICE.DefaultBackofficeDiscoveryService.getDiagnostics()
@@ -1669,6 +1808,7 @@ module.exports = {
       await SERVICE.DefaultFunctionalModuleCatalogueService.reconcileActiveRuntimeLeases(
         remaining.map(entry => entry.value), Array.from(affectedProjects), {});
     }
+    if (expired > 0) await this.refreshRuntimeRegistrySnapshot(remaining.map(entry => entry.value));
     let availabilityRemoved = 0;
     let discoveryRemoved = 0;
     if (

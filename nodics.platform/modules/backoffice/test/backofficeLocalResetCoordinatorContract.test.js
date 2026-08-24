@@ -20,12 +20,11 @@ class NodicsError extends Error { constructor(code, message) { super(message || 
     global.CONFIG = { get: key => key === 'backofficeLocalReset' ? policy : undefined };
     global.NODICS = { getSelectedEnvironmentName: () => 'kickoffLocal', getInternalAuthToken: () => 'service-token' };
     global.SERVICE = { DefaultModuleService: {
-        buildRequest: descriptor => descriptor,
-        fetch: async descriptor => {
+        invokeModule: async descriptor => {
             assert.strictEqual(descriptor.requestBody.resetScope, 'LOCAL_ACCEPTANCE');
             assert.strictEqual(descriptor.requestBody.reason, 'fresh acceptance verification');
             assert.strictEqual(descriptor.header.Authorization, 'Bearer service-token');
-            return { result: { acknowledged: true } };
+            return descriptor.responseSelector({ result: { acknowledged: true } });
         }
     } };
     assert.deepStrictEqual(await service.status({}), { enabled: false, destructive: true, apiOnly: true, environmentAllowed: true,
@@ -33,7 +32,7 @@ class NodicsError extends Error { constructor(code, message) { super(message || 
     await assert.rejects(service.execute({ localReset: {} }), error => error.code === 'ERR_BOF_00092');
     policy.enabled = true;
     assert.strictEqual((await service.status({})).reason, 'RESET_PROVIDERS_MISSING');
-    policy.providers = [{ code: 'owner', moduleName: 'system', connectionName: 'ownerRuntime' }];
+    policy.providers = [{ code: 'owner', moduleName: 'system', connectionName: 'ownerRuntime', targetAuthority: { runtimeRole: 'OWNER' } }];
     await assert.rejects(service.execute({ authData: { tokenType: 'service', principalId: 'internal' },
         localReset: { confirmation: policy.confirmation, reason: 'fresh acceptance verification' } }),
     error => error.code === 'ERR_BOF_00093');

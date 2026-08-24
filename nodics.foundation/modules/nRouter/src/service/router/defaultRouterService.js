@@ -41,6 +41,16 @@ module.exports = {
     lifecycleContributorRegistered: false,
 
     /**
+     * Returns true when a module may expose local runtime routers.
+     *
+     * @param {string} moduleName Module name to check.
+     * @returns {boolean} True when the module is active locally.
+     */
+    isLocalActiveModule: function (moduleName) {
+        return !NODICS.isModuleActive || NODICS.isModuleActive(moduleName);
+    },
+
+    /**
      * Prepared module/server/node configuration container used for URL resolution and server startup.
      *
      * @type {Object|string}
@@ -208,6 +218,9 @@ module.exports = {
      */
     activateRouters: function (moduleRouter, moduleObject, moduleName, routers) {
         let _self = this;
+        if (!_self.isLocalActiveModule(moduleName)) {
+            return;
+        }
         let urlPrefix = moduleObject.metaData.prefix || moduleName;
         if (routers.default) {
             _.each(moduleObject.rawSchema, (schemaObject, schemaName) => {
@@ -226,6 +239,9 @@ module.exports = {
             });
             let modules = NODICS.getModules();
             _.each(modules, (cModuleObject, cModuleName) => {
+                if (!_self.isLocalActiveModule(cModuleName)) {
+                    return;
+                }
                 _.each(cModuleObject.rawSchema, (cSchemaObject, cSchemaName) => {
                     if (cSchemaObject.service && cSchemaObject.service.enabled &&
                         cSchemaObject.router && cSchemaObject.router.enabled &&

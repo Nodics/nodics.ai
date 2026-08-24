@@ -242,3 +242,54 @@ NODICS.getEnvironmentName = originalGetEnvironmentName;
 NODICS.getServerName = originalGetServerName;
 NODICS.getServerRootName = originalGetServerRootName;
 NODICS.getRawModule = originalGetRawModule;
+
+function activationFixture(name, kind, parent, index, extraMetaData) {
+    let fixture = moduleFixture(name, kind, parent, index);
+    fixture.path = path.join(repoRoot, 'activation-fixture', parent || '', name);
+    fixture.metaData.nodics.runtime = { router: false, publish: false, web: false };
+    Object.assign(fixture.metaData, extraMetaData || {});
+    return fixture;
+}
+
+const activationModules = [
+    activationFixture('activationProject', 'application', null, '100.0'),
+    activationFixture('activationLocal', 'environment', 'activationProject', '100.1'),
+    activationFixture('activationServer', 'server', 'activationLocal', '100.1.1'),
+    activationFixture('platformGroup', 'group', null, '1.0'),
+    activationFixture('token', 'capability', 'platformGroup', '1.1'),
+    activationFixture('profile', 'capability', 'platformGroup', '1.2'),
+    activationFixture('search', 'capability', 'platformGroup', '1.3'),
+    activationFixture('localFeature', 'capability', 'platformGroup', '1.4', { requiredModules: ['token'] }),
+    activationFixture('partnerContentPack', 'content-pack', 'platformGroup', '1.5')
+];
+activationModules.find(moduleObject => moduleObject.name === 'activationServer').metaData.nodics.extends = ['platformGroup'];
+activationModules.find(moduleObject => moduleObject.name === 'platformGroup').modules = ['token', 'profile', 'search', 'localFeature'];
+
+const activationByName = Object.fromEntries(activationModules.map(moduleObject => [moduleObject.name, moduleObject]));
+const originalLoadServerProperties = initService.loadServerProperties;
+const originalNodicsForActivation = global.NODICS;
+global.NODICS = {
+    getRawModule: moduleName => activationByName[moduleName],
+    getServerName: () => 'activationServer',
+    getServerRootName: () => 'activationLocal',
+    getNodeName: () => null,
+    getNodePath: () => null,
+    getEnvironmentName: () => 'activationProject',
+    getEnvironmentPath: () => activationByName.activationLocal.path,
+    addLogger: () => {}
+};
+
+initService.loadServerProperties = () => ({
+    activeModules: { groups: [], modules: ['activationServer', 'localFeature', 'partnerContentPack'] }
+});
+let moduleLevelModules = initService.getActiveModules();
+assert(moduleLevelModules.includes('activationServer'), 'module-level activation must keep the selected server active');
+assert(moduleLevelModules.includes('activationLocal'), 'module-level activation must keep the selected environment/server root active');
+assert(moduleLevelModules.includes('localFeature'), 'module-level activation must keep explicit local modules active');
+assert(moduleLevelModules.includes('partnerContentPack'), 'module-level activation must keep explicit runtime-loadable content packs active');
+assert(moduleLevelModules.includes('token'), 'module-level activation must include true local requiredModules');
+assert(moduleLevelModules.includes('platformGroup'), 'module-level activation must keep parent group packages available');
+assert(!moduleLevelModules.includes('profile') && !moduleLevelModules.includes('search'),
+    'module-level activation must not activate unrelated group child capabilities');
+initService.loadServerProperties = originalLoadServerProperties;
+global.NODICS = originalNodicsForActivation;

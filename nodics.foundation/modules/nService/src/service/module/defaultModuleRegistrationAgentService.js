@@ -106,6 +106,43 @@ module.exports = {
         return [NODICS.getSelectedEnvironmentName(), NODICS.getServerName(), NODICS.getNodeName() || 'default', process.pid].join(':');
     },
 
+    /** Returns a bounded authority context for a schema/service claim. */
+    getAuthorityContext: function (moduleName, schemaName, schema) {
+        let configured = CONFIG.get('runtimeAuthorityContexts') || {};
+        let schemas = configured.schemas || {};
+        let modules = configured.modules || {};
+        return String(schema.authorityContext || schema.runtimeAuthority ||
+            schemas[moduleName + '.' + schemaName] || modules[moduleName] || (moduleName + '.' + schemaName));
+    },
+
+    /** Builds registry authority claims from the local module's materialized schemas. */
+    buildAuthorityClaims: function (moduleName, rawModule) {
+        let rawSchema = rawModule.rawSchema || {};
+        let claims = [];
+        Object.keys(rawSchema).sort().forEach(schemaName => {
+            let schema = rawSchema[schemaName];
+            if (!schema || typeof schema !== 'object') return;
+            let authorityContext = this.getAuthorityContext(moduleName, schemaName, schema);
+            if (schema.model === true) {
+                claims.push({
+                    kind: 'schema',
+                    moduleName: moduleName,
+                    claimName: schemaName,
+                    authorityContext: authorityContext
+                });
+            }
+            if (schema.service && schema.service.enabled === true) {
+                claims.push({
+                    kind: 'service',
+                    moduleName: moduleName,
+                    claimName: schemaName,
+                    authorityContext: authorityContext
+                });
+            }
+        });
+        return claims;
+    },
+
     /** Builds a bounded module registration payload from authoritative runtime metadata. */
     buildRegistration: function (moduleName) {
         let rawModule = NODICS.getRawModule(moduleName) || {};
@@ -129,7 +166,8 @@ module.exports = {
                 web: runtime.web === true
             },
             healthPath: config.healthPath,
-            leaseTtlMs: config.leaseTtlMs
+            leaseTtlMs: config.leaseTtlMs,
+            authorityClaims: this.buildAuthorityClaims(moduleName, rawModule)
         };
         if (nodicsMetadata.functionalModule) {
             registration.functionalModule = JSON.parse(JSON.stringify(nodicsMetadata.functionalModule));

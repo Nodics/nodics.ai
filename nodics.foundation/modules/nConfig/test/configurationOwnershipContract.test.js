@@ -145,7 +145,7 @@ const framework = merge({},
     load('nodics.foundation/modules/nRouter/config/properties.js'),
     load('nodics.foundation/modules/nSearch/search/config/properties.js'),
     load('nodics.foundation/modules/nEms/emsClient/config/properties.js'),
-    load('nodics.cron/modules/cronjob/config/properties.js'));
+    load('nodics.process/modules/cronjob/config/properties.js'));
 const local = require(path.join(fixtureRoot, 'customerProject/envs/local/config/properties.js'));
 
 const backoffice = merge({}, framework, local,
