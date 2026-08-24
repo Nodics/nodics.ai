@@ -261,25 +261,26 @@ questions, preflight checks, and approval-gated execution:
 
 ```bash
 npx github:Nodics/nodics.installer --action=questionnaire
-npx github:Nodics/nodics.installer --action=preflight --workspace=/Users/me/Projects/nodicsRoot
-npx github:Nodics/nodics.installer --action=execute --yes --execution-level=download
+npx github:Nodics/nodics.installer --application-name="Acme Apparel" --action=preflight --workspace=/Users/me/Projects/nodicsRoot
+npx github:Nodics/nodics.installer --application-name="Acme Apparel" --action=execute --yes --execution-level=download
 ```
 
 Execution levels are `download`, `install`, `preflight`, `start`, `initialize`,
 and `acceptance`. Execution never runs unless `--yes` is present. Setup evidence
 is written under `<workspace>/.nodics-installer/setup-evidence.json`.
 
-This installer is separate from `nodics.ai` and `nodics.kickoff`. That boundary
-is important: a command inside Kickoff can only run after Kickoff and the
-framework have already been downloaded. The installer must work one step
-earlier, when the machine may have no Nodics source code at all.
+This installer is separate from `nodics.ai` and the named customer application
+project. That boundary is important: a command inside a customer project can
+only run after the project and framework have already been downloaded. The
+installer must work one step earlier, when the machine may have no Nodics source
+code at all.
 
 The installer should support two beginner journeys:
 
 | Journey | Beginner intent | Installer result |
 | --- | --- | --- |
-| Run Nodics locally | "I want to try Nodics with the reference project." | Downloads the framework, Kickoff, selected frontend apps, selected accelerator data, then prepares and starts the local reference environment. |
-| Create my own project | "I want my own project instead of Kickoff." | Uses the Application Builder flow to create a customer project, then prepares that project against the framework and selected apps. |
+| Run Nodics locally | "I want to run my application locally." | Downloads the framework, Axis, a named application project, optional named application web app, selected accelerator data, then prepares and starts the local environment. |
+| Create my own project | "I want deeper project scaffolding and module choices." | Uses the Application Builder flow to expand the named application into a governed customer project. |
 
 The current implementation focuses on **Run Nodics locally**. That path gives new
 evaluators and developers a working product before they make project-design
@@ -296,35 +297,40 @@ without knowing module names such as `nodics.foundation`, `nodics.platform`, or
 The minimum question set is:
 
 1. What do you want to do?
-   - Try Nodics locally with the reference Kickoff project.
+   - Run Nodics locally with my named application.
    - Create my own Nodics customer project.
-2. Where should Nodics be installed?
+2. What is the application name?
+   - Example: Acme Apparel.
+   - This becomes local folders such as `acme-apparel` and `acme-apparel.web`.
+3. Where should Nodics be installed?
    - Default workspace folder.
    - Custom absolute workspace folder.
-3. How should repositories be downloaded?
+4. How should repositories be downloaded?
    - HTTPS clone.
    - SSH clone.
    - Use existing local repositories.
-4. Which local mode do you want?
+5. Which local mode do you want?
    - Direct Node.js local processes for the fastest developer loop.
    - Docker Local for a more isolated production-simulation environment.
-5. Which applications do you want to run?
+6. Which standard application should be included?
    - Axis BackOffice.
-   - Nexus corporate site.
-   - Agora commerce storefront.
-6. Which starter business experience do you want?
+   - No standard app.
+7. Should the customer web app be created?
+   - Yes, create `<application>.web`.
+   - No, backend and Axis only.
+8. Which starter business experience do you want?
    - Common reference setup.
    - Apparel.
    - Electronics.
    - Telco.
    - Combined multi-domain reference.
-7. Do you want sample data?
+9. Do you want sample data?
    - Yes, install guided initialization and sample/reference data.
    - No, prepare a clean local runtime only.
-8. Should existing local data be preserved?
+10. Should existing local data be preserved?
    - Preserve local data.
    - Prepare for a fresh local run.
-9. What should the installer do now?
+11. What should the installer do now?
    - Print the setup plan only.
    - Download and install dependencies.
    - Download, install dependencies, run preflight, and start.
@@ -340,7 +346,7 @@ meet them on the first screen.
 The installer must turn beginner answers into an explicit setup plan before it
 changes the machine. The default first action should be a dry run.
 
-The plan for the reference Kickoff journey is:
+The plan for the named application journey is:
 
 1. Inspect the machine.
    - Check operating system.
@@ -357,20 +363,22 @@ The plan for the reference Kickoff journey is:
 3. Resolve the release/catalogue.
    - Read a versioned Nodics installer catalogue.
    - Select compatible repository URLs, branches, tags, or release manifests.
-   - Bind the selected framework, Kickoff, frontend apps, and accelerators into
-     one setup plan.
+   - Bind the selected framework, Axis, named application project, named
+     application web app, and accelerators into one setup plan.
 4. Download or reuse repositories.
    - Fetch `nodics.ai` for framework modules and tooling.
-   - Fetch `nodics.kickoff` for the reference customer project.
-   - Fetch `nodics.exp` when frontend apps are selected.
-   - Fetch selected frontend apps from the `nodics.exp/apps.json` catalogue:
-     Axis, Nexus, Agora, and future registered apps.
+   - Fetch or create the named application project, for example `acme-apparel`.
+   - Fetch `nodics.axis` when Axis BackOffice is selected.
+   - Fetch or create the named application web app, for example
+     `acme-apparel.web`.
    - Preserve user changes in existing repositories. Never reset or overwrite a
      dirty checkout automatically.
-5. Configure Kickoff.
+5. Configure the application project.
    - Copy `.env.example` to `.env` only when `.env` does not already exist.
    - Write or confirm `NODICS_FRAMEWORK_ROOT`.
-   - Run `npm run configure:framework` from `nodics.kickoff`.
+   - Write or confirm `NODICS_APPLICATION_NAME`,
+     `NODICS_APPLICATION_CODE`, `NODICS_AXIS_ROOT`, and `NODICS_WEB_ROOT`.
+   - Run `npm run configure:framework` from the named application project.
    - Explain that this creates machine-local links under `.nodics/framework/`.
 6. Install dependencies.
    - Use deterministic install commands where lockfiles require them.
@@ -384,10 +392,10 @@ The plan for the reference Kickoff journey is:
    - Explain busy ports in plain language and tell the user what owns them when
      that can be determined safely.
 8. Start the selected topology.
-   - Start framework backend runtimes through Kickoff project commands.
+   - Start framework backend runtimes through the named application project
+     commands.
    - Start Axis when BackOffice is selected.
-   - Start Nexus when the corporate site is selected.
-   - Start Agora when storefront or accelerator journeys are selected.
+   - Start the named application web app when selected.
    - Keep generated PID and log ownership under the project-generated topology
      folder, not in random global locations.
 9. Guide first initialization.
@@ -419,8 +427,7 @@ summary like:
 Nodics is running locally.
 
 Axis BackOffice:      http://localhost:3100
-Nexus corporate site: http://localhost:3200
-Agora storefront:    http://localhost:3300
+Application web app:  http://localhost:3300
 Platform API:        http://localhost:4300
 WCMS Staged API:     http://localhost:4312
 WCMS Online API:     http://localhost:4314
@@ -448,6 +455,7 @@ The report should include:
 
 - installer version;
 - selected journey;
+- application name and application code;
 - selected local mode;
 - workspace path;
 - repositories, branches, tags, and commit SHAs;
@@ -483,11 +491,12 @@ the source of truth once repositories exist locally.
 | --- | --- |
 | `nodics.installer` | First-machine bootstrap, beginner questions, repository download/reuse, setup plan, setup evidence, and orchestration. |
 | `nodics.ai` / `nTooling` | Framework-aware validation, project framework linking, topology, Docker Local, Application Builder planning, qualification, and upgrade-safe contracts. |
-| `nodics.kickoff` | Reference customer-project runtime composition, local environments, data packs, sample documentation, and acceptance aliases. |
-| `nodics.exp` | Frontend app catalogue, app fetch/status/verify tooling, and discovery of Axis, Nexus, Agora, and future apps. |
+| Named application project | Customer runtime composition, local environments, data packs, sample documentation, and acceptance aliases. |
+| `nodics.axis` | Standard BackOffice frontend. |
+| Named application web project | Customer-facing web experience, derived from the application name. |
 
 When the installer finishes, a developer can continue with normal project
-commands from `nodics.kickoff`, for example:
+commands from the named application project, for example:
 
 ```bash
 npm run topology:status
@@ -496,7 +505,7 @@ npm run topology:start:all
 npm run acceptance:guided-initialization
 ```
 
-For users who already cloned the repositories manually, a later Kickoff shortcut
+For users who already created the repositories manually, a later project shortcut
 such as `npm run setup:local` may delegate to the same setup-plan logic. That
 shortcut is useful, but it cannot replace the standalone installer because it
 requires local source code to exist first.
@@ -649,11 +658,11 @@ For a new customer local environment, prefer starting with the standalone
 installer so the machine is checked before repositories are changed:
 
 ```bash
-npx github:Nodics/nodics.installer --action=preflight --workspace=/Users/me/Projects/nodicsRoot
-npx github:Nodics/nodics.installer --action=execute --yes --execution-level=download --workspace=/Users/me/Projects/nodicsRoot
-npx github:Nodics/nodics.installer --action=execute --yes --execution-level=install --workspace=/Users/me/Projects/nodicsRoot
-npx github:Nodics/nodics.installer --action=execute --yes --execution-level=preflight --workspace=/Users/me/Projects/nodicsRoot
-npx github:Nodics/nodics.installer --action=execute --yes --execution-level=start --workspace=/Users/me/Projects/nodicsRoot
+npx github:Nodics/nodics.installer --application-name="Acme Apparel" --action=preflight --workspace=/Users/me/Projects/nodicsRoot
+npx github:Nodics/nodics.installer --application-name="Acme Apparel" --action=execute --yes --execution-level=download --workspace=/Users/me/Projects/nodicsRoot
+npx github:Nodics/nodics.installer --application-name="Acme Apparel" --action=execute --yes --execution-level=install --workspace=/Users/me/Projects/nodicsRoot
+npx github:Nodics/nodics.installer --application-name="Acme Apparel" --action=execute --yes --execution-level=preflight --workspace=/Users/me/Projects/nodicsRoot
+npx github:Nodics/nodics.installer --application-name="Acme Apparel" --action=execute --yes --execution-level=start --workspace=/Users/me/Projects/nodicsRoot
 ```
 
 Some integrations are optional in local development. If a provider is disabled
