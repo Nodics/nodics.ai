@@ -33,6 +33,12 @@ installer from source after confirming the target workspace. For architecture,
 module, schema, data, and runtime work, continue from the AGENTS/README chain
 inside this repository.
 
+Current beginner bootstrap command:
+
+```bash
+npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.startio --company-site-name=acme.web --commerce-site-name=acme.apparel --workspace=/Users/me/Projects/NodicsCustomer
+```
+
 ## Required expert posture
 
 AI tools and human technical leaders working on Nodics must not act as generic

@@ -282,10 +282,10 @@ preflight, and approval-gated execution modes:
 
 ```bash
 npx github:Nodics/nodics.installer --action=questionnaire
-npx github:Nodics/nodics.installer --action=doctor --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --workspace=/Users/me/Projects/NodicsCustomer
+npx github:Nodics/nodics.installer --action=doctor --application-name=Acme --project-name=acme.startio --company-site-name=acme.web --commerce-site-name=acme.apparel --workspace=/Users/me/Projects/NodicsCustomer
 npx github:Nodics/nodics.installer --action=troubleshooting
-npx github:Nodics/nodics.installer --action=plan --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --workspace=/Users/me/Projects/NodicsCustomer
-npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --action=execute --yes --execution-level=download --workspace=/Users/me/Projects/NodicsCustomer
+npx github:Nodics/nodics.installer --action=plan --application-name=Acme --project-name=acme.startio --company-site-name=acme.web --commerce-site-name=acme.apparel --workspace=/Users/me/Projects/NodicsCustomer
+npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.startio --company-site-name=acme.web --commerce-site-name=acme.apparel --action=execute --yes --execution-level=download --workspace=/Users/me/Projects/NodicsCustomer
 ```
 
 Execution levels are `download`, `install`, `preflight`, `start`, `initialize`,
@@ -301,11 +301,11 @@ installer reports those data-pack failures with import artifacts and next steps.
 For the Acme example, the installer derives customer-owned runtime identity
 from the names supplied by the user:
 
-- backend project: `acme.project`;
+- backend project: `acme.startio`;
 - customer modules: `acmeCore`, `acmeApi`, and `acmeInt`;
 - local environments: `acmeLocal` and `acmeDockerLocal`;
-- company site: `acme`;
-- commerce site: `acme-apparel`.
+- company site: `acme.web`;
+- commerce site: `acme.apparel`.
 
 `nodics.ai` remains the framework repository and `nodics.axis` remains the
 standard BackOffice application. The installer may use reference templates
@@ -359,10 +359,10 @@ The minimum question set is:
    - Axis BackOffice.
    - No standard app.
 7. Should the company site be created?
-   - Yes, create a named company site such as `acme`.
+   - Yes, create a named company site such as `acme.web`.
    - No, backend, Axis, and commerce site only.
 8. Should the commerce site be created?
-   - Yes, create a named commerce site such as `acme-apparel`.
+   - Yes, create a named commerce site such as `acme.apparel`.
    - No, backend, Axis, and company site only.
 9. Which starter business experience do you want?
    - Common reference setup.
@@ -414,10 +414,10 @@ The plan for the named application journey is:
 4. Download or reuse repositories.
    - Fetch `nodics.ai` for framework modules and tooling.
    - Fetch or create the named backend application project, for example
-     `acme.project`.
+     `acme.startio`.
    - Fetch `nodics.axis` when Axis BackOffice is selected.
-   - Fetch or create the named company site, for example `acme`.
-   - Fetch or create the named commerce site, for example `acme-apparel`.
+   - Fetch or create the named company site, for example `acme.web`.
+   - Fetch or create the named commerce site, for example `acme.apparel`.
    - Preserve user changes in existing repositories. Never reset or overwrite a
      dirty checkout automatically.
 5. Configure the application project.
@@ -710,11 +710,11 @@ For a new customer local environment, prefer starting with the standalone
 installer so the machine is checked before repositories are changed:
 
 ```bash
-npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --action=doctor --workspace=/Users/me/Projects/NodicsCustomer
-npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --action=execute --yes --execution-level=download --workspace=/Users/me/Projects/NodicsCustomer
-npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --action=execute --yes --execution-level=install --workspace=/Users/me/Projects/NodicsCustomer
-npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --action=execute --yes --execution-level=preflight --workspace=/Users/me/Projects/NodicsCustomer
-npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.project --company-site-name=acme --commerce-site-name=acme-apparel --action=execute --yes --execution-level=start --workspace=/Users/me/Projects/NodicsCustomer
+npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.startio --company-site-name=acme.web --commerce-site-name=acme.apparel --action=doctor --workspace=/Users/me/Projects/NodicsCustomer
+npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.startio --company-site-name=acme.web --commerce-site-name=acme.apparel --action=execute --yes --execution-level=download --workspace=/Users/me/Projects/NodicsCustomer
+npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.startio --company-site-name=acme.web --commerce-site-name=acme.apparel --action=execute --yes --execution-level=install --workspace=/Users/me/Projects/NodicsCustomer
+npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.startio --company-site-name=acme.web --commerce-site-name=acme.apparel --action=execute --yes --execution-level=preflight --workspace=/Users/me/Projects/NodicsCustomer
+npx github:Nodics/nodics.installer --application-name=Acme --project-name=acme.startio --company-site-name=acme.web --commerce-site-name=acme.apparel --action=execute --yes --execution-level=start --workspace=/Users/me/Projects/NodicsCustomer
 ```
 
 Some integrations are optional in local development. If a provider is disabled
