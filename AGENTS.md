@@ -8,6 +8,31 @@ own local behavior inside each functional module group.
 
 Core rule: capabilities are sacred, implementations are negotiable.
 
+## AI tool GitHub entry path
+
+A user may start the Nodics journey directly from an AI coding tool such as
+Codex, Claude Code, GitHub Copilot, or another repository-aware assistant by
+providing the GitHub repository URL. In that path the user does not need to
+download or run `nodics.installer` first.
+
+When started from a repository URL, the AI tool must:
+
+1. treat the repository root `AGENTS.md` as the first operating contract;
+2. read root `README.md` for human orientation;
+3. descend through the nearest ancestor `AGENTS.md` files before touching a
+   module, environment, server, data pack, or frontend integration;
+4. explain whether the user is asking for repository analysis, code changes, or
+   local environment setup;
+5. use `nodics.installer` only when the user asks to create or repair a local
+   customer workspace;
+6. keep all edits inside the owning source repository and never commit generated
+   customer-local work unless the user explicitly asks.
+
+For local setup requests, guide the user to the installer command or invoke the
+installer from source after confirming the target workspace. For architecture,
+module, schema, data, and runtime work, continue from the AGENTS/README chain
+inside this repository.
+
 ## Required expert posture
 
 AI tools and human technical leaders working on Nodics must not act as generic

@@ -21,15 +21,27 @@ const fs = require('fs');
 const path = require('path');
 
 const repositoryRoot = path.resolve(__dirname, '../../..');
+const frameworkRoot = path.resolve(repositoryRoot, '..');
 
 function read(relativePath) {
     return fs.readFileSync(path.join(repositoryRoot, relativePath), 'utf8');
+}
+
+function readFrameworkRoot(relativePath) {
+    return fs.readFileSync(path.join(frameworkRoot, relativePath), 'utf8');
 }
 
 function requireClauses(relativePath, clauses) {
     const content = read(relativePath);
     clauses.forEach(clause => {
         assert(content.includes(clause), relativePath + ' must preserve LLM contract clause: ' + clause);
+    });
+}
+
+function requireFrameworkRootClauses(relativePath, clauses) {
+    const content = readFrameworkRoot(relativePath).replace(/\s+/g, ' ');
+    clauses.forEach(clause => {
+        assert(content.includes(clause), relativePath + ' must preserve root LLM contract clause: ' + clause);
     });
 }
 
@@ -44,6 +56,22 @@ requireClauses('AGENTS.md', [
     'successful, rejected,',
     'boundary/scale, failure/recovery, and later-layer customization use cases',
     'business evaluators, business users, administrators/operators'
+]);
+
+requireFrameworkRootClauses('AGENTS.md', [
+    'AI tool GitHub entry path',
+    'Codex, Claude Code, GitHub Copilot',
+    'providing the GitHub repository URL',
+    'does not need to download or run `nodics.installer` first',
+    'use `nodics.installer` only when the user asks to create or repair a local customer workspace'
+]);
+
+requireFrameworkRootClauses('README.md', [
+    'Nodics Installer beginner journey',
+    'Codex, Claude Code, GitHub Copilot',
+    'GitHub repository URL',
+    'AGENTS.md` first',
+    'not required before repository analysis or source work can begin'
 ]);
 
 requireClauses('modules/nSetup/llm/contracts/nodics-principles.md', [

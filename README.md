@@ -250,6 +250,14 @@ in spirit to mature platform installers. A first-time user should not need to
 clone several repositories manually, learn repository names, edit `.env` files,
 or understand runtime topology before seeing Nodics run locally.
 
+If the user starts inside an AI coding tool such as Codex, Claude Code, GitHub
+Copilot, or another repository-aware assistant, they can point the tool directly
+at the GitHub repository URL. In that case the AI tool should follow
+`AGENTS.md` first, then root `README.md`, then the nearest module `AGENTS.md`
+and README files. The installer is still useful for creating or repairing a
+local customer workspace, but it is not required before repository analysis or
+source work can begin.
+
 The current bootstrap command is:
 
 ```bash
