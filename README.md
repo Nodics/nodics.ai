@@ -267,7 +267,7 @@ npx github:Nodics/nodics.installer
 For a reproducible release, pin the installer tag:
 
 ```bash
-npx github:Nodics/nodics.installer#v0.7.1
+npx github:Nodics/nodics.installer#v0.7.2
 ```
 
 After Nodics publishes the npm package, the equivalent registry command is:
