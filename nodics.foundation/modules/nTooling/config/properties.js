@@ -264,7 +264,8 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderQualificationContract.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderEndToEndJourneyContract.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderUpgradeContract.test.js' },
-                { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderSafetyAcceptanceContract.test.js' }
+                { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderSafetyAcceptanceContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/localBootstrapAcceptanceProjectContract.test.js' }
             ],
             governance: [
                 { node: 'nodics.foundation/modules/nConfig/test/layeredCustomizationContract.test.js' },

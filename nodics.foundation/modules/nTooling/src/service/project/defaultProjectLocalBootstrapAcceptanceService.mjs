@@ -32,6 +32,7 @@ const enterpriseCode = process.env.AXIS_ENTERPRISE || "default";
 const loginId = process.env.AXIS_LOGIN_ID || "admin";
 const password = process.env.AXIS_PASSWORD || "adminPassword";
 const projectCode = process.env.AXIS_PROJECT || "nodics.kickoff";
+const isReferenceKickoffProject = projectCode === "nodics.kickoff";
 const runtimeMode = process.env.NODICS_ACCEPTANCE_RUNTIME || "kickoffLocal";
 const managedStartupEnabled = runtimeMode === "kickoffLocal";
 const nexusUrl = process.env.NEXUS_URL || "http://127.0.0.1:3200";
@@ -43,22 +44,28 @@ const qualifyDocumentationRollback = process.argv.includes("--qualify-documentat
 const documentationPacks = [
   {
     code: "nodicsDocumentation",
+    profileCode: "frameworkdocs",
     minimumRoutes: 9,
     navigationComponent: "nodicsDocumentationNavigation",
     site: "nodicsDocumentationSite",
+    path: "/docs/framework",
   },
   {
     code: "axisDocumentation",
+    profileCode: "axisdocs",
     minimumRoutes: 14,
     navigationComponent: "axisDocumentationNavigation",
     site: "axisDocumentationSite",
+    path: "/docs/nodics-axis",
   },
-  {
+  ...(isReferenceKickoffProject ? [{
     code: "kickoffDocumentation",
+    profileCode: "kickoffdocs",
     minimumRoutes: 4,
     navigationComponent: "kickoffDocumentationNavigation",
     site: "kickoffDocumentationSite",
-  },
+    path: "/docs/nodics-kickoff",
+  }] : []),
 ];
 const nexusPacks = [];
 const contentPacks = [...documentationPacks, ...nexusPacks];
@@ -507,12 +514,7 @@ async function verifyDocumentationInitiallyNotInstalled(headers) {
 /** Proves importing optional documentation writes only to Staged until the publication workflow completes. */
 async function verifyDocumentationNotOnlineBeforePublication() {
   if (!expectDocumentationNotInstalled) return;
-  const profiles = [
-    { site: "nodicsDocumentationSite", path: "/docs/framework" },
-    { site: "axisDocumentationSite", path: "/docs/nodics-axis" },
-    { site: "kickoffDocumentationSite", path: "/docs/nodics-kickoff" },
-  ];
-  for (const profile of profiles) {
+  for (const profile of documentationPacks) {
     const delivered = await requestJsonResponse(
       wcmsOnlineUrl,
       `/nodics/cms/v0/delivery/pages/resolve?site=${encodeURIComponent(profile.site)}&path=${encodeURIComponent(profile.path)}&locale=en&channel=web`,
@@ -850,31 +852,26 @@ async function qualifyPartnerWebsiteCustomization(headers) {
 
 /** Proves optional documentation packs are administered by Axis/Platform and published through the normal approval path. */
 async function publishDocumentationBundles(headers) {
-  const profiles = [
-    { code: "frameworkdocs", site: "nodicsDocumentationSite", path: "/docs/framework" },
-    { code: "axisdocs", site: "axisDocumentationSite", path: "/docs/nodics-axis" },
-    { code: "kickoffdocs", site: "kickoffDocumentationSite", path: "/docs/nodics-kickoff" },
-  ];
-  for (const profile of profiles) {
-    let status = await requestJson(platformUrl, `/nodics/backoffice/v0/applications/${profile.code}/initialization`, { headers });
+  for (const profile of documentationPacks) {
+    let status = await requestJson(platformUrl, `/nodics/backoffice/v0/applications/${profile.profileCode}/initialization`, { headers });
     if (status.readiness !== "READY") {
-      const initiated = await requestJson(platformUrl, `/nodics/backoffice/v0/applications/${profile.code}/initialization/initiate`, {
+      const initiated = await requestJson(platformUrl, `/nodics/backoffice/v0/applications/${profile.profileCode}/initialization/initiate`, {
         headers, method: "POST", body: JSON.stringify({ reason: "Optional Axis documentation publication qualification" }),
       });
       const publicationCode = initiated.publication?.code;
       if (!publicationCode || initiated.publication?.state !== "PENDING_APPROVAL") {
-        throw new Error(`${profile.code} did not enter approval: ${JSON.stringify(initiated)}`);
+        throw new Error(`${profile.profileCode} did not enter approval: ${JSON.stringify(initiated)}`);
       }
       const instances = await requestJson(processUrl, "/nodics/process/v0/instances?limit=100", { headers });
       const instance = [].concat(instances.items || instances || []).find(
         (item) => item.definitionCode === "cmsPublicationApproval" && item.context?.publicationCode === publicationCode && item.status === "WAITING",
       );
-      if (!instance) throw new Error(`${profile.code} workflow instance is unavailable for ${publicationCode}`);
+      if (!instance) throw new Error(`${profile.profileCode} workflow instance is unavailable for ${publicationCode}`);
       const tasks = await requestJson(processUrl, `/nodics/process/v0/tasks?instanceCode=${encodeURIComponent(instance.code)}&limit=20`, { headers });
       const task = [].concat(tasks.items || tasks || []).find(
         (item) => item.instanceCode === instance.code && item.nodeCode === "publicationReview" && ["OPEN", "CLAIMED"].includes(item.status),
       );
-      if (!task) throw new Error(`${profile.code} approval task is unavailable for ${instance.code}`);
+      if (!task) throw new Error(`${profile.profileCode} approval task is unavailable for ${instance.code}`);
       if (task.status === "OPEN") {
         await requestJson(processUrl, `/nodics/process/v0/tasks/${encodeURIComponent(task.code)}/claim`, { headers, method: "POST" });
       }
@@ -882,10 +879,10 @@ async function publishDocumentationBundles(headers) {
         headers, method: "POST",
         body: JSON.stringify({ decision: { approved: true, action: "APPROVE", emergencyOverride: true, reason: "Optional Axis documentation publication qualification" } }),
       });
-      status = await requestJson(platformUrl, `/nodics/backoffice/v0/applications/${profile.code}/initialization`, { headers });
+      status = await requestJson(platformUrl, `/nodics/backoffice/v0/applications/${profile.profileCode}/initialization`, { headers });
     }
     if (status.readiness !== "READY" || status.publication?.state !== "ONLINE") {
-      throw new Error(`${profile.code} is not READY Online: ${JSON.stringify(status)}`);
+      throw new Error(`${profile.profileCode} is not READY Online: ${JSON.stringify(status)}`);
     }
     const delivered = await requestJson(wcmsOnlineUrl,
       `/nodics/cms/v0/delivery/pages/resolve?site=${encodeURIComponent(profile.site)}&path=${encodeURIComponent(profile.path)}&locale=en&channel=web`,
@@ -1130,7 +1127,7 @@ async function main() {
     "/docs",
     "/docs/framework",
     "/docs/nodics-axis",
-    "/docs/nodics-kickoff",
+    ...(isReferenceKickoffProject ? ["/docs/nodics-kickoff"] : []),
     "/content",
     "/content/designer",
     "/media",
