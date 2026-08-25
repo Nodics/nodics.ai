@@ -1018,7 +1018,7 @@ async function runAxisSmoke() {
       env: {
         ...process.env,
         AXIS_EXPECT_MODULES: "1",
-        AXIS_EXPECT_DOCUMENTATION: "1",
+        AXIS_EXPECT_DOCUMENTATION: isReferenceKickoffProject ? "1" : "0",
         AXIS_CRON_LIFECYCLE: "1",
         AXIS_PROCESS_LIFECYCLE: "1",
         AXIS_URL: axisUrl,

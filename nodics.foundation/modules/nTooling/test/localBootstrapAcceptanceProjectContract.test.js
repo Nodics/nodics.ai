@@ -51,6 +51,10 @@ assert(
   'the /docs/nodics-kickoff route must be optional for generated customer projects'
 );
 assert(
+  source.includes('AXIS_EXPECT_DOCUMENTATION: isReferenceKickoffProject ? "1" : "0"'),
+  'Axis smoke must not require Kickoff documentation for generated customer projects'
+);
+assert(
   !source.includes('const profiles = [\n    { code: "frameworkdocs"') &&
     source.includes('profile.profileCode'),
   'documentation publication must use shared project-aware pack metadata'
