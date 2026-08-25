@@ -19,8 +19,11 @@ import { promisify } from "node:util";
 const execFileAsync = promisify(execFile);
 const projectRoot = resolve(process.env.NODICS_PROJECT_ROOT || process.cwd());
 const workspaceRoot = resolve(projectRoot, "..");
+const defaultAxisRoot = existsSync(resolve(workspaceRoot, "nodics.axis")) ?
+  resolve(workspaceRoot, "nodics.axis") :
+  resolve(workspaceRoot, "nodics.exp", "nodics.axis");
 const axisRoot = resolve(
-  process.env.NODICS_AXIS_ROOT || resolve(workspaceRoot, "nodics.exp", "nodics.axis"),
+  process.env.NODICS_AXIS_ROOT || defaultAxisRoot,
 );
 const platformUrl = process.env.AXIS_PLATFORM_URL || "http://127.0.0.1:4300";
 const wcmsUrl = process.env.AXIS_WCMS_URL || "http://127.0.0.1:4312";

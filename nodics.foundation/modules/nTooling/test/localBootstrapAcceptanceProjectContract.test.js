@@ -37,6 +37,11 @@ assert(
   'local acceptance must identify the reference Kickoff project explicitly'
 );
 assert(
+  source.includes('const defaultAxisRoot = existsSync(resolve(workspaceRoot, "nodics.axis"))') &&
+    source.includes('resolve(workspaceRoot, "nodics.exp", "nodics.axis")'),
+  'local acceptance must discover the flat customer Axis checkout before falling back to nodics.exp'
+);
+assert(
   source.includes('...(isReferenceKickoffProject ? [{') &&
     source.includes('code: "kickoffDocumentation"'),
   'kickoffDocumentation must be included only for the reference Kickoff project'
