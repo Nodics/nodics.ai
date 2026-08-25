@@ -50,8 +50,20 @@ function normalizeRuntime(runtime) {
   return {
     ...runtime,
     cwd: runtime.cwd ? path.resolve(resolveTemplate(runtime.cwd)) : projectRoot,
-    readyPath: runtime.readyPath || '/nodics/system/v0/health/ready'
+    readyPath: runtime.readyPath || '/nodics/system/v0/health/ready',
+    env: normalizeRuntimeEnvironment(runtime.env)
   };
+}
+
+function normalizeRuntimeEnvironment(environment) {
+  if (!environment || typeof environment !== 'object' || Array.isArray(environment)) return {};
+  return Object.fromEntries(Object.entries(environment)
+    .filter(([, value]) => value !== undefined && value !== null)
+    .map(([key, value]) => [key, resolveTemplate(value)]));
+}
+
+function runtimeEnvironment(runtime) {
+  return Object.assign({}, process.env, runtime.env || {});
 }
 
 export const backendRuntimes = Object.freeze(readTopology().backendRuntimes);
@@ -209,7 +221,7 @@ async function start(includeFrontends) {
       const args = runtime.args || ['run', runtime.script];
       const logPath = path.join(topology.stateDirectory, `${runtime.code}.log`);
       const log = fs.openSync(logPath, 'a');
-      const child = spawn(command, args, { cwd, env: process.env, stdio: ['ignore', log, log], detached: true });
+      const child = spawn(command, args, { cwd, env: runtimeEnvironment(runtime), stdio: ['ignore', log, log], detached: true });
       children.push({ runtime, child });
       persist();
       child.once('exit', code => {

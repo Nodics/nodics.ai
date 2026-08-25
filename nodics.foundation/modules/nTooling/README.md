@@ -66,6 +66,7 @@ handler is still possible, but it requires the normal explicit
 - module metadata normalization;
 - module LLM context generation and validation;
 - topology planning and structure generation support;
+- local topology runtime `env` injection from project manifests;
 - MCP read-only, validation, runtime-context, and guarded mutation-plan command surfaces.
 - Application Builder schemas plus beginner-facing `builder:guide`,
   `builder:answers-template`, interactive `builder:questionnaire`,

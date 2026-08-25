@@ -13,6 +13,10 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Treat this directory as a layered Nodics module boundary when it contains `package.json`.
 - Keep capabilities stable and make implementations replaceable through the module hierarchy.
 - Do not hardcode project, environment, server, node, tenant, or customer behavior into reusable framework code.
+- Local topology runtime-specific environment values belong in the project
+  manifest runtime `env` object and must be merged by topology tooling at
+  process launch. Do not require customer-specific `.env` files inside
+  vendor-owned frontend repositories.
 - Put configurable behavior in layered configuration, schemas, routers, services, pipelines, data, and runtime governance.
 - Update the concise `README.md`, canonical documentation content, `llm/contracts`, `llm/examples`, generated context, and tests whenever behavior or extension contracts change.
 - Use `llm/contracts` for exact module-local AI/developer rules, `llm/examples` for approved patterns, and `llm/generated` for source-derived facts. Do not add a module-local llm README file; this `AGENTS.md` is the AI navigation and behavior entrypoint for the module.
