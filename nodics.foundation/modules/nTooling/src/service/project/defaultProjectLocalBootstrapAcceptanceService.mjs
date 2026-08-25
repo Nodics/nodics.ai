@@ -110,19 +110,87 @@ function readProjectDescriptor() {
   return JSON.parse(readFileSync(descriptorPath, "utf8"));
 }
 
+function validateLocalBootstrapCapabilities(capabilities) {
+  const errors = [];
+  const isObject = (value) => value && typeof value === "object" && !Array.isArray(value);
+  const requireString = (value, pathName) => {
+    if (typeof value !== "string" || !value.trim()) {
+      errors.push(`${pathName} must be a non-empty string.`);
+    }
+  };
+  if (!isObject(capabilities)) {
+    return ["acceptance.localBootstrap must be an object."];
+  }
+  if (!Array.isArray(capabilities.documentationPacks)) {
+    errors.push("acceptance.localBootstrap.documentationPacks must be an array.");
+  } else {
+    capabilities.documentationPacks.forEach((pack, index) => {
+      const base = `acceptance.localBootstrap.documentationPacks[${index}]`;
+      if (!isObject(pack)) {
+        errors.push(`${base} must be an object.`);
+        return;
+      }
+      requireString(pack.code, `${base}.code`);
+      requireString(pack.profileCode, `${base}.profileCode`);
+      requireString(pack.navigationComponent, `${base}.navigationComponent`);
+      requireString(pack.site, `${base}.site`);
+      requireString(pack.path, `${base}.path`);
+      if (typeof pack.path === "string" && !pack.path.startsWith("/")) {
+        errors.push(`${base}.path must start with /.`);
+      }
+      if (!Number.isInteger(pack.minimumRoutes) || pack.minimumRoutes < 0) {
+        errors.push(`${base}.minimumRoutes must be a non-negative integer.`);
+      }
+    });
+  }
+  if (!Array.isArray(capabilities.contentPacks)) {
+    errors.push("acceptance.localBootstrap.contentPacks must be an array.");
+  }
+  if (!isObject(capabilities.axisSmoke)) {
+    errors.push("acceptance.localBootstrap.axisSmoke must be an object.");
+    return errors;
+  }
+  ["expectModules", "expectDocumentation", "cronLifecycle", "processLifecycle"].forEach((field) => {
+    if (typeof capabilities.axisSmoke[field] !== "boolean") {
+      errors.push(`acceptance.localBootstrap.axisSmoke.${field} must be true or false.`);
+    }
+  });
+  if (!Array.isArray(capabilities.axisSmoke.routes)) {
+    errors.push("acceptance.localBootstrap.axisSmoke.routes must be an array.");
+  } else {
+    capabilities.axisSmoke.routes.forEach((route, index) => {
+      if (typeof route !== "string" || !route.startsWith("/")) {
+        errors.push(`acceptance.localBootstrap.axisSmoke.routes[${index}] must start with /.`);
+      }
+    });
+  }
+  return errors;
+}
+
+function assertValidLocalBootstrapCapabilities(capabilities) {
+  const errors = validateLocalBootstrapCapabilities(capabilities);
+  if (errors.length) {
+    throw new Error(`Invalid acceptance.localBootstrap in nodics.project.json:\n- ${errors.join("\n- ")}`);
+  }
+}
+
 function loadLocalBootstrapCapabilities() {
   const fallback = defaultLocalBootstrapCapabilities();
   const descriptor = projectDescriptor;
-  const configured = descriptor?.acceptance?.localBootstrap || {};
+  const configured = descriptor?.acceptance?.localBootstrap;
+  if (configured !== undefined) {
+    assertValidLocalBootstrapCapabilities(configured);
+  }
+  const configuredCapabilities = configured || {};
   const axisSmoke = {
     ...fallback.axisSmoke,
-    ...(configured.axisSmoke || {}),
+    ...(configuredCapabilities.axisSmoke || {}),
   };
   return {
-    documentationPacks: Array.isArray(configured.documentationPacks) ?
-      configured.documentationPacks : fallback.documentationPacks,
-    contentPacks: Array.isArray(configured.contentPacks) ?
-      configured.contentPacks : fallback.contentPacks,
+    documentationPacks: Array.isArray(configuredCapabilities.documentationPacks) ?
+      configuredCapabilities.documentationPacks : fallback.documentationPacks,
+    contentPacks: Array.isArray(configuredCapabilities.contentPacks) ?
+      configuredCapabilities.contentPacks : fallback.contentPacks,
     axisSmoke: {
       ...axisSmoke,
       routes: Array.isArray(axisSmoke.routes) ? axisSmoke.routes : fallback.axisSmoke.routes,

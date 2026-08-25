@@ -47,6 +47,11 @@ assert(
   'local acceptance must load capability declarations from nodics.project.json'
 );
 assert(
+  source.includes('function assertValidLocalBootstrapCapabilities(capabilities)') &&
+    source.includes('Invalid acceptance.localBootstrap in nodics.project.json'),
+  'local acceptance must reject invalid capability declarations with a beginner-readable descriptor error'
+);
+assert(
   source.includes('const projectCode = process.env.AXIS_PROJECT || projectDescriptor.projectCode || "nodics.kickoff";'),
   'local acceptance must derive the project code from nodics.project.json before using the legacy fallback'
 );
