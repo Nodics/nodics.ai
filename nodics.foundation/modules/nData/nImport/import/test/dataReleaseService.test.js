@@ -33,7 +33,7 @@ let files = {};
 });
 fs.writeFileSync(path.join(root, 'data', 'manifest.json'), JSON.stringify({
     contractVersion: 0, module: 'testModule', sections: { core: {
-        kind: 'DATA_RELEASE', dataType: 'core', version: '0.0.0',
+        kind: 'DATA_RELEASE', dataType: 'core', version: '1.1.0',
         displayName: 'Test Core Release',
         description: 'Test core release',
         owningDomain: 'test.domain', lifecycle: 'PUBLISHABLE', destinationRole: 'WCMS_STAGED',
@@ -222,6 +222,54 @@ const routers = require('../src/router/routers');
         { moduleName: 'multiSectionModule', releaseCode: 'multiSectionModule:next', status: 'NOT_INSTALLED' }
     ]);
     assert.deepStrictEqual(executableSectionPlan.releases.map(release => release.releaseCode), ['multiSectionModule:next']);
+
+    let orderedRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-data-release-order-'));
+    let originalGetActiveModules = global.NODICS.getActiveModules;
+    let originalGetRawModule = global.NODICS.getRawModule;
+    try {
+        fs.mkdirSync(path.join(orderedRoot, 'data', 'staged', 'headers'), { recursive: true });
+        fs.mkdirSync(path.join(orderedRoot, 'data', 'staged', 'data'), { recursive: true });
+        fs.writeFileSync(path.join(orderedRoot, 'data', 'staged', 'headers', 'mediaHeader.js'), 'module.exports = {};\n');
+        fs.writeFileSync(path.join(orderedRoot, 'data', 'staged', 'data', 'mediaData.js'), 'module.exports = [];\n');
+        fs.writeFileSync(path.join(orderedRoot, 'data', 'staged', 'headers', 'componentHeader.js'), 'module.exports = {};\n');
+        fs.writeFileSync(path.join(orderedRoot, 'data', 'staged', 'data', 'componentData.js'), 'module.exports = [];\n');
+        let orderedFiles = ['staged/headers/mediaHeader.js', 'staged/data/mediaData.js',
+            'staged/headers/componentHeader.js', 'staged/data/componentData.js'].reduce((result, file) => {
+            result[file] = crypto.createHash('sha256').update(fs.readFileSync(path.join(orderedRoot, 'data', file))).digest('hex');
+            return result;
+        }, {});
+        let orderedSection = (description, files) => ({
+            kind: 'DATA_RELEASE', dataType: 'core', version: '0.0.0',
+            description: description, owningDomain: 'ordered.domain', lifecycle: 'PUBLISHABLE',
+            destinationRole: 'WCMS_STAGED', environmentScope: ['LOCAL'], sensitivity: 'PUBLIC',
+            versioningPolicy: 'IMMUTABLE', publicationPolicy: 'REQUIRED',
+            initialPublicationPolicy: 'ADMIN_INITIATED', removalPolicy: 'UNPUBLISH_OR_RETIRE',
+            sourceRoot: 'staged', files: files
+        });
+        fs.writeFileSync(path.join(orderedRoot, 'data', 'manifest.json'), JSON.stringify({
+            contractVersion: 2, module: 'orderedModule', sections: {
+                zMediaReference: orderedSection('Media references required before dependent components.', {
+                    'staged/headers/mediaHeader.js': orderedFiles['staged/headers/mediaHeader.js'],
+                    'staged/data/mediaData.js': orderedFiles['staged/data/mediaData.js']
+                }),
+                aComponentMedia: orderedSection('Component media depends on media references.', {
+                    'staged/headers/componentHeader.js': orderedFiles['staged/headers/componentHeader.js'],
+                    'staged/data/componentData.js': orderedFiles['staged/data/componentData.js']
+                })
+            }
+        }));
+        global.NODICS.getActiveModules = () => ['orderedModule'];
+        global.NODICS.getRawModule = moduleName => moduleName === 'orderedModule' ?
+            { name: 'orderedModule', path: orderedRoot, parent: 'orderedGroup',
+                canonicalIdentity: 'orderedGroup/orderedModule' } :
+            originalGetRawModule(moduleName);
+        let orderedReleases = service.discoverReleases('core');
+        assert.deepStrictEqual(orderedReleases.map(release => release.sectionCode), ['zMediaReference', 'aComponentMedia']);
+    } finally {
+        global.NODICS.getActiveModules = originalGetActiveModules;
+        global.NODICS.getRawModule = originalGetRawModule;
+        fs.rmSync(orderedRoot, { recursive: true, force: true });
+    }
 
     await assert.rejects(() => service.preflight({
         tenant: 'default',

@@ -356,6 +356,7 @@ module.exports = {
     discoverReleases: function (requestedType) {
         if (requestedType) this.validateDataType(requestedType);
         let releases = [];
+        let discoveryOrder = 0;
         this.discoveryOwners().forEach(selector => {
             let rawModule = NODICS.getRawModule(selector.moduleName);
             if (!rawModule || !rawModule.path) return;
@@ -379,9 +380,15 @@ module.exports = {
             if (aggregate) {
                 sections.forEach(entry => {
                     try {
-                        releases.push(this.inspectManifest(rawModule, entry[1].dataType, aggregatePath, entry[1], entry[0], !selector.active));
+                        releases.push(Object.assign(
+                            this.inspectManifest(rawModule, entry[1].dataType, aggregatePath, entry[1], entry[0], !selector.active),
+                            { discoveryOrder: discoveryOrder++ }
+                        ));
                     } catch (error) {
-                        releases.push(this.invalidManifestRelease(rawModule, entry[1].dataType, aggregatePath, error, entry[0]));
+                        releases.push(Object.assign(
+                            this.invalidManifestRelease(rawModule, entry[1].dataType, aggregatePath, error, entry[0]),
+                            { discoveryOrder: discoveryOrder++ }
+                        ));
                     }
                 });
                 return;
@@ -391,14 +398,22 @@ module.exports = {
                 let legacyPath = path.join(rawModule.path, 'data', dataType, 'manifest.json');
                 if (!fs.existsSync(legacyPath)) return;
                 try {
-                    releases.push(this.inspectManifest(rawModule, dataType, legacyPath, undefined, dataType));
+                    releases.push(Object.assign(
+                        this.inspectManifest(rawModule, dataType, legacyPath, undefined, dataType),
+                        { discoveryOrder: discoveryOrder++ }
+                    ));
                 } catch (error) {
-                    releases.push(this.invalidManifestRelease(rawModule, dataType, legacyPath, error, dataType));
+                    releases.push(Object.assign(
+                        this.invalidManifestRelease(rawModule, dataType, legacyPath, error, dataType),
+                        { discoveryOrder: discoveryOrder++ }
+                    ));
                 }
             });
         });
         return releases.sort((first, second) =>
-            first.dataType.localeCompare(second.dataType) || first.releaseCode.localeCompare(second.releaseCode));
+            first.dataType.localeCompare(second.dataType) ||
+            first.discoveryOrder - second.discoveryOrder ||
+            first.releaseCode.localeCompare(second.releaseCode));
     },
 
     /** Reads and validates the aggregate manifest envelope when a module owns a data directory. */
