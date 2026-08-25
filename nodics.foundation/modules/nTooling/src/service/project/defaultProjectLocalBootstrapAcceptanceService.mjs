@@ -12,7 +12,7 @@
 
 import { execFile, spawn } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { promisify } from "node:util";
 
@@ -34,8 +34,8 @@ const axisUrl = process.env.AXIS_URL || "http://127.0.0.1:3100";
 const enterpriseCode = process.env.AXIS_ENTERPRISE || "default";
 const loginId = process.env.AXIS_LOGIN_ID || "admin";
 const password = process.env.AXIS_PASSWORD || "adminPassword";
-const projectCode = process.env.AXIS_PROJECT || "nodics.kickoff";
-const isReferenceKickoffProject = projectCode === "nodics.kickoff";
+const projectDescriptor = readProjectDescriptor();
+const projectCode = process.env.AXIS_PROJECT || projectDescriptor.projectCode || "nodics.kickoff";
 const runtimeMode = process.env.NODICS_ACCEPTANCE_RUNTIME || "kickoffLocal";
 const managedStartupEnabled = runtimeMode === "kickoffLocal";
 const nexusUrl = process.env.NEXUS_URL || "http://127.0.0.1:3200";
@@ -44,33 +44,96 @@ const dropLocalDb = process.argv.includes("--drop-local-db");
 const leaveStarted = process.argv.includes("--leave-started");
 const expectDocumentationNotInstalled = process.argv.includes("--expect-documentation-not-installed");
 const qualifyDocumentationRollback = process.argv.includes("--qualify-documentation-rollback");
-const documentationPacks = [
-  {
-    code: "nodicsDocumentation",
-    profileCode: "frameworkdocs",
-    minimumRoutes: 9,
-    navigationComponent: "nodicsDocumentationNavigation",
-    site: "nodicsDocumentationSite",
-    path: "/docs/framework",
-  },
-  {
-    code: "axisDocumentation",
-    profileCode: "axisdocs",
-    minimumRoutes: 14,
-    navigationComponent: "axisDocumentationNavigation",
-    site: "axisDocumentationSite",
-    path: "/docs/nodics-axis",
-  },
-  ...(isReferenceKickoffProject ? [{
-    code: "kickoffDocumentation",
-    profileCode: "kickoffdocs",
-    minimumRoutes: 4,
-    navigationComponent: "kickoffDocumentationNavigation",
-    site: "kickoffDocumentationSite",
-    path: "/docs/nodics-kickoff",
-  }] : []),
-];
-const nexusPacks = [];
+function defaultLocalBootstrapCapabilities() {
+  return {
+    documentationPacks: [
+      {
+        code: "nodicsDocumentation",
+        profileCode: "frameworkdocs",
+        minimumRoutes: 9,
+        navigationComponent: "nodicsDocumentationNavigation",
+        site: "nodicsDocumentationSite",
+        path: "/docs/framework",
+      },
+      {
+        code: "axisDocumentation",
+        profileCode: "axisdocs",
+        minimumRoutes: 14,
+        navigationComponent: "axisDocumentationNavigation",
+        site: "axisDocumentationSite",
+        path: "/docs/nodics-axis",
+      },
+      {
+        code: "kickoffDocumentation",
+        profileCode: "kickoffdocs",
+        minimumRoutes: 4,
+        navigationComponent: "kickoffDocumentationNavigation",
+        site: "kickoffDocumentationSite",
+        path: "/docs/nodics-kickoff",
+      },
+    ],
+    contentPacks: [],
+    axisSmoke: {
+      expectModules: true,
+      expectDocumentation: true,
+      cronLifecycle: true,
+      processLifecycle: true,
+      routes: [
+        "/",
+        "/docs",
+        "/docs/framework",
+        "/docs/nodics-axis",
+        "/docs/nodics-kickoff",
+        "/content",
+        "/content/designer",
+        "/media",
+        "/process",
+        "/process/definitions",
+        "/process/tasks",
+        "/process/triggers",
+        "/process/designer",
+        "/cron",
+        "/system-integrations",
+        "/registry",
+        "/operations/imports-exports",
+        "/docs/framework/process",
+        "/docs/framework/process/visual-designer",
+        "/docs/swaggers",
+      ],
+    },
+  };
+}
+
+function readProjectDescriptor() {
+  const descriptorPath = resolve(projectRoot, "nodics.project.json");
+  if (!existsSync(descriptorPath)) return {};
+  return JSON.parse(readFileSync(descriptorPath, "utf8"));
+}
+
+function loadLocalBootstrapCapabilities() {
+  const fallback = defaultLocalBootstrapCapabilities();
+  const descriptor = projectDescriptor;
+  const configured = descriptor?.acceptance?.localBootstrap || {};
+  const axisSmoke = {
+    ...fallback.axisSmoke,
+    ...(configured.axisSmoke || {}),
+  };
+  return {
+    documentationPacks: Array.isArray(configured.documentationPacks) ?
+      configured.documentationPacks : fallback.documentationPacks,
+    contentPacks: Array.isArray(configured.contentPacks) ?
+      configured.contentPacks : fallback.contentPacks,
+    axisSmoke: {
+      ...axisSmoke,
+      routes: Array.isArray(axisSmoke.routes) ? axisSmoke.routes : fallback.axisSmoke.routes,
+    },
+  };
+}
+
+const localBootstrapCapabilities = loadLocalBootstrapCapabilities();
+const documentationPacks = localBootstrapCapabilities.documentationPacks;
+const nexusPacks = localBootstrapCapabilities.contentPacks;
+const axisSmoke = localBootstrapCapabilities.axisSmoke;
 const contentPacks = [...documentationPacks, ...nexusPacks];
 const expectedCatalogs = Object.freeze([
   Object.freeze({
@@ -1017,10 +1080,10 @@ async function runAxisSmoke() {
       cwd: axisRoot,
       env: {
         ...process.env,
-        AXIS_EXPECT_MODULES: "1",
-        AXIS_EXPECT_DOCUMENTATION: isReferenceKickoffProject ? "1" : "0",
-        AXIS_CRON_LIFECYCLE: "1",
-        AXIS_PROCESS_LIFECYCLE: "1",
+        AXIS_EXPECT_MODULES: axisSmoke.expectModules ? "1" : "0",
+        AXIS_EXPECT_DOCUMENTATION: axisSmoke.expectDocumentation ? "1" : "0",
+        AXIS_CRON_LIFECYCLE: axisSmoke.cronLifecycle ? "1" : "0",
+        AXIS_PROCESS_LIFECYCLE: axisSmoke.processLifecycle ? "1" : "0",
         AXIS_URL: axisUrl,
         AXIS_PLATFORM_URL: platformUrl,
         AXIS_PROCESS_URL: processUrl,
@@ -1125,28 +1188,7 @@ async function main() {
   await qualifyDocumentationReleaseRollback(headers);
   await verifyPublicationOperations(headers);
   await verifyWcmsDesignerAuthoringAvailability(headers);
-  for (const route of [
-    "/",
-    "/docs",
-    "/docs/framework",
-    "/docs/nodics-axis",
-    ...(isReferenceKickoffProject ? ["/docs/nodics-kickoff"] : []),
-    "/content",
-    "/content/designer",
-    "/media",
-    "/process",
-    "/process/definitions",
-    "/process/tasks",
-    "/process/triggers",
-    "/process/designer",
-    "/cron",
-    "/system-integrations",
-    "/registry",
-    "/operations/imports-exports",
-    "/docs/framework/process",
-    "/docs/framework/process/visual-designer",
-    "/docs/swaggers",
-  ]) {
+  for (const route of axisSmoke.routes) {
     await expectHttpOk(axisUrl, route);
     log(`Axis route ${route} returned HTTP 200`);
   }

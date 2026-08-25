@@ -11,10 +11,10 @@
 
 /**
  * @module nTooling/test/localBootstrapAcceptanceProjectContract
- * @description Proves local bootstrap acceptance keeps Kickoff-only documentation gates scoped to the reference project.
+ * @description Proves local bootstrap acceptance reads project-declared capabilities instead of hard-coded project names.
  * @layer test
  * @owner nTooling
- * @override Customer-project acceptance may add customer documentation checks, but must not require Kickoff-only packs or routes outside nodics.kickoff.
+ * @override Customer-project acceptance may add customer documentation checks through nodics.project.json, but must not infer capabilities from a project code.
  */
 const assert = require('assert');
 const fs = require('fs');
@@ -33,8 +33,8 @@ const servicePath = path.join(
 const source = fs.readFileSync(servicePath, 'utf8');
 
 assert(
-  source.includes('const isReferenceKickoffProject = projectCode === "nodics.kickoff";'),
-  'local acceptance must identify the reference Kickoff project explicitly'
+  !source.includes(['isReference', 'KickoffProject'].join('')),
+  'local acceptance must not branch on a hard-coded project name'
 );
 assert(
   source.includes('const defaultAxisRoot = existsSync(resolve(workspaceRoot, "nodics.axis"))') &&
@@ -42,17 +42,23 @@ assert(
   'local acceptance must discover the flat customer Axis checkout before falling back to nodics.exp'
 );
 assert(
-  source.includes('...(isReferenceKickoffProject ? [{') &&
+  source.includes('function loadLocalBootstrapCapabilities()') &&
+    source.includes('descriptor?.acceptance?.localBootstrap'),
+  'local acceptance must load capability declarations from nodics.project.json'
+);
+assert(
+  source.includes('const projectCode = process.env.AXIS_PROJECT || projectDescriptor.projectCode || "nodics.kickoff";'),
+  'local acceptance must derive the project code from nodics.project.json before using the legacy fallback'
+);
+assert(
+  source.includes('function defaultLocalBootstrapCapabilities()') &&
     source.includes('code: "kickoffDocumentation"'),
-  'kickoffDocumentation must be included only for the reference Kickoff project'
+  'legacy fallback capabilities must preserve Kickoff documentation behavior when older projects do not declare localBootstrap'
 );
 assert(
-  source.includes('...(isReferenceKickoffProject ? ["/docs/nodics-kickoff"] : [])'),
-  'the /docs/nodics-kickoff route must be optional for generated customer projects'
-);
-assert(
-  source.includes('AXIS_EXPECT_DOCUMENTATION: isReferenceKickoffProject ? "1" : "0"'),
-  'Axis smoke must not require Kickoff documentation for generated customer projects'
+  source.includes('AXIS_EXPECT_DOCUMENTATION: axisSmoke.expectDocumentation ? "1" : "0"') &&
+    source.includes('for (const route of axisSmoke.routes)'),
+  'Axis smoke flags and routes must come from declared capabilities'
 );
 assert(
   !source.includes('const profiles = [\n    { code: "frameworkdocs"') &&
