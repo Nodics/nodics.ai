@@ -7,14 +7,13 @@
   "description": "Versioned documentation content for Nodics functional modules.",
   "nodics": {
     "kind": "group",
-    "runtimeModule": false,
-    "loadableByNodicsModuleLoader": false,
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
     "owns": [
       "composition",
       "configuration",
       "data",
       "documentation",
-      "content-pack",
       "llm"
     ],
     "runtime": {

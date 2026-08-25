@@ -14,13 +14,13 @@
         "owns": [
             "configuration",
             "data",
-            "event",
-            "pipeline",
-            "router",
             "schema",
-            "search",
-            "interceptor",
+            "router",
             "service",
+            "pipeline",
+            "interceptor",
+            "event",
+            "search",
             "utility",
             "test",
             "llm"

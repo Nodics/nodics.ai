@@ -5,14 +5,30 @@
   "index": "50.21",
   "private": true,
   "main": "nodics.js",
-  "requiredModules": ["cms", "vDatabase", "vMongodb", "vService"],
+  "requiredModules": [
+    "cms",
+    "vDatabase",
+    "vMongodb",
+    "vService"
+  ],
   "nodics": {
     "kind": "publish",
-    "extends": ["cms"],
+    "extends": [
+      "cms"
+    ],
     "runtimeModule": true,
     "loadableByNodicsModuleLoader": true,
-    "owns": ["schema", "configuration"],
-    "runtime": { "router": false, "publish": true, "web": false },
+    "owns": [
+      "configuration",
+      "schema",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": true,
+      "web": false
+    },
     "displayName": "CMS Staged Versioning"
   }
 }

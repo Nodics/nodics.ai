@@ -183,6 +183,12 @@ module.exports = exportedService = {
     return null;
 },
 
+    /** Implements isTopologyModule as an overrideable service operation. */
+    isTopologyModule: function (moduleObject) {
+    const parts = moduleObject.relativePath.split('/');
+    return parts.includes('envs');
+},
+
     /** Implements collectJavaScriptFiles as an overrideable service operation. */
     collectJavaScriptFiles: function (directory, files) {
     if (!fs.existsSync(directory)) {
@@ -450,6 +456,9 @@ module.exports = exportedService = {
     validatePropertiesPurity: function (report, moduleObject) {
     const propertiesPath = path.join(moduleObject.path, 'config/properties.js');
     if (!fs.existsSync(propertiesPath)) {
+        return;
+    }
+    if ((this.isTopologyModule || exportedService.isTopologyModule).call(this, moduleObject)) {
         return;
     }
     const activeSource = (this.stripJavaScriptComments || exportedService.stripJavaScriptComments).call(this, fs.readFileSync(propertiesPath, 'utf8'));

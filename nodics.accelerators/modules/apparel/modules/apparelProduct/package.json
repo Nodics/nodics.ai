@@ -13,13 +13,13 @@
         "loadableByNodicsModuleLoader": true,
         "owns": [
             "configuration",
-            "event",
-            "pipeline",
-            "router",
             "schema",
-            "search",
-            "interceptor",
+            "router",
             "service",
+            "pipeline",
+            "interceptor",
+            "event",
+            "search",
             "utility",
             "test",
             "llm"

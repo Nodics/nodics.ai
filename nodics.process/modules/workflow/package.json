@@ -12,8 +12,22 @@
     "kind": "capability",
     "runtimeModule": true,
     "loadableByNodicsModuleLoader": true,
-    "owns": ["configuration", "schema", "utility", "service", "router", "controller", "facade", "test", "llm"],
-    "runtime": { "router": true, "publish": false, "web": false },
+    "owns": [
+      "configuration",
+      "schema",
+      "router",
+      "controller",
+      "facade",
+      "service",
+      "utility",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": true,
+      "publish": false,
+      "web": false
+    },
     "displayName": "Workflow"
   }
 }

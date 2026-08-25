@@ -10,7 +10,17 @@
         "displayName": "Discovery Source",
         "runtimeModule": true,
         "loadableByNodicsModuleLoader": true,
-        "owns": ["configuration", "schema", "service", "test", "llm"],
-        "runtime": { "router": false, "publish": false, "web": false }
+        "owns": [
+            "configuration",
+            "schema",
+            "service",
+            "test",
+            "llm"
+        ],
+        "runtime": {
+            "router": false,
+            "publish": false,
+            "web": false
+        }
     }
 }

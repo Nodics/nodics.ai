@@ -11,11 +11,11 @@
     "runtimeModule": true,
     "loadableByNodicsModuleLoader": true,
     "owns": [
-    "configuration",
-    "data",
-    "documentation",
-    "service",
-    "test",
+      "configuration",
+      "data",
+      "service",
+      "test",
+      "documentation",
       "llm"
     ],
     "runtime": {

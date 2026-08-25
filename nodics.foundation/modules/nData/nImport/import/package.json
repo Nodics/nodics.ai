@@ -16,7 +16,7 @@
         "url": "https://github.com/Nodics/nodics.ai.git"
     },
     "dependencies": {},
-  "nodics": {
+    "nodics": {
         "kind": "capability",
         "runtimeModule": true,
         "loadableByNodicsModuleLoader": true,
@@ -39,12 +39,12 @@
             "publish": false,
             "web": false
         },
-    "displayName": "Import Engine"
-  },
-  "requiredModules": [
-    "jsImport",
-    "jsonImport",
-    "csvImport",
-    "excelImport"
-  ]
+        "displayName": "Import Engine"
+    },
+    "requiredModules": [
+        "jsImport",
+        "jsonImport",
+        "csvImport",
+        "excelImport"
+    ]
 }

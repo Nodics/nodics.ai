@@ -1,8 +1,30 @@
 {
-  "name": "cart", "version": "0.0.0", "index": "70.21", "private": true,
-  "main": "nodics.js", "description": "Customer-owned Cart, exact calculation, diagnostics, and API capability.",
-  "nodics": { "kind": "capability", "displayName": "Cart", "runtimeModule": true,
+  "name": "cart",
+  "version": "0.0.0",
+  "index": "70.21",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Customer-owned Cart, exact calculation, diagnostics, and API capability.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Cart",
+    "runtimeModule": true,
     "loadableByNodicsModuleLoader": true,
-    "owns": ["configuration", "schema", "service", "pipeline", "facade", "controller", "router", "test", "llm"],
-    "runtime": { "router": true, "publish": false, "web": false } }
+    "owns": [
+      "configuration",
+      "schema",
+      "router",
+      "controller",
+      "facade",
+      "service",
+      "pipeline",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": true,
+      "publish": false,
+      "web": false
+    }
+  }
 }

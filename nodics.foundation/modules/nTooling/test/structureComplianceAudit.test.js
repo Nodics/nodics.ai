@@ -79,6 +79,12 @@ try {
         ['composition', 'configuration', 'router', 'service', 'utility', 'llm'],
         {},
         'module.exports = { activeModules: { groups: [], modules: ["apiServer"] } };\n');
+    fs.writeFileSync(path.join(projectHome, 'acme/envs/local/apiServer/config/properties.js'), [
+        'const helper = require("../config/runtime-properties");',
+        'const modules = ["apiServer"].map(value => value);',
+        'module.exports = helper ? { activeModules: { groups: [], modules } } : {};',
+        ''
+    ].join('\n'));
     write(path.join(projectHome, 'acme/envs/local/apiServer/src/router/routers.js'), 'module.exports = {};\n');
     write(path.join(projectHome, 'acme/envs/local/apiServer/src/router/appConfig.js'), 'module.exports = {};\n');
     write(path.join(projectHome, 'acme/envs/local/apiServer/src/service/defaultSampleService.js'), [

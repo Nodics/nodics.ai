@@ -10,7 +10,16 @@
     "displayName": "Customer List",
     "runtimeModule": true,
     "loadableByNodicsModuleLoader": true,
-    "owns": ["configuration", "schema", "service", "facade", "controller", "router", "test", "llm"],
+    "owns": [
+      "configuration",
+      "schema",
+      "router",
+      "controller",
+      "facade",
+      "service",
+      "test",
+      "llm"
+    ],
     "runtime": {
       "router": true,
       "publish": false,

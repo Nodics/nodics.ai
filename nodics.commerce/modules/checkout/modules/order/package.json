@@ -10,7 +10,20 @@
     "displayName": "Order",
     "runtimeModule": true,
     "loadableByNodicsModuleLoader": true,
-    "owns": ["configuration", "schema", "service", "facade", "controller", "router", "test", "llm"],
-    "runtime": { "router": true, "publish": false, "web": false }
+    "owns": [
+      "configuration",
+      "schema",
+      "router",
+      "controller",
+      "facade",
+      "service",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": true,
+      "publish": false,
+      "web": false
+    }
   }
 }

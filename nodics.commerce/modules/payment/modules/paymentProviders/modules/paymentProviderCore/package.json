@@ -13,7 +13,6 @@
     "owns": [
       "configuration",
       "service",
-      "test",
       "llm"
     ],
     "runtime": {

@@ -55,6 +55,7 @@ const rootPackage = JSON.parse(fs.readFileSync(path.join(rootPath, 'package.json
 const modules = [{
     name: rootPackage.name,
     relativePath: '.',
+    path: rootPath,
     packageJson: rootPackage
 }].concat(scanModules());
 
@@ -93,12 +94,17 @@ modules.forEach(module => {
             'nodics.runtime values must be boolean for package: ' + module.relativePath);
     });
 
-    if (['setup', 'tooling'].includes(nodics.kind)) {
+    if (['framework', 'setup', 'tooling'].includes(nodics.kind)) {
         assert.strictEqual(nodics.runtimeModule, false, nodics.kind + ' package must not be runtime loadable: ' + module.relativePath);
         assert.strictEqual(nodics.loadableByNodicsModuleLoader, false, nodics.kind + ' package must not be module-loader loadable: ' + module.relativePath);
         assert.strictEqual(nodics.runtime.router, false, nodics.kind + ' package must not expose routers: ' + module.relativePath);
         assert.strictEqual(nodics.runtime.publish, false, nodics.kind + ' package must not be publish gated: ' + module.relativePath);
         assert.strictEqual(nodics.runtime.web, false, nodics.kind + ' package must not be web gated: ' + module.relativePath);
+    }
+
+    if (['modules', 'envs'].includes(module.relativePath)) {
+        assert.strictEqual(nodics.runtimeModule, false, 'structural group must not be runtime loadable: ' + module.relativePath);
+        assert.strictEqual(nodics.loadableByNodicsModuleLoader, false, 'structural group must not be module-loader loadable: ' + module.relativePath);
     }
 
     if (nodics.kind === 'publish') {
@@ -123,6 +129,11 @@ modules.forEach(module => {
             'project packages must contain standard modules/ directory: ' + module.relativePath);
         assert(fs.existsSync(path.join(module.path, 'envs')),
             'project packages must contain standard envs/ directory: ' + module.relativePath);
+    }
+
+    if (fs.existsSync(path.join(module.path, 'docs'))) {
+        assert(nodics.owns.includes('documentation'),
+            'packages with governed docs source must preserve documentation ownership: ' + module.relativePath);
     }
 
     if (modernizedDescriptions[module.relativePath]) {

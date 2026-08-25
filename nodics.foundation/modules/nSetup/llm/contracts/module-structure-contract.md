@@ -120,6 +120,14 @@ Do not add sibling config files like `config/tooling.js` or
 loader/generator contract that cannot be expressed as properties, and that
 exception must be documented in the owning module README and tests.
 
+Project topology modules under `envs/` may resolve local environment values,
+secret references, ports, database names, active module lists, and shared
+topology helper imports inside `config/properties.js`, because those files are
+the runnable environment/server/node composition boundary.
+This exception does not apply to framework or business capability modules. Reusable behavior and
+large default payloads still belong in module-owned source utilities or
+services.
+
 New project, environment, server, and node modules must follow
 `modules/nSetup/llm/standards/module-generation-guide.md`. Generation must be driven by module
 metadata, active-module registration, layered configuration, source

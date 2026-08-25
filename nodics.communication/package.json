@@ -1,7 +1,48 @@
 {
-  "name": "nodics.communication", "version": "0.0.0", "index": "89.99", "private": true, "main": "nodics.js",
+  "name": "nodics.communication",
+  "version": "0.0.0",
+  "index": "89.99",
+  "private": true,
+  "main": "nodics.js",
   "description": "Provider-neutral Nodics communication functional module group.",
-  "requiredModules": ["commsSchema", "commsCore", "commsVerification", "localCommsProvider", "smtpCommsProvider", "smsCommsProvider", "commsApi"],
-  "nodics": { "kind": "group", "displayName": "Nodics Communication", "extends": ["nodics.foundation"], "runtimeModule": true, "loadableByNodicsModuleLoader": true, "owns": ["composition", "configuration", "test", "llm"], "runtime": { "router": false, "publish": false, "web": false }, "functionalModule": { "identity": "nodics.communication", "displayName": "Communication", "type": "STANDARD", "protected": false } },
-  "scripts": { "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check", "test:contract": "for file in test/*.test.js modules/*/test/*.test.js; do node \"$file\" || exit 1; done", "test": "npm run check:syntax && npm run test:contract" }
+  "requiredModules": [
+    "commsSchema",
+    "commsCore",
+    "commsVerification",
+    "localCommsProvider",
+    "smtpCommsProvider",
+    "smsCommsProvider",
+    "commsApi"
+  ],
+  "nodics": {
+    "kind": "group",
+    "displayName": "Nodics Communication",
+    "extends": [
+      "nodics.foundation"
+    ],
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "composition",
+      "configuration",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    },
+    "functionalModule": {
+      "identity": "nodics.communication",
+      "displayName": "Communication",
+      "type": "STANDARD",
+      "protected": false
+    }
+  },
+  "scripts": {
+    "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
+    "test:contract": "for file in test/*.test.js modules/*/test/*.test.js; do node \"$file\" || exit 1; done",
+    "test": "npm run check:syntax && npm run test:contract"
+  }
 }

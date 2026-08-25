@@ -16,7 +16,6 @@
       "controller",
       "facade",
       "service",
-      "test",
       "llm"
     ],
     "runtime": {

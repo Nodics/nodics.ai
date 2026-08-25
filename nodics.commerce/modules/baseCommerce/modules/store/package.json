@@ -18,7 +18,7 @@
       "llm"
     ],
     "runtime": {
-    "router": true,
+      "router": true,
       "publish": false,
       "web": false
     }

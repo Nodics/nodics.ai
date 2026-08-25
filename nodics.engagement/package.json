@@ -43,7 +43,7 @@
     },
     "scripts": {
         "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
-    "test:contract": "for file in test/*.test.js modules/*/test/*.test.js; do node \"$file\" || exit 1; done",
+        "test:contract": "for file in test/*.test.js modules/*/test/*.test.js; do node \"$file\" || exit 1; done",
         "test": "npm run check:syntax && npm run test:contract"
     }
 }

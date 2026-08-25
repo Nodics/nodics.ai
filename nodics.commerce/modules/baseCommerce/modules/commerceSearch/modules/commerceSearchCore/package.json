@@ -13,12 +13,11 @@
     "owns": [
       "configuration",
       "schema",
-      "service",
-      "facade",
-      "controller",
       "router",
+      "controller",
+      "facade",
+      "service",
       "search",
-      "data",
       "test",
       "llm"
     ],

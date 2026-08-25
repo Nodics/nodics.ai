@@ -21,8 +21,8 @@
         "runtimeModule": true,
         "loadableByNodicsModuleLoader": true,
         "owns": [
-        "configuration",
-        "data",
+            "configuration",
+            "data",
             "schema",
             "router",
             "service",

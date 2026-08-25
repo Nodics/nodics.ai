@@ -1,5 +1,25 @@
 {
-  "name": "smsCommsProvider", "version": "0.0.0", "index": "89.42", "private": true, "main": "nodics.js",
+  "name": "smsCommsProvider",
+  "version": "0.0.0",
+  "index": "89.42",
+  "private": true,
+  "main": "nodics.js",
   "description": "Disabled-by-default sandbox-capable SMS provider boundary.",
-  "nodics": { "kind": "capability", "displayName": "SMS Communication Provider", "runtimeModule": true, "loadableByNodicsModuleLoader": true, "owns": ["configuration", "service", "test", "llm"], "runtime": { "router": false, "publish": false, "web": false } }
+  "nodics": {
+    "kind": "capability",
+    "displayName": "SMS Communication Provider",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "service",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  }
 }

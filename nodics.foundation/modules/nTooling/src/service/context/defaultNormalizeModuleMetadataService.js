@@ -43,6 +43,33 @@ const generatedFolderToOwnership = {
     test: 'test'
 };
 
+const preservedExplicitOwnership = new Set([
+    'assets',
+    'documentation'
+]);
+
+const nonRuntimeKinds = new Set([
+    'framework',
+    'setup',
+    'tooling'
+]);
+
+function detectJsonIndent(source) {
+    const match = source.match(/\n( +)"/);
+    return match ? match[1].length : 2;
+}
+
+function writePackageJsonIfChanged(packagePath, packageJson, source) {
+    const formatted = JSON.stringify(packageJson, null, detectJsonIndent(source)) + '\n';
+    if (formatted !== source) {
+        fs.writeFileSync(packagePath, formatted, 'utf8');
+    }
+}
+
+function isStructuralGroup(module) {
+    return module.relativePath === 'modules' || module.relativePath === 'envs';
+}
+
 
 
 
@@ -116,8 +143,28 @@ module.exports = exportedService = {
     });
 },
 
+    /** Implements inferDescription as an overrideable service operation. */
+    inferDescription: function (module, kind) {
+    if (module.packageJson.description) {
+        return module.packageJson.description;
+    }
+    const displayName = module.packageJson?.nodics?.displayName || module.packageJson.name;
+    if (module.relativePath === 'envs') {
+        return 'Environment composition boundary for this Nodics project.';
+    }
+    if (module.relativePath.startsWith('envs/')) {
+        return displayName + ' runtime composition and configuration boundary for this Nodics project.';
+    }
+    return displayName + ' ' + kind + ' module for this Nodics project.';
+},
+
     /** Implements inferOwns as an overrideable service operation. */
     inferOwns: function (module, kind) {
+    if (kind === 'framework') {
+        return Array.isArray(module.packageJson?.nodics?.owns) && module.packageJson.nodics.owns.length
+            ? module.packageJson.nodics.owns
+            : ['repository', 'workspace-governance', 'release'];
+    }
     if (kind === 'setup') {
         return ['llm'];
     }
@@ -127,6 +174,12 @@ module.exports = exportedService = {
     let owns = listFeatureFolders(module.path)
         .map(folder => generatedFolderToOwnership[folder])
         .filter(Boolean);
+    if (fs.existsSync(path.join(module.path, 'docs'))) {
+        owns.push('documentation');
+    }
+    (Array.isArray(module.packageJson?.nodics?.owns) ? module.packageJson.nodics.owns : [])
+        .filter(ownership => preservedExplicitOwnership.has(ownership))
+        .forEach(ownership => owns.push(ownership));
     if ((kind === 'group' || (this.hasChildren || exportedService.hasChildren).call(this, module)) && !owns.includes('composition')) {
         owns.unshift('composition');
     }
@@ -139,19 +192,26 @@ module.exports = exportedService = {
     /** Implements normalizeModule as an overrideable service operation. */
     normalizeModule: function (module) {
     let packagePath = path.join(module.path, 'package.json');
-    let packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+    let source = fs.readFileSync(packagePath, 'utf8');
+    let packageJson = JSON.parse(source);
     let kind = (this.inferKind || exportedService.inferKind).call(this, module);
+    packageJson.description = (this.inferDescription || exportedService.inferDescription).call(this, {
+        path: module.path,
+        relativePath: module.relativePath,
+        packageJson: packageJson
+    }, kind);
+    const runtimeLoadable = !nonRuntimeKinds.has(kind) && !isStructuralGroup(module);
     packageJson.nodics = Object.assign({}, packageJson.nodics || {}, {
         kind: kind,
         runtime: (this.inferRuntime || exportedService.inferRuntime).call(this, packageJson, kind),
-        runtimeModule: !['setup', 'tooling'].includes(kind),
-        loadableByNodicsModuleLoader: !['setup', 'tooling'].includes(kind),
+        runtimeModule: runtimeLoadable,
+        loadableByNodicsModuleLoader: runtimeLoadable,
         owns: (this.inferOwns || exportedService.inferOwns).call(this, module, kind)
     });
     delete packageJson.nodics.moduleType;
     delete packageJson.type;
     delete packageJson.nodics.description;
-    fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 4) + '\n', 'utf8');
+    writePackageJsonIfChanged(packagePath, packageJson, source);
 },
 
     /** Implements run as an overrideable service operation. */

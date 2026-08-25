@@ -13,14 +13,14 @@
     "owns": [
       "configuration",
       "schema",
-      "service",
-      "controller",
       "router",
+      "controller",
+      "service",
       "test",
       "llm"
     ],
     "runtime": {
-    "router": true,
+      "router": true,
       "publish": false,
       "web": false
     }

@@ -199,6 +199,13 @@ schema, generator, or external-source contract that cannot be represented as
 properties. The owning module must document the exception and provide tests that
 prove the artifact is not a hidden parallel source of configuration truth.
 
+Project topology modules under `envs/`, including environment, server, and node
+packages, are the bounded exception for runnable local topology composition.
+Their `config/properties.js` files may resolve environment variables, ports,
+database names, active module lists, and shared topology helper imports. Do not
+use that topology exception to hide reusable framework or business capability
+behavior in normal module configuration.
+
 ## Documentation And Tests
 
 The module README explains purpose, ownership, dependencies, configuration, and

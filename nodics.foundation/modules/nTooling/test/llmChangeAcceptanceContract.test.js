@@ -308,7 +308,9 @@ requireClauses('modules/nSetup/llm/standards/module-standard.md', [
     'test/                         Module-owned tests proving default behavior and override/customization behavior; not mandatory for pure group modules',
     'An implemented capability module must remain understandable when only its local',
     'successful, rejected, boundary/scale, failure/recovery, and later-layer',
-    'Critical invariants must be enforced by focused tests'
+    'Critical invariants must be enforced by focused tests',
+    'Project topology modules under `envs/`, including environment, server, and node',
+    'use that topology exception to hide reusable framework or business capability'
 ]);
 
 requireClauses('modules/nSetup/llm/contracts/documentation-impact-contract.md', [
@@ -379,7 +381,9 @@ requireClauses('modules/nSetup/llm/contracts/module-structure-contract.md', [
     '`tooling.discovery`',
     '`tooling.documentationGovernance`',
     'Do not add sibling config files like `config/tooling.js`',
-    '`config/documentation-governance.json`'
+    '`config/documentation-governance.json`',
+    'Project topology modules under `envs/` may resolve local environment values',
+    'This exception does not apply to framework or business capability modules'
 ]);
 
 requireClauses('modules/nSetup/llm/ai-enablement-index.md', [
@@ -500,7 +504,9 @@ requireClauses('modules/nSetup/llm/standards/module-standard.md', [
     'the scaffold has passed the same generated-module contract',
     'Run `npm run structure:audit -- --fail` before adding business logic',
     'fix the owning normalizer or source rule instead of manually',
-    'framework defects'
+    'framework defects',
+    'Project topology modules under `envs/`, including environment, server, and node',
+    'use that topology exception to hide reusable framework or business capability'
 ]);
 
 console.log('Nodics LLM change acceptance contract validated');

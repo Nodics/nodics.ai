@@ -22,7 +22,7 @@
     "owns": [
       "composition",
       "configuration",
-      "test",
+      "data",
       "llm"
     ],
     "runtime": {
