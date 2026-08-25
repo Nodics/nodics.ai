@@ -152,15 +152,25 @@ module.exports = {
      */
     filterDeclaredReleaseFiles: function (fileList, dataReleasePlan, folderName) {
         if (!Array.isArray(dataReleasePlan) || dataReleasePlan.length === 0) return fileList;
-        let allowed = new Set();
-        dataReleasePlan.forEach(release => {
-            (release.declaredFiles || []).filter(file => file.split('/').includes(folderName))
-                .forEach(file => allowed.add(path.resolve(NODICS.getRawModule(release.moduleName).path, 'data', file)));
+        let byPath = {};
+        _.each(fileList, (paths, name) => {
+            [].concat(paths || []).forEach(file => {
+                byPath[path.resolve(file)] = { name: name, file: file };
+            });
         });
         let filtered = {};
-        _.each(fileList, (paths, name) => {
-            let selected = [].concat(paths || []).filter(file => allowed.has(path.resolve(file)));
-            if (selected.length > 0) filtered[name] = selected;
+        let used = new Set();
+        dataReleasePlan.forEach(release => {
+            let moduleObject = NODICS.getRawModule(release.moduleName);
+            if (!moduleObject || !moduleObject.path) return;
+            (release.declaredFiles || []).filter(file => file.split('/').includes(folderName)).forEach(file => {
+                let resolved = path.resolve(moduleObject.path, 'data', file);
+                let entry = byPath[resolved];
+                if (!entry || used.has(resolved)) return;
+                if (!filtered[entry.name]) filtered[entry.name] = [];
+                filtered[entry.name].push(entry.file);
+                used.add(resolved);
+            });
         });
         return filtered;
     },
