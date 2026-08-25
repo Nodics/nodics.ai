@@ -1074,7 +1074,12 @@ async function runAxisSmoke() {
   if (!existsSync(resolve(axisRoot, "package.json"))) {
     throw new Error(`Axis repository not found at ${axisRoot}`);
   }
-  log("running Axis smoke with documentation and Process-composed cronjob lifecycle gates");
+  const enabledGates = [
+    axisSmoke.expectDocumentation ? "documentation" : null,
+    axisSmoke.cronLifecycle ? "cron lifecycle" : null,
+    axisSmoke.processLifecycle ? "process lifecycle" : null,
+  ].filter(Boolean);
+  log(`running Axis smoke${enabledGates.length ? ` with ${enabledGates.join(", ")}` : ""}`);
   await new Promise((resolvePromise, rejectPromise) => {
     const child = spawn("npm", ["run", "smoke:live"], {
       cwd: axisRoot,
