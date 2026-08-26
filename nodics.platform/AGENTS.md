@@ -15,6 +15,10 @@
 - Keep this repository backend/API-only.
 - Frontend clients own rendering and interaction. Documentation-content
   projects own authored content.
+- The `installer` child module owns installed-runtime Application Builder
+  backend capability contracts only. Keep the public first-machine bootstrap
+  package in the separate `nodics.installer` repository so beginner `npx`
+  setup still works before `nodics.ai` exists locally.
 - Platform owns governed documentation import/projection and API delivery, not
   an external content project's source tree.
 - BackOffice registration controls Axis representation and does not silently
