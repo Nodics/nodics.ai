@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultDiscoveryIndexConfigurationService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultDiscoveryIndexConfigurationService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultDiscoveryIndexConfigurationService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultDiscoveryIndexConfigurationService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultDiscoveryIndexConfigurationService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultDiscoveryIndexConfigurationService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultDiscoveryIndexConfigurationService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultDiscoveryIndexConfigurationService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultDiscoveryIndexConfigurationService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultDiscoveryIndexConfigurationService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultDiscoveryIndexConfigurationService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultDiscoveryIndexConfigurationService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultDiscoveryIndexConfigurationService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultDiscoveryIndexConfigurationService.doIndexing(request);
     }
 };

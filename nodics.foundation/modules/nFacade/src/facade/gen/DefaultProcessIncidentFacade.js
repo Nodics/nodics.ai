@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultProcessIncidentService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultProcessIncidentService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultProcessIncidentService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultProcessIncidentService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultProcessIncidentService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultProcessIncidentService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultProcessIncidentService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultProcessIncidentService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultProcessIncidentService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultProcessIncidentService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultProcessIncidentService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultProcessIncidentService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultProcessIncidentService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultProcessIncidentService.doIndexing(request);
     }
 };

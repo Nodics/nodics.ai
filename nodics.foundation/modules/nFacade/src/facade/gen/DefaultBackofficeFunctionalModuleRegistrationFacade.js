@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultBackofficeFunctionalModuleRegistrationService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultBackofficeFunctionalModuleRegistrationService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultBackofficeFunctionalModuleRegistrationService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultBackofficeFunctionalModuleRegistrationService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultBackofficeFunctionalModuleRegistrationService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultBackofficeFunctionalModuleRegistrationService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultBackofficeFunctionalModuleRegistrationService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultBackofficeFunctionalModuleRegistrationService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultBackofficeFunctionalModuleRegistrationService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultBackofficeFunctionalModuleRegistrationService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultBackofficeFunctionalModuleRegistrationService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultBackofficeFunctionalModuleRegistrationService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultBackofficeFunctionalModuleRegistrationService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultBackofficeFunctionalModuleRegistrationService.doIndexing(request);
     }
 };

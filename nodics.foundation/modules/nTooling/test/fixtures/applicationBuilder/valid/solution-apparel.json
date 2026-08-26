@@ -8,7 +8,7 @@
   "experience": { "storefront": "AGORA", "composition": "apparel", "routes": ["/", "/apparel"], "rendererKeys": ["agora.apparel.product-card"] },
   "security": { "authentication": "PASSWORD", "authorization": "BACKEND_OWNED", "session": "BEARER", "corsOrigins": ["http://127.0.0.1:3300"], "publicApiCategories": ["customer"] },
   "integrations": [],
-  "data": { "packs": ["agora.common", "agora.apparel"], "customerOwnedRoots": ["modules/agora.common/data", "modules/agora.apparel/data"] },
+  "data": { "packs": ["agora.apparel"], "customerOwnedRoots": ["modules/agora.apparel/data"] },
   "qualification": { "profile": "LOCAL_END_TO_END", "journeys": ["apparel.size-colour-checkout"], "freshDatabaseRequired": true },
   "decisions": { "unresolved": [], "assumptions": [] }
 }

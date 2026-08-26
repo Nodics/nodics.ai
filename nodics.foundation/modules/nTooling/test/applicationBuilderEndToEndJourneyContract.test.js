@@ -40,7 +40,7 @@ const cases = [{
     preset: 'telco',
     frontends: 'AGORA,AXIS',
     expectedDomains: ['TELCO'],
-    expectedPacks: ['agora.common', 'agora.telco']
+    expectedPacks: ['agora.telco']
 }, {
     projectCode: 'acmeMarketplace',
     customerCode: 'acme',
@@ -48,7 +48,7 @@ const cases = [{
     preset: 'combined',
     frontends: 'AGORA,AXIS,NEXUS',
     expectedDomains: ['APPAREL', 'ELECTRONICS', 'TELCO'],
-    expectedPacks: ['agora.apparel', 'agora.common', 'agora.electronics', 'agora.telco', 'nexus.web']
+    expectedPacks: ['agora.apparel', 'agora.electronics', 'agora.telco', 'nexus.web']
 }];
 
 /**

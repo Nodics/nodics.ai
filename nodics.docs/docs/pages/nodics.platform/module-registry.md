@@ -66,7 +66,7 @@ understand every technical module that helped Core or WCMS start.
 | Mandatory foundation | Core, Platform, WCMS | Installed and active by runtime contract; not deregisterable from Axis. |
 | Optional functional capability | Process | Register, activate, deactivate, deregister. |
 | Technical module | `cronjob`, `media`, `profile` internals | Not shown as separate business registry cards unless exposed by an owning functional module. |
-| Customer extension | future customer Platform extension | Customizes the standard identity; does not create a new displayed Platform name by default. |
+| Customer extension | customer Platform extension | Customizes the standard identity; does not create a new displayed Platform name by default. |
 
 Mandatory does not mean “hardcoded in Axis.” It means the current reference
 BackOffice experience depends on those capabilities. Axis still discovers the

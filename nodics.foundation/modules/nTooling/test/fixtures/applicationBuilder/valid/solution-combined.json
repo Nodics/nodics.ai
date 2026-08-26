@@ -8,7 +8,7 @@
   "experience": { "storefront": "AGORA", "composition": "combined", "routes": ["/", "/apparel", "/electronics", "/telco"], "rendererKeys": ["agora.apparel.product-card", "agora.electronics.product-card", "agora.telco.product-card"], "themeCode": "referenceTheme" },
   "security": { "authentication": "PASSWORD_AND_OIDC", "authorization": "BACKEND_OWNED", "session": "SECURE_BROWSER_SESSION", "corsOrigins": ["http://127.0.0.1:3300"], "publicApiCategories": ["customer", "contentDelivery"] },
   "integrations": [{ "code": "localProvisioning", "kind": "PROVISIONING", "certificationState": "LOCAL_ADAPTER", "secretReference": "secrets/telco/provisioning", "required": true }],
-  "data": { "packs": ["agora.common", "agora.apparel", "agora.electronics", "agora.telco", "nexus.web"], "customerOwnedRoots": ["modules/agora.common/data", "modules/agora.apparel/data", "modules/agora.electronics/data", "modules/agora.telco/data", "modules/nexus.web/data"], "sampleData": true },
+  "data": { "packs": ["agora.apparel", "agora.electronics", "agora.telco", "nexus.web"], "customerOwnedRoots": ["modules/agora.apparel/data", "modules/agora.electronics/data", "modules/agora.telco/data", "modules/nexus.web/data"], "sampleData": true },
   "qualification": { "profile": "LOCAL_END_TO_END", "journeys": ["apparel.size-colour-checkout", "electronics.warranty-checkout", "telco.device-plan-provisioning", "commerce.mixed-cart"], "freshDatabaseRequired": true, "browserRequired": true },
   "decisions": { "unresolved": [], "assumptions": ["External providers remain behind local deterministic adapters."] }
 }

@@ -65,7 +65,7 @@ ecosystem.
 | Business analyst | What problem is the user, operator, partner, or business evaluator trying to solve? | If the request is “register Cron,” explain the lifecycle and what business capability becomes available, not only the button click. |
 | Enterprise architect | Which module, runtime, tenant, security boundary, and release unit owns this behavior? | Module registration is Platform/BackOffice state; Axis renders it; Cron only reports its runtime availability. |
 | Nodics framework expert | Is this Core, Platform, WCMS, Cron, Axis renderer, customer project, or customer overlay work? | A documentation content pack belongs in the backend owner, not in the frontend repository. |
-| Domain expert | Could this pattern apply to commerce, telco, logistics, content, workflow, or another domain without becoming domain-locked? | A media picker should be reusable for product media, CMS media, and future workflow attachments. |
+| Domain expert | Could this pattern apply to commerce, telco, logistics, content, workflow, or another domain without becoming domain-locked? | A media picker should be reusable for product media, CMS media, and workflow attachments. |
 | Principal engineer | Can configuration or extension solve this before new framework code is written? | Prefer a server property, content component property, or customer module overlay before editing a framework default. |
 | QA and tester | What small failure will a user notice after the happy path succeeds? | Register/activate/deactivate buttons must refresh state immediately without forcing login or page reload. |
 | TechOps/DevOps reviewer | How will this run, restart, roll back, and be diagnosed in local and production topology? | A fresh bootstrap script must drop only named local databases and refuse to run if unrelated servers occupy the expected ports. |
@@ -77,7 +77,7 @@ contract or typed client flow.
 
 ## Coding principles that protect customization
 
-Nodics code should be written so future customer projects can extend it without
+Nodics code should be written so customer projects can extend it without
 copying framework files. Use these rules as the practical checklist:
 
 1. Prefer configuration first. If behavior can be changed through properties,
@@ -90,7 +90,7 @@ copying framework files. Use these rules as the practical checklist:
 3. Keep JavaScript export-friendly. Prefer small exported functions, services,
    and configuration objects over sealed inline behavior, so a later customer
    module can override or compose the behavior through Nodics loading.
-4. Document the file and exported behavior. A future AI tool may read only the
+4. Document the file and exported behavior. An AI tool may read only the
    nearest file and `AGENTS.md`, so ownership, override path, side effects, and
    test expectations must be visible.
 5. Treat generated data as output. If CMS documentation, import manifests, or
@@ -109,7 +109,7 @@ Backend behavior belongs in the backend project or module that owns the
 business rule. In Kickoff, project modules live under `modules/`, while
 environment and server composition live under `envs/`.
 
-A future module such as `kickoff.platform` may extend `nodics.platform` to
+A customer module such as `kickoff.platform` may extend `nodics.platform` to
 customize Platform services. The runtime server can load the customer extension
 after Platform. Service precedence then follows the normal module merge and
 index order. Axis should still display the functional capability as Platform,
@@ -127,7 +127,7 @@ renders that authorized contract.
 
 Simple presentation changes, such as logo, copy, theme, or demo content, should
 come from backend-owned CMS or configuration where possible. Hard-coding those
-values in the frontend makes future customers harder to support.
+values in the frontend makes later customer projects harder to support.
 
 ## Choosing the right customization mechanism
 

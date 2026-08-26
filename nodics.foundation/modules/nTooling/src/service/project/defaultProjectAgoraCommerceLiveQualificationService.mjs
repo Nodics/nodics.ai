@@ -60,7 +60,7 @@ async function main() {
   console.log("[agora-commerce-live-qualification] expected flow: data folder -> Staged schemas -> Online schemas -> search indexing -> Agora frontend");
   console.log("[agora-commerce-live-qualification] validating local topology readiness");
   await ensureTopologyReady();
-  console.log("[agora-commerce-live-qualification] validating staged agoraCommonData release contracts");
+  console.log("[agora-commerce-live-qualification] validating staged Agora domain release contracts");
   await run("npm", ["run", "test:agora-commerce"]);
   console.log("[agora-commerce-live-qualification] validating staged data import acceptance");
   await run("npm", ["run", "acceptance:agora-commerce-data"]);

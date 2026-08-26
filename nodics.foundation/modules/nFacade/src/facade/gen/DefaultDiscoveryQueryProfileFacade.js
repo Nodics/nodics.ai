@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultDiscoveryQueryProfileService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultDiscoveryQueryProfileService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultDiscoveryQueryProfileService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultDiscoveryQueryProfileService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultDiscoveryQueryProfileService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultDiscoveryQueryProfileService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultDiscoveryQueryProfileService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultDiscoveryQueryProfileService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultDiscoveryQueryProfileService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultDiscoveryQueryProfileService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultDiscoveryQueryProfileService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultDiscoveryQueryProfileService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultDiscoveryQueryProfileService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultDiscoveryQueryProfileService.doIndexing(request);
     }
 };

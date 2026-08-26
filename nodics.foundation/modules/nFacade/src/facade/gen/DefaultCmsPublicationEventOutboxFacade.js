@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultCmsPublicationEventOutboxService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultCmsPublicationEventOutboxService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultCmsPublicationEventOutboxService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultCmsPublicationEventOutboxService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultCmsPublicationEventOutboxService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultCmsPublicationEventOutboxService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultCmsPublicationEventOutboxService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultCmsPublicationEventOutboxService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultCmsPublicationEventOutboxService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultCmsPublicationEventOutboxService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultCmsPublicationEventOutboxService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultCmsPublicationEventOutboxService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultCmsPublicationEventOutboxService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultCmsPublicationEventOutboxService.doIndexing(request);
     }
 };

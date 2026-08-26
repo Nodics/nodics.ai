@@ -29,7 +29,7 @@ The business value is indirect but powerful:
 | Operations | Startup, logs, imports, schemas, routers, and validation follow repeatable rules. |
 | Governance | APIs, data releases, generated artifacts, and module ownership are explicit. |
 
-Core is what lets a partner trust that Platform, WCMS, Cron, and future modules
+Core is what lets a partner trust that Platform, WCMS, Cron, and additional modules
 are not unrelated applications glued together by convention.
 
 ## Beginner mental model
@@ -55,7 +55,7 @@ flowchart TB
   Config --> Platform["nodics.platform"]
   Loader --> WCMS["nodics.wcms"]
   Routing --> Process["nodics.process"]
-  Services --> Future["future functional modules"]
+  Services --> OtherCapabilities["additional functional modules"]
 ```
 
 Every higher module builds on this foundation. A module can extend another
@@ -180,7 +180,7 @@ When changing Core or a module that depends on Core, use this sequence:
 7. Run quality, docs, AI, LLM, module, and acceptance checks appropriate to the
    changed surface.
 
-This sequence protects future custom modules. A partner should be able to
+This sequence protects customer extension modules. A partner should be able to
 override a service, replace a provider, or adjust configuration without
 patching framework source.
 

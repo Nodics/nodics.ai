@@ -64,7 +64,7 @@ The runtime graph must show the customer module loading after the standard
 Process modules. Availability through a package dependency is not enough; the
 module and server `extends` relationships determine functional composition and
 service precedence. Test both the default framework path and the customized
-path so future framework releases cannot silently break only one of them.
+path so later framework releases cannot silently break only one of them.
 
 Operational ownership must also be explicit. The customer team owns its
 adapter dependencies, secrets, deployment configuration, alerts, runbooks, and

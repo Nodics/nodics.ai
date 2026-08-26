@@ -1,7 +1,7 @@
 # installer
 
 `installer` is the platform runtime module for installed Nodics workspaces. It
-creates the backend home for future Application Builder APIs and future Axis
+creates the backend home for read-only Application Builder APIs and Axis
 operator screens.
 
 The separate `nodics.installer` repository remains the public first-machine
@@ -13,16 +13,19 @@ npx github:Nodics/nodics.installer
 
 ## Scope Contract
 
-Phase 1 API scope is frozen in
+The current API scope is frozen in
 [llm/contracts/installer-api-scope-contract.md](llm/contracts/installer-api-scope-contract.md).
 Do not implement APIs outside that contract without updating the action ledger
 first.
 
+Detailed module documentation is maintained in
+[docs/pages/installed-runtime-application-builder-apis.md](docs/pages/installed-runtime-application-builder-apis.md).
+
 ## Responsibilities
 
-- Publish client-safe BackOffice capability metadata for future Axis discovery.
+- Publish client-safe BackOffice capability metadata for Axis discovery.
 - Publish a bounded operation catalog for installed-runtime setup operations.
-- Expose Phase 1 read-only APIs for discovery, workspace status, inventory,
+- Expose read-only APIs for discovery, workspace status, inventory,
   preflight, setup planning, and redacted evidence reads.
 - Protect `nodics.ai` and `nodics.axis` as vendor-owned repositories in
   customer workspaces.
@@ -36,9 +39,9 @@ first.
 - No new business descriptor such as `nodics.solution.json`.
 - No Application Builder authority based on `nodics.project.json`.
 
-## Future API Shape
+## Current API Shape
 
-Phase 1 operations are read-only:
+Current operations are read-only:
 
 - `GET /nodics/installer/v0/info`
 - `GET /nodics/installer/v0/operations`

@@ -36,9 +36,18 @@ function prepareRequest(request) {
  * @override Preserve read-only request projection and low-disclosure failure envelopes.
  */
 module.exports = {
+    /** Initializes the controller lifecycle boundary. */
     init: function () { return Promise.resolve(true); },
+    /** Completes post-initialization for the controller lifecycle boundary. */
     postInit: function () { return Promise.resolve(true); },
 
+    /**
+     * Executes a named installer operation through the Application Builder facade.
+     * @param {string} operation Facade operation name.
+     * @param {Object} request Installer HTTP request envelope.
+     * @param {Function} callback Optional Node-style callback.
+     * @returns {Promise<Object>|undefined} Operation response when no callback is supplied.
+     */
     execute: function (operation, request, callback) {
         const preparedRequest = prepareRequest(request);
         const promise = facade()[operation](preparedRequest)
@@ -47,11 +56,18 @@ module.exports = {
         promise.then(value => callback(null, value)).catch(callback);
     },
 
+    /** Returns installer Application Builder metadata. */
     info: function (request, callback) { return this.execute('info', request, callback); },
+    /** Lists supported installer Application Builder operations. */
     operations: function (request, callback) { return this.execute('operations', request, callback); },
+    /** Returns current workspace status. */
     workspaceStatus: function (request, callback) { return this.execute('workspaceStatus', request, callback); },
+    /** Returns safe workspace repository inventory. */
     workspaceInventory: function (request, callback) { return this.execute('workspaceInventory', request, callback); },
+    /** Runs safe workspace preflight checks. */
     workspacePreflight: function (request, callback) { return this.execute('workspacePreflight', request, callback); },
+    /** Builds a non-mutating setup plan for the requested workspace. */
     setupPlan: function (request, callback) { return this.execute('setupPlan', request, callback); },
+    /** Reads allowlisted setup or qualification evidence. */
     evidenceRead: function (request, callback) { return this.execute('evidenceRead', request, callback); }
 };

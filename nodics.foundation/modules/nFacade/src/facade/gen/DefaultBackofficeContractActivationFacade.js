@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultBackofficeContractActivationService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultBackofficeContractActivationService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultBackofficeContractActivationService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultBackofficeContractActivationService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultBackofficeContractActivationService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultBackofficeContractActivationService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultBackofficeContractActivationService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultBackofficeContractActivationService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultBackofficeContractActivationService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultBackofficeContractActivationService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultBackofficeContractActivationService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultBackofficeContractActivationService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultBackofficeContractActivationService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultBackofficeContractActivationService.doIndexing(request);
     }
 };

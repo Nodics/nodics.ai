@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultPriceDecisionService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultPriceDecisionService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultPriceDecisionService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultPriceDecisionService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultPriceDecisionService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultPriceDecisionService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultPriceDecisionService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultPriceDecisionService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultPriceDecisionService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultPriceDecisionService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultPriceDecisionService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultPriceDecisionService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultPriceDecisionService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultPriceDecisionService.doIndexing(request);
     }
 };

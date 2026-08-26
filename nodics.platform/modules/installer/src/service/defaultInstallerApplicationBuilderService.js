@@ -133,9 +133,16 @@ function readEvidenceFiles(resolved, request) {
  * @override Mutating setup, lifecycle, repair, backup, rollback, and update operations require a future governed contract.
  */
 module.exports = {
+    /** Initializes the service lifecycle boundary. */
     init: function () { return Promise.resolve(true); },
+    /** Completes post-initialization for the service lifecycle boundary. */
     postInit: function () { return Promise.resolve(true); },
 
+    /**
+     * Returns installer Application Builder metadata and permission visibility.
+     * @param {Object} request Installer request envelope.
+     * @returns {Promise<Object>} Standard installer success response.
+     */
     info: async function (request) {
         assertOperationPermission(request, 'installer.info');
         const config = configurationService.getApplicationBuilderConfig();
@@ -153,6 +160,11 @@ module.exports = {
         });
     },
 
+    /**
+     * Lists safe Phase 1 operations exposed by the installer surface.
+     * @param {Object} request Installer request envelope.
+     * @returns {Promise<Object>} Standard installer success response.
+     */
     operations: async function (request) {
         assertOperationPermission(request, 'installer.operations');
         return responseService.success(request, 'installer.operations', {
@@ -162,6 +174,11 @@ module.exports = {
         });
     },
 
+    /**
+     * Returns protected workspace status without mutating local files.
+     * @param {Object} request Installer request envelope.
+     * @returns {Promise<Object>} Standard installer success response.
+     */
     workspaceStatus: async function (request) {
         assertOperationPermission(request, 'workspace.status');
         const resolved = workspaceBoundaryService.resolveWorkspace(request);
@@ -170,6 +187,11 @@ module.exports = {
         });
     },
 
+    /**
+     * Returns a bounded repository inventory for an allowed workspace.
+     * @param {Object} request Installer request envelope.
+     * @returns {Promise<Object>} Standard installer success response.
+     */
     workspaceInventory: async function (request) {
         assertOperationPermission(request, 'workspace.inventory');
         const resolved = workspaceBoundaryService.resolveWorkspace(request);
@@ -179,6 +201,11 @@ module.exports = {
         });
     },
 
+    /**
+     * Runs non-mutating preflight checks for an allowed workspace.
+     * @param {Object} request Installer request envelope.
+     * @returns {Promise<Object>} Standard installer success response.
+     */
     workspacePreflight: async function (request) {
         assertOperationPermission(request, 'workspace.preflight');
         const resolved = workspaceBoundaryService.resolveWorkspace(request);
@@ -198,6 +225,11 @@ module.exports = {
         });
     },
 
+    /**
+     * Produces a dry-run setup plan for a requested customer workspace.
+     * @param {Object} request Installer request envelope.
+     * @returns {Promise<Object>} Standard installer success response.
+     */
     setupPlan: async function (request) {
         assertOperationPermission(request, 'setup.plan');
         const resolved = workspaceBoundaryService.resolveWorkspace(request);
@@ -244,6 +276,11 @@ module.exports = {
         }, messages.length ? { warning: true } : {});
     },
 
+    /**
+     * Reads allowlisted evidence files with configured redaction.
+     * @param {Object} request Installer request envelope.
+     * @returns {Promise<Object>} Standard installer success response.
+     */
     evidenceRead: async function (request) {
         assertOperationPermission(request, 'evidence.read');
         const resolved = workspaceBoundaryService.resolveWorkspace(request);

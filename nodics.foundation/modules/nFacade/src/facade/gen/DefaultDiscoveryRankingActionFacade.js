@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultDiscoveryRankingActionService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultDiscoveryRankingActionService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultDiscoveryRankingActionService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultDiscoveryRankingActionService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultDiscoveryRankingActionService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultDiscoveryRankingActionService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultDiscoveryRankingActionService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultDiscoveryRankingActionService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultDiscoveryRankingActionService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultDiscoveryRankingActionService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultDiscoveryRankingActionService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultDiscoveryRankingActionService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultDiscoveryRankingActionService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultDiscoveryRankingActionService.doIndexing(request);
     }
 };

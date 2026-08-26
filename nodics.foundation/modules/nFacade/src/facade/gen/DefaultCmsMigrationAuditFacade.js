@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultCmsMigrationAuditService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultCmsMigrationAuditService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultCmsMigrationAuditService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultCmsMigrationAuditService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultCmsMigrationAuditService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultCmsMigrationAuditService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultCmsMigrationAuditService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultCmsMigrationAuditService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultCmsMigrationAuditService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultCmsMigrationAuditService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultCmsMigrationAuditService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultCmsMigrationAuditService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultCmsMigrationAuditService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultCmsMigrationAuditService.doIndexing(request);
     }
 };

@@ -42,8 +42,10 @@ global.SERVICE = {
     },
     DefaultProductSearchProjectionService: {
         save: async request => savedProjections.push(request),
+        update: async () => undefined
+    },
+    DefaultSearchService: {
         doSave: async request => indexedProjections.push(request),
-        update: async () => undefined,
         doRemoveByQuery: async request => removedQueries.push(request)
     }
 };
@@ -122,8 +124,8 @@ test('search cache keys and index partitions isolate tenant Store and locale and
 
 test('partial indexing failure invokes tenant Product and Store compensation', async () => {
     let calls = 0;
-    let original = global.SERVICE.DefaultProductSearchProjectionService.doSave;
-    global.SERVICE.DefaultProductSearchProjectionService.doSave = async () => {
+    let original = global.SERVICE.DefaultSearchService.doSave;
+    global.SERVICE.DefaultSearchService.doSave = async () => {
         calls += 1;
         if (calls === 2) throw new Error('provider unavailable');
     };
@@ -132,6 +134,6 @@ test('partial indexing failure invokes tenant Product and Store compensation', a
         assert.equal(removedQueries.length, 1);
         assert.deepEqual(removedQueries[0].query, { tenant: 'default', productCode: product.code, storeCode: 'sampleStore' });
     } finally {
-        global.SERVICE.DefaultProductSearchProjectionService.doSave = original;
+        global.SERVICE.DefaultSearchService.doSave = original;
     }
 });

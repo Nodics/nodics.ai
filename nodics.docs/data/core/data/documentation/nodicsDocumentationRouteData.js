@@ -86,12 +86,12 @@ module.exports = {
     "active": true
   },
   "record6": {
-    "code": "nodicsDocsRouteframeworkFutureModuleDocumentationPattern",
+    "code": "nodicsDocsRouteframeworkCapabilityDocumentationMaturityPattern",
     "site": "nodicsDocumentationSite",
-    "path": "/docs/framework/framework-future-module-documentation-pattern",
+    "path": "/docs/framework/framework-capability-documentation-maturity-pattern",
     "locale": "en",
     "channel": "web",
-    "page": "nodicsDocsPageframeworkFutureModuleDocumentationPattern",
+    "page": "nodicsDocsPageframeworkCapabilityDocumentationMaturityPattern",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
     "accessMode": "PUBLIC",

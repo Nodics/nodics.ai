@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultCustomerFeedbackHandoffService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultCustomerFeedbackHandoffService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultCustomerFeedbackHandoffService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultCustomerFeedbackHandoffService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultCustomerFeedbackHandoffService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultCustomerFeedbackHandoffService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultCustomerFeedbackHandoffService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultCustomerFeedbackHandoffService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultCustomerFeedbackHandoffService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultCustomerFeedbackHandoffService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultCustomerFeedbackHandoffService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultCustomerFeedbackHandoffService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultCustomerFeedbackHandoffService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultCustomerFeedbackHandoffService.doIndexing(request);
     }
 };

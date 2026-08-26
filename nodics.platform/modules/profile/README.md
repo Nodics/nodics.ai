@@ -14,6 +14,8 @@ and whether their credentials and sessions remain valid.
 | Module or scheduled job   | Obtain or use governed internal credentials                    | Secured service-token/API-key flow; never the human username/password route               |
 | Identity operator         | Bootstrap, migrate, rotate, audit, or recover identity state   | Explicit administrative permissions, versioned audit, redaction, and fail-closed recovery |
 | BackOffice client         | Discover allowed Profile operations and invoke Profile APIs    | Profile stays authoritative; BackOffice receives no credential or authorization ownership |
+| Documentation author      | Draft and submit governed documentation/navigation changes     | Authoring permissions without approval, activation, rollback, or publication authority    |
+| Axis viewer               | Read allowed Axis workspaces, dashboards, and documentation    | Read-only groups and permissions; no mutating application operations                      |
 
 **Maturity: Production-ready capability.** Production deployment still
 requires governed bootstrap secrets, tenant-specific identity planning, and a
@@ -241,6 +243,14 @@ clean database bootstrap: an employee cannot be persisted with a missing,
 inactive, or unknown group merely because initialization is in progress.
 Every permission seeded on a group must already exist in the effective
 `identityGovernance.permissionCatalog`.
+
+Profile also seeds inactive `documentationAuthor` and `axisViewer` employees
+for governed documentation and read-only Axis adoption. These bootstrap users
+receive random non-shared passwords and remain disabled until an administrator
+intentionally activates or resets them. Their responsibilities are expressed
+through `documentationAuthorUserGroup` and `axisViewerUserGroup`, so customer
+projects can extend or replace the personas through layered data without
+changing framework source.
 
 Projects can replace the service list, override the reconciler in a later module
 layer, extend `identityGovernance.migration.groupTargets`, or disable automatic

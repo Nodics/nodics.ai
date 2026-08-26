@@ -79,7 +79,7 @@ module.exports = {
         },
         publicBootstrap: {
             enabled: true,
-            contractVersion: 0,
+            contractVersion: 1,
             requiredModules: {
                 profile: 'profile',
                 cms: {

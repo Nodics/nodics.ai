@@ -42,7 +42,15 @@ applicationDocumentationContract.validateCatalogue({
   ownerRoot: root,
   sourceDirectory: 'docs',
   cataloguePath: 'docs/catalogue.json',
-  catalogue: { pack: 'nodics.docs', version: catalogue.release, documents: catalogue.documents },
+  catalogue: {
+    pack: 'nodics.docs',
+    version: catalogue.release,
+    navigationSections: catalogue.navigationSections,
+    documents: catalogue.documents,
+  },
+  requireNavigationSections: true,
+  requireEnterpriseMetadata: true,
+  validateContentQuality: true,
 });
 const documents = catalogue.documents;
 
@@ -284,12 +292,45 @@ function jsModule(description, value) {
   return `${copyrightHeader}'use strict';\n\n/** @description ${description} */\nmodule.exports = ${JSON.stringify(value, null, 2)};\n`;
 }
 
-const sections = [...new Set(documents.map((document) => document.functionalModule))].map(
-  (functionalModule, index) => ({
-    code: slug(functionalModule),
-    title: functionalModule.replace(/^nodics\./, 'Nodics '),
-    order: (index + 1) * 10,
-  }),
+const defaultAudience = ['architect', 'developer', 'operator'];
+const defaultSectionTitle = (document) =>
+  document.functionalModule.replace(/^nodics\./, 'Nodics ');
+const sectionEntries = new Map();
+(catalogue.navigationSections || []).forEach((section, index) => {
+  const title = section.title;
+  const code = section.code || slug(title);
+  if (!title || !code) {
+    throw new Error(`Invalid documentation navigation section at index ${index}`);
+  }
+  sectionEntries.set(code, {
+    code,
+    title,
+    order: section.order || (index + 1) * 10,
+    summary: section.summary || '',
+    audience: section.audience || defaultAudience,
+    visibility: section.visibility || 'public',
+    accessMode: section.accessMode || 'PUBLIC',
+    lifecycleState: section.lifecycleState || 'ONLINE',
+  });
+});
+documents.forEach((document, index) => {
+  const title = document.navigationSection || defaultSectionTitle(document);
+  const code = document.navigationSectionCode || slug(title);
+  if (!sectionEntries.has(code)) {
+    sectionEntries.set(code, {
+      code,
+      title,
+      order: document.navigationSectionOrder || (index + 1) * 10,
+      summary: document.navigationSectionSummary || '',
+      audience: document.audience || defaultAudience,
+      visibility: document.visibility || 'public',
+      accessMode: document.accessMode || 'PUBLIC',
+      lifecycleState: document.lifecycleState || 'ONLINE',
+    });
+  }
+});
+const sections = [...sectionEntries.values()].sort((left, right) =>
+  left.order - right.order || left.title.localeCompare(right.title),
 );
 const routeFor = (document, index) => {
   const route = document.route ||
@@ -301,7 +342,9 @@ const routeFor = (document, index) => {
 };
 const sourcePages = documents.map((document, index) => {
   const markdown = fs.readFileSync(path.join(root, document.content), 'utf8');
-  const section = sections.find((item) => item.code === slug(document.functionalModule));
+  const sectionTitle = document.navigationSection || defaultSectionTitle(document);
+  const sectionCode = document.navigationSectionCode || slug(sectionTitle);
+  const section = sections.find((item) => item.code === sectionCode);
   const recordIdentity = document.recordCode || document.id;
   const blocks = markdownBlocks(markdown, camel(recordIdentity), document.content);
   const documentHeadings = blocks
@@ -324,9 +367,33 @@ const navigationItems = sourcePages.map((document, index) => ({
   section: document.section.code,
   sectionTitle: document.section.title,
   sectionOrder: document.section.order,
-  order: (index + 1) * 10,
-  audience: ['architect', 'developer', 'operator'],
+  group: document.navigationGroup ? slug(document.navigationGroup) : document.section.code,
+  groupTitle: document.navigationGroup || document.section.title,
+  groupOrder: document.navigationGroupOrder || document.navigationOrder || (index + 1) * 10,
+  subgroup: document.navigationSubgroup ? slug(document.navigationSubgroup) : null,
+  subgroupTitle: document.navigationSubgroup || null,
+  order: document.navigationOrder || (index + 1) * 10,
+  parentId: document.parentId || null,
+  hierarchyPath: document.hierarchyPath || [document.section.title, document.title],
+  hierarchyDepth: document.hierarchyDepth || 2,
+  documentType: document.documentType || 'overview',
+  audience: document.audience || defaultAudience,
+  businessAudience: document.businessAudience || [],
+  technicalAudience: document.technicalAudience || [],
   summary: document.summary,
+  visibility: document.visibility || 'public',
+  accessMode: document.accessMode || 'PUBLIC',
+  publiclyAvailable: document.publiclyAvailable !== false,
+  requiresAuthentication: Boolean(document.requiresAuthentication),
+  allowedRoles: document.allowedRoles || [],
+  allowedGroups: document.allowedGroups || [],
+  allowedPermissions: document.allowedPermissions || [],
+  lifecycleState: document.lifecycleState || 'ONLINE',
+  maturityState: document.maturityState || 'operational',
+  implementationState: document.implementationState || 'current',
+  relatedPages: document.relatedPages || [],
+  searchKeywords: document.searchKeywords || [],
+  topicKeywords: document.topicKeywords || [],
   searchText: `${document.title} ${document.summary} ${document.markdown}`,
 }));
 const navigationComponent = {
@@ -360,8 +427,34 @@ const articleComponents = Object.fromEntries(
         route: document.route,
         section: document.section.code,
         sectionTitle: document.section.title,
-        audience: ['architect', 'developer', 'operator'],
+        group: document.navigationGroup ? slug(document.navigationGroup) : document.section.code,
+        groupTitle: document.navigationGroup || document.section.title,
+        subgroup: document.navigationSubgroup ? slug(document.navigationSubgroup) : null,
+        subgroupTitle: document.navigationSubgroup || null,
+        parentId: document.parentId || null,
+        hierarchyPath: document.hierarchyPath || [document.section.title, document.title],
+        hierarchyDepth: document.hierarchyDepth || 2,
+        documentType: document.documentType || 'overview',
+        audience: document.audience || defaultAudience,
+        businessAudience: document.businessAudience || [],
+        technicalAudience: document.technicalAudience || [],
         summary: document.summary,
+        visibility: document.visibility || 'public',
+        accessMode: document.accessMode || 'PUBLIC',
+        publiclyAvailable: document.publiclyAvailable !== false,
+        requiresAuthentication: Boolean(document.requiresAuthentication),
+        allowedRoles: document.allowedRoles || [],
+        allowedGroups: document.allowedGroups || [],
+        allowedPermissions: document.allowedPermissions || [],
+        lifecycleState: document.lifecycleState || 'ONLINE',
+        version: document.version || catalogue.release,
+        maturityState: document.maturityState || 'operational',
+        implementationState: document.implementationState || 'current',
+        renderingComponent: document.renderingComponent || 'documentation.component.article',
+        relatedPages: document.relatedPages || [],
+        sourceEvidence: document.sourceEvidence || [],
+        searchKeywords: document.searchKeywords || [],
+        topicKeywords: document.topicKeywords || [],
         headings: document.headings,
         blocks: document.blocks,
         searchText: `${document.title} ${document.summary} ${document.markdown}`,
@@ -377,6 +470,8 @@ const articleComponents = Object.fromEntries(
           repository: 'nodics.docs',
           functionalModule: document.functionalModule,
           technicalModule: document.technicalModule || null,
+          owner: document.sourceOwner || 'nodics.docs',
+          sourcePath: document.sourcePath || document.content,
           path: document.content,
           wordCount: wordCount(document.markdown),
           checksum: sha256(document.markdown),
@@ -423,7 +518,7 @@ const routeRecords = Object.fromEntries(
       page: `nodicsDocsPage${document.codeSuffix}`,
       routeType: 'PAGE',
       deliveryState: 'ONLINE',
-      accessMode: 'PUBLIC',
+      accessMode: document.accessMode || 'PUBLIC',
       active: true,
     },
   ]),

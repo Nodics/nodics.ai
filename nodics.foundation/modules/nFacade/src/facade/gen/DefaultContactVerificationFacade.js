@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultContactVerificationService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultContactVerificationService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultContactVerificationService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultContactVerificationService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultContactVerificationService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultContactVerificationService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultContactVerificationService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultContactVerificationService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultContactVerificationService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultContactVerificationService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultContactVerificationService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultContactVerificationService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultContactVerificationService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultContactVerificationService.doIndexing(request);
     }
 };

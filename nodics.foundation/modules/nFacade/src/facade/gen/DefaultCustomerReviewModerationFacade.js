@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultCustomerReviewModerationService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultCustomerReviewModerationService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultCustomerReviewModerationService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultCustomerReviewModerationService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultCustomerReviewModerationService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultCustomerReviewModerationService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultCustomerReviewModerationService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultCustomerReviewModerationService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultCustomerReviewModerationService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultCustomerReviewModerationService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultCustomerReviewModerationService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultCustomerReviewModerationService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultCustomerReviewModerationService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultCustomerReviewModerationService.doIndexing(request);
     }
 };

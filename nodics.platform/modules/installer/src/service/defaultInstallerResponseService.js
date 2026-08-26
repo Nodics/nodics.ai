@@ -39,9 +39,20 @@ function sanitizeError(error) {
  */
 module.exports = {
     CONTRACT_VERSION,
+    /** Initializes the response service lifecycle boundary. */
     init: function () { return Promise.resolve(true); },
+    /** Completes post-initialization for the response service lifecycle boundary. */
     postInit: function () { return Promise.resolve(true); },
 
+    /**
+     * Builds a successful or warning installer response envelope.
+     * @param {Object} request Installer request envelope.
+     * @param {string} operation Operation code.
+     * @param {Object} data Response data payload.
+     * @param {Object} diagnostics Optional diagnostics payload.
+     * @param {string[]} redactions Optional redaction codes.
+     * @returns {Object} Installer response envelope.
+     */
     success: function (request, operation, data, diagnostics, redactions) {
         return {
             contractVersion: CONTRACT_VERSION,
@@ -55,6 +66,13 @@ module.exports = {
         };
     },
 
+    /**
+     * Builds a low-disclosure failed installer response envelope.
+     * @param {Object} request Installer request envelope.
+     * @param {string} operation Operation code.
+     * @param {Error} error Failure cause.
+     * @returns {Object} Installer response envelope.
+     */
     failure: function (request, operation, error) {
         return {
             contractVersion: CONTRACT_VERSION,

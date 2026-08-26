@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultEngagementUnifiedQueueItemService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultEngagementUnifiedQueueItemService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultEngagementUnifiedQueueItemService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultEngagementUnifiedQueueItemService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultEngagementUnifiedQueueItemService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultEngagementUnifiedQueueItemService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultEngagementUnifiedQueueItemService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultEngagementUnifiedQueueItemService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultEngagementUnifiedQueueItemService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultEngagementUnifiedQueueItemService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultEngagementUnifiedQueueItemService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultEngagementUnifiedQueueItemService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultEngagementUnifiedQueueItemService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultEngagementUnifiedQueueItemService.doIndexing(request);
     }
 };

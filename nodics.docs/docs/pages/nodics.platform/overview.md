@@ -48,7 +48,7 @@ flowchart LR
   BackOffice --> Registry["Functional module registry"]
   BackOffice --> Capabilities["Browser-safe capabilities"]
   Profile --> Session["Human session contract"]
-  Registry --> Modules["Core, Platform, WCMS, Cron, future modules"]
+  Registry --> Modules["Core, Platform, WCMS, Cron, additional modules"]
 ```
 
 Axis does not decide which rooms exist. Platform/BackOffice returns the

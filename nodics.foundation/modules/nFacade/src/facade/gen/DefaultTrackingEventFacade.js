@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultTrackingEventService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultTrackingEventService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultTrackingEventService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultTrackingEventService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultTrackingEventService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultTrackingEventService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultTrackingEventService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultTrackingEventService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultTrackingEventService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultTrackingEventService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultTrackingEventService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultTrackingEventService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultTrackingEventService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultTrackingEventService.doIndexing(request);
     }
 };

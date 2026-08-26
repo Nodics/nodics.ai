@@ -149,7 +149,7 @@ module.exports = {
                 errors.push('Selected domain requires customer data pack: ' + expectedPack);
             }
         });
-        const expectedDataPacks = new Set(['agora.common'].concat(domainCodes.map(code => 'agora.' + code)));
+        const expectedDataPacks = new Set(domainCodes.map(code => 'agora.' + code));
         if ((solution.topology.frontends || []).includes('NEXUS')) {
             expectedDataPacks.add('nexus.web');
         }

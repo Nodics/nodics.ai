@@ -172,7 +172,7 @@ frontend or a hidden storage convention.
 ## Business value
 
 Media lets business teams reuse assets across CMS, documentation, imports,
-exports, product experiences, and future websites without losing governance.
+exports, product experiences, and websites without losing governance.
 It also keeps operating cost flexible: local storage can support a developer
 machine, while production can move to cloud or CDN-backed storage under the
 same module contract.

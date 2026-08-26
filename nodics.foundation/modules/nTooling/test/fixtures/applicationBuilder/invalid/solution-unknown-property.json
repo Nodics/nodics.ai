@@ -8,7 +8,7 @@
   "experience": { "storefront": "AGORA", "composition": "commerce", "routes": ["/"], "rendererKeys": [] },
   "security": { "authentication": "PASSWORD", "authorization": "BACKEND_OWNED", "session": "BEARER", "corsOrigins": [], "publicApiCategories": ["customer"] },
   "integrations": [],
-  "data": { "packs": [], "customerOwnedRoots": ["modules/agora.common/data"] },
+  "data": { "packs": [], "customerOwnedRoots": [] },
   "qualification": { "profile": "CONTRACT", "journeys": ["commerce.discovery"], "freshDatabaseRequired": false },
   "decisions": { "unresolved": [], "assumptions": [] },
   "generatedBusinessLogic": true

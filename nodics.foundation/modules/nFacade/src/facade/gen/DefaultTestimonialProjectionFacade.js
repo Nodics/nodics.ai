@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultTestimonialProjectionService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultTestimonialProjectionService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultTestimonialProjectionService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultTestimonialProjectionService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultTestimonialProjectionService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultTestimonialProjectionService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultTestimonialProjectionService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultTestimonialProjectionService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultTestimonialProjectionService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultTestimonialProjectionService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultTestimonialProjectionService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultTestimonialProjectionService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultTestimonialProjectionService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultTestimonialProjectionService.doIndexing(request);
     }
 };

@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultDiscoveryFieldMappingService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultDiscoveryFieldMappingService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultDiscoveryFieldMappingService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultDiscoveryFieldMappingService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultDiscoveryFieldMappingService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultDiscoveryFieldMappingService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultDiscoveryFieldMappingService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultDiscoveryFieldMappingService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultDiscoveryFieldMappingService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultDiscoveryFieldMappingService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultDiscoveryFieldMappingService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultDiscoveryFieldMappingService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultDiscoveryFieldMappingService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultDiscoveryFieldMappingService.doIndexing(request);
     }
 };

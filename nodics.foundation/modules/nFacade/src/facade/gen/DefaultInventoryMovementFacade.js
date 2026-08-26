@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultInventoryMovementService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultInventoryMovementService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultInventoryMovementService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultInventoryMovementService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultInventoryMovementService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultInventoryMovementService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultInventoryMovementService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultInventoryMovementService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultInventoryMovementService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultInventoryMovementService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultInventoryMovementService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultInventoryMovementService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultInventoryMovementService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultInventoryMovementService.doIndexing(request);
     }
 };

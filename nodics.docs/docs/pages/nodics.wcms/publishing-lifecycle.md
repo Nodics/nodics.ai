@@ -71,7 +71,7 @@ Mandatory framework data such as the standard publication approval workflow
 and baseline policy is installed from its owning backend module. Application or
 website bundles are imported into Staged through governed nImport APIs. An
 administrator verifies the content and explicitly publishes it. This supports
-Axis initialization, partner website starters, and future template bundles
+Axis initialization, partner website starters, and additional template bundles
 without making the frontend or a customer database script the content owner.
 
 Axis includes a minimal bundled recovery login so an administrator can sign in

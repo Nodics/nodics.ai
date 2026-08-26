@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultCustomerReviewAuthenticityEvidenceService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultCustomerReviewAuthenticityEvidenceService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultCustomerReviewAuthenticityEvidenceService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultCustomerReviewAuthenticityEvidenceService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultCustomerReviewAuthenticityEvidenceService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultCustomerReviewAuthenticityEvidenceService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultCustomerReviewAuthenticityEvidenceService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultCustomerReviewAuthenticityEvidenceService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultCustomerReviewAuthenticityEvidenceService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultCustomerReviewAuthenticityEvidenceService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultCustomerReviewAuthenticityEvidenceService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultCustomerReviewAuthenticityEvidenceService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultCustomerReviewAuthenticityEvidenceService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultCustomerReviewAuthenticityEvidenceService.doIndexing(request);
     }
 };

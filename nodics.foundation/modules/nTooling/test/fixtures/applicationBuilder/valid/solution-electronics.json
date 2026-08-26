@@ -8,7 +8,7 @@
   "experience": { "storefront": "AGORA", "composition": "electronics", "routes": ["/", "/electronics"], "rendererKeys": ["agora.electronics.product-card"] },
   "security": { "authentication": "PASSWORD", "authorization": "BACKEND_OWNED", "session": "BEARER", "corsOrigins": ["http://127.0.0.1:3300"], "publicApiCategories": ["customer"] },
   "integrations": [],
-  "data": { "packs": ["agora.common", "agora.electronics"], "customerOwnedRoots": ["modules/agora.common/data", "modules/agora.electronics/data"] },
+  "data": { "packs": ["agora.electronics"], "customerOwnedRoots": ["modules/agora.electronics/data"] },
   "qualification": { "profile": "LOCAL_END_TO_END", "journeys": ["electronics.warranty-checkout"], "freshDatabaseRequired": true },
   "decisions": { "unresolved": [], "assumptions": [] }
 }

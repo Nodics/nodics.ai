@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultValidatorService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultValidatorService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultValidatorService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultValidatorService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultValidatorService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultValidatorService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultValidatorService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultValidatorService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultValidatorService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultValidatorService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultValidatorService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultValidatorService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultValidatorService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultValidatorService.doIndexing(request);
     }
 };

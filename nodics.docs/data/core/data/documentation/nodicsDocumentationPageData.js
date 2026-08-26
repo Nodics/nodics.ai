@@ -164,8 +164,8 @@ module.exports = {
     "active": true
   },
   "record6": {
-    "code": "nodicsDocsPageframeworkFutureModuleDocumentationPattern",
-    "name": "Future module documentation pattern",
+    "code": "nodicsDocsPageframeworkCapabilityDocumentationMaturityPattern",
+    "name": "Capability documentation maturity pattern",
     "cmsSite": [
       "nodicsDocumentationSite"
     ],
@@ -180,7 +180,7 @@ module.exports = {
         "active": true
       },
       {
-        "target": "nodicsDocsComponentframeworkFutureModuleDocumentationPattern",
+        "target": "nodicsDocsComponentframeworkCapabilityDocumentationMaturityPattern",
         "slot": "article",
         "index": 10,
         "active": true

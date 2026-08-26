@@ -42,7 +42,7 @@ casually.
 | `TASK` | Human work, such as review, approval, or correction. | Process |
 | `DECISION` | Chooses the next path using declared decision data. | Process |
 | `ACTION` | Calls an explicitly allowed domain adapter. | Process orchestrates; domain module owns business logic. |
-| `TIMER` | Represents a wait, schedule boundary, or future SLA point. | Process records intent; Cron can schedule real execution. |
+| `TIMER` | Represents a wait, schedule boundary, or SLA checkpoint. | Process records intent; Cron can schedule real execution. |
 | `SUB_PROCESS` | References another governed workflow definition. | Process |
 | `END` | Marks the instance complete. | Process |
 

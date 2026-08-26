@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultContactCorrespondenceService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultContactCorrespondenceService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultContactCorrespondenceService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultContactCorrespondenceService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultContactCorrespondenceService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultContactCorrespondenceService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultContactCorrespondenceService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultContactCorrespondenceService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultContactCorrespondenceService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultContactCorrespondenceService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultContactCorrespondenceService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultContactCorrespondenceService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultContactCorrespondenceService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultContactCorrespondenceService.doIndexing(request);
     }
 };

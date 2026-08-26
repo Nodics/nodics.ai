@@ -54,7 +54,15 @@ function redactText(value, maxBytes) {
 module.exports = {
     REDACTED,
     secretPatterns,
+    /** Initializes the redaction service lifecycle boundary. */
     init: function () { return Promise.resolve(true); },
+    /** Completes post-initialization for the redaction service lifecycle boundary. */
     postInit: function () { return Promise.resolve(true); },
+    /**
+     * Redacts secrets and optionally truncates text for safe installer evidence responses.
+     * @param {*} value Raw text-like value.
+     * @param {number} maxBytes Optional maximum number of UTF-8 bytes to return.
+     * @returns {{value: string, redactions: string[]}} Redacted text and applied redaction codes.
+     */
     redactText
 };

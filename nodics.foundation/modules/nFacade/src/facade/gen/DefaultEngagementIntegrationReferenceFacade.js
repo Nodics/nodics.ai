@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultEngagementIntegrationReferenceService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultEngagementIntegrationReferenceService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultEngagementIntegrationReferenceService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultEngagementIntegrationReferenceService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultEngagementIntegrationReferenceService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultEngagementIntegrationReferenceService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultEngagementIntegrationReferenceService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultEngagementIntegrationReferenceService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultEngagementIntegrationReferenceService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultEngagementIntegrationReferenceService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultEngagementIntegrationReferenceService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultEngagementIntegrationReferenceService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultEngagementIntegrationReferenceService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultEngagementIntegrationReferenceService.doIndexing(request);
     }
 };

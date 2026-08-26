@@ -180,7 +180,7 @@ flowchart LR
 
 The Designer may make authoring feel easier, but it must not introduce a
 parallel content model. It must save through CMS, Catalog, Media, and
-Publishing contracts. If a future customer wants a different page-design flow,
+Publishing contracts. If a customer wants a different page-design flow,
 they can override the Designer service methods or provide different backend
 templates, slot definitions, component type groups, and renderer mappings.
 They should not fork Axis to invent storage, route, media, or publishing

@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultCustomerListEntryService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultCustomerListEntryService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultCustomerListEntryService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultCustomerListEntryService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultCustomerListEntryService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultCustomerListEntryService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultCustomerListEntryService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultCustomerListEntryService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultCustomerListEntryService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultCustomerListEntryService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultCustomerListEntryService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultCustomerListEntryService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultCustomerListEntryService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultCustomerListEntryService.doIndexing(request);
     }
 };

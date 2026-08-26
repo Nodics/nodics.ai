@@ -45,7 +45,7 @@ Customer projects live outside `nodics.ai`. The reference project is
 local environment configuration, add project modules, and contribute
 project-owned documentation without copying framework source.
 
-A future customer extension module such as `kickoff.platform` may customize
+A customer extension module such as `kickoff.platform` may customize
 Platform behavior. That does not rename the functional capability. BackOffice
 and Axis should still present Platform as Platform unless the customer
 intentionally exposes a separate functional module.
@@ -204,7 +204,7 @@ This architecture helps teams customize without forking. It also supports
 clearer cost control: teams can reuse a capability, configure it, extend it in
 a later layer, and only create a new implementation when the existing contract
 cannot satisfy the requirement. That avoids duplicate authority paths and makes
-future framework upgrades more realistic.
+later framework upgrades more realistic.
 
 ## Architecture decision guide
 
@@ -218,7 +218,7 @@ flowchart TD
   Business -->|Used across projects| Framework["Framework functional module"]
   Business -->|Customer-specific| Project["Customer project or extension module"]
   Business -->|Browser rendering only| Axis["nodics.axis renderer"]
-  Framework --> Owner["Choose Core, Platform, WCMS, Cron, Docs, or future module"]
+  Framework --> Owner["Choose Core, Platform, WCMS, Cron, Docs, or another module"]
   Project --> Extends["Extend framework module without renaming identity"]
   Axis --> Backend["Confirm backend-owned contract already exists"]
   Owner --> Technical["Place code in the owning technical module"]
@@ -247,7 +247,7 @@ capability remains Platform/Profile. Axis should still display Platform, not a
 new customer-branded functional module name, because the partner is extending
 the standard capability rather than creating a separate business capability.
 
-A future customer module could load like this:
+A customer module could load like this:
 
 ```text
 nodics.foundation

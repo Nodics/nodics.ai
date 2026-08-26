@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultLocalizationKeyService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultLocalizationKeyService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultLocalizationKeyService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultLocalizationKeyService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultLocalizationKeyService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultLocalizationKeyService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultLocalizationKeyService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultLocalizationKeyService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultLocalizationKeyService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultLocalizationKeyService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultLocalizationKeyService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultLocalizationKeyService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultLocalizationKeyService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultLocalizationKeyService.doIndexing(request);
     }
 };

@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultCommsVerificationChallengeService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultCommsVerificationChallengeService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultCommsVerificationChallengeService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultCommsVerificationChallengeService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultCommsVerificationChallengeService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultCommsVerificationChallengeService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultCommsVerificationChallengeService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultCommsVerificationChallengeService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultCommsVerificationChallengeService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultCommsVerificationChallengeService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultCommsVerificationChallengeService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultCommsVerificationChallengeService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultCommsVerificationChallengeService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultCommsVerificationChallengeService.doIndexing(request);
     }
 };

@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultCouponBatchService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultCouponBatchService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultCouponBatchService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultCouponBatchService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultCouponBatchService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultCouponBatchService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultCouponBatchService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultCouponBatchService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultCouponBatchService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultCouponBatchService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultCouponBatchService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultCouponBatchService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultCouponBatchService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultCouponBatchService.doIndexing(request);
     }
 };

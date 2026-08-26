@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultInventoryBalanceService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultInventoryBalanceService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultInventoryBalanceService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultInventoryBalanceService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultInventoryBalanceService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultInventoryBalanceService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultInventoryBalanceService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultInventoryBalanceService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultInventoryBalanceService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultInventoryBalanceService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultInventoryBalanceService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultInventoryBalanceService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultInventoryBalanceService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultInventoryBalanceService.doIndexing(request);
     }
 };

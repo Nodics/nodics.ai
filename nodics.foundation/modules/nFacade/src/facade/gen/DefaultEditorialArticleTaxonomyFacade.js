@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultEditorialArticleTaxonomyService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultEditorialArticleTaxonomyService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultEditorialArticleTaxonomyService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultEditorialArticleTaxonomyService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultEditorialArticleTaxonomyService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultEditorialArticleTaxonomyService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultEditorialArticleTaxonomyService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultEditorialArticleTaxonomyService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultEditorialArticleTaxonomyService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultEditorialArticleTaxonomyService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultEditorialArticleTaxonomyService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultEditorialArticleTaxonomyService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultEditorialArticleTaxonomyService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultEditorialArticleTaxonomyService.doIndexing(request);
     }
 };

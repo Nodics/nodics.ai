@@ -13,7 +13,7 @@ Output folder?                    /workspace/generated/acme-mobile
 Builder explains:
 - Backend: Telco with Electronics, Commerce, and Foundation dependencies.
 - Storefront: Agora Telco composition.
-- Customer data: agora.common + agora.telco.
+- Customer data: agora.telco.
 - Qualification: generated skeleton first, reference runtime evidence optional.
 - Next command: create and review the plan.
 ```
@@ -87,7 +87,7 @@ node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:dry-run \
 
 For a Telco preset, the dry run explains that Telco is the active customer
 experience, Electronics is resolved as backend behavior, and only
-`agora.common` plus `agora.telco` data packs are selected unless the user asks
+`agora.telco` data pack is selected unless the user asks
 for Electronics or Combined.
 
 The low-level command path still exists for auditability. From the `nodics.ai`

@@ -173,10 +173,17 @@ module.exports = {
     resolveRepositoryCoordinates: function (input) {
         const experienceInfo = this.loadExperienceCatalogue(input.exp);
         const cleanCheckoutExperienceFallback = !experienceInfo && this.canUseCleanCheckoutFallback(input.exp, 'exp');
-        const agoraApp = input.agora ? null : (experienceInfo ? this.resolveExperienceAppRoot(experienceInfo, 'agora') : null);
+        const domainStorefrontCodes = ['agoraApparel', 'agoraElectronics', 'agoraTelco'];
+        const sharedFrontendPackageCodes = ['domainCommerceUi'];
+        const experienceApps = input.agora || !experienceInfo ? [] :
+            domainStorefrontCodes.concat(sharedFrontendPackageCodes)
+                .filter(appCode => experienceInfo.catalogue.apps[appCode])
+                .map(appCode => this.resolveExperienceAppRoot(experienceInfo, appCode));
+        const defaultStorefrontApp = experienceApps.find(app => app.code === 'agoraApparel') ||
+            experienceApps.find(app => app.type === 'storefront');
         const agoraRoot = cleanCheckoutExperienceFallback && !input.agora ?
             null :
-            this.resolveRepositoryRootOrFallback(input.agora || agoraApp?.root, 'agora');
+            this.resolveRepositoryRootOrFallback(input.agora || defaultStorefrontApp?.root, 'agora');
         return {
             roots: {
                 framework: this.resolveRepositoryRoot(input.framework, 'framework'),
@@ -184,7 +191,7 @@ module.exports = {
                 kickoff: this.resolveRepositoryRootOrFallback(input.kickoff, 'kickoff'),
                 exp: experienceInfo ? experienceInfo.root : null
             },
-            experienceApps: agoraApp ? [agoraApp] : []
+            experienceApps: experienceApps
         };
     },
 
@@ -318,13 +325,60 @@ module.exports = {
     },
 
     /**
+     * Discovers storefront compositions from the split nodics.exp domain apps and adds planning-only aggregate descriptors.
+     * @param {Object[]} experienceApps Resolved nodics.exp apps.
+     * @param {string|null} directAgoraRoot Direct Agora repository root when explicitly supplied.
+     * @returns {Object[]} Source-backed and synthesized composition descriptors.
+     */
+    discoverExperienceCompositions: function (experienceApps, directAgoraRoot) {
+        if (directAgoraRoot || !experienceApps || experienceApps.length === 0) {
+            return this.discoverAgoraCompositions(directAgoraRoot);
+        }
+        const storefrontApps = experienceApps.filter(app => app.type === 'storefront');
+        const sourceCompositions = storefrontApps.flatMap(app => this.discoverAgoraCompositions(app.root)
+            .map(descriptor => Object.assign({}, descriptor, {
+                sourceApp: app.code,
+                sourcePackage: app.packageName
+            })));
+        if (sourceCompositions.length === 0) {
+            return this.discoverAgoraCompositions(null);
+        }
+        const rendererKeys = Array.from(new Set(sourceCompositions.flatMap(descriptor => descriptor.rendererKeys || [])))
+            .sort();
+        const domains = Array.from(new Set(sourceCompositions.flatMap(descriptor => descriptor.domains || [])))
+            .sort();
+        const commerceRendererKeys = rendererKeys.filter(rendererKey => rendererKey.startsWith('commerce.'));
+        const commerceDescriptor = {
+            code: 'commerce',
+            path: 'synthesized/domain.commerce.ui/commerce',
+            domains: [],
+            imports: [],
+            rendererKeys: commerceRendererKeys.length ? commerceRendererKeys : ['commerce.product.card'],
+            sourceDigest: this.digest({ code: 'commerce', rendererKeys: commerceRendererKeys })
+        };
+        const combinedDescriptor = {
+            code: 'combined',
+            path: 'synthesized/nodics.exp/combined-domain-storefront',
+            domains: domains,
+            imports: sourceCompositions.map(descriptor => descriptor.sourcePackage + ':' + descriptor.path).sort(),
+            rendererKeys: rendererKeys,
+            sourceDigest: this.digest({ code: 'combined', domains: domains, rendererKeys: rendererKeys })
+        };
+        const lookup = new Map();
+        sourceCompositions.concat([commerceDescriptor, combinedDescriptor]).forEach(descriptor => {
+            lookup.set(descriptor.code, descriptor);
+        });
+        return Array.from(lookup.values()).sort((left, right) => left.code.localeCompare(right.code));
+    },
+
+    /**
      * Reads customer-owned Kickoff Agora and Nexus data-pack module boundaries.
      * @param {Object[]} kickoffPackages Discovered Kickoff packages.
      * @returns {Object[]} Customer data-pack descriptors.
      */
     discoverDataPacks: function (kickoffPackages) {
         if (!kickoffPackages || kickoffPackages.length === 0) {
-            return ['agora.common', 'agora.apparel', 'agora.electronics', 'agora.telco', 'nexus.web']
+            return ['agora.apparel', 'agora.electronics', 'agora.telco', 'nexus.web']
                 .map(code => {
                     const metadata = {
                         code: code,
@@ -404,7 +458,7 @@ module.exports = {
                 .map(code => ({ code: code, root: roots[code] })),
             frontendApps: coordinates.experienceApps,
             capabilities: capabilities,
-            frontendCompositions: this.discoverAgoraCompositions(roots.agora),
+            frontendCompositions: this.discoverExperienceCompositions(coordinates.experienceApps, input.agora ? roots.agora : null),
             customerDataPacks: this.discoverDataPacks(kickoffPackages),
             qualificationCommands: {
                 framework: this.discoverQualificationCommands(roots.framework),

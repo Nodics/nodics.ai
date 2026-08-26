@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultInventoryReservationService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultInventoryReservationService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultInventoryReservationService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultInventoryReservationService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultInventoryReservationService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultInventoryReservationService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultInventoryReservationService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultInventoryReservationService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultInventoryReservationService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultInventoryReservationService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultInventoryReservationService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultInventoryReservationService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultInventoryReservationService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultInventoryReservationService.doIndexing(request);
     }
 };

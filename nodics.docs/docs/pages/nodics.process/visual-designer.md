@@ -94,17 +94,17 @@ Then ask these business questions before adding more nodes:
 | --- | --- | --- |
 | Who starts this process? | Prevents hidden automation and duplicate cases. | Process trigger metadata or domain API call. |
 | Who owns the human task? | Makes the work queue visible. | Process task assignment policy. |
-| What happens if the task is delayed? | Defines SLA and escalation. | Process policy, future timer, or Cron relationship. |
+| What happens if the task is delayed? | Defines SLA and escalation. | Process policy, timer, or Cron relationship. |
 | What business object is affected? | Lets users connect workflow to real work. | Process instance context and domain module reference. |
 | What evidence is required? | Supports audit and compliance. | Process audit event and domain audit. |
 
 If a user cannot answer these questions, the flow is not ready for publication
 even if the graph is technically valid.
 
-## Designer library roadmap
+## Designer library evolution
 
 The first implementation uses a Nodics-native card/canvas projection because it
-keeps the contract easy to test. The roadmap is:
+keeps the contract easy to test. The evolution path is:
 
 1. keep the backend graph contract stable;
 2. keep Axis as the renderer/editor only;

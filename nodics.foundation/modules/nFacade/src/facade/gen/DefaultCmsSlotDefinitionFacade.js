@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultCmsSlotDefinitionService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultCmsSlotDefinitionService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultCmsSlotDefinitionService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultCmsSlotDefinitionService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultCmsSlotDefinitionService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultCmsSlotDefinitionService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultCmsSlotDefinitionService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultCmsSlotDefinitionService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultCmsSlotDefinitionService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultCmsSlotDefinitionService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultCmsSlotDefinitionService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultCmsSlotDefinitionService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultCmsSlotDefinitionService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultCmsSlotDefinitionService.doIndexing(request);
     }
 };

@@ -8,7 +8,7 @@
   "experience": { "storefront": "AGORA", "composition": "commerce", "routes": ["/", "/products"], "rendererKeys": ["commerce.product.card"], "themeCode": "referenceTheme" },
   "security": { "authentication": "PASSWORD", "authorization": "BACKEND_OWNED", "session": "BEARER", "corsOrigins": ["http://127.0.0.1:3300"], "publicApiCategories": ["customer"] },
   "integrations": [],
-  "data": { "packs": ["agora.common"], "customerOwnedRoots": ["modules/agora.common/data"], "sampleData": true },
+  "data": { "packs": [], "customerOwnedRoots": [], "sampleData": true },
   "qualification": { "profile": "LOCAL_END_TO_END", "journeys": ["commerce.discovery", "commerce.checkout"], "freshDatabaseRequired": true, "browserRequired": true },
   "decisions": { "unresolved": [], "assumptions": ["Local adapters are used for external providers."] }
 }

@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultDiscoverySourceMixConfigurationService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultDiscoverySourceMixConfigurationService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultDiscoverySourceMixConfigurationService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultDiscoverySourceMixConfigurationService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultDiscoverySourceMixConfigurationService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultDiscoverySourceMixConfigurationService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultDiscoverySourceMixConfigurationService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultDiscoverySourceMixConfigurationService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultDiscoverySourceMixConfigurationService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultDiscoverySourceMixConfigurationService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultDiscoverySourceMixConfigurationService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultDiscoverySourceMixConfigurationService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultDiscoverySourceMixConfigurationService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultDiscoverySourceMixConfigurationService.doIndexing(request);
     }
 };

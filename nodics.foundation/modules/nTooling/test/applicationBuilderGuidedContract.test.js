@@ -57,7 +57,7 @@ assert.deepStrictEqual(result.solution.capabilities.domains, ['TELCO'],
     'Guided Telco preset must activate only the Telco experience domain');
 assert(result.plan.backendGraph.nodes.includes('electronics'),
     'Guided Telco plan must resolve Electronics transitively without asking the user');
-assert.deepStrictEqual(result.solution.data.packs, ['agora.common', 'agora.telco'],
+assert.deepStrictEqual(result.solution.data.packs, ['agora.telco'],
     'Guided Telco preset must not add an Electronics customer data pack');
 assert(result.summary.nextCommands.some(command => command.includes('builder:approve')),
     'Guided Builder must provide the next approval command in beginner language');

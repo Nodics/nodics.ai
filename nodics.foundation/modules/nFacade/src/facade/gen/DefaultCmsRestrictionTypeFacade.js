@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultCmsRestrictionTypeService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultCmsRestrictionTypeService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultCmsRestrictionTypeService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultCmsRestrictionTypeService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultCmsRestrictionTypeService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultCmsRestrictionTypeService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultCmsRestrictionTypeService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultCmsRestrictionTypeService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultCmsRestrictionTypeService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultCmsRestrictionTypeService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultCmsRestrictionTypeService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultCmsRestrictionTypeService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultCmsRestrictionTypeService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultCmsRestrictionTypeService.doIndexing(request);
     }
 };

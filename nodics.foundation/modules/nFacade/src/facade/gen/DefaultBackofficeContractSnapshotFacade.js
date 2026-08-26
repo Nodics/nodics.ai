@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultBackofficeContractSnapshotService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultBackofficeContractSnapshotService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultBackofficeContractSnapshotService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultBackofficeContractSnapshotService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultBackofficeContractSnapshotService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultBackofficeContractSnapshotService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultBackofficeContractSnapshotService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultBackofficeContractSnapshotService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultBackofficeContractSnapshotService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultBackofficeContractSnapshotService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultBackofficeContractSnapshotService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultBackofficeContractSnapshotService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultBackofficeContractSnapshotService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultBackofficeContractSnapshotService.doIndexing(request);
     }
 };

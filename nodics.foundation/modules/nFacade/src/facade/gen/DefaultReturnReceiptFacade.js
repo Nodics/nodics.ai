@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultReturnReceiptService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultReturnReceiptService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultReturnReceiptService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultReturnReceiptService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultReturnReceiptService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultReturnReceiptService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultReturnReceiptService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultReturnReceiptService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultReturnReceiptService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultReturnReceiptService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultReturnReceiptService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultReturnReceiptService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultReturnReceiptService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultReturnReceiptService.doIndexing(request);
     }
 };

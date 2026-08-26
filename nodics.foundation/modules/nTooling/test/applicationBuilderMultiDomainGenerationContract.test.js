@@ -73,19 +73,19 @@ const cases = [{
     capabilities: ['electronics', 'nodics.commerce', 'nodics.foundation'],
     domains: ['electronics'],
     renderers: ['agora.electronics.product-card'],
-    packs: ['agora.common', 'agora.electronics']
+    packs: ['agora.electronics']
 }, {
     fixture: 'solution-telco.json',
     capabilities: ['electronics', 'nodics.commerce', 'nodics.foundation', 'telco'],
     domains: ['telco'],
     renderers: ['agora.telco.product-card'],
-    packs: ['agora.common', 'agora.telco']
+    packs: ['agora.telco']
 }, {
     fixture: 'solution-combined.json',
     capabilities: ['apparel', 'electronics', 'nodics.commerce', 'nodics.foundation', 'telco'],
     domains: ['apparel', 'electronics', 'telco'],
     renderers: ['agora.apparel.product-card', 'agora.electronics.product-card', 'agora.telco.product-card'],
-    packs: ['agora.apparel', 'agora.common', 'agora.electronics', 'agora.telco', 'nexus.web']
+    packs: ['agora.apparel', 'agora.electronics', 'agora.telco', 'nexus.web']
 }];
 
 try {
@@ -166,7 +166,7 @@ try {
                 'Price seed count must match product seed count: ' + dataPack);
             assert.strictEqual(inventory.inventory.length, products.products.length,
                 'Inventory seed count must match product seed count: ' + dataPack);
-            if (dataPack.startsWith('agora.') && dataPack !== 'agora.common') {
+            if (dataPack.startsWith('agora.') && true) {
                 const expectedDomain = dataPack.split('.').pop();
                 assert(products.products.length > 0,
                     'Domain data pack must include at least one starter product: ' + dataPack);

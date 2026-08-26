@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultEngagementDeliveryAttemptService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultEngagementDeliveryAttemptService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultEngagementDeliveryAttemptService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultEngagementDeliveryAttemptService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultEngagementDeliveryAttemptService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultEngagementDeliveryAttemptService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultEngagementDeliveryAttemptService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultEngagementDeliveryAttemptService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultEngagementDeliveryAttemptService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultEngagementDeliveryAttemptService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultEngagementDeliveryAttemptService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultEngagementDeliveryAttemptService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultEngagementDeliveryAttemptService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultEngagementDeliveryAttemptService.doIndexing(request);
     }
 };

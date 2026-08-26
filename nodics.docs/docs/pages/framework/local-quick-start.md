@@ -214,7 +214,7 @@ For a beginner, the important point is that export is not simply “download a
 file.” The request enters through a secured API, reaches an owning controller
 and service, reads data through the owning persistence contracts, writes output
 through an approved storage or delivery path, and records enough evidence for
-support. A future customer module may customize export format or destination,
+support. A customer extension module may customize export format or destination,
 but it should not bypass the owner of the data being exported.
 
 ## Fresh database test

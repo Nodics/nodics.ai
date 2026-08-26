@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultProductSearchProjectionService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultProductSearchProjectionService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultProductSearchProjectionService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultProductSearchProjectionService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultProductSearchProjectionService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultProductSearchProjectionService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultProductSearchProjectionService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultProductSearchProjectionService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultProductSearchProjectionService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultProductSearchProjectionService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultProductSearchProjectionService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultProductSearchProjectionService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultProductSearchProjectionService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultProductSearchProjectionService.doIndexing(request);
     }
 };

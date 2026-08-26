@@ -14,7 +14,88 @@
       "source": "pages/project-overview.md",
       "evidence": "README.md",
       "summary": "Understand Axis, its backend boundary, supported runtime, setup, configuration, quality commands, and implemented scope.",
-      "audience": ["business-user", "administrator", "developer", "operator"]
+      "audience": [
+        "business-user",
+        "administrator",
+        "developer",
+        "operator"
+      ],
+      "id": "axis.overview",
+      "locale": "en",
+      "content": "docs/pages/project-overview.md",
+      "slug": "nodics-axis",
+      "parentId": "discover-axis.axis-overview-and-architecture",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Discover Axis",
+        "Axis Overview and Architecture",
+        "What Is Nodics Axis?"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Discover Axis",
+      "navigationSectionCode": "discover-axis",
+      "navigationSectionOrder": 10,
+      "navigationGroup": "Axis Overview and Architecture",
+      "navigationGroupCode": "axis-overview-and-architecture",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 10,
+      "documentType": "overview",
+      "businessAudience": [
+        "business-user",
+        "administrator"
+      ],
+      "technicalAudience": [
+        "developer",
+        "operator"
+      ],
+      "sourceOwner": "nodics.platform/modules/axis",
+      "sourcePath": "docs/pages/project-overview.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "relatedPages": [
+        "axis.architecture",
+        "axis.documentation-content",
+        "axis.employee-access"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/project-overview.md",
+        "README.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "discover-axis",
+        "axis-overview-and-architecture",
+        "what-is-nodics-axis",
+        "business-user",
+        "administrator",
+        "developer",
+        "operator"
+      ],
+      "topicKeywords": [
+        "Discover Axis",
+        "Axis Overview and Architecture",
+        "What Is Nodics Axis?",
+        "business-user",
+        "administrator",
+        "developer",
+        "operator"
+      ]
     },
     {
       "code": "architecture",
@@ -26,7 +107,87 @@
       "source": "pages/architecture-and-ownership.md",
       "evidence": "docs/architecture-and-ownership.md",
       "summary": "Learn the per-project deployment model, authority boundaries, role journeys, security model, documentation ownership, customization rules, and verification expectations.",
-      "audience": ["architect", "developer", "security-reviewer", "ai-tool"]
+      "audience": [
+        "architect",
+        "developer",
+        "security-reviewer",
+        "ai-tool"
+      ],
+      "id": "axis.architecture",
+      "locale": "en",
+      "content": "docs/pages/architecture-and-ownership.md",
+      "slug": "architecture",
+      "parentId": "discover-axis.axis-overview-and-architecture",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Discover Axis",
+        "Axis Overview and Architecture",
+        "Architecture and Repository Boundaries"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Discover Axis",
+      "navigationSectionCode": "discover-axis",
+      "navigationSectionOrder": 10,
+      "navigationGroup": "Axis Overview and Architecture",
+      "navigationGroupCode": "axis-overview-and-architecture",
+      "navigationGroupOrder": 20,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 20,
+      "documentType": "contract",
+      "businessAudience": [],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "security-reviewer",
+        "ai-tool"
+      ],
+      "sourceOwner": "nodics.platform/modules/axis",
+      "sourcePath": "docs/pages/architecture-and-ownership.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "relatedPages": [
+        "axis.overview",
+        "axis.implementation-contract",
+        "axis.cms-renderers"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/architecture-and-ownership.md",
+        "docs/architecture-and-ownership.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "discover-axis",
+        "axis-overview-and-architecture",
+        "architecture-and-repository-boundaries",
+        "architect",
+        "developer",
+        "security-reviewer",
+        "ai-tool"
+      ],
+      "topicKeywords": [
+        "Discover Axis",
+        "Axis Overview and Architecture",
+        "Architecture and Repository Boundaries",
+        "architect",
+        "developer",
+        "security-reviewer",
+        "ai-tool"
+      ]
     },
     {
       "code": "technology-stack",
@@ -38,7 +199,86 @@
       "source": "pages/frontend-technology-stack.md",
       "evidence": "docs/frontend-technology-stack.md",
       "summary": "Review exact package versions, state ownership, styling, repository shape, renderer organization, dependency governance, and verification.",
-      "audience": ["developer", "operator", "architect", "ai-tool"]
+      "audience": [
+        "developer",
+        "operator",
+        "architect",
+        "ai-tool"
+      ],
+      "id": "axis.technology-stack",
+      "locale": "en",
+      "content": "docs/pages/frontend-technology-stack.md",
+      "slug": "technology-stack",
+      "parentId": "build-and-operate-axis.axis-build-and-runtime",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Build and Operate Axis",
+        "Axis Build and Runtime",
+        "Frontend Technology Stack"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Build and Operate Axis",
+      "navigationSectionCode": "build-and-operate-axis",
+      "navigationSectionOrder": 20,
+      "navigationGroup": "Axis Build and Runtime",
+      "navigationGroupCode": "axis-build-and-runtime",
+      "navigationGroupOrder": 30,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 30,
+      "documentType": "how-to",
+      "businessAudience": [],
+      "technicalAudience": [
+        "developer",
+        "operator",
+        "architect",
+        "ai-tool"
+      ],
+      "sourceOwner": "nodics.platform/modules/axis",
+      "sourcePath": "docs/pages/frontend-technology-stack.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "relatedPages": [
+        "axis.design-system",
+        "axis.feature-delivery"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/frontend-technology-stack.md",
+        "docs/frontend-technology-stack.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "build-and-operate-axis",
+        "axis-build-and-runtime",
+        "frontend-technology-stack",
+        "developer",
+        "operator",
+        "architect",
+        "ai-tool"
+      ],
+      "topicKeywords": [
+        "Build and Operate Axis",
+        "Axis Build and Runtime",
+        "Frontend Technology Stack",
+        "developer",
+        "operator",
+        "architect",
+        "ai-tool"
+      ]
     },
     {
       "code": "design-system",
@@ -50,7 +290,87 @@
       "source": "pages/design-system-and-shell.md",
       "evidence": "docs/design-system-and-shell.md",
       "summary": "Understand authentication layouts, design foundations, shell structure, responsive states, accessibility, recovery, and extension rules.",
-      "audience": ["designer", "developer", "business-user", "ai-tool"]
+      "audience": [
+        "designer",
+        "developer",
+        "business-user",
+        "ai-tool"
+      ],
+      "id": "axis.design-system",
+      "locale": "en",
+      "content": "docs/pages/design-system-and-shell.md",
+      "slug": "design-system",
+      "parentId": "build-and-operate-axis.axis-build-and-runtime",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Build and Operate Axis",
+        "Axis Build and Runtime",
+        "Design System and Application Shell"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Build and Operate Axis",
+      "navigationSectionCode": "build-and-operate-axis",
+      "navigationSectionOrder": 20,
+      "navigationGroup": "Axis Build and Runtime",
+      "navigationGroupCode": "axis-build-and-runtime",
+      "navigationGroupOrder": 40,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 40,
+      "documentType": "how-to",
+      "businessAudience": [
+        "designer",
+        "business-user"
+      ],
+      "technicalAudience": [
+        "developer",
+        "ai-tool"
+      ],
+      "sourceOwner": "nodics.platform/modules/axis",
+      "sourcePath": "docs/pages/design-system-and-shell.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "relatedPages": [
+        "axis.technology-stack",
+        "axis.employee-access"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/design-system-and-shell.md",
+        "docs/design-system-and-shell.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "build-and-operate-axis",
+        "axis-build-and-runtime",
+        "design-system-and-application-shell",
+        "designer",
+        "developer",
+        "business-user",
+        "ai-tool"
+      ],
+      "topicKeywords": [
+        "Build and Operate Axis",
+        "Axis Build and Runtime",
+        "Design System and Application Shell",
+        "designer",
+        "developer",
+        "business-user",
+        "ai-tool"
+      ]
     },
     {
       "code": "cms-renderers",
@@ -62,7 +382,86 @@
       "source": "pages/cms-delivery-and-renderers.md",
       "evidence": "docs/cms-delivery-and-renderers.md",
       "summary": "Follow the CMS delivery, validation, cache-safety, logical renderer, and frontend implementation boundaries.",
-      "audience": ["developer", "architect", "security-reviewer", "ai-tool"]
+      "audience": [
+        "developer",
+        "architect",
+        "security-reviewer",
+        "ai-tool"
+      ],
+      "id": "axis.cms-renderers",
+      "locale": "en",
+      "content": "docs/pages/cms-delivery-and-renderers.md",
+      "slug": "cms-renderers",
+      "parentId": "build-and-operate-axis.axis-build-and-runtime",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Build and Operate Axis",
+        "Axis Build and Runtime",
+        "CMS Delivery and Renderer Integration"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Build and Operate Axis",
+      "navigationSectionCode": "build-and-operate-axis",
+      "navigationSectionOrder": 20,
+      "navigationGroup": "Axis Build and Runtime",
+      "navigationGroupCode": "axis-build-and-runtime",
+      "navigationGroupOrder": 50,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 50,
+      "documentType": "how-to",
+      "businessAudience": [],
+      "technicalAudience": [
+        "developer",
+        "architect",
+        "security-reviewer",
+        "ai-tool"
+      ],
+      "sourceOwner": "nodics.platform/modules/axis",
+      "sourcePath": "docs/pages/cms-delivery-and-renderers.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "relatedPages": [
+        "axis.documentation-content",
+        "axis.page-designer"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/cms-delivery-and-renderers.md",
+        "docs/cms-delivery-and-renderers.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "build-and-operate-axis",
+        "axis-build-and-runtime",
+        "cms-delivery-and-renderer-integration",
+        "developer",
+        "architect",
+        "security-reviewer",
+        "ai-tool"
+      ],
+      "topicKeywords": [
+        "Build and Operate Axis",
+        "Axis Build and Runtime",
+        "CMS Delivery and Renderer Integration",
+        "developer",
+        "architect",
+        "security-reviewer",
+        "ai-tool"
+      ]
     },
     {
       "code": "documentation-content",
@@ -74,7 +473,87 @@
       "source": "pages/documentation-content.md",
       "evidence": "docs/documentation-content.md",
       "summary": "Understand dynamic documentation products, content-pack installation, renderer ownership, failure recovery, and contributor verification.",
-      "audience": ["administrator", "developer", "operator", "ai-tool"]
+      "audience": [
+        "administrator",
+        "developer",
+        "operator",
+        "ai-tool"
+      ],
+      "id": "axis.documentation-content",
+      "locale": "en",
+      "content": "docs/pages/documentation-content.md",
+      "slug": "documentation-content",
+      "parentId": "build-and-operate-axis.axis-build-and-runtime",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Build and Operate Axis",
+        "Axis Build and Runtime",
+        "Documentation Content in Axis"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Build and Operate Axis",
+      "navigationSectionCode": "build-and-operate-axis",
+      "navigationSectionOrder": 20,
+      "navigationGroup": "Axis Build and Runtime",
+      "navigationGroupCode": "axis-build-and-runtime",
+      "navigationGroupOrder": 60,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 60,
+      "documentType": "how-to",
+      "businessAudience": [
+        "administrator"
+      ],
+      "technicalAudience": [
+        "developer",
+        "operator",
+        "ai-tool"
+      ],
+      "sourceOwner": "nodics.platform/modules/axis",
+      "sourcePath": "docs/pages/documentation-content.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "relatedPages": [
+        "axis.cms-renderers",
+        "axis.imports-exports"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/documentation-content.md",
+        "docs/documentation-content.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "build-and-operate-axis",
+        "axis-build-and-runtime",
+        "documentation-content-in-axis",
+        "administrator",
+        "developer",
+        "operator",
+        "ai-tool"
+      ],
+      "topicKeywords": [
+        "Build and Operate Axis",
+        "Axis Build and Runtime",
+        "Documentation Content in Axis",
+        "administrator",
+        "developer",
+        "operator",
+        "ai-tool"
+      ]
     },
     {
       "code": "employee-access",
@@ -86,7 +565,87 @@
       "source": "pages/employee-login.md",
       "evidence": "docs/employee-login.md",
       "summary": "Operate the employee-only authentication journey, recovery, persistent browser session, idle lock, logout, configuration, and safe failures.",
-      "audience": ["business-user", "administrator", "developer", "security-reviewer"]
+      "audience": [
+        "business-user",
+        "administrator",
+        "developer",
+        "security-reviewer"
+      ],
+      "id": "axis.employee-access",
+      "locale": "en",
+      "content": "docs/pages/employee-login.md",
+      "slug": "employee-access",
+      "parentId": "axis-capabilities.axis-workspaces-and-operations",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Employee Login, Recovery, Lock, and Dashboard"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Axis Capabilities",
+      "navigationSectionCode": "axis-capabilities",
+      "navigationSectionOrder": 30,
+      "navigationGroup": "Axis Workspaces and Operations",
+      "navigationGroupCode": "axis-workspaces-and-operations",
+      "navigationGroupOrder": 70,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 70,
+      "documentType": "how-to",
+      "businessAudience": [
+        "business-user",
+        "administrator"
+      ],
+      "technicalAudience": [
+        "developer",
+        "security-reviewer"
+      ],
+      "sourceOwner": "nodics.platform/modules/axis",
+      "sourcePath": "docs/pages/employee-login.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "relatedPages": [
+        "axis.overview",
+        "axis.module-health"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/employee-login.md",
+        "docs/employee-login.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "axis-capabilities",
+        "axis-workspaces-and-operations",
+        "employee-login-recovery-lock-and-dashboard",
+        "business-user",
+        "administrator",
+        "developer",
+        "security-reviewer"
+      ],
+      "topicKeywords": [
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Employee Login, Recovery, Lock, and Dashboard",
+        "business-user",
+        "administrator",
+        "developer",
+        "security-reviewer"
+      ]
     },
     {
       "code": "assistant",
@@ -98,7 +657,87 @@
       "source": "pages/assistant-frontend.md",
       "evidence": "docs/assistant-frontend.md",
       "summary": "Learn the governed Assistant request flow, typed API contracts, resumable streaming, presentation lifecycle, evidence, accessibility, and security behavior.",
-      "audience": ["business-user", "developer", "architect", "security-reviewer"]
+      "audience": [
+        "business-user",
+        "developer",
+        "architect",
+        "security-reviewer"
+      ],
+      "id": "axis.assistant",
+      "locale": "en",
+      "content": "docs/pages/assistant-frontend.md",
+      "slug": "assistant",
+      "parentId": "axis-capabilities.axis-workspaces-and-operations",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Axis Assistant Frontend"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Axis Capabilities",
+      "navigationSectionCode": "axis-capabilities",
+      "navigationSectionOrder": 30,
+      "navigationGroup": "Axis Workspaces and Operations",
+      "navigationGroupCode": "axis-workspaces-and-operations",
+      "navigationGroupOrder": 80,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 80,
+      "documentType": "how-to",
+      "businessAudience": [
+        "business-user"
+      ],
+      "technicalAudience": [
+        "developer",
+        "architect",
+        "security-reviewer"
+      ],
+      "sourceOwner": "nodics.platform/modules/axis",
+      "sourcePath": "docs/pages/assistant-frontend.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "relatedPages": [
+        "axis.implementation-contract",
+        "axis.employee-access"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/assistant-frontend.md",
+        "docs/assistant-frontend.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "axis-capabilities",
+        "axis-workspaces-and-operations",
+        "axis-assistant-frontend",
+        "business-user",
+        "developer",
+        "architect",
+        "security-reviewer"
+      ],
+      "topicKeywords": [
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Axis Assistant Frontend",
+        "business-user",
+        "developer",
+        "architect",
+        "security-reviewer"
+      ]
     },
     {
       "code": "schema-workbench",
@@ -110,7 +749,87 @@
       "source": "pages/schema-workbench.md",
       "evidence": "docs/schema-workbench.md",
       "summary": "Use and extend governed schema discovery, record operations, relationship coordination, failure recovery, responsive behavior, and verification.",
-      "audience": ["business-user", "administrator", "developer", "operator"]
+      "audience": [
+        "business-user",
+        "administrator",
+        "developer",
+        "operator"
+      ],
+      "id": "axis.schema-workbench",
+      "locale": "en",
+      "content": "docs/pages/schema-workbench.md",
+      "slug": "schema-workbench",
+      "parentId": "axis-capabilities.axis-workspaces-and-operations",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Axis Schema Workbench"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Axis Capabilities",
+      "navigationSectionCode": "axis-capabilities",
+      "navigationSectionOrder": 30,
+      "navigationGroup": "Axis Workspaces and Operations",
+      "navigationGroupCode": "axis-workspaces-and-operations",
+      "navigationGroupOrder": 90,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 90,
+      "documentType": "how-to",
+      "businessAudience": [
+        "business-user",
+        "administrator"
+      ],
+      "technicalAudience": [
+        "developer",
+        "operator"
+      ],
+      "sourceOwner": "nodics.platform/modules/axis",
+      "sourcePath": "docs/pages/schema-workbench.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "relatedPages": [
+        "axis.page-designer",
+        "axis.implementation-contract"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/schema-workbench.md",
+        "docs/schema-workbench.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "axis-capabilities",
+        "axis-workspaces-and-operations",
+        "axis-schema-workbench",
+        "business-user",
+        "administrator",
+        "developer",
+        "operator"
+      ],
+      "topicKeywords": [
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Axis Schema Workbench",
+        "business-user",
+        "administrator",
+        "developer",
+        "operator"
+      ]
     },
     {
       "code": "page-designer",
@@ -122,7 +841,87 @@
       "source": "pages/page-designer.md",
       "evidence": "docs/pages/page-designer.md",
       "summary": "Use the governed catalog-first Designer flow for sites, templates, dynamic slots, sections, components, media, routes, navigation, and publish readiness.",
-      "audience": ["business-user", "designer", "developer", "operator"]
+      "audience": [
+        "business-user",
+        "designer",
+        "developer",
+        "operator"
+      ],
+      "id": "axis.page-designer",
+      "locale": "en",
+      "content": "docs/pages/page-designer.md",
+      "slug": "page-designer",
+      "parentId": "axis-capabilities.axis-workspaces-and-operations",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Axis Page Designer"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Axis Capabilities",
+      "navigationSectionCode": "axis-capabilities",
+      "navigationSectionOrder": 30,
+      "navigationGroup": "Axis Workspaces and Operations",
+      "navigationGroupCode": "axis-workspaces-and-operations",
+      "navigationGroupOrder": 95,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 95,
+      "documentType": "how-to",
+      "businessAudience": [
+        "business-user",
+        "designer"
+      ],
+      "technicalAudience": [
+        "developer",
+        "operator"
+      ],
+      "sourceOwner": "nodics.platform/modules/axis",
+      "sourcePath": "docs/pages/page-designer.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "relatedPages": [
+        "axis.cms-renderers",
+        "axis.media-management"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/page-designer.md",
+        "docs/pages/page-designer.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "axis-capabilities",
+        "axis-workspaces-and-operations",
+        "axis-page-designer",
+        "business-user",
+        "designer",
+        "developer",
+        "operator"
+      ],
+      "topicKeywords": [
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Axis Page Designer",
+        "business-user",
+        "designer",
+        "developer",
+        "operator"
+      ]
     },
     {
       "code": "module-health",
@@ -134,7 +933,87 @@
       "source": "pages/module-health.md",
       "evidence": "docs/module-health.md",
       "summary": "Monitor backend-governed module registration and runtime health evidence without creating a browser-side health authority.",
-      "audience": ["administrator", "operator", "developer", "security-reviewer"]
+      "audience": [
+        "administrator",
+        "operator",
+        "developer",
+        "security-reviewer"
+      ],
+      "id": "axis.module-health",
+      "locale": "en",
+      "content": "docs/pages/module-health.md",
+      "slug": "module-health",
+      "parentId": "axis-capabilities.axis-workspaces-and-operations",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Module Health"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Axis Capabilities",
+      "navigationSectionCode": "axis-capabilities",
+      "navigationSectionOrder": 30,
+      "navigationGroup": "Axis Workspaces and Operations",
+      "navigationGroupCode": "axis-workspaces-and-operations",
+      "navigationGroupOrder": 100,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 100,
+      "documentType": "how-to",
+      "businessAudience": [
+        "administrator"
+      ],
+      "technicalAudience": [
+        "operator",
+        "developer",
+        "security-reviewer"
+      ],
+      "sourceOwner": "nodics.platform/modules/axis",
+      "sourcePath": "docs/pages/module-health.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "relatedPages": [
+        "axis.imports-exports",
+        "axis.overview"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/module-health.md",
+        "docs/module-health.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "axis-capabilities",
+        "axis-workspaces-and-operations",
+        "module-health",
+        "administrator",
+        "operator",
+        "developer",
+        "security-reviewer"
+      ],
+      "topicKeywords": [
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Module Health",
+        "administrator",
+        "operator",
+        "developer",
+        "security-reviewer"
+      ]
     },
     {
       "code": "imports-exports",
@@ -146,7 +1025,87 @@
       "source": "pages/imports-and-exports.md",
       "evidence": "docs/imports-and-exports.md",
       "summary": "Review immutable data releases, validation, installation, history, security, responsive behavior, and the fail-closed export boundary.",
-      "audience": ["administrator", "operator", "developer", "security-reviewer"]
+      "audience": [
+        "administrator",
+        "operator",
+        "developer",
+        "security-reviewer"
+      ],
+      "id": "axis.imports-exports",
+      "locale": "en",
+      "content": "docs/pages/imports-and-exports.md",
+      "slug": "imports-exports",
+      "parentId": "axis-capabilities.axis-workspaces-and-operations",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Imports and Exports Workspace"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Axis Capabilities",
+      "navigationSectionCode": "axis-capabilities",
+      "navigationSectionOrder": 30,
+      "navigationGroup": "Axis Workspaces and Operations",
+      "navigationGroupCode": "axis-workspaces-and-operations",
+      "navigationGroupOrder": 110,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 110,
+      "documentType": "how-to",
+      "businessAudience": [
+        "administrator"
+      ],
+      "technicalAudience": [
+        "operator",
+        "developer",
+        "security-reviewer"
+      ],
+      "sourceOwner": "nodics.platform/modules/axis",
+      "sourcePath": "docs/pages/imports-and-exports.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "relatedPages": [
+        "axis.module-health",
+        "axis.documentation-content"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/imports-and-exports.md",
+        "docs/imports-and-exports.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "axis-capabilities",
+        "axis-workspaces-and-operations",
+        "imports-and-exports-workspace",
+        "administrator",
+        "operator",
+        "developer",
+        "security-reviewer"
+      ],
+      "topicKeywords": [
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Imports and Exports Workspace",
+        "administrator",
+        "operator",
+        "developer",
+        "security-reviewer"
+      ]
     },
     {
       "code": "media-management",
@@ -158,7 +1117,87 @@
       "source": "pages/media-management.md",
       "evidence": "docs/pages/media-management.md",
       "summary": "Understand the governed Media Management navigation, route shell, backend ownership, storage and delivery boundaries, and upcoming capability slices.",
-      "audience": ["administrator", "operator", "developer", "business-user"]
+      "audience": [
+        "administrator",
+        "operator",
+        "developer",
+        "business-user"
+      ],
+      "id": "axis.media-management",
+      "locale": "en",
+      "content": "docs/pages/media-management.md",
+      "slug": "media",
+      "parentId": "axis-capabilities.axis-workspaces-and-operations",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Media Management Workspace"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Axis Capabilities",
+      "navigationSectionCode": "axis-capabilities",
+      "navigationSectionOrder": 30,
+      "navigationGroup": "Axis Workspaces and Operations",
+      "navigationGroupCode": "axis-workspaces-and-operations",
+      "navigationGroupOrder": 115,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 115,
+      "documentType": "how-to",
+      "businessAudience": [
+        "administrator",
+        "business-user"
+      ],
+      "technicalAudience": [
+        "operator",
+        "developer"
+      ],
+      "sourceOwner": "nodics.platform/modules/axis",
+      "sourcePath": "docs/pages/media-management.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "relatedPages": [
+        "axis.page-designer",
+        "axis.cms-renderers"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/media-management.md",
+        "docs/pages/media-management.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "axis-capabilities",
+        "axis-workspaces-and-operations",
+        "media-management-workspace",
+        "administrator",
+        "operator",
+        "developer",
+        "business-user"
+      ],
+      "topicKeywords": [
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Media Management Workspace",
+        "administrator",
+        "operator",
+        "developer",
+        "business-user"
+      ]
     },
     {
       "code": "customer-engagement",
@@ -170,7 +1209,87 @@
       "source": "pages/customer-engagement.md",
       "evidence": "docs/pages/customer-engagement.md",
       "summary": "Use the lightweight six-domain Engagement journey for contact, testimonials, reviews, feedback, work management, governance, and recovery.",
-      "audience": ["business-user", "administrator", "operator", "developer"]
+      "audience": [
+        "business-user",
+        "administrator",
+        "operator",
+        "developer"
+      ],
+      "id": "axis.customer-engagement",
+      "locale": "en",
+      "content": "docs/pages/customer-engagement.md",
+      "slug": "customer-engagement",
+      "parentId": "axis-capabilities.axis-workspaces-and-operations",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Customer Engagement Workspaces"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Axis Capabilities",
+      "navigationSectionCode": "axis-capabilities",
+      "navigationSectionOrder": 30,
+      "navigationGroup": "Axis Workspaces and Operations",
+      "navigationGroupCode": "axis-workspaces-and-operations",
+      "navigationGroupOrder": 116,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 116,
+      "documentType": "how-to",
+      "businessAudience": [
+        "business-user",
+        "administrator"
+      ],
+      "technicalAudience": [
+        "operator",
+        "developer"
+      ],
+      "sourceOwner": "nodics.platform/modules/axis",
+      "sourcePath": "docs/pages/customer-engagement.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "relatedPages": [
+        "axis.module-health",
+        "axis.imports-exports"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/customer-engagement.md",
+        "docs/pages/customer-engagement.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "axis-capabilities",
+        "axis-workspaces-and-operations",
+        "customer-engagement-workspaces",
+        "business-user",
+        "administrator",
+        "operator",
+        "developer"
+      ],
+      "topicKeywords": [
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Customer Engagement Workspaces",
+        "business-user",
+        "administrator",
+        "operator",
+        "developer"
+      ]
     },
     {
       "code": "openapi-reference",
@@ -182,7 +1301,91 @@
       "source": "pages/openapi-reference.md",
       "evidence": "docs/pages/openapi-reference.md",
       "summary": "Explain how Axis presents backend-owned Swagger and OpenAPI contracts grouped by registered runtime, functional module, and authorized API category.",
-      "audience": ["developer", "operator", "administrator", "integration", "ai-tool"]
+      "audience": [
+        "developer",
+        "operator",
+        "administrator",
+        "integration",
+        "ai-tool"
+      ],
+      "id": "axis.openapi-reference",
+      "locale": "en",
+      "content": "docs/pages/openapi-reference.md",
+      "slug": "openapi-reference",
+      "parentId": "axis-capabilities.axis-workspaces-and-operations",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Swagger and OpenAPI Reference"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Axis Capabilities",
+      "navigationSectionCode": "axis-capabilities",
+      "navigationSectionOrder": 30,
+      "navigationGroup": "Axis Workspaces and Operations",
+      "navigationGroupCode": "axis-workspaces-and-operations",
+      "navigationGroupOrder": 118,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 118,
+      "documentType": "how-to",
+      "businessAudience": [
+        "administrator"
+      ],
+      "technicalAudience": [
+        "developer",
+        "operator",
+        "integration",
+        "ai-tool"
+      ],
+      "sourceOwner": "nodics.platform/modules/axis",
+      "sourcePath": "docs/pages/openapi-reference.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "relatedPages": [
+        "axis.module-health",
+        "axis.schema-workbench"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/openapi-reference.md",
+        "docs/pages/openapi-reference.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "axis-capabilities",
+        "axis-workspaces-and-operations",
+        "swagger-and-openapi-reference",
+        "developer",
+        "operator",
+        "administrator",
+        "integration",
+        "ai-tool"
+      ],
+      "topicKeywords": [
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Swagger and OpenAPI Reference",
+        "developer",
+        "operator",
+        "administrator",
+        "integration",
+        "ai-tool"
+      ]
     },
     {
       "code": "feature-delivery",
@@ -194,7 +1397,86 @@
       "source": "pages/feature-delivery-checklist.md",
       "evidence": "docs/feature-delivery-checklist.md",
       "summary": "Apply repository-boundary, reuse, security, interaction, contract-testing, documentation, partial-discovery, and completion gates.",
-      "audience": ["developer", "architect", "framework-maintainer", "ai-tool"]
+      "audience": [
+        "developer",
+        "architect",
+        "framework-maintainer",
+        "ai-tool"
+      ],
+      "id": "axis.feature-delivery",
+      "locale": "en",
+      "content": "docs/pages/feature-delivery-checklist.md",
+      "slug": "feature-delivery",
+      "parentId": "contribute-to-axis.axis-contribution-and-governance",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Contribute to Axis",
+        "Axis Contribution and Governance",
+        "Axis Feature Delivery Checklist"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Contribute to Axis",
+      "navigationSectionCode": "contribute-to-axis",
+      "navigationSectionOrder": 40,
+      "navigationGroup": "Axis Contribution and Governance",
+      "navigationGroupCode": "axis-contribution-and-governance",
+      "navigationGroupOrder": 120,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 120,
+      "documentType": "how-to",
+      "businessAudience": [],
+      "technicalAudience": [
+        "developer",
+        "architect",
+        "framework-maintainer",
+        "ai-tool"
+      ],
+      "sourceOwner": "nodics.platform/modules/axis",
+      "sourcePath": "docs/pages/feature-delivery-checklist.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "relatedPages": [
+        "axis.implementation-contract",
+        "axis.technology-stack"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/feature-delivery-checklist.md",
+        "docs/feature-delivery-checklist.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "contribute-to-axis",
+        "axis-contribution-and-governance",
+        "axis-feature-delivery-checklist",
+        "developer",
+        "architect",
+        "framework-maintainer",
+        "ai-tool"
+      ],
+      "topicKeywords": [
+        "Contribute to Axis",
+        "Axis Contribution and Governance",
+        "Axis Feature Delivery Checklist",
+        "developer",
+        "architect",
+        "framework-maintainer",
+        "ai-tool"
+      ]
     },
     {
       "code": "implementation-contract",
@@ -206,7 +1488,168 @@
       "source": "pages/implementation-and-documentation-contract.md",
       "evidence": "docs/implementation-and-documentation-contract.md",
       "summary": "Follow local discovery, repository ownership, placement, documentation, required scenarios, customization, and acceptance contracts.",
-      "audience": ["developer", "architect", "framework-maintainer", "ai-tool"]
+      "audience": [
+        "developer",
+        "architect",
+        "framework-maintainer",
+        "ai-tool"
+      ],
+      "id": "axis.implementation-contract",
+      "locale": "en",
+      "content": "docs/pages/implementation-and-documentation-contract.md",
+      "slug": "implementation-contract",
+      "parentId": "contribute-to-axis.axis-contribution-and-governance",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Contribute to Axis",
+        "Axis Contribution and Governance",
+        "Axis Implementation and Documentation Contract"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Contribute to Axis",
+      "navigationSectionCode": "contribute-to-axis",
+      "navigationSectionOrder": 40,
+      "navigationGroup": "Axis Contribution and Governance",
+      "navigationGroupCode": "axis-contribution-and-governance",
+      "navigationGroupOrder": 130,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 130,
+      "documentType": "contract",
+      "businessAudience": [],
+      "technicalAudience": [
+        "developer",
+        "architect",
+        "framework-maintainer",
+        "ai-tool"
+      ],
+      "sourceOwner": "nodics.platform/modules/axis",
+      "sourcePath": "docs/pages/implementation-and-documentation-contract.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "relatedPages": [
+        "axis.feature-delivery",
+        "axis.architecture"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/implementation-and-documentation-contract.md",
+        "docs/implementation-and-documentation-contract.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "contribute-to-axis",
+        "axis-contribution-and-governance",
+        "axis-implementation-and-documentation-contract",
+        "developer",
+        "architect",
+        "framework-maintainer",
+        "ai-tool"
+      ],
+      "topicKeywords": [
+        "Contribute to Axis",
+        "Axis Contribution and Governance",
+        "Axis Implementation and Documentation Contract",
+        "developer",
+        "architect",
+        "framework-maintainer",
+        "ai-tool"
+      ]
+    }
+  ],
+  "navigationSections": [
+    {
+      "code": "discover-axis",
+      "title": "Discover Axis",
+      "order": 10,
+      "summary": "Business and architecture introduction to Nodics Axis, its purpose, boundaries, documentation ownership, and repository responsibilities.",
+      "audience": [
+        "business-user",
+        "administrator",
+        "architect",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "lifecycleState": "ONLINE"
+    },
+    {
+      "code": "build-and-operate-axis",
+      "title": "Build and Operate Axis",
+      "order": 20,
+      "summary": "Technology, shell, renderer, documentation, CMS delivery, and operational rules for building and running Axis safely.",
+      "audience": [
+        "business-user",
+        "administrator",
+        "architect",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "lifecycleState": "ONLINE"
+    },
+    {
+      "code": "axis-capabilities",
+      "title": "Axis Capabilities",
+      "order": 30,
+      "summary": "Axis user-facing workspaces, dashboards, actions, recovery behavior, and backend-owned capability contracts.",
+      "audience": [
+        "business-user",
+        "administrator",
+        "architect",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "lifecycleState": "ONLINE"
+    },
+    {
+      "code": "contribute-to-axis",
+      "title": "Contribute to Axis",
+      "order": 40,
+      "summary": "Contribution, implementation, quality, documentation, and governance rules for adding or changing Axis behavior.",
+      "audience": [
+        "business-user",
+        "administrator",
+        "architect",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "lifecycleState": "ONLINE"
     }
   ]
 }

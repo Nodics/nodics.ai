@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultTaxPolicyService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultTaxPolicyService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultTaxPolicyService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultTaxPolicyService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultTaxPolicyService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultTaxPolicyService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultTaxPolicyService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultTaxPolicyService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultTaxPolicyService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultTaxPolicyService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultTaxPolicyService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultTaxPolicyService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultTaxPolicyService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultTaxPolicyService.doIndexing(request);
     }
 };

@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultCmsPublicationDeploymentReceiptService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultCmsPublicationDeploymentReceiptService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultCmsPublicationDeploymentReceiptService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultCmsPublicationDeploymentReceiptService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultCmsPublicationDeploymentReceiptService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultCmsPublicationDeploymentReceiptService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultCmsPublicationDeploymentReceiptService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultCmsPublicationDeploymentReceiptService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultCmsPublicationDeploymentReceiptService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultCmsPublicationDeploymentReceiptService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultCmsPublicationDeploymentReceiptService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultCmsPublicationDeploymentReceiptService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultCmsPublicationDeploymentReceiptService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultCmsPublicationDeploymentReceiptService.doIndexing(request);
     }
 };

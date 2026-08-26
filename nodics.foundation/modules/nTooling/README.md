@@ -125,6 +125,18 @@ Staged-to-Online lifecycle policy. Projects retain their own renderer schemas,
 records and application content; nTooling does not become a documentation
 content owner or runtime importer.
 
+Strict documentation generators must also use the same service for enterprise
+documentation metadata and quality enforcement. The shared contract validates
+backend-owned navigation sections, hierarchy placement, source ownership,
+audience, access mode, lifecycle state, maturity state, related pages, source
+evidence, minimum page depth, required business/developer/operator guidance,
+visual or tabular explanation, common mistakes, verification, and unsafe
+delivery-phase wording. This is a framework completion rule: generated
+documentation is not accepted only because Markdown exists; it must be
+navigable, source-backed, publishable, access-controlled, and useful enough for
+business users, architects, administrators, developers, operators, QA owners,
+and AI tools.
+
 ## Command Contract
 
 Commands belong in `config/properties.js` under `tooling.commands`. A command definition should identify:

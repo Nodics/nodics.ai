@@ -56,7 +56,7 @@ const dryRun = guidedService.dryRun(answers, catalogue);
 assert.strictEqual(dryRun.dryRun, true, 'Generated answers must delegate to dry-run planning');
 assert(dryRun.dryRunPlan.selectedResult.transitiveBackendDependencies.includes('electronics'),
     'Generated Telco answers must still explain Electronics dependency resolution');
-assert.deepStrictEqual(dryRun.dryRunPlan.selectedResult.dataPacks, ['agora.common', 'agora.telco'],
+assert.deepStrictEqual(dryRun.dryRunPlan.selectedResult.dataPacks, ['agora.telco'],
     'Generated Telco answers must not select Electronics data');
 
 const tempParent = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-builder-answers-'));

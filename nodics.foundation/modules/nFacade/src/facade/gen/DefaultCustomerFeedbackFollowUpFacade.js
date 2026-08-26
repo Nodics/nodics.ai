@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultCustomerFeedbackFollowUpService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultCustomerFeedbackFollowUpService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultCustomerFeedbackFollowUpService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultCustomerFeedbackFollowUpService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultCustomerFeedbackFollowUpService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultCustomerFeedbackFollowUpService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultCustomerFeedbackFollowUpService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultCustomerFeedbackFollowUpService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultCustomerFeedbackFollowUpService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultCustomerFeedbackFollowUpService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultCustomerFeedbackFollowUpService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultCustomerFeedbackFollowUpService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultCustomerFeedbackFollowUpService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultCustomerFeedbackFollowUpService.doIndexing(request);
     }
 };

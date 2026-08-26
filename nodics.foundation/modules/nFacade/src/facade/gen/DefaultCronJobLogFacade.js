@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultCronJobLogService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultCronJobLogService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultCronJobLogService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultCronJobLogService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultCronJobLogService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultCronJobLogService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultCronJobLogService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultCronJobLogService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultCronJobLogService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultCronJobLogService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultCronJobLogService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultCronJobLogService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultCronJobLogService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultCronJobLogService.doIndexing(request);
     }
 };

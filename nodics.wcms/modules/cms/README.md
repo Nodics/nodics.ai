@@ -80,6 +80,31 @@ versioned CMS authoring. Customer/project modules may extend these schemas,
 initializer data, and validation services through later layers; Axis must
 discover and render them rather than hardcoding one customer WCMS model.
 
+Enterprise documentation management is also CMS-owned. Documentation products,
+hierarchical navigation, hierarchy landing dashboards, documentation page
+metadata, authoring templates, access policies, publication state, and search
+metadata are first-class CMS schemas. They reference existing content catalogs,
+CMS sites, pages, routes, and components instead of replacing them. This lets
+Axis manage documentation as backend data while Nexus and Axis readers render
+only the approved Online content allowed by each access policy.
+
+The documentation hierarchy is intentionally business-readable:
+
+```text
+Documentation product
+  Section
+    Group
+      Subgroup
+        Topic
+          Page link
+```
+
+Every hierarchy level can carry summary/dashboard content, child summaries,
+journey links, lifecycle state, maturity state, audience metadata, search
+keywords, and access rules. Validation, publishing hooks, and future external
+search indexing remain service concerns layered on top of these schema
+contracts; Elasticsearch is a projection target, not the source of truth.
+
 ## Axis Page Designer
 
 Axis may provide a Page Designer workspace for business users who do not want
@@ -314,7 +339,9 @@ Run `node nodics.wcms/modules/cms/test/cmsContentDeliveryContract.test.js`,
 `node nodics.wcms/modules/cms/test/cmsStorefrontDeliveryContract.test.js`,
 `node nodics.wcms/modules/cms/test/cmsSiteReferenceContract.test.js`, and
 `node nodics.wcms/modules/cms/test/cmsPublicationManifestContract.test.js`, and
-`node nodics.wcms/modules/cms/test/cmsLocalizedContentContract.test.js`, and
+`node nodics.wcms/modules/cms/test/cmsLocalizedContentContract.test.js`,
+`node nodics.wcms/modules/cms/test/cmsDocumentationEntityModelContract.test.js`,
+and
 `node nodics.wcms/modules/cms/test/cmsWcmsAuthoringSchemaContract.test.js` before broader
 generated and integration suites. CMS contract upgrades use secured
 `/migration/preview`, `/migration/apply`, and `/migration/rollback` operations.

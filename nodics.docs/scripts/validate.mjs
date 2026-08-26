@@ -12,10 +12,13 @@
 import { access, readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { dirname, resolve, sep } from 'node:path';
+import { createRequire } from 'node:module';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const require = createRequire(import.meta.url);
+const applicationDocumentationContract = require('../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js');
 const catalogue = JSON.parse(await readFile(resolve(root, 'docs/catalogue.json'), 'utf8'));
 const minimumWordCount = 500;
 const minimumSectionCount = 5;
@@ -87,9 +90,68 @@ if (!/^\d+\.\d+\.\d+$/.test(catalogue.release || '')) {
 if (!Array.isArray(catalogue.documents) || catalogue.documents.length === 0) {
   throw new Error('Documentation catalogue is empty');
 }
+applicationDocumentationContract.validateCatalogue({
+  ownerRoot: root,
+  sourceDirectory: 'docs',
+  cataloguePath: 'docs/catalogue.json',
+  catalogue: {
+    pack: 'nodics.docs',
+    version: catalogue.release,
+    navigationSections: catalogue.navigationSections,
+    documents: catalogue.documents,
+  },
+  requireNavigationSections: true,
+  requireEnterpriseMetadata: true,
+  validateContentQuality: true,
+});
+if (!Array.isArray(catalogue.navigationSections) || catalogue.navigationSections.length === 0) {
+  throw new Error('Documentation catalogue requires navigation sections');
+}
 
 const ids = new Set();
+const sectionCodes = new Set();
 const identity = /^[A-Za-z][A-Za-z0-9._-]{0,127}$/;
+const allowedDocumentTypes = new Set([
+  'overview',
+  'concept',
+  'quickstart',
+  'how-to',
+  'configuration',
+  'customization',
+  'integration',
+  'operations',
+  'reference',
+  'contract',
+]);
+const allowedMaturityStates = new Set([
+  'concept',
+  'design-contract',
+  'partial',
+  'current-read-only',
+  'preview-only',
+  'unavailable',
+  'operational',
+]);
+const allowedLifecycleStates = new Set([
+  'DRAFT',
+  'STAGED',
+  'REVIEW_IN_PROGRESS',
+  'CHANGES_REQUESTED',
+  'APPROVED',
+  'ONLINE',
+  'ARCHIVED',
+  'RETIRED',
+  'ROLLBACK_PENDING',
+  'PUBLICATION_FAILED',
+]);
+const allowedAccessModes = new Set([
+  'PUBLIC',
+  'AUTHENTICATED',
+  'ROLE_BASED',
+  'GROUP_BASED',
+  'PERMISSION_BASED',
+  'RESTRICTED',
+]);
 
 async function loadGeneratedRecords(relativePath) {
   const moduleObject = { exports: {} };
@@ -122,6 +184,22 @@ for (const route of routeRecords) {
   }
 }
 
+for (const section of catalogue.navigationSections) {
+  if (!section || !identity.test(section.code || '') || sectionCodes.has(section.code)) {
+    throw new Error(`Invalid or duplicate navigation section: ${section && section.code}`);
+  }
+  sectionCodes.add(section.code);
+  if (!section.title || !Number.isInteger(section.order) || !section.summary) {
+    throw new Error(`Incomplete navigation section metadata: ${section.code}`);
+  }
+  if (!allowedAccessModes.has(section.accessMode || '')) {
+    throw new Error(`Invalid navigation section access mode: ${section.code}`);
+  }
+  if (!allowedLifecycleStates.has(section.lifecycleState || '')) {
+    throw new Error(`Invalid navigation section lifecycle state: ${section.code}`);
+  }
+}
+
 for (const document of catalogue.documents) {
   if (!identity.test(document.id || '') || ids.has(document.id)) {
     throw new Error(`Invalid or duplicate document id: ${document.id}`);
@@ -135,6 +213,33 @@ for (const document of catalogue.documents) {
   }
   if (!document.title || !document.summary || document.locale !== 'en') {
     throw new Error(`Incomplete document metadata: ${document.id}`);
+  }
+  if (!document.slug || !document.parentId || !Array.isArray(document.hierarchyPath)) {
+    throw new Error(`Incomplete hierarchy metadata: ${document.id}`);
+  }
+  if (!document.navigationSection || !document.navigationGroup || !Number.isInteger(document.navigationOrder)) {
+    throw new Error(`Incomplete navigation metadata: ${document.id}`);
+  }
+  if (!sectionCodes.has(document.navigationSectionCode || '')) {
+    throw new Error(`Document references unknown navigation section: ${document.id}`);
+  }
+  if (!allowedDocumentTypes.has(document.documentType || '')) {
+    throw new Error(`Invalid document type: ${document.id}`);
+  }
+  if (!Array.isArray(document.audience) || document.audience.length === 0) {
+    throw new Error(`Document audience is required: ${document.id}`);
+  }
+  if (!allowedAccessModes.has(document.accessMode || '')) {
+    throw new Error(`Invalid access mode: ${document.id}`);
+  }
+  if (!allowedLifecycleStates.has(document.lifecycleState || '')) {
+    throw new Error(`Invalid lifecycle state: ${document.id}`);
+  }
+  if (!allowedMaturityStates.has(document.maturityState || '')) {
+    throw new Error(`Invalid maturity state: ${document.id}`);
+  }
+  if (!document.sourceOwner || !document.sourcePath) {
+    throw new Error(`Source metadata is required: ${document.id}`);
   }
   if (
     document.route &&

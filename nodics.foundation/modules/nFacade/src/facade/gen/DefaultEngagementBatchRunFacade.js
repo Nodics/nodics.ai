@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultEngagementBatchRunService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultEngagementBatchRunService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultEngagementBatchRunService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultEngagementBatchRunService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultEngagementBatchRunService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultEngagementBatchRunService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultEngagementBatchRunService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultEngagementBatchRunService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultEngagementBatchRunService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultEngagementBatchRunService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultEngagementBatchRunService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultEngagementBatchRunService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultEngagementBatchRunService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultEngagementBatchRunService.doIndexing(request);
     }
 };

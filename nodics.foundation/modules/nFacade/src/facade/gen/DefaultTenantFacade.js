@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultTenantService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultTenantService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultTenantService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultTenantService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultTenantService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultTenantService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultTenantService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultTenantService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultTenantService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultTenantService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultTenantService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultTenantService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultTenantService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultTenantService.doIndexing(request);
     }
 };

@@ -529,6 +529,12 @@ Every change must:
   through the governed build/generation path;
 - document purpose, owner, layer, extension path, inputs/outputs, side effects,
   failure behavior, and exported methods for every new source file;
+- keep generated documentation aligned with the shared application
+  documentation contract: backend-owned hierarchy metadata, source ownership,
+  audience, access mode, lifecycle state, maturity state, related pages, source
+  evidence, visual or tabular explanation, business/developer/operator
+  guidance, common mistakes, verification, and publication readiness are part
+  of feature completion;
 - include positive, negative, security/access, tenant, data, failure/recovery,
   and traceability tests as applicable;
 - include an override/customization test for every new or changed extension

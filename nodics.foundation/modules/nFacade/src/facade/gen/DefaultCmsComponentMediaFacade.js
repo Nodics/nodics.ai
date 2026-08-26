@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultCmsComponentMediaService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultCmsComponentMediaService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultCmsComponentMediaService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultCmsComponentMediaService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultCmsComponentMediaService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultCmsComponentMediaService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultCmsComponentMediaService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultCmsComponentMediaService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultCmsComponentMediaService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultCmsComponentMediaService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultCmsComponentMediaService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultCmsComponentMediaService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultCmsComponentMediaService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultCmsComponentMediaService.doIndexing(request);
     }
 };

@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultCommsInboxMessageService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultCommsInboxMessageService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultCommsInboxMessageService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultCommsInboxMessageService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultCommsInboxMessageService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultCommsInboxMessageService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultCommsInboxMessageService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultCommsInboxMessageService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultCommsInboxMessageService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultCommsInboxMessageService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultCommsInboxMessageService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultCommsInboxMessageService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultCommsInboxMessageService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultCommsInboxMessageService.doIndexing(request);
     }
 };

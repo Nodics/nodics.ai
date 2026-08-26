@@ -24,12 +24,11 @@ const managed = [];
 const require = createRequire(import.meta.url);
 const composition = require(path.join(projectRoot, "config", "agora-domain-composition.js")).resolve();
 const groupByPack = Object.freeze({
-  agoraCommonData: "agora.common",
-  agoraApparelData: "agora.apparel",
-  agoraElectronicsData: "agora.electronics",
-  agoraTelcoData: "agora.telco"
+  agoraApparel: "agora.apparel",
+  agoraElectronics: "agora.electronics",
+  agoraTelco: "agora.telco"
 });
-const storefrontPacks = Object.freeze(["agoraCommonData", ...composition.projectPacks]);
+const storefrontPacks = Object.freeze([...composition.projectPacks]);
 const requiredReleaseCodes = Object.freeze(storefrontPacks.flatMap((pack) => {
   const manifest = require(path.join(projectRoot, "modules", groupByPack[pack], "modules", pack, "data", "manifest.json"));
   return Object.entries(manifest.sections)

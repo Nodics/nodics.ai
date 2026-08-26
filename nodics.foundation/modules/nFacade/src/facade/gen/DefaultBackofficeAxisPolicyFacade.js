@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultBackofficeAxisPolicyService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultBackofficeAxisPolicyService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultBackofficeAxisPolicyService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultBackofficeAxisPolicyService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultBackofficeAxisPolicyService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultBackofficeAxisPolicyService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultBackofficeAxisPolicyService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultBackofficeAxisPolicyService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultBackofficeAxisPolicyService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultBackofficeAxisPolicyService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultBackofficeAxisPolicyService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultBackofficeAxisPolicyService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultBackofficeAxisPolicyService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultBackofficeAxisPolicyService.doIndexing(request);
     }
 };

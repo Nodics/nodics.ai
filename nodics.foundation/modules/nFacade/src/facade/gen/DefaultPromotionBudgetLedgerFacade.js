@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultPromotionBudgetLedgerService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultPromotionBudgetLedgerService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultPromotionBudgetLedgerService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultPromotionBudgetLedgerService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultPromotionBudgetLedgerService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultPromotionBudgetLedgerService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultPromotionBudgetLedgerService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultPromotionBudgetLedgerService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultPromotionBudgetLedgerService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultPromotionBudgetLedgerService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultPromotionBudgetLedgerService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultPromotionBudgetLedgerService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultPromotionBudgetLedgerService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultPromotionBudgetLedgerService.doIndexing(request);
     }
 };

@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultTestimonialCandidateService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultTestimonialCandidateService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultTestimonialCandidateService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultTestimonialCandidateService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultTestimonialCandidateService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultTestimonialCandidateService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultTestimonialCandidateService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultTestimonialCandidateService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultTestimonialCandidateService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultTestimonialCandidateService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultTestimonialCandidateService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultTestimonialCandidateService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultTestimonialCandidateService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultTestimonialCandidateService.doIndexing(request);
     }
 };

@@ -48,8 +48,10 @@ global.SERVICE = {
     },
     DefaultProductSearchProjectionService: {
         save: async request => persisted.push(request),
+        update: async request => updated.push(request)
+    },
+    DefaultSearchService: {
         doSave: async request => indexed.push(request),
-        update: async request => updated.push(request),
         doRemoveByQuery: async request => removed.push(request)
     }
 };
@@ -99,8 +101,8 @@ test('publication fails closed before persistence when tenant or required locale
 });
 
 test('publication fails closed when nSearch reports document indexing failures', async () => {
-    let original = global.SERVICE.DefaultProductSearchProjectionService.doSave;
-    global.SERVICE.DefaultProductSearchProjectionService.doSave = async () => ({
+    let original = global.SERVICE.DefaultSearchService.doSave;
+    global.SERVICE.DefaultSearchService.doSave = async () => ({
         code: 'SUC_SRCH_00000',
         result: [],
         errors: [{ code: 'ERR_SRCH_00003', message: 'Invalid data model to save' }]
@@ -114,7 +116,7 @@ test('publication fails closed when nSearch reports document indexing failures',
         assert.equal(removed.length, 1);
         assert.deepEqual(removed[0].query, { tenant: 'default', productCode: product.code, storeCode: 'sampleStore' });
     } finally {
-        global.SERVICE.DefaultProductSearchProjectionService.doSave = original;
+        global.SERVICE.DefaultSearchService.doSave = original;
     }
 });
 

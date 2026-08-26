@@ -57,7 +57,7 @@ assert(result.dryRunPlan.selectedResult.transitiveBackendDependencies.includes('
     'Telco dry run must show Electronics as backend behavior resolved by dependency');
 assert.deepStrictEqual(result.dryRunPlan.selectedResult.activeDomains, ['TELCO'],
     'Telco dry run must activate only the Telco customer experience');
-assert.deepStrictEqual(result.dryRunPlan.selectedResult.dataPacks, ['agora.common', 'agora.telco'],
+assert.deepStrictEqual(result.dryRunPlan.selectedResult.dataPacks, ['agora.telco'],
     'Telco dry run must not include the Electronics data pack unless the user selected that domain');
 assert(!result.dryRunPlan.selectedResult.rendererKeys.includes('agora.electronics.product-card'),
     'Telco dry run must not include Electronics renderers unless the user selected Electronics');

@@ -44,6 +44,15 @@ module.exports = {
         throw error;
     },
 
+    /** Returns the active nSearch service boundary for provider-neutral indexing operations. */
+    searchService: function () {
+        if (SERVICE.DefaultSearchService && typeof SERVICE.DefaultSearchService.doSave === 'function') return SERVICE.DefaultSearchService;
+        if (SERVICE.DefaultProductSearchProjectionService && typeof SERVICE.DefaultProductSearchProjectionService.doSave === 'function') {
+            return SERVICE.DefaultProductSearchProjectionService;
+        }
+        throw new Error('Product search publication requires an nSearch save service');
+    },
+
     /** Publishes one Product into deterministic locale-specific persistence and nSearch projections. */
     publish: async function (request, input) {
         if (!input || !input.product || !input.storeCode) throw new Error('Product and Store are required for localized search publication');
@@ -61,7 +70,7 @@ module.exports = {
                 }));
                 let model = this.persistenceModel(request, projection);
                 await SERVICE.DefaultProductSearchProjectionService.save({ tenant: request.tenant, authData: request.authData, model: model });
-                this.assertSearchSaveSucceeded(await SERVICE.DefaultProductSearchProjectionService.doSave({ tenant: request.tenant,
+                this.assertSearchSaveSucceeded(await this.searchService().doSave({ tenant: request.tenant,
                     moduleName: 'product', indexName: this.policy().searchIndexName, model: model,
                     searchOptions: { analyzer: (this.policy().analyzerByLocale || {})[locale] } }), model);
                 projections.push(model);
@@ -88,7 +97,7 @@ module.exports = {
             let model = this.persistenceModel(request, Object.assign({}, snapshot, { status: 'CURRENT',
                 projectedAt: request.now ? new Date(request.now) : new Date() }));
             await SERVICE.DefaultProductSearchProjectionService.save({ tenant: request.tenant, authData: request.authData, model: model });
-            this.assertSearchSaveSucceeded(await SERVICE.DefaultProductSearchProjectionService.doSave({ tenant: request.tenant, moduleName: 'product',
+            this.assertSearchSaveSucceeded(await this.searchService().doSave({ tenant: request.tenant, moduleName: 'product',
                 indexName: this.policy().searchIndexName, model: model, searchOptions: { analyzer: (this.policy().analyzerByLocale || {})[model.locale] } }), model);
             restored.push(model);
         }
@@ -103,7 +112,7 @@ module.exports = {
         let query = { tenant: request.tenant, storeCode: input.storeCode, status: 'CURRENT' };
         await SERVICE.DefaultProductSearchProjectionService.update({ tenant: request.tenant,
             authData: request.authData, query: query, model: { status: 'WITHDRAWN' } });
-        await SERVICE.DefaultProductSearchProjectionService.doRemoveByQuery({ tenant: request.tenant, moduleName: 'product',
+        await this.searchService().doRemoveByQuery({ tenant: request.tenant, moduleName: 'product',
             indexName: this.policy().searchIndexName, query: query });
         return { status: 'WITHDRAWN', storeCode: input.storeCode };
     },
@@ -116,7 +125,7 @@ module.exports = {
         let query = { tenant: request.tenant, productCode: input.productCode, storeCode: input.storeCode };
         await SERVICE.DefaultProductSearchProjectionService.update({ tenant: request.tenant,
             authData: request.authData, query: query, model: { status: 'WITHDRAWN' } });
-        await SERVICE.DefaultProductSearchProjectionService.doRemoveByQuery({ tenant: request.tenant, moduleName: 'product',
+        await this.searchService().doRemoveByQuery({ tenant: request.tenant, moduleName: 'product',
             indexName: this.policy().searchIndexName, query: query });
         return { status: 'WITHDRAWN', productCode: input.productCode, storeCode: input.storeCode };
     }

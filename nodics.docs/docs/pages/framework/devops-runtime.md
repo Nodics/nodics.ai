@@ -20,7 +20,7 @@ The reference local setup uses separate servers:
 - Axis on `http://localhost:3100`.
 
 This split keeps module boundaries visible. It also prepares the team for a
-future topology where different capabilities may run in different processes,
+distributed topology where different capabilities may run in different processes,
 hosts, containers, or deployment units.
 
 ```mermaid

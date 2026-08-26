@@ -23,9 +23,12 @@ const axisOrigin = process.env.AXIS_ORIGIN || process.env.AXIS_URL || "http://12
 const enterpriseCode = process.env.AXIS_ENTERPRISE || process.env.NODICS_ENTERPRISE_CODE || "default";
 const loginId = process.env.AXIS_LOGIN_ID || "admin";
 const password = process.env.AXIS_PASSWORD || "adminPassword";
-const assetRoot = path.join(projectRoot, "modules", "agora.common", "modules", "agoraCommonData", "assets", "agora-cms-media");
-const assetManifestPath = path.join(assetRoot, "assetManifest.js");
-const assetFilesRoot = path.join(assetRoot, "files");
+const composition = require(path.join(projectRoot, "config", "agora-domain-composition.js")).resolve();
+const groupByPack = Object.freeze({
+  agoraApparel: "agora.apparel",
+  agoraElectronics: "agora.electronics",
+  agoraTelco: "agora.telco",
+});
 
 function log(message) {
   console.log(`[agora-cms-media-seed] ${message}`);
@@ -90,7 +93,7 @@ function mimeType(fileName) {
   return "application/octet-stream";
 }
 
-async function uploadAsset(headers, asset) {
+async function uploadAsset(headers, asset, assetFilesRoot) {
   const filePath = path.join(assetFilesRoot, asset.fileName);
   if (!existsSync(filePath)) throw new Error(`Asset file is missing: ${filePath}`);
   const buffer = await fs.readFile(filePath);
@@ -128,16 +131,27 @@ async function uploadAsset(headers, asset) {
 }
 
 async function run() {
-  if (!existsSync(assetManifestPath)) throw new Error(`Missing Agora media asset manifest: ${assetManifestPath}`);
-  const assets = require(assetManifestPath);
-  if (!Array.isArray(assets) || assets.length === 0) throw new Error("Agora media asset manifest is empty");
+  const assetsByCode = new Map();
+  for (const pack of composition.projectPacks) {
+    const group = groupByPack[pack];
+    if (!group) throw new Error(`Unsupported Agora media pack: ${pack}`);
+    const assetRoot = path.join(projectRoot, "modules", group, "modules", pack, "assets", "agora-cms-media");
+    const assetManifestPath = path.join(assetRoot, "assetManifest.js");
+    const assetFilesRoot = path.join(assetRoot, "files");
+    if (!existsSync(assetManifestPath)) throw new Error(`Missing Agora media asset manifest: ${assetManifestPath}`);
+    const assets = require(assetManifestPath);
+    if (!Array.isArray(assets) || assets.length === 0) throw new Error(`Agora media asset manifest is empty: ${assetManifestPath}`);
+    for (const asset of assets) {
+      if (!assetsByCode.has(asset.mediaCode)) assetsByCode.set(asset.mediaCode, { asset, assetFilesRoot });
+    }
+  }
   const headers = await authenticateEmployee();
   let reconciled = 0;
-  for (const asset of assets) {
-    const result = await uploadAsset(headers, asset);
+  for (const { asset, assetFilesRoot } of assetsByCode.values()) {
+    const result = await uploadAsset(headers, asset, assetFilesRoot);
     if (result === "reconciled") reconciled += 1;
   }
-  log(`PASS ${reconciled} reconciled, ${assets.length} total`);
+  log(`PASS ${reconciled} reconciled, ${assetsByCode.size} total`);
 }
 
 run().catch((error) => {

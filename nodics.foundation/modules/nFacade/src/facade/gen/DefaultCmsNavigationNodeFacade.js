@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultCmsNavigationNodeService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultCmsNavigationNodeService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultCmsNavigationNodeService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultCmsNavigationNodeService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultCmsNavigationNodeService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultCmsNavigationNodeService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultCmsNavigationNodeService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultCmsNavigationNodeService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultCmsNavigationNodeService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultCmsNavigationNodeService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultCmsNavigationNodeService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultCmsNavigationNodeService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultCmsNavigationNodeService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultCmsNavigationNodeService.doIndexing(request);
     }
 };

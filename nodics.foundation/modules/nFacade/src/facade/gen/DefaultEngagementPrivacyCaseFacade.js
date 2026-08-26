@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultEngagementPrivacyCaseService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultEngagementPrivacyCaseService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultEngagementPrivacyCaseService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultEngagementPrivacyCaseService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultEngagementPrivacyCaseService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultEngagementPrivacyCaseService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultEngagementPrivacyCaseService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultEngagementPrivacyCaseService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultEngagementPrivacyCaseService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultEngagementPrivacyCaseService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultEngagementPrivacyCaseService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultEngagementPrivacyCaseService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultEngagementPrivacyCaseService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultEngagementPrivacyCaseService.doIndexing(request);
     }
 };

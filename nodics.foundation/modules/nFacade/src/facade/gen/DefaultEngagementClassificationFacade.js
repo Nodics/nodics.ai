@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultEngagementClassificationService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultEngagementClassificationService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultEngagementClassificationService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultEngagementClassificationService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultEngagementClassificationService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultEngagementClassificationService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultEngagementClassificationService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultEngagementClassificationService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultEngagementClassificationService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultEngagementClassificationService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultEngagementClassificationService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultEngagementClassificationService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultEngagementClassificationService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultEngagementClassificationService.doIndexing(request);
     }
 };

@@ -89,6 +89,10 @@ project role names.
 The catalog includes `ai.usage.readOwn` for the aiProviders-owned,
 authenticated-human self-service usage summary. It is distinct from the
 tenant-wide operator permissions `ai.ledger.read` and `ai.ledger.manage`.
+It also includes the baseline Axis visibility and documentation-authoring
+permissions used by Profile seed groups, while approval, activation, rollback,
+and publication remain separate permissions for administrators and publishing
+owners.
 
 Internal-token route authorization is also layered. The default route
 permission is `authSecurity.internalToken.routePermission`, which resolves to

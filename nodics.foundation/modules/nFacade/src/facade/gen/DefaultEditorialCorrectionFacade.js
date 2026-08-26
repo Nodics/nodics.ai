@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultEditorialCorrectionService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultEditorialCorrectionService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultEditorialCorrectionService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultEditorialCorrectionService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultEditorialCorrectionService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultEditorialCorrectionService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultEditorialCorrectionService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultEditorialCorrectionService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultEditorialCorrectionService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultEditorialCorrectionService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultEditorialCorrectionService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultEditorialCorrectionService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultEditorialCorrectionService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultEditorialCorrectionService.doIndexing(request);
     }
 };

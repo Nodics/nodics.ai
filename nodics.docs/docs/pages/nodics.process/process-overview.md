@@ -2,7 +2,7 @@
 
 `nodics.process` is the standard Nodics functional module group for business
 processes, workflows, task orchestration, runtime instances, audit evidence,
-and future automation design. It exists because most enterprise applications do
+and automation design. It exists because most enterprise applications do
 not run as one simple button click. A content approval, onboarding request,
 order exception, document review, refund approval, or partner activation often
 needs multiple steps, people, systems, deadlines, decisions, retries, and audit
@@ -130,7 +130,7 @@ later as governed extensions after the foundation is proven.
 
 ## Extension direction
 
-Future modules or customer projects should extend Process through:
+Additional modules or customer projects should extend Process through:
 
 - graph validation policy;
 - task assignment policy;

@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultContactHandoffService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultContactHandoffService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultContactHandoffService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultContactHandoffService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultContactHandoffService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultContactHandoffService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultContactHandoffService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultContactHandoffService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultContactHandoffService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultContactHandoffService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultContactHandoffService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultContactHandoffService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultContactHandoffService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultContactHandoffService.doIndexing(request);
     }
 };

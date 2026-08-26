@@ -26,6 +26,12 @@ const commerceOnlineUrl = process.env.NODICS_COMMERCE_ONLINE_URL || process.env.
 const wcmsOnlineUrl = process.env.NODICS_WCMS_ONLINE_URL || "http://127.0.0.1:4314";
 const axisOrigin = process.env.AXIS_ORIGIN || "http://127.0.0.1:3100";
 const managed = [];
+const composition = require(path.join(projectRoot, "config", "agora-domain-composition.js")).resolve();
+const groupByPack = Object.freeze({
+  agoraApparel: { group: "agora.apparel", folder: "apparel", prefix: "agoraApparel" },
+  agoraElectronics: { group: "agora.electronics", folder: "electronics", prefix: "agoraElectronics" },
+  agoraTelco: { group: "agora.telco", folder: "telco", prefix: "agoraTelco" },
+});
 
 function log(message) {
   console.log(`[agora-commerce-publication-acceptance] ${message}`);
@@ -174,15 +180,40 @@ async function authenticateService(servicePrincipalHeaders) {
   return { Authorization: `Bearer ${authToken}` };
 }
 
-async function dataRecords(relativePath) {
-  const module = await import(pathToFileURL(path.join(projectRoot, "modules", "agora.common", "modules", "agoraCommonData", relativePath)).href);
+async function importRecords(filePath) {
+  try {
+    await fs.access(filePath);
+  } catch {
+    return [];
+  }
+  const module = await import(pathToFileURL(filePath).href);
   const records = module.default || module;
   return Object.values(records);
 }
 
 async function assetRecords() {
-  const module = await import(pathToFileURL(path.join(projectRoot, "modules", "agora.common", "modules", "agoraCommonData", "assets", "agora-cms-media", "assetManifest.js")).href);
-  return module.default || module;
+  const assetsByCode = new Map();
+  for (const pack of composition.projectPacks) {
+    const domain = groupByPack[pack];
+    const module = await import(pathToFileURL(path.join(projectRoot, "modules", domain.group, "modules", pack, "assets", "agora-cms-media", "assetManifest.js")).href);
+    const assets = module.default || module;
+    for (const asset of assets) {
+      if (!assetsByCode.has(asset.mediaCode)) {
+        assetsByCode.set(asset.mediaCode, { ...asset, pack });
+      }
+    }
+  }
+  return [...assetsByCode.values()];
+}
+
+async function domainDataRecords(fileSuffix) {
+  const records = [];
+  for (const pack of composition.projectPacks) {
+    const domain = groupByPack[pack];
+    const filePath = path.join(projectRoot, "modules", domain.group, "modules", pack, "data", "staged", domain.folder, "data", `${domain.prefix}${fileSuffix}`);
+    records.push(...await importRecords(filePath));
+  }
+  return records;
 }
 
 async function validatePublicationContract(headers) {
@@ -252,11 +283,11 @@ async function restoreOnline(headers, publication) {
 }
 
 async function restoreOperationalOnline(headers) {
-  const priceBooks = await dataRecords("data/staged/pricing/data/agoraPriceBookData.js");
-  const priceRows = await dataRecords("data/staged/pricing/data/agoraPriceRowData.js");
-  const warehouses = await dataRecords("data/staged/inventory/data/agoraWarehouseData.js");
-  const inventoryBalances = await dataRecords("data/staged/inventory/data/agoraInventoryBalanceData.js");
-  const taxPolicies = await dataRecords("data/staged/tax/data/agoraTaxPolicyData.js");
+  const priceBooks = await domainDataRecords("PriceBookData.js");
+  const priceRows = await domainDataRecords("PriceRowData.js");
+  const warehouses = await domainDataRecords("WarehouseData.js");
+  const inventoryBalances = await domainDataRecords("InventoryBalanceData.js");
+  const taxPolicies = await domainDataRecords("TaxPolicyData.js");
   const pricing = await request(commerceOnlineUrl, "/nodics/pricing/v0/internal/pricing/publication/operational/restore", {
     method: "POST",
     headers,
@@ -307,7 +338,8 @@ function mimeTypeOf(fileName) {
 }
 
 async function productMediaPublicationAsset(asset) {
-  const filePath = path.join(projectRoot, "modules", "agora.common", "modules", "agoraCommonData", "assets", "agora-cms-media", "files", asset.fileName);
+  const domain = groupByPack[asset.pack];
+  const filePath = path.join(projectRoot, "modules", domain.group, "modules", asset.pack, "assets", "agora-cms-media", "files", asset.fileName);
   const buffer = await fs.readFile(filePath);
   const checksumAlgorithm = "sha256";
   return {
@@ -367,7 +399,7 @@ async function publishProductMedia(deliveryHeaders, publicationHeaders, products
     .map((asset) => [asset.mediaCode, asset]));
   const missingAssets = discoveredMediaCodes.filter((mediaCode) => !assetsByCode.has(mediaCode));
   if (missingAssets.length > 0) {
-    throw new Error(`Product media assets are missing from agoraCommonData asset manifest: ${missingAssets.join(", ")}`);
+    throw new Error(`Product media assets are missing from selected Agora domain asset manifests: ${missingAssets.join(", ")}`);
   }
   const mediaCodes = Array.from(new Set([...assetsByCode.keys()])).sort();
   const publicationAssets = [];

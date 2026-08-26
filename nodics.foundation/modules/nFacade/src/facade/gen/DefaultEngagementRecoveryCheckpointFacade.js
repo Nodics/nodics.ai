@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultEngagementRecoveryCheckpointService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultEngagementRecoveryCheckpointService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultEngagementRecoveryCheckpointService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultEngagementRecoveryCheckpointService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultEngagementRecoveryCheckpointService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultEngagementRecoveryCheckpointService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultEngagementRecoveryCheckpointService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultEngagementRecoveryCheckpointService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultEngagementRecoveryCheckpointService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultEngagementRecoveryCheckpointService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultEngagementRecoveryCheckpointService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultEngagementRecoveryCheckpointService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultEngagementRecoveryCheckpointService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultEngagementRecoveryCheckpointService.doIndexing(request);
     }
 };

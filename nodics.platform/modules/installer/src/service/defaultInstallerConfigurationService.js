@@ -41,9 +41,16 @@ function envAllowedRoots() {
  * @override Customer projects may override allowlists through normal configuration layering.
  */
 module.exports = {
+    /** Initializes the configuration service lifecycle boundary. */
     init: function () { return Promise.resolve(true); },
+    /** Completes post-initialization for the configuration service lifecycle boundary. */
     postInit: function () { return Promise.resolve(true); },
 
+    /**
+     * Resolves Application Builder configuration from defaults, runtime config, environment, and overrides.
+     * @param {Object} overrides Optional configuration overrides for tests or controlled runtime calls.
+     * @returns {Object} Effective Application Builder configuration.
+     */
     getApplicationBuilderConfig: function (overrides) {
         const defaults = deepClone(localProperties.installer.applicationBuilder);
         const runtimeConfig = readRuntimeConfig();

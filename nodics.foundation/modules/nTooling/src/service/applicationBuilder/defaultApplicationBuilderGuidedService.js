@@ -42,7 +42,7 @@ module.exports = {
                 routes: ['/', '/products'],
                 renderers: ['commerce.product.card'],
                 catalogs: ['mainProductCatalog', 'mainContentCatalog'],
-                packs: ['agora.common'],
+                packs: [],
                 journeys: ['commerce.discovery', 'commerce.checkout'],
                 explanation: 'Base Commerce storefront with shared product discovery and checkout foundations.'
             },
@@ -55,7 +55,7 @@ module.exports = {
                 routes: ['/', '/apparel'],
                 renderers: ['agora.apparel.product-card'],
                 catalogs: ['apparelProductCatalog', 'apparelContentCatalog'],
-                packs: ['agora.common', 'agora.apparel'],
+                packs: ['agora.apparel'],
                 journeys: ['apparel.size-colour-checkout'],
                 explanation: 'Apparel storefront with size, colour, style, brand, and fit-oriented product behavior.'
             },
@@ -68,7 +68,7 @@ module.exports = {
                 routes: ['/', '/electronics'],
                 renderers: ['agora.electronics.product-card'],
                 catalogs: ['electronicsProductCatalog', 'electronicsContentCatalog'],
-                packs: ['agora.common', 'agora.electronics'],
+                packs: ['agora.electronics'],
                 journeys: ['electronics.warranty-checkout'],
                 explanation: 'Electronics storefront with device specification, compatibility, and warranty behavior.'
             },
@@ -81,14 +81,14 @@ module.exports = {
                 routes: ['/', '/telco'],
                 renderers: ['agora.telco.product-card'],
                 catalogs: ['telcoProductCatalog', 'telcoContentCatalog'],
-                packs: ['agora.common', 'agora.telco'],
+                packs: ['agora.telco'],
                 journeys: ['telco.device-plan-provisioning'],
                 integrations: [{ code: 'localProvisioning', kind: 'PROVISIONING',
                     certificationState: 'LOCAL_ADAPTER', required: true }],
                 explanation: 'Telco storefront with device behavior plus subscription-plan and provisioning behavior.'
             },
             combined: {
-                label: 'Combined multi-domain commerce storefront',
+                label: 'Combined domain commerce storefront',
                 selected: ['nodics.commerce', 'apparel', 'electronics', 'telco'],
                 domains: ['APPAREL', 'ELECTRONICS', 'TELCO'],
                 excluded: [],
@@ -97,7 +97,7 @@ module.exports = {
                 renderers: ['agora.apparel.product-card', 'agora.electronics.product-card',
                     'agora.telco.product-card'],
                 catalogs: ['apparelCatalog', 'electronicsCatalog', 'telcoCatalog', 'contentCatalog'],
-                packs: ['agora.common', 'agora.apparel', 'agora.electronics', 'agora.telco'],
+                packs: ['agora.apparel', 'agora.electronics', 'agora.telco'],
                 journeys: ['apparel.size-colour-checkout', 'electronics.warranty-checkout',
                     'telco.device-plan-provisioning', 'commerce.mixed-cart'],
                 integrations: [{ code: 'localProvisioning', kind: 'PROVISIONING',

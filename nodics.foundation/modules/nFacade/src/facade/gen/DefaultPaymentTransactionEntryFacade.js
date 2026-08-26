@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultPaymentTransactionEntryService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultPaymentTransactionEntryService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultPaymentTransactionEntryService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultPaymentTransactionEntryService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultPaymentTransactionEntryService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultPaymentTransactionEntryService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultPaymentTransactionEntryService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultPaymentTransactionEntryService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultPaymentTransactionEntryService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultPaymentTransactionEntryService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultPaymentTransactionEntryService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultPaymentTransactionEntryService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultPaymentTransactionEntryService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultPaymentTransactionEntryService.doIndexing(request);
     }
 };

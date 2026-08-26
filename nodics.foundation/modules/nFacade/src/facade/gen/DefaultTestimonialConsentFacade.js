@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultTestimonialConsentService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultTestimonialConsentService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultTestimonialConsentService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultTestimonialConsentService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultTestimonialConsentService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultTestimonialConsentService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultTestimonialConsentService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultTestimonialConsentService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultTestimonialConsentService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultTestimonialConsentService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultTestimonialConsentService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultTestimonialConsentService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultTestimonialConsentService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultTestimonialConsentService.doIndexing(request);
     }
 };

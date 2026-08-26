@@ -99,9 +99,17 @@ function classifyWorkspace(workspaceRoot, config) {
  * @override Do not relax allowlist or vendor-root protections without explicit security review.
  */
 module.exports = {
+    /** Initializes the workspace boundary service lifecycle. */
     init: function () { return Promise.resolve(true); },
+    /** Completes post-initialization for the workspace boundary service lifecycle. */
     postInit: function () { return Promise.resolve(true); },
 
+    /**
+     * Resolves and validates the requested customer workspace root.
+     * @param {Object} request Installer request envelope.
+     * @param {Object} options Optional configuration overrides.
+     * @returns {Object} Validated workspace projection with configuration and classification.
+     */
     resolveWorkspace: function (request, options) {
         const config = configurationService.getApplicationBuilderConfig(options || {});
         const payload = requestPayload(request);
@@ -139,5 +147,11 @@ module.exports = {
         };
     },
 
+    /**
+     * Classifies workspace markers and protected-vendor state.
+     * @param {string} workspaceRoot Validated workspace root.
+     * @param {Object} config Effective installer configuration.
+     * @returns {Object} Workspace classification.
+     */
     classifyWorkspace
 };

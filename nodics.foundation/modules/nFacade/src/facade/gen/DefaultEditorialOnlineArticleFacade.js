@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultEditorialOnlineArticleService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultEditorialOnlineArticleService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultEditorialOnlineArticleService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultEditorialOnlineArticleService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultEditorialOnlineArticleService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultEditorialOnlineArticleService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultEditorialOnlineArticleService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultEditorialOnlineArticleService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultEditorialOnlineArticleService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultEditorialOnlineArticleService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultEditorialOnlineArticleService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultEditorialOnlineArticleService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultEditorialOnlineArticleService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultEditorialOnlineArticleService.doIndexing(request);
     }
 };

@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultEngagementActivityService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultEngagementActivityService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultEngagementActivityService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultEngagementActivityService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultEngagementActivityService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultEngagementActivityService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultEngagementActivityService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultEngagementActivityService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultEngagementActivityService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultEngagementActivityService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultEngagementActivityService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultEngagementActivityService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultEngagementActivityService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultEngagementActivityService.doIndexing(request);
     }
 };

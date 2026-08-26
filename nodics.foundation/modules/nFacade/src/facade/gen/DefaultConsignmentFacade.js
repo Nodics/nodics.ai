@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultConsignmentService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultConsignmentService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultConsignmentService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultConsignmentService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultConsignmentService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultConsignmentService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultConsignmentService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultConsignmentService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultConsignmentService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultConsignmentService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultConsignmentService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultConsignmentService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultConsignmentService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultConsignmentService.doIndexing(request);
     }
 };

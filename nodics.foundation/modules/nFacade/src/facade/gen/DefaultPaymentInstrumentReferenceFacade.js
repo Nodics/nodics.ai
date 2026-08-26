@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultPaymentInstrumentReferenceService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultPaymentInstrumentReferenceService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultPaymentInstrumentReferenceService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultPaymentInstrumentReferenceService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultPaymentInstrumentReferenceService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultPaymentInstrumentReferenceService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultPaymentInstrumentReferenceService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultPaymentInstrumentReferenceService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultPaymentInstrumentReferenceService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultPaymentInstrumentReferenceService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultPaymentInstrumentReferenceService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultPaymentInstrumentReferenceService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultPaymentInstrumentReferenceService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultPaymentInstrumentReferenceService.doIndexing(request);
     }
 };

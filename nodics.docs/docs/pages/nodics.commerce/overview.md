@@ -110,7 +110,7 @@ Examples:
 
 ## Security and evidence baseline
 
-All future Commerce slices must enforce tenant isolation, authenticated
+All Commerce slices added to the framework must enforce tenant isolation, authenticated
 audiences, least-privilege permissions, idempotency, audit trails, protected
 data handling, and exact money and quantity representations. Provider secrets
 must never enter schemas, logs, browser payloads, documentation, or generated

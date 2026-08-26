@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultMediaFormatService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultMediaFormatService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultMediaFormatService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultMediaFormatService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultMediaFormatService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultMediaFormatService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultMediaFormatService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultMediaFormatService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultMediaFormatService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultMediaFormatService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultMediaFormatService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultMediaFormatService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultMediaFormatService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultMediaFormatService.doIndexing(request);
     }
 };

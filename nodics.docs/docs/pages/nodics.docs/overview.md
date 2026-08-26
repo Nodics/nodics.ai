@@ -29,7 +29,7 @@ wrong repository.
 - local quick start and verification;
 - customization and extension;
 - runtime and DevOps guidance;
-- Core, Platform, WCMS, Media, Cron, Docs, and future standard module
+- Core, Platform, WCMS, Media, Cron, Docs, and additional standard module
   explanations.
 
 It does not own Axis product documentation, customer project documentation,
@@ -142,7 +142,7 @@ To update framework documentation:
 8. Open Axis documentation and verify the page renders with headings, tables,
    diagrams, and images.
 
-For example, if you add a future Commerce module overview, the page belongs in
+For example, if you add a Commerce capability overview, the page belongs in
 `nodics.docs` only if it explains reusable framework Commerce behavior. If a
 customer project adds customer-specific Commerce setup, that guide belongs in
 the customer project.
@@ -207,7 +207,8 @@ secret values. Public documentation should also avoid implying that one
 reference project name is mandatory for all customers.
 
 Tenant and enterprise behavior should be described carefully. If a behavior is
-implemented, say so. If it is a design direction, mark it as planned or future.
+implemented, say so. If it is a design direction, mark it as concept,
+design-contract, partial implementation, or operational.
 Do not invent runtime behavior to make documentation look complete.
 
 ## Troubleshooting

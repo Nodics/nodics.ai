@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultPaymentReconciliationService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultPaymentReconciliationService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultPaymentReconciliationService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultPaymentReconciliationService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultPaymentReconciliationService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultPaymentReconciliationService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultPaymentReconciliationService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultPaymentReconciliationService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultPaymentReconciliationService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultPaymentReconciliationService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultPaymentReconciliationService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultPaymentReconciliationService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultPaymentReconciliationService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultPaymentReconciliationService.doIndexing(request);
     }
 };

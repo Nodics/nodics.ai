@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultCouponService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultCouponService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultCouponService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultCouponService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultCouponService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultCouponService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultCouponService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultCouponService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultCouponService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultCouponService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultCouponService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultCouponService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultCouponService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultCouponService.doIndexing(request);
     }
 };

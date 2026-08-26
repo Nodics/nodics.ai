@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultProcessAuditEventService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultProcessAuditEventService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultProcessAuditEventService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultProcessAuditEventService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultProcessAuditEventService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultProcessAuditEventService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultProcessAuditEventService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultProcessAuditEventService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultProcessAuditEventService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultProcessAuditEventService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultProcessAuditEventService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultProcessAuditEventService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultProcessAuditEventService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultProcessAuditEventService.doIndexing(request);
     }
 };

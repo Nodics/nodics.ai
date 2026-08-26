@@ -56,13 +56,33 @@ assert.strictEqual(catalogue.catalogueDigest, catalogueService.digest(portableCa
 if (fs.existsSync(expRoot)) {
     assert(expCatalogue.repositories.some(repository => repository.code === 'exp'),
         'Builder discovery must record nodics.exp provenance when used');
-    assert(expCatalogue.frontendApps.some(app => app.code === 'agora' && app.location === 'nested'),
-        'Builder discovery must resolve Agora from nodics.exp nested layout');
+    assert(expCatalogue.frontendApps.some(app => app.code === 'agoraApparel' && app.location === 'nested'),
+        'Builder discovery must resolve Agora Apparel from nodics.exp nested layout');
+    assert(expCatalogue.frontendApps.some(app => app.code === 'agoraElectronics' && app.location === 'nested'),
+        'Builder discovery must resolve Agora Electronics from nodics.exp nested layout');
+    assert(expCatalogue.frontendApps.some(app => app.code === 'agoraTelco' && app.location === 'nested'),
+        'Builder discovery must resolve Agora Telco from nodics.exp nested layout');
+    assert(expCatalogue.frontendApps.some(app => app.code === 'domainCommerceUi' && app.location === 'nested'),
+        'Builder discovery must resolve shared Domain Commerce UI from nodics.exp nested layout');
 }
 assert.deepStrictEqual(expCatalogue.capabilities, catalogue.capabilities,
     'Using nodics.exp to resolve the same Agora app must keep backend capability semantics');
-assert.deepStrictEqual(expCatalogue.frontendCompositions, catalogue.frontendCompositions,
-    'Using nodics.exp to resolve the same Agora app must keep Agora composition semantics');
+const expCompositionByCode = new Map(expCatalogue.frontendCompositions.map(composition => [composition.code, composition]));
+['apparel', 'electronics', 'telco', 'combined', 'commerce'].forEach(code => {
+    assert(expCompositionByCode.has(code),
+        'Using nodics.exp must expose the ' + code + ' Agora composition semantics');
+});
+assert.deepStrictEqual(expCompositionByCode.get('combined').domains, ['apparel', 'electronics', 'telco'],
+    'Split nodics.exp apps must preserve combined multi-domain planning semantics');
+assert.deepStrictEqual(expCompositionByCode.get('combined').rendererKeys,
+    catalogue.frontendCompositions.find(composition => composition.code === 'combined').rendererKeys,
+    'Split nodics.exp apps must preserve combined renderer availability');
+assert(expCompositionByCode.get('apparel').sourcePackage === 'nodics.agora.apparel',
+    'Apparel composition must retain split app provenance');
+assert(expCompositionByCode.get('electronics').sourcePackage === 'nodics.agora.electronics',
+    'Electronics composition must retain split app provenance');
+assert(expCompositionByCode.get('telco').sourcePackage === 'nodics.agora.telco',
+    'Telco composition must retain split app provenance');
 assert.deepStrictEqual(expCatalogue.customerDataPacks, catalogue.customerDataPacks,
     'Using nodics.exp to resolve the same Agora app must keep Kickoff data-pack semantics');
 

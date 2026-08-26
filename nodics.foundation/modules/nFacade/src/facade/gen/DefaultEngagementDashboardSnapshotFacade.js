@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultEngagementDashboardSnapshotService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultEngagementDashboardSnapshotService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultEngagementDashboardSnapshotService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultEngagementDashboardSnapshotService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultEngagementDashboardSnapshotService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultEngagementDashboardSnapshotService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultEngagementDashboardSnapshotService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultEngagementDashboardSnapshotService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultEngagementDashboardSnapshotService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultEngagementDashboardSnapshotService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultEngagementDashboardSnapshotService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultEngagementDashboardSnapshotService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultEngagementDashboardSnapshotService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultEngagementDashboardSnapshotService.doIndexing(request);
     }
 };

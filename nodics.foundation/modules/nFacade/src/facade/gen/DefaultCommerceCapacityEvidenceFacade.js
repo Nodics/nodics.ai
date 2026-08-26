@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultCommerceCapacityEvidenceService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultCommerceCapacityEvidenceService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultCommerceCapacityEvidenceService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultCommerceCapacityEvidenceService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultCommerceCapacityEvidenceService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultCommerceCapacityEvidenceService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultCommerceCapacityEvidenceService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultCommerceCapacityEvidenceService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultCommerceCapacityEvidenceService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultCommerceCapacityEvidenceService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultCommerceCapacityEvidenceService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultCommerceCapacityEvidenceService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultCommerceCapacityEvidenceService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultCommerceCapacityEvidenceService.doIndexing(request);
     }
 };

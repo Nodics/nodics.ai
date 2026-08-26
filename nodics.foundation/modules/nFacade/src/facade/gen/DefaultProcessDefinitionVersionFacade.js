@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultProcessDefinitionVersionService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultProcessDefinitionVersionService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultProcessDefinitionVersionService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultProcessDefinitionVersionService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultProcessDefinitionVersionService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultProcessDefinitionVersionService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultProcessDefinitionVersionService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultProcessDefinitionVersionService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultProcessDefinitionVersionService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultProcessDefinitionVersionService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultProcessDefinitionVersionService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultProcessDefinitionVersionService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultProcessDefinitionVersionService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultProcessDefinitionVersionService.doIndexing(request);
     }
 };

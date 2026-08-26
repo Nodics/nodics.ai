@@ -61,9 +61,15 @@ module.exports = {
     PHASE_ONE_PERMISSIONS,
     FUTURE_PERMISSIONS,
 
+    /** Initializes the permission service lifecycle boundary. */
     init: function () { return Promise.resolve(true); },
+    /** Completes post-initialization for the permission service lifecycle boundary. */
     postInit: function () { return Promise.resolve(true); },
 
+    /**
+     * Lists the installer permission model exposed to Axis and diagnostics.
+     * @returns {Object} Phase 1 and future permission metadata.
+     */
     listPermissions: function () {
         return {
             phaseOne: PHASE_ONE_PERMISSIONS.slice(),
@@ -74,6 +80,12 @@ module.exports = {
         };
     },
 
+    /**
+     * Fails closed when a request lacks the required installer permission.
+     * @param {Object} request Installer request envelope.
+     * @param {string} permission Required permission code.
+     * @returns {boolean} True when permission is present.
+     */
     assertPermission: function (request, permission) {
         if (!PHASE_ONE_PERMISSIONS.includes(permission)) {
             throw installerError('INSTALLER_PERMISSION_UNDEFINED',

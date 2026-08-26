@@ -128,6 +128,12 @@ let platformAdminGroup = Object.values(userGroupsData).find(
 let commerceOperatorGroup = Object.values(userGroupsData).find(
   (group) => group.code === "commerceOperatorUserGroup",
 );
+let axisViewerGroup = Object.values(userGroupsData).find(
+  (group) => group.code === "axisViewerUserGroup",
+);
+let documentationAuthorGroup = Object.values(userGroupsData).find(
+  (group) => group.code === "documentationAuthorUserGroup",
+);
 let customerGroup = Object.values(userGroupsData).find(
   (group) => group.code === "customerUserGroup",
 );
@@ -164,6 +170,23 @@ assert(
 assert(
   platformAdminGroup.permissions.includes("backoffice.registry.refresh"),
   "Default platform administrators should be allowed to request a bounded module-health refresh",
+);
+[
+  "axis.view",
+  "axis.dashboard.view",
+  "axis.application.read",
+  "axis.documentation.read",
+  "documentation.draft.create",
+  "documentation.draft.update",
+  "documentation.navigation.update",
+  "documentation.dashboard.update",
+  "documentation.submitReview",
+].forEach((permission) =>
+  assert(
+    platformAdminGroup.permissions.includes(permission),
+    "Default platform administrators should include documentation and Axis permission: " +
+      permission,
+  ),
 );
 ["commerce.promotion.manage", "commerce.promotion.approve", "commerce.inventory.operate"].forEach((permission) => {
   assert(
@@ -237,6 +260,79 @@ let contentGroup = Object.values(userGroupsData).find(
   (group) => group.code === "contentUserGroup",
 );
 assert(contentGroup.permissions.includes("cms.backoffice.view"));
+assert(axisViewerGroup, "Default Axis Viewer group should be seeded");
+assert(
+  axisViewerGroup.parentGroups.includes("employeeUserGroup"),
+  "Axis Viewer should inherit only employee baseline access",
+);
+[
+  "axis.view",
+  "axis.dashboard.view",
+  "axis.application.read",
+  "axis.documentation.read",
+  "backoffice.registry.view",
+  "cms.backoffice.view",
+  "commerce.order.read",
+  "process.definition.read",
+  "dynamo.class.view",
+].forEach((permission) =>
+  assert(
+    axisViewerGroup.permissions.includes(permission),
+    "Axis Viewer should include read-only Axis permission: " + permission,
+  ),
+);
+[
+  "cms.backoffice.manage",
+  "commerce.inventory.operate",
+  "commerce.promotion.manage",
+  "documentation.draft.create",
+  "documentation.navigation.update",
+  "publish.lifecycle.requestApproval",
+  "runtime.config.request.activate",
+  "system.log.level.update",
+].forEach((permission) =>
+  assert(
+    !axisViewerGroup.permissions.includes(permission),
+    "Axis Viewer must not include mutating permission: " + permission,
+  ),
+);
+assert(
+  documentationAuthorGroup,
+  "Default Documentation Author group should be seeded",
+);
+assert(
+  documentationAuthorGroup.parentGroups.includes("axisViewerUserGroup"),
+  "Documentation Author should inherit read-only Axis visibility",
+);
+[
+  "documentation.draft.create",
+  "documentation.draft.update",
+  "documentation.navigation.update",
+  "documentation.dashboard.update",
+  "documentation.submitReview",
+  "publish.lifecycle.create",
+  "publish.lifecycle.validate",
+  "publish.lifecycle.requestApproval",
+].forEach((permission) =>
+  assert(
+    documentationAuthorGroup.permissions.includes(permission),
+    "Documentation Author should include authoring permission: " +
+      permission,
+  ),
+);
+[
+  "publish.lifecycle.approve",
+  "publish.lifecycle.activate",
+  "publish.lifecycle.rollback",
+  "editorial.publish.execute",
+  "backoffice.contract.approve",
+].forEach((permission) =>
+  assert(
+    !documentationAuthorGroup.permissions.includes(permission),
+    "Documentation Author must not include approval or publication permission: " +
+      permission,
+  ),
+);
 [
   "system.log.level.update",
   "system.schema.index.rebuild",
@@ -281,6 +377,12 @@ Object.values(userGroupsData).forEach((group) =>
 
 let adminEmployee = employeeData.record0;
 let apiAdminEmployee = employeeData.record1;
+let documentationAuthorEmployee = Object.values(employeeData).find(
+  (employee) => employee.code === "documentationAuthor",
+);
+let axisViewerEmployee = Object.values(employeeData).find(
+  (employee) => employee.code === "axisViewer",
+);
 assert(adminEmployee.userGroups.includes("runtimeConfigAdminUserGroup"));
 assert(adminEmployee.userGroups.includes("adminGroup"));
 assert(apiAdminEmployee.userGroups.includes("serviceAccountUserGroup"));
@@ -291,6 +393,17 @@ assert.strictEqual(
   apiAdminEmployee.identityMigrationVersion,
   authProperties.identityGovernance.migration.version,
 );
+assert(
+  documentationAuthorEmployee,
+  "Default Documentation Author employee should be seeded",
+);
+assert.strictEqual(documentationAuthorEmployee.active, false);
+assert.deepStrictEqual(documentationAuthorEmployee.userGroups, [
+  "documentationAuthorUserGroup",
+]);
+assert(axisViewerEmployee, "Default Axis Viewer employee should be seeded");
+assert.strictEqual(axisViewerEmployee.active, false);
+assert.deepStrictEqual(axisViewerEmployee.userGroups, ["axisViewerUserGroup"]);
 
 let baseUserGroup = Object.values(userGroupsData).find(
   (group) => group.code === "userGroup",

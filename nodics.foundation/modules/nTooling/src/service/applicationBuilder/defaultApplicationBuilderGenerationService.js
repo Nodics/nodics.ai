@@ -217,9 +217,6 @@ module.exports = {
 
     /** Returns the domain represented by a generated data pack. */
     dataPackDomain: function (dataPack) {
-        if (dataPack === 'agora.common') {
-            return 'common';
-        }
         if (dataPack === 'nexus.web') {
             return 'web';
         }
@@ -229,7 +226,7 @@ module.exports = {
     /** Returns starter products that belong in a customer-owned data pack. */
     dataPackProducts: function (solution, dataPack) {
         const domain = this.dataPackDomain(dataPack);
-        if (domain === 'common' || domain === 'web') {
+        if (domain === 'web') {
             return [];
         }
         return this.starterProducts(solution).filter(product => product.domain === domain);
@@ -250,7 +247,6 @@ module.exports = {
         if (documentPath === 'manifest.json') {
             return Object.assign({}, base, {
                 description: dataPack === 'nexus.web' ? 'Corporate website starter content data pack' :
-                    dataPack === 'agora.common' ? 'Shared Agora storefront starter content data pack' :
                         'Domain storefront starter data pack for ' + domain,
                 catalogs: solution.commerce.catalogs || [],
                 files: [

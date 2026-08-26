@@ -13,6 +13,51 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 
+const DOCUMENT_IDENTITY = /^[A-Za-z][A-Za-z0-9._-]{0,127}$/;
+const LOWER_DOCUMENT_IDENTITY = /^[a-z][a-z0-9.-]*$/;
+const SEMVER = /^\d+\.\d+\.\d+$/;
+const ALLOWED_DOCUMENT_TYPES = new Set([
+    'overview',
+    'concept',
+    'quickstart',
+    'how-to',
+    'configuration',
+    'customization',
+    'integration',
+    'operations',
+    'reference',
+    'contract'
+]);
+const ALLOWED_MATURITY_STATES = new Set([
+    'concept',
+    'design-contract',
+    'partial',
+    'current-read-only',
+    'preview-only',
+    'unavailable',
+    'operational'
+]);
+const ALLOWED_LIFECYCLE_STATES = new Set([
+    'DRAFT',
+    'STAGED',
+    'REVIEW_IN_PROGRESS',
+    'CHANGES_REQUESTED',
+    'APPROVED',
+    'ONLINE',
+    'ARCHIVED',
+    'RETIRED',
+    'ROLLBACK_PENDING',
+    'PUBLICATION_FAILED'
+]);
+const ALLOWED_ACCESS_MODES = new Set([
+    'PUBLIC',
+    'AUTHENTICATED',
+    'ROLE_BASED',
+    'GROUP_BASED',
+    'PERMISSION_BASED',
+    'RESTRICTED'
+]);
+
 /**
  * @module nTooling/service/defaultApplicationDocumentationContractService
  * @description Validates application-owned documentation sources and builds immutable WCMS Staged content-pack manifest sections without owning project renderers or runtime import behavior.
@@ -56,6 +101,167 @@ module.exports = {
         return resolved;
     },
 
+    /** Counts human-readable words in Markdown or generated documentation text. */
+    countWords: function (body) {
+        return (String(body || '').match(/\b[\w'.-]+\b/g) || []).length;
+    },
+
+    /** Validates reusable, Axis-manageable top-level documentation navigation sections. */
+    validateNavigationSections: function (catalogue, options) {
+        const strict = Boolean(options && options.requireNavigationSections);
+        const sections = Array.isArray(catalogue && catalogue.navigationSections) ? catalogue.navigationSections : [];
+        if (!sections.length) {
+            if (strict) {
+                this.fail('ERR_TOOL_DOC_00008', 'documentation catalogue requires backend-owned navigation sections');
+            }
+            return Object.freeze([]);
+        }
+        const identities = new Set();
+        sections.forEach((section, index) => {
+            if (!section || !DOCUMENT_IDENTITY.test(section.code || '') || identities.has(section.code)) {
+                this.fail('ERR_TOOL_DOC_00008', 'navigation section identities must be unique stable codes');
+            }
+            identities.add(section.code);
+            if (!section.title || !Number.isInteger(section.order) || !section.summary) {
+                this.fail('ERR_TOOL_DOC_00008', section.code + ' requires title, summary, and order');
+            }
+            if (section.accessMode && !ALLOWED_ACCESS_MODES.has(section.accessMode)) {
+                this.fail('ERR_TOOL_DOC_00008', section.code + ' has invalid access mode');
+            }
+            if (section.lifecycleState && !ALLOWED_LIFECYCLE_STATES.has(section.lifecycleState)) {
+                this.fail('ERR_TOOL_DOC_00008', section.code + ' has invalid lifecycle state');
+            }
+            if (!Number.isFinite(section.order) || section.order <= 0 || section.order !== Math.trunc(section.order)) {
+                this.fail('ERR_TOOL_DOC_00008', section.code + ' order must be a positive integer');
+            }
+            if (index > 0 && section.order === sections[index - 1].order && section.title === sections[index - 1].title) {
+                this.fail('ERR_TOOL_DOC_00008', section.code + ' duplicates adjacent navigation placement');
+            }
+        });
+        return Object.freeze(sections.map(section => Object.freeze(Object.assign({}, section))));
+    },
+
+    /** Validates enterprise documentation metadata that every generated document must eventually carry. */
+    validateDocumentMetadata: function (document, catalogue, options) {
+        const strict = Boolean(options && options.requireEnterpriseMetadata);
+        if (!strict) return Object.freeze(document);
+        const sectionCodes = new Set((catalogue.navigationSections || []).map(section => section.code));
+        if (!document.slug || !document.parentId || !Array.isArray(document.hierarchyPath) || document.hierarchyPath.length < 2) {
+            this.fail('ERR_TOOL_DOC_00009', document.id + ' requires slug, parentId, and hierarchyPath');
+        }
+        if (!document.navigationSection || !document.navigationSectionCode || !document.navigationGroup || !Number.isInteger(document.navigationOrder)) {
+            this.fail('ERR_TOOL_DOC_00009', document.id + ' requires navigation section, group, and order metadata');
+        }
+        if (!sectionCodes.has(document.navigationSectionCode)) {
+            this.fail('ERR_TOOL_DOC_00009', document.id + ' references unknown navigation section');
+        }
+        if (!ALLOWED_DOCUMENT_TYPES.has(document.documentType || '')) {
+            this.fail('ERR_TOOL_DOC_00009', document.id + ' has invalid document type');
+        }
+        if (!Array.isArray(document.audience) || !document.audience.length) {
+            this.fail('ERR_TOOL_DOC_00009', document.id + ' requires audience metadata');
+        }
+        if (!document.sourceOwner || !document.sourcePath) {
+            this.fail('ERR_TOOL_DOC_00009', document.id + ' requires source owner and source path');
+        }
+        this.relativePath(document.sourcePath, document.id + '.sourcePath');
+        if (!ALLOWED_ACCESS_MODES.has(document.accessMode || '')) {
+            this.fail('ERR_TOOL_DOC_00009', document.id + ' has invalid access mode');
+        }
+        if (!ALLOWED_LIFECYCLE_STATES.has(document.lifecycleState || '')) {
+            this.fail('ERR_TOOL_DOC_00009', document.id + ' has invalid lifecycle state');
+        }
+        if (!ALLOWED_MATURITY_STATES.has(document.maturityState || '')) {
+            this.fail('ERR_TOOL_DOC_00009', document.id + ' has invalid maturity state');
+        }
+        if (!Array.isArray(document.relatedPages) || !Array.isArray(document.sourceEvidence)) {
+            this.fail('ERR_TOOL_DOC_00009', document.id + ' requires related pages and source evidence arrays');
+        }
+        return Object.freeze(document);
+    },
+
+    /** Validates cross-document hierarchy and audit references for strict documentation catalogues. */
+    validateCatalogueIntegrity: function (catalogue, options) {
+        if (!(options && options.requireEnterpriseMetadata)) return Object.freeze({ documents: 0 });
+        const documents = catalogue.documents || [];
+        const ids = new Set(documents.map(document => document.id));
+        const siblingOrders = new Map();
+        documents.forEach(document => {
+            const hierarchyDepth = document.hierarchyDepth;
+            if (!Number.isInteger(hierarchyDepth) || hierarchyDepth < 2 || hierarchyDepth !== document.hierarchyPath.length) {
+                this.fail('ERR_TOOL_DOC_00011', document.id + ' hierarchy depth must match hierarchy path');
+            }
+            const siblingKey = document.parentId;
+            const orderKey = siblingKey + ':' + document.navigationOrder;
+            if (siblingOrders.has(orderKey)) {
+                this.fail('ERR_TOOL_DOC_00011', document.id + ' duplicates navigation order with ' + siblingOrders.get(orderKey));
+            }
+            siblingOrders.set(orderKey, document.id);
+            (document.relatedPages || []).forEach(relatedPage => {
+                if (!ids.has(relatedPage)) {
+                    this.fail('ERR_TOOL_DOC_00011', document.id + ' references unknown related page ' + relatedPage);
+                }
+            });
+            (document.sourceEvidence || []).forEach((evidence, index) => {
+                if (typeof evidence !== 'string' || !evidence.trim()) {
+                    this.fail('ERR_TOOL_DOC_00011', document.id + ' has invalid source evidence at index ' + index);
+                }
+            });
+        });
+        return Object.freeze({ documents: documents.length });
+    },
+
+    /** Validates the reusable Nodics documentation depth and audit contract for authored pages. */
+    validateContentQuality: function (document, body, options) {
+        const content = String(body || '');
+        const minimumWordCount = Number.isInteger(options && options.minimumWordCount) ? options.minimumWordCount : 500;
+        const minimumSectionCount = Number.isInteger(options && options.minimumSectionCount) ? options.minimumSectionCount : 5;
+        if (!content.trim().startsWith('# ')) {
+            this.fail('ERR_TOOL_DOC_00010', document.id + ' must start with exactly one page title');
+        }
+        const wordCount = this.countWords(content);
+        if (wordCount < minimumWordCount) {
+            this.fail('ERR_TOOL_DOC_00010', document.id + ' is too shallow for enterprise documentation');
+        }
+        const sectionCount = (content.match(/^## /gm) || []).length;
+        if (sectionCount < minimumSectionCount) {
+            this.fail('ERR_TOOL_DOC_00010', document.id + ' needs more structured sections');
+        }
+        const hasVisualAid = content.includes('```mermaid') || /^!\[.+\]\(.+\)/m.test(content) || /^\| .+ \|$/m.test(content);
+        if (!hasVisualAid) {
+            this.fail('ERR_TOOL_DOC_00010', document.id + ' needs at least one visual aid, table, or diagram');
+        }
+        const requiredAudienceEvidence = [
+            ['beginner', /\bbeginners?\b/i],
+            ['business', /\bbusiness\b/i],
+            ['developer', /\bdevelopers?\b/i],
+            ['operator', /\b(devops|operator|production)\b/i]
+        ];
+        requiredAudienceEvidence.forEach(([label, pattern]) => {
+            if (!pattern.test(content)) {
+                this.fail('ERR_TOOL_DOC_00010', document.id + ' is missing ' + label + ' guidance');
+            }
+        });
+        [
+            ['common mistakes', /^## Common mistakes\b/im],
+            ['verification', /^## Verification\b/im]
+        ].forEach(([label, pattern]) => {
+            if (!pattern.test(content)) {
+                this.fail('ERR_TOOL_DOC_00010', document.id + ' is missing required ' + label + ' section');
+            }
+        });
+        if (/\bPhase\s+\d+\b|future plan|future-plan/i.test(content)) {
+            this.fail('ERR_TOOL_DOC_00010', document.id + ' contains delivery-phase or roadmap-promise wording');
+        }
+        if (/local-archive|legacy-repositories|nodicsaxis|old nodics repository/i.test(content)) {
+            this.fail('ERR_TOOL_DOC_00010', document.id + ' contains legacy migration-only references');
+        }
+        if (/nodics\.axis[^.\n]*(owns|owner|source)[^.\n]*(catalog|site|page|component|route|documentation data)/i.test(content)) {
+            this.fail('ERR_TOOL_DOC_00010', document.id + ' suggests frontend-owned backend data');
+        }
+        return Object.freeze({ documentId: document.id, wordCount: wordCount, sectionCount: sectionCount, hasVisualAid: true });
+    },
+
     /** Validates a module-owned documentation catalogue and returns its source files. */
     validateCatalogue: function (request) {
         const root = path.resolve(request && request.ownerRoot || '');
@@ -71,16 +277,21 @@ module.exports = {
         if (!catalogue || typeof catalogue.pack !== 'string' || !catalogue.pack || typeof catalogue.version !== 'string' || !catalogue.version) {
             this.fail('ERR_TOOL_DOC_00003', 'catalogue requires stable pack and version values');
         }
+        if ((request && request.requireEnterpriseMetadata) && !SEMVER.test(catalogue.version)) {
+            this.fail('ERR_TOOL_DOC_00003', 'strict documentation catalogue version must use semantic versioning');
+        }
+        this.validateNavigationSections(catalogue, request);
         const documents = Array.isArray(catalogue.documents) ? catalogue.documents : [];
         if (!documents.length) {
             this.fail('ERR_TOOL_DOC_00003', 'catalogue requires at least one document');
         }
         const identities = new Set();
         const sources = documents.map(document => {
-            if (!document || !/^[a-z][a-z0-9.-]*$/.test(document.id || '') || identities.has(document.id)) {
+            if (!document || !LOWER_DOCUMENT_IDENTITY.test(document.id || '') || identities.has(document.id)) {
                 this.fail('ERR_TOOL_DOC_00004', 'document identities must be unique stable lowercase codes');
             }
             identities.add(document.id);
+            this.validateDocumentMetadata(document, catalogue, request);
             const content = this.relativePath(document.content, document.id + '.content');
             if (!content.startsWith(sourceDirectory + '/pages/') || !content.endsWith('.md')) {
                 this.fail('ERR_TOOL_DOC_00002', document.id + ' source must be Markdown below ' + sourceDirectory + '/pages');
@@ -89,8 +300,12 @@ module.exports = {
             if (!fs.existsSync(sourcePath) || !fs.statSync(sourcePath).isFile()) {
                 this.fail('ERR_TOOL_DOC_00005', document.id + ' source does not exist');
             }
+            if (request && request.validateContentQuality) {
+                this.validateContentQuality(document, fs.readFileSync(sourcePath, 'utf8'), request);
+            }
             return Object.freeze({ id: document.id, relativePath: content, absolutePath: sourcePath });
         });
+        this.validateCatalogueIntegrity(catalogue, request);
         return Object.freeze({ pack: catalogue.pack, version: catalogue.version, cataloguePath: cataloguePath, sourceDirectory: sourceDirectory, documents: Object.freeze(sources) });
     },
 

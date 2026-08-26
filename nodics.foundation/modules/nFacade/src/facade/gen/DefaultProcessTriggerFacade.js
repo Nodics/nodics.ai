@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultProcessTriggerService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultProcessTriggerService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultProcessTriggerService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultProcessTriggerService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultProcessTriggerService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultProcessTriggerService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultProcessTriggerService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultProcessTriggerService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultProcessTriggerService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultProcessTriggerService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultProcessTriggerService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultProcessTriggerService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultProcessTriggerService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultProcessTriggerService.doIndexing(request);
     }
 };

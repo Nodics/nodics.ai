@@ -20,7 +20,7 @@ development. The hard part starts when that MVP becomes a real product. Code
 that was written only to prove an idea often has no strong module boundaries,
 no tenant model, no safe customization path, no consistent API contracts, weak
 security, duplicated configuration, and limited tests. Every new customer adds
-another exception. Every exception makes future releases slower and riskier.
+another exception. Every exception makes later releases slower and riskier.
 
 Nodics turns those repeated scaling problems into explicit contracts. A feature
 belongs to an owning capability. Configuration has layered scope. Services,
@@ -215,7 +215,7 @@ repository becomes a dumping ground for every page users can see.
 
 Imagine a company wants to launch a partner portal. The portal needs employee
 login, business-unit onboarding, content pages, media uploads, scheduled jobs,
-documentation, and future customer-specific changes. A quick team can build
+documentation, and customer-specific changes. A quick team can build
 those pieces directly into one application. That works until another customer
 asks for different behavior, another region needs different rules, operations
 asks for independent scaling, and security asks who owns each API.
@@ -416,7 +416,7 @@ extend. Data releases have manifests and checksums. Functional module
 registration is persisted. Axis discovers authorized capabilities from
 BackOffice instead of using hardcoded assumptions.
 
-For production, this means Platform, WCMS, Cron, and future functional modules
+For production, this means Platform, WCMS, Cron, and additional functional modules
 can run together for a small deployment or separately for a larger topology.
 The contract remains the same even when the physical deployment changes.
 

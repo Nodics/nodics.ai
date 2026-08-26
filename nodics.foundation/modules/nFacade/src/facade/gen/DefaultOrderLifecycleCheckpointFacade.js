@@ -65,44 +65,5 @@ module.exports = {
     },
     update: function (request) {
         return SERVICE.DefaultOrderLifecycleCheckpointService.update(request);
-    },
-    doRefresh: function (request) {
-        return SERVICE.DefaultOrderLifecycleCheckpointService.doRefresh(request);
-    },
-    doCheckHealth: function (request) {
-        return SERVICE.DefaultOrderLifecycleCheckpointService.doCheckHealth(request);
-    },
-    doExists: function (request) {
-        return SERVICE.DefaultOrderLifecycleCheckpointService.doExists(request);
-    },
-    doGet: function (request) {
-        return SERVICE.DefaultOrderLifecycleCheckpointService.doGet(request);
-    },
-    doSearch: function (request) {
-        return SERVICE.DefaultOrderLifecycleCheckpointService.doSearch(request);
-    },
-    doSave: function (request) {
-        return SERVICE.DefaultOrderLifecycleCheckpointService.doSave(request);
-    },
-    doBulk: function (request) {
-        return SERVICE.DefaultOrderLifecycleCheckpointService.doBulk(request);
-    },
-    doRemove: function (request) {
-        return SERVICE.DefaultOrderLifecycleCheckpointService.doRemove(request);
-    },
-    doRemoveByQuery: function (request) {
-        return SERVICE.DefaultOrderLifecycleCheckpointService.doRemoveByQuery(request);
-    },
-    doGetSchema: function (request) {
-        return SERVICE.DefaultOrderLifecycleCheckpointService.doGetSchema(request);
-    },
-    doUpdateSchema: function (request) {
-        return SERVICE.DefaultOrderLifecycleCheckpointService.doUpdateSchema(request);
-    },
-    doRemoveIndex: function (request) {
-        return SERVICE.DefaultOrderLifecycleCheckpointService.doRemoveIndex(request);
-    },
-    doIndexing: function (request) {
-        return SERVICE.DefaultOrderLifecycleCheckpointService.doIndexing(request);
     }
 };
