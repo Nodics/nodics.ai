@@ -33,7 +33,7 @@ export function resolveWorkspace(environment = process.env) {
     framework: path.resolve(environment.NODICS_QUALIFICATION_FRAMEWORK_ROOT || path.join(workspaceRoot, 'nodics.ai')),
     axis: path.resolve(environment.NODICS_QUALIFICATION_AXIS_ROOT || path.join(expRoot, 'nodics.axis')),
     nexus: path.resolve(environment.NODICS_QUALIFICATION_NEXUS_ROOT || path.join(expRoot, 'nodics.nexus')),
-    agora: path.resolve(environment.NODICS_QUALIFICATION_AGORA_ROOT || path.join(expRoot, 'nodics.agora')),
+    agora: path.resolve(environment.NODICS_QUALIFICATION_AGORA_ROOT || path.join(expRoot, 'nodics.agora.apparel')),
   };
 }
 
@@ -77,7 +77,7 @@ export function createQualificationPlan(options = {}) {
       proves: 'Public delivery client tests, type safety, lint, and production bundle remain compatible with Online-only delivery.',
     },
     {
-      id: 'agora-verification', owner: 'nodics.agora', cwd: workspace.agora,
+      id: 'agora-verification', owner: 'nodics.agora.apparel', cwd: workspace.agora,
       command: 'npm', args: ['run', 'verify:multi-domain'],
       proves: 'Storefront component composition, domain renderer mapping, Commerce client contracts, and multi-domain customer journey bundle remain compatible with Kickoff data.',
     },

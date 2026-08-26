@@ -30,10 +30,10 @@ const toolingCommandService = require('../src/service/defaultToolingCommandServi
 const frameworkRoot = path.resolve(__dirname, '../../../..');
 const workspaceRoot = path.dirname(frameworkRoot);
 const expRoot = path.join(workspaceRoot, 'nodics.exp');
-const agoraRoot = path.join(expRoot, 'nodics.agora');
+const agoraRoot = path.join(expRoot, 'nodics.agora.apparel');
 const kickoffRoot = path.join(workspaceRoot, 'nodics.kickoff');
 const fixtureRoot = path.join(__dirname, 'fixtures', 'applicationBuilder');
-const catalogue = catalogueService.discover({ framework: frameworkRoot, agora: agoraRoot, kickoff: kickoffRoot });
+const catalogue = catalogueService.discover({ framework: frameworkRoot, exp: expRoot, kickoff: kickoffRoot });
 const expCatalogue = catalogueService.discover({ framework: frameworkRoot, exp: expRoot, kickoff: kickoffRoot });
 
 /** Loads one Builder fixture. */
@@ -131,7 +131,7 @@ assert.strictEqual(commands['builder:guide'].handler, '@nTooling/application-bui
 
 const cli = path.join(frameworkRoot, 'nodics.foundation/modules/nTooling/bin/nodics-tool.js');
 const cliResult = JSON.parse(childProcess.execFileSync(process.execPath,
-    [cli, 'builder:guide', '--agora=' + agoraRoot, '--kickoff=' + kickoffRoot,
+    [cli, 'builder:guide', '--exp=' + expRoot, '--kickoff=' + kickoffRoot,
         '--answers=' + path.join(fixtureRoot, 'valid', 'guided-request-telco.json')],
     { cwd: frameworkRoot, encoding: 'utf8' }));
 assert.strictEqual(cliResult.guided, true, 'Governed CLI must expose guided Builder output');

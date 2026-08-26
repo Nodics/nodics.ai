@@ -110,7 +110,7 @@ existing solution locks to approved target releases without mutating the
 generated application.
 When a `nodics.exp` workspace is available, Builder commands may use
 `--exp=/path/to/nodics.exp` and resolve Agora from `apps.json`; direct
-`--agora=/path/to/nodics.agora` remains available for explicit automation.
+`--agora=/path/to/nodics.agora.apparel` remains available for explicit automation.
 The `nodics.exp` catalogue is a Nodics-owned template governance rule for
 framework/reference experience apps published under the Nodics organization.
 It must not be treated as a mandatory repository layout for real

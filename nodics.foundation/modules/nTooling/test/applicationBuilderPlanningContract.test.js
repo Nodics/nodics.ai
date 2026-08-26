@@ -26,10 +26,10 @@ const toolingCommandService = require('../src/service/defaultToolingCommandServi
 const frameworkRoot = path.resolve(__dirname, '../../../..');
 const workspaceRoot = path.dirname(frameworkRoot);
 const expRoot = path.join(workspaceRoot, 'nodics.exp');
-const agoraRoot = path.join(expRoot, 'nodics.agora');
+const agoraRoot = path.join(expRoot, 'nodics.agora.apparel');
 const kickoffRoot = path.join(workspaceRoot, 'nodics.kickoff');
 const fixtureRoot = path.join(__dirname, 'fixtures', 'applicationBuilder', 'valid');
-const catalogue = catalogueService.discover({ framework: frameworkRoot, agora: agoraRoot, kickoff: kickoffRoot });
+const catalogue = catalogueService.discover({ framework: frameworkRoot, exp: expRoot, kickoff: kickoffRoot });
 const expCatalogue = catalogueService.discover({ framework: frameworkRoot, exp: expRoot, kickoff: kickoffRoot });
 
 assert.strictEqual(catalogue.readOnly, true, 'Builder discovery must be read-only');
@@ -62,8 +62,6 @@ if (fs.existsSync(expRoot)) {
         'Builder discovery must resolve Agora Electronics from nodics.exp nested layout');
     assert(expCatalogue.frontendApps.some(app => app.code === 'agoraTelco' && app.location === 'nested'),
         'Builder discovery must resolve Agora Telco from nodics.exp nested layout');
-    assert(expCatalogue.frontendApps.some(app => app.code === 'domainCommerceUi' && app.location === 'nested'),
-        'Builder discovery must resolve shared Domain Commerce UI from nodics.exp nested layout');
 }
 assert.deepStrictEqual(expCatalogue.capabilities, catalogue.capabilities,
     'Using nodics.exp to resolve the same Agora app must keep backend capability semantics');

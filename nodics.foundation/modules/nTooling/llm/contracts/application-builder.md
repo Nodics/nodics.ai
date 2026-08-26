@@ -26,7 +26,7 @@ journey.
 The Builder must receive explicit Framework and Kickoff repository roots plus
 either a direct Agora repository root or a `nodics.exp` workspace root. When
 `nodics.exp` is supplied, Builder resolves Agora from `apps.json`, preferring a
-nested `nodics.exp/nodics.agora` repository and allowing the documented sibling
+nested `nodics.exp/nodics.agora.apparel` repository and allowing the documented sibling
 fallback during transition. It must not infer undeclared sibling locations or
 treat generated context as an architecture authority.
 

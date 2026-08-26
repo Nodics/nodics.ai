@@ -6,7 +6,7 @@
   "version": "0.0.0",
   "packageMetadata": { "packageName": "telco", "moduleRoot": "nodics.accelerators/modules/telco", "metadataDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
   "backend": { "packages": ["telcoCatalog", "telcoSubscription", "telcoProvisioning"], "publicApiCategories": ["customer", "operator"], "lifecycleAuthorities": ["order", "workflow", "telcoProvisioning"] },
-  "frontend": { "packages": ["nodics.agora"], "compositionEntries": ["src/composition/telco.ts"], "routes": ["/telco"], "rendererKeys": ["agora.telco.product-card"] },
+  "frontend": { "packages": ["nodics.agora.telco"], "compositionEntries": ["src/composition/telco.ts"], "routes": ["/telco"], "rendererKeys": ["agora.telco.product-card"] },
   "dependencies": { "requires": ["nodics.commerce"], "extends": ["electronics"], "conflictsWith": [], "optional": ["nodics.engagement"] },
   "dataPacks": ["agora.telco"],
   "topologyRoles": ["PLATFORM", "PROCESS", "COMMERCE", "AXIS", "AGORA"],

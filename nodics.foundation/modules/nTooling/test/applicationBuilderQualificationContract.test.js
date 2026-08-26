@@ -31,13 +31,13 @@ const toolingCommandService = require('../src/service/defaultToolingCommandServi
 const frameworkRoot = path.resolve(__dirname, '../../../..');
 const workspaceRoot = path.dirname(frameworkRoot);
 const expRoot = path.join(workspaceRoot, 'nodics.exp');
-const agoraRoot = path.join(expRoot, 'nodics.agora');
+const agoraRoot = path.join(expRoot, 'nodics.agora.apparel');
 const kickoffRoot = path.join(workspaceRoot, 'nodics.kickoff');
 const fixtureRoot = path.join(__dirname, 'fixtures', 'applicationBuilder', 'valid');
 const referenceEvidencePath = path.join(workspaceRoot, 'actionsRepo', 'Agora',
     'nodics-multi-domain-qualification-evidence-2026-08-15.md');
 const hasReferenceEvidence = fs.existsSync(referenceEvidencePath);
-const catalogue = catalogueService.discover({ framework: frameworkRoot, agora: agoraRoot, kickoff: kickoffRoot });
+const catalogue = catalogueService.discover({ framework: frameworkRoot, exp: expRoot, kickoff: kickoffRoot });
 const tempParent = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-builder-wp-b6-'));
 
 /** Loads one solution fixture. */
@@ -137,7 +137,7 @@ try {
     const cliPlanPath = path.join(tempParent, 'cli-approved-plan.json');
     fs.writeFileSync(cliPlanPath, JSON.stringify(cliPlan, null, 2));
     const cli = path.join(frameworkRoot, 'nodics.foundation/modules/nTooling/bin/nodics-tool.js');
-    const cliArgs = [cli, 'builder:qualify', '--agora=' + agoraRoot, '--kickoff=' + kickoffRoot,
+    const cliArgs = [cli, 'builder:qualify', '--exp=' + expRoot, '--kickoff=' + kickoffRoot,
         '--solution=' + path.join(fixtureRoot, 'solution-commerce.json'), '--plan=' + cliPlanPath,
         '--output=' + cliOutput];
     if (hasReferenceEvidence) {

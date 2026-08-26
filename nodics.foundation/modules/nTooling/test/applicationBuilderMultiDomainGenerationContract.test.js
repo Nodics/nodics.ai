@@ -28,10 +28,10 @@ const planningService = require('../src/service/applicationBuilder/defaultApplic
 const frameworkRoot = path.resolve(__dirname, '../../../..');
 const workspaceRoot = path.dirname(frameworkRoot);
 const expRoot = path.join(workspaceRoot, 'nodics.exp');
-const agoraRoot = path.join(expRoot, 'nodics.agora');
+const agoraRoot = path.join(expRoot, 'nodics.agora.apparel');
 const kickoffRoot = path.join(workspaceRoot, 'nodics.kickoff');
 const fixtureRoot = path.join(__dirname, 'fixtures', 'applicationBuilder', 'valid');
-const catalogue = catalogueService.discover({ framework: frameworkRoot, agora: agoraRoot, kickoff: kickoffRoot });
+const catalogue = catalogueService.discover({ framework: frameworkRoot, exp: expRoot, kickoff: kickoffRoot });
 const tempParent = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-builder-wp-b5-'));
 
 /** Loads one solution fixture. */
@@ -206,7 +206,7 @@ try {
     const cliApprovedPath = path.join(tempParent, 'combined-approved.json');
     fs.writeFileSync(cliPlanPath, JSON.stringify(cliPlan, null, 2));
     const cli = path.join(frameworkRoot, 'nodics.foundation/modules/nTooling/bin/nodics-tool.js');
-    const roots = ['--agora=' + agoraRoot, '--kickoff=' + kickoffRoot];
+    const roots = ['--exp=' + expRoot, '--kickoff=' + kickoffRoot];
     const approvedJson = childProcess.execFileSync(process.execPath,
         [cli, 'builder:approve'].concat(roots, ['--plan=' + cliPlanPath, '--approval-reference=WP-B5-CLI']),
         { cwd: frameworkRoot, encoding: 'utf8' });

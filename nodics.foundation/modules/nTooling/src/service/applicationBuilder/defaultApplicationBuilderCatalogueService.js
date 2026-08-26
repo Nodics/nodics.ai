@@ -76,7 +76,7 @@ module.exports = {
         const normalized = path.resolve(repositoryPath).split(path.sep).join('/');
         return [
             { label: 'exp', suffix: '/nodics.exp' },
-            { label: 'agora', suffix: '/nodics.exp/nodics.agora' },
+            { label: 'agora', suffix: '/nodics.exp/nodics.agora.apparel' },
             { label: 'kickoff', suffix: '/nodics.kickoff' }
         ].some(candidate => candidate.label === label && normalized.endsWith(candidate.suffix));
     },

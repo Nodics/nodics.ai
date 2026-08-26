@@ -191,7 +191,7 @@ module.exports = {
             contractVersion: 1,
             orchestration: 'nodics.exp may coordinate workspaces and scripts only; app repositories remain separately owned.',
             generatedApps: {
-                agora: { selected: frontends.includes('AGORA'), repository: 'nodics.agora',
+                agora: { selected: frontends.includes('AGORA'), repository: 'nodics.agora.apparel',
                     role: 'Customer commerce storefront experience' },
                 axis: { selected: frontends.includes('AXIS'), repository: 'nodics.axis',
                     role: 'BackOffice and operational administration' },
@@ -393,7 +393,7 @@ module.exports = {
             '- `storefront/generated/agora-composition.ts`: generated composition snapshot for the selected hierarchy.\n' +
             '- `storefront/customer`: customer-owned extension root.\n\n' +
             '## Frontend repository roles\n\n' +
-            '- `nodics.agora`: customer commerce storefront.\n' +
+            '- `nodics.agora.apparel`: customer commerce storefront.\n' +
             '- `nodics.axis`: BackOffice/admin application when selected.\n' +
             '- `nodics.nexus`: corporate/content website when selected.\n' +
             '- `nodics.exp`: optional workspace orchestration only; it does not own application source.\n';

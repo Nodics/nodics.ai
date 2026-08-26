@@ -30,10 +30,10 @@ const toolingCommandService = require('../src/service/defaultToolingCommandServi
 const frameworkRoot = path.resolve(__dirname, '../../../..');
 const workspaceRoot = path.dirname(frameworkRoot);
 const expRoot = path.join(workspaceRoot, 'nodics.exp');
-const agoraRoot = path.join(expRoot, 'nodics.agora');
+const agoraRoot = path.join(expRoot, 'nodics.agora.apparel');
 const kickoffRoot = path.join(workspaceRoot, 'nodics.kickoff');
 const fixtureRoot = path.join(__dirname, 'fixtures', 'applicationBuilder', 'valid');
-const catalogue = catalogueService.discover({ framework: frameworkRoot, agora: agoraRoot, kickoff: kickoffRoot });
+const catalogue = catalogueService.discover({ framework: frameworkRoot, exp: expRoot, kickoff: kickoffRoot });
 const tempParent = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-builder-upgrade-'));
 
 /** Loads one solution fixture. */
@@ -105,12 +105,12 @@ try {
     const releasePath = path.join(tempParent, 'release-manifest.json');
     fs.writeFileSync(targetPlanPath, JSON.stringify(targetPlan, null, 2));
     const releaseOutput = childProcess.execFileSync(process.execPath,
-        [cli, 'builder:release-manifest', '--agora=' + agoraRoot, '--kickoff=' + kickoffRoot,
+        [cli, 'builder:release-manifest', '--exp=' + expRoot, '--kickoff=' + kickoffRoot,
             '--solution=' + targetSolutionPath, '--plan=' + targetPlanPath, '--release-channel=LOCAL_TEST'],
         { cwd: frameworkRoot, encoding: 'utf8' });
     fs.writeFileSync(releasePath, releaseOutput);
     const cliUpgrade = JSON.parse(childProcess.execFileSync(process.execPath,
-        [cli, 'builder:upgrade-plan', '--agora=' + agoraRoot, '--kickoff=' + kickoffRoot,
+        [cli, 'builder:upgrade-plan', '--exp=' + expRoot, '--kickoff=' + kickoffRoot,
             '--current-lock=' + path.join(outputRoot, 'solution-lock.json'), '--release=' + releasePath,
             '--solution=' + targetSolutionPath, '--plan=' + targetPlanPath],
         { cwd: frameworkRoot, encoding: 'utf8' }));

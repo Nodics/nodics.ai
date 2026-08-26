@@ -104,7 +104,7 @@ Validate a solution without changing any repository:
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:validate \
-  --agora=/workspace/nodics.exp/nodics.agora \
+  --agora=/workspace/nodics.exp/nodics.agora.apparel \
   --kickoff=/workspace/nodics.kickoff \
   --solution=/workspace/solutions/acme-telco.json
 ```
@@ -113,7 +113,7 @@ Create an approval-required plan:
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:plan \
-  --agora=/workspace/nodics.exp/nodics.agora \
+  --agora=/workspace/nodics.exp/nodics.agora.apparel \
   --kickoff=/workspace/nodics.kickoff \
   --solution=/workspace/solutions/acme-telco.json
 ```
@@ -126,7 +126,7 @@ reference:
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:approve \
-  --agora=/workspace/nodics.exp/nodics.agora \
+  --agora=/workspace/nodics.exp/nodics.agora.apparel \
   --kickoff=/workspace/nodics.kickoff \
   --plan=/workspace/plans/commerce-plan.json \
   --approval-reference=CHANGE-1234
@@ -137,7 +137,7 @@ an absent absolute test root:
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:generate \
-  --agora=/workspace/nodics.exp/nodics.agora \
+  --agora=/workspace/nodics.exp/nodics.agora.apparel \
   --kickoff=/workspace/nodics.kickoff \
   --solution=/workspace/solutions/commerce.json \
   --plan=/workspace/plans/commerce-approved.json \
@@ -175,7 +175,7 @@ Qualify a generated output after generation:
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:qualify \
-  --agora=/workspace/nodics.exp/nodics.agora \
+  --agora=/workspace/nodics.exp/nodics.agora.apparel \
   --kickoff=/workspace/nodics.kickoff \
   --solution=/workspace/solutions/combined.json \
   --plan=/workspace/plans/combined-approved.json \
@@ -197,7 +197,7 @@ Create a local digest-bound release manifest from an approved target plan:
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:release-manifest \
-  --agora=/workspace/nodics.exp/nodics.agora \
+  --agora=/workspace/nodics.exp/nodics.agora.apparel \
   --kickoff=/workspace/nodics.kickoff \
   --solution=/workspace/solutions/apparel.json \
   --plan=/workspace/plans/apparel-approved.json \
@@ -208,7 +208,7 @@ Plan an upgrade from an existing generated lock to that target release:
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:upgrade-plan \
-  --agora=/workspace/nodics.exp/nodics.agora \
+  --agora=/workspace/nodics.exp/nodics.agora.apparel \
   --kickoff=/workspace/nodics.kickoff \
   --current-lock=/workspace/generated/reference-commerce/solution-lock.json \
   --release=/workspace/releases/apparel-release.json \

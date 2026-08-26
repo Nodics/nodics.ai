@@ -28,11 +28,10 @@ const qualificationService = require('../src/service/applicationBuilder/defaultA
 const frameworkRoot = path.resolve(__dirname, '../../../..');
 const workspaceRoot = path.dirname(frameworkRoot);
 const expRoot = path.join(workspaceRoot, 'nodics.exp');
-const agoraRoot = path.join(expRoot, 'nodics.agora');
+const agoraRoot = path.join(expRoot, 'nodics.agora.apparel');
 const kickoffRoot = path.join(workspaceRoot, 'nodics.kickoff');
 const fixtureRoot = path.join(__dirname, 'fixtures', 'applicationBuilder', 'valid');
-const catalogue = catalogueService.discover({ framework: frameworkRoot, exp: expRoot, agora: agoraRoot,
-    kickoff: kickoffRoot });
+const catalogue = catalogueService.discover({ framework: frameworkRoot, exp: expRoot, kickoff: kickoffRoot });
 const tempParent = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-builder-safety-'));
 
 /** Loads a valid solution fixture. */
