@@ -10,12 +10,17 @@
 
 - `installer` is the installed-runtime Application Builder capability under
   `nodics.platform`.
+- Before adding or changing APIs, read
+  `llm/contracts/installer-api-scope-contract.md` and the matching action
+  ledger under `actionsRepo/installer-application-builder`.
 - Keep the public first-machine bootstrap package in the separate
   `nodics.installer` repository. Do not move or delete that repository just
   because this runtime module exists.
 - This module may expose secured backend APIs later for status, inventory,
   preflight, support-bundle, repair, and other governed local-workspace
   operations after Nodics already exists locally.
+- Phase 1 APIs are active only for read-only discovery, workspace readiness,
+  dry-run setup planning, and redacted evidence reads.
 - This module does not own npm package identity, `npx` bootstrap behavior,
   repository download before first clone, framework runtime loading, Axis
   frontend source, or customer project customization.
@@ -34,6 +39,8 @@
 
 ## Safety Rules
 
+- Keep Phase 1 APIs read-only unless the scope contract and action ledger are
+  explicitly updated first.
 - Never execute shell commands from this module without an explicit governed
   API contract and test coverage.
 - Never mutate `nodics.ai` or `nodics.axis` for a customer-specific setup.

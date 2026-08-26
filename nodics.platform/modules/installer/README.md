@@ -11,12 +11,19 @@ bootstrap package. Beginners still use that repository through:
 npx github:Nodics/nodics.installer
 ```
 
+## Scope Contract
+
+Phase 1 API scope is frozen in
+[llm/contracts/installer-api-scope-contract.md](llm/contracts/installer-api-scope-contract.md).
+Do not implement APIs outside that contract without updating the action ledger
+first.
+
 ## Responsibilities
 
 - Publish client-safe BackOffice capability metadata for future Axis discovery.
 - Publish a bounded operation catalog for installed-runtime setup operations.
-- Keep API execution disabled until secured routes, permissions, evidence,
-  audit, redaction, and vendor-boundary tests exist.
+- Expose Phase 1 read-only APIs for discovery, workspace status, inventory,
+  preflight, setup planning, and redacted evidence reads.
 - Protect `nodics.ai` and `nodics.axis` as vendor-owned repositories in
   customer workspaces.
 
@@ -31,12 +38,15 @@ npx github:Nodics/nodics.installer
 
 ## Future API Shape
 
-The first safe operations should be read-only:
+Phase 1 operations are read-only:
 
-- workspace status;
-- workspace inventory;
-- preflight readiness;
-- support-bundle planning.
+- `GET /nodics/installer/v0/info`
+- `GET /nodics/installer/v0/operations`
+- `POST /nodics/installer/v0/workspace/status`
+- `POST /nodics/installer/v0/workspace/inventory`
+- `POST /nodics/installer/v0/workspace/preflight`
+- `POST /nodics/installer/v0/setup/plan`
+- `POST /nodics/installer/v0/evidence/read`
 
 Mutating operations such as repair, backup, rollback, update-vendors, start, or
 initialize should require explicit permissions, environment allowlists,

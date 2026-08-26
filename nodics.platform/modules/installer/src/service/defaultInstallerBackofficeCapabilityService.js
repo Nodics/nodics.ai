@@ -46,7 +46,7 @@ const capability = {
                 'tenant',
                 'enterprise'
             ],
-            featureState: 'HIDDEN',
+            featureState: 'PREVIEW',
             requiredPermissions: [
                 'installer.workspace.view'
             ],
@@ -60,10 +60,10 @@ const capability = {
                     intent: 'READ',
                     permission: 'installer.workspace.view',
                     summary: 'Read installer evidence, workspace manifest, and topology status.',
-                    featureState: 'HIDDEN',
+                    featureState: 'PREVIEW',
                     ownerModule: 'installer',
-                    handlerAction: 'workspace-status',
-                    httpMethod: 'GET',
+                    handlerAction: 'workspace.status',
+                    httpMethod: 'POST',
                     operationRoute: '/nodics/installer/v0/workspace/status',
                     order: 10
                 },
@@ -73,9 +73,9 @@ const capability = {
                     intent: 'VERIFY',
                     permission: 'installer.workspace.view',
                     summary: 'Run local prerequisite and port checks before setup or repair.',
-                    featureState: 'HIDDEN',
+                    featureState: 'PREVIEW',
                     ownerModule: 'installer',
-                    handlerAction: 'preflight',
+                    handlerAction: 'workspace.preflight',
                     httpMethod: 'POST',
                     operationRoute: '/nodics/installer/v0/workspace/preflight',
                     order: 20

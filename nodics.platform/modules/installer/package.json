@@ -12,13 +12,17 @@
     "loadableByNodicsModuleLoader": true,
     "owns": [
       "configuration",
+      "schema",
+      "router",
+      "controller",
+      "facade",
       "service",
       "test",
       "documentation",
       "llm"
     ],
     "runtime": {
-      "router": false,
+      "router": true,
       "publish": false,
       "web": false
     },
