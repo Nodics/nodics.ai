@@ -33,7 +33,7 @@
         "cmsPublicationApproval": {
             "kind": "DATA_RELEASE",
             "dataType": "init",
-            "version": "0.0.0",
+            "version": "1.0.0",
             "displayName": "CMS Publication Approval Workflow",
             "description": "WCMS-owned mandatory CMS publication approval workflow contribution",
             "owningDomain": "cms",
@@ -49,7 +49,7 @@
             "removalPolicy": "RETAIN",
             "installer": "PROCESS_DEFINITION",
             "files": {
-                "init/data/process/cmsPublicationApprovalDefinitionData.js": "71967a2082250f146edab6af720f5fe36685a05c37348f19b0ed62abbea824bc"
+                "init/data/process/cmsPublicationApprovalDefinitionData.js": "1ba10f5c93a9346e9034d834010b9743eae2191f3e4f200d9f0a8d5b21c334b5"
             }
         },
         "sample": {

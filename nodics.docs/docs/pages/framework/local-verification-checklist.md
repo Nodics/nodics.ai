@@ -1,234 +1,74 @@
-# Local verification and acceptance checklist
+# Local Verification and Acceptance Checklist
 
-This page explains how to prove that a local Nodics workspace is healthy after
-setup, documentation import, module registration, or a framework change. It is
-written for a beginner who has started the servers and now needs to answer a
-more important question: “How do I know this is really working?”
+Local Verification and Acceptance Checklist is the overview for proving a
+local Nodics environment after code, content, or setup changes. It keeps the
+high-level acceptance rules here and links the detailed browser journey to a
+focused page.
 
-For a business evaluator, this checklist shows whether the framework is
-demonstrable and repeatable. For a developer, it shows which commands and UI
-screens prove the expected behavior. For a DevOps or TechOps engineer, it
-shows which runtime processes, data packs, logs, and recovery states must be
-observable before the stack is trusted.
-
-## What this is
-
-Local verification is the controlled proof that the framework, reference
-project, backend servers, documentation packs, and Axis frontend agree with
-each other. A server can start and still be incomplete if data was not
-imported. A documentation release can exist on disk and still be unavailable
-if WCMS has not imported it. Axis can render a route and still be unsafe if it
-is guessing capabilities instead of reading Platform and WCMS contracts.
-
-The checklist therefore verifies the full path:
+## Acceptance flow
 
 ```mermaid
 flowchart LR
-  Source["Backend-owned source data"] --> Generate["Generated content pack"]
-  Generate --> Validate["Checksum and release validation"]
-  Validate --> Runtime["Platform, WCMS, Process runtime"]
-  Runtime --> Import["Axis import/install"]
-  Import --> Render["Axis routes and documentation"]
-  Render --> Evidence["Acceptance logs and visible UI"]
+  Clean["Fresh schema"] --> Build["Clean build"]
+  Build --> Start["Start servers"]
+  Start --> Setup["Axis setup"]
+  Setup --> Browser["Browser verification"]
+  Browser --> Evidence["Evidence and fixes"]
 ```
 
-## Why it exists
-
-Without a verification contract, every developer invents a different meaning
-for “working.” One person may mean that Node started. Another may mean the
-login page opened. A tester may mean routes returned HTTP 200. An operator may
-mean the database can be rebuilt from empty local state. Nodics needs a common
-definition because the framework is modular: Platform, WCMS, Cron, Axis, and
-customer projects can each be healthy or unhealthy independently.
-
-This page gives the shared definition for local development. It does not
-replace production monitoring, security review, performance testing, or
-customer-specific acceptance, but it gives everyone the same first baseline.
-
-## Who uses it
-
-| Reader | What they verify |
+| Check | Why it matters |
 | --- | --- |
-| Business evaluator | The local demo can be started, logged into, imported, and explored without custom manual database edits. |
-| Developer | Source changes regenerated the right artifacts and did not break Platform, WCMS, Cron, Axis, or documentation routes. |
-| Architect | Module ownership, runtime loading, import ownership, and Axis rendering are still separated. |
-| Administrator | Module Registry, Imports and Exports, Documentation, Content, Media, and Cron screens show the expected state. |
-| DevOps or TechOps | Processes, ports, databases, logs, generated packs, and recovery behavior are visible and repeatable. |
-| Tester or QA engineer | Happy path, failure path, persistence, refresh, and route checks are covered. |
-| AI tool | The right generated artifacts and validation commands were run before claiming completion. |
+| Fresh schema | Proves the system does not depend on old local data. |
+| Clean build | Proves generated contracts and compiled frontend agree. |
+| Startup | Proves topology, ports, and runtime dependencies work. |
+| Browser journey | Proves a real user can complete setup and open applications. |
 
-## Preconditions
+## Business perspective
 
-Before running local acceptance, confirm these basics:
+Acceptance should answer one simple question: can a new customer or developer
+start from nothing and reach a working governed workspace without being lost?
+That means Axis must explain setup status, required imports, approval tasks,
+publication, Online readiness, and application links clearly.
 
-1. MongoDB is running and reachable from the local server configuration.
-2. The framework repository, customer/reference project, and Axis frontend are
-   checked out.
-3. The customer project `.env` points `NODICS_FRAMEWORK_ROOT` to the framework
-   checkout.
-4. Dependencies are installed after any package or local-framework-link change.
-5. No unrelated process is using the local ports expected by the reference
-   stack.
+## Developer perspective
 
-The reference ports are:
+Developers should run focused tests for changed modules and complete browser
+verification when the change affects navigation, setup, publication, content,
+media, roles, or storefront rendering. A passing API test is not enough when
+the user journey is the thing being changed.
 
-| Process | Default local URL | Owner |
-| --- | --- | --- |
-| Platform | `http://localhost:4300` | `nodics.platform` through the customer project server |
-| WCMS | `http://localhost:4310` | `nodics.wcms` through the customer project server |
-| Process and Automation | `http://localhost:4330` | `nodics.process` through the customer project server |
-| Axis | `http://localhost:3100` | `nodics.axis` frontend |
+## Continue with
 
-## Fast automated acceptance
+- **Fresh Schema Setup Journey** for schema cleanup and first-run setup.
+- **Local Browser Acceptance Journey** for end-to-end browser verification.
+- **Local Runtime Troubleshooting** for common local failures.
 
-From the customer project, run:
+## Operational evidence
 
-```bash
-npm run acceptance:local
-```
+The checklist should produce a small acceptance record for every run. Include command output summary, failed and passed test suites, started ports, setup actions completed, content packs imported, approval tasks completed, applications opened, media rendered, and unresolved blockers. If the run uses a fresh schema, say so explicitly. If it reuses existing data, mark the result as limited because stale data can hide import, publication, role, and navigation defects.
 
-This command is the normal local confidence check. It starts or verifies
-Platform, WCMS, Cron, and Axis; authenticates the reference admin; checks
-documentation release state; opens important Axis routes; verifies WCMS
-record counts; and runs live smoke coverage for module registry and Cron
-lifecycle.
+## Reader and implementation contract
 
-Use the fresh database version when you intentionally want to rebuild the
-local reference databases from zero:
+A beginner should understand the difference between command success and journey success. A business user should know whether the setup can be completed without reading logs. A developer should know which automated checks cover the code path and which browser checks cover user experience. An operator should know how to repeat the run from a fresh schema and compare evidence between attempts.
 
-```bash
-npm run acceptance:local:fresh
-```
+This checklist must be updated after any change to setup, import, publishing, content, media, approval tasks, left navigation, runtime configuration, or storefront rendering. The acceptance result should state what passed, what was not run, and what remains blocked by missing data or environment state.
 
-The fresh command is destructive only for the named local reference databases.
-It must not be generalized to arbitrary database names. A safe fresh run proves
-that the local environment does not depend on hidden manual records.
+## Documentation maintenance rule
 
-## Manual UI acceptance journey
+Keep this topic current whenever implementation, configuration, Axis workflow, publication behavior, or customer-facing rendering changes. The page should remain small enough to scan, but it must still carry enough business context, technical ownership, customization guidance, visual structure, operational evidence, and verification detail for a reader to act without guessing. When the detail becomes too large, create a sibling topic and link it from this page instead of turning the overview back into a long mixed article.
 
-Automated acceptance is fast, but a human should also walk the product once
-after major documentation, Axis, WCMS, registry, or import changes.
-
-1. Open `http://localhost:3100`.
-2. Log in with enterprise `default`, username `admin`, and the configured
-   reference password.
-3. Open **Documentation → Framework** and verify the first article renders,
-   navigation stays usable, and diagrams/images appear as images rather than
-   Markdown text.
-4. Open **Documentation → Nodics Axis** and **Documentation → Nodics Kickoff**
-   to confirm product and project documentation are imported from their owning
-   backend packages.
-5. Open **System and Integrations → Module Registry** and confirm Core,
-   Platform, and WCMS are mandatory active modules.
-6. If Cron is running, confirm Cron appears as an optional observed module.
-   Register, activate, deactivate, and deregister it without a browser
-   refresh.
-7. Open **Imports and Exports** and confirm release cards are valid. If a card
-   says `INVALID RELEASE`, regenerate the owning content/data manifests
-   instead of bypassing validation.
-8. Open **Content** and confirm sites, catalogs, pages, components, and routes
-   have non-zero counts after import.
-9. Open **Media** and confirm media screens use backend-owned source contexts
-   and do not expose private storage paths.
-10. Refresh the browser and confirm the session and selected route recover as
-    expected.
-
-## Documentation-specific checks
-
-Framework documentation is source-owned by `nodics.docs`. The frontend should
-not own these records. When framework docs change, run:
-
-```bash
-npm --prefix nodics.ai/nodics.docs run docs:generate
-npm --prefix nodics.ai/nodics.docs test
-```
-
-Then run framework-level governance checks:
-
-```bash
-npm --prefix nodics.ai run quality:copyright
-npm --prefix nodics.ai run quality:docs
-npm --prefix nodics.ai run ai:validate
-npm --prefix nodics.ai run llm:generate
-npm --prefix nodics.ai run llm:validate
-git -C nodics.ai diff --check
-```
-
-If the generated documentation content pack changes, import or update the
-release through Axis and verify the visible routes. The expected result is not
-only “the file exists”; the expected result is that WCMS reports the release as
-current and Axis renders the page from backend-delivered content.
-
-## What success looks like
-
-The local stack is acceptable when these statements are true:
-
-| Evidence | Expected result |
-| --- | --- |
-| Server startup | Platform, WCMS, Cron if selected, and Axis are reachable on expected local ports. |
-| Authentication | The reference admin can log in and unauthorized access fails closed. |
-| Registry | Mandatory modules are active; optional modules follow register, activate, deactivate, deregister lifecycle. |
-| Documentation packs | Framework, Axis, and customer project documentation packs are current after import. |
-| CMS records | Sites, catalogs, pages, components, and routes exist; no visible site is orphaned from its catalog. |
-| Visual docs | Diagrams and screenshots render as governed images, not broken links or raw Markdown. |
-| Route health | `/`, `/docs`, `/docs/framework`, `/content`, `/media`, `/cron`, and system routes return HTTP 200. |
-| Fresh rebuild | The local database can be recreated from backend-owned data packs. |
-
-## Troubleshooting
-
-| Symptom | Likely owner | Safe first check |
-| --- | --- | --- |
-| Login page opens but login fails | Platform/Profile | Confirm Platform is reachable and the reference identity data was imported. |
-| Documentation page shows recovery mode | WCMS/content-pack owner | Confirm WCMS is running and documentation releases are installed/current. |
-| A release says `INVALID RELEASE` | Owning data pack | Regenerate manifests from source and restart the affected runtime. |
-| Module action needs browser refresh | Axis plus BackOffice API | Check operation response and local state update after register/activate/deactivate/deregister. |
-| Cron disappears after deregister | BackOffice registry projection | Confirm live runtime observation returns the module to available optional state. |
-| Media page reports schema discovery issue | WCMS/Media API category | Confirm the media and data API categories are enabled by module defaults or narrow server override. |
-| Docs image is broken | `nodics.docs` source/generator | Confirm image exists under `docs/pages/assets/images` and the Markdown path is relative. |
+This extension guidance must stay linked to the owning project or capability page whenever a customer customizes the behavior.
 
 ## Common mistakes
 
-- Calling the stack healthy before importing initialization and documentation
-  data.
-- Editing generated documentation data instead of fixing Markdown source and
-  regenerating.
-- Treating `nodics.axis` as the owner of Framework, Axis product, or customer
-  project documentation records.
-- Dropping broad databases or using unsafe environment variables during a
-  fresh test.
-- Ignoring `INVALID RELEASE` because the UI still shows a checkbox.
-- Accepting a visual documentation change without opening the rendered Axis
-  page.
-- Claiming module registry lifecycle works after only a page refresh.
-
-## Related pages
-
-Read **Local quick start with Kickoff and Axis** before this page if the
-servers have not been started yet. Read **Modular architecture and ownership**
-to understand why each runtime has a different owner. Read **Functional module
-registry** for the detailed lifecycle rules behind module registration. Read
-**Runtime and DevOps operations** before designing production topology.
+- Testing on a reused schema and missing initialization defects.
+- Verifying backend endpoints but not the Axis or storefront UI.
+- Ignoring customer-friendly empty or unpublished states.
+- Leaving setup commands undocumented after implementation changes.
 
 ## Verification
 
-This page verifies itself through repeatability. A beginner should be able to
-follow the checklist after a normal local start and again after a fresh local
-database bootstrap. The expected result is the same: no manual database edits,
-no generated-file hand patches, no frontend-owned content data, and no hidden
-project-name assumptions.
-
-When this checklist is used after a documentation change, the evidence must
-include regenerated content-pack files, passing documentation validation, a
-current release version, successful import into WCMS, and rendered Axis routes.
-When it is used after a runtime or registry change, the evidence must include
-server startup, persisted registry state, immediate UI refresh after lifecycle
-operations, and safe behavior after restart. If the evidence cannot name the
-owning module for a failure, the verification is not yet useful enough.
-
-## Customization and extension
-
-Project teams may extend this checklist with local services, extra content
-packs, integration adapters, commerce accelerators, or tenant-specific smoke
-journeys. Each extension must preserve the same evidence style: command,
-owner, environment, expected result, observed result, rollback path, and
-business impact when the check fails.
+Verify local acceptance by recording commands, test results, server status,
+browser routes, screenshots or observations, and any remaining gaps. A
+business user should see a guided path; a developer should see reproducible
+steps; an operator should see evidence.

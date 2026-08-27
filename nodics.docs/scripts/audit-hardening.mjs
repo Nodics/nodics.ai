@@ -27,6 +27,7 @@ const expectedGeneratedFiles = [
   'data/core/data/documentation/nodicsDocumentationAccessPolicyData.js',
   'data/core/data/documentation/nodicsDocumentationNavigationData.js',
   'data/core/data/documentation/nodicsDocumentationDashboardData.js',
+  'data/core/data/documentation/nodicsDocumentationLegacyNavigationCleanupData.js',
   'data/core/data/documentation/nodicsDocumentationNodeData.js',
   'data/core/data/documentation/nodicsDocumentationPageMetadataData.js',
   'data/core/data/documentation/nodicsDocumentationPublicationStateData.js',
@@ -222,10 +223,13 @@ function assertCoverageMap() {
   }
   const rows = glossary.split('\n').filter(line => /^\| \d+ \|/.test(line));
   if (rows.length !== requiredCoverageTerms.length) fail(`Coverage map is incomplete: ${rows.length} rows`);
-  const teeDeap = readFileSync(join(docsRoot, 'docs/pages/applications/tee-deap-solution-use-cases.md'), 'utf8');
-  const normalizedTeeDeap = teeDeap.replace(/\s+/g, ' ');
-  if (!normalizedTeeDeap.includes('TEE means Task Execution Engine') || !normalizedTeeDeap.includes('DEAP means Data Engineering and Analytics Platform')) fail('TEE/DEAP definitions are missing');
-  if (/not separate framework products/i.test(normalizedTeeDeap) === false) fail('TEE/DEAP must be described as solution use cases');
+  const tee = readFileSync(join(docsRoot, 'docs/pages/applications/task-execution-engine.md'), 'utf8');
+  const deap = readFileSync(join(docsRoot, 'docs/pages/applications/data-engineering-analytics-platform.md'), 'utf8');
+  const normalizedTee = tee.replace(/\s+/g, ' ');
+  const normalizedDeap = deap.replace(/\s+/g, ' ');
+  if (!normalizedTee.includes('Task Execution Engine, or TEE')) fail('TEE definition is missing');
+  if (!normalizedDeap.includes('Data Engineering and Analytics Platform, or DEAP')) fail('DEAP definition is missing');
+  if (/solution use case/i.test(normalizedTee) === false || /solution use case/i.test(normalizedDeap) === false) fail('TEE/DEAP must be described as solution use cases');
   const cron = readFileSync(join(docsRoot, 'docs/pages/nodics.process/cronjob-operations.md'), 'utf8');
   const data = readFileSync(join(docsRoot, 'docs/pages/nodics.foundation/data-import-export-migration.md'), 'utf8');
   const discovery = readFileSync(join(docsRoot, 'docs/pages/nodics.discovery/search-indexing-discovery.md'), 'utf8');

@@ -41,6 +41,11 @@ module.exports = {
     publicationCode: function (descriptor) {
         return ['cmsBaseline', descriptor.code, descriptor.releaseVersion].join('_').replace(/[^A-Za-z0-9_-]/g, '_');
     },
+    /** Normalizes media identities that the publishing application declares as part of the complete Online release. */
+    mediaCodes: function (input) {
+        return Array.from(new Set([].concat(input && input.mediaCodes || []).map(code => String(code || '').trim())
+            .filter(code => /^[A-Za-z0-9][A-Za-z0-9._-]{0,255}$/.test(code)))).sort();
+    },
     /** Builds the client-safe review bound to the exact qualified release checksum and publication identity. */
     review: function (descriptor, release, publication, request) {
         if (!release.publicationReview) return undefined;
@@ -149,6 +154,7 @@ module.exports = {
         let readiness = state === 'ONLINE' ? 'READY' : state === 'WITHDRAWN' ? 'RETIRED' :
             state === 'ROLLED_BACK' ? 'ROLLED_BACK' : state === 'REJECTED' ? 'REJECTED' :
             state === 'FAILED' ? 'FAILED' : state ? 'PUBLICATION_PENDING' :
+                release.status === 'RUNNING' ? 'IMPORTING' :
                 release.status === 'CURRENT' ? 'IMPORTED' : 'NOT_IMPORTED';
         return { baselineCode: descriptor.code, releaseCode: release.releaseCode, releaseVersion: release.version,
             releaseStatus: release.status, readiness: readiness,
@@ -192,9 +198,11 @@ module.exports = {
             }
         }
         let actorRequest = this.actorRequest(request, 'Administrator initiated CMS baseline publication');
+        let mediaCodes = this.mediaCodes(input);
         let publicationInput = { code: this.publicationCode(descriptor), domain: 'cms', rootType: descriptor.rootType,
             rootCode: descriptor.rootCode, sourceVersion: String(descriptor.sourceVersion),
             siteCode: descriptor.rootCode, catalogCode: input.catalogCode };
+        if (mediaCodes.length) publicationInput.mediaCodes = mediaCodes;
         let publication = await this.publication(descriptor, actorRequest);
         if (!publication) {
             publication = await SERVICE.DefaultPublicationLifecycleService.create(Object.assign({}, actorRequest,

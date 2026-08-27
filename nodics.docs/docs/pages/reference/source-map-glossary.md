@@ -148,7 +148,7 @@ pack rather than creating a disconnected page tree.
 | 45 | Agora Apparel | Accelerators and Industry Solution Templates | Apparel storefront package, domain sample data, responsive journey, and backend API consumption. |
 | 46 | Agora Electronics | Accelerators and Industry Solution Templates | Electronics storefront package, catalog/search journey, media, pricing, and checkout APIs. |
 | 47 | Agora Telco | Accelerators and Industry Solution Templates | Telco storefront package, offer/catalog journey, customer onboarding, and commerce API boundaries. |
-| 48 | TEE Solution Use Case | TEE and DEAP Solution Use Cases | Task Execution Engine composition through Process, Cron, Pipeline, EMS, and governed runtime change. |
-| 49 | DEAP Solution Use Case | TEE and DEAP Solution Use Cases | Data Engineering and Analytics Platform composition through import/export, discovery, events, jobs, and publication. |
+| 48 | TEE Solution Use Case | Task Execution Engine | Task Execution Engine composition through Process, Cron, Pipeline, EMS, and governed runtime change. |
+| 49 | DEAP Solution Use Case | Data Engineering and Analytics Platform | Data Engineering and Analytics Platform composition through import/export, discovery, events, jobs, and publication. |
 | 50 | Reference Source Map and Glossary | Reference Source Map and Glossary | Catalogue metadata, source evidence, business-friendly names, and exact implementation references. |
 | 51 | Routing and API Governance | Routing and API Governance | Route metadata, generated CRUD routes, request context, HTTP hardening, OpenAPI generation, authorization, and runtime router configuration. |

@@ -450,9 +450,14 @@ module.exports = {
         else if (activeRun) state = 'IMPORTING';
         else if (!availableRelease.available) state = 'SOURCE_UNAVAILABLE';
         else if (installedRelease) {
+            let versionComparison = this.compareVersions(availableRelease.version, installedRelease.contentPackVersion);
             state = installedRelease.contentPackVersion === availableRelease.version &&
                 installedRelease.contentPackChecksum === availableRelease.checksum ?
-                'CURRENT' : 'UPDATE_AVAILABLE';
+                'CURRENT' : versionComparison === 0 &&
+                    !this.isDevelopmentRelease(availableRelease.version) &&
+                    installedRelease.contentPackChecksum &&
+                    installedRelease.contentPackChecksum !== availableRelease.checksum ?
+                    'INVALID_RELEASE' : 'UPDATE_AVAILABLE';
         }
         let allowedOperations = [];
         if (context.enabled && availableRelease.available && !activeRun) {

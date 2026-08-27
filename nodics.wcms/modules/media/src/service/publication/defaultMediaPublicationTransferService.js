@@ -261,11 +261,6 @@ module.exports = {
             return result;
         }
         for (let asset of assets) {
-            let buffer = Buffer.from(String(asset.contentBase64 || ''), 'base64');
-            if (!buffer.length || buffer.length !== Number(asset.sizeBytes) ||
-                this.checksum(buffer, asset.checksumAlgorithm) !== asset.checksum) {
-                throw new CLASSES.NodicsError('ERR_MED_00014', 'Published media payload integrity validation failed');
-            }
             let existing = this.items(await SERVICE.DefaultMediaService.get({ tenant: request.tenant, authData: request.authData,
                 query: { code: asset.code, checksum: asset.checksum }, searchOptions: { limit: 2 } }));
             if (existing.length !== 1) {
@@ -274,7 +269,23 @@ module.exports = {
                 result.queued += 1;
                 continue;
             }
-            let replay = await this.replicateAsset(asset, buffer, existing[0], Object.assign({}, request, {
+            let activeMedia = existing[0];
+            let buffer = Buffer.from(String(asset.contentBase64 || ''), 'base64');
+            if (!buffer.length && activeMedia.providerCode && activeMedia.storageKey &&
+                SERVICE.DefaultMediaStorageProviderRegistryService &&
+                typeof SERVICE.DefaultMediaStorageProviderRegistryService.read === 'function') {
+                buffer = await SERVICE.DefaultMediaStorageProviderRegistryService.read({ providerCode: activeMedia.providerCode,
+                    storageKey: activeMedia.storageKey, maximumBytes: Number(asset.sizeBytes || 0) || undefined });
+            }
+            if (!buffer.length || buffer.length !== Number(asset.sizeBytes) ||
+                this.checksum(buffer, asset.checksumAlgorithm) !== asset.checksum) {
+                let queued = await this.recordReplicationFailure(asset, activeMedia, request,
+                    new CLASSES.NodicsError('ERR_MED_00014', 'Published media payload integrity validation failed'));
+                if (queued && queued.status === 'REPLICATION_ESCALATED') result.escalated += 1;
+                else result.queued += 1;
+                continue;
+            }
+            let replay = await this.replicateAsset(asset, buffer, activeMedia, Object.assign({}, request, {
                 retryCount: Number(request.retryCount || 0) + 1
             }));
             if (replay && replay.status === 'REPLICATION_SYNCHRONIZED') result.synchronized += 1;

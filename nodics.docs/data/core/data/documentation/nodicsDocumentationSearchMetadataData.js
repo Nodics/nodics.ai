@@ -60,8 +60,8 @@ module.exports = {
     "targetType": "NAVIGATION",
     "targetCode": "nodicsDocumentationNavigation",
     "title": "Nodics Documentation Navigation",
-    "summary": "Search topics, business capabilities, configuration, providers, and extension points",
-    "searchText": "Nodics Documentation Navigation Search framework documentation Search topics, business capabilities, configuration, providers, and extension points",
+    "summary": "Search documentation",
+    "searchText": "Nodics Documentation Navigation Search framework documentation Search documentation",
     "keywords": [
       "navigation",
       "hierarchy",
@@ -2058,21 +2058,22 @@ module.exports = {
     "active": true
   },
   "record50": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpnodicsframeworkframeworkvalueandadoption",
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkwhatisnodics",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpnodicsFrameworkframeworkValueAndAdoption",
-    "title": "Framework Value and Adoption",
-    "summary": "Business-friendly group for Framework Value and Adoption documentation topics.",
-    "searchText": "Framework Value and Adoption Business-friendly group for Framework Value and Adoption documentation topics. nodics-framework framework-value-and-adoption what-is-nodics",
+    "targetCode": "nodicsDocsNodeTopicframeworkWhatIsNodics",
+    "title": "What is Nodics?",
+    "summary": "Introductory definition of Nodics, its enterprise purpose, and the first mental model for business, developer, and operator readers.",
+    "searchText": "What is Nodics? Introductory definition of Nodics, its enterprise purpose, and the first mental model for business, developer, and operator readers. nodics-framework framework-value-and-adoption what-is-nodics enterprise-framework",
     "keywords": [
       "nodics-framework",
       "framework-value-and-adoption",
-      "what-is-nodics"
+      "what-is-nodics",
+      "enterprise-framework"
     ],
     "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
       "audience": [
         "business",
         "architect",
@@ -2100,17 +2101,19 @@ module.exports = {
     "active": true
   },
   "record51": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkwhatisnodics",
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkwhynodicsexists",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkWhatIsNodics",
-    "title": "What is Nodics?",
-    "summary": "Business, beginner, and adoption-oriented introduction to the Nodics enterprise framework.",
-    "searchText": "What is Nodics? Business, beginner, and adoption-oriented introduction to the Nodics enterprise framework. nodics-framework framework-value-and-adoption what-is-nodics",
+    "targetCode": "nodicsDocsNodeTopicframeworkWhyNodicsExists",
+    "title": "Why Nodics Exists",
+    "summary": "Industry problems, business value, and why Nodics turns fast delivery into governed enterprise software.",
+    "searchText": "Why Nodics Exists Industry problems, business value, and why Nodics turns fast delivery into governed enterprise software. nodics-framework framework-value-and-adoption why-nodics-exists business-value enterprise-problems",
     "keywords": [
       "nodics-framework",
       "framework-value-and-adoption",
-      "what-is-nodics"
+      "why-nodics-exists",
+      "business-value",
+      "enterprise-problems"
     ],
     "facets": {
       "nodeLevel": "TOPIC",
@@ -2142,21 +2145,23 @@ module.exports = {
     "active": true
   },
   "record52": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpdocumentationroadmapreaderjourneyandcoveragemap",
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkhownodicsworks",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpdocumentationRoadmapreaderJourneyAndCoverageMap",
-    "title": "Reader Journey and Coverage Map",
-    "summary": "Business-friendly group for Reader Journey and Coverage Map documentation topics.",
-    "searchText": "Reader Journey and Coverage Map Business-friendly group for Reader Journey and Coverage Map documentation topics. documentation-roadmap reader-journey-and-coverage-map documentation-roadmap-and-reader-journey",
+    "targetCode": "nodicsDocsNodeTopicframeworkHowNodicsWorks",
+    "title": "How Nodics Works",
+    "summary": "Mental model for framework modules, customer projects, Axis, public applications, runtime ownership, and customization.",
+    "searchText": "How Nodics Works Mental model for framework modules, customer projects, Axis, public applications, runtime ownership, and customization. nodics-framework framework-value-and-adoption how-nodics-works runtime-model backend-driven-experience",
     "keywords": [
-      "documentation-roadmap",
-      "reader-journey-and-coverage-map",
-      "documentation-roadmap-and-reader-journey"
+      "nodics-framework",
+      "framework-value-and-adoption",
+      "how-nodics-works",
+      "runtime-model",
+      "backend-driven-experience"
     ],
     "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
       "audience": [
         "business",
         "architect",
@@ -2184,17 +2189,19 @@ module.exports = {
     "active": true
   },
   "record53": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicdocsdocumentationroadmap",
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkadoptionandfirstjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicdocsDocumentationRoadmap",
-    "title": "Documentation Roadmap and Reader Journey",
-    "summary": "How business users, developers, operators, QA owners, and AI tools navigate the governed Nodics documentation set.",
-    "searchText": "Documentation Roadmap and Reader Journey How business users, developers, operators, QA owners, and AI tools navigate the governed Nodics documentation set. documentation-roadmap reader-journey-and-coverage-map documentation-roadmap-and-reader-journey",
+    "targetCode": "nodicsDocsNodeTopicframeworkAdoptionAndFirstJourney",
+    "title": "Adoption and First Journey",
+    "summary": "The first business, developer, and operator path through setup, capability registration, imports, publishing, and browser verification.",
+    "searchText": "Adoption and First Journey The first business, developer, and operator path through setup, capability registration, imports, publishing, and browser verification. nodics-framework framework-value-and-adoption adoption first-journey fresh-schema-setup",
     "keywords": [
-      "documentation-roadmap",
-      "reader-journey-and-coverage-map",
-      "documentation-roadmap-and-reader-journey"
+      "nodics-framework",
+      "framework-value-and-adoption",
+      "adoption",
+      "first-journey",
+      "fresh-schema-setup"
     ],
     "facets": {
       "nodeLevel": "TOPIC",
@@ -2226,21 +2233,21 @@ module.exports = {
     "active": true
   },
   "record54": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpframeworkarchitectureanddesignmodularityandownership",
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicdocsdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpframeworkArchitectureAndDesignmodularityAndOwnership",
-    "title": "Modularity and Ownership",
-    "summary": "Business-friendly group for Modularity and Ownership documentation topics.",
-    "searchText": "Modularity and Ownership Business-friendly group for Modularity and Ownership documentation topics. framework-architecture-and-design modularity-and-ownership modular-architecture-and-ownership",
+    "targetCode": "nodicsDocsNodeTopicdocsDocumentationRoadmap",
+    "title": "Documentation Roadmap",
+    "summary": "How the Nodics documentation product is organized and how readers choose the right path through the enterprise hierarchy.",
+    "searchText": "Documentation Roadmap How the Nodics documentation product is organized and how readers choose the right path through the enterprise hierarchy. documentation-roadmap documentation-organization reader-navigation",
     "keywords": [
-      "framework-architecture-and-design",
-      "modularity-and-ownership",
-      "modular-architecture-and-ownership"
+      "documentation-roadmap",
+      "documentation-organization",
+      "reader-navigation"
     ],
     "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
       "audience": [
         "business",
         "architect",
@@ -2268,6 +2275,138 @@ module.exports = {
     "active": true
   },
   "record55": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicdocsdocumentationprinciples",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicdocsDocumentationPrinciples",
+    "title": "Documentation Principles",
+    "summary": "Framework-level documentation rules for README thinness, detailed docs depth, visual evidence, customization, publishing, and access.",
+    "searchText": "Documentation Principles Framework-level documentation rules for README thinness, detailed docs depth, visual evidence, customization, publishing, and access. documentation-roadmap reader-journey-and-coverage-map documentation-principles readme-contract visual-contract",
+    "keywords": [
+      "documentation-roadmap",
+      "reader-journey-and-coverage-map",
+      "documentation-principles",
+      "readme-contract",
+      "visual-contract"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record56": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicdocsreaderjourneyandcoverage",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicdocsReaderJourneyAndCoverage",
+    "title": "Reader Journey and Coverage",
+    "summary": "How business users, developers, operators, QA owners, administrators, and AI tools navigate capability documentation.",
+    "searchText": "Reader Journey and Coverage How business users, developers, operators, QA owners, administrators, and AI tools navigate capability documentation. documentation-roadmap reader-journey-and-coverage-map reader-journey coverage-map audience-paths",
+    "keywords": [
+      "documentation-roadmap",
+      "reader-journey-and-coverage-map",
+      "reader-journey",
+      "coverage-map",
+      "audience-paths"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record57": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicdocsdocumentationpublishingmodel",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicdocsDocumentationPublishingModel",
+    "title": "Documentation Publishing Model",
+    "summary": "How documentation source becomes content catalog data, Staged records, approval tasks, Online pages, and public or authenticated delivery.",
+    "searchText": "Documentation Publishing Model How documentation source becomes content catalog data, Staged records, approval tasks, Online pages, and public or authenticated delivery. documentation-roadmap reader-journey-and-coverage-map documentation-publishing content-catalog staged-online",
+    "keywords": [
+      "documentation-roadmap",
+      "reader-journey-and-coverage-map",
+      "documentation-publishing",
+      "content-catalog",
+      "staged-online"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record58": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkmodulararchitecture",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2309,22 +2448,22 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record56": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpcapabilityregistryandlifecyclemanagementfunctionalmoduleregistry",
+  "record59": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkruntimeservercomposition",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpcapabilityRegistryAndLifecycleManagementfunctionalModuleRegistry",
-    "title": "Functional Module Registry",
-    "summary": "Business-friendly group for Functional Module Registry documentation topics.",
-    "searchText": "Functional Module Registry Business-friendly group for Functional Module Registry documentation topics. capability-registry-and-lifecycle-management functional-module-registry functional-module-registry",
+    "targetCode": "nodicsDocsNodeTopicframeworkRuntimeServerComposition",
+    "title": "Runtime Server Composition",
+    "summary": "How project topology composes framework modules into Platform, WCMS, Process, and other runtime servers.",
+    "searchText": "Runtime Server Composition How project topology composes framework modules into Platform, WCMS, Process, and other runtime servers. runtime-server-composition server-topology platform-wcms-process",
     "keywords": [
-      "capability-registry-and-lifecycle-management",
-      "functional-module-registry",
-      "functional-module-registry"
+      "runtime-server-composition",
+      "server-topology",
+      "platform-wcms-process"
     ],
     "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
       "audience": [
         "business",
         "architect",
@@ -2351,7 +2490,91 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record57": {
+  "record60": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkmoduleloadingserviceprecedence",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicframeworkModuleLoadingServicePrecedence",
+    "title": "Module Loading and Service Precedence",
+    "summary": "How runtime loading order, service overrides, and project layers decide which implementation is active.",
+    "searchText": "Module Loading and Service Precedence How runtime loading order, service overrides, and project layers decide which implementation is active. module-loading service-precedence override-order",
+    "keywords": [
+      "module-loading",
+      "service-precedence",
+      "override-order"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record61": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkarchitecturedecisionguide",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicframeworkArchitectureDecisionGuide",
+    "title": "Architecture Decision Guide",
+    "summary": "Decision path for choosing framework, project, content, provider, service, pipeline, schema, route, or renderer ownership.",
+    "searchText": "Architecture Decision Guide Decision path for choosing framework, project, content, provider, service, pipeline, schema, route, or renderer ownership. architecture-decision-guide ownership-decision where-change-belongs",
+    "keywords": [
+      "architecture-decision-guide",
+      "ownership-decision",
+      "where-change-belongs"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record62": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicplatformmoduleregistry",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2393,49 +2616,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record58": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpfoundationruntimeservicesruntimefoundation",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpfoundationRuntimeServicesruntimeFoundation",
-    "title": "Runtime Foundation",
-    "summary": "Business-friendly group for Runtime Foundation documentation topics.",
-    "searchText": "Runtime Foundation Business-friendly group for Runtime Foundation documentation topics. foundation-runtime-services runtime-foundation foundation-overview",
-    "keywords": [
-      "foundation-runtime-services",
-      "runtime-foundation",
-      "foundation-overview"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record59": {
+  "record63": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2477,50 +2658,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record60": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpnodicsapplicationsuiteapplicationoverview",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpnodicsApplicationSuiteapplicationOverview",
-    "title": "Application Overview",
-    "summary": "Business-friendly group for Application Overview documentation topics.",
-    "searchText": "Application Overview Business-friendly group for Application Overview documentation topics. nodics-application-suite axis nexus kickoff",
-    "keywords": [
-      "nodics-application-suite",
-      "axis",
-      "nexus",
-      "kickoff"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record61": {
+  "record64": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicapplicationssuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2563,60 +2701,22 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record62": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpsolutionusecasessolutionpatterns",
+  "record65": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicsolutionstaskexecutionengine",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpsolutionUseCasessolutionPatterns",
-    "title": "Solution Patterns",
-    "summary": "Business-friendly group for Solution Patterns documentation topics.",
-    "searchText": "Solution Patterns Business-friendly group for Solution Patterns documentation topics. solution-use-cases solution-patterns tee-and-deap-solution-use-cases",
+    "targetCode": "nodicsDocsNodeTopicsolutionsTaskExecutionEngine",
+    "title": "Task Execution Engine",
+    "summary": "How customers use Nodics Process, Cron, Pipelines, Events, and governed runtime change to build a Task Execution Engine.",
+    "searchText": "Task Execution Engine How customers use Nodics Process, Cron, Pipelines, Events, and governed runtime change to build a Task Execution Engine. solution-use-cases task-execution-engine tee cron process pipeline runtime-change",
     "keywords": [
       "solution-use-cases",
-      "solution-patterns",
-      "tee-and-deap-solution-use-cases"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record63": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicsolutionsteedeap",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicsolutionsTeeDeap",
-    "title": "TEE and DEAP Solution Use Cases",
-    "summary": "How Task Execution Engine and Data Engineering and Analytics Platform solutions can be built on the Nodics Framework.",
-    "searchText": "TEE and DEAP Solution Use Cases How Task Execution Engine and Data Engineering and Analytics Platform solutions can be built on the Nodics Framework. solution-use-cases solution-patterns tee-and-deap-solution-use-cases",
-    "keywords": [
-      "solution-use-cases",
-      "solution-patterns",
-      "tee-and-deap-solution-use-cases"
+      "task-execution-engine",
+      "tee",
+      "cron",
+      "process",
+      "pipeline",
+      "runtime-change"
     ],
     "facets": {
       "nodeLevel": "TOPIC",
@@ -2647,24 +2747,27 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record64": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpacceleratorsandindustrysolutiontemplatesagoraacceleratorfamily",
+  "record66": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicsolutionsdataengineeringanalyticsplatform",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpacceleratorsAndIndustrySolutionTemplatesagoraAcceleratorFamily",
-    "title": "Agora Accelerator Family",
-    "summary": "Business-friendly group for Agora Accelerator Family documentation topics.",
-    "searchText": "Agora Accelerator Family Business-friendly group for Agora Accelerator Family documentation topics. accelerators industry-solution-templates agora-apparel agora-electronics agora-telco",
+    "targetCode": "nodicsDocsNodeTopicsolutionsDataEngineeringAnalyticsPlatform",
+    "title": "Data Engineering and Analytics Platform",
+    "summary": "How customers use Nodics import, export, discovery, provider, event, pipeline, and publishing capabilities to build governed data platforms.",
+    "searchText": "Data Engineering and Analytics Platform How customers use Nodics import, export, discovery, provider, event, pipeline, and publishing capabilities to build governed data platforms. solution-use-cases data-engineering-and-analytics-platform deap import export discovery analytics data-pipeline",
     "keywords": [
-      "accelerators",
-      "industry-solution-templates",
-      "agora-apparel",
-      "agora-electronics",
-      "agora-telco"
+      "solution-use-cases",
+      "data-engineering-and-analytics-platform",
+      "deap",
+      "import",
+      "export",
+      "discovery",
+      "analytics",
+      "data-pipeline"
     ],
     "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
       "audience": [
         "business",
         "architect",
@@ -2691,7 +2794,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record65": {
+  "record67": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicacceleratorsagoraindustrytemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2735,49 +2838,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record66": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpnodicsinstallerandworkspacesetuplocalworkspacesetup",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpnodicsInstallerAndWorkspaceSetuplocalWorkspaceSetup",
-    "title": "Local Workspace Setup",
-    "summary": "Business-friendly group for Local Workspace Setup documentation topics.",
-    "searchText": "Local Workspace Setup Business-friendly group for Local Workspace Setup documentation topics. nodics-installer-and-workspace-setup local-workspace-setup local-quick-start-with-kickoff-and-axis",
-    "keywords": [
-      "nodics-installer-and-workspace-setup",
-      "local-workspace-setup",
-      "local-quick-start-with-kickoff-and-axis"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record67": {
+  "record68": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworklocalquickstart",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2819,24 +2880,22 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record68": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpnodicsinstallerandworkspacesetupinstalledruntimeapis",
+  "record69": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkfreshschemasetupjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpnodicsInstallerAndWorkspaceSetupinstalledRuntimeApis",
-    "title": "Installed Runtime APIs",
-    "summary": "Business-friendly group for Installed Runtime APIs documentation topics.",
-    "searchText": "Installed Runtime APIs Business-friendly group for Installed Runtime APIs documentation topics. installer application-builder workspace-readiness setup-plan evidence",
+    "targetCode": "nodicsDocsNodeTopicframeworkFreshSchemaSetupJourney",
+    "title": "Fresh Schema Setup Journey",
+    "summary": "Required order for initializing Axis, registering capabilities, importing app packs, publishing Online, and verifying browsers.",
+    "searchText": "Fresh Schema Setup Journey Required order for initializing Axis, registering capabilities, importing app packs, publishing Online, and verifying browsers. fresh-schema setup-journey axis-nexus-agora-initialization",
     "keywords": [
-      "installer",
-      "application-builder",
-      "workspace-readiness",
-      "setup-plan",
-      "evidence"
+      "fresh-schema",
+      "setup-journey",
+      "axis-nexus-agora-initialization"
     ],
     "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
       "audience": [
         "business",
         "architect",
@@ -2863,7 +2922,49 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record69": {
+  "record70": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworklocalruntimetroubleshooting",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicframeworkLocalRuntimeTroubleshooting",
+    "title": "Local Runtime Troubleshooting",
+    "summary": "Practical troubleshooting for ports, stale topology state, schema import failures, publication state, and missing navigation.",
+    "searchText": "Local Runtime Troubleshooting Practical troubleshooting for ports, stale topology state, schema import failures, publication state, and missing navigation. local-runtime-troubleshooting ports fresh-schema-errors",
+    "keywords": [
+      "local-runtime-troubleshooting",
+      "ports",
+      "fresh-schema-errors"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record71": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicinstallerinstalledruntimeapplicationbuilder",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2907,49 +3008,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record70": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpapplicationbuilderandworkspacegenerationworkspacegenerationjourney",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpapplicationBuilderAndWorkspaceGenerationworkspaceGenerationJourney",
-    "title": "Workspace Generation Journey",
-    "summary": "Business-friendly group for Workspace Generation Journey documentation topics.",
-    "searchText": "Workspace Generation Journey Business-friendly group for Workspace Generation Journey documentation topics. application-builder-and-workspace-generation workspace-generation-journey application-builder-and-workspace-generation",
-    "keywords": [
-      "application-builder-and-workspace-generation",
-      "workspace-generation-journey",
-      "application-builder-and-workspace-generation"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record71": {
+  "record72": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicbuilderworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2965,48 +3024,6 @@ module.exports = {
     "facets": {
       "nodeLevel": "TOPIC",
       "nodeType": "PAGE",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record72": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpaxisandbackofficeoperationsvisualworkflowdesigner",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpaxisAndBackofficeOperationsvisualWorkflowDesigner",
-    "title": "Visual Workflow Designer",
-    "summary": "Business-friendly group for Visual Workflow Designer documentation topics.",
-    "searchText": "Visual Workflow Designer Business-friendly group for Visual Workflow Designer documentation topics. axis-and-backoffice-operations visual-workflow-designer visual-workflow-designer-contract",
-    "keywords": [
-      "axis-and-backoffice-operations",
-      "visual-workflow-designer",
-      "visual-workflow-designer-contract"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
       "audience": [
         "business",
         "architect",
@@ -3076,48 +3093,6 @@ module.exports = {
     "active": true
   },
   "record74": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpbusinesscustomizationinaxisaxiscustomizationworkspace",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpbusinessCustomizationInAxisaxisCustomizationWorkspace",
-    "title": "Axis Customization Workspace",
-    "summary": "Business-friendly group for Axis Customization Workspace documentation topics.",
-    "searchText": "Axis Customization Workspace Business-friendly group for Axis Customization Workspace documentation topics. business-customization-in-axis axis-customization-workspace business-customization-in-axis",
-    "keywords": [
-      "business-customization-in-axis",
-      "axis-customization-workspace",
-      "business-customization-in-axis"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record75": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicaxisbusinesscustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3159,49 +3134,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record76": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpuserenterpriseandtenantmanagementplatformandprofilefoundations",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpuserEnterpriseAndTenantManagementplatformAndProfileFoundations",
-    "title": "Platform and Profile Foundations",
-    "summary": "Business-friendly group for Platform and Profile Foundations documentation topics.",
-    "searchText": "Platform and Profile Foundations Business-friendly group for Platform and Profile Foundations documentation topics. user-enterprise-and-tenant-management platform-and-profile-foundations platform-overview",
-    "keywords": [
-      "user-enterprise-and-tenant-management",
-      "platform-and-profile-foundations",
-      "platform-overview"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record77": {
+  "record75": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicplatformoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3243,49 +3176,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record78": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpsecuritygovernanceandcomplianceidentityandaccessgovernance",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpsecurityGovernanceAndComplianceidentityAndAccessGovernance",
-    "title": "Identity and Access Governance",
-    "summary": "Business-friendly group for Identity and Access Governance documentation topics.",
-    "searchText": "Identity and Access Governance Business-friendly group for Identity and Access Governance documentation topics. security-governance-and-compliance identity-and-access-governance security-identity-and-access-governance",
-    "keywords": [
-      "security-governance-and-compliance",
-      "identity-and-access-governance",
-      "security-identity-and-access-governance"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record79": {
+  "record76": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicsecurityidentityaccessgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3327,49 +3218,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record80": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpapplicationconfigurationandruntimebehaviormanagementconfigurationlayersandbehavior",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpapplicationConfigurationAndRuntimeBehaviorManagementconfigurationLayersAndBehavior",
-    "title": "Configuration Layers and Behavior",
-    "summary": "Business-friendly group for Configuration Layers and Behavior documentation topics.",
-    "searchText": "Configuration Layers and Behavior Business-friendly group for Configuration Layers and Behavior documentation topics. application-configuration-and-runtime-behavior-management configuration-layers-and-behavior application-configuration-and-runtime-behavior-management",
-    "keywords": [
-      "application-configuration-and-runtime-behavior-management",
-      "configuration-layers-and-behavior",
-      "application-configuration-and-runtime-behavior-management"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record81": {
+  "record77": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicconfigurationruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3411,7 +3260,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record82": {
+  "record78": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicroutingapigovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3455,49 +3304,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record83": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpruntimegovernanceanddynamicchangemanagementgovernedruntimechange",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpruntimeGovernanceAndDynamicChangeManagementgovernedRuntimeChange",
-    "title": "Governed Runtime Change",
-    "summary": "Business-friendly group for Governed Runtime Change documentation topics.",
-    "searchText": "Governed Runtime Change Business-friendly group for Governed Runtime Change documentation topics. runtime-governance-and-dynamic-change-management governed-runtime-change governed-runtime-change-capability",
-    "keywords": [
-      "runtime-governance-and-dynamic-change-management",
-      "governed-runtime-change",
-      "governed-runtime-change-capability"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record84": {
+  "record79": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicruntimegovernedchange",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3539,49 +3346,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record85": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrplocalizationandinternationalizationlocalizedexperiencemanagement",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrplocalizationAndInternationalizationlocalizedExperienceManagement",
-    "title": "Localized Experience Management",
-    "summary": "Business-friendly group for Localized Experience Management documentation topics.",
-    "searchText": "Localized Experience Management Business-friendly group for Localized Experience Management documentation topics. localization-and-internationalization localized-experience-management localization-and-internationalization",
-    "keywords": [
-      "localization-and-internationalization",
-      "localized-experience-management",
-      "localization-and-internationalization"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record86": {
+  "record80": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiclocalizationinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3623,49 +3388,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record87": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpdatamodelingandschemamanagementschemaandmodelextension",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpdataModelingAndSchemaManagementschemaAndModelExtension",
-    "title": "Schema and Model Extension",
-    "summary": "Business-friendly group for Schema and Model Extension documentation topics.",
-    "searchText": "Schema and Model Extension Business-friendly group for Schema and Model Extension documentation topics. data-modeling-and-schema-management schema-and-model-extension data-modeling-and-schema-management",
-    "keywords": [
-      "data-modeling-and-schema-management",
-      "schema-and-model-extension",
-      "data-modeling-and-schema-management"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record88": {
+  "record81": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicschemadatamodelingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3707,49 +3430,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record89": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpdatabaseandpersistencemanagementprovideranddataaccesslayer",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpdatabaseAndPersistenceManagementproviderAndDataAccessLayer",
-    "title": "Provider and Data Access Layer",
-    "summary": "Business-friendly group for Provider and Data Access Layer documentation topics.",
-    "searchText": "Provider and Data Access Layer Business-friendly group for Provider and Data Access Layer documentation topics. database-and-persistence-management provider-and-data-access-layer provider-and-data-access-layer",
-    "keywords": [
-      "database-and-persistence-management",
-      "provider-and-data-access-layer",
-      "provider-and-data-access-layer"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record90": {
+  "record82": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicpersistenceproviderdataaccesslayer",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3791,49 +3472,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record91": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpcachingandruntimestatemanagementcacheprovidersandinvalidation",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpcachingAndRuntimeStateManagementcacheProvidersAndInvalidation",
-    "title": "Cache Providers and Invalidation",
-    "summary": "Business-friendly group for Cache Providers and Invalidation documentation topics.",
-    "searchText": "Cache Providers and Invalidation Business-friendly group for Cache Providers and Invalidation documentation topics. caching-and-runtime-state-management cache-providers-and-invalidation caching-and-runtime-state-management",
-    "keywords": [
-      "caching-and-runtime-state-management",
-      "cache-providers-and-invalidation",
-      "caching-and-runtime-state-management"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record92": {
+  "record83": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccacheruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3875,49 +3514,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record93": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpdeveloperextensionandprojectcustomizationprojectlayercustomization",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpdeveloperExtensionAndProjectCustomizationprojectLayerCustomization",
-    "title": "Project-Layer Customization",
-    "summary": "Business-friendly group for Project-Layer Customization documentation topics.",
-    "searchText": "Project-Layer Customization Business-friendly group for Project-Layer Customization documentation topics. developer-extension-and-project-customization project-layer-customization customization-and-extension-guide",
-    "keywords": [
-      "developer-extension-and-project-customization",
-      "project-layer-customization",
-      "customization-and-extension-guide"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record94": {
+  "record84": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkcustomizationguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3959,22 +3556,23 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record95": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpdeveloperextensionandprojectcustomizationprocesscustomization",
+  "record85": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkbackendextensionpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpdeveloperExtensionAndProjectCustomizationprocessCustomization",
-    "title": "Process Customization",
-    "summary": "Business-friendly group for Process Customization documentation topics.",
-    "searchText": "Process Customization Business-friendly group for Process Customization documentation topics. developer-extension-and-project-customization process-customization developer-customization-guide",
+    "targetCode": "nodicsDocsNodeTopicframeworkBackendExtensionPatterns",
+    "title": "Backend Extension Patterns",
+    "summary": "How projects extend behavior through configuration, provider adapters, services, validators, pipelines, schemas, and events.",
+    "searchText": "Backend Extension Patterns How projects extend behavior through configuration, provider adapters, services, validators, pipelines, schemas, and events. backend-extension-patterns service-override provider-adapter pipeline-extension",
     "keywords": [
-      "developer-extension-and-project-customization",
-      "process-customization",
-      "developer-customization-guide"
+      "backend-extension-patterns",
+      "service-override",
+      "provider-adapter",
+      "pipeline-extension"
     ],
     "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
       "audience": [
         "business",
         "architect",
@@ -4001,7 +3599,49 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record96": {
+  "record86": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkaxiscontentcustomization",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicframeworkAxisContentCustomization",
+    "title": "Axis Content Customization",
+    "summary": "How business users customize backend-owned content, navigation, visibility, setup records, and publishing decisions from Axis.",
+    "searchText": "Axis Content Customization How business users customize backend-owned content, navigation, visibility, setup records, and publishing decisions from Axis. axis-content-customization business-user-customization backend-owned-navigation",
+    "keywords": [
+      "axis-content-customization",
+      "business-user-customization",
+      "backend-owned-navigation"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record87": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessdevelopercustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4043,49 +3683,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record97": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpdeveloperextensionandprojectcustomizationcustomerprojectextensions",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpdeveloperExtensionAndProjectCustomizationcustomerProjectExtensions",
-    "title": "Customer Project Extensions",
-    "summary": "Business-friendly group for Customer Project Extensions documentation topics.",
-    "searchText": "Customer Project Extensions Business-friendly group for Customer Project Extensions documentation topics. developer-extension-and-project-customization customer-project-extensions custom-project-extension-guide",
-    "keywords": [
-      "developer-extension-and-project-customization",
-      "customer-project-extensions",
-      "custom-project-extension-guide"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record98": {
+  "record88": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocesscustomprojectextension",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4127,49 +3725,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record99": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpstoremarketsiteandchannelmanagementcommercefoundations",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpstoreMarketSiteAndChannelManagementcommerceFoundations",
-    "title": "Commerce Foundations",
-    "summary": "Business-friendly group for Commerce Foundations documentation topics.",
-    "searchText": "Commerce Foundations Business-friendly group for Commerce Foundations documentation topics. store-market-site-and-channel-management commerce-foundations base-commerce-foundations",
-    "keywords": [
-      "store-market-site-and-channel-management",
-      "commerce-foundations",
-      "base-commerce-foundations"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record100": {
+  "record89": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercebasefoundations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4211,49 +3767,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record101": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpwcmsandcontentmanagementcontentmodelanddelivery",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpwcmsAndContentManagementcontentModelAndDelivery",
-    "title": "Content Model and Delivery",
-    "summary": "Business-friendly group for Content Model and Delivery documentation topics.",
-    "searchText": "Content Model and Delivery Business-friendly group for Content Model and Delivery documentation topics. wcms-and-content-management content-model-and-delivery wcms-content-management",
-    "keywords": [
-      "wcms-and-content-management",
-      "content-model-and-delivery",
-      "wcms-content-management"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record102": {
+  "record90": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4295,22 +3809,22 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record103": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpproductcataloganddiscoverycatalogmodelandpublication",
+  "record91": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmscontentcatalogmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpproductCatalogAndDiscoverycatalogModelAndPublication",
-    "title": "Catalog Model and Publication",
-    "summary": "Business-friendly group for Catalog Model and Publication documentation topics.",
-    "searchText": "Catalog Model and Publication Business-friendly group for Catalog Model and Publication documentation topics. product-catalog-and-discovery catalog-model-and-publication product-catalog-and-discovery-management",
+    "targetCode": "nodicsDocsNodeTopicwcmsContentCatalogModel",
+    "title": "Content Catalog Model",
+    "summary": "How sites, catalogs, pages, components, media, routes, access policy, and publication state drive public content.",
+    "searchText": "Content Catalog Model How sites, catalogs, pages, components, media, routes, access policy, and publication state drive public content. content-catalog-model cms-page-component-route online-content",
     "keywords": [
-      "product-catalog-and-discovery",
-      "catalog-model-and-publication",
-      "product-catalog-and-discovery-management"
+      "content-catalog-model",
+      "cms-page-component-route",
+      "online-content"
     ],
     "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
       "audience": [
         "business",
         "architect",
@@ -4337,7 +3851,92 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record104": {
+  "record92": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmspagedesignercomponents",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicwcmsPageDesignerComponents",
+    "title": "Page Designer and Components",
+    "summary": "How Axis-managed content areas, components, renderer metadata, sequence, validation, and publishing work together.",
+    "searchText": "Page Designer and Components How Axis-managed content areas, components, renderer metadata, sequence, validation, and publishing work together. page-designer component-renderer content-area",
+    "keywords": [
+      "page-designer",
+      "component-renderer",
+      "content-area"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record93": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmssitepublicationvisibility",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicwcmsSitePublicationVisibility",
+    "title": "Site Publication and Visibility",
+    "summary": "How Staged, approval, Online, access policy, maintenance pages, and public delivery determine what users see.",
+    "searchText": "Site Publication and Visibility How Staged, approval, Online, access policy, maintenance pages, and public delivery determine what users see. site-publication visibility maintenance-page online-only",
+    "keywords": [
+      "site-publication",
+      "visibility",
+      "maintenance-page",
+      "online-only"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record94": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccatalogproductdiscoverymanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4379,49 +3978,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record105": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpsearchanddiscoverysearchprovidersandindexing",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpsearchAndDiscoverysearchProvidersAndIndexing",
-    "title": "Search Providers and Indexing",
-    "summary": "Business-friendly group for Search Providers and Indexing documentation topics.",
-    "searchText": "Search Providers and Indexing Business-friendly group for Search Providers and Indexing documentation topics. search-and-discovery search-providers-and-indexing search-indexing-and-discovery",
-    "keywords": [
-      "search-and-discovery",
-      "search-providers-and-indexing",
-      "search-indexing-and-discovery"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record106": {
+  "record95": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicdiscoverysearchindexing",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4463,49 +4020,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record107": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpmediamanagementmedialifecycleandstorage",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpmediaManagementmediaLifecycleAndStorage",
-    "title": "Media Lifecycle and Storage",
-    "summary": "Business-friendly group for Media Lifecycle and Storage documentation topics.",
-    "searchText": "Media Lifecycle and Storage Business-friendly group for Media Lifecycle and Storage documentation topics. media-management media-lifecycle-and-storage media-management",
-    "keywords": [
-      "media-management",
-      "media-lifecycle-and-storage",
-      "media-management"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record108": {
+  "record96": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4547,22 +4062,22 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record109": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpinventoryandstockmanagementstockavailabilityandreservation",
+  "record97": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsmediastoragedelivery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpinventoryAndStockManagementstockAvailabilityAndReservation",
-    "title": "Stock Availability and Reservation",
-    "summary": "Business-friendly group for Stock Availability and Reservation documentation topics.",
-    "searchText": "Stock Availability and Reservation Business-friendly group for Stock Availability and Reservation documentation topics. inventory-and-stock-management stock-availability-and-reservation inventory-and-stock-management",
+    "targetCode": "nodicsDocsNodeTopicwcmsMediaStorageDelivery",
+    "title": "Media Storage and Delivery",
+    "summary": "Provider, access, URL, cache, and browser delivery model for media used by content and storefront experiences.",
+    "searchText": "Media Storage and Delivery Provider, access, URL, cache, and browser delivery model for media used by content and storefront experiences. media-management media-lifecycle-and-storage media-management",
     "keywords": [
-      "inventory-and-stock-management",
-      "stock-availability-and-reservation",
-      "inventory-and-stock-management"
+      "media-management",
+      "media-lifecycle-and-storage",
+      "media-management"
     ],
     "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
       "audience": [
         "business",
         "architect",
@@ -4589,7 +4104,49 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record110": {
+  "record98": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsmediaimportpublication",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicwcmsMediaImportPublication",
+    "title": "Media Import and Publication",
+    "summary": "Complete content-pack preparation for media assets, media records, page references, and Online publication.",
+    "searchText": "Media Import and Publication Complete content-pack preparation for media assets, media records, page references, and Online publication. media-management media-lifecycle-and-storage media-management",
+    "keywords": [
+      "media-management",
+      "media-lifecycle-and-storage",
+      "media-management"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record99": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicinventorystockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4631,49 +4188,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record111": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrppricingpromotionsandtaxcommercialdecisioning",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrppricingPromotionsAndTaxcommercialDecisioning",
-    "title": "Commercial Decisioning",
-    "summary": "Business-friendly group for Commercial Decisioning documentation topics.",
-    "searchText": "Commercial Decisioning Business-friendly group for Commercial Decisioning documentation topics. pricing-promotions-and-tax commercial-decisioning pricing-promotions-and-tax-management",
-    "keywords": [
-      "pricing-promotions-and-tax",
-      "commercial-decisioning",
-      "pricing-promotions-and-tax-management"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record112": {
+  "record100": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicpricingpromotionstaxmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4715,49 +4230,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record113": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpcommercecartandcheckoutcommercejourneyoverview",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpcommerceCartAndCheckoutcommerceJourneyOverview",
-    "title": "Commerce Journey Overview",
-    "summary": "Business-friendly group for Commerce Journey Overview documentation topics.",
-    "searchText": "Commerce Journey Overview Business-friendly group for Commerce Journey Overview documentation topics. commerce-cart-and-checkout commerce-journey-overview commerce-overview",
-    "keywords": [
-      "commerce-cart-and-checkout",
-      "commerce-journey-overview",
-      "commerce-overview"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record114": {
+  "record101": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommerceoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4799,49 +4272,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record115": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpcommercecartandcheckoutcartandorderplacement",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpcommerceCartAndCheckoutcartAndOrderPlacement",
-    "title": "Cart and Order Placement",
-    "summary": "Business-friendly group for Cart and Order Placement documentation topics.",
-    "searchText": "Cart and Order Placement Business-friendly group for Cart and Order Placement documentation topics. commerce-cart-and-checkout cart-and-order-placement cart-checkout-and-order-placement",
-    "keywords": [
-      "commerce-cart-and-checkout",
-      "cart-and-order-placement",
-      "cart-checkout-and-order-placement"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record116": {
+  "record102": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercecartorder",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4883,49 +4314,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record117": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrppaymentmanagementpaymentandfulfillmentboundary",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrppaymentManagementpaymentAndFulfillmentBoundary",
-    "title": "Payment and Fulfillment Boundary",
-    "summary": "Business-friendly group for Payment and Fulfillment Boundary documentation topics.",
-    "searchText": "Payment and Fulfillment Boundary Business-friendly group for Payment and Fulfillment Boundary documentation topics. payment-management payment-and-fulfillment-boundary payment-and-fulfillment-operations",
-    "keywords": [
-      "payment-management",
-      "payment-and-fulfillment-boundary",
-      "payment-and-fulfillment-operations"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record118": {
+  "record103": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercepaymentfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4967,49 +4356,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record119": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpshippingandfulfillmentshippingandfulfillmentflow",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpshippingAndFulfillmentshippingAndFulfillmentFlow",
-    "title": "Shipping and Fulfillment Flow",
-    "summary": "Business-friendly group for Shipping and Fulfillment Flow documentation topics.",
-    "searchText": "Shipping and Fulfillment Flow Business-friendly group for Shipping and Fulfillment Flow documentation topics. shipping-and-fulfillment shipping-and-fulfillment-flow shipping-and-fulfillment-management",
-    "keywords": [
-      "shipping-and-fulfillment",
-      "shipping-and-fulfillment-flow",
-      "shipping-and-fulfillment-management"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record120": {
+  "record104": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicfulfillmentshippingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5051,49 +4398,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record121": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpordermanagementorderstateandoperations",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrporderManagementorderStateAndOperations",
-    "title": "Order State and Operations",
-    "summary": "Business-friendly group for Order State and Operations documentation topics.",
-    "searchText": "Order State and Operations Business-friendly group for Order State and Operations documentation topics. order-management order-state-and-operations order-management-lifecycle",
-    "keywords": [
-      "order-management",
-      "order-state-and-operations",
-      "order-management-lifecycle"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record122": {
+  "record105": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicordermanagementlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5135,49 +4440,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record123": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpcancellationsreturnsandrefundsreverseorderlifecycle",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpcancellationsReturnsAndRefundsreverseOrderLifecycle",
-    "title": "Reverse Order Lifecycle",
-    "summary": "Business-friendly group for Reverse Order Lifecycle documentation topics.",
-    "searchText": "Reverse Order Lifecycle Business-friendly group for Reverse Order Lifecycle documentation topics. cancellations-returns-and-refunds reverse-order-lifecycle cancellation-return-and-refund-lifecycle",
-    "keywords": [
-      "cancellations-returns-and-refunds",
-      "reverse-order-lifecycle",
-      "cancellation-return-and-refund-lifecycle"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record124": {
+  "record106": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercereturnsrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5219,49 +4482,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record125": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpcustomerengagementandfeedbackreviewsandratings",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackreviewsAndRatings",
-    "title": "Reviews and Ratings",
-    "summary": "Business-friendly group for Reviews and Ratings documentation topics.",
-    "searchText": "Reviews and Ratings Business-friendly group for Reviews and Ratings documentation topics. customer-engagement-and-feedback reviews-and-ratings customer-reviews-and-ratings",
-    "keywords": [
-      "customer-engagement-and-feedback",
-      "reviews-and-ratings",
-      "customer-reviews-and-ratings"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record126": {
+  "record107": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementcustomerreviews",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5303,22 +4524,22 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record127": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpcustomerengagementandfeedbackfeedbackandcomplaints",
+  "record108": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementreviewmoderationgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackfeedbackAndComplaints",
-    "title": "Feedback and Complaints",
-    "summary": "Business-friendly group for Feedback and Complaints documentation topics.",
-    "searchText": "Feedback and Complaints Business-friendly group for Feedback and Complaints documentation topics. customer-engagement-and-feedback feedback-and-complaints customer-feedback-complaints-and-closed-loop-action",
+    "targetCode": "nodicsDocsNodeTopicengagementReviewModerationGovernance",
+    "title": "Review Moderation and Governance",
+    "summary": "Axis moderation queues, approval and rejection decisions, permissions, state transitions, and audit expectations.",
+    "searchText": "Review Moderation and Governance Axis moderation queues, approval and rejection decisions, permissions, state transitions, and audit expectations. customer-engagement-and-feedback reviews-and-ratings customer-reviews-and-ratings",
     "keywords": [
       "customer-engagement-and-feedback",
-      "feedback-and-complaints",
-      "customer-feedback-complaints-and-closed-loop-action"
+      "reviews-and-ratings",
+      "customer-reviews-and-ratings"
     ],
     "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
       "audience": [
         "business",
         "architect",
@@ -5345,7 +4566,49 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record128": {
+  "record109": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementreviewaggregationrecovery",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicengagementReviewAggregationRecovery",
+    "title": "Review Aggregation and Recovery",
+    "summary": "Rating aggregate correctness, recalculation, event recovery, and product or discovery visibility after review changes.",
+    "searchText": "Review Aggregation and Recovery Rating aggregate correctness, recalculation, event recovery, and product or discovery visibility after review changes. customer-engagement-and-feedback reviews-and-ratings customer-reviews-and-ratings",
+    "keywords": [
+      "customer-engagement-and-feedback",
+      "reviews-and-ratings",
+      "customer-reviews-and-ratings"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record110": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementcustomerfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5387,49 +4650,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record129": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpcustomerengagementandfeedbackunifiedengagementoperations",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackunifiedEngagementOperations",
-    "title": "Unified Engagement Operations",
-    "summary": "Business-friendly group for Unified Engagement Operations documentation topics.",
-    "searchText": "Unified Engagement Operations Business-friendly group for Unified Engagement Operations documentation topics. customer-engagement-and-feedback unified-engagement-operations unified-engagement-operations",
-    "keywords": [
-      "customer-engagement-and-feedback",
-      "unified-engagement-operations",
-      "unified-engagement-operations"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record130": {
+  "record111": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementunifiedoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5471,49 +4692,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record131": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpcustomerengagementandfeedbackgovernedautomationandai",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackgovernedAutomationAndAi",
-    "title": "Governed Automation and AI",
-    "summary": "Business-friendly group for Governed Automation and AI documentation topics.",
-    "searchText": "Governed Automation and AI Business-friendly group for Governed Automation and AI documentation topics. customer-engagement-and-feedback governed-automation-and-ai governed-automation-and-ai",
-    "keywords": [
-      "customer-engagement-and-feedback",
-      "governed-automation-and-ai",
-      "governed-automation-and-ai"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record132": {
+  "record112": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementgovernedautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5555,49 +4734,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record133": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpcustomerengagementandfeedbackenterpriseengagementoperations",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackenterpriseEngagementOperations",
-    "title": "Enterprise Engagement Operations",
-    "summary": "Business-friendly group for Enterprise Engagement Operations documentation topics.",
-    "searchText": "Enterprise Engagement Operations Business-friendly group for Enterprise Engagement Operations documentation topics. customer-engagement-and-feedback enterprise-engagement-operations enterprise-scale-resilience-and-ecosystem-operations",
-    "keywords": [
-      "customer-engagement-and-feedback",
-      "enterprise-engagement-operations",
-      "enterprise-scale-resilience-and-ecosystem-operations"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record134": {
+  "record113": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagemententerpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5639,49 +4776,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record135": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpcommunicationandnotificationscommunicationdeliveryandverification",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpcommunicationAndNotificationscommunicationDeliveryAndVerification",
-    "title": "Communication Delivery and Verification",
-    "summary": "Business-friendly group for Communication Delivery and Verification documentation topics.",
-    "searchText": "Communication Delivery and Verification Business-friendly group for Communication Delivery and Verification documentation topics. communication-and-notifications communication-delivery-and-verification communication-delivery-and-verification",
-    "keywords": [
-      "communication-and-notifications",
-      "communication-delivery-and-verification",
-      "communication-delivery-and-verification"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record136": {
+  "record114": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommunicationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5723,49 +4818,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record137": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpeventandmessagingmanagementeventsandclustercoordination",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpeventAndMessagingManagementeventsAndClusterCoordination",
-    "title": "Events and Cluster Coordination",
-    "summary": "Business-friendly group for Events and Cluster Coordination documentation topics.",
-    "searchText": "Events and Cluster Coordination Business-friendly group for Events and Cluster Coordination documentation topics. event-and-messaging-management events-and-cluster-coordination events-messaging-and-cluster-coordination",
-    "keywords": [
-      "event-and-messaging-management",
-      "events-and-cluster-coordination",
-      "events-messaging-and-cluster-coordination"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record138": {
+  "record115": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiceventsmessagingclustercoordination",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5807,49 +4860,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record139": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpprocessandworkflowautomationprocessoverview",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpprocessAndWorkflowAutomationprocessOverview",
-    "title": "Process Overview",
-    "summary": "Business-friendly group for Process Overview documentation topics.",
-    "searchText": "Process Overview Business-friendly group for Process Overview documentation topics. process-and-workflow-automation process-overview business-process-and-automation-overview",
-    "keywords": [
-      "process-and-workflow-automation",
-      "process-overview",
-      "business-process-and-automation-overview"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record140": {
+  "record116": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5891,49 +4902,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record141": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpprocessandworkflowautomationruntimelifecycle",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpprocessAndWorkflowAutomationruntimeLifecycle",
-    "title": "Runtime Lifecycle",
-    "summary": "Business-friendly group for Runtime Lifecycle documentation topics.",
-    "searchText": "Runtime Lifecycle Business-friendly group for Runtime Lifecycle documentation topics. process-and-workflow-automation runtime-lifecycle runtime-instance-and-task-lifecycle",
-    "keywords": [
-      "process-and-workflow-automation",
-      "runtime-lifecycle",
-      "runtime-instance-and-task-lifecycle"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record142": {
+  "record117": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessruntimelifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5975,49 +4944,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record143": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpprocessandworkflowautomationworkflowgettingstarted",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpprocessAndWorkflowAutomationworkflowGettingStarted",
-    "title": "Workflow Getting Started",
-    "summary": "Business-friendly group for Workflow Getting Started documentation topics.",
-    "searchText": "Workflow Getting Started Business-friendly group for Workflow Getting Started documentation topics. process-and-workflow-automation workflow-getting-started build-your-first-workflow",
-    "keywords": [
-      "process-and-workflow-automation",
-      "workflow-getting-started",
-      "build-your-first-workflow"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record144": {
+  "record118": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessfirstworkflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6059,49 +4986,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record145": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpprocessandworkflowautomationhumantaskflow",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpprocessAndWorkflowAutomationhumanTaskFlow",
-    "title": "Human Task Flow",
-    "summary": "Business-friendly group for Human Task Flow documentation topics.",
-    "searchText": "Human Task Flow Business-friendly group for Human Task Flow documentation topics. process-and-workflow-automation human-task-flow build-your-first-human-task-flow",
-    "keywords": [
-      "process-and-workflow-automation",
-      "human-task-flow",
-      "build-your-first-human-task-flow"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record146": {
+  "record119": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessfirsthumantask",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6143,49 +5028,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record147": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpprocessandworkflowautomationbusinessvalueandadoption",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpprocessAndWorkflowAutomationbusinessValueAndAdoption",
-    "title": "Business Value and Adoption",
-    "summary": "Business-friendly group for Business Value and Adoption documentation topics.",
-    "searchText": "Business Value and Adoption Business-friendly group for Business Value and Adoption documentation topics. process-and-workflow-automation business-value-and-adoption business-value-and-adoption-model",
-    "keywords": [
-      "process-and-workflow-automation",
-      "business-value-and-adoption",
-      "business-value-and-adoption-model"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record148": {
+  "record120": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessbusinessvalue",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6227,49 +5070,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record149": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrppipelineandbusinesslogicorchestrationpipelineexecutionmodel",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrppipelineAndBusinessLogicOrchestrationpipelineExecutionModel",
-    "title": "Pipeline Execution Model",
-    "summary": "Business-friendly group for Pipeline Execution Model documentation topics.",
-    "searchText": "Pipeline Execution Model Business-friendly group for Pipeline Execution Model documentation topics. pipeline-and-business-logic-orchestration pipeline-execution-model pipeline-and-business-logic-orchestration",
-    "keywords": [
-      "pipeline-and-business-logic-orchestration",
-      "pipeline-execution-model",
-      "pipeline-and-business-logic-orchestration"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record150": {
+  "record121": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicpipelinebusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6311,49 +5112,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record151": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpcronandscheduledautomationcronoperations",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpcronAndScheduledAutomationcronOperations",
-    "title": "Cron Operations",
-    "summary": "Business-friendly group for Cron Operations documentation topics.",
-    "searchText": "Cron Operations Business-friendly group for Cron Operations documentation topics. cron-and-scheduled-automation cron-operations cron-operations",
-    "keywords": [
-      "cron-and-scheduled-automation",
-      "cron-operations",
-      "cron-operations"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record152": {
+  "record122": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccronoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6395,22 +5154,23 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record153": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpcronandscheduledautomationprocessandcronruntimeboundary",
+  "record123": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccronnoderesponsibilitytee",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpcronAndScheduledAutomationprocessAndCronRuntimeBoundary",
-    "title": "Process and Cron Runtime Boundary",
-    "summary": "Business-friendly group for Process and Cron Runtime Boundary documentation topics.",
-    "searchText": "Process and Cron Runtime Boundary Business-friendly group for Process and Cron Runtime Boundary documentation topics. cron-and-scheduled-automation process-and-cron-runtime-boundary process-and-cronjob-shared-runtime",
+    "targetCode": "nodicsDocsNodeTopiccronNodeResponsibilityTee",
+    "title": "Cron Node Responsibility and TEE",
+    "summary": "How scheduled work ownership, failover, responsibility transfer, recovery, and TEE references should be documented.",
+    "searchText": "Cron Node Responsibility and TEE How scheduled work ownership, failover, responsibility transfer, recovery, and TEE references should be documented. cron-node-responsibility tee task-execution-engine cluster-failover",
     "keywords": [
-      "cron-and-scheduled-automation",
-      "process-and-cron-runtime-boundary",
-      "process-and-cronjob-shared-runtime"
+      "cron-node-responsibility",
+      "tee",
+      "task-execution-engine",
+      "cluster-failover"
     ],
     "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
       "audience": [
         "business",
         "architect",
@@ -6437,7 +5197,49 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record154": {
+  "record124": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccronprojectcustomization",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopiccronProjectCustomization",
+    "title": "Project Cron Customization",
+    "summary": "How customer projects add scheduled business work with job definitions, triggers, permissions, retry, audit, and tests.",
+    "searchText": "Project Cron Customization How customer projects add scheduled business work with job definitions, triggers, permissions, retry, audit, and tests. project-cron-customization scheduled-job-extension cron-project-module",
+    "keywords": [
+      "project-cron-customization",
+      "scheduled-job-extension",
+      "cron-project-module"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record125": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessprocesscronruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6479,49 +5281,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record155": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpcronandscheduledautomationscheduledautomationtriggers",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpcronAndScheduledAutomationscheduledAutomationTriggers",
-    "title": "Scheduled Automation Triggers",
-    "summary": "Business-friendly group for Scheduled Automation Triggers documentation topics.",
-    "searchText": "Scheduled Automation Triggers Business-friendly group for Scheduled Automation Triggers documentation topics. cron-and-scheduled-automation scheduled-automation-triggers scheduled-automation-and-cron-triggers",
-    "keywords": [
-      "cron-and-scheduled-automation",
-      "scheduled-automation-triggers",
-      "scheduled-automation-and-cron-triggers"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record156": {
+  "record126": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6563,49 +5323,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record157": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpdataimportexportandmigrationdatamovementandmigration",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpdataImportExportAndMigrationdataMovementAndMigration",
-    "title": "Data Movement and Migration",
-    "summary": "Business-friendly group for Data Movement and Migration documentation topics.",
-    "searchText": "Data Movement and Migration Business-friendly group for Data Movement and Migration documentation topics. data-import-export-and-migration data-movement-and-migration data-import-export-and-migration",
-    "keywords": [
-      "data-import-export-and-migration",
-      "data-movement-and-migration",
-      "data-import-export-and-migration"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record158": {
+  "record127": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicdataimportexportmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6647,49 +5365,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record159": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpsystemintegrationandexternalconnectivityactionadapterintegration",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpsystemIntegrationAndExternalConnectivityactionAdapterIntegration",
-    "title": "Action Adapter Integration",
-    "summary": "Business-friendly group for Action Adapter Integration documentation topics.",
-    "searchText": "Action Adapter Integration Business-friendly group for Action Adapter Integration documentation topics. system-integration-and-external-connectivity action-adapter-integration action-adapter-contract",
-    "keywords": [
-      "system-integration-and-external-connectivity",
-      "action-adapter-integration",
-      "action-adapter-contract"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record160": {
+  "record128": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessactionadapters",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6731,49 +5407,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record161": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpoperationsmonitoringandrecoveryruntimeanddevops",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpoperationsMonitoringAndRecoveryruntimeAndDevops",
-    "title": "Runtime and DevOps",
-    "summary": "Business-friendly group for Runtime and DevOps documentation topics.",
-    "searchText": "Runtime and DevOps Business-friendly group for Runtime and DevOps documentation topics. operations-monitoring-and-recovery runtime-and-devops runtime-and-devops-operations",
-    "keywords": [
-      "operations-monitoring-and-recovery",
-      "runtime-and-devops",
-      "runtime-and-devops-operations"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record162": {
+  "record129": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkdevopsruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6815,22 +5449,22 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record163": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpoperationsmonitoringandrecoverylocalverificationandacceptance",
+  "record130": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkruntimereleaserollback",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpoperationsMonitoringAndRecoverylocalVerificationAndAcceptance",
-    "title": "Local Verification and Acceptance",
-    "summary": "Business-friendly group for Local Verification and Acceptance documentation topics.",
-    "searchText": "Local Verification and Acceptance Business-friendly group for Local Verification and Acceptance documentation topics. operations-monitoring-and-recovery local-verification-and-acceptance local-verification-and-acceptance-checklist",
+    "targetCode": "nodicsDocsNodeTopicframeworkRuntimeReleaseRollback",
+    "title": "Runtime Release and Rollback",
+    "summary": "Release and rollback guidance for code, configuration, content, data import, generated contracts, and browser evidence.",
+    "searchText": "Runtime Release and Rollback Release and rollback guidance for code, configuration, content, data import, generated contracts, and browser evidence. operations-monitoring-and-recovery runtime-and-devops runtime-and-devops-operations",
     "keywords": [
       "operations-monitoring-and-recovery",
-      "local-verification-and-acceptance",
-      "local-verification-and-acceptance-checklist"
+      "runtime-and-devops",
+      "runtime-and-devops-operations"
     ],
     "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
       "audience": [
         "business",
         "architect",
@@ -6857,7 +5491,49 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record164": {
+  "record131": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworklocalbrowseracceptancejourney",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicframeworkLocalBrowserAcceptanceJourney",
+    "title": "Local Browser Acceptance Journey",
+    "summary": "Fresh-schema browser acceptance path for Axis, documentation, Nexus, Agora, setup actions, and unpublished states.",
+    "searchText": "Local Browser Acceptance Journey Fresh-schema browser acceptance path for Axis, documentation, Nexus, Agora, setup actions, and unpublished states. operations-monitoring-and-recovery local-verification-and-acceptance local-verification-and-acceptance-checklist",
+    "keywords": [
+      "operations-monitoring-and-recovery",
+      "local-verification-and-acceptance",
+      "local-verification-and-acceptance-checklist"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record132": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworklocalverificationchecklist",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6899,49 +5575,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record165": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpoperationsmonitoringandrecoverycommerceenterpriseoperations",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpoperationsMonitoringAndRecoverycommerceEnterpriseOperations",
-    "title": "Commerce Enterprise Operations",
-    "summary": "Business-friendly group for Commerce Enterprise Operations documentation topics.",
-    "searchText": "Commerce Enterprise Operations Business-friendly group for Commerce Enterprise Operations documentation topics. operations-monitoring-and-recovery commerce-enterprise-operations commerce-enterprise-operations-and-migration",
-    "keywords": [
-      "operations-monitoring-and-recovery",
-      "commerce-enterprise-operations",
-      "commerce-enterprise-operations-and-migration"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record166": {
+  "record133": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommerceenterpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6983,49 +5617,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record167": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpoperationsmonitoringandrecoveryprocessincidentrecovery",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpoperationsMonitoringAndRecoveryprocessIncidentRecovery",
-    "title": "Process Incident Recovery",
-    "summary": "Business-friendly group for Process Incident Recovery documentation topics.",
-    "searchText": "Process Incident Recovery Business-friendly group for Process Incident Recovery documentation topics. operations-monitoring-and-recovery process-incident-recovery incident-retry-and-compensation-operations",
-    "keywords": [
-      "operations-monitoring-and-recovery",
-      "process-incident-recovery",
-      "incident-retry-and-compensation-operations"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record168": {
+  "record134": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessincidentrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7067,49 +5659,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record169": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpoperationsmonitoringandrecoveryprocessruntimetopology",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpoperationsMonitoringAndRecoveryprocessRuntimeTopology",
-    "title": "Process Runtime Topology",
-    "summary": "Business-friendly group for Process Runtime Topology documentation topics.",
-    "searchText": "Process Runtime Topology Business-friendly group for Process Runtime Topology documentation topics. operations-monitoring-and-recovery process-runtime-topology devops-and-runtime-topology",
-    "keywords": [
-      "operations-monitoring-and-recovery",
-      "process-runtime-topology",
-      "devops-and-runtime-topology"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record170": {
+  "record135": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessdevopstopology",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7151,49 +5701,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record171": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpqualitytestingandcertificationprocessregressionevidence",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpqualityTestingAndCertificationprocessRegressionEvidence",
-    "title": "Process Regression Evidence",
-    "summary": "Business-friendly group for Process Regression Evidence documentation topics.",
-    "searchText": "Process Regression Evidence Business-friendly group for Process Regression Evidence documentation topics. quality-testing-and-certification process-regression-evidence process-qa-and-regression-guide",
-    "keywords": [
-      "quality-testing-and-certification",
-      "process-regression-evidence",
-      "process-qa-and-regression-guide"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record172": {
+  "record136": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessqaregressionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7235,49 +5743,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record173": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpdocumentationmanagementdocumentationcontractandquality",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpdocumentationManagementdocumentationContractAndQuality",
-    "title": "Documentation Contract and Quality",
-    "summary": "Business-friendly group for Documentation Contract and Quality documentation topics.",
-    "searchText": "Documentation Contract and Quality Business-friendly group for Documentation Contract and Quality documentation topics. documentation-management documentation-contract-and-quality capability-documentation-maturity-pattern",
-    "keywords": [
-      "documentation-management",
-      "documentation-contract-and-quality",
-      "capability-documentation-maturity-pattern"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record174": {
+  "record137": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkcapabilitydocumentationmaturitypattern",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7319,49 +5785,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record175": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpdocumentationmanagementdocumentationruntimeandpublishing",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpdocumentationManagementdocumentationRuntimeAndPublishing",
-    "title": "Documentation Runtime and Publishing",
-    "summary": "Business-friendly group for Documentation Runtime and Publishing documentation topics.",
-    "searchText": "Documentation Runtime and Publishing Business-friendly group for Documentation Runtime and Publishing documentation topics. documentation-management documentation-runtime-and-publishing docs-overview",
-    "keywords": [
-      "documentation-management",
-      "documentation-runtime-and-publishing",
-      "docs-overview"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record176": {
+  "record138": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicdocsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7403,49 +5827,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record177": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpreleasestagingandpublicationcontentpublicationlifecycle",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpreleaseStagingAndPublicationcontentPublicationLifecycle",
-    "title": "Content Publication Lifecycle",
-    "summary": "Business-friendly group for Content Publication Lifecycle documentation topics.",
-    "searchText": "Content Publication Lifecycle Business-friendly group for Content Publication Lifecycle documentation topics. release-staging-and-publication content-publication-lifecycle staged-to-online-publishing-lifecycle",
-    "keywords": [
-      "release-staging-and-publication",
-      "content-publication-lifecycle",
-      "staged-to-online-publishing-lifecycle"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record178": {
+  "record139": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmspublishinglifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7487,49 +5869,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record179": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpaianddevelopertoolingaianddeveloperenablement",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpaiAndDeveloperToolingaiAndDeveloperEnablement",
-    "title": "AI and Developer Enablement",
-    "summary": "Business-friendly group for AI and Developer Enablement documentation topics.",
-    "searchText": "AI and Developer Enablement Business-friendly group for AI and Developer Enablement documentation topics. ai-and-developer-tooling ai-and-developer-enablement ai-and-developer-tooling",
-    "keywords": [
-      "ai-and-developer-tooling",
-      "ai-and-developer-enablement",
-      "ai-and-developer-tooling"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record180": {
+  "record140": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopictoolingaideveloperenablement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7571,49 +5911,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record181": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodegrpreferencesourcemapandglossary",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeGrpreferencesourceMapAndGlossary",
-    "title": "Source Map and Glossary",
-    "summary": "Business-friendly group for Source Map and Glossary documentation topics.",
-    "searchText": "Source Map and Glossary Business-friendly group for Source Map and Glossary documentation topics. reference source-map-and-glossary reference-source-map-and-glossary",
-    "keywords": [
-      "reference",
-      "source-map-and-glossary",
-      "reference-source-map-and-glossary"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business",
-        "architect",
-        "administrator",
-        "developer",
-        "operator",
-        "qa",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record182": {
+  "record141": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicreferencesourcemapglossary",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7655,7 +5953,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record183": {
+  "record142": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardproduct",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7688,7 +5986,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record184": {
+  "record143": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardnavigation",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7721,7 +6019,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record185": {
+  "record144": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsframework",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7754,7 +6052,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record186": {
+  "record145": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7787,7 +6085,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record187": {
+  "record146": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecframeworkarchitectureanddesign",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7820,7 +6118,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record188": {
+  "record147": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccapabilityregistryandlifecyclemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7853,7 +6151,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record189": {
+  "record148": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecfoundationruntimeservices",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7886,7 +6184,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record190": {
+  "record149": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsapplicationsuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7919,7 +6217,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record191": {
+  "record150": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsolutionusecases",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7952,7 +6250,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record192": {
+  "record151": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecacceleratorsandindustrysolutiontemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7985,7 +6283,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record193": {
+  "record152": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsinstallerandworkspacesetup",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8018,7 +6316,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record194": {
+  "record153": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecapplicationbuilderandworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8051,7 +6349,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record195": {
+  "record154": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecaxisandbackofficeoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8084,7 +6382,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record196": {
+  "record155": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecbusinesscustomizationinaxis",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8117,7 +6415,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record197": {
+  "record156": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecuserenterpriseandtenantmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8150,7 +6448,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record198": {
+  "record157": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsecuritygovernanceandcompliance",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8183,7 +6481,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record199": {
+  "record158": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecapplicationconfigurationandruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8216,7 +6514,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record200": {
+  "record159": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecruntimegovernanceanddynamicchangemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8249,7 +6547,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record201": {
+  "record160": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseclocalizationandinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8282,7 +6580,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record202": {
+  "record161": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdatamodelingandschemamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8315,7 +6613,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record203": {
+  "record162": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdatabaseandpersistencemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8348,7 +6646,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record204": {
+  "record163": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccachingandruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8381,7 +6679,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record205": {
+  "record164": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdeveloperextensionandprojectcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8414,7 +6712,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record206": {
+  "record165": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecstoremarketsiteandchannelmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8447,7 +6745,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record207": {
+  "record166": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecwcmsandcontentmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8480,7 +6778,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record208": {
+  "record167": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecproductcataloganddiscovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8513,7 +6811,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record209": {
+  "record168": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsearchanddiscovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8546,7 +6844,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record210": {
+  "record169": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8579,7 +6877,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record211": {
+  "record170": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecinventoryandstockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8612,7 +6910,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record212": {
+  "record171": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpricingpromotionsandtax",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8645,7 +6943,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record213": {
+  "record172": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccommercecartandcheckout",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8678,7 +6976,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record214": {
+  "record173": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpaymentmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8711,7 +7009,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record215": {
+  "record174": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecshippingandfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8744,7 +7042,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record216": {
+  "record175": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecordermanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8777,7 +7075,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record217": {
+  "record176": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccancellationsreturnsandrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8810,7 +7108,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record218": {
+  "record177": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccustomerengagementandfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8843,7 +7141,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record219": {
+  "record178": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccommunicationandnotifications",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8876,7 +7174,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record220": {
+  "record179": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseceventandmessagingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8909,7 +7207,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record221": {
+  "record180": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecprocessandworkflowautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8942,7 +7240,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record222": {
+  "record181": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpipelineandbusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8975,7 +7273,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record223": {
+  "record182": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccronandscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9008,7 +7306,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record224": {
+  "record183": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdataimportexportandmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9041,7 +7339,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record225": {
+  "record184": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsystemintegrationandexternalconnectivity",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9074,7 +7372,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record226": {
+  "record185": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecoperationsmonitoringandrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9107,7 +7405,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record227": {
+  "record186": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecqualitytestingandcertification",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9140,7 +7438,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record228": {
+  "record187": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdocumentationmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9173,7 +7471,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record229": {
+  "record188": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecreleasestagingandpublication",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9206,7 +7504,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record230": {
+  "record189": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecaianddevelopertooling",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9239,7 +7537,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record231": {
+  "record190": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecreference",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9272,2203 +7570,28 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record232": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpnodicsframeworkframeworkvalueandadoption",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpnodicsFrameworkframeworkValueAndAdoption",
-    "title": "Framework Value and Adoption",
-    "summary": "Detailed landing content for Framework Value and Adoption, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Framework Value and Adoption Detailed landing content for Framework Value and Adoption, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpnodicsFrameworkframeworkValueAndAdoption",
-      "Framework Value and Adoption"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpnodicsFrameworkframeworkValueAndAdoption"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record233": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpdocumentationroadmapreaderjourneyandcoveragemap",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpdocumentationRoadmapreaderJourneyAndCoverageMap",
-    "title": "Reader Journey and Coverage Map",
-    "summary": "Detailed landing content for Reader Journey and Coverage Map, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Reader Journey and Coverage Map Detailed landing content for Reader Journey and Coverage Map, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpdocumentationRoadmapreaderJourneyAndCoverageMap",
-      "Reader Journey and Coverage Map"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpdocumentationRoadmapreaderJourneyAndCoverageMap"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record234": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpframeworkarchitectureanddesignmodularityandownership",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpframeworkArchitectureAndDesignmodularityAndOwnership",
-    "title": "Modularity and Ownership",
-    "summary": "Detailed landing content for Modularity and Ownership, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Modularity and Ownership Detailed landing content for Modularity and Ownership, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpframeworkArchitectureAndDesignmodularityAndOwnership",
-      "Modularity and Ownership"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpframeworkArchitectureAndDesignmodularityAndOwnership"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record235": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpcapabilityregistryandlifecyclemanagementfunctionalmoduleregistry",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpcapabilityRegistryAndLifecycleManagementfunctionalModuleRegistry",
-    "title": "Functional Module Registry",
-    "summary": "Detailed landing content for Functional Module Registry, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Functional Module Registry Detailed landing content for Functional Module Registry, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpcapabilityRegistryAndLifecycleManagementfunctionalModuleRegistry",
-      "Functional Module Registry"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpcapabilityRegistryAndLifecycleManagementfunctionalModuleRegistry"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record236": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpfoundationruntimeservicesruntimefoundation",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpfoundationRuntimeServicesruntimeFoundation",
-    "title": "Runtime Foundation",
-    "summary": "Detailed landing content for Runtime Foundation, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Runtime Foundation Detailed landing content for Runtime Foundation, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpfoundationRuntimeServicesruntimeFoundation",
-      "Runtime Foundation"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpfoundationRuntimeServicesruntimeFoundation"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record237": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpnodicsapplicationsuiteapplicationoverview",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpnodicsApplicationSuiteapplicationOverview",
-    "title": "Application Overview",
-    "summary": "Detailed landing content for Application Overview, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Application Overview Detailed landing content for Application Overview, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpnodicsApplicationSuiteapplicationOverview",
-      "Application Overview"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpnodicsApplicationSuiteapplicationOverview"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record238": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpsolutionusecasessolutionpatterns",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpsolutionUseCasessolutionPatterns",
-    "title": "Solution Patterns",
-    "summary": "Detailed landing content for Solution Patterns, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Solution Patterns Detailed landing content for Solution Patterns, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpsolutionUseCasessolutionPatterns",
-      "Solution Patterns"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpsolutionUseCasessolutionPatterns"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record239": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpacceleratorsandindustrysolutiontemplatesagoraacceleratorfamily",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpacceleratorsAndIndustrySolutionTemplatesagoraAcceleratorFamily",
-    "title": "Agora Accelerator Family",
-    "summary": "Detailed landing content for Agora Accelerator Family, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Agora Accelerator Family Detailed landing content for Agora Accelerator Family, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpacceleratorsAndIndustrySolutionTemplatesagoraAcceleratorFamily",
-      "Agora Accelerator Family"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpacceleratorsAndIndustrySolutionTemplatesagoraAcceleratorFamily"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record240": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpnodicsinstallerandworkspacesetuplocalworkspacesetup",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpnodicsInstallerAndWorkspaceSetuplocalWorkspaceSetup",
-    "title": "Local Workspace Setup",
-    "summary": "Detailed landing content for Local Workspace Setup, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Local Workspace Setup Detailed landing content for Local Workspace Setup, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpnodicsInstallerAndWorkspaceSetuplocalWorkspaceSetup",
-      "Local Workspace Setup"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpnodicsInstallerAndWorkspaceSetuplocalWorkspaceSetup"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record241": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpnodicsinstallerandworkspacesetupinstalledruntimeapis",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpnodicsInstallerAndWorkspaceSetupinstalledRuntimeApis",
-    "title": "Installed Runtime APIs",
-    "summary": "Detailed landing content for Installed Runtime APIs, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Installed Runtime APIs Detailed landing content for Installed Runtime APIs, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpnodicsInstallerAndWorkspaceSetupinstalledRuntimeApis",
-      "Installed Runtime APIs"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpnodicsInstallerAndWorkspaceSetupinstalledRuntimeApis"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record242": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpapplicationbuilderandworkspacegenerationworkspacegenerationjourney",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpapplicationBuilderAndWorkspaceGenerationworkspaceGenerationJourney",
-    "title": "Workspace Generation Journey",
-    "summary": "Detailed landing content for Workspace Generation Journey, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Workspace Generation Journey Detailed landing content for Workspace Generation Journey, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpapplicationBuilderAndWorkspaceGenerationworkspaceGenerationJourney",
-      "Workspace Generation Journey"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpapplicationBuilderAndWorkspaceGenerationworkspaceGenerationJourney"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record243": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpaxisandbackofficeoperationsvisualworkflowdesigner",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpaxisAndBackofficeOperationsvisualWorkflowDesigner",
-    "title": "Visual Workflow Designer",
-    "summary": "Detailed landing content for Visual Workflow Designer, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Visual Workflow Designer Detailed landing content for Visual Workflow Designer, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpaxisAndBackofficeOperationsvisualWorkflowDesigner",
-      "Visual Workflow Designer"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpaxisAndBackofficeOperationsvisualWorkflowDesigner"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record244": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpbusinesscustomizationinaxisaxiscustomizationworkspace",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpbusinessCustomizationInAxisaxisCustomizationWorkspace",
-    "title": "Axis Customization Workspace",
-    "summary": "Detailed landing content for Axis Customization Workspace, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Axis Customization Workspace Detailed landing content for Axis Customization Workspace, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpbusinessCustomizationInAxisaxisCustomizationWorkspace",
-      "Axis Customization Workspace"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpbusinessCustomizationInAxisaxisCustomizationWorkspace"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record245": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpuserenterpriseandtenantmanagementplatformandprofilefoundations",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpuserEnterpriseAndTenantManagementplatformAndProfileFoundations",
-    "title": "Platform and Profile Foundations",
-    "summary": "Detailed landing content for Platform and Profile Foundations, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Platform and Profile Foundations Detailed landing content for Platform and Profile Foundations, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpuserEnterpriseAndTenantManagementplatformAndProfileFoundations",
-      "Platform and Profile Foundations"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpuserEnterpriseAndTenantManagementplatformAndProfileFoundations"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record246": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpsecuritygovernanceandcomplianceidentityandaccessgovernance",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpsecurityGovernanceAndComplianceidentityAndAccessGovernance",
-    "title": "Identity and Access Governance",
-    "summary": "Detailed landing content for Identity and Access Governance, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Identity and Access Governance Detailed landing content for Identity and Access Governance, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpsecurityGovernanceAndComplianceidentityAndAccessGovernance",
-      "Identity and Access Governance"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpsecurityGovernanceAndComplianceidentityAndAccessGovernance"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record247": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpapplicationconfigurationandruntimebehaviormanagem398d2188205666ce",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpapplicationConfigurationAndRuntimeBehaviorManagementconfigurationLayersAndBehavior",
-    "title": "Configuration Layers and Behavior",
-    "summary": "Detailed landing content for Configuration Layers and Behavior, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Configuration Layers and Behavior Detailed landing content for Configuration Layers and Behavior, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpapplicationConfigurationAndRuntimeBehaviorManagementconfigurationLayersAndBehavior",
-      "Configuration Layers and Behavior"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpapplicationConfigurationAndRuntimeBehaviorManagementconfigurationLayersAndBehavior"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record248": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpruntimegovernanceanddynamicchangemanagementgovernedruntimechange",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpruntimeGovernanceAndDynamicChangeManagementgovernedRuntimeChange",
-    "title": "Governed Runtime Change",
-    "summary": "Detailed landing content for Governed Runtime Change, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Governed Runtime Change Detailed landing content for Governed Runtime Change, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpruntimeGovernanceAndDynamicChangeManagementgovernedRuntimeChange",
-      "Governed Runtime Change"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpruntimeGovernanceAndDynamicChangeManagementgovernedRuntimeChange"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record249": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrplocalizationandinternationalizationlocalizedexperiencemanagement",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrplocalizationAndInternationalizationlocalizedExperienceManagement",
-    "title": "Localized Experience Management",
-    "summary": "Detailed landing content for Localized Experience Management, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Localized Experience Management Detailed landing content for Localized Experience Management, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrplocalizationAndInternationalizationlocalizedExperienceManagement",
-      "Localized Experience Management"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrplocalizationAndInternationalizationlocalizedExperienceManagement"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record250": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpdatamodelingandschemamanagementschemaandmodelextension",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpdataModelingAndSchemaManagementschemaAndModelExtension",
-    "title": "Schema and Model Extension",
-    "summary": "Detailed landing content for Schema and Model Extension, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Schema and Model Extension Detailed landing content for Schema and Model Extension, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpdataModelingAndSchemaManagementschemaAndModelExtension",
-      "Schema and Model Extension"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpdataModelingAndSchemaManagementschemaAndModelExtension"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record251": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpdatabaseandpersistencemanagementprovideranddataaccesslayer",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpdatabaseAndPersistenceManagementproviderAndDataAccessLayer",
-    "title": "Provider and Data Access Layer",
-    "summary": "Detailed landing content for Provider and Data Access Layer, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Provider and Data Access Layer Detailed landing content for Provider and Data Access Layer, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpdatabaseAndPersistenceManagementproviderAndDataAccessLayer",
-      "Provider and Data Access Layer"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpdatabaseAndPersistenceManagementproviderAndDataAccessLayer"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record252": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpcachingandruntimestatemanagementcacheprovidersandinvalidation",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpcachingAndRuntimeStateManagementcacheProvidersAndInvalidation",
-    "title": "Cache Providers and Invalidation",
-    "summary": "Detailed landing content for Cache Providers and Invalidation, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Cache Providers and Invalidation Detailed landing content for Cache Providers and Invalidation, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpcachingAndRuntimeStateManagementcacheProvidersAndInvalidation",
-      "Cache Providers and Invalidation"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpcachingAndRuntimeStateManagementcacheProvidersAndInvalidation"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record253": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpdeveloperextensionandprojectcustomizationprojectlayercustomization",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpdeveloperExtensionAndProjectCustomizationprojectLayerCustomization",
-    "title": "Project-Layer Customization",
-    "summary": "Detailed landing content for Project-Layer Customization, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Project-Layer Customization Detailed landing content for Project-Layer Customization, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpdeveloperExtensionAndProjectCustomizationprojectLayerCustomization",
-      "Project-Layer Customization"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpdeveloperExtensionAndProjectCustomizationprojectLayerCustomization"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record254": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpdeveloperextensionandprojectcustomizationprocesscustomization",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpdeveloperExtensionAndProjectCustomizationprocessCustomization",
-    "title": "Process Customization",
-    "summary": "Detailed landing content for Process Customization, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Process Customization Detailed landing content for Process Customization, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpdeveloperExtensionAndProjectCustomizationprocessCustomization",
-      "Process Customization"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpdeveloperExtensionAndProjectCustomizationprocessCustomization"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record255": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpdeveloperextensionandprojectcustomizationcustomerprojectextensions",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpdeveloperExtensionAndProjectCustomizationcustomerProjectExtensions",
-    "title": "Customer Project Extensions",
-    "summary": "Detailed landing content for Customer Project Extensions, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Customer Project Extensions Detailed landing content for Customer Project Extensions, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpdeveloperExtensionAndProjectCustomizationcustomerProjectExtensions",
-      "Customer Project Extensions"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpdeveloperExtensionAndProjectCustomizationcustomerProjectExtensions"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record256": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpstoremarketsiteandchannelmanagementcommercefoundations",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpstoreMarketSiteAndChannelManagementcommerceFoundations",
-    "title": "Commerce Foundations",
-    "summary": "Detailed landing content for Commerce Foundations, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Commerce Foundations Detailed landing content for Commerce Foundations, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpstoreMarketSiteAndChannelManagementcommerceFoundations",
-      "Commerce Foundations"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpstoreMarketSiteAndChannelManagementcommerceFoundations"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record257": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpwcmsandcontentmanagementcontentmodelanddelivery",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpwcmsAndContentManagementcontentModelAndDelivery",
-    "title": "Content Model and Delivery",
-    "summary": "Detailed landing content for Content Model and Delivery, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Content Model and Delivery Detailed landing content for Content Model and Delivery, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpwcmsAndContentManagementcontentModelAndDelivery",
-      "Content Model and Delivery"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpwcmsAndContentManagementcontentModelAndDelivery"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record258": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpproductcataloganddiscoverycatalogmodelandpublication",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpproductCatalogAndDiscoverycatalogModelAndPublication",
-    "title": "Catalog Model and Publication",
-    "summary": "Detailed landing content for Catalog Model and Publication, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Catalog Model and Publication Detailed landing content for Catalog Model and Publication, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpproductCatalogAndDiscoverycatalogModelAndPublication",
-      "Catalog Model and Publication"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpproductCatalogAndDiscoverycatalogModelAndPublication"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record259": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpsearchanddiscoverysearchprovidersandindexing",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpsearchAndDiscoverysearchProvidersAndIndexing",
-    "title": "Search Providers and Indexing",
-    "summary": "Detailed landing content for Search Providers and Indexing, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Search Providers and Indexing Detailed landing content for Search Providers and Indexing, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpsearchAndDiscoverysearchProvidersAndIndexing",
-      "Search Providers and Indexing"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpsearchAndDiscoverysearchProvidersAndIndexing"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record260": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpmediamanagementmedialifecycleandstorage",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpmediaManagementmediaLifecycleAndStorage",
-    "title": "Media Lifecycle and Storage",
-    "summary": "Detailed landing content for Media Lifecycle and Storage, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Media Lifecycle and Storage Detailed landing content for Media Lifecycle and Storage, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpmediaManagementmediaLifecycleAndStorage",
-      "Media Lifecycle and Storage"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpmediaManagementmediaLifecycleAndStorage"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record261": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpinventoryandstockmanagementstockavailabilityandreservation",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpinventoryAndStockManagementstockAvailabilityAndReservation",
-    "title": "Stock Availability and Reservation",
-    "summary": "Detailed landing content for Stock Availability and Reservation, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Stock Availability and Reservation Detailed landing content for Stock Availability and Reservation, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpinventoryAndStockManagementstockAvailabilityAndReservation",
-      "Stock Availability and Reservation"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpinventoryAndStockManagementstockAvailabilityAndReservation"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record262": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrppricingpromotionsandtaxcommercialdecisioning",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrppricingPromotionsAndTaxcommercialDecisioning",
-    "title": "Commercial Decisioning",
-    "summary": "Detailed landing content for Commercial Decisioning, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Commercial Decisioning Detailed landing content for Commercial Decisioning, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrppricingPromotionsAndTaxcommercialDecisioning",
-      "Commercial Decisioning"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrppricingPromotionsAndTaxcommercialDecisioning"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record263": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpcommercecartandcheckoutcommercejourneyoverview",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpcommerceCartAndCheckoutcommerceJourneyOverview",
-    "title": "Commerce Journey Overview",
-    "summary": "Detailed landing content for Commerce Journey Overview, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Commerce Journey Overview Detailed landing content for Commerce Journey Overview, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpcommerceCartAndCheckoutcommerceJourneyOverview",
-      "Commerce Journey Overview"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpcommerceCartAndCheckoutcommerceJourneyOverview"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record264": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpcommercecartandcheckoutcartandorderplacement",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpcommerceCartAndCheckoutcartAndOrderPlacement",
-    "title": "Cart and Order Placement",
-    "summary": "Detailed landing content for Cart and Order Placement, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Cart and Order Placement Detailed landing content for Cart and Order Placement, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpcommerceCartAndCheckoutcartAndOrderPlacement",
-      "Cart and Order Placement"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpcommerceCartAndCheckoutcartAndOrderPlacement"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record265": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrppaymentmanagementpaymentandfulfillmentboundary",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrppaymentManagementpaymentAndFulfillmentBoundary",
-    "title": "Payment and Fulfillment Boundary",
-    "summary": "Detailed landing content for Payment and Fulfillment Boundary, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Payment and Fulfillment Boundary Detailed landing content for Payment and Fulfillment Boundary, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrppaymentManagementpaymentAndFulfillmentBoundary",
-      "Payment and Fulfillment Boundary"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrppaymentManagementpaymentAndFulfillmentBoundary"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record266": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpshippingandfulfillmentshippingandfulfillmentflow",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpshippingAndFulfillmentshippingAndFulfillmentFlow",
-    "title": "Shipping and Fulfillment Flow",
-    "summary": "Detailed landing content for Shipping and Fulfillment Flow, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Shipping and Fulfillment Flow Detailed landing content for Shipping and Fulfillment Flow, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpshippingAndFulfillmentshippingAndFulfillmentFlow",
-      "Shipping and Fulfillment Flow"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpshippingAndFulfillmentshippingAndFulfillmentFlow"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record267": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpordermanagementorderstateandoperations",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrporderManagementorderStateAndOperations",
-    "title": "Order State and Operations",
-    "summary": "Detailed landing content for Order State and Operations, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Order State and Operations Detailed landing content for Order State and Operations, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrporderManagementorderStateAndOperations",
-      "Order State and Operations"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrporderManagementorderStateAndOperations"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record268": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpcancellationsreturnsandrefundsreverseorderlifecycle",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpcancellationsReturnsAndRefundsreverseOrderLifecycle",
-    "title": "Reverse Order Lifecycle",
-    "summary": "Detailed landing content for Reverse Order Lifecycle, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Reverse Order Lifecycle Detailed landing content for Reverse Order Lifecycle, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpcancellationsReturnsAndRefundsreverseOrderLifecycle",
-      "Reverse Order Lifecycle"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpcancellationsReturnsAndRefundsreverseOrderLifecycle"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record269": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpcustomerengagementandfeedbackreviewsandratings",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpcustomerEngagementAndFeedbackreviewsAndRatings",
-    "title": "Reviews and Ratings",
-    "summary": "Detailed landing content for Reviews and Ratings, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Reviews and Ratings Detailed landing content for Reviews and Ratings, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpcustomerEngagementAndFeedbackreviewsAndRatings",
-      "Reviews and Ratings"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackreviewsAndRatings"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record270": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpcustomerengagementandfeedbackfeedbackandcomplaints",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpcustomerEngagementAndFeedbackfeedbackAndComplaints",
-    "title": "Feedback and Complaints",
-    "summary": "Detailed landing content for Feedback and Complaints, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Feedback and Complaints Detailed landing content for Feedback and Complaints, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpcustomerEngagementAndFeedbackfeedbackAndComplaints",
-      "Feedback and Complaints"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackfeedbackAndComplaints"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record271": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpcustomerengagementandfeedbackunifiedengagementoperations",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpcustomerEngagementAndFeedbackunifiedEngagementOperations",
-    "title": "Unified Engagement Operations",
-    "summary": "Detailed landing content for Unified Engagement Operations, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Unified Engagement Operations Detailed landing content for Unified Engagement Operations, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpcustomerEngagementAndFeedbackunifiedEngagementOperations",
-      "Unified Engagement Operations"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackunifiedEngagementOperations"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record272": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpcustomerengagementandfeedbackgovernedautomationandai",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpcustomerEngagementAndFeedbackgovernedAutomationAndAi",
-    "title": "Governed Automation and AI",
-    "summary": "Detailed landing content for Governed Automation and AI, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Governed Automation and AI Detailed landing content for Governed Automation and AI, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpcustomerEngagementAndFeedbackgovernedAutomationAndAi",
-      "Governed Automation and AI"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackgovernedAutomationAndAi"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record273": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpcustomerengagementandfeedbackenterpriseengagementoperations",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpcustomerEngagementAndFeedbackenterpriseEngagementOperations",
-    "title": "Enterprise Engagement Operations",
-    "summary": "Detailed landing content for Enterprise Engagement Operations, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Enterprise Engagement Operations Detailed landing content for Enterprise Engagement Operations, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpcustomerEngagementAndFeedbackenterpriseEngagementOperations",
-      "Enterprise Engagement Operations"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackenterpriseEngagementOperations"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record274": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpcommunicationandnotificationscommunicationdeliveryandverification",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpcommunicationAndNotificationscommunicationDeliveryAndVerification",
-    "title": "Communication Delivery and Verification",
-    "summary": "Detailed landing content for Communication Delivery and Verification, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Communication Delivery and Verification Detailed landing content for Communication Delivery and Verification, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpcommunicationAndNotificationscommunicationDeliveryAndVerification",
-      "Communication Delivery and Verification"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpcommunicationAndNotificationscommunicationDeliveryAndVerification"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record275": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpeventandmessagingmanagementeventsandclustercoordination",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpeventAndMessagingManagementeventsAndClusterCoordination",
-    "title": "Events and Cluster Coordination",
-    "summary": "Detailed landing content for Events and Cluster Coordination, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Events and Cluster Coordination Detailed landing content for Events and Cluster Coordination, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpeventAndMessagingManagementeventsAndClusterCoordination",
-      "Events and Cluster Coordination"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpeventAndMessagingManagementeventsAndClusterCoordination"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record276": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpprocessandworkflowautomationprocessoverview",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpprocessAndWorkflowAutomationprocessOverview",
-    "title": "Process Overview",
-    "summary": "Detailed landing content for Process Overview, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Process Overview Detailed landing content for Process Overview, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpprocessAndWorkflowAutomationprocessOverview",
-      "Process Overview"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpprocessAndWorkflowAutomationprocessOverview"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record277": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpprocessandworkflowautomationruntimelifecycle",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpprocessAndWorkflowAutomationruntimeLifecycle",
-    "title": "Runtime Lifecycle",
-    "summary": "Detailed landing content for Runtime Lifecycle, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Runtime Lifecycle Detailed landing content for Runtime Lifecycle, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpprocessAndWorkflowAutomationruntimeLifecycle",
-      "Runtime Lifecycle"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpprocessAndWorkflowAutomationruntimeLifecycle"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record278": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpprocessandworkflowautomationworkflowgettingstarted",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpprocessAndWorkflowAutomationworkflowGettingStarted",
-    "title": "Workflow Getting Started",
-    "summary": "Detailed landing content for Workflow Getting Started, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Workflow Getting Started Detailed landing content for Workflow Getting Started, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpprocessAndWorkflowAutomationworkflowGettingStarted",
-      "Workflow Getting Started"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpprocessAndWorkflowAutomationworkflowGettingStarted"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record279": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpprocessandworkflowautomationhumantaskflow",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpprocessAndWorkflowAutomationhumanTaskFlow",
-    "title": "Human Task Flow",
-    "summary": "Detailed landing content for Human Task Flow, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Human Task Flow Detailed landing content for Human Task Flow, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpprocessAndWorkflowAutomationhumanTaskFlow",
-      "Human Task Flow"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpprocessAndWorkflowAutomationhumanTaskFlow"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record280": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpprocessandworkflowautomationbusinessvalueandadoption",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpprocessAndWorkflowAutomationbusinessValueAndAdoption",
-    "title": "Business Value and Adoption",
-    "summary": "Detailed landing content for Business Value and Adoption, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Business Value and Adoption Detailed landing content for Business Value and Adoption, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpprocessAndWorkflowAutomationbusinessValueAndAdoption",
-      "Business Value and Adoption"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpprocessAndWorkflowAutomationbusinessValueAndAdoption"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record281": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrppipelineandbusinesslogicorchestrationpipelineexecutionmodel",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrppipelineAndBusinessLogicOrchestrationpipelineExecutionModel",
-    "title": "Pipeline Execution Model",
-    "summary": "Detailed landing content for Pipeline Execution Model, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Pipeline Execution Model Detailed landing content for Pipeline Execution Model, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrppipelineAndBusinessLogicOrchestrationpipelineExecutionModel",
-      "Pipeline Execution Model"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrppipelineAndBusinessLogicOrchestrationpipelineExecutionModel"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record282": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpcronandscheduledautomationcronoperations",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpcronAndScheduledAutomationcronOperations",
-    "title": "Cron Operations",
-    "summary": "Detailed landing content for Cron Operations, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Cron Operations Detailed landing content for Cron Operations, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpcronAndScheduledAutomationcronOperations",
-      "Cron Operations"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpcronAndScheduledAutomationcronOperations"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record283": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpcronandscheduledautomationprocessandcronruntimeboundary",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpcronAndScheduledAutomationprocessAndCronRuntimeBoundary",
-    "title": "Process and Cron Runtime Boundary",
-    "summary": "Detailed landing content for Process and Cron Runtime Boundary, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Process and Cron Runtime Boundary Detailed landing content for Process and Cron Runtime Boundary, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpcronAndScheduledAutomationprocessAndCronRuntimeBoundary",
-      "Process and Cron Runtime Boundary"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpcronAndScheduledAutomationprocessAndCronRuntimeBoundary"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record284": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpcronandscheduledautomationscheduledautomationtriggers",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpcronAndScheduledAutomationscheduledAutomationTriggers",
-    "title": "Scheduled Automation Triggers",
-    "summary": "Detailed landing content for Scheduled Automation Triggers, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Scheduled Automation Triggers Detailed landing content for Scheduled Automation Triggers, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpcronAndScheduledAutomationscheduledAutomationTriggers",
-      "Scheduled Automation Triggers"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpcronAndScheduledAutomationscheduledAutomationTriggers"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record285": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpdataimportexportandmigrationdatamovementandmigration",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpdataImportExportAndMigrationdataMovementAndMigration",
-    "title": "Data Movement and Migration",
-    "summary": "Detailed landing content for Data Movement and Migration, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Data Movement and Migration Detailed landing content for Data Movement and Migration, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpdataImportExportAndMigrationdataMovementAndMigration",
-      "Data Movement and Migration"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpdataImportExportAndMigrationdataMovementAndMigration"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record286": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpsystemintegrationandexternalconnectivityactionadapterintegration",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpsystemIntegrationAndExternalConnectivityactionAdapterIntegration",
-    "title": "Action Adapter Integration",
-    "summary": "Detailed landing content for Action Adapter Integration, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Action Adapter Integration Detailed landing content for Action Adapter Integration, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpsystemIntegrationAndExternalConnectivityactionAdapterIntegration",
-      "Action Adapter Integration"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpsystemIntegrationAndExternalConnectivityactionAdapterIntegration"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record287": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpoperationsmonitoringandrecoveryruntimeanddevops",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpoperationsMonitoringAndRecoveryruntimeAndDevops",
-    "title": "Runtime and DevOps",
-    "summary": "Detailed landing content for Runtime and DevOps, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Runtime and DevOps Detailed landing content for Runtime and DevOps, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpoperationsMonitoringAndRecoveryruntimeAndDevops",
-      "Runtime and DevOps"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpoperationsMonitoringAndRecoveryruntimeAndDevops"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record288": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpoperationsmonitoringandrecoverylocalverificationandacceptance",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpoperationsMonitoringAndRecoverylocalVerificationAndAcceptance",
-    "title": "Local Verification and Acceptance",
-    "summary": "Detailed landing content for Local Verification and Acceptance, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Local Verification and Acceptance Detailed landing content for Local Verification and Acceptance, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpoperationsMonitoringAndRecoverylocalVerificationAndAcceptance",
-      "Local Verification and Acceptance"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpoperationsMonitoringAndRecoverylocalVerificationAndAcceptance"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record289": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpoperationsmonitoringandrecoverycommerceenterpriseoperations",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpoperationsMonitoringAndRecoverycommerceEnterpriseOperations",
-    "title": "Commerce Enterprise Operations",
-    "summary": "Detailed landing content for Commerce Enterprise Operations, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Commerce Enterprise Operations Detailed landing content for Commerce Enterprise Operations, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpoperationsMonitoringAndRecoverycommerceEnterpriseOperations",
-      "Commerce Enterprise Operations"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpoperationsMonitoringAndRecoverycommerceEnterpriseOperations"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record290": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpoperationsmonitoringandrecoveryprocessincidentrecovery",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpoperationsMonitoringAndRecoveryprocessIncidentRecovery",
-    "title": "Process Incident Recovery",
-    "summary": "Detailed landing content for Process Incident Recovery, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Process Incident Recovery Detailed landing content for Process Incident Recovery, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpoperationsMonitoringAndRecoveryprocessIncidentRecovery",
-      "Process Incident Recovery"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpoperationsMonitoringAndRecoveryprocessIncidentRecovery"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record291": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpoperationsmonitoringandrecoveryprocessruntimetopology",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpoperationsMonitoringAndRecoveryprocessRuntimeTopology",
-    "title": "Process Runtime Topology",
-    "summary": "Detailed landing content for Process Runtime Topology, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Process Runtime Topology Detailed landing content for Process Runtime Topology, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpoperationsMonitoringAndRecoveryprocessRuntimeTopology",
-      "Process Runtime Topology"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpoperationsMonitoringAndRecoveryprocessRuntimeTopology"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record292": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpqualitytestingandcertificationprocessregressionevidence",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpqualityTestingAndCertificationprocessRegressionEvidence",
-    "title": "Process Regression Evidence",
-    "summary": "Detailed landing content for Process Regression Evidence, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Process Regression Evidence Detailed landing content for Process Regression Evidence, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpqualityTestingAndCertificationprocessRegressionEvidence",
-      "Process Regression Evidence"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpqualityTestingAndCertificationprocessRegressionEvidence"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record293": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpdocumentationmanagementdocumentationcontractandquality",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpdocumentationManagementdocumentationContractAndQuality",
-    "title": "Documentation Contract and Quality",
-    "summary": "Detailed landing content for Documentation Contract and Quality, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Documentation Contract and Quality Detailed landing content for Documentation Contract and Quality, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpdocumentationManagementdocumentationContractAndQuality",
-      "Documentation Contract and Quality"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpdocumentationManagementdocumentationContractAndQuality"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record294": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpdocumentationmanagementdocumentationruntimeandpublishing",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpdocumentationManagementdocumentationRuntimeAndPublishing",
-    "title": "Documentation Runtime and Publishing",
-    "summary": "Detailed landing content for Documentation Runtime and Publishing, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Documentation Runtime and Publishing Detailed landing content for Documentation Runtime and Publishing, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpdocumentationManagementdocumentationRuntimeAndPublishing",
-      "Documentation Runtime and Publishing"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpdocumentationManagementdocumentationRuntimeAndPublishing"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record295": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpreleasestagingandpublicationcontentpublicationlifecycle",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpreleaseStagingAndPublicationcontentPublicationLifecycle",
-    "title": "Content Publication Lifecycle",
-    "summary": "Detailed landing content for Content Publication Lifecycle, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Content Publication Lifecycle Detailed landing content for Content Publication Lifecycle, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpreleaseStagingAndPublicationcontentPublicationLifecycle",
-      "Content Publication Lifecycle"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpreleaseStagingAndPublicationcontentPublicationLifecycle"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record296": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpaianddevelopertoolingaianddeveloperenablement",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpaiAndDeveloperToolingaiAndDeveloperEnablement",
-    "title": "AI and Developer Enablement",
-    "summary": "Detailed landing content for AI and Developer Enablement, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "AI and Developer Enablement Detailed landing content for AI and Developer Enablement, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpaiAndDeveloperToolingaiAndDeveloperEnablement",
-      "AI and Developer Enablement"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpaiAndDeveloperToolingaiAndDeveloperEnablement"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record297": {
-    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardgrpreferencesourcemapandglossary",
-    "product": "nodicsDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "nodicsDocsDashboardGrpreferencesourceMapAndGlossary",
-    "title": "Source Map and Glossary",
-    "summary": "Detailed landing content for Source Map and Glossary, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "searchText": "Source Map and Glossary Detailed landing content for Source Map and Glossary, including business purpose, technical ownership, customization routes, and validation evidence for child topics.",
-    "keywords": [
-      "GROUP",
-      "nodicsDocsNodeGrpreferencesourceMapAndGlossary",
-      "Source Map and Glossary"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "nodicsDocsNodeGrpreferencesourceMapAndGlossary"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record298": {
+  "record191": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkOverview",
     "title": "What is Nodics?",
-    "summary": "Business, beginner, and adoption-oriented introduction to the Nodics enterprise framework.",
-    "searchText": "What is Nodics? Business, beginner, and adoption-oriented introduction to the Nodics enterprise framework. # What is Nodics?\n\nNodics is a modular enterprise application framework for building serious\nbusiness platforms without asking every project to reinvent the same\narchitecture. It gives teams a governed backend foundation for APIs, data,\nconfiguration, authentication, permissions, runtime composition, imports,\nexports, content management, scheduled work, events, testing, and operational\ncontracts.\n\nIn plain language, Nodics is an application factory. A factory does not decide\nwhich product your company sells. It gives you repeatable equipment, safety\nrules, quality checks, extension points, and production discipline. Your\nproject still owns its business rules, customer-specific behavior, integrations,\nand user experiences.\n\n## The problem Nodics solves\n\nModern teams can create an MVP very quickly, especially with AI-assisted\ndevelopment. The hard part starts when that MVP becomes a real product. Code\nthat was written only to prove an idea often has no strong module boundaries,\nno tenant model, no safe customization path, no consistent API contracts, weak\nsecurity, duplicated configuration, and limited tests. Every new customer adds\nanother exception. Every exception makes later releases slower and riskier.\n\nNodics turns those repeated scaling problems into explicit contracts. A feature\nbelongs to an owning capability. Configuration has layered scope. Services,\nschemas, routes, APIs, and generated artifacts are created in known places.\nCustomer customizations load after framework behavior instead of editing the\nframework directly. Axis renders employee workspaces, but backend modules keep\nauthority over data and operations.\n\n## From vibe-coded MVP to scalable product\n\nAI-assisted development can create an MVP quickly. That is a major advantage\nfor founders, product teams, and delivery partners because it shortens the\ndistance between idea and working experience. The problem is that a fast MVP is\nnot automatically a scalable product.\n\nMany AI-built or vibe-coded MVPs work well for the first demo but become\nexpensive when the product needs:\n\n- multiple tenants, enterprises, brands, or regions;\n- secure employee and customer access;\n- governed schemas, APIs, imports, exports, and media;\n- content and operational administration;\n- repeatable deployment, monitoring, logs, and rollback;\n- safe customizations for different customers;\n- documentation that explains ownership rather than only files;\n- tests and contracts that let the system change without breaking silently.\n\nNodics addresses this gap by giving the MVP a durable foundation. The customer\njourney can still move fast, but the implementation is organized through\nframework modules, project-owned extensions, runtime composition, data\nreleases, Axis administration, and documentation ownership. AI remains useful,\nbut it works inside a governed architecture instead of becoming the hidden\nauthor of an unmaintainable codebase.\n\nThe promise is simple: use AI to discover and prove the product faster, then\nuse Nodics to make that product explainable, secure, operable, and ready to\nscale.\n\n## Why a business should care\n\nFor a business evaluator, the important point is not the folder structure. The\nimportant point is that Nodics helps teams move from idea to production without\nthrowing away the architecture. It supports faster delivery while keeping\ngovernance, maintainability, tenant isolation, operational visibility, and safe\ncustomer-specific change in view from the beginning.\n\nThis matters when an organization wants one platform to support many\nenterprises, tenants, brands, websites, internal teams, or partner\ncustomizations. The modular approach reduces the cost of change because a\nproject can extend or configure the owner of a behavior instead of copying code\ninto another place. That lowers upgrade risk, reduces duplicate authority, and\nhelps teams reason about who owns what.\n\n## Executive summary for a non-technical reader\n\nNodics is trying to solve a familiar enterprise problem: companies want fast\ndelivery, but they also need security, governance, customization, operations,\nand upgradeability. Many teams get speed by building one large application.\nThat feels good in the first few weeks, then becomes expensive when the second\ncustomer, second tenant, second deployment, or second integration arrives.\n\nNodics takes a different approach. It gives the project a modular backend\nfoundation from the start. Each capability has a named owner. Customer\nprojects extend the framework instead of modifying shared framework source.\nAxis gives business users and administrators one browser workspace, but the\nbrowser does not become the authority for business rules. Content, media,\nimports, documentation, scheduled jobs, identity, and module lifecycle remain\nbackend-governed.\n\nThe business value is not only \"we can build screens.\" The business value is\n\"we can build screens, change them safely, support many customers, explain the\nsystem to new people, recover from mistakes, and keep upgrading the platform.\"\n\n```mermaid\nflowchart LR\n  Speed[\"Fast delivery\"] --> Risk[\"Growth risk\"]\n  Risk --> Problems[\"Forks, duplicated rules, hidden config, weak ownership\"]\n  Problems --> Nodics[\"Nodics modular contracts\"]\n  Nodics --> Outcome[\"Reusable framework + project customization + governed operations\"]\n```\n\n## Beginner mental model\n\nImagine a company needs employee login, content management, imports, media,\nscheduled jobs, and APIs. Without a framework, the first team might build login\none way, the second team might build imports another way, and the third team\nmight put customer-specific rules directly into shared code. The application\nworks for a while, then becomes difficult to secure, test, deploy, or extend.\n\nWith Nodics, those concerns have named owners. Profile owns employee identity.\nWCMS owns CMS content. Media owns media records and lifecycle. Cron owns\nscheduled work. BackOffice exposes operational metadata. Axis renders the user\ninterface by consuming authorized backend contracts. A customer project, such\nas Kickoff, composes these capabilities and adds project behavior after the\nframework modules.\n\n## Developer mental model\n\nA developer should read Nodics as a set of ownership questions:\n\n1. Which functional module owns the business capability?\n2. Which technical module owns the route, schema, service, data release, or\n   renderer metadata?\n3. Is the requested behavior already configurable?\n4. If code is required, should it live in framework source or a customer\n   extension module?\n5. Which server graph must load the change?\n6. Which generated artifacts must be regenerated from source?\n7. Which tests prove default behavior and customization behavior?\n\nThis is why Nodics asks developers and AI tools to avoid nearest-file editing.\nThe correct file is the one owned by the correct capability, not the first file\nthat happens to contain a similar word.\n\n## DevOps mental model\n\nAn operator sees Nodics as a set of runtime graphs and release artifacts:\n\n- Platform handles human login, Profile, BackOffice, registry, and API\n  discovery.\n- WCMS handles sites, catalogs, pages, components, media, and documentation\n  delivery.\n- Cron handles scheduled/background execution.\n- Customer projects declare which modules and environments load.\n- Data releases are immutable and checksum-governed.\n- Public properties, private properties, environment overrides, and server\n  overrides must remain explainable.\n\nThe operational benefit is traceability. When something goes wrong, the team\ncan ask: which module owns it, which server loaded it, which release imported\nit, which property changed it, and which rollback path is safe?\n\n## What teams can build\n\nNodics can be used as the backend foundation for multi-tenant business APIs,\nemployee BackOffice applications, CMS-driven websites, governed content and\nmedia operations, data import/export flows, scheduled jobs, and customer\nplatforms that need safe extension. The framework supplies reusable capability\ncontracts; the adopting project supplies the business-specific behavior and\ndeployment decisions.\n\nThe current reference workspace demonstrates this through `nodics.kickoff`,\nwhich starts local Platform, WCMS, and Process servers, and through `nodics.axis`,\nwhich logs employees in and renders discovered workspaces and documentation.\n\n## How to read Nodics if you are new\n\nYou do not need to understand every module, database collection, service, or\nruntime property on the first day. Nodics documentation is intended to be read\nas a journey.\n\n| If you are... | Start with this question | Then read |\n| --- | --- | --- |\n| A business sponsor | What problem does Nodics solve and what risk does it reduce? | This overview, then the local quick start so you can see Axis, module registry, imports, WCMS, media, and documentation. |\n| A developer | How do I run it and where do I customize safely? | Local quick start, modular architecture, customization guide, then module-specific pages. |\n| An architect | How are capability ownership, runtime loading, and extension boundaries enforced? | Modular architecture, functional module registry, runtime and DevOps operations. |\n| A business administrator | What screens and actions can I use from Axis? | Axis documentation, Imports and Exports, Module Registry, WCMS, Media. |\n| A DevOps engineer | Which servers, dependencies, secrets, and recovery steps matter? | Runtime and DevOps operations, local quick start, import/export lifecycle, logs and health checks. |\n| A QA engineer | What should be verified before a feature is accepted? | Capability documentation, module tests, API checks, import validation, and Axis route behavior. |\n\nThis sequence matters. A beginner should first understand the product story,\nthen the running experience, then the customization model, and only then the\ndeep internals.\n\n```mermaid\nflowchart TD\n  A[\"Understand the business problem\"] --> B[\"Run Kickoff locally\"]\n  B --> C[\"Login to Axis\"]\n  C --> D[\"Open Documentation and Module Registry\"]\n  D --> E[\"Import initialization, core, sample, and documentation data\"]\n  E --> F[\"Study module ownership\"]\n  F --> G[\"Customize through project modules or configuration\"]\nG --> H[\"Validate with tests, API checks, and runtime evidence\"]\n```\n\n## How the documentation is organized\n\nNodics documentation is intentionally separated by ownership:\n\n| Documentation product | Owner | What belongs there |\n| --- | --- | --- |\n| Framework | `nodics.docs` | Framework concepts, module architecture, quick start, customization model, runtime operations, and standard module guidance. |\n| Nodics Axis | `nodics.platform/modules/axis` | Axis product behavior, browser architecture, UI workspaces, renderer contracts, and Axis-specific backend content. |\n| Nodics Kickoff | `nodics.kickoff` | Reference project setup, local servers, project modules, sample customization, and project acceptance. |\n| Swagger/API | Runtime modules | OpenAPI/API contracts exposed by registered backend modules. |\n\nAxis renders these products together, but their source ownership stays\nseparate. This avoids a common documentation mistake where the frontend\nrepository becomes a dumping ground for every page users can see.\n\n## A day-one business scenario\n\nImagine a company wants to launch a partner portal. The portal needs employee\nlogin, business-unit onboarding, content pages, media uploads, scheduled jobs,\ndocumentation, and customer-specific changes. A quick team can build\nthose pieces directly into one application. That works until another customer\nasks for different behavior, another region needs different rules, operations\nasks for independent scaling, and security asks who owns each API.\n\nWith Nodics, the first conversation changes:\n\n1. Platform owns employee identity, Profile, BackOffice discovery, and module\n   registration.\n2. WCMS owns websites, catalogs, pages, components, routes, documentation\n   content, and media lifecycle.\n3. Cron owns scheduled work.\n4. Axis renders authorized business workspaces from backend contracts.\n5. The customer project owns project-specific configuration, content, docs,\n   and custom modules.\n\nThe business result is not only a running portal. The result is a portal that\nhas an upgrade path, a customization path, and an operational model from the\nbeginning.\n\n## A day-one developer scenario\n\nA new developer should be able to clone the framework, clone the reference\nproject, start the servers, and see the product before writing code.\n\nThe flow is:\n\n1. Clone or open `nodics.ai`, `nodics.kickoff`, and `nodics.axis`.\n2. In `nodics.kickoff`, set `NODICS_FRAMEWORK_ROOT` to the framework checkout.\n3. Run the framework configuration command and install dependencies.\n4. Start Platform, WCMS, and Cron from Kickoff.\n5. Start Axis.\n6. Log in as the reference admin user.\n7. Open Module Registry to see which functional modules are mandatory,\n   registered, active, optional, or available.\n8. Open Imports and Exports to validate and install backend-owned data packs.\n9. Open Documentation to read Framework, API, Axis, and Kickoff content.\n10. Make the first customization in the customer project rather than editing\n    framework source.\n\nThe developer learns by watching the system run. Folder structure becomes much\neasier after the runtime behavior is visible.\n\n## A day-one operations scenario\n\nAn operator should not have to inspect business source code to understand the\nruntime. Nodics separates the major operational questions:\n\n- Platform server answers login, profile, BackOffice, registry, and API\n  discovery questions.\n- WCMS server answers site, catalog, page, component, route, media, and\n  documentation delivery questions.\n- Process server answers workflow and scheduled job questions.\n- Kickoff declares which framework modules the local customer project loads.\n- Axis is a frontend renderer and must not own backend data records.\n\nFor local development the servers can run on one machine. For a larger\ndeployment they can move into separate processes or infrastructure units. The\nfunctional ownership model remains stable even when the physical topology\nchanges.\n\n## What Nodics is not\n\nNodics is not a finished industry product that removes the need for business\nanalysis. It is not a frontend repository. It is not permission to access\nanother module's database directly. It does not make operations automatic:\ncredentials, infrastructure, monitoring, backup, scaling, and production\nsecurity remain deployment responsibilities.\n\nThe promise is more practical: Nodics gives a project a governed model for\nbuilding and evolving enterprise software without scattering ownership.\n\n## The Nodics idea in one picture\n\n![Nodics architecture overview](../assets/images/nodics-architecture.jpg \"Architecture diagram retained as governed documentation evidence\")\n\n```mermaid\nflowchart LR\n  Business[\"Business need<br/>customer, tenant, site, workflow\"] --> Project[\"Customer project<br/>nodics.kickoff or partner project\"]\n  Project --> Runtime[\"Runtime servers<br/>Platform, WCMS, Cron\"]\n  Runtime --> Framework[\"Nodics framework modules<br/>Core, Platform, WCMS, Cron\"]\n  Framework --> Contracts[\"Governed contracts<br/>APIs, schemas, routes, services, imports\"]\n  Contracts --> Axis[\"Axis BackOffice<br/>renders authorized capability metadata\"]\n  Contracts --> Apps[\"Customer apps and sites<br/>consume safe backend APIs\"]\n```\n\nRead the diagram from left to right. A company starts with a business need.\nThe customer project expresses that need without editing framework source. The\nruntime servers load the required framework capabilities. Those capabilities\npublish governed contracts. Axis and other applications consume those\ncontracts instead of guessing which modules exist or which database records are\nsafe to touch.\n\n## Business mindset: why Nodics can reduce cost\n\nA business usually pays for software twice. The first cost is building the\nfeature. The second cost is living with it: support, upgrades, security fixes,\nnew customers, new countries, new integrations, and production incidents.\nNodics is designed to reduce the second cost by making ownership visible.\n\n![Enterprise tenant design](../assets/images/enterprise-tenant-design.jpg \"Enterprise and tenant isolation reference from the archived documentation set\")\n\nThe enterprise/tenant picture is useful for a beginner because it shows why\nNodics starts with context instead of adding context later. A project may serve\none company in local development, but the framework must still be able to\nreason about many enterprises, tenants, databases, brands, and operational\nboundaries. That is why Profile, BackOffice, APIs, imports, content, media,\nand Cron jobs must always preserve enterprise and tenant context in their\ncontracts.\n\n| Business concern | How Nodics helps |\n| --- | --- |\n| Multiple enterprises and tenants | Capabilities are built with enterprise, tenant, permission, and runtime context in mind instead of adding it later as an afterthought. |\n| Customer-specific customization | A project can extend a framework capability in a later module layer while preserving the same functional module identity. |\n| Faster onboarding | Kickoff gives a runnable reference project so a partner can see Platform, WCMS, Cron, Axis, imports, and documentation before writing custom code. |\n| Lower upgrade risk | Framework code remains separate from customer code. Custom behavior is composed through runtime extension instead of direct framework edits. |\n| Operational confidence | Imports, checksums, module registration, API exposure, and runtime status are explicit contracts that can be tested and monitored. |\n\nFor a non-technical evaluator, the key question is: “Can this platform grow\nwithout every customer becoming a fork?” Nodics answers that by separating\nframework authority, customer authority, runtime composition, and frontend\nrendering.\n\n## How Nodics compares with common build approaches\n\nThis is not a claim that every other platform or project is wrong. Many large\nenterprise platforms teach similar ideas through product guides, administrator\nguides, developer guides, extension guides, API references, and operations\nguides. Nodics follows that same reader-friendly discipline, but its own design\nchoice is to keep functional module ownership, runtime composition, and\ncustomer customization explicit from the start.\n\n| Common approach | What often goes wrong | Nodics principle |\n| --- | --- | --- |\n| One-off application | Fast first delivery, then scattered ownership and painful change. | Start with named functional modules and explicit runtime loading. |\n| Customer fork | One customer is happy, but upgrades become expensive. | Keep framework source separate; customize in later-loaded project modules. |\n| Frontend-owned business behavior | UI becomes the authority for what is installed, active, or allowed. | Axis renders backend-owned capability contracts. |\n| Ungoverned microservices | Many services exist, but ownership, data contracts, and setup become unclear. | Functional modules own APIs, schemas, data releases, docs, and tests. |\n| Configuration as hidden environment magic | Local, test, and production drift without traceability. | Use layered public/private properties and server/environment overrides. |\n| Documentation after delivery | New users cannot understand why the system exists or how to run it. | Documentation is part of feature acceptance and content-pack ownership. |\n\n## The learning path from simple to deep\n\nNodics documentation should grow from simple questions to deeper capability\nguides:\n\n```mermaid\nflowchart LR\n  Intro[\"What is Nodics?\"] --> Quick[\"Local quick start\"]\n  Quick --> Axis[\"Explore Axis\"]\n  Axis --> Registry[\"Module registry\"]\n  Registry --> Imports[\"Imports and exports\"]\n  Imports --> Modules[\"Module guides\"]\n  Modules --> Custom[\"Customization\"]\n  Custom --> Ops[\"Runtime and operations\"]\n  Ops --> API[\"Swagger and API reference\"]\n```\n\nThe order is intentional. A reader first learns the promise, then sees the\nsystem, then learns how modules are registered and data is initialized, then\ngoes deeper into implementation and operations.\n\n## Developer mindset: how to think before coding\n\nWhen a developer adds a feature, the first question should not be “Where can I\nmake this work fastest?” The first question should be “Who owns this behavior?”\n\nUse this simple decision path:\n\n1. If the behavior is required by every runtime, it probably belongs in Core.\n2. If it is employee identity, onboarding, authorization, or BackOffice\n   metadata, it belongs in Platform.\n3. If it is site, catalog, page, component, route, documentation content, or\n   media lifecycle, it belongs in WCMS or the backend module/project that owns\n   that content.\n4. If it is scheduled or background work, it belongs in Cron or a project\n   module loaded by Cron.\n5. If it is browser rendering only, it belongs in Axis.\n6. If it is customer-specific, it belongs in the customer project or customer\n   extension module, not inside reusable framework source.\n\nExample: changing the Axis login logo is not the same as changing employee\nauthentication. The visual component can be configured through WCMS/Axis-owned\ncontent. The actual authentication contract stays in Platform/Profile.\n\n## DevOps mindset: why runtime boundaries matter\n\nProduction teams need to answer practical questions:\n\n- Which server owns this API?\n- Which modules were loaded into this server?\n- Which release of initialization data was imported?\n- Which credentials are public configuration and which are private secrets?\n- Can we restart a server without losing module registration state?\n- Can we rebuild an environment from source-controlled module data?\n\nNodics makes these questions first-class. Runtime servers declare what they\nextend. Data releases have manifests and checksums. Functional module\nregistration is persisted. Axis discovers authorized capabilities from\nBackOffice instead of using hardcoded assumptions.\n\nFor production, this means Platform, WCMS, Cron, and additional functional modules\ncan run together for a small deployment or separately for a larger topology.\nThe contract remains the same even when the physical deployment changes.\n\n## A beginner example\n\nSuppose a partner wants a small internal portal with login, documentation,\nmedia upload, and one nightly cleanup job.\n\nThe beginner temptation is to create one application, one database connection,\none upload folder, and one timer. It works locally, then becomes painful when a\nsecond tenant, second environment, or custom customer rule arrives.\n\nWith Nodics, the same solution is expressed differently:\n\n- Platform handles employee login and BackOffice capability discovery.\n- WCMS handles documentation pages, content catalogs, routes, and media.\n- Cron handles the nightly cleanup job.\n- Kickoff starts the local servers and contributes project-owned docs.\n- Axis renders what the backend says is authorized and active.\n\nNothing in this example requires a beginner to understand every internal\ntechnical module on day one. They can start with the functional module picture\nand then go deeper module by module.\n\n## Common mistakes\n\n- Thinking Nodics is only a folder structure. The important contract is\n  ownership: which module owns behavior, data, APIs, documentation, and\n  runtime responsibility.\n- Treating Axis as the business authority because users see the screen there.\n  Axis renders; backend modules own operations, content data, permissions, and\n  imported records.\n- Editing framework source for a customer-specific change before checking\n  configuration, project modules, and customer extension modules.\n- Reading every technical module before running the reference product. A\n  beginner learns faster by starting the system, logging into Axis, importing\n  content, then studying owners.\n- Assuming a microservice topology means every capability must be deployed as\n  a separate process on day one. Nodics separates ownership first; deployment\n  topology can evolve.\n- Ignoring DevOps, QA, and documentation because the happy path works locally.\n  Enterprise frameworks are judged by upgrade, recovery, security, and\n  maintainability as much as by first-run speed.\n\n## Verification\n\nThe introduction is proven when a new reader can connect the story to a\nrunning system. The minimum local proof is to configure the reference customer\nproject, start Platform and WCMS, start Axis, log in as the reference admin,\nopen Documentation, inspect Module Registry, and validate or install the\navailable data releases. That proves the product story is not detached from\nruntime behavior.\n\nFor a developer or AI contributor, the verification goes deeper: read the root\n`AGENTS.md`, identify the owning module before editing, regenerate generated\nartifacts from source definitions, run documentation and AI governance checks,\nand use the fresh local acceptance script when the change affects import,\nruntime, registry, Axis, or documentation behavior. A contribution is not\nready if it can explain the code but cannot explain the business outcome,\nmodule owner, runtime graph, and acceptance evidence.\n\n## Next actions\n\n- Read modular architecture to understand ownership and runtime composition.\n- Follow the local quick start to run Kickoff and Axis.\n- Read customization guidance before changing framework behavior.\n- Read runtime and DevOps operations before planning production topology.\n",
+    "summary": "Introductory definition of Nodics, its enterprise purpose, and the first mental model for business, developer, and operator readers.",
+    "searchText": "What is Nodics? Introductory definition of Nodics, its enterprise purpose, and the first mental model for business, developer, and operator readers. # What is Nodics?\n\nNodics is a modular enterprise application framework for building governed\nbusiness platforms without forcing every project to reinvent authentication,\ncontent management, APIs, configuration, data import, publishing, workflow,\nscheduled jobs, media, documentation, and operational contracts. It is not a\nsingle finished storefront or one fixed business product. It is the framework\nfoundation that customer projects, internal tools, public sites, accelerators,\nand solution use cases can build on.\n\nFor a beginner, the easiest mental model is this: Nodics gives the reusable\nenterprise machinery, while the customer project supplies the business-specific\nrules, content, branding, integrations, and runtime decisions. Axis is the\nauthenticated business workspace. Nexus and Agora are public-facing\napplications that consume approved Online content and APIs. Backend modules\nremain the authority for data, permissions, workflows, routes, and publication.\n\n## Business definition\n\nNodics helps teams move faster without giving up enterprise governance. A\nbusiness can start with a reference project, initialize the required data,\npublish public content, then customize behavior through Axis, configuration,\nprovider adapters, services, pipelines, and project modules. The value is not\nonly speed. The value is speed with a path to operate, secure, explain,\nextend, test, and upgrade the platform.\n\n| Business question | Nodics answer |\n| --- | --- |\n| What is being adopted? | A modular framework for enterprise application delivery. |\n| Who uses it? | Business users, administrators, developers, operators, QA owners, partners, and AI-assisted delivery tools. |\n| What does it reduce? | Repeated architecture work, customer forks, hidden configuration, unclear ownership, and fragile runtime changes. |\n| What does it enable? | Faster setup, governed customization, publishable content, reusable capability modules, and clearer production support. |\n\n## Technical definition\n\nTechnically, Nodics is a layered runtime. Framework modules live in\n`nodics.ai`. Customer projects such as Kickoff declare which framework modules\nand project modules load into Platform, WCMS, Process, and other runtime\nservers. Axis renders authorized capabilities from backend contracts. CMS\ncontent, documentation, storefront pages, media, routes, and publication state\ncome from backend-owned content packs and catalogs.\n\n```mermaid\nflowchart LR\n  Framework[\"Nodics framework modules\"] --> Project[\"Customer project\"]\n  Project --> Runtime[\"Platform, WCMS, Process runtime\"]\n  Runtime --> Axis[\"Axis business workspace\"]\n  Runtime --> PublicApps[\"Nexus, Agora, partner apps\"]\n  Project --> Extensions[\"Configuration, providers, services, pipelines\"]\n```\n\n## What teams can build\n\nTeams can build employee BackOffice applications, public corporate sites,\nCMS-driven storefronts, commerce accelerators, process automation, scheduled\njobs, integrations, documentation portals, data engineering solutions, and\ncustomer-specific project layers. The framework gives common contracts; the\nproject decides which business journey is needed.\n\nNodics is also meant to work well with AI-assisted development. AI can help\nmove quickly, but the framework keeps ownership explicit so generated changes\ndo not scatter behavior across the wrong modules.\n\n## Where to continue\n\nUse the sibling pages in this group as the first reader path. Read **Why Nodics\nExists** for the business problem and industry context. Read **How Nodics\nWorks** for runtime, module, Axis, Nexus, Agora, and backend ownership. Read\n**Adoption and First Journey** for the first setup and verification path.\n\n## Common mistakes\n\n- Treating Nodics as one application instead of a framework used by many\n  applications and solution use cases.\n- Assuming Axis owns backend records because administrators use Axis screens.\n- Expecting Nexus or Agora to show Staged content before Online publication.\n- Customizing framework source before checking project-layer extension paths.\n- Reading only technical modules before understanding the business journey.\n\n## Verification\n\nThis introduction is correct when a new business user can explain what Nodics\nis, a developer can identify framework versus project ownership, and an\noperator can explain why public apps only render approved Online content. The\nlocal proof is to start the reference workspace, initialize Axis, register\nrequired capabilities, import content packs, approve publication where needed,\nand verify Axis, Nexus, and Agora from the browser.\n",
     "keywords": [
       "nodics-framework",
       "framework-value-and-adoption",
       "what-is-nodics",
+      "enterprise-framework",
       "Nodics Framework",
       "Framework Value and Adoption",
-      "What is Nodics?"
+      "What is Nodics?",
+      "Enterprise framework"
     ],
     "facets": {
       "section": "nodics-framework",
-      "group": "framework-value-and-adoption",
+      "group": "nodics-framework",
+      "navigationDepth": 2,
       "documentType": "overview",
       "audience": [
         "business",
@@ -11497,25 +7620,176 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record299": {
+  "record192": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkwhynodicsexists",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataframeworkWhyNodicsExists",
+    "title": "Why Nodics Exists",
+    "summary": "Industry problems, business value, and why Nodics turns fast delivery into governed enterprise software.",
+    "searchText": "Why Nodics Exists Industry problems, business value, and why Nodics turns fast delivery into governed enterprise software. # Why Nodics Exists\n\nNodics exists because most enterprise software teams are asked to move fast and\nstay governed at the same time. That sounds simple in planning meetings, but it\nbecomes difficult when a product starts serving more than one customer, tenant,\nbrand, region, channel, or operational team. A beginner usually sees the first\nworking screen. A business sponsor sees the market opportunity. A developer\nsees the code that must survive the second and third wave of requirements. An\noperator sees the production system that must be explainable when something\nchanges at runtime.\n\nThe framework was created to keep those viewpoints connected. It gives a\nproject named capability owners, runtime composition, configuration layering,\ncontent publication, import/export discipline, extension points, and\ndocumentation contracts so teams can build quickly without losing the path to\nscale.\n\n## Business problem\n\nMany teams can now create a first product experience very quickly, especially\nwith AI-assisted development. The difficult part is what happens after the\nfirst demo. Customers ask for custom rules. Security asks for permission\nboundaries. Operations asks how to rebuild an environment. QA asks what must be\ntested. Business users ask where they can update content, configuration, or\nworkflow without waiting for a full engineering release.\n\nNodics treats those questions as product requirements, not afterthoughts. A\nbusiness can use the framework to reduce the gap between first delivery and\nenterprise readiness.\n\n| Enterprise pressure | Common failure | Nodics response |\n| --- | --- | --- |\n| Faster go to market | One application grows without clear ownership. | Functional capabilities own APIs, schemas, data, documentation, and runtime behavior. |\n| Customer customization | Teams fork framework code for every customer. | Project modules extend or override behavior after framework modules load. |\n| Runtime change | Operators edit node-local settings manually. | Governed configuration and events propagate changes across running nodes. |\n| Public content | Draft and Online content become mixed. | Staged, approval, Online, access policy, and audit remain explicit. |\n| Supportability | New developers cannot tell where behavior lives. | Documentation and source maps explain business names and technical owners. |\n\n## From fast MVP to durable platform\n\nA fast MVP is useful because it proves demand. It becomes expensive when the\nimplementation has no stable model for ownership, extension, permissions,\ndata, media, imports, workflow, and runtime operation. The team then pays again\nto restructure the product while customers are already using it.\n\nNodics tries to avoid that rewrite. The same business idea can start quickly,\nbut it is placed inside a framework that already expects multiple servers,\npublishable content, reusable modules, generated contracts, and project-layer\ncustomization. This lets developers and AI tools build inside guardrails\ninstead of creating hidden behavior wherever the first screen happened to work.\n\n```mermaid\nflowchart LR\n  Idea[\"Business idea\"] --> MVP[\"Fast MVP\"]\n  MVP --> Pressure[\"Customer, tenant, security, operations pressure\"]\n  Pressure --> Contract[\"Nodics ownership and runtime contracts\"]\n  Contract --> Scale[\"Reusable product with project customization\"]\n```\n\n## Why a business should care\n\nFor a business reader, the value is not only that Nodics can produce APIs or\nscreens. The value is that the product can continue changing after the first\nrelease. Teams can add a new site, publish new content, register another\ncapability, switch a provider, add a project-layer service, or prepare a new\naccelerator without making the original framework unrecognizable.\n\nThat matters for revenue because delivery speed is only useful when the\nplatform can keep accepting change. A company can start a customer project,\nshow the working journey, publish content, and then add business-specific\nrules without turning every customer into a private fork. It also matters for\ncost because support, upgrade, security, and onboarding become easier when the\nsystem can explain its own owners and lifecycle.\n\n## What this means for developers\n\nA developer should treat every change as an ownership question. If the change\nis a reusable framework capability, it belongs in the owning framework module.\nIf it is customer-specific, it belongs in the customer project or a later\nextension module. If it changes content, navigation, or public visibility, it\nbelongs in the content catalog and publication workflow. If it changes runtime\nbehavior, it needs configuration, validation, event propagation, tests, and\noperator guidance.\n\nThis is why Nodics documentation must stay detailed. The page should tell a\ndeveloper which capability owns the behavior, how the project can extend it,\nwhich configuration keys or data records are involved, and how to verify the\nchange from a fresh schema.\n\n## Operator and governance impact\n\nOperators need to know whether a change requires restart, publication,\napproval, cache invalidation, event propagation, or rollback. Nodics exists to\nmake those decisions visible. Runtime servers load declared modules, generated\ncontracts expose API boundaries, data packs carry versioned checksums, and\npublication state separates Staged work from Online delivery.\n\nFor production and support teams, this is the difference between \"the screen\nchanged somehow\" and \"this approved content pack version became Online for\nthis site, catalog, route, and access policy.\"\n\n## Common mistakes\n\n- Treating Nodics as only a folder structure instead of an ownership and\n  runtime model.\n- Building a customer-specific behavior directly inside reusable framework\n  source before checking project-layer extension points.\n- Letting Axis or a storefront become the authority for backend state because\n  users see the screen there.\n- Shipping a fast MVP without documenting the business problem, extension path,\n  configuration behavior, and production verification.\n- Assuming beginners only need technical files; business and operator context\n  must be visible from the first documentation pages.\n\n## Verification\n\nThis page is useful when a new business reader can explain why Nodics exists\nwithout knowing the source tree, and when a developer can connect that story to\nmodule ownership, project-layer customization, content publication, and runtime\noperation. The minimum verification is to run the reference workspace, open\nAxis, inspect Module Registry, import or publish governed data, and confirm\nthat Nexus or Agora only render Online content after approval.\n",
+    "keywords": [
+      "nodics-framework",
+      "framework-value-and-adoption",
+      "why-nodics-exists",
+      "business-value",
+      "enterprise-problems",
+      "Nodics Framework",
+      "Framework Value and Adoption",
+      "Why Nodics Exists"
+    ],
+    "facets": {
+      "section": "nodics-framework",
+      "group": "nodics-framework",
+      "navigationDepth": 2,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record193": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkhownodicsworks",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataframeworkHowNodicsWorks",
+    "title": "How Nodics Works",
+    "summary": "Mental model for framework modules, customer projects, Axis, public applications, runtime ownership, and customization.",
+    "searchText": "How Nodics Works Mental model for framework modules, customer projects, Axis, public applications, runtime ownership, and customization. # How Nodics Works\n\nNodics works by separating business capability ownership from the physical\nfiles, servers, and screens that implement it. A beginner can think of Nodics\nas a framework that lets a project assemble enterprise capabilities without\ncopying them into one large application. A business user can think of it as a\ngoverned way to change content, configuration, workflows, and operational data\nfrom Axis. A developer can think of it as a layered runtime where framework\nmodules load first and customer project modules extend behavior safely.\n\nThe important rule is simple: the screen is not always the owner. Axis may\nrender an operation, Nexus may render a public page, Agora may render a\nstorefront, but backend modules own the data contracts, APIs, publication\nrules, permissions, and runtime services.\n\n## Mental model\n\nNodics has four major parts in the current reference experience:\n\n| Layer | What it does | Reader impact |\n| --- | --- | --- |\n| Framework modules | Provide reusable capabilities such as Platform, WCMS, Process, Foundation, Commerce, Discovery, Engagement, and Localization. | Developers learn where behavior is owned before changing code. |\n| Customer project | Declares runtime topology, project modules, data packs, configuration, and customization. | Business teams can launch a tailored solution without editing reusable framework source. |\n| Axis | Renders authenticated business and administrator workspaces from backend-owned metadata. | Business users manage capabilities through a guided interface. |\n| Public apps | Nexus, Agora, and other applications consume Online content and APIs. | Public users see only approved, published, and permitted experiences. |\n\n## Runtime flow\n\nThe runtime flow begins with a project environment. The project points to the\nframework checkout, declares which servers exist, and loads the modules needed\nby each server. Platform handles employee identity, profile, BackOffice\nmetadata, module registration, and API discovery. WCMS handles sites, catalogs,\npages, components, routes, documentation, and media. Process handles workflow\nand scheduled automation. Commerce and other domain modules add business\ncapabilities when registered and active.\n\n```mermaid\nflowchart TD\n  Project[\"Customer project\"] --> Topology[\"Runtime topology\"]\n  Topology --> Platform[\"Platform server\"]\n  Topology --> WCMS[\"WCMS server\"]\n  Topology --> Process[\"Process server\"]\n  Platform --> Axis[\"Axis authenticated workspace\"]\n  WCMS --> Nexus[\"Nexus public site\"]\n  WCMS --> Agora[\"Agora storefront\"]\n  Process --> Approval[\"Workflow and scheduled operations\"]\n  Project --> Extensions[\"Project modules and configuration\"]\n  Extensions --> Platform\n  Extensions --> WCMS\n  Extensions --> Process\n```\n\n## Backend-driven experience\n\nAxis should not hardcode which business applications, imports, documentation\npages, modules, or approvals exist. Those should come from backend component\nmetadata, content catalog records, module registry records, process tasks, and\npublication state. This keeps the user journey customizable from Axis while\nthe backend remains the authority.\n\nFor example, when documentation is published, the left navigation must refresh\nfrom the Online documentation content model. Swagger/OpenAPI can be available\nindependently because it is generated API reference, not a CMS documentation\npack. When an Agora or Nexus content pack is imported, the import must prepare\nthe full site: media files, media records, pages, components, routes, catalog\ndata, and publication workflow evidence.\n\n## Customization model\n\nDevelopers customize Nodics in the layer that owns the reason for change.\nBusiness labels, page hierarchy, visibility, and content areas belong in the\ncontent catalog. Provider changes, such as moving from local cache to Redis or\nfrom one search engine to another, belong in provider configuration and\nadapter contracts. Business logic belongs in services, validators, pipelines,\nor extension modules owned by the capability.\n\n```js\n// Example mental model, not a hardcoded navigation contract.\nconst customizationDecision = {\n  content: 'Axis-managed content catalog and publication workflow',\n  provider: 'configuration plus provider adapter',\n  businessLogic: 'service, validator, pipeline, or project extension',\n  publicPage: 'Online CMS route with access policy'\n};\n```\n\n## Operator view\n\nOperators care about whether the runtime can be explained. Nodics keeps\nconfiguration, module loading, imports, events, publication, and approvals as\nvisible records. If a configuration change is pushed at runtime, the cluster\nmust receive it through governed events. If a node is responsible for cron\nwork and goes down, another node may take responsibility and transfer it back\nwhen the original node returns, depending on the capability design. Those are\nbusiness continuity concerns, not only technical details.\n\n## Common mistakes\n\n- Assuming the application that displays data owns the data.\n- Importing a storefront content pack before the required domain capabilities\n  are registered and active.\n- Hardcoding navigation, headers, footers, or public pages in Nexus or Agora\n  instead of using backend content.\n- Treating Swagger as blocked by CMS publication when it is generated API\n  reference.\n- Adding project behavior into the framework layer because that is the nearest\n  file.\n\n## Verification\n\nA correct implementation can be verified from a fresh schema. Initialize Axis\nbaseline data, register the required modules, import application content packs,\nsubmit and approve publication where required, then refresh the browser. Axis\nshould show available backend-driven actions, Nexus and Agora should render\nonly Online content, Swagger should remain independently accessible, and logs\nshould show which server and module handled each step.\n",
+    "keywords": [
+      "nodics-framework",
+      "framework-value-and-adoption",
+      "how-nodics-works",
+      "runtime-model",
+      "backend-driven-experience",
+      "Nodics Framework",
+      "Framework Value and Adoption",
+      "How Nodics Works"
+    ],
+    "facets": {
+      "section": "nodics-framework",
+      "group": "nodics-framework",
+      "navigationDepth": 2,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record194": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkadoptionandfirstjourney",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataframeworkAdoptionAndFirstJourney",
+    "title": "Adoption and First Journey",
+    "summary": "The first business, developer, and operator path through setup, capability registration, imports, publishing, and browser verification.",
+    "searchText": "Adoption and First Journey The first business, developer, and operator path through setup, capability registration, imports, publishing, and browser verification. # Adoption and First Journey\n\nThe first Nodics journey should help a reader move from concept to a running\nworkspace without getting lost in module internals. A beginner should\nunderstand what Nodics is, start the local reference project, sign in to Axis,\nsee which capabilities are available, initialize the required data, and open\nthe public applications only after Online content exists. A business reader\nshould see how fast the product can be prepared. A developer should see where\ncustomization belongs. An operator should see which services, data packs, and\npublication states prove the environment.\n\nThis page describes the adoption path, not every implementation detail. The\ndeep module pages explain specific schemas, APIs, providers, pipelines,\nworkflows, and project-layer override paths.\n\n## First reader sequence\n\nThe documentation should not force a new reader to open every framework module\nbefore seeing the product. The sequence should be practical:\n\n| Step | Reader action | Why it matters |\n| --- | --- | --- |\n| 1 | Read What is Nodics and Why Nodics Exists. | Understand the business reason before touching code. |\n| 2 | Open the Kickoff setup and local runtime pages. | Learn the reference project and server topology. |\n| 3 | Start Platform, WCMS, Process, Axis, Nexus, and Agora as required. | See the runtime boundary instead of guessing from folders. |\n| 4 | Initialize Axis baseline data. | Axis needs governed content and administration data before full workspace use. |\n| 5 | Register required modules and capabilities. | Storefront packs should not pretend to work without their domain owners. |\n| 6 | Import Nexus, Agora, documentation, and sample data packs. | Content, media, pages, and routes become Staged records. |\n| 7 | Publish approved Online content and verify browsers. | Public apps render Online data only. |\n\n## Business adoption journey\n\nFor business users, adoption starts with confidence that the platform can\nsupport fast revenue without becoming fragile. The reference workspace should\nshow how an administrator can prepare Axis, initialize a corporate site,\nprepare storefront accelerators, approve publication, and confirm the public\nexperience. The journey should make the next action obvious from the screen.\n\nIf a pack needs approval, the user should see the pending item and approve or\nreject it in the same operational place when their role permits it. If a site\nis not Online yet, the public app should show a professional maintenance page,\nnot hidden framework data. If data is missing, the UI should explain what must\nbe initialized first.\n\n## Developer adoption journey\n\nDevelopers should start by running the product and then tracing ownership.\nAfter the fresh environment is visible, they can study how the project points\nto `nodics.ai`, how Kickoff declares local topology, how modules register\ncapabilities, how data packs import Staged records, and how Axis reads\nbackend-owned metadata.\n\n```mermaid\nflowchart LR\n  Clone[\"Open framework and project\"] --> Start[\"Start local servers\"]\n  Start --> Axis[\"Sign in to Axis\"]\n  Axis --> Registry[\"Register capabilities\"]\n  Registry --> Import[\"Import content and sample data\"]\n  Import --> Publish[\"Approve and publish Online\"]\n  Publish --> Customize[\"Customize from project layer\"]\n```\n\nThe first customization should happen in the project layer or through Axis\nmanaged content, not by editing framework source. That habit keeps the\nframework upgradeable.\n\n## Operator adoption journey\n\nOperators adopt Nodics by learning the runtime evidence. They should know how\nto check server status, port ownership, logs, data import state, publication\nstate, task queues, content routes, and public delivery. When a local schema is\nfresh, operators should be able to explain why Axis may start in a recovery\nworkspace, why Nexus or Agora may show a maintenance page, and which import or\npublication action unlocks the normal experience.\n\nOperational adoption also includes knowing what can run in parallel.\nDocumentation imports can happen alongside other setup work because they\npublish documentation content. Commerce-dependent Agora data must wait until\ncommerce capabilities are registered because the storefront data relies on\ndomain models.\n\n## Documentation entry points\n\nThe first navigation level must stay friendly. Business users should see\ncapabilities and journeys, not raw module package names. Developers and AI\ntools still need exact source ownership, so each detailed page should include\nsource maps, module names, configuration keys, APIs, events, and validation\ncommands in the page body.\n\n| Entry point | Best for | Continue to |\n| --- | --- | --- |\n| What is Nodics? | First-time business, developer, and operator readers. | Why Nodics Exists and How Nodics Works. |\n| Documentation Roadmap | Readers choosing their route through the docs. | Reader Journey and Coverage. |\n| Kickoff setup | Teams starting a local reference environment. | Local runtime, acceptance checklist, and publishing operations. |\n| Axis guide | Administrators using the BackOffice workspace. | Module registry, imports, documentation publication, and workflows. |\n\n## Common mistakes\n\n- Trying to understand every package before running the reference environment.\n- Importing Agora data before the commerce capability is registered.\n- Expecting Nexus or Agora to show full public content before Online\n  publication exists.\n- Treating documentation import as a one-time exercise instead of a recurring\n  content-pack release process.\n- Putting customer-specific setup rules only in environment files instead of\n  project-owned configuration and installer-generated workspace data.\n\n## Verification\n\nThe adoption journey is correct when a new user can start from a clean schema,\nfollow the setup sequence, and understand each next action from Axis without\nasking which page owns it. Verification should include browser checks for Axis,\nNexus, and Agora, plus data evidence that required modules are registered,\ncontent packs are imported, publication tasks can be approved or rejected by\nauthorized users, and public apps show Online content or a customer-friendly\nmaintenance page.\n",
+    "keywords": [
+      "nodics-framework",
+      "framework-value-and-adoption",
+      "adoption",
+      "first-journey",
+      "fresh-schema-setup",
+      "Nodics Framework",
+      "Framework Value and Adoption",
+      "Adoption and First Journey"
+    ],
+    "facets": {
+      "section": "nodics-framework",
+      "group": "nodics-framework",
+      "navigationDepth": 2,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record195": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatadocsDocumentationRoadmap",
-    "title": "Documentation Roadmap and Reader Journey",
-    "summary": "How business users, developers, operators, QA owners, and AI tools navigate the governed Nodics documentation set.",
-    "searchText": "Documentation Roadmap and Reader Journey How business users, developers, operators, QA owners, and AI tools navigate the governed Nodics documentation set. # Documentation Roadmap and Reader Journey\n\nHow business users, developers, operators, QA owners, and AI tools navigate the governed Nodics documentation set. This page is intentionally written for beginners, business users, developers, operators, architects, QA owners, and AI tools. It explains the business problem first, then the technical ownership model, then the exact customization and verification responsibilities so nobody has to guess where a change belongs.\n\nLarge enterprise platforms fail when readers cannot tell where to start, which page is authoritative, or whether a topic is business guidance, project customization, runtime operation, or source reference. The roadmap separates high-level understanding, module capability pages, extension guidance, operational runbooks, and reference material while keeping all pages backend-owned, publishable, searchable, and governed by content catalog metadata.\n\n## Business context\n\nFor a business user, this topic answers what decision can be made, which operational journey is supported, and what risk is reduced. The practical value is faster delivery without losing governance: teams can understand the current capability, decide whether it applies to their project, and know when Axis, Nexus, content catalog, workflow, or runtime services are involved.\n\nFor beginners, the mental model is simple: the page title is the business capability, the table identifies who owns each part, and the diagram shows how a request or change flows. A reader should not need source-code knowledge to understand the journey, but the developer path is still available when customization is needed.\n\n| Business question | Answer for this topic |\n| --- | --- |\n| What problem does it solve? | Large enterprise platforms fail when readers cannot tell where to start, which page is authoritative, or whether a topic is business guidance, project customization, runtime operation, or source reference. |\n| Who uses it? | Business users, administrators, developers, operators, QA owners, implementation partners, and AI-assisted delivery tools. |\n| What changes can it support? | The roadmap separates high-level understanding, module capability pages, extension guidance, operational runbooks, and reference material while keeping all pages backend-owned, publishable, searchable, and governed by content catalog metadata. |\n| What must be governed? | Permissions, validation, source ownership, publication state, runtime impact, audit evidence, and rollback boundaries. |\n\n## Journey and ownership\n\nNodics Docs owns the public documentation product, publication metadata, navigation hierarchy, and generated content pack records; Axis edits and previews through backend APIs, and Nexus consumes Online public pages. This keeps the reader-facing name friendly while preserving exact source ownership for developers and AI tools. Axis may render management screens or authenticated documentation, Nexus may render public Online content, and the backend content catalog remains authoritative for navigation, pages, access policies, and publication state.\n\n```mermaid\nflowchart LR\n  Reader[\"Business or developer request\"] --> Axis[\"Axis or Nexus view\"]\n  Axis --> Backend[\"Owning backend capability\"]\n  Backend --> Catalog[\"Content/catalog/schema/config records\"]\n  Catalog --> Runtime[\"Runtime behavior or published page\"]\n  Runtime --> Evidence[\"Audit, validation, and support evidence\"]\n```\n\n| Responsibility | Owner | Notes |\n| --- | --- | --- |\n| Business capability name | Documentation Roadmap | Used in navigation and dashboards so readers are not exposed to raw module names first. |\n| Source owner | nodics.docs | Carries exact implementation, documentation, and validation evidence. |\n| Technical module | documentation | Holds the relevant schema, service, router, data, or contract detail where applicable. |\n| Axis experience | Backend-declared workspace | Axis renders metadata and actions but does not become the authority. |\n| Public experience | Online content delivery | Nexus renders only records approved for public access. |\n\n## Data and configuration detail\n\nEvery topic must explain the data that changes behavior. Some topics are schema-driven, some are configuration-driven, some are publishable content, and some are operational records. The documentation must say which category applies before showing code. That keeps production operators and developers aligned on whether a change needs publication, restart, event propagation, approval, or only a project-layer override.\n\n| Detail area | What to document | Verification signal |\n| --- | --- | --- |\n| Model or record | Type code, catalog, tenant, enterprise, state, owner, and lifecycle. | Schema contract or generated model test. |\n| Configuration key | Default value, override location, environment scope, and runtime impact. | Config validation and runtime refresh evidence. |\n| API or event | Route/event name, payload boundary, permission, idempotency, and failure mode. | Route, service, event, and authorization tests. |\n| Publication and access | Staged/Online state, access mode, roles, groups, and permissions. | Content-pack validation and access-policy test. |\n\n```js\ndocumentationNavigation: { product: \"nodicsDocumentationProduct\", expandable: true, source: \"contentCatalog\" }\n```\n\n## Customization and extension\n\nDevelopers should customize from the project layer first. A customer project may add properties, services, validators, pipelines, renderers, data packs, or provider configuration when the extension respects the owning capability. Business users may update governed records in Axis when the record is designed for administration. Framework source changes are reserved for improving the reusable product capability itself.\n\n| Customization type | Recommended path | Avoid |\n| --- | --- | --- |\n| Business label, navigation, or content area | Axis-managed content catalog item with publication workflow. | Hardcoding labels or page trees in the frontend. |\n| Runtime setting | Module configuration with validation and governed runtime propagation. | Editing node-local files on each server by hand. |\n| Domain behavior | Extension service, validator, pipeline step, or provider adapter. | Forking the standard module for customer-only logic. |\n| Public visibility | Access policy with public/authenticated/role-based state. | Exposing internal or draft pages through Nexus. |\n\n## Operations and governance\n\nOperators need production-safe evidence, not only implementation notes. Each page must call out logging, tracing, permission checks, event propagation, data import/export, publication status, rollback behavior, and troubleshooting. If a capability affects multiple nodes, the documentation must explain how changes reach every node and how a partial failure is detected.\n\n| Operational concern | Required documentation detail |\n| --- | --- |\n| Security | Authentication mode, permission code, role/group, tenant and enterprise isolation. |\n| Audit | Actor, timestamp, source record, checksum, approval, route/event, and result. |\n| Resilience | Retry, idempotency, compensation, fallback, cache invalidation, and rollback. |\n| Observability | Logs, metrics, dashboard cards, health checks, and support evidence. |\n\n## README segregation contract\n\nREADME files are source-adjacent entry points. They help a developer, AI tool,\nor GitHub visitor identify what a module owns and where to continue reading.\nThey are not the place for full business journeys, screenshots, long provider\nmatrices, configuration tutorials, migration guides, or operator runbooks.\nThose details belong in the backend-owned documentation content catalog under\n`nodics.docs` or the owning module `docs/` area so they can be published,\npermissioned, searched, approved, localized, and rendered through Axis and\nNexus.\n\n| README section | Required purpose | What must move to real docs |\n| --- | --- | --- |\n| Title and one paragraph | Name the module and its capability boundary. | Long product positioning and full business journeys. |\n| Responsibility | State what the module owns and what it does not own. | Full schema tables, API matrices, and lifecycle runbooks. |\n| Developer Notes | Give crisp source-adjacent implementation cautions. | Provider tutorials, customization walkthroughs, and production operations. |\n| Documentation | Link to the authoritative deep docs pages. | Duplicated public documentation content. |\n| Verification | List the focused validation path. | Complete troubleshooting guides and release evidence matrices. |\n\nInstaller and the `nodics.ai` root README are exceptions because they are\ndirect GitHub entry points. All other module README files should stay below\nthe thinness threshold and continue readers into real documentation. When a\nfuture implementation adds functionality, the documentation generator or the\ndeveloper must update the real docs page, source map, access policy, visual\nevidence, and validation commands. The README should only add or adjust the\nshort pointer if the module responsibility or deep documentation location\nchanged.\n\n## Common mistakes\n\n- Treating a friendly navigation label as the technical source owner.\n- Writing only developer details and skipping the business decision that the page supports.\n- Updating Axis or Nexus code when the content catalog, schema, or backend capability should own the change.\n- Forgetting access rules for public, authenticated, role-based, group-based, or permission-based pages.\n- Skipping diagrams, comparison tables, source maps, or troubleshooting matrices because the topic feels obvious.\n- Changing runtime behavior without explaining production impact, cluster propagation, and rollback.\n- Leaving generated documentation without source evidence, validation commands, and maturity state.\n\n## Verification\n\nVerification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.\n\nFor implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.\n",
+    "title": "Documentation Roadmap",
+    "summary": "How the Nodics documentation product is organized and how readers choose the right path through the enterprise hierarchy.",
+    "searchText": "Documentation Roadmap How the Nodics documentation product is organized and how readers choose the right path through the enterprise hierarchy. # Documentation Roadmap and Reader Journey\n\nHow business users, developers, operators, QA owners, and AI tools navigate the governed Nodics documentation set. This page is intentionally written for beginners, business users, developers, operators, architects, QA owners, and AI tools. It explains the business problem first, then the technical ownership model, then the exact customization and verification responsibilities so nobody has to guess where a change belongs.\n\nLarge enterprise platforms fail when readers cannot tell where to start, which page is authoritative, or whether a topic is business guidance, project customization, runtime operation, or source reference. The roadmap separates high-level understanding, module capability pages, extension guidance, operational runbooks, and reference material while keeping all pages backend-owned, publishable, searchable, and governed by content catalog metadata.\n\n## Business context\n\nFor a business user, this topic answers what decision can be made, which operational journey is supported, and what risk is reduced. The practical value is faster delivery without losing governance: teams can understand the current capability, decide whether it applies to their project, and know when Axis, Nexus, content catalog, workflow, or runtime services are involved.\n\nFor beginners, the mental model is simple: the page title is the business capability, the table identifies who owns each part, and the diagram shows how a request or change flows. A reader should not need source-code knowledge to understand the journey, but the developer path is still available when customization is needed.\n\n| Business question | Answer for this topic |\n| --- | --- |\n| What problem does it solve? | Large enterprise platforms fail when readers cannot tell where to start, which page is authoritative, or whether a topic is business guidance, project customization, runtime operation, or source reference. |\n| Who uses it? | Business users, administrators, developers, operators, QA owners, implementation partners, and AI-assisted delivery tools. |\n| What changes can it support? | The roadmap separates high-level understanding, module capability pages, extension guidance, operational runbooks, and reference material while keeping all pages backend-owned, publishable, searchable, and governed by content catalog metadata. |\n| What must be governed? | Permissions, validation, source ownership, publication state, runtime impact, audit evidence, and rollback boundaries. |\n\n## Journey and ownership\n\nNodics Docs owns the public documentation product, publication metadata, navigation hierarchy, and generated content pack records; Axis edits and previews through backend APIs, and Nexus consumes Online public pages. This keeps the reader-facing name friendly while preserving exact source ownership for developers and AI tools. Axis may render management screens or authenticated documentation, Nexus may render public Online content, and the backend content catalog remains authoritative for navigation, pages, access policies, and publication state.\n\n```mermaid\nflowchart LR\n  Reader[\"Business or developer request\"] --> Axis[\"Axis or Nexus view\"]\n  Axis --> Backend[\"Owning backend capability\"]\n  Backend --> Catalog[\"Content/catalog/schema/config records\"]\n  Catalog --> Runtime[\"Runtime behavior or published page\"]\n  Runtime --> Evidence[\"Audit, validation, and support evidence\"]\n```\n\n| Responsibility | Owner | Notes |\n| --- | --- | --- |\n| Business capability name | Documentation Roadmap | Used in navigation and dashboards so readers are not exposed to raw module names first. |\n| Source owner | nodics.docs | Carries exact implementation, documentation, and validation evidence. |\n| Technical module | documentation | Holds the relevant schema, service, router, data, or contract detail where applicable. |\n| Axis experience | Backend-declared workspace | Axis renders metadata and actions but does not become the authority. |\n| Public experience | Online content delivery | Nexus renders only records approved for public access. |\n\n## Data and configuration detail\n\nEvery topic must explain the data that changes behavior. Some topics are schema-driven, some are configuration-driven, some are publishable content, and some are operational records. The documentation must say which category applies before showing code. That keeps production operators and developers aligned on whether a change needs publication, restart, event propagation, approval, or only a project-layer override.\n\n| Detail area | What to document | Verification signal |\n| --- | --- | --- |\n| Model or record | Type code, catalog, tenant, enterprise, state, owner, and lifecycle. | Schema contract or generated model test. |\n| Configuration key | Default value, override location, environment scope, and runtime impact. | Config validation and runtime refresh evidence. |\n| API or event | Route/event name, payload boundary, permission, idempotency, and failure mode. | Route, service, event, and authorization tests. |\n| Publication and access | Staged/Online state, access mode, roles, groups, and permissions. | Content-pack validation and access-policy test. |\n\n```js\ndocumentationNavigation: { product: \"nodicsDocumentationProduct\", expandable: true, source: \"contentCatalog\" }\n```\n\n## Customization and extension\n\nDevelopers should customize from the project layer first. A customer project may add properties, services, validators, pipelines, renderers, data packs, or provider configuration when the extension respects the owning capability. Business users may update governed records in Axis when the record is designed for administration. Framework source changes are reserved for improving the reusable product capability itself.\n\n| Customization type | Recommended path | Avoid |\n| --- | --- | --- |\n| Business label, navigation, or content area | Axis-managed content catalog item with publication workflow. | Hardcoding labels or page trees in the frontend. |\n| Runtime setting | Module configuration with validation and governed runtime propagation. | Editing node-local files on each server by hand. |\n| Domain behavior | Extension service, validator, pipeline step, or provider adapter. | Forking the standard module for customer-only logic. |\n| Public visibility | Access policy with public/authenticated/role-based state. | Exposing internal or draft pages through Nexus. |\n\n## Operations and governance\n\nOperators need production-safe evidence, not only implementation notes. Each page must call out logging, tracing, permission checks, event propagation, data import/export, publication status, rollback behavior, and troubleshooting. If a capability affects multiple nodes, the documentation must explain how changes reach every node and how a partial failure is detected.\n\n| Operational concern | Required documentation detail |\n| --- | --- |\n| Security | Authentication mode, permission code, role/group, tenant and enterprise isolation. |\n| Audit | Actor, timestamp, source record, checksum, approval, route/event, and result. |\n| Resilience | Retry, idempotency, compensation, fallback, cache invalidation, and rollback. |\n| Observability | Logs, metrics, dashboard cards, health checks, and support evidence. |\n\n## README segregation contract\n\nREADME files are source-adjacent entry points. They help a developer, AI tool,\nor GitHub visitor identify what a module owns and where to continue reading.\nThey are not the place for full business journeys, screenshots, long provider\nmatrices, configuration tutorials, migration guides, or operator runbooks.\nThose details belong in the backend-owned documentation content catalog under\n`nodics.docs` or the owning module `docs/` area so they can be published,\npermissioned, searched, approved, localized, and rendered through Axis and\nNexus.\n\n| README section | Required purpose | What must move to real docs |\n| --- | --- | --- |\n| Title and one paragraph | Name the module and its capability boundary. | Long product positioning and full business journeys. |\n| Responsibility | State what the module owns and what it does not own. | Full schema tables, API matrices, and lifecycle runbooks. |\n| Developer Notes | Give crisp source-adjacent implementation cautions. | Provider tutorials, customization walkthroughs, and production operations. |\n| Documentation | Link to the authoritative deep docs pages. | Duplicated public documentation content. |\n| Verification | List the focused validation path. | Complete troubleshooting guides and release evidence matrices. |\n\nInstaller and the `nodics.ai` root README are exceptions because they are\ndirect GitHub entry points. All other module README files should stay below\nthe thinness threshold and continue readers into real documentation. When a\nfuture implementation adds functionality, the documentation generator or the\ndeveloper must update the real docs page, source map, access policy, visual\nevidence, and validation commands. The README should only add or adjust the\nshort pointer if the module responsibility or deep documentation location\nchanged.\n\n## Common mistakes\n\n- Treating a friendly navigation label as the technical source owner.\n- Writing only developer details and skipping the business decision that the page supports.\n- Updating Axis or Nexus code when the content catalog, schema, or backend capability should own the change.\n- Forgetting access rules for public, authenticated, role-based, group-based, or permission-based pages.\n- Skipping diagrams, comparison tables, source maps, or troubleshooting matrices because the topic feels obvious.\n- Changing runtime behavior without explaining production impact, cluster propagation, and rollback.\n- Leaving generated documentation without source evidence, validation commands, and maturity state.\n\n## Verification\n\nVerification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.\n\nFor implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.\n",
     "keywords": [
       "documentation-roadmap",
-      "reader-journey-and-coverage-map",
-      "documentation-roadmap-and-reader-journey",
+      "documentation-organization",
+      "reader-navigation",
       "Documentation Roadmap",
       "Reader Journey and Coverage Map",
-      "Documentation Roadmap and Reader Journey"
+      "Documentation organization"
     ],
     "facets": {
       "section": "documentation-roadmap",
-      "group": "reader-journey-and-coverage-map",
+      "group": "documentation-roadmap",
+      "navigationDepth": 2,
       "documentType": "overview",
       "audience": [
         "business",
@@ -11544,14 +7818,164 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record300": {
+  "record196": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationprinciples",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatadocsDocumentationPrinciples",
+    "title": "Documentation Principles",
+    "summary": "Framework-level documentation rules for README thinness, detailed docs depth, visual evidence, customization, publishing, and access.",
+    "searchText": "Documentation Principles Framework-level documentation rules for README thinness, detailed docs depth, visual evidence, customization, publishing, and access. # Documentation Principles\n\nNodics documentation is part of the framework contract. It is not a one-time\nproject clean-up activity. Every new capability, configuration option,\nprovider, workflow, API, data pack, Axis journey, Nexus page, Agora storefront,\nor project-layer extension must carry documentation that helps business users,\ndevelopers, operators, QA owners, and AI tools understand what changed and how\nto use it safely.\n\nThe principle is direct: README files stay thin and source-adjacent, while\nreal documentation under the backend-owned documentation content model stays\ndeep, visual, publishable, permissioned, searchable, and governed.\n\n## README and real documentation split\n\nModule README files help a GitHub visitor, developer, or AI tool identify what\nthe module owns. They should be crisp. They should not become full training\nmanuals, production runbooks, provider migration guides, or long business\njourneys. Installer README and the `nodics.ai` root README are exceptions\nbecause they are public entry points into the whole workspace.\n\n| Location | Purpose | Detail level |\n| --- | --- | --- |\n| Module `README.md` | State module responsibility, boundaries, warnings, and links to deep docs. | Thin and module-specific. |\n| Module `docs/` | Explain implemented capability details owned by that module. | Deep, visual, testable, and customization-focused. |\n| `nodics.docs` | Framework-wide product documentation and navigation source. | Enterprise hierarchy with business and technical journeys. |\n| Generated content pack | Publishable documentation data imported into Staged and Online. | Backend-owned records with access, workflow, search, and checksums. |\n\n## Required topic depth\n\nEach detailed topic must explain the business problem first, then technical\nownership. It should not be only a list of files. A business user should know\nwhat decision the page supports. A developer should know where to extend. An\noperator should know runtime impact. QA should know what to validate. AI tools\nshould know which source owner to inspect before suggesting changes.\n\nRequired detail includes data models, configuration keys, APIs, events,\nextension points, project-layer override paths, validation, troubleshooting,\nsecurity, access policy, publication state, and operational impact wherever\nthose are applicable.\n\n## Visual contract\n\nDocumentation must not become boring blocks of text. The page should use\nvisual explanation where it helps the reader understand flow, ownership,\nsequence, comparison, schema, or state. Diagrams, data-flow visuals,\nstate-flow diagrams, module hierarchy diagrams, tabular comparisons, schema\ntables, screenshots, and code snippets are expected for serious capability\npages.\n\n```mermaid\nflowchart TD\n  Business[\"Business perspective\"] --> Page[\"Documentation topic\"]\n  Technical[\"Technical perspective\"] --> Page\n  Page --> Visuals[\"Diagrams, tables, screenshots, examples\"]\n  Page --> Validation[\"Tests, browser evidence, audit checks\"]\n  Page --> Publishing[\"Staged review and Online delivery\"]\n```\n\n## Configuration and customization principle\n\nLow-level configuration details are important because they change application\nbehavior. If a project can switch from local cache to Redis, change a provider,\nextend a schema, add a service, override business logic, add a navigation\nitem, or configure a content area, the documentation must explain the exact\npath. The same rule applies across cache, search, commerce, WCMS, workflow,\nevents, media, localization, profile, and every other capability.\n\nBusiness users may configure governed records in Axis when the capability is\ndesigned for administration. Developers extend from project modules when code\nis required. Framework source changes are reserved for reusable framework\ncapabilities.\n\n## Publishing and access principle\n\nReal documentation is content. It must be modeled through content catalog\nrecords, not hardcoded frontend JSON. Axis is the management and preview\nexperience. Staged holds the working copy. Approval governs Online publication.\nNexus and public links consume Online content only when the access policy\nallows it. Some pages are public; some require authentication, roles, groups,\nor permissions.\n\n| Governance area | Documentation requirement |\n| --- | --- |\n| Access | Public, authenticated, role-based, group-based, or permission-based behavior. |\n| Workflow | What edit triggers review, approval, publishing, and audit. |\n| Search | Keywords, topic metadata, and future index readiness. |\n| Evidence | Source path, generated record, checksum, browser proof, and validation command. |\n\n## Common mistakes\n\n- Writing only technical implementation notes and skipping the business\n  decision or operational journey.\n- Keeping detailed provider or configuration guidance only in README files.\n- Adding screenshots without explaining the data or permission model behind\n  the screen.\n- Publishing documentation navigation from frontend constants instead of the\n  backend content catalog.\n- Forgetting that generated documentation must be updated every time source\n  documentation changes.\n\n## Verification\n\nDocumentation is acceptable when it passes the generator and validation\ncontract, imports as governed content, supports Staged and Online lifecycle,\nand helps a beginner complete the journey without hidden tribal knowledge. A\ndeveloper should be able to identify the owning module, configuration path,\nextension point, test command, and browser verification from the page itself.\n",
+    "keywords": [
+      "documentation-roadmap",
+      "reader-journey-and-coverage-map",
+      "documentation-principles",
+      "readme-contract",
+      "visual-contract",
+      "Documentation Roadmap",
+      "Reader Journey and Coverage Map",
+      "Documentation Principles"
+    ],
+    "facets": {
+      "section": "documentation-roadmap",
+      "group": "documentation-roadmap",
+      "navigationDepth": 2,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record197": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsreaderjourneyandcoverage",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatadocsReaderJourneyAndCoverage",
+    "title": "Reader Journey and Coverage",
+    "summary": "How business users, developers, operators, QA owners, administrators, and AI tools navigate capability documentation.",
+    "searchText": "Reader Journey and Coverage How business users, developers, operators, QA owners, administrators, and AI tools navigate capability documentation. # Reader Journey and Coverage\n\nNodics documentation must serve multiple readers at the same time without\nmaking any of them feel lost. A business user wants to know what the capability\ndoes and which decision it supports. A developer wants exact ownership,\nconfiguration, extension, API, and testing detail. An operator wants runtime,\npublishing, logs, rollback, and support evidence. A QA owner wants acceptance\ncriteria. An AI tool needs source boundaries so it does not edit the nearest\nfile and create the wrong authority.\n\nThe reader journey is therefore not a decorative navigation choice. It is a\nframework contract for how capability knowledge is organized.\n\n## Audience paths\n\nEach page should make the entry path clear. A beginner can start from the\nbusiness story, then move into the running product, then into ownership and\ncustomization. A specialist can jump directly to the capability page and still\nfind the tables, diagrams, and validation evidence they need.\n\n| Reader | First question | Page must provide |\n| --- | --- | --- |\n| Business user | What problem does this solve? | Outcome, supported operation, risk, approval, and impact. |\n| Administrator | What can I do in Axis? | UI journey, permissions, workflow state, and next action. |\n| Developer | Where do I extend safely? | Owning module, schema, service, configuration, API, event, and project path. |\n| Operator | What changes at runtime? | Server graph, logs, health, event propagation, rollback, and support evidence. |\n| QA owner | How is this accepted? | Data setup, browser path, API checks, tests, and failure cases. |\n| AI tool | What is authoritative? | Source owner, generated artifacts, source map, and forbidden shortcuts. |\n\n## Coverage map\n\nThe documentation hierarchy should be broad enough that users recognize the\nbusiness capability before they see raw implementation names. WCMS and Content\nManagement, Product Catalog and Discovery, Cart and Checkout, Payments,\nShipping, Order Management, Returns and Refunds, Users and Enterprise\nManagement, Stock, Pricing, Process Workflows, Cron and Scheduled Automation,\nSearch and Discovery Providers, Accelerators and Industry Templates, and\nSolution Use Cases are examples of business-friendly groups.\n\n```mermaid\nflowchart LR\n  Start[\"Framework story\"] --> Setup[\"Setup and runtime\"]\n  Setup --> Admin[\"Axis administration\"]\n  Admin --> Capabilities[\"Business capability groups\"]\n  Capabilities --> Extend[\"Customization and extension\"]\n  Extend --> Operate[\"Operations, QA, and support\"]\n```\n\n## Topic composition\n\nEvery capability page should be predictable. Readers should not have to guess\nwhether a page contains only technical notes or the full business journey.\nWhen a capability is backend-owned but rendered in Axis, the page must explain\nboth. When public content is visible in Nexus or Agora, the page must explain\nStaged, approval, Online delivery, and access policy.\n\nRecommended sections include business context, journey and ownership, data and\nconfiguration detail, customization and extension, operations and governance,\ncommon mistakes, and verification. Topic dashboards at section, group,\nsubgroup, and page level should summarize child navigation so users can scan\nbefore opening every page.\n\n## Navigation behavior\n\nNavigation should be hierarchical, expandable, searchable, and backend-driven.\nHowever, hierarchy should not punish the reader. A group with one page should\nbe avoided or flattened by splitting the content into meaningful sibling pages.\nGroups should exist when they help compare or choose between multiple topics.\nThe left navigation should use business-friendly labels; exact technical\nmodule names should appear in the body, source map, or technical reference.\n\nSearch should work across keywords, topics, module names, business phrases,\nconfiguration names, and API terms. The current implementation can use content\ncatalog data directly. Future indexing can push the same content catalog into\nElasticsearch without changing the authoring principle.\n\n## Business and technical balance\n\nThe same topic should answer two levels of questions:\n\n| Perspective | Required content |\n| --- | --- |\n| Business | Problem solved, who uses it, decisions supported, Axis/runtime behavior, risks, approvals, and impact. |\n| Technical | Owning module, data model, configuration keys, APIs/events, extension points, project-layer override path, validation, and troubleshooting. |\n\nThis balance is what makes documentation useful for an enterprise customer\nand still detailed enough for developers and AI-assisted implementation.\n\n## Common mistakes\n\n- Creating a deep hierarchy where a user opens two containers to reach one\n  page.\n- Naming top-level groups from package names instead of business capabilities.\n- Hiding business impact in developer-only implementation notes.\n- Forgetting operator, QA, and AI-tool needs when writing only happy-path\n  tutorials.\n- Making search depend on frontend-only metadata instead of backend-owned\n  content records.\n\n## Verification\n\nReader journey coverage is proven when a new user can use navigation, search,\ntopic dashboards, and page content to move from a business question to the\ncorrect technical owner. Validation should include generated documentation\nchecks, content-pack import, Axis navigation rendering, public/authenticated\naccess checks, and browser verification for the workflows described by the\npage.\n",
+    "keywords": [
+      "documentation-roadmap",
+      "reader-journey-and-coverage-map",
+      "reader-journey",
+      "coverage-map",
+      "audience-paths",
+      "Documentation Roadmap",
+      "Reader Journey and Coverage Map",
+      "Reader Journey and Coverage"
+    ],
+    "facets": {
+      "section": "documentation-roadmap",
+      "group": "documentation-roadmap",
+      "navigationDepth": 2,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record198": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationpublishingmodel",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatadocsDocumentationPublishingModel",
+    "title": "Documentation Publishing Model",
+    "summary": "How documentation source becomes content catalog data, Staged records, approval tasks, Online pages, and public or authenticated delivery.",
+    "searchText": "Documentation Publishing Model How documentation source becomes content catalog data, Staged records, approval tasks, Online pages, and public or authenticated delivery. # Documentation Publishing Model\n\nNodics documentation is managed as publishable content, not static text that a\nfrontend hardcodes. Source Markdown and catalogue metadata generate a\ndocumentation content pack. Axis imports that pack into Staged, authors and\nadministrators review it, Process manages approval tasks, and Online delivery\nbecomes visible only after governed approval and publishing. Nexus can expose\npublic documentation links, while Axis can show authenticated or role-based\npages when access policy requires login.\n\nThis model matters because documentation is part of the product. It carries\nbusiness guidance, implementation contracts, configuration behavior,\ncustomization rules, visual evidence, and support instructions. If that\ncontent changes, it deserves the same lifecycle discipline as other enterprise\ncontent.\n\nFor a beginner, the safe mental model is: source documentation is prepared by\nthe owning module, Axis imports and reviews the Staged copy, approval promotes\nthe release to Online, and public readers only see what Online access policy\nallows.\n\n## Source to Online flow\n\nThe publishing model has a clear sequence. Developers update source\ndocumentation and catalogue metadata. The generator creates content catalog\nrecords, navigation nodes, pages, routes, access policies, search metadata,\npublication state, and checksums. Axis imports the pack to Staged. Approval\ndecides whether the Staged release becomes Online. Public apps read Online\nonly.\n\n```mermaid\nsequenceDiagram\n  participant Source as Source docs\n  participant Pack as Generated content pack\n  participant Axis as Axis authoring\n  participant Process as Approval task\n  participant Online as Online catalog\n  participant Nexus as Nexus public docs\n  Source->>Pack: generate records and checksums\n  Pack->>Axis: import to Staged\n  Axis->>Process: request approval\n  Process->>Online: approve and publish\n  Online->>Nexus: render public pages by access policy\n```\n\n## Content catalog authority\n\nNavigation, page content, summary areas, dashboards, access policy, and search\nmetadata belong in the content catalog. Axis should let business users manage\nthese records through components such as navigation, groups, subgroups, and\npages. A user should be able to reorder navigation, update labels, change\nvisibility, and submit for publication from Axis where permissions allow.\n\nThe current implementation may render directly from content catalog records.\nFuture Elasticsearch indexing can improve search and retrieval, but indexing\ndoes not replace content catalog ownership. The content catalog remains the\nsource of truth.\n\nFor customization and extension, a project should add or override\ndocumentation structures through backend-owned content catalog records,\nproject-owned documentation packs, access policies, and renderer metadata.\nDevelopers should avoid frontend-only documentation trees because those cannot\nparticipate in Staged review, Online publishing, permission checks, search\nmetadata, or audit history.\n\n## Access and workflow\n\nEach page must declare whether it is public, authenticated, role-based,\ngroup-based, permission-based, or restricted. Public pages may appear on Nexus\nafter Online publication. Authenticated pages should remain available inside\nAxis or an authenticated documentation surface. Workflow triggers must exist\nfor page edits, navigation edits, dashboard changes, access policy changes,\nsource evidence changes, and search metadata changes.\n\n| Record changed | Workflow impact | Verification |\n| --- | --- | --- |\n| Page body | Content review and Online publication. | Compare Staged and Online page revision. |\n| Navigation item | Navigation review and browser refresh. | Axis left navigation updates after mutation. |\n| Access policy | Security review before Online exposure. | Public and authenticated routes enforce expected access. |\n| Search metadata | Search preview and indexing readiness. | Keywords and facets return the expected page. |\n\n## Axis and public experience\n\nAxis is both a documentation management surface and a documentation reading\nsurface for authenticated users. It should show available updates, trigger\napproval, display approval tasks, and allow authorized users to approve or\nreject from the same business journey. The user should not need to jump across\nmultiple confusing pages to complete a documentation release.\n\nNexus and other public surfaces should not show Staged content. If Online\ncontent is missing, they should show a professional customer-friendly\nmaintenance or waiting-for-publication message. Swagger/OpenAPI is separate:\nit is generated API reference and does not require CMS documentation approval.\n\n## Developer and operator responsibilities\n\nDevelopers must update documentation source whenever implementation behavior\nchanges. They must bump the content pack release when generated content\nchanges after an Online release, run generation and validation, and provide\nsource evidence. Operators must verify imports, approval tasks, Online state,\nbrowser routes, logs, audit evidence, and rollback candidates.\n\nThis responsibility is ongoing. Documentation generation happens with current\nimplementation and future implementation updates.\n\n## Common mistakes\n\n- Treating generated documentation as a one-time seed rather than a recurring\n  release.\n- Hardcoding documentation cards or left navigation in Axis or Nexus.\n- Blocking Swagger/API reference behind CMS documentation approval.\n- Updating Staged content without incrementing the content pack release after\n  Online publication.\n- Forgetting access policies for pages that should be authenticated or\n  role-based.\n\n## Verification\n\nThe publishing model is correct when a fresh schema can import documentation\nto Staged, submit approval, approve or reject through authorized actions,\npublish Online, refresh Axis navigation without manual confusion, and open\npublic Nexus documentation only for pages whose access policy permits public\nviewing. Generated content checks, validation reports, browser evidence, and\naudit records must all agree on the same release.\n",
+    "keywords": [
+      "documentation-roadmap",
+      "reader-journey-and-coverage-map",
+      "documentation-publishing",
+      "content-catalog",
+      "staged-online",
+      "Documentation Roadmap",
+      "Reader Journey and Coverage Map",
+      "Documentation Publishing Model"
+    ],
+    "facets": {
+      "section": "documentation-roadmap",
+      "group": "documentation-roadmap",
+      "navigationDepth": 2,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record199": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkmodulararchitecture",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkModularArchitecture",
     "title": "Modular architecture and ownership",
     "summary": "How functional modules, technical modules, runtime servers, and customer projects fit together.",
-    "searchText": "Modular architecture and ownership How functional modules, technical modules, runtime servers, and customer projects fit together. # Modular architecture and ownership\n\nNodics is organized around ownership. Every meaningful behavior should have a\ncapability owner, and every runtime server should load an explicit chain of\nmodules. This is what lets a local reference project stay small while the same\nframework can later support larger distributed deployments.\n\n## What this is\n\nThe modular architecture defines how framework modules, functional module\ngroups, customer projects, environment modules, server modules, and services\nfit together. It prevents the common failure where code is placed wherever it\nfirst works and nobody can later tell which component owns the behavior.\n\n## Functional modules and technical modules\n\nA functional module is the business-facing capability identity. Examples are\n`nodics.foundation`, `nodics.platform`, `nodics.wcms`, and `nodics.process`. Axis and\nBackOffice talk about these capabilities at this level because business users\ndo not need to manage every internal technical module.\n\nA technical module is an implementation unit inside a functional module group.\nFor example, Core contains many technical modules for configuration, data,\nservices, routing, validation, cache, and system behavior. Those modules are\nimportant to developers, but they should not flood the module registry user\nexperience unless a business capability genuinely needs to expose them.\n\n## Runtime server composition\n\nRepository dependencies only make code available. Runtime `extends`\nconfiguration decides what actually loads. A Platform server normally loads\nCore first, Platform second, then project and environment/server modules. A\nWCMS server loads Core, WCMS, and project modules. A Process server loads Core,\nProcess, workflow, cronjob, and project modules.\n\nThe order matters because service override and merge behavior follow runtime\nload order and module indexes. Module hierarchy describes functional\navailability; service precedence describes which implementation wins at\nruntime. These are related but different concepts.\n\n## Customer projects\n\nCustomer projects live outside `nodics.ai`. The reference project is\n`nodics.kickoff`. It shows how a project can compose framework modules, provide\nlocal environment configuration, add project modules, and contribute\nproject-owned documentation without copying framework source.\n\nA customer extension module such as `kickoff.platform` may customize\nPlatform behavior. That does not rename the functional capability. BackOffice\nand Axis should still present Platform as Platform unless the customer\nintentionally exposes a separate functional module.\n\n## Ownership boundaries\n\n- Framework source belongs in `nodics.ai`.\n- Framework documentation content belongs in `nodics.docs`.\n- Axis product documentation belongs in `nodics.platform/modules/axis`.\n- Customer documentation belongs in the owning customer project.\n- Browser renderers belong in `nodics.axis`.\n- CMS records that are imported into a database must be owned by backend\n  modules or backend projects, never the frontend repository.\n\n## Current capability map\n\nUse this map when deciding where new code, data, or documentation should live.\n\n| Capability | Repository or module owner | Runtime role | Documentation owner |\n| --- | --- | --- | --- |\n| Core framework | `nodics.ai/nodics.foundation` | Mandatory base for every runtime server | `nodics.docs` |\n| Platform and profile | `nodics.ai/nodics.platform` | Platform server capability for user onboarding, authentication, and registry-facing services | `nodics.docs` for framework behavior; `nodics.platform/modules/axis` for Axis product behavior |\n| Axis backend content | `nodics.ai/nodics.platform/modules/axis` | CMS records owned by the backend Axis module so the Axis frontend can render product documentation and shell experience | `nodics.platform/modules/axis` |\n| WCMS | `nodics.ai/nodics.wcms` | Content management runtime for sites, catalogs, pages, components, routes, and renderable content | `nodics.docs` |\n| Media | `nodics.ai/nodics.wcms/modules/media` | Governed media and asset lifecycle used by content experiences | `nodics.docs` |\n| Process automation | `nodics.ai/nodics.process/modules/cronjob` | Optional scheduled-job runtime capability inside Process | `nodics.docs` |\n| Framework documentation | `nodics.ai/nodics.docs` | Backend content pack imported into WCMS; not a UI renderer | `nodics.docs` |\n| Axis frontend | `nodics.axis` | Browser renderer for BackOffice, WCMS, docs, and module-owned capabilities | `nodics.platform/modules/axis` for product docs |\n| Kickoff reference project | `nodics.kickoff` | Customer-style project that composes framework servers locally | `nodics.kickoff` |\n\nThe key rule is simple: a frontend may render content, but it should not own\ndatabase-importable content. If a page, component, catalog, route, or\ndocumentation record is imported into WCMS, it must be shipped by the backend\nmodule or project that owns that content.\n\n## Runtime composition diagram\n\n```mermaid\nflowchart TD\n  Core[\"nodics.foundation<br/>mandatory framework foundation\"]\n  Platform[\"nodics.platform<br/>profile, backoffice, axis backend data\"]\n  WCMS[\"nodics.wcms<br/>cms, media, content delivery\"]\n  Process[\"nodics.process<br/>workflow and cronjob runtime\"]\n  Kickoff[\"nodics.kickoff<br/>customer/reference project\"]\n  PlatformServer[\"kickoffLocal/platformServer\"]\n  WcmsServer[\"kickoffLocal/wcmsServer\"]\n  ProcessServer[\"kickoffLocal/processServer\"]\n\n  Core --> Platform\n  Core --> WCMS\n  Core --> Process\n  Platform --> Kickoff\n  WCMS --> Kickoff\n  Process --> Kickoff\n  Kickoff --> PlatformServer\n  Kickoff --> WcmsServer\n  Kickoff --> ProcessServer\n```\n\nThis picture shows the concept, not a Git repository dependency tree. The\nimportant idea is that each server loads an effective runtime graph. A server\ndoes not load every module in the workspace just because the files exist. It\nloads the modules that are part of its configured extension chain.\n\n![Micro-services architecture](../assets/images/microservices-architecture.jpg \"Micro-service style module separation reference from the archived documentation set\")\n\nThe archived micro-service visual is not a command to split every feature into\na separate process on day one. It explains the direction of travel: modules\nexpose API/service contracts, persistence is hidden behind owning services,\nand shared infrastructure such as cache, search, and databases are reached\nthrough governed module contracts. A partner can begin with multiple runtimes\non one machine and later distribute Platform, WCMS, Process, Commerce, or other\ncapabilities without changing the ownership model.\n\n## Beginner reading path\n\nFor a beginner, read the architecture in two passes. First, ignore every\ntechnical module and look only at the functional module chain: Core gives the\nbase framework, Platform gives identity and BackOffice, WCMS gives content,\nCron gives scheduled work, and Kickoff composes those capabilities for a local\nproject. That view explains what is available.\n\nSecond, look at runtime order. Runtime order explains which service\nimplementation wins when more than one module contributes the same service,\nrouter, schema, or configuration. A beginner mistake is to assume that a parent\nfolder or package dependency controls behavior. In Nodics, installed packages\nonly make code reachable; the active server graph decides what is loaded.\n\n## Module hierarchy versus service precedence\n\nTwo ideas are easy to mix together:\n\n| Concept | What it answers | Example |\n| --- | --- | --- |\n| Functional module hierarchy | Which capability is available? | A WCMS server has the `nodics.wcms` capability, which itself depends on Core. |\n| Service precedence | Which implementation wins at runtime? | If a customer module overrides a service after Platform loads, the later module implementation wins for that runtime. |\n\nFunctional hierarchy is about capability identity. Service precedence is about\nruntime execution order. That is why a customer extension such as\n`kickoff.platform` may customize Platform behavior while the functional module\nname remains `nodics.platform` in Axis and BackOffice.\n\n## Why `extends` is the right word\n\n`extends` makes the architecture readable because a later module builds on an\nearlier module. It does not mean every file is copied. It means the later\nmodule participates in the same runtime composition and can add configuration,\nservices, routers, schema records, import data, tests, and documentation.\n\nFor example:\n\n```text\nplatformServer\n  extends kickoff project modules\n    extends nodics.platform\n      extends nodics.foundation\n```\n\nThe exact physical folders can change. A customer may keep framework source in\none checkout and the customer project somewhere else. The contract is the\nruntime graph, not the parent directory name on one developer machine.\n\n## DevOps and operator view\n\nDevOps teams should treat the server graph as deployment evidence. A production\nPlatform server, WCMS server, or Process server should declare exactly which\nfunctional modules and customer layers are active, which ports and database\nnames it uses, and which properties are inherited versus overridden. That makes\nrollback and support much safer: an operator can compare two runtime graphs\nwithout reading every source file.\n\nWhen production incidents happen, the first question is usually not “which Git\nrepository changed?” It is “which runtime process loaded which module chain\nwith which effective properties?” Modular architecture gives support teams a\nshared language for that investigation.\n\n## Documentation ownership matrix\n\nDocumentation is also modular. It should not become another ungoverned bucket.\n\n| Documentation topic | Source owner | Why |\n| --- | --- | --- |\n| Framework vision, architecture, Core, Platform, WCMS, Cron | `nodics.docs` | This content explains reusable framework behavior. |\n| Axis product behavior, renderers, shell, login, schema workbench | `nodics.platform/modules/axis` | Axis-specific CMS records and product docs are owned by the backend Axis module. |\n| Kickoff local setup and reference customization | `nodics.kickoff` | Kickoff is a customer-style project and must teach customers where project-owned content lives. |\n| Customer-specific module guides | Customer project or customer extension module | Customer data must not be hidden inside framework repositories. |\n\nWhen Axis displays “Framework,” “Swaggers,” “Nodics Axis,” and “Nodics\nKickoff,” that is a frontend navigation decision. It does not mean all content\ncomes from one repository. Each backend owner contributes its governed content\npack.\n\n## Business value\n\nThis architecture helps teams customize without forking. It also supports\nclearer cost control: teams can reuse a capability, configure it, extend it in\na later layer, and only create a new implementation when the existing contract\ncannot satisfy the requirement. That avoids duplicate authority paths and makes\nlater framework upgrades more realistic.\n\n## Architecture decision guide\n\nWhen a requirement arrives, do not begin with a file name. Begin with the\nowner. The following decision guide keeps the architecture understandable for\nbusiness users, developers, operators, and AI tools.\n\n```mermaid\nflowchart TD\n  Requirement[\"New requirement\"] --> Business[\"Is it a business capability?\"]\n  Business -->|Used across projects| Framework[\"Framework functional module\"]\n  Business -->|Customer-specific| Project[\"Customer project or extension module\"]\n  Business -->|Browser rendering only| Axis[\"nodics.axis renderer\"]\n  Framework --> Owner[\"Choose Core, Platform, WCMS, Cron, Docs, or another module\"]\n  Project --> Extends[\"Extend framework module without renaming identity\"]\n  Axis --> Backend[\"Confirm backend-owned contract already exists\"]\n  Owner --> Technical[\"Place code in the owning technical module\"]\n  Extends --> Runtime[\"Load later through runtime extends\"]\n  Backend --> Renderer[\"Render authorized metadata only\"]\n```\n\nUse these questions:\n\n1. Is the behavior reusable framework behavior or customer-specific behavior?\n2. Is it backend authority, frontend presentation, documentation content, or\n   operational topology?\n3. Which functional module owns the business capability?\n4. Which technical module owns the implementation details?\n5. Which runtime server loads the owner?\n6. Which later-loaded module may customize it?\n7. Which tests prove default behavior and customization behavior?\n\nIf those answers are not clear, pause before coding. A small pause here\nprevents months of cleanup later.\n\n## Example: customer customizes Platform without renaming Platform\n\nSuppose a partner wants to customize employee onboarding rules. The business\ncapability remains Platform/Profile. Axis should still display Platform, not a\nnew customer-branded functional module name, because the partner is extending\nthe standard capability rather than creating a separate business capability.\n\nA customer module could load like this:\n\n```text\nnodics.foundation\nnodics.platform\ncustomer.platform\ncustomer project\nenvironment module\nserver module\n```\n\nThe important distinction is identity versus implementation. The functional\nmodule identity remains `nodics.platform`; the implementation may be extended\nor overridden by later modules according to the runtime load order. This keeps\nbusiness navigation, registry state, documentation, and API discovery stable\nwhile allowing project-specific behavior.\n\n## Example: why Axis does not own documentation data\n\nAxis is the browser renderer. It can own React components, route handling,\nrecovery screens, and renderer mappings in the frontend. It must not own\nbackend-importable CMS sites, content catalogs, pages, components, routes, or\ndocumentation content records.\n\nThe correct ownership is:\n\n| Content type | Owner |\n| --- | --- |\n| Framework documentation | `nodics.docs` |\n| Axis product documentation | `nodics.platform/modules/axis` |\n| Customer project documentation | customer project, such as the reference project |\n| Browser renderer code | `nodics.axis` |\n\nThis is not bureaucracy. It prevents the frontend from becoming a hidden\ndatabase seed repository. If a partner replaces Axis later, the backend-owned\ncontent remains valid. If a documentation pack changes, the import manifest\nand WCMS delivery contract remain the authority.\n\n## Operator example: same capability, different topology\n\nIn a local demo, Platform, WCMS, Cron, MongoDB, and Axis may all run on one\ndeveloper machine. In production, the same capabilities may be split across\ndifferent processes, containers, nodes, or networks. The architecture must\nsurvive that change.\n\n| Local concern | Production concern | Stable Nodics contract |\n| --- | --- | --- |\n| One terminal starts Platform. | Multiple Platform nodes may serve BackOffice APIs. | Platform owns Profile, BackOffice, registry, and API discovery. |\n| WCMS runs on port `4310`. | WCMS may scale separately with cache/search/storage. | WCMS owns content, routes, media, and documentation delivery. |\n| Cron runs only when testing. | Cron may run on controlled scheduler nodes. | Cron owns scheduled job lifecycle and execution evidence. |\n| Axis runs through Vite. | Axis may be built and hosted separately. | Axis renders backend-owned capability contracts. |\n\nThe module identity does not change just because topology changes. That is why\nruntime `extends`, service load order, registration state, and deployment\ntopology must be discussed separately.\n\n## Common mistakes\n\n- Copying Core, Platform, or WCMS source into a customer project.\n- Treating a server as the owner of a capability.\n- Exposing every technical module as a business registry item.\n- Putting CMS import data into `nodics.axis`.\n- Renaming a standard functional module because a customer customizes it.\n\n## Next actions\n\nAfter this page, read the local quick start and customization guide. Those\npages show how the architecture becomes concrete commands, files, and project\nrules.\n\n## Verification\n\nArchitecture decisions must be proven in the repository, not only described in\nconversation. For every new or moved capability, verify the functional module\nowner, the technical module owner, the runtime server graph, the configuration\nlayer, generated artifacts, import data, tests, and documentation source. If a\npage, component, catalog, route, or documentation record is imported into a\ndatabase, verify that it lives in a backend-owned module or customer project\nand not in the frontend repository.\n\nFor a local acceptance proof, start the reference Platform, WCMS, and optional\nProcess servers from the customer project, import the relevant data releases, and\nopen Axis. The module registry should show high-level functional modules,\ndocumentation products should resolve from their owning content packs, and\nruntime health should reflect backend observation rather than local frontend\nassumptions. If the user-visible behavior can only be explained by reading a\nfrontend file, the ownership boundary needs another review.\n",
+    "searchText": "Modular architecture and ownership How functional modules, technical modules, runtime servers, and customer projects fit together. # Modular Architecture and Ownership\n\nModular Architecture and Ownership is the entry page for how Nodics separates\nbusiness capabilities, runtime servers, project extensions, and technical\nimplementation details. It helps a business reader understand why Nodics can\ngrow without becoming one large application, and helps a developer decide where\na change belongs before writing code.\n\nThe detailed pages in this group explain runtime composition, service\nprecedence, and architecture decisions. This page is the dashboard for that\njourney.\n\n## Ownership model\n\n```mermaid\nflowchart LR\n  Capability[\"Business capability\"] --> Module[\"Functional module\"]\n  Module --> Technical[\"Technical modules\"]\n  Technical --> Server[\"Runtime server\"]\n  Project[\"Customer project\"] --> Override[\"Project extension\"]\n  Override --> Module\n```\n\n| Layer | What it owns | Reader impact |\n| --- | --- | --- |\n| Functional module | Business capability boundary and public contract. | Business users see a stable capability name. |\n| Technical module | Schemas, services, controllers, pipelines, events, and tests. | Developers know where implementation lives. |\n| Runtime server | Which modules are active together in a process. | Operators know what must run in each topology. |\n| Customer project | Extensions, overrides, configuration, and seed data. | Customers customize without editing reusable framework source. |\n\n## What to read next\n\n- Read **Runtime Server Composition** when deciding which backend server should\n  host a capability.\n- Read **Module Loading and Service Precedence** when a project overrides a\n  schema, service, controller, pipeline, event, or configuration value.\n- Read **Architecture Decision Guide** when choosing between module ownership,\n  project customization, runtime configuration, import data, or Axis content.\n- Read **Functional Module Registry** when you need the active capability map\n  visible to Axis, tools, and operators.\n\n## Business perspective\n\nFor business teams, modularity means controlled growth. A retailer can start\nwith content, catalog, cart, checkout, payment, shipping, and order operations,\nthen add search, engagement, integrations, automation, analytics, and industry\naccelerators without redesigning the whole platform. Each capability has a\nbusiness-friendly name, a clear owner, and a publication or runtime contract.\n\nThe important decision is not the package name. The important decision is who\nowns the business behavior, who can change it, how it is approved, and where an\noperator can verify it.\n\n## Technical perspective\n\nFor a developer, modular architecture protects extension boundaries. A project\ncan extend Platform, WCMS, Commerce, Process, or another capability through\nproject modules, configuration, data, and service precedence. The project does\nnot rename the core capability or copy framework implementation just to make a\ncustomer-specific change.\n\nEvery topic in this area should identify the owning module, the project-layer\noverride path, configuration keys, APIs, events, pipelines, validation tests,\nand operational evidence. If the change affects runtime behavior, the\ndocumentation must also explain whether it is static, import-driven, or\ngoverned runtime change.\n\n## Common mistakes\n\n- Naming documentation after exact package folders instead of business\n  capability names.\n- Putting project customization inside reusable framework modules.\n- Treating Axis as the owner of backend data instead of the administrative\n  client.\n- Describing service overrides without explaining load order or verification.\n\n## Verification\n\nVerify modular decisions by checking the module metadata, generated service\ncontracts, active runtime composition, Axis capability registry, and tests for\nthe changed behavior. A beginner should be able to follow the capability name;\na developer should be able to find the implementation; an operator should be\nable to see where the capability runs.\n",
     "keywords": [
       "framework-architecture-and-design",
       "modularity-and-ownership",
@@ -11562,7 +7986,8 @@ module.exports = {
     ],
     "facets": {
       "section": "framework-architecture-and-design",
-      "group": "modularity-and-ownership",
+      "group": "framework-architecture-and-design",
+      "navigationDepth": 2,
       "documentType": "concept",
       "audience": [
         "business",
@@ -11591,7 +8016,151 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record301": {
+  "record200": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkruntimeservercomposition",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataframeworkRuntimeServerComposition",
+    "title": "Runtime Server Composition",
+    "summary": "How project topology composes framework modules into Platform, WCMS, Process, and other runtime servers.",
+    "searchText": "Runtime Server Composition How project topology composes framework modules into Platform, WCMS, Process, and other runtime servers. # Runtime Server Composition\n\nRuntime server composition explains how Nodics turns framework modules and\nproject modules into running services. A beginner often looks at repository\nfolders and assumes that every available module is active. That is not the\nNodics model. Repository code only makes a capability available. Runtime\ncomposition decides which capabilities load into a specific server, in which\norder, and with which project or environment customizations.\n\nFor business users, this matters because the same framework can support a\nsmall local evaluation and a larger enterprise deployment without changing the\ncapability ownership model. For developers and operators, it explains where a\nchange belongs and which server must load it before the behavior exists.\n\n## Runtime model\n\nPlatform, WCMS, Process, and other servers are composition targets. Platform\nusually handles employee identity, profile, BackOffice metadata, module\nregistry, and API discovery. WCMS handles sites, catalogs, pages, components,\nroutes, media, and documentation delivery. Process handles workflow, human\ntasks, scheduled automation, and cron-related runtime behavior. A customer\nproject decides which modules extend each server for a given environment.\n\n```mermaid\nflowchart TD\n  Project[\"Customer project\"] --> Platform[\"Platform server\"]\n  Project --> WCMS[\"WCMS server\"]\n  Project --> Process[\"Process server\"]\n  Framework[\"Framework modules\"] --> Platform\n  Framework --> WCMS\n  Framework --> Process\n  Extensions[\"Project and environment modules\"] --> Platform\n  Extensions --> WCMS\n  Extensions --> Process\n```\n\n## Composition decisions\n\n| Decision | Business impact | Technical impact |\n| --- | --- | --- |\n| Load Platform | Axis login, registry, profile, and administration are available. | Platform modules and project platform extensions must load. |\n| Load WCMS | Public content, documentation, media, and site routes can be delivered. | WCMS schemas, services, routes, and content packs must load. |\n| Load Process | Approval tasks, workflows, and scheduled automation can run. | Process and cron modules must load with task persistence and worker settings. |\n| Add project extension | Customer behavior appears without forking framework source. | Later-loaded modules override or extend framework services. |\n\n## Customization and extension\n\nA project should customize composition through project-owned configuration and\nmodules. If a capability is not needed, it should not be forced into the\nruntime only because its code exists in the framework. If a capability is\nneeded by a public application, it must be registered and loaded before related\ncontent data is imported. Agora commerce data, for example, should not be\ntreated as complete unless the commerce capabilities it depends on are active.\n\n## Operator view\n\nOperators should verify composition by checking server status, loaded module\nlists, logs, generated routes, module registry state, and health endpoints.\nWhen a server fails, the question is not only \"which process stopped?\" It is\n\"which composed capability was responsible for the failed route, import, job,\nor publication state?\"\n\n## Common mistakes\n\n- Assuming every module in the framework checkout is active in every server.\n- Importing data for a capability before the capability is registered and\n  loaded.\n- Treating local topology as the only production topology.\n- Hiding customer-specific runtime decisions in unsourced environment files.\n- Editing a framework module when a project extension should own the change.\n\n## Verification\n\nVerify composition from a fresh schema by starting the topology, checking the\nloaded modules for each server, opening Axis Module Registry, importing only\ndata packs whose capabilities are active, and confirming that public apps show\nOnline content only after the relevant WCMS publication path succeeds.\n",
+    "keywords": [
+      "runtime-server-composition",
+      "server-topology",
+      "platform-wcms-process",
+      "Framework Architecture and Design",
+      "Modularity and Ownership",
+      "Runtime Server Composition"
+    ],
+    "facets": {
+      "section": "framework-architecture-and-design",
+      "group": "framework-architecture-and-design",
+      "navigationDepth": 2,
+      "documentType": "concept",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record201": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkmoduleloadingserviceprecedence",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataframeworkModuleLoadingServicePrecedence",
+    "title": "Module Loading and Service Precedence",
+    "summary": "How runtime loading order, service overrides, and project layers decide which implementation is active.",
+    "searchText": "Module Loading and Service Precedence How runtime loading order, service overrides, and project layers decide which implementation is active. # Module Loading and Service Precedence\n\nModule loading and service precedence explain which implementation wins when\nframework and project modules provide related behavior. This topic is separate\nfrom the business module hierarchy. A capability such as Platform, WCMS,\nCommerce, or Process may be visible to business users as one capability, while\ndevelopers still need to know the exact technical module and service order\nused at runtime.\n\nThe beginner rule is: the later, more specific layer may extend or override\nthe earlier framework layer when the module is composed into the same runtime.\nThat is how customer projects customize behavior without renaming the\nframework capability or modifying shared framework source.\n\n## Loading order\n\nRuntime loading starts with foundational modules, then loads functional\ncapabilities, then project, environment, and server-specific modules. The exact\ncomposition is declared by the project. Service precedence follows that load\norder, so a project service can replace or extend a framework service when the\ncontract allows it.\n\n```mermaid\nflowchart LR\n  Core[\"Core foundation\"] --> Capability[\"Framework capability\"]\n  Capability --> Project[\"Project extension\"]\n  Project --> Environment[\"Environment override\"]\n  Environment --> Server[\"Server-specific behavior\"]\n```\n\n## Business and developer impact\n\n| Reader | Why precedence matters |\n| --- | --- |\n| Business user | A customer can receive tailored behavior while still using the standard capability. |\n| Developer | The correct customization point is the later project module, not a direct framework edit. |\n| Operator | Runtime logs and loaded-module evidence explain why a specific implementation handled a request. |\n| QA owner | Tests must prove both default framework behavior and project override behavior. |\n\n## Customization and extension\n\nUse precedence deliberately. Add a project service when the customer needs a\ndifferent decision, validation, provider, or business rule. Add configuration\nwhen behavior already has a supported switch. Add a pipeline step when the\ncapability is intentionally orchestrated through business logic stages. Avoid\ncopying an entire framework module because one method needs customer-specific\nbehavior.\n\n```js\nmodule.exports = {\n  service: 'customerPriceDecisionService',\n  extends: 'defaultPriceDecisionService',\n  owner: 'customer.project.pricing'\n};\n```\n\n## Operator view\n\nWhen production behavior differs from the default framework, operators should\nbe able to see which module supplied the active service. Logs, runtime module\nlists, configuration source, and generated context should all point to the\nsame owner. That evidence matters during incidents, upgrades, and rollback.\n\n## Reader and implementation contract\n\nA beginner should finish this topic understanding that a customization does\nnot become active only because a file exists. The module must be part of the\nruntime graph, and the runtime graph must load it after the framework behavior\nit extends. A business user should understand that the customer can keep a\nstandard capability name while receiving tailored behavior. A developer should\nknow where the override lives, which service contract it replaces or extends,\nand which generated artifacts or tests need to be updated. An operator should\nknow how to prove the active implementation from logs, module loading output,\nconfiguration source, and runtime health evidence.\n\nDocument every precedence-sensitive change with the same shape: business\nreason, owning capability, base implementation, project implementation,\nactivation configuration, server graph, rollback path, and verification\ncommand. Without that evidence, a future maintainer cannot tell whether a\ndifferent result is expected customization or accidental drift.\n\n## Common mistakes\n\n- Confusing functional module hierarchy with service precedence.\n- Renaming a capability because a project overrides one implementation detail.\n- Adding duplicate services without knowing which one wins.\n- Testing only the default service and forgetting the project override path.\n- Documenting an override without explaining runtime and rollback impact.\n\n## Verification\n\nVerify precedence by checking the composed module order, confirming the active\nservice implementation, running the framework default tests, running the\nproject override tests, and proving the browser or API behavior uses the\nexpected service. The documentation must identify the owning capability, the\noverride path, and the rollback path.\n",
+    "keywords": [
+      "module-loading",
+      "service-precedence",
+      "override-order",
+      "Framework Architecture and Design",
+      "Modularity and Ownership",
+      "Service Precedence"
+    ],
+    "facets": {
+      "section": "framework-architecture-and-design",
+      "group": "framework-architecture-and-design",
+      "navigationDepth": 2,
+      "documentType": "concept",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record202": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkarchitecturedecisionguide",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataframeworkArchitectureDecisionGuide",
+    "title": "Architecture Decision Guide",
+    "summary": "Decision path for choosing framework, project, content, provider, service, pipeline, schema, route, or renderer ownership.",
+    "searchText": "Architecture Decision Guide Decision path for choosing framework, project, content, provider, service, pipeline, schema, route, or renderer ownership. # Architecture Decision Guide\n\nThe architecture decision guide helps teams decide where a new behavior,\nconfiguration, API, schema, data pack, renderer, or workflow belongs. It exists\nbecause enterprise projects fail when every team solves the same ownership\nquestion differently. A business user sees the resulting confusion as slow\ndelivery. A developer sees it as duplicated code. An operator sees it as a\nruntime that cannot explain itself.\n\nUse this page before implementation. It does not replace module-specific\ndocumentation; it gives the first decision path so the right module-specific\npage is opened.\n\n## Decision path\n\n```mermaid\nflowchart TD\n  Need[\"New requirement\"] --> Business[\"Is this customer-specific?\"]\n  Business -->|Yes| Project[\"Project module, content, or configuration\"]\n  Business -->|No| Capability[\"Find reusable capability owner\"]\n  Capability --> Data[\"Does it change data or schema?\"]\n  Capability --> UI[\"Is it only browser rendering?\"]\n  Capability --> Runtime[\"Does it change runtime behavior?\"]\n  Data --> Owner[\"Owning backend module\"]\n  UI --> Axis[\"Axis or public app renderer\"]\n  Runtime --> Config[\"Configuration, provider, pipeline, event, or service\"]\n```\n\n## Ownership table\n\n| Change type | Preferred owner | Avoid |\n| --- | --- | --- |\n| Employee identity or permission | Platform/Profile capability. | Public app or Axis-only logic. |\n| CMS page, component, route, media, or documentation | WCMS or backend content pack owner. | Frontend hardcoded pages. |\n| Storefront accelerator data | Accelerator project/module pack plus required domain capabilities. | Importing data before modules are registered. |\n| Scheduled work | Process/Cron or project cron extension. | Node-local timers hidden from governance. |\n| Business rule | Service, validator, pipeline, or project extension. | Editing unrelated framework files. |\n| Provider switch | Provider adapter and configuration. | One-off conditionals in business code. |\n\n## Business perspective\n\nThe business benefit is predictable change. If a customer asks for a new\napproval rule, product field, page layout, search provider, or payment adapter,\nthe team can identify the owner and impact before changing code. That shortens\ndelivery because the discussion moves from \"where can we hack this?\" to \"which\ncapability owns the business decision?\"\n\n## Customization and extension\n\nStart with configuration and content when the behavior is designed for\nbusiness administration. Move to project modules when code is needed. Change\nframework source only when the reusable capability itself needs to improve for\nall projects. Every extension must document its owner, runtime impact, tests,\nand rollback path.\n\n## Reader and implementation contract\n\nA beginner should use this page as the first checkpoint before opening source\nfiles. A business sponsor should be able to see whether a request changes\ncustomer experience, administration, runtime behavior, public content,\nsecurity, or operations. A developer should convert that business request into\none owner and one extension path before editing. An operator should receive\nenough detail to know which server, import, publication, or configuration\nchange will be affected.\n\nWhen a decision is made, record the rejected options as well as the selected\nowner. For example, if a new storefront header is implemented through WCMS\ncontent, state why it is not a hardcoded Agora component. If a workflow is\nimplemented in Process, state why it is not an unmanaged cron timer. These\nsmall decision notes prevent future teams and AI tools from reversing the\narchitecture during urgent delivery work.\n\n## Common mistakes\n\n- Starting from the nearest matching filename instead of the owning capability.\n- Putting backend authority inside Axis because the action starts from a\n  screen.\n- Treating generated OpenAPI, documentation, or content data as hand-edited\n  output.\n- Forgetting that data import, publication, and runtime activation may require\n  separate steps.\n- Skipping business impact when the change appears technical.\n\n## Verification\n\nA decision is ready when the owning capability is named, the project versus\nframework boundary is clear, configuration and content options were checked,\nthe runtime server is known, and the validation path covers API, browser,\ndata, permissions, publication, and operations where applicable.\n",
+    "keywords": [
+      "architecture-decision-guide",
+      "ownership-decision",
+      "where-change-belongs",
+      "Framework Architecture and Design",
+      "Modularity and Ownership",
+      "Architecture Decision Guide"
+    ],
+    "facets": {
+      "section": "framework-architecture-and-design",
+      "group": "framework-architecture-and-design",
+      "navigationDepth": 2,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record203": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataplatformmoduleregistry",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11609,7 +8178,8 @@ module.exports = {
     ],
     "facets": {
       "section": "capability-registry-and-lifecycle-management",
-      "group": "functional-module-registry",
+      "group": "capability-registry-and-lifecycle-management",
+      "navigationDepth": 2,
       "documentType": "contract",
       "audience": [
         "business",
@@ -11638,7 +8208,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record302": {
+  "record204": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11656,7 +8226,8 @@ module.exports = {
     ],
     "facets": {
       "section": "foundation-runtime-services",
-      "group": "runtime-foundation",
+      "group": "foundation-runtime-services",
+      "navigationDepth": 2,
       "documentType": "overview",
       "audience": [
         "business",
@@ -11685,7 +8256,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record303": {
+  "record205": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataapplicationssuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11705,7 +8276,8 @@ module.exports = {
     ],
     "facets": {
       "section": "nodics-application-suite",
-      "group": "application-overview",
+      "group": "nodics-application-suite",
+      "navigationDepth": 2,
       "documentType": "overview",
       "audience": [
         "business",
@@ -11734,25 +8306,31 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record304": {
-    "code": "nodicsDocsSearchpagenodicsdocsmetadatasolutionsteedeap",
+  "record206": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatasolutionstaskexecutionengine",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
-    "targetCode": "nodicsDocsMetadatasolutionsTeeDeap",
-    "title": "TEE and DEAP Solution Use Cases",
-    "summary": "How Task Execution Engine and Data Engineering and Analytics Platform solutions can be built on the Nodics Framework.",
-    "searchText": "TEE and DEAP Solution Use Cases How Task Execution Engine and Data Engineering and Analytics Platform solutions can be built on the Nodics Framework. # TEE and DEAP Solution Use Cases\n\nHow Task Execution Engine and Data Engineering and Analytics Platform solutions can be built on the Nodics Framework. This page is intentionally written for beginners, business users, developers, operators, architects, QA owners, and AI tools. It explains the business problem first, then the technical ownership model, then the exact customization and verification responsibilities so nobody has to guess where a change belongs.\n\nCustomers often need more than commerce screens: they need governed task execution, analytics pipelines, operational evidence, and reusable solution patterns without turning each project into a custom platform fork. TEE uses Nodics process, cron, event, pipeline, and Axis capabilities to orchestrate tasks. DEAP uses import, publishing, discovery, provider, and analytics-oriented extension points to manage data products and insights.\n\n## Business context\n\nFor a business user, this topic answers what decision can be made, which operational journey is supported, and what risk is reduced. The practical value is faster delivery without losing governance: teams can understand the current capability, decide whether it applies to their project, and know when Axis, Nexus, content catalog, workflow, or runtime services are involved.\n\nFor beginners, the mental model is simple: the page title is the business capability, the table identifies who owns each part, and the diagram shows how a request or change flows. A reader should not need source-code knowledge to understand the journey, but the developer path is still available when customization is needed.\n\n| Business question | Answer for this topic |\n| --- | --- |\n| What problem does it solve? | Customers often need more than commerce screens: they need governed task execution, analytics pipelines, operational evidence, and reusable solution patterns without turning each project into a custom platform fork. |\n| Who uses it? | Business users, administrators, developers, operators, QA owners, implementation partners, and AI-assisted delivery tools. |\n| What changes can it support? | TEE uses Nodics process, cron, event, pipeline, and Axis capabilities to orchestrate tasks. DEAP uses import, publishing, discovery, provider, and analytics-oriented extension points to manage data products and insights. |\n| What must be governed? | Permissions, validation, source ownership, publication state, runtime impact, audit evidence, and rollback boundaries. |\n\n## Journey and ownership\n\nTEE and DEAP are solution use cases, not core product labels. The owning pages map them to framework capabilities and link back to Process, Cron, Pipelines, Import, Search, and Axis documentation. This keeps the reader-facing name friendly while preserving exact source ownership for developers and AI tools. Axis may render management screens or authenticated documentation, Nexus may render public Online content, and the backend content catalog remains authoritative for navigation, pages, access policies, and publication state.\n\n```mermaid\nflowchart LR\n  Reader[\"Business or developer request\"] --> Axis[\"Axis or Nexus view\"]\n  Axis --> Backend[\"Owning backend capability\"]\n  Backend --> Catalog[\"Content/catalog/schema/config records\"]\n  Catalog --> Runtime[\"Runtime behavior or published page\"]\n  Runtime --> Evidence[\"Audit, validation, and support evidence\"]\n```\n\n| Responsibility | Owner | Notes |\n| --- | --- | --- |\n| Business capability name | Solution Use Cases | Used in navigation and dashboards so readers are not exposed to raw module names first. |\n| Source owner | nodics.docs | Carries exact implementation, documentation, and validation evidence. |\n| Technical module | documentation | Holds the relevant schema, service, router, data, or contract detail where applicable. |\n| Axis experience | Backend-declared workspace | Axis renders metadata and actions but does not become the authority. |\n| Public experience | Online content delivery | Nexus renders only records approved for public access. |\n\n## Data and configuration detail\n\nEvery topic must explain the data that changes behavior. Some topics are schema-driven, some are configuration-driven, some are publishable content, and some are operational records. The documentation must say which category applies before showing code. That keeps production operators and developers aligned on whether a change needs publication, restart, event propagation, approval, or only a project-layer override.\n\n| Detail area | What to document | Verification signal |\n| --- | --- | --- |\n| Model or record | Type code, catalog, tenant, enterprise, state, owner, and lifecycle. | Schema contract or generated model test. |\n| Configuration key | Default value, override location, environment scope, and runtime impact. | Config validation and runtime refresh evidence. |\n| API or event | Route/event name, payload boundary, permission, idempotency, and failure mode. | Route, service, event, and authorization tests. |\n| Publication and access | Staged/Online state, access mode, roles, groups, and permissions. | Content-pack validation and access-policy test. |\n\n```js\nsolutionPattern: { tee: [\"process\", \"cron\", \"pipeline\"], deap: [\"import\", \"discovery\", \"publishing\"] }\n```\n\n## Customization and extension\n\nDevelopers should customize from the project layer first. A customer project may add properties, services, validators, pipelines, renderers, data packs, or provider configuration when the extension respects the owning capability. Business users may update governed records in Axis when the record is designed for administration. Framework source changes are reserved for improving the reusable product capability itself.\n\n| Customization type | Recommended path | Avoid |\n| --- | --- | --- |\n| Business label, navigation, or content area | Axis-managed content catalog item with publication workflow. | Hardcoding labels or page trees in the frontend. |\n| Runtime setting | Module configuration with validation and governed runtime propagation. | Editing node-local files on each server by hand. |\n| Domain behavior | Extension service, validator, pipeline step, or provider adapter. | Forking the standard module for customer-only logic. |\n| Public visibility | Access policy with public/authenticated/role-based state. | Exposing internal or draft pages through Nexus. |\n\n## Operations and governance\n\nOperators need production-safe evidence, not only implementation notes. Each page must call out logging, tracing, permission checks, event propagation, data import/export, publication status, rollback behavior, and troubleshooting. If a capability affects multiple nodes, the documentation must explain how changes reach every node and how a partial failure is detected.\n\n| Operational concern | Required documentation detail |\n| --- | --- |\n| Security | Authentication mode, permission code, role/group, tenant and enterprise isolation. |\n| Audit | Actor, timestamp, source record, checksum, approval, route/event, and result. |\n| Resilience | Retry, idempotency, compensation, fallback, cache invalidation, and rollback. |\n| Observability | Logs, metrics, dashboard cards, health checks, and support evidence. |\n\n## Common mistakes\n\n- Treating a friendly navigation label as the technical source owner.\n- Writing only developer details and skipping the business decision that the page supports.\n- Updating Axis or Nexus code when the content catalog, schema, or backend capability should own the change.\n- Forgetting access rules for public, authenticated, role-based, group-based, or permission-based pages.\n- Skipping diagrams, comparison tables, source maps, or troubleshooting matrices because the topic feels obvious.\n- Changing runtime behavior without explaining production impact, cluster propagation, and rollback.\n- Leaving generated documentation without source evidence, validation commands, and maturity state.\n\n## Verification\n\nVerification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.\n\nFor implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.\n\n## Solution definition and coverage\n\nTEE means Task Execution Engine. DEAP means Data Engineering and Analytics\nPlatform. They are not separate framework products. They are solution use\ncases that customers can build with Nodics Framework capabilities. Keeping\nthem under Solution Use Cases avoids confusing them with Catalog Product or\nwith the Nodics Application Suite.\n\n```mermaid\nflowchart LR\n  Nodics[\"Nodics Framework\"] --> TEE[\"Task Execution Engine\"]\n  Nodics --> DEAP[\"Data Engineering and Analytics Platform\"]\n  TEE --> Process[\"Process workflows\"]\n  TEE --> Cron[\"Cron and scheduled automation\"]\n  TEE --> Pipeline[\"Pipelines\"]\n  TEE --> EMS[\"Events and messaging\"]\n  DEAP --> Import[\"Import and export\"]\n  DEAP --> Discovery[\"Discovery and indexing\"]\n  DEAP --> Governance[\"Governed runtime change\"]\n  DEAP --> Dashboards[\"Axis dashboards\"]\n```\n\n| Solution | Uses these framework capabilities | Business outcome |\n| --- | --- | --- |\n| TEE | Process, Cron, Pipeline, Events, Messaging, Runtime Governance, Axis operations. | Execute scheduled, manual, and event-triggered tasks with audit and recovery. |\n| DEAP | Import/Export, Discovery, Data Modeling, Provider Access, Events, Cron, Publication, Axis dashboards. | Move, validate, index, analyze, and publish governed data flows. |\n\nTEE documentation should reference Cron and Scheduled Automation, Process and\nWorkflow Automation, Pipeline and Business Logic Orchestration, Events and\nMessaging, and Governed Runtime Change. DEAP documentation should reference\nData Import/Export/Migration, Search and Discovery, Provider and Data Access,\nSchema and Data Modeling, Events and Messaging, and Axis dashboards. Each\nsolution page must show the business problem, an end-to-end journey, module\ncomposition, extension points, configuration, operational evidence,\ntroubleshooting, and validation commands.\n",
+    "targetCode": "nodicsDocsMetadatasolutionsTaskExecutionEngine",
+    "title": "Task Execution Engine",
+    "summary": "How customers use Nodics Process, Cron, Pipelines, Events, and governed runtime change to build a Task Execution Engine.",
+    "searchText": "Task Execution Engine How customers use Nodics Process, Cron, Pipelines, Events, and governed runtime change to build a Task Execution Engine. # Task Execution Engine\n\nTask Execution Engine, or TEE, is a Nodics solution use case for running governed business tasks across manual actions, scheduled jobs, process workflows, event messages, and runtime-safe configuration changes. It is not a separate application-suite product. It is a customer solution pattern built from Nodics Framework capabilities when a business needs repeatable execution, operational evidence, and recovery behavior without creating a custom platform fork.\n\nFor a beginner, the mental model is simple: TEE is the operating layer that turns business work into controlled tasks. A business user sees a job, approval, retry, or operational queue in Axis. A developer connects that work to process definitions, cron schedules, pipeline stages, services, events, and data records. An operator verifies that work is traceable, restart-safe, and recoverable across running nodes.\n\n## Business context\n\nBusinesses usually start asking for TEE when manual operations become too risky or too slow: product data needs nightly validation, publication needs approval, pricing needs scheduled activation, fulfillment needs retry, or a partner integration needs controlled execution. TEE provides a pattern for making these operations visible, permissioned, monitored, and auditable.\n\n| Business question | TEE answer |\n| --- | --- |\n| What problem does it solve? | It converts repetitive or sensitive business operations into governed tasks with ownership, execution evidence, and recovery. |\n| Who uses it? | Business users request or monitor tasks, administrators manage approvals, developers implement task behavior, and operators support runtime execution. |\n| What decisions are supported? | Whether a task should run, pause, retry, fail over, require approval, or trigger another business process. |\n| What business value does it create? | Faster operations, fewer hidden scripts, clearer accountability, and safer go-live for automated business changes. |\n\n## Execution journey\n\nTEE begins with a business trigger and ends with observable evidence. The trigger may be a cron schedule, an Axis action, a process task, an event, or an API request. The execution should move through validated inputs, a pipeline or service boundary, state updates, audit events, and a visible result. When the task changes Online content or runtime behavior, approval and publication controls must remain in the owning capability.\n\n```mermaid\nflowchart LR\n  Request[\"Business request or schedule\"] --> Permission[\"Permission and context check\"]\n  Permission --> Process[\"Process workflow or cron trigger\"]\n  Process --> Pipeline[\"Pipeline and domain service execution\"]\n  Pipeline --> Event[\"Event or runtime notification\"]\n  Event --> Evidence[\"Audit, history, retry, and support evidence\"]\n  Evidence --> Axis[\"Axis task or operations view\"]\n```\n\n| Journey step | Business view | Technical owner |\n| --- | --- | --- |\n| Request | User asks for work or reviews a scheduled operation. | Axis action, API route, cron job, or process trigger. |\n| Validate | System confirms tenant, enterprise, permission, payload, and state. | Profile, routing, validator, schema, and process services. |\n| Execute | Task runs once with clear status and failure handling. | Pipeline, domain service, event, and runtime service contracts. |\n| Recover | Failed or interrupted work can be retried or transferred safely. | Cron, process incidents, idempotency, node membership, and audit. |\n\n## Capability composition\n\nTEE should be documented as a composition of existing Nodics capabilities, not as a shortcut around them. Cron owns scheduled execution. Process owns workflow definitions, tasks, approvals, and runtime lifecycle. Pipeline owns ordered business logic execution. Event and messaging capabilities notify other nodes or services. Runtime governance controls safe changes while the application is running.\n\n| Capability | Role in TEE | Documentation link to maintain |\n| --- | --- | --- |\n| Cron and Scheduled Automation | Runs scheduled and background work with node responsibility and recovery. | Cron and Scheduled Automation |\n| Process and Workflow Automation | Models approval, task state, incidents, retries, and human decisions. | Process Workflows |\n| Pipeline and Business Logic Orchestration | Provides ordered, testable execution steps. | Pipeline and Business Logic Orchestration |\n| Event and Messaging Management | Propagates changes and operational messages across nodes. | Event and Messaging Management |\n| Governed Runtime Change | Applies controlled runtime changes without unmanaged node-by-node edits. | Governed Runtime Change Capability |\n\n## Configuration and extension\n\nDevelopers customize TEE from the project layer by adding task definitions, cron schedules, workflow definitions, pipeline stages, validators, and domain services. Business users should configure only the records that are designed for Axis administration. If a task affects runtime behavior or Online content, it must use the relevant publication, approval, permission, and audit flow.\n\n| Extension need | Recommended approach | Avoid |\n| --- | --- | --- |\n| Add a scheduled business task | Define a cron job, link it to a process or service, and document retry/idempotency. | Running unmanaged scripts outside Nodics lifecycle. |\n| Add human approval | Use Process task and approval contracts. | Embedding approval state only in a custom UI. |\n| Add execution logic | Add a pipeline step or project-layer service override with tests. | Forking framework services for customer-only behavior. |\n| Notify other nodes | Use events or messaging with bounded payloads and audit. | Asking operators to update each node manually. |\n\n```js\nteeTask: {\n  trigger: \"cron-or-process\",\n  execution: [\"validate-context\", \"run-pipeline\", \"record-audit\"],\n  recovery: [\"idempotency-key\", \"retry-policy\", \"node-responsibility\"]\n}\n```\n\n## Operations and troubleshooting\n\nOperators need evidence that a TEE task is safe to support in production. Every task should expose status, owner, trigger, last run, next run, correlation id, error summary, retry policy, and audit trail. Cluster-sensitive tasks must explain which node currently owns execution and how responsibility transfers when a node goes down and later returns.\n\n| Symptom | Likely cause | Check |\n| --- | --- | --- |\n| Task did not run | Schedule disabled, permission missing, or owning node unavailable. | Cron status, process trigger, node registry, and logs. |\n| Task ran twice | Missing idempotency, duplicate trigger, or unsafe retry. | Execution id, correlation id, and retry policy. |\n| Runtime change not visible | Event propagation failed or stale cache remained active. | Event logs, cache invalidation, and runtime configuration audit. |\n| Approval task is stuck | Process task state or permission mapping is incomplete. | Process task queue, role permission, and incident records. |\n\n## Common mistakes\n\n- Presenting TEE as a separate product instead of a solution use case built from framework capabilities.\n- Creating a cron job without explaining business owner, retry policy, idempotency, and audit.\n- Putting approval behavior into frontend code instead of Process and permission contracts.\n- Running scheduled work without documenting node responsibility and failover behavior.\n- Skipping beginner and business guidance because the execution looks technical.\n- Changing runtime behavior without events, audit, cache invalidation, and rollback evidence.\n\n## Verification\n\nVerification must prove both the business journey and the technical contract. Review the page in Axis to confirm the user can understand when to use TEE, who owns each step, and where operational evidence appears. Then run the owning Process, Cron, Pipeline, Event, and runtime-governance tests for the implementation being documented.\n\nDocumentation verification requires `npm run docs:check`, `npm run validate`, and `npm run audit:hardening` from `nodics.docs`. Runtime verification should include a scheduled execution, a manual trigger if exposed, a permission denial, an idempotent retry, a node responsibility transfer where applicable, and browser evidence from the relevant Axis operation screen.\n",
     "keywords": [
       "solution-use-cases",
-      "solution-patterns",
-      "tee-and-deap-solution-use-cases",
+      "task-execution-engine",
+      "tee",
+      "cron",
+      "process",
+      "pipeline",
+      "runtime-change",
       "Solution Use Cases",
       "Solution Patterns",
-      "TEE and DEAP Solution Use Cases"
+      "Task Execution Engine",
+      "TEE"
     ],
     "facets": {
       "section": "solution-use-cases",
-      "group": "solution-patterns",
+      "group": "solution-use-cases",
+      "navigationDepth": 2,
       "documentType": "concept",
       "audience": [
         "business",
@@ -11781,7 +8359,61 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record305": {
+  "record207": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatasolutionsdataengineeringanalyticsplatform",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatasolutionsDataEngineeringAnalyticsPlatform",
+    "title": "Data Engineering and Analytics Platform",
+    "summary": "How customers use Nodics import, export, discovery, provider, event, pipeline, and publishing capabilities to build governed data platforms.",
+    "searchText": "Data Engineering and Analytics Platform How customers use Nodics import, export, discovery, provider, event, pipeline, and publishing capabilities to build governed data platforms. # Data Engineering and Analytics Platform\n\nData Engineering and Analytics Platform, or DEAP, is a Nodics solution use case for building governed data flows: consume data from approved sources, validate and transform it, publish it to approved destinations, and expose operational or analytical evidence. It is not a standalone product label in the application suite. It is a solution pattern that uses Nodics data import, export, discovery, publishing, provider, event, cron, pipeline, and Axis capabilities.\n\nFor a beginner, DEAP can be understood as a trusted data factory. A business user wants reliable data movement, reporting, enrichment, or search readiness. A developer defines schemas, mappings, processors, adapters, and pipeline steps. An operator watches batches, failures, quarantine, retries, lineage, and publication evidence so data quality issues do not silently reach Online experiences.\n\n## Business context\n\nCustomers need DEAP when data quality and data movement become business risks. Product feeds, content indexes, customer engagement data, partner files, search documents, analytics exports, and migration packs all need source ownership, validation, transformation, retention, and support evidence. DEAP gives teams one governed pattern for these flows instead of one-off scripts and disconnected dashboards.\n\n| Business question | DEAP answer |\n| --- | --- |\n| What problem does it solve? | It makes data ingestion, transformation, publishing, search readiness, and analytics evidence governed and repeatable. |\n| Who uses it? | Business data owners, administrators, developers, operators, QA owners, and implementation partners. |\n| What decisions are supported? | Whether a source is trusted, a batch is valid, a transform is accepted, a destination can be published, or a data issue needs quarantine. |\n| What business value does it create? | Faster onboarding of data sources, safer migrations, better search/content quality, and clearer operational accountability. |\n\n## Data journey\n\nDEAP starts from an approved source and ends with a governed destination or analytical output. The journey should preserve source identity, tenant and enterprise context, schema version, checksum, mapping, transformation decision, lineage, validation result, and publication receipt. If data feeds search, WCMS, commerce, or analytics, the owning domain remains responsible for business meaning while DEAP carries the movement and processing pattern.\n\n```mermaid\nflowchart LR\n  Source[\"Approved data source\"] --> Import[\"Import or connector intake\"]\n  Import --> Validate[\"Schema, mapping, and quality validation\"]\n  Validate --> Process[\"Pipeline transformation and enrichment\"]\n  Process --> Publish[\"Publication, index, export, or analytics target\"]\n  Publish --> Evidence[\"Lineage, audit, receipt, and support evidence\"]\n  Evidence --> Axis[\"Axis monitoring and business review\"]\n```\n\n| Journey step | Business view | Technical owner |\n| --- | --- | --- |\n| Source approval | Business owner confirms source, purpose, and data classification. | Provider configuration, import definition, access policy. |\n| Intake | File, API, event, or content pack is received with checksum and context. | Import/export services, provider adapters, event handlers. |\n| Process | Data is validated, transformed, enriched, or quarantined. | Schema, mapping, validator, pipeline, processor service. |\n| Deliver | Data reaches search, publication, export, dashboard, or analytical target. | Discovery, publishing, export, reporting, or domain projection. |\n\n## Capability composition\n\nDEAP documentation should link to the framework capabilities that implement the flow. Data import/export owns file and record movement. Discovery owns index configuration and query-ready documents. Provider and data access layers control storage and external connections. Cron and Process can schedule or govern recurring flows. Event and messaging capabilities distribute changes and processing results. Axis renders the management journey declared by the backend.\n\n| Capability | Role in DEAP | Documentation link to maintain |\n| --- | --- | --- |\n| Data Import, Export, and Migration | Defines packs, manifests, import runs, mappings, checksums, and migration evidence. | Data Import, Export, and Migration |\n| Schema and Data Modeling | Defines source records, target records, validation, and extension fields. | Data Modeling and Schema Management |\n| Provider and Data Access Layer | Keeps MongoDB, search, file, and other providers replaceable through governed adapters. | Provider and Data Access Layer |\n| Search and Discovery | Builds searchable documents and index operations from approved sources. | Search and Discovery |\n| Pipeline and Events | Executes transformations and propagates changes with traceable payloads. | Pipeline and Event documentation |\n\n## Configuration and extension\n\nDevelopers customize DEAP by adding data-pack headers, import definitions, mapping records, validators, processors, provider adapters, discovery source providers, and export destinations. Business users manage only records exposed through Axis workspaces and governed by role, workflow, and publication rules. A project must document whether a change is a business configuration, a schema extension, a provider replacement, or a domain-service customization.\n\n| Extension need | Recommended approach | Avoid |\n| --- | --- | --- |\n| Add a feed or file format | Add an import definition, header, parser, mapping, and validation evidence. | Accepting arbitrary files without schema and checksum. |\n| Add a transformation | Add a pipeline processor with deterministic input and output contracts. | Hiding transformation rules in ad hoc scripts. |\n| Replace storage or search provider | Implement a provider adapter and document migration and rollback. | Binding DEAP logic directly to one database client. |\n| Publish to search or analytics | Use discovery or export publication with receipts and lineage. | Writing target data without acknowledgement or audit. |\n\n```js\ndeapFlow: {\n  source: \"approved-feed\",\n  controls: [\"schema-version\", \"checksum\", \"mapping\", \"quarantine\"],\n  delivery: [\"discovery-index\", \"export-target\", \"analytics-dashboard\"]\n}\n```\n\n## Operations and troubleshooting\n\nOperators need DEAP pages to explain how data issues are found and contained. A data flow should show source, batch id, record counts, accepted count, rejected count, quarantine reason, retry state, destination acknowledgement, and rollback or compensation path. Production support must be able to distinguish a provider outage from malformed source data, a mapping error, a processor failure, or an unpublished destination.\n\n| Symptom | Likely cause | Check |\n| --- | --- | --- |\n| Batch imports but records are missing | Mapping, validation, or quarantine rejected records. | Import run, rejection report, schema version, and mapping revision. |\n| Search results are stale | Index publication did not run or alias was not switched. | Discovery publication policy, index batch, and Online pointer. |\n| Analytics numbers changed unexpectedly | Source scope, transform rule, or deduplication changed. | Lineage, checksum, processor version, and audit. |\n| Provider replacement breaks delivery | Adapter contract or migration path is incomplete. | Provider configuration, data-access test, and rollback evidence. |\n\n## Common mistakes\n\n- Presenting DEAP as a finished product instead of a solution use case built from source-backed framework capabilities.\n- Importing data without source ownership, classification, checksum, and quarantine behavior.\n- Combining business data meaning with low-level provider code.\n- Skipping mapping and transformation documentation because a processor test passed.\n- Allowing search, analytics, and publication targets to drift without lineage and receipts.\n- Forgetting beginner and business guidance when describing schemas, providers, and pipelines.\n\n## Verification\n\nVerification must prove that DEAP is understandable and operable. The page should let a business user identify the data problem, the source, the destination, and the risk controls. Developers should verify schema, parser, mapping, processor, provider, discovery, publication, and export contracts for the specific flow being documented. Operators should verify batch status, quarantine, retry, audit, and support evidence in Axis.\n\nDocumentation verification requires `npm run docs:check`, `npm run validate`, and `npm run audit:hardening` from `nodics.docs`. Runtime verification should include a valid import, an invalid record, a mapping failure, an idempotent retry, a provider failure or fallback path where applicable, a publication or export receipt, and browser evidence from the Axis view used by the business user.\n",
+    "keywords": [
+      "solution-use-cases",
+      "data-engineering-and-analytics-platform",
+      "deap",
+      "import",
+      "export",
+      "discovery",
+      "analytics",
+      "data-pipeline",
+      "Solution Use Cases",
+      "Solution Patterns",
+      "Data Engineering and Analytics Platform",
+      "DEAP"
+    ],
+    "facets": {
+      "section": "solution-use-cases",
+      "group": "solution-use-cases",
+      "navigationDepth": 2,
+      "documentType": "concept",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "design-contract"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record208": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsagoraindustrytemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11802,7 +8434,8 @@ module.exports = {
     ],
     "facets": {
       "section": "accelerators-and-industry-solution-templates",
-      "group": "agora-accelerator-family",
+      "group": "accelerators-and-industry-solution-templates",
+      "navigationDepth": 2,
       "documentType": "overview",
       "audience": [
         "business",
@@ -11831,14 +8464,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record306": {
+  "record209": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalquickstart",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkLocalQuickStart",
     "title": "Local quick start with Kickoff and Axis",
     "summary": "Beginner-friendly steps to configure the framework, start local servers, log in to Axis, and open documentation.",
-    "searchText": "Local quick start with Kickoff and Axis Beginner-friendly steps to configure the framework, start local servers, log in to Axis, and open documentation. # Local quick start with Kickoff and Axis\n\nThis guide starts the local reference stack from zero. It is written for a\ndeveloper who is new to Nodics and wants to see the framework, BackOffice, WCMS\ndocumentation, and Axis working locally.\n\nFor a beginner, the goal is not to understand every internal module on the\nfirst day. The goal is to prove that the framework can start, authenticate,\nimport governed content, show documentation, and expose a safe BackOffice\nworkspace before any custom business code is written.\n\nFor a business evaluator, this quick start demonstrates adoption friction. If a\nnew partner can clone the framework, run Kickoff, and see Platform, WCMS, Cron,\nand Axis working together, then the framework is easier to evaluate than an\narchitecture that exists only on slides.\n\n## What you will run\n\nThe reference setup uses three projects:\n\n- `nodics.ai` contains framework backend modules.\n- `nodics.kickoff` is the reference customer project and local server owner.\n- `nodics.axis` is the BackOffice frontend.\n\nKickoff starts backend servers. Axis connects to Platform, authenticates an\nemployee, reads the BackOffice bootstrap contract, and renders workspaces and\ndocumentation from registered backend sources.\n\n```mermaid\nflowchart TB\n  AI[\"nodics.ai<br/>framework modules\"] --> Kickoff[\"nodics.kickoff<br/>reference customer project\"]\n  Kickoff --> Platform[\"Platform server<br/>4300\"]\n  Kickoff --> WCMS[\"WCMS server<br/>4310\"]\n  Kickoff --> Process[\"Process server<br/>4330\"]\n  Axis[\"nodics.axis<br/>frontend 3100\"] --> Platform\n  Axis --> WCMS\n  Platform --> Registry[\"BackOffice registry\"]\n  WCMS --> Content[\"CMS and documentation content\"]\n  Process --> Jobs[\"Process and cronjob runtime observation\"]\n```\n\n## Business outcome of the quick start\n\nAfter this guide succeeds, the business-facing proof is simple: a customer\nproject can run the framework without forking framework code, content can be\nmanaged through backend-owned packs, and operators can see which capabilities\nare live. That is the first adoption story Nodics must make boring and\nrepeatable.\n\n## Prerequisites\n\nInstall Node.js and npm versions compatible with the repositories. Start\nMongoDB before starting the backend. Elasticsearch and Redis may be needed when\ntheir providers are enabled by configuration; disabled providers may produce\ninformational logs and are not a failure in the reference setup.\n\n## Step 1: configure Kickoff\n\nOpen `nodics.kickoff`:\n\n```bash\ncd ../nodics.kickoff\ncp .env.example .env\n```\n\nEdit `.env`:\n\n```bash\nNODICS_FRAMEWORK_ROOT=../nodics.ai\n```\n\nThis tells Kickoff where the framework checkout lives. The path may be\nabsolute or relative to the Kickoff project root.\n\nGenerate local framework links and install:\n\n```bash\nnpm run configure:framework\nnpm install\n```\n\nThe configure step creates local links under `.nodics/framework`. That folder\nis machine-local and must not be committed.\n\n## Step 2: start backend servers\n\nUse separate terminals from `nodics.kickoff`.\n\nStart Platform:\n\n```bash\nnpm run start:platform\n```\n\nPlatform provides employee authentication, Profile, BackOffice bootstrap,\nruntime module registry, documentation-source registry, and Platform APIs.\nLocal HTTP port: `http://localhost:4300`.\n\nStart WCMS:\n\n```bash\nnpm run start:wcms\n```\n\nWCMS owns CMS sites, content catalogs, pages, components, routes, media, and\ndocumentation content-pack delivery. Local HTTP port:\n`http://localhost:4310`.\n\nStart Cron when scheduled work is needed:\n\n```bash\nnpm run start:cron\n```\n\n## Step 3: start Axis\n\nOpen `nodics.axis`:\n\n```bash\ncd ../nodics.axis\nnpm install\nnpm run dev\n```\n\nOpen `http://localhost:3100`.\n\n## Step 4: log in\n\nUse the reference employee:\n\n```text\nEnterprise: default\nUsername: admin\nPassword: adminPassword\n```\n\nAfter login, open `http://localhost:3100/docs`. You should see Framework,\nSwaggers, Nodics Axis, and Nodics Kickoff.\n\n## First-hour exploration checklist\n\nAfter login, do not jump straight into code. Spend a few minutes exploring the\nruntime from Axis:\n\n1. Open **Documentation** and read the Framework overview.\n2. Open **System and Integrations → Module Registry** and notice that Core,\n   Platform, and WCMS are mandatory while Cron is optional when its server is\n   observed.\n3. Open **System and Integrations → Module Health** and compare project\n   registration state with runtime evidence.\n4. Open **Imports and Exports** and review initialization, core, sample, file,\n   export, and history tabs.\n5. Open **Content and Experience** and confirm WCMS pages, components,\n   catalogs, and routes exist.\n6. Open **Media** and review the media workspace as backend-owned content and\n   metadata, not frontend-owned files.\n\nThis tour gives a beginner the practical map: Profile authenticates, BackOffice\ndiscovers, WCMS serves content, Cron reports runtime capability, and Axis\nrenders what the backend authorizes.\n\n## What “initial data import” means\n\nThe local stack does not become useful only because the servers start. The\nservers also need governed data: catalogs, Profile records, WCMS sites, Axis\npages, documentation routes, module registry records, and sample data. Axis\nshows this through the Initialize experience.\n\n![Data import process](../assets/images/data-import-process.jpg \"Data import process reference from the archived documentation set\")\n\n```mermaid\nsequenceDiagram\n  participant User as Developer in Axis\n  participant Axis as nodics.axis\n  participant Platform as Platform 4300\n  participant WCMS as WCMS 4310\n  participant Modules as Module data folders\n\n  User->>Axis: Open Initialize\n  Axis->>Platform: Authenticate and load BackOffice bootstrap\n  Axis->>WCMS: GET /nodics/import/v0/init\n  WCMS->>Modules: Discover init manifests in active runtime graph\n  Modules-->>WCMS: Release name, version, checksum, files\n  WCMS-->>Axis: Valid release catalogue\n  User->>Axis: Select releases and install\n  Axis->>WCMS: POST /nodics/import/v0/init/install\n  WCMS->>Modules: Read header and data files\n  WCMS-->>Axis: Import result and evidence\n```\n\nIf Axis says `INVALID RELEASE`, do not ignore it. That means the manifest\nchecksum does not match the current files. Run the framework manifest generator\nfrom `nodics.ai` before importing again:\n\n```bash\nnode nodics.foundation/modules/nTooling/bin/generate-data-release-manifests.js\n```\n\nThen restart the affected backend server so it rediscovers the updated\nmanifests. In local development the most common affected server is WCMS\nbecause the Initialize page reads import catalogues from port `4310`.\n\n## What “export” means in the same governance model\n\nImports and exports are two sides of the same governed data story. Import\nbrings trusted module-owned records into a runtime database. Export takes\nauthorized runtime records and produces a controlled output file, storage\nrecord, or delivery artifact. Both need ownership, validation, status,\nsecurity, audit, and repeatable operational evidence.\n\n![Data export process flow](../assets/images/data-export-process-flow.jpg \"Data export process reference from the archived documentation set\")\n\nFor a beginner, the important point is that export is not simply “download a\nfile.” The request enters through a secured API, reaches an owning controller\nand service, reads data through the owning persistence contracts, writes output\nthrough an approved storage or delivery path, and records enough evidence for\nsupport. A customer extension module may customize export format or destination,\nbut it should not bypass the owner of the data being exported.\n\n## Fresh database test\n\nFor the safest repeatable local verification, use the Kickoff acceptance\nrunner from `nodics.kickoff`:\n\n```bash\nnpm run acceptance:local:fresh\n```\n\nThis command drops only the local reference databases:\n\n```text\nkickoffLocal\nkickoffLocalWcms\nkickoffLocalCron\n```\n\nIt then starts Platform, WCMS, Cron, and Axis if they are not already running;\nwaits for each server; logs in as the reference admin user; checks the module\nregistry; imports and verifies Framework, Axis, and Kickoff documentation\ncontent packs; verifies CMS counts; opens the important Axis routes; and runs\nthe live Axis smoke gates for module registry, documentation packs, and Cron\nlifecycle. The runner stops the servers it started after the checks complete;\npass `--leave-started` if you intentionally want to keep the local stack\nrunning for manual inspection.\n\nThe fresh runner intentionally refuses to drop databases when local Nodics\nports are already busy. Stop Platform, WCMS, Cron, and Axis first so the test\nreally proves a clean bootstrap. If you only want to verify the stack that is\nalready running, use the non-destructive command:\n\n```bash\nnpm run acceptance:local\n```\n\n## Manual startup versus acceptance runner\n\nUse the manual startup when you want to learn logs and runtime behavior. Use\nthe acceptance runner when you want a repeatable proof.\n\n| Need | Recommended path |\n| --- | --- |\n| First learning session | Start Platform, WCMS, Cron, and Axis manually in separate terminals. |\n| Fresh database confidence | Run `npm run acceptance:local:fresh` from Kickoff. |\n| Quick regression after documentation changes | Run `npm run acceptance:local` from Kickoff. |\n| Debugging one server | Start only the affected server and inspect its logs. |\n| UI inspection after automated setup | Run the acceptance script with `--leave-started`. |\n\nThe important rule is scope. Local acceptance may reset only the configured\nKickoff local databases. It must never delete unrelated MongoDB databases,\nworkspace folders, home directories, or shared environments.\n\nWhen you drop local MongoDB schemas to test from zero, use this order:\n\n1. Stop Platform, WCMS, Cron, and Axis.\n2. Drop only the local Nodics development databases you intentionally want to\n   reset.\n3. Start Platform and wait until it finishes module loading.\n4. Start WCMS and wait until it finishes module loading.\n5. Start Cron only if you want to test optional module registration.\n6. Start Axis and log in with the reference admin user.\n7. Open Initialize and import required `init`, then `core`, then `sample`\n   releases as needed.\n\nDo not drop databases in a shared or production-like environment from this\nguide. This quick start is only for local developer machines.\n\n## Manual server checklist\n\nUse this checklist if something looks wrong:\n\n| Check | Expected result |\n| --- | --- |\n| `http://localhost:4300` | Platform server is listening. |\n| `http://localhost:4310` | WCMS server is listening. |\n| `http://localhost:3100` | Axis Vite dev server is listening. |\n| Axis login | `default / admin / adminPassword` logs in. |\n| Documentation dashboard | Framework, Swaggers, Nodics Axis, and Nodics Kickoff are visible after content import. |\n| Initialize screen | Releases are grouped by selected data type and do not repeat across Init/Core/Sample. |\n\n## Troubleshooting\n\nIf Axis says the BackOffice registry is unavailable, Platform is not reachable\nor still starting. Check the Platform terminal and confirm port `4300`.\n\nIf CMS documentation is unavailable, WCMS is not reachable, the content pack\nhas not been imported, or the imported version is stale. Check port `4310` and\nthe content-pack import status.\n\nIf npm cannot resolve framework packages, rerun `npm run configure:framework`\nafter checking `NODICS_FRAMEWORK_ROOT`.\n\n## What success looks like for each reader\n\nThe quick start is successful only when different readers can see their own\nevidence, not merely when terminal processes stay open.\n\n| Reader | Evidence they should see | Why it matters |\n| --- | --- | --- |\n| Business evaluator | Axis opens, login succeeds, dashboards and documentation are visible. | Proves the framework is not only an architecture idea; it has a runnable business workspace. |\n| Developer | Platform, WCMS, and Cron start from Kickoff without editing framework source. | Proves customer projects compose the framework through configuration and dependencies. |\n| Architect | Module Registry shows mandatory and optional functional modules at the correct level. | Proves business capability identity is separated from internal technical modules. |\n| Operator | Ports, runtime logs, import releases, and module lifecycle states are observable. | Proves the stack can be diagnosed without guessing from frontend behavior. |\n| QA engineer | Fresh acceptance can recreate the local system from empty databases. | Proves the demo is repeatable and not dependent on accidental local state. |\n\nIf one reader's evidence is missing, the quick start is not complete. For\nexample, a developer may see servers running, but a business evaluator still\ncannot evaluate Nodics if Axis documentation is missing. Likewise, Axis may\nopen, but an operator cannot trust the bootstrap if content packs show checksum\nerrors or stale releases.\n\n## First guided walkthrough after login\n\nAfter login, use this short walkthrough before changing any code:\n\n1. Open **Dashboard** and confirm Axis is in the authenticated workspace, not\n   the static recovery screen.\n2. Open **System and Integrations > Module Registry** and confirm Core,\n   Platform, and WCMS are mandatory active capabilities.\n3. If Cron is running, register and activate Cron, then deactivate and\n   deregister it to understand the optional module lifecycle.\n4. Open **System and Integrations > Imports and Exports** and review\n   initialization, core, sample, file import, export, and history tabs.\n5. Import missing documentation packs if a fresh database was used.\n6. Open **Content and Experience > Content** to see the content dashboard.\n7. Open **Content and Experience > Media** to see governed media operations.\n8. Open **Documentation > Nodics Documentation** and read Framework, Swaggers,\n   Nodics Axis, and Nodics Kickoff.\n\nThis walkthrough intentionally uses Axis screens first. A beginner should see\nthe framework's behavior before reading internal files. Once the user sees the\nrunning product, repository structure becomes easier to understand.\n\n```mermaid\nflowchart TD\n  Login[\"Login to Axis\"] --> Registry[\"Module Registry\"]\n  Registry --> Imports[\"Imports and Exports\"]\n  Imports --> Content[\"Content dashboard\"]\n  Content --> Media[\"Media operations\"]\n  Media --> Docs[\"Documentation\"]\n  Docs --> Code[\"Only then inspect source ownership\"]\n```\n\n## First safe customization exercise\n\nThe first customization should be intentionally small. Do not begin by editing\nCore, Platform, WCMS, or Axis source. A good beginner exercise is to change\nproject-owned documentation or demo content in the customer project, regenerate\nthe project documentation pack, import it through Axis, and verify the updated\npage.\n\nThe learning outcome is important:\n\n- the source content lives in the owner project;\n- generated data lives under the owner project's generated data folder;\n- the manifest checksum changes with the content;\n- WCMS imports the release;\n- Axis renders the result from backend delivery contracts;\n- no frontend renderer or framework source file is edited.\n\nThat small exercise teaches the full Nodics pattern: owner first, generated\ndata second, import through governance, render through Axis, verify through the\nrunning system.\n\n## Beginner glossary\n\n| Term | Plain-language meaning |\n| --- | --- |\n| Framework repository | Reusable Nodics backend capabilities, currently `nodics.ai`. |\n| Customer project | The adopting project that composes and customizes the framework, such as the reference project. |\n| Functional module | Business-facing capability group such as Platform, WCMS, Cron, or Docs. |\n| Technical module | Internal implementation unit under a functional module group. |\n| Runtime server | A process that loads a configured module graph and exposes APIs or background behavior. |\n| Axis | Browser BackOffice renderer that discovers backend capabilities. |\n| Content pack | Versioned backend-owned data release imported into WCMS. |\n| Manifest checksum | Integrity evidence proving the release files match the manifest. |\n| Registration | Persisted project decision to accept an observed optional functional module. |\n| Activation | Persisted project decision that a registered module should be usable. |\n\n## Common mistakes\n\n- Starting Axis before Platform and then assuming the frontend is broken when\n  the BackOffice registry is unavailable.\n- Starting Platform but not WCMS, then expecting documentation and content\n  routes to render.\n- Editing generated documentation data after an `INVALID RELEASE` instead of\n  fixing Markdown source and regenerating the content pack.\n- Leaving `NODICS_FRAMEWORK_ROOT` pointed at an old checkout after moving the\n  framework repository.\n- Treating the sibling-folder layout as mandatory. It is only the easiest\n  beginner layout; the `.env` property makes the framework location portable.\n- Putting secrets into frontend or public configuration because a screen needs\n  an endpoint.\n- Skipping the import screens and expecting every catalog, site, page,\n  component, media record, and documentation route to appear automatically.\n\n## Verification\n\nThe quick start is complete only when the running product proves the expected\nbehavior. At minimum, verify that Platform responds on `4300`, WCMS responds\non `4310`, Axis responds on `3100`, the reference admin can log in, the\nDocumentation landing page opens, and System and Integrations shows the module\nregistry. Then open Imports and Exports and confirm available releases can be\nvalidated and installed without checksum errors.\n\nFor a stronger developer check, run the local acceptance script from the\nreference customer project after the servers are available. That script\nexercises backend startup assumptions, documentation release status, route\nhealth, CMS counts, Axis smoke routes, and optional Cron lifecycle behavior.\nIf this fails, use the failure owner: Platform for login and registry, WCMS for\ncontent and documentation delivery, Cron for scheduled capability lifecycle,\nand Axis for browser rendering and state refresh.\n\n## Next actions\n\nOnce the reference stack is running, continue in this sequence:\n\n1. Run the local verification and acceptance checklist so the stack is proven,\n   not only started.\n2. Read the modular architecture page to understand ownership boundaries.\n3. Read the Core and Platform overviews to understand the foundation and\n   employee-facing backend contracts.\n4. Review the functional module registry to understand mandatory and optional\n   capability lifecycle.\n5. Review WCMS, Media, and Cron based on the capability you want to explore.\n6. Read the customization guide before changing code.\n7. Make the first customization in the owning customer project or backend\n   content pack instead of editing framework source.\n\nThis order keeps the first day practical: see the system, verify it, learn the\nowners, then customize safely. If a beginner starts with random source files,\nNodics looks like folders. If they start with the running product and the\nverification checklist, Nodics looks like an ecosystem.\n",
+    "searchText": "Local quick start with Kickoff and Axis Beginner-friendly steps to configure the framework, start local servers, log in to Axis, and open documentation. # Local Quick Start with Kickoff and Axis\n\nLocal Quick Start explains the shortest reliable path for running Nodics on a\ndeveloper machine. It is not the full enterprise setup manual. Use it to start\nKickoff, open Axis, confirm the managed workspace is available, and know where\nto continue when the schema is fresh or a server fails.\n\n## Quick path\n\n```mermaid\nflowchart LR\n  Configure[\"Check Kickoff env\"] --> Start[\"Start local topology\"]\n  Start --> Axis[\"Open Axis\"]\n  Axis --> Login[\"Login as admin\"]\n  Login --> Setup[\"Run setup journeys\"]\n  Setup --> Verify[\"Open Nexus, Agora, and Docs\"]\n```\n\n| Step | Command or action | Expected result |\n| --- | --- | --- |\n| Configure | Review the Kickoff `.env` and topology settings. | Ports and framework root are correct. |\n| Start | Run the project topology command from Kickoff. | Backend services and frontend apps start. |\n| Axis | Open `http://localhost:3100`. | Axis login or first-run setup is visible. |\n| Setup | Use Axis setup screens. | Baseline data, accelerators, and documentation move through governed import and approval. |\n| Verify | Open Axis, Nexus, Agora, and docs links. | Each page either renders Online content or a customer-friendly unpublished message. |\n\n## Business perspective\n\nThe quick start is for proving that a project workspace can become useful\nquickly. Business users should see how Axis guides setup instead of requiring\nhidden scripts. A customer team should understand which data is not imported,\nwhich packs need approval, and which storefronts are waiting for Online\npublication.\n\nThis page intentionally links to the deeper fresh-schema journey and runtime\ntroubleshooting page instead of carrying every recovery detail here.\n\nFor beginners, this page should be treated as the map, not the full manual.\nFollow the visible Axis setup journey first, then open the linked pages only\nwhen a specific setup, publishing, or runtime problem needs deeper explanation.\n\n## Developer perspective\n\nDevelopers use this page to confirm the local topology, then move to focused\npages for schema cleanup, build, server startup, publication, and browser\nacceptance. If a project adds new modules, content packs, media assets,\naccelerators, or documentation packs, the local quick start should point to the\nright setup page rather than expanding into a giant checklist.\n\nProject code should continue to use the framework root from the local machine\nor configured environment. The project should not depend on copied framework\nmodules under `.nodics/framework`.\n\n## Operator view\n\nAn operator should know that quick start success is not only a server process\nbeing alive. The useful result is a live Axis workspace with visible setup\nstatus, import history, approval tasks, Online readiness, and application links\nthat do not leave the user guessing.\n\n## Continue with\n\n- **Fresh Schema Setup Journey** for deleting schema data, importing baseline\n  content, publishing Online, and verifying from the browser.\n- **Local Runtime Troubleshooting** for busy ports, stale supervisor state,\n  remote-service circuit errors, and timeout diagnostics.\n- **Application Setup and Accelerators** for Nexus, Agora Apparel, Agora\n  Electronics, Agora Telco, and future accelerator setup.\n\n## Customization and extension guidance\n\nWhen a project changes the local setup, document the project-specific module list, ports, environment files, content packs, accelerator packs, and any extra startup or approval step. Keep customer setup data in project-owned configuration or generated content packs, not in reusable framework source. If the project adds a new application, the quick start should link to that setup journey and explain the fresh-schema verification path.\n\n## Common mistakes\n\n- Treating a successful start command as complete setup.\n- Importing accelerator data before the required backend capability is\n  registered.\n- Expecting documentation, Nexus, or Agora to render Online content before the\n  relevant content pack has been approved and published.\n- Hiding setup instructions in logs instead of exposing them in Axis.\n\n## Verification\n\nVerify the quick start with a fresh schema, a clean build, local server start,\nAxis setup screens, documentation publication, accelerator publication, and\nbrowser checks for `localhost:3100`, `localhost:3200`, and the Agora storefront\nports used by the topology.\n",
     "keywords": [
       "nodics-installer-and-workspace-setup",
       "local-workspace-setup",
@@ -11849,7 +8482,8 @@ module.exports = {
     ],
     "facets": {
       "section": "nodics-installer-and-workspace-setup",
-      "group": "local-workspace-setup",
+      "group": "nodics-installer-and-workspace-setup",
+      "navigationDepth": 2,
       "documentType": "quickstart",
       "audience": [
         "business",
@@ -11878,7 +8512,103 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record307": {
+  "record210": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkfreshschemasetupjourney",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataframeworkFreshSchemaSetupJourney",
+    "title": "Fresh Schema Setup Journey",
+    "summary": "Required order for initializing Axis, registering capabilities, importing app packs, publishing Online, and verifying browsers.",
+    "searchText": "Fresh Schema Setup Journey Required order for initializing Axis, registering capabilities, importing app packs, publishing Online, and verifying browsers. # Fresh Schema Setup Journey\n\nThe fresh schema setup journey explains the order required to bring a new\nlocal database from empty state to a usable Axis, Nexus, Agora, and\ndocumentation experience. It exists because a fresh schema is where hidden\ndependencies become visible. If the setup order is unclear, users see buttons\nthat do nothing, public pages that render partial data, or imported packs that\nlook successful while required capabilities are still missing.\n\nFor a beginner, this page is the safe path. For an operator, it is the\nacceptance sequence. For developers, it is the minimum journey that proves\nsetup documentation matches the implementation.\n\n## Required order\n\n```mermaid\nflowchart TD\n  Empty[\"Empty database\"] --> Axis[\"Initialize Axis baseline\"]\n  Axis --> Modules[\"Register required capabilities\"]\n  Modules --> AppData[\"Import Nexus and Agora data packs\"]\n  Axis --> Docs[\"Import documentation packs\"]\n  AppData --> Publish[\"Approve and publish Online content\"]\n  Docs --> Publish\n  Publish --> Browser[\"Verify Axis, Nexus, Agora, and docs in browser\"]\n```\n\n## Setup table\n\n| Step | Action | Why it comes here |\n| --- | --- | --- |\n| 1 | Start local backend and Axis. | The user needs the recovery shell and APIs. |\n| 2 | Initialize Axis baseline. | Axis needs managed CMS and administration data. |\n| 3 | Register required modules. | Commerce and other domain data must not import as if owners are absent. |\n| 4 | Import application data packs. | Nexus and Agora need content, media, routes, catalogs, and records. |\n| 5 | Import documentation packs. | Documentation can happen in parallel with app preparation. |\n| 6 | Approve and publish. | Public apps consume Online content, not Staged content. |\n| 7 | Verify in browser. | The user journey proves the setup is complete. |\n\n## Business and user experience\n\nThe setup screens should make the next action obvious. If an application pack\nneeds commerce capabilities, Axis should show that dependency before import.\nIf content is not Online, Nexus or Agora should show a customer-friendly\nmaintenance page. If approval is required, the user should see the approval\ntask and perform approve or reject from the same business journey when\npermissions allow it.\n\n## Customization and extension\n\nProjects can add their own setup packs, required capabilities, and publication\nsteps. The installer should copy project-owned setup metadata where needed,\nbut it should not force every customer into Nodics sample server names. A\ngenerated customer corporate site or storefront should declare its own content\npack, media assets, channel, catalog, and dependency requirements.\n\n## Reader and implementation contract\n\nA beginner should be able to follow this page without knowing internal module\nnames first. The screen should say what is missing, what is ready, and what\naction comes next. A business user should understand when the site is safe to\nshow publicly. A developer should understand which backend pack or capability\nprovides each record. An operator should understand which logs, publication\nstates, and browser checks prove the environment.\n\nEach setup step should have a visible state: not imported, Staged ready,\napproval needed, approval in progress, Online ready, failed, or blocked by a\nmissing capability. If an implementation cannot express one of those states,\nthe UI journey will become confusing again because users will have to infer\nwhat the framework already knows.\n\n## Common mistakes\n\n- Importing Agora data before commerce capabilities are registered.\n- Assuming documentation publishing should block Swagger/OpenAPI visibility.\n- Forgetting media files and media records during a site data import.\n- Showing public application content from fallback frontend constants.\n- Asking users to find approval tasks on a separate confusing page.\n\n## Verification\n\nVerification must use a fresh schema. Run the setup sequence, confirm Axis\nbaseline state, confirm required modules are registered, import application\nand documentation packs, approve publication, refresh navigation, and open\nNexus and Agora. Public apps must either show Online content or the approved\nmaintenance state.\n",
+    "keywords": [
+      "fresh-schema",
+      "setup-journey",
+      "axis-nexus-agora-initialization",
+      "Nodics Installer and Workspace Setup",
+      "Local Workspace Setup",
+      "Fresh Schema Setup Journey"
+    ],
+    "facets": {
+      "section": "nodics-installer-and-workspace-setup",
+      "group": "nodics-installer-and-workspace-setup",
+      "navigationDepth": 2,
+      "documentType": "quickstart",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record211": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalruntimetroubleshooting",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataframeworkLocalRuntimeTroubleshooting",
+    "title": "Local Runtime Troubleshooting",
+    "summary": "Practical troubleshooting for ports, stale topology state, schema import failures, publication state, and missing navigation.",
+    "searchText": "Local Runtime Troubleshooting Practical troubleshooting for ports, stale topology state, schema import failures, publication state, and missing navigation. # Local Runtime Troubleshooting\n\nLocal runtime troubleshooting gives developers and operators a practical path\nwhen the reference workspace does not start cleanly. It belongs beside the\nquick start because setup problems are part of the first user journey. If a\nport is busy, a supervisor state file is stale, a schema import fails, or a\ncontent pack times out, the user should not have to guess whether the failure\nis a server issue, data issue, publication issue, or browser issue.\n\nThe goal is not to hide failures. The goal is to make them actionable.\n\n## Troubleshooting flow\n\n```mermaid\nflowchart TD\n  Failure[\"Local failure\"] --> Ports[\"Check ports and topology status\"]\n  Failure --> Logs[\"Read generated server logs\"]\n  Failure --> Data[\"Check fresh schema and import state\"]\n  Data --> Capabilities[\"Confirm required module registration\"]\n  Data --> Publish[\"Confirm Staged, approval, and Online status\"]\n  Logs --> Fix[\"Fix root cause and restart only the needed topology\"]\n```\n\n## Common local signals\n\n| Symptom | Likely cause | Action |\n| --- | --- | --- |\n| Required ports are busy | A previous Axis, Nexus, Agora, or backend process is still running. | Run topology status, identify the owner, and stop it explicitly. |\n| Stop refuses to signal PID | Generated state is stale or belongs to another checkout. | Resolve listening ports manually before restarting. |\n| Import validation fails | Fresh schema contract or content-pack field mismatch. | Fix source pack/schema, regenerate, and retry import. |\n| Public app shows maintenance | Online CMS content is not published for that site. | Import, approve, publish, then refresh. |\n| Axis navigation is missing docs | Documentation source is not Online or navigation did not refresh. | Publish the docs pack and refresh backend-driven navigation. |\n\n## Business impact\n\nLocal troubleshooting is a business concern because adoption depends on the\nfirst hour. A user who cannot understand what failed will not trust the\nframework. Error messages should name the missing dependency, owner, and next\naction wherever possible. Maintenance pages should be professional and\ncustomer-friendly, not accidental blank screens.\n\n## Customization and extension\n\nCustomer projects may use different ports, servers, application packs, or\ncontent catalogs. Troubleshooting documentation must refer to project-owned\nconfiguration and generated workspace metadata rather than assuming only the\nreference Kickoff topology. Installer-created projects should include enough\nmetadata for Axis to show setup dependencies and recovery steps.\n\n## Reader and implementation contract\n\nA beginner should never have to decide between random terminal commands and\nguesswork. The troubleshooting path should name the owner of the failure and\nthe safest next action. A business administrator should see whether the issue\nblocks authoring, approval, Online publication, or public delivery. A\ndeveloper should know whether the fix belongs in schema, import data,\nconfiguration, service code, or frontend rendering. An operator should know\nwhich process can be restarted and which process must be left alone.\n\nTroubleshooting guidance should be updated whenever startup, import,\npublication, or browser setup behavior changes. If the UI introduces a new\nbutton such as initialize, update Staged, approve, reject, or refresh, the\nfailure states for that action must be documented with the same care as the\nhappy path.\n\n## Common mistakes\n\n- Treating every startup failure as a build failure.\n- Deleting schema before reading the failing import or server log.\n- Killing processes without confirming which checkout owns the port.\n- Fixing a UI symptom while the missing record is in Staged/Online\n  publication state.\n- Keeping troubleshooting knowledge outside the docs.\n\n## Verification\n\nTroubleshooting is verified by reproducing a fresh schema setup, checking the\nfailure messages, confirming logs point to the correct owner, and proving that\nthe documented recovery restores Axis, Nexus, Agora, documentation, and API\nreference behavior without manual hidden steps.\n",
+    "keywords": [
+      "local-runtime-troubleshooting",
+      "ports",
+      "fresh-schema-errors",
+      "Nodics Installer and Workspace Setup",
+      "Local Workspace Setup",
+      "Local Runtime Troubleshooting"
+    ],
+    "facets": {
+      "section": "nodics-installer-and-workspace-setup",
+      "group": "nodics-installer-and-workspace-setup",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record212": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatainstallerinstalledruntimeapplicationbuilder",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11898,7 +8628,8 @@ module.exports = {
     ],
     "facets": {
       "section": "nodics-installer-and-workspace-setup",
-      "group": "installed-runtime-apis",
+      "group": "nodics-installer-and-workspace-setup",
+      "navigationDepth": 2,
       "documentType": "reference",
       "audience": [
         "business",
@@ -11927,7 +8658,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record308": {
+  "record213": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatabuilderworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11945,7 +8676,8 @@ module.exports = {
     ],
     "facets": {
       "section": "application-builder-and-workspace-generation",
-      "group": "workspace-generation-journey",
+      "group": "application-builder-and-workspace-generation",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "business",
@@ -11974,7 +8706,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record309": {
+  "record214": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessvisualdesigner",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11992,7 +8724,8 @@ module.exports = {
     ],
     "facets": {
       "section": "axis-and-backoffice-operations",
-      "group": "visual-workflow-designer",
+      "group": "axis-and-backoffice-operations",
+      "navigationDepth": 2,
       "documentType": "contract",
       "audience": [
         "business",
@@ -12021,7 +8754,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record310": {
+  "record215": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataaxisbusinesscustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12039,7 +8772,8 @@ module.exports = {
     ],
     "facets": {
       "section": "business-customization-in-axis",
-      "group": "axis-customization-workspace",
+      "group": "business-customization-in-axis",
+      "navigationDepth": 2,
       "documentType": "customization",
       "audience": [
         "business",
@@ -12068,7 +8802,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record311": {
+  "record216": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataplatformoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12086,7 +8820,8 @@ module.exports = {
     ],
     "facets": {
       "section": "user-enterprise-and-tenant-management",
-      "group": "platform-and-profile-foundations",
+      "group": "user-enterprise-and-tenant-management",
+      "navigationDepth": 2,
       "documentType": "overview",
       "audience": [
         "business",
@@ -12115,7 +8850,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record312": {
+  "record217": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasecurityidentityaccessgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12133,7 +8868,8 @@ module.exports = {
     ],
     "facets": {
       "section": "security-governance-and-compliance",
-      "group": "identity-and-access-governance",
+      "group": "security-governance-and-compliance",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -12162,7 +8898,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record313": {
+  "record218": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataconfigurationruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12180,7 +8916,8 @@ module.exports = {
     ],
     "facets": {
       "section": "application-configuration-and-runtime-behavior-management",
-      "group": "configuration-layers-and-behavior",
+      "group": "application-configuration-and-runtime-behavior-management",
+      "navigationDepth": 2,
       "documentType": "configuration",
       "audience": [
         "business",
@@ -12209,7 +8946,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record314": {
+  "record219": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataroutingapigovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12231,7 +8968,8 @@ module.exports = {
     ],
     "facets": {
       "section": "application-configuration-and-runtime-behavior-management",
-      "group": "configuration-layers-and-behavior",
+      "group": "application-configuration-and-runtime-behavior-management",
+      "navigationDepth": 2,
       "documentType": "configuration",
       "audience": [
         "business",
@@ -12260,7 +8998,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record315": {
+  "record220": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataruntimegovernedchange",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12278,7 +9016,8 @@ module.exports = {
     ],
     "facets": {
       "section": "runtime-governance-and-dynamic-change-management",
-      "group": "governed-runtime-change",
+      "group": "runtime-governance-and-dynamic-change-management",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -12307,7 +9046,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record316": {
+  "record221": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatalocalizationinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12325,7 +9064,8 @@ module.exports = {
     ],
     "facets": {
       "section": "localization-and-internationalization",
-      "group": "localized-experience-management",
+      "group": "localization-and-internationalization",
+      "navigationDepth": 2,
       "documentType": "configuration",
       "audience": [
         "business",
@@ -12354,7 +9094,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record317": {
+  "record222": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataschemadatamodelingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12372,7 +9112,8 @@ module.exports = {
     ],
     "facets": {
       "section": "data-modeling-and-schema-management",
-      "group": "schema-and-model-extension",
+      "group": "data-modeling-and-schema-management",
+      "navigationDepth": 2,
       "documentType": "customization",
       "audience": [
         "business",
@@ -12401,7 +9142,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record318": {
+  "record223": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatapersistenceproviderdataaccesslayer",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12419,7 +9160,8 @@ module.exports = {
     ],
     "facets": {
       "section": "database-and-persistence-management",
-      "group": "provider-and-data-access-layer",
+      "group": "database-and-persistence-management",
+      "navigationDepth": 2,
       "documentType": "configuration",
       "audience": [
         "business",
@@ -12448,7 +9190,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record319": {
+  "record224": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacacheruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12466,7 +9208,8 @@ module.exports = {
     ],
     "facets": {
       "section": "caching-and-runtime-state-management",
-      "group": "cache-providers-and-invalidation",
+      "group": "caching-and-runtime-state-management",
+      "navigationDepth": 2,
       "documentType": "configuration",
       "audience": [
         "business",
@@ -12495,14 +9238,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record320": {
+  "record225": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkcustomizationguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkCustomizationGuide",
     "title": "Customization and extension guide",
     "summary": "How customer projects customize Nodics safely without forking framework authority.",
-    "searchText": "Customization and extension guide How customer projects customize Nodics safely without forking framework authority. # Customization and extension guide\n\nNodics is built for customization, but customization must happen in the right\nowner. The safest path is to reuse an existing capability, configure it, extend\nit in a later-loaded module, and create new framework behavior only when the\nexisting contract truly cannot satisfy the requirement.\n\nFor a beginner, customization means “where should I put my change so I can\nstill upgrade the framework later?” The safest answer is usually configuration\nfirst, then a customer project module, then a customer extension module, and\nonly then a framework change if the behavior is truly reusable for everyone.\n\n## What this is\n\nThis guide explains how a customer or partner changes Nodics behavior without\nturning a customer project into a fork of the framework. It applies to backend\ncustomization, Axis presentation customization, and documentation ownership.\n\n## The customization ladder\n\nStart with the least invasive option:\n\n1. Use existing behavior.\n2. Change configuration in the correct project, environment, server, node, or\n   tenant scope.\n3. Add customer project modules under the customer project.\n4. Add a customer extension module that extends a framework functional module.\n5. Create a new implementation only when the existing capability contract is\n   missing or incorrect.\n\nThis ladder protects upgradeability. The later a customization loads, the more\nspecific it is. Framework modules stay reusable; customer modules carry\ncustomer decisions.\n\n| Customization level | Who should use it | Beginner example | Upgrade risk |\n| --- | --- | --- | --- |\n| Axis/WCMS content | Business user or content admin | Change a heading, image, documentation page, or dashboard card. | Low, because backend content is governed and versioned. |\n| Project configuration | Developer or operator | Change a local port, database name, or feature override for one environment. | Low when the property stays narrow. |\n| Project module | Developer | Add Kickoff-specific schema fields or business services. | Medium, because tests must prove the behavior. |\n| Customer extension module | Senior developer | Override Platform behavior while keeping the Platform functional identity. | Medium to high, because service precedence must be explicit. |\n| Framework module change | Framework team | Improve Core import behavior for every project. | Shared release risk, so it needs broader validation. |\n| New functional module | Architecture owner | Add Commerce, Workflow, or another independent capability. | High if ownership is blurry. |\n\n```mermaid\nflowchart TD\n  Need[\"Need to change behavior or content\"] --> Content{\"Can Axis/WCMS governed content solve it?\"}\n  Content -->|Yes| Wcms[\"Update backend-owned CMS data\"]\n  Content -->|No| Config{\"Can configuration solve it?\"}\n  Config -->|Yes| Props[\"Add narrow project/environment/server property\"]\n  Config -->|No| Project{\"Is it project-specific?\"}\n  Project -->|Yes| Module[\"Add project or customer extension module\"]\n  Project -->|No| Framework[\"Change the owning framework module with tests\"]\n```\n\n## The role an AI tool or developer must play\n\nNodics is too broad for a narrow “make the code pass” mindset. A developer or\nAI assistant working on Nodics must deliberately switch through several\nperspectives before changing files. This is not ceremony; it is how the\nframework avoids accidental shortcuts that work for one screen and break the\necosystem.\n\n| Role | Question to ask before coding | Example |\n| --- | --- | --- |\n| Business analyst | What problem is the user, operator, partner, or business evaluator trying to solve? | If the request is “register Cron,” explain the lifecycle and what business capability becomes available, not only the button click. |\n| Enterprise architect | Which module, runtime, tenant, security boundary, and release unit owns this behavior? | Module registration is Platform/BackOffice state; Axis renders it; Cron only reports its runtime availability. |\n| Nodics framework expert | Is this Core, Platform, WCMS, Cron, Axis renderer, customer project, or customer overlay work? | A documentation content pack belongs in the backend owner, not in the frontend repository. |\n| Domain expert | Could this pattern apply to commerce, telco, logistics, content, workflow, or another domain without becoming domain-locked? | A media picker should be reusable for product media, CMS media, and workflow attachments. |\n| Principal engineer | Can configuration or extension solve this before new framework code is written? | Prefer a server property, content component property, or customer module overlay before editing a framework default. |\n| QA and tester | What small failure will a user notice after the happy path succeeds? | Register/activate/deactivate buttons must refresh state immediately without forcing login or page reload. |\n| TechOps/DevOps reviewer | How will this run, restart, roll back, and be diagnosed in local and production topology? | A fresh bootstrap script must drop only named local databases and refuse to run if unrelated servers occupy the expected ports. |\n\nIf these roles point to different answers, document the trade-off before\nimplementation. For example, a browser-only workaround may be fast, but if the\nreal authority is a backend registry, the correct fix belongs in the backend\ncontract or typed client flow.\n\n## Coding principles that protect customization\n\nNodics code should be written so customer projects can extend it without\ncopying framework files. Use these rules as the practical checklist:\n\n1. Prefer configuration first. If behavior can be changed through properties,\n   feature metadata, content component properties, server/environment deltas, or\n   tenant configuration, do that before changing code.\n2. Put files in the owner that matches the behavior. Error/status definitions\n   belong in status-definition files, API exposure belongs in owning module\n   properties, runtime topology belongs in server configuration, and renderer\n   code belongs in Axis.\n3. Keep JavaScript export-friendly. Prefer small exported functions, services,\n   and configuration objects over sealed inline behavior, so a later customer\n   module can override or compose the behavior through Nodics loading.\n4. Document the file and exported behavior. An AI tool may read only the\n   nearest file and `AGENTS.md`, so ownership, override path, side effects, and\n   test expectations must be visible.\n5. Treat generated data as output. If CMS documentation, import manifests, or\n   generated records are wrong, fix the source and regenerate; do not hand-edit\n   generated projections.\n6. Keep public and private configuration separate. Browser-visible values,\n   runtime coordinates, secret references, and actual secrets have different\n   owners and different storage rules.\n7. Test both the owner and the integration. A service override needs focused\n   tests; a runtime graph change needs startup/acceptance tests; a frontend\n   state change needs UI or smoke coverage.\n\n## Backend customization\n\nBackend behavior belongs in the backend project or module that owns the\nbusiness rule. In Kickoff, project modules live under `modules/`, while\nenvironment and server composition live under `envs/`.\n\nA customer module such as `kickoff.platform` may extend `nodics.platform` to\ncustomize Platform services. The runtime server can load the customer extension\nafter Platform. Service precedence then follows the normal module merge and\nindex order. Axis should still display the functional capability as Platform,\nbecause the customer extension changes implementation, not the business-facing\nidentity.\n\n## Axis customization\n\nAxis is the browser application. It owns renderers, interaction behavior,\nlayout, accessibility, and static recovery. It must not own imported CMS data,\nbackend schemas, permissions, or business rules. If a customer needs a new\nBackOffice page, the backend should expose the authorized navigation,\ncapability metadata, API contract, and CMS content where applicable. Axis then\nrenders that authorized contract.\n\nSimple presentation changes, such as logo, copy, theme, or demo content, should\ncome from backend-owned CMS or configuration where possible. Hard-coding those\nvalues in the frontend makes later customer projects harder to support.\n\n## Choosing the right customization mechanism\n\nUse the smallest mechanism that honestly solves the requirement. This keeps\ncustomization cheap, testable, and upgrade-friendly.\n\n| Requirement | Preferred mechanism | Why |\n| --- | --- | --- |\n| Change a label, image, logo, or help text | Backend-owned CMS content or configuration | Business-facing content should not require a frontend fork. |\n| Change a runtime value per environment | Environment/server/node property override | Keeps the framework default reusable and the local deployment explicit. |\n| Add a customer data seed | Customer project data pack | Data belongs to the project that owns it and can be imported through governance. |\n| Add a new API behavior for a customer | Customer project module or customer extension module | Keeps customer code later in the runtime graph. |\n| Change a framework service algorithm | Later-loaded service override with tests | Preserves the functional module identity while replacing implementation. |\n| Add a reusable capability for many projects | New or existing framework functional module | Avoids hiding reusable platform behavior inside one customer project. |\n| Add a browser-only interaction | `nodics.axis` renderer change | UI behavior belongs in Axis only when backend authority already exists. |\n\nIf the preferred mechanism feels too small, prove why. A service override may\nbe needed, but it should not be the first answer when a property or data pack\nis enough.\n\n```mermaid\nflowchart TD\n  Need[\"Customization need\"] --> Config[\"Can config/content solve it?\"]\n  Config -->|Yes| UseConfig[\"Use property, CMS, or data pack\"]\n  Config -->|No| Project[\"Is it customer-specific?\"]\n  Project -->|Yes| Later[\"Use project or customer extension module\"]\n  Project -->|No| Reusable[\"Is it reusable framework behavior?\"]\n  Reusable -->|Yes| Framework[\"Implement in owning framework module\"]\n  Reusable -->|No| Reconsider[\"Re-check ownership and requirement\"]\n  Later --> Test[\"Add default, override, and regression tests\"]\n  Framework --> Test\n  UseConfig --> Validate[\"Validate runtime result\"]\n```\n\n## Worked example: changing a demo company identity\n\nSuppose a partner wants the local demo to show its own company name, logo, and\nwelcome message. The wrong path is editing Axis React code or framework\nProfile services. The correct path depends on what is being changed:\n\n1. If it is presentation content, put it in the owning WCMS or project content\n   pack.\n2. If it is an environment default, place the override in the customer\n   environment/server configuration.\n3. If it is project documentation, update the customer project documentation\n   source and regenerate the customer docs pack.\n4. Import the generated pack through Axis Imports and Exports.\n5. Verify Axis renders the new values from backend delivery contracts.\n\nThe business sees a custom experience. The developer avoids a fork. The\noperator can rebuild the environment from source-controlled project data.\n\n## Worked example: overriding a service safely\n\nSuppose a customer needs a different employee onboarding rule than the\nstandard Platform behavior. That is not a reason to rename Platform or copy\nthe entire module. The safer model is:\n\n1. Identify the Platform service that owns the rule.\n2. Confirm the extension point is intended to be overridden.\n3. Create a later-loaded customer module that extends Platform behavior.\n4. Export the replacement or composed service in the expected loader-visible\n   style.\n5. Keep status/error definitions in the correct status-definition file, not in\n   a random properties file.\n6. Add tests for the default rule, custom rule, rejected request, tenant\n   boundary, authorization boundary, and regression risk.\n7. Document the custom behavior in the customer project, not in reusable\n   framework documentation unless the extension point itself changed.\n\nThe module registry should still show Platform. The customization changes\nimplementation, not the business-facing functional identity.\n\n## Business and DevOps impact\n\nThe business value of this discipline is lower long-term cost. A customer can\nreceive framework upgrades without reapplying hidden edits. DevOps teams also\ngain a clean release story: framework packages, customer modules, environment\nproperties, and imported content packs can be rolled forward or backward as\nseparate operational units.\n\nFor production support, every customization should answer three questions:\nwhich module owns it, which runtime loads it, and which test or document proves\nthe intended behavior? If those answers are missing, the customization is not\nready for a production release.\n\n## Documentation customization\n\nDocumentation follows the owner of the thing being explained:\n\n- framework guidance goes to `nodics.docs`;\n- Axis product guidance goes to `nodics.platform/modules/axis`;\n- project guidance goes to the owning customer project, such as\n  `nodics.kickoff`;\n- generated content records stay under `data/core/data/documentation`;\n- each data owner keeps typed release sections in `data/manifest.json`.\n\nDo not put customer project documentation into `nodics.docs`, and do not put\nimportable documentation records into `nodics.axis`.\n\n## Common mistakes\n\n- Editing framework source for one customer.\n- Adding business authorization in the browser.\n- Creating a second module registry or endpoint list in Axis.\n- Moving generated CMS data into a frontend repository.\n- Changing a functional module display name because an implementation was\n  customized.\n- Skipping tests after service override changes.\n\n## Verification\n\nEvery customization should prove success and failure behavior. For backend\nchanges, run the owning module tests and any affected runtime smoke test. For\nAxis changes, run typecheck and focused UI tests. For documentation changes,\nregenerate the owning content pack, validate checksums, import through WCMS,\nand verify the route in Axis.\n\n## Customization acceptance checklist\n\nBefore accepting a customization, answer each question:\n\n| Question | Acceptable answer |\n| --- | --- |\n| Who owns the behavior? | A named framework module, customer module, project, or frontend renderer. |\n| Is framework source edited? | Only if the behavior is reusable framework behavior and the owner module was confirmed. |\n| Is there a configuration-first option? | Yes, it was used or explicitly rejected with evidence. |\n| Is functional identity preserved? | Yes; customer extensions do not rename standard capabilities. |\n| Are private values protected? | Secrets are not placed in frontend code, generated docs, or public properties. |\n| Are generated files regenerated from source? | Yes; generated CMS data and manifests match source content. |\n| Are tests proportional to risk? | Happy path, negative, boundary, authorization, tenant, runtime, and regression checks exist where applicable. |\n| Is documentation updated in the owner? | Yes; no second authority was created. |\n\nIf the checklist cannot be completed, the customization may still be a useful\nprototype, but it is not production-ready Nodics behavior.\n",
+    "searchText": "Customization and extension guide How customer projects customize Nodics safely without forking framework authority. # Customization and Extension Guide\n\nCustomization and Extension Guide is the decision page for changing Nodics\nwithout breaking reusable framework ownership. It explains which customization\nmechanism to choose first, then links to deeper backend and Axis customization\ntopics.\n\n## Customization ladder\n\n```mermaid\nflowchart TD\n  Need[\"Business change\"] --> Data[\"Content or import data\"]\n  Need --> Config[\"Configuration\"]\n  Need --> Axis[\"Axis-managed content/component metadata\"]\n  Need --> Backend[\"Project backend extension\"]\n  Backend --> Verify[\"Tests, audit, and runtime evidence\"]\n```\n\n| Change type | First place to check | Why |\n| --- | --- | --- |\n| Business content | Axis content catalog or import data. | Keeps business updates governed and publishable. |\n| Runtime behavior | Configuration or Dynamo-style governed runtime change. | Avoids redeploy when runtime policy is intentionally dynamic. |\n| UI arrangement | Axis-managed component and navigation metadata. | Lets business users adjust labels, sequence, visibility, and page structure. |\n| Backend logic | Project-layer module extension. | Keeps framework source reusable and customer-specific behavior isolated. |\n\n## Business perspective\n\nBusiness users should not need to know package names to request a change. They\nneed to know whether a change affects content, catalog data, pricing, checkout,\napproval, publication, security, or runtime operations. Documentation must\nexplain the decision, expected impact, risk, approval path, and rollback model.\n\n## Developer perspective\n\nDevelopers should start from the owning capability and pick the least invasive\nextension point. If configuration is enough, use configuration. If a model,\nservice, pipeline, event, controller, or schema must change, use a project\nmodule and document the override path. If Axis needs new editing controls,\npublish the backend metadata and render it through Axis rather than hardcoding\nbusiness structure in the frontend.\n\n## Continue with\n\n- **Backend Extension Patterns** for services, schemas, APIs, events,\n  pipelines, interceptors, and project module ownership.\n- **Axis Content Customization** for navigation, components, page content,\n  publication visibility, role access, and user-facing labels.\n- **Governed Runtime Change Capability** when administrators need approved\n  runtime changes distributed across running nodes.\n\n## Reader and implementation contract\n\nA beginner should leave this page knowing that customization is a managed choice, not a random code edit. A business user should understand whether the requested change belongs to content, configuration, Axis-managed structure, runtime governance, or backend extension. A developer should know that the implementation must start from the owning capability and must document the selected extension mechanism. An operator should know which evidence proves the customization is active and how it can be reversed.\n\nEvery future customization topic should include the same minimum information: business problem, decision supported, owner, configuration keys, data model or schema impact, APIs or events, project-layer override path, permissions, audit behavior, visual flow, and test evidence. If a customization changes customer-visible behavior, the documentation must include browser verification and rollback notes.\n\n## Common mistakes\n\n- Editing framework source for a customer-only behavior.\n- Hardcoding content, navigation, or visibility in Axis.\n- Adding a backend override without tests and operational evidence.\n- Describing the technical change but not the business decision it supports.\n\n## Verification\n\nVerify customization by checking the affected module contract, project-layer\noverride, configuration source, Axis visibility, audit trail, and tests. A\nbeginner should understand what changed, a business user should understand the\nimpact, a developer should know where to implement, and an operator should know\nhow to observe and rollback the change.\n",
     "keywords": [
       "developer-extension-and-project-customization",
       "project-layer-customization",
@@ -12513,7 +9256,8 @@ module.exports = {
     ],
     "facets": {
       "section": "developer-extension-and-project-customization",
-      "group": "project-layer-customization",
+      "group": "developer-extension-and-project-customization",
+      "navigationDepth": 2,
       "documentType": "customization",
       "audience": [
         "business",
@@ -12542,7 +9286,104 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record321": {
+  "record226": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkbackendextensionpatterns",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataframeworkBackendExtensionPatterns",
+    "title": "Backend Extension Patterns",
+    "summary": "How projects extend behavior through configuration, provider adapters, services, validators, pipelines, schemas, and events.",
+    "searchText": "Backend Extension Patterns How projects extend behavior through configuration, provider adapters, services, validators, pipelines, schemas, and events. # Backend Extension Patterns\n\nBackend Extension Patterns explain how developers add or change behavior\nwithout damaging the reusable framework. This page splits the deeper developer\nguidance out of the general customization overview so a reader can choose the\nright path: configuration, provider, service, validator, pipeline, schema,\nroute, event, or project module.\n\nThe business reason is straightforward. Customer-specific behavior should be\nfast to deliver, but it should not make framework upgrades expensive. Nodics\nkeeps that balance by making extension points explicit.\n\n## Extension options\n\n| Pattern | Use when | Verification |\n| --- | --- | --- |\n| Configuration | Behavior already has a supported switch. | Config validation and runtime evidence. |\n| Provider adapter | Storage, cache, search, messaging, or integration backend changes. | Provider tests and fallback behavior. |\n| Service override | Business decision changes for a project. | Default and override tests. |\n| Validator | Data rules or approval rules change. | Valid and invalid payload tests. |\n| Pipeline step | Business logic is staged or composable. | Step order and failure tests. |\n| Schema extension | Project needs additional data fields. | Generated schema and API tests. |\n\n## Decision flow\n\n```mermaid\nflowchart TD\n  Need[\"Customization need\"] --> Config[\"Can configuration solve it?\"]\n  Config -->|Yes| Setting[\"Use validated property\"]\n  Config -->|No| Existing[\"Is there an extension point?\"]\n  Existing -->|Yes| Extend[\"Project service, provider, validator, or pipeline\"]\n  Existing -->|No| Framework[\"Improve reusable framework capability\"]\n```\n\n## Business and developer impact\n\nBusiness users get faster customization because the project does not need to\nfork the framework for every customer request. Developers get clearer code\nownership because the extension lives beside the customer project. Operators\nget better support because logs and generated context can identify the active\nimplementation.\n\n## Customization and extension\n\nThe extension itself must be documented. The page should say which module owns\nthe base behavior, where the project override lives, which server loads it,\nwhich configuration enables it, which API or event changes, and how rollback\nworks. If the customization is business-configurable from Axis, the Axis\njourney and approval rules must be documented as well.\n\n## Reader and implementation contract\n\nA beginner should learn that customization has a ladder and the lowest safe\nstep should be tried first. A business user should understand whether the\nrequest can be handled by Axis configuration or requires developer delivery. A\ndeveloper should identify the extension mechanism before writing code. An\noperator should receive enough detail to support the customized runtime during\nrestart, scaling, failure, and rollback.\n\nEvery extension page should include a small evidence map: owning capability,\nproject module, configuration key, affected server, API or event boundary,\ndata impact, tests, and browser proof where a user-facing journey changes.\nThat evidence keeps customization fast without making the system mysterious.\n\n## Common mistakes\n\n- Editing framework source for a customer-only rule.\n- Adding a provider without documenting configuration and failure behavior.\n- Creating a service override but testing only the default service.\n- Extending schemas without explaining API, import, and migration impact.\n- Using Axis to hide backend complexity instead of exposing governed actions.\n\n## Verification\n\nVerify backend extension by proving default framework behavior still works,\nthe project override activates only in the intended runtime, generated schemas\nor APIs are updated, tests cover failure paths, and browser or API evidence\nshows the customized behavior. The documentation must include the owner,\nextension path, and rollback signal.\n",
+    "keywords": [
+      "backend-extension-patterns",
+      "service-override",
+      "provider-adapter",
+      "pipeline-extension",
+      "Developer Extension and Project Customization",
+      "Project-Layer Customization",
+      "Backend Extension Patterns"
+    ],
+    "facets": {
+      "section": "developer-extension-and-project-customization",
+      "group": "developer-extension-and-project-customization",
+      "navigationDepth": 2,
+      "documentType": "customization",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record227": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkaxiscontentcustomization",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataframeworkAxisContentCustomization",
+    "title": "Axis Content Customization",
+    "summary": "How business users customize backend-owned content, navigation, visibility, setup records, and publishing decisions from Axis.",
+    "searchText": "Axis Content Customization How business users customize backend-owned content, navigation, visibility, setup records, and publishing decisions from Axis. # Axis Content Customization\n\nAxis Content Customization explains how business users and administrators can\nchange labels, navigation, page content, content areas, visibility, setup\nrecords, and publishing decisions without turning Axis into the backend owner.\nThis page belongs with project customization because many customer changes are\nbusiness-managed rather than code-managed.\n\nThe key rule is that Axis is the workspace. Backend modules and content\ncatalog records remain the authority.\n\n## Customization journey\n\n```mermaid\nflowchart LR\n  User[\"Axis user\"] --> Record[\"Open backend-owned record\"]\n  Record --> Edit[\"Edit label, order, content, access, or property\"]\n  Edit --> Validate[\"Backend validation\"]\n  Validate --> Staged[\"Save to Staged\"]\n  Staged --> Approval[\"Approval and audit\"]\n  Approval --> Online[\"Online delivery\"]\n```\n\n## What business users can change\n\n| Change | Owner | Notes |\n| --- | --- | --- |\n| Documentation navigation | Documentation content catalog. | Section, group, subgroup, sequence, and summaries should be editable with workflow. |\n| CMS pages and content areas | WCMS content catalog. | Headers, footers, pages, and components should be backend-driven. |\n| Public visibility | Access policy records. | Public and authenticated views must be explicit. |\n| Setup and application packs | Backend initialization metadata. | Axis should show dependencies and next actions. |\n| Workflow decisions | Process tasks and permissions. | Authorized users can approve or reject according to permissions. |\n\n## Business value\n\nThis model gives business teams more control without bypassing governance.\nThey can prepare content, request publication, approve tasks when authorized,\nand verify public delivery in a guided journey. Developers still own renderer\ncontracts and backend validation, so the UI does not become a private data\nmodel.\n\n## Customization and extension\n\nProjects can add Axis screens, renderers, and workspaces when new business\ncapabilities require them. The extension must consume backend contracts, not\ninvent frontend-only authority. If a new left-nav item or content section is\nneeded, the backend should expose navigation metadata and permissions so Axis\ncan render it consistently.\n\n## Reader and implementation contract\n\nA beginner should know that Axis is where work happens, not where backend\ntruth is invented. A business user should have a clear path to update content,\nsubmit approval, review pending work, approve or reject when permitted, and\nverify public delivery. A developer should know which backend API and renderer\ncontract power the screen. An operator should know which state refreshes after\neach mutation.\n\nEvery Axis customization should be designed as a single business journey where\npossible. If a user starts from documentation publishing, they should not be\nsent to unrelated task lists without context. The screen should show available\nupdates, dependency blockers, approval actions, Online state, and links that\nbecome visible after successful publication.\n\n## Common mistakes\n\n- Hardcoding Axis navigation for data that should be backend-managed.\n- Requiring users to jump between multiple pages to approve one publication.\n- Hiding setup dependencies until an import fails.\n- Letting the requester identity block approval instead of checking actual\n  permissions, unless separation of duties is explicitly required.\n- Forgetting to refresh navigation after a successful mutation.\n\n## Verification\n\nVerify Axis customization by changing a backend-owned record from Axis,\nconfirming validation and permissions, completing approval where required, and\nchecking that Axis and public apps refresh from the updated backend state. The\nbrowser journey should be easy enough for a business administrator to complete\nwithout reading source code.\n",
+    "keywords": [
+      "axis-content-customization",
+      "business-user-customization",
+      "backend-owned-navigation",
+      "Developer Extension and Project Customization",
+      "Project-Layer Customization",
+      "Axis Content Customization"
+    ],
+    "facets": {
+      "section": "developer-extension-and-project-customization",
+      "group": "developer-extension-and-project-customization",
+      "navigationDepth": 2,
+      "documentType": "customization",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record228": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessdevelopercustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12560,7 +9401,8 @@ module.exports = {
     ],
     "facets": {
       "section": "developer-extension-and-project-customization",
-      "group": "process-customization",
+      "group": "developer-extension-and-project-customization",
+      "navigationDepth": 2,
       "documentType": "customization",
       "audience": [
         "business",
@@ -12589,7 +9431,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record322": {
+  "record229": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocesscustomprojectextension",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12607,7 +9449,8 @@ module.exports = {
     ],
     "facets": {
       "section": "developer-extension-and-project-customization",
-      "group": "customer-project-extensions",
+      "group": "developer-extension-and-project-customization",
+      "navigationDepth": 2,
       "documentType": "customization",
       "audience": [
         "business",
@@ -12636,7 +9479,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record323": {
+  "record230": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercebasefoundations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12654,7 +9497,8 @@ module.exports = {
     ],
     "facets": {
       "section": "store-market-site-and-channel-management",
-      "group": "commerce-foundations",
+      "group": "store-market-site-and-channel-management",
+      "navigationDepth": 2,
       "documentType": "concept",
       "audience": [
         "business",
@@ -12683,14 +9527,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record324": {
+  "record231": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatawcmsOverview",
     "title": "WCMS content management",
     "summary": "How Nodics manages sites, catalogs, pages, components, routes, and delivery through the WCMS runtime.",
-    "searchText": "WCMS content management How Nodics manages sites, catalogs, pages, components, routes, and delivery through the WCMS runtime. # WCMS content management\n\nWCMS is the Nodics functional module for governed web content. It owns the\nbackend records that describe sites, content catalogs, page types, templates,\nslots, pages, components, navigation, routes, restrictions, publication, and\ndelivery. A frontend such as Nodics Axis renders the resolved contract, but the\nbackend decides which content exists and when it is active.\n\n## Problem it solves\n\nMost enterprise applications eventually need content that changes faster than\ncode releases. Login pages, documentation, dashboards, banners, help text,\nnavigation, and site experiences should be governed without asking developers\nto rebuild the frontend every time copy or composition changes. WCMS gives\nNodics a backend-owned content model that can be imported, versioned, searched,\npublished, and delivered safely.\n\n## Core ownership rule\n\nIf a CMS record is imported into a database, it belongs to a backend module or\nbackend project. `nodics.axis` may provide renderers, but it must not own\ndatabase-importable site, page, component, catalog, or route data. Framework\ndocumentation belongs in `nodics.docs`, Axis product documentation belongs in\n`nodics.platform/modules/axis`, and customer project documentation belongs in\nthe customer project.\n\nThis rule keeps runtime ownership clear. It also allows a partner to replace\nor extend a frontend without losing the governed content source.\n\n## What WCMS manages\n\n- Sites: named delivery surfaces such as Axis documentation or a storefront.\n- Content catalogs: governed containers that group pages and components.\n- Page and component types: contracts that describe what kind of record is\n  being rendered.\n- Templates and slots: layout-level rules for where components can appear.\n- Pages and components: authored content and structured properties.\n- Routes: URL, locale, channel, site, and page mappings.\n- Navigation nodes: menu structures and discovery metadata.\n- Restrictions: access and delivery constraints around content.\n- Publication state: the difference between authored content and content that\n  is safe to deliver.\n\n## Catalog-first content model\n\nWCMS uses a catalog-first model. The Content Catalog is the governed content\ncontainer. A Site is one delivery or authoring surface inside that content\nuniverse. Templates, slots, component types, renderer mappings, pages, routes,\nnavigation, restrictions, media references, and publishing evidence all belong\nunder that catalog-governed model.\n\n```mermaid\nflowchart TD\n  Catalog[\"Content Catalog\"]\n  Site[\"Site\"]\n  Template[\"Page Template\"]\n  Page[\"Page\"]\n  Slots[\"Template Slots: any number\"]\n  Sections[\"Page Sections\"]\n  Components[\"Component Instances\"]\n  Media[\"Governed Media\"]\n  Route[\"Page Route\"]\n  Nav[\"Navigation Node\"]\n\n  Catalog --> Site\n  Catalog --> Template\n  Site --> Page\n  Template --> Page\n  Page --> Slots\n  Slots --> Sections\n  Sections --> Components\n  Components --> Media\n  Page --> Route\n  Route --> Nav\n```\n\nThe slot count is never fixed by Axis or by a generic framework assumption. A\ntemplate can declare one slot, three slots, ten slots, or a specialized set of\nslots such as `navigation`, `article`, `relatedResources`, `hero`, `body`,\n`gallery`, `checkoutSummary`, or anything a module/project template needs.\nDesigner behavior must read those slot definitions from CMS and validate\nagainst the backend contract.\n\nConceptually, the hierarchy is:\n\n```text\nContent Catalog\n  ├── Sites\n  │   └── Pages\n  │       ├── Route\n  │       ├── Navigation Node\n  │       └── Template Usage\n  │           └── Slots\n  │               └── Sections\n  │                   └── Components\n  │                       └── Media References\n  └── Reusable definitions\n      ├── Page Templates\n      ├── Slot Definitions\n      ├── Component Types\n      └── Renderer Mappings\n```\n\nThis matters for beginners because it explains why a page record alone is not\nenough. A page is only useful when it belongs to a Site, that Site belongs to a\nContent Catalog, the selected template declares slots, and the components fit\nthose slot rules.\n\n## How a page becomes visible\n\n```mermaid\nflowchart TD\n  Catalog[\"Content catalog<br/>governs content universe\"]\n  Site[\"CMS site<br/>delivery surface inside catalog\"]\n  Type[\"Page/component types<br/>renderer contract\"]\n  Template[\"Page template<br/>slot rules\"]\n  Component[\"CMS components<br/>structured properties\"]\n  Page[\"CMS page<br/>composition\"]\n  Route[\"CMS route<br/>URL + locale + channel\"]\n  Axis[\"Axis renderer<br/>browser presentation\"]\n\n  Catalog --> Site\n  Catalog --> Template\n  Type --> Template\n  Template --> Page\n  Component --> Page\n  Site --> Route\n  Page --> Route\n  Route --> Axis\n```\n\nA page cannot exist meaningfully without the surrounding records. A route needs\na site. A site needs a catalog. A page needs a type and usually a template. A\ntemplate needs slots. Components need type codes and renderer mappings. This is\nwhy a data pack with pages but no content catalog is incomplete. It might look\nlike “some records imported,” but the content model is not healthy.\n\n## Beginner example: documentation content\n\nNodics documentation is a good first example because it is visible in Axis and\nstill follows the backend ownership rule.\n\n1. `nodics.docs` owns framework documentation markdown.\n2. Its generator converts markdown into CMS records: catalog, site, page type,\n   component type, renderer mappings, template, components, pages, and routes.\n3. WCMS imports the generated core data pack.\n4. Axis opens `/docs`, requests the route from WCMS, and renders the returned\n   page contract.\n5. If the markdown changes, the content pack version and checksum change, then\n   the environment imports the new governed release.\n\nAxis does not read markdown files from `nodics.docs`. Axis reads the backend\ndelivery contract. That distinction is the heart of the modularisation work.\n\n## Axis Page Designer foundation\n\nAxis Page Designer is the business-friendly authoring surface over this same\ncatalog-first model. It is intentionally not a pixel-perfect website builder.\nIt is a guided composition workspace that helps a user select a Content\nCatalog, select or create a Site, select a template, understand the template's\ndynamic slot list, add page sections, add components, associate governed\nmedia, assign a route, assign navigation, and validate whether the draft is\nready for publishing.\n\n```mermaid\nflowchart LR\n  User[\"Business user\"] --> AxisDesigner[\"Axis Page Designer\"]\n  AxisDesigner --> CmsAuthoring[\"CMS Designer Authoring APIs\"]\n  CmsAuthoring --> Catalog[\"Catalog service\"]\n  CmsAuthoring --> Site[\"CMS Site\"]\n  CmsAuthoring --> Template[\"Page Template and Slots\"]\n  CmsAuthoring --> Page[\"Page\"]\n  CmsAuthoring --> Detail[\"Component Detail placements\"]\n  CmsAuthoring --> Component[\"Components\"]\n  CmsAuthoring --> Media[\"CMS media references and nMedia validation\"]\n  CmsAuthoring --> Route[\"Page Route\"]\n  CmsAuthoring --> Navigation[\"Navigation Node\"]\n  CmsAuthoring --> Publish[\"nPublish readiness\"]\n```\n\nThe Designer may make authoring feel easier, but it must not introduce a\nparallel content model. It must save through CMS, Catalog, Media, and\nPublishing contracts. If a customer wants a different page-design flow,\nthey can override the Designer service methods or provide different backend\ntemplates, slot definitions, component type groups, and renderer mappings.\nThey should not fork Axis to invent storage, route, media, or publishing\nauthority in the browser.\n\nThe first endpoint a Page Designer should call is the WCMS-owned Designer\nauthoring model. That model tells Axis which records are currently available:\ncontent catalogs, sites, page templates, slot definitions, page types,\ncomponent types, component type groups, media folders, media formats, media\ntypes, navigation parents, and publishing-readiness hints. The browser can\nturn those records into dropdowns, chips, and helper text, but the records\nstill come from backend-owned Catalog, CMS, Media, Navigation, and Publishing\nservices. This protects business users from typing magic strings and protects\nthe framework from frontend-owned persistence.\n\nThe user journey should stay soft. A business user should not be forced to\nunderstand every schema before creating a page. The recommended Designer flow\nis:\n\n1. load WCMS defaults and show one recommended starting path;\n2. let the user change the catalog, site, template, page code, route, slots,\n   and primary component only when needed;\n3. auto-filter dependent choices, such as sites by catalog and slots by\n   template;\n4. show media and navigation information as helpful hints, not as mandatory\n   noise;\n5. validate the draft and show backend evidence in a readable panel;\n6. unlock Save only for the exact draft that WCMS validated.\n\nThis makes the screen feel like a guided assistant rather than a raw database\neditor. Advanced users can still open the owning workspaces for catalogs,\nsites, templates, components, media, routes, and navigation when they need\nfull control.\n\nOwnership also controls how we write tests. CMS tests prove the authoring\nmodel contract. Axis tests prove that the frontend can parse and render the\nmetadata safely. A reference customer project, such as a local demo project,\nonly proves that its composed runtime can observe the model. It must not\ndescribe that acceptance check as if the customer project owns the WCMS\ncontract.\n\n## Required record chain\n\n| Record | Beginner explanation | Common failure if missing |\n| --- | --- | --- |\n| Catalog | The container that says this content belongs together. | Sites or pages look orphaned and governance becomes unclear. |\n| Site | The named delivery surface, such as Axis docs or a customer website. | Routes cannot resolve a delivery target. |\n| Type code | The contract that tells Axis what kind of page or component this is. | Axis cannot choose the correct renderer safely. |\n| Renderer mapping | The allowed browser renderer for a type. | Axis refuses or falls back because the backend did not authorize a renderer. |\n| Template and slots | The layout contract for where components are allowed. | Components may exist but not render in a predictable layout. |\n| Component | The structured content or properties to render. | Page loads but has no meaningful body. |\n| Page | The composition of components. | Route can resolve but there is no page to display. |\n| Route | The URL, locale, channel, and delivery state. | Direct navigation shows recovery or not-found behavior. |\n\n## Developer model\n\nDevelopers should treat WCMS data like code-owned configuration until the\nbusiness explicitly moves a capability into operator-managed authoring. A\nmodule ships source documentation or content definitions, generates importable\nrecords, and exposes the pack through the governed import system. The generated\nrecords are then loaded into WCMS. Runtime delivery reads the database records,\nnot the frontend repository.\n\nWhen a project needs custom content, place the source and generated pack in the\nowning project, such as `nodics.kickoff`. Do not modify framework packs to add\ncustomer-specific pages.\n\n## Content-pack release model\n\nWCMS data releases are immutable. If the source content changes, the generated\nrecords and checksum change, so the release version must change too. This\nprotects operators from installing two different sets of content under the\nsame trusted version.\n\n```mermaid\nflowchart TD\n  Source[\"Source Markdown or data definitions\"] --> Generate[\"Generator creates CMS records\"]\n  Generate --> Manifest[\"Manifest hashes generated files\"]\n  Manifest --> Validate[\"Validator checks release integrity\"]\n  Validate --> Import[\"WCMS imports immutable release\"]\n  Import --> Deliver[\"Routes deliver CMS page contracts\"]\n```\n\nIf import says a release is invalid, treat that as useful protection. Fix the\nsource, generator, version, or manifest rather than bypassing checksum\nvalidation.\n\n## Business model\n\nWCMS reduces release friction. Business users can work with governed content\nsurfaces while developers preserve reusable module boundaries. A partner can\nrun many customer-facing websites, internal applications, and documentation\nexperiences through the same content foundation while still keeping project\nownership clean.\n\n## Business journey: from content idea to visible page\n\nA business user usually does not think in terms of catalogs, routes, renderer\nmappings, and templates. They think: “I need a page that explains this\ncapability, uses the right brand, appears in the right navigation, and can be\nchanged safely later.” WCMS turns that business need into governed records.\n\n```mermaid\nflowchart TD\n  Idea[\"Business content idea\"] --> Owner[\"Identify owning module or project\"]\n  Owner --> Source[\"Write source content or data definition\"]\n  Source --> Generate[\"Generate CMS records and manifest\"]\n  Generate --> Import[\"Import through WCMS\"]\n  Import --> Route[\"Resolve route for site, locale, channel\"]\n  Route --> Render[\"Axis or site renderer displays page\"]\n  Render --> Govern[\"Audit, version, and update through owner\"]\n```\n\nThis is why WCMS is a framework capability instead of a frontend folder. The\npage must be visible to users, but the authority for what the page means, who\nowns it, how it is versioned, and how it is imported belongs to the backend\nmodule or project.\n\n## Example: three documentation sites\n\nThe reference Axis documentation navigation may show Framework, Swaggers,\nNodics Axis, and a customer project guide. That visible navigation is a user\nexperience decision. The backend data ownership is separate:\n\n| Visible documentation area | Backend owner | Content purpose |\n| --- | --- | --- |\n| Framework | `nodics.docs` | Reusable Nodics framework concepts, quick start, architecture, customization, operations, module guides. |\n| Swaggers | BackOffice/API discovery | Runtime API reference grouped by registered backend capability. |\n| Nodics Axis | `nodics.platform/modules/axis` | Axis product behavior, renderer contracts, shell behavior, schema workbench, documentation rendering. |\n| Customer project | customer project | Project setup, local demo behavior, project data, custom modules, customer-specific examples. |\n\nNo documentation area should store importable CMS data in `nodics.axis`.\nAxis may render all of these areas, but it does not own the content records.\n\n## Developer journey: adding a module-owned page\n\nWhen a developer adds documentation or content for a functional module, the\nsafe process is:\n\n1. Confirm the backend owner of the subject.\n2. Add or update source content under that owner.\n3. Regenerate generated CMS data and manifests with the owner-provided script.\n4. Run content-pack validation.\n5. Start WCMS and import through Axis or an approved backend import API.\n6. Open the route in Axis or the target site.\n7. Verify navigation, page body, renderer mapping, authorization, and route\n   recovery behavior.\n\nHand-editing generated CMS records may seem faster, but it breaks release\nintegrity. If generated output is wrong, fix the source or generator.\n\n## DevOps model\n\nWCMS should be deployed as a runtime server when content delivery or content\nmanagement is required. Axis depends on Platform for identity and on WCMS for\ngoverned presentation content. Local Kickoff normally starts Platform, WCMS,\nCron where needed, and Axis as the frontend renderer.\n\nProduction deployments should define backup, migration, publication, cache,\nsearch, media storage, and import history policies. Content packs should have\nsemantic releases, checksums, and repeatable import behavior so an environment\ncan be rebuilt from source-controlled module data.\n\n## Operations checklist\n\n| Check | Expected evidence |\n| --- | --- |\n| WCMS process | Server starts and exposes content/import APIs on the configured port. |\n| Content catalogs | Every site has an owning catalog; pages are not orphaned. |\n| Routes | Each visible URL resolves to a page for site, locale, and channel. |\n| Renderer mappings | Axis receives only renderer types the backend has authorized. |\n| Import history | Content-pack install records include version, checksum, status, and outcome. |\n| Media | Components reference media records, not private storage paths. |\n| Recovery | Missing route, missing renderer, unauthorized access, and stale content fail safely. |\n| Backup | Database, media storage, and generated release evidence can be restored together. |\n\nWCMS incidents should be investigated by record chain. Start with the route,\nthen page, template, components, renderer mapping, site, catalog, and import\nhistory. That is usually faster than searching the frontend first.\n\n## QA scenarios\n\nA WCMS change should be tested with more than one happy route:\n\n1. page route resolves for the expected site, locale, and channel;\n2. missing route shows recovery rather than broken layout;\n3. missing renderer mapping fails safely;\n4. content pack validates before import;\n5. same version with changed checksum is rejected;\n6. project documentation imports separately from framework and Axis docs;\n7. generated files are recreated from source without manual drift;\n8. Axis renders the delivered contract without direct filesystem access.\n\n## What not to do\n\n- Do not put WCMS import data in `nodics.axis`.\n- Do not create a second content registry in the frontend.\n- Do not hardcode page availability in Axis when WCMS can deliver it.\n- Do not let a route imply ownership; route ownership comes from the backend\n  module or project that owns the pack.\n- Do not let generated records drift from their source catalogue.\n- Do not create pages or components without catalogs and sites.\n- Do not treat documentation content as special static frontend content just\n  because Axis renders it.\n\n## Common mistakes\n\nThe most common WCMS mistake is treating a visible page as a frontend asset\ninstead of a backend-owned content chain. Another common mistake is importing\npages and components without catalogs, sites, templates, slots, renderer\nmappings, and routes. That creates partial data that may look present in the\ndatabase but cannot be delivered safely.\n\nDo not duplicate content ownership in Axis. Do not let a customer project edit\nframework documentation. Do not let framework documentation include\ncustomer-specific setup as if every adopter used the same project. Do not\nignore version and checksum failures; an invalid release is the system\nprotecting itself from drift.\n\n## Verification\n\nVerify WCMS by walking the complete delivery chain. A route should resolve to\na site, catalog, page, template, slots, components, type codes, renderer\nmappings, restrictions where applicable, and safe media references. Imported\nreleases should record semantic version, checksum, source owner, status, and\nhistory. Axis should render the delivered contract and show recovery when a\nroute, renderer, or content source is missing.\n\nFor documentation specifically, verify each product separately: framework\ndocumentation from `nodics.docs`, Axis product documentation from the Platform\nAxis backend module, Swagger/API documentation from registered runtime\nmodules, and customer-project documentation from the owning customer project.\nThe fact that Axis displays all of them together does not make Axis the data\nowner.\n\n## CMS entity model coverage\n\nWCMS owns the content model used by Axis authoring and Nexus delivery. The\ncentral journey is: a business user manages a CMS Site, page route, page,\ntemplate, slot definition, component, localization, media reference,\nrestriction, type code, and renderer mapping; the content is approved and\npublished; Nexus or another storefront resolves the Online version.\n\n```mermaid\nflowchart LR\n  Site[\"CMS site\"] --> Route[\"Page route\"]\n  Route --> Page[\"CMS page\"]\n  Page --> Template[\"Page template\"]\n  Template --> Slot[\"Slot definition\"]\n  Slot --> Component[\"CMS component\"]\n  Component --> Renderer[\"Type code to renderer\"]\n  Component --> Media[\"Media reference\"]\n  Page --> Restriction[\"Restriction policy\"]\n```\n\n| Entity | Business purpose | Extension note |\n| --- | --- | --- |\n| CmsSite | Owns site, catalog, locale, domain, and publication context. | Add project site attributes and access policy. |\n| CmsPageRoute | Maps request path to page. | Document route conflict and fallback behavior. |\n| CmsPage | Owns page identity, template, lifecycle, and visibility. | Add page types through schema and renderer mapping. |\n| CmsPageTemplate and CmsSlotDefinition | Control layout areas. | Add content areas without hardcoding the frontend tree. |\n| CmsComponent and localization | Holds content blocks and translated fields. | Add component schema, validation, and rendering contract. |\n| CmsRestriction | Controls conditional visibility. | Document role, segment, tenant, date, or custom rules. |\n\n## Editorial coverage\n\nEditorial content is covered under WCMS because it uses content authoring,\npublication, localization, delivery, and search projection patterns. The\nimplementation includes articles, authors, series, taxonomy terms, content\ntypes, corrections, localizations, online articles, publication receipts,\npublication targets, workflow adapters, structured data, delivery services,\nand backoffice capability metadata.\n\nBusiness documentation should explain the authoring journey, correction\npolicy, localization completeness, publication target, public delivery, SEO,\nstructured data, and withdrawal behavior. Developer documentation should map\ncustom fields, workflow adapters, publication adapters, delivery projections,\nand renderer contracts to the owning services and generated schema tests.\n",
+    "searchText": "WCMS content management How Nodics manages sites, catalogs, pages, components, routes, and delivery through the WCMS runtime. # WCMS Content Management\n\nWCMS Content Management explains how Nodics manages business-owned pages,\ncontent areas, components, navigation, visibility, and publication. It is the\nentry page for content teams, Axis administrators, developers, operators, and AI\ntools that need to understand the content model before changing it.\n\n## WCMS model\n\n```mermaid\nflowchart LR\n  Axis[\"Axis editing workspace\"] --> Catalog[\"Content catalog\"]\n  Catalog --> Page[\"Page\"]\n  Page --> Area[\"Content area\"]\n  Area --> Component[\"Component\"]\n  Component --> Publish[\"Staged to Online publication\"]\n  Publish --> Nexus[\"Nexus, Agora, or Axis documentation view\"]\n```\n\n| Concept | Meaning | Who cares |\n| --- | --- | --- |\n| Content catalog | Backend-owned hierarchy for pages and components. | Architects, developers, AI tools. |\n| Page | Route-level business experience. | Business users and content authors. |\n| Content area | A controlled placement region inside a page. | Page designers and frontend developers. |\n| Component | Editable business content or functional renderer. | Authors, administrators, and operators. |\n| Publication | Governed movement from Staged to Online. | Reviewers, publishers, and QA. |\n\n## Business perspective\n\nWCMS exists so customer-facing and internal content is managed through a\ngoverned backend model, not through frontend hardcoding. A business user can\nprepare pages, update navigation, manage components, request approval, and\npublish Online content through Axis. Public Nexus pages, Agora storefronts,\nAxis documentation, and internal pages can share the same content principles\nwhile using different access and visibility rules.\n\n## Technical perspective\n\nDevelopers should treat WCMS as the authority for content structure. Frontends\nrender pages, areas, and components from backend data. If a page, navigation\nitem, header, footer, hero, article, banner, or documentation link is visible\nwithout Online content, it should be either a governed fallback state or a\ndeliberate recovery shell.\n\n## Continue with\n\n- **Content Catalog Model** for page, area, component, catalog, and hierarchy\n  records.\n- **Page Designer and Components** for creating editable areas and component\n  renderers.\n- **Site Publication and Visibility** for Staged, Online, public, authenticated,\n  and role-based delivery.\n- **Media Management** for image, file, and asset ownership used by content.\n\n## Reader and implementation contract\n\nA beginner should understand that WCMS is the backend-owned content authority for page structure, not a frontend convenience layer. A business user should know how a content change moves from Axis editing to Staged preparation, approval, Online visibility, and public or authenticated rendering. A developer should know which model owns catalog, page, area, component, route, visibility, and media references. An operator should know where to verify publication state and missing-content fallback behavior.\n\nEvery WCMS page must explain the business journey and the implementation contract together. That includes content catalog ownership, editable component rules, route mapping, role visibility, publishing workflow, media dependencies, Axis customization surface, and browser evidence for Nexus, Agora, Axis, or documentation views.\n\nThis extension guidance must stay linked to the owning project or capability page whenever a customer customizes the behavior.\n\n## Common mistakes\n\n- Hardcoding business pages, header, footer, or storefront content in Nexus or\n  Agora.\n- Creating content without publication state and visibility metadata.\n- Importing page data but forgetting media objects and physical assets.\n- Treating Axis as the content owner instead of the editing and operations\n  surface.\n\n## Verification\n\nVerify WCMS by importing content to Staged, approving publication, opening the\nOnline route, checking role visibility, confirming media renders, and inspecting\naudit evidence. A beginner should see the page journey, a business user should\nsee how to change it, a developer should see the schema and renderer contract,\nand an operator should see publication status.\n",
     "keywords": [
       "wcms-and-content-management",
       "content-model-and-delivery",
@@ -12701,7 +9545,8 @@ module.exports = {
     ],
     "facets": {
       "section": "wcms-and-content-management",
-      "group": "content-model-and-delivery",
+      "group": "wcms-and-content-management",
+      "navigationDepth": 2,
       "documentType": "overview",
       "audience": [
         "business",
@@ -12730,25 +9575,123 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record325": {
-    "code": "nodicsDocsSearchpagenodicsdocsmetadatacatalogproductdiscoverymanagement",
+  "record232": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmscontentcatalogmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
-    "targetCode": "nodicsDocsMetadatacatalogProductDiscoveryManagement",
-    "title": "Product Catalog and Discovery Management",
-    "summary": "Products, categories, variants, localized attributes, catalog publication, discovery projections, and project customization.",
-    "searchText": "Product Catalog and Discovery Management Products, categories, variants, localized attributes, catalog publication, discovery projections, and project customization. # Product Catalog and Discovery Management\n\nProducts, categories, variants, localized attributes, catalog publication, discovery projections, and project customization. This page is intentionally written for beginners, business users, developers, operators, architects, QA owners, and AI tools. It explains the business problem first, then the technical ownership model, then the exact customization and verification responsibilities so nobody has to guess where a change belongs.\n\nBusiness teams need product data that can be enriched, localized, approved, published, searched, and customized without mixing catalog ownership with checkout or order ownership. Product catalog owns sellable item structure and discovery projections. Search providers consume indexed projections; checkout consumes selected product and price evidence at calculation time.\n\n## Business context\n\nFor a business user, this topic answers what decision can be made, which operational journey is supported, and what risk is reduced. The practical value is faster delivery without losing governance: teams can understand the current capability, decide whether it applies to their project, and know when Axis, Nexus, content catalog, workflow, or runtime services are involved.\n\nFor beginners, the mental model is simple: the page title is the business capability, the table identifies who owns each part, and the diagram shows how a request or change flows. A reader should not need source-code knowledge to understand the journey, but the developer path is still available when customization is needed.\n\n| Business question | Answer for this topic |\n| --- | --- |\n| What problem does it solve? | Business teams need product data that can be enriched, localized, approved, published, searched, and customized without mixing catalog ownership with checkout or order ownership. |\n| Who uses it? | Business users, administrators, developers, operators, QA owners, implementation partners, and AI-assisted delivery tools. |\n| What changes can it support? | Product catalog owns sellable item structure and discovery projections. Search providers consume indexed projections; checkout consumes selected product and price evidence at calculation time. |\n| What must be governed? | Permissions, validation, source ownership, publication state, runtime impact, audit evidence, and rollback boundaries. |\n\n## Journey and ownership\n\nCommerce product capabilities own product, category, variant, localization, and publication records. Media owns assets, Pricing owns price decisions, and Search owns query/index behavior. This keeps the reader-facing name friendly while preserving exact source ownership for developers and AI tools. Axis may render management screens or authenticated documentation, Nexus may render public Online content, and the backend content catalog remains authoritative for navigation, pages, access policies, and publication state.\n\n```mermaid\nflowchart LR\n  Reader[\"Business or developer request\"] --> Axis[\"Axis or Nexus view\"]\n  Axis --> Backend[\"Owning backend capability\"]\n  Backend --> Catalog[\"Content/catalog/schema/config records\"]\n  Catalog --> Runtime[\"Runtime behavior or published page\"]\n  Runtime --> Evidence[\"Audit, validation, and support evidence\"]\n```\n\n| Responsibility | Owner | Notes |\n| --- | --- | --- |\n| Business capability name | Product Catalog and Discovery | Used in navigation and dashboards so readers are not exposed to raw module names first. |\n| Source owner | nodics.commerce | Carries exact implementation, documentation, and validation evidence. |\n| Technical module | product | Holds the relevant schema, service, router, data, or contract detail where applicable. |\n| Axis experience | Backend-declared workspace | Axis renders metadata and actions but does not become the authority. |\n| Public experience | Online content delivery | Nexus renders only records approved for public access. |\n\n## Data and configuration detail\n\nEvery topic must explain the data that changes behavior. Some topics are schema-driven, some are configuration-driven, some are publishable content, and some are operational records. The documentation must say which category applies before showing code. That keeps production operators and developers aligned on whether a change needs publication, restart, event propagation, approval, or only a project-layer override.\n\n| Detail area | What to document | Verification signal |\n| --- | --- | --- |\n| Model or record | Type code, catalog, tenant, enterprise, state, owner, and lifecycle. | Schema contract or generated model test. |\n| Configuration key | Default value, override location, environment scope, and runtime impact. | Config validation and runtime refresh evidence. |\n| API or event | Route/event name, payload boundary, permission, idempotency, and failure mode. | Route, service, event, and authorization tests. |\n| Publication and access | Staged/Online state, access mode, roles, groups, and permissions. | Content-pack validation and access-policy test. |\n\n```js\nproductExtension: { code: \"shirt-100\", attributes: { fabric: \"cotton\" }, publishTo: \"onlineCatalog\" }\n```\n\n## Customization and extension\n\nDevelopers should customize from the project layer first. A customer project may add properties, services, validators, pipelines, renderers, data packs, or provider configuration when the extension respects the owning capability. Business users may update governed records in Axis when the record is designed for administration. Framework source changes are reserved for improving the reusable product capability itself.\n\n| Customization type | Recommended path | Avoid |\n| --- | --- | --- |\n| Business label, navigation, or content area | Axis-managed content catalog item with publication workflow. | Hardcoding labels or page trees in the frontend. |\n| Runtime setting | Module configuration with validation and governed runtime propagation. | Editing node-local files on each server by hand. |\n| Domain behavior | Extension service, validator, pipeline step, or provider adapter. | Forking the standard module for customer-only logic. |\n| Public visibility | Access policy with public/authenticated/role-based state. | Exposing internal or draft pages through Nexus. |\n\n## Operations and governance\n\nOperators need production-safe evidence, not only implementation notes. Each page must call out logging, tracing, permission checks, event propagation, data import/export, publication status, rollback behavior, and troubleshooting. If a capability affects multiple nodes, the documentation must explain how changes reach every node and how a partial failure is detected.\n\n| Operational concern | Required documentation detail |\n| --- | --- |\n| Security | Authentication mode, permission code, role/group, tenant and enterprise isolation. |\n| Audit | Actor, timestamp, source record, checksum, approval, route/event, and result. |\n| Resilience | Retry, idempotency, compensation, fallback, cache invalidation, and rollback. |\n| Observability | Logs, metrics, dashboard cards, health checks, and support evidence. |\n\n## Common mistakes\n\n- Treating a friendly navigation label as the technical source owner.\n- Writing only developer details and skipping the business decision that the page supports.\n- Updating Axis or Nexus code when the content catalog, schema, or backend capability should own the change.\n- Forgetting access rules for public, authenticated, role-based, group-based, or permission-based pages.\n- Skipping diagrams, comparison tables, source maps, or troubleshooting matrices because the topic feels obvious.\n- Changing runtime behavior without explaining production impact, cluster propagation, and rollback.\n- Leaving generated documentation without source evidence, validation commands, and maturity state.\n\n## Verification\n\nVerification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.\n\nFor implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.\n\n## Current implementation coverage\n\nThe product catalog page covers the source records that create sellable and\ndiscoverable assortments: Product, Category, ProductVariant, localized product\nand category records, product publication records, and product search\nprojections. Product management is not only a list of items. It is the\nbusiness journey that lets a merchandiser define what can be sold, where it is\nvisible, which localized attributes appear to customers, and which discovery\nprojection is safe to index.\n\n```mermaid\nflowchart LR\n  Product[\"Product and Variant\"] --> Localization[\"Localized attributes\"]\n  Product --> Category[\"Category assignment\"]\n  Localization --> Publication[\"Catalog publication\"]\n  Category --> Publication\n  Publication --> Projection[\"Search projection\"]\n  Projection --> Discovery[\"Discovery index\"]\n  Discovery --> Storefront[\"Storefront and Axis preview\"]\n```\n\n| Entity or service area | Business purpose | Developer extension point |\n| --- | --- | --- |\n| Product and ProductVariant | Own sellable identity, classification, status, and variant structure. | Add project-layer schema properties and validation services. |\n| ProductLocalization and CategoryLocalization | Own locale-specific names, descriptions, slugs, SEO, and completeness. | Add locale fields and fallback behavior through localization-aware services. |\n| ProductPublication | Controls whether catalog data is ready for customer-facing publication. | Extend publication validation and evidence capture. |\n| ProductSearchProjection | Provides indexable, rebuildable discovery data. | Extend projection builder instead of editing index records directly. |\n| Product BackOffice capability | Declares Axis workbench metadata for business users. | Add backend-declared columns, summaries, and actions. |\n\nProject customization should happen in the owning product layer or a later\nproject module. For example, an apparel project can add size charts, fabric\ncomposition, sustainability badges, and fit attributes while keeping the base\nProduct identity and publication contract intact. An electronics project can\nadd warranty, energy rating, and technical specifications. Those properties\nmust be documented with type, validation, indexing, import/export, Axis\nvisibility, and publication behavior.\n\nImplementation evidence is held in product schemas, product discovery API\ncontracts, product localization contracts, domain enrichment tests, localized\nsearch publication tests, and generated schema contracts for Product,\nCategory, Variant, Localization, Publication, and Search Projection.\n",
+    "targetCode": "nodicsDocsMetadatawcmsContentCatalogModel",
+    "title": "Content Catalog Model",
+    "summary": "How sites, catalogs, pages, components, media, routes, access policy, and publication state drive public content.",
+    "searchText": "Content Catalog Model How sites, catalogs, pages, components, media, routes, access policy, and publication state drive public content. # Content Catalog Model\n\nThe content catalog model explains how Nodics stores and delivers CMS-backed\ncontent such as pages, components, documentation, navigation, media\nreferences, headers, footers, Nexus content, and Agora storefront content. It\nexists because public applications must not hardcode business content when the\ncontent is expected to be managed, approved, published, localized, searched,\nand governed from Axis.\n\nFor a beginner, the safe model is: content is prepared in Staged, reviewed and\napproved, then published Online. Nexus and Agora consume Online content only.\nAxis is the management surface, but WCMS and backend content packs own the\nrecords.\n\n## Catalog objects\n\n| Object | Purpose | Business impact |\n| --- | --- | --- |\n| Site | Defines the public or authenticated experience being delivered. | Separates Nexus, Agora, documentation, and partner sites. |\n| Catalog | Holds versioned content for a site or product area. | Lets teams manage Staged and Online content separately. |\n| Page | Represents a route-level content experience. | Controls what users see for a URL. |\n| Component | Provides renderable content blocks. | Lets business users assemble page areas. |\n| Media | Connects files and metadata to content. | Enables images, documents, and assets without frontend bundling. |\n| Access policy | Controls public or authenticated visibility. | Prevents draft or restricted content from leaking. |\n\n## Data flow\n\n```mermaid\nflowchart LR\n  Pack[\"Content pack\"] --> Staged[\"Staged catalog\"]\n  Axis[\"Axis authoring\"] --> Staged\n  Staged --> Approval[\"Review and approval\"]\n  Approval --> Online[\"Online catalog\"]\n  Online --> Nexus[\"Nexus\"]\n  Online --> Agora[\"Agora\"]\n```\n\n## Customization and extension\n\nProjects can add content catalogs for their own corporate sites, storefronts,\ndocumentation sets, and partner experiences. The project pack should include\npages, components, routes, media records, media assets, publication metadata,\nand access policy. The installer may prepare this structure, but the project\nmust own its content rather than depending on reference Kickoff sample data.\n\n## Operator view\n\nOperators should be able to inspect which content pack imported a record,\nwhich catalog version is Staged, which release is Online, which route is\nactive, and whether the media artifact exists. If a public site does not\nrender, the investigation should start with site, catalog, route, page,\ncomponent, media, and publication state.\n\n## Reader and implementation contract\n\nA beginner should come away knowing that the content catalog is the data model\nbehind what Axis manages and what Nexus or Agora can render. A business user\nshould understand that changing content, navigation, header, footer, or page\nvisibility is a governed business operation. A developer should understand\nthat content records, media records, routes, and renderer metadata must be\ncreated together. An operator should understand that Online delivery is proven\nby catalog version, route, page, component, media artifact, and access policy.\n\nWhen a project introduces a new corporate site or storefront, the content pack\nmust be complete. Import should prepare media files, media objects, pages,\ncomponents, navigation, routes, publication metadata, and access rules. A\npartial pack creates a user journey that looks initialized but still cannot\nrender the real public experience.\n\n## Common mistakes\n\n- Rendering Nexus or Agora content from frontend constants after a fresh schema.\n- Importing page records without the required media records and files.\n- Treating Staged content as visible public content.\n- Using one catalog for unrelated sites without access and lifecycle clarity.\n- Forgetting that navigation and headers are also content.\n\n## Verification\n\nVerify the content catalog model by importing a complete site pack, approving\nand publishing it Online, then opening the public route. The browser should\nrender backend-owned content. A fresh schema should show a professional\nmaintenance page until Online content exists.\n",
     "keywords": [
-      "product-catalog-and-discovery",
-      "catalog-model-and-publication",
-      "product-catalog-and-discovery-management",
-      "Product Catalog and Discovery",
-      "Catalog Model and Publication",
-      "Product Catalog and Discovery Management"
+      "content-catalog-model",
+      "cms-page-component-route",
+      "online-content",
+      "WCMS and Content Management",
+      "Content Model and Delivery",
+      "Content Catalog Model"
     ],
     "facets": {
-      "section": "product-catalog-and-discovery",
-      "group": "catalog-model-and-publication",
+      "section": "wcms-and-content-management",
+      "group": "wcms-and-content-management",
+      "navigationDepth": 2,
+      "documentType": "concept",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record233": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmspagedesignercomponents",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatawcmsPageDesignerComponents",
+    "title": "Page Designer and Components",
+    "summary": "How Axis-managed content areas, components, renderer metadata, sequence, validation, and publishing work together.",
+    "searchText": "Page Designer and Components How Axis-managed content areas, components, renderer metadata, sequence, validation, and publishing work together. # Page Designer and Components\n\nPage Designer and Components explain how Axis can let business users manage\npage structure without making the frontend the owner of content. This topic is\nseparate from the general WCMS overview because it is the user-facing authoring\njourney. A business user thinks in terms of content areas, navigation, headers,\nfooters, banners, cards, and links. A developer thinks in terms of component\ntypes, renderers, slots, properties, validation, and publication.\n\nBoth views must meet in the content catalog.\n\n## Authoring journey\n\n```mermaid\nflowchart TD\n  User[\"Business user in Axis\"] --> Page[\"Open page or navigation component\"]\n  Page --> Edit[\"Edit content area, sequence, label, or component properties\"]\n  Edit --> Validate[\"Backend validation\"]\n  Validate --> Staged[\"Save to Staged\"]\n  Staged --> Approval[\"Submit for approval\"]\n  Approval --> Online[\"Publish Online\"]\n```\n\n## Component contract\n\n| Area | Business meaning | Technical meaning |\n| --- | --- | --- |\n| Content area | A region of a page that can hold components. | Slot or composition metadata. |\n| Component | A visible piece of content or interaction. | Typed record with renderer, properties, and validation. |\n| Renderer | How the component appears in Axis, Nexus, or Agora. | Frontend implementation selected by backend metadata. |\n| Sequence | Ordering of visible items. | Backend-managed position or relation. |\n| Access | Who can view or edit the content. | Access policy and permission checks. |\n\n## Customization and extension\n\nProjects can introduce new component types and renderers when the business\nexperience needs them. The backend record must declare the component type,\nproperties, renderer key, channels, validation rules, publication behavior,\nand access policy. Axis can render the editing journey, but the component\ndefinition and data remain backend-owned.\n\n## Business and operator impact\n\nThis model lets business users change content safely without asking developers\nto redeploy for every label, image, navigation order, or campaign message.\nOperators still have governance because edits go through Staged and Online\npublication, and each change can be audited by actor, timestamp, target site,\ncomponent, and route.\n\n## Reader and implementation contract\n\nA beginner should understand that Page Designer is not a separate CMS hidden\ninside Axis. It is a user-friendly view over backend-owned content catalog\nrecords. A business user should see familiar concepts such as page, slot,\ncomponent, sequence, visibility, and publish status. A developer should see\ncomponent type, renderer key, property schema, validation, and project\nextension path. An operator should see audit, publication state, Online route,\nand rollback evidence.\n\nEvery component type needs a stable contract. The documentation should show\nwhich properties are configurable, which renderer consumes them, what happens\nwhen a property is missing, which channels can render the component, and how\nthe component behaves across Axis, Nexus, Agora, and authenticated views.\n\n## Common mistakes\n\n- Hardcoding headers, footers, navigation, or hero sections in public apps.\n- Creating an Axis editor that saves records without publication workflow.\n- Allowing a renderer property that the backend contract does not validate.\n- Showing draft Staged components on Nexus or Agora.\n- Forgetting responsive and accessibility checks for new renderers.\n\n## Verification\n\nVerify a component journey by creating or updating a component from Axis,\nsaving it to Staged, approving publication, refreshing public delivery, and\nchecking the browser. Tests should cover renderer fallback, invalid\nproperties, permission failures, and Online-only visibility.\n",
+    "keywords": [
+      "page-designer",
+      "component-renderer",
+      "content-area",
+      "WCMS and Content Management",
+      "Content Model and Delivery",
+      "Page Designer and Components"
+    ],
+    "facets": {
+      "section": "wcms-and-content-management",
+      "group": "wcms-and-content-management",
+      "navigationDepth": 2,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record234": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmssitepublicationvisibility",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatawcmsSitePublicationVisibility",
+    "title": "Site Publication and Visibility",
+    "summary": "How Staged, approval, Online, access policy, maintenance pages, and public delivery determine what users see.",
+    "searchText": "Site Publication and Visibility How Staged, approval, Online, access policy, maintenance pages, and public delivery determine what users see. # Site Publication and Visibility\n\nSite Publication and Visibility explain when content becomes visible to Axis,\nNexus, Agora, and public users. This page belongs under WCMS because visibility\nis not only a frontend route decision. It depends on site, catalog, page,\ncomponent, media, access policy, Staged state, approval, Online state, and\nruntime delivery.\n\nFor a beginner, the rule is simple: if content is not Online for the target\nsite and access policy, the public application should not display it. It may\nshow a customer-friendly maintenance page, but it must not leak Staged or\nfallback sample content.\n\n## Visibility flow\n\n```mermaid\nflowchart LR\n  Draft[\"Author or import\"] --> Staged[\"Staged content\"]\n  Staged --> Review[\"Review task\"]\n  Review --> Approved[\"Approved publication\"]\n  Approved --> Online[\"Online catalog\"]\n  Online --> Public[\"Nexus, Agora, docs, or partner site\"]\n```\n\n## Visibility matrix\n\n| State | Axis authoring | Axis reading | Nexus/Agora public | Notes |\n| --- | --- | --- | --- | --- |\n| Not imported | Recovery or setup journey. | Not available except setup guidance. | Maintenance page. | User needs initialization. |\n| Staged | Editable by permitted users. | Preview only where supported. | Not visible. | Approval required. |\n| Approval in progress | Review decision needed. | Review evidence visible to permitted users. | Previous Online remains active. | Same screen should guide the user. |\n| Online | Managed with audit and history. | Available by access policy. | Visible by access policy. | Navigation should refresh after mutation. |\n\n## Customization and extension\n\nProjects can define public, authenticated, role-based, group-based,\npermission-based, or restricted visibility. The content pack and Axis editing\nsurface must expose this clearly. A customer corporate site may choose public\nmarketing pages, authenticated partner pages, and internal Axis-only\ndocumentation within the same governance model.\n\n## Operator view\n\nWhen a public page is missing, operators should inspect the site code, route,\ncatalog, Online version, page record, component records, media artifacts,\naccess policy, and publication audit. A green import does not always mean the\npublic route is Online; import only prepares the Staged copy unless the\nworkflow explicitly publishes.\n\n## Reader and implementation contract\n\nA beginner should understand the difference between imported, Staged,\napproval, Online, and retired content before diagnosing a public page. A\nbusiness user should know whether a missing page means content is not ready,\napproval is pending, or visibility is restricted. A developer should know\nwhich records must be created for a route to render. An operator should know\nwhich Online evidence proves the page is live.\n\nVisibility documentation must cover both positive and negative outcomes. It is\nnot enough to say how a page appears. The page must also explain what a public\napplication shows when content is missing, when access is restricted, when a\npublication is rejected, and when a previous Online version remains active\nwhile a new Staged release is waiting for review.\n\n## Common mistakes\n\n- Expecting an imported Staged page to appear on Nexus immediately.\n- Showing stale navigation until the user manually refreshes after approval.\n- Hiding approval tasks in a separate workflow page without context.\n- Treating Swagger/OpenAPI as a CMS publication item.\n- Forgetting that media visibility must follow the page and access policy.\n\n## Verification\n\nVerify visibility with a fresh schema and a browser. Before publication, Nexus\nand Agora should show the maintenance state. After import, approval, and Online\npublication, the public pages, headers, footers, images, and links should come\nfrom backend records. Unauthorized users must not see restricted pages.\n",
+    "keywords": [
+      "site-publication",
+      "visibility",
+      "maintenance-page",
+      "online-only",
+      "WCMS and Content Management",
+      "Content Model and Delivery",
+      "Site Publication and Visibility"
+    ],
+    "facets": {
+      "section": "wcms-and-content-management",
+      "group": "wcms-and-content-management",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -12777,7 +9720,55 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record326": {
+  "record235": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacatalogproductdiscoverymanagement",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacatalogProductDiscoveryManagement",
+    "title": "Product Catalog and Discovery Management",
+    "summary": "Products, categories, variants, localized attributes, catalog publication, discovery projections, and project customization.",
+    "searchText": "Product Catalog and Discovery Management Products, categories, variants, localized attributes, catalog publication, discovery projections, and project customization. # Product Catalog and Discovery Management\n\nProducts, categories, variants, localized attributes, catalog publication, discovery projections, and project customization. This page is intentionally written for beginners, business users, developers, operators, architects, QA owners, and AI tools. It explains the business problem first, then the technical ownership model, then the exact customization and verification responsibilities so nobody has to guess where a change belongs.\n\nBusiness teams need product data that can be enriched, localized, approved, published, searched, and customized without mixing catalog ownership with checkout or order ownership. Product catalog owns sellable item structure and discovery projections. Search providers consume indexed projections; checkout consumes selected product and price evidence at calculation time.\n\n## Business context\n\nFor a business user, this topic answers what decision can be made, which operational journey is supported, and what risk is reduced. The practical value is faster delivery without losing governance: teams can understand the current capability, decide whether it applies to their project, and know when Axis, Nexus, content catalog, workflow, or runtime services are involved.\n\nFor beginners, the mental model is simple: the page title is the business capability, the table identifies who owns each part, and the diagram shows how a request or change flows. A reader should not need source-code knowledge to understand the journey, but the developer path is still available when customization is needed.\n\n| Business question | Answer for this topic |\n| --- | --- |\n| What problem does it solve? | Business teams need product data that can be enriched, localized, approved, published, searched, and customized without mixing catalog ownership with checkout or order ownership. |\n| Who uses it? | Business users, administrators, developers, operators, QA owners, implementation partners, and AI-assisted delivery tools. |\n| What changes can it support? | Product catalog owns sellable item structure and discovery projections. Search providers consume indexed projections; checkout consumes selected product and price evidence at calculation time. |\n| What must be governed? | Permissions, validation, source ownership, publication state, runtime impact, audit evidence, and rollback boundaries. |\n\n## Journey and ownership\n\nCommerce product capabilities own product, category, variant, localization, and publication records. Media owns assets, Pricing owns price decisions, and Search owns query/index behavior. This keeps the reader-facing name friendly while preserving exact source ownership for developers and AI tools. Axis may render management screens or authenticated documentation, Nexus may render public Online content, and the backend content catalog remains authoritative for navigation, pages, access policies, and publication state.\n\n```mermaid\nflowchart LR\n  Reader[\"Business or developer request\"] --> Axis[\"Axis or Nexus view\"]\n  Axis --> Backend[\"Owning backend capability\"]\n  Backend --> Catalog[\"Content/catalog/schema/config records\"]\n  Catalog --> Runtime[\"Runtime behavior or published page\"]\n  Runtime --> Evidence[\"Audit, validation, and support evidence\"]\n```\n\n| Responsibility | Owner | Notes |\n| --- | --- | --- |\n| Business capability name | Product Catalog and Discovery | Used in navigation and dashboards so readers are not exposed to raw module names first. |\n| Source owner | nodics.commerce | Carries exact implementation, documentation, and validation evidence. |\n| Technical module | product | Holds the relevant schema, service, router, data, or contract detail where applicable. |\n| Axis experience | Backend-declared workspace | Axis renders metadata and actions but does not become the authority. |\n| Public experience | Online content delivery | Nexus renders only records approved for public access. |\n\n## Data and configuration detail\n\nEvery topic must explain the data that changes behavior. Some topics are schema-driven, some are configuration-driven, some are publishable content, and some are operational records. The documentation must say which category applies before showing code. That keeps production operators and developers aligned on whether a change needs publication, restart, event propagation, approval, or only a project-layer override.\n\n| Detail area | What to document | Verification signal |\n| --- | --- | --- |\n| Model or record | Type code, catalog, tenant, enterprise, state, owner, and lifecycle. | Schema contract or generated model test. |\n| Configuration key | Default value, override location, environment scope, and runtime impact. | Config validation and runtime refresh evidence. |\n| API or event | Route/event name, payload boundary, permission, idempotency, and failure mode. | Route, service, event, and authorization tests. |\n| Publication and access | Staged/Online state, access mode, roles, groups, and permissions. | Content-pack validation and access-policy test. |\n\n```js\nproductExtension: { code: \"shirt-100\", attributes: { fabric: \"cotton\" }, publishTo: \"onlineCatalog\" }\n```\n\n## Customization and extension\n\nDevelopers should customize from the project layer first. A customer project may add properties, services, validators, pipelines, renderers, data packs, or provider configuration when the extension respects the owning capability. Business users may update governed records in Axis when the record is designed for administration. Framework source changes are reserved for improving the reusable product capability itself.\n\n| Customization type | Recommended path | Avoid |\n| --- | --- | --- |\n| Business label, navigation, or content area | Axis-managed content catalog item with publication workflow. | Hardcoding labels or page trees in the frontend. |\n| Runtime setting | Module configuration with validation and governed runtime propagation. | Editing node-local files on each server by hand. |\n| Domain behavior | Extension service, validator, pipeline step, or provider adapter. | Forking the standard module for customer-only logic. |\n| Public visibility | Access policy with public/authenticated/role-based state. | Exposing internal or draft pages through Nexus. |\n\n## Operations and governance\n\nOperators need production-safe evidence, not only implementation notes. Each page must call out logging, tracing, permission checks, event propagation, data import/export, publication status, rollback behavior, and troubleshooting. If a capability affects multiple nodes, the documentation must explain how changes reach every node and how a partial failure is detected.\n\n| Operational concern | Required documentation detail |\n| --- | --- |\n| Security | Authentication mode, permission code, role/group, tenant and enterprise isolation. |\n| Audit | Actor, timestamp, source record, checksum, approval, route/event, and result. |\n| Resilience | Retry, idempotency, compensation, fallback, cache invalidation, and rollback. |\n| Observability | Logs, metrics, dashboard cards, health checks, and support evidence. |\n\n## Common mistakes\n\n- Treating a friendly navigation label as the technical source owner.\n- Writing only developer details and skipping the business decision that the page supports.\n- Updating Axis or Nexus code when the content catalog, schema, or backend capability should own the change.\n- Forgetting access rules for public, authenticated, role-based, group-based, or permission-based pages.\n- Skipping diagrams, comparison tables, source maps, or troubleshooting matrices because the topic feels obvious.\n- Changing runtime behavior without explaining production impact, cluster propagation, and rollback.\n- Leaving generated documentation without source evidence, validation commands, and maturity state.\n\n## Verification\n\nVerification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.\n\nFor implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.\n\n## Current implementation coverage\n\nThe product catalog page covers the source records that create sellable and\ndiscoverable assortments: Product, Category, ProductVariant, localized product\nand category records, product publication records, and product search\nprojections. Product management is not only a list of items. It is the\nbusiness journey that lets a merchandiser define what can be sold, where it is\nvisible, which localized attributes appear to customers, and which discovery\nprojection is safe to index.\n\n```mermaid\nflowchart LR\n  Product[\"Product and Variant\"] --> Localization[\"Localized attributes\"]\n  Product --> Category[\"Category assignment\"]\n  Localization --> Publication[\"Catalog publication\"]\n  Category --> Publication\n  Publication --> Projection[\"Search projection\"]\n  Projection --> Discovery[\"Discovery index\"]\n  Discovery --> Storefront[\"Storefront and Axis preview\"]\n```\n\n| Entity or service area | Business purpose | Developer extension point |\n| --- | --- | --- |\n| Product and ProductVariant | Own sellable identity, classification, status, and variant structure. | Add project-layer schema properties and validation services. |\n| ProductLocalization and CategoryLocalization | Own locale-specific names, descriptions, slugs, SEO, and completeness. | Add locale fields and fallback behavior through localization-aware services. |\n| ProductPublication | Controls whether catalog data is ready for customer-facing publication. | Extend publication validation and evidence capture. |\n| ProductSearchProjection | Provides indexable, rebuildable discovery data. | Extend projection builder instead of editing index records directly. |\n| Product BackOffice capability | Declares Axis workbench metadata for business users. | Add backend-declared columns, summaries, and actions. |\n\nProject customization should happen in the owning product layer or a later\nproject module. For example, an apparel project can add size charts, fabric\ncomposition, sustainability badges, and fit attributes while keeping the base\nProduct identity and publication contract intact. An electronics project can\nadd warranty, energy rating, and technical specifications. Those properties\nmust be documented with type, validation, indexing, import/export, Axis\nvisibility, and publication behavior.\n\nImplementation evidence is held in product schemas, product discovery API\ncontracts, product localization contracts, domain enrichment tests, localized\nsearch publication tests, and generated schema contracts for Product,\nCategory, Variant, Localization, Publication, and Search Projection.\n",
+    "keywords": [
+      "product-catalog-and-discovery",
+      "catalog-model-and-publication",
+      "product-catalog-and-discovery-management",
+      "Product Catalog and Discovery",
+      "Catalog Model and Publication",
+      "Product Catalog and Discovery Management"
+    ],
+    "facets": {
+      "section": "product-catalog-and-discovery",
+      "group": "product-catalog-and-discovery",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record236": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadiscoverysearchindexing",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12795,7 +9786,8 @@ module.exports = {
     ],
     "facets": {
       "section": "search-and-discovery",
-      "group": "search-providers-and-indexing",
+      "group": "search-and-discovery",
+      "navigationDepth": 2,
       "documentType": "integration",
       "audience": [
         "business",
@@ -12824,14 +9816,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record327": {
+  "record237": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatawcmsMediaManagement",
     "title": "Media management",
     "summary": "Governed upload, storage policy, media metadata, source contexts, and safe frontend boundaries.",
-    "searchText": "Media management Governed upload, storage policy, media metadata, source contexts, and safe frontend boundaries. # Media management\n\nMedia is the Nodics capability for governed files and assets. It lives inside\n`nodics.wcms` because content experiences need images, documents, imports,\nexports, and downloadable files, but the binary lifecycle must remain a backend\ncontract rather than a browser convention.\n\n## Problem it solves\n\nWithout a media module, each application starts inventing its own file paths,\nfolder rules, validation, and download behavior. That quickly becomes risky:\nfrontends may leak storage locations, imports may accept unsafe files, and\nbusiness modules may duplicate asset records. Media creates one governed place\nfor upload policy, metadata, storage-provider resolution, source context, and\ndelivery safety.\n\n## Core concepts\n\n- Media record: metadata for a governed file or external asset.\n- Folder policy: which purpose, path prefix, file types, size limits, access\n  mode, and retention rules apply.\n- Format policy: original, preview, responsive, import, export, document, or\n  custom format vocabulary.\n- Storage provider: the backend implementation that stores bytes locally, on\n  NAS, S3, Azure Blob, GCP Storage, CDN-backed storage, or a custom provider.\n- Source context: a safe backend projection that tells Axis which upload and\n  selection choices are valid for data imports, content media, product media,\n  utility media, and generated exports.\n\n```mermaid\nflowchart LR\n  Source[\"Source context\"] --> Policy[\"Folder and format policy\"]\n  Policy --> Upload[\"Upload validation\"]\n  Upload --> Provider[\"Storage provider\"]\n  Provider --> Record[\"Media metadata record\"]\n  Record --> Reference[\"WCMS/module references\"]\n  Record --> Delivery[\"Safe delivery contract\"]\n```\n\n## Frontend boundary\n\nAxis may display upload controls, folder choices, media records, and selection\ndialogs. It must not decide absolute paths, bucket names, storage keys,\ncredentials, signed URLs, retention behavior, or provider details. Axis sends\nthe intended source context and allowed business target; Media resolves the\neffective upload policy and storage behavior.\n\nThis is especially important for partners. A customer can remap storage from\nlocal development folders to cloud storage without changing Axis renderers or\nbusiness modules.\n\n## Upload and delivery lifecycle\n\nThe typical lifecycle is:\n\n1. A user or module selects a source context, such as `contentMedia` or\n   `dataImports`.\n2. Media resolves the effective folder and format policy from layered Nodics\n   configuration.\n3. The upload validates extension, MIME type, size, access mode, and target\n   schema expectations.\n4. The provider writes bytes and returns safe provider-relative metadata.\n5. Media persists the record, checksum, lifecycle state, and reference data.\n6. Other modules reference the media record instead of storing file paths.\n7. Delivery routes enforce authorization and expose only safe access details.\n\n```mermaid\nsequenceDiagram\n  participant User as Business user\n  participant Axis as Axis media page\n  participant Media as WCMS Media API\n  participant Policy as Folder and format policy\n  participant Store as Storage provider\n  participant DB as Media metadata DB\n\n  User->>Axis: Choose file and source context\n  Axis->>Media: Upload request with business context\n  Media->>Policy: Resolve allowed folder, format, size, MIME\n  Policy-->>Media: Effective upload policy\n  Media->>Store: Persist bytes through provider\n  Store-->>Media: Provider-relative storage evidence\n  Media->>DB: Save media record, checksum, status, references\n  Media-->>Axis: Safe media contract\n```\n\nThe frontend never receives private storage roots or credentials. It receives a\nsafe media contract: code, name, type, lifecycle state, preview or delivery\ninformation allowed by policy, and metadata that the user is permitted to see.\n\n## Source contexts\n\nMedia source context tells the backend why a file is being used. That matters\nbecause a CSV import file, a CMS hero image, a PDF document, and a generated\nexport should not share the same policy.\n\n| Source context | Typical file examples | Different policy needs |\n| --- | --- | --- |\n| `dataImports` | CSV, JSON, XLSX | Strict schema target, validation, short retention, no public delivery. |\n| `contentMedia` | Images, icons, documents | Editorial lifecycle, preview, reuse by components and pages. |\n| `documentationMedia` | Diagrams, screenshots, how-to images | Versioned with documentation and safe for authenticated delivery. |\n| `exports` | Generated CSV, PDF, report files | Expiry, audit evidence, download authorization. |\n| `utility` | Temporary or operational files | Narrow access, cleanup, and operational logging. |\n\nWhen a new module needs files, add a source context and policy instead of\ncreating another upload API. That keeps scanning, retention, audit, and storage\nprovider behavior consistent.\n\n## Media ownership across modules\n\nMedia is a shared governed capability, but shared does not mean ownerless.\nOther modules reference media records; they do not invent storage authority.\n\n| Consumer | What it may do | What it must not do |\n| --- | --- | --- |\n| WCMS pages/components | Reference media records for images, documents, or downloads. | Store private paths or credentials in component data. |\n| Documentation | Reference screenshots, diagrams, and help images as governed media. | Copy images into every frontend or leave broken Markdown as visible text. |\n| Imports and exports | Upload import files or expose generated export files through source context. | Bypass validation or retention policy. |\n| Product or commerce modules | Associate media records with product or business entities. | Own the binary lifecycle unless explicitly implemented as a media provider. |\n| Axis | Render upload/select/manage screens from backend contracts. | Decide storage paths, buckets, signed URLs, virus scan rules, or retention. |\n\nThe goal is simple: a business module can say “this record uses this media,”\nbut Media decides how the file is governed.\n\n## Business journey: adding a website banner\n\nImagine a business user needs a new homepage banner image.\n\n1. Axis opens the Media page and asks the backend for valid source contexts.\n2. The user chooses a content-media context and selects an image.\n3. Media validates type, size, folder policy, and access mode.\n4. The storage provider saves bytes and returns safe storage evidence.\n5. Media creates or updates the media record.\n6. A WCMS component references the media record.\n7. The page renders through WCMS/Axis or a customer site renderer.\n\nAt no point should the business user or frontend type a filesystem path,\nbucket name, or private URL. That information belongs to the backend provider\ncontract.\n\n## Developer journey: adding a new media use case\n\nWhen a new module needs files, the developer should add a source context or\npolicy before creating new upload code. A good implementation explains:\n\n- which module needs the media;\n- whether files are user-uploaded, generated, imported, or externally\n  referenced;\n- allowed extensions and MIME types;\n- maximum size and retention;\n- public, authenticated, private, or temporary delivery mode;\n- audit and cleanup requirements;\n- whether previews, thumbnails, or transformations are required;\n- which tests prove rejected files and unauthorized access fail safely.\n\nIf the use case needs a different storage backend, implement or configure a\nprovider behind Media rather than exposing storage rules to each consumer.\n\n## Beginner customization example\n\nImagine a partner wants to allow PNG and JPG images for website banners, but\nnot PDF files. They should not change Axis upload code. The correct path is:\n\n1. Add or override a media folder policy in a later project module.\n2. Set allowed MIME types and maximum size.\n3. Keep the same Media upload API.\n4. Let Axis rediscover allowed source contexts from backend metadata.\n5. Verify upload, preview, delivery, unauthorized access, and cleanup.\n\nThis gives the business the custom behavior it wants without creating a forked\nfrontend or a hidden storage convention.\n\n## Business value\n\nMedia lets business teams reuse assets across CMS, documentation, imports,\nexports, product experiences, and websites without losing governance.\nIt also keeps operating cost flexible: local storage can support a developer\nmachine, while production can move to cloud or CDN-backed storage under the\nsame module contract.\n\n## DevOps considerations\n\nProduction storage should be explicit. Define provider roots, backup,\nretention, size limits, virus scanning or approval workflows where required,\ndownload authorization, cache headers, and lifecycle cleanup. Never rely on a\nrepository folder as production storage. Development defaults may write under\nserver temp paths, but those paths are disposable and environment-specific.\n\n## Failure and recovery examples\n\n| Failure | Safe behavior |\n| --- | --- |\n| File exceeds policy | Reject before storage and show a business-safe reason. |\n| MIME type is not allowed | Reject using backend policy, not frontend-only validation. |\n| Storage provider is unavailable | Keep metadata unchanged and return a bounded failure. |\n| Bytes missing for an existing record | Show unavailable media state and preserve audit evidence. |\n| Unauthorized download | Fail closed without leaking storage path or provider details. |\n| Checksum mismatch | Block delivery or mark the record for operator review. |\n\nThese failures should feel understandable in Axis, but the decision belongs to\nMedia and its provider contracts.\n\n## Operational acceptance checklist\n\n| Area | Acceptance evidence |\n| --- | --- |\n| Upload policy | Allowed and rejected MIME types, extensions, and sizes behave as configured. |\n| Storage provider | Provider returns safe relative evidence and does not leak private roots. |\n| Metadata | Media record includes code, filename, format, size, checksum, lifecycle state, source context, and references. |\n| Authorization | Unauthorized upload, view, update, and download attempts fail closed. |\n| Retention | Temporary and generated files have cleanup policy and audit evidence. |\n| Delivery | Public or authenticated delivery matches the media access mode. |\n| Reuse | WCMS/documentation/business modules reference media by record, not storage path. |\n| Recovery | Missing bytes, stale records, provider failure, and checksum mismatch have safe error behavior. |\n\nMedia failures often look like frontend problems because users see them in\nAxis, but most root causes are backend policy, provider, or metadata issues.\nStart investigation at the media record and source context.\n\n## Customization model\n\nCustomer projects may add or override media folder and format policy through\nlater module configuration. If behavior needs more than configuration, replace\nthe media storage policy or provider service in a later active module while\npreserving the same safe API contract. Do not fork Axis to change storage\nrules.\n\n## Common mistakes\n\n- Letting Axis build storage keys, local paths, bucket names, or download URLs.\n- Treating a media upload as successful before backend validation, checksum,\n  metadata persistence, and lifecycle state are recorded.\n- Reusing one folder policy for imports, exports, CMS images, product images,\n  private documents, and generated artifacts.\n- Exposing absolute paths, provider credentials, signed URL secrets, or\n  storage internals in browser-visible responses.\n- Deleting media because one screen no longer references it without checking\n  backend media-reference usage.\n- Creating media records without an owning source context, format policy, and\n  delivery rule.\n\n## Verification\n\nVerify Media through policy, metadata, storage, delivery, and usage. Upload\nallowed and rejected file types, confirm backend policy owns the result, check\nthat media records contain checksum and lifecycle evidence, and make sure Axis\nshows only safe metadata. Download or preview must go through the Media\ndelivery contract using a media code, never a raw filesystem or provider path.\n\nFor content and documentation scenarios, verify that pages and components\nreference media records or governed embedded images rather than copying assets\ninto the frontend. For production scenarios, add provider failure, missing\nbytes, unauthorized download, oversized file, checksum mismatch, retention,\nbackup, and restore checks. Media is acceptable only when both the happy path\nand the unsafe shortcut are proven.\n",
+    "searchText": "Media management Governed upload, storage policy, media metadata, source contexts, and safe frontend boundaries. # Media Management\n\nMedia Management explains how Nodics stores, relates, publishes, and delivers\nimages and files used by Nexus, Agora, Axis, documentation, and other business\nexperiences. This page is the overview. Detailed asset storage and publication\njourneys live in the sibling topics.\n\n## Media model\n\n```mermaid\nflowchart LR\n  Source[\"Module or Axis upload\"] --> Asset[\"Physical asset\"]\n  Source --> Media[\"Media record\"]\n  Media --> Usage[\"Page, article, product, or component\"]\n  Usage --> Publish[\"Staged to Online\"]\n  Publish --> Delivery[\"Frontend delivery\"]\n```\n\n| Area | Rule |\n| --- | --- |\n| Physical asset | Must be present, copyable, and tied to the owning module or upload source. |\n| Media record | Must describe business meaning, visibility, and usage context. |\n| Publication | Must move media data and referenced assets together. |\n| Frontend | Must render backend-published media or a deliberate fallback state. |\n\n## Business perspective\n\nFor business users, media is part of the customer experience. A banner, blog\nimage, product image, documentation screenshot, or news asset should not appear\nby accident or disappear after publishing. Axis should make the media status\nclear: uploaded, related to content, staged, approved, online, retired, or\nmissing.\n\n## Developer perspective\n\nDevelopers should not bury storefront images in frontend-only folders when the\nimage is business content. Module-owned seed media belongs with module data and\nmust be imported with the related content pack. Runtime uploads need media\nrecords, storage provider behavior, access rules, and delivery URLs that match\nthe site and tenant.\n\n## Continue with\n\n- **Media Storage and Delivery** for provider selection, URL generation, access,\n  and runtime delivery behavior.\n- **Media Import and Publication** for seed assets, content packs, media object\n  creation, publication, and fresh-schema verification.\n- **WCMS Content Management** for pages, content areas, and components that use\n  media.\n\n## Operational evidence\n\nThe page should show how a user proves media is not only configured but actually usable. Evidence includes the source module or upload owner, the media code, the related content item, the active provider, the resolved delivery URL, and the browser result. For project customization, add the exact place where the customer changes the provider, asset source, access rule, or validation rule. That evidence matters because media problems usually appear as broken customer pages, not obvious backend errors.\n\n## Reader and implementation contract\n\nA beginner should understand that media is both a file and a governed record. A business user should know why an image is visible, unpublished, retired, or missing. A developer should know where the source asset lives, which media record represents it, which content item references it, and which provider delivers it. An operator should know how to inspect physical availability, Online state, access mode, and browser loading errors.\n\nEvery media topic must include source ownership, storage provider, media record fields, usage relation, visibility, publication behavior, fallback state, and browser verification. If a customer can replace or upload the asset from Axis, the page must also explain permissions, validation, size constraints, and rollback.\n\nThis extension guidance must stay linked to the owning project or capability page whenever a customer customizes the behavior.\n\n## Common mistakes\n\n- Importing content data without the referenced media records and files.\n- Keeping business images hardcoded in Nexus or Agora source.\n- Publishing a page without validating media delivery in the browser.\n- Documenting a media use case without storage provider and access rules.\n\n## Verification\n\nVerify media by checking the physical asset, media record, usage relation,\npublication state, frontend URL, browser rendering, and missing-asset fallback.\nA beginner should understand why the image appears; a developer should know\nwhere it comes from; an operator should know how to diagnose it.\n",
     "keywords": [
       "media-management",
       "media-lifecycle-and-storage",
@@ -12842,7 +9834,8 @@ module.exports = {
     ],
     "facets": {
       "section": "media-management",
-      "group": "media-lifecycle-and-storage",
+      "group": "media-management",
+      "navigationDepth": 2,
       "documentType": "overview",
       "audience": [
         "business",
@@ -12871,7 +9864,103 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record328": {
+  "record238": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediastoragedelivery",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatawcmsMediaStorageDelivery",
+    "title": "Media Storage and Delivery",
+    "summary": "Provider, access, URL, cache, and browser delivery model for media used by content and storefront experiences.",
+    "searchText": "Media Storage and Delivery Provider, access, URL, cache, and browser delivery model for media used by content and storefront experiences. # Media Storage and Delivery\n\nMedia Storage and Delivery explains how Nodics serves images and files after\nthey have been registered as media records. It focuses on provider behavior,\naccess control, URL construction, cache behavior, and frontend delivery.\n\n## Delivery flow\n\n```mermaid\nflowchart LR\n  Media[\"Media record\"] --> Provider[\"Storage provider\"]\n  Provider --> Url[\"Delivery URL\"]\n  Url --> Frontend[\"Nexus, Agora, Axis, or Docs\"]\n  Frontend --> Browser[\"Browser render\"]\n```\n\n| Concern | Documentation requirement |\n| --- | --- |\n| Provider | Name local, cloud, or future provider behavior and configuration key. |\n| Path | Explain generated path, module-owned seed path, or upload location. |\n| Access | State whether the asset is public, authenticated, role-scoped, or internal. |\n| Cache | Explain browser, CDN, or application cache invalidation if applicable. |\n| Failure | Show missing, unpublished, forbidden, and retired media behavior. |\n\n## Business perspective\n\nBusiness users care that media appears in the right channel at the right time.\nA public Nexus hero image, an Agora product image, and an internal Axis\ndocument screenshot may have different visibility rules. Documentation must\nexplain the business consequence of changing an image, retiring it, or moving\nit between public and authenticated delivery.\n\nThe business problem this solves is broken trust: a published page with missing\nor inaccessible media looks unfinished even when the content records are valid.\n\n## Developer perspective\n\nDevelopers should implement media delivery through a provider contract rather\nthan hardcoded paths. A project can later move from local storage to a cloud\nprovider or secured file gateway if the provider selection, configuration, and\nURL generation are documented. The media record should be the contract the\nfrontend consumes, not the filesystem path.\n\n## Operator perspective\n\nOperators need a quick path to diagnose broken media. The page should tell\nthem which provider is active, whether the physical artifact exists, whether\nthe media record is Online, whether the page that references it is Online, and\nwhether the frontend is receiving a usable URL.\n\n## Operational evidence\n\nThe documentation should provide enough evidence for a support user to separate provider failure from content failure. Include sample status values, expected HTTP behavior, access mode, and whether the URL is public or generated for an authenticated request. When a provider is replaced in a project layer, document the configuration change and the migration plan for already imported assets. This prevents a future team from changing storage successfully while still breaking every published page that expects older URLs.\n\n## Reader and implementation contract\n\nA beginner should understand that the delivery URL is not the source of truth; the media record and provider contract are. A business user should know whether an asset is safe for public display or limited to authenticated users. A developer should document provider selection, path generation, delivery route, cache policy, and how a different provider can be plugged in later. An operator should know which checks prove the asset is reachable and which failure means record, provider, access, or cache trouble.\n\nThis page must be updated whenever a new provider, access mode, CDN strategy, signed URL rule, or cache invalidation pattern is introduced. The documentation should include diagrams and tables because media failures are easiest to solve when the user can see how record, storage, route, and browser are connected.\n\n## Customization and extension guidance\n\nA project can customize media delivery by replacing the storage provider, changing URL generation, adding signed delivery, or changing cache behavior. Document the configuration key, provider implementation, access rule, migration path, and rollback behavior. The frontend should continue to consume media records and delivery URLs from the backend contract, even when the provider changes.\n\n## Common mistakes\n\n- Treating a static asset path as the media contract.\n- Changing storage provider without documenting migration and rollback.\n- Publishing public pages that reference authenticated-only media.\n- Caching old media after a governed content update.\n\n## Verification\n\nVerify delivery by opening the rendered page, checking image load status,\ninspecting the media record, confirming access mode, and testing the configured\nprovider. Include browser evidence for business acceptance and API/provider\nevidence for developer and operator acceptance.\n",
+    "keywords": [
+      "media-management",
+      "media-lifecycle-and-storage",
+      "media-management",
+      "Media Management",
+      "Media Lifecycle and Storage",
+      "Media management"
+    ],
+    "facets": {
+      "section": "media-management",
+      "group": "media-management",
+      "navigationDepth": 2,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record239": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediaimportpublication",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatawcmsMediaImportPublication",
+    "title": "Media Import and Publication",
+    "summary": "Complete content-pack preparation for media assets, media records, page references, and Online publication.",
+    "searchText": "Media Import and Publication Complete content-pack preparation for media assets, media records, page references, and Online publication. # Media Import and Publication\n\nMedia Import and Publication explains how a content pack prepares a complete\nsite experience, including media files, media records, page references, and\nOnline delivery state. Importing Nexus or Agora data should prepare the whole\nsite, not only text records.\n\n## Import flow\n\n```mermaid\nflowchart TD\n  Pack[\"Content pack\"] --> Assets[\"Module-owned assets\"]\n  Pack --> Records[\"Media and content records\"]\n  Assets --> Staged[\"Staged import\"]\n  Records --> Staged\n  Staged --> Approval[\"Governed approval\"]\n  Approval --> Online[\"Online media and content\"]\n```\n\n## Complete site preparation\n\n| Asset type | What must be imported |\n| --- | --- |\n| Images | Physical file, media record, alt text, usage relation, and visibility. |\n| Blogs and news | Article records, media references, categories, dates, and publication state. |\n| Header and footer | Navigation, branding, links, and any referenced logo media. |\n| Storefront content | Pages, components, content areas, media, and route mapping. |\n\n## Business perspective\n\nWhen an administrator clicks initialize for Nexus or Agora, the expectation is\nthat the business application becomes ready for review. The import should make\nvisible what was created, what is missing, what is waiting for approval, and\nwhat will become public after publishing. A customer-friendly unpublished page\nis acceptable before Online approval; hardcoded demo content is not.\n\n## Developer perspective\n\nDevelopers should keep seed media beside the module that owns the business\ncontent, normally under the module data or asset folder. The importer must copy\nassets, create media records, connect them to pages or business objects, and\nreport failures with enough detail to retry safely. If a customer generates a\nnew corporate site, the installer should copy or generate the right content\npack and media assets instead of forcing changes into environment properties.\n\n## Operational evidence\n\nA complete import should leave a trace that business and technical users can both inspect. The evidence should include package version, checksum, target site, target catalog, number of media records, number of physical files copied, missing asset list, publication task, approval decision, and browser route tested after Online activation. If any of those are missing, the import may look successful while the site still fails to render images, articles, or navigation assets for customers.\n\n## Reader and implementation contract\n\nA beginner should understand that content-pack import must prepare a complete experience, not only database rows. A business user should know what becomes ready after import and what still waits for approval. A developer should document the asset folder, manifest, media object, page reference, site, catalog, channel, and importer behavior. An operator should know how to retry import, inspect failures, and prove that Online pages can actually load their media.\n\nThis topic must be kept in sync with Nexus, Agora, documentation, and future accelerator setup. Whenever a module adds blogs, news, banners, product images, logos, or documents, the import documentation must include physical assets, metadata records, relation creation, publication state, and browser evidence.\n\n## Customization and extension guidance\n\nA project can extend media import by adding new seed asset folders, validation rules, content-pack manifests, or post-import checks. Document the owner module, asset path, manifest fields, import command or Axis action, target site, target catalog, and publication dependency. This keeps Nexus, Agora, and future accelerators complete when a customer creates their own content package.\n\n## Common mistakes\n\n- Importing page records while leaving images outside the content pack.\n- Using local environment config to describe customer-specific site media.\n- Showing a storefront header, footer, blogs, or news from frontend defaults\n  when no Online content exists.\n- Marking import successful before media verification is complete.\n\n## Verification\n\nVerify import with a fresh schema. Initialize the content pack, inspect import\nhistory, confirm media records and physical files, publish Online, then open\nthe Nexus or Agora page in the browser. A developer should also test missing\nasset handling and retry behavior.\n",
+    "keywords": [
+      "media-management",
+      "media-lifecycle-and-storage",
+      "media-management",
+      "Media Management",
+      "Media Lifecycle and Storage",
+      "Media management"
+    ],
+    "facets": {
+      "section": "media-management",
+      "group": "media-management",
+      "navigationDepth": 2,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record240": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatainventorystockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12889,7 +9978,8 @@ module.exports = {
     ],
     "facets": {
       "section": "inventory-and-stock-management",
-      "group": "stock-availability-and-reservation",
+      "group": "inventory-and-stock-management",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -12918,7 +10008,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record329": {
+  "record241": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatapricingpromotionstaxmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12936,7 +10026,8 @@ module.exports = {
     ],
     "facets": {
       "section": "pricing-promotions-and-tax",
-      "group": "commercial-decisioning",
+      "group": "pricing-promotions-and-tax",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -12965,7 +10056,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record330": {
+  "record242": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommerceoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12983,7 +10074,8 @@ module.exports = {
     ],
     "facets": {
       "section": "commerce-cart-and-checkout",
-      "group": "commerce-journey-overview",
+      "group": "commerce-cart-and-checkout",
+      "navigationDepth": 2,
       "documentType": "overview",
       "audience": [
         "business",
@@ -13012,7 +10104,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record331": {
+  "record243": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercecartorder",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13030,7 +10122,8 @@ module.exports = {
     ],
     "facets": {
       "section": "commerce-cart-and-checkout",
-      "group": "cart-and-order-placement",
+      "group": "commerce-cart-and-checkout",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "business",
@@ -13059,14 +10152,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record332": {
+  "record244": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercepaymentfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommercePaymentFulfillment",
     "title": "Payment and fulfillment operations",
     "summary": "Provider-safe payment and fulfillment guide covering methods, adapters, callbacks, reconciliation, shipment, tracking, warehouse work, and returns.",
-    "searchText": "Payment and fulfillment operations Provider-safe payment and fulfillment guide covering methods, adapters, callbacks, reconciliation, shipment, tracking, warehouse work, and returns. # Payment and fulfillment operations\n\n## Business journey\n\nPayment moves money; Fulfillment moves goods. Order connects their evidence but does not perform either operation. Payment separates methods, provider adapters, transactions, callbacks, and reconciliation. Fulfillment separates consignments, shipments, tracking, warehouse tasks, returns, receipts, inspections, and exceptions.\n\n| Concern | Authority | Safe evidence |\n| --- | --- | --- |\n| Authorization, capture, void, refund | Payment | transaction entry and provider reference |\n| Card or wallet eligibility | Payment Method | method capability without raw secret |\n| External execution | Payment Provider | redacted request/outcome evidence |\n| Shipment and tracking | Fulfillment | consignment, shipment, tracking event |\n| Warehouse work | Fulfillment | assigned task and completion evidence |\n| Returned stock disposition | Inventory | disposition and movement after inspection |\n\n## Payment for beginners\n\nThe browser sends an opaque provider token, never raw card data. Payment validates tenant, currency, exact amount, operation, and idempotency key. The selected adapter executes AUTHORIZE, CAPTURE, VOID, or REFUND and Payment stores the outcome.\n\nThe included Stripe-shaped sandbox adapter is an offline conformance simulator. It accepts test tokens and returns deterministic references so tests can exercise success and replay. It is disabled by default, is not connected to Stripe, and is not live-qualified. PayPal, CyberSource, and Visa packages are declared but disabled until adapter conformance and external certification are complete.\n\nCallbacks require a service boundary, HMAC or provider-approved signature verification, a freshness window, constant-time comparison, and replay storage. Callback data never bypasses reconciliation. A valid signature proves origin integrity; Payment still validates tenant mapping, transaction identity, amount, currency, event ordering, and allowed transition.\n\n## Fulfillment for beginners\n\nFulfillment releases an Order into consignments. One order may produce partial shipments. Tracking events append evidence and cannot silently rewrite prior carrier history. Cancellation becomes an intent because a warehouse or carrier may already have acted.\n\nA return begins with eligible Order evidence, then Fulfillment manages RMA logistics, pickup or drop-off, receipt, and inspection. Inventory decides whether inspected goods are restocked, quarantined, repaired, or written off. Payment refunds only after the approved lifecycle evidence reaches the configured checkpoint.\n\n## Developer guidance\n\nProvider adapters implement one narrow contract. Do not leak SDK objects into Payment schemas. Normalize provider statuses into owned statuses while retaining the original provider code and redacted reference. Derive deterministic idempotency keys and keep provider secrets in deployment secret management.\n\nCarrier adapters follow the same boundary: normalized request, bounded timeout, redacted outcome, callback verification, retry, and reconciliation. New providers remain disabled until contract tests, sandbox tests, security review, operational runbook, and qualification evidence exist.\n\n## Operator and DevOps guidance\n\nOperators inspect unknown payment outcomes, callback rejection, reconciliation drift, expiring authorizations, partial capture/refund totals, shipment exceptions, missing tracking, warehouse backlog, and return inspection queues. Axis renders evidence and owner actions; it never stores credentials or invents statuses.\n\nProduction teams configure timeouts, retries, circuit breakers, rate limits, concurrency, dead-letter handling, and provider-specific capacity. Monitor success, decline, unknown, latency, duplicate suppression, callback age, shipment delay, and reconciliation lag. Exercise provider outage and carrier outage independently.\n\n## Common mistakes\n\n- Storing raw card, wallet, or bank credentials.\n- Calling a provider from Order or Axis.\n- Treating an HTTP timeout as a final payment state.\n- Accepting a callback without replay protection.\n- Marking the offline simulator as live-qualified.\n- Letting Payment decide returned-stock disposition.\n- Assuming every order ships in one consignment.\n\n## Verification\n\nRun method/provider conformance, sandbox authorize/capture/void/refund, idempotent replay, invalid-token, callback signature, expiry, replay, transition, partial shipment, return receipt, inspection, and exception tests. Verify secrets are absent from logs, schemas, docs, OpenAPI examples, and Axis. A live provider requires separate credentialed sandbox certification, webhook delivery, reconciliation, capacity, security, and owner sign-off; local tests do not substitute for that evidence.\n\n## Payment Transaction And Reconciliation Coverage\n\nPayment documentation must explicitly cover PaymentTransaction,\nPaymentTransactionEntry, PaymentInstrumentReference, and\nPaymentReconciliation. These records are the difference between a customer\njourney that merely calls a provider and an enterprise journey that can\nexplain what money state is known, unknown, authorized, captured, voided,\nrefunded, or waiting for reconciliation.\n\n```mermaid\nflowchart LR\n  Checkout[\"Checkout payment request\"] --> Instrument[\"Payment instrument reference\"]\n  Instrument --> Transaction[\"Payment transaction\"]\n  Transaction --> Entry[\"Transaction entry\"]\n  Entry --> Provider[\"Provider adapter\"]\n  Provider --> Callback[\"Callback or polling result\"]\n  Callback --> Reconciliation[\"Payment reconciliation\"]\n  Reconciliation --> Order[\"Order or refund decision\"]\n```\n\n| Record | Business meaning | Required operator evidence |\n| --- | --- | --- |\n| PaymentInstrumentReference | Tokenized reference to a payment method, never raw credentials. | Token source, owner, expiry, and redaction. |\n| PaymentTransaction | Parent commercial payment intent and state. | Idempotency key, provider, amount, currency, tenant, and order reference. |\n| PaymentTransactionEntry | Each authorize, capture, void, refund, or callback result. | Provider reference, request hash, response state, and retry status. |\n| PaymentReconciliation | Comparison between Nodics and provider state. | Drift, corrective action, owner, timestamp, and final evidence. |\n\nDevelopers customize provider behavior through payment provider adapters, not\nthrough checkout or Axis. Business users should see unknown outcomes and\nreconciliation work as operational tasks, because a timeout is not a decline\nand retrying money movement with a new key is unsafe.\n",
+    "searchText": "Payment and fulfillment operations Provider-safe payment and fulfillment guide covering methods, adapters, callbacks, reconciliation, shipment, tracking, warehouse work, and returns. # Payment and fulfillment operations\n\n## Business journey\n\nPayment moves money; Fulfillment moves goods. Order connects their evidence but does not perform either operation. Payment separates methods, provider adapters, transactions, callbacks, and reconciliation. Fulfillment separates consignments, shipments, tracking, warehouse tasks, returns, receipts, inspections, and exceptions.\n\n| Concern | Authority | Safe evidence |\n| --- | --- | --- |\n| Authorization, capture, void, refund | Payment | transaction entry and provider reference |\n| Card or wallet eligibility | Payment Method | method capability without raw secret |\n| External execution | Payment Provider | redacted request/outcome evidence |\n| Shipment and tracking | Fulfillment | consignment, shipment, tracking event |\n| Warehouse work | Fulfillment | assigned task and completion evidence |\n| Returned stock disposition | Inventory | disposition and movement after inspection |\n\n## Payment for beginners\n\nThe browser sends an opaque provider token, never raw card data. Payment validates tenant, currency, exact amount, operation, and idempotency key. The selected adapter executes AUTHORIZE, CAPTURE, VOID, or REFUND and Payment stores the outcome.\n\nThe included Stripe-shaped sandbox adapter is an offline conformance simulator. It accepts test tokens and returns deterministic references so tests can exercise success and replay. It is disabled by default, is not connected to Stripe, and is not live-qualified. PayPal, CyberSource, and Visa packages are declared but disabled until adapter conformance and external certification are complete.\n\nCallbacks require a service boundary, HMAC or provider-approved signature verification, a freshness window, constant-time comparison, and replay storage. Callback data never bypasses reconciliation. A valid signature proves origin integrity; Payment still validates tenant mapping, transaction identity, amount, currency, event ordering, and allowed transition.\n\n## Fulfillment for beginners\n\nFulfillment releases an Order into consignments. One order may produce partial shipments. Tracking events append evidence and cannot silently rewrite prior carrier history. Cancellation becomes an intent because a warehouse or carrier may already have acted.\n\nA return begins with eligible Order evidence, then Fulfillment manages RMA logistics, pickup or drop-off, receipt, and inspection. Inventory decides whether inspected goods are restocked, quarantined, repaired, or written off. Payment refunds only after the approved lifecycle evidence reaches the configured checkpoint.\n\n## Developer guidance\n\nProvider adapters implement one narrow contract. Do not leak SDK objects into Payment schemas. Normalize provider statuses into owned statuses while retaining the original provider code and redacted reference. Derive deterministic idempotency keys and keep provider secrets in deployment secret management.\n\nCarrier adapters follow the same boundary: normalized request, bounded timeout, redacted outcome, callback verification, retry, and reconciliation. New providers remain disabled until contract tests, sandbox tests, security review, operational runbook, and qualification evidence exist.\n\n## Operator and DevOps guidance\n\nOperators inspect unknown payment outcomes, callback rejection, reconciliation drift, expiring authorizations, partial capture/refund totals, shipment exceptions, missing tracking, warehouse backlog, and return inspection queues. Axis renders evidence and owner actions; it never stores credentials or invents statuses.\n\nProduction teams configure timeouts, retries, circuit breakers, rate limits, concurrency, dead-letter handling, and provider-specific capacity. Monitor success, decline, unknown, latency, duplicate suppression, callback age, shipment delay, and reconciliation lag. Exercise provider outage and carrier outage independently.\n\n## Customization and extension guidance\n\nProjects can customize payment and fulfillment by adding payment providers, authorization rules, capture timing, fraud checks, shipping handoff, or settlement events. Document provider configuration, event flow, failure behavior, retry policy, business approval impact, and browser or API evidence for checkout. Customer-specific logic should live in project modules or adapters, not by changing the reusable commerce contract.\n\n## Common mistakes\n\n- Storing raw card, wallet, or bank credentials.\n- Calling a provider from Order or Axis.\n- Treating an HTTP timeout as a final payment state.\n- Accepting a callback without replay protection.\n- Marking the offline simulator as live-qualified.\n- Letting Payment decide returned-stock disposition.\n- Assuming every order ships in one consignment.\n\n## Verification\n\nRun method/provider conformance, sandbox authorize/capture/void/refund, idempotent replay, invalid-token, callback signature, expiry, replay, transition, partial shipment, return receipt, inspection, and exception tests. Verify secrets are absent from logs, schemas, docs, OpenAPI examples, and Axis. A live provider requires separate credentialed sandbox certification, webhook delivery, reconciliation, capacity, security, and owner sign-off; local tests do not substitute for that evidence.\n\n## Payment Transaction And Reconciliation Coverage\n\nPayment documentation must explicitly cover PaymentTransaction,\nPaymentTransactionEntry, PaymentInstrumentReference, and\nPaymentReconciliation. These records are the difference between a customer\njourney that merely calls a provider and an enterprise journey that can\nexplain what money state is known, unknown, authorized, captured, voided,\nrefunded, or waiting for reconciliation.\n\n```mermaid\nflowchart LR\n  Checkout[\"Checkout payment request\"] --> Instrument[\"Payment instrument reference\"]\n  Instrument --> Transaction[\"Payment transaction\"]\n  Transaction --> Entry[\"Transaction entry\"]\n  Entry --> Provider[\"Provider adapter\"]\n  Provider --> Callback[\"Callback or polling result\"]\n  Callback --> Reconciliation[\"Payment reconciliation\"]\n  Reconciliation --> Order[\"Order or refund decision\"]\n```\n\n| Record | Business meaning | Required operator evidence |\n| --- | --- | --- |\n| PaymentInstrumentReference | Tokenized reference to a payment method, never raw credentials. | Token source, owner, expiry, and redaction. |\n| PaymentTransaction | Parent commercial payment intent and state. | Idempotency key, provider, amount, currency, tenant, and order reference. |\n| PaymentTransactionEntry | Each authorize, capture, void, refund, or callback result. | Provider reference, request hash, response state, and retry status. |\n| PaymentReconciliation | Comparison between Nodics and provider state. | Drift, corrective action, owner, timestamp, and final evidence. |\n\nDevelopers customize provider behavior through payment provider adapters, not\nthrough checkout or Axis. Business users should see unknown outcomes and\nreconciliation work as operational tasks, because a timeout is not a decline\nand retrying money movement with a new key is unsafe.\n",
     "keywords": [
       "payment-management",
       "payment-and-fulfillment-boundary",
@@ -13077,7 +10170,8 @@ module.exports = {
     ],
     "facets": {
       "section": "payment-management",
-      "group": "payment-and-fulfillment-boundary",
+      "group": "payment-management",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -13106,7 +10200,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record333": {
+  "record245": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafulfillmentshippingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13124,7 +10218,8 @@ module.exports = {
     ],
     "facets": {
       "section": "shipping-and-fulfillment",
-      "group": "shipping-and-fulfillment-flow",
+      "group": "shipping-and-fulfillment",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -13153,7 +10248,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record334": {
+  "record246": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataordermanagementlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13171,7 +10266,8 @@ module.exports = {
     ],
     "facets": {
       "section": "order-management",
-      "group": "order-state-and-operations",
+      "group": "order-management",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -13200,7 +10296,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record335": {
+  "record247": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercereturnsrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13218,7 +10314,8 @@ module.exports = {
     ],
     "facets": {
       "section": "cancellations-returns-and-refunds",
-      "group": "reverse-order-lifecycle",
+      "group": "cancellations-returns-and-refunds",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -13247,14 +10344,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record336": {
+  "record248": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementcustomerreviews",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataengagementCustomerReviews",
     "title": "Customer reviews and ratings",
     "summary": "Beginner-to-operator journey for review submission, moderation, publication, rating aggregates, recovery, APIs, and safe customization.",
-    "searchText": "Customer reviews and ratings Beginner-to-operator journey for review submission, moderation, publication, rating aggregates, recovery, APIs, and safe customization. # Customer reviews and ratings\n\nCustomer Reviews lets shoppers share an experience and lets a business moderate, respond to, publish, and measure that evidence without changing or suppressing it merely because the opinion is negative. This guide starts with a beginner-friendly mental model and continues into developer and operator detail. It is owned by `nodics.engagement/customerReview`; public and operator HTTP operations are owned by `engagementApi`, and Axis renders backend-authorized workspaces.\n\nThink of a review as a signed evidence folder. The customer's wording and rating are versioned, verification and incentive disclosures are stored beside it, moderation records explain every decision, and the public website receives a smaller safe copy. Rating totals are calculated only from those published copies, so hidden or withdrawn content cannot continue influencing the score.\n\n## Who should read this\n\n| Reader | Start here, then continue to |\n| --- | --- |\n| Shopper or customer-support user | Submit and manage a review; understand verification, publication, and withdrawal. |\n| Moderator or business user | Review queue, policy decisions, responses, abuse reports, appeals, and aggregate repair. |\n| Developer or partner | Ownership, API projections, configuration, safe extension, and tests. |\n| Operator or security reviewer | Tenant isolation, reconciliation, cache/search invalidation, monitoring, and recovery. |\n| Architect or AI tool | Module boundary, immutable evidence, generated artifacts, and prohibited parallel authorities. |\n\n## What is available\n\nThe implemented capability supports polymorphic review targets, overall and dimensional ratings, text and media references, registered-customer ownership, authenticity evidence, incentive disclosures, immutable versions, moderation, business responses, abuse reports, appeals, CRES migration evidence, sanitized public projections, helpfulness votes, rating distributions, verified/unverified counts, deterministic rebuilding, drift detection, bounded sorting/filtering, media galleries, and Schema.org eligibility diagnostics.\n\nReview solicitation, external import/syndication, feedback/complaint management,\nunified operations, optional AI assistance, and enterprise load/failover\nqualification have separate capability and deployment-readiness boundaries.\nThey must not be represented as active in a deployment merely because their\ncontracts or designs are documented.\n\n## End-to-end journey\n\n```mermaid\nflowchart LR\n  Shopper[\"Shopper submits review\"] --> Version[\"Immutable review version\"]\n  Version --> Evidence[\"Authenticity and disclosure evidence\"]\n  Evidence --> Queue[\"Moderator reviews in Axis\"]\n  Queue -->|Approved| Projection[\"Sanitized public projection\"]\n  Queue -->|Policy violation| Restricted[\"Rejected or quarantined with reason\"]\n  Projection --> Aggregate[\"Rebuilt rating aggregate\"]\n  Projection --> Storefront[\"Storefront list, filters, media and rating\"]\n  Withdrawal[\"Customer withdrawal or governed hide\"] --> Projection\n  Projection --> Repair[\"Reconciliation and cache/search invalidation\"]\n  Repair --> Aggregate\n```\n\nIn plain language: the submitted record is not itself a public page. Approval produces a version-specific public projection. The aggregate service reads only projections whose status is `PUBLISHED`. Withdrawal, hiding, anonymization, migration reconciliation, or restoration changes the projection and triggers a deterministic rebuild.\n\n## Shopper journey\n\n1. Sign in through the customer experience and choose an eligible product, service, order, store, seller, content item, event, location, or project-defined target.\n2. Submit a rating, review text, or both, as permitted by policy. Include the idempotency key supplied by the client so a network retry does not create a second review.\n3. Expect a customer-owned record with a safe status. Pre-moderation normally places it in `PENDING_MODERATION`.\n4. View the review through the customer API. Other customers cannot read the private record merely by guessing its code.\n5. When published, the storefront reads the sanitized public projection, not the customer-owned schema.\n6. Withdraw the review when permitted. The public projection leaves published state and the rating is rebuilt without it.\n\nA one-star review is valid evidence. A moderator may restrict it for a recorded policy violation such as personal data, spam, or abusive content, but `NEGATIVE_SENTIMENT` is prohibited as a reason.\n\n## Moderator journey in Axis\n\n1. Open Customer Experience → Reviews or Review Moderation. Navigation appears only when the backend capability catalogue exposes `nodics.engagement` and the user holds the required permission.\n2. Filter the workbench by status, target, site, locale, or queue. Open the detail view to inspect current version, verification/disclosure evidence, and prior moderation history.\n3. Choose only an action supplied by the backend workbench contract. Restrictive actions require a policy reason and optimistic revision.\n4. Approve a valid review. The backend creates a sanitized public projection and rebuilds the relevant aggregate.\n5. Add a versioned business response through the response workflow. Only a `PUBLISHED` response is included in the shopper projection.\n6. If an abuse report or appeal changes the decision, use restore/hide actions. Axis refreshes its query; the backend remains the state authority.\n\nAxis must not calculate ratings, expose owner IDs, store review data locally, invent moderation actions, or directly edit aggregate records.\n\n## Public API behavior\n\n| Purpose | Method and path | Important boundary |\n| --- | --- | --- |\n| List published reviews | `GET /public/reviews` | Returns a bounded page of public projections only. |\n| Get rating summary | `GET /public/review-aggregates/:targetType/:targetCode` | Returns current target aggregate fields; no reviewer identity. |\n| Submit a review | `POST /customer/reviews` | Requires an authenticated customer and tenant context. |\n| Vote helpful/unhelpful | `PUT /customer/reviews/:reviewCode/helpfulness` | One customer-owned vote is replaced/versioned, not duplicated. |\n| Moderate | `POST /operator/reviews/:reviewCode/actions/:actionCode` | Requires employee permission, reason policy, tenant scope, and revision. |\n\nPublic sorting supports recent, helpful, rating-high, and rating-low modes. Filters are bounded by the API policy. Result metadata repeats applied filters, count, offset, and limit so a storefront can explain what the shopper is viewing.\n\n## Aggregate correctness and recovery\n\nAn aggregate records count, sum, average, one-to-five distribution, dimensional summaries, verified and unverified counts, policy version, calculation version, source hash, and calculation time. Its source hash is produced from stable projection evidence. Incremental triggers use the same rebuild function, making retries safe and allowing a full rebuild to be compared with stored state.\n\n| Situation | Expected result |\n| --- | --- |\n| Approval or restoration | Projection becomes published and begins contributing. |\n| Hide, withdrawal, or anonymization | Projection stops contributing; audit evidence remains. |\n| Duplicate event or worker retry | Same source set produces the same hash and totals. |\n| Concurrent lifecycle updates | Optimistic review revision rejects stale commands; reconciliation uses final persisted state. |\n| Drift or missing aggregate | Rebuild from published projections and replace stored aggregate with evidence. |\n| Cache or search outage | Domain records remain authoritative; retain invalidation evidence and retry the adapter. |\n\n## Review requests, sessions, and syndication\n\nA review request starts from completed purchase, service, or experience evidence supplied by its owning module. Review policy calculates the waiting period and expiry, honors opt-out and suppression, restricts channels, limits reminders, and respects quiet hours. It rejects any input that tries to select recipients using predicted sentiment, predicted rating, or a “likely promoter” segment.\n\nEmail, SMS, account, QR, and in-app delivery all use the same request record. Communication providers deliver the invitation but do not own eligibility or review state. Content-free acquisition events record eligible, offered, delivered, opened, started, completed, expired, suppressed, or failed stages so administrators can measure coverage and conversion without copying review text into analytics events.\n\nA request can contain several product targets. Starting it creates a customer-owned session with explicit target and completed-target lists, expiry, and optimistic revision. This supports one order containing several reviewable items without issuing unrelated tokens or losing partial progress.\n\nExternal imports always enter a quarantine-first syndication record. The record preserves provider and external IDs, origin, license, disclosure, governed target mapping, source hash, mapping version, moderation evidence, status, and reconciliation time. A same-hash replay is skipped; a changed payload with the same external identity is reconciled. Neither state changes public ratings until a normal internal review passes moderation and becomes a published projection.\n\nGoogle Customer Reviews is an optional reference adapter and remains disabled until merchant configuration, consent, disclosure, callback security, provider terms, monitoring, and rollback are qualified. The provider never becomes the Nodics review-state authority.\n\n## Configuration and ownership map\n\n- `customerReview/config/properties.js` owns rating bounds, moderation transitions, public page limits, aggregate/calculation versions, media limit, cache TTL, and Schema.org enablement.\n- `customerReview/src/schemas/schemas.js` owns authored persistence definitions. Generated Core schema/service/controller/facade artifacts are outputs and must not be edited.\n- `defaultCustomerReviewProjectionService` owns sanitization, page behavior, media allow-listing, and structured-data diagnostics.\n- `defaultCustomerReviewAggregateService` owns deterministic calculation and drift comparison.\n- `defaultCustomerReviewPublicExperienceService` owns lifecycle reconciliation and adapter invalidation evidence.\n- `engagementApi` owns dedicated public/customer/operator routes and DTO allow-lists.\n- `nodics.axis` owns rendering only. Product storefront rendering remains customer-application owned.\n\n## Customize and extend safely\n\nStart with a later project configuration override. A project may change page limits, cache TTL, enabled target types, rating bounds, moderation modes, or supported sort modes when the invariant remains safe. If a project needs a different aggregate store or search engine, override the relevant service in a later-loaded project module while preserving tenant scope, published-only inclusion, source hashes, and rebuild behavior.\n\nDo not copy the framework service, edit generated schema files, calculate ratings in Axis, expose generic schema CRUD, or use search/cache as the review authority. Add a focused customization test proving the default and override produce equivalent integrity evidence.\n\n## Security and privacy\n\nCustomer records are owner- and tenant-scoped. Operators require explicit permissions. Public DTOs omit owner IDs, internal notes, raw provenance, moderation evidence, and private media fields. Incentives must be disclosed and cannot be conditioned on sentiment. Withdrawal removes public visibility while retention/legal-hold policy determines which private evidence may remain.\n\n## Common mistakes\n\n- Calculating the visible average from private review records instead of published projections.\n- Treating a negative rating as evidence of spam or a moderation violation.\n- Returning customer identity, internal notes, raw provenance, or unapproved media in a public DTO.\n- Updating aggregate counters without retaining source hashes and a full-rebuild path.\n- Letting Axis, a storefront, cache, or search index become the review state authority.\n- Editing generated schema services instead of the owning schema definition and regenerating.\n- Retrying a stale moderation command without honoring the optimistic revision conflict.\n\n## Troubleshooting\n\n| Symptom | Safe check and recovery |\n| --- | --- |\n| Approved review is absent | Confirm a current immutable version exists, inspect projection reconciliation error, then retry reconciliation. |\n| Rating looks stale | Compare aggregate source hash/count with a full projection rebuild; replace only through the review service. |\n| Hidden review still appears | Verify public query requires `PUBLISHED`, clear/retry the recorded cache/search invalidation, and test the source projection directly. |\n| Customer receives forbidden | Confirm access-token subject, tenant, customer group, ownership, and exact permission; never bypass in the browser. |\n| Structured data is missing | Read eligibility diagnostics. Zero published ratings intentionally produces no aggregate markup. |\n\n## Verification\n\nRun the review regression and lifecycle contracts, Engagement API route/security contracts, generated schema contracts, documentation pack validation, and Axis Customer Engagement regression. Acceptance must include approval, negative-review protection, hide, withdrawal, restore, retry, drift rebuild, tenant denial, oversized page request, and later-layer configuration override.\n\nNext: review solicitation and syndication explains how requests and imported evidence are governed without selecting only likely-positive customers.\n",
+    "searchText": "Customer reviews and ratings Beginner-to-operator journey for review submission, moderation, publication, rating aggregates, recovery, APIs, and safe customization. # Customer Reviews and Ratings\n\nCustomer Reviews and Ratings is the overview for capturing shopper feedback,\nmoderating it, publishing approved reviews, and maintaining aggregate rating\ncorrectness. The detailed moderation and recovery topics live beside this\npage.\n\n## Review lifecycle\n\n```mermaid\nflowchart LR\n  Shopper[\"Shopper submits review\"] --> Staged[\"Review captured\"]\n  Staged --> Moderate[\"Moderation decision\"]\n  Moderate --> Publish[\"Approved review visible\"]\n  Publish --> Aggregate[\"Rating aggregate updated\"]\n```\n\n| Stage | Business question | Technical question |\n| --- | --- | --- |\n| Capture | Who can submit feedback? | Which API, identity, and product reference are required? |\n| Moderate | Who approves or rejects? | Which roles, queues, and state transitions apply? |\n| Publish | Where does the review appear? | Which site, catalog, channel, and visibility rules apply? |\n| Aggregate | Are ratings accurate? | Which recalculation and recovery path validates totals? |\n\n## Business perspective\n\nReviews influence product trust, merchandising, search, and customer service.\nBusiness users need to know which reviews are waiting, which were rejected,\nwhich are public, and whether aggregate ratings are trustworthy. Documentation\nmust describe the operational journey without hiding it behind API language.\n\n## Developer perspective\n\nDevelopers need the data model, public submission behavior, moderation\nworkflow, aggregate update logic, events, permissions, and extension points.\nProjects may add fraud checks, syndication, review requests, moderation\npolicies, or downstream search indexing, but those changes must stay inside the\ngoverned engagement model.\n\n## Continue with\n\n- **Review Moderation and Governance** for Axis queues, approval, rejection,\n  permissions, and business audit.\n- **Review Aggregation and Recovery** for aggregate correctness, recalculation,\n  failure recovery, and search or product-page impact.\n\n## Operational evidence\n\nA review feature is only trustworthy when the visible customer experience and the administrative queue agree. Evidence should include submitted review record, product relation, moderation state, reviewer decision, final public visibility, aggregate rating result, and any downstream search or discovery update. Project documentation should also say whether reviews are enabled by site, catalog, channel, product type, or customer segment. This helps a business user understand why reviews appear in one experience and not another.\n\n## Reader and implementation contract\n\nA beginner should understand the simple journey: a shopper submits feedback, a reviewer makes a governed decision, and only approved content affects public experience. A business user should know how reviews affect trust, merchandising, service response, and product discovery. A developer should understand the submission contract, moderation state, aggregate update, events, permissions, and extension points. An operator should know which queues, logs, and recalculation tools prove the feature is healthy.\n\nEvery review topic must include shopper journey, Axis moderation journey, public visibility, security and privacy rules, aggregate correctness, recovery path, and browser verification. If a project customizes rating rules, review requests, syndication, or moderation policy, this page must link to the project-specific implementation and tests.\n\n## Documentation maintenance rule\n\nKeep this topic current whenever implementation, configuration, Axis workflow, publication behavior, or customer-facing rendering changes. The page should remain small enough to scan, but it must still carry enough business context, technical ownership, customization guidance, visual structure, operational evidence, and verification detail for a reader to act without guessing. When the detail becomes too large, create a sibling topic and link it from this page instead of turning the overview back into a long mixed article.\n\n## Common mistakes\n\n- Showing reviews publicly without a moderation state.\n- Updating aggregate ratings without a recovery path.\n- Documenting submission APIs but not the business approval journey.\n- Forgetting privacy, abuse, and role-based access rules.\n\n## Verification\n\nVerify reviews by submitting a review, moderating it, checking public\nvisibility, recalculating aggregate ratings, and confirming audit evidence.\nBrowser checks should cover shopper-visible pages and Axis moderation screens.\n",
     "keywords": [
       "customer-engagement-and-feedback",
       "reviews-and-ratings",
@@ -13265,7 +10362,8 @@ module.exports = {
     ],
     "facets": {
       "section": "customer-engagement-and-feedback",
-      "group": "reviews-and-ratings",
+      "group": "customer-engagement-and-feedback",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "business",
@@ -13294,7 +10392,103 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record337": {
+  "record249": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementreviewmoderationgovernance",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataengagementReviewModerationGovernance",
+    "title": "Review Moderation and Governance",
+    "summary": "Axis moderation queues, approval and rejection decisions, permissions, state transitions, and audit expectations.",
+    "searchText": "Review Moderation and Governance Axis moderation queues, approval and rejection decisions, permissions, state transitions, and audit expectations. # Review Moderation and Governance\n\nReview Moderation and Governance explains how submitted reviews become\napproved, rejected, hidden, or escalated. It is written for business moderators,\nadministrators, developers, operators, QA owners, and AI tools that need a\nclear lifecycle contract.\n\n## Moderation flow\n\n```mermaid\nflowchart TD\n  Submitted[\"Submitted review\"] --> Queue[\"Moderation queue\"]\n  Queue --> Approve[\"Approve\"]\n  Queue --> Reject[\"Reject\"]\n  Queue --> Escalate[\"Escalate or hold\"]\n  Approve --> Public[\"Visible review\"]\n  Reject --> Hidden[\"Hidden with reason\"]\n```\n\n| Decision | Required evidence |\n| --- | --- |\n| Approve | Reviewer, timestamp, review id, product id, and visibility target. |\n| Reject | Reviewer, timestamp, reason, notification rule, and audit state. |\n| Hold | Owner, reason, due date, and next action. |\n| Escalate | Queue, role requirement, and business risk. |\n\n## Business perspective\n\nModerators need a clear queue, filters, review context, product context,\ncustomer context, and one obvious decision area. The UI should not make a user\nopen unrelated pages to understand what can be approved. Documentation should\nexplain how review decisions affect product pages, customer trust, search\nranking, and compliance.\n\n## Developer perspective\n\nDevelopers should expose moderation through explicit state transitions and\npermissions. The requester or submitter identity is audit data, not the only\napproval rule. Approval should be controlled by role, permission, and workflow\npolicy. Projects can add custom checks, but every added rule must be visible in\nAxis and covered by tests.\n\n## Operator perspective\n\nOperators need to see stuck reviews, failed moderation actions, event delivery\nfailures, and aggregate update status. If moderation emits events to search,\nnotification, analytics, or product services, the documentation must explain\nretry and recovery behavior.\n\n## Operational evidence\n\nModeration evidence should be visible without requiring the reviewer to interpret raw records. The queue should show item context, current state, allowed actions, decision history, and next outcome. The backend evidence should include role or permission evaluation, workflow transition, rejection reason, audit user, and timestamps. This is important because moderation is a governed business operation; the user journey must make the correct action obvious while still preserving enough detail for compliance and debugging.\n\n## Reader and implementation contract\n\nA beginner should understand that moderation is a business decision with audit, not an edit button on a record. A business reviewer should see what must be reviewed, why it matters, and what each decision changes. A developer should document permissions, workflow policy, state transitions, validation, events, and rejection reasons. An operator should know where blocked, stale, or failed moderation tasks appear and how they are retried.\n\nThis page must be updated when approval policy changes globally, because the rule is permission-based and should not be hardcoded around requester identity. Documentation should show the queue and decision flow visually so reviewers are not forced through disconnected pages to complete one task.\n\n## Customization and extension guidance\n\nProjects can customize review moderation with additional decision states, abuse checks, escalation queues, notification rules, or role policies. Document the workflow change, permission rule, state transition, Axis queue behavior, audit fields, and browser verification. Approval should remain governed by policy and permission, not by hardcoded assumptions about who created the request.\n\n## Common mistakes\n\n- Blocking approval only because the same user submitted the request, while\n  ignoring actual permissions.\n- Hiding rejection reasons from the audit trail.\n- Making moderation depend on frontend-only state.\n- Updating public visibility before the workflow decision is complete.\n\n## Verification\n\nVerify moderation with success, rejection, permission-denied, escalation, and\nretry scenarios. Browser evidence should show the queue, selected review,\ndecision controls, confirmation state, and final visibility.\n",
+    "keywords": [
+      "customer-engagement-and-feedback",
+      "reviews-and-ratings",
+      "customer-reviews-and-ratings",
+      "Customer Engagement and Feedback",
+      "Reviews and Ratings",
+      "Customer reviews and ratings"
+    ],
+    "facets": {
+      "section": "customer-engagement-and-feedback",
+      "group": "customer-engagement-and-feedback",
+      "navigationDepth": 2,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record250": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementreviewaggregationrecovery",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataengagementReviewAggregationRecovery",
+    "title": "Review Aggregation and Recovery",
+    "summary": "Rating aggregate correctness, recalculation, event recovery, and product or discovery visibility after review changes.",
+    "searchText": "Review Aggregation and Recovery Rating aggregate correctness, recalculation, event recovery, and product or discovery visibility after review changes. # Review Aggregation and Recovery\n\nReview Aggregation and Recovery explains how Nodics keeps average ratings,\nreview counts, and review-derived signals correct after moderation decisions,\nimports, failures, retries, or project customizations.\n\n## Aggregate flow\n\n```mermaid\nflowchart LR\n  Decision[\"Review decision\"] --> Event[\"Aggregate event\"]\n  Event --> Aggregate[\"Rating aggregate\"]\n  Aggregate --> Product[\"Product page\"]\n  Aggregate --> Search[\"Search or discovery\"]\n  Failure[\"Failure\"] --> Rebuild[\"Recalculate\"]\n  Rebuild --> Aggregate\n```\n\n| Aggregate | Why it matters | Recovery signal |\n| --- | --- | --- |\n| Review count | Merchandising and shopper trust. | Count differs from approved review query. |\n| Average rating | Product ranking and conversion. | Stored average differs from recalculated value. |\n| Distribution | Filtering and analytics. | Bucket totals do not match approved reviews. |\n| Derived search field | Discovery and sorting. | Search index differs from Online data. |\n\n## Business perspective\n\nA business user should not have to trust a number blindly. If a product shows\n4.7 stars, the system should be able to explain which approved reviews created\nthat value and how it can be recalculated. This matters for customer trust,\nmarketplace quality, and commercial decisions.\n\n## Developer perspective\n\nDevelopers should keep aggregation idempotent and recoverable. Moderation,\nimports, deletes, retire actions, or syndication updates can all change the\naggregate. The implementation should expose recalculation APIs or jobs,\ndocument events, and keep search synchronization separate from the source of\ntruth.\n\n## Operator perspective\n\nOperators need a way to detect drift, rerun aggregate calculation, inspect\nfailed events, and validate the product page after recovery. If an aggregate\nupdate is asynchronous, documentation must state where pending and failed work\nis visible.\n\n## Operational evidence\n\nAggregate recovery evidence should compare source reviews with stored totals. Include approved count, rejected count, rating distribution, computed average, stored average, recalculation run id, event status, and storefront verification. If search consumes the aggregate, include the indexed value and refresh behavior. This lets a business user trust the number on the page and lets a developer or operator quickly decide whether the problem is source data, event delivery, calculation logic, or index synchronization.\n\n## Reader and implementation contract\n\nA beginner should understand that aggregate ratings are derived evidence, not hand-authored content. A business user should know why aggregate accuracy affects product confidence, sorting, and commercial decisions. A developer should document the source query, update event, recalculation job, idempotency model, and search synchronization. An operator should know how to detect drift, rebuild safely, and validate the storefront after recovery.\n\nEvery aggregate topic must include successful update, rejected review behavior, deleted or retired review behavior, failed event recovery, recalculation acceptance, and browser verification. If downstream search or analytics consumes aggregate ratings, link those dependencies so the business impact is visible.\n\n## Documentation maintenance rule\n\nKeep this topic current whenever implementation, configuration, Axis workflow, publication behavior, or customer-facing rendering changes. The page should remain small enough to scan, but it must still carry enough business context, technical ownership, customization guidance, visual structure, operational evidence, and verification detail for a reader to act without guessing. When the detail becomes too large, create a sibling topic and link it from this page instead of turning the overview back into a long mixed article.\n\nThis extension guidance must stay linked to the owning project or capability page whenever a customer customizes the behavior.\n\n## Common mistakes\n\n- Treating aggregate values as manually editable content.\n- Updating search before the source review state is final.\n- Recalculating without an idempotency or audit contract.\n- Testing a single approved review but not rejection, deletion, or retry.\n\n## Verification\n\nVerify aggregation by creating approved and rejected reviews, recalculating the\naggregate, comparing stored values to source queries, and checking browser\noutput on product or discovery pages. Include failure and retry evidence for\nproduction readiness.\n",
+    "keywords": [
+      "customer-engagement-and-feedback",
+      "reviews-and-ratings",
+      "customer-reviews-and-ratings",
+      "Customer Engagement and Feedback",
+      "Reviews and Ratings",
+      "Customer reviews and ratings"
+    ],
+    "facets": {
+      "section": "customer-engagement-and-feedback",
+      "group": "customer-engagement-and-feedback",
+      "navigationDepth": 2,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record251": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementcustomerfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13312,7 +10506,8 @@ module.exports = {
     ],
     "facets": {
       "section": "customer-engagement-and-feedback",
-      "group": "feedback-and-complaints",
+      "group": "customer-engagement-and-feedback",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "business",
@@ -13341,7 +10536,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record338": {
+  "record252": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementunifiedoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13359,7 +10554,8 @@ module.exports = {
     ],
     "facets": {
       "section": "customer-engagement-and-feedback",
-      "group": "unified-engagement-operations",
+      "group": "customer-engagement-and-feedback",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -13388,7 +10584,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record339": {
+  "record253": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementgovernedautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13406,7 +10602,8 @@ module.exports = {
     ],
     "facets": {
       "section": "customer-engagement-and-feedback",
-      "group": "governed-automation-and-ai",
+      "group": "customer-engagement-and-feedback",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -13435,7 +10632,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record340": {
+  "record254": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagemententerpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13453,7 +10650,8 @@ module.exports = {
     ],
     "facets": {
       "section": "customer-engagement-and-feedback",
-      "group": "enterprise-engagement-operations",
+      "group": "customer-engagement-and-feedback",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -13482,7 +10680,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record341": {
+  "record255": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommunicationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13500,7 +10698,8 @@ module.exports = {
     ],
     "facets": {
       "section": "communication-and-notifications",
-      "group": "communication-delivery-and-verification",
+      "group": "communication-and-notifications",
+      "navigationDepth": 2,
       "documentType": "overview",
       "audience": [
         "business",
@@ -13529,7 +10728,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record342": {
+  "record256": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataeventsmessagingclustercoordination",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13547,7 +10746,8 @@ module.exports = {
     ],
     "facets": {
       "section": "event-and-messaging-management",
-      "group": "events-and-cluster-coordination",
+      "group": "event-and-messaging-management",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -13576,7 +10776,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record343": {
+  "record257": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13594,7 +10794,8 @@ module.exports = {
     ],
     "facets": {
       "section": "process-and-workflow-automation",
-      "group": "process-overview",
+      "group": "process-and-workflow-automation",
+      "navigationDepth": 2,
       "documentType": "overview",
       "audience": [
         "business",
@@ -13623,7 +10824,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record344": {
+  "record258": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessruntimelifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13641,7 +10842,8 @@ module.exports = {
     ],
     "facets": {
       "section": "process-and-workflow-automation",
-      "group": "runtime-lifecycle",
+      "group": "process-and-workflow-automation",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -13670,7 +10872,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record345": {
+  "record259": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessfirstworkflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13688,7 +10890,8 @@ module.exports = {
     ],
     "facets": {
       "section": "process-and-workflow-automation",
-      "group": "workflow-getting-started",
+      "group": "process-and-workflow-automation",
+      "navigationDepth": 2,
       "documentType": "quickstart",
       "audience": [
         "business",
@@ -13717,7 +10920,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record346": {
+  "record260": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessfirsthumantask",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13735,7 +10938,8 @@ module.exports = {
     ],
     "facets": {
       "section": "process-and-workflow-automation",
-      "group": "human-task-flow",
+      "group": "process-and-workflow-automation",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "business",
@@ -13764,7 +10968,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record347": {
+  "record261": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessbusinessvalue",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13782,7 +10986,8 @@ module.exports = {
     ],
     "facets": {
       "section": "process-and-workflow-automation",
-      "group": "business-value-and-adoption",
+      "group": "process-and-workflow-automation",
+      "navigationDepth": 2,
       "documentType": "concept",
       "audience": [
         "business",
@@ -13811,7 +11016,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record348": {
+  "record262": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatapipelinebusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13829,7 +11034,8 @@ module.exports = {
     ],
     "facets": {
       "section": "pipeline-and-business-logic-orchestration",
-      "group": "pipeline-execution-model",
+      "group": "pipeline-and-business-logic-orchestration",
+      "navigationDepth": 2,
       "documentType": "customization",
       "audience": [
         "business",
@@ -13858,14 +11064,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record349": {
+  "record263": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacronoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacronOperations",
     "title": "Cron operations",
     "summary": "Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety.",
-    "searchText": "Cron operations Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety. # Cron operations\n\nCron is the Nodics optional functional module for scheduled and manually\ntriggered backend work. It extends Core and contributes the `cronjob`\ntechnical module. A project registers Cron when it needs scheduled jobs,\nbackground maintenance, retries, cleanup, synchronization, or other timed\nbusiness processes.\n\nFor a beginner, Cron is the part of Nodics that asks “what should happen\nlater, repeatedly, or in the background?” A user may click a button in Axis,\nbut many real enterprise actions must happen without a user staring at the\nscreen: cleanup temporary media, retry failed exports, synchronize external\nsystems, send reminders, rebuild projections, or close expired workflows.\n\n## Why Cron is optional\n\nCore, Platform, and WCMS are mandatory for Axis-driven onboarding and governed\ncontent. Cron is different. Many deployments do not need scheduled work on day\none, so Cron should appear in the module registry as an optional functional\nmodule when a cron runtime is live. Registering or activating Cron persists\nproject intent; restarting servers should not ask the same registration\nquestion again.\n\n## Ownership model\n\nCron owns scheduler mechanics, lifecycle routes, persisted job definitions,\nruntime containers, execution state, logging, events, and failure handling.\nThe server hosts Cron, but the server is not the functional owner. Node\nplacement fields decide where a job may run; they do not create another module\nidentity.\n\nCustomer jobs belong in project modules. Reusable scheduler behavior belongs\nin `nodics.process/modules/cronjob`. If a partner needs custom scheduling behavior, they may\ncreate a customer extension module that loads after Cron and overrides the\napproved service contract.\n\nFor developers, the important rule is that Cron should orchestrate the timing\nand execution contract, while the owning business module should own the actual\nbusiness operation. A media cleanup job should call media-owned cleanup logic.\nA workflow reminder job should call workflow-owned reminder logic. Cron should\nnot become a dumping ground for unrelated domain behavior.\n\n## Job lifecycle\n\nA job definition normally describes:\n\n- job code and active state;\n- schedule, start, optional end, and trigger type;\n- handler or target module operation;\n- tenant, enterprise, and node placement;\n- retry, timeout, priority, and overlap expectations;\n- last execution status and safe operational evidence.\n\nCron supports create or register, update, run, start, stop, pause, resume, and\nremove through secured backend operations. Manual run and scheduled execution\nmust share the same tenant, permission, node, logging, and failure contracts.\n\n![Cron job lifecycle](../assets/images/cron-job-lifecycle.png \"Cron lifecycle reference from the archived documentation set\")\n\n![Cron job process](../assets/images/cronjob-process.jpg \"Cron job process reference from the archived documentation set\")\n\n```mermaid\nstateDiagram-v2\n  [*] --> Registered\n  Registered --> Active: activate\n  Active --> Due: schedule reaches due time\n  Due --> Running: node claims execution\n  Running --> Completed: success\n  Running --> Failed: error or timeout\n  Failed --> Retrying: retry policy allows\n  Retrying --> Due\n  Active --> Paused: pause\n  Paused --> Active: resume\n  Active --> Stopped: stop\n  Stopped --> Active: start\n  Registered --> Removed: remove\n  Completed --> Active: wait for next schedule\n```\n\nFor beginners, the important point is that a job definition and a job run are\nnot the same thing. The definition says what should happen and when. A run is\none execution attempt with its own start time, status, logs, retries, and\noutcome. Production support usually investigates runs, but operators manage\ndefinitions.\n\n## Example job: nightly media cleanup\n\nA realistic first Cron job might clean expired temporary media.\n\n| Field | Example value | Why it matters |\n| --- | --- | --- |\n| Code | `media.temporary.cleanup` | Stable identity for logs, permissions, and support. |\n| Trigger | Daily at 02:00 local environment time | Runs outside peak usage. |\n| Owner module | `media` or project extension | Keeps business behavior with the module that owns the data. |\n| Idempotency | Delete only records already marked expired | Safe if the job runs twice. |\n| Timeout | 10 minutes | Prevents a stuck cleanup from occupying the scheduler forever. |\n| Retry | Two retries with backoff | Handles temporary storage/database failures without hiding persistent bugs. |\n| Audit | Count scanned, deleted, skipped, failed | Lets operators prove what happened. |\n\nThe job should not accept arbitrary paths or delete files by frontend request.\nIt should ask Media for expired records through a governed service and let the\nstorage provider perform safe cleanup.\n\n## Business journey: why scheduled work needs governance\n\nScheduled work often starts innocently: “run this cleanup every night.” In a\nreal enterprise system, the same job may touch many tenants, delete data,\nretry external calls, create reports, or send notifications. That makes Cron a\nbusiness-risk capability, not only a timer.\n\n| Business need | Cron responsibility | Owning business module responsibility |\n| --- | --- | --- |\n| Nightly media cleanup | Schedule, claim, execute, retry, log. | Media decides which records are expired and safe to delete. |\n| Export retry | Run retry window and record attempts. | Import/export module decides retry eligibility and file semantics. |\n| Reminder emails | Schedule and throttle execution. | Workflow or notification module owns message content and recipient rules. |\n| Projection rebuild | Run controlled background task. | Owning data module owns rebuild logic and consistency rules. |\n\nCron should make the work happen at the right time with safe operational\nevidence. It should not absorb every domain rule just because the work happens\nin the background.\n\n## Developer journey: adding a project cron job\n\nWhen a project adds a scheduled job, follow this sequence:\n\n1. Identify the business module that owns the actual operation.\n2. Expose a safe service method in that module.\n3. Add the job definition in the project or owning module data/configuration.\n4. Configure schedule, tenant/enterprise scope, node placement, timeout,\n   retry, overlap, and audit expectations.\n5. Register or import the job through governed data flow.\n6. Test manual run and scheduled execution with the same security and tenant\n   context.\n7. Verify restart behavior by stopping and starting processServer.\n8. Document support steps, alert thresholds, and reconciliation behavior.\n\nDo not pass executable code, raw URLs, filesystem paths, or untrusted handler\nnames through job records. Job definitions should point to known backend\ncontracts.\n\n## Registering Process automation as an optional module\n\nCore, Platform, and WCMS are mandatory in the Axis reference stack. Process is\noptional. That means Axis may discover a live processServer and show Process as\navailable to register. When a user registers and activates Process, the project\nintent is stored in the BackOffice/runtime registry. Restarting the server\nshould not ask again unless the state was removed. Cronjob is a technical module\ninside that Process registration.\n\nThe lifecycle is:\n\n1. processServer starts and reports `nodics.process` as live.\n2. BackOffice observes the runtime module catalogue.\n3. Axis shows Process under available modules.\n4. A user registers Process into the project.\n5. A user activates Process.\n6. Cronjob-owned navigation, APIs, docs, and initialization data become visible\n   according to permissions and content import state.\n7. Deactivation hides runtime availability without forgetting registration.\n8. Deregistration removes the project registration and returns Process to the\n   available state while the server remains live.\n\n```mermaid\nsequenceDiagram\n  participant Process as processServer\n  participant BackOffice as BackOffice registry\n  participant Axis as Axis module registry\n  Process->>BackOffice: report nodics.process runtime observation\n  Axis->>BackOffice: request authorized module registry\n  BackOffice-->>Axis: nodics.process available\n  Axis->>BackOffice: register nodics.process\n  BackOffice-->>Axis: registered state\n  Axis->>BackOffice: activate nodics.process\n  BackOffice-->>Axis: active state\n```\n\nThe server observation starts the conversation. Registration and activation\nrecord project intent. The two should not be collapsed into one hidden action.\n\n## Production safety\n\nScheduled jobs are deceptively simple. A timer firing every minute is easy;\nmaking it safe in production is the real work. Jobs that change external state\nmust define idempotency keys, duplicate-run policy, timeout behavior, retry\nsafety, compensation or reconciliation steps, and alerting.\n\nMulti-node deployments must treat scheduler memory as disposable. Persisted\njob definitions are authoritative; in-memory schedules are rebuilt from\nruntime state. Node failover can help, but it is not a universal exactly-once\nguarantee. Network partitions, process termination, downstream timeouts, and\nuncertain completion must be handled by the job contract.\n\n## Execution safety model\n\n```mermaid\nflowchart TD\n  Due[\"Job becomes due\"] --> Claim[\"Runtime node attempts claim\"]\n  Claim -->|Claim denied| Skip[\"Skip with safe reason\"]\n  Claim -->|Claim accepted| Execute[\"Execute handler\"]\n  Execute --> Success[\"Record success evidence\"]\n  Execute --> Failure[\"Record failure evidence\"]\n  Failure --> Retry{\"Retry allowed?\"}\n  Retry -->|Yes| Backoff[\"Schedule retry with backoff\"]\n  Retry -->|No| Alert[\"Leave failed state and alert\"]\n  Backoff --> Due\n```\n\nThe claim step matters in multi-node environments. Without it, two nodes may\nrun the same job. Even with a claim, job handlers should still be idempotent\nbecause distributed systems can fail after a side effect but before a status\nupdate is recorded.\n\n## Operations runbook outline\n\nEvery production cron capability should have a small runbook:\n\n| Runbook area | Required detail |\n| --- | --- |\n| Job purpose | What business outcome the job supports. |\n| Owner | Functional module or project that owns the business operation. |\n| Schedule | Frequency, timezone, blackout windows, and manual run policy. |\n| Data scope | Tenant, enterprise, site, catalog, or environment boundaries. |\n| Idempotency | What makes repeat execution safe. |\n| Retry | Retry count, backoff, retryable errors, non-retryable errors. |\n| Timeout | Maximum duration and stuck-run recovery. |\n| Observability | Logs, metrics, alerts, dashboards, and correlation fields. |\n| Recovery | Re-run, skip, reconcile, or compensate instructions. |\n| Release impact | What happens during deploy, rollback, or schema/content migration. |\n\n## Security model\n\nCron lifecycle routes require authentication and authorization. A human may\nauthorize a Cron operation, but the job itself must use governed internal\nservice-token flow when calling another module. Do not accept arbitrary URLs,\nservice names, credentials, executable code, or node identifiers from\nuntrusted request data.\n\n## DevOps model\n\nOperations teams should monitor scheduler readiness, active job count, due\njobs, started jobs, completed jobs, failed jobs, skipped jobs, schedule delay,\nduration, retry count, overlap denial, temporary ownership, node handoff, and\ndownstream latency. Logs should carry tenant, enterprise, job code, trigger\ntype, assigned node, attempt, correlation identity, and safe outcome.\n\nBefore production use, every real job should have tests for schedule boundary,\nmanual run, unauthorized access, cross-tenant access, duplicate execution,\ntimeout, retry, partial failure, restart, drain, node loss, node return,\ndownstream recovery, idempotency, and reconciliation.\n\n## Axis and BackOffice view\n\nAxis should show Cron as a functional module, not as every internal technical\nschema. Once registered and active, Cron-owned navigation and workbench\ncapabilities can appear through BackOffice and WCMS data just like other module\ncapabilities. Axis remains the renderer; Cron remains the runtime authority.\n\n## Acceptance checklist\n\nBefore Cron is considered ready beyond local demo use, verify:\n\n- Cron appears in the functional module registry only when the runtime is\n  observed.\n- Register, activate, deactivate, and deregister operations persist and update\n  Axis without manual refresh.\n- Job definitions are persisted and rebuilt after runtime restart.\n- Manual run and scheduled run share the same authorization, tenant, logging,\n  and failure contracts.\n- Duplicate execution is prevented or made harmless through idempotency.\n- Failed runs produce useful diagnostics without exposing secrets.\n- Node loss, restart, timeout, retry, and downstream failure behavior are\n  tested.\n- Business handlers remain in the owning business module.\n\n## Common mistakes\n\n- Putting domain cleanup or workflow logic directly inside Cron instead of the\n  owning business module.\n- Treating an in-memory schedule as the authority instead of persisted job\n  definitions.\n- Assuming one node means production will never run duplicate work.\n- Running jobs without idempotency, timeout, retry, and audit decisions.\n- Letting Axis construct arbitrary job handler names or URLs.\n- Forgetting that Cron registration is optional project state, not process\n  startup.\n\n## Verification\n\nFor local verification, start processServer from the reference customer project\nand confirm that the functional module registry observes `nodics.process` with\nthe `cronjob` technical module. Register it, activate it, deactivate it, and\nderegister it without refreshing the browser. After deregistration, Process\nshould return to the available list while processServer is still observed.\nRestart servers and confirm that durable registration state behaves as expected.\n\nFor job-level verification, test both manual and scheduled execution. A\nproduction-ready job must prove authorization, tenant context, duplicate-run\nprotection, timeout, retry, logging, downstream failure behavior, and safe\nrestart. If the job performs business work, test the owning business module as\nwell; Cron proves scheduling and execution governance, not the correctness of\nevery domain operation it triggers.\n\n## TEE Reference And Node Responsibility Coverage\n\nCron is a primary building block for the Task Execution Engine use case. It\nexecutes scheduled and manual jobs, coordinates runtime state, records\nCronJobLog evidence, and participates in node responsibility transfer. When a\nnode goes down, configured responsibilities can be taken over by another node;\nwhen it returns, ownership can be restored. That behavior must be documented\nfor every scheduled automation that affects commerce, publication,\nlocalization, media cleanup, discovery rebuild, or engagement operations.\n\n```mermaid\nflowchart LR\n  Schedule[\"Schedule or manual trigger\"] --> CronJob[\"Cron job\"]\n  CronJob --> Pipeline[\"Execution pipeline\"]\n  Pipeline --> Domain[\"Owning domain service\"]\n  Domain --> Log[\"Cron job log\"]\n  NodeDown[\"Node down\"] --> Takeover[\"Responsibility takeover\"]\n  NodeUp[\"Node up\"] --> Restore[\"Responsibility restore\"]\n```\n\n| Topic | What to document | Evidence |\n| --- | --- | --- |\n| Job definition | Code, handler, module, tenant, schedule, timeout, and retry. | CronJob schema and configuration contracts. |\n| Execution | Pipeline, input, output, idempotency, and downstream owner. | Runtime service and process trigger contracts. |\n| Node ownership | Normal node, temporary owner, takeover, and restoration. | Node-down/up and failover tests. |\n| Operations | Manual start, pause, logs, blocked reason, and recovery action. | CronJobLog and Axis workbench behavior. |\n\nEvery TEE-oriented job page should link back to this Cron topic and to the\nPipeline, Events/Messaging, and Process topics that explain the rest of the\nexecution model.\n",
+    "searchText": "Cron operations Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety. # Cron Operations\n\nCron Operations is the overview for scheduled business automation in Nodics.\nIt explains why scheduled work is governed, where responsibility belongs, and\nwhich detailed pages to read before adding or operating jobs.\n\n## Scheduled work model\n\n```mermaid\nflowchart LR\n  Job[\"Scheduled job\"] --> Owner[\"Responsible node\"]\n  Owner --> Execute[\"Business action\"]\n  Execute --> Evidence[\"Log, audit, status\"]\n  Evidence --> Axis[\"Axis operations\"]\n```\n\n| Concern | What the documentation must explain |\n| --- | --- |\n| Schedule | Timezone, activation, retry, and pause behavior. |\n| Responsibility | Which node owns execution and how failover works. |\n| Business impact | Which records, systems, or customers can be affected. |\n| Operations | How an operator sees status, failures, and retry controls. |\n\n## Business perspective\n\nCron is not just a timer. It runs business operations such as cleanup, export,\nnotification, synchronization, recalculation, or escalation. Business users\nneed to know what runs automatically, when it runs, who can pause it, and what\nhappens when it fails.\n\n## Developer perspective\n\nDevelopers should implement scheduled work through Process and Cron contracts,\nnot ad hoc startup timers. Project jobs must document configuration, service or\npipeline ownership, idempotency, permissions, events, tests, and Axis\nvisibility.\n\n## Continue with\n\n- **Cron Node Responsibility and TEE** for cluster ownership, failover,\n  transfer-back, and the Task Execution Engine use case.\n- **Project Cron Customization** for customer-owned job definitions,\n  configuration, permissions, and tests.\n- **Scheduled Automation and Cron Triggers** for trigger concepts.\n- **Process and Cronjob Shared Runtime** for the boundary between Process and\n  Cron capabilities.\n\n## Operational evidence\n\nCron evidence should be written for the person on call as much as the developer. Include job code, schedule, timezone, enabled state, owning node, last run, next run, current status, retry count, error summary, affected business records, and audit reference. If the job triggers a pipeline or external integration, document the downstream evidence too. This keeps automated operations understandable when the business asks whether an expected nightly or hourly action actually happened.\n\n## Reader and implementation contract\n\nA beginner should understand that Cron is a governed automation capability. A business user should know what automatic process is running, which decision it supports, and how failure affects customers or operations. A developer should document job definition, trigger, service or pipeline, configuration keys, permissions, idempotency, and events. An operator should know current owner, last run, next run, failure reason, retry option, and audit record.\n\nCron documentation must be updated whenever a new scheduled job is added or a project changes schedule, provider, retry, or responsibility behavior. If the job is a good TEE use case, this page should link to TEE so the business value of reliable task execution is clear.\n\n## Documentation maintenance rule\n\nKeep this topic current whenever implementation, configuration, Axis workflow, publication behavior, or customer-facing rendering changes. The page should remain small enough to scan, but it must still carry enough business context, technical ownership, customization guidance, visual structure, operational evidence, and verification detail for a reader to act without guessing. When the detail becomes too large, create a sibling topic and link it from this page instead of turning the overview back into a long mixed article.\n\nThis extension guidance must stay linked to the owning project or capability page whenever a customer customizes the behavior.\n\n## Common mistakes\n\n- Starting unmanaged timers from application startup.\n- Running the same scheduled job on multiple nodes without ownership.\n- Hiding job state from Axis.\n- Documenting the code path but not the business risk and retry behavior.\n\n## Verification\n\nVerify Cron with registration, disabled state, execution, retry, failure,\ncluster responsibility, audit, logs, and browser-visible operator status. A\nbeginner should understand why the job exists; a developer should know where to\nextend it; an operator should know how to control it.\n",
     "keywords": [
       "cron-and-scheduled-automation",
       "cron-operations",
@@ -13876,7 +11082,8 @@ module.exports = {
     ],
     "facets": {
       "section": "cron-and-scheduled-automation",
-      "group": "cron-operations",
+      "group": "cron-and-scheduled-automation",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -13905,7 +11112,104 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record350": {
+  "record264": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacronnoderesponsibilitytee",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacronNodeResponsibilityTee",
+    "title": "Cron Node Responsibility and TEE",
+    "summary": "How scheduled work ownership, failover, responsibility transfer, recovery, and TEE references should be documented.",
+    "searchText": "Cron Node Responsibility and TEE How scheduled work ownership, failover, responsibility transfer, recovery, and TEE references should be documented. # Cron Node Responsibility and TEE\n\nCron Node Responsibility and TEE explain how scheduled work can remain safe\nwhen the runtime has more than one node. TEE means Task Execution Engine. It is\na solution use case built on Nodics process and cron capabilities, not a\nseparate framework product. This page belongs under Cron because node\nresponsibility, handoff, recovery, and scheduled execution are operational\nconcerns.\n\nFor business users, the value is continuity. A scheduled business operation\nshould not silently stop because one node went down. For developers and\noperators, the value is a clear contract for ownership, failover, audit, and\nrecovery.\n\n## Responsibility flow\n\n```mermaid\nflowchart TD\n  Cluster[\"Cron-capable cluster\"] --> Owner[\"Responsible node owns job\"]\n  Owner --> Down[\"Node unavailable\"]\n  Down --> Transfer[\"Another node takes responsibility\"]\n  Transfer --> Audit[\"Audit responsibility transfer\"]\n  Owner --> Return[\"Original node returns\"]\n  Return --> Restore[\"Responsibility can transfer back\"]\n```\n\n## Business and technical model\n\n| Concern | Required behavior |\n| --- | --- |\n| Ownership | Exactly one node should own a responsibility at a time. |\n| Failover | Another eligible node can take responsibility when the owner is unavailable. |\n| Recovery | Responsibility transfer must be audited and observable. |\n| TEE reference | TEE documentation should link here as a concrete scheduled execution use case. |\n| Configuration | Eligibility, heartbeat, retry, and timeout values must be documented. |\n\n## Customization and extension\n\nProjects can add cron jobs, execution policies, node eligibility rules, and\nbusiness-specific recovery behavior. Those changes should use Process/Cron\ncontracts and project modules. A project should not create unmanaged timers\nthat run outside the responsibility model, because operators would lose audit,\nretry, and failover evidence.\n\n## Operator view\n\nOperators need to see which node owns which responsibility, when ownership\nchanged, which jobs are pending, which jobs failed, and whether a recovered\nnode resumed its expected role. Dashboard, logs, audit entries, and health\nchecks should align.\n\n## Project configuration points\n\nEvery project that relies on scheduled automation should document the\nconfiguration that controls ownership behavior. At minimum, include the node\neligibility rule, heartbeat interval, timeout threshold, retry window,\nresponsibility transfer policy, and the event or message used to notify other\nnodes. If the project changes the lock provider, storage provider, or cluster\ncoordination strategy, the page must explain the business reason and the\nrollback path.\n\n## Reader and implementation contract\n\nA beginner should understand that scheduled work is a governed capability, not\njust a timer. A business user should understand why responsibility transfer\nprotects operations. A developer should understand the node ownership model,\nheartbeat or availability signal, event behavior, and job state transitions.\nAn operator should see enough evidence to decide whether a job is healthy,\ntransferred, stuck, failed, or ready for retry.\n\nTEE documentation should refer to this operational model because TEE is one of\nthe strongest business use cases for reliable scheduled and task execution. If\nfuture implementations add more responsibility states, lock providers, or\ncluster coordination rules, this page and the TEE solution page must be\nupdated together.\n\n## Common mistakes\n\n- Treating cron as a single local timer instead of a governed runtime\n  capability.\n- Running the same job on multiple nodes without ownership control.\n- Failing over without an audit record.\n- Documenting TEE without linking back to Cron responsibility and Process task\n  lifecycle.\n- Hiding heartbeat and timeout configuration from operators.\n\n## Verification\n\nVerify node responsibility with tests that simulate owner loss, takeover,\nrecovery, and transfer-back behavior where supported. Browser or API evidence\nshould show the current owner, job state, audit trail, and failure handling.\nTEE solution documentation should reference this page for scheduled execution\nresponsibility.\n",
+    "keywords": [
+      "cron-node-responsibility",
+      "tee",
+      "task-execution-engine",
+      "cluster-failover",
+      "Cron and Scheduled Automation",
+      "Cron Operations",
+      "Cron Node Responsibility and TEE"
+    ],
+    "facets": {
+      "section": "cron-and-scheduled-automation",
+      "group": "cron-and-scheduled-automation",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record265": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacronprojectcustomization",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacronProjectCustomization",
+    "title": "Project Cron Customization",
+    "summary": "How customer projects add scheduled business work with job definitions, triggers, permissions, retry, audit, and tests.",
+    "searchText": "Project Cron Customization How customer projects add scheduled business work with job definitions, triggers, permissions, retry, audit, and tests. # Project Cron Customization\n\nProject Cron Customization explains how a customer project adds scheduled\nbusiness work without editing reusable Process or Cron framework source. This\ntopic is separate from cron operations because developers need a clear path\nfor creating project-owned jobs, configuration, validation, testing, and\noperational evidence.\n\nFor a business reader, scheduled work might mean nightly cleanup, catalog\nsync, email follow-up, price recalculation, analytics export, or workflow\nreminder. For a developer, it means a job definition, trigger, action,\npermission, retry behavior, logs, and tests.\n\n## Project job model\n\n```mermaid\nflowchart LR\n  Requirement[\"Business schedule\"] --> Project[\"Project cron module\"]\n  Project --> Definition[\"Job definition and trigger\"]\n  Definition --> Action[\"Action or service\"]\n  Action --> Evidence[\"Logs, audit, retry, and status\"]\n  Evidence --> Axis[\"Axis operation view\"]\n```\n\n## Implementation checklist\n\n| Area | What to define |\n| --- | --- |\n| Job owner | Project module and business capability. |\n| Trigger | Schedule, timezone, activation state, and retry window. |\n| Action | Service, adapter, or pipeline step to execute. |\n| Permissions | Who can view, pause, resume, retry, or cancel. |\n| Data impact | Records changed, idempotency key, and rollback behavior. |\n| Verification | Unit tests, integration tests, logs, and browser evidence. |\n\n## Customization and extension\n\nStart in the customer project. Add a project cron module or project Process\nextension that declares the job and points to a service or pipeline owned by\nthe project capability. Use configuration for schedules and provider choices.\nUse events when the job must notify other nodes or invalidate runtime state.\nUse Axis metadata so administrators can see status and action buttons.\n\n## Operator and QA impact\n\nOperators need to know whether a job is active, when it last ran, what it\nchanged, and how to retry safely. QA owners need acceptance data that proves a\nfresh schema can register the job, execute it, recover from failure, and avoid\nduplicate side effects.\n\n## Configuration ownership\n\nProject teams should keep cron behavior configurable from the project layer\nwherever the schedule or provider choice can change between customers or\nenvironments. Document the configuration key, default value, accepted values,\nruntime reload behavior, and who is allowed to change it from Axis. If a job\nupdates commerce, content, media, or integration data, include the target\ncatalog, tenant, site, and approval or publishing dependency so operators can\nunderstand the business blast radius before running it.\n\n## Reader and implementation contract\n\nA beginner should be able to recognize the difference between a business\nschedule and a technical execution mechanism. A business user should know who\ncan pause, resume, retry, or inspect the job. A developer should know where to\ndefine the trigger, where the service or pipeline lives, and how to keep the\njob idempotent. An operator should know which dashboard, log, audit record, or\nAPI proves the job state.\n\nProject cron documentation should be updated every time a customer adds a new\nscheduled operation. The page must include the schedule, timezone, input data,\nside effects, retry policy, permission model, runtime owner, and acceptance\nevidence. Without those details, a scheduled operation becomes production\nrisk instead of enterprise automation.\n\n## Common mistakes\n\n- Adding a timer in application startup code.\n- Hardcoding a schedule where a project configuration should own it.\n- Missing idempotency for jobs that call external systems.\n- Forgetting Axis visibility for business operators.\n- Testing only success and not retry, cancellation, or disabled state.\n\n## Verification\n\nVerify a project cron customization by loading the project module in the\nProcess runtime, confirming the job registration, running the trigger or manual\nexecution path, checking logs and audit evidence, and validating that disabled\nor failed jobs behave as documented.\n",
+    "keywords": [
+      "project-cron-customization",
+      "scheduled-job-extension",
+      "cron-project-module",
+      "Cron and Scheduled Automation",
+      "Cron Operations",
+      "Project Cron Customization"
+    ],
+    "facets": {
+      "section": "cron-and-scheduled-automation",
+      "group": "cron-and-scheduled-automation",
+      "navigationDepth": 2,
+      "documentType": "customization",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record266": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessprocesscronruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13923,7 +11227,8 @@ module.exports = {
     ],
     "facets": {
       "section": "cron-and-scheduled-automation",
-      "group": "process-and-cron-runtime-boundary",
+      "group": "cron-and-scheduled-automation",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -13952,14 +11257,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record351": {
+  "record267": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessScheduledAutomation",
     "title": "Scheduled Automation and Cron Triggers",
     "summary": "Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence.",
-    "searchText": "Scheduled Automation and Cron Triggers Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence. # Scheduled Automation and Cron Triggers\n\nScheduled automation connects time-based execution to business workflows. Nodics\nkeeps the ownership boundary explicit:\n\n- nodics.process owns process definitions, trigger relationships, instances,\n  tasks, and audit.\n- nodics.process/modules/cronjob owns job scheduling, firing, retry timing, and\n  scheduler runtime.\n\n## Why this split exists\n\nIf Process owned Cron jobs directly, workflows would become a hidden scheduler.\nIf Cron owned process definitions, scheduled jobs would become a hidden workflow\nengine. Keeping the boundary clear makes the system easier to test, operate, and\ncustomize.\n\n```mermaid\nsequenceDiagram\n  participant Cron as cronjob\n  participant Process as nodics.process\n  participant Audit as Process audit\n  Cron->>Process: POST /triggers/:code/execute\n  Process->>Audit: process.trigger.execution.requested\n  Process->>Process: start published process instance\n  Process->>Audit: process.instance.started\n  Process->>Audit: process.trigger.execution.completed\n```\n\n## Trigger lifecycle\n\n| State | Meaning |\n| --- | --- |\n| `DRAFT` | Relationship exists but is not executable. |\n| `ACTIVE` | Authorized scheduler can execute it. |\n| `PAUSED` | Keep metadata but do not execute. |\n| `ARCHIVED` | Historical relationship; cannot be updated or executed. |\n\nAxis should make this lifecycle obvious. A business user should not need to\nguess why an automation did not run.\n\n## Runtime execution contract\n\nThe execution API requires an active trigger. The scheduler should pass a\ncorrelation or idempotency key.\n\n```http\nPOST /nodics/process/v0/triggers/dailyContentApproval/execute\nAuthorization: Bearer <runtime-token>\ncontent-type: application/json\n\n{\n  \"correlationId\": \"cron-fire-2026-08-09T10:00:00Z\",\n  \"context\": {\n    \"source\": \"cron\",\n    \"businessDate\": \"2026-08-09\"\n  }\n}\n```\n\nProcess starts the referenced workflow and records audit evidence. Cronjob\nremains responsible for deciding when to call this endpoint and how to retry\nscheduler failures.\n\n## Cron-owned job declaration\n\nWhen workflow and cronjob run together in `processServer`, a Cron job can execute a\nProcess trigger without using a browser-only shortcut:\n\n```js\n{\n  code: 'dailyContentApprovalJob',\n  trigger: { expression: '0 10 * * *' },\n  jobDetail: {\n    processTrigger: {\n      triggerCode: 'dailyContentApproval',\n      context: {\n        sourceDescription: 'Daily content approval automation'\n      }\n    }\n  }\n}\n```\n\nThis declaration is intentionally small. The business process remains in\nProcess. The schedule remains in cronjob. Domain-specific work remains in the\ndomain module that Process calls through explicit ACTION adapters.\n\n## What business users should see in Axis\n\nAxis should explain two related but different records:\n\n| Axis concept | Backend owner | What the user controls |\n| --- | --- | --- |\n| Scheduled trigger relationship | `nodics.process` | Which process definition is allowed to start from a schedule. |\n| Cron job | `nodics.process/modules/cronjob` | When the schedule fires and how scheduler lifecycle is operated. |\n| Manual execute now | `nodics.process` | Test an active trigger immediately with audit evidence. |\n\nThis helps a business user understand why activating a trigger relationship is\nnot the same thing as starting a scheduler, and why a Cron job may still need to\nexist before real time-based automation fires.\n\n## Common mistakes\n\n- Treating trigger activation as proof that a scheduler exists and is healthy.\n- Duplicating schedule state in Process and Cron or losing tenant, correlation, idempotency, and audit context.\n\n## Verification\n\nActivate a Process trigger, verify the Cron-owned schedule handoff, execute it once with idempotency evidence, reject unauthorized or inactive execution, and confirm retry and recovery behavior.\nA beginner developer and production operator should both understand which evidence belongs to Process and which belongs to Cron.\nAlso repeat the check after processServer restarts and after a missed schedule window. Confirm the scheduler follows the configured misfire policy, does not replay a completed correlation unexpectedly, and exposes a recoverable incident when downstream execution fails. Metrics and logs must remain tenant-safe, bounded, and free of trigger payload secrets.\n",
+    "searchText": "Scheduled Automation and Cron Triggers Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence. # Scheduled Automation and Cron Triggers\n\nScheduled automation connects time-based execution to business workflows. Nodics\nkeeps the ownership boundary explicit:\n\n- nodics.process owns process definitions, trigger relationships, instances,\n  tasks, and audit.\n- nodics.process/modules/cronjob owns job scheduling, firing, retry timing, and\n  scheduler runtime.\n\n## Why this split exists\n\nIf Process owned Cron jobs directly, workflows would become a hidden scheduler.\nIf Cron owned process definitions, scheduled jobs would become a hidden workflow\nengine. Keeping the boundary clear makes the system easier to test, operate, and\ncustomize.\n\n```mermaid\nsequenceDiagram\n  participant Cron as cronjob\n  participant Process as nodics.process\n  participant Audit as Process audit\n  Cron->>Process: POST /triggers/:code/execute\n  Process->>Audit: process.trigger.execution.requested\n  Process->>Process: start published process instance\n  Process->>Audit: process.instance.started\n  Process->>Audit: process.trigger.execution.completed\n```\n\n## Trigger lifecycle\n\n| State | Meaning |\n| --- | --- |\n| `DRAFT` | Relationship exists but is not executable. |\n| `ACTIVE` | Authorized scheduler can execute it. |\n| `PAUSED` | Keep metadata but do not execute. |\n| `ARCHIVED` | Historical relationship; cannot be updated or executed. |\n\nAxis should make this lifecycle obvious. A business user should not need to\nguess why an automation did not run.\n\n## Runtime execution contract\n\nThe execution API requires an active trigger. The scheduler should pass a\ncorrelation or idempotency key.\n\n```http\nPOST /nodics/process/v0/triggers/dailyContentApproval/execute\nAuthorization: Bearer <runtime-token>\ncontent-type: application/json\n\n{\n  \"correlationId\": \"cron-fire-2026-08-09T10:00:00Z\",\n  \"context\": {\n    \"source\": \"cron\",\n    \"businessDate\": \"2026-08-09\"\n  }\n}\n```\n\nProcess starts the referenced workflow and records audit evidence. Cronjob\nremains responsible for deciding when to call this endpoint and how to retry\nscheduler failures.\n\n## Cron-owned job declaration\n\nWhen workflow and cronjob run together in `processServer`, a Cron job can execute a\nProcess trigger without using a browser-only shortcut:\n\n```js\n{\n  code: 'dailyContentApprovalJob',\n  trigger: { expression: '0 10 * * *' },\n  jobDetail: {\n    processTrigger: {\n      triggerCode: 'dailyContentApproval',\n      context: {\n        sourceDescription: 'Daily content approval automation'\n      }\n    }\n  }\n}\n```\n\nThis declaration is intentionally small. The business process remains in\nProcess. The schedule remains in cronjob. Domain-specific work remains in the\ndomain module that Process calls through explicit ACTION adapters.\n\n## What business users should see in Axis\n\nAxis should explain two related but different records:\n\n| Axis concept | Backend owner | What the user controls |\n| --- | --- | --- |\n| Scheduled trigger relationship | `nodics.process` | Which process definition is allowed to start from a schedule. |\n| Cron job | `nodics.process/modules/cronjob` | When the schedule fires and how scheduler lifecycle is operated. |\n| Manual execute now | `nodics.process` | Test an active trigger immediately with audit evidence. |\n\nThis helps a business user understand why activating a trigger relationship is\nnot the same thing as starting a scheduler, and why a Cron job may still need to\nexist before real time-based automation fires.\n\n## Customization and extension guidance\n\nProjects can customize scheduled automation with project-owned triggers, calendars, retry rules, pause and resume permissions, or business-specific execution services. Document configuration keys, owner module, affected business data, Axis controls, job evidence, and recovery behavior. Scheduled work should stay inside the governed Process and Cron model so operators can understand and control it.\n\n## Common mistakes\n\n- Treating trigger activation as proof that a scheduler exists and is healthy.\n- Duplicating schedule state in Process and Cron or losing tenant, correlation, idempotency, and audit context.\n\n## Verification\n\nActivate a Process trigger, verify the Cron-owned schedule handoff, execute it once with idempotency evidence, reject unauthorized or inactive execution, and confirm retry and recovery behavior.\nA beginner developer and production operator should both understand which evidence belongs to Process and which belongs to Cron.\nAlso repeat the check after processServer restarts and after a missed schedule window. Confirm the scheduler follows the configured misfire policy, does not replay a completed correlation unexpectedly, and exposes a recoverable incident when downstream execution fails. Metrics and logs must remain tenant-safe, bounded, and free of trigger payload secrets.\n",
     "keywords": [
       "cron-and-scheduled-automation",
       "scheduled-automation-triggers",
@@ -13970,7 +11275,8 @@ module.exports = {
     ],
     "facets": {
       "section": "cron-and-scheduled-automation",
-      "group": "scheduled-automation-triggers",
+      "group": "cron-and-scheduled-automation",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -13999,7 +11305,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record352": {
+  "record268": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadataimportexportmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14017,7 +11323,8 @@ module.exports = {
     ],
     "facets": {
       "section": "data-import-export-and-migration",
-      "group": "data-movement-and-migration",
+      "group": "data-import-export-and-migration",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -14046,7 +11353,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record353": {
+  "record269": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessactionadapters",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14064,7 +11371,8 @@ module.exports = {
     ],
     "facets": {
       "section": "system-integration-and-external-connectivity",
-      "group": "action-adapter-integration",
+      "group": "system-integration-and-external-connectivity",
+      "navigationDepth": 2,
       "documentType": "integration",
       "audience": [
         "business",
@@ -14093,14 +11401,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record354": {
+  "record270": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkdevopsruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkDevopsRuntime",
     "title": "Runtime and DevOps operations",
     "summary": "Runtime topology, dependencies, public and private properties, deployment, monitoring, and recovery guidance.",
-    "searchText": "Runtime and DevOps operations Runtime topology, dependencies, public and private properties, deployment, monitoring, and recovery guidance. # Runtime and DevOps operations\n\nNodics runtime operations are based on explicit server composition and layered\nconfiguration. A runtime server is a process that hosts an effective set of\nactive modules. The module remains the capability owner; the server is the\nruntime grouping.\n\nFor a beginner, DevOps in Nodics means “how does this code become a safe,\nobservable process?” The answer starts with a clear server graph, narrow\nproperties, predictable dependencies, releaseable content packs, and recovery\nbehavior that operators can explain during an incident.\n\n## Local topology\n\nThe reference local setup uses separate servers:\n\n- Platform on `http://localhost:4300`;\n- WCMS on `http://localhost:4310`;\n- Cron when scheduled behavior is needed;\n- Axis on `http://localhost:3100`.\n\nThis split keeps module boundaries visible. It also prepares the team for a\ndistributed topology where different capabilities may run in different processes,\nhosts, containers, or deployment units.\n\n```mermaid\nflowchart LR\n  Operator[\"Developer or operator\"] --> Kickoff[\"nodics.kickoff scripts\"]\n  Kickoff --> Platform[\"Platform server<br/>4300\"]\n  Kickoff --> WCMS[\"WCMS server<br/>4310\"]\n  Kickoff --> Process[\"Process server<br/>4330\"]\n  Platform --> MongoP[\"kickoffLocal DB\"]\n  WCMS --> MongoW[\"kickoffLocalWcms DB\"]\n  Process --> MongoC[\"kickoffLocalProcess DB\"]\n  Axis[\"nodics.axis<br/>3100\"] --> Platform\n  Axis --> WCMS\n```\n\nThis diagram is intentionally local and beginner-friendly. Production may use\ncontainers, private networks, managed databases, and separate deployment\npipelines, but the same ownership idea remains: servers host capabilities;\nmodules own behavior.\n\n## Configuration layers\n\nNodics configuration is layered. Framework defaults come first. Project,\nenvironment, server, node, tenant, and governed runtime configuration can refine\nbehavior later. A developer should place a property in the narrowest owner that\nneeds it.\n\nThe practical rule is: defaults travel with the owning module; overrides travel\nwith the runtime. If WCMS generally owns data import, data export, media\nmanagement, or CMS delivery, those defaults belong in the WCMS module. If\nPlatform generally owns profile, BackOffice, or runtime registry exposure,\nthose defaults belong in Platform. A project, environment, server, or node file\nshould add only the part it intentionally changes for that boundary.\n\nServer configuration should therefore stay light. It may define ports, active\nmodules, local database names, runtime identity, remote service coordinates, or\nan explicit decision to disable an inherited capability. It should not copy\nwhole inherited property blocks such as `apiExposure`, provider defaults,\nimport/export policy, media settings, permissions, limits, or discovery flags\njust to make the server file look complete. Copied defaults become a second\nauthority and make upgrades harder.\n\nUse public browser configuration only for values safe to expose, such as Axis\nbase URLs and client contract versions. Credentials, private keys, service\ntokens, database passwords, and provider secrets belong in protected backend\nconfiguration or deployment secret management.\n\n## Public versus private properties\n\nNodics configuration must be explicit about visibility. A property being\nneeded by a screen does not automatically make it safe for the browser.\n\n| Property type | Example | Owner | Browser visible? |\n| --- | --- | --- | --- |\n| Framework default | default API category enablement | owning framework module | only if intentionally exposed |\n| Project default | reference enterprise display name | customer project | sometimes |\n| Environment override | local database name, local host/port | environment/server module | usually no |\n| Private secret | database password, token signing secret, storage credential | secret store or private runtime property | never |\n| Public frontend config | Platform base URL, WCMS base URL | Axis deployment config | yes, but not secret |\n| Generated state | import manifest checksum, generated docs data | owning module/project generator | imported through backend |\n\nThe safe rule is simple: if exposure would help an attacker, it is private. If\nAxis needs to display a value, expose a sanitized backend contract instead of\npassing the private property through the frontend.\n\n## Dependencies\n\nMongoDB is the primary local runtime dependency for persisted records.\nElasticsearch is used when search-backed capabilities are enabled. Redis is\nused when Redis-backed cache or session behavior is enabled. Enterprise\nmessaging, external storage, AI providers, or other integrations may be\noptional depending on active modules and configuration.\n\nDisabled providers should fail closed or log that they are disabled. A disabled\noptional provider is not the same as a broken mandatory provider.\n\n## Deployment mindset\n\nStart simple locally. Keep capability ownership correct. Then distribute only\nwhen scale, resilience, security, or team ownership requires it. The runtime\ntopology can change without moving business ownership out of the owning module.\n\nFor production, define:\n\n- which servers run which functional modules;\n- where public and private properties are sourced;\n- how credentials are injected and rotated;\n- how logs, health, audit events, and runtime diagnostics are collected;\n- how content packs, generated artifacts, and database migrations are released;\n- how rollback works for code, configuration, and imported content.\n\n## Local-to-production evolution\n\nThe first Nodics deployment should be understandable before it is distributed.\nLocal development proves ownership and behavior. Production topology then\nseparates runtime processes only for a reason: scale, resilience, security,\nteam ownership, data locality, or operational control.\n\n![Cloud deployment process](../assets/images/cloud-deployment-process.jpg \"Cloud deployment topology reference from the archived documentation set\")\n\n```mermaid\nflowchart LR\n  Local[\"Local developer machine<br/>Platform + WCMS + Cron + Axis\"] --> Shared[\"Shared test environment<br/>separate DBs and controlled imports\"]\n  Shared --> PreProd[\"Pre-production<br/>production-like properties and providers\"]\n  PreProd --> Prod[\"Production<br/>monitored, backed up, secured, scalable\"]\n```\n\nThe important rule is that deployment shape changes should not move business\nownership. Platform remains Platform whether it runs locally or across several\nnodes. WCMS remains WCMS whether media storage is local or cloud-backed. Cron\nremains Cron whether one scheduler node or multiple controlled nodes execute\njobs.\n\n## Release and rollback model\n\nA Nodics release is not only source code. A real release may include:\n\n- framework package versions;\n- customer project code;\n- environment/server property changes;\n- generated import manifests;\n- initialization, core, sample, and documentation data releases;\n- Axis frontend build;\n- database migration or data repair scripts;\n- provider configuration changes;\n- operational runbook updates.\n\nRollback must name which layer is rolling back. Rolling back Axis does not\nroll back imported WCMS content. Rolling back a content pack does not roll back\nframework source. Rolling back a server property may require process restart.\nThis separation is a strength only when operators can see and control each\nlayer.\n\n## Monitoring and recovery\n\nPlatform exposes registry and BackOffice projections for active modules. WCMS\nowns content-pack delivery and CMS route resolution. Cron owns scheduled work.\nAxis should show recovery states when these backends are unavailable instead of\ninventing another control plane.\n\nWhen something fails, identify the owner first:\n\n- login or BackOffice bootstrap: Platform/Profile/BackOffice;\n- CMS page delivery or documentation content: WCMS/CMS/content-pack owner;\n- scheduled job execution: Cron;\n- frontend rendering or shell interaction: Axis;\n- customer-specific behavior: customer project module.\n\n![Log management system](../assets/images/log-management-system.jpg \"Logging and output routing reference from the archived documentation set\")\n\nLogs are operational evidence, not only developer debugging text. A production\ntopology should make it possible to connect a user request, module action,\nscheduled job, import, export, and storage/provider call with a shared\ncorrelation story. Console output may be enough during local development, but\nshared environments need retained logs, safe rotation, searchability, and\nsecurity-aware redaction.\n\n## Operational acceptance checklist\n\nBefore calling an environment healthy, verify:\n\n| Area | Acceptance evidence |\n| --- | --- |\n| Process health | Platform, WCMS, Cron where required, and Axis are reachable on expected ports. |\n| Runtime graph | Each server logs or exposes the effective module graph it loaded. |\n| Module registry | Mandatory modules are active; optional modules match project intent. |\n| Data imports | Required releases validate, install, and record import history. |\n| Documentation | Framework, Axis, API, and customer documentation routes render through WCMS. |\n| Authentication | Reference or environment-specific employee login works through Platform. |\n| Authorization | Unauthorized calls fail closed and do not leak private data. |\n| Configuration | Public and private properties are sourced from the correct layer. |\n| Observability | Logs include correlation, enterprise, tenant where applicable, module, and safe status evidence. |\n| Recovery | Restarting servers preserves durable registry and imported content state. |\n\nThis checklist is intentionally practical. It lets a support engineer prove\nthe system from the outside before diving into source code.\n\n## Common incident examples\n\n| Symptom | First owner to inspect | Likely next check |\n| --- | --- | --- |\n| Axis shows BackOffice registry unavailable | Platform/BackOffice | Is port `4300` reachable and did Platform finish startup? |\n| Documentation route shows recovery | WCMS/content pack owner | Is port `4310` reachable and was the docs pack imported? |\n| Module disappeared after register | Platform registry API and Axis refresh state | Did the operation response update persisted state and frontend cache? |\n| Process automation is registered but unavailable | Process runtime observation | Is processServer running and reporting `nodics.process` with `cronjob`? |\n| Import release is invalid | Content-pack manifest owner | Were source files changed without regenerating manifests? |\n| Media upload exposes path-like data | WCMS Media | Is the API returning storage internals instead of safe contracts? |\n\n## Common mistakes\n\n- Treating environment or server modules as business capability owners.\n- Putting secrets into frontend `.env` files.\n- Deploying generated content without a version change.\n- Relying on process memory instead of durable registration or import history.\n- Ignoring negative tests, recovery states, and rollback behavior.\n\n## Verification\n\nFor a local developer or beginner operator, verify the operations model with\nthe reference acceptance script before trusting manual UI observations. Start\nfrom a known local database state, run the framework servers through the\ncustomer project, then confirm Platform, WCMS, Cron where required, and Axis\nare all reachable. The acceptance evidence should show module registry state,\ndocumentation import status, route health, and Cron lifecycle behavior.\n\nFor a shared environment, add environment-specific checks: dependency versions,\ndatabase backup and restore evidence, secret-source validation, log retention,\nhealth probes, restart behavior, and rollback steps for each imported data\nrelease. A production change is not verified merely because the application\nstarted. It is verified when the owning module, runtime process, imported\nrelease, security boundary, and rollback evidence can all be explained by an\noperator who did not write the code.\n\n## Next actions\n\nBefore production, write an environment-specific operations runbook that lists\nserver topology, dependency versions, secrets strategy, health checks,\nmonitoring, backup, restore, content-pack import process, and rollback steps.\n\n## Customization and extension\n\nProjects may customize runtime topology, health checks, deployment scripts,\nmonitoring, backup/restore, and rollback procedures per environment. The\nextension must preserve the framework-owned module graph, generated content\npack validation, secret redaction, and operator evidence needed to explain a\nfailure without editing source on a running node.\n",
+    "searchText": "Runtime and DevOps operations Runtime topology, dependencies, public and private properties, deployment, monitoring, and recovery guidance. # Runtime and DevOps Operations\n\nRuntime and DevOps Operations is the overview for running Nodics safely across\nlocal, staged, online, and future production environments. It points operators\nand developers to focused pages for topology, configuration, release,\nrollback, monitoring, and browser acceptance.\n\n## Runtime map\n\n```mermaid\nflowchart LR\n  Config[\"Configuration\"] --> Server[\"Runtime server\"]\n  Server --> Modules[\"Active modules\"]\n  Modules --> Health[\"Health and logs\"]\n  Health --> Release[\"Release and rollback\"]\n```\n\n| Area | Owner question |\n| --- | --- |\n| Topology | Which servers run locally and which capabilities do they host? |\n| Configuration | Which values come from project env, module defaults, or governed runtime changes? |\n| Dependencies | Which external stores or services must be reachable? |\n| Recovery | Which logs, health checks, and operations prove the system recovered? |\n\n## Business perspective\n\nBusiness stakeholders care about availability, controlled change, and safe\nrecovery. If documentation, Nexus, Agora, checkout, or publishing is not\navailable, the operator should have a clear path to identify whether the issue\nis startup, configuration, missing data, publication state, media delivery, or\nexternal dependency health.\n\n## Developer perspective\n\nDevelopers use this page to understand where runtime behavior is configured\nand where deeper runbooks live. A code change that affects topology,\nconfiguration, generated schema, import, publication, cache, events, or\nprovider selection must update the related documentation and tests.\n\n## Continue with\n\n- **Process Runtime Topology** for process and service layout.\n- **Local Runtime Troubleshooting** for busy ports, stale state, timeouts, and\n  circuit errors.\n- **Runtime Release and Rollback** for changing environments safely.\n- **Local Browser Acceptance Journey** for proving a fresh setup from the UI.\n\n## Operational evidence\n\nRuntime documentation should connect commands to visible system state. Include topology status, active modules, generated schema status, environment source, dependency health, circuit state, logs, import history, publication state, and browser route evidence. If a local setup differs from staged or online environments, state the difference directly. This helps beginners avoid guessing and gives experienced operators a reliable path from symptom to owner without reading unrelated source files.\n\n## Reader and implementation contract\n\nA beginner should understand that runtime readiness is more than a process listening on a port. A business user should understand which application journey is affected when a service, dependency, import, or publication state fails. A developer should document configuration layers, active modules, generated contracts, provider choices, and tests. An operator should know where to inspect health, logs, circuits, import history, publication state, and rollback evidence.\n\nEvery DevOps topic must connect local proof to enterprise readiness. That means clean build, fresh schema, startup, setup journey, browser acceptance, monitoring, recovery, and a clear statement of what is implemented now versus what belongs to future production rollout.\n\n## Documentation maintenance rule\n\nKeep this topic current whenever implementation, configuration, Axis workflow, publication behavior, or customer-facing rendering changes. The page should remain small enough to scan, but it must still carry enough business context, technical ownership, customization guidance, visual structure, operational evidence, and verification detail for a reader to act without guessing. When the detail becomes too large, create a sibling topic and link it from this page instead of turning the overview back into a long mixed article.\n\nThis extension guidance must stay linked to the owning project or capability page whenever a customer customizes the behavior.\n\n## Common mistakes\n\n- Treating local success as production readiness.\n- Hiding required environment values outside project configuration.\n- Changing provider behavior without rollback and monitoring notes.\n- Running browser acceptance without a fresh schema or clean content state.\n\n## Verification\n\nVerify runtime work with startup logs, health endpoints, generated schema,\nAxis status, import/publish evidence, browser checks, and rollback evidence.\nOperators should be able to diagnose the system without reading source code.\n",
     "keywords": [
       "operations-monitoring-and-recovery",
       "runtime-and-devops",
@@ -14111,7 +11419,8 @@ module.exports = {
     ],
     "facets": {
       "section": "operations-monitoring-and-recovery",
-      "group": "runtime-and-devops",
+      "group": "operations-monitoring-and-recovery",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -14140,14 +11449,62 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record355": {
-    "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalverificationchecklist",
+  "record271": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkruntimereleaserollback",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
-    "targetCode": "nodicsDocsMetadataframeworkLocalVerificationChecklist",
-    "title": "Local verification and acceptance checklist",
-    "summary": "How to prove the local framework, customer-project servers, Axis, documentation, registry, imports, WCMS, and Cron are healthy.",
-    "searchText": "Local verification and acceptance checklist How to prove the local framework, customer-project servers, Axis, documentation, registry, imports, WCMS, and Cron are healthy. # Local verification and acceptance checklist\n\nThis page explains how to prove that a local Nodics workspace is healthy after\nsetup, documentation import, module registration, or a framework change. It is\nwritten for a beginner who has started the servers and now needs to answer a\nmore important question: “How do I know this is really working?”\n\nFor a business evaluator, this checklist shows whether the framework is\ndemonstrable and repeatable. For a developer, it shows which commands and UI\nscreens prove the expected behavior. For a DevOps or TechOps engineer, it\nshows which runtime processes, data packs, logs, and recovery states must be\nobservable before the stack is trusted.\n\n## What this is\n\nLocal verification is the controlled proof that the framework, reference\nproject, backend servers, documentation packs, and Axis frontend agree with\neach other. A server can start and still be incomplete if data was not\nimported. A documentation release can exist on disk and still be unavailable\nif WCMS has not imported it. Axis can render a route and still be unsafe if it\nis guessing capabilities instead of reading Platform and WCMS contracts.\n\nThe checklist therefore verifies the full path:\n\n```mermaid\nflowchart LR\n  Source[\"Backend-owned source data\"] --> Generate[\"Generated content pack\"]\n  Generate --> Validate[\"Checksum and release validation\"]\n  Validate --> Runtime[\"Platform, WCMS, Process runtime\"]\n  Runtime --> Import[\"Axis import/install\"]\n  Import --> Render[\"Axis routes and documentation\"]\n  Render --> Evidence[\"Acceptance logs and visible UI\"]\n```\n\n## Why it exists\n\nWithout a verification contract, every developer invents a different meaning\nfor “working.” One person may mean that Node started. Another may mean the\nlogin page opened. A tester may mean routes returned HTTP 200. An operator may\nmean the database can be rebuilt from empty local state. Nodics needs a common\ndefinition because the framework is modular: Platform, WCMS, Cron, Axis, and\ncustomer projects can each be healthy or unhealthy independently.\n\nThis page gives the shared definition for local development. It does not\nreplace production monitoring, security review, performance testing, or\ncustomer-specific acceptance, but it gives everyone the same first baseline.\n\n## Who uses it\n\n| Reader | What they verify |\n| --- | --- |\n| Business evaluator | The local demo can be started, logged into, imported, and explored without custom manual database edits. |\n| Developer | Source changes regenerated the right artifacts and did not break Platform, WCMS, Cron, Axis, or documentation routes. |\n| Architect | Module ownership, runtime loading, import ownership, and Axis rendering are still separated. |\n| Administrator | Module Registry, Imports and Exports, Documentation, Content, Media, and Cron screens show the expected state. |\n| DevOps or TechOps | Processes, ports, databases, logs, generated packs, and recovery behavior are visible and repeatable. |\n| Tester or QA engineer | Happy path, failure path, persistence, refresh, and route checks are covered. |\n| AI tool | The right generated artifacts and validation commands were run before claiming completion. |\n\n## Preconditions\n\nBefore running local acceptance, confirm these basics:\n\n1. MongoDB is running and reachable from the local server configuration.\n2. The framework repository, customer/reference project, and Axis frontend are\n   checked out.\n3. The customer project `.env` points `NODICS_FRAMEWORK_ROOT` to the framework\n   checkout.\n4. Dependencies are installed after any package or local-framework-link change.\n5. No unrelated process is using the local ports expected by the reference\n   stack.\n\nThe reference ports are:\n\n| Process | Default local URL | Owner |\n| --- | --- | --- |\n| Platform | `http://localhost:4300` | `nodics.platform` through the customer project server |\n| WCMS | `http://localhost:4310` | `nodics.wcms` through the customer project server |\n| Process and Automation | `http://localhost:4330` | `nodics.process` through the customer project server |\n| Axis | `http://localhost:3100` | `nodics.axis` frontend |\n\n## Fast automated acceptance\n\nFrom the customer project, run:\n\n```bash\nnpm run acceptance:local\n```\n\nThis command is the normal local confidence check. It starts or verifies\nPlatform, WCMS, Cron, and Axis; authenticates the reference admin; checks\ndocumentation release state; opens important Axis routes; verifies WCMS\nrecord counts; and runs live smoke coverage for module registry and Cron\nlifecycle.\n\nUse the fresh database version when you intentionally want to rebuild the\nlocal reference databases from zero:\n\n```bash\nnpm run acceptance:local:fresh\n```\n\nThe fresh command is destructive only for the named local reference databases.\nIt must not be generalized to arbitrary database names. A safe fresh run proves\nthat the local environment does not depend on hidden manual records.\n\n## Manual UI acceptance journey\n\nAutomated acceptance is fast, but a human should also walk the product once\nafter major documentation, Axis, WCMS, registry, or import changes.\n\n1. Open `http://localhost:3100`.\n2. Log in with enterprise `default`, username `admin`, and the configured\n   reference password.\n3. Open **Documentation → Framework** and verify the first article renders,\n   navigation stays usable, and diagrams/images appear as images rather than\n   Markdown text.\n4. Open **Documentation → Nodics Axis** and **Documentation → Nodics Kickoff**\n   to confirm product and project documentation are imported from their owning\n   backend packages.\n5. Open **System and Integrations → Module Registry** and confirm Core,\n   Platform, and WCMS are mandatory active modules.\n6. If Cron is running, confirm Cron appears as an optional observed module.\n   Register, activate, deactivate, and deregister it without a browser\n   refresh.\n7. Open **Imports and Exports** and confirm release cards are valid. If a card\n   says `INVALID RELEASE`, regenerate the owning content/data manifests\n   instead of bypassing validation.\n8. Open **Content** and confirm sites, catalogs, pages, components, and routes\n   have non-zero counts after import.\n9. Open **Media** and confirm media screens use backend-owned source contexts\n   and do not expose private storage paths.\n10. Refresh the browser and confirm the session and selected route recover as\n    expected.\n\n## Documentation-specific checks\n\nFramework documentation is source-owned by `nodics.docs`. The frontend should\nnot own these records. When framework docs change, run:\n\n```bash\nnpm --prefix nodics.ai/nodics.docs run docs:generate\nnpm --prefix nodics.ai/nodics.docs test\n```\n\nThen run framework-level governance checks:\n\n```bash\nnpm --prefix nodics.ai run quality:copyright\nnpm --prefix nodics.ai run quality:docs\nnpm --prefix nodics.ai run ai:validate\nnpm --prefix nodics.ai run llm:generate\nnpm --prefix nodics.ai run llm:validate\ngit -C nodics.ai diff --check\n```\n\nIf the generated documentation content pack changes, import or update the\nrelease through Axis and verify the visible routes. The expected result is not\nonly “the file exists”; the expected result is that WCMS reports the release as\ncurrent and Axis renders the page from backend-delivered content.\n\n## What success looks like\n\nThe local stack is acceptable when these statements are true:\n\n| Evidence | Expected result |\n| --- | --- |\n| Server startup | Platform, WCMS, Cron if selected, and Axis are reachable on expected local ports. |\n| Authentication | The reference admin can log in and unauthorized access fails closed. |\n| Registry | Mandatory modules are active; optional modules follow register, activate, deactivate, deregister lifecycle. |\n| Documentation packs | Framework, Axis, and customer project documentation packs are current after import. |\n| CMS records | Sites, catalogs, pages, components, and routes exist; no visible site is orphaned from its catalog. |\n| Visual docs | Diagrams and screenshots render as governed images, not broken links or raw Markdown. |\n| Route health | `/`, `/docs`, `/docs/framework`, `/content`, `/media`, `/cron`, and system routes return HTTP 200. |\n| Fresh rebuild | The local database can be recreated from backend-owned data packs. |\n\n## Troubleshooting\n\n| Symptom | Likely owner | Safe first check |\n| --- | --- | --- |\n| Login page opens but login fails | Platform/Profile | Confirm Platform is reachable and the reference identity data was imported. |\n| Documentation page shows recovery mode | WCMS/content-pack owner | Confirm WCMS is running and documentation releases are installed/current. |\n| A release says `INVALID RELEASE` | Owning data pack | Regenerate manifests from source and restart the affected runtime. |\n| Module action needs browser refresh | Axis plus BackOffice API | Check operation response and local state update after register/activate/deactivate/deregister. |\n| Cron disappears after deregister | BackOffice registry projection | Confirm live runtime observation returns the module to available optional state. |\n| Media page reports schema discovery issue | WCMS/Media API category | Confirm the media and data API categories are enabled by module defaults or narrow server override. |\n| Docs image is broken | `nodics.docs` source/generator | Confirm image exists under `docs/pages/assets/images` and the Markdown path is relative. |\n\n## Common mistakes\n\n- Calling the stack healthy before importing initialization and documentation\n  data.\n- Editing generated documentation data instead of fixing Markdown source and\n  regenerating.\n- Treating `nodics.axis` as the owner of Framework, Axis product, or customer\n  project documentation records.\n- Dropping broad databases or using unsafe environment variables during a\n  fresh test.\n- Ignoring `INVALID RELEASE` because the UI still shows a checkbox.\n- Accepting a visual documentation change without opening the rendered Axis\n  page.\n- Claiming module registry lifecycle works after only a page refresh.\n\n## Related pages\n\nRead **Local quick start with Kickoff and Axis** before this page if the\nservers have not been started yet. Read **Modular architecture and ownership**\nto understand why each runtime has a different owner. Read **Functional module\nregistry** for the detailed lifecycle rules behind module registration. Read\n**Runtime and DevOps operations** before designing production topology.\n\n## Verification\n\nThis page verifies itself through repeatability. A beginner should be able to\nfollow the checklist after a normal local start and again after a fresh local\ndatabase bootstrap. The expected result is the same: no manual database edits,\nno generated-file hand patches, no frontend-owned content data, and no hidden\nproject-name assumptions.\n\nWhen this checklist is used after a documentation change, the evidence must\ninclude regenerated content-pack files, passing documentation validation, a\ncurrent release version, successful import into WCMS, and rendered Axis routes.\nWhen it is used after a runtime or registry change, the evidence must include\nserver startup, persisted registry state, immediate UI refresh after lifecycle\noperations, and safe behavior after restart. If the evidence cannot name the\nowning module for a failure, the verification is not yet useful enough.\n\n## Customization and extension\n\nProject teams may extend this checklist with local services, extra content\npacks, integration adapters, commerce accelerators, or tenant-specific smoke\njourneys. Each extension must preserve the same evidence style: command,\nowner, environment, expected result, observed result, rollback path, and\nbusiness impact when the check fails.\n",
+    "targetCode": "nodicsDocsMetadataframeworkRuntimeReleaseRollback",
+    "title": "Runtime Release and Rollback",
+    "summary": "Release and rollback guidance for code, configuration, content, data import, generated contracts, and browser evidence.",
+    "searchText": "Runtime Release and Rollback Release and rollback guidance for code, configuration, content, data import, generated contracts, and browser evidence. # Runtime Release and Rollback\n\nRuntime Release and Rollback explains how Nodics changes should move through\nlocal, staged, online, and future production environments without surprising\nbusiness users. It covers configuration, generated data, publication state, and\nrollback evidence.\n\n## Release flow\n\n```mermaid\nflowchart TD\n  Change[\"Code, config, data, or content change\"] --> Validate[\"Build and tests\"]\n  Validate --> Staged[\"Staged runtime\"]\n  Staged --> Approval[\"Governed approval\"]\n  Approval --> Online[\"Online runtime or content\"]\n  Online --> Observe[\"Monitor and verify\"]\n  Observe --> Rollback[\"Rollback candidate\"]\n```\n\n| Release item | Rollback question |\n| --- | --- |\n| Code | Which commit, package, or module version restores behavior? |\n| Configuration | Which previous value is valid and who can activate it? |\n| Content | Which Online version remains active if approval is rejected? |\n| Data import | Which run, checksum, and target environment can be audited? |\n\n## Business perspective\n\nBusiness users should know whether a release changes customer-visible content,\ncheckout behavior, operational queues, automation, or internal Axis pages. A\nrelease is not complete until there is browser evidence for the affected\njourney and a clear rollback story if the change damages revenue or operations.\n\n## Developer perspective\n\nDevelopers should connect implementation change to generated contracts,\nmodule metadata, tests, and deployment artifacts. If a change introduces a new\nschema, service, route, event, pipeline, or content pack, it must document how\nit is validated and what happens to existing data during rollback.\n\n## Operator perspective\n\nOperators need release identity, health status, logs, import runs, publication\nreceipts, task approvals, and monitoring signals. If a rollback is not yet\nautomated, the documentation must still describe the manual decision and the\nevidence required before executing it.\n\n## Operational evidence\n\nRelease documentation should capture the evidence that proves a change can be trusted. Include commit or package version, generated contract result, schema migration status, data import status, approval task, Online activation, affected routes, browser result, monitoring result, and rollback candidate. For content releases, include the previous Online version that remains active until approval. For runtime releases, include the configuration or deployment value that restores the previous behavior.\n\n## Reader and implementation contract\n\nA beginner should understand that release and rollback apply to content, data, configuration, generated contracts, and code. A business user should know what customer or operator journey changes and when the change becomes visible. A developer should document version, checksum, migration, import run, schema impact, and validation evidence. An operator should know how to confirm the active version and what action restores the previous state.\n\nThis page must be updated when a new release mechanism or rollback boundary is introduced. If the rollback is manual, the documentation should say so honestly and list the exact evidence needed before an administrator acts.\n\n## Documentation maintenance rule\n\nKeep this topic current whenever implementation, configuration, Axis workflow, publication behavior, or customer-facing rendering changes. The page should remain small enough to scan, but it must still carry enough business context, technical ownership, customization guidance, visual structure, operational evidence, and verification detail for a reader to act without guessing. When the detail becomes too large, create a sibling topic and link it from this page instead of turning the overview back into a long mixed article.\n\nThis extension guidance must stay linked to the owning project or capability page whenever a customer customizes the behavior.\n\n## Common mistakes\n\n- Publishing content without a rollback candidate.\n- Changing runtime configuration without audit and approval.\n- Treating generated schema differences as harmless.\n- Missing browser verification for the journey that business users care about.\n\n## Verification\n\nVerify release and rollback by recording build result, generated contract\nstatus, import or migration evidence, approval outcome, browser result, health\nsignals, and rollback instructions. A beginner should know what changed; an\noperator should know how to recover.\n",
+    "keywords": [
+      "operations-monitoring-and-recovery",
+      "runtime-and-devops",
+      "runtime-and-devops-operations",
+      "Operations, Monitoring, and Recovery",
+      "Runtime and DevOps",
+      "Runtime and DevOps operations"
+    ],
+    "facets": {
+      "section": "operations-monitoring-and-recovery",
+      "group": "operations-monitoring-and-recovery",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record272": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalbrowseracceptancejourney",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataframeworkLocalBrowserAcceptanceJourney",
+    "title": "Local Browser Acceptance Journey",
+    "summary": "Fresh-schema browser acceptance path for Axis, documentation, Nexus, Agora, setup actions, and unpublished states.",
+    "searchText": "Local Browser Acceptance Journey Fresh-schema browser acceptance path for Axis, documentation, Nexus, Agora, setup actions, and unpublished states. # Local Browser Acceptance Journey\n\nLocal Browser Acceptance Journey explains the required manual browser pass\nafter a fresh schema setup. It exists because many defects only appear when a\nreal user moves through Axis, Nexus, Agora, documentation, and approval flows.\n\n## Browser path\n\n```mermaid\nflowchart TD\n  Axis[\"Open Axis\"] --> Setup[\"Complete setup dashboard\"]\n  Setup --> Docs[\"Publish documentation\"]\n  Setup --> Apps[\"Initialize applications\"]\n  Docs --> Nav[\"Open documentation navigation\"]\n  Apps --> Nexus[\"Open Nexus\"]\n  Apps --> Agora[\"Open Agora\"]\n  Nav --> Evidence[\"Record visible evidence\"]\n```\n\n| Route | What to verify |\n| --- | --- |\n| `localhost:3100` | Axis login, setup status, left navigation, and workspace clarity. |\n| `/docs` | Documentation publication center, available links, and compact lists. |\n| `/docs/framework` | Documentation navigation, page content, diagrams, tags, and search. |\n| `localhost:3200` | Nexus Online content or customer-friendly unpublished message. |\n| Agora ports | Storefront Online content or customer-friendly unpublished message. |\n\n## Business perspective\n\nThe browser journey should feel like a guided onboarding process. A user\nshould know what is ready, what needs approval, what can be opened, and why a\nlink is locked. Empty pages should explain the business state instead of\nshowing broken layouts or hardcoded sample content.\n\n## Developer perspective\n\nDevelopers should verify the same route after every UI, content, publication,\nor import change. The browser pass should catch stale navigation, missing media,\nunpublished content, alignment issues, broken labels, hidden approval tasks,\nand actions that do nothing.\n\n## Operator perspective\n\nOperators need evidence that setup actions triggered the expected backend\nstate. Browser checks should be paired with import history, publication state,\napproval tasks, logs, and API status when a failure appears.\n\n## Operational evidence\n\nBrowser acceptance should produce evidence a teammate can repeat. Record the schema state, build result, server status, logged-in role, route opened, expected state, actual state, screenshots or notes, and any backend log or API used to explain a failure. The route list should include setup pages, documentation pages, application pages, approval queues, and customer-facing unpublished states. This prevents false confidence from testing only one happy path.\n\n## Reader and implementation contract\n\nA beginner should understand the visible journey before learning internal APIs. A business user should see whether the system is usable, waiting for data, waiting for approval, or intentionally unpublished. A developer should know which route, component, content pack, media relation, and action caused the visible state. An operator should know what backend evidence to inspect when the browser result is wrong.\n\nEvery browser acceptance page must include routes, expected states, setup actions, approval or publication gates, frontend fallback behavior, and evidence. It should be updated whenever Axis, Nexus, Agora, documentation navigation, setup accelerators, media import, or publication UI changes.\n\n## Documentation maintenance rule\n\nKeep this topic current whenever implementation, configuration, Axis workflow, publication behavior, or customer-facing rendering changes. The page should remain small enough to scan, but it must still carry enough business context, technical ownership, customization guidance, visual structure, operational evidence, and verification detail for a reader to act without guessing. When the detail becomes too large, create a sibling topic and link it from this page instead of turning the overview back into a long mixed article.\n\nThis extension guidance must stay linked to the owning project or capability page whenever a customer customizes the behavior.\n\n## Common mistakes\n\n- Checking only the route that was changed.\n- Not using a fresh schema before claiming setup works.\n- Publishing docs but forgetting Nexus or Agora content.\n- Allowing a button to trigger work without visible progress or error detail.\n\n## Verification\n\nVerification is complete when every route either renders approved Online\ncontent or an intentional unpublished/maintenance state, all setup actions show\nclear progress or failure, and the user can find the next action without\nleaving the current workflow.\n",
     "keywords": [
       "operations-monitoring-and-recovery",
       "local-verification-and-acceptance",
@@ -14158,7 +11515,8 @@ module.exports = {
     ],
     "facets": {
       "section": "operations-monitoring-and-recovery",
-      "group": "local-verification-and-acceptance",
+      "group": "operations-monitoring-and-recovery",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -14187,7 +11545,55 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record356": {
+  "record273": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalverificationchecklist",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataframeworkLocalVerificationChecklist",
+    "title": "Local verification and acceptance checklist",
+    "summary": "How to prove the local framework, customer-project servers, Axis, documentation, registry, imports, WCMS, and Cron are healthy.",
+    "searchText": "Local verification and acceptance checklist How to prove the local framework, customer-project servers, Axis, documentation, registry, imports, WCMS, and Cron are healthy. # Local Verification and Acceptance Checklist\n\nLocal Verification and Acceptance Checklist is the overview for proving a\nlocal Nodics environment after code, content, or setup changes. It keeps the\nhigh-level acceptance rules here and links the detailed browser journey to a\nfocused page.\n\n## Acceptance flow\n\n```mermaid\nflowchart LR\n  Clean[\"Fresh schema\"] --> Build[\"Clean build\"]\n  Build --> Start[\"Start servers\"]\n  Start --> Setup[\"Axis setup\"]\n  Setup --> Browser[\"Browser verification\"]\n  Browser --> Evidence[\"Evidence and fixes\"]\n```\n\n| Check | Why it matters |\n| --- | --- |\n| Fresh schema | Proves the system does not depend on old local data. |\n| Clean build | Proves generated contracts and compiled frontend agree. |\n| Startup | Proves topology, ports, and runtime dependencies work. |\n| Browser journey | Proves a real user can complete setup and open applications. |\n\n## Business perspective\n\nAcceptance should answer one simple question: can a new customer or developer\nstart from nothing and reach a working governed workspace without being lost?\nThat means Axis must explain setup status, required imports, approval tasks,\npublication, Online readiness, and application links clearly.\n\n## Developer perspective\n\nDevelopers should run focused tests for changed modules and complete browser\nverification when the change affects navigation, setup, publication, content,\nmedia, roles, or storefront rendering. A passing API test is not enough when\nthe user journey is the thing being changed.\n\n## Continue with\n\n- **Fresh Schema Setup Journey** for schema cleanup and first-run setup.\n- **Local Browser Acceptance Journey** for end-to-end browser verification.\n- **Local Runtime Troubleshooting** for common local failures.\n\n## Operational evidence\n\nThe checklist should produce a small acceptance record for every run. Include command output summary, failed and passed test suites, started ports, setup actions completed, content packs imported, approval tasks completed, applications opened, media rendered, and unresolved blockers. If the run uses a fresh schema, say so explicitly. If it reuses existing data, mark the result as limited because stale data can hide import, publication, role, and navigation defects.\n\n## Reader and implementation contract\n\nA beginner should understand the difference between command success and journey success. A business user should know whether the setup can be completed without reading logs. A developer should know which automated checks cover the code path and which browser checks cover user experience. An operator should know how to repeat the run from a fresh schema and compare evidence between attempts.\n\nThis checklist must be updated after any change to setup, import, publishing, content, media, approval tasks, left navigation, runtime configuration, or storefront rendering. The acceptance result should state what passed, what was not run, and what remains blocked by missing data or environment state.\n\n## Documentation maintenance rule\n\nKeep this topic current whenever implementation, configuration, Axis workflow, publication behavior, or customer-facing rendering changes. The page should remain small enough to scan, but it must still carry enough business context, technical ownership, customization guidance, visual structure, operational evidence, and verification detail for a reader to act without guessing. When the detail becomes too large, create a sibling topic and link it from this page instead of turning the overview back into a long mixed article.\n\nThis extension guidance must stay linked to the owning project or capability page whenever a customer customizes the behavior.\n\n## Common mistakes\n\n- Testing on a reused schema and missing initialization defects.\n- Verifying backend endpoints but not the Axis or storefront UI.\n- Ignoring customer-friendly empty or unpublished states.\n- Leaving setup commands undocumented after implementation changes.\n\n## Verification\n\nVerify local acceptance by recording commands, test results, server status,\nbrowser routes, screenshots or observations, and any remaining gaps. A\nbusiness user should see a guided path; a developer should see reproducible\nsteps; an operator should see evidence.\n",
+    "keywords": [
+      "operations-monitoring-and-recovery",
+      "local-verification-and-acceptance",
+      "local-verification-and-acceptance-checklist",
+      "Operations, Monitoring, and Recovery",
+      "Local Verification and Acceptance",
+      "Local verification and acceptance checklist"
+    ],
+    "facets": {
+      "section": "operations-monitoring-and-recovery",
+      "group": "operations-monitoring-and-recovery",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record274": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommerceenterpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14205,7 +11611,8 @@ module.exports = {
     ],
     "facets": {
       "section": "operations-monitoring-and-recovery",
-      "group": "commerce-enterprise-operations",
+      "group": "operations-monitoring-and-recovery",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -14234,7 +11641,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record357": {
+  "record275": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessincidentrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14252,7 +11659,8 @@ module.exports = {
     ],
     "facets": {
       "section": "operations-monitoring-and-recovery",
-      "group": "process-incident-recovery",
+      "group": "operations-monitoring-and-recovery",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -14281,7 +11689,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record358": {
+  "record276": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessdevopstopology",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14299,7 +11707,8 @@ module.exports = {
     ],
     "facets": {
       "section": "operations-monitoring-and-recovery",
-      "group": "process-runtime-topology",
+      "group": "operations-monitoring-and-recovery",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -14328,7 +11737,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record359": {
+  "record277": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessqaregressionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14346,7 +11755,8 @@ module.exports = {
     ],
     "facets": {
       "section": "quality-testing-and-certification",
-      "group": "process-regression-evidence",
+      "group": "quality-testing-and-certification",
+      "navigationDepth": 2,
       "documentType": "reference",
       "audience": [
         "business",
@@ -14375,7 +11785,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record360": {
+  "record278": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkcapabilitydocumentationmaturitypattern",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14393,7 +11803,8 @@ module.exports = {
     ],
     "facets": {
       "section": "documentation-management",
-      "group": "documentation-contract-and-quality",
+      "group": "documentation-management",
+      "navigationDepth": 2,
       "documentType": "contract",
       "audience": [
         "business",
@@ -14422,14 +11833,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record361": {
+  "record279": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatadocsOverview",
     "title": "Docs overview",
     "summary": "How Nodics framework documentation is authored, generated, validated, imported, rendered, and kept separate from Axis and customer project documentation.",
-    "searchText": "Docs overview How Nodics framework documentation is authored, generated, validated, imported, rendered, and kept separate from Axis and customer project documentation. # Nodics Docs overview\n\n`nodics.docs` is the standard Nodics framework documentation module. It owns\nframework documentation content that is imported into WCMS and rendered by\nAxis. It is not a frontend, not a runtime server, and not a dumping ground for\nevery page a user can see. Its job is narrower and more important: preserve\nthe reusable framework story, generate governed CMS records, and make that\ncontent available through the same backend-owned content-pack lifecycle used\nby other Nodics capabilities.\n\nFor a beginner, think of `nodics.docs` as the framework library. Axis is the\nreading application. WCMS is the library catalogue and delivery desk. The docs\nmodule owns the books about the framework. Axis can display those books, but\nAxis does not own them.\n\n## What this is\n\nThis page explains the documentation module as a functional capability. It is\nwritten for business evaluators who want to understand how Nodics teaches its\nplatform, developers who need to add or change framework documentation,\noperators who need to import documentation content safely, testers who need to\nverify release integrity, and AI tools that must not place documentation in the\nwrong repository.\n\n`nodics.docs` owns framework-level documentation such as:\n\n- what Nodics is and what business problem it solves;\n- modular architecture and ownership;\n- local quick start and verification;\n- customization and extension;\n- runtime and DevOps guidance;\n- Core, Platform, WCMS, Media, Cron, Docs, and additional standard module\n  explanations.\n\nIt does not own Axis product documentation, customer project documentation,\ncustomer-specific setup, or frontend renderer code.\n\n## Why it exists\n\nEnterprise frameworks fail adoption when the product can run but nobody can\nexplain it. A new business user needs to understand the problem being solved.\nA new developer needs to know what to clone, which commands to run, and where\nto customize safely. An operator needs to know which servers, imports,\nproperties, logs, and rollback paths matter. An AI tool needs a durable\nauthority that survives beyond one chat.\n\nWithout a documentation module, framework guidance tends to scatter across\nREADME files, old project notes, frontend pages, temporary migration folders,\nand generated data. That creates a second authority problem. `nodics.docs`\nkeeps framework documentation in one backend-owned module and publishes it as\nan immutable content release that WCMS can validate and import.\n\n## Business value\n\nDocumentation is part of the product, not an afterthought. Good framework\ndocumentation reduces onboarding cost, sales friction, partner confusion,\nsupport time, and customization risk. It helps a business evaluator understand\nwhy Nodics exists before asking a developer to inspect code. It helps a\npartner developer avoid unsafe shortcuts. It helps an operations team rebuild\nan environment from source-controlled content instead of relying on manually\nedited database records.\n\nThe business value is strongest when documentation is governed the same way as\nother enterprise content:\n\n| Business concern | `nodics.docs` answer |\n| --- | --- |\n| First-time adoption | Guided pages explain what Nodics is, how to run it, and what to inspect first. |\n| Partner customization | The customization guide explains configuration-first and customer-module-first extension. |\n| Operational confidence | Runtime and verification pages explain servers, imports, registry, and recovery. |\n| Governance | Generated CMS records and manifests prevent silent content drift. |\n| Multi-project clarity | Framework docs, Axis docs, and customer docs remain separate even when Axis renders them together. |\n\n## Beginner mental model\n\nImagine a company library. The library has books, a catalogue, shelves, access\nrules, and a reading room. In Nodics:\n\n- `nodics.docs` writes and owns the framework books.\n- The generator converts those books into WCMS records.\n- WCMS imports the records and delivers pages.\n- Axis is the reading room where employees open documentation.\n- Customer projects write their own customer/project books in their own\n  repository.\n\nThat separation matters because a book about the framework should not be\nrewritten by a customer project, and a customer-specific guide should not be\npublished as if every Nodics adopter used the same project.\n\n## How it works\n\nThe module starts from authored Markdown and a catalogue. The generator reads\nthe catalogue, parses each page, embeds governed local images as safe data\npayloads, creates CMS catalogs, sites, page records, component records, route\nrecords, renderer mappings, and a release manifest. WCMS then validates and\nimports the release. Axis renders the delivered documentation pages through\nits documentation renderer.\n\n```mermaid\nflowchart LR\n  Markdown[\"Authored Markdown\"] --> Catalogue[\"Documentation catalogue\"]\n  Catalogue --> Generator[\"Content-pack generator\"]\n  Generator --> Data[\"Generated CMS records\"]\n  Generator --> Manifest[\"Release manifest and checksums\"]\n  Data --> WCMS[\"WCMS import\"]\n  Manifest --> WCMS\n  WCMS --> Axis[\"Axis documentation renderer\"]\n  Axis --> Reader[\"Business, developer, operator, QA, AI reader\"]\n```\n\nThe generated data is committed because the runtime import contract needs\ndeterministic records and checksums. The generated data is not the source of\ntruth. If a page title, body, route, image, or navigation entry is wrong, fix\nthe Markdown or catalogue and regenerate.\n\n## Documentation ownership map\n\n| Documentation product | Source owner | Runtime delivery | What must not happen |\n| --- | --- | --- | --- |\n| Framework docs | `nodics.ai/nodics.docs` | WCMS imports framework docs pack and Axis renders `/docs/framework` routes. | Do not store framework docs in the frontend repository. |\n| Axis product docs | `nodics.ai/nodics.platform/modules/axis` | WCMS imports Axis docs pack and Axis renders `/docs/nodics-axis`. | Do not put Axis product docs in `nodics.docs` just because Axis displays them. |\n| Customer project docs | Owning customer project | WCMS imports the project docs pack and Axis renders the project docs source. | Do not hardcode a customer project into framework docs. |\n| Swagger/API docs | Registered runtime modules | Axis groups API references by runtime/module discovery. | Do not invent API groups in the browser without backend evidence. |\n\nThis matrix is one of the most important documentation contracts in Nodics.\nNavigation may group products together for a nice user experience, but source\nownership remains separate.\n\n## Step-by-step usage\n\nTo update framework documentation:\n\n1. Edit the authored Markdown page under `nodics.docs/docs/pages`.\n2. If you add a new page, add it to `nodics.docs/docs/catalogue.json`.\n3. If the page uses an image, place the image under\n   `nodics.docs/docs/pages/assets/images` and reference it with a relative path.\n4. Bump the documentation release when generated output or release content\n   changes.\n5. Run the documentation generator.\n6. Run the documentation tests.\n7. Import the release through WCMS in a local or fresh bootstrap environment.\n8. Open Axis documentation and verify the page renders with headings, tables,\n   diagrams, and images.\n\nFor example, if you add a Commerce capability overview, the page belongs in\n`nodics.docs` only if it explains reusable framework Commerce behavior. If a\ncustomer project adds customer-specific Commerce setup, that guide belongs in\nthe customer project.\n\n## Configuration and source map\n\nImportant source files are:\n\n| Artifact | Purpose |\n| --- | --- |\n| `docs/catalogue.json` | Authored list of framework documentation pages, owners, routes, summaries, and release version. |\n| `docs/pages/**/*.md` | Human-authored canonical documentation source. |\n| `docs/pages/assets/images` | Governed images used by documentation pages. |\n| `scripts/generate-content-pack.mjs` | Converts source documentation into generated CMS data and manifest files. |\n| `scripts/validate.mjs` | Enforces release, ownership, depth, structure, image/table/diagram, and unsafe-reference checks. |\n| `data/core/data/documentation` | Generated CMS records imported by WCMS. |\n| `data/manifest.json` | Aggregate module data manifest with generated documentation release and checksum evidence. |\n\nGenerated output must be recreated from source definitions. Do not repair a\nchecksum by editing generated files directly.\n\n## Customization and extension\n\nPartners should not customize framework documentation inside `nodics.docs`\nunless the change improves reusable framework guidance. A customer project can\nadd its own documentation content pack to explain project modules, local setup,\nsample data, customer-specific business rules, or environment-specific\noperations. Axis can display that customer documentation alongside framework\ndocumentation after BackOffice and WCMS advertise it.\n\nThe safe extension ladder is:\n\n1. improve the existing framework page when the guidance is reusable;\n2. add a new `nodics.docs` page when a standard framework module needs public\n   explanation;\n3. add Axis product docs in the Platform Axis backend module when the topic is\n   Axis behavior;\n4. add customer docs in the customer project when the topic is project-owned;\n5. add frontend renderer behavior in `nodics.axis` only when presentation code\n   is required.\n\n## DevOps and production notes\n\nDocumentation releases are operational artifacts. A production environment\nshould import them through WCMS, preserve import history, reject changed\nchecksums under the same version, and make rollback possible by installing a\nknown previous release. Images should remain governed content payloads or safe\nmedia references rather than copied frontend files.\n\nOperators should monitor documentation import status, checksum failures,\nroute delivery, missing renderer errors, and image rendering. A documentation\npage that is correct in Git but not imported into WCMS is not live. A page\nthat is imported but points to missing images is not acceptable for business\nonboarding.\n\n## Security, tenant, and governance notes\n\nDocumentation should never expose credentials, private URLs, local machine\npaths, provider secrets, database passwords, tokens, or customer-private\nconfiguration. It may explain where secrets belong, but it must not publish\nsecret values. Public documentation should also avoid implying that one\nreference project name is mandatory for all customers.\n\nTenant and enterprise behavior should be described carefully. If a behavior is\nimplemented, say so. If it is a design direction, mark it as concept,\ndesign-contract, partial implementation, or operational.\nDo not invent runtime behavior to make documentation look complete.\n\n## Troubleshooting\n\n| Symptom | Likely cause | Safe recovery |\n| --- | --- | --- |\n| Documentation release is invalid | Markdown, catalogue, or generated manifest changed without regeneration or version bump. | Fix source, bump release when needed, regenerate, rerun tests. |\n| Axis documentation page shows recovery | WCMS has not imported the pack, route is missing, or WCMS is unavailable. | Check WCMS, import status, generated route data, and page route. |\n| Image displays as text or broken link | Markdown image path or generator image embedding failed. | Verify image exists under `docs/pages/assets/images`, path is relative, and generated component contains an image block. |\n| Page appears under wrong product | Documentation source ownership or BackOffice documentation registry is wrong. | Move source to the owning module/project and regenerate the correct pack. |\n| Customer-specific setup appears in framework docs | Ownership drift. | Move the project-specific guide to the customer project documentation pack. |\n\n## Common mistakes\n\n- Writing short summaries when the page needs beginner-level explanation,\n  examples, operations notes, and verification.\n- Creating a new page when an existing canonical page should be expanded.\n- Putting customer project documentation into the framework docs module.\n- Putting Axis product documentation into the frontend repository.\n- Editing generated data or manifests by hand.\n- Forgetting to bump the release after changing generated content.\n- Importing docs without opening the rendered Axis page to verify diagrams,\n  tables, images, and navigation.\n\n## Verification\n\nRun the documentation generator and validator from `nodics.docs`. Then run the\nframework quality checks that cover documentation and AI guidance. For runtime\nproof, import the generated release through WCMS and open the Axis\ndocumentation routes. The live result should show Framework documentation as a\nseparate documentation product with rendered pages, headings, tables, diagrams,\nand images.\n\nFor a fresh local proof, run the customer project's local acceptance script\nafter database reset. The evidence should show documentation releases current,\nWCMS record counts healthy, Axis documentation routes returning HTTP 200, and\nimages embedded as renderable documentation blocks. If only the Markdown file\nlooks correct but the generated pack, import status, or Axis route fails, the\ndocumentation change is not complete.\n\n## Related pages\n\nRead **What is Nodics?** for the product story, **Modular architecture and\nownership** for the source-ownership model, **Local quick start** for the\nfirst runnable setup, **Customization and extension guide** before moving\ndocumentation between owners, and **WCMS content management** to understand\nhow generated documentation records become delivered pages.\n",
+    "searchText": "Docs overview How Nodics framework documentation is authored, generated, validated, imported, rendered, and kept separate from Axis and customer project documentation. # Docs Overview\n\nDocs Overview explains how Nodics documentation is authored, generated,\npublished, searched, and rendered. It is the entry point for documentation\nmanagement, not the only page that describes the entire system.\n\n## Documentation model\n\n```mermaid\nflowchart LR\n  Source[\"Module docs source\"] --> Pack[\"Documentation content pack\"]\n  Pack --> Staged[\"Staged documentation\"]\n  Staged --> Approval[\"Approval workflow\"]\n  Approval --> Online[\"Online documentation\"]\n  Online --> Axis[\"Axis\"]\n  Online --> Nexus[\"Nexus public/wiki links\"]\n```\n\n| Area | Ownership |\n| --- | --- |\n| Thin README | Module-specific developer and AI context. |\n| Detailed docs | Content-pack documentation with diagrams, tables, examples, and journeys. |\n| Navigation | Backend content catalog, editable through Axis. |\n| Publication | Governed Staged-to-Online flow with approval and audit. |\n\n## Business perspective\n\nDocumentation should help business users understand the capability, the\nproblem it solves, who uses it, what decisions it supports, what can be changed\nin Axis, and what risks or approvals apply. Public pages may appear in Nexus;\nrole-scoped pages may remain inside Axis.\n\n## Developer perspective\n\nDevelopers and AI tools should treat the documentation contract as framework\nlaw for every current and future implementation. A generated page must include\nbusiness perspective, technical perspective, extension points, configuration,\nschemas or data model, APIs/events where relevant, project-layer override path,\nvisual explanation, troubleshooting, and verification.\n\n## Continue with\n\n- **Documentation Principles** for the reusable generation contract.\n- **Reader Journey and Coverage** for business, developer, operator, QA, and\n  AI-tool reader requirements.\n- **Documentation Publishing Model** for Staged, approval, Online, and\n  visibility.\n- **Capability Documentation Maturity Pattern** for quality expectations.\n\n## Operational evidence\n\nDocumentation evidence should prove both content quality and publication behavior. Include generated page count, release version, validation report, hardening audit, source evidence, visual requirements, role visibility, Staged state, approval task, Online state, Axis route, Nexus route where public, and search/navigation result. This is especially important because documentation is not a one-time artifact. Every new capability must bring its own updated documentation evidence before it is treated as complete.\n\n## Reader and implementation contract\n\nA beginner should understand where documentation lives and why README files are intentionally thin. A business user should know how published pages explain business value, risks, approval, and operations. A developer should know how generated documentation is tied to module contracts, source evidence, configuration, APIs, events, schemas, and extension points. An operator should know how publication state, visibility, roles, and search affect what users can see.\n\nEvery future documentation generation must follow this contract. It should not produce flat, text-only pages. It must include visual explanation, tabular comparison where useful, business and technical perspectives, project-layer customization guidance, validation, troubleshooting, and links to adjacent journeys.\n\n## Documentation maintenance rule\n\nKeep this topic current whenever implementation, configuration, Axis workflow, publication behavior, or customer-facing rendering changes. The page should remain small enough to scan, but it must still carry enough business context, technical ownership, customization guidance, visual structure, operational evidence, and verification detail for a reader to act without guessing. When the detail becomes too large, create a sibling topic and link it from this page instead of turning the overview back into a long mixed article.\n\n## Common mistakes\n\n- Treating documentation generation as a one-time cleanup.\n- Putting detailed enterprise documentation only in module README files.\n- Hardcoding documentation navigation in Axis.\n- Publishing text-heavy pages without diagrams, tables, examples, and\n  verification evidence.\n\n## Verification\n\nVerify docs by running generation checks, validating the content pack,\npublishing Online, opening Axis and Nexus views, checking role visibility, and\nusing search/navigation to find topics without guessing package names.\n",
     "keywords": [
       "documentation-management",
       "documentation-runtime-and-publishing",
@@ -14440,7 +11851,8 @@ module.exports = {
     ],
     "facets": {
       "section": "documentation-management",
-      "group": "documentation-runtime-and-publishing",
+      "group": "documentation-management",
+      "navigationDepth": 2,
       "documentType": "overview",
       "audience": [
         "business",
@@ -14469,7 +11881,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record362": {
+  "record280": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmspublishinglifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14487,7 +11899,8 @@ module.exports = {
     ],
     "facets": {
       "section": "release-staging-and-publication",
-      "group": "content-publication-lifecycle",
+      "group": "release-staging-and-publication",
+      "navigationDepth": 2,
       "documentType": "operations",
       "audience": [
         "business",
@@ -14516,7 +11929,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record363": {
+  "record281": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatatoolingaideveloperenablement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14534,7 +11947,8 @@ module.exports = {
     ],
     "facets": {
       "section": "ai-and-developer-tooling",
-      "group": "ai-and-developer-enablement",
+      "group": "ai-and-developer-tooling",
+      "navigationDepth": 2,
       "documentType": "contract",
       "audience": [
         "business",
@@ -14563,14 +11977,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record364": {
+  "record282": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferencesourcemapglossary",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatareferenceSourceMapGlossary",
     "title": "Reference Source Map and Glossary",
     "summary": "Business-friendly names, technical source owners, module identifiers, common terms, and navigation-to-code references for documentation readers.",
-    "searchText": "Reference Source Map and Glossary Business-friendly names, technical source owners, module identifiers, common terms, and navigation-to-code references for documentation readers. # Reference Source Map and Glossary\n\nBusiness-friendly names, technical source owners, module identifiers, common terms, and navigation-to-code references for documentation readers. This page is intentionally written for beginners, business users, developers, operators, architects, QA owners, and AI tools. It explains the business problem first, then the technical ownership model, then the exact customization and verification responsibilities so nobody has to guess where a change belongs.\n\nBusiness names should be easy to read, but developers and AI tools also need exact source ownership to avoid changing the wrong module or creating parallel authorities. The reference source map keeps friendly navigation labels connected to module groups, capability modules, docs folders, data records, generated files, and validation commands.\n\n## Business context\n\nFor a business user, this topic answers what decision can be made, which operational journey is supported, and what risk is reduced. The practical value is faster delivery without losing governance: teams can understand the current capability, decide whether it applies to their project, and know when Axis, Nexus, content catalog, workflow, or runtime services are involved.\n\nFor beginners, the mental model is simple: the page title is the business capability, the table identifies who owns each part, and the diagram shows how a request or change flows. A reader should not need source-code knowledge to understand the journey, but the developer path is still available when customization is needed.\n\n| Business question | Answer for this topic |\n| --- | --- |\n| What problem does it solve? | Business names should be easy to read, but developers and AI tools also need exact source ownership to avoid changing the wrong module or creating parallel authorities. |\n| Who uses it? | Business users, administrators, developers, operators, QA owners, implementation partners, and AI-assisted delivery tools. |\n| What changes can it support? | The reference source map keeps friendly navigation labels connected to module groups, capability modules, docs folders, data records, generated files, and validation commands. |\n| What must be governed? | Permissions, validation, source ownership, publication state, runtime impact, audit evidence, and rollback boundaries. |\n\n## Journey and ownership\n\nNodics Docs owns the reader-facing reference map. Exact module facts are sourced from package metadata, catalogue entries, generated manifests, and module contracts. This keeps the reader-facing name friendly while preserving exact source ownership for developers and AI tools. Axis may render management screens or authenticated documentation, Nexus may render public Online content, and the backend content catalog remains authoritative for navigation, pages, access policies, and publication state.\n\n```mermaid\nflowchart LR\n  Reader[\"Business or developer request\"] --> Axis[\"Axis or Nexus view\"]\n  Axis --> Backend[\"Owning backend capability\"]\n  Backend --> Catalog[\"Content/catalog/schema/config records\"]\n  Catalog --> Runtime[\"Runtime behavior or published page\"]\n  Runtime --> Evidence[\"Audit, validation, and support evidence\"]\n```\n\n| Responsibility | Owner | Notes |\n| --- | --- | --- |\n| Business capability name | Reference | Used in navigation and dashboards so readers are not exposed to raw module names first. |\n| Source owner | nodics.docs | Carries exact implementation, documentation, and validation evidence. |\n| Technical module | documentation | Holds the relevant schema, service, router, data, or contract detail where applicable. |\n| Axis experience | Backend-declared workspace | Axis renders metadata and actions but does not become the authority. |\n| Public experience | Online content delivery | Nexus renders only records approved for public access. |\n\n## Data and configuration detail\n\nEvery topic must explain the data that changes behavior. Some topics are schema-driven, some are configuration-driven, some are publishable content, and some are operational records. The documentation must say which category applies before showing code. That keeps production operators and developers aligned on whether a change needs publication, restart, event propagation, approval, or only a project-layer override.\n\n| Detail area | What to document | Verification signal |\n| --- | --- | --- |\n| Model or record | Type code, catalog, tenant, enterprise, state, owner, and lifecycle. | Schema contract or generated model test. |\n| Configuration key | Default value, override location, environment scope, and runtime impact. | Config validation and runtime refresh evidence. |\n| API or event | Route/event name, payload boundary, permission, idempotency, and failure mode. | Route, service, event, and authorization tests. |\n| Publication and access | Staged/Online state, access mode, roles, groups, and permissions. | Content-pack validation and access-policy test. |\n\n```js\nsourceMap: { label: \"Payment Management\", owner: \"nodics.commerce/payment\", docs: \"docs/pages/nodics.commerce\" }\n```\n\n## Customization and extension\n\nDevelopers should customize from the project layer first. A customer project may add properties, services, validators, pipelines, renderers, data packs, or provider configuration when the extension respects the owning capability. Business users may update governed records in Axis when the record is designed for administration. Framework source changes are reserved for improving the reusable product capability itself.\n\n| Customization type | Recommended path | Avoid |\n| --- | --- | --- |\n| Business label, navigation, or content area | Axis-managed content catalog item with publication workflow. | Hardcoding labels or page trees in the frontend. |\n| Runtime setting | Module configuration with validation and governed runtime propagation. | Editing node-local files on each server by hand. |\n| Domain behavior | Extension service, validator, pipeline step, or provider adapter. | Forking the standard module for customer-only logic. |\n| Public visibility | Access policy with public/authenticated/role-based state. | Exposing internal or draft pages through Nexus. |\n\n## Operations and governance\n\nOperators need production-safe evidence, not only implementation notes. Each page must call out logging, tracing, permission checks, event propagation, data import/export, publication status, rollback behavior, and troubleshooting. If a capability affects multiple nodes, the documentation must explain how changes reach every node and how a partial failure is detected.\n\n| Operational concern | Required documentation detail |\n| --- | --- |\n| Security | Authentication mode, permission code, role/group, tenant and enterprise isolation. |\n| Audit | Actor, timestamp, source record, checksum, approval, route/event, and result. |\n| Resilience | Retry, idempotency, compensation, fallback, cache invalidation, and rollback. |\n| Observability | Logs, metrics, dashboard cards, health checks, and support evidence. |\n\n## Common mistakes\n\n- Treating a friendly navigation label as the technical source owner.\n- Writing only developer details and skipping the business decision that the page supports.\n- Updating Axis or Nexus code when the content catalog, schema, or backend capability should own the change.\n- Forgetting access rules for public, authenticated, role-based, group-based, or permission-based pages.\n- Skipping diagrams, comparison tables, source maps, or troubleshooting matrices because the topic feels obvious.\n- Changing runtime behavior without explaining production impact, cluster propagation, and rollback.\n- Leaving generated documentation without source evidence, validation commands, and maturity state.\n\n## Verification\n\nVerification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.\n\nFor implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.\n\n## Business Capability Coverage Map\n\nThis section records the approved 50-item batch as a source map. It keeps the\nreader-facing hierarchy business-friendly while giving developers and AI tools\nthe exact page where each topic is covered. When a new topic is added, update\nthe owning page, source evidence, validation commands, and generated content\npack rather than creating a disconnected page tree.\n\n| No. | Business capability | Primary documentation page | Main implementation evidence |\n| --- | --- | --- | --- |\n| 1 | Product Catalog and Discovery | Product Catalog and Discovery Management | Product, Category, Variant, localization, publication, and projection schemas. |\n| 2 | Base Commerce | Base Commerce foundations | Store, sales channel, point of service, and commerce composition contracts. |\n| 3 | Cart and Checkout | Cart, checkout, and order placement | Cart, CartEntry, CartCalculation, CheckoutSession, placement ports, and customer APIs. |\n| 4 | Pricing, Promotions, and Tax | Pricing, Promotions, and Tax Management | PriceBook, PriceRow, PriceDecision, Promotion, Coupon, DiscountDecision, TaxPolicy, and TaxDecision. |\n| 5 | Inventory and Stock Management | Inventory and Stock Management | InventoryBalance, InventoryMovement, InventoryReservation, Warehouse, and availability services. |\n| 6 | Order Management | Order Management Lifecycle | CommerceOrder, OrderEntry, lifecycle request/version/checkpoint, history, and readiness services. |\n| 7 | Payments | Payment and fulfillment operations | PaymentTransaction, entries, instruments, reconciliation, refund execution, and provider readiness. |\n| 8 | Shipping and Fulfillment | Shipping and Fulfillment Management | Consignment, Shipment, carrier adapters, warehouse task, exception, and return services. |\n| 9 | Returns, Refunds, and Cancellations | Cancellation, return, and refund lifecycle | Order reversal, return inspection, receipt, payment refund, and fulfillment return execution. |\n| 10 | Commerce Enterprise Operations | Commerce enterprise operations and migration | Commerce operations, migration, compatibility, capacity, recovery, and retirement contracts. |\n| 11 | Search and Discovery Providers | Search, Indexing, and Discovery | Discovery config, mapping, projection, source, runtime, publication, and ranking modules. |\n| 12 | WCMS Commerce References | WCMS content management | CMS site, route, page, template, slot, component, renderer, restriction, media, and publication data. |\n| 13 | WCMS and Content Management | WCMS content management | CMS authoring schemas, delivery contracts, designer composition, publication workflow, and site references. |\n| 14 | CMS Entity Model | WCMS content management | CmsSite, CmsPage, CmsPageRoute, CmsPageTemplate, CmsSlotDefinition, CmsComponent, and renderer mapping. |\n| 15 | Content Publication Lifecycle | Staged-to-Online publishing lifecycle | Publication manifest, outbox, deployment receipt, workflow callback, and online pointer tests. |\n| 16 | Media Management and Asset Delivery | Media management | Media, folders, formats, artifacts, references, sets, providers, delivery, upload, cleanup, and replication. |\n| 17 | Localization and Internationalization | Localization and Internationalization | LocalizationKey, LocalizationValue, release, online pointer, import/export, publication, and translation memory port. |\n| 18 | Customer Identity and Profile | Security, Identity, and Access Governance | Customer, employee, user, password, auth provider, session, registration, and profile routes. |\n| 19 | Enterprise, Tenant, Group, Role, and Permission Management | Security, Identity, and Access Governance | Enterprise, tenant, user group, principal scope assignment, authorization, and permission resolution. |\n| 20 | Customer Engagement | Unified engagement operations | Activity, assignment, consent, relation, dashboard, privacy, publication reference, and queue items. |\n| 21 | Customer Feedback | Customer feedback, complaints, and closed-loop action | Feedback, classification, resolution, follow-up, handoff, insight, metrics, and privacy operations. |\n| 22 | Customer Reviews | Customer reviews and ratings | Review, version, moderation, projection, aggregate, abuse, helpfulness, request, syndication, and response. |\n| 23 | Communication and Notification Templates | Communication, delivery, and verification | Intent, template, version, attempt, inbox, suppression, verification, provider, and callback contracts. |\n| 24 | Import, Export, and Migration | Data Import, Export, and Migration | Import definitions, import runs, data packs, migration register, media import staging, and release evidence. |\n| 25 | Channel and Store Management | Base Commerce foundations | Store, SalesChannel, StoreContext, and Stores & Channels Axis capability. |\n| 26 | Point of Service and Warehouse Management | Inventory and Stock Management | PointOfService, Warehouse, WarehouseTask, stock movements, and fulfillment handoff. |\n| 27 | Coupon and Promotion Budget Governance | Pricing, Promotions, and Tax Management | Coupon, CouponBatch, PromotionBudgetLedger, PromotionRedemption, and simulation services. |\n| 28 | Tax Policy and Decision Evidence | Pricing, Promotions, and Tax Management | TaxPolicy, TaxDecision, publication checks, and calculation evidence. |\n| 29 | Order History and Checkpoints | Order Management Lifecycle | OrderHistory, OrderLifecycleCheckpoint, OrderLifecycleVersion, and recovery checkpoint data. |\n| 30 | Payment Reconciliation | Payment and fulfillment operations | PaymentTransaction, PaymentTransactionEntry, instrument reference, reconciliation, and refund execution. |\n| 31 | Consignments and Exceptions | Shipping and Fulfillment Management | Consignment, Shipment, FulfillmentException, tracking event, and carrier sandbox adapter. |\n| 32 | Return Receipts and Reversal Calculations | Cancellation, return, and refund lifecycle | ReturnReceipt, ReturnInspection, FulfillmentReturn, and OrderReversalCalculation. |\n| 33 | Discovery Rules and Ranking | Search, Indexing, and Discovery | CommerceSearchRule, DiscoveryRankingProfile, DiscoveryRankingAction, QueryProfile, and FacetProfile. |\n| 34 | Discovery Sources and Field Mappings | Search, Indexing, and Discovery | DiscoverySourceProvider, DiscoveryFieldMapping, SourceMixConfiguration, and field policy. |\n| 35 | Editorial Content | WCMS content management | EditorialArticle, Author, Series, TaxonomyTerm, ContentType, Correction, and localization. |\n| 36 | Editorial Publication | Staged-to-Online publishing lifecycle | Editorial publication service, target, online projection, publication receipt, and workflow adapter. |\n| 37 | Contact Operations | Unified engagement operations | ContactRequest, ContactAttempt, Correspondence, Handoff, Resolution, Verification, and provider recovery. |\n| 38 | Engagement Automation | Unified engagement operations | EngagementAutomationDecision, evaluation, batch run, operational execution, privacy, and retention. |\n| 39 | Testimonials | Unified engagement operations | TestimonialCandidate, Consent, Version, Projection, public intake, lifecycle, and publication adapter. |\n| 40 | Tracking Events and Analytics Capture | Shipping and Fulfillment Management | TrackingEvent, shipment visibility, carrier event evidence, and fulfillment customer policy. |\n| 41 | Process Workflows | Business Process and Automation Overview | ProcessDefinition, Instance, Task, Trigger, AuditEvent, Incident, graph validation, and publication approval. |\n| 42 | Cron and Scheduled Automation | Cron operations | CronJob, CronJobLog, scheduler container, node handoff, process trigger, and runtime service. |\n| 43 | Data Installation and Seed Packs | Data Import, Export, and Migration | Data installation records, content packs, headers, manifests, checksum, and init/sample/core layers. |\n| 44 | Accelerators and Industry Templates | Accelerators and Industry Solution Templates | Agora Apparel, Electronics, Telco package metadata and shared commerce/content contracts. |\n| 45 | Agora Apparel | Accelerators and Industry Solution Templates | Apparel storefront package, domain sample data, responsive journey, and backend API consumption. |\n| 46 | Agora Electronics | Accelerators and Industry Solution Templates | Electronics storefront package, catalog/search journey, media, pricing, and checkout APIs. |\n| 47 | Agora Telco | Accelerators and Industry Solution Templates | Telco storefront package, offer/catalog journey, customer onboarding, and commerce API boundaries. |\n| 48 | TEE Solution Use Case | TEE and DEAP Solution Use Cases | Task Execution Engine composition through Process, Cron, Pipeline, EMS, and governed runtime change. |\n| 49 | DEAP Solution Use Case | TEE and DEAP Solution Use Cases | Data Engineering and Analytics Platform composition through import/export, discovery, events, jobs, and publication. |\n| 50 | Reference Source Map and Glossary | Reference Source Map and Glossary | Catalogue metadata, source evidence, business-friendly names, and exact implementation references. |\n| 51 | Routing and API Governance | Routing and API Governance | Route metadata, generated CRUD routes, request context, HTTP hardening, OpenAPI generation, authorization, and runtime router configuration. |\n",
+    "searchText": "Reference Source Map and Glossary Business-friendly names, technical source owners, module identifiers, common terms, and navigation-to-code references for documentation readers. # Reference Source Map and Glossary\n\nBusiness-friendly names, technical source owners, module identifiers, common terms, and navigation-to-code references for documentation readers. This page is intentionally written for beginners, business users, developers, operators, architects, QA owners, and AI tools. It explains the business problem first, then the technical ownership model, then the exact customization and verification responsibilities so nobody has to guess where a change belongs.\n\nBusiness names should be easy to read, but developers and AI tools also need exact source ownership to avoid changing the wrong module or creating parallel authorities. The reference source map keeps friendly navigation labels connected to module groups, capability modules, docs folders, data records, generated files, and validation commands.\n\n## Business context\n\nFor a business user, this topic answers what decision can be made, which operational journey is supported, and what risk is reduced. The practical value is faster delivery without losing governance: teams can understand the current capability, decide whether it applies to their project, and know when Axis, Nexus, content catalog, workflow, or runtime services are involved.\n\nFor beginners, the mental model is simple: the page title is the business capability, the table identifies who owns each part, and the diagram shows how a request or change flows. A reader should not need source-code knowledge to understand the journey, but the developer path is still available when customization is needed.\n\n| Business question | Answer for this topic |\n| --- | --- |\n| What problem does it solve? | Business names should be easy to read, but developers and AI tools also need exact source ownership to avoid changing the wrong module or creating parallel authorities. |\n| Who uses it? | Business users, administrators, developers, operators, QA owners, implementation partners, and AI-assisted delivery tools. |\n| What changes can it support? | The reference source map keeps friendly navigation labels connected to module groups, capability modules, docs folders, data records, generated files, and validation commands. |\n| What must be governed? | Permissions, validation, source ownership, publication state, runtime impact, audit evidence, and rollback boundaries. |\n\n## Journey and ownership\n\nNodics Docs owns the reader-facing reference map. Exact module facts are sourced from package metadata, catalogue entries, generated manifests, and module contracts. This keeps the reader-facing name friendly while preserving exact source ownership for developers and AI tools. Axis may render management screens or authenticated documentation, Nexus may render public Online content, and the backend content catalog remains authoritative for navigation, pages, access policies, and publication state.\n\n```mermaid\nflowchart LR\n  Reader[\"Business or developer request\"] --> Axis[\"Axis or Nexus view\"]\n  Axis --> Backend[\"Owning backend capability\"]\n  Backend --> Catalog[\"Content/catalog/schema/config records\"]\n  Catalog --> Runtime[\"Runtime behavior or published page\"]\n  Runtime --> Evidence[\"Audit, validation, and support evidence\"]\n```\n\n| Responsibility | Owner | Notes |\n| --- | --- | --- |\n| Business capability name | Reference | Used in navigation and dashboards so readers are not exposed to raw module names first. |\n| Source owner | nodics.docs | Carries exact implementation, documentation, and validation evidence. |\n| Technical module | documentation | Holds the relevant schema, service, router, data, or contract detail where applicable. |\n| Axis experience | Backend-declared workspace | Axis renders metadata and actions but does not become the authority. |\n| Public experience | Online content delivery | Nexus renders only records approved for public access. |\n\n## Data and configuration detail\n\nEvery topic must explain the data that changes behavior. Some topics are schema-driven, some are configuration-driven, some are publishable content, and some are operational records. The documentation must say which category applies before showing code. That keeps production operators and developers aligned on whether a change needs publication, restart, event propagation, approval, or only a project-layer override.\n\n| Detail area | What to document | Verification signal |\n| --- | --- | --- |\n| Model or record | Type code, catalog, tenant, enterprise, state, owner, and lifecycle. | Schema contract or generated model test. |\n| Configuration key | Default value, override location, environment scope, and runtime impact. | Config validation and runtime refresh evidence. |\n| API or event | Route/event name, payload boundary, permission, idempotency, and failure mode. | Route, service, event, and authorization tests. |\n| Publication and access | Staged/Online state, access mode, roles, groups, and permissions. | Content-pack validation and access-policy test. |\n\n```js\nsourceMap: { label: \"Payment Management\", owner: \"nodics.commerce/payment\", docs: \"docs/pages/nodics.commerce\" }\n```\n\n## Customization and extension\n\nDevelopers should customize from the project layer first. A customer project may add properties, services, validators, pipelines, renderers, data packs, or provider configuration when the extension respects the owning capability. Business users may update governed records in Axis when the record is designed for administration. Framework source changes are reserved for improving the reusable product capability itself.\n\n| Customization type | Recommended path | Avoid |\n| --- | --- | --- |\n| Business label, navigation, or content area | Axis-managed content catalog item with publication workflow. | Hardcoding labels or page trees in the frontend. |\n| Runtime setting | Module configuration with validation and governed runtime propagation. | Editing node-local files on each server by hand. |\n| Domain behavior | Extension service, validator, pipeline step, or provider adapter. | Forking the standard module for customer-only logic. |\n| Public visibility | Access policy with public/authenticated/role-based state. | Exposing internal or draft pages through Nexus. |\n\n## Operations and governance\n\nOperators need production-safe evidence, not only implementation notes. Each page must call out logging, tracing, permission checks, event propagation, data import/export, publication status, rollback behavior, and troubleshooting. If a capability affects multiple nodes, the documentation must explain how changes reach every node and how a partial failure is detected.\n\n| Operational concern | Required documentation detail |\n| --- | --- |\n| Security | Authentication mode, permission code, role/group, tenant and enterprise isolation. |\n| Audit | Actor, timestamp, source record, checksum, approval, route/event, and result. |\n| Resilience | Retry, idempotency, compensation, fallback, cache invalidation, and rollback. |\n| Observability | Logs, metrics, dashboard cards, health checks, and support evidence. |\n\n## Common mistakes\n\n- Treating a friendly navigation label as the technical source owner.\n- Writing only developer details and skipping the business decision that the page supports.\n- Updating Axis or Nexus code when the content catalog, schema, or backend capability should own the change.\n- Forgetting access rules for public, authenticated, role-based, group-based, or permission-based pages.\n- Skipping diagrams, comparison tables, source maps, or troubleshooting matrices because the topic feels obvious.\n- Changing runtime behavior without explaining production impact, cluster propagation, and rollback.\n- Leaving generated documentation without source evidence, validation commands, and maturity state.\n\n## Verification\n\nVerification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.\n\nFor implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.\n\n## Business Capability Coverage Map\n\nThis section records the approved 50-item batch as a source map. It keeps the\nreader-facing hierarchy business-friendly while giving developers and AI tools\nthe exact page where each topic is covered. When a new topic is added, update\nthe owning page, source evidence, validation commands, and generated content\npack rather than creating a disconnected page tree.\n\n| No. | Business capability | Primary documentation page | Main implementation evidence |\n| --- | --- | --- | --- |\n| 1 | Product Catalog and Discovery | Product Catalog and Discovery Management | Product, Category, Variant, localization, publication, and projection schemas. |\n| 2 | Base Commerce | Base Commerce foundations | Store, sales channel, point of service, and commerce composition contracts. |\n| 3 | Cart and Checkout | Cart, checkout, and order placement | Cart, CartEntry, CartCalculation, CheckoutSession, placement ports, and customer APIs. |\n| 4 | Pricing, Promotions, and Tax | Pricing, Promotions, and Tax Management | PriceBook, PriceRow, PriceDecision, Promotion, Coupon, DiscountDecision, TaxPolicy, and TaxDecision. |\n| 5 | Inventory and Stock Management | Inventory and Stock Management | InventoryBalance, InventoryMovement, InventoryReservation, Warehouse, and availability services. |\n| 6 | Order Management | Order Management Lifecycle | CommerceOrder, OrderEntry, lifecycle request/version/checkpoint, history, and readiness services. |\n| 7 | Payments | Payment and fulfillment operations | PaymentTransaction, entries, instruments, reconciliation, refund execution, and provider readiness. |\n| 8 | Shipping and Fulfillment | Shipping and Fulfillment Management | Consignment, Shipment, carrier adapters, warehouse task, exception, and return services. |\n| 9 | Returns, Refunds, and Cancellations | Cancellation, return, and refund lifecycle | Order reversal, return inspection, receipt, payment refund, and fulfillment return execution. |\n| 10 | Commerce Enterprise Operations | Commerce enterprise operations and migration | Commerce operations, migration, compatibility, capacity, recovery, and retirement contracts. |\n| 11 | Search and Discovery Providers | Search, Indexing, and Discovery | Discovery config, mapping, projection, source, runtime, publication, and ranking modules. |\n| 12 | WCMS Commerce References | WCMS content management | CMS site, route, page, template, slot, component, renderer, restriction, media, and publication data. |\n| 13 | WCMS and Content Management | WCMS content management | CMS authoring schemas, delivery contracts, designer composition, publication workflow, and site references. |\n| 14 | CMS Entity Model | WCMS content management | CmsSite, CmsPage, CmsPageRoute, CmsPageTemplate, CmsSlotDefinition, CmsComponent, and renderer mapping. |\n| 15 | Content Publication Lifecycle | Staged-to-Online publishing lifecycle | Publication manifest, outbox, deployment receipt, workflow callback, and online pointer tests. |\n| 16 | Media Management and Asset Delivery | Media management | Media, folders, formats, artifacts, references, sets, providers, delivery, upload, cleanup, and replication. |\n| 17 | Localization and Internationalization | Localization and Internationalization | LocalizationKey, LocalizationValue, release, online pointer, import/export, publication, and translation memory port. |\n| 18 | Customer Identity and Profile | Security, Identity, and Access Governance | Customer, employee, user, password, auth provider, session, registration, and profile routes. |\n| 19 | Enterprise, Tenant, Group, Role, and Permission Management | Security, Identity, and Access Governance | Enterprise, tenant, user group, principal scope assignment, authorization, and permission resolution. |\n| 20 | Customer Engagement | Unified engagement operations | Activity, assignment, consent, relation, dashboard, privacy, publication reference, and queue items. |\n| 21 | Customer Feedback | Customer feedback, complaints, and closed-loop action | Feedback, classification, resolution, follow-up, handoff, insight, metrics, and privacy operations. |\n| 22 | Customer Reviews | Customer reviews and ratings | Review, version, moderation, projection, aggregate, abuse, helpfulness, request, syndication, and response. |\n| 23 | Communication and Notification Templates | Communication, delivery, and verification | Intent, template, version, attempt, inbox, suppression, verification, provider, and callback contracts. |\n| 24 | Import, Export, and Migration | Data Import, Export, and Migration | Import definitions, import runs, data packs, migration register, media import staging, and release evidence. |\n| 25 | Channel and Store Management | Base Commerce foundations | Store, SalesChannel, StoreContext, and Stores & Channels Axis capability. |\n| 26 | Point of Service and Warehouse Management | Inventory and Stock Management | PointOfService, Warehouse, WarehouseTask, stock movements, and fulfillment handoff. |\n| 27 | Coupon and Promotion Budget Governance | Pricing, Promotions, and Tax Management | Coupon, CouponBatch, PromotionBudgetLedger, PromotionRedemption, and simulation services. |\n| 28 | Tax Policy and Decision Evidence | Pricing, Promotions, and Tax Management | TaxPolicy, TaxDecision, publication checks, and calculation evidence. |\n| 29 | Order History and Checkpoints | Order Management Lifecycle | OrderHistory, OrderLifecycleCheckpoint, OrderLifecycleVersion, and recovery checkpoint data. |\n| 30 | Payment Reconciliation | Payment and fulfillment operations | PaymentTransaction, PaymentTransactionEntry, instrument reference, reconciliation, and refund execution. |\n| 31 | Consignments and Exceptions | Shipping and Fulfillment Management | Consignment, Shipment, FulfillmentException, tracking event, and carrier sandbox adapter. |\n| 32 | Return Receipts and Reversal Calculations | Cancellation, return, and refund lifecycle | ReturnReceipt, ReturnInspection, FulfillmentReturn, and OrderReversalCalculation. |\n| 33 | Discovery Rules and Ranking | Search, Indexing, and Discovery | CommerceSearchRule, DiscoveryRankingProfile, DiscoveryRankingAction, QueryProfile, and FacetProfile. |\n| 34 | Discovery Sources and Field Mappings | Search, Indexing, and Discovery | DiscoverySourceProvider, DiscoveryFieldMapping, SourceMixConfiguration, and field policy. |\n| 35 | Editorial Content | WCMS content management | EditorialArticle, Author, Series, TaxonomyTerm, ContentType, Correction, and localization. |\n| 36 | Editorial Publication | Staged-to-Online publishing lifecycle | Editorial publication service, target, online projection, publication receipt, and workflow adapter. |\n| 37 | Contact Operations | Unified engagement operations | ContactRequest, ContactAttempt, Correspondence, Handoff, Resolution, Verification, and provider recovery. |\n| 38 | Engagement Automation | Unified engagement operations | EngagementAutomationDecision, evaluation, batch run, operational execution, privacy, and retention. |\n| 39 | Testimonials | Unified engagement operations | TestimonialCandidate, Consent, Version, Projection, public intake, lifecycle, and publication adapter. |\n| 40 | Tracking Events and Analytics Capture | Shipping and Fulfillment Management | TrackingEvent, shipment visibility, carrier event evidence, and fulfillment customer policy. |\n| 41 | Process Workflows | Business Process and Automation Overview | ProcessDefinition, Instance, Task, Trigger, AuditEvent, Incident, graph validation, and publication approval. |\n| 42 | Cron and Scheduled Automation | Cron operations | CronJob, CronJobLog, scheduler container, node handoff, process trigger, and runtime service. |\n| 43 | Data Installation and Seed Packs | Data Import, Export, and Migration | Data installation records, content packs, headers, manifests, checksum, and init/sample/core layers. |\n| 44 | Accelerators and Industry Templates | Accelerators and Industry Solution Templates | Agora Apparel, Electronics, Telco package metadata and shared commerce/content contracts. |\n| 45 | Agora Apparel | Accelerators and Industry Solution Templates | Apparel storefront package, domain sample data, responsive journey, and backend API consumption. |\n| 46 | Agora Electronics | Accelerators and Industry Solution Templates | Electronics storefront package, catalog/search journey, media, pricing, and checkout APIs. |\n| 47 | Agora Telco | Accelerators and Industry Solution Templates | Telco storefront package, offer/catalog journey, customer onboarding, and commerce API boundaries. |\n| 48 | TEE Solution Use Case | Task Execution Engine | Task Execution Engine composition through Process, Cron, Pipeline, EMS, and governed runtime change. |\n| 49 | DEAP Solution Use Case | Data Engineering and Analytics Platform | Data Engineering and Analytics Platform composition through import/export, discovery, events, jobs, and publication. |\n| 50 | Reference Source Map and Glossary | Reference Source Map and Glossary | Catalogue metadata, source evidence, business-friendly names, and exact implementation references. |\n| 51 | Routing and API Governance | Routing and API Governance | Route metadata, generated CRUD routes, request context, HTTP hardening, OpenAPI generation, authorization, and runtime router configuration. |\n",
     "keywords": [
       "reference",
       "source-map-and-glossary",
@@ -14581,7 +11995,8 @@ module.exports = {
     ],
     "facets": {
       "section": "reference",
-      "group": "source-map-and-glossary",
+      "group": "reference",
+      "navigationDepth": 2,
       "documentType": "reference",
       "audience": [
         "business",

@@ -18,7 +18,7 @@ module.exports = {
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.what-is-nodics",
     "title": "What is Nodics?",
-    "summary": "Business, beginner, and adoption-oriented introduction to the Nodics enterprise framework.",
+    "summary": "Introductory definition of Nodics, its enterprise purpose, and the first mental model for business, developer, and operator readers.",
     "businessSummary": "What is Nodics? explains the business purpose, supported decisions, operational impact, and controls for the Framework Value and Adoption journey.",
     "technicalSummary": "What is Nodics? records owning module nodics.docs, technical module documentation, source path docs/pages/framework/what-is-nodics.md, extension points, validation, and troubleshooting evidence.",
     "ownerFunctionalModule": "nodics.docs",
@@ -30,136 +30,37 @@ module.exports = {
     "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworkoverview",
     "headings": [
       {
-        "text": "The problem Nodics solves",
-        "anchor": "frameworkOverview-1-the-problem-nodics-solves",
+        "text": "Business definition",
+        "anchor": "frameworkOverview-1-business-definition",
         "level": 2
       },
       {
-        "text": "From vibe-coded MVP to scalable product",
-        "anchor": "frameworkOverview-2-from-vibe-coded-mvp-to-scalable-product",
-        "level": 2
-      },
-      {
-        "text": "Why a business should care",
-        "anchor": "frameworkOverview-3-why-a-business-should-care",
-        "level": 2
-      },
-      {
-        "text": "Executive summary for a non-technical reader",
-        "anchor": "frameworkOverview-4-executive-summary-for-a-non-technical-reader",
-        "level": 2
-      },
-      {
-        "text": "Beginner mental model",
-        "anchor": "frameworkOverview-5-beginner-mental-model",
-        "level": 2
-      },
-      {
-        "text": "Developer mental model",
-        "anchor": "frameworkOverview-6-developer-mental-model",
-        "level": 2
-      },
-      {
-        "text": "DevOps mental model",
-        "anchor": "frameworkOverview-7-devops-mental-model",
+        "text": "Technical definition",
+        "anchor": "frameworkOverview-2-technical-definition",
         "level": 2
       },
       {
         "text": "What teams can build",
-        "anchor": "frameworkOverview-8-what-teams-can-build",
+        "anchor": "frameworkOverview-3-what-teams-can-build",
         "level": 2
       },
       {
-        "text": "How to read Nodics if you are new",
-        "anchor": "frameworkOverview-9-how-to-read-nodics-if-you-are-new",
-        "level": 2
-      },
-      {
-        "text": "How the documentation is organized",
-        "anchor": "frameworkOverview-10-how-the-documentation-is-organized",
-        "level": 2
-      },
-      {
-        "text": "A day-one business scenario",
-        "anchor": "frameworkOverview-11-a-day-one-business-scenario",
-        "level": 2
-      },
-      {
-        "text": "A day-one developer scenario",
-        "anchor": "frameworkOverview-12-a-day-one-developer-scenario",
-        "level": 2
-      },
-      {
-        "text": "A day-one operations scenario",
-        "anchor": "frameworkOverview-13-a-day-one-operations-scenario",
-        "level": 2
-      },
-      {
-        "text": "What Nodics is not",
-        "anchor": "frameworkOverview-14-what-nodics-is-not",
-        "level": 2
-      },
-      {
-        "text": "The Nodics idea in one picture",
-        "anchor": "frameworkOverview-15-the-nodics-idea-in-one-picture",
-        "level": 2
-      },
-      {
-        "text": "Business mindset: why Nodics can reduce cost",
-        "anchor": "frameworkOverview-16-business-mindset-why-nodics-can-reduce-cost",
-        "level": 2
-      },
-      {
-        "text": "How Nodics compares with common build approaches",
-        "anchor": "frameworkOverview-17-how-nodics-compares-with-common-build-approaches",
-        "level": 2
-      },
-      {
-        "text": "The learning path from simple to deep",
-        "anchor": "frameworkOverview-18-the-learning-path-from-simple-to-deep",
-        "level": 2
-      },
-      {
-        "text": "Developer mindset: how to think before coding",
-        "anchor": "frameworkOverview-19-developer-mindset-how-to-think-before-coding",
-        "level": 2
-      },
-      {
-        "text": "DevOps mindset: why runtime boundaries matter",
-        "anchor": "frameworkOverview-20-devops-mindset-why-runtime-boundaries-matter",
-        "level": 2
-      },
-      {
-        "text": "A beginner example",
-        "anchor": "frameworkOverview-21-a-beginner-example",
+        "text": "Where to continue",
+        "anchor": "frameworkOverview-4-where-to-continue",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "frameworkOverview-22-common-mistakes",
+        "anchor": "frameworkOverview-5-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "frameworkOverview-23-verification",
-        "level": 2
-      },
-      {
-        "text": "Next actions",
-        "anchor": "frameworkOverview-24-next-actions",
+        "anchor": "frameworkOverview-6-verification",
         "level": 2
       }
     ],
     "diagrams": [
-      {
-        "language": "mermaid"
-      },
-      {
-        "language": "mermaid"
-      },
-      {
-        "language": "mermaid"
-      },
       {
         "language": "mermaid"
       }
@@ -167,44 +68,25 @@ module.exports = {
     "visualAssets": [
       {
         "kind": "table",
-        "title": "If you are..., Start with this question, Then read"
-      },
-      {
-        "kind": "table",
-        "title": "Documentation product, Owner, What belongs there"
-      },
-      {
-        "kind": "image",
-        "title": "Architecture diagram retained as governed documentation evidence"
-      },
-      {
-        "kind": "image",
-        "title": "Enterprise and tenant isolation reference from the archived documentation set"
-      },
-      {
-        "kind": "table",
-        "title": "Business concern, How Nodics helps"
-      },
-      {
-        "kind": "table",
-        "title": "Common approach, What often goes wrong, Nodics principle"
+        "title": "Business question, Nodics answer"
       }
     ],
     "visualRequirements": [
       "diagram",
-      "table",
-      "screenshot",
-      "code-example"
+      "table"
     ],
     "relatedPages": [
+      "framework.why-nodics-exists",
+      "framework.how-nodics-works",
+      "framework.adoption-and-first-journey",
       "framework.modular-architecture",
       "framework.local-quick-start",
-      "docs.overview"
+      "docs.documentation-roadmap"
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/framework/what-is-nodics.md",
-    "sourceChecksum": "8b6d3100572b7d38d5576c2fb14b55f5bdb1b1fbee37df61bef3235a0f3dd205",
-    "sourceWordCount": 3530,
+    "sourceChecksum": "99e075a8f2ba041e252dcd30c8e32be2028193caa2c248fd3ba3d6c817265f11",
+    "sourceWordCount": 598,
     "audience": [
       "business",
       "architect",
@@ -231,13 +113,323 @@ module.exports = {
     "active": true
   },
   "record1": {
+    "code": "nodicsDocsMetadataframeworkWhyNodicsExists",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "framework.why-nodics-exists",
+    "title": "Why Nodics Exists",
+    "summary": "Industry problems, business value, and why Nodics turns fast delivery into governed enterprise software.",
+    "businessSummary": "Why Nodics Exists explains the business purpose, supported decisions, operational impact, and controls for the Framework Value and Adoption journey.",
+    "technicalSummary": "Why Nodics Exists records owning module nodics.docs, technical module documentation, source path docs/pages/framework/why-nodics-exists.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.docs",
+    "technicalModule": "documentation",
+    "targetPage": "nodicsDocsPageframeworkWhyNodicsExists",
+    "targetRoute": "nodicsDocsRouteframeworkWhyNodicsExists",
+    "articleComponent": "nodicsDocsComponentframeworkWhyNodicsExists",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworkwhynodicsexists",
+    "headings": [
+      {
+        "text": "Business problem",
+        "anchor": "frameworkWhyNodicsExists-1-business-problem",
+        "level": 2
+      },
+      {
+        "text": "From fast MVP to durable platform",
+        "anchor": "frameworkWhyNodicsExists-2-from-fast-mvp-to-durable-platform",
+        "level": 2
+      },
+      {
+        "text": "Why a business should care",
+        "anchor": "frameworkWhyNodicsExists-3-why-a-business-should-care",
+        "level": 2
+      },
+      {
+        "text": "What this means for developers",
+        "anchor": "frameworkWhyNodicsExists-4-what-this-means-for-developers",
+        "level": 2
+      },
+      {
+        "text": "Operator and governance impact",
+        "anchor": "frameworkWhyNodicsExists-5-operator-and-governance-impact",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "frameworkWhyNodicsExists-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "frameworkWhyNodicsExists-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Enterprise pressure, Common failure, Nodics response"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "framework.what-is-nodics",
+      "framework.how-nodics-works",
+      "framework.adoption-and-first-journey",
+      "docs.documentation-roadmap"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/framework/why-nodics-exists.md",
+    "sourceChecksum": "e2e32c987e05fa836308ba587a62c2871d1cbc2d20a09e7d756f80ec70be8446",
+    "sourceWordCount": 941,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record2": {
+    "code": "nodicsDocsMetadataframeworkHowNodicsWorks",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "framework.how-nodics-works",
+    "title": "How Nodics Works",
+    "summary": "Mental model for framework modules, customer projects, Axis, public applications, runtime ownership, and customization.",
+    "businessSummary": "How Nodics Works explains the business purpose, supported decisions, operational impact, and controls for the Framework Value and Adoption journey.",
+    "technicalSummary": "How Nodics Works records owning module nodics.docs, technical module documentation, source path docs/pages/framework/how-nodics-works.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.docs",
+    "technicalModule": "documentation",
+    "targetPage": "nodicsDocsPageframeworkHowNodicsWorks",
+    "targetRoute": "nodicsDocsRouteframeworkHowNodicsWorks",
+    "articleComponent": "nodicsDocsComponentframeworkHowNodicsWorks",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworkhownodicsworks",
+    "headings": [
+      {
+        "text": "Mental model",
+        "anchor": "frameworkHowNodicsWorks-1-mental-model",
+        "level": 2
+      },
+      {
+        "text": "Runtime flow",
+        "anchor": "frameworkHowNodicsWorks-2-runtime-flow",
+        "level": 2
+      },
+      {
+        "text": "Backend-driven experience",
+        "anchor": "frameworkHowNodicsWorks-3-backend-driven-experience",
+        "level": 2
+      },
+      {
+        "text": "Customization model",
+        "anchor": "frameworkHowNodicsWorks-4-customization-model",
+        "level": 2
+      },
+      {
+        "text": "Operator view",
+        "anchor": "frameworkHowNodicsWorks-5-operator-view",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "frameworkHowNodicsWorks-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "frameworkHowNodicsWorks-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Layer, What it does, Reader impact"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "framework.what-is-nodics",
+      "framework.why-nodics-exists",
+      "framework.adoption-and-first-journey",
+      "docs.documentation-roadmap"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/framework/how-nodics-works.md",
+    "sourceChecksum": "83c6cddaeb7ef6dcaa2f798b391671fd909f404f399d1751d2a9f1785862809e",
+    "sourceWordCount": 778,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record3": {
+    "code": "nodicsDocsMetadataframeworkAdoptionAndFirstJourney",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "framework.adoption-and-first-journey",
+    "title": "Adoption and First Journey",
+    "summary": "The first business, developer, and operator path through setup, capability registration, imports, publishing, and browser verification.",
+    "businessSummary": "Adoption and First Journey explains the business purpose, supported decisions, operational impact, and controls for the Framework Value and Adoption journey.",
+    "technicalSummary": "Adoption and First Journey records owning module nodics.docs, technical module documentation, source path docs/pages/framework/adoption-and-first-journey.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.docs",
+    "technicalModule": "documentation",
+    "targetPage": "nodicsDocsPageframeworkAdoptionAndFirstJourney",
+    "targetRoute": "nodicsDocsRouteframeworkAdoptionAndFirstJourney",
+    "articleComponent": "nodicsDocsComponentframeworkAdoptionAndFirstJourney",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworkadoptionandfirstjourney",
+    "headings": [
+      {
+        "text": "First reader sequence",
+        "anchor": "frameworkAdoptionAndFirstJourney-1-first-reader-sequence",
+        "level": 2
+      },
+      {
+        "text": "Business adoption journey",
+        "anchor": "frameworkAdoptionAndFirstJourney-2-business-adoption-journey",
+        "level": 2
+      },
+      {
+        "text": "Developer adoption journey",
+        "anchor": "frameworkAdoptionAndFirstJourney-3-developer-adoption-journey",
+        "level": 2
+      },
+      {
+        "text": "Operator adoption journey",
+        "anchor": "frameworkAdoptionAndFirstJourney-4-operator-adoption-journey",
+        "level": 2
+      },
+      {
+        "text": "Documentation entry points",
+        "anchor": "frameworkAdoptionAndFirstJourney-5-documentation-entry-points",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "frameworkAdoptionAndFirstJourney-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "frameworkAdoptionAndFirstJourney-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Step, Reader action, Why it matters"
+      },
+      {
+        "kind": "table",
+        "title": "Entry point, Best for, Continue to"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "framework.what-is-nodics",
+      "framework.why-nodics-exists",
+      "framework.how-nodics-works",
+      "docs.documentation-roadmap"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/framework/adoption-and-first-journey.md",
+    "sourceChecksum": "783f2b3b93690a11f6c1fdf793a3413ae1c32247620cb3449b2bbe8b67be8ea0",
+    "sourceWordCount": 868,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record4": {
     "code": "nodicsDocsMetadatadocsDocumentationRoadmap",
     "product": "nodicsDocumentationProduct",
     "documentId": "docs.documentation-roadmap",
-    "title": "Documentation Roadmap and Reader Journey",
-    "summary": "How business users, developers, operators, QA owners, and AI tools navigate the governed Nodics documentation set.",
-    "businessSummary": "Documentation Roadmap and Reader Journey explains the business purpose, supported decisions, operational impact, and controls for the Reader Journey and Coverage Map journey.",
-    "technicalSummary": "Documentation Roadmap and Reader Journey records owning module nodics.docs, technical module documentation, source path docs/pages/nodics.docs/documentation-roadmap.md, extension points, validation, and troubleshooting evidence.",
+    "title": "Documentation Roadmap",
+    "summary": "How the Nodics documentation product is organized and how readers choose the right path through the enterprise hierarchy.",
+    "businessSummary": "Documentation Roadmap explains the business purpose, supported decisions, operational impact, and controls for the Reader Journey and Coverage Map journey.",
+    "technicalSummary": "Documentation Roadmap records owning module nodics.docs, technical module documentation, source path docs/pages/nodics.docs/documentation-roadmap.md, extension points, validation, and troubleshooting evidence.",
     "ownerFunctionalModule": "nodics.docs",
     "technicalModule": "documentation",
     "targetPage": "nodicsDocsPagedocsDocumentationRoadmap",
@@ -326,6 +518,9 @@ module.exports = {
     ],
     "relatedPages": [
       "framework.what-is-nodics",
+      "docs.documentation-principles",
+      "docs.reader-journey-and-coverage",
+      "docs.documentation-publishing-model",
       "docs.overview",
       "framework.capability-documentation-maturity-pattern"
     ],
@@ -358,127 +553,59 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record2": {
-    "code": "nodicsDocsMetadataframeworkModularArchitecture",
+  "record5": {
+    "code": "nodicsDocsMetadatadocsDocumentationPrinciples",
     "product": "nodicsDocumentationProduct",
-    "documentId": "framework.modular-architecture",
-    "title": "Modular architecture and ownership",
-    "summary": "How functional modules, technical modules, runtime servers, and customer projects fit together.",
-    "businessSummary": "Modular architecture and ownership explains the business purpose, supported decisions, operational impact, and controls for the Modularity and Ownership journey.",
-    "technicalSummary": "Modular architecture and ownership records owning module nodics.foundation, technical module nSetup, source path docs/pages/framework/modular-architecture.md, extension points, validation, and troubleshooting evidence.",
-    "ownerFunctionalModule": "nodics.foundation",
-    "technicalModule": "nSetup",
-    "targetPage": "nodicsDocsPageframeworkModularArchitecture",
-    "targetRoute": "nodicsDocsRouteframeworkModularArchitecture",
-    "articleComponent": "nodicsDocsComponentframeworkModularArchitecture",
+    "documentId": "docs.documentation-principles",
+    "title": "Documentation Principles",
+    "summary": "Framework-level documentation rules for README thinness, detailed docs depth, visual evidence, customization, publishing, and access.",
+    "businessSummary": "Documentation Principles explains the business purpose, supported decisions, operational impact, and controls for the Reader Journey and Coverage Map journey.",
+    "technicalSummary": "Documentation Principles records owning module nodics.docs, technical module documentation, source path docs/pages/nodics.docs/documentation-principles.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.docs",
+    "technicalModule": "documentation",
+    "targetPage": "nodicsDocsPagedocsDocumentationPrinciples",
+    "targetRoute": "nodicsDocsRoutedocsDocumentationPrinciples",
+    "articleComponent": "nodicsDocsComponentdocsDocumentationPrinciples",
     "template": "nodicsDocumentationArticleTemplate",
-    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworkmodulararchitecture",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationprinciples",
     "headings": [
       {
-        "text": "What this is",
-        "anchor": "frameworkModularArchitecture-1-what-this-is",
+        "text": "README and real documentation split",
+        "anchor": "docsDocumentationPrinciples-1-readme-and-real-documentation-split",
         "level": 2
       },
       {
-        "text": "Functional modules and technical modules",
-        "anchor": "frameworkModularArchitecture-2-functional-modules-and-technical-modules",
+        "text": "Required topic depth",
+        "anchor": "docsDocumentationPrinciples-2-required-topic-depth",
         "level": 2
       },
       {
-        "text": "Runtime server composition",
-        "anchor": "frameworkModularArchitecture-3-runtime-server-composition",
+        "text": "Visual contract",
+        "anchor": "docsDocumentationPrinciples-3-visual-contract",
         "level": 2
       },
       {
-        "text": "Customer projects",
-        "anchor": "frameworkModularArchitecture-4-customer-projects",
+        "text": "Configuration and customization principle",
+        "anchor": "docsDocumentationPrinciples-4-configuration-and-customization-principle",
         "level": 2
       },
       {
-        "text": "Ownership boundaries",
-        "anchor": "frameworkModularArchitecture-5-ownership-boundaries",
-        "level": 2
-      },
-      {
-        "text": "Current capability map",
-        "anchor": "frameworkModularArchitecture-6-current-capability-map",
-        "level": 2
-      },
-      {
-        "text": "Runtime composition diagram",
-        "anchor": "frameworkModularArchitecture-7-runtime-composition-diagram",
-        "level": 2
-      },
-      {
-        "text": "Beginner reading path",
-        "anchor": "frameworkModularArchitecture-8-beginner-reading-path",
-        "level": 2
-      },
-      {
-        "text": "Module hierarchy versus service precedence",
-        "anchor": "frameworkModularArchitecture-9-module-hierarchy-versus-service-precedence",
-        "level": 2
-      },
-      {
-        "text": "Why `extends` is the right word",
-        "anchor": "frameworkModularArchitecture-10-why-extends-is-the-right-word",
-        "level": 2
-      },
-      {
-        "text": "DevOps and operator view",
-        "anchor": "frameworkModularArchitecture-11-devops-and-operator-view",
-        "level": 2
-      },
-      {
-        "text": "Documentation ownership matrix",
-        "anchor": "frameworkModularArchitecture-12-documentation-ownership-matrix",
-        "level": 2
-      },
-      {
-        "text": "Business value",
-        "anchor": "frameworkModularArchitecture-13-business-value",
-        "level": 2
-      },
-      {
-        "text": "Architecture decision guide",
-        "anchor": "frameworkModularArchitecture-14-architecture-decision-guide",
-        "level": 2
-      },
-      {
-        "text": "Example: customer customizes Platform without renaming Platform",
-        "anchor": "frameworkModularArchitecture-15-example-customer-customizes-platform-without-renaming-platform",
-        "level": 2
-      },
-      {
-        "text": "Example: why Axis does not own documentation data",
-        "anchor": "frameworkModularArchitecture-16-example-why-axis-does-not-own-documentation-data",
-        "level": 2
-      },
-      {
-        "text": "Operator example: same capability, different topology",
-        "anchor": "frameworkModularArchitecture-17-operator-example-same-capability-different-topology",
+        "text": "Publishing and access principle",
+        "anchor": "docsDocumentationPrinciples-5-publishing-and-access-principle",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "frameworkModularArchitecture-18-common-mistakes",
-        "level": 2
-      },
-      {
-        "text": "Next actions",
-        "anchor": "frameworkModularArchitecture-19-next-actions",
+        "anchor": "docsDocumentationPrinciples-6-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "frameworkModularArchitecture-20-verification",
+        "anchor": "docsDocumentationPrinciples-7-verification",
         "level": 2
       }
     ],
     "diagrams": [
-      {
-        "language": "mermaid"
-      },
       {
         "language": "mermaid"
       }
@@ -486,44 +613,27 @@ module.exports = {
     "visualAssets": [
       {
         "kind": "table",
-        "title": "Capability, Repository or module owner, Runtime role, Documentation owner"
-      },
-      {
-        "kind": "image",
-        "title": "Micro-service style module separation reference from the archived documentation set"
+        "title": "Location, Purpose, Detail level"
       },
       {
         "kind": "table",
-        "title": "Concept, What it answers, Example"
-      },
-      {
-        "kind": "table",
-        "title": "Documentation topic, Source owner, Why"
-      },
-      {
-        "kind": "table",
-        "title": "Content type, Owner"
-      },
-      {
-        "kind": "table",
-        "title": "Local concern, Production concern, Stable Nodics contract"
+        "title": "Governance area, Documentation requirement"
       }
     ],
     "visualRequirements": [
-      "architecture-diagram",
-      "table",
-      "image",
-      "code-example"
+      "diagram",
+      "table"
     ],
     "relatedPages": [
-      "foundation.overview",
-      "framework.customization-guide",
-      "platform.module-registry"
+      "docs.documentation-roadmap",
+      "docs.reader-journey-and-coverage",
+      "docs.documentation-publishing-model",
+      "framework.what-is-nodics"
     ],
     "sourceRepository": "nodics.docs",
-    "sourcePath": "docs/pages/framework/modular-architecture.md",
-    "sourceChecksum": "c64adb588d5e051c48998ffdf80312c6a71b5efb0bb989562712114e6e678b40",
-    "sourceWordCount": 2293,
+    "sourcePath": "docs/pages/nodics.docs/documentation-principles.md",
+    "sourceChecksum": "1cba02d7ad375748f52764c4ee28bc63a7441fc596c44c1925c34d1451684fd0",
+    "sourceWordCount": 714,
     "audience": [
       "business",
       "architect",
@@ -549,7 +659,614 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record3": {
+  "record6": {
+    "code": "nodicsDocsMetadatadocsReaderJourneyAndCoverage",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "docs.reader-journey-and-coverage",
+    "title": "Reader Journey and Coverage",
+    "summary": "How business users, developers, operators, QA owners, administrators, and AI tools navigate capability documentation.",
+    "businessSummary": "Reader Journey and Coverage explains the business purpose, supported decisions, operational impact, and controls for the Reader Journey and Coverage Map journey.",
+    "technicalSummary": "Reader Journey and Coverage records owning module nodics.docs, technical module documentation, source path docs/pages/nodics.docs/reader-journey-and-coverage.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.docs",
+    "technicalModule": "documentation",
+    "targetPage": "nodicsDocsPagedocsReaderJourneyAndCoverage",
+    "targetRoute": "nodicsDocsRoutedocsReaderJourneyAndCoverage",
+    "articleComponent": "nodicsDocsComponentdocsReaderJourneyAndCoverage",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatadocsreaderjourneyandcoverage",
+    "headings": [
+      {
+        "text": "Audience paths",
+        "anchor": "docsReaderJourneyAndCoverage-1-audience-paths",
+        "level": 2
+      },
+      {
+        "text": "Coverage map",
+        "anchor": "docsReaderJourneyAndCoverage-2-coverage-map",
+        "level": 2
+      },
+      {
+        "text": "Topic composition",
+        "anchor": "docsReaderJourneyAndCoverage-3-topic-composition",
+        "level": 2
+      },
+      {
+        "text": "Navigation behavior",
+        "anchor": "docsReaderJourneyAndCoverage-4-navigation-behavior",
+        "level": 2
+      },
+      {
+        "text": "Business and technical balance",
+        "anchor": "docsReaderJourneyAndCoverage-5-business-and-technical-balance",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "docsReaderJourneyAndCoverage-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "docsReaderJourneyAndCoverage-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Reader, First question, Page must provide"
+      },
+      {
+        "kind": "table",
+        "title": "Perspective, Required content"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "docs.documentation-roadmap",
+      "docs.documentation-principles",
+      "docs.documentation-publishing-model",
+      "framework.what-is-nodics"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.docs/reader-journey-and-coverage.md",
+    "sourceChecksum": "096514c89141a83cb82833f4e7c2209bf3136e55cdf80431575e475f19440c3a",
+    "sourceWordCount": 734,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record7": {
+    "code": "nodicsDocsMetadatadocsDocumentationPublishingModel",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "docs.documentation-publishing-model",
+    "title": "Documentation Publishing Model",
+    "summary": "How documentation source becomes content catalog data, Staged records, approval tasks, Online pages, and public or authenticated delivery.",
+    "businessSummary": "Documentation Publishing Model explains the business purpose, supported decisions, operational impact, and controls for the Reader Journey and Coverage Map journey.",
+    "technicalSummary": "Documentation Publishing Model records owning module nodics.docs, technical module documentation, source path docs/pages/nodics.docs/documentation-publishing-model.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.docs",
+    "technicalModule": "documentation",
+    "targetPage": "nodicsDocsPagedocsDocumentationPublishingModel",
+    "targetRoute": "nodicsDocsRoutedocsDocumentationPublishingModel",
+    "articleComponent": "nodicsDocsComponentdocsDocumentationPublishingModel",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationpublishingmodel",
+    "headings": [
+      {
+        "text": "Source to Online flow",
+        "anchor": "docsDocumentationPublishingModel-1-source-to-online-flow",
+        "level": 2
+      },
+      {
+        "text": "Content catalog authority",
+        "anchor": "docsDocumentationPublishingModel-2-content-catalog-authority",
+        "level": 2
+      },
+      {
+        "text": "Access and workflow",
+        "anchor": "docsDocumentationPublishingModel-3-access-and-workflow",
+        "level": 2
+      },
+      {
+        "text": "Axis and public experience",
+        "anchor": "docsDocumentationPublishingModel-4-axis-and-public-experience",
+        "level": 2
+      },
+      {
+        "text": "Developer and operator responsibilities",
+        "anchor": "docsDocumentationPublishingModel-5-developer-and-operator-responsibilities",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "docsDocumentationPublishingModel-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "docsDocumentationPublishingModel-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Record changed, Workflow impact, Verification"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "docs.documentation-roadmap",
+      "docs.documentation-principles",
+      "docs.reader-journey-and-coverage",
+      "framework.what-is-nodics"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.docs/documentation-publishing-model.md",
+    "sourceChecksum": "8fdbb90b6f062b9805cb9d5ddbf0abbe49d2a3d366d4ada96435ecd71bbc28fa",
+    "sourceWordCount": 805,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record8": {
+    "code": "nodicsDocsMetadataframeworkModularArchitecture",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "framework.modular-architecture",
+    "title": "Modular architecture and ownership",
+    "summary": "How functional modules, technical modules, runtime servers, and customer projects fit together.",
+    "businessSummary": "Modular architecture and ownership explains the business purpose, supported decisions, operational impact, and controls for the Modularity and Ownership journey.",
+    "technicalSummary": "Modular architecture and ownership records owning module nodics.foundation, technical module nSetup, source path docs/pages/framework/modular-architecture.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nSetup",
+    "targetPage": "nodicsDocsPageframeworkModularArchitecture",
+    "targetRoute": "nodicsDocsRouteframeworkModularArchitecture",
+    "articleComponent": "nodicsDocsComponentframeworkModularArchitecture",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworkmodulararchitecture",
+    "headings": [
+      {
+        "text": "Ownership model",
+        "anchor": "frameworkModularArchitecture-1-ownership-model",
+        "level": 2
+      },
+      {
+        "text": "What to read next",
+        "anchor": "frameworkModularArchitecture-2-what-to-read-next",
+        "level": 2
+      },
+      {
+        "text": "Business perspective",
+        "anchor": "frameworkModularArchitecture-3-business-perspective",
+        "level": 2
+      },
+      {
+        "text": "Technical perspective",
+        "anchor": "frameworkModularArchitecture-4-technical-perspective",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "frameworkModularArchitecture-5-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "frameworkModularArchitecture-6-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Layer, What it owns, Reader impact"
+      }
+    ],
+    "visualRequirements": [
+      "architecture-diagram",
+      "table",
+      "diagram"
+    ],
+    "relatedPages": [
+      "framework.runtime-server-composition",
+      "framework.module-loading-service-precedence",
+      "framework.architecture-decision-guide",
+      "foundation.overview",
+      "framework.customization-guide",
+      "platform.module-registry"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/framework/modular-architecture.md",
+    "sourceChecksum": "8918b924ad914c2ef5fe04fb0da6ca3c9349b73f0539c4ffd9987298569ba2e0",
+    "sourceWordCount": 513,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record9": {
+    "code": "nodicsDocsMetadataframeworkRuntimeServerComposition",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "framework.runtime-server-composition",
+    "title": "Runtime Server Composition",
+    "summary": "How project topology composes framework modules into Platform, WCMS, Process, and other runtime servers.",
+    "businessSummary": "Runtime Server Composition explains the business purpose, supported decisions, operational impact, and controls for the Modularity and Ownership journey.",
+    "technicalSummary": "Runtime Server Composition records owning module nodics.foundation, technical module nSetup, source path docs/pages/framework/runtime-server-composition.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nSetup",
+    "targetPage": "nodicsDocsPageframeworkRuntimeServerComposition",
+    "targetRoute": "nodicsDocsRouteframeworkRuntimeServerComposition",
+    "articleComponent": "nodicsDocsComponentframeworkRuntimeServerComposition",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworkruntimeservercomposition",
+    "headings": [
+      {
+        "text": "Runtime model",
+        "anchor": "frameworkRuntimeServerComposition-1-runtime-model",
+        "level": 2
+      },
+      {
+        "text": "Composition decisions",
+        "anchor": "frameworkRuntimeServerComposition-2-composition-decisions",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension",
+        "anchor": "frameworkRuntimeServerComposition-3-customization-and-extension",
+        "level": 2
+      },
+      {
+        "text": "Operator view",
+        "anchor": "frameworkRuntimeServerComposition-4-operator-view",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "frameworkRuntimeServerComposition-5-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "frameworkRuntimeServerComposition-6-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Decision, Business impact, Technical impact"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "foundation.overview",
+      "framework.customization-guide",
+      "platform.module-registry"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/framework/runtime-server-composition.md",
+    "sourceChecksum": "62c519ad4061a1c6293ab79e456c00e42081ef2f209e24c1ae9560a336eb9be1",
+    "sourceWordCount": 517,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record10": {
+    "code": "nodicsDocsMetadataframeworkModuleLoadingServicePrecedence",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "framework.module-loading-service-precedence",
+    "title": "Module Loading and Service Precedence",
+    "summary": "How runtime loading order, service overrides, and project layers decide which implementation is active.",
+    "businessSummary": "Module Loading and Service Precedence explains the business purpose, supported decisions, operational impact, and controls for the Modularity and Ownership journey.",
+    "technicalSummary": "Module Loading and Service Precedence records owning module nodics.foundation, technical module nSetup, source path docs/pages/framework/module-loading-and-service-precedence.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nSetup",
+    "targetPage": "nodicsDocsPageframeworkModuleLoadingServicePrecedence",
+    "targetRoute": "nodicsDocsRouteframeworkModuleLoadingServicePrecedence",
+    "articleComponent": "nodicsDocsComponentframeworkModuleLoadingServicePrecedence",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworkmoduleloadingserviceprecedence",
+    "headings": [
+      {
+        "text": "Loading order",
+        "anchor": "frameworkModuleLoadingServicePrecedence-1-loading-order",
+        "level": 2
+      },
+      {
+        "text": "Business and developer impact",
+        "anchor": "frameworkModuleLoadingServicePrecedence-2-business-and-developer-impact",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension",
+        "anchor": "frameworkModuleLoadingServicePrecedence-3-customization-and-extension",
+        "level": 2
+      },
+      {
+        "text": "Operator view",
+        "anchor": "frameworkModuleLoadingServicePrecedence-4-operator-view",
+        "level": 2
+      },
+      {
+        "text": "Reader and implementation contract",
+        "anchor": "frameworkModuleLoadingServicePrecedence-5-reader-and-implementation-contract",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "frameworkModuleLoadingServicePrecedence-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "frameworkModuleLoadingServicePrecedence-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Reader, Why precedence matters"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example"
+    ],
+    "relatedPages": [
+      "foundation.overview",
+      "framework.customization-guide",
+      "platform.module-registry"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/framework/module-loading-and-service-precedence.md",
+    "sourceChecksum": "0a50bbdb47943f01609b149677c35fe136e943e97ab1ec1953e68baaf36f76c0",
+    "sourceWordCount": 603,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record11": {
+    "code": "nodicsDocsMetadataframeworkArchitectureDecisionGuide",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "framework.architecture-decision-guide",
+    "title": "Architecture Decision Guide",
+    "summary": "Decision path for choosing framework, project, content, provider, service, pipeline, schema, route, or renderer ownership.",
+    "businessSummary": "Architecture Decision Guide explains the business purpose, supported decisions, operational impact, and controls for the Modularity and Ownership journey.",
+    "technicalSummary": "Architecture Decision Guide records owning module nodics.foundation, technical module nSetup, source path docs/pages/framework/architecture-decision-guide.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nSetup",
+    "targetPage": "nodicsDocsPageframeworkArchitectureDecisionGuide",
+    "targetRoute": "nodicsDocsRouteframeworkArchitectureDecisionGuide",
+    "articleComponent": "nodicsDocsComponentframeworkArchitectureDecisionGuide",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworkarchitecturedecisionguide",
+    "headings": [
+      {
+        "text": "Decision path",
+        "anchor": "frameworkArchitectureDecisionGuide-1-decision-path",
+        "level": 2
+      },
+      {
+        "text": "Ownership table",
+        "anchor": "frameworkArchitectureDecisionGuide-2-ownership-table",
+        "level": 2
+      },
+      {
+        "text": "Business perspective",
+        "anchor": "frameworkArchitectureDecisionGuide-3-business-perspective",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension",
+        "anchor": "frameworkArchitectureDecisionGuide-4-customization-and-extension",
+        "level": 2
+      },
+      {
+        "text": "Reader and implementation contract",
+        "anchor": "frameworkArchitectureDecisionGuide-5-reader-and-implementation-contract",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "frameworkArchitectureDecisionGuide-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "frameworkArchitectureDecisionGuide-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Change type, Preferred owner, Avoid"
+      }
+    ],
+    "visualRequirements": [
+      "decision-tree",
+      "table"
+    ],
+    "relatedPages": [
+      "foundation.overview",
+      "framework.customization-guide",
+      "platform.module-registry"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/framework/architecture-decision-guide.md",
+    "sourceChecksum": "749c570f553b85eb967357625a2d526e8f18f15e95ec26db68e5b125de574970",
+    "sourceWordCount": 597,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record12": {
     "code": "nodicsDocsMetadataplatformModuleRegistry",
     "product": "nodicsDocumentationProduct",
     "documentId": "platform.module-registry",
@@ -692,7 +1409,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record4": {
+  "record13": {
     "code": "nodicsDocsMetadatafoundationOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "foundation.overview",
@@ -858,7 +1575,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record5": {
+  "record14": {
     "code": "nodicsDocsMetadataapplicationsSuite",
     "product": "nodicsDocumentationProduct",
     "documentId": "applications.suite",
@@ -964,67 +1681,59 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record6": {
-    "code": "nodicsDocsMetadatasolutionsTeeDeap",
+  "record15": {
+    "code": "nodicsDocsMetadatasolutionsTaskExecutionEngine",
     "product": "nodicsDocumentationProduct",
-    "documentId": "solutions.tee-deap",
-    "title": "TEE and DEAP Solution Use Cases",
-    "summary": "How Task Execution Engine and Data Engineering and Analytics Platform solutions can be built on the Nodics Framework.",
-    "businessSummary": "TEE and DEAP Solution Use Cases explains the business purpose, supported decisions, operational impact, and controls for the Solution Patterns journey.",
-    "technicalSummary": "TEE and DEAP Solution Use Cases records owning module nodics.docs, technical module documentation, source path docs/pages/applications/tee-deap-solution-use-cases.md, extension points, validation, and troubleshooting evidence.",
+    "documentId": "solutions.task-execution-engine",
+    "title": "Task Execution Engine",
+    "summary": "How customers use Nodics Process, Cron, Pipelines, Events, and governed runtime change to build a Task Execution Engine.",
+    "businessSummary": "Task Execution Engine explains the business purpose, supported decisions, operational impact, and controls for the Solution Patterns journey.",
+    "technicalSummary": "Task Execution Engine records owning module nodics.docs, technical module documentation, source path docs/pages/applications/task-execution-engine.md, extension points, validation, and troubleshooting evidence.",
     "ownerFunctionalModule": "nodics.docs",
     "technicalModule": "documentation",
-    "targetPage": "nodicsDocsPagesolutionsTeeDeap",
-    "targetRoute": "nodicsDocsRoutesolutionsTeeDeap",
-    "articleComponent": "nodicsDocsComponentsolutionsTeeDeap",
+    "targetPage": "nodicsDocsPagesolutionsTaskExecutionEngine",
+    "targetRoute": "nodicsDocsRoutesolutionsTaskExecutionEngine",
+    "articleComponent": "nodicsDocsComponentsolutionsTaskExecutionEngine",
     "template": "nodicsDocumentationArticleTemplate",
-    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatasolutionsteedeap",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatasolutionstaskexecutionengine",
     "headings": [
       {
         "text": "Business context",
-        "anchor": "solutionsTeeDeap-1-business-context",
+        "anchor": "solutionsTaskExecutionEngine-1-business-context",
         "level": 2
       },
       {
-        "text": "Journey and ownership",
-        "anchor": "solutionsTeeDeap-2-journey-and-ownership",
+        "text": "Execution journey",
+        "anchor": "solutionsTaskExecutionEngine-2-execution-journey",
         "level": 2
       },
       {
-        "text": "Data and configuration detail",
-        "anchor": "solutionsTeeDeap-3-data-and-configuration-detail",
+        "text": "Capability composition",
+        "anchor": "solutionsTaskExecutionEngine-3-capability-composition",
         "level": 2
       },
       {
-        "text": "Customization and extension",
-        "anchor": "solutionsTeeDeap-4-customization-and-extension",
+        "text": "Configuration and extension",
+        "anchor": "solutionsTaskExecutionEngine-4-configuration-and-extension",
         "level": 2
       },
       {
-        "text": "Operations and governance",
-        "anchor": "solutionsTeeDeap-5-operations-and-governance",
+        "text": "Operations and troubleshooting",
+        "anchor": "solutionsTaskExecutionEngine-5-operations-and-troubleshooting",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "solutionsTeeDeap-6-common-mistakes",
+        "anchor": "solutionsTaskExecutionEngine-6-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "solutionsTeeDeap-7-verification",
-        "level": 2
-      },
-      {
-        "text": "Solution definition and coverage",
-        "anchor": "solutionsTeeDeap-8-solution-definition-and-coverage",
+        "anchor": "solutionsTaskExecutionEngine-7-verification",
         "level": 2
       }
     ],
     "diagrams": [
-      {
-        "language": "mermaid"
-      },
       {
         "language": "mermaid"
       }
@@ -1032,27 +1741,23 @@ module.exports = {
     "visualAssets": [
       {
         "kind": "table",
-        "title": "Business question, Answer for this topic"
+        "title": "Business question, TEE answer"
       },
       {
         "kind": "table",
-        "title": "Responsibility, Owner, Notes"
+        "title": "Journey step, Business view, Technical owner"
       },
       {
         "kind": "table",
-        "title": "Detail area, What to document, Verification signal"
+        "title": "Capability, Role in TEE, Documentation link to maintain"
       },
       {
         "kind": "table",
-        "title": "Customization type, Recommended path, Avoid"
+        "title": "Extension need, Recommended approach, Avoid"
       },
       {
         "kind": "table",
-        "title": "Operational concern, Required documentation detail"
-      },
-      {
-        "kind": "table",
-        "title": "Solution, Uses these framework capabilities, Business outcome"
+        "title": "Symptom, Likely cause, Check"
       }
     ],
     "visualRequirements": [
@@ -1064,12 +1769,15 @@ module.exports = {
     "relatedPages": [
       "process.overview",
       "process.scheduled-automation",
-      "docs.documentation-roadmap"
+      "pipeline.business-logic-orchestration",
+      "events.messaging-cluster-coordination",
+      "runtime.governed-change",
+      "cron.node-responsibility-tee"
     ],
     "sourceRepository": "nodics.docs",
-    "sourcePath": "docs/pages/applications/tee-deap-solution-use-cases.md",
-    "sourceChecksum": "cb0513209138d68b1edc64546b4215a87bc6b143ad8b6feb7325d58bb31387f5",
-    "sourceWordCount": 1350,
+    "sourcePath": "docs/pages/applications/task-execution-engine.md",
+    "sourceChecksum": "e5a4bebc6b1224b8e0aa07d39e6ad75f8d791020145c79485ff93070323cffbd",
+    "sourceWordCount": 1078,
     "audience": [
       "business",
       "architect",
@@ -1095,7 +1803,129 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record7": {
+  "record16": {
+    "code": "nodicsDocsMetadatasolutionsDataEngineeringAnalyticsPlatform",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "solutions.data-engineering-analytics-platform",
+    "title": "Data Engineering and Analytics Platform",
+    "summary": "How customers use Nodics import, export, discovery, provider, event, pipeline, and publishing capabilities to build governed data platforms.",
+    "businessSummary": "Data Engineering and Analytics Platform explains the business purpose, supported decisions, operational impact, and controls for the Solution Patterns journey.",
+    "technicalSummary": "Data Engineering and Analytics Platform records owning module nodics.docs, technical module documentation, source path docs/pages/applications/data-engineering-analytics-platform.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.docs",
+    "technicalModule": "documentation",
+    "targetPage": "nodicsDocsPagesolutionsDataEngineeringAnalyticsPlatform",
+    "targetRoute": "nodicsDocsRoutesolutionsDataEngineeringAnalyticsPlatform",
+    "articleComponent": "nodicsDocsComponentsolutionsDataEngineeringAnalyticsPlatform",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatasolutionsdataengineeringanalyticsplatform",
+    "headings": [
+      {
+        "text": "Business context",
+        "anchor": "solutionsDataEngineeringAnalyticsPlatform-1-business-context",
+        "level": 2
+      },
+      {
+        "text": "Data journey",
+        "anchor": "solutionsDataEngineeringAnalyticsPlatform-2-data-journey",
+        "level": 2
+      },
+      {
+        "text": "Capability composition",
+        "anchor": "solutionsDataEngineeringAnalyticsPlatform-3-capability-composition",
+        "level": 2
+      },
+      {
+        "text": "Configuration and extension",
+        "anchor": "solutionsDataEngineeringAnalyticsPlatform-4-configuration-and-extension",
+        "level": 2
+      },
+      {
+        "text": "Operations and troubleshooting",
+        "anchor": "solutionsDataEngineeringAnalyticsPlatform-5-operations-and-troubleshooting",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "solutionsDataEngineeringAnalyticsPlatform-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "solutionsDataEngineeringAnalyticsPlatform-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Business question, DEAP answer"
+      },
+      {
+        "kind": "table",
+        "title": "Journey step, Business view, Technical owner"
+      },
+      {
+        "kind": "table",
+        "title": "Capability, Role in DEAP, Documentation link to maintain"
+      },
+      {
+        "kind": "table",
+        "title": "Extension need, Recommended approach, Avoid"
+      },
+      {
+        "kind": "table",
+        "title": "Symptom, Likely cause, Check"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "data.import-export-migration",
+      "discovery.search-indexing",
+      "schema.data-modeling-management",
+      "persistence.provider-data-access-layer",
+      "pipeline.business-logic-orchestration",
+      "events.messaging-cluster-coordination"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/applications/data-engineering-analytics-platform.md",
+    "sourceChecksum": "f7fdb519bb93877315a9f33baecc195dcf4aa825e01f1c60e742f293bd986bb8",
+    "sourceWordCount": 1121,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record17": {
     "code": "nodicsDocsMetadataacceleratorsAgoraIndustryTemplates",
     "product": "nodicsDocumentationProduct",
     "documentId": "accelerators.agora-industry-templates",
@@ -1214,7 +2044,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record8": {
+  "record18": {
     "code": "nodicsDocsMetadataframeworkLocalQuickStart",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.local-quick-start",
@@ -1231,163 +2061,72 @@ module.exports = {
     "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalquickstart",
     "headings": [
       {
-        "text": "What you will run",
-        "anchor": "frameworkLocalQuickStart-1-what-you-will-run",
+        "text": "Quick path",
+        "anchor": "frameworkLocalQuickStart-1-quick-path",
         "level": 2
       },
       {
-        "text": "Business outcome of the quick start",
-        "anchor": "frameworkLocalQuickStart-2-business-outcome-of-the-quick-start",
+        "text": "Business perspective",
+        "anchor": "frameworkLocalQuickStart-2-business-perspective",
         "level": 2
       },
       {
-        "text": "Prerequisites",
-        "anchor": "frameworkLocalQuickStart-3-prerequisites",
+        "text": "Developer perspective",
+        "anchor": "frameworkLocalQuickStart-3-developer-perspective",
         "level": 2
       },
       {
-        "text": "Step 1: configure Kickoff",
-        "anchor": "frameworkLocalQuickStart-4-step-1-configure-kickoff",
+        "text": "Operator view",
+        "anchor": "frameworkLocalQuickStart-4-operator-view",
         "level": 2
       },
       {
-        "text": "Step 2: start backend servers",
-        "anchor": "frameworkLocalQuickStart-5-step-2-start-backend-servers",
+        "text": "Continue with",
+        "anchor": "frameworkLocalQuickStart-5-continue-with",
         "level": 2
       },
       {
-        "text": "Step 3: start Axis",
-        "anchor": "frameworkLocalQuickStart-6-step-3-start-axis",
-        "level": 2
-      },
-      {
-        "text": "Step 4: log in",
-        "anchor": "frameworkLocalQuickStart-7-step-4-log-in",
-        "level": 2
-      },
-      {
-        "text": "First-hour exploration checklist",
-        "anchor": "frameworkLocalQuickStart-8-first-hour-exploration-checklist",
-        "level": 2
-      },
-      {
-        "text": "What “initial data import” means",
-        "anchor": "frameworkLocalQuickStart-9-what-initial-data-import-means",
-        "level": 2
-      },
-      {
-        "text": "What “export” means in the same governance model",
-        "anchor": "frameworkLocalQuickStart-10-what-export-means-in-the-same-governance-model",
-        "level": 2
-      },
-      {
-        "text": "Fresh database test",
-        "anchor": "frameworkLocalQuickStart-11-fresh-database-test",
-        "level": 2
-      },
-      {
-        "text": "Manual startup versus acceptance runner",
-        "anchor": "frameworkLocalQuickStart-12-manual-startup-versus-acceptance-runner",
-        "level": 2
-      },
-      {
-        "text": "Manual server checklist",
-        "anchor": "frameworkLocalQuickStart-13-manual-server-checklist",
-        "level": 2
-      },
-      {
-        "text": "Troubleshooting",
-        "anchor": "frameworkLocalQuickStart-14-troubleshooting",
-        "level": 2
-      },
-      {
-        "text": "What success looks like for each reader",
-        "anchor": "frameworkLocalQuickStart-15-what-success-looks-like-for-each-reader",
-        "level": 2
-      },
-      {
-        "text": "First guided walkthrough after login",
-        "anchor": "frameworkLocalQuickStart-16-first-guided-walkthrough-after-login",
-        "level": 2
-      },
-      {
-        "text": "First safe customization exercise",
-        "anchor": "frameworkLocalQuickStart-17-first-safe-customization-exercise",
-        "level": 2
-      },
-      {
-        "text": "Beginner glossary",
-        "anchor": "frameworkLocalQuickStart-18-beginner-glossary",
+        "text": "Customization and extension guidance",
+        "anchor": "frameworkLocalQuickStart-6-customization-and-extension-guidance",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "frameworkLocalQuickStart-19-common-mistakes",
+        "anchor": "frameworkLocalQuickStart-7-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "frameworkLocalQuickStart-20-verification",
-        "level": 2
-      },
-      {
-        "text": "Next actions",
-        "anchor": "frameworkLocalQuickStart-21-next-actions",
+        "anchor": "frameworkLocalQuickStart-8-verification",
         "level": 2
       }
     ],
     "diagrams": [
       {
         "language": "mermaid"
-      },
-      {
-        "language": "mermaid"
-      },
-      {
-        "language": "mermaid"
       }
     ],
     "visualAssets": [
       {
-        "kind": "image",
-        "title": "Data import process reference from the archived documentation set"
-      },
-      {
-        "kind": "image",
-        "title": "Data export process reference from the archived documentation set"
-      },
-      {
         "kind": "table",
-        "title": "Need, Recommended path"
-      },
-      {
-        "kind": "table",
-        "title": "Check, Expected result"
-      },
-      {
-        "kind": "table",
-        "title": "Reader, Evidence they should see, Why it matters"
-      },
-      {
-        "kind": "table",
-        "title": "Term, Plain-language meaning"
+        "title": "Step, Command or action, Expected result"
       }
     ],
     "visualRequirements": [
       "diagram",
-      "table",
-      "screenshot",
-      "command-example"
+      "table"
     ],
     "relatedPages": [
+      "framework.fresh-schema-setup-journey",
+      "framework.local-runtime-troubleshooting",
       "framework.what-is-nodics",
       "framework.local-verification-checklist",
       "platform.module-registry"
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/framework/local-quick-start.md",
-    "sourceChecksum": "103dd0a7ea364db1eb38266954fd893e39148b187794f9f2d0ae8cb1a97d9141",
-    "sourceWordCount": 2660,
+    "sourceChecksum": "c5afa8595b3b077b1109c02327e0c6aeb3069d268d090bf3620fc5e69910f279",
+    "sourceWordCount": 621,
     "audience": [
       "business",
       "architect",
@@ -1413,7 +2152,209 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record9": {
+  "record19": {
+    "code": "nodicsDocsMetadataframeworkFreshSchemaSetupJourney",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "framework.fresh-schema-setup-journey",
+    "title": "Fresh Schema Setup Journey",
+    "summary": "Required order for initializing Axis, registering capabilities, importing app packs, publishing Online, and verifying browsers.",
+    "businessSummary": "Fresh Schema Setup Journey explains the business purpose, supported decisions, operational impact, and controls for the Local Workspace Setup journey.",
+    "technicalSummary": "Fresh Schema Setup Journey records owning module nodics.foundation, technical module nSetup, source path docs/pages/framework/fresh-schema-setup-journey.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nSetup",
+    "targetPage": "nodicsDocsPageframeworkFreshSchemaSetupJourney",
+    "targetRoute": "nodicsDocsRouteframeworkFreshSchemaSetupJourney",
+    "articleComponent": "nodicsDocsComponentframeworkFreshSchemaSetupJourney",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworkfreshschemasetupjourney",
+    "headings": [
+      {
+        "text": "Required order",
+        "anchor": "frameworkFreshSchemaSetupJourney-1-required-order",
+        "level": 2
+      },
+      {
+        "text": "Setup table",
+        "anchor": "frameworkFreshSchemaSetupJourney-2-setup-table",
+        "level": 2
+      },
+      {
+        "text": "Business and user experience",
+        "anchor": "frameworkFreshSchemaSetupJourney-3-business-and-user-experience",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension",
+        "anchor": "frameworkFreshSchemaSetupJourney-4-customization-and-extension",
+        "level": 2
+      },
+      {
+        "text": "Reader and implementation contract",
+        "anchor": "frameworkFreshSchemaSetupJourney-5-reader-and-implementation-contract",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "frameworkFreshSchemaSetupJourney-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "frameworkFreshSchemaSetupJourney-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Step, Action, Why it comes here"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "framework.what-is-nodics",
+      "framework.local-verification-checklist",
+      "platform.module-registry"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/framework/fresh-schema-setup-journey.md",
+    "sourceChecksum": "d2d7d374fea70af084c2ab3b8954ffb3ef7a26212f2b0030429a15c72302ff79",
+    "sourceWordCount": 596,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record20": {
+    "code": "nodicsDocsMetadataframeworkLocalRuntimeTroubleshooting",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "framework.local-runtime-troubleshooting",
+    "title": "Local Runtime Troubleshooting",
+    "summary": "Practical troubleshooting for ports, stale topology state, schema import failures, publication state, and missing navigation.",
+    "businessSummary": "Local Runtime Troubleshooting explains the business purpose, supported decisions, operational impact, and controls for the Local Workspace Setup journey.",
+    "technicalSummary": "Local Runtime Troubleshooting records owning module nodics.foundation, technical module nSetup, source path docs/pages/framework/local-runtime-troubleshooting.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nSetup",
+    "targetPage": "nodicsDocsPageframeworkLocalRuntimeTroubleshooting",
+    "targetRoute": "nodicsDocsRouteframeworkLocalRuntimeTroubleshooting",
+    "articleComponent": "nodicsDocsComponentframeworkLocalRuntimeTroubleshooting",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalruntimetroubleshooting",
+    "headings": [
+      {
+        "text": "Troubleshooting flow",
+        "anchor": "frameworkLocalRuntimeTroubleshooting-1-troubleshooting-flow",
+        "level": 2
+      },
+      {
+        "text": "Common local signals",
+        "anchor": "frameworkLocalRuntimeTroubleshooting-2-common-local-signals",
+        "level": 2
+      },
+      {
+        "text": "Business impact",
+        "anchor": "frameworkLocalRuntimeTroubleshooting-3-business-impact",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension",
+        "anchor": "frameworkLocalRuntimeTroubleshooting-4-customization-and-extension",
+        "level": 2
+      },
+      {
+        "text": "Reader and implementation contract",
+        "anchor": "frameworkLocalRuntimeTroubleshooting-5-reader-and-implementation-contract",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "frameworkLocalRuntimeTroubleshooting-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "frameworkLocalRuntimeTroubleshooting-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Symptom, Likely cause, Action"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "framework.what-is-nodics",
+      "framework.local-verification-checklist",
+      "platform.module-registry"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/framework/local-runtime-troubleshooting.md",
+    "sourceChecksum": "d29ac1144b732d06ca3b941d0abb95e4465a155d14e0464d71f2bbe2f161f784",
+    "sourceWordCount": 575,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record21": {
     "code": "nodicsDocsMetadatainstallerInstalledRuntimeApplicationBuilder",
     "product": "nodicsDocumentationProduct",
     "documentId": "installer.installed-runtime-application-builder",
@@ -1519,7 +2460,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record10": {
+  "record22": {
     "code": "nodicsDocsMetadatabuilderWorkspaceGeneration",
     "product": "nodicsDocumentationProduct",
     "documentId": "builder.workspace-generation",
@@ -1638,7 +2579,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record11": {
+  "record23": {
     "code": "nodicsDocsMetadataprocessVisualDesigner",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.visual-designer",
@@ -1757,7 +2698,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record12": {
+  "record24": {
     "code": "nodicsDocsMetadataaxisBusinessCustomization",
     "product": "nodicsDocumentationProduct",
     "documentId": "axis.business-customization",
@@ -1876,7 +2817,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record13": {
+  "record25": {
     "code": "nodicsDocsMetadataplatformOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "platform.overview",
@@ -2013,7 +2954,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record14": {
+  "record26": {
     "code": "nodicsDocsMetadatasecurityIdentityAccessGovernance",
     "product": "nodicsDocumentationProduct",
     "documentId": "security.identity-access-governance",
@@ -2144,7 +3085,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record15": {
+  "record27": {
     "code": "nodicsDocsMetadataconfigurationRuntimeBehaviorManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "configuration.runtime-behavior-management",
@@ -2264,7 +3205,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record16": {
+  "record28": {
     "code": "nodicsDocsMetadataroutingApiGovernance",
     "product": "nodicsDocumentationProduct",
     "documentId": "routing.api-governance",
@@ -2383,7 +3324,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record17": {
+  "record29": {
     "code": "nodicsDocsMetadataruntimeGovernedChange",
     "product": "nodicsDocumentationProduct",
     "documentId": "runtime.governed-change",
@@ -2502,7 +3443,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record18": {
+  "record30": {
     "code": "nodicsDocsMetadatalocalizationInternationalization",
     "product": "nodicsDocumentationProduct",
     "documentId": "localization.internationalization",
@@ -2633,7 +3574,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record19": {
+  "record31": {
     "code": "nodicsDocsMetadataschemaDataModelingManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "schema.data-modeling-management",
@@ -2752,7 +3693,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record20": {
+  "record32": {
     "code": "nodicsDocsMetadatapersistenceProviderDataAccessLayer",
     "product": "nodicsDocumentationProduct",
     "documentId": "persistence.provider-data-access-layer",
@@ -2867,7 +3808,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record21": {
+  "record33": {
     "code": "nodicsDocsMetadatacacheRuntimeStateManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "cache.runtime-state-management",
@@ -2986,7 +3927,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record22": {
+  "record34": {
     "code": "nodicsDocsMetadataframeworkCustomizationGuide",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.customization-guide",
@@ -3003,80 +3944,42 @@ module.exports = {
     "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworkcustomizationguide",
     "headings": [
       {
-        "text": "What this is",
-        "anchor": "frameworkCustomizationGuide-1-what-this-is",
+        "text": "Customization ladder",
+        "anchor": "frameworkCustomizationGuide-1-customization-ladder",
         "level": 2
       },
       {
-        "text": "The customization ladder",
-        "anchor": "frameworkCustomizationGuide-2-the-customization-ladder",
+        "text": "Business perspective",
+        "anchor": "frameworkCustomizationGuide-2-business-perspective",
         "level": 2
       },
       {
-        "text": "The role an AI tool or developer must play",
-        "anchor": "frameworkCustomizationGuide-3-the-role-an-ai-tool-or-developer-must-play",
+        "text": "Developer perspective",
+        "anchor": "frameworkCustomizationGuide-3-developer-perspective",
         "level": 2
       },
       {
-        "text": "Coding principles that protect customization",
-        "anchor": "frameworkCustomizationGuide-4-coding-principles-that-protect-customization",
+        "text": "Continue with",
+        "anchor": "frameworkCustomizationGuide-4-continue-with",
         "level": 2
       },
       {
-        "text": "Backend customization",
-        "anchor": "frameworkCustomizationGuide-5-backend-customization",
-        "level": 2
-      },
-      {
-        "text": "Axis customization",
-        "anchor": "frameworkCustomizationGuide-6-axis-customization",
-        "level": 2
-      },
-      {
-        "text": "Choosing the right customization mechanism",
-        "anchor": "frameworkCustomizationGuide-7-choosing-the-right-customization-mechanism",
-        "level": 2
-      },
-      {
-        "text": "Worked example: changing a demo company identity",
-        "anchor": "frameworkCustomizationGuide-8-worked-example-changing-a-demo-company-identity",
-        "level": 2
-      },
-      {
-        "text": "Worked example: overriding a service safely",
-        "anchor": "frameworkCustomizationGuide-9-worked-example-overriding-a-service-safely",
-        "level": 2
-      },
-      {
-        "text": "Business and DevOps impact",
-        "anchor": "frameworkCustomizationGuide-10-business-and-devops-impact",
-        "level": 2
-      },
-      {
-        "text": "Documentation customization",
-        "anchor": "frameworkCustomizationGuide-11-documentation-customization",
+        "text": "Reader and implementation contract",
+        "anchor": "frameworkCustomizationGuide-5-reader-and-implementation-contract",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "frameworkCustomizationGuide-12-common-mistakes",
+        "anchor": "frameworkCustomizationGuide-6-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "frameworkCustomizationGuide-13-verification",
-        "level": 2
-      },
-      {
-        "text": "Customization acceptance checklist",
-        "anchor": "frameworkCustomizationGuide-14-customization-acceptance-checklist",
+        "anchor": "frameworkCustomizationGuide-7-verification",
         "level": 2
       }
     ],
     "diagrams": [
-      {
-        "language": "mermaid"
-      },
       {
         "language": "mermaid"
       }
@@ -3084,35 +3987,24 @@ module.exports = {
     "visualAssets": [
       {
         "kind": "table",
-        "title": "Customization level, Who should use it, Beginner example, Upgrade risk"
-      },
-      {
-        "kind": "table",
-        "title": "Role, Question to ask before coding, Example"
-      },
-      {
-        "kind": "table",
-        "title": "Requirement, Preferred mechanism, Why"
-      },
-      {
-        "kind": "table",
-        "title": "Question, Acceptable answer"
+        "title": "Change type, First place to check, Why"
       }
     ],
     "visualRequirements": [
       "diagram",
-      "comparison-table",
-      "code-example"
+      "comparison-table"
     ],
     "relatedPages": [
+      "framework.backend-extension-patterns",
+      "framework.axis-content-customization",
+      "framework.architecture-decision-guide",
       "framework.modular-architecture",
-      "process.custom-project-extension",
-      "docs.overview"
+      "process.custom-project-extension"
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/framework/customization-guide.md",
-    "sourceChecksum": "d6fe07c150101bd1240c5f3f3ea84f6f022d48b544c30ab765db0781f42b304d",
-    "sourceWordCount": 2147,
+    "sourceChecksum": "4cecb2e3a0096457a874cb5f3e504386eef63af9a7e8aa11a1cd4360b35dcb0b",
+    "sourceWordCount": 512,
     "audience": [
       "business",
       "architect",
@@ -3138,7 +4030,209 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record23": {
+  "record35": {
+    "code": "nodicsDocsMetadataframeworkBackendExtensionPatterns",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "framework.backend-extension-patterns",
+    "title": "Backend Extension Patterns",
+    "summary": "How projects extend behavior through configuration, provider adapters, services, validators, pipelines, schemas, and events.",
+    "businessSummary": "Backend Extension Patterns explains the business purpose, supported decisions, operational impact, and controls for the Project-Layer Customization journey.",
+    "technicalSummary": "Backend Extension Patterns records owning module nodics.foundation, technical module nSetup, source path docs/pages/framework/backend-extension-patterns.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nSetup",
+    "targetPage": "nodicsDocsPageframeworkBackendExtensionPatterns",
+    "targetRoute": "nodicsDocsRouteframeworkBackendExtensionPatterns",
+    "articleComponent": "nodicsDocsComponentframeworkBackendExtensionPatterns",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworkbackendextensionpatterns",
+    "headings": [
+      {
+        "text": "Extension options",
+        "anchor": "frameworkBackendExtensionPatterns-1-extension-options",
+        "level": 2
+      },
+      {
+        "text": "Decision flow",
+        "anchor": "frameworkBackendExtensionPatterns-2-decision-flow",
+        "level": 2
+      },
+      {
+        "text": "Business and developer impact",
+        "anchor": "frameworkBackendExtensionPatterns-3-business-and-developer-impact",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension",
+        "anchor": "frameworkBackendExtensionPatterns-4-customization-and-extension",
+        "level": 2
+      },
+      {
+        "text": "Reader and implementation contract",
+        "anchor": "frameworkBackendExtensionPatterns-5-reader-and-implementation-contract",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "frameworkBackendExtensionPatterns-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "frameworkBackendExtensionPatterns-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Pattern, Use when, Verification"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "framework.modular-architecture",
+      "process.custom-project-extension",
+      "docs.overview"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/framework/backend-extension-patterns.md",
+    "sourceChecksum": "c8fdfe2fdabe5cb44729218bf58f1a64ebba525186f859f4a57eacba056371e6",
+    "sourceWordCount": 520,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record36": {
+    "code": "nodicsDocsMetadataframeworkAxisContentCustomization",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "framework.axis-content-customization",
+    "title": "Axis Content Customization",
+    "summary": "How business users customize backend-owned content, navigation, visibility, setup records, and publishing decisions from Axis.",
+    "businessSummary": "Axis Content Customization explains the business purpose, supported decisions, operational impact, and controls for the Project-Layer Customization journey.",
+    "technicalSummary": "Axis Content Customization records owning module nodics.foundation, technical module nSetup, source path docs/pages/framework/axis-content-customization.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nSetup",
+    "targetPage": "nodicsDocsPageframeworkAxisContentCustomization",
+    "targetRoute": "nodicsDocsRouteframeworkAxisContentCustomization",
+    "articleComponent": "nodicsDocsComponentframeworkAxisContentCustomization",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworkaxiscontentcustomization",
+    "headings": [
+      {
+        "text": "Customization journey",
+        "anchor": "frameworkAxisContentCustomization-1-customization-journey",
+        "level": 2
+      },
+      {
+        "text": "What business users can change",
+        "anchor": "frameworkAxisContentCustomization-2-what-business-users-can-change",
+        "level": 2
+      },
+      {
+        "text": "Business value",
+        "anchor": "frameworkAxisContentCustomization-3-business-value",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension",
+        "anchor": "frameworkAxisContentCustomization-4-customization-and-extension",
+        "level": 2
+      },
+      {
+        "text": "Reader and implementation contract",
+        "anchor": "frameworkAxisContentCustomization-5-reader-and-implementation-contract",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "frameworkAxisContentCustomization-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "frameworkAxisContentCustomization-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Change, Owner, Notes"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "framework.modular-architecture",
+      "process.custom-project-extension",
+      "docs.overview"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/framework/axis-content-customization.md",
+    "sourceChecksum": "414adcd134568b56217c7cd40682703219f39f1ddb721e808f3d3367ff614a50",
+    "sourceWordCount": 508,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record37": {
     "code": "nodicsDocsMetadataprocessDeveloperCustomization",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.developer-customization",
@@ -3254,7 +4348,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record24": {
+  "record38": {
     "code": "nodicsDocsMetadataprocessCustomProjectExtension",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.custom-project-extension",
@@ -3354,7 +4448,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record25": {
+  "record39": {
     "code": "nodicsDocsMetadatacommerceBaseFoundations",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.base-foundations",
@@ -3467,7 +4561,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record26": {
+  "record40": {
     "code": "nodicsDocsMetadatawcmsOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.overview",
@@ -3484,132 +4578,42 @@ module.exports = {
     "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatawcmsoverview",
     "headings": [
       {
-        "text": "Problem it solves",
-        "anchor": "wcmsOverview-1-problem-it-solves",
+        "text": "WCMS model",
+        "anchor": "wcmsOverview-1-wcms-model",
         "level": 2
       },
       {
-        "text": "Core ownership rule",
-        "anchor": "wcmsOverview-2-core-ownership-rule",
+        "text": "Business perspective",
+        "anchor": "wcmsOverview-2-business-perspective",
         "level": 2
       },
       {
-        "text": "What WCMS manages",
-        "anchor": "wcmsOverview-3-what-wcms-manages",
+        "text": "Technical perspective",
+        "anchor": "wcmsOverview-3-technical-perspective",
         "level": 2
       },
       {
-        "text": "Catalog-first content model",
-        "anchor": "wcmsOverview-4-catalog-first-content-model",
+        "text": "Continue with",
+        "anchor": "wcmsOverview-4-continue-with",
         "level": 2
       },
       {
-        "text": "How a page becomes visible",
-        "anchor": "wcmsOverview-5-how-a-page-becomes-visible",
-        "level": 2
-      },
-      {
-        "text": "Beginner example: documentation content",
-        "anchor": "wcmsOverview-6-beginner-example-documentation-content",
-        "level": 2
-      },
-      {
-        "text": "Axis Page Designer foundation",
-        "anchor": "wcmsOverview-7-axis-page-designer-foundation",
-        "level": 2
-      },
-      {
-        "text": "Required record chain",
-        "anchor": "wcmsOverview-8-required-record-chain",
-        "level": 2
-      },
-      {
-        "text": "Developer model",
-        "anchor": "wcmsOverview-9-developer-model",
-        "level": 2
-      },
-      {
-        "text": "Content-pack release model",
-        "anchor": "wcmsOverview-10-content-pack-release-model",
-        "level": 2
-      },
-      {
-        "text": "Business model",
-        "anchor": "wcmsOverview-11-business-model",
-        "level": 2
-      },
-      {
-        "text": "Business journey: from content idea to visible page",
-        "anchor": "wcmsOverview-12-business-journey-from-content-idea-to-visible-page",
-        "level": 2
-      },
-      {
-        "text": "Example: three documentation sites",
-        "anchor": "wcmsOverview-13-example-three-documentation-sites",
-        "level": 2
-      },
-      {
-        "text": "Developer journey: adding a module-owned page",
-        "anchor": "wcmsOverview-14-developer-journey-adding-a-module-owned-page",
-        "level": 2
-      },
-      {
-        "text": "DevOps model",
-        "anchor": "wcmsOverview-15-devops-model",
-        "level": 2
-      },
-      {
-        "text": "Operations checklist",
-        "anchor": "wcmsOverview-16-operations-checklist",
-        "level": 2
-      },
-      {
-        "text": "QA scenarios",
-        "anchor": "wcmsOverview-17-qa-scenarios",
-        "level": 2
-      },
-      {
-        "text": "What not to do",
-        "anchor": "wcmsOverview-18-what-not-to-do",
+        "text": "Reader and implementation contract",
+        "anchor": "wcmsOverview-5-reader-and-implementation-contract",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "wcmsOverview-19-common-mistakes",
+        "anchor": "wcmsOverview-6-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "wcmsOverview-20-verification",
-        "level": 2
-      },
-      {
-        "text": "CMS entity model coverage",
-        "anchor": "wcmsOverview-21-cms-entity-model-coverage",
-        "level": 2
-      },
-      {
-        "text": "Editorial coverage",
-        "anchor": "wcmsOverview-22-editorial-coverage",
+        "anchor": "wcmsOverview-7-verification",
         "level": 2
       }
     ],
     "diagrams": [
-      {
-        "language": "mermaid"
-      },
-      {
-        "language": "mermaid"
-      },
-      {
-        "language": "mermaid"
-      },
-      {
-        "language": "mermaid"
-      },
-      {
-        "language": "mermaid"
-      },
       {
         "language": "mermaid"
       }
@@ -3617,35 +4621,25 @@ module.exports = {
     "visualAssets": [
       {
         "kind": "table",
-        "title": "Record, Beginner explanation, Common failure if missing"
-      },
-      {
-        "kind": "table",
-        "title": "Visible documentation area, Backend owner, Content purpose"
-      },
-      {
-        "kind": "table",
-        "title": "Check, Expected evidence"
-      },
-      {
-        "kind": "table",
-        "title": "Entity, Business purpose, Extension note"
+        "title": "Concept, Meaning, Who cares"
       }
     ],
     "visualRequirements": [
       "diagram",
-      "source-map-table",
-      "code-example"
+      "source-map-table"
     ],
     "relatedPages": [
+      "wcms.content-catalog-model",
+      "wcms.page-designer-components",
+      "wcms.site-publication-visibility",
       "wcms.media-management",
       "wcms.publishing-lifecycle",
       "docs.overview"
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.wcms/overview.md",
-    "sourceChecksum": "884e5b4c28c47cc5bcf947b9416a3793e825d8c7a4b80ce2b556970dfe01a674",
-    "sourceWordCount": 2961,
+    "sourceChecksum": "f8eec3d7d2f58d99bb51c1b9e16551994276cc84e6898c5548a219bd0f584523",
+    "sourceWordCount": 539,
     "audience": [
       "business",
       "architect",
@@ -3671,7 +4665,310 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record27": {
+  "record41": {
+    "code": "nodicsDocsMetadatawcmsContentCatalogModel",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "wcms.content-catalog-model",
+    "title": "Content Catalog Model",
+    "summary": "How sites, catalogs, pages, components, media, routes, access policy, and publication state drive public content.",
+    "businessSummary": "Content Catalog Model explains the business purpose, supported decisions, operational impact, and controls for the Content Model and Delivery journey.",
+    "technicalSummary": "Content Catalog Model records owning module nodics.wcms, technical module wcms, source path docs/pages/nodics.wcms/content-catalog-model.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.wcms",
+    "technicalModule": "wcms",
+    "targetPage": "nodicsDocsPagewcmsContentCatalogModel",
+    "targetRoute": "nodicsDocsRoutewcmsContentCatalogModel",
+    "articleComponent": "nodicsDocsComponentwcmsContentCatalogModel",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatawcmscontentcatalogmodel",
+    "headings": [
+      {
+        "text": "Catalog objects",
+        "anchor": "wcmsContentCatalogModel-1-catalog-objects",
+        "level": 2
+      },
+      {
+        "text": "Data flow",
+        "anchor": "wcmsContentCatalogModel-2-data-flow",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension",
+        "anchor": "wcmsContentCatalogModel-3-customization-and-extension",
+        "level": 2
+      },
+      {
+        "text": "Operator view",
+        "anchor": "wcmsContentCatalogModel-4-operator-view",
+        "level": 2
+      },
+      {
+        "text": "Reader and implementation contract",
+        "anchor": "wcmsContentCatalogModel-5-reader-and-implementation-contract",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "wcmsContentCatalogModel-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "wcmsContentCatalogModel-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Object, Purpose, Business impact"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "wcms.media-management",
+      "wcms.publishing-lifecycle",
+      "docs.overview"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.wcms/content-catalog-model.md",
+    "sourceChecksum": "c07e400a2c4fa909a88ebb5e5a232404b50e005dabf893306325904d5f8791e3",
+    "sourceWordCount": 556,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record42": {
+    "code": "nodicsDocsMetadatawcmsPageDesignerComponents",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "wcms.page-designer-components",
+    "title": "Page Designer and Components",
+    "summary": "How Axis-managed content areas, components, renderer metadata, sequence, validation, and publishing work together.",
+    "businessSummary": "Page Designer and Components explains the business purpose, supported decisions, operational impact, and controls for the Content Model and Delivery journey.",
+    "technicalSummary": "Page Designer and Components records owning module nodics.wcms, technical module wcms, source path docs/pages/nodics.wcms/page-designer-and-components.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.wcms",
+    "technicalModule": "wcms",
+    "targetPage": "nodicsDocsPagewcmsPageDesignerComponents",
+    "targetRoute": "nodicsDocsRoutewcmsPageDesignerComponents",
+    "articleComponent": "nodicsDocsComponentwcmsPageDesignerComponents",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatawcmspagedesignercomponents",
+    "headings": [
+      {
+        "text": "Authoring journey",
+        "anchor": "wcmsPageDesignerComponents-1-authoring-journey",
+        "level": 2
+      },
+      {
+        "text": "Component contract",
+        "anchor": "wcmsPageDesignerComponents-2-component-contract",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension",
+        "anchor": "wcmsPageDesignerComponents-3-customization-and-extension",
+        "level": 2
+      },
+      {
+        "text": "Business and operator impact",
+        "anchor": "wcmsPageDesignerComponents-4-business-and-operator-impact",
+        "level": 2
+      },
+      {
+        "text": "Reader and implementation contract",
+        "anchor": "wcmsPageDesignerComponents-5-reader-and-implementation-contract",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "wcmsPageDesignerComponents-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "wcmsPageDesignerComponents-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Business meaning, Technical meaning"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "wcms.media-management",
+      "wcms.publishing-lifecycle",
+      "docs.overview"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.wcms/page-designer-and-components.md",
+    "sourceChecksum": "9b041f66db05bcaf893292f0e1590ff80508d3bb7640fe365dcf40b49f5e467f",
+    "sourceWordCount": 505,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record43": {
+    "code": "nodicsDocsMetadatawcmsSitePublicationVisibility",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "wcms.site-publication-visibility",
+    "title": "Site Publication and Visibility",
+    "summary": "How Staged, approval, Online, access policy, maintenance pages, and public delivery determine what users see.",
+    "businessSummary": "Site Publication and Visibility explains the business purpose, supported decisions, operational impact, and controls for the Content Model and Delivery journey.",
+    "technicalSummary": "Site Publication and Visibility records owning module nodics.wcms, technical module wcms, source path docs/pages/nodics.wcms/site-publication-and-visibility.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.wcms",
+    "technicalModule": "wcms",
+    "targetPage": "nodicsDocsPagewcmsSitePublicationVisibility",
+    "targetRoute": "nodicsDocsRoutewcmsSitePublicationVisibility",
+    "articleComponent": "nodicsDocsComponentwcmsSitePublicationVisibility",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatawcmssitepublicationvisibility",
+    "headings": [
+      {
+        "text": "Visibility flow",
+        "anchor": "wcmsSitePublicationVisibility-1-visibility-flow",
+        "level": 2
+      },
+      {
+        "text": "Visibility matrix",
+        "anchor": "wcmsSitePublicationVisibility-2-visibility-matrix",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension",
+        "anchor": "wcmsSitePublicationVisibility-3-customization-and-extension",
+        "level": 2
+      },
+      {
+        "text": "Operator view",
+        "anchor": "wcmsSitePublicationVisibility-4-operator-view",
+        "level": 2
+      },
+      {
+        "text": "Reader and implementation contract",
+        "anchor": "wcmsSitePublicationVisibility-5-reader-and-implementation-contract",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "wcmsSitePublicationVisibility-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "wcmsSitePublicationVisibility-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "State, Axis authoring, Axis reading, Nexus/Agora public, Notes"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "wcms.media-management",
+      "wcms.publishing-lifecycle",
+      "docs.overview"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.wcms/site-publication-and-visibility.md",
+    "sourceChecksum": "b7014f3a7cf6316ed680f6043b111ef934d8527a67a09a89f233e68777ac5997",
+    "sourceWordCount": 532,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record44": {
     "code": "nodicsDocsMetadatacatalogProductDiscoveryManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "catalog.product-discovery-management",
@@ -3802,7 +5099,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record28": {
+  "record45": {
     "code": "nodicsDocsMetadatadiscoverySearchIndexing",
     "product": "nodicsDocumentationProduct",
     "documentId": "discovery.search-indexing",
@@ -3933,7 +5230,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record29": {
+  "record46": {
     "code": "nodicsDocsMetadatawcmsMediaManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.media-management",
@@ -3950,90 +5247,47 @@ module.exports = {
     "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediamanagement",
     "headings": [
       {
-        "text": "Problem it solves",
-        "anchor": "wcmsMediaManagement-1-problem-it-solves",
+        "text": "Media model",
+        "anchor": "wcmsMediaManagement-1-media-model",
         "level": 2
       },
       {
-        "text": "Core concepts",
-        "anchor": "wcmsMediaManagement-2-core-concepts",
+        "text": "Business perspective",
+        "anchor": "wcmsMediaManagement-2-business-perspective",
         "level": 2
       },
       {
-        "text": "Frontend boundary",
-        "anchor": "wcmsMediaManagement-3-frontend-boundary",
+        "text": "Developer perspective",
+        "anchor": "wcmsMediaManagement-3-developer-perspective",
         "level": 2
       },
       {
-        "text": "Upload and delivery lifecycle",
-        "anchor": "wcmsMediaManagement-4-upload-and-delivery-lifecycle",
+        "text": "Continue with",
+        "anchor": "wcmsMediaManagement-4-continue-with",
         "level": 2
       },
       {
-        "text": "Source contexts",
-        "anchor": "wcmsMediaManagement-5-source-contexts",
+        "text": "Operational evidence",
+        "anchor": "wcmsMediaManagement-5-operational-evidence",
         "level": 2
       },
       {
-        "text": "Media ownership across modules",
-        "anchor": "wcmsMediaManagement-6-media-ownership-across-modules",
-        "level": 2
-      },
-      {
-        "text": "Business journey: adding a website banner",
-        "anchor": "wcmsMediaManagement-7-business-journey-adding-a-website-banner",
-        "level": 2
-      },
-      {
-        "text": "Developer journey: adding a new media use case",
-        "anchor": "wcmsMediaManagement-8-developer-journey-adding-a-new-media-use-case",
-        "level": 2
-      },
-      {
-        "text": "Beginner customization example",
-        "anchor": "wcmsMediaManagement-9-beginner-customization-example",
-        "level": 2
-      },
-      {
-        "text": "Business value",
-        "anchor": "wcmsMediaManagement-10-business-value",
-        "level": 2
-      },
-      {
-        "text": "DevOps considerations",
-        "anchor": "wcmsMediaManagement-11-devops-considerations",
-        "level": 2
-      },
-      {
-        "text": "Failure and recovery examples",
-        "anchor": "wcmsMediaManagement-12-failure-and-recovery-examples",
-        "level": 2
-      },
-      {
-        "text": "Operational acceptance checklist",
-        "anchor": "wcmsMediaManagement-13-operational-acceptance-checklist",
-        "level": 2
-      },
-      {
-        "text": "Customization model",
-        "anchor": "wcmsMediaManagement-14-customization-model",
+        "text": "Reader and implementation contract",
+        "anchor": "wcmsMediaManagement-6-reader-and-implementation-contract",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "wcmsMediaManagement-15-common-mistakes",
+        "anchor": "wcmsMediaManagement-7-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "wcmsMediaManagement-16-verification",
+        "anchor": "wcmsMediaManagement-8-verification",
         "level": 2
       }
     ],
     "diagrams": [
-      {
-        "language": "mermaid"
-      },
       {
         "language": "mermaid"
       }
@@ -4041,34 +5295,23 @@ module.exports = {
     "visualAssets": [
       {
         "kind": "table",
-        "title": "Source context, Typical file examples, Different policy needs"
-      },
-      {
-        "kind": "table",
-        "title": "Consumer, What it may do, What it must not do"
-      },
-      {
-        "kind": "table",
-        "title": "Failure, Safe behavior"
-      },
-      {
-        "kind": "table",
-        "title": "Area, Acceptance evidence"
+        "title": "Area, Rule"
       }
     ],
     "visualRequirements": [
       "lifecycle-state-diagram",
-      "table",
-      "code-example"
+      "table"
     ],
     "relatedPages": [
       "wcms.overview",
-      "commerce.base-foundations"
+      "commerce.base-foundations",
+      "wcms.media-storage-delivery",
+      "wcms.media-import-publication"
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.wcms/media-management.md",
-    "sourceChecksum": "7eb05521c87b56b9a58a02e1cc22be22be956f508a6ee6331044ac7cd24a306f",
-    "sourceWordCount": 1721,
+    "sourceChecksum": "08efd60090733a0d838738f9813cf24e044fc15367a0c9774cb1efb6b313fe44",
+    "sourceWordCount": 568,
     "audience": [
       "business",
       "architect",
@@ -4094,7 +5337,225 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record30": {
+  "record47": {
+    "code": "nodicsDocsMetadatawcmsMediaStorageDelivery",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "wcms.media-storage-delivery",
+    "title": "Media Storage and Delivery",
+    "summary": "Provider, access, URL, cache, and browser delivery model for media used by content and storefront experiences.",
+    "businessSummary": "Media Storage and Delivery explains the business purpose, supported decisions, operational impact, and controls for the Media Lifecycle and Storage journey.",
+    "technicalSummary": "Media Storage and Delivery records owning module nodics.wcms, technical module media, source path docs/pages/nodics.wcms/media-storage-and-delivery.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.wcms",
+    "technicalModule": "media",
+    "targetPage": "nodicsDocsPagewcmsMediaStorageDelivery",
+    "targetRoute": "nodicsDocsRoutewcmsMediaStorageDelivery",
+    "articleComponent": "nodicsDocsComponentwcmsMediaStorageDelivery",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediastoragedelivery",
+    "headings": [
+      {
+        "text": "Delivery flow",
+        "anchor": "wcmsMediaStorageDelivery-1-delivery-flow",
+        "level": 2
+      },
+      {
+        "text": "Business perspective",
+        "anchor": "wcmsMediaStorageDelivery-2-business-perspective",
+        "level": 2
+      },
+      {
+        "text": "Developer perspective",
+        "anchor": "wcmsMediaStorageDelivery-3-developer-perspective",
+        "level": 2
+      },
+      {
+        "text": "Operator perspective",
+        "anchor": "wcmsMediaStorageDelivery-4-operator-perspective",
+        "level": 2
+      },
+      {
+        "text": "Operational evidence",
+        "anchor": "wcmsMediaStorageDelivery-5-operational-evidence",
+        "level": 2
+      },
+      {
+        "text": "Reader and implementation contract",
+        "anchor": "wcmsMediaStorageDelivery-6-reader-and-implementation-contract",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "wcmsMediaStorageDelivery-7-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "wcmsMediaStorageDelivery-8-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "wcmsMediaStorageDelivery-9-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Concern, Documentation requirement"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "wcms.media-management"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.wcms/media-storage-and-delivery.md",
+    "sourceChecksum": "f652503a1a4cec26692c53ca4f6437aa3633b5a7dad9626b0d0342bb81590de8",
+    "sourceWordCount": 647,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record48": {
+    "code": "nodicsDocsMetadatawcmsMediaImportPublication",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "wcms.media-import-publication",
+    "title": "Media Import and Publication",
+    "summary": "Complete content-pack preparation for media assets, media records, page references, and Online publication.",
+    "businessSummary": "Media Import and Publication explains the business purpose, supported decisions, operational impact, and controls for the Media Lifecycle and Storage journey.",
+    "technicalSummary": "Media Import and Publication records owning module nodics.wcms, technical module media, source path docs/pages/nodics.wcms/media-import-and-publication.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.wcms",
+    "technicalModule": "media",
+    "targetPage": "nodicsDocsPagewcmsMediaImportPublication",
+    "targetRoute": "nodicsDocsRoutewcmsMediaImportPublication",
+    "articleComponent": "nodicsDocsComponentwcmsMediaImportPublication",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediaimportpublication",
+    "headings": [
+      {
+        "text": "Import flow",
+        "anchor": "wcmsMediaImportPublication-1-import-flow",
+        "level": 2
+      },
+      {
+        "text": "Complete site preparation",
+        "anchor": "wcmsMediaImportPublication-2-complete-site-preparation",
+        "level": 2
+      },
+      {
+        "text": "Business perspective",
+        "anchor": "wcmsMediaImportPublication-3-business-perspective",
+        "level": 2
+      },
+      {
+        "text": "Developer perspective",
+        "anchor": "wcmsMediaImportPublication-4-developer-perspective",
+        "level": 2
+      },
+      {
+        "text": "Operational evidence",
+        "anchor": "wcmsMediaImportPublication-5-operational-evidence",
+        "level": 2
+      },
+      {
+        "text": "Reader and implementation contract",
+        "anchor": "wcmsMediaImportPublication-6-reader-and-implementation-contract",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "wcmsMediaImportPublication-7-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "wcmsMediaImportPublication-8-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "wcmsMediaImportPublication-9-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Asset type, What must be imported"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "wcms.media-management"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.wcms/media-import-and-publication.md",
+    "sourceChecksum": "2e58f163ceca47ca05ced3330cf0d67a60981b96c7bad41cbe99055eac4a4b4b",
+    "sourceWordCount": 603,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record49": {
     "code": "nodicsDocsMetadatainventoryStockManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "inventory.stock-management",
@@ -4225,7 +5686,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record31": {
+  "record50": {
     "code": "nodicsDocsMetadatapricingPromotionsTaxManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "pricing.promotions-tax-management",
@@ -4356,7 +5817,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record32": {
+  "record51": {
     "code": "nodicsDocsMetadatacommerceOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.overview",
@@ -4462,7 +5923,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record33": {
+  "record52": {
     "code": "nodicsDocsMetadatacommerceCartOrder",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.cart-order",
@@ -4558,7 +6019,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record34": {
+  "record53": {
     "code": "nodicsDocsMetadatacommercePaymentFulfillment",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.payment-fulfillment",
@@ -4600,18 +6061,23 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "Customization and extension guidance",
+        "anchor": "commercePaymentFulfillment-6-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
         "text": "Common mistakes",
-        "anchor": "commercePaymentFulfillment-6-common-mistakes",
+        "anchor": "commercePaymentFulfillment-7-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "commercePaymentFulfillment-7-verification",
+        "anchor": "commercePaymentFulfillment-8-verification",
         "level": 2
       },
       {
         "text": "Payment Transaction And Reconciliation Coverage",
-        "anchor": "commercePaymentFulfillment-8-payment-transaction-and-reconciliation-coverage",
+        "anchor": "commercePaymentFulfillment-9-payment-transaction-and-reconciliation-coverage",
         "level": 2
       }
     ],
@@ -4639,8 +6105,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.commerce/payment-fulfillment.md",
-    "sourceChecksum": "724c4f72188de22d12d6d0818e9f744dc5c0881314acec515c32e6658972fd29",
-    "sourceWordCount": 787,
+    "sourceChecksum": "8bc73f067affb71340c91efb3270f8a3540bdd5554a6539bfc3e7f0692f0f7d9",
+    "sourceWordCount": 847,
     "audience": [
       "business",
       "architect",
@@ -4666,7 +6132,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record35": {
+  "record54": {
     "code": "nodicsDocsMetadatafulfillmentShippingManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "fulfillment.shipping-management",
@@ -4797,7 +6263,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record36": {
+  "record55": {
     "code": "nodicsDocsMetadataorderManagementLifecycle",
     "product": "nodicsDocumentationProduct",
     "documentId": "order.management-lifecycle",
@@ -4928,7 +6394,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record37": {
+  "record56": {
     "code": "nodicsDocsMetadatacommerceReturnsRefunds",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.returns-refunds",
@@ -5041,7 +6507,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record38": {
+  "record57": {
     "code": "nodicsDocsMetadataengagementCustomerReviews",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.customer-reviews",
@@ -5058,73 +6524,48 @@ module.exports = {
     "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataengagementcustomerreviews",
     "headings": [
       {
-        "text": "Who should read this",
-        "anchor": "engagementCustomerReviews-1-who-should-read-this",
+        "text": "Review lifecycle",
+        "anchor": "engagementCustomerReviews-1-review-lifecycle",
         "level": 2
       },
       {
-        "text": "What is available",
-        "anchor": "engagementCustomerReviews-2-what-is-available",
+        "text": "Business perspective",
+        "anchor": "engagementCustomerReviews-2-business-perspective",
         "level": 2
       },
       {
-        "text": "End-to-end journey",
-        "anchor": "engagementCustomerReviews-3-end-to-end-journey",
+        "text": "Developer perspective",
+        "anchor": "engagementCustomerReviews-3-developer-perspective",
         "level": 2
       },
       {
-        "text": "Shopper journey",
-        "anchor": "engagementCustomerReviews-4-shopper-journey",
+        "text": "Continue with",
+        "anchor": "engagementCustomerReviews-4-continue-with",
         "level": 2
       },
       {
-        "text": "Moderator journey in Axis",
-        "anchor": "engagementCustomerReviews-5-moderator-journey-in-axis",
+        "text": "Operational evidence",
+        "anchor": "engagementCustomerReviews-5-operational-evidence",
         "level": 2
       },
       {
-        "text": "Public API behavior",
-        "anchor": "engagementCustomerReviews-6-public-api-behavior",
+        "text": "Reader and implementation contract",
+        "anchor": "engagementCustomerReviews-6-reader-and-implementation-contract",
         "level": 2
       },
       {
-        "text": "Aggregate correctness and recovery",
-        "anchor": "engagementCustomerReviews-7-aggregate-correctness-and-recovery",
-        "level": 2
-      },
-      {
-        "text": "Review requests, sessions, and syndication",
-        "anchor": "engagementCustomerReviews-8-review-requests-sessions-and-syndication",
-        "level": 2
-      },
-      {
-        "text": "Configuration and ownership map",
-        "anchor": "engagementCustomerReviews-9-configuration-and-ownership-map",
-        "level": 2
-      },
-      {
-        "text": "Customize and extend safely",
-        "anchor": "engagementCustomerReviews-10-customize-and-extend-safely",
-        "level": 2
-      },
-      {
-        "text": "Security and privacy",
-        "anchor": "engagementCustomerReviews-11-security-and-privacy",
+        "text": "Documentation maintenance rule",
+        "anchor": "engagementCustomerReviews-7-documentation-maintenance-rule",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "engagementCustomerReviews-12-common-mistakes",
-        "level": 2
-      },
-      {
-        "text": "Troubleshooting",
-        "anchor": "engagementCustomerReviews-13-troubleshooting",
+        "anchor": "engagementCustomerReviews-8-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "engagementCustomerReviews-14-verification",
+        "anchor": "engagementCustomerReviews-9-verification",
         "level": 2
       }
     ],
@@ -5136,19 +6577,7 @@ module.exports = {
     "visualAssets": [
       {
         "kind": "table",
-        "title": "Reader, Start here, then continue to"
-      },
-      {
-        "kind": "table",
-        "title": "Purpose, Method and path, Important boundary"
-      },
-      {
-        "kind": "table",
-        "title": "Situation, Expected result"
-      },
-      {
-        "kind": "table",
-        "title": "Symptom, Safe check and recovery"
+        "title": "Stage, Business question, Technical question"
       }
     ],
     "visualRequirements": [
@@ -5157,12 +6586,14 @@ module.exports = {
     ],
     "relatedPages": [
       "engagement.unified-operations",
-      "engagement.enterprise-operations"
+      "engagement.enterprise-operations",
+      "engagement.review-moderation-governance",
+      "engagement.review-aggregation-recovery"
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.engagement/customer-reviews.md",
-    "sourceChecksum": "19dfe06bc5bc7a94807c2bc3d20483bd7778856bdc9b35ccd42425b4bf7032db",
-    "sourceWordCount": 1732,
+    "sourceChecksum": "9b95eb7216b36b91b8a16b25f3d198148c307e56a43be4ce653c44efd2903b90",
+    "sourceWordCount": 569,
     "audience": [
       "business",
       "architect",
@@ -5188,7 +6619,225 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record39": {
+  "record58": {
+    "code": "nodicsDocsMetadataengagementReviewModerationGovernance",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "engagement.review-moderation-governance",
+    "title": "Review Moderation and Governance",
+    "summary": "Axis moderation queues, approval and rejection decisions, permissions, state transitions, and audit expectations.",
+    "businessSummary": "Review Moderation and Governance explains the business purpose, supported decisions, operational impact, and controls for the Reviews and Ratings journey.",
+    "technicalSummary": "Review Moderation and Governance records owning module nodics.engagement, technical module customerReview, source path docs/pages/nodics.engagement/review-moderation-and-governance.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.engagement",
+    "technicalModule": "customerReview",
+    "targetPage": "nodicsDocsPageengagementReviewModerationGovernance",
+    "targetRoute": "nodicsDocsRouteengagementReviewModerationGovernance",
+    "articleComponent": "nodicsDocsComponentengagementReviewModerationGovernance",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataengagementreviewmoderationgovernance",
+    "headings": [
+      {
+        "text": "Moderation flow",
+        "anchor": "engagementReviewModerationGovernance-1-moderation-flow",
+        "level": 2
+      },
+      {
+        "text": "Business perspective",
+        "anchor": "engagementReviewModerationGovernance-2-business-perspective",
+        "level": 2
+      },
+      {
+        "text": "Developer perspective",
+        "anchor": "engagementReviewModerationGovernance-3-developer-perspective",
+        "level": 2
+      },
+      {
+        "text": "Operator perspective",
+        "anchor": "engagementReviewModerationGovernance-4-operator-perspective",
+        "level": 2
+      },
+      {
+        "text": "Operational evidence",
+        "anchor": "engagementReviewModerationGovernance-5-operational-evidence",
+        "level": 2
+      },
+      {
+        "text": "Reader and implementation contract",
+        "anchor": "engagementReviewModerationGovernance-6-reader-and-implementation-contract",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "engagementReviewModerationGovernance-7-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "engagementReviewModerationGovernance-8-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "engagementReviewModerationGovernance-9-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Decision, Required evidence"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "engagement.customer-reviews"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.engagement/review-moderation-and-governance.md",
+    "sourceChecksum": "bc41edd1b7287331356ec3463decc88df8a159e47b83bf0d9e1a39c3aebba6aa",
+    "sourceWordCount": 555,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record59": {
+    "code": "nodicsDocsMetadataengagementReviewAggregationRecovery",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "engagement.review-aggregation-recovery",
+    "title": "Review Aggregation and Recovery",
+    "summary": "Rating aggregate correctness, recalculation, event recovery, and product or discovery visibility after review changes.",
+    "businessSummary": "Review Aggregation and Recovery explains the business purpose, supported decisions, operational impact, and controls for the Reviews and Ratings journey.",
+    "technicalSummary": "Review Aggregation and Recovery records owning module nodics.engagement, technical module customerReview, source path docs/pages/nodics.engagement/review-aggregation-and-recovery.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.engagement",
+    "technicalModule": "customerReview",
+    "targetPage": "nodicsDocsPageengagementReviewAggregationRecovery",
+    "targetRoute": "nodicsDocsRouteengagementReviewAggregationRecovery",
+    "articleComponent": "nodicsDocsComponentengagementReviewAggregationRecovery",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataengagementreviewaggregationrecovery",
+    "headings": [
+      {
+        "text": "Aggregate flow",
+        "anchor": "engagementReviewAggregationRecovery-1-aggregate-flow",
+        "level": 2
+      },
+      {
+        "text": "Business perspective",
+        "anchor": "engagementReviewAggregationRecovery-2-business-perspective",
+        "level": 2
+      },
+      {
+        "text": "Developer perspective",
+        "anchor": "engagementReviewAggregationRecovery-3-developer-perspective",
+        "level": 2
+      },
+      {
+        "text": "Operator perspective",
+        "anchor": "engagementReviewAggregationRecovery-4-operator-perspective",
+        "level": 2
+      },
+      {
+        "text": "Operational evidence",
+        "anchor": "engagementReviewAggregationRecovery-5-operational-evidence",
+        "level": 2
+      },
+      {
+        "text": "Reader and implementation contract",
+        "anchor": "engagementReviewAggregationRecovery-6-reader-and-implementation-contract",
+        "level": 2
+      },
+      {
+        "text": "Documentation maintenance rule",
+        "anchor": "engagementReviewAggregationRecovery-7-documentation-maintenance-rule",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "engagementReviewAggregationRecovery-8-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "engagementReviewAggregationRecovery-9-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Aggregate, Why it matters, Recovery signal"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "engagement.customer-reviews"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.engagement/review-aggregation-and-recovery.md",
+    "sourceChecksum": "08ae6d8b0340800b3957360bf4b8bb6e56311cfaeeb0900450d224d86189ea43",
+    "sourceWordCount": 589,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record60": {
     "code": "nodicsDocsMetadataengagementCustomerFeedback",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.customer-feedback",
@@ -5317,7 +6966,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record40": {
+  "record61": {
     "code": "nodicsDocsMetadataengagementUnifiedOperations",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.unified-operations",
@@ -5453,7 +7102,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record41": {
+  "record62": {
     "code": "nodicsDocsMetadataengagementGovernedAutomation",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.governed-automation",
@@ -5573,7 +7222,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record42": {
+  "record63": {
     "code": "nodicsDocsMetadataengagementEnterpriseOperations",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.enterprise-operations",
@@ -5692,7 +7341,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record43": {
+  "record64": {
     "code": "nodicsDocsMetadatacommunicationOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "communication.overview",
@@ -5817,7 +7466,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record44": {
+  "record65": {
     "code": "nodicsDocsMetadataeventsMessagingClusterCoordination",
     "product": "nodicsDocumentationProduct",
     "documentId": "events.messaging-cluster-coordination",
@@ -5941,7 +7590,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record45": {
+  "record66": {
     "code": "nodicsDocsMetadataprocessOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.overview",
@@ -6072,7 +7721,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record46": {
+  "record67": {
     "code": "nodicsDocsMetadataprocessRuntimeLifecycle",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.runtime-lifecycle",
@@ -6195,7 +7844,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record47": {
+  "record68": {
     "code": "nodicsDocsMetadataprocessFirstWorkflow",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.first-workflow",
@@ -6304,7 +7953,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record48": {
+  "record69": {
     "code": "nodicsDocsMetadataprocessFirstHumanTask",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.first-human-task",
@@ -6408,7 +8057,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record49": {
+  "record70": {
     "code": "nodicsDocsMetadataprocessBusinessValue",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.business-value",
@@ -6522,7 +8171,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record50": {
+  "record71": {
     "code": "nodicsDocsMetadatapipelineBusinessLogicOrchestration",
     "product": "nodicsDocumentationProduct",
     "documentId": "pipeline.business-logic-orchestration",
@@ -6641,7 +8290,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record51": {
+  "record72": {
     "code": "nodicsDocsMetadatacronOperations",
     "product": "nodicsDocumentationProduct",
     "documentId": "cron.operations",
@@ -6658,145 +8307,78 @@ module.exports = {
     "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacronoperations",
     "headings": [
       {
-        "text": "Why Cron is optional",
-        "anchor": "cronOperations-1-why-cron-is-optional",
+        "text": "Scheduled work model",
+        "anchor": "cronOperations-1-scheduled-work-model",
         "level": 2
       },
       {
-        "text": "Ownership model",
-        "anchor": "cronOperations-2-ownership-model",
+        "text": "Business perspective",
+        "anchor": "cronOperations-2-business-perspective",
         "level": 2
       },
       {
-        "text": "Job lifecycle",
-        "anchor": "cronOperations-3-job-lifecycle",
+        "text": "Developer perspective",
+        "anchor": "cronOperations-3-developer-perspective",
         "level": 2
       },
       {
-        "text": "Example job: nightly media cleanup",
-        "anchor": "cronOperations-4-example-job-nightly-media-cleanup",
+        "text": "Continue with",
+        "anchor": "cronOperations-4-continue-with",
         "level": 2
       },
       {
-        "text": "Business journey: why scheduled work needs governance",
-        "anchor": "cronOperations-5-business-journey-why-scheduled-work-needs-governance",
+        "text": "Operational evidence",
+        "anchor": "cronOperations-5-operational-evidence",
         "level": 2
       },
       {
-        "text": "Developer journey: adding a project cron job",
-        "anchor": "cronOperations-6-developer-journey-adding-a-project-cron-job",
+        "text": "Reader and implementation contract",
+        "anchor": "cronOperations-6-reader-and-implementation-contract",
         "level": 2
       },
       {
-        "text": "Registering Process automation as an optional module",
-        "anchor": "cronOperations-7-registering-process-automation-as-an-optional-module",
-        "level": 2
-      },
-      {
-        "text": "Production safety",
-        "anchor": "cronOperations-8-production-safety",
-        "level": 2
-      },
-      {
-        "text": "Execution safety model",
-        "anchor": "cronOperations-9-execution-safety-model",
-        "level": 2
-      },
-      {
-        "text": "Operations runbook outline",
-        "anchor": "cronOperations-10-operations-runbook-outline",
-        "level": 2
-      },
-      {
-        "text": "Security model",
-        "anchor": "cronOperations-11-security-model",
-        "level": 2
-      },
-      {
-        "text": "DevOps model",
-        "anchor": "cronOperations-12-devops-model",
-        "level": 2
-      },
-      {
-        "text": "Axis and BackOffice view",
-        "anchor": "cronOperations-13-axis-and-backoffice-view",
-        "level": 2
-      },
-      {
-        "text": "Acceptance checklist",
-        "anchor": "cronOperations-14-acceptance-checklist",
+        "text": "Documentation maintenance rule",
+        "anchor": "cronOperations-7-documentation-maintenance-rule",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "cronOperations-15-common-mistakes",
+        "anchor": "cronOperations-8-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "cronOperations-16-verification",
-        "level": 2
-      },
-      {
-        "text": "TEE Reference And Node Responsibility Coverage",
-        "anchor": "cronOperations-17-tee-reference-and-node-responsibility-coverage",
+        "anchor": "cronOperations-9-verification",
         "level": 2
       }
     ],
     "diagrams": [
       {
         "language": "mermaid"
-      },
-      {
-        "language": "mermaid"
-      },
-      {
-        "language": "mermaid"
-      },
-      {
-        "language": "mermaid"
       }
     ],
     "visualAssets": [
       {
-        "kind": "image",
-        "title": "Cron lifecycle reference from the archived documentation set"
-      },
-      {
-        "kind": "image",
-        "title": "Cron job process reference from the archived documentation set"
-      },
-      {
         "kind": "table",
-        "title": "Field, Example value, Why it matters"
-      },
-      {
-        "kind": "table",
-        "title": "Business need, Cron responsibility, Owning business module responsibility"
-      },
-      {
-        "kind": "table",
-        "title": "Runbook area, Required detail"
-      },
-      {
-        "kind": "table",
-        "title": "Topic, What to document, Evidence"
+        "title": "Concern, What the documentation must explain"
       }
     ],
     "visualRequirements": [
       "lifecycle-state-diagram",
       "troubleshooting-matrix",
-      "image",
-      "code-example"
+      "diagram",
+      "table"
     ],
     "relatedPages": [
+      "cron.node-responsibility-tee",
+      "cron.project-customization",
       "process.scheduled-automation",
       "process.process-cron-runtime"
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.process/cronjob-operations.md",
-    "sourceChecksum": "4d92c80dd5095220b3131b133adf910f3ef5448c325e0d1c9a9bf8fb24b9eabb",
-    "sourceWordCount": 2141,
+    "sourceChecksum": "d12171a4416afd05c2873e578cc7bb0f83db70621f48b3297cbb6fadfddb865a",
+    "sourceWordCount": 592,
     "audience": [
       "business",
       "architect",
@@ -6822,7 +8404,217 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record52": {
+  "record73": {
+    "code": "nodicsDocsMetadatacronNodeResponsibilityTee",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "cron.node-responsibility-tee",
+    "title": "Cron Node Responsibility and TEE",
+    "summary": "How scheduled work ownership, failover, responsibility transfer, recovery, and TEE references should be documented.",
+    "businessSummary": "Cron Node Responsibility and TEE explains the business purpose, supported decisions, operational impact, and controls for the Cron Operations journey.",
+    "technicalSummary": "Cron Node Responsibility and TEE records owning module nodics.process, technical module cronjob, source path docs/pages/nodics.process/cron-node-responsibility-and-tee.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.process",
+    "technicalModule": "cronjob",
+    "targetPage": "nodicsDocsPagecronNodeResponsibilityTee",
+    "targetRoute": "nodicsDocsRoutecronNodeResponsibilityTee",
+    "articleComponent": "nodicsDocsComponentcronNodeResponsibilityTee",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacronnoderesponsibilitytee",
+    "headings": [
+      {
+        "text": "Responsibility flow",
+        "anchor": "cronNodeResponsibilityTee-1-responsibility-flow",
+        "level": 2
+      },
+      {
+        "text": "Business and technical model",
+        "anchor": "cronNodeResponsibilityTee-2-business-and-technical-model",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension",
+        "anchor": "cronNodeResponsibilityTee-3-customization-and-extension",
+        "level": 2
+      },
+      {
+        "text": "Operator view",
+        "anchor": "cronNodeResponsibilityTee-4-operator-view",
+        "level": 2
+      },
+      {
+        "text": "Project configuration points",
+        "anchor": "cronNodeResponsibilityTee-5-project-configuration-points",
+        "level": 2
+      },
+      {
+        "text": "Reader and implementation contract",
+        "anchor": "cronNodeResponsibilityTee-6-reader-and-implementation-contract",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "cronNodeResponsibilityTee-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "cronNodeResponsibilityTee-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Concern, Required behavior"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "process.scheduled-automation",
+      "process.process-cron-runtime"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.process/cron-node-responsibility-and-tee.md",
+    "sourceChecksum": "b06089fc6302630a5ea7941ed0096014decaf17b5cdc89c5646ba1d9ad336432",
+    "sourceWordCount": 566,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record74": {
+    "code": "nodicsDocsMetadatacronProjectCustomization",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "cron.project-customization",
+    "title": "Project Cron Customization",
+    "summary": "How customer projects add scheduled business work with job definitions, triggers, permissions, retry, audit, and tests.",
+    "businessSummary": "Project Cron Customization explains the business purpose, supported decisions, operational impact, and controls for the Cron Operations journey.",
+    "technicalSummary": "Project Cron Customization records owning module nodics.process, technical module cronjob, source path docs/pages/nodics.process/project-cron-customization.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.process",
+    "technicalModule": "cronjob",
+    "targetPage": "nodicsDocsPagecronProjectCustomization",
+    "targetRoute": "nodicsDocsRoutecronProjectCustomization",
+    "articleComponent": "nodicsDocsComponentcronProjectCustomization",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacronprojectcustomization",
+    "headings": [
+      {
+        "text": "Project job model",
+        "anchor": "cronProjectCustomization-1-project-job-model",
+        "level": 2
+      },
+      {
+        "text": "Implementation checklist",
+        "anchor": "cronProjectCustomization-2-implementation-checklist",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension",
+        "anchor": "cronProjectCustomization-3-customization-and-extension",
+        "level": 2
+      },
+      {
+        "text": "Operator and QA impact",
+        "anchor": "cronProjectCustomization-4-operator-and-qa-impact",
+        "level": 2
+      },
+      {
+        "text": "Configuration ownership",
+        "anchor": "cronProjectCustomization-5-configuration-ownership",
+        "level": 2
+      },
+      {
+        "text": "Reader and implementation contract",
+        "anchor": "cronProjectCustomization-6-reader-and-implementation-contract",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "cronProjectCustomization-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "cronProjectCustomization-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, What to define"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "process.scheduled-automation",
+      "process.process-cron-runtime"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.process/project-cron-customization.md",
+    "sourceChecksum": "c28d21262832db742aa3e4c64bb5f85972b38dd65976f31d8aaa2d8c1c065cc1",
+    "sourceWordCount": 570,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record75": {
     "code": "nodicsDocsMetadataprocessProcessCronRuntime",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.process-cron-runtime",
@@ -6933,7 +8725,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record53": {
+  "record76": {
     "code": "nodicsDocsMetadataprocessScheduledAutomation",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.scheduled-automation",
@@ -6975,13 +8767,18 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "Customization and extension guidance",
+        "anchor": "processScheduledAutomation-6-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
         "text": "Common mistakes",
-        "anchor": "processScheduledAutomation-6-common-mistakes",
+        "anchor": "processScheduledAutomation-7-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "processScheduledAutomation-7-verification",
+        "anchor": "processScheduledAutomation-8-verification",
         "level": 2
       }
     ],
@@ -7011,8 +8808,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.process/scheduled-automation.md",
-    "sourceChecksum": "1ea1216b30d13ff1a6dcdd4ac58a77757401d6551e37a21976905803adeb9ad5",
-    "sourceWordCount": 547,
+    "sourceChecksum": "aef323b6002cac0865e9d03df4c4b7d846f4f7adc7b601e52fe7f85b6804bcaa",
+    "sourceWordCount": 603,
     "audience": [
       "business",
       "architect",
@@ -7038,7 +8835,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record54": {
+  "record77": {
     "code": "nodicsDocsMetadatadataImportExportMigration",
     "product": "nodicsDocumentationProduct",
     "documentId": "data.import-export-migration",
@@ -7169,7 +8966,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record55": {
+  "record78": {
     "code": "nodicsDocsMetadataprocessActionAdapters",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.action-adapters",
@@ -7265,7 +9062,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record56": {
+  "record79": {
     "code": "nodicsDocsMetadataframeworkDevopsRuntime",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.devops-runtime",
@@ -7282,80 +9079,52 @@ module.exports = {
     "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworkdevopsruntime",
     "headings": [
       {
-        "text": "Local topology",
-        "anchor": "frameworkDevopsRuntime-1-local-topology",
+        "text": "Runtime map",
+        "anchor": "frameworkDevopsRuntime-1-runtime-map",
         "level": 2
       },
       {
-        "text": "Configuration layers",
-        "anchor": "frameworkDevopsRuntime-2-configuration-layers",
+        "text": "Business perspective",
+        "anchor": "frameworkDevopsRuntime-2-business-perspective",
         "level": 2
       },
       {
-        "text": "Public versus private properties",
-        "anchor": "frameworkDevopsRuntime-3-public-versus-private-properties",
+        "text": "Developer perspective",
+        "anchor": "frameworkDevopsRuntime-3-developer-perspective",
         "level": 2
       },
       {
-        "text": "Dependencies",
-        "anchor": "frameworkDevopsRuntime-4-dependencies",
+        "text": "Continue with",
+        "anchor": "frameworkDevopsRuntime-4-continue-with",
         "level": 2
       },
       {
-        "text": "Deployment mindset",
-        "anchor": "frameworkDevopsRuntime-5-deployment-mindset",
+        "text": "Operational evidence",
+        "anchor": "frameworkDevopsRuntime-5-operational-evidence",
         "level": 2
       },
       {
-        "text": "Local-to-production evolution",
-        "anchor": "frameworkDevopsRuntime-6-local-to-production-evolution",
+        "text": "Reader and implementation contract",
+        "anchor": "frameworkDevopsRuntime-6-reader-and-implementation-contract",
         "level": 2
       },
       {
-        "text": "Release and rollback model",
-        "anchor": "frameworkDevopsRuntime-7-release-and-rollback-model",
-        "level": 2
-      },
-      {
-        "text": "Monitoring and recovery",
-        "anchor": "frameworkDevopsRuntime-8-monitoring-and-recovery",
-        "level": 2
-      },
-      {
-        "text": "Operational acceptance checklist",
-        "anchor": "frameworkDevopsRuntime-9-operational-acceptance-checklist",
-        "level": 2
-      },
-      {
-        "text": "Common incident examples",
-        "anchor": "frameworkDevopsRuntime-10-common-incident-examples",
+        "text": "Documentation maintenance rule",
+        "anchor": "frameworkDevopsRuntime-7-documentation-maintenance-rule",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "frameworkDevopsRuntime-11-common-mistakes",
+        "anchor": "frameworkDevopsRuntime-8-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "frameworkDevopsRuntime-12-verification",
-        "level": 2
-      },
-      {
-        "text": "Next actions",
-        "anchor": "frameworkDevopsRuntime-13-next-actions",
-        "level": 2
-      },
-      {
-        "text": "Customization and extension",
-        "anchor": "frameworkDevopsRuntime-14-customization-and-extension",
+        "anchor": "frameworkDevopsRuntime-9-verification",
         "level": 2
       }
     ],
     "diagrams": [
-      {
-        "language": "mermaid"
-      },
       {
         "language": "mermaid"
       }
@@ -7363,40 +9132,27 @@ module.exports = {
     "visualAssets": [
       {
         "kind": "table",
-        "title": "Property type, Example, Owner, Browser visible?"
-      },
-      {
-        "kind": "image",
-        "title": "Cloud deployment topology reference from the archived documentation set"
-      },
-      {
-        "kind": "image",
-        "title": "Logging and output routing reference from the archived documentation set"
-      },
-      {
-        "kind": "table",
-        "title": "Area, Acceptance evidence"
-      },
-      {
-        "kind": "table",
-        "title": "Symptom, First owner to inspect, Likely next check"
+        "title": "Area, Owner question"
       }
     ],
     "visualRequirements": [
       "data-flow",
       "troubleshooting-matrix",
-      "image",
-      "code-example"
+      "diagram",
+      "table"
     ],
     "relatedPages": [
       "framework.local-verification-checklist",
       "foundation.overview",
-      "commerce.enterprise-operations"
+      "commerce.enterprise-operations",
+      "framework.runtime-release-rollback",
+      "framework.local-runtime-troubleshooting",
+      "framework.local-browser-acceptance-journey"
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/framework/devops-runtime.md",
-    "sourceChecksum": "3ba288be3b20d7d36b9e29af5ce499e9e2679e1d0e218321356cf734f02b906c",
-    "sourceWordCount": 1655,
+    "sourceChecksum": "bab9f5e395c8b41f6920210fe2923f3c80398ba2e75416d9cb0aaf9cdba9892e",
+    "sourceWordCount": 584,
     "audience": [
       "business",
       "architect",
@@ -7422,7 +9178,225 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record57": {
+  "record80": {
+    "code": "nodicsDocsMetadataframeworkRuntimeReleaseRollback",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "framework.runtime-release-rollback",
+    "title": "Runtime Release and Rollback",
+    "summary": "Release and rollback guidance for code, configuration, content, data import, generated contracts, and browser evidence.",
+    "businessSummary": "Runtime Release and Rollback explains the business purpose, supported decisions, operational impact, and controls for the Runtime and DevOps journey.",
+    "technicalSummary": "Runtime Release and Rollback records owning module nodics.foundation, technical module nSetup, source path docs/pages/framework/runtime-release-and-rollback.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nSetup",
+    "targetPage": "nodicsDocsPageframeworkRuntimeReleaseRollback",
+    "targetRoute": "nodicsDocsRouteframeworkRuntimeReleaseRollback",
+    "articleComponent": "nodicsDocsComponentframeworkRuntimeReleaseRollback",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworkruntimereleaserollback",
+    "headings": [
+      {
+        "text": "Release flow",
+        "anchor": "frameworkRuntimeReleaseRollback-1-release-flow",
+        "level": 2
+      },
+      {
+        "text": "Business perspective",
+        "anchor": "frameworkRuntimeReleaseRollback-2-business-perspective",
+        "level": 2
+      },
+      {
+        "text": "Developer perspective",
+        "anchor": "frameworkRuntimeReleaseRollback-3-developer-perspective",
+        "level": 2
+      },
+      {
+        "text": "Operator perspective",
+        "anchor": "frameworkRuntimeReleaseRollback-4-operator-perspective",
+        "level": 2
+      },
+      {
+        "text": "Operational evidence",
+        "anchor": "frameworkRuntimeReleaseRollback-5-operational-evidence",
+        "level": 2
+      },
+      {
+        "text": "Reader and implementation contract",
+        "anchor": "frameworkRuntimeReleaseRollback-6-reader-and-implementation-contract",
+        "level": 2
+      },
+      {
+        "text": "Documentation maintenance rule",
+        "anchor": "frameworkRuntimeReleaseRollback-7-documentation-maintenance-rule",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "frameworkRuntimeReleaseRollback-8-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "frameworkRuntimeReleaseRollback-9-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Release item, Rollback question"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "framework.devops-runtime"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/framework/runtime-release-and-rollback.md",
+    "sourceChecksum": "6e453024e4444c4827d820c355ee00f0c60adde872497bcc7f3c0ca8e83f15c9",
+    "sourceWordCount": 594,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record81": {
+    "code": "nodicsDocsMetadataframeworkLocalBrowserAcceptanceJourney",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "framework.local-browser-acceptance-journey",
+    "title": "Local Browser Acceptance Journey",
+    "summary": "Fresh-schema browser acceptance path for Axis, documentation, Nexus, Agora, setup actions, and unpublished states.",
+    "businessSummary": "Local Browser Acceptance Journey explains the business purpose, supported decisions, operational impact, and controls for the Local Verification and Acceptance journey.",
+    "technicalSummary": "Local Browser Acceptance Journey records owning module nodics.foundation, technical module nSetup, source path docs/pages/framework/local-browser-acceptance-journey.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nSetup",
+    "targetPage": "nodicsDocsPageframeworkLocalBrowserAcceptanceJourney",
+    "targetRoute": "nodicsDocsRouteframeworkLocalBrowserAcceptanceJourney",
+    "articleComponent": "nodicsDocsComponentframeworkLocalBrowserAcceptanceJourney",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalbrowseracceptancejourney",
+    "headings": [
+      {
+        "text": "Browser path",
+        "anchor": "frameworkLocalBrowserAcceptanceJourney-1-browser-path",
+        "level": 2
+      },
+      {
+        "text": "Business perspective",
+        "anchor": "frameworkLocalBrowserAcceptanceJourney-2-business-perspective",
+        "level": 2
+      },
+      {
+        "text": "Developer perspective",
+        "anchor": "frameworkLocalBrowserAcceptanceJourney-3-developer-perspective",
+        "level": 2
+      },
+      {
+        "text": "Operator perspective",
+        "anchor": "frameworkLocalBrowserAcceptanceJourney-4-operator-perspective",
+        "level": 2
+      },
+      {
+        "text": "Operational evidence",
+        "anchor": "frameworkLocalBrowserAcceptanceJourney-5-operational-evidence",
+        "level": 2
+      },
+      {
+        "text": "Reader and implementation contract",
+        "anchor": "frameworkLocalBrowserAcceptanceJourney-6-reader-and-implementation-contract",
+        "level": 2
+      },
+      {
+        "text": "Documentation maintenance rule",
+        "anchor": "frameworkLocalBrowserAcceptanceJourney-7-documentation-maintenance-rule",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "frameworkLocalBrowserAcceptanceJourney-8-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "frameworkLocalBrowserAcceptanceJourney-9-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Route, What to verify"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table"
+    ],
+    "relatedPages": [
+      "framework.local-verification-checklist"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/framework/local-browser-acceptance-journey.md",
+    "sourceChecksum": "e3c60eba65d02083657b982992668b40853c3a0c9506ac3b9e8f5dbb0f234d8b",
+    "sourceWordCount": 596,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record82": {
     "code": "nodicsDocsMetadataframeworkLocalVerificationChecklist",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.local-verification-checklist",
@@ -7439,68 +9413,48 @@ module.exports = {
     "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalverificationchecklist",
     "headings": [
       {
-        "text": "What this is",
-        "anchor": "frameworkLocalVerificationChecklist-1-what-this-is",
+        "text": "Acceptance flow",
+        "anchor": "frameworkLocalVerificationChecklist-1-acceptance-flow",
         "level": 2
       },
       {
-        "text": "Why it exists",
-        "anchor": "frameworkLocalVerificationChecklist-2-why-it-exists",
+        "text": "Business perspective",
+        "anchor": "frameworkLocalVerificationChecklist-2-business-perspective",
         "level": 2
       },
       {
-        "text": "Who uses it",
-        "anchor": "frameworkLocalVerificationChecklist-3-who-uses-it",
+        "text": "Developer perspective",
+        "anchor": "frameworkLocalVerificationChecklist-3-developer-perspective",
         "level": 2
       },
       {
-        "text": "Preconditions",
-        "anchor": "frameworkLocalVerificationChecklist-4-preconditions",
+        "text": "Continue with",
+        "anchor": "frameworkLocalVerificationChecklist-4-continue-with",
         "level": 2
       },
       {
-        "text": "Fast automated acceptance",
-        "anchor": "frameworkLocalVerificationChecklist-5-fast-automated-acceptance",
+        "text": "Operational evidence",
+        "anchor": "frameworkLocalVerificationChecklist-5-operational-evidence",
         "level": 2
       },
       {
-        "text": "Manual UI acceptance journey",
-        "anchor": "frameworkLocalVerificationChecklist-6-manual-ui-acceptance-journey",
+        "text": "Reader and implementation contract",
+        "anchor": "frameworkLocalVerificationChecklist-6-reader-and-implementation-contract",
         "level": 2
       },
       {
-        "text": "Documentation-specific checks",
-        "anchor": "frameworkLocalVerificationChecklist-7-documentation-specific-checks",
-        "level": 2
-      },
-      {
-        "text": "What success looks like",
-        "anchor": "frameworkLocalVerificationChecklist-8-what-success-looks-like",
-        "level": 2
-      },
-      {
-        "text": "Troubleshooting",
-        "anchor": "frameworkLocalVerificationChecklist-9-troubleshooting",
+        "text": "Documentation maintenance rule",
+        "anchor": "frameworkLocalVerificationChecklist-7-documentation-maintenance-rule",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "frameworkLocalVerificationChecklist-10-common-mistakes",
-        "level": 2
-      },
-      {
-        "text": "Related pages",
-        "anchor": "frameworkLocalVerificationChecklist-11-related-pages",
+        "anchor": "frameworkLocalVerificationChecklist-8-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "frameworkLocalVerificationChecklist-12-verification",
-        "level": 2
-      },
-      {
-        "text": "Customization and extension",
-        "anchor": "frameworkLocalVerificationChecklist-13-customization-and-extension",
+        "anchor": "frameworkLocalVerificationChecklist-9-verification",
         "level": 2
       }
     ],
@@ -7512,35 +9466,25 @@ module.exports = {
     "visualAssets": [
       {
         "kind": "table",
-        "title": "Reader, What they verify"
-      },
-      {
-        "kind": "table",
-        "title": "Process, Default local URL, Owner"
-      },
-      {
-        "kind": "table",
-        "title": "Evidence, Expected result"
-      },
-      {
-        "kind": "table",
-        "title": "Symptom, Likely owner, Safe first check"
+        "title": "Check, Why it matters"
       }
     ],
     "visualRequirements": [
       "diagram",
-      "troubleshooting-matrix",
-      "command-example"
+      "troubleshooting-matrix"
     ],
     "relatedPages": [
       "framework.local-quick-start",
       "framework.devops-runtime",
-      "process.qa-regression-guide"
+      "process.qa-regression-guide",
+      "framework.fresh-schema-setup-journey",
+      "framework.local-browser-acceptance-journey",
+      "framework.local-runtime-troubleshooting"
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/framework/local-verification-checklist.md",
-    "sourceChecksum": "cf5a0d8e0e05a3796681d013c5b24115531b642ed30d72b5dba649876f9764d5",
-    "sourceWordCount": 1615,
+    "sourceChecksum": "4967d849379e54e38d5f4b49beab9e5bdbb8446d8e8cac20de47910f314809b7",
+    "sourceWordCount": 581,
     "audience": [
       "business",
       "architect",
@@ -7566,7 +9510,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record58": {
+  "record83": {
     "code": "nodicsDocsMetadatacommerceEnterpriseOperations",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.enterprise-operations",
@@ -7681,7 +9625,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record59": {
+  "record84": {
     "code": "nodicsDocsMetadataprocessIncidentRecovery",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.incident-recovery",
@@ -7797,7 +9741,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record60": {
+  "record85": {
     "code": "nodicsDocsMetadataprocessDevopsTopology",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.devops-topology",
@@ -7912,7 +9856,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record61": {
+  "record86": {
     "code": "nodicsDocsMetadataprocessQaRegressionGuide",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.qa-regression-guide",
@@ -8018,7 +9962,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record62": {
+  "record87": {
     "code": "nodicsDocsMetadataframeworkCapabilityDocumentationMaturityPattern",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.capability-documentation-maturity-pattern",
@@ -8128,7 +10072,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record63": {
+  "record88": {
     "code": "nodicsDocsMetadatadocsOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "docs.overview",
@@ -8145,78 +10089,48 @@ module.exports = {
     "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatadocsoverview",
     "headings": [
       {
-        "text": "What this is",
-        "anchor": "docsOverview-1-what-this-is",
+        "text": "Documentation model",
+        "anchor": "docsOverview-1-documentation-model",
         "level": 2
       },
       {
-        "text": "Why it exists",
-        "anchor": "docsOverview-2-why-it-exists",
+        "text": "Business perspective",
+        "anchor": "docsOverview-2-business-perspective",
         "level": 2
       },
       {
-        "text": "Business value",
-        "anchor": "docsOverview-3-business-value",
+        "text": "Developer perspective",
+        "anchor": "docsOverview-3-developer-perspective",
         "level": 2
       },
       {
-        "text": "Beginner mental model",
-        "anchor": "docsOverview-4-beginner-mental-model",
+        "text": "Continue with",
+        "anchor": "docsOverview-4-continue-with",
         "level": 2
       },
       {
-        "text": "How it works",
-        "anchor": "docsOverview-5-how-it-works",
+        "text": "Operational evidence",
+        "anchor": "docsOverview-5-operational-evidence",
         "level": 2
       },
       {
-        "text": "Documentation ownership map",
-        "anchor": "docsOverview-6-documentation-ownership-map",
+        "text": "Reader and implementation contract",
+        "anchor": "docsOverview-6-reader-and-implementation-contract",
         "level": 2
       },
       {
-        "text": "Step-by-step usage",
-        "anchor": "docsOverview-7-step-by-step-usage",
-        "level": 2
-      },
-      {
-        "text": "Configuration and source map",
-        "anchor": "docsOverview-8-configuration-and-source-map",
-        "level": 2
-      },
-      {
-        "text": "Customization and extension",
-        "anchor": "docsOverview-9-customization-and-extension",
-        "level": 2
-      },
-      {
-        "text": "DevOps and production notes",
-        "anchor": "docsOverview-10-devops-and-production-notes",
-        "level": 2
-      },
-      {
-        "text": "Security, tenant, and governance notes",
-        "anchor": "docsOverview-11-security-tenant-and-governance-notes",
-        "level": 2
-      },
-      {
-        "text": "Troubleshooting",
-        "anchor": "docsOverview-12-troubleshooting",
+        "text": "Documentation maintenance rule",
+        "anchor": "docsOverview-7-documentation-maintenance-rule",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "docsOverview-13-common-mistakes",
+        "anchor": "docsOverview-8-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "docsOverview-14-verification",
-        "level": 2
-      },
-      {
-        "text": "Related pages",
-        "anchor": "docsOverview-15-related-pages",
+        "anchor": "docsOverview-9-verification",
         "level": 2
       }
     ],
@@ -8228,19 +10142,7 @@ module.exports = {
     "visualAssets": [
       {
         "kind": "table",
-        "title": "Business concern, `nodics.docs` answer"
-      },
-      {
-        "kind": "table",
-        "title": "Documentation product, Source owner, Runtime delivery, What must not happen"
-      },
-      {
-        "kind": "table",
-        "title": "Artifact, Purpose"
-      },
-      {
-        "kind": "table",
-        "title": "Symptom, Likely cause, Safe recovery"
+        "title": "Area, Ownership"
       }
     ],
     "visualRequirements": [
@@ -8249,12 +10151,15 @@ module.exports = {
     ],
     "relatedPages": [
       "framework.capability-documentation-maturity-pattern",
-      "wcms.publishing-lifecycle"
+      "wcms.publishing-lifecycle",
+      "docs.documentation-principles",
+      "docs.reader-journey-and-coverage",
+      "docs.documentation-publishing-model"
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.docs/overview.md",
-    "sourceChecksum": "84e0833bae8d27e314f722aaa4089d9861cebcc4041c9a4d0d91a19c5cf07c27",
-    "sourceWordCount": 1883,
+    "sourceChecksum": "e522c9aab41ff1d70100d9deabcc752453d0a79f7b0e694a16d12948cf499cd3",
+    "sourceWordCount": 554,
     "audience": [
       "business",
       "architect",
@@ -8280,7 +10185,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record64": {
+  "record89": {
     "code": "nodicsDocsMetadatawcmsPublishingLifecycle",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.publishing-lifecycle",
@@ -8385,7 +10290,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record65": {
+  "record90": {
     "code": "nodicsDocsMetadatatoolingAiDeveloperEnablement",
     "product": "nodicsDocumentationProduct",
     "documentId": "tooling.ai-developer-enablement",
@@ -8504,7 +10409,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record66": {
+  "record91": {
     "code": "nodicsDocsMetadatareferenceSourceMapGlossary",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.source-map-glossary",
@@ -8605,8 +10510,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/reference/source-map-glossary.md",
-    "sourceChecksum": "04d142b0a609d39ddd56b71b5e0e9a0142faba22a81a35f79d0455d24123c2b5",
-    "sourceWordCount": 2112,
+    "sourceChecksum": "653b54f50b6aab845519becddac0b6b55b22b5f4b75b730ab3ca7bf325922e9a",
+    "sourceWordCount": 2108,
     "audience": [
       "business",
       "architect",

@@ -39,6 +39,7 @@ module.exports = {
                 revision: { type: 'int', required: true, default: 0, description: 'Optimistic-concurrency revision' },
                 auditTrail: { type: 'array', required: true, default: [], description: 'Authoritative immutable transition journal updated atomically with lifecycle state' },
                 dependencies: { type: 'array', required: false, description: 'Bounded adapter-resolved dependency identities' },
+                mediaCodes: { type: 'array', required: false, description: 'Additional media identities that must move with the governed publication even when they are not directly present in the root content graph' },
                 validation: { type: 'object', required: false, description: 'Sanitized domain validation result' },
                 workflowRef: { type: 'string', required: false, description: 'Existing workflow authority reference' },
                 previousOnlineVersion: { type: 'string', required: false, description: 'Rollback target captured before activation' },

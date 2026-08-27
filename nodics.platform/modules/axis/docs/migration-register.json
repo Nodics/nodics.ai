@@ -1,6 +1,6 @@
 {
   "pack": "nodics.platform.axis",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "generatedAtPolicy": "deterministic-no-timestamp",
   "sources": [
     {
@@ -19,8 +19,8 @@
       "canonicalSource": "docs/pages/project-overview.md",
       "destinationRoute": "/docs/nodics-axis",
       "disposition": "migrated",
-      "sourceHash": "30e6c9ed1a6da07cae9e77e0a82d655d1b24708ef7adec06fb9b714454f5d8f8",
-      "wordCount": 1956,
+      "sourceHash": "2c66360cc7f6f06a6a21223911584cb98053052054b034548e6d18a231c17dda",
+      "wordCount": 1962,
       "headings": [
         "Why Axis exists",
         "Reader mindset",
@@ -180,8 +180,8 @@
       "canonicalSource": "docs/pages/documentation-content.md",
       "destinationRoute": "/docs/nodics-axis/documentation-content",
       "disposition": "migrated",
-      "sourceHash": "d50849733c01ace653bac8915135285a82f128044e3b3a06d32407b07819fd9a",
-      "wordCount": 2120,
+      "sourceHash": "59ec53dc90887b24312beeb46e78fe5de373477519ed1d24405df329559b1f31",
+      "wordCount": 2227,
       "headings": [
         "Employee Journey",
         "Nodics Axis Content Pack",
@@ -560,13 +560,14 @@
       "canonicalSource": "docs/pages/implementation-and-documentation-contract.md",
       "destinationRoute": "/docs/nodics-axis/implementation-contract",
       "disposition": "migrated",
-      "sourceHash": "e7d5621fcbde5882345f48c629861ebe6c1839d1e98bcf707099e414728aac3f",
-      "wordCount": 1600,
+      "sourceHash": "e0697f1d287786c00d19364a058ea015cc290f108bcb0da4a652f18d57bb1ee6",
+      "wordCount": 1942,
       "headings": [
         "Local Discovery Chain",
         "Repository Ownership",
         "AI and developer role stack",
         "Placement Rules",
+        "Guided Operational Journeys",
         "Required Feature Documentation",
         "Customize and extend safely",
         "Canonical Source and Generated Data",

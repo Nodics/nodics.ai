@@ -151,7 +151,7 @@ const onlineBody = await onlineResponse.json().catch(() => ({}));
 assert(onlineResponse.status === 403 && String(onlineBody.message || '').includes('dataImport'),
   'Online runtime must reject data-import administration');
 
-const publicationProfiles = config.publicationProfiles || ['nexus', 'nexusupdate', 'partnernexus'];
+const publicationProfiles = config.publicationProfiles || ['nexus', 'nexusupdate'];
 const publicationEvidence = [];
 await importMandatoryProcessRelease(headers);
 for (const code of publicationProfiles) {

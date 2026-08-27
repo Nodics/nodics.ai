@@ -27,6 +27,30 @@ module.exports = {
         }
         return principal;
     },
+    /** Preserves sanitized target-side diagnostics without exposing internal credentials. */
+    targetDiagnostic: function (error, baselineCode) {
+        let source = error && (error.data || error.result || error.response || error);
+        let remoteResponse = source && source.remoteResponse || error && error.remoteResponse;
+        let targetCode = String(source && (source.code || source.errorCode) || error && error.code || 'UNKNOWN_TARGET_ERROR');
+        let targetMessage = String(source && (source.remoteMessage || source.message) ||
+            remoteResponse && (remoteResponse.message || remoteResponse.error || remoteResponse.reason) ||
+            error && (error.remoteMessage || error.message) || 'Unknown target error');
+        let targetResponseCode = source && source.responseCode ? String(source.responseCode) :
+            error && error.status ? String(error.status) : undefined;
+        return new CLASSES.NodicsError({
+            code: 'ERR_BOF_00085',
+            message: 'Axis initialization target failed for baseline ' + baselineCode + ': ' +
+                targetCode + ' - ' + targetMessage,
+            metadata: {
+                targetCode: targetCode,
+                targetMessage: targetMessage,
+                targetResponseCode: targetResponseCode,
+                baselineCode: baselineCode,
+                targetModuleName: 'cms'
+            },
+            causes: remoteResponse ? [remoteResponse] : undefined
+        });
+    },
     /** Calls the fixed CMS Staged baseline API with internal authentication. */
     invoke: function (operation, request) {
         let principal = this.human(request);
@@ -49,6 +73,8 @@ module.exports = {
             idempotencyKey: operation === 'initiate' ? baselineCode + ':' + String(request.correlationId || request.requestId || principal) : undefined,
             header: { Authorization: 'Bearer ' + token },
             responseSelector: response => response && (response.data || response.result || response)
+        }).catch(error => {
+            throw this.targetDiagnostic(error, baselineCode);
         });
     },
     /** Returns the backend-derived Axis initialization readiness projection. */

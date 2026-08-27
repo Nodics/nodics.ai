@@ -112,10 +112,23 @@ class NodicsError extends Error { constructor(code, message) { super(message || 
     await service.reconcileReplication(assets, { tenant: 'default', authData: {}, manifestCode: 'manifest-1' });
     assert.strictEqual(placements[0].targetRole, 'REPLICATION_PROD_MEDIA_LOCATION');
     assert.strictEqual(replicationRecords[0].status, 'REPLICATION_SYNCHRONIZED');
+    global.SERVICE.DefaultMediaStorageProviderRegistryService.read = async request => {
+        assert.strictEqual(request.providerCode, 'online-local');
+        assert.strictEqual(request.storageKey, 'active/hero.png');
+        return buffer;
+    };
+    let redactedAssets = assets.map(asset => {
+        let clone = Object.assign({}, asset);
+        delete clone.contentBase64;
+        return clone;
+    });
+    await service.reconcileReplication(redactedAssets, { tenant: 'default', authData: {}, manifestCode: 'manifest-1' });
+    assert.strictEqual(placements[1].targetRole, 'REPLICATION_PROD_MEDIA_LOCATION');
+    assert.strictEqual(replicationRecords[1].status, 'REPLICATION_SYNCHRONIZED');
     mediaConfig.publication.topology.replicationProviderCode = 'dr-down';
     await service.reconcileReplication(assets, { tenant: 'default', authData: {}, manifestCode: 'manifest-1' });
-    assert.strictEqual(replicationRecords[1].status, 'REPLICATION_RETRY_SCHEDULED');
-    assert.strictEqual(replicationRecords[1].failureCode, 'DR_DOWN');
+    assert.strictEqual(replicationRecords[2].status, 'REPLICATION_RETRY_SCHEDULED');
+    assert.strictEqual(replicationRecords[2].failureCode, 'DR_DOWN');
     mediaConfig.publication.topology.replicationEnabled = false;
 
     let genericTransfers = [];

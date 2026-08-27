@@ -19,7 +19,7 @@ module.exports = {
     "name": "Nodics Documentation Navigation",
     "renderer": "documentation.component.navigation",
     "searchLabel": "Search framework documentation",
-    "searchPlaceholder": "Search topics, business capabilities, configuration, providers, and extension points",
+    "searchPlaceholder": "Search documentation",
     "emptyMessage": "No framework documentation matches your search.",
     "expandable": true,
     "accessMode": "PUBLIC",

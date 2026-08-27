@@ -103,6 +103,30 @@ store generated CMS data, the change belongs somewhere else.
 - Secrets never belong in frontend source, `.env`, generated browser config,
   storage, URLs, telemetry, or logs.
 
+## Guided Operational Journeys
+
+Axis workspaces must be designed from the operator's next decision, not from
+the number of backend endpoints available. If a task naturally belongs to one
+business journey, keep the user in one clear workspace and expose the next
+safe action there. Do not force the user through a chain of unrelated pages
+only to complete one approval, import, registration, or publication decision.
+
+| Journey rule | Axis responsibility | Backend authority |
+| --- | --- | --- |
+| One place to finish | Keep related status, evidence, approve/reject, refresh, and detail expansion together when the backend contract allows it. | The owning module decides allowed actions, validation, lifecycle transition, and audit. |
+| Permission-based actions | Show approve, reject, publish, initialize, register, or activate only when the current user has the required permission. Do not block only because the same user requested the action unless the backend policy explicitly requires separation of duties. | Profile, BackOffice, Process, and the target module enforce permissions on every request. |
+| Capability gating | When an application needs another capability, show the missing capability and route the user to Module Registry instead of pretending import success means runtime readiness. | BackOffice Module Registry and the owning modules decide registration, activation, and runtime availability. |
+| Refresh after mutation | After any successful mutation, invalidate the affected query state and redraw navigation, counters, row status, and allowed actions without requiring manual browser refresh. | Backend responses remain the source of truth for the refreshed model. |
+| Compact enterprise layout | Use list rows, expandable detail, stable columns, aligned buttons, and design-system colors for operational dashboards. Avoid decorative cards, large repeated instruction blocks, and labels that compete with primary actions. | CMS may supply labels and help text; Axis owns accessible, responsive presentation. |
+
+The documentation publication center and Setup and Accelerators workspace are
+reference examples for this rule. Documentation packs can be requested,
+reviewed, approved, rejected, updated, and opened from the same operational
+surface when the backend advertises those actions. Application packs can be
+initialized only after their required functional capabilities are registered
+and active; otherwise the row must explain the missing capability and guide
+the user to Module Registry.
+
 ## Required Feature Documentation
 
 Every significant feature guide explains:

@@ -133,8 +133,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "docs/pages/project-overview.md",
-    "sourceChecksum": "30e6c9ed1a6da07cae9e77e0a82d655d1b24708ef7adec06fb9b714454f5d8f8",
-    "sourceWordCount": 1956,
+    "sourceChecksum": "2c66360cc7f6f06a6a21223911584cb98053052054b034548e6d18a231c17dda",
+    "sourceWordCount": 1962,
     "audience": [
       "business-user",
       "administrator",
@@ -662,8 +662,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "docs/pages/documentation-content.md",
-    "sourceChecksum": "d50849733c01ace653bac8915135285a82f128044e3b3a06d32407b07819fd9a",
-    "sourceWordCount": 2120,
+    "sourceChecksum": "59ec53dc90887b24312beeb46e78fe5de373477519ed1d24405df329559b1f31",
+    "sourceWordCount": 2227,
     "audience": [
       "administrator",
       "developer",
@@ -1868,68 +1868,73 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "Guided Operational Journeys",
+        "anchor": "implementation-contract-5-guided-operational-journeys",
+        "level": 2
+      },
+      {
         "text": "Required Feature Documentation",
-        "anchor": "implementation-contract-5-required-feature-documentation",
+        "anchor": "implementation-contract-6-required-feature-documentation",
         "level": 2
       },
       {
         "text": "Customize and extend safely",
-        "anchor": "implementation-contract-6-customize-and-extend-safely",
+        "anchor": "implementation-contract-7-customize-and-extend-safely",
         "level": 2
       },
       {
         "text": "Canonical Source and Generated Data",
-        "anchor": "implementation-contract-7-canonical-source-and-generated-data",
+        "anchor": "implementation-contract-8-canonical-source-and-generated-data",
         "level": 2
       },
       {
         "text": "Required Examples",
-        "anchor": "implementation-contract-8-required-examples",
+        "anchor": "implementation-contract-9-required-examples",
         "level": 2
       },
       {
         "text": "Successful",
-        "anchor": "implementation-contract-9-successful",
+        "anchor": "implementation-contract-10-successful",
         "level": 3
       },
       {
         "text": "Unauthorized",
-        "anchor": "implementation-contract-10-unauthorized",
+        "anchor": "implementation-contract-11-unauthorized",
         "level": 3
       },
       {
         "text": "Boundary",
-        "anchor": "implementation-contract-11-boundary",
+        "anchor": "implementation-contract-12-boundary",
         "level": 3
       },
       {
         "text": "Failure And Recovery",
-        "anchor": "implementation-contract-12-failure-and-recovery",
+        "anchor": "implementation-contract-13-failure-and-recovery",
         "level": 3
       },
       {
         "text": "Customization",
-        "anchor": "implementation-contract-13-customization",
+        "anchor": "implementation-contract-14-customization",
         "level": 3
       },
       {
         "text": "Acceptance",
-        "anchor": "implementation-contract-14-acceptance",
+        "anchor": "implementation-contract-15-acceptance",
         "level": 2
       },
       {
         "text": "Continue",
-        "anchor": "implementation-contract-15-continue",
+        "anchor": "implementation-contract-16-continue",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "implementation-contract-16-common-mistakes",
+        "anchor": "implementation-contract-17-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "implementation-contract-17-verification",
+        "anchor": "implementation-contract-18-verification",
         "level": 2
       }
     ],
@@ -1938,6 +1943,10 @@ module.exports = {
       {
         "kind": "table",
         "title": "Role, Axis responsibility"
+      },
+      {
+        "kind": "table",
+        "title": "Journey rule, Axis responsibility, Backend authority"
       }
     ],
     "visualRequirements": [
@@ -1950,8 +1959,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "docs/pages/implementation-and-documentation-contract.md",
-    "sourceChecksum": "e7d5621fcbde5882345f48c629861ebe6c1839d1e98bcf707099e414728aac3f",
-    "sourceWordCount": 1600,
+    "sourceChecksum": "e0697f1d287786c00d19364a058ea015cc290f108bcb0da4a652f18d57bb1ee6",
+    "sourceWordCount": 1942,
     "audience": [
       "developer",
       "architect",

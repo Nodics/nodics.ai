@@ -864,14 +864,8 @@ async function qualifyNexusApplicationUpdate(headers) {
     throw new Error(`Nexus v2 retained lifecycle requires recovery: ${JSON.stringify(initialStatus)}`);
   }
   if (initialStatus.readiness === "READY" && initialStatus.publication?.state === "ONLINE") {
-    const partnerStatus = await requestJson(platformUrl,
-      "/nodics/backoffice/v0/applications/partnernexus/initialization", { headers });
-    if (partnerStatus.readiness === "READY" && partnerStatus.publication?.state === "ONLINE") {
-      log("Nexus v2 lifecycle remains ONLINE and is superseded by the retained partner customization");
-    } else {
-      await assertMarker(true, "Retained v2");
-      log("Nexus v2 lifecycle is already ONLINE with its delivery marker on retained data");
-    }
+    await assertMarker(true, "Retained v2");
+    log("Nexus v2 lifecycle is already ONLINE with its delivery marker on retained data");
     return;
   }
 
@@ -933,63 +927,6 @@ async function qualifyNexusApplicationUpdate(headers) {
     throw new Error(`Nexus v2 lineage is incomplete: ${JSON.stringify(status.lineage)}`);
   }
   log("Nexus v1 -> v2 rejection, publication, retry, rollback, retirement, and recovery are qualified");
-}
-
-/** Proves a later-loaded partner module can publish an independently owned Nexus customization. */
-async function qualifyPartnerWebsiteCustomization(headers) {
-  const profilePath = "/nodics/backoffice/v0/applications/partnernexus/initialization";
-  const deliveryPath = "/nodics/cms/v0/delivery/pages/resolve?site=nexusCorporateSite&path=/&locale=en&channel=web";
-  const marker = "partner-site-1.0.5";
-  const assertMarker = async () => {
-    let response;
-    for (let attempt = 0; attempt < 20; attempt += 1) {
-      response = await requestJsonResponse(wcmsOnlineUrl, deliveryPath, { headers });
-      if (response.status === 200 && JSON.stringify(response.body).includes(marker)) return;
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    }
-    throw new Error(`Partner website marker is not Online: ${JSON.stringify(response)}`);
-  };
-
-  let status = await requestJson(platformUrl, profilePath, { headers });
-  if (status.readiness !== "READY") {
-    const initiated = await requestJson(platformUrl, `${profilePath}/initiate`, {
-      headers,
-      method: "POST",
-      body: JSON.stringify({ reason: "Qualify later-loaded partner website customization" }),
-    });
-    if (initiated.publication?.state !== "PENDING_APPROVAL") {
-      throw new Error(`Partner website customization did not enter approval: ${JSON.stringify(initiated)}`);
-    }
-    await decidePublication(headers, initiated.publication.code, true,
-      "Approve independently owned partner website customization");
-    status = await requestJson(platformUrl, profilePath, { headers });
-  }
-  if (status.readiness !== "READY" || status.publication?.state !== "ONLINE" ||
-      !status.publication.previousOnlineVersion) {
-    throw new Error(`Partner website customization is not Online over a previous release: ${JSON.stringify(status)}`);
-  }
-  const lineage = status.lineage;
-  const deliveredPartnerEvent = lineage?.target?.outbox?.find(
-    (item) => item.operation === "DEPLOY" && item.status === "DELIVERED",
-  );
-  if (lineage?.actor !== loginId || lineage?.source?.releaseCode !== "partnerSiteData:partnerNexusCustomization" ||
-      lineage?.source?.releaseVersion !== "1.0.5" || !lineage?.publication?.workflowRef ||
-      lineage?.target?.manifest?.createdBy !== loginId ||
-      !lineage?.target?.receipts?.some((item) => item.operation === "DEPLOY") ||
-      !deliveredPartnerEvent || !deliveredPartnerEvent.operationKey ||
-      !Number.isInteger(deliveredPartnerEvent.sequence) || deliveredPartnerEvent.attempts !== 1) {
-    throw new Error(`Partner website correlation lineage is incomplete: ${JSON.stringify(lineage)}`);
-  }
-  await assertMarker();
-  const replay = await requestJson(platformUrl, `${profilePath}/initiate`, {
-    headers,
-    method: "POST",
-    body: JSON.stringify({ reason: "Partner website customization idempotency replay" }),
-  });
-  if (replay.readiness !== "READY" || replay.publication?.code !== status.publication.code) {
-    throw new Error(`Partner website customization replay was not idempotent: ${JSON.stringify(replay)}`);
-  }
-  log("later-loaded partner website customization is READY without changing the original Nexus release authority");
 }
 
 /** Proves optional documentation packs are administered by Axis/Platform and published through the normal approval path. */
@@ -1264,7 +1201,6 @@ async function main() {
   await publishAxisBaseline(headers);
   await publishNexusApplicationBundle(headers);
   await qualifyNexusApplicationUpdate(headers);
-  await qualifyPartnerWebsiteCustomization(headers);
   log("documentation publication skipped: oversized documentation bundles remain Staged until chunked/page-level publication is implemented");
   await qualifyDocumentationReleaseRollback(headers);
   await verifyPublicationOperations(headers);

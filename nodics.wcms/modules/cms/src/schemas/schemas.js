@@ -1199,7 +1199,7 @@ module.exports = {
                 sourceVersion: { type: 'string', required: true },
                 dependencies: { type: 'array', required: true, description: 'Frozen schema, code, and version identities' },
                 snapshot: { type: 'object', required: true, description: 'Immutable client-safe CMS delivery graph' },
-                mediaAssets: { type: 'array', required: false, description: 'Checksum-verified referenced media transfer payloads; never exposed by delivery' },
+                mediaAssets: { type: 'array', required: false, description: 'Checksum-verified referenced media metadata; transfer bytes are not persisted' },
                 contentHash: { type: 'string', required: true, description: 'Deterministic manifest integrity identifier' },
                 createdBy: { type: 'string', required: false },
                 correlationId: { type: 'string', required: false }

@@ -37,8 +37,8 @@ assert.deepStrictEqual(schemas.cmsPublicationDeploymentReceipt.transaction, { en
 assert.deepStrictEqual(schemas.cmsPublicationEventOutbox.transaction, { enabled: true, sideEffects: 'none' });
 assert.strictEqual(properties.publish.providers.domainAdapters.cms, 'DefaultCmsPublicationAdapterService');
 assert.strictEqual(properties.publish.providers.versionProviders.cms, 'DefaultCmsPublicationVersionProviderService');
-assert.strictEqual(properties.cms.publication.maximumDeploymentRequestBytes, '16mb');
-assert.strictEqual(properties.cms.publication.target.maxManifestBytes, 12582912);
+assert.strictEqual(properties.cms.publication.maximumDeploymentRequestBytes, '64mb');
+assert.strictEqual(properties.cms.publication.target.maxManifestBytes, 67108864);
 assert.strictEqual(properties.bodyParserHandler.cmsPublicationBodyParserHandler,
     'DefaultCmsPublicationBodyParserHandlerService');
 assert.strictEqual(routes.cmsPublicationTarget.deployPublication.bodyParserHandler,
@@ -172,7 +172,8 @@ SERVICE.TestCmsTargetTransport = {
 properties.cms.publication.targetTransportProvider = 'TestCmsTargetTransport';
 properties.cms.publication.runtimeRole = 'STAGED';
 
-const publication = { code: 'publish-home', domain: 'cms', rootType: 'pageRoute', rootCode: 'home-route', sourceVersion: '0' };
+const publication = { code: 'publish-home', domain: 'cms', rootType: 'pageRoute', rootCode: 'home-route',
+    sourceVersion: '0', mediaCodes: ['product-extra-media'] };
 const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, correlationId: 'correlation-a' };
 
 (async () => {
@@ -217,6 +218,12 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     assert.strictEqual(manifest.snapshot.page.components[0].localization.fallbackUsed, false);
     assert.strictEqual(manifest.snapshot.page.components[0].media[0].mediaCode, 'hero-en');
     assert.strictEqual(manifest.snapshot.page.components[0].media[0].altText, 'English hero');
+    assert.deepStrictEqual(manifest.mediaAssets.map(item => item.code).sort(), ['hero-en', 'product-extra-media'],
+        'application-declared media must publish with the CMS release even when it is outside the component graph');
+    assert.strictEqual(manifest.mediaAssets[0].contentBase64, 'eA==',
+        'deployment payload must retain media bytes for the target import call');
+    assert.strictEqual(data.manifests[0].mediaAssets[0].contentBase64, undefined,
+        'durable manifests must store media metadata only, not transfer bytes');
     assert.strictEqual(manifest.snapshot.page.rendererContractVersion, 1);
     assert.deepStrictEqual(manifest.snapshot.page.rendererChannels, ['web']);
     assert.strictEqual(manifest.snapshot.page.rendererDeprecated, false);
@@ -229,7 +236,10 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
         renderer: 'template.main',
         contractVersion: 0
     });
-    assert.strictEqual((await manifests.persist(publication, request)).code, manifest.code, 'manifest persistence must be idempotent');
+    let replayManifest = await manifests.persist(publication, request);
+    assert.strictEqual(replayManifest.code, manifest.code, 'manifest persistence must be idempotent');
+    assert.strictEqual(replayManifest.mediaAssets[0].contentBase64, 'eA==',
+        'idempotent deployment retries must reattach freshly exported media bytes');
 
     let activated = await provider.activate(publication, request);
     assert.strictEqual(activated.version, manifest.code);

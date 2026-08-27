@@ -11,17 +11,32 @@
 
 /** Validates Platform-owned routing, internal authentication, human delegation, and fixed baseline identity. */
 const assert = require('assert');
-class NodicsError extends Error { constructor(code, message) { super(message || code); this.code = code; } }
+class NodicsError extends Error {
+    constructor(code, message) {
+        if (code && typeof code === 'object') {
+            super(code.message);
+            this.code = code.code;
+            this.metadata = code.metadata;
+            this.causes = code.causes;
+        } else {
+            super(message || code);
+            this.code = code;
+        }
+    }
+}
 global.CLASSES = { NodicsError: NodicsError };
 global.CONFIG = { get: key => key === 'axis' ? { initialization: { baselineCode: 'axis', target: {
     moduleName: 'cms', connectionName: 'wcmsStaged', connectionType: 'abstract', timeoutMs: 1000, maxAttempts: 2
 } } } : undefined };
 global.NODICS = { getInternalAuthToken: tenant => tenant === 'default' ? 'internal-token' : undefined };
 let descriptor;
+let moduleInvocationHandler = async value => value.responseSelector({ data: {
+    readiness: value.methodName === 'POST' ? 'PUBLICATION_PENDING' : 'NOT_IMPORTED'
+} });
 global.SERVICE = { DefaultModuleService: {
     invokeModule: async value => {
         descriptor = value;
-        return value.responseSelector({ data: { readiness: value.methodName === 'POST' ? 'PUBLICATION_PENDING' : 'NOT_IMPORTED' } });
+        return moduleInvocationHandler(value);
     }
 } };
 const service = require('../src/service/defaultAxisInitializationService');
@@ -38,6 +53,21 @@ const request = { tenant: 'default', authData: { principalId: 'admin', tokenType
     assert.strictEqual(descriptor.apiName, '/publication/baselines/axis/initiate');
     assert.strictEqual(descriptor.requestBody.requestedBy, 'admin');
     assert.strictEqual(descriptor.requestBody.reason, 'Initialize Axis');
+    moduleInvocationHandler = async () => {
+        let error = new Error('A data release import is already running');
+        error.code = 'ERR_IMP_00003';
+        error.status = 400;
+        error.remoteResponse = { code: 'ERR_IMP_00003', message: 'A data release import is already running' };
+        throw error;
+    };
+    await assert.rejects(async () => service.initiate(request), error => {
+        assert.strictEqual(error.code, 'ERR_BOF_00085');
+        assert.strictEqual(error.metadata.targetMessage, 'A data release import is already running');
+        assert.deepStrictEqual(error.causes, [
+            { code: 'ERR_IMP_00003', message: 'A data release import is already running' }
+        ]);
+        return true;
+    });
     await assert.rejects(async () => service.status(Object.assign({}, request, { authData: { principalId: 'service', tokenType: 'service' } })),
         error => error.code === 'AXIS_INITIALIZATION_HUMAN_REQUIRED');
     console.log('Axis initialization service validated');

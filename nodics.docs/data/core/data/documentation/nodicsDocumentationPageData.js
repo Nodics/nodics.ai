@@ -39,8 +39,83 @@ module.exports = {
     "active": true
   },
   "record1": {
+    "code": "nodicsDocsPageframeworkWhyNodicsExists",
+    "name": "Why Nodics Exists",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentframeworkWhyNodicsExists",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record2": {
+    "code": "nodicsDocsPageframeworkHowNodicsWorks",
+    "name": "How Nodics Works",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentframeworkHowNodicsWorks",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record3": {
+    "code": "nodicsDocsPageframeworkAdoptionAndFirstJourney",
+    "name": "Adoption and First Journey",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentframeworkAdoptionAndFirstJourney",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record4": {
     "code": "nodicsDocsPagedocsDocumentationRoadmap",
-    "name": "Documentation Roadmap and Reader Journey",
+    "name": "Documentation Roadmap",
     "cmsSite": [
       "nodicsDocumentationSite"
     ],
@@ -63,7 +138,82 @@ module.exports = {
     ],
     "active": true
   },
-  "record2": {
+  "record5": {
+    "code": "nodicsDocsPagedocsDocumentationPrinciples",
+    "name": "Documentation Principles",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentdocsDocumentationPrinciples",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record6": {
+    "code": "nodicsDocsPagedocsReaderJourneyAndCoverage",
+    "name": "Reader Journey and Coverage",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentdocsReaderJourneyAndCoverage",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record7": {
+    "code": "nodicsDocsPagedocsDocumentationPublishingModel",
+    "name": "Documentation Publishing Model",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentdocsDocumentationPublishingModel",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record8": {
     "code": "nodicsDocsPageframeworkModularArchitecture",
     "name": "Modular architecture and ownership",
     "cmsSite": [
@@ -88,7 +238,82 @@ module.exports = {
     ],
     "active": true
   },
-  "record3": {
+  "record9": {
+    "code": "nodicsDocsPageframeworkRuntimeServerComposition",
+    "name": "Runtime Server Composition",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentframeworkRuntimeServerComposition",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record10": {
+    "code": "nodicsDocsPageframeworkModuleLoadingServicePrecedence",
+    "name": "Module Loading and Service Precedence",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentframeworkModuleLoadingServicePrecedence",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record11": {
+    "code": "nodicsDocsPageframeworkArchitectureDecisionGuide",
+    "name": "Architecture Decision Guide",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentframeworkArchitectureDecisionGuide",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record12": {
     "code": "nodicsDocsPageplatformModuleRegistry",
     "name": "Functional module registry",
     "cmsSite": [
@@ -113,7 +338,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record4": {
+  "record13": {
     "code": "nodicsDocsPagefoundationOverview",
     "name": "Foundation overview",
     "cmsSite": [
@@ -138,7 +363,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record5": {
+  "record14": {
     "code": "nodicsDocsPageapplicationsSuite",
     "name": "Nodics Application Suite",
     "cmsSite": [
@@ -163,9 +388,9 @@ module.exports = {
     ],
     "active": true
   },
-  "record6": {
-    "code": "nodicsDocsPagesolutionsTeeDeap",
-    "name": "TEE and DEAP Solution Use Cases",
+  "record15": {
+    "code": "nodicsDocsPagesolutionsTaskExecutionEngine",
+    "name": "Task Execution Engine",
     "cmsSite": [
       "nodicsDocumentationSite"
     ],
@@ -180,7 +405,7 @@ module.exports = {
         "active": true
       },
       {
-        "target": "nodicsDocsComponentsolutionsTeeDeap",
+        "target": "nodicsDocsComponentsolutionsTaskExecutionEngine",
         "slot": "article",
         "index": 10,
         "active": true
@@ -188,7 +413,32 @@ module.exports = {
     ],
     "active": true
   },
-  "record7": {
+  "record16": {
+    "code": "nodicsDocsPagesolutionsDataEngineeringAnalyticsPlatform",
+    "name": "Data Engineering and Analytics Platform",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentsolutionsDataEngineeringAnalyticsPlatform",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record17": {
     "code": "nodicsDocsPageacceleratorsAgoraIndustryTemplates",
     "name": "Accelerators and Industry Solution Templates",
     "cmsSite": [
@@ -213,7 +463,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record8": {
+  "record18": {
     "code": "nodicsDocsPageframeworkLocalQuickStart",
     "name": "Local quick start with Kickoff and Axis",
     "cmsSite": [
@@ -238,7 +488,57 @@ module.exports = {
     ],
     "active": true
   },
-  "record9": {
+  "record19": {
+    "code": "nodicsDocsPageframeworkFreshSchemaSetupJourney",
+    "name": "Fresh Schema Setup Journey",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentframeworkFreshSchemaSetupJourney",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record20": {
+    "code": "nodicsDocsPageframeworkLocalRuntimeTroubleshooting",
+    "name": "Local Runtime Troubleshooting",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentframeworkLocalRuntimeTroubleshooting",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record21": {
     "code": "nodicsDocsPageinstallerInstalledRuntimeApplicationBuilder",
     "name": "Installed Runtime Installer and Application Builder APIs",
     "cmsSite": [
@@ -263,7 +563,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record10": {
+  "record22": {
     "code": "nodicsDocsPagebuilderWorkspaceGeneration",
     "name": "Application Builder and Workspace Generation",
     "cmsSite": [
@@ -288,7 +588,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record11": {
+  "record23": {
     "code": "nodicsDocsPageprocessVisualDesigner",
     "name": "Visual Workflow Designer Contract",
     "cmsSite": [
@@ -313,7 +613,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record12": {
+  "record24": {
     "code": "nodicsDocsPageaxisBusinessCustomization",
     "name": "Business Customization in Axis",
     "cmsSite": [
@@ -338,7 +638,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record13": {
+  "record25": {
     "code": "nodicsDocsPageplatformOverview",
     "name": "Platform overview",
     "cmsSite": [
@@ -363,7 +663,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record14": {
+  "record26": {
     "code": "nodicsDocsPagesecurityIdentityAccessGovernance",
     "name": "Security, Identity, and Access Governance",
     "cmsSite": [
@@ -388,7 +688,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record15": {
+  "record27": {
     "code": "nodicsDocsPageconfigurationRuntimeBehaviorManagement",
     "name": "Application Configuration and Runtime Behavior Management",
     "cmsSite": [
@@ -413,7 +713,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record16": {
+  "record28": {
     "code": "nodicsDocsPageroutingApiGovernance",
     "name": "Routing and API Governance",
     "cmsSite": [
@@ -438,7 +738,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record17": {
+  "record29": {
     "code": "nodicsDocsPageruntimeGovernedChange",
     "name": "Governed Runtime Change Capability",
     "cmsSite": [
@@ -463,7 +763,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record18": {
+  "record30": {
     "code": "nodicsDocsPagelocalizationInternationalization",
     "name": "Localization and Internationalization",
     "cmsSite": [
@@ -488,7 +788,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record19": {
+  "record31": {
     "code": "nodicsDocsPageschemaDataModelingManagement",
     "name": "Data Modeling and Schema Management",
     "cmsSite": [
@@ -513,7 +813,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record20": {
+  "record32": {
     "code": "nodicsDocsPagepersistenceProviderDataAccessLayer",
     "name": "Provider and Data Access Layer",
     "cmsSite": [
@@ -538,7 +838,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record21": {
+  "record33": {
     "code": "nodicsDocsPagecacheRuntimeStateManagement",
     "name": "Caching and Runtime State Management",
     "cmsSite": [
@@ -563,7 +863,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record22": {
+  "record34": {
     "code": "nodicsDocsPageframeworkCustomizationGuide",
     "name": "Customization and extension guide",
     "cmsSite": [
@@ -588,7 +888,57 @@ module.exports = {
     ],
     "active": true
   },
-  "record23": {
+  "record35": {
+    "code": "nodicsDocsPageframeworkBackendExtensionPatterns",
+    "name": "Backend Extension Patterns",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentframeworkBackendExtensionPatterns",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record36": {
+    "code": "nodicsDocsPageframeworkAxisContentCustomization",
+    "name": "Axis Content Customization",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentframeworkAxisContentCustomization",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record37": {
     "code": "nodicsDocsPageprocessDeveloperCustomization",
     "name": "Developer Customization Guide",
     "cmsSite": [
@@ -613,7 +963,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record24": {
+  "record38": {
     "code": "nodicsDocsPageprocessCustomProjectExtension",
     "name": "Custom Project Extension Guide",
     "cmsSite": [
@@ -638,7 +988,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record25": {
+  "record39": {
     "code": "nodicsDocsPagecommerceBaseFoundations",
     "name": "Base Commerce foundations",
     "cmsSite": [
@@ -663,7 +1013,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record26": {
+  "record40": {
     "code": "nodicsDocsPagewcmsOverview",
     "name": "WCMS content management",
     "cmsSite": [
@@ -688,7 +1038,82 @@ module.exports = {
     ],
     "active": true
   },
-  "record27": {
+  "record41": {
+    "code": "nodicsDocsPagewcmsContentCatalogModel",
+    "name": "Content Catalog Model",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentwcmsContentCatalogModel",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record42": {
+    "code": "nodicsDocsPagewcmsPageDesignerComponents",
+    "name": "Page Designer and Components",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentwcmsPageDesignerComponents",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record43": {
+    "code": "nodicsDocsPagewcmsSitePublicationVisibility",
+    "name": "Site Publication and Visibility",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentwcmsSitePublicationVisibility",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record44": {
     "code": "nodicsDocsPagecatalogProductDiscoveryManagement",
     "name": "Product Catalog and Discovery Management",
     "cmsSite": [
@@ -713,7 +1138,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record28": {
+  "record45": {
     "code": "nodicsDocsPagediscoverySearchIndexing",
     "name": "Search, Indexing, and Discovery",
     "cmsSite": [
@@ -738,7 +1163,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record29": {
+  "record46": {
     "code": "nodicsDocsPagewcmsMediaManagement",
     "name": "Media management",
     "cmsSite": [
@@ -763,7 +1188,57 @@ module.exports = {
     ],
     "active": true
   },
-  "record30": {
+  "record47": {
+    "code": "nodicsDocsPagewcmsMediaStorageDelivery",
+    "name": "Media Storage and Delivery",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentwcmsMediaStorageDelivery",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record48": {
+    "code": "nodicsDocsPagewcmsMediaImportPublication",
+    "name": "Media Import and Publication",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentwcmsMediaImportPublication",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record49": {
     "code": "nodicsDocsPageinventoryStockManagement",
     "name": "Inventory and Stock Management",
     "cmsSite": [
@@ -788,7 +1263,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record31": {
+  "record50": {
     "code": "nodicsDocsPagepricingPromotionsTaxManagement",
     "name": "Pricing, Promotions, and Tax Management",
     "cmsSite": [
@@ -813,7 +1288,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record32": {
+  "record51": {
     "code": "nodicsDocsPagecommerceOverview",
     "name": "Commerce overview",
     "cmsSite": [
@@ -838,7 +1313,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record33": {
+  "record52": {
     "code": "nodicsDocsPagecommerceCartOrder",
     "name": "Cart, checkout, and order placement",
     "cmsSite": [
@@ -863,7 +1338,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record34": {
+  "record53": {
     "code": "nodicsDocsPagecommercePaymentFulfillment",
     "name": "Payment and fulfillment operations",
     "cmsSite": [
@@ -888,7 +1363,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record35": {
+  "record54": {
     "code": "nodicsDocsPagefulfillmentShippingManagement",
     "name": "Shipping and Fulfillment Management",
     "cmsSite": [
@@ -913,7 +1388,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record36": {
+  "record55": {
     "code": "nodicsDocsPageorderManagementLifecycle",
     "name": "Order Management Lifecycle",
     "cmsSite": [
@@ -938,7 +1413,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record37": {
+  "record56": {
     "code": "nodicsDocsPagecommerceReturnsRefunds",
     "name": "Cancellation, return, and refund lifecycle",
     "cmsSite": [
@@ -963,7 +1438,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record38": {
+  "record57": {
     "code": "nodicsDocsPageengagementCustomerReviews",
     "name": "Customer reviews and ratings",
     "cmsSite": [
@@ -988,7 +1463,57 @@ module.exports = {
     ],
     "active": true
   },
-  "record39": {
+  "record58": {
+    "code": "nodicsDocsPageengagementReviewModerationGovernance",
+    "name": "Review Moderation and Governance",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentengagementReviewModerationGovernance",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record59": {
+    "code": "nodicsDocsPageengagementReviewAggregationRecovery",
+    "name": "Review Aggregation and Recovery",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentengagementReviewAggregationRecovery",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record60": {
     "code": "nodicsDocsPageengagementCustomerFeedback",
     "name": "Customer feedback, complaints, and closed-loop action",
     "cmsSite": [
@@ -1013,7 +1538,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record40": {
+  "record61": {
     "code": "nodicsDocsPageengagementUnifiedOperations",
     "name": "Unified engagement operations",
     "cmsSite": [
@@ -1038,7 +1563,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record41": {
+  "record62": {
     "code": "nodicsDocsPageengagementGovernedAutomation",
     "name": "Governed automation and AI",
     "cmsSite": [
@@ -1063,7 +1588,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record42": {
+  "record63": {
     "code": "nodicsDocsPageengagementEnterpriseOperations",
     "name": "Enterprise scale, resilience, and ecosystem operations",
     "cmsSite": [
@@ -1088,7 +1613,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record43": {
+  "record64": {
     "code": "nodicsDocsPagecommunicationOverview",
     "name": "Communication, delivery, and verification",
     "cmsSite": [
@@ -1113,7 +1638,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record44": {
+  "record65": {
     "code": "nodicsDocsPageeventsMessagingClusterCoordination",
     "name": "Events, Messaging, and Cluster Coordination",
     "cmsSite": [
@@ -1138,7 +1663,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record45": {
+  "record66": {
     "code": "nodicsDocsPageprocessOverview",
     "name": "Business Process and Automation Overview",
     "cmsSite": [
@@ -1163,7 +1688,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record46": {
+  "record67": {
     "code": "nodicsDocsPageprocessRuntimeLifecycle",
     "name": "Runtime Instance and Task Lifecycle",
     "cmsSite": [
@@ -1188,7 +1713,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record47": {
+  "record68": {
     "code": "nodicsDocsPageprocessFirstWorkflow",
     "name": "Build Your First Workflow",
     "cmsSite": [
@@ -1213,7 +1738,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record48": {
+  "record69": {
     "code": "nodicsDocsPageprocessFirstHumanTask",
     "name": "Build Your First Human Task Flow",
     "cmsSite": [
@@ -1238,7 +1763,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record49": {
+  "record70": {
     "code": "nodicsDocsPageprocessBusinessValue",
     "name": "Business Value and Adoption Model",
     "cmsSite": [
@@ -1263,7 +1788,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record50": {
+  "record71": {
     "code": "nodicsDocsPagepipelineBusinessLogicOrchestration",
     "name": "Pipeline and Business Logic Orchestration",
     "cmsSite": [
@@ -1288,7 +1813,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record51": {
+  "record72": {
     "code": "nodicsDocsPagecronOperations",
     "name": "Cron operations",
     "cmsSite": [
@@ -1313,7 +1838,57 @@ module.exports = {
     ],
     "active": true
   },
-  "record52": {
+  "record73": {
+    "code": "nodicsDocsPagecronNodeResponsibilityTee",
+    "name": "Cron Node Responsibility and TEE",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentcronNodeResponsibilityTee",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record74": {
+    "code": "nodicsDocsPagecronProjectCustomization",
+    "name": "Project Cron Customization",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentcronProjectCustomization",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record75": {
     "code": "nodicsDocsPageprocessProcessCronRuntime",
     "name": "Process and Cronjob Shared Runtime",
     "cmsSite": [
@@ -1338,7 +1913,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record53": {
+  "record76": {
     "code": "nodicsDocsPageprocessScheduledAutomation",
     "name": "Scheduled Automation and Cron Triggers",
     "cmsSite": [
@@ -1363,7 +1938,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record54": {
+  "record77": {
     "code": "nodicsDocsPagedataImportExportMigration",
     "name": "Data Import, Export, and Migration",
     "cmsSite": [
@@ -1388,7 +1963,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record55": {
+  "record78": {
     "code": "nodicsDocsPageprocessActionAdapters",
     "name": "Action Adapter Contract",
     "cmsSite": [
@@ -1413,7 +1988,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record56": {
+  "record79": {
     "code": "nodicsDocsPageframeworkDevopsRuntime",
     "name": "Runtime and DevOps operations",
     "cmsSite": [
@@ -1438,7 +2013,57 @@ module.exports = {
     ],
     "active": true
   },
-  "record57": {
+  "record80": {
+    "code": "nodicsDocsPageframeworkRuntimeReleaseRollback",
+    "name": "Runtime Release and Rollback",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentframeworkRuntimeReleaseRollback",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record81": {
+    "code": "nodicsDocsPageframeworkLocalBrowserAcceptanceJourney",
+    "name": "Local Browser Acceptance Journey",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentframeworkLocalBrowserAcceptanceJourney",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record82": {
     "code": "nodicsDocsPageframeworkLocalVerificationChecklist",
     "name": "Local verification and acceptance checklist",
     "cmsSite": [
@@ -1463,7 +2088,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record58": {
+  "record83": {
     "code": "nodicsDocsPagecommerceEnterpriseOperations",
     "name": "Commerce enterprise operations and migration",
     "cmsSite": [
@@ -1488,7 +2113,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record59": {
+  "record84": {
     "code": "nodicsDocsPageprocessIncidentRecovery",
     "name": "Incident, Retry, and Compensation Operations",
     "cmsSite": [
@@ -1513,7 +2138,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record60": {
+  "record85": {
     "code": "nodicsDocsPageprocessDevopsTopology",
     "name": "DevOps and Runtime Topology",
     "cmsSite": [
@@ -1538,7 +2163,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record61": {
+  "record86": {
     "code": "nodicsDocsPageprocessQaRegressionGuide",
     "name": "Process QA and Regression Guide",
     "cmsSite": [
@@ -1563,7 +2188,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record62": {
+  "record87": {
     "code": "nodicsDocsPageframeworkCapabilityDocumentationMaturityPattern",
     "name": "Capability documentation maturity pattern",
     "cmsSite": [
@@ -1588,7 +2213,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record63": {
+  "record88": {
     "code": "nodicsDocsPagedocsOverview",
     "name": "Docs overview",
     "cmsSite": [
@@ -1613,7 +2238,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record64": {
+  "record89": {
     "code": "nodicsDocsPagewcmsPublishingLifecycle",
     "name": "Staged-to-Online publishing lifecycle",
     "cmsSite": [
@@ -1638,7 +2263,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record65": {
+  "record90": {
     "code": "nodicsDocsPagetoolingAiDeveloperEnablement",
     "name": "AI and Developer Tooling",
     "cmsSite": [
@@ -1663,7 +2288,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record66": {
+  "record91": {
     "code": "nodicsDocsPagereferenceSourceMapGlossary",
     "name": "Reference Source Map and Glossary",
     "cmsSite": [

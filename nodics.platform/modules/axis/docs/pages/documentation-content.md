@@ -15,7 +15,8 @@ Axis does not hardcode product tabs or maintain another registry.
 - **Swaggers** renders the active System-owned OpenAPI contract in an
   Axis-owned, searchable reference and links to the backend's standalone
   interactive Swagger UI. API descriptions are not copied into a content
-  catalog.
+  catalog. Swagger/OpenAPI availability follows runtime contract discovery,
+  not CMS documentation publication readiness.
 - **Nodics Axis** renders the Platform `axis` module's committed
   documentation content pack through its own CMS Site and content catalog.
 - A customer project, such as `nodics.kickoff`, contributes its own canonical
@@ -93,6 +94,16 @@ empty-state messages come from the bounded backend status contract. Axis sends
 only the employee bearer token and enterprise context to the registered System
 endpoint and never receives local paths, credentials, manifests, source files,
 or backend diagnostics.
+
+The documentation publication center is the operational home for the whole
+documentation lifecycle. It should show each publishable documentation source
+as a compact row with Staged state, Online state, next action, refresh, and
+expandable evidence. When approval is pending and the authenticated employee
+has permission, Axis may render approve and reject actions inline instead of
+sending the user to a separate Process page. The backend still owns workflow,
+permission, publication, and audit decisions. After approval, rejection,
+update, or publication, Axis must refresh the documentation source model and
+left navigation without requiring a manual browser refresh.
 
 The shared CMS navigation component supplies the searchable article index,
 category grouping, audience filters, and configurable labels. Each article

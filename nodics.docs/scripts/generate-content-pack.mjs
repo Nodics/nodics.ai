@@ -364,6 +364,32 @@ const sourcePages = documents.map((document, index) => {
     codeSuffix: camel(recordIdentity),
   };
 });
+
+function documentationPageSort(left, right) {
+  return (
+    (left.navigationGroupOrder || 100) - (right.navigationGroupOrder || 100) ||
+    String(left.navigationGroup || left.section.title).localeCompare(
+      String(right.navigationGroup || right.section.title),
+    ) ||
+    (left.navigationOrder || 100) - (right.navigationOrder || 100) ||
+    left.title.localeCompare(right.title)
+  );
+}
+
+const sectionPageOrder = new Map();
+sections.forEach((section) => {
+  sourcePages
+    .filter((document) => document.section.code === section.code)
+    .sort(documentationPageSort)
+    .forEach((document, index) => {
+      sectionPageOrder.set(document.id, (index + 1) * 10);
+    });
+});
+
+function twoLevelNavigationOrder(document, fallbackIndex = 0) {
+  return sectionPageOrder.get(document.id) || (fallbackIndex + 1) * 10;
+}
+
 const navigationItems = sourcePages.map((document, index) => ({
   code: document.id,
   title: document.title,
@@ -371,15 +397,15 @@ const navigationItems = sourcePages.map((document, index) => ({
   section: document.section.code,
   sectionTitle: document.section.title,
   sectionOrder: document.section.order,
-  group: document.navigationGroup ? slug(document.navigationGroup) : document.section.code,
-  groupTitle: document.navigationGroup || document.section.title,
-  groupOrder: document.navigationGroupOrder || document.navigationOrder || (index + 1) * 10,
-  subgroup: document.navigationSubgroup ? slug(document.navigationSubgroup) : null,
-  subgroupTitle: document.navigationSubgroup || null,
-  order: document.navigationOrder || (index + 1) * 10,
-  parentId: document.parentId || null,
-  hierarchyPath: document.hierarchyPath || [document.section.title, document.title],
-  hierarchyDepth: document.hierarchyDepth || 2,
+  group: document.section.code,
+  groupTitle: document.section.title,
+  groupOrder: document.section.order,
+  subgroup: null,
+  subgroupTitle: null,
+  order: twoLevelNavigationOrder(document, index),
+  parentId: document.section.code,
+  hierarchyPath: [document.section.title, document.title],
+  hierarchyDepth: 2,
   documentType: document.documentType || 'overview',
   audience: document.audience || defaultAudience,
   businessAudience: document.businessAudience || [],
@@ -528,8 +554,6 @@ const productRecords = {
 };
 
 const sectionNodeCodes = new Map();
-const groupNodeCodes = new Map();
-const subgroupNodeCodes = new Map();
 const nodeRecords = [];
 const dashboardRecords = [];
 
@@ -579,7 +603,7 @@ pushDashboard({
   title: 'Nodics Documentation Navigation',
   summary: 'Expandable and searchable documentation navigation generated from backend content-catalog metadata, with section dashboards and page-level access controls.',
   contentArea: {
-    navigationPattern: 'Sections, groups, subgroups, and topics are backend records that Axis can manage and render without hardcoded frontend menus.',
+    navigationPattern: 'Sections and page links are backend records that Axis can manage and render without hardcoded frontend menus.',
   },
   cards: sections.map((section) => ({
     code: section.code,
@@ -644,14 +668,7 @@ sections.forEach((section) => {
   const sectionNodeCode = boundedCode('nodicsDocsNodeSec', [section.code]);
   sectionNodeCodes.set(section.code, sectionNodeCode);
   const sectionPages = sourcePages.filter((document) => document.section.code === section.code);
-  const groups = [...new Map(sectionPages.map((document) => [
-    document.navigationGroupCode || slug(document.navigationGroup || section.title),
-    {
-      code: document.navigationGroupCode || slug(document.navigationGroup || section.title),
-      title: document.navigationGroup || section.title,
-      order: document.navigationGroupOrder || 100,
-    },
-  ])).values()].sort((left, right) => left.order - right.order || left.title.localeCompare(right.title));
+  const sortedSectionPages = [...sectionPages].sort(documentationPageSort);
   const dashboardCode = boundedCode('nodicsDocsDashboardSec', [section.code]);
 
   pushDashboard({
@@ -662,20 +679,20 @@ sections.forEach((section) => {
     summary: section.summary,
     contentArea: {
       businessPurpose: section.summary,
-      technicalPurpose: 'This section is a backend documentation node with ordered children, search metadata, access policy, and publication lifecycle state.',
+      technicalPurpose: 'This section is a backend documentation node with direct page links, search metadata, access policy, and publication lifecycle state.',
     },
-    cards: groups.map((group) => ({
-      code: group.code,
-      title: group.title,
-      summary: `Open ${group.title} topics and implementation guidance.`,
-      order: group.order,
+    cards: sortedSectionPages.map((document) => ({
+      code: document.id,
+      title: document.title,
+      summary: document.summary,
+      order: twoLevelNavigationOrder(document),
     })),
-    journeyLinks: sectionPages.slice(0, 6).map((document) => ({
+    journeyLinks: sortedSectionPages.slice(0, 6).map((document) => ({
       label: document.title,
       targetPage: document.id,
       route: document.route,
     })),
-    statusSummary: { pages: sectionPages.length, groups: groups.length },
+    statusSummary: { pages: sectionPages.length, navigationDepth: 2 },
     accessMode: section.accessMode || 'PUBLIC',
     lifecycleState: section.lifecycleState || defaultLifecycle,
   });
@@ -686,26 +703,27 @@ sections.forEach((section) => {
     navigation: navigationCode,
     parentNode: rootNodeCode,
     nodeLevel: 'SECTION',
-    nodeType: groups.length || sectionPages.length ? 'CONTAINER' : 'PAGE_LINK',
+    nodeType: sectionPages.length ? 'CONTAINER' : 'PAGE_LINK',
     nodeTitle: section.title,
     nodeSummary: section.summary,
     nodeContentArea: {
       dashboard: dashboardCode,
-      groups: groups.map((group) => group.code),
-      pages: sectionPages.map((document) => document.id),
+      navigationDepth: 2,
+      pages: sortedSectionPages.map((document) => document.id),
     },
     nodeDashboard: dashboardCode,
-    childSummaryCards: groups.map((group) => ({
-      code: group.code,
-      title: group.title,
-      order: group.order,
+    childSummaryCards: sortedSectionPages.map((document) => ({
+      code: document.id,
+      title: document.title,
+      summary: document.summary,
+      order: twoLevelNavigationOrder(document),
     })),
-    childJourneyLinks: sectionPages.slice(0, 6).map((document) => ({
+    childJourneyLinks: sortedSectionPages.slice(0, 6).map((document) => ({
       label: document.title,
       targetPage: document.id,
       route: document.route,
     })),
-    childStatusSummary: { childCount: groups.length, pages: sectionPages.length },
+    childStatusSummary: { childCount: sectionPages.length, pages: sectionPages.length },
     nodeOrder: section.order,
     expandable: true,
     expandedByDefault: false,
@@ -727,190 +745,13 @@ sections.forEach((section) => {
   });
 });
 
-sourcePages.forEach((document) => {
+sourcePages.forEach((document, index) => {
   const sectionCode = document.section.code;
-  const groupCode = document.navigationGroupCode || slug(document.navigationGroup || document.section.title);
-  const groupKey = `${sectionCode}:${groupCode}`;
-  if (!groupNodeCodes.has(groupKey)) {
-    const groupNodeCode = boundedCode('nodicsDocsNodeGrp', [sectionCode, groupCode]);
-    const groupPages = sourcePages.filter((page) =>
-      page.section.code === sectionCode &&
-      (page.navigationGroupCode || slug(page.navigationGroup || page.section.title)) === groupCode
-    );
-    const subgroups = [...new Map(groupPages.filter((page) => page.navigationSubgroupCode).map((page) => [
-      page.navigationSubgroupCode,
-      {
-        code: page.navigationSubgroupCode,
-        title: page.navigationSubgroup,
-        order: page.navigationOrder || 100,
-      },
-    ])).values()];
-    const dashboardCode = boundedCode('nodicsDocsDashboardGrp', [sectionCode, groupCode]);
-    groupNodeCodes.set(groupKey, groupNodeCode);
-    pushDashboard({
-      code: dashboardCode,
-      ownerType: 'GROUP',
-      ownerCode: groupNodeCode,
-      title: document.navigationGroup || document.section.title,
-      summary: `Detailed landing content for ${document.navigationGroup || document.section.title}, including business purpose, technical ownership, customization routes, and validation evidence for child topics.`,
-      contentArea: {
-        businessPurpose: 'Group related documentation topics so business and development users can enter from the capability they recognize.',
-        technicalPurpose: 'Preserve section and group ownership as backend records that can be reordered and summarized through Axis.',
-      },
-      cards: groupPages.map((page) => ({
-        code: page.id,
-        title: page.title,
-        summary: page.summary,
-        order: page.navigationOrder,
-      })),
-      journeyLinks: groupPages.map((page) => ({
-        label: page.title,
-        targetPage: page.id,
-        route: page.route,
-      })),
-      statusSummary: { pages: groupPages.length, subgroups: subgroups.length },
-      accessMode: document.accessMode || 'PUBLIC',
-      lifecycleState: document.lifecycleState || defaultLifecycle,
-    });
-    nodeRecords.push({
-      code: groupNodeCode,
-      product: productCode,
-      navigation: navigationCode,
-      parentNode: sectionNodeCodes.get(sectionCode),
-      nodeLevel: 'GROUP',
-      nodeType: 'CONTAINER',
-      nodeTitle: document.navigationGroup || document.section.title,
-      nodeSummary: `Business-friendly group for ${document.navigationGroup || document.section.title} documentation topics.`,
-      nodeContentArea: {
-        dashboard: dashboardCode,
-        pages: groupPages.map((page) => page.id),
-        subgroups: subgroups.map((subgroup) => subgroup.code),
-      },
-      nodeDashboard: dashboardCode,
-      childSummaryCards: groupPages.map((page) => ({
-        code: page.id,
-        title: page.title,
-        summary: page.summary,
-        order: page.navigationOrder,
-      })),
-      childJourneyLinks: groupPages.map((page) => ({
-        label: page.title,
-        targetPage: page.id,
-        route: page.route,
-      })),
-      childStatusSummary: { childCount: groupPages.length, subgroups: subgroups.length },
-      nodeOrder: document.navigationGroupOrder || document.navigationOrder || 100,
-      expandable: true,
-      expandedByDefault: false,
-      nodeIcon: 'folder-open',
-      nodeAudience: document.audience || defaultAudience,
-      accessPolicy: accessPolicyFor(document),
-      accessMode: document.accessMode || 'PUBLIC',
-      allowedRoles: document.allowedRoles || [],
-      allowedGroups: document.allowedGroups || [],
-      allowedPermissions: document.allowedPermissions || [],
-      ...workflowMetadata('NODE'),
-      lifecycleState: document.lifecycleState || defaultLifecycle,
-      maturityState: schemaMaturity(document.maturityState),
-      searchKeywords: document.searchKeywords || [],
-      relatedNodes: [],
-      locale: document.locale || 'en',
-      channel: 'web',
-      active: true,
-    });
-  }
-
-  let parentNode = groupNodeCodes.get(groupKey);
-  if (document.navigationSubgroupCode) {
-    const subgroupKey = `${groupKey}:${document.navigationSubgroupCode}`;
-    if (!subgroupNodeCodes.has(subgroupKey)) {
-      const subgroupNodeCode = boundedCode('nodicsDocsNodeSub', [sectionCode, groupCode, document.navigationSubgroupCode]);
-      const subgroupPages = sourcePages.filter((page) =>
-        page.section.code === sectionCode &&
-        (page.navigationGroupCode || slug(page.navigationGroup || page.section.title)) === groupCode &&
-        page.navigationSubgroupCode === document.navigationSubgroupCode
-      );
-      const dashboardCode = boundedCode('nodicsDocsDashboardSub', [sectionCode, groupCode, document.navigationSubgroupCode]);
-      subgroupNodeCodes.set(subgroupKey, subgroupNodeCode);
-      pushDashboard({
-        code: dashboardCode,
-        ownerType: 'SUBGROUP',
-        ownerCode: subgroupNodeCode,
-        title: document.navigationSubgroup,
-        summary: `Detailed landing content for ${document.navigationSubgroup}, with links to each owned topic and implementation reference.`,
-        contentArea: {
-          businessPurpose: 'Separate deeper capability details without forcing users to know internal module names.',
-          technicalPurpose: 'Keep related topics under a stable backend node for Axis-managed order, access, and publication lifecycle.',
-        },
-        cards: subgroupPages.map((page) => ({
-          code: page.id,
-          title: page.title,
-          summary: page.summary,
-          order: page.navigationOrder,
-        })),
-        journeyLinks: subgroupPages.map((page) => ({
-          label: page.title,
-          targetPage: page.id,
-          route: page.route,
-        })),
-        statusSummary: { pages: subgroupPages.length },
-        accessMode: document.accessMode || 'PUBLIC',
-        lifecycleState: document.lifecycleState || defaultLifecycle,
-      });
-      nodeRecords.push({
-        code: subgroupNodeCode,
-        product: productCode,
-        navigation: navigationCode,
-        parentNode,
-        nodeLevel: 'SUBGROUP',
-        nodeType: 'CONTAINER',
-        nodeTitle: document.navigationSubgroup,
-        nodeSummary: `Subgroup for ${document.navigationSubgroup} documentation topics.`,
-        nodeContentArea: {
-          dashboard: dashboardCode,
-          pages: subgroupPages.map((page) => page.id),
-        },
-        nodeDashboard: dashboardCode,
-        childSummaryCards: subgroupPages.map((page) => ({
-          code: page.id,
-          title: page.title,
-          summary: page.summary,
-          order: page.navigationOrder,
-        })),
-        childJourneyLinks: subgroupPages.map((page) => ({
-          label: page.title,
-          targetPage: page.id,
-          route: page.route,
-        })),
-        childStatusSummary: { childCount: subgroupPages.length },
-        nodeOrder: document.navigationOrder || 100,
-        expandable: true,
-        expandedByDefault: false,
-        nodeIcon: 'list-tree',
-        nodeAudience: document.audience || defaultAudience,
-        accessPolicy: accessPolicyFor(document),
-        accessMode: document.accessMode || 'PUBLIC',
-        allowedRoles: document.allowedRoles || [],
-        allowedGroups: document.allowedGroups || [],
-        allowedPermissions: document.allowedPermissions || [],
-        ...workflowMetadata('NODE'),
-        lifecycleState: document.lifecycleState || defaultLifecycle,
-        maturityState: schemaMaturity(document.maturityState),
-        searchKeywords: document.searchKeywords || [],
-        relatedNodes: [],
-        locale: document.locale || 'en',
-        channel: 'web',
-        active: true,
-      });
-    }
-    parentNode = subgroupNodeCodes.get(subgroupKey);
-  }
-
   nodeRecords.push({
     code: boundedCode('nodicsDocsNodeTopic', [document.id]),
     product: productCode,
     navigation: navigationCode,
-    parentNode,
+    parentNode: sectionNodeCodes.get(sectionCode),
     nodeLevel: 'TOPIC',
     nodeType: 'PAGE',
     nodeTitle: document.title,
@@ -927,7 +768,7 @@ sourcePages.forEach((document) => {
     targetDocumentationPage: metadataPageCode(document),
     targetPage: pageCode(document),
     targetRoute: routeCode(document),
-    nodeOrder: document.navigationOrder || 100,
+    nodeOrder: 10000 + twoLevelNavigationOrder(document, index),
     expandable: false,
     expandedByDefault: false,
     nodeIcon: 'file-text',
@@ -955,12 +796,20 @@ const navigationRecords = {
     name: 'Nodics Documentation Navigation',
     renderer: 'documentation.component.navigation',
     searchLabel: 'Search framework documentation',
-    searchPlaceholder: 'Search topics, business capabilities, configuration, providers, and extension points',
+    searchPlaceholder: 'Search documentation',
     emptyMessage: 'No framework documentation matches your search.',
     expandable: true,
     accessMode: 'PUBLIC',
     lifecycleState: defaultLifecycle,
     ...workflowMetadata('NAVIGATION'),
+    active: true,
+  },
+};
+
+const legacyNavigationCleanupRecords = {
+  record0: {
+    code: 'nodicsDocumentationLegacyNavigationCleanup',
+    reason: 'Remove generated multi-level navigation containers before importing the two-level section and page-link hierarchy.',
     active: true,
   },
 };
@@ -1117,7 +966,8 @@ const searchTargets = [
     keywords: [...(document.searchKeywords || []), ...(document.topicKeywords || [])],
     facets: {
       section: document.section.code,
-      group: document.navigationGroupCode || slug(document.navigationGroup || document.section.title),
+      group: document.section.code,
+      navigationDepth: 2,
       documentType: document.documentType,
       audience: document.audience || defaultAudience,
       maturityState: document.maturityState || 'operational',
@@ -1193,7 +1043,7 @@ const navigationComponent = {
     properties: {
       title: 'Nodics Framework',
       searchLabel: 'Search framework documentation',
-      searchPlaceholder: 'Search modules, contracts, registry, and runtime guidance',
+      searchPlaceholder: 'Search documentation',
       emptyMessage: 'No framework documentation matches your search.',
       sections,
       items: navigationItems,
@@ -1215,13 +1065,13 @@ const articleComponents = Object.fromEntries(
         route: document.route,
         section: document.section.code,
         sectionTitle: document.section.title,
-        group: document.navigationGroup ? slug(document.navigationGroup) : document.section.code,
-        groupTitle: document.navigationGroup || document.section.title,
-        subgroup: document.navigationSubgroup ? slug(document.navigationSubgroup) : null,
-        subgroupTitle: document.navigationSubgroup || null,
-        parentId: document.parentId || null,
-        hierarchyPath: document.hierarchyPath || [document.section.title, document.title],
-        hierarchyDepth: document.hierarchyDepth || 2,
+        group: document.section.code,
+        groupTitle: document.section.title,
+        subgroup: null,
+        subgroupTitle: null,
+        parentId: document.section.code,
+        hierarchyPath: [document.section.title, document.title],
+        hierarchyDepth: 2,
         documentType: document.documentType || 'overview',
         audience: document.audience || defaultAudience,
         businessAudience: document.businessAudience || [],
@@ -1341,6 +1191,10 @@ const files = {
     'Generated Nodics framework documentation hierarchy dashboards.',
     dashboardRecordMap,
   ),
+  'data/core/data/documentation/nodicsDocumentationLegacyNavigationCleanupData.js': jsModule(
+    'Generated cleanup marker for retired multi-level documentation navigation records.',
+    legacyNavigationCleanupRecords,
+  ),
   'data/core/data/documentation/nodicsDocumentationNodeData.js': jsModule(
     'Generated Nodics framework documentation hierarchy nodes.',
     nodeRecordMap,
@@ -1404,7 +1258,7 @@ const files = {
     'Generated Nodics framework documentation routes.',
     routeRecords,
   ),
-  'data/core/headers/nodicsDocumentationContentPackHeader.js': `${copyrightHeader}'use strict';\n\n/** @description Nodics foundation-import header for framework documentation. */\nmodule.exports = {\n  cms: {\n    nodicsDocumentationSiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSiteData' }, query: { code: '$code' } },\n    nodicsDocumentationProductData: { options: { enabled: true, schemaName: 'cmsDocumentationProduct', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationProductData' }, query: { code: '$code' } },\n    nodicsDocumentationAccessPolicyData: { options: { enabled: true, schemaName: 'cmsDocumentationAccessPolicy', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationAccessPolicyData' }, query: { code: '$code' } },\n    nodicsDocumentationNavigationData: { options: { enabled: true, schemaName: 'cmsDocumentationNavigation', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationNavigationData' }, query: { code: '$code' } },\n    nodicsDocumentationDashboardData: { options: { enabled: true, schemaName: 'cmsDocumentationDashboard', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationDashboardData' }, query: { code: '$code' } },\n    nodicsDocumentationNodeData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationNodeData' }, query: { code: '$code' } },\n    nodicsDocumentationPageMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationPage', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationPageMetadataData' }, query: { code: '$code' } },\n    nodicsDocumentationPublicationStateData: { options: { enabled: true, schemaName: 'cmsDocumentationPublicationState', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationPublicationStateData' }, query: { code: '$code' } },\n    nodicsDocumentationSearchMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationSearchMetadata', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSearchMetadataData' }, query: { code: '$code' } },\n    nodicsDocumentationTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTypeCodeData' }, query: { code: '$code' } },\n    nodicsDocumentationRendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationRendererData' }, query: { code: '$code' } },\n    nodicsDocumentationTemplateBootstrapData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTemplateBootstrapData' }, query: { code: '$code' } },\n    nodicsDocumentationSlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSlotData' }, query: { code: '$code' } },\n    nodicsDocumentationTemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTemplateData' }, query: { code: '$code' } },\n    nodicsDocumentationComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationComponentData' }, query: { code: '$code' } },\n    nodicsDocumentationPageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationPageData' }, query: { code: '$code' } },\n    nodicsDocumentationRouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationRouteData' }, query: { code: '$code' } },\n  },\n};\n`,
+  'data/core/headers/nodicsDocumentationContentPackHeader.js': `${copyrightHeader}'use strict';\n\n/** @description Nodics foundation-import header for framework documentation. */\nmodule.exports = {\n  cms: {\n    nodicsDocumentationSiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSiteData' }, query: { code: '$code' } },\n    nodicsDocumentationProductData: { options: { enabled: true, schemaName: 'cmsDocumentationProduct', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationProductData' }, query: { code: '$code' } },\n    nodicsDocumentationAccessPolicyData: { options: { enabled: true, schemaName: 'cmsDocumentationAccessPolicy', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationAccessPolicyData' }, query: { code: '$code' } },\n    nodicsDocumentationNavigationData: { options: { enabled: true, schemaName: 'cmsDocumentationNavigation', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationNavigationData' }, query: { code: '$code' } },\n    nodicsDocumentationDashboardData: { options: { enabled: true, schemaName: 'cmsDocumentationDashboard', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationDashboardData' }, query: { code: '$code' } },\n    nodicsDocumentationLegacyNavigationCleanupData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'remove', dataFilePrefix: 'nodicsDocumentationLegacyNavigationCleanupData' }, query: { product: '${productCode}', navigation: '${navigationCode}', $or: [{ nodeLevel: { $in: ['GROUP', 'SUBGROUP'] } }, { code: '${boundedCode('nodicsDocsNodeTopic', ['solutions.tee-deap-solution-use-cases'])}' }] } },\n    nodicsDocumentationNodeData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationNodeData' }, query: { code: '$code' } },\n    nodicsDocumentationPageMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationPage', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationPageMetadataData' }, query: { code: '$code' } },\n    nodicsDocumentationPublicationStateData: { options: { enabled: true, schemaName: 'cmsDocumentationPublicationState', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationPublicationStateData' }, query: { code: '$code' } },\n    nodicsDocumentationSearchMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationSearchMetadata', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSearchMetadataData' }, query: { code: '$code' } },\n    nodicsDocumentationTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTypeCodeData' }, query: { code: '$code' } },\n    nodicsDocumentationRendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationRendererData' }, query: { code: '$code' } },\n    nodicsDocumentationTemplateBootstrapData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTemplateBootstrapData' }, query: { code: '$code' } },\n    nodicsDocumentationSlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSlotData' }, query: { code: '$code' } },\n    nodicsDocumentationTemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTemplateData' }, query: { code: '$code' } },\n    nodicsDocumentationComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationComponentData' }, query: { code: '$code' } },\n    nodicsDocumentationPageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationPageData' }, query: { code: '$code' } },\n    nodicsDocumentationRouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationRouteData' }, query: { code: '$code' } },\n  },\n};\n`,
 };
 
 for (const [relativePath, content] of Object.entries(files)) {

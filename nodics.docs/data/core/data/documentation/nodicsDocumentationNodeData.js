@@ -313,7 +313,7 @@ module.exports = {
     "childJourneyLinks": [],
     "childStatusSummary": {
       "childCount": 47,
-      "pages": 67
+      "pages": 92
     },
     "nodeOrder": 10,
     "expandable": true,
@@ -366,19 +366,39 @@ module.exports = {
     "nodeSummary": "Framework purpose, adoption value, enterprise problems solved, and how Nodics supports fast but governed delivery.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecnodicsFramework",
-      "groups": [
-        "framework-value-and-adoption"
-      ],
+      "navigationDepth": 2,
       "pages": [
-        "framework.what-is-nodics"
+        "framework.what-is-nodics",
+        "framework.why-nodics-exists",
+        "framework.how-nodics-works",
+        "framework.adoption-and-first-journey"
       ]
     },
     "nodeDashboard": "nodicsDocsDashboardSecnodicsFramework",
     "childSummaryCards": [
       {
-        "code": "framework-value-and-adoption",
-        "title": "Framework Value and Adoption",
+        "code": "framework.what-is-nodics",
+        "title": "What is Nodics?",
+        "summary": "Introductory definition of Nodics, its enterprise purpose, and the first mental model for business, developer, and operator readers.",
         "order": 10
+      },
+      {
+        "code": "framework.why-nodics-exists",
+        "title": "Why Nodics Exists",
+        "summary": "Industry problems, business value, and why Nodics turns fast delivery into governed enterprise software.",
+        "order": 20
+      },
+      {
+        "code": "framework.how-nodics-works",
+        "title": "How Nodics Works",
+        "summary": "Mental model for framework modules, customer projects, Axis, public applications, runtime ownership, and customization.",
+        "order": 30
+      },
+      {
+        "code": "framework.adoption-and-first-journey",
+        "title": "Adoption and First Journey",
+        "summary": "The first business, developer, and operator path through setup, capability registration, imports, publishing, and browser verification.",
+        "order": 40
       }
     ],
     "childJourneyLinks": [
@@ -386,11 +406,26 @@ module.exports = {
         "label": "What is Nodics?",
         "targetPage": "framework.what-is-nodics",
         "route": "/docs/framework"
+      },
+      {
+        "label": "Why Nodics Exists",
+        "targetPage": "framework.why-nodics-exists",
+        "route": "/docs/framework/framework-why-nodics-exists"
+      },
+      {
+        "label": "How Nodics Works",
+        "targetPage": "framework.how-nodics-works",
+        "route": "/docs/framework/framework-how-nodics-works"
+      },
+      {
+        "label": "Adoption and First Journey",
+        "targetPage": "framework.adoption-and-first-journey",
+        "route": "/docs/framework/framework-adoption-and-first-journey"
       }
     ],
     "childStatusSummary": {
-      "childCount": 1,
-      "pages": 1
+      "childCount": 4,
+      "pages": 4
     },
     "nodeOrder": 10,
     "expandable": true,
@@ -442,31 +477,66 @@ module.exports = {
     "nodeSummary": "Reader journeys for business users, architects, administrators, developers, operators, partners, QA owners, and AI tools.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecdocumentationRoadmap",
-      "groups": [
-        "reader-journey-and-coverage-map"
-      ],
+      "navigationDepth": 2,
       "pages": [
-        "docs.documentation-roadmap"
+        "docs.documentation-roadmap",
+        "docs.documentation-principles",
+        "docs.reader-journey-and-coverage",
+        "docs.documentation-publishing-model"
       ]
     },
     "nodeDashboard": "nodicsDocsDashboardSecdocumentationRoadmap",
     "childSummaryCards": [
       {
-        "code": "reader-journey-and-coverage-map",
-        "title": "Reader Journey and Coverage Map",
+        "code": "docs.documentation-roadmap",
+        "title": "Documentation Roadmap",
+        "summary": "How the Nodics documentation product is organized and how readers choose the right path through the enterprise hierarchy.",
         "order": 10
+      },
+      {
+        "code": "docs.documentation-principles",
+        "title": "Documentation Principles",
+        "summary": "Framework-level documentation rules for README thinness, detailed docs depth, visual evidence, customization, publishing, and access.",
+        "order": 20
+      },
+      {
+        "code": "docs.reader-journey-and-coverage",
+        "title": "Reader Journey and Coverage",
+        "summary": "How business users, developers, operators, QA owners, administrators, and AI tools navigate capability documentation.",
+        "order": 30
+      },
+      {
+        "code": "docs.documentation-publishing-model",
+        "title": "Documentation Publishing Model",
+        "summary": "How documentation source becomes content catalog data, Staged records, approval tasks, Online pages, and public or authenticated delivery.",
+        "order": 40
       }
     ],
     "childJourneyLinks": [
       {
-        "label": "Documentation Roadmap and Reader Journey",
+        "label": "Documentation Roadmap",
         "targetPage": "docs.documentation-roadmap",
         "route": "/docs/framework/docs-documentation-roadmap"
+      },
+      {
+        "label": "Documentation Principles",
+        "targetPage": "docs.documentation-principles",
+        "route": "/docs/framework/docs-documentation-principles"
+      },
+      {
+        "label": "Reader Journey and Coverage",
+        "targetPage": "docs.reader-journey-and-coverage",
+        "route": "/docs/framework/docs-reader-journey-and-coverage"
+      },
+      {
+        "label": "Documentation Publishing Model",
+        "targetPage": "docs.documentation-publishing-model",
+        "route": "/docs/framework/docs-documentation-publishing-model"
       }
     ],
     "childStatusSummary": {
-      "childCount": 1,
-      "pages": 1
+      "childCount": 4,
+      "pages": 4
     },
     "nodeOrder": 20,
     "expandable": true,
@@ -518,19 +588,39 @@ module.exports = {
     "nodeSummary": "Architecture, modularity, ownership, runtime composition, extension direction, and design boundaries.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecframeworkArchitectureAndDesign",
-      "groups": [
-        "modularity-and-ownership"
-      ],
+      "navigationDepth": 2,
       "pages": [
-        "framework.modular-architecture"
+        "framework.modular-architecture",
+        "framework.runtime-server-composition",
+        "framework.module-loading-service-precedence",
+        "framework.architecture-decision-guide"
       ]
     },
     "nodeDashboard": "nodicsDocsDashboardSecframeworkArchitectureAndDesign",
     "childSummaryCards": [
       {
-        "code": "modularity-and-ownership",
-        "title": "Modularity and Ownership",
+        "code": "framework.modular-architecture",
+        "title": "Modular architecture and ownership",
+        "summary": "How functional modules, technical modules, runtime servers, and customer projects fit together.",
         "order": 10
+      },
+      {
+        "code": "framework.runtime-server-composition",
+        "title": "Runtime Server Composition",
+        "summary": "How project topology composes framework modules into Platform, WCMS, Process, and other runtime servers.",
+        "order": 20
+      },
+      {
+        "code": "framework.module-loading-service-precedence",
+        "title": "Module Loading and Service Precedence",
+        "summary": "How runtime loading order, service overrides, and project layers decide which implementation is active.",
+        "order": 30
+      },
+      {
+        "code": "framework.architecture-decision-guide",
+        "title": "Architecture Decision Guide",
+        "summary": "Decision path for choosing framework, project, content, provider, service, pipeline, schema, route, or renderer ownership.",
+        "order": 40
       }
     ],
     "childJourneyLinks": [
@@ -538,11 +628,26 @@ module.exports = {
         "label": "Modular architecture and ownership",
         "targetPage": "framework.modular-architecture",
         "route": "/docs/framework/framework-modular-architecture"
+      },
+      {
+        "label": "Runtime Server Composition",
+        "targetPage": "framework.runtime-server-composition",
+        "route": "/docs/framework/framework-runtime-server-composition"
+      },
+      {
+        "label": "Module Loading and Service Precedence",
+        "targetPage": "framework.module-loading-service-precedence",
+        "route": "/docs/framework/framework-module-loading-service-precedence"
+      },
+      {
+        "label": "Architecture Decision Guide",
+        "targetPage": "framework.architecture-decision-guide",
+        "route": "/docs/framework/framework-architecture-decision-guide"
       }
     ],
     "childStatusSummary": {
-      "childCount": 1,
-      "pages": 1
+      "childCount": 4,
+      "pages": 4
     },
     "nodeOrder": 30,
     "expandable": true,
@@ -594,9 +699,7 @@ module.exports = {
     "nodeSummary": "Capability registration, activation, runtime observation, lifecycle state, and backend-owned capability identity.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSeccapabilityRegistryAndLifecycleManagement",
-      "groups": [
-        "functional-module-registry"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "platform.module-registry"
       ]
@@ -604,8 +707,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSeccapabilityRegistryAndLifecycleManagement",
     "childSummaryCards": [
       {
-        "code": "functional-module-registry",
-        "title": "Functional Module Registry",
+        "code": "platform.module-registry",
+        "title": "Functional module registry",
+        "summary": "Durable project registration and runtime observation rules.",
         "order": 10
       }
     ],
@@ -670,9 +774,7 @@ module.exports = {
     "nodeSummary": "Shared runtime services that support modules, routes, schemas, configuration, events, validation, and tooling.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecfoundationRuntimeServices",
-      "groups": [
-        "runtime-foundation"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "foundation.overview"
       ]
@@ -680,8 +782,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecfoundationRuntimeServices",
     "childSummaryCards": [
       {
-        "code": "runtime-foundation",
-        "title": "Runtime Foundation",
+        "code": "foundation.overview",
+        "title": "Foundation overview",
+        "summary": "Beginner, developer, and operations guide to the Foundation runtime, request path, cache, events, configuration, and quality rules.",
         "order": 10
       }
     ],
@@ -746,9 +849,7 @@ module.exports = {
     "nodeSummary": "Application experiences built on the framework, including Axis, Nexus, and Kickoff.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecnodicsApplicationSuite",
-      "groups": [
-        "application-overview"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "applications.suite"
       ]
@@ -756,8 +857,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecnodicsApplicationSuite",
     "childSummaryCards": [
       {
-        "code": "application-overview",
-        "title": "Application Overview",
+        "code": "applications.suite",
+        "title": "Nodics Application Suite",
+        "summary": "Business and technical overview of Axis, Nexus, and Kickoff as application experiences built on the Nodics Framework.",
         "order": 10
       }
     ],
@@ -822,31 +924,42 @@ module.exports = {
     "nodeSummary": "Solution patterns such as Task Execution Engine and Data Engineering and Analytics Platform that customers can build with Nodics.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecsolutionUseCases",
-      "groups": [
-        "solution-patterns"
-      ],
+      "navigationDepth": 2,
       "pages": [
-        "solutions.tee-deap"
+        "solutions.task-execution-engine",
+        "solutions.data-engineering-analytics-platform"
       ]
     },
     "nodeDashboard": "nodicsDocsDashboardSecsolutionUseCases",
     "childSummaryCards": [
       {
-        "code": "solution-patterns",
-        "title": "Solution Patterns",
+        "code": "solutions.task-execution-engine",
+        "title": "Task Execution Engine",
+        "summary": "How customers use Nodics Process, Cron, Pipelines, Events, and governed runtime change to build a Task Execution Engine.",
         "order": 10
+      },
+      {
+        "code": "solutions.data-engineering-analytics-platform",
+        "title": "Data Engineering and Analytics Platform",
+        "summary": "How customers use Nodics import, export, discovery, provider, event, pipeline, and publishing capabilities to build governed data platforms.",
+        "order": 20
       }
     ],
     "childJourneyLinks": [
       {
-        "label": "TEE and DEAP Solution Use Cases",
-        "targetPage": "solutions.tee-deap",
-        "route": "/docs/framework/solutions-tee-deap"
+        "label": "Task Execution Engine",
+        "targetPage": "solutions.task-execution-engine",
+        "route": "/docs/framework/solutions-task-execution-engine"
+      },
+      {
+        "label": "Data Engineering and Analytics Platform",
+        "targetPage": "solutions.data-engineering-analytics-platform",
+        "route": "/docs/framework/solutions-data-engineering-analytics-platform"
       }
     ],
     "childStatusSummary": {
-      "childCount": 1,
-      "pages": 1
+      "childCount": 2,
+      "pages": 2
     },
     "nodeOrder": 70,
     "expandable": true,
@@ -898,9 +1011,7 @@ module.exports = {
     "nodeSummary": "Agora accelerator application families and industry templates that help customers build faster.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecacceleratorsAndIndustrySolutionTemplates",
-      "groups": [
-        "agora-accelerator-family"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "accelerators.agora-industry-templates"
       ]
@@ -908,8 +1019,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecacceleratorsAndIndustrySolutionTemplates",
     "childSummaryCards": [
       {
-        "code": "agora-accelerator-family",
-        "title": "Agora Accelerator Family",
+        "code": "accelerators.agora-industry-templates",
+        "title": "Accelerators and Industry Solution Templates",
+        "summary": "Agora accelerator family overview for Apparel, Electronics, and Telco customer commerce storefronts.",
         "order": 10
       }
     ],
@@ -974,26 +1086,39 @@ module.exports = {
     "nodeSummary": "First-machine bootstrap, local workspace setup, runtime visibility, and installer handoff guidance.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecnodicsInstallerAndWorkspaceSetup",
-      "groups": [
-        "local-workspace-setup",
-        "installed-runtime-apis"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "framework.local-quick-start",
+        "framework.fresh-schema-setup-journey",
+        "framework.local-runtime-troubleshooting",
         "installer.installed-runtime-application-builder"
       ]
     },
     "nodeDashboard": "nodicsDocsDashboardSecnodicsInstallerAndWorkspaceSetup",
     "childSummaryCards": [
       {
-        "code": "local-workspace-setup",
-        "title": "Local Workspace Setup",
+        "code": "framework.local-quick-start",
+        "title": "Local quick start with Kickoff and Axis",
+        "summary": "Beginner-friendly steps to configure the framework, start local servers, log in to Axis, and open documentation.",
         "order": 10
       },
       {
-        "code": "installed-runtime-apis",
-        "title": "Installed Runtime APIs",
+        "code": "framework.fresh-schema-setup-journey",
+        "title": "Fresh Schema Setup Journey",
+        "summary": "Required order for initializing Axis, registering capabilities, importing app packs, publishing Online, and verifying browsers.",
         "order": 20
+      },
+      {
+        "code": "framework.local-runtime-troubleshooting",
+        "title": "Local Runtime Troubleshooting",
+        "summary": "Practical troubleshooting for ports, stale topology state, schema import failures, publication state, and missing navigation.",
+        "order": 30
+      },
+      {
+        "code": "installer.installed-runtime-application-builder",
+        "title": "Installed Runtime Installer and Application Builder APIs",
+        "summary": "Safe read-only runtime API model for installed workspace inspection, setup planning, operation catalogue, and redacted evidence.",
+        "order": 40
       }
     ],
     "childJourneyLinks": [
@@ -1003,14 +1128,24 @@ module.exports = {
         "route": "/docs/framework/framework-local-quick-start"
       },
       {
+        "label": "Fresh Schema Setup Journey",
+        "targetPage": "framework.fresh-schema-setup-journey",
+        "route": "/docs/framework/framework-fresh-schema-setup-journey"
+      },
+      {
+        "label": "Local Runtime Troubleshooting",
+        "targetPage": "framework.local-runtime-troubleshooting",
+        "route": "/docs/framework/framework-local-runtime-troubleshooting"
+      },
+      {
         "label": "Installed Runtime Installer and Application Builder APIs",
         "targetPage": "installer.installed-runtime-application-builder",
         "route": "/docs/framework/installer-installed-runtime-application-builder"
       }
     ],
     "childStatusSummary": {
-      "childCount": 2,
-      "pages": 2
+      "childCount": 4,
+      "pages": 4
     },
     "nodeOrder": 90,
     "expandable": true,
@@ -1062,9 +1197,7 @@ module.exports = {
     "nodeSummary": "Guided workspace generation, questionnaires, capability selection, setup-plan preview, and governed handoff.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecapplicationBuilderAndWorkspaceGeneration",
-      "groups": [
-        "workspace-generation-journey"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "builder.workspace-generation"
       ]
@@ -1072,8 +1205,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecapplicationBuilderAndWorkspaceGeneration",
     "childSummaryCards": [
       {
-        "code": "workspace-generation-journey",
-        "title": "Workspace Generation Journey",
+        "code": "builder.workspace-generation",
+        "title": "Application Builder and Workspace Generation",
+        "summary": "How the installed runtime exposes governed workspace discovery, readiness, setup planning, and accelerator selection for Axis-driven application building.",
         "order": 10
       }
     ],
@@ -1138,9 +1272,7 @@ module.exports = {
     "nodeSummary": "Axis workspaces, BackOffice journeys, dashboards, actions, approvals, operational screens, and backend contracts.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecaxisAndBackofficeOperations",
-      "groups": [
-        "visual-workflow-designer"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "process.visual-designer"
       ]
@@ -1148,8 +1280,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecaxisAndBackofficeOperations",
     "childSummaryCards": [
       {
-        "code": "visual-workflow-designer",
-        "title": "Visual Workflow Designer",
+        "code": "process.visual-designer",
+        "title": "Visual Workflow Designer Contract",
+        "summary": "Describe the backend-owned graph contract, Axis editor projection, and validation workflow for the visual designer.",
         "order": 10
       }
     ],
@@ -1214,9 +1347,7 @@ module.exports = {
     "nodeSummary": "How business users and projects customize navigation, content areas, screens, renderers, and business functionality through Axis.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecbusinessCustomizationInAxis",
-      "groups": [
-        "axis-customization-workspace"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "axis.business-customization"
       ]
@@ -1224,8 +1355,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecbusinessCustomizationInAxis",
     "childSummaryCards": [
       {
-        "code": "axis-customization-workspace",
-        "title": "Axis Customization Workspace",
+        "code": "axis.business-customization",
+        "title": "Business Customization in Axis",
+        "summary": "How Axis lets authorized users manage navigation, content areas, documentation pages, runtime configuration, and capability-specific business data.",
         "order": 10
       }
     ],
@@ -1290,9 +1422,7 @@ module.exports = {
     "nodeSummary": "Profile, users, enterprises, tenants, groups, permissions, identity context, and account operations.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecuserEnterpriseAndTenantManagement",
-      "groups": [
-        "platform-and-profile-foundations"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "platform.overview"
       ]
@@ -1300,8 +1430,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecuserEnterpriseAndTenantManagement",
     "childSummaryCards": [
       {
-        "code": "platform-and-profile-foundations",
-        "title": "Platform and Profile Foundations",
+        "code": "platform.overview",
+        "title": "Platform overview",
+        "summary": "How Platform, Profile, BackOffice, authentication, authorization, Axis backend content, and module governance fit together.",
         "order": 10
       }
     ],
@@ -1366,9 +1497,7 @@ module.exports = {
     "nodeSummary": "Authentication, authorization, tenant isolation, access policy, audit, approval gates, secrets, and compliance controls.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecsecurityGovernanceAndCompliance",
-      "groups": [
-        "identity-and-access-governance"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "security.identity-access-governance"
       ]
@@ -1376,8 +1505,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecsecurityGovernanceAndCompliance",
     "childSummaryCards": [
       {
-        "code": "identity-and-access-governance",
-        "title": "Identity and Access Governance",
+        "code": "security.identity-access-governance",
+        "title": "Security, Identity, and Access Governance",
+        "summary": "Authentication, authorization, groups, documentation authoring roles, read-only Axis access, tenant isolation, and audit responsibilities.",
         "order": 10
       }
     ],
@@ -1442,9 +1572,7 @@ module.exports = {
     "nodeSummary": "Configuration layers, runtime behavior controls, provider selection, overrides, and behavior-changing settings.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecapplicationConfigurationAndRuntimeBehaviorManagement",
-      "groups": [
-        "configuration-layers-and-behavior"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "configuration.runtime-behavior-management",
         "routing.api-governance"
@@ -1453,9 +1581,16 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecapplicationConfigurationAndRuntimeBehaviorManagement",
     "childSummaryCards": [
       {
-        "code": "configuration-layers-and-behavior",
-        "title": "Configuration Layers and Behavior",
+        "code": "configuration.runtime-behavior-management",
+        "title": "Application Configuration and Runtime Behavior Management",
+        "summary": "How configuration layers, provider choices, runtime settings, and project overrides change Nodics behavior safely.",
         "order": 10
+      },
+      {
+        "code": "routing.api-governance",
+        "title": "Routing and API Governance",
+        "summary": "How Nodics owns route metadata, generated CRUD routes, security, permissions, request context, and runtime API behavior.",
+        "order": 20
       }
     ],
     "childJourneyLinks": [
@@ -1471,7 +1606,7 @@ module.exports = {
       }
     ],
     "childStatusSummary": {
-      "childCount": 1,
+      "childCount": 2,
       "pages": 2
     },
     "nodeOrder": 150,
@@ -1524,9 +1659,7 @@ module.exports = {
     "nodeSummary": "Governed runtime changes, activation, event-driven refresh, audit, rollback, and controlled mutation boundaries.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecruntimeGovernanceAndDynamicChangeManagement",
-      "groups": [
-        "governed-runtime-change"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "runtime.governed-change"
       ]
@@ -1534,8 +1667,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecruntimeGovernanceAndDynamicChangeManagement",
     "childSummaryCards": [
       {
-        "code": "governed-runtime-change",
-        "title": "Governed Runtime Change",
+        "code": "runtime.governed-change",
+        "title": "Governed Runtime Change Capability",
+        "summary": "How Nodics handles runtime configuration and business behavior changes across clustered nodes through governed APIs and event propagation.",
         "order": 10
       }
     ],
@@ -1600,9 +1734,7 @@ module.exports = {
     "nodeSummary": "Locales, translations, localized data, fallback behavior, content localization, and project-level customization.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSeclocalizationAndInternationalization",
-      "groups": [
-        "localized-experience-management"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "localization.internationalization"
       ]
@@ -1610,8 +1742,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSeclocalizationAndInternationalization",
     "childSummaryCards": [
       {
-        "code": "localized-experience-management",
-        "title": "Localized Experience Management",
+        "code": "localization.internationalization",
+        "title": "Localization and Internationalization",
+        "summary": "Locales, translations, fallback behavior, localized content, project overrides, and release validation for multilingual customer experiences.",
         "order": 10
       }
     ],
@@ -1676,9 +1809,7 @@ module.exports = {
     "nodeSummary": "Schemas, model generation, property extension, validation, persistence contracts, and project-layer schema changes.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecdataModelingAndSchemaManagement",
-      "groups": [
-        "schema-and-model-extension"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "schema.data-modeling-management"
       ]
@@ -1686,8 +1817,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecdataModelingAndSchemaManagement",
     "childSummaryCards": [
       {
-        "code": "schema-and-model-extension",
-        "title": "Schema and Model Extension",
+        "code": "schema.data-modeling-management",
+        "title": "Data Modeling and Schema Management",
+        "summary": "How schemas define model behavior, generated services, API contracts, validation, and project-layer property extension.",
         "order": 10
       }
     ],
@@ -1752,9 +1884,7 @@ module.exports = {
     "nodeSummary": "Database providers, virtual data access, model registration, MongoDB behavior, provider replacement, and persistence operations.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecdatabaseAndPersistenceManagement",
-      "groups": [
-        "provider-and-data-access-layer"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "persistence.provider-data-access-layer"
       ]
@@ -1762,8 +1892,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecdatabaseAndPersistenceManagement",
     "childSummaryCards": [
       {
-        "code": "provider-and-data-access-layer",
+        "code": "persistence.provider-data-access-layer",
         "title": "Provider and Data Access Layer",
+        "summary": "How the Nodics data access layer uses MongoDB today while preserving provider seams for additional database providers.",
         "order": 10
       }
     ],
@@ -1828,9 +1959,7 @@ module.exports = {
     "nodeSummary": "Cache providers, cache keys, node-local state, Redis replacement, runtime state behavior, invalidation, and diagnostics.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSeccachingAndRuntimeStateManagement",
-      "groups": [
-        "cache-providers-and-invalidation"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "cache.runtime-state-management"
       ]
@@ -1838,8 +1967,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSeccachingAndRuntimeStateManagement",
     "childSummaryCards": [
       {
-        "code": "cache-providers-and-invalidation",
-        "title": "Cache Providers and Invalidation",
+        "code": "cache.runtime-state-management",
+        "title": "Caching and Runtime State Management",
+        "summary": "How local node cache, Redis-style providers, invalidation, runtime state, and diagnostics influence application behavior.",
         "order": 10
       }
     ],
@@ -1904,13 +2034,11 @@ module.exports = {
     "nodeSummary": "Project-layer overrides, module extension, services, routers, validators, events, data packs, and upgrade-safe customization.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecdeveloperExtensionAndProjectCustomization",
-      "groups": [
-        "project-layer-customization",
-        "process-customization",
-        "customer-project-extensions"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "framework.customization-guide",
+        "framework.backend-extension-patterns",
+        "framework.axis-content-customization",
         "process.developer-customization",
         "process.custom-project-extension"
       ]
@@ -1918,19 +2046,34 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecdeveloperExtensionAndProjectCustomization",
     "childSummaryCards": [
       {
-        "code": "project-layer-customization",
-        "title": "Project-Layer Customization",
+        "code": "framework.customization-guide",
+        "title": "Customization and extension guide",
+        "summary": "How customer projects customize Nodics safely without forking framework authority.",
         "order": 10
       },
       {
-        "code": "process-customization",
-        "title": "Process Customization",
+        "code": "framework.backend-extension-patterns",
+        "title": "Backend Extension Patterns",
+        "summary": "How projects extend behavior through configuration, provider adapters, services, validators, pipelines, schemas, and events.",
         "order": 20
       },
       {
-        "code": "customer-project-extensions",
-        "title": "Customer Project Extensions",
+        "code": "framework.axis-content-customization",
+        "title": "Axis Content Customization",
+        "summary": "How business users customize backend-owned content, navigation, visibility, setup records, and publishing decisions from Axis.",
         "order": 30
+      },
+      {
+        "code": "process.developer-customization",
+        "title": "Developer Customization Guide",
+        "summary": "Show where developers extend Process behavior, where domain actions belong, and how customer modules customize safely.",
+        "order": 40
+      },
+      {
+        "code": "process.custom-project-extension",
+        "title": "Custom Project Extension Guide",
+        "summary": "Explain how customer overlays customize Process behavior while preserving functional module identity and backend governance.",
+        "order": 50
       }
     ],
     "childJourneyLinks": [
@@ -1938,6 +2081,16 @@ module.exports = {
         "label": "Customization and extension guide",
         "targetPage": "framework.customization-guide",
         "route": "/docs/framework/framework-customization-guide"
+      },
+      {
+        "label": "Backend Extension Patterns",
+        "targetPage": "framework.backend-extension-patterns",
+        "route": "/docs/framework/framework-backend-extension-patterns"
+      },
+      {
+        "label": "Axis Content Customization",
+        "targetPage": "framework.axis-content-customization",
+        "route": "/docs/framework/framework-axis-content-customization"
       },
       {
         "label": "Developer Customization Guide",
@@ -1951,8 +2104,8 @@ module.exports = {
       }
     ],
     "childStatusSummary": {
-      "childCount": 3,
-      "pages": 3
+      "childCount": 5,
+      "pages": 5
     },
     "nodeOrder": 210,
     "expandable": true,
@@ -2004,9 +2157,7 @@ module.exports = {
     "nodeSummary": "Stores, markets, sites, channels, context selection, catalog relationships, and commerce/content operating boundaries.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecstoreMarketSiteAndChannelManagement",
-      "groups": [
-        "commerce-foundations"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "commerce.base-foundations"
       ]
@@ -2014,8 +2165,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecstoreMarketSiteAndChannelManagement",
     "childSummaryCards": [
       {
-        "code": "commerce-foundations",
-        "title": "Commerce Foundations",
+        "code": "commerce.base-foundations",
+        "title": "Base Commerce foundations",
+        "summary": "Beginner-to-operator guide for Store, Product, Pricing, Tax, Promotion, Inventory, exact decisions, publication, recovery, and customization.",
         "order": 10
       }
     ],
@@ -2080,19 +2232,39 @@ module.exports = {
     "nodeSummary": "CMS sites, catalogs, pages, components, routes, templates, slots, content authoring, and delivery behavior.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecwcmsAndContentManagement",
-      "groups": [
-        "content-model-and-delivery"
-      ],
+      "navigationDepth": 2,
       "pages": [
-        "wcms.overview"
+        "wcms.overview",
+        "wcms.content-catalog-model",
+        "wcms.page-designer-components",
+        "wcms.site-publication-visibility"
       ]
     },
     "nodeDashboard": "nodicsDocsDashboardSecwcmsAndContentManagement",
     "childSummaryCards": [
       {
-        "code": "content-model-and-delivery",
-        "title": "Content Model and Delivery",
+        "code": "wcms.overview",
+        "title": "WCMS content management",
+        "summary": "How Nodics manages sites, catalogs, pages, components, routes, and delivery through the WCMS runtime.",
         "order": 10
+      },
+      {
+        "code": "wcms.content-catalog-model",
+        "title": "Content Catalog Model",
+        "summary": "How sites, catalogs, pages, components, media, routes, access policy, and publication state drive public content.",
+        "order": 20
+      },
+      {
+        "code": "wcms.page-designer-components",
+        "title": "Page Designer and Components",
+        "summary": "How Axis-managed content areas, components, renderer metadata, sequence, validation, and publishing work together.",
+        "order": 30
+      },
+      {
+        "code": "wcms.site-publication-visibility",
+        "title": "Site Publication and Visibility",
+        "summary": "How Staged, approval, Online, access policy, maintenance pages, and public delivery determine what users see.",
+        "order": 40
       }
     ],
     "childJourneyLinks": [
@@ -2100,11 +2272,26 @@ module.exports = {
         "label": "WCMS content management",
         "targetPage": "wcms.overview",
         "route": "/docs/framework/wcms-overview"
+      },
+      {
+        "label": "Content Catalog Model",
+        "targetPage": "wcms.content-catalog-model",
+        "route": "/docs/framework/wcms-content-catalog-model"
+      },
+      {
+        "label": "Page Designer and Components",
+        "targetPage": "wcms.page-designer-components",
+        "route": "/docs/framework/wcms-page-designer-components"
+      },
+      {
+        "label": "Site Publication and Visibility",
+        "targetPage": "wcms.site-publication-visibility",
+        "route": "/docs/framework/wcms-site-publication-visibility"
       }
     ],
     "childStatusSummary": {
-      "childCount": 1,
-      "pages": 1
+      "childCount": 4,
+      "pages": 4
     },
     "nodeOrder": 230,
     "expandable": true,
@@ -2156,9 +2343,7 @@ module.exports = {
     "nodeSummary": "Products, categories, attributes, catalog data, publication, discovery relationships, and customization.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecproductCatalogAndDiscovery",
-      "groups": [
-        "catalog-model-and-publication"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "catalog.product-discovery-management"
       ]
@@ -2166,8 +2351,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecproductCatalogAndDiscovery",
     "childSummaryCards": [
       {
-        "code": "catalog-model-and-publication",
-        "title": "Catalog Model and Publication",
+        "code": "catalog.product-discovery-management",
+        "title": "Product Catalog and Discovery Management",
+        "summary": "Products, categories, variants, localized attributes, catalog publication, discovery projections, and project customization.",
         "order": 10
       }
     ],
@@ -2232,9 +2418,7 @@ module.exports = {
     "nodeSummary": "Search providers, discovery adapters, Elasticsearch, Solr, product indexing, content indexing, and query behavior.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecsearchAndDiscovery",
-      "groups": [
-        "search-providers-and-indexing"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "discovery.search-indexing"
       ]
@@ -2242,8 +2426,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecsearchAndDiscovery",
     "childSummaryCards": [
       {
-        "code": "search-providers-and-indexing",
-        "title": "Search Providers and Indexing",
+        "code": "discovery.search-indexing",
+        "title": "Search, Indexing, and Discovery",
+        "summary": "Elasticsearch, Solr, provider adapters, catalog/content indexing, ranking, query profiles, and search metadata governance.",
         "order": 10
       }
     ],
@@ -2308,19 +2493,32 @@ module.exports = {
     "nodeSummary": "Media records, upload, storage, metadata, provider choice, publication, delivery, cleanup, and reusable media lifecycle.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecmediaManagement",
-      "groups": [
-        "media-lifecycle-and-storage"
-      ],
+      "navigationDepth": 2,
       "pages": [
-        "wcms.media-management"
+        "wcms.media-management",
+        "wcms.media-storage-delivery",
+        "wcms.media-import-publication"
       ]
     },
     "nodeDashboard": "nodicsDocsDashboardSecmediaManagement",
     "childSummaryCards": [
       {
-        "code": "media-lifecycle-and-storage",
-        "title": "Media Lifecycle and Storage",
+        "code": "wcms.media-management",
+        "title": "Media management",
+        "summary": "Governed upload, storage policy, media metadata, source contexts, and safe frontend boundaries.",
         "order": 10
+      },
+      {
+        "code": "wcms.media-storage-delivery",
+        "title": "Media Storage and Delivery",
+        "summary": "Provider, access, URL, cache, and browser delivery model for media used by content and storefront experiences.",
+        "order": 20
+      },
+      {
+        "code": "wcms.media-import-publication",
+        "title": "Media Import and Publication",
+        "summary": "Complete content-pack preparation for media assets, media records, page references, and Online publication.",
+        "order": 30
       }
     ],
     "childJourneyLinks": [
@@ -2328,11 +2526,21 @@ module.exports = {
         "label": "Media management",
         "targetPage": "wcms.media-management",
         "route": "/docs/framework/wcms-media-management"
+      },
+      {
+        "label": "Media Storage and Delivery",
+        "targetPage": "wcms.media-storage-delivery",
+        "route": "/docs/framework/wcms-media-storage-delivery"
+      },
+      {
+        "label": "Media Import and Publication",
+        "targetPage": "wcms.media-import-publication",
+        "route": "/docs/framework/wcms-media-import-publication"
       }
     ],
     "childStatusSummary": {
-      "childCount": 1,
-      "pages": 1
+      "childCount": 3,
+      "pages": 3
     },
     "nodeOrder": 260,
     "expandable": true,
@@ -2384,9 +2592,7 @@ module.exports = {
     "nodeSummary": "Inventory records, stock levels, reservations, availability, warehouse relationships, and operational stock behavior.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecinventoryAndStockManagement",
-      "groups": [
-        "stock-availability-and-reservation"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "inventory.stock-management"
       ]
@@ -2394,8 +2600,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecinventoryAndStockManagement",
     "childSummaryCards": [
       {
-        "code": "stock-availability-and-reservation",
-        "title": "Stock Availability and Reservation",
+        "code": "inventory.stock-management",
+        "title": "Inventory and Stock Management",
+        "summary": "Inventory balances, stock movements, reservations, warehouse relationships, availability summaries, and checkout protection.",
         "order": 10
       }
     ],
@@ -2460,9 +2667,7 @@ module.exports = {
     "nodeSummary": "Price calculation, tax behavior, promotions, discount rules, exact decisions, and configuration.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecpricingPromotionsAndTax",
-      "groups": [
-        "commercial-decisioning"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "pricing.promotions-tax-management"
       ]
@@ -2470,8 +2675,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecpricingPromotionsAndTax",
     "childSummaryCards": [
       {
-        "code": "commercial-decisioning",
-        "title": "Commercial Decisioning",
+        "code": "pricing.promotions-tax-management",
+        "title": "Pricing, Promotions, and Tax Management",
+        "summary": "Price books, price rows, promotion decisions, coupon behavior, tax policies, calculation evidence, and extension boundaries.",
         "order": 10
       }
     ],
@@ -2536,10 +2742,7 @@ module.exports = {
     "nodeSummary": "Cart creation, checkout calculation, order placement, idempotency, compensation, and checkout ownership.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSeccommerceCartAndCheckout",
-      "groups": [
-        "commerce-journey-overview",
-        "cart-and-order-placement"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "commerce.overview",
         "commerce.cart-order"
@@ -2548,13 +2751,15 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSeccommerceCartAndCheckout",
     "childSummaryCards": [
       {
-        "code": "commerce-journey-overview",
-        "title": "Commerce Journey Overview",
+        "code": "commerce.overview",
+        "title": "Commerce overview",
+        "summary": "Beginner orientation to the Commerce journey, ownership map, capability state, security baseline, verification, and safe customization.",
         "order": 10
       },
       {
-        "code": "cart-and-order-placement",
-        "title": "Cart and Order Placement",
+        "code": "commerce.cart-order",
+        "title": "Cart, checkout, and order placement",
+        "summary": "Customer, developer, and operator journey for exact calculation, placement, idempotency, compensation, immutable Orders, and recovery.",
         "order": 20
       }
     ],
@@ -2624,9 +2829,7 @@ module.exports = {
     "nodeSummary": "Payment methods, providers, authorization, callbacks, capture, reconciliation, risk, and payment operations.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecpaymentManagement",
-      "groups": [
-        "payment-and-fulfillment-boundary"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "commerce.payment-fulfillment"
       ]
@@ -2634,8 +2837,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecpaymentManagement",
     "childSummaryCards": [
       {
-        "code": "payment-and-fulfillment-boundary",
-        "title": "Payment and Fulfillment Boundary",
+        "code": "commerce.payment-fulfillment",
+        "title": "Payment and fulfillment operations",
+        "summary": "Provider-safe payment and fulfillment guide covering methods, adapters, callbacks, reconciliation, shipment, tracking, warehouse work, and returns.",
         "order": 10
       }
     ],
@@ -2700,9 +2904,7 @@ module.exports = {
     "nodeSummary": "Shipping methods, fulfillment flow, warehouse handoff, shipment, tracking, and provider integration.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecshippingAndFulfillment",
-      "groups": [
-        "shipping-and-fulfillment-flow"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "fulfillment.shipping-management"
       ]
@@ -2710,8 +2912,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecshippingAndFulfillment",
     "childSummaryCards": [
       {
-        "code": "shipping-and-fulfillment-flow",
-        "title": "Shipping and Fulfillment Flow",
+        "code": "fulfillment.shipping-management",
+        "title": "Shipping and Fulfillment Management",
+        "summary": "Shipping methods, fulfillment policy, consignments, warehouse handoff, shipment tracking, and provider integration boundaries.",
         "order": 10
       }
     ],
@@ -2776,9 +2979,7 @@ module.exports = {
     "nodeSummary": "Order state, ownership, operational actions, fulfillment coordination, and post-placement lifecycle.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecorderManagement",
-      "groups": [
-        "order-state-and-operations"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "order.management-lifecycle"
       ]
@@ -2786,8 +2987,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecorderManagement",
     "childSummaryCards": [
       {
-        "code": "order-state-and-operations",
-        "title": "Order State and Operations",
+        "code": "order.management-lifecycle",
+        "title": "Order Management Lifecycle",
+        "summary": "Order state, operational ownership, fulfillment coordination, lifecycle requests, history, reversals, and support visibility.",
         "order": 10
       }
     ],
@@ -2852,9 +3054,7 @@ module.exports = {
     "nodeSummary": "Cancellation, return, refund, approvals, policies, reverse logistics, compensation, and customer/operator recovery.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSeccancellationsReturnsAndRefunds",
-      "groups": [
-        "reverse-order-lifecycle"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "commerce.returns-refunds"
       ]
@@ -2862,8 +3062,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSeccancellationsReturnsAndRefunds",
     "childSummaryCards": [
       {
-        "code": "reverse-order-lifecycle",
-        "title": "Reverse Order Lifecycle",
+        "code": "commerce.returns-refunds",
+        "title": "Cancellation, return, and refund lifecycle",
+        "summary": "Structured self-service and operator journey for policy, maker-checker approval, owner intents, checkpoints, recovery, and final Order evidence.",
         "order": 10
       }
     ],
@@ -2928,15 +3129,11 @@ module.exports = {
     "nodeSummary": "Reviews, ratings, feedback, complaints, triage, follow-up, insights, moderation, and engagement operations.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSeccustomerEngagementAndFeedback",
-      "groups": [
-        "reviews-and-ratings",
-        "feedback-and-complaints",
-        "unified-engagement-operations",
-        "governed-automation-and-ai",
-        "enterprise-engagement-operations"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "engagement.customer-reviews",
+        "engagement.review-moderation-governance",
+        "engagement.review-aggregation-recovery",
         "engagement.customer-feedback",
         "engagement.unified-operations",
         "engagement.governed-automation",
@@ -2946,29 +3143,46 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSeccustomerEngagementAndFeedback",
     "childSummaryCards": [
       {
-        "code": "reviews-and-ratings",
-        "title": "Reviews and Ratings",
+        "code": "engagement.customer-reviews",
+        "title": "Customer reviews and ratings",
+        "summary": "Beginner-to-operator journey for review submission, moderation, publication, rating aggregates, recovery, APIs, and safe customization.",
         "order": 10
       },
       {
-        "code": "feedback-and-complaints",
-        "title": "Feedback and Complaints",
+        "code": "engagement.review-moderation-governance",
+        "title": "Review Moderation and Governance",
+        "summary": "Axis moderation queues, approval and rejection decisions, permissions, state transitions, and audit expectations.",
         "order": 20
       },
       {
-        "code": "unified-engagement-operations",
-        "title": "Unified Engagement Operations",
+        "code": "engagement.review-aggregation-recovery",
+        "title": "Review Aggregation and Recovery",
+        "summary": "Rating aggregate correctness, recalculation, event recovery, and product or discovery visibility after review changes.",
         "order": 30
       },
       {
-        "code": "governed-automation-and-ai",
-        "title": "Governed Automation and AI",
+        "code": "engagement.customer-feedback",
+        "title": "Customer feedback, complaints, and closed-loop action",
+        "summary": "Beginner-to-operator journey for feedback intake, triage, follow-up, resolution, handoffs, surveys, insights, recovery, and safe customization.",
         "order": 40
       },
       {
-        "code": "enterprise-engagement-operations",
-        "title": "Enterprise Engagement Operations",
+        "code": "engagement.unified-operations",
+        "title": "Unified engagement operations",
+        "summary": "Beginner-to-operator journey for unified queues, dashboards, batch previews, repair evidence, bounded exports, authority boundaries, and recovery.",
         "order": 50
+      },
+      {
+        "code": "engagement.governed-automation",
+        "title": "Governed automation and AI",
+        "summary": "Beginner-to-operator journey for optional AI proposals, deterministic fallback, evidence, evaluation, human review, overrides, monitoring, and safe extension.",
+        "order": 60
+      },
+      {
+        "code": "engagement.enterprise-operations",
+        "title": "Enterprise scale, resilience, and ecosystem operations",
+        "summary": "Beginner-to-operator journey for capacity, regional residency, provider delivery, backpressure, recovery, compatibility, accessibility, security, and release acceptance.",
+        "order": 70
       }
     ],
     "childJourneyLinks": [
@@ -2976,6 +3190,16 @@ module.exports = {
         "label": "Customer reviews and ratings",
         "targetPage": "engagement.customer-reviews",
         "route": "/docs/framework/engagement-customer-reviews"
+      },
+      {
+        "label": "Review Moderation and Governance",
+        "targetPage": "engagement.review-moderation-governance",
+        "route": "/docs/framework/engagement-review-moderation-governance"
+      },
+      {
+        "label": "Review Aggregation and Recovery",
+        "targetPage": "engagement.review-aggregation-recovery",
+        "route": "/docs/framework/engagement-review-aggregation-recovery"
       },
       {
         "label": "Customer feedback, complaints, and closed-loop action",
@@ -2991,16 +3215,11 @@ module.exports = {
         "label": "Governed automation and AI",
         "targetPage": "engagement.governed-automation",
         "route": "/docs/framework/engagement-governed-automation"
-      },
-      {
-        "label": "Enterprise scale, resilience, and ecosystem operations",
-        "targetPage": "engagement.enterprise-operations",
-        "route": "/docs/framework/engagement-enterprise-operations"
       }
     ],
     "childStatusSummary": {
-      "childCount": 5,
-      "pages": 5
+      "childCount": 7,
+      "pages": 7
     },
     "nodeOrder": 340,
     "expandable": true,
@@ -3052,9 +3271,7 @@ module.exports = {
     "nodeSummary": "Templates, delivery intent, consent, suppression, providers, verification, callbacks, retry, and inbox behavior.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSeccommunicationAndNotifications",
-      "groups": [
-        "communication-delivery-and-verification"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "communication.overview"
       ]
@@ -3062,8 +3279,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSeccommunicationAndNotifications",
     "childSummaryCards": [
       {
-        "code": "communication-delivery-and-verification",
-        "title": "Communication Delivery and Verification",
+        "code": "communication.overview",
+        "title": "Communication, delivery, and verification",
+        "summary": "Beginner-to-operator journey for templates, intent, consent, suppression, verification, provider delivery, callbacks, retry, inbox, recovery, and domain integration.",
         "order": 10
       }
     ],
@@ -3128,9 +3346,7 @@ module.exports = {
     "nodeSummary": "Events, EMS, message providers, retry, failover, node responsibility transfer, and event-driven runtime refresh.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSeceventAndMessagingManagement",
-      "groups": [
-        "events-and-cluster-coordination"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "events.messaging-cluster-coordination"
       ]
@@ -3138,8 +3354,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSeceventAndMessagingManagement",
     "childSummaryCards": [
       {
-        "code": "events-and-cluster-coordination",
-        "title": "Events and Cluster Coordination",
+        "code": "events.messaging-cluster-coordination",
+        "title": "Events, Messaging, and Cluster Coordination",
+        "summary": "Event publishing, event splitting, cluster propagation, node responsibility transfer, runtime refresh, and provider extension.",
         "order": 10
       }
     ],
@@ -3204,13 +3421,7 @@ module.exports = {
     "nodeSummary": "Workflow definitions, runtime instances, tasks, approvals, incidents, transitions, and business process automation.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecprocessAndWorkflowAutomation",
-      "groups": [
-        "process-overview",
-        "runtime-lifecycle",
-        "workflow-getting-started",
-        "human-task-flow",
-        "business-value-and-adoption"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "process.overview",
         "process.runtime-lifecycle",
@@ -3222,28 +3433,33 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecprocessAndWorkflowAutomation",
     "childSummaryCards": [
       {
-        "code": "process-overview",
-        "title": "Process Overview",
+        "code": "process.overview",
+        "title": "Business Process and Automation Overview",
+        "summary": "Understand why nodics.process exists, how it helps business users, developers, and operators, and where it fits with Core, Cron, Platform, Axis, and customer modules.",
         "order": 10
       },
       {
-        "code": "runtime-lifecycle",
-        "title": "Runtime Lifecycle",
+        "code": "process.runtime-lifecycle",
+        "title": "Runtime Instance and Task Lifecycle",
+        "summary": "Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships.",
         "order": 20
       },
       {
-        "code": "workflow-getting-started",
-        "title": "Workflow Getting Started",
+        "code": "process.first-workflow",
+        "title": "Build Your First Workflow",
+        "summary": "Create a first Process workflow from START through TASK, DECISION, ACTION, TIMER, SUB_PROCESS, and END with beginner-safe examples.",
         "order": 30
       },
       {
-        "code": "human-task-flow",
-        "title": "Human Task Flow",
+        "code": "process.first-human-task",
+        "title": "Build Your First Human Task Flow",
+        "summary": "Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps.",
         "order": 40
       },
       {
-        "code": "business-value-and-adoption",
-        "title": "Business Value and Adoption",
+        "code": "process.business-value",
+        "title": "Business Value and Adoption Model",
+        "summary": "Explain the business problems Process solves, how it lowers operating cost, and how business users should think about automation governance.",
         "order": 50
       }
     ],
@@ -3328,9 +3544,7 @@ module.exports = {
     "nodeSummary": "Pipeline-backed business logic, handlers, orchestration order, extension points, validation, and runtime behavior.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecpipelineAndBusinessLogicOrchestration",
-      "groups": [
-        "pipeline-execution-model"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "pipeline.business-logic-orchestration"
       ]
@@ -3338,8 +3552,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecpipelineAndBusinessLogicOrchestration",
     "childSummaryCards": [
       {
-        "code": "pipeline-execution-model",
-        "title": "Pipeline Execution Model",
+        "code": "pipeline.business-logic-orchestration",
+        "title": "Pipeline and Business Logic Orchestration",
+        "summary": "How Nodics pipelines compose validation, enrichment, decisioning, side effects, events, and project-layer business logic.",
         "order": 10
       }
     ],
@@ -3404,13 +3619,11 @@ module.exports = {
     "nodeSummary": "CronJobs, schedules, node execution, failover, responsibility transfer, recovery, and Task Execution Engine references.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSeccronAndScheduledAutomation",
-      "groups": [
-        "cron-operations",
-        "process-and-cron-runtime-boundary",
-        "scheduled-automation-triggers"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "cron.operations",
+        "cron.node-responsibility-tee",
+        "cron.project-customization",
         "process.process-cron-runtime",
         "process.scheduled-automation"
       ]
@@ -3418,19 +3631,34 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSeccronAndScheduledAutomation",
     "childSummaryCards": [
       {
-        "code": "cron-operations",
-        "title": "Cron Operations",
+        "code": "cron.operations",
+        "title": "Cron operations",
+        "summary": "Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety.",
         "order": 10
       },
       {
-        "code": "process-and-cron-runtime-boundary",
-        "title": "Process and Cron Runtime Boundary",
+        "code": "cron.node-responsibility-tee",
+        "title": "Cron Node Responsibility and TEE",
+        "summary": "How scheduled work ownership, failover, responsibility transfer, recovery, and TEE references should be documented.",
         "order": 20
       },
       {
-        "code": "scheduled-automation-triggers",
-        "title": "Scheduled Automation Triggers",
+        "code": "cron.project-customization",
+        "title": "Project Cron Customization",
+        "summary": "How customer projects add scheduled business work with job definitions, triggers, permissions, retry, audit, and tests.",
         "order": 30
+      },
+      {
+        "code": "process.process-cron-runtime",
+        "title": "Process and Cronjob Shared Runtime",
+        "summary": "Clarify how processServer can include workflow and cronjob while each module keeps a separate ownership boundary.",
+        "order": 40
+      },
+      {
+        "code": "process.scheduled-automation",
+        "title": "Scheduled Automation and Cron Triggers",
+        "summary": "Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence.",
+        "order": 50
       }
     ],
     "childJourneyLinks": [
@@ -3438,6 +3666,16 @@ module.exports = {
         "label": "Cron operations",
         "targetPage": "cron.operations",
         "route": "/docs/framework/cron-operations"
+      },
+      {
+        "label": "Cron Node Responsibility and TEE",
+        "targetPage": "cron.node-responsibility-tee",
+        "route": "/docs/framework/cron-node-responsibility-tee"
+      },
+      {
+        "label": "Project Cron Customization",
+        "targetPage": "cron.project-customization",
+        "route": "/docs/framework/cron-project-customization"
       },
       {
         "label": "Process and Cronjob Shared Runtime",
@@ -3451,8 +3689,8 @@ module.exports = {
       }
     ],
     "childStatusSummary": {
-      "childCount": 3,
-      "pages": 3
+      "childCount": 5,
+      "pages": 5
     },
     "nodeOrder": 390,
     "expandable": true,
@@ -3504,9 +3742,7 @@ module.exports = {
     "nodeSummary": "Data packs, import/export operations, migrations, manifests, checksums, release evidence, and DEAP references.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecdataImportExportAndMigration",
-      "groups": [
-        "data-movement-and-migration"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "data.import-export-migration"
       ]
@@ -3514,8 +3750,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecdataImportExportAndMigration",
     "childSummaryCards": [
       {
-        "code": "data-movement-and-migration",
-        "title": "Data Movement and Migration",
+        "code": "data.import-export-migration",
+        "title": "Data Import, Export, and Migration",
+        "summary": "Import definitions, data installation, exports, migration registers, release evidence, rollback boundaries, and customer onboarding.",
         "order": 10
       }
     ],
@@ -3580,9 +3817,7 @@ module.exports = {
     "nodeSummary": "Adapters, providers, external systems, credentials, webhooks, callbacks, connectivity evidence, and integration operations.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecsystemIntegrationAndExternalConnectivity",
-      "groups": [
-        "action-adapter-integration"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "process.action-adapters"
       ]
@@ -3590,8 +3825,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecsystemIntegrationAndExternalConnectivity",
     "childSummaryCards": [
       {
-        "code": "action-adapter-integration",
-        "title": "Action Adapter Integration",
+        "code": "process.action-adapters",
+        "title": "Action Adapter Contract",
+        "summary": "Learn why ACTION nodes use registered declarative adapters and how customer and domain modules own business execution.",
         "order": 10
       }
     ],
@@ -3656,16 +3892,12 @@ module.exports = {
     "nodeSummary": "Runtime topology, health, logs, monitoring, incidents, recovery, rollback, acceptance evidence, and support operations.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecoperationsMonitoringAndRecovery",
-      "groups": [
-        "runtime-and-devops",
-        "local-verification-and-acceptance",
-        "commerce-enterprise-operations",
-        "process-incident-recovery",
-        "process-runtime-topology"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "framework.devops-runtime",
+        "framework.runtime-release-rollback",
         "framework.local-verification-checklist",
+        "framework.local-browser-acceptance-journey",
         "commerce.enterprise-operations",
         "process.incident-recovery",
         "process.devops-topology"
@@ -3674,29 +3906,46 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecoperationsMonitoringAndRecovery",
     "childSummaryCards": [
       {
-        "code": "runtime-and-devops",
-        "title": "Runtime and DevOps",
+        "code": "framework.devops-runtime",
+        "title": "Runtime and DevOps operations",
+        "summary": "Runtime topology, dependencies, public and private properties, deployment, monitoring, and recovery guidance.",
         "order": 10
       },
       {
-        "code": "local-verification-and-acceptance",
-        "title": "Local Verification and Acceptance",
+        "code": "framework.runtime-release-rollback",
+        "title": "Runtime Release and Rollback",
+        "summary": "Release and rollback guidance for code, configuration, content, data import, generated contracts, and browser evidence.",
         "order": 20
       },
       {
-        "code": "commerce-enterprise-operations",
-        "title": "Commerce Enterprise Operations",
+        "code": "framework.local-verification-checklist",
+        "title": "Local verification and acceptance checklist",
+        "summary": "How to prove the local framework, customer-project servers, Axis, documentation, registry, imports, WCMS, and Cron are healthy.",
         "order": 30
       },
       {
-        "code": "process-incident-recovery",
-        "title": "Process Incident Recovery",
+        "code": "framework.local-browser-acceptance-journey",
+        "title": "Local Browser Acceptance Journey",
+        "summary": "Fresh-schema browser acceptance path for Axis, documentation, Nexus, Agora, setup actions, and unpublished states.",
         "order": 40
       },
       {
-        "code": "process-runtime-topology",
-        "title": "Process Runtime Topology",
+        "code": "commerce.enterprise-operations",
+        "title": "Commerce enterprise operations and migration",
+        "summary": "Capacity, backpressure, providers, recovery, compatibility, tenant migration, rollback, legacy retirement, and production qualification guidance.",
         "order": 50
+      },
+      {
+        "code": "process.incident-recovery",
+        "title": "Incident, Retry, and Compensation Operations",
+        "summary": "Operate failed ACTION nodes through Process-owned incidents, bounded retries, dead-letter handling, and declarative domain-owned compensation.",
+        "order": 60
+      },
+      {
+        "code": "process.devops-topology",
+        "title": "DevOps and Runtime Topology",
+        "summary": "Explain deployment topology, observability, fresh bootstrap evidence, and production sustainability for Process runtimes.",
+        "order": 70
       }
     ],
     "childJourneyLinks": [
@@ -3706,9 +3955,19 @@ module.exports = {
         "route": "/docs/framework/framework-devops-runtime"
       },
       {
+        "label": "Runtime Release and Rollback",
+        "targetPage": "framework.runtime-release-rollback",
+        "route": "/docs/framework/framework-runtime-release-rollback"
+      },
+      {
         "label": "Local verification and acceptance checklist",
         "targetPage": "framework.local-verification-checklist",
         "route": "/docs/framework/framework-local-verification-checklist"
+      },
+      {
+        "label": "Local Browser Acceptance Journey",
+        "targetPage": "framework.local-browser-acceptance-journey",
+        "route": "/docs/framework/framework-local-browser-acceptance-journey"
       },
       {
         "label": "Commerce enterprise operations and migration",
@@ -3719,16 +3978,11 @@ module.exports = {
         "label": "Incident, Retry, and Compensation Operations",
         "targetPage": "process.incident-recovery",
         "route": "/docs/framework/process/incident-recovery"
-      },
-      {
-        "label": "DevOps and Runtime Topology",
-        "targetPage": "process.devops-topology",
-        "route": "/docs/framework/process/devops-topology"
       }
     ],
     "childStatusSummary": {
-      "childCount": 5,
-      "pages": 5
+      "childCount": 7,
+      "pages": 7
     },
     "nodeOrder": 420,
     "expandable": true,
@@ -3780,9 +4034,7 @@ module.exports = {
     "nodeSummary": "Test strategy, regression gates, certification evidence, acceptance checks, generated contracts, and release qualification.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecqualityTestingAndCertification",
-      "groups": [
-        "process-regression-evidence"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "process.qa-regression-guide"
       ]
@@ -3790,8 +4042,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecqualityTestingAndCertification",
     "childSummaryCards": [
       {
-        "code": "process-regression-evidence",
-        "title": "Process Regression Evidence",
+        "code": "process.qa-regression-guide",
+        "title": "Process QA and Regression Guide",
+        "summary": "Define backend, fresh database, Axis smoke, and negative regression checks for Process and Cron automation.",
         "order": 10
       }
     ],
@@ -3856,10 +4109,7 @@ module.exports = {
     "nodeSummary": "Documentation authoring, content catalog, navigation components, publication lifecycle, access rules, and validation.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecdocumentationManagement",
-      "groups": [
-        "documentation-contract-and-quality",
-        "documentation-runtime-and-publishing"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "framework.capability-documentation-maturity-pattern",
         "docs.overview"
@@ -3868,13 +4118,15 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecdocumentationManagement",
     "childSummaryCards": [
       {
-        "code": "documentation-contract-and-quality",
-        "title": "Documentation Contract and Quality",
+        "code": "framework.capability-documentation-maturity-pattern",
+        "title": "Capability documentation maturity pattern",
+        "summary": "How to document concept, design-contract, partial, and operational capabilities without creating false runtime authority.",
         "order": 10
       },
       {
-        "code": "documentation-runtime-and-publishing",
-        "title": "Documentation Runtime and Publishing",
+        "code": "docs.overview",
+        "title": "Docs overview",
+        "summary": "How Nodics framework documentation is authored, generated, validated, imported, rendered, and kept separate from Axis and customer project documentation.",
         "order": 20
       }
     ],
@@ -3944,9 +4196,7 @@ module.exports = {
     "nodeSummary": "Staged and Online publication, approval, immutable releases, rollback, visibility, publication evidence, and consumer delivery.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecreleaseStagingAndPublication",
-      "groups": [
-        "content-publication-lifecycle"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "wcms.publishing-lifecycle"
       ]
@@ -3954,8 +4204,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecreleaseStagingAndPublication",
     "childSummaryCards": [
       {
-        "code": "content-publication-lifecycle",
-        "title": "Content Publication Lifecycle",
+        "code": "wcms.publishing-lifecycle",
+        "title": "Staged-to-Online publishing lifecycle",
+        "summary": "Author, approve, deploy, recover, and customize immutable WCMS releases across physically separated Staged and Online runtimes.",
         "order": 10
       }
     ],
@@ -4020,9 +4271,7 @@ module.exports = {
     "nodeSummary": "AI tool guidance, generated context, safe automation, documentation generation, source-backed behavior, and developer tooling.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecaiAndDeveloperTooling",
-      "groups": [
-        "ai-and-developer-enablement"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "tooling.ai-developer-enablement"
       ]
@@ -4030,8 +4279,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecaiAndDeveloperTooling",
     "childSummaryCards": [
       {
-        "code": "ai-and-developer-enablement",
-        "title": "AI and Developer Enablement",
+        "code": "tooling.ai-developer-enablement",
+        "title": "AI and Developer Tooling",
+        "summary": "How AI tools, developers, and reviewers use contracts, source maps, generated context, quality gates, and documentation principles safely.",
         "order": 10
       }
     ],
@@ -4096,9 +4346,7 @@ module.exports = {
     "nodeSummary": "Glossary, API references, source maps, configuration references, schema references, status codes, and appendices.",
     "nodeContentArea": {
       "dashboard": "nodicsDocsDashboardSecreference",
-      "groups": [
-        "source-map-and-glossary"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "reference.source-map-glossary"
       ]
@@ -4106,8 +4354,9 @@ module.exports = {
     "nodeDashboard": "nodicsDocsDashboardSecreference",
     "childSummaryCards": [
       {
-        "code": "source-map-and-glossary",
-        "title": "Source Map and Glossary",
+        "code": "reference.source-map-glossary",
+        "title": "Reference Source Map and Glossary",
+        "summary": "Business-friendly names, technical source owners, module identifiers, common terms, and navigation-to-code references for documentation readers.",
         "order": 10
       }
     ],
@@ -4162,90 +4411,14 @@ module.exports = {
     "active": true
   },
   "record48": {
-    "code": "nodicsDocsNodeGrpnodicsFrameworkframeworkValueAndAdoption",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecnodicsFramework",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Framework Value and Adoption",
-    "nodeSummary": "Business-friendly group for Framework Value and Adoption documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpnodicsFrameworkframeworkValueAndAdoption",
-      "pages": [
-        "framework.what-is-nodics"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpnodicsFrameworkframeworkValueAndAdoption",
-    "childSummaryCards": [
-      {
-        "code": "framework.what-is-nodics",
-        "title": "What is Nodics?",
-        "summary": "Business, beginner, and adoption-oriented introduction to the Nodics enterprise framework.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "What is Nodics?",
-        "targetPage": "framework.what-is-nodics",
-        "route": "/docs/framework"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "nodics-framework",
-      "framework-value-and-adoption",
-      "what-is-nodics"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record49": {
     "code": "nodicsDocsNodeTopicframeworkWhatIsNodics",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpnodicsFrameworkframeworkValueAndAdoption",
+    "parentNode": "nodicsDocsNodeSecnodicsFramework",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "What is Nodics?",
-    "nodeSummary": "Business, beginner, and adoption-oriented introduction to the Nodics enterprise framework.",
+    "nodeSummary": "Introductory definition of Nodics, its enterprise purpose, and the first mental model for business, developer, and operator readers.",
     "nodeContentArea": {
       "route": "/docs/framework",
       "documentType": "overview",
@@ -4270,7 +4443,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataframeworkOverview",
     "targetPage": "nodicsDocsPageframeworkOverview",
     "targetRoute": "nodicsDocsRouteframeworkOverview",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -4303,57 +4476,298 @@ module.exports = {
     "searchKeywords": [
       "nodics-framework",
       "framework-value-and-adoption",
-      "what-is-nodics"
+      "what-is-nodics",
+      "enterprise-framework"
     ],
     "relatedNodes": [
+      "nodicsDocsNodeTopicframeworkWhyNodicsExists",
+      "nodicsDocsNodeTopicframeworkHowNodicsWorks",
+      "nodicsDocsNodeTopicframeworkAdoptionAndFirstJourney",
       "nodicsDocsNodeTopicframeworkModularArchitecture",
       "nodicsDocsNodeTopicframeworkLocalQuickStart",
-      "nodicsDocsNodeTopicdocsOverview"
+      "nodicsDocsNodeTopicdocsDocumentationRoadmap"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record49": {
+    "code": "nodicsDocsNodeTopicframeworkWhyNodicsExists",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecnodicsFramework",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Why Nodics Exists",
+    "nodeSummary": "Industry problems, business value, and why Nodics turns fast delivery into governed enterprise software.",
+    "nodeContentArea": {
+      "route": "/docs/framework/framework-why-nodics-exists",
+      "documentType": "overview",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataframeworkWhyNodicsExists",
+    "targetPage": "nodicsDocsPageframeworkWhyNodicsExists",
+    "targetRoute": "nodicsDocsRouteframeworkWhyNodicsExists",
+    "nodeOrder": 10020,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "nodics-framework",
+      "framework-value-and-adoption",
+      "why-nodics-exists",
+      "business-value",
+      "enterprise-problems"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicframeworkWhatIsNodics",
+      "nodicsDocsNodeTopicframeworkHowNodicsWorks",
+      "nodicsDocsNodeTopicframeworkAdoptionAndFirstJourney",
+      "nodicsDocsNodeTopicdocsDocumentationRoadmap"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record50": {
-    "code": "nodicsDocsNodeGrpdocumentationRoadmapreaderJourneyAndCoverageMap",
+    "code": "nodicsDocsNodeTopicframeworkHowNodicsWorks",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecnodicsFramework",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "How Nodics Works",
+    "nodeSummary": "Mental model for framework modules, customer projects, Axis, public applications, runtime ownership, and customization.",
+    "nodeContentArea": {
+      "route": "/docs/framework/framework-how-nodics-works",
+      "documentType": "overview",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataframeworkHowNodicsWorks",
+    "targetPage": "nodicsDocsPageframeworkHowNodicsWorks",
+    "targetRoute": "nodicsDocsRouteframeworkHowNodicsWorks",
+    "nodeOrder": 10030,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "nodics-framework",
+      "framework-value-and-adoption",
+      "how-nodics-works",
+      "runtime-model",
+      "backend-driven-experience"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicframeworkWhatIsNodics",
+      "nodicsDocsNodeTopicframeworkWhyNodicsExists",
+      "nodicsDocsNodeTopicframeworkAdoptionAndFirstJourney",
+      "nodicsDocsNodeTopicdocsDocumentationRoadmap"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record51": {
+    "code": "nodicsDocsNodeTopicframeworkAdoptionAndFirstJourney",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecnodicsFramework",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Adoption and First Journey",
+    "nodeSummary": "The first business, developer, and operator path through setup, capability registration, imports, publishing, and browser verification.",
+    "nodeContentArea": {
+      "route": "/docs/framework/framework-adoption-and-first-journey",
+      "documentType": "overview",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataframeworkAdoptionAndFirstJourney",
+    "targetPage": "nodicsDocsPageframeworkAdoptionAndFirstJourney",
+    "targetRoute": "nodicsDocsRouteframeworkAdoptionAndFirstJourney",
+    "nodeOrder": 10040,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "nodics-framework",
+      "framework-value-and-adoption",
+      "adoption",
+      "first-journey",
+      "fresh-schema-setup"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicframeworkWhatIsNodics",
+      "nodicsDocsNodeTopicframeworkWhyNodicsExists",
+      "nodicsDocsNodeTopicframeworkHowNodicsWorks",
+      "nodicsDocsNodeTopicdocsDocumentationRoadmap"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record52": {
+    "code": "nodicsDocsNodeTopicdocsDocumentationRoadmap",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdocumentationRoadmap",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Reader Journey and Coverage Map",
-    "nodeSummary": "Business-friendly group for Reader Journey and Coverage Map documentation topics.",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Documentation Roadmap",
+    "nodeSummary": "How the Nodics documentation product is organized and how readers choose the right path through the enterprise hierarchy.",
     "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpdocumentationRoadmapreaderJourneyAndCoverageMap",
-      "pages": [
-        "docs.documentation-roadmap"
+      "route": "/docs/framework/docs-documentation-roadmap",
+      "documentType": "overview",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
       ],
-      "subgroups": []
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
     },
-    "nodeDashboard": "nodicsDocsDashboardGrpdocumentationRoadmapreaderJourneyAndCoverageMap",
-    "childSummaryCards": [
-      {
-        "code": "docs.documentation-roadmap",
-        "title": "Documentation Roadmap and Reader Journey",
-        "summary": "How business users, developers, operators, QA owners, and AI tools navigate the governed Nodics documentation set.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Documentation Roadmap and Reader Journey",
-        "targetPage": "docs.documentation-roadmap",
-        "route": "/docs/framework/docs-documentation-roadmap"
-      }
-    ],
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
     "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
+      "childCount": 0
     },
-    "nodeOrder": 10,
-    "expandable": true,
+    "targetDocumentationPage": "nodicsDocsMetadatadocsDocumentationRoadmap",
+    "targetPage": "nodicsDocsPagedocsDocumentationRoadmap",
+    "targetRoute": "nodicsDocsRoutedocsDocumentationRoadmap",
+    "nodeOrder": 10010,
+    "expandable": false,
     "expandedByDefault": false,
-    "nodeIcon": "folder-open",
+    "nodeIcon": "file-text",
     "nodeAudience": [
       "business",
       "architect",
@@ -4382,25 +4796,32 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "documentation-roadmap",
-      "reader-journey-and-coverage-map",
-      "documentation-roadmap-and-reader-journey"
+      "documentation-organization",
+      "reader-navigation"
     ],
-    "relatedNodes": [],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicframeworkWhatIsNodics",
+      "nodicsDocsNodeTopicdocsDocumentationPrinciples",
+      "nodicsDocsNodeTopicdocsReaderJourneyAndCoverage",
+      "nodicsDocsNodeTopicdocsDocumentationPublishingModel",
+      "nodicsDocsNodeTopicdocsOverview",
+      "nodicsDocsNodeTopicframeworkCapabilityDocumentationMaturityPattern"
+    ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record51": {
-    "code": "nodicsDocsNodeTopicdocsDocumentationRoadmap",
+  "record53": {
+    "code": "nodicsDocsNodeTopicdocsDocumentationPrinciples",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpdocumentationRoadmapreaderJourneyAndCoverageMap",
+    "parentNode": "nodicsDocsNodeSecdocumentationRoadmap",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
-    "nodeTitle": "Documentation Roadmap and Reader Journey",
-    "nodeSummary": "How business users, developers, operators, QA owners, and AI tools navigate the governed Nodics documentation set.",
+    "nodeTitle": "Documentation Principles",
+    "nodeSummary": "Framework-level documentation rules for README thinness, detailed docs depth, visual evidence, customization, publishing, and access.",
     "nodeContentArea": {
-      "route": "/docs/framework/docs-documentation-roadmap",
+      "route": "/docs/framework/docs-documentation-principles",
       "documentType": "overview",
       "businessAudience": [
         "business user",
@@ -4420,10 +4841,10 @@ module.exports = {
     "childStatusSummary": {
       "childCount": 0
     },
-    "targetDocumentationPage": "nodicsDocsMetadatadocsDocumentationRoadmap",
-    "targetPage": "nodicsDocsPagedocsDocumentationRoadmap",
-    "targetRoute": "nodicsDocsRoutedocsDocumentationRoadmap",
-    "nodeOrder": 10,
+    "targetDocumentationPage": "nodicsDocsMetadatadocsDocumentationPrinciples",
+    "targetPage": "nodicsDocsPagedocsDocumentationPrinciples",
+    "targetRoute": "nodicsDocsRoutedocsDocumentationPrinciples",
+    "nodeOrder": 10020,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -4456,57 +4877,57 @@ module.exports = {
     "searchKeywords": [
       "documentation-roadmap",
       "reader-journey-and-coverage-map",
-      "documentation-roadmap-and-reader-journey"
+      "documentation-principles",
+      "readme-contract",
+      "visual-contract"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkWhatIsNodics",
-      "nodicsDocsNodeTopicdocsOverview",
-      "nodicsDocsNodeTopicframeworkCapabilityDocumentationMaturityPattern"
+      "nodicsDocsNodeTopicdocsDocumentationRoadmap",
+      "nodicsDocsNodeTopicdocsReaderJourneyAndCoverage",
+      "nodicsDocsNodeTopicdocsDocumentationPublishingModel",
+      "nodicsDocsNodeTopicframeworkWhatIsNodics"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record52": {
-    "code": "nodicsDocsNodeGrpframeworkArchitectureAndDesignmodularityAndOwnership",
+  "record54": {
+    "code": "nodicsDocsNodeTopicdocsReaderJourneyAndCoverage",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecframeworkArchitectureAndDesign",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Modularity and Ownership",
-    "nodeSummary": "Business-friendly group for Modularity and Ownership documentation topics.",
+    "parentNode": "nodicsDocsNodeSecdocumentationRoadmap",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Reader Journey and Coverage",
+    "nodeSummary": "How business users, developers, operators, QA owners, administrators, and AI tools navigate capability documentation.",
     "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpframeworkArchitectureAndDesignmodularityAndOwnership",
-      "pages": [
-        "framework.modular-architecture"
+      "route": "/docs/framework/docs-reader-journey-and-coverage",
+      "documentType": "overview",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
       ],
-      "subgroups": []
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
     },
-    "nodeDashboard": "nodicsDocsDashboardGrpframeworkArchitectureAndDesignmodularityAndOwnership",
-    "childSummaryCards": [
-      {
-        "code": "framework.modular-architecture",
-        "title": "Modular architecture and ownership",
-        "summary": "How functional modules, technical modules, runtime servers, and customer projects fit together.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Modular architecture and ownership",
-        "targetPage": "framework.modular-architecture",
-        "route": "/docs/framework/framework-modular-architecture"
-      }
-    ],
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
     "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
+      "childCount": 0
     },
-    "nodeOrder": 10,
-    "expandable": true,
+    "targetDocumentationPage": "nodicsDocsMetadatadocsReaderJourneyAndCoverage",
+    "targetPage": "nodicsDocsPagedocsReaderJourneyAndCoverage",
+    "targetRoute": "nodicsDocsRoutedocsReaderJourneyAndCoverage",
+    "nodeOrder": 10030,
+    "expandable": false,
     "expandedByDefault": false,
-    "nodeIcon": "folder-open",
+    "nodeIcon": "file-text",
     "nodeAudience": [
       "business",
       "architect",
@@ -4534,20 +4955,107 @@ module.exports = {
     "lifecycleState": "ONLINE",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
-      "framework-architecture-and-design",
-      "modularity-and-ownership",
-      "modular-architecture-and-ownership"
+      "documentation-roadmap",
+      "reader-journey-and-coverage-map",
+      "reader-journey",
+      "coverage-map",
+      "audience-paths"
     ],
-    "relatedNodes": [],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicdocsDocumentationRoadmap",
+      "nodicsDocsNodeTopicdocsDocumentationPrinciples",
+      "nodicsDocsNodeTopicdocsDocumentationPublishingModel",
+      "nodicsDocsNodeTopicframeworkWhatIsNodics"
+    ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record53": {
+  "record55": {
+    "code": "nodicsDocsNodeTopicdocsDocumentationPublishingModel",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecdocumentationRoadmap",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Documentation Publishing Model",
+    "nodeSummary": "How documentation source becomes content catalog data, Staged records, approval tasks, Online pages, and public or authenticated delivery.",
+    "nodeContentArea": {
+      "route": "/docs/framework/docs-documentation-publishing-model",
+      "documentType": "overview",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatadocsDocumentationPublishingModel",
+    "targetPage": "nodicsDocsPagedocsDocumentationPublishingModel",
+    "targetRoute": "nodicsDocsRoutedocsDocumentationPublishingModel",
+    "nodeOrder": 10040,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "documentation-roadmap",
+      "reader-journey-and-coverage-map",
+      "documentation-publishing",
+      "content-catalog",
+      "staged-online"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicdocsDocumentationRoadmap",
+      "nodicsDocsNodeTopicdocsDocumentationPrinciples",
+      "nodicsDocsNodeTopicdocsReaderJourneyAndCoverage",
+      "nodicsDocsNodeTopicframeworkWhatIsNodics"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record56": {
     "code": "nodicsDocsNodeTopicframeworkModularArchitecture",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpframeworkArchitectureAndDesignmodularityAndOwnership",
+    "parentNode": "nodicsDocsNodeSecframeworkArchitectureAndDesign",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Modular architecture and ownership",
@@ -4576,7 +5084,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataframeworkModularArchitecture",
     "targetPage": "nodicsDocsPageframeworkModularArchitecture",
     "targetRoute": "nodicsDocsRouteframeworkModularArchitecture",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -4612,6 +5120,9 @@ module.exports = {
       "modular-architecture-and-ownership"
     ],
     "relatedNodes": [
+      "nodicsDocsNodeTopicframeworkRuntimeServerComposition",
+      "nodicsDocsNodeTopicframeworkModuleLoadingServicePrecedence",
+      "nodicsDocsNodeTopicframeworkArchitectureDecisionGuide",
       "nodicsDocsNodeTopicfoundationOverview",
       "nodicsDocsNodeTopicframeworkCustomizationGuide",
       "nodicsDocsNodeTopicplatformModuleRegistry"
@@ -4620,46 +5131,43 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record54": {
-    "code": "nodicsDocsNodeGrpcapabilityRegistryAndLifecycleManagementfunctionalModuleRegistry",
+  "record57": {
+    "code": "nodicsDocsNodeTopicframeworkRuntimeServerComposition",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSeccapabilityRegistryAndLifecycleManagement",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Functional Module Registry",
-    "nodeSummary": "Business-friendly group for Functional Module Registry documentation topics.",
+    "parentNode": "nodicsDocsNodeSecframeworkArchitectureAndDesign",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Runtime Server Composition",
+    "nodeSummary": "How project topology composes framework modules into Platform, WCMS, Process, and other runtime servers.",
     "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpcapabilityRegistryAndLifecycleManagementfunctionalModuleRegistry",
-      "pages": [
-        "platform.module-registry"
+      "route": "/docs/framework/framework-runtime-server-composition",
+      "documentType": "concept",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
       ],
-      "subgroups": []
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
     },
-    "nodeDashboard": "nodicsDocsDashboardGrpcapabilityRegistryAndLifecycleManagementfunctionalModuleRegistry",
-    "childSummaryCards": [
-      {
-        "code": "platform.module-registry",
-        "title": "Functional module registry",
-        "summary": "Durable project registration and runtime observation rules.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Functional module registry",
-        "targetPage": "platform.module-registry",
-        "route": "/docs/framework/platform-module-registry"
-      }
-    ],
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
     "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
+      "childCount": 0
     },
-    "nodeOrder": 10,
-    "expandable": true,
+    "targetDocumentationPage": "nodicsDocsMetadataframeworkRuntimeServerComposition",
+    "targetPage": "nodicsDocsPageframeworkRuntimeServerComposition",
+    "targetRoute": "nodicsDocsRouteframeworkRuntimeServerComposition",
+    "nodeOrder": 10020,
+    "expandable": false,
     "expandedByDefault": false,
-    "nodeIcon": "folder-open",
+    "nodeIcon": "file-text",
     "nodeAudience": [
       "business",
       "architect",
@@ -4687,20 +5195,178 @@ module.exports = {
     "lifecycleState": "ONLINE",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
-      "capability-registry-and-lifecycle-management",
-      "functional-module-registry",
-      "functional-module-registry"
+      "runtime-server-composition",
+      "server-topology",
+      "platform-wcms-process"
     ],
-    "relatedNodes": [],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicfoundationOverview",
+      "nodicsDocsNodeTopicframeworkCustomizationGuide",
+      "nodicsDocsNodeTopicplatformModuleRegistry"
+    ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record55": {
+  "record58": {
+    "code": "nodicsDocsNodeTopicframeworkModuleLoadingServicePrecedence",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecframeworkArchitectureAndDesign",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Module Loading and Service Precedence",
+    "nodeSummary": "How runtime loading order, service overrides, and project layers decide which implementation is active.",
+    "nodeContentArea": {
+      "route": "/docs/framework/framework-module-loading-service-precedence",
+      "documentType": "concept",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataframeworkModuleLoadingServicePrecedence",
+    "targetPage": "nodicsDocsPageframeworkModuleLoadingServicePrecedence",
+    "targetRoute": "nodicsDocsRouteframeworkModuleLoadingServicePrecedence",
+    "nodeOrder": 10030,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "module-loading",
+      "service-precedence",
+      "override-order"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicfoundationOverview",
+      "nodicsDocsNodeTopicframeworkCustomizationGuide",
+      "nodicsDocsNodeTopicplatformModuleRegistry"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record59": {
+    "code": "nodicsDocsNodeTopicframeworkArchitectureDecisionGuide",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecframeworkArchitectureAndDesign",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Architecture Decision Guide",
+    "nodeSummary": "Decision path for choosing framework, project, content, provider, service, pipeline, schema, route, or renderer ownership.",
+    "nodeContentArea": {
+      "route": "/docs/framework/framework-architecture-decision-guide",
+      "documentType": "how-to",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataframeworkArchitectureDecisionGuide",
+    "targetPage": "nodicsDocsPageframeworkArchitectureDecisionGuide",
+    "targetRoute": "nodicsDocsRouteframeworkArchitectureDecisionGuide",
+    "nodeOrder": 10040,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "architecture-decision-guide",
+      "ownership-decision",
+      "where-change-belongs"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicfoundationOverview",
+      "nodicsDocsNodeTopicframeworkCustomizationGuide",
+      "nodicsDocsNodeTopicplatformModuleRegistry"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record60": {
     "code": "nodicsDocsNodeTopicplatformModuleRegistry",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpcapabilityRegistryAndLifecycleManagementfunctionalModuleRegistry",
+    "parentNode": "nodicsDocsNodeSeccapabilityRegistryAndLifecycleManagement",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Functional module registry",
@@ -4729,7 +5395,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataplatformModuleRegistry",
     "targetPage": "nodicsDocsPageplatformModuleRegistry",
     "targetRoute": "nodicsDocsRouteplatformModuleRegistry",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -4773,87 +5439,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record56": {
-    "code": "nodicsDocsNodeGrpfoundationRuntimeServicesruntimeFoundation",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecfoundationRuntimeServices",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Runtime Foundation",
-    "nodeSummary": "Business-friendly group for Runtime Foundation documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpfoundationRuntimeServicesruntimeFoundation",
-      "pages": [
-        "foundation.overview"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpfoundationRuntimeServicesruntimeFoundation",
-    "childSummaryCards": [
-      {
-        "code": "foundation.overview",
-        "title": "Foundation overview",
-        "summary": "Beginner, developer, and operations guide to the Foundation runtime, request path, cache, events, configuration, and quality rules.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Foundation overview",
-        "targetPage": "foundation.overview",
-        "route": "/docs/framework/foundation-overview"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "foundation-runtime-services",
-      "runtime-foundation",
-      "foundation-overview"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record57": {
+  "record61": {
     "code": "nodicsDocsNodeTopicfoundationOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpfoundationRuntimeServicesruntimeFoundation",
+    "parentNode": "nodicsDocsNodeSecfoundationRuntimeServices",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Foundation overview",
@@ -4882,7 +5472,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatafoundationOverview",
     "targetPage": "nodicsDocsPagefoundationOverview",
     "targetRoute": "nodicsDocsRoutefoundationOverview",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -4925,88 +5515,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record58": {
-    "code": "nodicsDocsNodeGrpnodicsApplicationSuiteapplicationOverview",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecnodicsApplicationSuite",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Application Overview",
-    "nodeSummary": "Business-friendly group for Application Overview documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpnodicsApplicationSuiteapplicationOverview",
-      "pages": [
-        "applications.suite"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpnodicsApplicationSuiteapplicationOverview",
-    "childSummaryCards": [
-      {
-        "code": "applications.suite",
-        "title": "Nodics Application Suite",
-        "summary": "Business and technical overview of Axis, Nexus, and Kickoff as application experiences built on the Nodics Framework.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Nodics Application Suite",
-        "targetPage": "applications.suite",
-        "route": "/docs/framework/applications-suite"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "nodics-application-suite",
-      "axis",
-      "nexus",
-      "kickoff"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record59": {
+  "record62": {
     "code": "nodicsDocsNodeTopicapplicationsSuite",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpnodicsApplicationSuiteapplicationOverview",
+    "parentNode": "nodicsDocsNodeSecnodicsApplicationSuite",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Nodics Application Suite",
@@ -5035,7 +5548,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataapplicationsSuite",
     "targetPage": "nodicsDocsPageapplicationsSuite",
     "targetRoute": "nodicsDocsRouteapplicationsSuite",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -5081,93 +5594,17 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record60": {
-    "code": "nodicsDocsNodeGrpsolutionUseCasessolutionPatterns",
+  "record63": {
+    "code": "nodicsDocsNodeTopicsolutionsTaskExecutionEngine",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecsolutionUseCases",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Solution Patterns",
-    "nodeSummary": "Business-friendly group for Solution Patterns documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpsolutionUseCasessolutionPatterns",
-      "pages": [
-        "solutions.tee-deap"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpsolutionUseCasessolutionPatterns",
-    "childSummaryCards": [
-      {
-        "code": "solutions.tee-deap",
-        "title": "TEE and DEAP Solution Use Cases",
-        "summary": "How Task Execution Engine and Data Engineering and Analytics Platform solutions can be built on the Nodics Framework.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "TEE and DEAP Solution Use Cases",
-        "targetPage": "solutions.tee-deap",
-        "route": "/docs/framework/solutions-tee-deap"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "solution-use-cases",
-      "solution-patterns",
-      "tee-and-deap-solution-use-cases"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record61": {
-    "code": "nodicsDocsNodeTopicsolutionsTeeDeap",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpsolutionUseCasessolutionPatterns",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
-    "nodeTitle": "TEE and DEAP Solution Use Cases",
-    "nodeSummary": "How Task Execution Engine and Data Engineering and Analytics Platform solutions can be built on the Nodics Framework.",
+    "nodeTitle": "Task Execution Engine",
+    "nodeSummary": "How customers use Nodics Process, Cron, Pipelines, Events, and governed runtime change to build a Task Execution Engine.",
     "nodeContentArea": {
-      "route": "/docs/framework/solutions-tee-deap",
+      "route": "/docs/framework/solutions-task-execution-engine",
       "documentType": "concept",
       "businessAudience": [
         "business user",
@@ -5187,10 +5624,10 @@ module.exports = {
     "childStatusSummary": {
       "childCount": 0
     },
-    "targetDocumentationPage": "nodicsDocsMetadatasolutionsTeeDeap",
-    "targetPage": "nodicsDocsPagesolutionsTeeDeap",
-    "targetRoute": "nodicsDocsRoutesolutionsTeeDeap",
-    "nodeOrder": 10,
+    "targetDocumentationPage": "nodicsDocsMetadatasolutionsTaskExecutionEngine",
+    "targetPage": "nodicsDocsPagesolutionsTaskExecutionEngine",
+    "targetRoute": "nodicsDocsRoutesolutionsTaskExecutionEngine",
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -5222,58 +5659,62 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "solution-use-cases",
-      "solution-patterns",
-      "tee-and-deap-solution-use-cases"
+      "task-execution-engine",
+      "tee",
+      "cron",
+      "process",
+      "pipeline",
+      "runtime-change"
     ],
     "relatedNodes": [
       "nodicsDocsNodeTopicprocessOverview",
       "nodicsDocsNodeTopicprocessScheduledAutomation",
-      "nodicsDocsNodeTopicdocsDocumentationRoadmap"
+      "nodicsDocsNodeTopicpipelineBusinessLogicOrchestration",
+      "nodicsDocsNodeTopiceventsMessagingClusterCoordination",
+      "nodicsDocsNodeTopicruntimeGovernedChange",
+      "nodicsDocsNodeTopiccronNodeResponsibilityTee"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record62": {
-    "code": "nodicsDocsNodeGrpacceleratorsAndIndustrySolutionTemplatesagoraAcceleratorFamily",
+  "record64": {
+    "code": "nodicsDocsNodeTopicsolutionsDataEngineeringAnalyticsPlatform",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Agora Accelerator Family",
-    "nodeSummary": "Business-friendly group for Agora Accelerator Family documentation topics.",
+    "parentNode": "nodicsDocsNodeSecsolutionUseCases",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Data Engineering and Analytics Platform",
+    "nodeSummary": "How customers use Nodics import, export, discovery, provider, event, pipeline, and publishing capabilities to build governed data platforms.",
     "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpacceleratorsAndIndustrySolutionTemplatesagoraAcceleratorFamily",
-      "pages": [
-        "accelerators.agora-industry-templates"
+      "route": "/docs/framework/solutions-data-engineering-analytics-platform",
+      "documentType": "concept",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
       ],
-      "subgroups": []
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
     },
-    "nodeDashboard": "nodicsDocsDashboardGrpacceleratorsAndIndustrySolutionTemplatesagoraAcceleratorFamily",
-    "childSummaryCards": [
-      {
-        "code": "accelerators.agora-industry-templates",
-        "title": "Accelerators and Industry Solution Templates",
-        "summary": "Agora accelerator family overview for Apparel, Electronics, and Telco customer commerce storefronts.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Accelerators and Industry Solution Templates",
-        "targetPage": "accelerators.agora-industry-templates",
-        "route": "/docs/framework/accelerators-agora-industry-templates"
-      }
-    ],
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
     "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
+      "childCount": 0
     },
-    "nodeOrder": 10,
-    "expandable": true,
+    "targetDocumentationPage": "nodicsDocsMetadatasolutionsDataEngineeringAnalyticsPlatform",
+    "targetPage": "nodicsDocsPagesolutionsDataEngineeringAnalyticsPlatform",
+    "targetRoute": "nodicsDocsRoutesolutionsDataEngineeringAnalyticsPlatform",
+    "nodeOrder": 10020,
+    "expandable": false,
     "expandedByDefault": false,
-    "nodeIcon": "folder-open",
+    "nodeIcon": "file-text",
     "nodeAudience": [
       "business",
       "architect",
@@ -5301,22 +5742,32 @@ module.exports = {
     "lifecycleState": "ONLINE",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
-      "accelerators",
-      "industry-solution-templates",
-      "agora-apparel",
-      "agora-electronics",
-      "agora-telco"
+      "solution-use-cases",
+      "data-engineering-and-analytics-platform",
+      "deap",
+      "import",
+      "export",
+      "discovery",
+      "analytics",
+      "data-pipeline"
     ],
-    "relatedNodes": [],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicdataImportExportMigration",
+      "nodicsDocsNodeTopicdiscoverySearchIndexing",
+      "nodicsDocsNodeTopicschemaDataModelingManagement",
+      "nodicsDocsNodeTopicpersistenceProviderDataAccessLayer",
+      "nodicsDocsNodeTopicpipelineBusinessLogicOrchestration",
+      "nodicsDocsNodeTopiceventsMessagingClusterCoordination"
+    ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record63": {
+  "record65": {
     "code": "nodicsDocsNodeTopicacceleratorsAgoraIndustryTemplates",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpacceleratorsAndIndustrySolutionTemplatesagoraAcceleratorFamily",
+    "parentNode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Accelerators and Industry Solution Templates",
@@ -5345,7 +5796,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataacceleratorsAgoraIndustryTemplates",
     "targetPage": "nodicsDocsPageacceleratorsAgoraIndustryTemplates",
     "targetRoute": "nodicsDocsRouteacceleratorsAgoraIndustryTemplates",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -5393,87 +5844,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record64": {
-    "code": "nodicsDocsNodeGrpnodicsInstallerAndWorkspaceSetuplocalWorkspaceSetup",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecnodicsInstallerAndWorkspaceSetup",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Local Workspace Setup",
-    "nodeSummary": "Business-friendly group for Local Workspace Setup documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpnodicsInstallerAndWorkspaceSetuplocalWorkspaceSetup",
-      "pages": [
-        "framework.local-quick-start"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpnodicsInstallerAndWorkspaceSetuplocalWorkspaceSetup",
-    "childSummaryCards": [
-      {
-        "code": "framework.local-quick-start",
-        "title": "Local quick start with Kickoff and Axis",
-        "summary": "Beginner-friendly steps to configure the framework, start local servers, log in to Axis, and open documentation.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Local quick start with Kickoff and Axis",
-        "targetPage": "framework.local-quick-start",
-        "route": "/docs/framework/framework-local-quick-start"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "nodics-installer-and-workspace-setup",
-      "local-workspace-setup",
-      "local-quick-start-with-kickoff-and-axis"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record65": {
+  "record66": {
     "code": "nodicsDocsNodeTopicframeworkLocalQuickStart",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpnodicsInstallerAndWorkspaceSetuplocalWorkspaceSetup",
+    "parentNode": "nodicsDocsNodeSecnodicsInstallerAndWorkspaceSetup",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Local quick start with Kickoff and Axis",
@@ -5502,7 +5877,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataframeworkLocalQuickStart",
     "targetPage": "nodicsDocsPageframeworkLocalQuickStart",
     "targetRoute": "nodicsDocsRouteframeworkLocalQuickStart",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -5538,6 +5913,8 @@ module.exports = {
       "local-quick-start-with-kickoff-and-axis"
     ],
     "relatedNodes": [
+      "nodicsDocsNodeTopicframeworkFreshSchemaSetupJourney",
+      "nodicsDocsNodeTopicframeworkLocalRuntimeTroubleshooting",
       "nodicsDocsNodeTopicframeworkWhatIsNodics",
       "nodicsDocsNodeTopicframeworkLocalVerificationChecklist",
       "nodicsDocsNodeTopicplatformModuleRegistry"
@@ -5546,46 +5923,43 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record66": {
-    "code": "nodicsDocsNodeGrpnodicsInstallerAndWorkspaceSetupinstalledRuntimeApis",
+  "record67": {
+    "code": "nodicsDocsNodeTopicframeworkFreshSchemaSetupJourney",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecnodicsInstallerAndWorkspaceSetup",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Installed Runtime APIs",
-    "nodeSummary": "Business-friendly group for Installed Runtime APIs documentation topics.",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Fresh Schema Setup Journey",
+    "nodeSummary": "Required order for initializing Axis, registering capabilities, importing app packs, publishing Online, and verifying browsers.",
     "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpnodicsInstallerAndWorkspaceSetupinstalledRuntimeApis",
-      "pages": [
-        "installer.installed-runtime-application-builder"
+      "route": "/docs/framework/framework-fresh-schema-setup-journey",
+      "documentType": "quickstart",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
       ],
-      "subgroups": []
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
     },
-    "nodeDashboard": "nodicsDocsDashboardGrpnodicsInstallerAndWorkspaceSetupinstalledRuntimeApis",
-    "childSummaryCards": [
-      {
-        "code": "installer.installed-runtime-application-builder",
-        "title": "Installed Runtime Installer and Application Builder APIs",
-        "summary": "Safe read-only runtime API model for installed workspace inspection, setup planning, operation catalogue, and redacted evidence.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Installed Runtime Installer and Application Builder APIs",
-        "targetPage": "installer.installed-runtime-application-builder",
-        "route": "/docs/framework/installer-installed-runtime-application-builder"
-      }
-    ],
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
     "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
+      "childCount": 0
     },
-    "nodeOrder": 20,
-    "expandable": true,
+    "targetDocumentationPage": "nodicsDocsMetadataframeworkFreshSchemaSetupJourney",
+    "targetPage": "nodicsDocsPageframeworkFreshSchemaSetupJourney",
+    "targetRoute": "nodicsDocsRouteframeworkFreshSchemaSetupJourney",
+    "nodeOrder": 10020,
+    "expandable": false,
     "expandedByDefault": false,
-    "nodeIcon": "folder-open",
+    "nodeIcon": "file-text",
     "nodeAudience": [
       "business",
       "architect",
@@ -5613,22 +5987,101 @@ module.exports = {
     "lifecycleState": "ONLINE",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
-      "installer",
-      "application-builder",
-      "workspace-readiness",
-      "setup-plan",
-      "evidence"
+      "fresh-schema",
+      "setup-journey",
+      "axis-nexus-agora-initialization"
     ],
-    "relatedNodes": [],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicframeworkWhatIsNodics",
+      "nodicsDocsNodeTopicframeworkLocalVerificationChecklist",
+      "nodicsDocsNodeTopicplatformModuleRegistry"
+    ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record67": {
+  "record68": {
+    "code": "nodicsDocsNodeTopicframeworkLocalRuntimeTroubleshooting",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecnodicsInstallerAndWorkspaceSetup",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Local Runtime Troubleshooting",
+    "nodeSummary": "Practical troubleshooting for ports, stale topology state, schema import failures, publication state, and missing navigation.",
+    "nodeContentArea": {
+      "route": "/docs/framework/framework-local-runtime-troubleshooting",
+      "documentType": "operations",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataframeworkLocalRuntimeTroubleshooting",
+    "targetPage": "nodicsDocsPageframeworkLocalRuntimeTroubleshooting",
+    "targetRoute": "nodicsDocsRouteframeworkLocalRuntimeTroubleshooting",
+    "nodeOrder": 10030,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "local-runtime-troubleshooting",
+      "ports",
+      "fresh-schema-errors"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicframeworkWhatIsNodics",
+      "nodicsDocsNodeTopicframeworkLocalVerificationChecklist",
+      "nodicsDocsNodeTopicplatformModuleRegistry"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record69": {
     "code": "nodicsDocsNodeTopicinstallerInstalledRuntimeApplicationBuilder",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpnodicsInstallerAndWorkspaceSetupinstalledRuntimeApis",
+    "parentNode": "nodicsDocsNodeSecnodicsInstallerAndWorkspaceSetup",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Installed Runtime Installer and Application Builder APIs",
@@ -5657,7 +6110,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatainstallerInstalledRuntimeApplicationBuilder",
     "targetPage": "nodicsDocsPageinstallerInstalledRuntimeApplicationBuilder",
     "targetRoute": "nodicsDocsRouteinstallerInstalledRuntimeApplicationBuilder",
-    "nodeOrder": 10,
+    "nodeOrder": 10040,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -5704,87 +6157,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record68": {
-    "code": "nodicsDocsNodeGrpapplicationBuilderAndWorkspaceGenerationworkspaceGenerationJourney",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecapplicationBuilderAndWorkspaceGeneration",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Workspace Generation Journey",
-    "nodeSummary": "Business-friendly group for Workspace Generation Journey documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpapplicationBuilderAndWorkspaceGenerationworkspaceGenerationJourney",
-      "pages": [
-        "builder.workspace-generation"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpapplicationBuilderAndWorkspaceGenerationworkspaceGenerationJourney",
-    "childSummaryCards": [
-      {
-        "code": "builder.workspace-generation",
-        "title": "Application Builder and Workspace Generation",
-        "summary": "How the installed runtime exposes governed workspace discovery, readiness, setup planning, and accelerator selection for Axis-driven application building.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Application Builder and Workspace Generation",
-        "targetPage": "builder.workspace-generation",
-        "route": "/docs/framework/builder-workspace-generation"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "application-builder-and-workspace-generation",
-      "workspace-generation-journey",
-      "application-builder-and-workspace-generation"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record69": {
+  "record70": {
     "code": "nodicsDocsNodeTopicbuilderWorkspaceGeneration",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpapplicationBuilderAndWorkspaceGenerationworkspaceGenerationJourney",
+    "parentNode": "nodicsDocsNodeSecapplicationBuilderAndWorkspaceGeneration",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Application Builder and Workspace Generation",
@@ -5813,7 +6190,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatabuilderWorkspaceGeneration",
     "targetPage": "nodicsDocsPagebuilderWorkspaceGeneration",
     "targetRoute": "nodicsDocsRoutebuilderWorkspaceGeneration",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -5857,87 +6234,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record70": {
-    "code": "nodicsDocsNodeGrpaxisAndBackofficeOperationsvisualWorkflowDesigner",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecaxisAndBackofficeOperations",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Visual Workflow Designer",
-    "nodeSummary": "Business-friendly group for Visual Workflow Designer documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpaxisAndBackofficeOperationsvisualWorkflowDesigner",
-      "pages": [
-        "process.visual-designer"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpaxisAndBackofficeOperationsvisualWorkflowDesigner",
-    "childSummaryCards": [
-      {
-        "code": "process.visual-designer",
-        "title": "Visual Workflow Designer Contract",
-        "summary": "Describe the backend-owned graph contract, Axis editor projection, and validation workflow for the visual designer.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Visual Workflow Designer Contract",
-        "targetPage": "process.visual-designer",
-        "route": "/docs/framework/process/visual-designer"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "axis-and-backoffice-operations",
-      "visual-workflow-designer",
-      "visual-workflow-designer-contract"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
   "record71": {
     "code": "nodicsDocsNodeTopicprocessVisualDesigner",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpaxisAndBackofficeOperationsvisualWorkflowDesigner",
+    "parentNode": "nodicsDocsNodeSecaxisAndBackofficeOperations",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Visual Workflow Designer Contract",
@@ -5966,7 +6267,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataprocessVisualDesigner",
     "targetPage": "nodicsDocsPageprocessVisualDesigner",
     "targetRoute": "nodicsDocsRouteprocessVisualDesigner",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -6010,86 +6311,10 @@ module.exports = {
     "active": true
   },
   "record72": {
-    "code": "nodicsDocsNodeGrpbusinessCustomizationInAxisaxisCustomizationWorkspace",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecbusinessCustomizationInAxis",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Axis Customization Workspace",
-    "nodeSummary": "Business-friendly group for Axis Customization Workspace documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpbusinessCustomizationInAxisaxisCustomizationWorkspace",
-      "pages": [
-        "axis.business-customization"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpbusinessCustomizationInAxisaxisCustomizationWorkspace",
-    "childSummaryCards": [
-      {
-        "code": "axis.business-customization",
-        "title": "Business Customization in Axis",
-        "summary": "How Axis lets authorized users manage navigation, content areas, documentation pages, runtime configuration, and capability-specific business data.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Business Customization in Axis",
-        "targetPage": "axis.business-customization",
-        "route": "/docs/framework/axis-business-customization"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "business-customization-in-axis",
-      "axis-customization-workspace",
-      "business-customization-in-axis"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record73": {
     "code": "nodicsDocsNodeTopicaxisBusinessCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpbusinessCustomizationInAxisaxisCustomizationWorkspace",
+    "parentNode": "nodicsDocsNodeSecbusinessCustomizationInAxis",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Business Customization in Axis",
@@ -6118,7 +6343,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataaxisBusinessCustomization",
     "targetPage": "nodicsDocsPageaxisBusinessCustomization",
     "targetRoute": "nodicsDocsRouteaxisBusinessCustomization",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -6162,87 +6387,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record74": {
-    "code": "nodicsDocsNodeGrpuserEnterpriseAndTenantManagementplatformAndProfileFoundations",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecuserEnterpriseAndTenantManagement",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Platform and Profile Foundations",
-    "nodeSummary": "Business-friendly group for Platform and Profile Foundations documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpuserEnterpriseAndTenantManagementplatformAndProfileFoundations",
-      "pages": [
-        "platform.overview"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpuserEnterpriseAndTenantManagementplatformAndProfileFoundations",
-    "childSummaryCards": [
-      {
-        "code": "platform.overview",
-        "title": "Platform overview",
-        "summary": "How Platform, Profile, BackOffice, authentication, authorization, Axis backend content, and module governance fit together.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Platform overview",
-        "targetPage": "platform.overview",
-        "route": "/docs/framework/platform-overview"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "user-enterprise-and-tenant-management",
-      "platform-and-profile-foundations",
-      "platform-overview"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record75": {
+  "record73": {
     "code": "nodicsDocsNodeTopicplatformOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpuserEnterpriseAndTenantManagementplatformAndProfileFoundations",
+    "parentNode": "nodicsDocsNodeSecuserEnterpriseAndTenantManagement",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Platform overview",
@@ -6271,7 +6420,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataplatformOverview",
     "targetPage": "nodicsDocsPageplatformOverview",
     "targetRoute": "nodicsDocsRouteplatformOverview",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -6314,87 +6463,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record76": {
-    "code": "nodicsDocsNodeGrpsecurityGovernanceAndComplianceidentityAndAccessGovernance",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecsecurityGovernanceAndCompliance",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Identity and Access Governance",
-    "nodeSummary": "Business-friendly group for Identity and Access Governance documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpsecurityGovernanceAndComplianceidentityAndAccessGovernance",
-      "pages": [
-        "security.identity-access-governance"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpsecurityGovernanceAndComplianceidentityAndAccessGovernance",
-    "childSummaryCards": [
-      {
-        "code": "security.identity-access-governance",
-        "title": "Security, Identity, and Access Governance",
-        "summary": "Authentication, authorization, groups, documentation authoring roles, read-only Axis access, tenant isolation, and audit responsibilities.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Security, Identity, and Access Governance",
-        "targetPage": "security.identity-access-governance",
-        "route": "/docs/framework/security-identity-access-governance"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "security-governance-and-compliance",
-      "identity-and-access-governance",
-      "security-identity-and-access-governance"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record77": {
+  "record74": {
     "code": "nodicsDocsNodeTopicsecurityIdentityAccessGovernance",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpsecurityGovernanceAndComplianceidentityAndAccessGovernance",
+    "parentNode": "nodicsDocsNodeSecsecurityGovernanceAndCompliance",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Security, Identity, and Access Governance",
@@ -6423,7 +6496,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatasecurityIdentityAccessGovernance",
     "targetPage": "nodicsDocsPagesecurityIdentityAccessGovernance",
     "targetRoute": "nodicsDocsRoutesecurityIdentityAccessGovernance",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -6467,99 +6540,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record78": {
-    "code": "nodicsDocsNodeGrpapplicationConfigurationAndRuntimeBehaviorManagementconfigurationLayersAndBehavior",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecapplicationConfigurationAndRuntimeBehaviorManagement",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Configuration Layers and Behavior",
-    "nodeSummary": "Business-friendly group for Configuration Layers and Behavior documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpapplicationConfigurationAndRuntimeBehaviorManagementconfigurationLayersAndBehavior",
-      "pages": [
-        "configuration.runtime-behavior-management",
-        "routing.api-governance"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpapplicationConfigurationAndRuntimeBehaviorManagementconfigurationLayersAndBehavior",
-    "childSummaryCards": [
-      {
-        "code": "configuration.runtime-behavior-management",
-        "title": "Application Configuration and Runtime Behavior Management",
-        "summary": "How configuration layers, provider choices, runtime settings, and project overrides change Nodics behavior safely.",
-        "order": 10
-      },
-      {
-        "code": "routing.api-governance",
-        "title": "Routing and API Governance",
-        "summary": "How Nodics owns route metadata, generated CRUD routes, security, permissions, request context, and runtime API behavior.",
-        "order": 20
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Application Configuration and Runtime Behavior Management",
-        "targetPage": "configuration.runtime-behavior-management",
-        "route": "/docs/framework/configuration-runtime-behavior-management"
-      },
-      {
-        "label": "Routing and API Governance",
-        "targetPage": "routing.api-governance",
-        "route": "/docs/framework/routing-api-governance"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 2,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "application-configuration-and-runtime-behavior-management",
-      "configuration-layers-and-behavior",
-      "application-configuration-and-runtime-behavior-management"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record79": {
+  "record75": {
     "code": "nodicsDocsNodeTopicconfigurationRuntimeBehaviorManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpapplicationConfigurationAndRuntimeBehaviorManagementconfigurationLayersAndBehavior",
+    "parentNode": "nodicsDocsNodeSecapplicationConfigurationAndRuntimeBehaviorManagement",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Application Configuration and Runtime Behavior Management",
@@ -6588,7 +6573,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataconfigurationRuntimeBehaviorManagement",
     "targetPage": "nodicsDocsPageconfigurationRuntimeBehaviorManagement",
     "targetRoute": "nodicsDocsRouteconfigurationRuntimeBehaviorManagement",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -6633,11 +6618,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record80": {
+  "record76": {
     "code": "nodicsDocsNodeTopicroutingApiGovernance",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpapplicationConfigurationAndRuntimeBehaviorManagementconfigurationLayersAndBehavior",
+    "parentNode": "nodicsDocsNodeSecapplicationConfigurationAndRuntimeBehaviorManagement",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Routing and API Governance",
@@ -6666,7 +6651,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataroutingApiGovernance",
     "targetPage": "nodicsDocsPageroutingApiGovernance",
     "targetRoute": "nodicsDocsRouteroutingApiGovernance",
-    "nodeOrder": 20,
+    "nodeOrder": 10020,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -6722,87 +6707,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record81": {
-    "code": "nodicsDocsNodeGrpruntimeGovernanceAndDynamicChangeManagementgovernedRuntimeChange",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecruntimeGovernanceAndDynamicChangeManagement",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Governed Runtime Change",
-    "nodeSummary": "Business-friendly group for Governed Runtime Change documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpruntimeGovernanceAndDynamicChangeManagementgovernedRuntimeChange",
-      "pages": [
-        "runtime.governed-change"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpruntimeGovernanceAndDynamicChangeManagementgovernedRuntimeChange",
-    "childSummaryCards": [
-      {
-        "code": "runtime.governed-change",
-        "title": "Governed Runtime Change Capability",
-        "summary": "How Nodics handles runtime configuration and business behavior changes across clustered nodes through governed APIs and event propagation.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Governed Runtime Change Capability",
-        "targetPage": "runtime.governed-change",
-        "route": "/docs/framework/runtime-governed-change"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "runtime-governance-and-dynamic-change-management",
-      "governed-runtime-change",
-      "governed-runtime-change-capability"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record82": {
+  "record77": {
     "code": "nodicsDocsNodeTopicruntimeGovernedChange",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpruntimeGovernanceAndDynamicChangeManagementgovernedRuntimeChange",
+    "parentNode": "nodicsDocsNodeSecruntimeGovernanceAndDynamicChangeManagement",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Governed Runtime Change Capability",
@@ -6831,7 +6740,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataruntimeGovernedChange",
     "targetPage": "nodicsDocsPageruntimeGovernedChange",
     "targetRoute": "nodicsDocsRouteruntimeGovernedChange",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -6875,87 +6784,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record83": {
-    "code": "nodicsDocsNodeGrplocalizationAndInternationalizationlocalizedExperienceManagement",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSeclocalizationAndInternationalization",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Localized Experience Management",
-    "nodeSummary": "Business-friendly group for Localized Experience Management documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrplocalizationAndInternationalizationlocalizedExperienceManagement",
-      "pages": [
-        "localization.internationalization"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrplocalizationAndInternationalizationlocalizedExperienceManagement",
-    "childSummaryCards": [
-      {
-        "code": "localization.internationalization",
-        "title": "Localization and Internationalization",
-        "summary": "Locales, translations, fallback behavior, localized content, project overrides, and release validation for multilingual customer experiences.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Localization and Internationalization",
-        "targetPage": "localization.internationalization",
-        "route": "/docs/framework/localization-internationalization"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "localization-and-internationalization",
-      "localized-experience-management",
-      "localization-and-internationalization"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record84": {
+  "record78": {
     "code": "nodicsDocsNodeTopiclocalizationInternationalization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrplocalizationAndInternationalizationlocalizedExperienceManagement",
+    "parentNode": "nodicsDocsNodeSeclocalizationAndInternationalization",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Localization and Internationalization",
@@ -6984,7 +6817,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatalocalizationInternationalization",
     "targetPage": "nodicsDocsPagelocalizationInternationalization",
     "targetRoute": "nodicsDocsRoutelocalizationInternationalization",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -7028,87 +6861,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record85": {
-    "code": "nodicsDocsNodeGrpdataModelingAndSchemaManagementschemaAndModelExtension",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecdataModelingAndSchemaManagement",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Schema and Model Extension",
-    "nodeSummary": "Business-friendly group for Schema and Model Extension documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpdataModelingAndSchemaManagementschemaAndModelExtension",
-      "pages": [
-        "schema.data-modeling-management"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpdataModelingAndSchemaManagementschemaAndModelExtension",
-    "childSummaryCards": [
-      {
-        "code": "schema.data-modeling-management",
-        "title": "Data Modeling and Schema Management",
-        "summary": "How schemas define model behavior, generated services, API contracts, validation, and project-layer property extension.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Data Modeling and Schema Management",
-        "targetPage": "schema.data-modeling-management",
-        "route": "/docs/framework/schema-data-modeling-management"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "data-modeling-and-schema-management",
-      "schema-and-model-extension",
-      "data-modeling-and-schema-management"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record86": {
+  "record79": {
     "code": "nodicsDocsNodeTopicschemaDataModelingManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpdataModelingAndSchemaManagementschemaAndModelExtension",
+    "parentNode": "nodicsDocsNodeSecdataModelingAndSchemaManagement",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Data Modeling and Schema Management",
@@ -7137,7 +6894,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataschemaDataModelingManagement",
     "targetPage": "nodicsDocsPageschemaDataModelingManagement",
     "targetRoute": "nodicsDocsRouteschemaDataModelingManagement",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -7181,87 +6938,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record87": {
-    "code": "nodicsDocsNodeGrpdatabaseAndPersistenceManagementproviderAndDataAccessLayer",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecdatabaseAndPersistenceManagement",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Provider and Data Access Layer",
-    "nodeSummary": "Business-friendly group for Provider and Data Access Layer documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpdatabaseAndPersistenceManagementproviderAndDataAccessLayer",
-      "pages": [
-        "persistence.provider-data-access-layer"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpdatabaseAndPersistenceManagementproviderAndDataAccessLayer",
-    "childSummaryCards": [
-      {
-        "code": "persistence.provider-data-access-layer",
-        "title": "Provider and Data Access Layer",
-        "summary": "How the Nodics data access layer uses MongoDB today while preserving provider seams for additional database providers.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Provider and Data Access Layer",
-        "targetPage": "persistence.provider-data-access-layer",
-        "route": "/docs/framework/persistence-provider-data-access-layer"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "database-and-persistence-management",
-      "provider-and-data-access-layer",
-      "provider-and-data-access-layer"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record88": {
+  "record80": {
     "code": "nodicsDocsNodeTopicpersistenceProviderDataAccessLayer",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpdatabaseAndPersistenceManagementproviderAndDataAccessLayer",
+    "parentNode": "nodicsDocsNodeSecdatabaseAndPersistenceManagement",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Provider and Data Access Layer",
@@ -7290,7 +6971,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatapersistenceProviderDataAccessLayer",
     "targetPage": "nodicsDocsPagepersistenceProviderDataAccessLayer",
     "targetRoute": "nodicsDocsRoutepersistenceProviderDataAccessLayer",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -7334,87 +7015,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record89": {
-    "code": "nodicsDocsNodeGrpcachingAndRuntimeStateManagementcacheProvidersAndInvalidation",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSeccachingAndRuntimeStateManagement",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Cache Providers and Invalidation",
-    "nodeSummary": "Business-friendly group for Cache Providers and Invalidation documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpcachingAndRuntimeStateManagementcacheProvidersAndInvalidation",
-      "pages": [
-        "cache.runtime-state-management"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpcachingAndRuntimeStateManagementcacheProvidersAndInvalidation",
-    "childSummaryCards": [
-      {
-        "code": "cache.runtime-state-management",
-        "title": "Caching and Runtime State Management",
-        "summary": "How local node cache, Redis-style providers, invalidation, runtime state, and diagnostics influence application behavior.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Caching and Runtime State Management",
-        "targetPage": "cache.runtime-state-management",
-        "route": "/docs/framework/cache-runtime-state-management"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "caching-and-runtime-state-management",
-      "cache-providers-and-invalidation",
-      "caching-and-runtime-state-management"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record90": {
+  "record81": {
     "code": "nodicsDocsNodeTopiccacheRuntimeStateManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpcachingAndRuntimeStateManagementcacheProvidersAndInvalidation",
+    "parentNode": "nodicsDocsNodeSeccachingAndRuntimeStateManagement",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Caching and Runtime State Management",
@@ -7443,7 +7048,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatacacheRuntimeStateManagement",
     "targetPage": "nodicsDocsPagecacheRuntimeStateManagement",
     "targetRoute": "nodicsDocsRoutecacheRuntimeStateManagement",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -7487,87 +7092,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record91": {
-    "code": "nodicsDocsNodeGrpdeveloperExtensionAndProjectCustomizationprojectLayerCustomization",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecdeveloperExtensionAndProjectCustomization",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Project-Layer Customization",
-    "nodeSummary": "Business-friendly group for Project-Layer Customization documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpdeveloperExtensionAndProjectCustomizationprojectLayerCustomization",
-      "pages": [
-        "framework.customization-guide"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpdeveloperExtensionAndProjectCustomizationprojectLayerCustomization",
-    "childSummaryCards": [
-      {
-        "code": "framework.customization-guide",
-        "title": "Customization and extension guide",
-        "summary": "How customer projects customize Nodics safely without forking framework authority.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Customization and extension guide",
-        "targetPage": "framework.customization-guide",
-        "route": "/docs/framework/framework-customization-guide"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "developer-extension-and-project-customization",
-      "project-layer-customization",
-      "customization-and-extension-guide"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record92": {
+  "record82": {
     "code": "nodicsDocsNodeTopicframeworkCustomizationGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpdeveloperExtensionAndProjectCustomizationprojectLayerCustomization",
+    "parentNode": "nodicsDocsNodeSecdeveloperExtensionAndProjectCustomization",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Customization and extension guide",
@@ -7596,7 +7125,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataframeworkCustomizationGuide",
     "targetPage": "nodicsDocsPageframeworkCustomizationGuide",
     "targetRoute": "nodicsDocsRouteframeworkCustomizationGuide",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -7632,54 +7161,53 @@ module.exports = {
       "customization-and-extension-guide"
     ],
     "relatedNodes": [
+      "nodicsDocsNodeTopicframeworkBackendExtensionPatterns",
+      "nodicsDocsNodeTopicframeworkAxisContentCustomization",
+      "nodicsDocsNodeTopicframeworkArchitectureDecisionGuide",
       "nodicsDocsNodeTopicframeworkModularArchitecture",
-      "nodicsDocsNodeTopicprocessCustomProjectExtension",
-      "nodicsDocsNodeTopicdocsOverview"
+      "nodicsDocsNodeTopicprocessCustomProjectExtension"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record93": {
-    "code": "nodicsDocsNodeGrpdeveloperExtensionAndProjectCustomizationprocessCustomization",
+  "record83": {
+    "code": "nodicsDocsNodeTopicframeworkBackendExtensionPatterns",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdeveloperExtensionAndProjectCustomization",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Process Customization",
-    "nodeSummary": "Business-friendly group for Process Customization documentation topics.",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Backend Extension Patterns",
+    "nodeSummary": "How projects extend behavior through configuration, provider adapters, services, validators, pipelines, schemas, and events.",
     "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpdeveloperExtensionAndProjectCustomizationprocessCustomization",
-      "pages": [
-        "process.developer-customization"
+      "route": "/docs/framework/framework-backend-extension-patterns",
+      "documentType": "customization",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
       ],
-      "subgroups": []
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
     },
-    "nodeDashboard": "nodicsDocsDashboardGrpdeveloperExtensionAndProjectCustomizationprocessCustomization",
-    "childSummaryCards": [
-      {
-        "code": "process.developer-customization",
-        "title": "Developer Customization Guide",
-        "summary": "Show where developers extend Process behavior, where domain actions belong, and how customer modules customize safely.",
-        "order": 20
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Developer Customization Guide",
-        "targetPage": "process.developer-customization",
-        "route": "/docs/framework/process/developer-customization"
-      }
-    ],
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
     "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
+      "childCount": 0
     },
-    "nodeOrder": 20,
-    "expandable": true,
+    "targetDocumentationPage": "nodicsDocsMetadataframeworkBackendExtensionPatterns",
+    "targetPage": "nodicsDocsPageframeworkBackendExtensionPatterns",
+    "targetRoute": "nodicsDocsRouteframeworkBackendExtensionPatterns",
+    "nodeOrder": 10020,
+    "expandable": false,
     "expandedByDefault": false,
-    "nodeIcon": "folder-open",
+    "nodeIcon": "file-text",
     "nodeAudience": [
       "business",
       "architect",
@@ -7707,20 +7235,102 @@ module.exports = {
     "lifecycleState": "ONLINE",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
-      "developer-extension-and-project-customization",
-      "process-customization",
-      "developer-customization-guide"
+      "backend-extension-patterns",
+      "service-override",
+      "provider-adapter",
+      "pipeline-extension"
     ],
-    "relatedNodes": [],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicframeworkModularArchitecture",
+      "nodicsDocsNodeTopicprocessCustomProjectExtension",
+      "nodicsDocsNodeTopicdocsOverview"
+    ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record94": {
+  "record84": {
+    "code": "nodicsDocsNodeTopicframeworkAxisContentCustomization",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecdeveloperExtensionAndProjectCustomization",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Axis Content Customization",
+    "nodeSummary": "How business users customize backend-owned content, navigation, visibility, setup records, and publishing decisions from Axis.",
+    "nodeContentArea": {
+      "route": "/docs/framework/framework-axis-content-customization",
+      "documentType": "customization",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataframeworkAxisContentCustomization",
+    "targetPage": "nodicsDocsPageframeworkAxisContentCustomization",
+    "targetRoute": "nodicsDocsRouteframeworkAxisContentCustomization",
+    "nodeOrder": 10030,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "axis-content-customization",
+      "business-user-customization",
+      "backend-owned-navigation"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicframeworkModularArchitecture",
+      "nodicsDocsNodeTopicprocessCustomProjectExtension",
+      "nodicsDocsNodeTopicdocsOverview"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record85": {
     "code": "nodicsDocsNodeTopicprocessDeveloperCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpdeveloperExtensionAndProjectCustomizationprocessCustomization",
+    "parentNode": "nodicsDocsNodeSecdeveloperExtensionAndProjectCustomization",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Developer Customization Guide",
@@ -7749,7 +7359,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataprocessDeveloperCustomization",
     "targetPage": "nodicsDocsPageprocessDeveloperCustomization",
     "targetRoute": "nodicsDocsRouteprocessDeveloperCustomization",
-    "nodeOrder": 20,
+    "nodeOrder": 10040,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -7792,87 +7402,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record95": {
-    "code": "nodicsDocsNodeGrpdeveloperExtensionAndProjectCustomizationcustomerProjectExtensions",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecdeveloperExtensionAndProjectCustomization",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Customer Project Extensions",
-    "nodeSummary": "Business-friendly group for Customer Project Extensions documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpdeveloperExtensionAndProjectCustomizationcustomerProjectExtensions",
-      "pages": [
-        "process.custom-project-extension"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpdeveloperExtensionAndProjectCustomizationcustomerProjectExtensions",
-    "childSummaryCards": [
-      {
-        "code": "process.custom-project-extension",
-        "title": "Custom Project Extension Guide",
-        "summary": "Explain how customer overlays customize Process behavior while preserving functional module identity and backend governance.",
-        "order": 30
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Custom Project Extension Guide",
-        "targetPage": "process.custom-project-extension",
-        "route": "/docs/framework/process/custom-project-extension"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 30,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "developer-extension-and-project-customization",
-      "customer-project-extensions",
-      "custom-project-extension-guide"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record96": {
+  "record86": {
     "code": "nodicsDocsNodeTopicprocessCustomProjectExtension",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpdeveloperExtensionAndProjectCustomizationcustomerProjectExtensions",
+    "parentNode": "nodicsDocsNodeSecdeveloperExtensionAndProjectCustomization",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Custom Project Extension Guide",
@@ -7901,7 +7435,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataprocessCustomProjectExtension",
     "targetPage": "nodicsDocsPageprocessCustomProjectExtension",
     "targetRoute": "nodicsDocsRouteprocessCustomProjectExtension",
-    "nodeOrder": 30,
+    "nodeOrder": 10050,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -7944,87 +7478,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record97": {
-    "code": "nodicsDocsNodeGrpstoreMarketSiteAndChannelManagementcommerceFoundations",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecstoreMarketSiteAndChannelManagement",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Commerce Foundations",
-    "nodeSummary": "Business-friendly group for Commerce Foundations documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpstoreMarketSiteAndChannelManagementcommerceFoundations",
-      "pages": [
-        "commerce.base-foundations"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpstoreMarketSiteAndChannelManagementcommerceFoundations",
-    "childSummaryCards": [
-      {
-        "code": "commerce.base-foundations",
-        "title": "Base Commerce foundations",
-        "summary": "Beginner-to-operator guide for Store, Product, Pricing, Tax, Promotion, Inventory, exact decisions, publication, recovery, and customization.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Base Commerce foundations",
-        "targetPage": "commerce.base-foundations",
-        "route": "/docs/framework/commerce-base-foundations"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "store-market-site-and-channel-management",
-      "commerce-foundations",
-      "base-commerce-foundations"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record98": {
+  "record87": {
     "code": "nodicsDocsNodeTopiccommerceBaseFoundations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpstoreMarketSiteAndChannelManagementcommerceFoundations",
+    "parentNode": "nodicsDocsNodeSecstoreMarketSiteAndChannelManagement",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Base Commerce foundations",
@@ -8053,7 +7511,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatacommerceBaseFoundations",
     "targetPage": "nodicsDocsPagecommerceBaseFoundations",
     "targetRoute": "nodicsDocsRoutecommerceBaseFoundations",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -8096,87 +7554,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record99": {
-    "code": "nodicsDocsNodeGrpwcmsAndContentManagementcontentModelAndDelivery",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecwcmsAndContentManagement",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Content Model and Delivery",
-    "nodeSummary": "Business-friendly group for Content Model and Delivery documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpwcmsAndContentManagementcontentModelAndDelivery",
-      "pages": [
-        "wcms.overview"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpwcmsAndContentManagementcontentModelAndDelivery",
-    "childSummaryCards": [
-      {
-        "code": "wcms.overview",
-        "title": "WCMS content management",
-        "summary": "How Nodics manages sites, catalogs, pages, components, routes, and delivery through the WCMS runtime.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "WCMS content management",
-        "targetPage": "wcms.overview",
-        "route": "/docs/framework/wcms-overview"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "wcms-and-content-management",
-      "content-model-and-delivery",
-      "wcms-content-management"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record100": {
+  "record88": {
     "code": "nodicsDocsNodeTopicwcmsOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpwcmsAndContentManagementcontentModelAndDelivery",
+    "parentNode": "nodicsDocsNodeSecwcmsAndContentManagement",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "WCMS content management",
@@ -8205,7 +7587,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatawcmsOverview",
     "targetPage": "nodicsDocsPagewcmsOverview",
     "targetRoute": "nodicsDocsRoutewcmsOverview",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -8241,6 +7623,9 @@ module.exports = {
       "wcms-content-management"
     ],
     "relatedNodes": [
+      "nodicsDocsNodeTopicwcmsContentCatalogModel",
+      "nodicsDocsNodeTopicwcmsPageDesignerComponents",
+      "nodicsDocsNodeTopicwcmsSitePublicationVisibility",
       "nodicsDocsNodeTopicwcmsMediaManagement",
       "nodicsDocsNodeTopicwcmsPublishingLifecycle",
       "nodicsDocsNodeTopicdocsOverview"
@@ -8249,46 +7634,43 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record101": {
-    "code": "nodicsDocsNodeGrpproductCatalogAndDiscoverycatalogModelAndPublication",
+  "record89": {
+    "code": "nodicsDocsNodeTopicwcmsContentCatalogModel",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecproductCatalogAndDiscovery",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Catalog Model and Publication",
-    "nodeSummary": "Business-friendly group for Catalog Model and Publication documentation topics.",
+    "parentNode": "nodicsDocsNodeSecwcmsAndContentManagement",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Content Catalog Model",
+    "nodeSummary": "How sites, catalogs, pages, components, media, routes, access policy, and publication state drive public content.",
     "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpproductCatalogAndDiscoverycatalogModelAndPublication",
-      "pages": [
-        "catalog.product-discovery-management"
+      "route": "/docs/framework/wcms-content-catalog-model",
+      "documentType": "concept",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
       ],
-      "subgroups": []
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
     },
-    "nodeDashboard": "nodicsDocsDashboardGrpproductCatalogAndDiscoverycatalogModelAndPublication",
-    "childSummaryCards": [
-      {
-        "code": "catalog.product-discovery-management",
-        "title": "Product Catalog and Discovery Management",
-        "summary": "Products, categories, variants, localized attributes, catalog publication, discovery projections, and project customization.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Product Catalog and Discovery Management",
-        "targetPage": "catalog.product-discovery-management",
-        "route": "/docs/framework/catalog-product-discovery-management"
-      }
-    ],
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
     "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
+      "childCount": 0
     },
-    "nodeOrder": 10,
-    "expandable": true,
+    "targetDocumentationPage": "nodicsDocsMetadatawcmsContentCatalogModel",
+    "targetPage": "nodicsDocsPagewcmsContentCatalogModel",
+    "targetRoute": "nodicsDocsRoutewcmsContentCatalogModel",
+    "nodeOrder": 10020,
+    "expandable": false,
     "expandedByDefault": false,
-    "nodeIcon": "folder-open",
+    "nodeIcon": "file-text",
     "nodeAudience": [
       "business",
       "architect",
@@ -8316,20 +7698,179 @@ module.exports = {
     "lifecycleState": "ONLINE",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
-      "product-catalog-and-discovery",
-      "catalog-model-and-publication",
-      "product-catalog-and-discovery-management"
+      "content-catalog-model",
+      "cms-page-component-route",
+      "online-content"
     ],
-    "relatedNodes": [],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicwcmsMediaManagement",
+      "nodicsDocsNodeTopicwcmsPublishingLifecycle",
+      "nodicsDocsNodeTopicdocsOverview"
+    ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record102": {
+  "record90": {
+    "code": "nodicsDocsNodeTopicwcmsPageDesignerComponents",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecwcmsAndContentManagement",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Page Designer and Components",
+    "nodeSummary": "How Axis-managed content areas, components, renderer metadata, sequence, validation, and publishing work together.",
+    "nodeContentArea": {
+      "route": "/docs/framework/wcms-page-designer-components",
+      "documentType": "how-to",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatawcmsPageDesignerComponents",
+    "targetPage": "nodicsDocsPagewcmsPageDesignerComponents",
+    "targetRoute": "nodicsDocsRoutewcmsPageDesignerComponents",
+    "nodeOrder": 10030,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "page-designer",
+      "component-renderer",
+      "content-area"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicwcmsMediaManagement",
+      "nodicsDocsNodeTopicwcmsPublishingLifecycle",
+      "nodicsDocsNodeTopicdocsOverview"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record91": {
+    "code": "nodicsDocsNodeTopicwcmsSitePublicationVisibility",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecwcmsAndContentManagement",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Site Publication and Visibility",
+    "nodeSummary": "How Staged, approval, Online, access policy, maintenance pages, and public delivery determine what users see.",
+    "nodeContentArea": {
+      "route": "/docs/framework/wcms-site-publication-visibility",
+      "documentType": "operations",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatawcmsSitePublicationVisibility",
+    "targetPage": "nodicsDocsPagewcmsSitePublicationVisibility",
+    "targetRoute": "nodicsDocsRoutewcmsSitePublicationVisibility",
+    "nodeOrder": 10040,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "site-publication",
+      "visibility",
+      "maintenance-page",
+      "online-only"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicwcmsMediaManagement",
+      "nodicsDocsNodeTopicwcmsPublishingLifecycle",
+      "nodicsDocsNodeTopicdocsOverview"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record92": {
     "code": "nodicsDocsNodeTopiccatalogProductDiscoveryManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpproductCatalogAndDiscoverycatalogModelAndPublication",
+    "parentNode": "nodicsDocsNodeSecproductCatalogAndDiscovery",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Product Catalog and Discovery Management",
@@ -8358,7 +7899,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatacatalogProductDiscoveryManagement",
     "targetPage": "nodicsDocsPagecatalogProductDiscoveryManagement",
     "targetRoute": "nodicsDocsRoutecatalogProductDiscoveryManagement",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -8402,87 +7943,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record103": {
-    "code": "nodicsDocsNodeGrpsearchAndDiscoverysearchProvidersAndIndexing",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecsearchAndDiscovery",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Search Providers and Indexing",
-    "nodeSummary": "Business-friendly group for Search Providers and Indexing documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpsearchAndDiscoverysearchProvidersAndIndexing",
-      "pages": [
-        "discovery.search-indexing"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpsearchAndDiscoverysearchProvidersAndIndexing",
-    "childSummaryCards": [
-      {
-        "code": "discovery.search-indexing",
-        "title": "Search, Indexing, and Discovery",
-        "summary": "Elasticsearch, Solr, provider adapters, catalog/content indexing, ranking, query profiles, and search metadata governance.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Search, Indexing, and Discovery",
-        "targetPage": "discovery.search-indexing",
-        "route": "/docs/framework/discovery-search-indexing"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "search-and-discovery",
-      "search-providers-and-indexing",
-      "search-indexing-and-discovery"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record104": {
+  "record93": {
     "code": "nodicsDocsNodeTopicdiscoverySearchIndexing",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpsearchAndDiscoverysearchProvidersAndIndexing",
+    "parentNode": "nodicsDocsNodeSecsearchAndDiscovery",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Search, Indexing, and Discovery",
@@ -8511,7 +7976,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatadiscoverySearchIndexing",
     "targetPage": "nodicsDocsPagediscoverySearchIndexing",
     "targetRoute": "nodicsDocsRoutediscoverySearchIndexing",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -8555,87 +8020,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record105": {
-    "code": "nodicsDocsNodeGrpmediaManagementmediaLifecycleAndStorage",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecmediaManagement",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Media Lifecycle and Storage",
-    "nodeSummary": "Business-friendly group for Media Lifecycle and Storage documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpmediaManagementmediaLifecycleAndStorage",
-      "pages": [
-        "wcms.media-management"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpmediaManagementmediaLifecycleAndStorage",
-    "childSummaryCards": [
-      {
-        "code": "wcms.media-management",
-        "title": "Media management",
-        "summary": "Governed upload, storage policy, media metadata, source contexts, and safe frontend boundaries.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Media management",
-        "targetPage": "wcms.media-management",
-        "route": "/docs/framework/wcms-media-management"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "media-management",
-      "media-lifecycle-and-storage",
-      "media-management"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record106": {
+  "record94": {
     "code": "nodicsDocsNodeTopicwcmsMediaManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpmediaManagementmediaLifecycleAndStorage",
+    "parentNode": "nodicsDocsNodeSecmediaManagement",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Media management",
@@ -8664,7 +8053,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatawcmsMediaManagement",
     "targetPage": "nodicsDocsPagewcmsMediaManagement",
     "targetRoute": "nodicsDocsRoutewcmsMediaManagement",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -8701,52 +8090,51 @@ module.exports = {
     ],
     "relatedNodes": [
       "nodicsDocsNodeTopicwcmsOverview",
-      "nodicsDocsNodeTopiccommerceBaseFoundations"
+      "nodicsDocsNodeTopiccommerceBaseFoundations",
+      "nodicsDocsNodeTopicwcmsMediaStorageDelivery",
+      "nodicsDocsNodeTopicwcmsMediaImportPublication"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record107": {
-    "code": "nodicsDocsNodeGrpinventoryAndStockManagementstockAvailabilityAndReservation",
+  "record95": {
+    "code": "nodicsDocsNodeTopicwcmsMediaStorageDelivery",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecinventoryAndStockManagement",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Stock Availability and Reservation",
-    "nodeSummary": "Business-friendly group for Stock Availability and Reservation documentation topics.",
+    "parentNode": "nodicsDocsNodeSecmediaManagement",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Media Storage and Delivery",
+    "nodeSummary": "Provider, access, URL, cache, and browser delivery model for media used by content and storefront experiences.",
     "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpinventoryAndStockManagementstockAvailabilityAndReservation",
-      "pages": [
-        "inventory.stock-management"
+      "route": "/docs/framework/wcms-media-storage-delivery",
+      "documentType": "overview",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
       ],
-      "subgroups": []
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
     },
-    "nodeDashboard": "nodicsDocsDashboardGrpinventoryAndStockManagementstockAvailabilityAndReservation",
-    "childSummaryCards": [
-      {
-        "code": "inventory.stock-management",
-        "title": "Inventory and Stock Management",
-        "summary": "Inventory balances, stock movements, reservations, warehouse relationships, availability summaries, and checkout protection.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Inventory and Stock Management",
-        "targetPage": "inventory.stock-management",
-        "route": "/docs/framework/inventory-stock-management"
-      }
-    ],
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
     "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
+      "childCount": 0
     },
-    "nodeOrder": 10,
-    "expandable": true,
+    "targetDocumentationPage": "nodicsDocsMetadatawcmsMediaStorageDelivery",
+    "targetPage": "nodicsDocsPagewcmsMediaStorageDelivery",
+    "targetRoute": "nodicsDocsRoutewcmsMediaStorageDelivery",
+    "nodeOrder": 10020,
+    "expandable": false,
     "expandedByDefault": false,
-    "nodeIcon": "folder-open",
+    "nodeIcon": "file-text",
     "nodeAudience": [
       "business",
       "architect",
@@ -8774,20 +8162,97 @@ module.exports = {
     "lifecycleState": "ONLINE",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
-      "inventory-and-stock-management",
-      "stock-availability-and-reservation",
-      "inventory-and-stock-management"
+      "media-management",
+      "media-lifecycle-and-storage",
+      "media-management"
     ],
-    "relatedNodes": [],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicwcmsMediaManagement"
+    ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record108": {
+  "record96": {
+    "code": "nodicsDocsNodeTopicwcmsMediaImportPublication",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecmediaManagement",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Media Import and Publication",
+    "nodeSummary": "Complete content-pack preparation for media assets, media records, page references, and Online publication.",
+    "nodeContentArea": {
+      "route": "/docs/framework/wcms-media-import-publication",
+      "documentType": "overview",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatawcmsMediaImportPublication",
+    "targetPage": "nodicsDocsPagewcmsMediaImportPublication",
+    "targetRoute": "nodicsDocsRoutewcmsMediaImportPublication",
+    "nodeOrder": 10030,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "media-management",
+      "media-lifecycle-and-storage",
+      "media-management"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicwcmsMediaManagement"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record97": {
     "code": "nodicsDocsNodeTopicinventoryStockManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpinventoryAndStockManagementstockAvailabilityAndReservation",
+    "parentNode": "nodicsDocsNodeSecinventoryAndStockManagement",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Inventory and Stock Management",
@@ -8816,7 +8281,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatainventoryStockManagement",
     "targetPage": "nodicsDocsPageinventoryStockManagement",
     "targetRoute": "nodicsDocsRouteinventoryStockManagement",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -8860,87 +8325,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record109": {
-    "code": "nodicsDocsNodeGrppricingPromotionsAndTaxcommercialDecisioning",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecpricingPromotionsAndTax",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Commercial Decisioning",
-    "nodeSummary": "Business-friendly group for Commercial Decisioning documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrppricingPromotionsAndTaxcommercialDecisioning",
-      "pages": [
-        "pricing.promotions-tax-management"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrppricingPromotionsAndTaxcommercialDecisioning",
-    "childSummaryCards": [
-      {
-        "code": "pricing.promotions-tax-management",
-        "title": "Pricing, Promotions, and Tax Management",
-        "summary": "Price books, price rows, promotion decisions, coupon behavior, tax policies, calculation evidence, and extension boundaries.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Pricing, Promotions, and Tax Management",
-        "targetPage": "pricing.promotions-tax-management",
-        "route": "/docs/framework/pricing-promotions-tax-management"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "pricing-promotions-and-tax",
-      "commercial-decisioning",
-      "pricing-promotions-and-tax-management"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record110": {
+  "record98": {
     "code": "nodicsDocsNodeTopicpricingPromotionsTaxManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrppricingPromotionsAndTaxcommercialDecisioning",
+    "parentNode": "nodicsDocsNodeSecpricingPromotionsAndTax",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Pricing, Promotions, and Tax Management",
@@ -8969,7 +8358,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatapricingPromotionsTaxManagement",
     "targetPage": "nodicsDocsPagepricingPromotionsTaxManagement",
     "targetRoute": "nodicsDocsRoutepricingPromotionsTaxManagement",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -9013,87 +8402,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record111": {
-    "code": "nodicsDocsNodeGrpcommerceCartAndCheckoutcommerceJourneyOverview",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSeccommerceCartAndCheckout",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Commerce Journey Overview",
-    "nodeSummary": "Business-friendly group for Commerce Journey Overview documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpcommerceCartAndCheckoutcommerceJourneyOverview",
-      "pages": [
-        "commerce.overview"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpcommerceCartAndCheckoutcommerceJourneyOverview",
-    "childSummaryCards": [
-      {
-        "code": "commerce.overview",
-        "title": "Commerce overview",
-        "summary": "Beginner orientation to the Commerce journey, ownership map, capability state, security baseline, verification, and safe customization.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Commerce overview",
-        "targetPage": "commerce.overview",
-        "route": "/docs/framework/commerce-overview"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "commerce-cart-and-checkout",
-      "commerce-journey-overview",
-      "commerce-overview"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record112": {
+  "record99": {
     "code": "nodicsDocsNodeTopiccommerceOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpcommerceCartAndCheckoutcommerceJourneyOverview",
+    "parentNode": "nodicsDocsNodeSeccommerceCartAndCheckout",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Commerce overview",
@@ -9122,7 +8435,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatacommerceOverview",
     "targetPage": "nodicsDocsPagecommerceOverview",
     "targetRoute": "nodicsDocsRoutecommerceOverview",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -9166,87 +8479,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record113": {
-    "code": "nodicsDocsNodeGrpcommerceCartAndCheckoutcartAndOrderPlacement",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSeccommerceCartAndCheckout",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Cart and Order Placement",
-    "nodeSummary": "Business-friendly group for Cart and Order Placement documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpcommerceCartAndCheckoutcartAndOrderPlacement",
-      "pages": [
-        "commerce.cart-order"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpcommerceCartAndCheckoutcartAndOrderPlacement",
-    "childSummaryCards": [
-      {
-        "code": "commerce.cart-order",
-        "title": "Cart, checkout, and order placement",
-        "summary": "Customer, developer, and operator journey for exact calculation, placement, idempotency, compensation, immutable Orders, and recovery.",
-        "order": 20
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Cart, checkout, and order placement",
-        "targetPage": "commerce.cart-order",
-        "route": "/docs/framework/commerce-cart-order"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 20,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "commerce-cart-and-checkout",
-      "cart-and-order-placement",
-      "cart-checkout-and-order-placement"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record114": {
+  "record100": {
     "code": "nodicsDocsNodeTopiccommerceCartOrder",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpcommerceCartAndCheckoutcartAndOrderPlacement",
+    "parentNode": "nodicsDocsNodeSeccommerceCartAndCheckout",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Cart, checkout, and order placement",
@@ -9275,7 +8512,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatacommerceCartOrder",
     "targetPage": "nodicsDocsPagecommerceCartOrder",
     "targetRoute": "nodicsDocsRoutecommerceCartOrder",
-    "nodeOrder": 20,
+    "nodeOrder": 10020,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -9319,87 +8556,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record115": {
-    "code": "nodicsDocsNodeGrppaymentManagementpaymentAndFulfillmentBoundary",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecpaymentManagement",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Payment and Fulfillment Boundary",
-    "nodeSummary": "Business-friendly group for Payment and Fulfillment Boundary documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrppaymentManagementpaymentAndFulfillmentBoundary",
-      "pages": [
-        "commerce.payment-fulfillment"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrppaymentManagementpaymentAndFulfillmentBoundary",
-    "childSummaryCards": [
-      {
-        "code": "commerce.payment-fulfillment",
-        "title": "Payment and fulfillment operations",
-        "summary": "Provider-safe payment and fulfillment guide covering methods, adapters, callbacks, reconciliation, shipment, tracking, warehouse work, and returns.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Payment and fulfillment operations",
-        "targetPage": "commerce.payment-fulfillment",
-        "route": "/docs/framework/commerce-payment-fulfillment"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "payment-management",
-      "payment-and-fulfillment-boundary",
-      "payment-and-fulfillment-operations"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record116": {
+  "record101": {
     "code": "nodicsDocsNodeTopiccommercePaymentFulfillment",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrppaymentManagementpaymentAndFulfillmentBoundary",
+    "parentNode": "nodicsDocsNodeSecpaymentManagement",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Payment and fulfillment operations",
@@ -9428,7 +8589,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatacommercePaymentFulfillment",
     "targetPage": "nodicsDocsPagecommercePaymentFulfillment",
     "targetRoute": "nodicsDocsRoutecommercePaymentFulfillment",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -9471,87 +8632,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record117": {
-    "code": "nodicsDocsNodeGrpshippingAndFulfillmentshippingAndFulfillmentFlow",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecshippingAndFulfillment",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Shipping and Fulfillment Flow",
-    "nodeSummary": "Business-friendly group for Shipping and Fulfillment Flow documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpshippingAndFulfillmentshippingAndFulfillmentFlow",
-      "pages": [
-        "fulfillment.shipping-management"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpshippingAndFulfillmentshippingAndFulfillmentFlow",
-    "childSummaryCards": [
-      {
-        "code": "fulfillment.shipping-management",
-        "title": "Shipping and Fulfillment Management",
-        "summary": "Shipping methods, fulfillment policy, consignments, warehouse handoff, shipment tracking, and provider integration boundaries.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Shipping and Fulfillment Management",
-        "targetPage": "fulfillment.shipping-management",
-        "route": "/docs/framework/fulfillment-shipping-management"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "shipping-and-fulfillment",
-      "shipping-and-fulfillment-flow",
-      "shipping-and-fulfillment-management"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record118": {
+  "record102": {
     "code": "nodicsDocsNodeTopicfulfillmentShippingManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpshippingAndFulfillmentshippingAndFulfillmentFlow",
+    "parentNode": "nodicsDocsNodeSecshippingAndFulfillment",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Shipping and Fulfillment Management",
@@ -9580,7 +8665,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatafulfillmentShippingManagement",
     "targetPage": "nodicsDocsPagefulfillmentShippingManagement",
     "targetRoute": "nodicsDocsRoutefulfillmentShippingManagement",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -9624,87 +8709,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record119": {
-    "code": "nodicsDocsNodeGrporderManagementorderStateAndOperations",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecorderManagement",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Order State and Operations",
-    "nodeSummary": "Business-friendly group for Order State and Operations documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrporderManagementorderStateAndOperations",
-      "pages": [
-        "order.management-lifecycle"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrporderManagementorderStateAndOperations",
-    "childSummaryCards": [
-      {
-        "code": "order.management-lifecycle",
-        "title": "Order Management Lifecycle",
-        "summary": "Order state, operational ownership, fulfillment coordination, lifecycle requests, history, reversals, and support visibility.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Order Management Lifecycle",
-        "targetPage": "order.management-lifecycle",
-        "route": "/docs/framework/order-management-lifecycle"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "order-management",
-      "order-state-and-operations",
-      "order-management-lifecycle"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record120": {
+  "record103": {
     "code": "nodicsDocsNodeTopicorderManagementLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrporderManagementorderStateAndOperations",
+    "parentNode": "nodicsDocsNodeSecorderManagement",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Order Management Lifecycle",
@@ -9733,7 +8742,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataorderManagementLifecycle",
     "targetPage": "nodicsDocsPageorderManagementLifecycle",
     "targetRoute": "nodicsDocsRouteorderManagementLifecycle",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -9777,87 +8786,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record121": {
-    "code": "nodicsDocsNodeGrpcancellationsReturnsAndRefundsreverseOrderLifecycle",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSeccancellationsReturnsAndRefunds",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Reverse Order Lifecycle",
-    "nodeSummary": "Business-friendly group for Reverse Order Lifecycle documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpcancellationsReturnsAndRefundsreverseOrderLifecycle",
-      "pages": [
-        "commerce.returns-refunds"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpcancellationsReturnsAndRefundsreverseOrderLifecycle",
-    "childSummaryCards": [
-      {
-        "code": "commerce.returns-refunds",
-        "title": "Cancellation, return, and refund lifecycle",
-        "summary": "Structured self-service and operator journey for policy, maker-checker approval, owner intents, checkpoints, recovery, and final Order evidence.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Cancellation, return, and refund lifecycle",
-        "targetPage": "commerce.returns-refunds",
-        "route": "/docs/framework/commerce-returns-refunds"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "cancellations-returns-and-refunds",
-      "reverse-order-lifecycle",
-      "cancellation-return-and-refund-lifecycle"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record122": {
+  "record104": {
     "code": "nodicsDocsNodeTopiccommerceReturnsRefunds",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpcancellationsReturnsAndRefundsreverseOrderLifecycle",
+    "parentNode": "nodicsDocsNodeSeccancellationsReturnsAndRefunds",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Cancellation, return, and refund lifecycle",
@@ -9886,7 +8819,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatacommerceReturnsRefunds",
     "targetPage": "nodicsDocsPagecommerceReturnsRefunds",
     "targetRoute": "nodicsDocsRoutecommerceReturnsRefunds",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -9929,87 +8862,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record123": {
-    "code": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackreviewsAndRatings",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Reviews and Ratings",
-    "nodeSummary": "Business-friendly group for Reviews and Ratings documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpcustomerEngagementAndFeedbackreviewsAndRatings",
-      "pages": [
-        "engagement.customer-reviews"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpcustomerEngagementAndFeedbackreviewsAndRatings",
-    "childSummaryCards": [
-      {
-        "code": "engagement.customer-reviews",
-        "title": "Customer reviews and ratings",
-        "summary": "Beginner-to-operator journey for review submission, moderation, publication, rating aggregates, recovery, APIs, and safe customization.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Customer reviews and ratings",
-        "targetPage": "engagement.customer-reviews",
-        "route": "/docs/framework/engagement-customer-reviews"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "customer-engagement-and-feedback",
-      "reviews-and-ratings",
-      "customer-reviews-and-ratings"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record124": {
+  "record105": {
     "code": "nodicsDocsNodeTopicengagementCustomerReviews",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackreviewsAndRatings",
+    "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Customer reviews and ratings",
@@ -10038,7 +8895,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataengagementCustomerReviews",
     "targetPage": "nodicsDocsPageengagementCustomerReviews",
     "targetRoute": "nodicsDocsRouteengagementCustomerReviews",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -10075,52 +8932,51 @@ module.exports = {
     ],
     "relatedNodes": [
       "nodicsDocsNodeTopicengagementUnifiedOperations",
-      "nodicsDocsNodeTopicengagementEnterpriseOperations"
+      "nodicsDocsNodeTopicengagementEnterpriseOperations",
+      "nodicsDocsNodeTopicengagementReviewModerationGovernance",
+      "nodicsDocsNodeTopicengagementReviewAggregationRecovery"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record125": {
-    "code": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackfeedbackAndComplaints",
+  "record106": {
+    "code": "nodicsDocsNodeTopicengagementReviewModerationGovernance",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Feedback and Complaints",
-    "nodeSummary": "Business-friendly group for Feedback and Complaints documentation topics.",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Review Moderation and Governance",
+    "nodeSummary": "Axis moderation queues, approval and rejection decisions, permissions, state transitions, and audit expectations.",
     "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpcustomerEngagementAndFeedbackfeedbackAndComplaints",
-      "pages": [
-        "engagement.customer-feedback"
+      "route": "/docs/framework/engagement-review-moderation-governance",
+      "documentType": "how-to",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
       ],
-      "subgroups": []
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
     },
-    "nodeDashboard": "nodicsDocsDashboardGrpcustomerEngagementAndFeedbackfeedbackAndComplaints",
-    "childSummaryCards": [
-      {
-        "code": "engagement.customer-feedback",
-        "title": "Customer feedback, complaints, and closed-loop action",
-        "summary": "Beginner-to-operator journey for feedback intake, triage, follow-up, resolution, handoffs, surveys, insights, recovery, and safe customization.",
-        "order": 20
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Customer feedback, complaints, and closed-loop action",
-        "targetPage": "engagement.customer-feedback",
-        "route": "/docs/framework/engagement-customer-feedback"
-      }
-    ],
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
     "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
+      "childCount": 0
     },
-    "nodeOrder": 20,
-    "expandable": true,
+    "targetDocumentationPage": "nodicsDocsMetadataengagementReviewModerationGovernance",
+    "targetPage": "nodicsDocsPageengagementReviewModerationGovernance",
+    "targetRoute": "nodicsDocsRouteengagementReviewModerationGovernance",
+    "nodeOrder": 10020,
+    "expandable": false,
     "expandedByDefault": false,
-    "nodeIcon": "folder-open",
+    "nodeIcon": "file-text",
     "nodeAudience": [
       "business",
       "architect",
@@ -10149,19 +9005,96 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
       "customer-engagement-and-feedback",
-      "feedback-and-complaints",
-      "customer-feedback-complaints-and-closed-loop-action"
+      "reviews-and-ratings",
+      "customer-reviews-and-ratings"
     ],
-    "relatedNodes": [],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicengagementCustomerReviews"
+    ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record126": {
+  "record107": {
+    "code": "nodicsDocsNodeTopicengagementReviewAggregationRecovery",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Review Aggregation and Recovery",
+    "nodeSummary": "Rating aggregate correctness, recalculation, event recovery, and product or discovery visibility after review changes.",
+    "nodeContentArea": {
+      "route": "/docs/framework/engagement-review-aggregation-recovery",
+      "documentType": "how-to",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataengagementReviewAggregationRecovery",
+    "targetPage": "nodicsDocsPageengagementReviewAggregationRecovery",
+    "targetRoute": "nodicsDocsRouteengagementReviewAggregationRecovery",
+    "nodeOrder": 10030,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "customer-engagement-and-feedback",
+      "reviews-and-ratings",
+      "customer-reviews-and-ratings"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicengagementCustomerReviews"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record108": {
     "code": "nodicsDocsNodeTopicengagementCustomerFeedback",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackfeedbackAndComplaints",
+    "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Customer feedback, complaints, and closed-loop action",
@@ -10190,7 +9123,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataengagementCustomerFeedback",
     "targetPage": "nodicsDocsPageengagementCustomerFeedback",
     "targetRoute": "nodicsDocsRouteengagementCustomerFeedback",
-    "nodeOrder": 20,
+    "nodeOrder": 10040,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -10233,87 +9166,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record127": {
-    "code": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackunifiedEngagementOperations",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Unified Engagement Operations",
-    "nodeSummary": "Business-friendly group for Unified Engagement Operations documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpcustomerEngagementAndFeedbackunifiedEngagementOperations",
-      "pages": [
-        "engagement.unified-operations"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpcustomerEngagementAndFeedbackunifiedEngagementOperations",
-    "childSummaryCards": [
-      {
-        "code": "engagement.unified-operations",
-        "title": "Unified engagement operations",
-        "summary": "Beginner-to-operator journey for unified queues, dashboards, batch previews, repair evidence, bounded exports, authority boundaries, and recovery.",
-        "order": 30
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Unified engagement operations",
-        "targetPage": "engagement.unified-operations",
-        "route": "/docs/framework/engagement-unified-operations"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 30,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "customer-engagement-and-feedback",
-      "unified-engagement-operations",
-      "unified-engagement-operations"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record128": {
+  "record109": {
     "code": "nodicsDocsNodeTopicengagementUnifiedOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackunifiedEngagementOperations",
+    "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Unified engagement operations",
@@ -10342,7 +9199,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataengagementUnifiedOperations",
     "targetPage": "nodicsDocsPageengagementUnifiedOperations",
     "targetRoute": "nodicsDocsRouteengagementUnifiedOperations",
-    "nodeOrder": 30,
+    "nodeOrder": 10050,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -10385,87 +9242,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record129": {
-    "code": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackgovernedAutomationAndAi",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Governed Automation and AI",
-    "nodeSummary": "Business-friendly group for Governed Automation and AI documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpcustomerEngagementAndFeedbackgovernedAutomationAndAi",
-      "pages": [
-        "engagement.governed-automation"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpcustomerEngagementAndFeedbackgovernedAutomationAndAi",
-    "childSummaryCards": [
-      {
-        "code": "engagement.governed-automation",
-        "title": "Governed automation and AI",
-        "summary": "Beginner-to-operator journey for optional AI proposals, deterministic fallback, evidence, evaluation, human review, overrides, monitoring, and safe extension.",
-        "order": 40
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Governed automation and AI",
-        "targetPage": "engagement.governed-automation",
-        "route": "/docs/framework/engagement-governed-automation"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 40,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "customer-engagement-and-feedback",
-      "governed-automation-and-ai",
-      "governed-automation-and-ai"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record130": {
+  "record110": {
     "code": "nodicsDocsNodeTopicengagementGovernedAutomation",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackgovernedAutomationAndAi",
+    "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Governed automation and AI",
@@ -10494,7 +9275,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataengagementGovernedAutomation",
     "targetPage": "nodicsDocsPageengagementGovernedAutomation",
     "targetRoute": "nodicsDocsRouteengagementGovernedAutomation",
-    "nodeOrder": 40,
+    "nodeOrder": 10060,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -10537,87 +9318,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record131": {
-    "code": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackenterpriseEngagementOperations",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Enterprise Engagement Operations",
-    "nodeSummary": "Business-friendly group for Enterprise Engagement Operations documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpcustomerEngagementAndFeedbackenterpriseEngagementOperations",
-      "pages": [
-        "engagement.enterprise-operations"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpcustomerEngagementAndFeedbackenterpriseEngagementOperations",
-    "childSummaryCards": [
-      {
-        "code": "engagement.enterprise-operations",
-        "title": "Enterprise scale, resilience, and ecosystem operations",
-        "summary": "Beginner-to-operator journey for capacity, regional residency, provider delivery, backpressure, recovery, compatibility, accessibility, security, and release acceptance.",
-        "order": 50
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Enterprise scale, resilience, and ecosystem operations",
-        "targetPage": "engagement.enterprise-operations",
-        "route": "/docs/framework/engagement-enterprise-operations"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 50,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "customer-engagement-and-feedback",
-      "enterprise-engagement-operations",
-      "enterprise-scale-resilience-and-ecosystem-operations"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record132": {
+  "record111": {
     "code": "nodicsDocsNodeTopicengagementEnterpriseOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpcustomerEngagementAndFeedbackenterpriseEngagementOperations",
+    "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Enterprise scale, resilience, and ecosystem operations",
@@ -10646,7 +9351,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataengagementEnterpriseOperations",
     "targetPage": "nodicsDocsPageengagementEnterpriseOperations",
     "targetRoute": "nodicsDocsRouteengagementEnterpriseOperations",
-    "nodeOrder": 50,
+    "nodeOrder": 10070,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -10689,87 +9394,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record133": {
-    "code": "nodicsDocsNodeGrpcommunicationAndNotificationscommunicationDeliveryAndVerification",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSeccommunicationAndNotifications",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Communication Delivery and Verification",
-    "nodeSummary": "Business-friendly group for Communication Delivery and Verification documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpcommunicationAndNotificationscommunicationDeliveryAndVerification",
-      "pages": [
-        "communication.overview"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpcommunicationAndNotificationscommunicationDeliveryAndVerification",
-    "childSummaryCards": [
-      {
-        "code": "communication.overview",
-        "title": "Communication, delivery, and verification",
-        "summary": "Beginner-to-operator journey for templates, intent, consent, suppression, verification, provider delivery, callbacks, retry, inbox, recovery, and domain integration.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Communication, delivery, and verification",
-        "targetPage": "communication.overview",
-        "route": "/docs/framework/communication-overview"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "communication-and-notifications",
-      "communication-delivery-and-verification",
-      "communication-delivery-and-verification"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record134": {
+  "record112": {
     "code": "nodicsDocsNodeTopiccommunicationOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpcommunicationAndNotificationscommunicationDeliveryAndVerification",
+    "parentNode": "nodicsDocsNodeSeccommunicationAndNotifications",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Communication, delivery, and verification",
@@ -10798,7 +9427,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatacommunicationOverview",
     "targetPage": "nodicsDocsPagecommunicationOverview",
     "targetRoute": "nodicsDocsRoutecommunicationOverview",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -10841,87 +9470,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record135": {
-    "code": "nodicsDocsNodeGrpeventAndMessagingManagementeventsAndClusterCoordination",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSeceventAndMessagingManagement",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Events and Cluster Coordination",
-    "nodeSummary": "Business-friendly group for Events and Cluster Coordination documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpeventAndMessagingManagementeventsAndClusterCoordination",
-      "pages": [
-        "events.messaging-cluster-coordination"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpeventAndMessagingManagementeventsAndClusterCoordination",
-    "childSummaryCards": [
-      {
-        "code": "events.messaging-cluster-coordination",
-        "title": "Events, Messaging, and Cluster Coordination",
-        "summary": "Event publishing, event splitting, cluster propagation, node responsibility transfer, runtime refresh, and provider extension.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Events, Messaging, and Cluster Coordination",
-        "targetPage": "events.messaging-cluster-coordination",
-        "route": "/docs/framework/events-messaging-cluster-coordination"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "event-and-messaging-management",
-      "events-and-cluster-coordination",
-      "events-messaging-and-cluster-coordination"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record136": {
+  "record113": {
     "code": "nodicsDocsNodeTopiceventsMessagingClusterCoordination",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpeventAndMessagingManagementeventsAndClusterCoordination",
+    "parentNode": "nodicsDocsNodeSeceventAndMessagingManagement",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Events, Messaging, and Cluster Coordination",
@@ -10950,7 +9503,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataeventsMessagingClusterCoordination",
     "targetPage": "nodicsDocsPageeventsMessagingClusterCoordination",
     "targetRoute": "nodicsDocsRouteeventsMessagingClusterCoordination",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -10994,87 +9547,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record137": {
-    "code": "nodicsDocsNodeGrpprocessAndWorkflowAutomationprocessOverview",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Process Overview",
-    "nodeSummary": "Business-friendly group for Process Overview documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpprocessAndWorkflowAutomationprocessOverview",
-      "pages": [
-        "process.overview"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpprocessAndWorkflowAutomationprocessOverview",
-    "childSummaryCards": [
-      {
-        "code": "process.overview",
-        "title": "Business Process and Automation Overview",
-        "summary": "Understand why nodics.process exists, how it helps business users, developers, and operators, and where it fits with Core, Cron, Platform, Axis, and customer modules.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Business Process and Automation Overview",
-        "targetPage": "process.overview",
-        "route": "/docs/framework/process"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "process-and-workflow-automation",
-      "process-overview",
-      "business-process-and-automation-overview"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record138": {
+  "record114": {
     "code": "nodicsDocsNodeTopicprocessOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpprocessAndWorkflowAutomationprocessOverview",
+    "parentNode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Business Process and Automation Overview",
@@ -11103,7 +9580,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataprocessOverview",
     "targetPage": "nodicsDocsPageprocessOverview",
     "targetRoute": "nodicsDocsRouteprocessOverview",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -11147,87 +9624,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record139": {
-    "code": "nodicsDocsNodeGrpprocessAndWorkflowAutomationruntimeLifecycle",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Runtime Lifecycle",
-    "nodeSummary": "Business-friendly group for Runtime Lifecycle documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpprocessAndWorkflowAutomationruntimeLifecycle",
-      "pages": [
-        "process.runtime-lifecycle"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpprocessAndWorkflowAutomationruntimeLifecycle",
-    "childSummaryCards": [
-      {
-        "code": "process.runtime-lifecycle",
-        "title": "Runtime Instance and Task Lifecycle",
-        "summary": "Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships.",
-        "order": 20
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Runtime Instance and Task Lifecycle",
-        "targetPage": "process.runtime-lifecycle",
-        "route": "/docs/framework/process/runtime-lifecycle"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 20,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "process-and-workflow-automation",
-      "runtime-lifecycle",
-      "runtime-instance-and-task-lifecycle"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record140": {
+  "record115": {
     "code": "nodicsDocsNodeTopicprocessRuntimeLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpprocessAndWorkflowAutomationruntimeLifecycle",
+    "parentNode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Runtime Instance and Task Lifecycle",
@@ -11256,7 +9657,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataprocessRuntimeLifecycle",
     "targetPage": "nodicsDocsPageprocessRuntimeLifecycle",
     "targetRoute": "nodicsDocsRouteprocessRuntimeLifecycle",
-    "nodeOrder": 20,
+    "nodeOrder": 10020,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -11299,87 +9700,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record141": {
-    "code": "nodicsDocsNodeGrpprocessAndWorkflowAutomationworkflowGettingStarted",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Workflow Getting Started",
-    "nodeSummary": "Business-friendly group for Workflow Getting Started documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpprocessAndWorkflowAutomationworkflowGettingStarted",
-      "pages": [
-        "process.first-workflow"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpprocessAndWorkflowAutomationworkflowGettingStarted",
-    "childSummaryCards": [
-      {
-        "code": "process.first-workflow",
-        "title": "Build Your First Workflow",
-        "summary": "Create a first Process workflow from START through TASK, DECISION, ACTION, TIMER, SUB_PROCESS, and END with beginner-safe examples.",
-        "order": 30
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Build Your First Workflow",
-        "targetPage": "process.first-workflow",
-        "route": "/docs/framework/process/first-workflow"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 30,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "process-and-workflow-automation",
-      "workflow-getting-started",
-      "build-your-first-workflow"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record142": {
+  "record116": {
     "code": "nodicsDocsNodeTopicprocessFirstWorkflow",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpprocessAndWorkflowAutomationworkflowGettingStarted",
+    "parentNode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Build Your First Workflow",
@@ -11408,7 +9733,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataprocessFirstWorkflow",
     "targetPage": "nodicsDocsPageprocessFirstWorkflow",
     "targetRoute": "nodicsDocsRouteprocessFirstWorkflow",
-    "nodeOrder": 30,
+    "nodeOrder": 10030,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -11451,87 +9776,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record143": {
-    "code": "nodicsDocsNodeGrpprocessAndWorkflowAutomationhumanTaskFlow",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Human Task Flow",
-    "nodeSummary": "Business-friendly group for Human Task Flow documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpprocessAndWorkflowAutomationhumanTaskFlow",
-      "pages": [
-        "process.first-human-task"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpprocessAndWorkflowAutomationhumanTaskFlow",
-    "childSummaryCards": [
-      {
-        "code": "process.first-human-task",
-        "title": "Build Your First Human Task Flow",
-        "summary": "Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps.",
-        "order": 40
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Build Your First Human Task Flow",
-        "targetPage": "process.first-human-task",
-        "route": "/docs/framework/process/first-human-task"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 40,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "process-and-workflow-automation",
-      "human-task-flow",
-      "build-your-first-human-task-flow"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record144": {
+  "record117": {
     "code": "nodicsDocsNodeTopicprocessFirstHumanTask",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpprocessAndWorkflowAutomationhumanTaskFlow",
+    "parentNode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Build Your First Human Task Flow",
@@ -11560,7 +9809,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataprocessFirstHumanTask",
     "targetPage": "nodicsDocsPageprocessFirstHumanTask",
     "targetRoute": "nodicsDocsRouteprocessFirstHumanTask",
-    "nodeOrder": 40,
+    "nodeOrder": 10040,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -11603,87 +9852,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record145": {
-    "code": "nodicsDocsNodeGrpprocessAndWorkflowAutomationbusinessValueAndAdoption",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Business Value and Adoption",
-    "nodeSummary": "Business-friendly group for Business Value and Adoption documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpprocessAndWorkflowAutomationbusinessValueAndAdoption",
-      "pages": [
-        "process.business-value"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpprocessAndWorkflowAutomationbusinessValueAndAdoption",
-    "childSummaryCards": [
-      {
-        "code": "process.business-value",
-        "title": "Business Value and Adoption Model",
-        "summary": "Explain the business problems Process solves, how it lowers operating cost, and how business users should think about automation governance.",
-        "order": 50
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Business Value and Adoption Model",
-        "targetPage": "process.business-value",
-        "route": "/docs/framework/process/business-value"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 50,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "process-and-workflow-automation",
-      "business-value-and-adoption",
-      "business-value-and-adoption-model"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record146": {
+  "record118": {
     "code": "nodicsDocsNodeTopicprocessBusinessValue",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpprocessAndWorkflowAutomationbusinessValueAndAdoption",
+    "parentNode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Business Value and Adoption Model",
@@ -11712,7 +9885,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataprocessBusinessValue",
     "targetPage": "nodicsDocsPageprocessBusinessValue",
     "targetRoute": "nodicsDocsRouteprocessBusinessValue",
-    "nodeOrder": 50,
+    "nodeOrder": 10050,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -11755,87 +9928,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record147": {
-    "code": "nodicsDocsNodeGrppipelineAndBusinessLogicOrchestrationpipelineExecutionModel",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecpipelineAndBusinessLogicOrchestration",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Pipeline Execution Model",
-    "nodeSummary": "Business-friendly group for Pipeline Execution Model documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrppipelineAndBusinessLogicOrchestrationpipelineExecutionModel",
-      "pages": [
-        "pipeline.business-logic-orchestration"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrppipelineAndBusinessLogicOrchestrationpipelineExecutionModel",
-    "childSummaryCards": [
-      {
-        "code": "pipeline.business-logic-orchestration",
-        "title": "Pipeline and Business Logic Orchestration",
-        "summary": "How Nodics pipelines compose validation, enrichment, decisioning, side effects, events, and project-layer business logic.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Pipeline and Business Logic Orchestration",
-        "targetPage": "pipeline.business-logic-orchestration",
-        "route": "/docs/framework/pipeline-business-logic-orchestration"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "pipeline-and-business-logic-orchestration",
-      "pipeline-execution-model",
-      "pipeline-and-business-logic-orchestration"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record148": {
+  "record119": {
     "code": "nodicsDocsNodeTopicpipelineBusinessLogicOrchestration",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrppipelineAndBusinessLogicOrchestrationpipelineExecutionModel",
+    "parentNode": "nodicsDocsNodeSecpipelineAndBusinessLogicOrchestration",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Pipeline and Business Logic Orchestration",
@@ -11864,7 +9961,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatapipelineBusinessLogicOrchestration",
     "targetPage": "nodicsDocsPagepipelineBusinessLogicOrchestration",
     "targetRoute": "nodicsDocsRoutepipelineBusinessLogicOrchestration",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -11908,87 +10005,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record149": {
-    "code": "nodicsDocsNodeGrpcronAndScheduledAutomationcronOperations",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSeccronAndScheduledAutomation",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Cron Operations",
-    "nodeSummary": "Business-friendly group for Cron Operations documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpcronAndScheduledAutomationcronOperations",
-      "pages": [
-        "cron.operations"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpcronAndScheduledAutomationcronOperations",
-    "childSummaryCards": [
-      {
-        "code": "cron.operations",
-        "title": "Cron operations",
-        "summary": "Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Cron operations",
-        "targetPage": "cron.operations",
-        "route": "/docs/framework/cron-operations"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "cron-and-scheduled-automation",
-      "cron-operations",
-      "cron-operations"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record150": {
+  "record120": {
     "code": "nodicsDocsNodeTopiccronOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpcronAndScheduledAutomationcronOperations",
+    "parentNode": "nodicsDocsNodeSeccronAndScheduledAutomation",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Cron operations",
@@ -12017,7 +10038,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatacronOperations",
     "targetPage": "nodicsDocsPagecronOperations",
     "targetRoute": "nodicsDocsRoutecronOperations",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -12053,6 +10074,8 @@ module.exports = {
       "cron-operations"
     ],
     "relatedNodes": [
+      "nodicsDocsNodeTopiccronNodeResponsibilityTee",
+      "nodicsDocsNodeTopiccronProjectCustomization",
       "nodicsDocsNodeTopicprocessScheduledAutomation",
       "nodicsDocsNodeTopicprocessProcessCronRuntime"
     ],
@@ -12060,46 +10083,43 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record151": {
-    "code": "nodicsDocsNodeGrpcronAndScheduledAutomationprocessAndCronRuntimeBoundary",
+  "record121": {
+    "code": "nodicsDocsNodeTopiccronNodeResponsibilityTee",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccronAndScheduledAutomation",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Process and Cron Runtime Boundary",
-    "nodeSummary": "Business-friendly group for Process and Cron Runtime Boundary documentation topics.",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Cron Node Responsibility and TEE",
+    "nodeSummary": "How scheduled work ownership, failover, responsibility transfer, recovery, and TEE references should be documented.",
     "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpcronAndScheduledAutomationprocessAndCronRuntimeBoundary",
-      "pages": [
-        "process.process-cron-runtime"
+      "route": "/docs/framework/cron-node-responsibility-tee",
+      "documentType": "operations",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
       ],
-      "subgroups": []
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
     },
-    "nodeDashboard": "nodicsDocsDashboardGrpcronAndScheduledAutomationprocessAndCronRuntimeBoundary",
-    "childSummaryCards": [
-      {
-        "code": "process.process-cron-runtime",
-        "title": "Process and Cronjob Shared Runtime",
-        "summary": "Clarify how processServer can include workflow and cronjob while each module keeps a separate ownership boundary.",
-        "order": 20
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Process and Cronjob Shared Runtime",
-        "targetPage": "process.process-cron-runtime",
-        "route": "/docs/framework/process/process-cron-runtime"
-      }
-    ],
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
     "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
+      "childCount": 0
     },
-    "nodeOrder": 20,
-    "expandable": true,
+    "targetDocumentationPage": "nodicsDocsMetadatacronNodeResponsibilityTee",
+    "targetPage": "nodicsDocsPagecronNodeResponsibilityTee",
+    "targetRoute": "nodicsDocsRoutecronNodeResponsibilityTee",
+    "nodeOrder": 10020,
+    "expandable": false,
     "expandedByDefault": false,
-    "nodeIcon": "folder-open",
+    "nodeIcon": "file-text",
     "nodeAudience": [
       "business",
       "architect",
@@ -12127,20 +10147,100 @@ module.exports = {
     "lifecycleState": "ONLINE",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
-      "cron-and-scheduled-automation",
-      "process-and-cron-runtime-boundary",
-      "process-and-cronjob-shared-runtime"
+      "cron-node-responsibility",
+      "tee",
+      "task-execution-engine",
+      "cluster-failover"
     ],
-    "relatedNodes": [],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicprocessScheduledAutomation",
+      "nodicsDocsNodeTopicprocessProcessCronRuntime"
+    ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record152": {
+  "record122": {
+    "code": "nodicsDocsNodeTopiccronProjectCustomization",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSeccronAndScheduledAutomation",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Project Cron Customization",
+    "nodeSummary": "How customer projects add scheduled business work with job definitions, triggers, permissions, retry, audit, and tests.",
+    "nodeContentArea": {
+      "route": "/docs/framework/cron-project-customization",
+      "documentType": "customization",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacronProjectCustomization",
+    "targetPage": "nodicsDocsPagecronProjectCustomization",
+    "targetRoute": "nodicsDocsRoutecronProjectCustomization",
+    "nodeOrder": 10030,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "project-cron-customization",
+      "scheduled-job-extension",
+      "cron-project-module"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicprocessScheduledAutomation",
+      "nodicsDocsNodeTopicprocessProcessCronRuntime"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record123": {
     "code": "nodicsDocsNodeTopicprocessProcessCronRuntime",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpcronAndScheduledAutomationprocessAndCronRuntimeBoundary",
+    "parentNode": "nodicsDocsNodeSeccronAndScheduledAutomation",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Process and Cronjob Shared Runtime",
@@ -12169,7 +10269,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataprocessProcessCronRuntime",
     "targetPage": "nodicsDocsPageprocessProcessCronRuntime",
     "targetRoute": "nodicsDocsRouteprocessProcessCronRuntime",
-    "nodeOrder": 20,
+    "nodeOrder": 10040,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -12212,87 +10312,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record153": {
-    "code": "nodicsDocsNodeGrpcronAndScheduledAutomationscheduledAutomationTriggers",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSeccronAndScheduledAutomation",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Scheduled Automation Triggers",
-    "nodeSummary": "Business-friendly group for Scheduled Automation Triggers documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpcronAndScheduledAutomationscheduledAutomationTriggers",
-      "pages": [
-        "process.scheduled-automation"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpcronAndScheduledAutomationscheduledAutomationTriggers",
-    "childSummaryCards": [
-      {
-        "code": "process.scheduled-automation",
-        "title": "Scheduled Automation and Cron Triggers",
-        "summary": "Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence.",
-        "order": 30
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Scheduled Automation and Cron Triggers",
-        "targetPage": "process.scheduled-automation",
-        "route": "/docs/framework/process/scheduled-automation"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 30,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "cron-and-scheduled-automation",
-      "scheduled-automation-triggers",
-      "scheduled-automation-and-cron-triggers"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record154": {
+  "record124": {
     "code": "nodicsDocsNodeTopicprocessScheduledAutomation",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpcronAndScheduledAutomationscheduledAutomationTriggers",
+    "parentNode": "nodicsDocsNodeSeccronAndScheduledAutomation",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Scheduled Automation and Cron Triggers",
@@ -12321,7 +10345,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataprocessScheduledAutomation",
     "targetPage": "nodicsDocsPageprocessScheduledAutomation",
     "targetRoute": "nodicsDocsRouteprocessScheduledAutomation",
-    "nodeOrder": 30,
+    "nodeOrder": 10050,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -12364,87 +10388,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record155": {
-    "code": "nodicsDocsNodeGrpdataImportExportAndMigrationdataMovementAndMigration",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecdataImportExportAndMigration",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Data Movement and Migration",
-    "nodeSummary": "Business-friendly group for Data Movement and Migration documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpdataImportExportAndMigrationdataMovementAndMigration",
-      "pages": [
-        "data.import-export-migration"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpdataImportExportAndMigrationdataMovementAndMigration",
-    "childSummaryCards": [
-      {
-        "code": "data.import-export-migration",
-        "title": "Data Import, Export, and Migration",
-        "summary": "Import definitions, data installation, exports, migration registers, release evidence, rollback boundaries, and customer onboarding.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Data Import, Export, and Migration",
-        "targetPage": "data.import-export-migration",
-        "route": "/docs/framework/data-import-export-migration"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "data-import-export-and-migration",
-      "data-movement-and-migration",
-      "data-import-export-and-migration"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record156": {
+  "record125": {
     "code": "nodicsDocsNodeTopicdataImportExportMigration",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpdataImportExportAndMigrationdataMovementAndMigration",
+    "parentNode": "nodicsDocsNodeSecdataImportExportAndMigration",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Data Import, Export, and Migration",
@@ -12473,7 +10421,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatadataImportExportMigration",
     "targetPage": "nodicsDocsPagedataImportExportMigration",
     "targetRoute": "nodicsDocsRoutedataImportExportMigration",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -12517,87 +10465,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record157": {
-    "code": "nodicsDocsNodeGrpsystemIntegrationAndExternalConnectivityactionAdapterIntegration",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecsystemIntegrationAndExternalConnectivity",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Action Adapter Integration",
-    "nodeSummary": "Business-friendly group for Action Adapter Integration documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpsystemIntegrationAndExternalConnectivityactionAdapterIntegration",
-      "pages": [
-        "process.action-adapters"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpsystemIntegrationAndExternalConnectivityactionAdapterIntegration",
-    "childSummaryCards": [
-      {
-        "code": "process.action-adapters",
-        "title": "Action Adapter Contract",
-        "summary": "Learn why ACTION nodes use registered declarative adapters and how customer and domain modules own business execution.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Action Adapter Contract",
-        "targetPage": "process.action-adapters",
-        "route": "/docs/framework/process/action-adapters"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "system-integration-and-external-connectivity",
-      "action-adapter-integration",
-      "action-adapter-contract"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record158": {
+  "record126": {
     "code": "nodicsDocsNodeTopicprocessActionAdapters",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpsystemIntegrationAndExternalConnectivityactionAdapterIntegration",
+    "parentNode": "nodicsDocsNodeSecsystemIntegrationAndExternalConnectivity",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Action Adapter Contract",
@@ -12626,7 +10498,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataprocessActionAdapters",
     "targetPage": "nodicsDocsPageprocessActionAdapters",
     "targetRoute": "nodicsDocsRouteprocessActionAdapters",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -12669,87 +10541,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record159": {
-    "code": "nodicsDocsNodeGrpoperationsMonitoringAndRecoveryruntimeAndDevops",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Runtime and DevOps",
-    "nodeSummary": "Business-friendly group for Runtime and DevOps documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpoperationsMonitoringAndRecoveryruntimeAndDevops",
-      "pages": [
-        "framework.devops-runtime"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpoperationsMonitoringAndRecoveryruntimeAndDevops",
-    "childSummaryCards": [
-      {
-        "code": "framework.devops-runtime",
-        "title": "Runtime and DevOps operations",
-        "summary": "Runtime topology, dependencies, public and private properties, deployment, monitoring, and recovery guidance.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Runtime and DevOps operations",
-        "targetPage": "framework.devops-runtime",
-        "route": "/docs/framework/framework-devops-runtime"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "operations-monitoring-and-recovery",
-      "runtime-and-devops",
-      "runtime-and-devops-operations"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record160": {
+  "record127": {
     "code": "nodicsDocsNodeTopicframeworkDevopsRuntime",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpoperationsMonitoringAndRecoveryruntimeAndDevops",
+    "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Runtime and DevOps operations",
@@ -12778,7 +10574,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataframeworkDevopsRuntime",
     "targetPage": "nodicsDocsPageframeworkDevopsRuntime",
     "targetRoute": "nodicsDocsRouteframeworkDevopsRuntime",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -12816,52 +10612,127 @@ module.exports = {
     "relatedNodes": [
       "nodicsDocsNodeTopicframeworkLocalVerificationChecklist",
       "nodicsDocsNodeTopicfoundationOverview",
-      "nodicsDocsNodeTopiccommerceEnterpriseOperations"
+      "nodicsDocsNodeTopiccommerceEnterpriseOperations",
+      "nodicsDocsNodeTopicframeworkRuntimeReleaseRollback",
+      "nodicsDocsNodeTopicframeworkLocalRuntimeTroubleshooting",
+      "nodicsDocsNodeTopicframeworkLocalBrowserAcceptanceJourney"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record161": {
-    "code": "nodicsDocsNodeGrpoperationsMonitoringAndRecoverylocalVerificationAndAcceptance",
+  "record128": {
+    "code": "nodicsDocsNodeTopicframeworkRuntimeReleaseRollback",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Local Verification and Acceptance",
-    "nodeSummary": "Business-friendly group for Local Verification and Acceptance documentation topics.",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Runtime Release and Rollback",
+    "nodeSummary": "Release and rollback guidance for code, configuration, content, data import, generated contracts, and browser evidence.",
     "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpoperationsMonitoringAndRecoverylocalVerificationAndAcceptance",
-      "pages": [
-        "framework.local-verification-checklist"
+      "route": "/docs/framework/framework-runtime-release-rollback",
+      "documentType": "operations",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
       ],
-      "subgroups": []
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
     },
-    "nodeDashboard": "nodicsDocsDashboardGrpoperationsMonitoringAndRecoverylocalVerificationAndAcceptance",
-    "childSummaryCards": [
-      {
-        "code": "framework.local-verification-checklist",
-        "title": "Local verification and acceptance checklist",
-        "summary": "How to prove the local framework, customer-project servers, Axis, documentation, registry, imports, WCMS, and Cron are healthy.",
-        "order": 20
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Local verification and acceptance checklist",
-        "targetPage": "framework.local-verification-checklist",
-        "route": "/docs/framework/framework-local-verification-checklist"
-      }
-    ],
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
     "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
+      "childCount": 0
     },
-    "nodeOrder": 20,
-    "expandable": true,
+    "targetDocumentationPage": "nodicsDocsMetadataframeworkRuntimeReleaseRollback",
+    "targetPage": "nodicsDocsPageframeworkRuntimeReleaseRollback",
+    "targetRoute": "nodicsDocsRouteframeworkRuntimeReleaseRollback",
+    "nodeOrder": 10020,
+    "expandable": false,
     "expandedByDefault": false,
-    "nodeIcon": "folder-open",
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "operations-monitoring-and-recovery",
+      "runtime-and-devops",
+      "runtime-and-devops-operations"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicframeworkDevopsRuntime"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record129": {
+    "code": "nodicsDocsNodeTopicframeworkLocalBrowserAcceptanceJourney",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Local Browser Acceptance Journey",
+    "nodeSummary": "Fresh-schema browser acceptance path for Axis, documentation, Nexus, Agora, setup actions, and unpublished states.",
+    "nodeContentArea": {
+      "route": "/docs/framework/framework-local-browser-acceptance-journey",
+      "documentType": "operations",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataframeworkLocalBrowserAcceptanceJourney",
+    "targetPage": "nodicsDocsPageframeworkLocalBrowserAcceptanceJourney",
+    "targetRoute": "nodicsDocsRouteframeworkLocalBrowserAcceptanceJourney",
+    "nodeOrder": 10040,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
     "nodeAudience": [
       "business",
       "architect",
@@ -12893,16 +10764,18 @@ module.exports = {
       "local-verification-and-acceptance",
       "local-verification-and-acceptance-checklist"
     ],
-    "relatedNodes": [],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicframeworkLocalVerificationChecklist"
+    ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record162": {
+  "record130": {
     "code": "nodicsDocsNodeTopicframeworkLocalVerificationChecklist",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpoperationsMonitoringAndRecoverylocalVerificationAndAcceptance",
+    "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Local verification and acceptance checklist",
@@ -12931,7 +10804,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataframeworkLocalVerificationChecklist",
     "targetPage": "nodicsDocsPageframeworkLocalVerificationChecklist",
     "targetRoute": "nodicsDocsRouteframeworkLocalVerificationChecklist",
-    "nodeOrder": 20,
+    "nodeOrder": 10030,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -12969,93 +10842,20 @@ module.exports = {
     "relatedNodes": [
       "nodicsDocsNodeTopicframeworkLocalQuickStart",
       "nodicsDocsNodeTopicframeworkDevopsRuntime",
-      "nodicsDocsNodeTopicprocessQaRegressionGuide"
+      "nodicsDocsNodeTopicprocessQaRegressionGuide",
+      "nodicsDocsNodeTopicframeworkFreshSchemaSetupJourney",
+      "nodicsDocsNodeTopicframeworkLocalBrowserAcceptanceJourney",
+      "nodicsDocsNodeTopicframeworkLocalRuntimeTroubleshooting"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record163": {
-    "code": "nodicsDocsNodeGrpoperationsMonitoringAndRecoverycommerceEnterpriseOperations",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Commerce Enterprise Operations",
-    "nodeSummary": "Business-friendly group for Commerce Enterprise Operations documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpoperationsMonitoringAndRecoverycommerceEnterpriseOperations",
-      "pages": [
-        "commerce.enterprise-operations"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpoperationsMonitoringAndRecoverycommerceEnterpriseOperations",
-    "childSummaryCards": [
-      {
-        "code": "commerce.enterprise-operations",
-        "title": "Commerce enterprise operations and migration",
-        "summary": "Capacity, backpressure, providers, recovery, compatibility, tenant migration, rollback, legacy retirement, and production qualification guidance.",
-        "order": 30
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Commerce enterprise operations and migration",
-        "targetPage": "commerce.enterprise-operations",
-        "route": "/docs/framework/commerce-enterprise-operations"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 30,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "operations-monitoring-and-recovery",
-      "commerce-enterprise-operations",
-      "commerce-enterprise-operations-and-migration"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record164": {
+  "record131": {
     "code": "nodicsDocsNodeTopiccommerceEnterpriseOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpoperationsMonitoringAndRecoverycommerceEnterpriseOperations",
+    "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Commerce enterprise operations and migration",
@@ -13084,7 +10884,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatacommerceEnterpriseOperations",
     "targetPage": "nodicsDocsPagecommerceEnterpriseOperations",
     "targetRoute": "nodicsDocsRoutecommerceEnterpriseOperations",
-    "nodeOrder": 30,
+    "nodeOrder": 10050,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -13127,87 +10927,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record165": {
-    "code": "nodicsDocsNodeGrpoperationsMonitoringAndRecoveryprocessIncidentRecovery",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Process Incident Recovery",
-    "nodeSummary": "Business-friendly group for Process Incident Recovery documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpoperationsMonitoringAndRecoveryprocessIncidentRecovery",
-      "pages": [
-        "process.incident-recovery"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpoperationsMonitoringAndRecoveryprocessIncidentRecovery",
-    "childSummaryCards": [
-      {
-        "code": "process.incident-recovery",
-        "title": "Incident, Retry, and Compensation Operations",
-        "summary": "Operate failed ACTION nodes through Process-owned incidents, bounded retries, dead-letter handling, and declarative domain-owned compensation.",
-        "order": 40
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Incident, Retry, and Compensation Operations",
-        "targetPage": "process.incident-recovery",
-        "route": "/docs/framework/process/incident-recovery"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 40,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "operations-monitoring-and-recovery",
-      "process-incident-recovery",
-      "incident-retry-and-compensation-operations"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record166": {
+  "record132": {
     "code": "nodicsDocsNodeTopicprocessIncidentRecovery",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpoperationsMonitoringAndRecoveryprocessIncidentRecovery",
+    "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Incident, Retry, and Compensation Operations",
@@ -13236,7 +10960,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataprocessIncidentRecovery",
     "targetPage": "nodicsDocsPageprocessIncidentRecovery",
     "targetRoute": "nodicsDocsRouteprocessIncidentRecovery",
-    "nodeOrder": 40,
+    "nodeOrder": 10060,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -13279,87 +11003,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record167": {
-    "code": "nodicsDocsNodeGrpoperationsMonitoringAndRecoveryprocessRuntimeTopology",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Process Runtime Topology",
-    "nodeSummary": "Business-friendly group for Process Runtime Topology documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpoperationsMonitoringAndRecoveryprocessRuntimeTopology",
-      "pages": [
-        "process.devops-topology"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpoperationsMonitoringAndRecoveryprocessRuntimeTopology",
-    "childSummaryCards": [
-      {
-        "code": "process.devops-topology",
-        "title": "DevOps and Runtime Topology",
-        "summary": "Explain deployment topology, observability, fresh bootstrap evidence, and production sustainability for Process runtimes.",
-        "order": 50
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "DevOps and Runtime Topology",
-        "targetPage": "process.devops-topology",
-        "route": "/docs/framework/process/devops-topology"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 50,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "operations-monitoring-and-recovery",
-      "process-runtime-topology",
-      "devops-and-runtime-topology"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record168": {
+  "record133": {
     "code": "nodicsDocsNodeTopicprocessDevopsTopology",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpoperationsMonitoringAndRecoveryprocessRuntimeTopology",
+    "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "DevOps and Runtime Topology",
@@ -13388,7 +11036,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataprocessDevopsTopology",
     "targetPage": "nodicsDocsPageprocessDevopsTopology",
     "targetRoute": "nodicsDocsRouteprocessDevopsTopology",
-    "nodeOrder": 50,
+    "nodeOrder": 10070,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -13431,87 +11079,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record169": {
-    "code": "nodicsDocsNodeGrpqualityTestingAndCertificationprocessRegressionEvidence",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecqualityTestingAndCertification",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Process Regression Evidence",
-    "nodeSummary": "Business-friendly group for Process Regression Evidence documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpqualityTestingAndCertificationprocessRegressionEvidence",
-      "pages": [
-        "process.qa-regression-guide"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpqualityTestingAndCertificationprocessRegressionEvidence",
-    "childSummaryCards": [
-      {
-        "code": "process.qa-regression-guide",
-        "title": "Process QA and Regression Guide",
-        "summary": "Define backend, fresh database, Axis smoke, and negative regression checks for Process and Cron automation.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Process QA and Regression Guide",
-        "targetPage": "process.qa-regression-guide",
-        "route": "/docs/framework/process/qa-regression-guide"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "quality-testing-and-certification",
-      "process-regression-evidence",
-      "process-qa-and-regression-guide"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record170": {
+  "record134": {
     "code": "nodicsDocsNodeTopicprocessQaRegressionGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpqualityTestingAndCertificationprocessRegressionEvidence",
+    "parentNode": "nodicsDocsNodeSecqualityTestingAndCertification",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Process QA and Regression Guide",
@@ -13540,7 +11112,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataprocessQaRegressionGuide",
     "targetPage": "nodicsDocsPageprocessQaRegressionGuide",
     "targetRoute": "nodicsDocsRouteprocessQaRegressionGuide",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -13583,87 +11155,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record171": {
-    "code": "nodicsDocsNodeGrpdocumentationManagementdocumentationContractAndQuality",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecdocumentationManagement",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Documentation Contract and Quality",
-    "nodeSummary": "Business-friendly group for Documentation Contract and Quality documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpdocumentationManagementdocumentationContractAndQuality",
-      "pages": [
-        "framework.capability-documentation-maturity-pattern"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpdocumentationManagementdocumentationContractAndQuality",
-    "childSummaryCards": [
-      {
-        "code": "framework.capability-documentation-maturity-pattern",
-        "title": "Capability documentation maturity pattern",
-        "summary": "How to document concept, design-contract, partial, and operational capabilities without creating false runtime authority.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Capability documentation maturity pattern",
-        "targetPage": "framework.capability-documentation-maturity-pattern",
-        "route": "/docs/framework/framework-capability-documentation-maturity-pattern"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "documentation-management",
-      "documentation-contract-and-quality",
-      "capability-documentation-maturity-pattern"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record172": {
+  "record135": {
     "code": "nodicsDocsNodeTopicframeworkCapabilityDocumentationMaturityPattern",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpdocumentationManagementdocumentationContractAndQuality",
+    "parentNode": "nodicsDocsNodeSecdocumentationManagement",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Capability documentation maturity pattern",
@@ -13692,7 +11188,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadataframeworkCapabilityDocumentationMaturityPattern",
     "targetPage": "nodicsDocsPageframeworkCapabilityDocumentationMaturityPattern",
     "targetRoute": "nodicsDocsRouteframeworkCapabilityDocumentationMaturityPattern",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -13735,87 +11231,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record173": {
-    "code": "nodicsDocsNodeGrpdocumentationManagementdocumentationRuntimeAndPublishing",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecdocumentationManagement",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Documentation Runtime and Publishing",
-    "nodeSummary": "Business-friendly group for Documentation Runtime and Publishing documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpdocumentationManagementdocumentationRuntimeAndPublishing",
-      "pages": [
-        "docs.overview"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpdocumentationManagementdocumentationRuntimeAndPublishing",
-    "childSummaryCards": [
-      {
-        "code": "docs.overview",
-        "title": "Docs overview",
-        "summary": "How Nodics framework documentation is authored, generated, validated, imported, rendered, and kept separate from Axis and customer project documentation.",
-        "order": 20
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Docs overview",
-        "targetPage": "docs.overview",
-        "route": "/docs/framework/docs-overview"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 20,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "documentation-management",
-      "documentation-runtime-and-publishing",
-      "docs-overview"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record174": {
+  "record136": {
     "code": "nodicsDocsNodeTopicdocsOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpdocumentationManagementdocumentationRuntimeAndPublishing",
+    "parentNode": "nodicsDocsNodeSecdocumentationManagement",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Docs overview",
@@ -13844,7 +11264,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatadocsOverview",
     "targetPage": "nodicsDocsPagedocsOverview",
     "targetRoute": "nodicsDocsRoutedocsOverview",
-    "nodeOrder": 20,
+    "nodeOrder": 10020,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -13881,93 +11301,20 @@ module.exports = {
     ],
     "relatedNodes": [
       "nodicsDocsNodeTopicframeworkCapabilityDocumentationMaturityPattern",
-      "nodicsDocsNodeTopicwcmsPublishingLifecycle"
+      "nodicsDocsNodeTopicwcmsPublishingLifecycle",
+      "nodicsDocsNodeTopicdocsDocumentationPrinciples",
+      "nodicsDocsNodeTopicdocsReaderJourneyAndCoverage",
+      "nodicsDocsNodeTopicdocsDocumentationPublishingModel"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record175": {
-    "code": "nodicsDocsNodeGrpreleaseStagingAndPublicationcontentPublicationLifecycle",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecreleaseStagingAndPublication",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Content Publication Lifecycle",
-    "nodeSummary": "Business-friendly group for Content Publication Lifecycle documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpreleaseStagingAndPublicationcontentPublicationLifecycle",
-      "pages": [
-        "wcms.publishing-lifecycle"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpreleaseStagingAndPublicationcontentPublicationLifecycle",
-    "childSummaryCards": [
-      {
-        "code": "wcms.publishing-lifecycle",
-        "title": "Staged-to-Online publishing lifecycle",
-        "summary": "Author, approve, deploy, recover, and customize immutable WCMS releases across physically separated Staged and Online runtimes.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Staged-to-Online publishing lifecycle",
-        "targetPage": "wcms.publishing-lifecycle",
-        "route": "/docs/framework/wcms-publishing-lifecycle"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "release-staging-and-publication",
-      "content-publication-lifecycle",
-      "staged-to-online-publishing-lifecycle"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record176": {
+  "record137": {
     "code": "nodicsDocsNodeTopicwcmsPublishingLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpreleaseStagingAndPublicationcontentPublicationLifecycle",
+    "parentNode": "nodicsDocsNodeSecreleaseStagingAndPublication",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Staged-to-Online publishing lifecycle",
@@ -13996,7 +11343,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatawcmsPublishingLifecycle",
     "targetPage": "nodicsDocsPagewcmsPublishingLifecycle",
     "targetRoute": "nodicsDocsRoutewcmsPublishingLifecycle",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -14039,87 +11386,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record177": {
-    "code": "nodicsDocsNodeGrpaiAndDeveloperToolingaiAndDeveloperEnablement",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "AI and Developer Enablement",
-    "nodeSummary": "Business-friendly group for AI and Developer Enablement documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpaiAndDeveloperToolingaiAndDeveloperEnablement",
-      "pages": [
-        "tooling.ai-developer-enablement"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpaiAndDeveloperToolingaiAndDeveloperEnablement",
-    "childSummaryCards": [
-      {
-        "code": "tooling.ai-developer-enablement",
-        "title": "AI and Developer Tooling",
-        "summary": "How AI tools, developers, and reviewers use contracts, source maps, generated context, quality gates, and documentation principles safely.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "AI and Developer Tooling",
-        "targetPage": "tooling.ai-developer-enablement",
-        "route": "/docs/framework/tooling-ai-developer-enablement"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "ai-and-developer-tooling",
-      "ai-and-developer-enablement",
-      "ai-and-developer-tooling"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record178": {
+  "record138": {
     "code": "nodicsDocsNodeTopictoolingAiDeveloperEnablement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpaiAndDeveloperToolingaiAndDeveloperEnablement",
+    "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "AI and Developer Tooling",
@@ -14148,7 +11419,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatatoolingAiDeveloperEnablement",
     "targetPage": "nodicsDocsPagetoolingAiDeveloperEnablement",
     "targetRoute": "nodicsDocsRoutetoolingAiDeveloperEnablement",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -14192,87 +11463,11 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record179": {
-    "code": "nodicsDocsNodeGrpreferencesourceMapAndGlossary",
-    "product": "nodicsDocumentationProduct",
-    "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecreference",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Source Map and Glossary",
-    "nodeSummary": "Business-friendly group for Source Map and Glossary documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "nodicsDocsDashboardGrpreferencesourceMapAndGlossary",
-      "pages": [
-        "reference.source-map-glossary"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "nodicsDocsDashboardGrpreferencesourceMapAndGlossary",
-    "childSummaryCards": [
-      {
-        "code": "reference.source-map-glossary",
-        "title": "Reference Source Map and Glossary",
-        "summary": "Business-friendly names, technical source owners, module identifiers, common terms, and navigation-to-code references for documentation readers.",
-        "order": 10
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Reference Source Map and Glossary",
-        "targetPage": "reference.source-map-glossary",
-        "route": "/docs/framework/reference-source-map-glossary"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 1,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business",
-      "architect",
-      "administrator",
-      "developer",
-      "operator",
-      "qa",
-      "ai-tool"
-    ],
-    "accessPolicy": "nodicsDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "reference",
-      "source-map-and-glossary",
-      "reference-source-map-and-glossary"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record180": {
+  "record139": {
     "code": "nodicsDocsNodeTopicreferenceSourceMapGlossary",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeGrpreferencesourceMapAndGlossary",
+    "parentNode": "nodicsDocsNodeSecreference",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
     "nodeTitle": "Reference Source Map and Glossary",
@@ -14301,7 +11496,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatareferenceSourceMapGlossary",
     "targetPage": "nodicsDocsPagereferenceSourceMapGlossary",
     "targetRoute": "nodicsDocsRoutereferenceSourceMapGlossary",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",

@@ -100,6 +100,10 @@ This helps a business user understand why activating a trigger relationship is
 not the same thing as starting a scheduler, and why a Cron job may still need to
 exist before real time-based automation fires.
 
+## Customization and extension guidance
+
+Projects can customize scheduled automation with project-owned triggers, calendars, retry rules, pause and resume permissions, or business-specific execution services. Document configuration keys, owner module, affected business data, Axis controls, job evidence, and recovery behavior. Scheduled work should stay inside the governed Process and Cron model so operators can understand and control it.
+
 ## Common mistakes
 
 - Treating trigger activation as proof that a scheduler exists and is healthy.

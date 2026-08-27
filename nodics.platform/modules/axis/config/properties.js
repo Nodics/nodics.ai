@@ -22,7 +22,7 @@ module.exports = {
         initialization: {
             baselineCode: 'axis',
             target: { moduleName: 'cms', connectionName: 'wcmsStaged', connectionType: 'abstract',
-                timeoutMs: 30000, maxAttempts: 2 }
+                timeoutMs: 120000, maxAttempts: 1 }
         }
     }
 };

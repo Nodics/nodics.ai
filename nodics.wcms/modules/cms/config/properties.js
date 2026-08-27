@@ -76,7 +76,7 @@ module.exports = {
         },
         publication: {
             enabled: false,
-            maximumDeploymentRequestBytes: '16mb',
+            maximumDeploymentRequestBytes: '64mb',
             runtimeRole: 'UNASSIGNED',
             maxDependencies: 500,
             maxDepth: 12,
@@ -98,7 +98,7 @@ module.exports = {
                 connectionType: 'abstract',
                 timeoutMs: 30000,
                 maxAttempts: 3,
-                maxManifestBytes: 12582912,
+                maxManifestBytes: 67108864,
                 supportedContractVersions: [0, 1, 2]
             },
             rootTypes: {

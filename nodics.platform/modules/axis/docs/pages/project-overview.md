@@ -139,8 +139,9 @@ Start the Nodics Kickoff backend servers in separate terminals:
 ```bash
 cd ../nodics.kickoff
 npm run start:platform
-npm run start:wcms
-npm run start:cron
+npm run start:wcms:staged
+npm run start:wcms:online
+npm run start:process
 ```
 
 Install and start Axis:

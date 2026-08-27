@@ -23,7 +23,7 @@ module.exports = {
     invoke: function (operation, request, callback) {
         this.prepare(request);
         let promise = FACADE.DefaultBackofficeAxisInitializationFacade[operation](request)
-            .then(data => ({ code: operation === 'initiate' ? 'SUC_BOF_00018' : 'SUC_BOF_00017', data: data }));
+            .then(data => ({ code: operation === 'initiate' ? 'SUC_BOF_00022' : 'SUC_BOF_00021', data: data }));
         if (!callback) return promise;
         promise.then(result => callback(null, result)).catch(callback);
     },

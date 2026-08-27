@@ -348,7 +348,7 @@ module.exports = {
                                     Object.assign({}, this.dataBase.getOptions().modelRemoveOptions || {
                                         j: false
                                     }, operationOptions)).then(success => {
-                                        let result = success.result || {};
+                                        let result = success.result || success || {};
                                         result.models = response;
                                         resolve(result);
                                     }).catch(error => {
@@ -360,7 +360,7 @@ module.exports = {
                         this.deleteMany(input.query, Object.assign({}, this.dataBase.getOptions().modelRemoveOptions || {
                             j: false
                         }, operationOptions)).then(success => {
-                            resolve(success.result);
+                            resolve(success.result || success || { deletedCount: 0 });
                         }).catch(error => {
                             reject(new CLASSES.NodicsError(error, null, 'ERR_MDL_00000'));
                         });

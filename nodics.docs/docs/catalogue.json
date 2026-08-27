@@ -1,6 +1,6 @@
 {
   "contract": "nodics.documentation/v1",
-  "release": "0.16.2",
+  "release": "0.16.7",
   "documents": [
     {
       "id": "framework.what-is-nodics",
@@ -8,7 +8,7 @@
       "functionalModule": "nodics.docs",
       "technicalModule": "documentation",
       "title": "What is Nodics?",
-      "summary": "Business, beginner, and adoption-oriented introduction to the Nodics enterprise framework.",
+      "summary": "Introductory definition of Nodics, its enterprise purpose, and the first mental model for business, developer, and operator readers.",
       "locale": "en",
       "content": "docs/pages/framework/what-is-nodics.md",
       "slug": "framework-what-is-nodics",
@@ -66,11 +66,14 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
+        "framework.why-nodics-exists",
+        "framework.how-nodics-works",
+        "framework.adoption-and-first-journey",
         "framework.modular-architecture",
         "framework.local-quick-start",
-        "docs.overview"
+        "docs.documentation-roadmap"
       ],
       "sourceEvidence": [
         "docs/catalogue.json",
@@ -82,26 +85,311 @@
       "searchKeywords": [
         "nodics-framework",
         "framework-value-and-adoption",
-        "what-is-nodics"
+        "what-is-nodics",
+        "enterprise-framework"
       ],
       "topicKeywords": [
         "Nodics Framework",
         "Framework Value and Adoption",
-        "What is Nodics?"
+        "What is Nodics?",
+        "Enterprise framework"
       ],
       "visualRequirements": [
         "diagram",
-        "table",
-        "screenshot",
-        "code-example"
+        "table"
+      ]
+    },
+    {
+      "id": "framework.why-nodics-exists",
+      "recordCode": "framework.why-nodics-exists",
+      "functionalModule": "nodics.docs",
+      "technicalModule": "documentation",
+      "title": "Why Nodics Exists",
+      "summary": "Industry problems, business value, and why Nodics turns fast delivery into governed enterprise software.",
+      "locale": "en",
+      "content": "docs/pages/framework/why-nodics-exists.md",
+      "slug": "framework-why-nodics-exists",
+      "parentId": "nodics-framework.framework-value-and-adoption",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Nodics Framework",
+        "Framework Value and Adoption",
+        "Why Nodics Exists"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Nodics Framework",
+      "navigationSectionCode": "nodics-framework",
+      "navigationSectionOrder": 10,
+      "navigationGroup": "Framework Value and Adoption",
+      "navigationGroupCode": "framework-value-and-adoption",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 20,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/framework/why-nodics-exists.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "framework.what-is-nodics",
+        "framework.how-nodics-works",
+        "framework.adoption-and-first-journey",
+        "docs.documentation-roadmap"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/framework/why-nodics-exists.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "nodics-framework",
+        "framework-value-and-adoption",
+        "why-nodics-exists",
+        "business-value",
+        "enterprise-problems"
+      ],
+      "topicKeywords": [
+        "Nodics Framework",
+        "Framework Value and Adoption",
+        "Why Nodics Exists"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ]
+    },
+    {
+      "id": "framework.how-nodics-works",
+      "recordCode": "framework.how-nodics-works",
+      "functionalModule": "nodics.docs",
+      "technicalModule": "documentation",
+      "title": "How Nodics Works",
+      "summary": "Mental model for framework modules, customer projects, Axis, public applications, runtime ownership, and customization.",
+      "locale": "en",
+      "content": "docs/pages/framework/how-nodics-works.md",
+      "slug": "framework-how-nodics-works",
+      "parentId": "nodics-framework.framework-value-and-adoption",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Nodics Framework",
+        "Framework Value and Adoption",
+        "How Nodics Works"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Nodics Framework",
+      "navigationSectionCode": "nodics-framework",
+      "navigationSectionOrder": 10,
+      "navigationGroup": "Framework Value and Adoption",
+      "navigationGroupCode": "framework-value-and-adoption",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 30,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/framework/how-nodics-works.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "framework.what-is-nodics",
+        "framework.why-nodics-exists",
+        "framework.adoption-and-first-journey",
+        "docs.documentation-roadmap"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/framework/how-nodics-works.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "nodics-framework",
+        "framework-value-and-adoption",
+        "how-nodics-works",
+        "runtime-model",
+        "backend-driven-experience"
+      ],
+      "topicKeywords": [
+        "Nodics Framework",
+        "Framework Value and Adoption",
+        "How Nodics Works"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ]
+    },
+    {
+      "id": "framework.adoption-and-first-journey",
+      "recordCode": "framework.adoption-and-first-journey",
+      "functionalModule": "nodics.docs",
+      "technicalModule": "documentation",
+      "title": "Adoption and First Journey",
+      "summary": "The first business, developer, and operator path through setup, capability registration, imports, publishing, and browser verification.",
+      "locale": "en",
+      "content": "docs/pages/framework/adoption-and-first-journey.md",
+      "slug": "framework-adoption-and-first-journey",
+      "parentId": "nodics-framework.framework-value-and-adoption",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Nodics Framework",
+        "Framework Value and Adoption",
+        "Adoption and First Journey"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Nodics Framework",
+      "navigationSectionCode": "nodics-framework",
+      "navigationSectionOrder": 10,
+      "navigationGroup": "Framework Value and Adoption",
+      "navigationGroupCode": "framework-value-and-adoption",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 40,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/framework/adoption-and-first-journey.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "framework.what-is-nodics",
+        "framework.why-nodics-exists",
+        "framework.how-nodics-works",
+        "docs.documentation-roadmap"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/framework/adoption-and-first-journey.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "nodics-framework",
+        "framework-value-and-adoption",
+        "adoption",
+        "first-journey",
+        "fresh-schema-setup"
+      ],
+      "topicKeywords": [
+        "Nodics Framework",
+        "Framework Value and Adoption",
+        "Adoption and First Journey"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
       ]
     },
     {
       "id": "docs.documentation-roadmap",
       "functionalModule": "nodics.docs",
       "technicalModule": "documentation",
-      "title": "Documentation Roadmap and Reader Journey",
-      "summary": "How business users, developers, operators, QA owners, and AI tools navigate the governed Nodics documentation set.",
+      "title": "Documentation Roadmap",
+      "summary": "How the Nodics documentation product is organized and how readers choose the right path through the enterprise hierarchy.",
       "locale": "en",
       "content": "docs/pages/nodics.docs/documentation-roadmap.md",
       "slug": "docs-documentation-roadmap",
@@ -159,9 +447,12 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "framework.what-is-nodics",
+        "docs.documentation-principles",
+        "docs.reader-journey-and-coverage",
+        "docs.documentation-publishing-model",
         "docs.overview",
         "framework.capability-documentation-maturity-pattern"
       ],
@@ -174,13 +465,13 @@
       "renderingComponent": "documentation.component.article",
       "searchKeywords": [
         "documentation-roadmap",
-        "reader-journey-and-coverage-map",
-        "documentation-roadmap-and-reader-journey"
+        "documentation-organization",
+        "reader-navigation"
       ],
       "topicKeywords": [
         "Documentation Roadmap",
         "Reader Journey and Coverage Map",
-        "Documentation Roadmap and Reader Journey"
+        "Documentation organization"
       ],
       "visualRequirements": [
         "diagram",
@@ -188,6 +479,291 @@
         "code-example",
         "troubleshooting-matrix"
       ]
+    },
+    {
+      "id": "docs.documentation-principles",
+      "functionalModule": "nodics.docs",
+      "technicalModule": "documentation",
+      "title": "Documentation Principles",
+      "summary": "Framework-level documentation rules for README thinness, detailed docs depth, visual evidence, customization, publishing, and access.",
+      "locale": "en",
+      "content": "docs/pages/nodics.docs/documentation-principles.md",
+      "slug": "docs-documentation-principles",
+      "parentId": "documentation-roadmap.reader-journey-and-coverage-map",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Documentation Roadmap",
+        "Reader Journey and Coverage Map",
+        "Documentation Principles"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Documentation Roadmap",
+      "navigationSectionCode": "documentation-roadmap",
+      "navigationSectionOrder": 20,
+      "navigationGroup": "Reader Journey and Coverage Map",
+      "navigationGroupCode": "reader-journey-and-coverage-map",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 20,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/nodics.docs/documentation-principles.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "docs.documentation-roadmap",
+        "docs.reader-journey-and-coverage",
+        "docs.documentation-publishing-model",
+        "framework.what-is-nodics"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.docs/documentation-principles.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "documentation-roadmap",
+        "reader-journey-and-coverage-map",
+        "documentation-principles",
+        "readme-contract",
+        "visual-contract"
+      ],
+      "topicKeywords": [
+        "Documentation Roadmap",
+        "Reader Journey and Coverage Map",
+        "Documentation Principles"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ],
+      "recordCode": "docs.documentation-principles"
+    },
+    {
+      "id": "docs.reader-journey-and-coverage",
+      "functionalModule": "nodics.docs",
+      "technicalModule": "documentation",
+      "title": "Reader Journey and Coverage",
+      "summary": "How business users, developers, operators, QA owners, administrators, and AI tools navigate capability documentation.",
+      "locale": "en",
+      "content": "docs/pages/nodics.docs/reader-journey-and-coverage.md",
+      "slug": "docs-reader-journey-and-coverage",
+      "parentId": "documentation-roadmap.reader-journey-and-coverage-map",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Documentation Roadmap",
+        "Reader Journey and Coverage Map",
+        "Reader Journey and Coverage"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Documentation Roadmap",
+      "navigationSectionCode": "documentation-roadmap",
+      "navigationSectionOrder": 20,
+      "navigationGroup": "Reader Journey and Coverage Map",
+      "navigationGroupCode": "reader-journey-and-coverage-map",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 30,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/nodics.docs/reader-journey-and-coverage.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "docs.documentation-roadmap",
+        "docs.documentation-principles",
+        "docs.documentation-publishing-model",
+        "framework.what-is-nodics"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.docs/reader-journey-and-coverage.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "documentation-roadmap",
+        "reader-journey-and-coverage-map",
+        "reader-journey",
+        "coverage-map",
+        "audience-paths"
+      ],
+      "topicKeywords": [
+        "Documentation Roadmap",
+        "Reader Journey and Coverage Map",
+        "Reader Journey and Coverage"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ],
+      "recordCode": "docs.reader-journey-and-coverage"
+    },
+    {
+      "id": "docs.documentation-publishing-model",
+      "functionalModule": "nodics.docs",
+      "technicalModule": "documentation",
+      "title": "Documentation Publishing Model",
+      "summary": "How documentation source becomes content catalog data, Staged records, approval tasks, Online pages, and public or authenticated delivery.",
+      "locale": "en",
+      "content": "docs/pages/nodics.docs/documentation-publishing-model.md",
+      "slug": "docs-documentation-publishing-model",
+      "parentId": "documentation-roadmap.reader-journey-and-coverage-map",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Documentation Roadmap",
+        "Reader Journey and Coverage Map",
+        "Documentation Publishing Model"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Documentation Roadmap",
+      "navigationSectionCode": "documentation-roadmap",
+      "navigationSectionOrder": 20,
+      "navigationGroup": "Reader Journey and Coverage Map",
+      "navigationGroupCode": "reader-journey-and-coverage-map",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 40,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/nodics.docs/documentation-publishing-model.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "docs.documentation-roadmap",
+        "docs.documentation-principles",
+        "docs.reader-journey-and-coverage",
+        "framework.what-is-nodics"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.docs/documentation-publishing-model.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "documentation-roadmap",
+        "reader-journey-and-coverage-map",
+        "documentation-publishing",
+        "content-catalog",
+        "staged-online"
+      ],
+      "topicKeywords": [
+        "Documentation Roadmap",
+        "Reader Journey and Coverage Map",
+        "Documentation Publishing Model"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ],
+      "recordCode": "docs.documentation-publishing-model"
     },
     {
       "id": "framework.modular-architecture",
@@ -252,8 +828,11 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
+        "framework.runtime-server-composition",
+        "framework.module-loading-service-precedence",
+        "framework.architecture-decision-guide",
         "foundation.overview",
         "framework.customization-guide",
         "platform.module-registry"
@@ -278,9 +857,285 @@
       "visualRequirements": [
         "architecture-diagram",
         "table",
-        "image",
-        "code-example"
+        "diagram"
       ]
+    },
+    {
+      "id": "framework.runtime-server-composition",
+      "functionalModule": "nodics.foundation",
+      "technicalModule": "nSetup",
+      "title": "Runtime Server Composition",
+      "summary": "How project topology composes framework modules into Platform, WCMS, Process, and other runtime servers.",
+      "locale": "en",
+      "content": "docs/pages/framework/runtime-server-composition.md",
+      "slug": "framework-runtime-server-composition",
+      "parentId": "framework-architecture-and-design.modularity-and-ownership",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Framework Architecture and Design",
+        "Modularity and Ownership",
+        "Runtime Server Composition"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Framework Architecture and Design",
+      "navigationSectionCode": "framework-architecture-and-design",
+      "navigationSectionOrder": 30,
+      "navigationGroup": "Modularity and Ownership",
+      "navigationGroupCode": "modularity-and-ownership",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 20,
+      "documentType": "concept",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/framework/runtime-server-composition.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "foundation.overview",
+        "framework.customization-guide",
+        "platform.module-registry"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/framework/runtime-server-composition.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "runtime-server-composition",
+        "server-topology",
+        "platform-wcms-process"
+      ],
+      "topicKeywords": [
+        "Framework Architecture and Design",
+        "Modularity and Ownership",
+        "Runtime Server Composition"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ],
+      "recordCode": "framework.runtime-server-composition"
+    },
+    {
+      "id": "framework.module-loading-service-precedence",
+      "functionalModule": "nodics.foundation",
+      "technicalModule": "nSetup",
+      "title": "Module Loading and Service Precedence",
+      "summary": "How runtime loading order, service overrides, and project layers decide which implementation is active.",
+      "locale": "en",
+      "content": "docs/pages/framework/module-loading-and-service-precedence.md",
+      "slug": "framework-module-loading-service-precedence",
+      "parentId": "framework-architecture-and-design.modularity-and-ownership",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Framework Architecture and Design",
+        "Modularity and Ownership",
+        "Module Loading and Service Precedence"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Framework Architecture and Design",
+      "navigationSectionCode": "framework-architecture-and-design",
+      "navigationSectionOrder": 30,
+      "navigationGroup": "Modularity and Ownership",
+      "navigationGroupCode": "modularity-and-ownership",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 30,
+      "documentType": "concept",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/framework/module-loading-and-service-precedence.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "foundation.overview",
+        "framework.customization-guide",
+        "platform.module-registry"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/framework/module-loading-and-service-precedence.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "module-loading",
+        "service-precedence",
+        "override-order"
+      ],
+      "topicKeywords": [
+        "Framework Architecture and Design",
+        "Modularity and Ownership",
+        "Service Precedence"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example"
+      ],
+      "recordCode": "framework.module-loading-service-precedence"
+    },
+    {
+      "id": "framework.architecture-decision-guide",
+      "functionalModule": "nodics.foundation",
+      "technicalModule": "nSetup",
+      "title": "Architecture Decision Guide",
+      "summary": "Decision path for choosing framework, project, content, provider, service, pipeline, schema, route, or renderer ownership.",
+      "locale": "en",
+      "content": "docs/pages/framework/architecture-decision-guide.md",
+      "slug": "framework-architecture-decision-guide",
+      "parentId": "framework-architecture-and-design.modularity-and-ownership",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Framework Architecture and Design",
+        "Modularity and Ownership",
+        "Architecture Decision Guide"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Framework Architecture and Design",
+      "navigationSectionCode": "framework-architecture-and-design",
+      "navigationSectionOrder": 30,
+      "navigationGroup": "Modularity and Ownership",
+      "navigationGroupCode": "modularity-and-ownership",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 40,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/framework/architecture-decision-guide.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "foundation.overview",
+        "framework.customization-guide",
+        "platform.module-registry"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/framework/architecture-decision-guide.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "architecture-decision-guide",
+        "ownership-decision",
+        "where-change-belongs"
+      ],
+      "topicKeywords": [
+        "Framework Architecture and Design",
+        "Modularity and Ownership",
+        "Architecture Decision Guide"
+      ],
+      "visualRequirements": [
+        "decision-tree",
+        "table"
+      ],
+      "recordCode": "framework.architecture-decision-guide"
     },
     {
       "id": "platform.module-registry",
@@ -345,7 +1200,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "platform.overview",
         "foundation.overview",
@@ -437,7 +1292,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "framework.modular-architecture",
         "framework.devops-runtime"
@@ -529,7 +1384,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "framework.what-is-nodics",
         "framework.local-quick-start",
@@ -563,20 +1418,20 @@
       ]
     },
     {
-      "id": "solutions.tee-deap",
+      "id": "solutions.task-execution-engine",
       "functionalModule": "nodics.docs",
       "technicalModule": "documentation",
-      "title": "TEE and DEAP Solution Use Cases",
-      "summary": "How Task Execution Engine and Data Engineering and Analytics Platform solutions can be built on the Nodics Framework.",
+      "title": "Task Execution Engine",
+      "summary": "How customers use Nodics Process, Cron, Pipelines, Events, and governed runtime change to build a Task Execution Engine.",
       "locale": "en",
-      "content": "docs/pages/applications/tee-deap-solution-use-cases.md",
-      "slug": "solutions-tee-deap",
+      "content": "docs/pages/applications/task-execution-engine.md",
+      "slug": "task-execution-engine",
       "parentId": "solution-use-cases.solution-patterns",
       "hierarchyPath": [
         "Nodics Documentation",
         "Solution Use Cases",
         "Solution Patterns",
-        "TEE and DEAP Solution Use Cases"
+        "Task Execution Engine"
       ],
       "hierarchyDepth": 4,
       "navigationSection": "Solution Use Cases",
@@ -611,7 +1466,7 @@
         "ai tool"
       ],
       "sourceOwner": "nodics.docs",
-      "sourcePath": "docs/pages/applications/tee-deap-solution-use-cases.md",
+      "sourcePath": "docs/pages/applications/task-execution-engine.md",
       "visibility": "public",
       "channel": [
         "axis",
@@ -625,28 +1480,146 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.6",
       "relatedPages": [
         "process.overview",
         "process.scheduled-automation",
-        "docs.documentation-roadmap"
+        "pipeline.business-logic-orchestration",
+        "events.messaging-cluster-coordination",
+        "runtime.governed-change",
+        "cron.node-responsibility-tee"
       ],
       "sourceEvidence": [
         "docs/catalogue.json",
-        "docs/pages/applications/tee-deap-solution-use-cases.md"
+        "docs/pages/applications/task-execution-engine.md",
+        "../nodics.process/modules/cronjob",
+        "../nodics.process/modules/workflow",
+        "../nodics.foundation/modules/nPipeline",
+        "../nodics.foundation/modules/nEvent"
       ],
       "maturityState": "design-contract",
       "implementationState": "design-contract",
       "renderingComponent": "documentation.component.article",
       "searchKeywords": [
         "solution-use-cases",
-        "solution-patterns",
-        "tee-and-deap-solution-use-cases"
+        "task-execution-engine",
+        "tee",
+        "cron",
+        "process",
+        "pipeline",
+        "runtime-change"
       ],
       "topicKeywords": [
         "Solution Use Cases",
         "Solution Patterns",
-        "TEE and DEAP Solution Use Cases"
+        "Task Execution Engine",
+        "TEE"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "configuration-table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
+    },
+    {
+      "id": "solutions.data-engineering-analytics-platform",
+      "functionalModule": "nodics.docs",
+      "technicalModule": "documentation",
+      "title": "Data Engineering and Analytics Platform",
+      "summary": "How customers use Nodics import, export, discovery, provider, event, pipeline, and publishing capabilities to build governed data platforms.",
+      "locale": "en",
+      "content": "docs/pages/applications/data-engineering-analytics-platform.md",
+      "slug": "data-engineering-analytics-platform",
+      "parentId": "solution-use-cases.solution-patterns",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Solution Use Cases",
+        "Solution Patterns",
+        "Data Engineering and Analytics Platform"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Solution Use Cases",
+      "navigationSectionCode": "solution-use-cases",
+      "navigationSectionOrder": 70,
+      "navigationGroup": "Solution Patterns",
+      "navigationGroupCode": "solution-patterns",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 20,
+      "documentType": "concept",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/applications/data-engineering-analytics-platform.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.6",
+      "relatedPages": [
+        "data.import-export-migration",
+        "discovery.search-indexing",
+        "schema.data-modeling-management",
+        "persistence.provider-data-access-layer",
+        "pipeline.business-logic-orchestration",
+        "events.messaging-cluster-coordination"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/applications/data-engineering-analytics-platform.md",
+        "../nodics.foundation/modules/nData",
+        "../nodics.discovery",
+        "../nodics.foundation/modules/nDatabase",
+        "../nodics.foundation/modules/nSearch"
+      ],
+      "maturityState": "design-contract",
+      "implementationState": "design-contract",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "solution-use-cases",
+        "data-engineering-and-analytics-platform",
+        "deap",
+        "import",
+        "export",
+        "discovery",
+        "analytics",
+        "data-pipeline"
+      ],
+      "topicKeywords": [
+        "Solution Use Cases",
+        "Solution Patterns",
+        "Data Engineering and Analytics Platform",
+        "DEAP"
       ],
       "visualRequirements": [
         "diagram",
@@ -718,7 +1691,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "applications.suite",
         "commerce.overview",
@@ -817,8 +1790,10 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
+        "framework.fresh-schema-setup-journey",
+        "framework.local-runtime-troubleshooting",
         "framework.what-is-nodics",
         "framework.local-verification-checklist",
         "platform.module-registry"
@@ -842,10 +1817,192 @@
       ],
       "visualRequirements": [
         "diagram",
-        "table",
-        "screenshot",
-        "command-example"
+        "table"
       ]
+    },
+    {
+      "id": "framework.fresh-schema-setup-journey",
+      "functionalModule": "nodics.foundation",
+      "technicalModule": "nSetup",
+      "title": "Fresh Schema Setup Journey",
+      "summary": "Required order for initializing Axis, registering capabilities, importing app packs, publishing Online, and verifying browsers.",
+      "locale": "en",
+      "content": "docs/pages/framework/fresh-schema-setup-journey.md",
+      "slug": "framework-fresh-schema-setup-journey",
+      "parentId": "nodics-installer-and-workspace-setup.local-workspace-setup",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Nodics Installer and Workspace Setup",
+        "Local Workspace Setup",
+        "Fresh Schema Setup Journey"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Nodics Installer and Workspace Setup",
+      "navigationSectionCode": "nodics-installer-and-workspace-setup",
+      "navigationSectionOrder": 90,
+      "navigationGroup": "Local Workspace Setup",
+      "navigationGroupCode": "local-workspace-setup",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 20,
+      "documentType": "quickstart",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/framework/fresh-schema-setup-journey.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "framework.what-is-nodics",
+        "framework.local-verification-checklist",
+        "platform.module-registry"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/framework/fresh-schema-setup-journey.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "fresh-schema",
+        "setup-journey",
+        "axis-nexus-agora-initialization"
+      ],
+      "topicKeywords": [
+        "Nodics Installer and Workspace Setup",
+        "Local Workspace Setup",
+        "Fresh Schema Setup Journey"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ],
+      "recordCode": "framework.fresh-schema-setup-journey"
+    },
+    {
+      "id": "framework.local-runtime-troubleshooting",
+      "functionalModule": "nodics.foundation",
+      "technicalModule": "nSetup",
+      "title": "Local Runtime Troubleshooting",
+      "summary": "Practical troubleshooting for ports, stale topology state, schema import failures, publication state, and missing navigation.",
+      "locale": "en",
+      "content": "docs/pages/framework/local-runtime-troubleshooting.md",
+      "slug": "framework-local-runtime-troubleshooting",
+      "parentId": "nodics-installer-and-workspace-setup.local-workspace-setup",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Nodics Installer and Workspace Setup",
+        "Local Workspace Setup",
+        "Local Runtime Troubleshooting"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Nodics Installer and Workspace Setup",
+      "navigationSectionCode": "nodics-installer-and-workspace-setup",
+      "navigationSectionOrder": 90,
+      "navigationGroup": "Local Workspace Setup",
+      "navigationGroupCode": "local-workspace-setup",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 30,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/framework/local-runtime-troubleshooting.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "framework.what-is-nodics",
+        "framework.local-verification-checklist",
+        "platform.module-registry"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/framework/local-runtime-troubleshooting.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "local-runtime-troubleshooting",
+        "ports",
+        "fresh-schema-errors"
+      ],
+      "topicKeywords": [
+        "Nodics Installer and Workspace Setup",
+        "Local Workspace Setup",
+        "Local Runtime Troubleshooting"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "troubleshooting-matrix"
+      ],
+      "recordCode": "framework.local-runtime-troubleshooting"
     },
     {
       "id": "installer.installed-runtime-application-builder",
@@ -910,7 +2067,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "framework.local-quick-start",
         "framework.local-verification-checklist",
@@ -1006,7 +2163,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "installer.installed-runtime-application-builder",
         "framework.local-quick-start",
@@ -1100,7 +2257,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "process.first-human-task",
         "process.overview"
@@ -1191,7 +2348,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "docs.overview",
         "process.visual-designer",
@@ -1284,7 +2441,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "platform.module-registry",
         "framework.modular-architecture"
@@ -1376,7 +2533,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "platform.overview",
         "axis.business-customization",
@@ -1469,7 +2626,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "foundation.overview",
         "cache.runtime-state-management",
@@ -1573,7 +2730,7 @@
         "router.configuration.read"
       ],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "configuration.runtime-behavior-management",
         "runtime.governed-change",
@@ -1677,7 +2834,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "configuration.runtime-behavior-management",
         "events.messaging-cluster-coordination",
@@ -1770,7 +2927,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "wcms.overview",
         "commerce.cart-order",
@@ -1863,7 +3020,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "persistence.provider-data-access-layer",
         "framework.customization-guide",
@@ -1956,7 +3113,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "schema.data-modeling-management",
         "configuration.runtime-behavior-management",
@@ -2049,7 +3206,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "configuration.runtime-behavior-management",
         "runtime.governed-change",
@@ -2142,11 +3299,13 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
+        "framework.backend-extension-patterns",
+        "framework.axis-content-customization",
+        "framework.architecture-decision-guide",
         "framework.modular-architecture",
-        "process.custom-project-extension",
-        "docs.overview"
+        "process.custom-project-extension"
       ],
       "sourceEvidence": [
         "docs/catalogue.json",
@@ -2167,9 +3326,193 @@
       ],
       "visualRequirements": [
         "diagram",
-        "comparison-table",
-        "code-example"
+        "comparison-table"
       ]
+    },
+    {
+      "id": "framework.backend-extension-patterns",
+      "functionalModule": "nodics.foundation",
+      "technicalModule": "nSetup",
+      "title": "Backend Extension Patterns",
+      "summary": "How projects extend behavior through configuration, provider adapters, services, validators, pipelines, schemas, and events.",
+      "locale": "en",
+      "content": "docs/pages/framework/backend-extension-patterns.md",
+      "slug": "framework-backend-extension-patterns",
+      "parentId": "developer-extension-and-project-customization.project-layer-customization",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Developer Extension and Project Customization",
+        "Project-Layer Customization",
+        "Backend Extension Patterns"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Developer Extension and Project Customization",
+      "navigationSectionCode": "developer-extension-and-project-customization",
+      "navigationSectionOrder": 210,
+      "navigationGroup": "Project-Layer Customization",
+      "navigationGroupCode": "project-layer-customization",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 20,
+      "documentType": "customization",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/framework/backend-extension-patterns.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "framework.modular-architecture",
+        "process.custom-project-extension",
+        "docs.overview"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/framework/backend-extension-patterns.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "backend-extension-patterns",
+        "service-override",
+        "provider-adapter",
+        "pipeline-extension"
+      ],
+      "topicKeywords": [
+        "Developer Extension and Project Customization",
+        "Project-Layer Customization",
+        "Backend Extension Patterns"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ],
+      "recordCode": "framework.backend-extension-patterns"
+    },
+    {
+      "id": "framework.axis-content-customization",
+      "functionalModule": "nodics.foundation",
+      "technicalModule": "nSetup",
+      "title": "Axis Content Customization",
+      "summary": "How business users customize backend-owned content, navigation, visibility, setup records, and publishing decisions from Axis.",
+      "locale": "en",
+      "content": "docs/pages/framework/axis-content-customization.md",
+      "slug": "framework-axis-content-customization",
+      "parentId": "developer-extension-and-project-customization.project-layer-customization",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Developer Extension and Project Customization",
+        "Project-Layer Customization",
+        "Axis Content Customization"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Developer Extension and Project Customization",
+      "navigationSectionCode": "developer-extension-and-project-customization",
+      "navigationSectionOrder": 210,
+      "navigationGroup": "Project-Layer Customization",
+      "navigationGroupCode": "project-layer-customization",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 30,
+      "documentType": "customization",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/framework/axis-content-customization.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "framework.modular-architecture",
+        "process.custom-project-extension",
+        "docs.overview"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/framework/axis-content-customization.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "axis-content-customization",
+        "business-user-customization",
+        "backend-owned-navigation"
+      ],
+      "topicKeywords": [
+        "Developer Extension and Project Customization",
+        "Project-Layer Customization",
+        "Axis Content Customization"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ],
+      "recordCode": "framework.axis-content-customization"
     },
     {
       "id": "process.developer-customization",
@@ -2235,7 +3578,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "process.custom-project-extension",
         "process.action-adapters"
@@ -2327,7 +3670,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "framework.customization-guide",
         "process.developer-customization"
@@ -2417,7 +3760,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "commerce.overview",
         "wcms.media-management"
@@ -2506,8 +3849,11 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
+        "wcms.content-catalog-model",
+        "wcms.page-designer-components",
+        "wcms.site-publication-visibility",
         "wcms.media-management",
         "wcms.publishing-lifecycle",
         "docs.overview"
@@ -2531,9 +3877,285 @@
       ],
       "visualRequirements": [
         "diagram",
-        "source-map-table",
-        "code-example"
+        "source-map-table"
       ]
+    },
+    {
+      "id": "wcms.content-catalog-model",
+      "functionalModule": "nodics.wcms",
+      "technicalModule": "wcms",
+      "title": "Content Catalog Model",
+      "summary": "How sites, catalogs, pages, components, media, routes, access policy, and publication state drive public content.",
+      "locale": "en",
+      "content": "docs/pages/nodics.wcms/content-catalog-model.md",
+      "slug": "wcms-content-catalog-model",
+      "parentId": "wcms-and-content-management.content-model-and-delivery",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "WCMS and Content Management",
+        "Content Model and Delivery",
+        "Content Catalog Model"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "WCMS and Content Management",
+      "navigationSectionCode": "wcms-and-content-management",
+      "navigationSectionOrder": 230,
+      "navigationGroup": "Content Model and Delivery",
+      "navigationGroupCode": "content-model-and-delivery",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 20,
+      "documentType": "concept",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/nodics.wcms/content-catalog-model.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "wcms.media-management",
+        "wcms.publishing-lifecycle",
+        "docs.overview"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.wcms/content-catalog-model.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "content-catalog-model",
+        "cms-page-component-route",
+        "online-content"
+      ],
+      "topicKeywords": [
+        "WCMS and Content Management",
+        "Content Model and Delivery",
+        "Content Catalog Model"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ],
+      "recordCode": "wcms.content-catalog-model"
+    },
+    {
+      "id": "wcms.page-designer-components",
+      "functionalModule": "nodics.wcms",
+      "technicalModule": "wcms",
+      "title": "Page Designer and Components",
+      "summary": "How Axis-managed content areas, components, renderer metadata, sequence, validation, and publishing work together.",
+      "locale": "en",
+      "content": "docs/pages/nodics.wcms/page-designer-and-components.md",
+      "slug": "wcms-page-designer-components",
+      "parentId": "wcms-and-content-management.content-model-and-delivery",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "WCMS and Content Management",
+        "Content Model and Delivery",
+        "Page Designer and Components"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "WCMS and Content Management",
+      "navigationSectionCode": "wcms-and-content-management",
+      "navigationSectionOrder": 230,
+      "navigationGroup": "Content Model and Delivery",
+      "navigationGroupCode": "content-model-and-delivery",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 30,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/nodics.wcms/page-designer-and-components.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "wcms.media-management",
+        "wcms.publishing-lifecycle",
+        "docs.overview"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.wcms/page-designer-and-components.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "page-designer",
+        "component-renderer",
+        "content-area"
+      ],
+      "topicKeywords": [
+        "WCMS and Content Management",
+        "Content Model and Delivery",
+        "Page Designer and Components"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ],
+      "recordCode": "wcms.page-designer-components"
+    },
+    {
+      "id": "wcms.site-publication-visibility",
+      "functionalModule": "nodics.wcms",
+      "technicalModule": "wcms",
+      "title": "Site Publication and Visibility",
+      "summary": "How Staged, approval, Online, access policy, maintenance pages, and public delivery determine what users see.",
+      "locale": "en",
+      "content": "docs/pages/nodics.wcms/site-publication-and-visibility.md",
+      "slug": "wcms-site-publication-visibility",
+      "parentId": "wcms-and-content-management.content-model-and-delivery",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "WCMS and Content Management",
+        "Content Model and Delivery",
+        "Site Publication and Visibility"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "WCMS and Content Management",
+      "navigationSectionCode": "wcms-and-content-management",
+      "navigationSectionOrder": 230,
+      "navigationGroup": "Content Model and Delivery",
+      "navigationGroupCode": "content-model-and-delivery",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 40,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/nodics.wcms/site-publication-and-visibility.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "wcms.media-management",
+        "wcms.publishing-lifecycle",
+        "docs.overview"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.wcms/site-publication-and-visibility.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "site-publication",
+        "visibility",
+        "maintenance-page",
+        "online-only"
+      ],
+      "topicKeywords": [
+        "WCMS and Content Management",
+        "Content Model and Delivery",
+        "Site Publication and Visibility"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ],
+      "recordCode": "wcms.site-publication-visibility"
     },
     {
       "id": "catalog.product-discovery-management",
@@ -2598,7 +4220,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "commerce.base-foundations",
         "discovery.search-indexing",
@@ -2691,7 +4313,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "catalog.product-discovery-management",
         "docs.overview",
@@ -2784,10 +4406,12 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "wcms.overview",
-        "commerce.base-foundations"
+        "commerce.base-foundations",
+        "wcms.media-storage-delivery",
+        "wcms.media-import-publication"
       ],
       "sourceEvidence": [
         "docs/catalogue.json",
@@ -2808,9 +4432,188 @@
       ],
       "visualRequirements": [
         "lifecycle-state-diagram",
-        "table",
-        "code-example"
+        "table"
       ]
+    },
+    {
+      "id": "wcms.media-storage-delivery",
+      "functionalModule": "nodics.wcms",
+      "technicalModule": "media",
+      "title": "Media Storage and Delivery",
+      "summary": "Provider, access, URL, cache, and browser delivery model for media used by content and storefront experiences.",
+      "locale": "en",
+      "content": "docs/pages/nodics.wcms/media-storage-and-delivery.md",
+      "slug": "wcms-media-storage-delivery",
+      "parentId": "media-management.media-lifecycle-and-storage",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Media Management",
+        "Media Lifecycle and Storage",
+        "Media Storage and Delivery"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Media Management",
+      "navigationSectionCode": "media-management",
+      "navigationSectionOrder": 260,
+      "navigationGroup": "Media Lifecycle and Storage",
+      "navigationGroupCode": "media-lifecycle-and-storage",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 20,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/nodics.wcms/media-storage-and-delivery.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "wcms.media-management"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.wcms/media-storage-and-delivery.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "media-management",
+        "media-lifecycle-and-storage",
+        "media-management"
+      ],
+      "topicKeywords": [
+        "Media Management",
+        "Media Lifecycle and Storage",
+        "Media management"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ],
+      "recordCode": "wcms.media-storage-delivery"
+    },
+    {
+      "id": "wcms.media-import-publication",
+      "functionalModule": "nodics.wcms",
+      "technicalModule": "media",
+      "title": "Media Import and Publication",
+      "summary": "Complete content-pack preparation for media assets, media records, page references, and Online publication.",
+      "locale": "en",
+      "content": "docs/pages/nodics.wcms/media-import-and-publication.md",
+      "slug": "wcms-media-import-publication",
+      "parentId": "media-management.media-lifecycle-and-storage",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Media Management",
+        "Media Lifecycle and Storage",
+        "Media Import and Publication"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Media Management",
+      "navigationSectionCode": "media-management",
+      "navigationSectionOrder": 260,
+      "navigationGroup": "Media Lifecycle and Storage",
+      "navigationGroupCode": "media-lifecycle-and-storage",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 30,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/nodics.wcms/media-import-and-publication.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "wcms.media-management"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.wcms/media-import-and-publication.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "media-management",
+        "media-lifecycle-and-storage",
+        "media-management"
+      ],
+      "topicKeywords": [
+        "Media Management",
+        "Media Lifecycle and Storage",
+        "Media management"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ],
+      "recordCode": "wcms.media-import-publication"
     },
     {
       "id": "inventory.stock-management",
@@ -2875,7 +4678,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "commerce.cart-order",
         "catalog.product-discovery-management",
@@ -2968,7 +4771,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "commerce.cart-order",
         "inventory.stock-management",
@@ -3061,7 +4864,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "commerce.base-foundations",
         "commerce.cart-order",
@@ -3151,7 +4954,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "commerce.overview",
         "commerce.payment-fulfillment",
@@ -3241,7 +5044,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "commerce.cart-order",
         "commerce.returns-refunds"
@@ -3330,7 +5133,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "commerce.payment-fulfillment",
         "inventory.stock-management",
@@ -3423,7 +5226,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "commerce.cart-order",
         "commerce.returns-refunds",
@@ -3516,7 +5319,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "commerce.cart-order",
         "commerce.payment-fulfillment"
@@ -3605,10 +5408,12 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "engagement.unified-operations",
-        "engagement.enterprise-operations"
+        "engagement.enterprise-operations",
+        "engagement.review-moderation-governance",
+        "engagement.review-aggregation-recovery"
       ],
       "sourceEvidence": [
         "docs/catalogue.json",
@@ -3631,6 +5436,186 @@
         "diagram",
         "table"
       ]
+    },
+    {
+      "id": "engagement.review-moderation-governance",
+      "functionalModule": "nodics.engagement",
+      "technicalModule": "customerReview",
+      "title": "Review Moderation and Governance",
+      "summary": "Axis moderation queues, approval and rejection decisions, permissions, state transitions, and audit expectations.",
+      "locale": "en",
+      "content": "docs/pages/nodics.engagement/review-moderation-and-governance.md",
+      "slug": "engagement-review-moderation-governance",
+      "parentId": "customer-engagement-and-feedback.reviews-and-ratings",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Customer Engagement and Feedback",
+        "Reviews and Ratings",
+        "Review Moderation and Governance"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Customer Engagement and Feedback",
+      "navigationSectionCode": "customer-engagement-and-feedback",
+      "navigationSectionOrder": 340,
+      "navigationGroup": "Reviews and Ratings",
+      "navigationGroupCode": "reviews-and-ratings",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 20,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/nodics.engagement/review-moderation-and-governance.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "engagement.customer-reviews"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.engagement/review-moderation-and-governance.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "customer-engagement-and-feedback",
+        "reviews-and-ratings",
+        "customer-reviews-and-ratings"
+      ],
+      "topicKeywords": [
+        "Customer Engagement and Feedback",
+        "Reviews and Ratings",
+        "Customer reviews and ratings"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ],
+      "recordCode": "engagement.review-moderation-governance"
+    },
+    {
+      "id": "engagement.review-aggregation-recovery",
+      "functionalModule": "nodics.engagement",
+      "technicalModule": "customerReview",
+      "title": "Review Aggregation and Recovery",
+      "summary": "Rating aggregate correctness, recalculation, event recovery, and product or discovery visibility after review changes.",
+      "locale": "en",
+      "content": "docs/pages/nodics.engagement/review-aggregation-and-recovery.md",
+      "slug": "engagement-review-aggregation-recovery",
+      "parentId": "customer-engagement-and-feedback.reviews-and-ratings",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Customer Engagement and Feedback",
+        "Reviews and Ratings",
+        "Review Aggregation and Recovery"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Customer Engagement and Feedback",
+      "navigationSectionCode": "customer-engagement-and-feedback",
+      "navigationSectionOrder": 340,
+      "navigationGroup": "Reviews and Ratings",
+      "navigationGroupCode": "reviews-and-ratings",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 30,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/nodics.engagement/review-aggregation-and-recovery.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "engagement.customer-reviews"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.engagement/review-aggregation-and-recovery.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "customer-engagement-and-feedback",
+        "reviews-and-ratings",
+        "customer-reviews-and-ratings"
+      ],
+      "topicKeywords": [
+        "Customer Engagement and Feedback",
+        "Reviews and Ratings",
+        "Customer reviews and ratings"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ],
+      "recordCode": "engagement.review-aggregation-recovery"
     },
     {
       "id": "engagement.customer-feedback",
@@ -3695,7 +5680,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "engagement.unified-operations",
         "engagement.governed-automation"
@@ -3785,7 +5770,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "engagement.customer-reviews",
         "engagement.customer-feedback"
@@ -3875,7 +5860,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "engagement.customer-feedback",
         "engagement.enterprise-operations"
@@ -3965,7 +5950,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "engagement.unified-operations",
         "framework.devops-runtime"
@@ -4054,7 +6039,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "engagement.customer-feedback",
         "process.action-adapters"
@@ -4144,7 +6129,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "runtime.governed-change",
         "cron.operations",
@@ -4238,7 +6223,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "process.first-workflow",
         "process.runtime-lifecycle",
@@ -4331,7 +6316,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "process.overview",
         "process.incident-recovery"
@@ -4423,7 +6408,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "process.overview",
         "process.first-human-task"
@@ -4515,7 +6500,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "process.first-workflow",
         "process.visual-designer"
@@ -4606,7 +6591,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "process.overview",
         "process.first-workflow"
@@ -4697,7 +6682,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "framework.customization-guide",
         "commerce.cart-order",
@@ -4790,8 +6775,10 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
+        "cron.node-responsibility-tee",
+        "cron.project-customization",
         "process.scheduled-automation",
         "process.process-cron-runtime"
       ],
@@ -4815,9 +6802,192 @@
       "visualRequirements": [
         "lifecycle-state-diagram",
         "troubleshooting-matrix",
-        "image",
-        "code-example"
+        "diagram",
+        "table"
       ]
+    },
+    {
+      "id": "cron.node-responsibility-tee",
+      "functionalModule": "nodics.process",
+      "technicalModule": "cronjob",
+      "title": "Cron Node Responsibility and TEE",
+      "summary": "How scheduled work ownership, failover, responsibility transfer, recovery, and TEE references should be documented.",
+      "locale": "en",
+      "content": "docs/pages/nodics.process/cron-node-responsibility-and-tee.md",
+      "slug": "cron-node-responsibility-tee",
+      "parentId": "cron-and-scheduled-automation.cron-operations",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Cron and Scheduled Automation",
+        "Cron Operations",
+        "Cron Node Responsibility and TEE"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Cron and Scheduled Automation",
+      "navigationSectionCode": "cron-and-scheduled-automation",
+      "navigationSectionOrder": 390,
+      "navigationGroup": "Cron Operations",
+      "navigationGroupCode": "cron-operations",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 20,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/nodics.process/cron-node-responsibility-and-tee.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "process.scheduled-automation",
+        "process.process-cron-runtime"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.process/cron-node-responsibility-and-tee.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "cron-node-responsibility",
+        "tee",
+        "task-execution-engine",
+        "cluster-failover"
+      ],
+      "topicKeywords": [
+        "Cron and Scheduled Automation",
+        "Cron Operations",
+        "Cron Node Responsibility and TEE"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ],
+      "recordCode": "cron.node-responsibility-tee"
+    },
+    {
+      "id": "cron.project-customization",
+      "functionalModule": "nodics.process",
+      "technicalModule": "cronjob",
+      "title": "Project Cron Customization",
+      "summary": "How customer projects add scheduled business work with job definitions, triggers, permissions, retry, audit, and tests.",
+      "locale": "en",
+      "content": "docs/pages/nodics.process/project-cron-customization.md",
+      "slug": "cron-project-customization",
+      "parentId": "cron-and-scheduled-automation.cron-operations",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Cron and Scheduled Automation",
+        "Cron Operations",
+        "Project Cron Customization"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Cron and Scheduled Automation",
+      "navigationSectionCode": "cron-and-scheduled-automation",
+      "navigationSectionOrder": 390,
+      "navigationGroup": "Cron Operations",
+      "navigationGroupCode": "cron-operations",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 30,
+      "documentType": "customization",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/nodics.process/project-cron-customization.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "process.scheduled-automation",
+        "process.process-cron-runtime"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.process/project-cron-customization.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "project-cron-customization",
+        "scheduled-job-extension",
+        "cron-project-module"
+      ],
+      "topicKeywords": [
+        "Cron and Scheduled Automation",
+        "Cron Operations",
+        "Project Cron Customization"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ],
+      "recordCode": "cron.project-customization"
     },
     {
       "id": "process.process-cron-runtime",
@@ -4883,7 +7053,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "cron.operations",
         "process.scheduled-automation"
@@ -4975,7 +7145,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "cron.operations",
         "process.process-cron-runtime"
@@ -5066,7 +7236,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "wcms.publishing-lifecycle",
         "docs.overview",
@@ -5160,7 +7330,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "process.developer-customization",
         "communication.overview"
@@ -5250,11 +7420,14 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "framework.local-verification-checklist",
         "foundation.overview",
-        "commerce.enterprise-operations"
+        "commerce.enterprise-operations",
+        "framework.runtime-release-rollback",
+        "framework.local-runtime-troubleshooting",
+        "framework.local-browser-acceptance-journey"
       ],
       "sourceEvidence": [
         "docs/catalogue.json",
@@ -5276,9 +7449,189 @@
       "visualRequirements": [
         "data-flow",
         "troubleshooting-matrix",
-        "image",
-        "code-example"
+        "diagram",
+        "table"
       ]
+    },
+    {
+      "id": "framework.runtime-release-rollback",
+      "functionalModule": "nodics.foundation",
+      "technicalModule": "nSetup",
+      "title": "Runtime Release and Rollback",
+      "summary": "Release and rollback guidance for code, configuration, content, data import, generated contracts, and browser evidence.",
+      "locale": "en",
+      "content": "docs/pages/framework/runtime-release-and-rollback.md",
+      "slug": "framework-runtime-release-rollback",
+      "parentId": "operations-monitoring-and-recovery.runtime-and-devops",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Operations, Monitoring, and Recovery",
+        "Runtime and DevOps",
+        "Runtime Release and Rollback"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Operations, Monitoring, and Recovery",
+      "navigationSectionCode": "operations-monitoring-and-recovery",
+      "navigationSectionOrder": 420,
+      "navigationGroup": "Runtime and DevOps",
+      "navigationGroupCode": "runtime-and-devops",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 20,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/framework/runtime-release-and-rollback.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "framework.devops-runtime"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/framework/runtime-release-and-rollback.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "operations-monitoring-and-recovery",
+        "runtime-and-devops",
+        "runtime-and-devops-operations"
+      ],
+      "topicKeywords": [
+        "Operations, Monitoring, and Recovery",
+        "Runtime and DevOps",
+        "Runtime and DevOps operations"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ],
+      "recordCode": "framework.runtime-release-rollback"
+    },
+    {
+      "id": "framework.local-browser-acceptance-journey",
+      "functionalModule": "nodics.foundation",
+      "technicalModule": "nSetup",
+      "title": "Local Browser Acceptance Journey",
+      "summary": "Fresh-schema browser acceptance path for Axis, documentation, Nexus, Agora, setup actions, and unpublished states.",
+      "locale": "en",
+      "content": "docs/pages/framework/local-browser-acceptance-journey.md",
+      "slug": "framework-local-browser-acceptance-journey",
+      "parentId": "operations-monitoring-and-recovery.local-verification-and-acceptance",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Operations, Monitoring, and Recovery",
+        "Local Verification and Acceptance",
+        "Local Browser Acceptance Journey"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Operations, Monitoring, and Recovery",
+      "navigationSectionCode": "operations-monitoring-and-recovery",
+      "navigationSectionOrder": 420,
+      "navigationGroup": "Local Verification and Acceptance",
+      "navigationGroupCode": "local-verification-and-acceptance",
+      "navigationGroupOrder": 20,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 30,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/framework/local-browser-acceptance-journey.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.5",
+      "relatedPages": [
+        "framework.local-verification-checklist"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/framework/local-browser-acceptance-journey.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "operations-monitoring-and-recovery",
+        "local-verification-and-acceptance",
+        "local-verification-and-acceptance-checklist"
+      ],
+      "topicKeywords": [
+        "Operations, Monitoring, and Recovery",
+        "Local Verification and Acceptance",
+        "Local verification and acceptance checklist"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table"
+      ],
+      "recordCode": "framework.local-browser-acceptance-journey"
     },
     {
       "id": "framework.local-verification-checklist",
@@ -5305,7 +7658,7 @@
       "navigationGroupOrder": 20,
       "navigationSubgroup": null,
       "navigationSubgroupCode": null,
-      "navigationOrder": 20,
+      "navigationOrder": 10,
       "documentType": "operations",
       "audience": [
         "business",
@@ -5343,11 +7696,14 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "framework.local-quick-start",
         "framework.devops-runtime",
-        "process.qa-regression-guide"
+        "process.qa-regression-guide",
+        "framework.fresh-schema-setup-journey",
+        "framework.local-browser-acceptance-journey",
+        "framework.local-runtime-troubleshooting"
       ],
       "sourceEvidence": [
         "docs/catalogue.json",
@@ -5368,8 +7724,7 @@
       ],
       "visualRequirements": [
         "diagram",
-        "troubleshooting-matrix",
-        "command-example"
+        "troubleshooting-matrix"
       ]
     },
     {
@@ -5435,7 +7790,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "commerce.overview",
         "framework.devops-runtime"
@@ -5525,7 +7880,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "process.runtime-lifecycle",
         "process.qa-regression-guide"
@@ -5617,7 +7972,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "process.overview",
         "framework.devops-runtime"
@@ -5708,7 +8063,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "process.incident-recovery",
         "framework.local-verification-checklist"
@@ -5798,7 +8153,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "docs.overview",
         "framework.customization-guide"
@@ -5888,10 +8243,13 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "framework.capability-documentation-maturity-pattern",
-        "wcms.publishing-lifecycle"
+        "wcms.publishing-lifecycle",
+        "docs.documentation-principles",
+        "docs.reader-journey-and-coverage",
+        "docs.documentation-publishing-model"
       ],
       "sourceEvidence": [
         "docs/catalogue.json",
@@ -5978,7 +8336,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "wcms.overview",
         "docs.overview"
@@ -6068,7 +8426,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "framework.capability-documentation-maturity-pattern",
         "docs.documentation-roadmap",
@@ -6161,7 +8519,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.2",
+      "version": "0.16.5",
       "relatedPages": [
         "docs.documentation-roadmap",
         "platform.module-registry",

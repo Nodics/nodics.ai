@@ -147,6 +147,29 @@ module.exports = {
         visit(snapshot);
         return Array.from(codes).sort();
     },
+    /** Combines content-graph media with application-declared media that belongs to the same governed release. */
+    publicationMediaCodes: function (publication, snapshot) {
+        let codes = new Set(this.collectMediaCodes(snapshot));
+        [].concat(publication && publication.mediaCodes || []).forEach(code => {
+            code = String(code || '').trim();
+            if (code) codes.add(code);
+        });
+        return Array.from(codes).sort();
+    },
+    /** Removes transfer-only bytes before manifests are stored in Mongo. */
+    redactMediaAssets: function (mediaAssets) {
+        return [].concat(mediaAssets || []).map(asset => {
+            if (!asset || typeof asset !== 'object') return asset;
+            let redacted = Object.assign({}, asset);
+            delete redacted.contentBase64;
+            return redacted;
+        });
+    },
+    /** Attaches transient media bytes to a durable manifest for one deployment call. */
+    withTransferMediaAssets: function (manifest, mediaAssets) {
+        if (!mediaAssets || !mediaAssets.length) return manifest;
+        return Object.assign({}, manifest, { mediaAssets: mediaAssets });
+    },
     /** Removes authoring/search-only payload from immutable delivery snapshots. */
     deliveryProperties: function (properties) {
         if (!properties || typeof properties !== 'object' || Array.isArray(properties)) return properties || {};
@@ -159,7 +182,7 @@ module.exports = {
     /** Persists one deterministic immutable publication manifest idempotently. */
     persist: async function (publication, request) {
         let snapshot = await this.buildSnapshot(publication, request);
-        let mediaCodes = this.collectMediaCodes(snapshot);
+        let mediaCodes = this.publicationMediaCodes(publication, snapshot);
         let code = [publication.code, publication.sourceVersion, Number(publication.revision || 0)].join('_');
         let mediaRequest = Object.assign({}, request, { publicationCode: publication.code, manifestCode: code });
         let mediaAssets = mediaCodes.length ? await SERVICE.DefaultMediaPublicationTransferService.exportReferenced(mediaCodes, mediaRequest) : [];
@@ -167,22 +190,23 @@ module.exports = {
         if (mediaAssets.length) contentModel.mediaAssets = mediaAssets;
         let content = JSON.stringify(contentModel);
         let contentHash = crypto.createHash('sha256').update(content).digest('hex');
+        let persistedMediaAssets = this.redactMediaAssets(mediaAssets);
         let model = { code: code, active: true, publicationCode: publication.code, rootType: publication.rootType,
             rootCode: publication.rootCode, sourceVersion: publication.sourceVersion, dependencies: publication.dependencies,
             snapshot: snapshot, contentHash: contentHash, createdBy: publication.requestedBy ||
                 request.authData && (request.authData.principalId || request.authData.code),
             correlationId: request.correlationId || request.requestId };
-        if (mediaAssets.length) model.mediaAssets = mediaAssets;
+        if (persistedMediaAssets.length) model.mediaAssets = persistedMediaAssets;
         let existing = this.items(await SERVICE.DefaultCmsPublicationManifestService.get({ tenant: request.tenant, authData: request.authData,
             transactionContext: request.transactionContext,
             query: { code: code }, searchOptions: { limit: 1 } }))[0];
         if (existing) {
             if (existing.contentHash !== contentHash) throw new CLASSES.NodicsError('CMS_PUBLICATION_MANIFEST_CONFLICT', 'Publication manifest identity conflict');
-            return existing;
+            return this.withTransferMediaAssets(existing, mediaAssets);
         }
         let response = await SERVICE.DefaultCmsPublicationManifestService.save({ tenant: request.tenant, authData: request.authData,
             transactionContext: request.transactionContext, model: model });
-        return this.items(response)[0] || response.result || model;
+        return this.withTransferMediaAssets(this.items(response)[0] || response.result || model, mediaAssets);
     },
     /** Imports one integrity-checked immutable manifest into the target CMS repository idempotently. */
     importManifest: async function (manifest, request) {
@@ -200,10 +224,10 @@ module.exports = {
             rootCode: manifest.rootCode, sourceVersion: manifest.sourceVersion, dependencies: manifest.dependencies,
             snapshot: manifest.snapshot, contentHash: manifest.contentHash, createdBy: manifest.createdBy,
             correlationId: request.correlationId || request.requestId || manifest.correlationId };
-        if (Object.prototype.hasOwnProperty.call(manifest, 'mediaAssets')) safe.mediaAssets = manifest.mediaAssets;
+        if (Object.prototype.hasOwnProperty.call(manifest, 'mediaAssets')) safe.mediaAssets = this.redactMediaAssets(manifest.mediaAssets);
         let response = await SERVICE.DefaultCmsPublicationManifestService.save({ tenant: request.tenant, authData: request.authData,
             transactionContext: request.transactionContext, model: safe });
-        return this.items(response)[0] || response.result || safe;
+        return this.withTransferMediaAssets(this.items(response)[0] || response.result || safe, manifest.mediaAssets);
     },
     /** Returns the current Online pointer for a route scope. */
     getPointer: async function (route, request) {

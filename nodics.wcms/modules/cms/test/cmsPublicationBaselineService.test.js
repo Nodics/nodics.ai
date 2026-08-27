@@ -56,7 +56,8 @@ global.SERVICE = {
 
 const service = require('../src/service/publication/defaultCmsPublicationBaselineService');
 const request = { tenant: 'default', authData: { principalId: 'platform-service', tokenType: 'service' },
-    baseline: { requestedBy: 'admin', correlationId: 'axis-baseline-1' } };
+    baseline: { requestedBy: 'admin', correlationId: 'axis-baseline-1',
+        mediaCodes: ['product-extra-media', '../rejected-media-code'] } };
 
 (async () => {
     const initiated = await service.initiate('axis', request);
@@ -68,6 +69,7 @@ const request = { tenant: 'default', authData: { principalId: 'platform-service'
     assert.deepStrictEqual(operations.map(item => item[0]), ['install', 'create', 'validate', 'requestApproval']);
     assert.strictEqual(operations[1][1].rootType, 'site');
     assert.strictEqual(operations[1][1].rootCode, 'axisCmsSite');
+    assert.deepStrictEqual(operations[1][1].mediaCodes, ['product-extra-media']);
     assert.strictEqual(operations[1][2].principalId, 'admin');
     assert(!operations.some(item => item[0] === 'approve' || item[0] === 'activate'),
         'baseline initiation must never approve or deploy Online');
@@ -90,6 +92,11 @@ const request = { tenant: 'default', authData: { principalId: 'platform-service'
     assert.strictEqual(operations.filter(item => item[0] === 'requestApproval').length, 4);
     const status = await service.status('axis', request);
     assert.strictEqual(status.readiness, 'PUBLICATION_PENDING');
+    lifecycle = undefined;
+    releaseStatus = 'RUNNING';
+    const importing = await service.status('axis', request);
+    assert.strictEqual(importing.readiness, 'IMPORTING');
+    assert.strictEqual(importing.releaseStatus, 'RUNNING');
     publication.runtimeRole = 'ONLINE';
     await assert.rejects(service.status('axis', request), error => error.code === 'CMS_BASELINE_SOURCE_ROLE_INVALID');
     console.log('CMS publication baseline service validated');

@@ -39,6 +39,10 @@ Operators inspect unknown payment outcomes, callback rejection, reconciliation d
 
 Production teams configure timeouts, retries, circuit breakers, rate limits, concurrency, dead-letter handling, and provider-specific capacity. Monitor success, decline, unknown, latency, duplicate suppression, callback age, shipment delay, and reconciliation lag. Exercise provider outage and carrier outage independently.
 
+## Customization and extension guidance
+
+Projects can customize payment and fulfillment by adding payment providers, authorization rules, capture timing, fraud checks, shipping handoff, or settlement events. Document provider configuration, event flow, failure behavior, retry policy, business approval impact, and browser or API evidence for checkout. Customer-specific logic should live in project modules or adapters, not by changing the reusable commerce contract.
+
 ## Common mistakes
 
 - Storing raw card, wallet, or bank credentials.

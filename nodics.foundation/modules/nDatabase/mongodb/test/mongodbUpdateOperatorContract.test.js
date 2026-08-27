@@ -132,6 +132,28 @@ async function run() {
     });
     assert.strictEqual(result.models[0].apiKey, undefined);
     assert.deepStrictEqual(result.models[0].permissions, ['payment.backoffice.read']);
+
+    let removedWithoutModified = await model.removeItems.call(Object.assign({}, context, {
+        deleteMany: () => Promise.resolve({ deletedCount: 0, acknowledged: true })
+    }), {
+        query: { nodeLevel: { $in: ['GROUP', 'SUBGROUP'] } }
+    });
+    assert.deepStrictEqual(removedWithoutModified, {
+        deletedCount: 0,
+        acknowledged: true
+    });
+
+    let removedWithModified = await model.removeItems.call(Object.assign({}, context, {
+        deleteMany: () => Promise.resolve({ deletedCount: 1, acknowledged: true }),
+        find: () => ({
+            toArray: callback => callback(null, [{ code: 'legacy-navigation-node' }])
+        })
+    }), {
+        query: { code: 'legacy-navigation-node' },
+        options: { returnModified: true }
+    });
+    assert.strictEqual(removedWithModified.deletedCount, 1);
+    assert.deepStrictEqual(removedWithModified.models, [{ code: 'legacy-navigation-node' }]);
 }
 
 run()

@@ -615,6 +615,8 @@ module.exports = {
             }).then(success => {
                 if (success && success.result && success.result.length > 0) {
                     resolve(success.result);
+                } else if (header.options.operation === 'remove' && success && success.result) {
+                    resolve(success.result);
                 } else if (success && success.errors && success.errors.length > 0) {
                     let error = new CLASSES.DataImportError(success.errors[0]);
                     if (success.errors.length > 1) {
