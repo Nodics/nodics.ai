@@ -8867,28 +8867,73 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "Two data creation lanes",
+        "anchor": "dataImportExportMigration-4-two-data-creation-lanes",
+        "level": 2
+      },
+      {
+        "text": "Module release data authoring",
+        "anchor": "dataImportExportMigration-5-module-release-data-authoring",
+        "level": 2
+      },
+      {
+        "text": "Header files",
+        "anchor": "dataImportExportMigration-6-header-files",
+        "level": 2
+      },
+      {
+        "text": "Record files",
+        "anchor": "dataImportExportMigration-7-record-files",
+        "level": 2
+      },
+      {
+        "text": "Generated files",
+        "anchor": "dataImportExportMigration-8-generated-files",
+        "level": 2
+      },
+      {
+        "text": "Release lifecycle",
+        "anchor": "dataImportExportMigration-9-release-lifecycle",
+        "level": 2
+      },
+      {
+        "text": "Lifecycle and destination",
+        "anchor": "dataImportExportMigration-10-lifecycle-and-destination",
+        "level": 2
+      },
+      {
+        "text": "Developer workflow",
+        "anchor": "dataImportExportMigration-11-developer-workflow",
+        "level": 2
+      },
+      {
+        "text": "Assets deferred",
+        "anchor": "dataImportExportMigration-12-assets-deferred",
+        "level": 2
+      },
+      {
         "text": "Customization and extension",
-        "anchor": "dataImportExportMigration-4-customization-and-extension",
+        "anchor": "dataImportExportMigration-13-customization-and-extension",
         "level": 2
       },
       {
         "text": "Operations and governance",
-        "anchor": "dataImportExportMigration-5-operations-and-governance",
+        "anchor": "dataImportExportMigration-14-operations-and-governance",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "dataImportExportMigration-6-common-mistakes",
+        "anchor": "dataImportExportMigration-15-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "dataImportExportMigration-7-verification",
+        "anchor": "dataImportExportMigration-16-verification",
         "level": 2
       },
       {
         "text": "Current implementation coverage",
-        "anchor": "dataImportExportMigration-8-current-implementation-coverage",
+        "anchor": "dataImportExportMigration-17-current-implementation-coverage",
         "level": 2
       }
     ],
@@ -8912,6 +8957,30 @@ module.exports = {
       {
         "kind": "table",
         "title": "Detail area, What to document, Verification signal"
+      },
+      {
+        "kind": "table",
+        "title": "Lane, Who uses it, Where it starts, What it is for, Authority"
+      },
+      {
+        "kind": "table",
+        "title": "Folder, Meaning"
+      },
+      {
+        "kind": "table",
+        "title": "Header part, Meaning"
+      },
+      {
+        "kind": "table",
+        "title": "File or folder, Required, Created by, Purpose"
+      },
+      {
+        "kind": "table",
+        "title": "File or folder, Created by, Purpose"
+      },
+      {
+        "kind": "table",
+        "title": "Concept, Meaning"
       },
       {
         "kind": "table",
@@ -8939,8 +9008,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/data-import-export-migration.md",
-    "sourceChecksum": "14a76487c2f84ccadb5a396af8df51967404fab46a24df3e8f59effc08bb7933",
-    "sourceWordCount": 1441,
+    "sourceChecksum": "1691f01b2ec149d67bdb86f31d5b7b87939d30e4891c2d43e105ea6308ea1e6a",
+    "sourceWordCount": 2666,
     "audience": [
       "business",
       "architect",

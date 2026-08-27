@@ -53,6 +53,236 @@ Every topic must explain the data that changes behavior. Some topics are schema-
 importRun: { definition: "cms.site.seed", source: "content-pack", lifecycle: "staged", checksum: "sha256" }
 ```
 
+## Two data creation lanes
+
+Nodics has two legitimate ways to create business data. Both must converge on
+the same backend module contracts.
+
+| Lane | Who uses it | Where it starts | What it is for | Authority |
+| --- | --- | --- | --- | --- |
+| Module release data | Developers, AI tools, release owners | Module `data/` folder | Bootstrap, core capability data, samples, accelerators, migrations, repeatable customer setup | Owning backend module and `nImport` |
+| Business-created data | Business users, administrators, operators | Axis BackOffice | Day-to-day catalogue, product, price, inventory, page, component, media, workflow, and operational maintenance | Owning backend module APIs, validation, workflow, audit, and publication |
+
+Axis handles the business user journey, but Axis does not become the data
+authority. Axis renders forms, actions, imports, uploads, approvals, and
+status from backend contracts. The owning backend module still owns schema,
+validation, permission, workflow, persistence, publication, and audit.
+
+Module release data and Axis-created data should use the same schemas and
+validators. A product created from a module release and a product created from
+Axis should land in the same Product/Commerce contract. A CMS component created
+from a module release and a CMS component created from Axis should use the same
+WCMS contract. Import must not bypass validation just because the source is a
+release file.
+
+## Module release data authoring
+
+Module release data travels with code. It is reviewed with the module, imported
+through `nImport`, and tracked through generated release evidence. Developers
+and AI tools should author release folders; Nodics tooling should generate the
+technical manifest.
+
+The target authoring structure is:
+
+```text
+modules/<module>/
+  data/
+    init-v001/
+      headers/
+      records/
+
+    core-v001/
+      headers/
+      records/
+
+    sample-v001/
+      commerce/
+        headers/
+        records/
+      content/
+        headers/
+        records/
+
+    manifest.json
+```
+
+The folder name is the release identity:
+
+| Folder | Meaning |
+| --- | --- |
+| `init-v001` | Initial/bootstrap setup data for a module or runtime boundary. |
+| `core-v001` | Standard module capability data needed by the module. |
+| `sample-v001` | Demo, reference, accelerator, or customer-project sample data. |
+
+The prefix before `-` is the data type. The `v001` suffix is the release
+sequence. When one release contains multiple business areas, use named
+subfolders inside the release, such as `sample-v001/commerce` and
+`sample-v001/content`, so developers and reviewers can understand the purpose
+without reading every record.
+
+## Header files
+
+Headers are the import routing contract. They tell `nImport` which module and
+schema should receive a record file.
+
+```js
+module.exports = {
+  profile: {
+    defaultAddresses: {
+      options: {
+        enabled: true,
+        schemaName: 'address',
+        operation: 'saveAll',
+        tenants: ['default'],
+        dataFilePrefix: 'defaultAddressesData'
+      },
+      query: {
+        code: '$code'
+      }
+    }
+  }
+};
+```
+
+Header fields mean:
+
+| Header part | Meaning |
+| --- | --- |
+| Top-level key, for example `profile` | Target module where the schema exists. |
+| Header key, for example `defaultAddresses` | Logical import unit within the header file. |
+| `schemaName` | Target schema inside the target module. |
+| `operation` | Persistence action such as `saveAll`, `saveOrUpdate`, `update`, or `remove`. |
+| `dataFilePrefix` | Name used to find the matching record file. |
+| `query` | Idempotent lookup key for existing records. |
+| `tenants` | Optional tenant selection for tenant-specific data. |
+| `userGroups` | Optional import execution authority for schema access policy. |
+| `macros` | Optional relation resolution rule for referenced records. |
+| `finalizeData` | Optional finalization control for the import pipeline. |
+
+The target module, schema, operation, and query belong in headers. Do not
+duplicate them in a separate release metadata file. The release folder tells
+Nodics which release is being imported; the header tells Nodics where each
+record goes.
+
+## Record files
+
+Record files live under `records/`. They contain the data that will be
+imported.
+
+```js
+module.exports = {
+  defaultEmployeeAddress: {
+    code: 'defaultEmployeeAddress',
+    addressLine1: 'Nodics',
+    city: 'Dubai',
+    active: true
+  }
+};
+```
+
+Use stable business keys when practical. Stable keys make customer overrides,
+review diffs, and AI-assisted changes easier because one record can be targeted
+directly. Existing files that use `record0`, `record1`, and similar positional
+names may be migrated gradually, but new release data should prefer meaningful
+keys.
+
+Record files may use small local constants or helper functions to reduce
+duplication. They should not call runtime services, read private filesystem
+paths, use random values, depend on current timestamps, call external networks,
+or hide deployment-specific decisions. If data needs secrets or environment
+values, use configuration or the owning runtime service instead of embedding
+them in release records.
+
+## Generated files
+
+Developers and AI tools create:
+
+| File or folder | Required | Created by | Purpose |
+| --- | --- | --- | --- |
+| `data/<dataType>-vNNN/headers/*.js` | Yes | Developer or AI | Import routing metadata. |
+| `data/<dataType>-vNNN/records/*.js` | Yes | Developer or AI | Actual records. |
+| Domain subfolders such as `sample-v001/commerce` | Optional | Developer or AI | Keep one release understandable when it has multiple business areas. |
+| `README.md` inside a release folder | Optional | Developer or AI | Human explanation for complex releases. |
+
+Nodics tooling generates:
+
+| File or folder | Created by | Purpose |
+| --- | --- | --- |
+| `data/manifest.json` | System | Technical release index, checksums, lifecycle, destination, sensitivity, publication, and removal policy. |
+| Compatibility projection under `data/init`, `data/core`, or `data/sample` | System during migration only | Allows current import runtime to keep working until it reads release folders directly. |
+| Validation report | System | Explains missing headers, missing records, checksum drift, unsupported operations, malformed release folders, and lifecycle conflicts. |
+
+`data/manifest.json` should be reviewed but not hand-authored during normal
+data work. It is the technical contract that proves exactly which files belong
+to a release and how the release may be imported.
+
+## Release lifecycle
+
+Current framework and reference application data is still pre-production. Until
+the first production release is accepted, `v001` is the mutable baseline. Teams
+may keep correcting and improving `init-v001`, `core-v001`, and `sample-v001`
+while the framework and reference applications are being qualified.
+
+At the first production release, accepted `v001` folders become immutable. Any
+later data change must create a new release folder:
+
+```text
+data/
+  core-v001/   # frozen production baseline
+  core-v002/   # next production change
+  sample-v001/ # frozen sample baseline
+  sample-v002/ # next sample change
+```
+
+Do not silently edit an already accepted production release. A new release
+folder gives operators and customers a clear answer to what changed, why it
+changed, which files were imported, and how to retry or roll back.
+
+## Lifecycle and destination
+
+The release folder determines the data type. The generated manifest records the
+technical lifecycle and destination policy.
+
+| Concept | Meaning |
+| --- | --- |
+| `dataType` | Category of data: `init`, `core`, or `sample`. |
+| `lifecycle` | Whether the release is `PUBLISHABLE`, `OPERATIONAL_VERSIONED`, or `REFERENCE`. |
+| `destinationRole` | Runtime role allowed to import the release, such as `PLATFORM`, `WCMS_STAGED`, `COMMERCE_STAGED`, `CRON`, `PROCESS`, or `ENGAGEMENT`. |
+| `publicationPolicy` | Whether Staged-to-Online publication is required. |
+| `removalPolicy` | What should happen when records are retired, unpublished, retained, or replaced. |
+
+Publishable data imports into Staged runtimes such as `WCMS_STAGED` or
+`COMMERCE_STAGED`. It reaches Online only through `nPublish`. Operational data,
+such as Cron schedules or Engagement operational configuration, stays in the
+owning runtime and does not enter the Staged-to-Online publication path.
+
+## Developer workflow
+
+1. Choose or create the release folder, for example `core-v001` before
+   production or `core-v002` after the production baseline is frozen.
+2. Add or update header files under `headers/`.
+3. Add or update record files under `records/`.
+4. Run the data generator so `data/manifest.json` and any compatibility
+   projection are updated.
+5. Run validation so missing headers, missing records, checksum drift,
+   duplicate headers, schema mismatches, unsupported operations, and lifecycle
+   errors fail before import.
+6. Run import preflight before install.
+7. Import into the correct runtime.
+8. If the release is publishable, use `nPublish` for Online activation.
+
+This keeps the authoring experience simple while preserving enterprise
+evidence: the developer writes headers and records, the system generates the
+technical release index, and `nImport` remains the execution authority.
+
+## Assets deferred
+
+Media and binary asset release structure is intentionally separate. Assets are
+governed data, but their final folder structure needs a dedicated discussion
+for intake, rights, checksums, storage-provider policy, media records,
+publication references, and cleanup. Do not generalize the header/record
+structure to assets until that Media-specific contract is approved.
+
 ## Customization and extension
 
 Developers should customize from the project layer first. A customer project may add properties, services, validators, pipelines, renderers, data packs, or provider configuration when the extension respects the owning capability. Business users may update governed records in Axis when the record is designed for administration. Framework source changes are reserved for improving the reusable product capability itself.
