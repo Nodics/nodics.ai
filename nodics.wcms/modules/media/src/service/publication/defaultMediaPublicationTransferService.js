@@ -52,6 +52,15 @@ module.exports = {
     errorMessage: function (error) {
         return String(error && error.message || error || 'Media replication failed').slice(0, 500);
     },
+    /** Builds a request for publication evidence that must not join the caller's CMS transaction. */
+    evidenceRequest: function (request, extension) {
+        return Object.assign({
+            tenant: request && request.tenant,
+            authData: request && request.authData,
+            requestId: request && request.requestId,
+            correlationId: request && request.correlationId
+        }, extension || {});
+    },
     /** Exports only explicitly referenced READY media without provider paths or credentials. */
     exportReferenced: async function (mediaCodes, request) {
         let codes = Array.from(new Set([].concat(mediaCodes || []).filter(Boolean))).sort();
@@ -98,8 +107,9 @@ module.exports = {
             evidence: Object.assign({ correlationId: request.correlationId || request.requestId,
                 operationKey: request.publicationOperationKey }, evidence || {}) };
         try {
-            let response = await SERVICE.DefaultMediaPlacementService.save({ tenant: request.tenant, authData: request.authData,
-                transactionContext: request.transactionContext, query: { code: code }, model: model });
+            let response = await SERVICE.DefaultMediaPlacementService.save(this.evidenceRequest(request, {
+                tenant: request.tenant, authData: request.authData, query: { code: code }, model: model
+            }));
             return response && Array.isArray(response.result) ? response.result[0] : model;
         } catch (error) {
             if (SERVICE.DefaultLoggerService && typeof SERVICE.DefaultLoggerService.warn === 'function') {
@@ -137,8 +147,9 @@ module.exports = {
                 operationKey: request.publicationOperationKey,
                 publicationPolicy: topology.policy,
                 recordedAt: new Date().toISOString() } };
-        let response = await SERVICE.DefaultMediaReplicationQueueService.save({ tenant: request.tenant, authData: request.authData,
-            transactionContext: request.transactionContext, query: { code: code }, model: model });
+        let response = await SERVICE.DefaultMediaReplicationQueueService.save(this.evidenceRequest(request, {
+            tenant: request.tenant, authData: request.authData, query: { code: code }, model: model
+        }));
         return response && Array.isArray(response.result) ? response.result[0] : model;
     },
     /** Marks one replication obligation synchronized after a successful target placement. */
@@ -165,8 +176,9 @@ module.exports = {
             evidence: { correlationId: request.correlationId || request.requestId,
                 operationKey: request.publicationOperationKey,
                 synchronizedAt: new Date().toISOString() } };
-        let response = await SERVICE.DefaultMediaReplicationQueueService.save({ tenant: request.tenant, authData: request.authData,
-            transactionContext: request.transactionContext, query: { code: code }, model: model });
+        let response = await SERVICE.DefaultMediaReplicationQueueService.save(this.evidenceRequest(request, {
+            tenant: request.tenant, authData: request.authData, query: { code: code }, model: model
+        }));
         return response && Array.isArray(response.result) ? response.result[0] : model;
     },
     /** Stores one physical target copy without changing the logical Online media identity. */

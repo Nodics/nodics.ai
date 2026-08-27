@@ -30,6 +30,7 @@ const wcmsUrl = process.env.AXIS_WCMS_URL || "http://127.0.0.1:4312";
 const wcmsOnlineUrl =
   process.env.NEXUS_CMS_URL || "http://127.0.0.1:4314";
 const processUrl = process.env.AXIS_PROCESS_URL || "http://127.0.0.1:4330";
+const engagementUrl = process.env.NODICS_ENGAGEMENT_URL || "http://127.0.0.1:4340";
 const axisUrl = process.env.AXIS_URL || "http://127.0.0.1:3100";
 const enterpriseCode = process.env.AXIS_ENTERPRISE || "default";
 const loginId = process.env.AXIS_LOGIN_ID || "admin";
@@ -600,6 +601,50 @@ function requireModule(modules, functionalModule, label) {
   return match;
 }
 
+async function ensureFunctionalModuleActive(headers, functionalModule, reason) {
+  const encodedModule = encodeURIComponent(functionalModule);
+  let current = await requestJson(
+    platformUrl,
+    `/nodics/backoffice/v0/runtime/modules/registrations/${encodedModule}?project=${encodeURIComponent(projectCode)}`,
+    { headers },
+  );
+  if (current.registrationState !== "REGISTERED") {
+    current = await requestJson(
+      platformUrl,
+      `/nodics/backoffice/v0/runtime/modules/registrations/${encodedModule}/register`,
+      {
+        headers,
+        method: "POST",
+        body: JSON.stringify({
+          project: projectCode,
+          expectedRevision: current.catalogueRevision,
+          reason,
+        }),
+      },
+    );
+  }
+  if (current.enabled !== true) {
+    current = await requestJson(
+      platformUrl,
+      `/nodics/backoffice/v0/runtime/modules/registrations/${encodedModule}/activate`,
+      {
+        headers,
+        method: "POST",
+        body: JSON.stringify({
+          project: projectCode,
+          expectedRevision: current.catalogueRevision,
+          reason,
+        }),
+      },
+    );
+  }
+  if (current.registrationState !== "REGISTERED" || current.enabled !== true) {
+    throw new Error(`${functionalModule} did not become active: ${JSON.stringify(current)}`);
+  }
+  log(`${functionalModule} is registered and active for ${projectCode}`);
+  return current;
+}
+
 async function importContentPacks(headers) {
   for (const pack of contentPacks) {
     const packCode = pack.code;
@@ -666,31 +711,6 @@ async function verifyDocumentationNotOnlineBeforePublication() {
     }
   }
   log("documentation imports remain isolated from Online before publication approval");
-}
-
-async function importNexusStagedRelease(headers) {
-  const releaseCode = "nexus.web:nexusCorporateSite";
-  const catalogue = await requestJson(wcmsUrl, "/nodics/import/v0/core", {
-    headers,
-  });
-  const releases = catalogue.data || catalogue.items || catalogue;
-  const release = [].concat(releases || []).find(
-    (item) => item.releaseCode === releaseCode,
-  );
-  if (!release) {
-    throw new Error(`${releaseCode} is unavailable from WCMS Staged nImport`);
-  }
-  if (release.status !== "CURRENT") {
-    await requestJson(wcmsUrl, "/nodics/import/v0/core/install", {
-      headers,
-      method: "POST",
-      body: JSON.stringify({
-        releaseCodes: [releaseCode],
-        expectedReleases: { [releaseCode]: release.version },
-      }),
-    });
-  }
-  log(`${releaseCode} is qualified through WCMS Staged nImport`);
 }
 
 async function importMandatoryProcessRelease(headers) {
@@ -1158,6 +1178,14 @@ async function main() {
     processUrl,
     "/nodics/system/v0/health/ready",
   );
+  await ensureProcess(
+    "Engagement",
+    urlPort(engagementUrl),
+    projectRoot,
+    "start:engagement",
+    engagementUrl,
+    "/nodics/system/v0/health/ready",
+  );
   await verifyLocalRouteSecurityMatrix();
   if (dropLocalDb) {
     const resetHeaders = await authenticate();
@@ -1166,6 +1194,7 @@ async function main() {
     await ensureProcess("WCMS Staged", 4312, projectRoot, "start:wcms:staged", wcmsUrl, "/nodics/system/v0/health/ready");
     await ensureProcess("WCMS Online", 4314, projectRoot, "start:wcms:online", wcmsOnlineUrl, "/nodics/system/v0/health/ready");
     await ensureProcess("Process and Automation", 4330, projectRoot, "start:process", processUrl, "/nodics/system/v0/health/ready");
+    await ensureProcess("Engagement", urlPort(engagementUrl), projectRoot, "start:engagement", engagementUrl, "/nodics/system/v0/health/ready");
     await verifyLocalRouteSecurityMatrix();
   }
   await waitForHttp(
@@ -1193,10 +1222,15 @@ async function main() {
     "nodics.process",
     "observed modules",
   );
+  requireModule(
+    [...registry.registered, ...registry.available],
+    "nodics.communication",
+    "observed modules",
+  );
+  await ensureFunctionalModuleActive(headers, "nodics.communication", "Local Nexus bootstrap requires Engagement capability");
   await verifyDocumentationInitiallyNotInstalled(headers);
   await importContentPacks(headers);
   await verifyDocumentationNotOnlineBeforePublication();
-  await importNexusStagedRelease(headers);
   await verifyGovernedImportExportBoundary(headers);
   await publishAxisBaseline(headers);
   await publishNexusApplicationBundle(headers);

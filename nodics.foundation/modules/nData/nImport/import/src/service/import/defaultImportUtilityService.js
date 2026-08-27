@@ -179,11 +179,29 @@ module.exports = {
         return filtered;
     },
 
-    /** Resolves only manifest-qualified physical roots, retaining legacy type folders for ordinary callers. */
+    /** Resolves physical release roots for manifest-qualified and ordinary system imports. */
     releaseRoots: function (moduleObject, dataType, dataReleasePlan) {
         let selected = Array.isArray(dataReleasePlan) ? dataReleasePlan.filter(release => release.moduleName === moduleObject.name) : [];
-        let roots = selected.length ? selected.map(release => release.sourceRoot || release.dataType) : [dataType];
+        let roots = selected.length ? selected.map(release => release.sourceRoot || release.dataType) : this.defaultReleaseRoots(moduleObject, dataType);
         return Array.from(new Set(roots)).map(root => path.resolve(moduleObject.path, 'data', root));
+    },
+
+    /** Discovers legacy and versioned release roots for callers that do not pass an explicit release plan. */
+    defaultReleaseRoots: function (moduleObject, dataType) {
+        let dataRoot = path.resolve(moduleObject.path, 'data');
+        let roots = [];
+        let legacyRoot = path.join(dataRoot, dataType);
+        if (fs.existsSync(legacyRoot) && fs.statSync(legacyRoot).isDirectory()) {
+            roots.push(dataType);
+        }
+        if (fs.existsSync(dataRoot) && fs.statSync(dataRoot).isDirectory()) {
+            let releasePattern = new RegExp('^' + dataType + '-v\\d{3}$');
+            fs.readdirSync(dataRoot).filter(entry => {
+                let fullPath = path.join(dataRoot, entry);
+                return releasePattern.test(entry) && fs.statSync(fullPath).isDirectory();
+            }).sort().forEach(entry => roots.push(entry));
+        }
+        return roots.length > 0 ? roots : [dataType];
     },
 
     /**

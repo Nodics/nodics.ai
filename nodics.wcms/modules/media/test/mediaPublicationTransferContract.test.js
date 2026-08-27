@@ -104,12 +104,19 @@ class NodicsError extends Error { constructor(code, message) { super(message || 
             sizeBytes: request.sizeBytes };
     };
     global.SERVICE.DefaultMediaPlacementService = { save: async request => {
+        assert.strictEqual(request.transactionContext, undefined);
+        assert.strictEqual(request.moduleName, undefined);
+        assert.strictEqual(request.schemaModel, undefined);
         placements.push(request.model); return { result: [request.model] };
     } };
     global.SERVICE.DefaultMediaReplicationQueueService = { save: async request => {
+        assert.strictEqual(request.transactionContext, undefined);
+        assert.strictEqual(request.moduleName, undefined);
+        assert.strictEqual(request.schemaModel, undefined);
         replicationRecords.push(request.model); return { result: [request.model] };
     } };
-    await service.reconcileReplication(assets, { tenant: 'default', authData: {}, manifestCode: 'manifest-1' });
+    await service.reconcileReplication(assets, { tenant: 'default', authData: {}, moduleName: 'cms',
+        schemaModel: { rawSchema: {} }, transactionContext: { id: 'tx' }, manifestCode: 'manifest-1' });
     assert.strictEqual(placements[0].targetRole, 'REPLICATION_PROD_MEDIA_LOCATION');
     assert.strictEqual(replicationRecords[0].status, 'REPLICATION_SYNCHRONIZED');
     global.SERVICE.DefaultMediaStorageProviderRegistryService.read = async request => {

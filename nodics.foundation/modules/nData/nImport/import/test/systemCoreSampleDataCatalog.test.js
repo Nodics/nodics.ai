@@ -59,14 +59,22 @@ function getActiveDataTypeRoots(activeModules) {
     let result = [];
     activeModules.forEach(moduleObject => {
         dataTypes.forEach(dataType => {
-            let dataRoot = path.join(moduleObject.path, 'data', dataType);
-            if (fs.existsSync(dataRoot)) {
+            let moduleDataRoot = path.join(moduleObject.path, 'data');
+            let roots = [dataType];
+            if (fs.existsSync(moduleDataRoot)) {
+                roots = roots.concat(fs.readdirSync(moduleDataRoot)
+                    .filter(entry => new RegExp('^' + dataType + '-v\\d{3}$').test(entry))
+                    .sort());
+            }
+            roots.forEach(rootName => {
+                let dataRoot = path.join(moduleDataRoot, rootName);
+                if (!fs.existsSync(dataRoot)) return;
                 result.push({
                     moduleName: moduleObject.name,
                     dataType: dataType,
                     dataRoot: dataRoot
                 });
-            }
+            });
         });
     });
     return result;
@@ -82,7 +90,7 @@ function getHeaderFiles(dataRoot) {
 function getDataFileKeys(dataRoot) {
     return walk(dataRoot, (filePath, fileName) => {
         let relativeSegments = path.relative(dataRoot, filePath).split(path.sep);
-        if (!relativeSegments.includes('data')) {
+        if (!relativeSegments.includes('data') && !relativeSegments.includes('records')) {
             return false;
         }
         let baseName = fileName.split('.').shift();
