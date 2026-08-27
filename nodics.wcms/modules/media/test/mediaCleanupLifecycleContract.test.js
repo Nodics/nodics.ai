@@ -20,8 +20,8 @@
 const assert = require('assert');
 const service = require('../src/service/storage/defaultMediaCleanupLifecycleService');
 const manifest = require('../data/manifest.json');
-const jobData = require('../data/init/data/jobs/mediaCleanupRetentionJobData');
-const jobHeader = require('../data/init/headers/jobs/mediaCleanupRetentionJobHeader');
+const jobData = require('../data/init-v001/records/jobs/mediaCleanupRetentionJobData');
+const jobHeader = require('../data/init-v001/headers/jobs/mediaCleanupRetentionJobHeader');
 
 let savedCandidates = [];
 let savedMedia = [];

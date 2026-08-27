@@ -22,17 +22,17 @@ const path = require('path');
  * @owner import
  */
 let root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-data-release-'));
-let releaseRoot = path.join(root, 'data', 'core');
+let releaseRoot = path.join(root, 'data', 'core-v001');
 fs.mkdirSync(path.join(releaseRoot, 'headers'), { recursive: true });
-fs.mkdirSync(path.join(releaseRoot, 'data'), { recursive: true });
+fs.mkdirSync(path.join(releaseRoot, 'records'), { recursive: true });
 fs.writeFileSync(path.join(releaseRoot, 'headers', 'header.js'), 'module.exports = {};\n');
-fs.writeFileSync(path.join(releaseRoot, 'data', 'data.js'), 'module.exports = [];\n');
+fs.writeFileSync(path.join(releaseRoot, 'records', 'data.js'), 'module.exports = [];\n');
 let files = {};
-['data/data.js', 'headers/header.js'].forEach(file => {
+['records/data.js', 'headers/header.js'].forEach(file => {
     files[file] = crypto.createHash('sha256').update(fs.readFileSync(path.join(releaseRoot, file))).digest('hex');
 });
 fs.writeFileSync(path.join(root, 'data', 'manifest.json'), JSON.stringify({
-    contractVersion: 0, module: 'testModule', sections: { core: {
+    contractVersion: 2, module: 'testModule', sections: { 'core-v001': {
         kind: 'DATA_RELEASE', dataType: 'core', version: '1.1.0',
         displayName: 'Test Core Release',
         description: 'Test core release',
@@ -48,7 +48,8 @@ fs.writeFileSync(path.join(root, 'data', 'manifest.json'), JSON.stringify({
             entities: [{ type: 'page', label: 'Pages', total: 2, added: 2, updated: 0, unchanged: 0, removed: 0 }],
             postPublicationCapabilities: [{ title: 'Open workspace', description: 'Use the published test workspace.' }]
         },
-        files: Object.fromEntries(Object.entries(files).map(([name, hash]) => ['core/' + name, hash]))
+        sourceRoot: 'core-v001',
+        files: Object.fromEntries(Object.entries(files).map(([name, hash]) => ['core-v001/' + name, hash]))
     } }
 }));
 
@@ -290,14 +291,14 @@ const routers = require('../src/router/routers');
     assert.throws(() => service.validatePublicationReview({ title: '<script>', entities: [] }, 'testModule', 'core'),
         /metadata is invalid|text is invalid/);
 
-    fs.writeFileSync(path.join(releaseRoot, 'data', 'data.js'), 'module.exports = [1];\n');
+    fs.writeFileSync(path.join(releaseRoot, 'records', 'data.js'), 'module.exports = [1];\n');
     let invalidReleases = service.discoverReleases('core');
     assert.strictEqual(invalidReleases.length, 1);
     assert.strictEqual(invalidReleases[0].invalidManifest, true);
     catalogue = await service.getCatalogue({ tenant: 'default', dataType: 'core' });
     assert.strictEqual(catalogue.data[0].status, 'INVALID_RELEASE');
     assert.match(catalogue.data[0].invalidReason, /checksum validation failed/);
-    assert.match(catalogue.data[0].invalidReason, /testModule\/core\/data\/data.js/);
+    assert.match(catalogue.data[0].invalidReason, /testModule\/core\/core-v001\/records\/data.js/);
     assert.match(catalogue.data[0].invalidReason, /expected .+\.\.\., actual .+\.\.\./);
     await assert.rejects(() => service.preflight({
         tenant: 'default',

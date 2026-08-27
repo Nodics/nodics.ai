@@ -26,8 +26,8 @@ const enrichment = require('../src/service/defaultProductSearchEnrichmentService
 const staging = require('../src/service/defaultProductPublicationPolicyService');
 const publication = require('../src/service/defaultProductSearchPublicationService');
 const indexes = require('../src/search/indexes');
-const sampleProducts = require('../data/sample/data/product/sampleProductData');
-const sampleLocalizations = require('../data/sample/data/product/sampleProductLocalizationData');
+const sampleProducts = require('../data/sample-v001/records/product/sampleProductData');
+const sampleLocalizations = require('../data/sample-v001/records/product/sampleProductLocalizationData');
 
 const persisted = [];
 const indexed = [];

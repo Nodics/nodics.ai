@@ -20,11 +20,11 @@ class NodicsError extends Error {
 }
 global.CLASSES = { NodicsError: NodicsError };
 
-const pageActions = require('../data/init/data/pages/defaultCmsPageWorkflowActionData');
-const pageChannels = require('../data/init/data/pages/defaultCmsPageWorkflowChannelData');
-const componentActions = require('../data/init/data/components/defaultCmsComponentWorkflowActionData');
-const pageMappings = require('../data/init/data/schema2Workflow/defaultCmsPage2WorkflowData');
-const componentMappings = require('../data/init/data/schema2Workflow/defaultCmsComponent2WorkflowData');
+const pageActions = require('../data/init-v001/records/pages/defaultCmsPageWorkflowActionData');
+const pageChannels = require('../data/init-v001/records/pages/defaultCmsPageWorkflowChannelData');
+const componentActions = require('../data/init-v001/records/components/defaultCmsComponentWorkflowActionData');
+const pageMappings = require('../data/init-v001/records/schema2Workflow/defaultCmsPage2WorkflowData');
+const componentMappings = require('../data/init-v001/records/schema2Workflow/defaultCmsComponent2WorkflowData');
 assert(pageActions.record1.channels.includes('publishCmsPageChannel'));
 assert.strictEqual(pageChannels.record1.target, 'publishCmsPageAction');
 assert.strictEqual(pageActions.record2.handler, 'DefaultWcmsPublicationWorkflowService.publish');

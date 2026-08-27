@@ -1,8 +1,8 @@
 {
-    "contractVersion": 0,
+    "contractVersion": 2,
     "module": "editorial",
     "sections": {
-        "init": {
+        "init-v001": {
             "kind": "DATA_RELEASE",
             "dataType": "init",
             "version": "0.0.0",
@@ -10,16 +10,19 @@
             "owningDomain": "editorial",
             "lifecycle": "REFERENCE",
             "destinationRole": "WCMS_STAGED",
-            "environmentScope": ["ALL"],
+            "environmentScope": [
+                "ALL"
+            ],
             "sensitivity": "INTERNAL",
             "versioningPolicy": "NONE",
             "publicationPolicy": "NONE",
             "initialPublicationPolicy": "NONE",
             "removalPolicy": "RETAIN",
             "files": {
-                "init/data/content/defaultEditorialContentTypeData.js": "096af0259f299a3a575e630bc5cd962b1bc90b9d58f00f26db2712fee3b0752f",
-                "init/headers/content/defaultEditorialContentTypeDataHeader.js": "3783e897d2f9cb0725f8df0cac2d084cd8b225e7944e6d614c9e7a1e85cfe12f"
-            }
+                "init-v001/records/content/defaultEditorialContentTypeData.js": "548b22b2530fa5026a8c441945efdb2a3df9b903bf50bd38af11dd158f212b53",
+                "init-v001/headers/content/defaultEditorialContentTypeDataHeader.js": "f35ff6282a7d61e96c92f777faca5c5f2a4d5d1cd7e26cc0e7c41721f6e75281"
+            },
+            "sourceRoot": "init-v001"
         }
     }
 }

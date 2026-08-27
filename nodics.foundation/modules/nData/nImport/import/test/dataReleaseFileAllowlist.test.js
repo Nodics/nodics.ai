@@ -19,13 +19,13 @@ global.NODICS = {
 global.UTILS = {};
 const utility = require('../src/service/import/defaultImportUtilityService');
 const files = {
-    declared: ['/trusted/owner/data/init/data/declared.js'],
-    sibling: ['/trusted/owner/data/init/data/sibling.js']
+    declared: ['/trusted/owner/data/init-v001/records/declared.js'],
+    sibling: ['/trusted/owner/data/init-v001/records/sibling.js']
 };
 const selected = utility.filterDeclaredReleaseFiles(files, [{
-    moduleName: 'owner', dataType: 'init', declaredFiles: ['init/data/declared.js', 'init/headers/declaredHeader.js']
+    moduleName: 'owner', dataType: 'init', declaredFiles: ['init-v001/records/declared.js', 'init-v001/headers/declaredHeader.js']
 }], 'data');
-assert.deepStrictEqual(selected, { declared: [path.resolve('/trusted/owner/data/init/data/declared.js')] });
+assert.deepStrictEqual(selected, { declared: [path.resolve('/trusted/owner/data/init-v001/records/declared.js')] });
 assert.deepStrictEqual(utility.filterDeclaredReleaseFiles(files, undefined, 'data'), files,
     'legacy non-release import callers retain established behavior');
 assert.deepStrictEqual(utility.modulesForImport(['owner'], [{ moduleName: 'owner' }]).map(item => item.name), ['owner'],

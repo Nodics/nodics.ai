@@ -230,11 +230,10 @@ All active Nodics-owned modules, generators, examples, and project templates
 must use contract version 2. Compatibility is a consumer safeguard, not
 permission to create new legacy manifests.
 
-During migration from the legacy layout, tooling may produce a compatibility
-projection under `data/init`, `data/core`, or `data/sample` if existing nImport
-runtime code still requires those roots. That projection is generated output,
-not the developer-authored source of truth. The target authoring shape remains
-`data/<dataType>-vNNN/{headers,records}`.
+Existing import consumers may tolerate legacy roots during bounded migration,
+but new Nodics-owned module data must be authored only as
+`data/<dataType>-vNNN/{headers,records}`. Compatibility is read-side behavior,
+not an instruction to generate or maintain duplicate legacy data roots.
 
 Asset and binary media release structure is intentionally deferred. Media
 assets remain governed data, but their final authoring layout needs a separate

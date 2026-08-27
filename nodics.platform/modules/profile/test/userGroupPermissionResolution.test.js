@@ -44,8 +44,8 @@ global.UTILS = Object.assign({}, commonUtils, {
   },
 });
 
-const userGroupsData = require("../data/init/data/groups/defaultBootstrapUserGroupsData");
-const employeeData = require("../data/init/data/user/defaultEmployeeData");
+const userGroupsData = require("../data/init-v001/records/groups/defaultBootstrapUserGroupsData");
+const employeeData = require("../data/init-v001/records/user/defaultEmployeeData");
 let groupTree = [
   {
     code: "runtimeConfigAdminUserGroup",

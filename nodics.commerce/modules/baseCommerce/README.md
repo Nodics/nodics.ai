@@ -9,7 +9,7 @@ activated.
 ## Ownership
 
 - Owns Base Commerce composition, configuration, LLM guidance, tests, and the
-  `data/core` Commerce core-reference release declared in `data/manifest.json`.
+  `data/core-v001` Commerce core-reference release declared in `data/manifest.json`.
 - Does not own child capability schemas, services, routers, source behavior, or
   feature-specific business rules.
 - Keeps operational store, sales-channel, and point-of-service defaults as

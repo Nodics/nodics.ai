@@ -44,13 +44,13 @@ global.NODICS = {
 };
 
 const repoRoot = path.resolve(__dirname, '../../../../../../');
-const enterpriseHeader = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init/headers/enterprise/defaultEnterpriseHeader'));
-const groupHeader = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init/headers/groups/defaultUserGroupsHeader'));
-const userHeader = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init/headers/user/defaultUsersHeader'));
-const enterpriseData = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init/data/enterprise/defaultEnterpriseData'));
-const tenantData = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init/data/enterprise/defaultTenantsData'));
-const groupData = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init/data/groups/defaultBootstrapUserGroupsData'));
-const userData = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init/data/user/defaultEmployeeData'));
+const enterpriseHeader = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/headers/enterprise/defaultEnterpriseHeader'));
+const groupHeader = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/headers/groups/defaultUserGroupsHeader'));
+const userHeader = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/headers/user/defaultUsersHeader'));
+const enterpriseData = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/enterprise/defaultEnterpriseData'));
+const tenantData = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/enterprise/defaultTenantsData'));
+const groupData = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/groups/defaultBootstrapUserGroupsData'));
+const userData = require(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/user/defaultEmployeeData'));
 const importService = require('../src/service/import/defaultImportService');
 const diagnostics = require('../src/service/diagnostics/defaultImportDiagnosticsService');
 
@@ -63,7 +63,7 @@ assert.strictEqual(userHeader.profile.defaultEmployee.options.schemaName, 'emplo
 assert.strictEqual(enterpriseData.record0.code, 'default');
 assert.strictEqual(tenantData.record0.code, 'default');
 assert.deepStrictEqual(
-    fs.readdirSync(path.join(repoRoot, 'nodics.platform/modules/profile/data/init/data/enterprise'))
+    fs.readdirSync(path.join(repoRoot, 'nodics.platform/modules/profile/data/init-v001/records/enterprise'))
         .filter(fileName => fileName.startsWith('defaultTenantsData'))
         .sort(),
     ['defaultTenantsData.js'],

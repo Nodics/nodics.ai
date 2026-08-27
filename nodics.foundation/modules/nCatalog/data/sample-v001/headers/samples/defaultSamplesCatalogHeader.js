@@ -1,0 +1,35 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+/**
+ * @module nodics.foundation/modules/nCatalog/data/sample-v001/headers/samples/defaultSamplesCatalogHeader
+ * @description Provides nCatalog initializer or sample data consumed by the import layer.
+ * @layer data
+ * @owner nCatalog
+ * @override Projects may override or extend this initializer data through layered import data rather than editing out-of-the-box framework records.
+ */
+module.exports = {
+    catalog: {
+        defaultSamplesCatalog: {
+            options: {
+                enabled: true,
+                schemaName: 'catalog',
+                operation: 'saveAll',
+                dataFilePrefix: 'defaultSamplesCatalogData',
+                userGroups: ['employeeUserGroup'],
+                finalizeData: false
+            },
+            query: {
+                code: '$code'
+            }
+        }
+    }
+};

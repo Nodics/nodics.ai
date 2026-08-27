@@ -1,8 +1,8 @@
 {
-    "contractVersion": 0,
+    "contractVersion": 2,
     "module": "profile",
     "sections": {
-        "init": {
+        "init-v001": {
             "kind": "DATA_RELEASE",
             "dataType": "init",
             "version": "0.0.0",
@@ -19,24 +19,25 @@
             "initialPublicationPolicy": "NONE",
             "removalPolicy": "RETAIN",
             "files": {
-                "init/data/address/defaultAddressesData.js": "39507c228b61de60ef6e6385293631eb660e64b13b389196906f1b75dc47ae63",
-                "init/data/address/defaultContactsData.js": "ebbe7117f5685bc344337cd10e41d4afbfe2f087ab0b4b66c03a74d03b8103f3",
-                "init/data/address/defaultTenantAddressesData.js": "131fbe33a15558593835a67d17c14cf545e4f3da2c9fd9ba964fe9a7a0fe0ace",
-                "init/data/address/defaultTenantContactsData.js": "cc69019c88728d606bcd84c298bcf12b302e3c7c67e99acd19e5defb1f3ed170",
-                "init/data/enterprise/defaultEnterpriseData.js": "02c57b34ba14d46673e146088b8f26e3ded42ac05d59d89440a8aa8b0aa480c5",
-                "init/data/enterprise/defaultTenantsData.js": "d83563312b485fb0aa29f4f9108dd7600814b1dbf54b38da1b499a332cfbed32",
-                "init/data/groups/defaultBootstrapUserGroupsData.js": "5026dbf939ce976489e35079fe10a8192257164bb9b391452a1893c67277f08e",
-                "init/data/user/defaultCutomerData.js": "b8c0e56ba8ba6db86740de026a6df1bf23ea3815cc9f0f3174abf7f204415c2d",
-                "init/data/user/defaultEmployeeData.js": "da6199d18f8dacd96503cf591591594a3d77893f64ab82f5510fb02ede706b30",
-                "init/headers/address/defaultAddressesHeader.js": "4b2c8a026830151466708a90cee091f5aa4d7adcaf4b0e8ffce0d76729f969c0",
-                "init/headers/address/defaultContactsHeader.js": "8433baa063791921ff3609fb7391d9d89e7d047c8183755c9c7daacc20f6e9fb",
-                "init/headers/enterprise/defaultEnterpriseHeader.js": "25fd400d6a4c6e75f636c18d2b7fce5242fc9857c1e2626a8af4b07355dfb6a6",
-                "init/headers/enterprise/defaultTenantsHeader.js": "08c7e013aea8a5641e308393f8d721894c8b5d85e4340cdba3abbc7eef8fee81",
-                "init/headers/groups/defaultUserGroupsHeader.js": "fa7a3cb00b5574cbd7389e76ac99741efab5c869fde3adbcb3ab9a0cc02d3105",
-                "init/headers/user/defaultUsersHeader.js": "ef5e915cdf2259cb880810f58abf923ea5d1d68741ba5dfc4ee2dfa4d1d2ce82"
-            }
+                "init-v001/records/address/defaultAddressesData.js": "c1657ffd4c9400f434a87de0d40121a165ad1828d298bedad374d2ecc97f872c",
+                "init-v001/records/address/defaultContactsData.js": "de5ff9494a541fb1df0fa30ce816ad6aee616385222d9a71dc93cb19f2914095",
+                "init-v001/records/address/defaultTenantAddressesData.js": "1d209fa6a8b24ee4632a6e1e77aaf80ef880f0b91ffabd2880c2ea02a9dd17dd",
+                "init-v001/records/address/defaultTenantContactsData.js": "ec1a1fd5c7011a37ddaab2e5328575b3dcfab7927ab41031ec9844b91917629b",
+                "init-v001/records/enterprise/defaultEnterpriseData.js": "7db95f99ed1e0020131b016a065b58affeb3597bcd9133f21cdd6dbd77bc0b7b",
+                "init-v001/records/enterprise/defaultTenantsData.js": "2855a833d2b24a6b4005d9c6772e9c8d0c6f5da0863dfc8912d8fa7c5dd9f83e",
+                "init-v001/records/groups/defaultBootstrapUserGroupsData.js": "282be5808925cf2c2b2e9ab62112cd33e26c66af051af2cbcf856bac5b9ad267",
+                "init-v001/records/user/defaultCutomerData.js": "fdbcd52c7188c370aabe614477e06d67fe1b94972325d5dfdda67679556adb21",
+                "init-v001/records/user/defaultEmployeeData.js": "7d8429cc81110810acad6b8a56ce593734b9ccb20538dd2182c920e50bb6134c",
+                "init-v001/headers/address/defaultAddressesHeader.js": "234ff8f38ed73b22cbe6a36eaa63b18e177ca33af1650a2d40a15b45c737cf0a",
+                "init-v001/headers/address/defaultContactsHeader.js": "07f67b81bb021b4bd2f234af5e027acc1bbabf3b96aeecce17933fc6abb0ee85",
+                "init-v001/headers/enterprise/defaultEnterpriseHeader.js": "8f82d95adf916168a84fe34b83345f18c329b7140df0af1830a3e62380ae0382",
+                "init-v001/headers/enterprise/defaultTenantsHeader.js": "755d4697206ec16e96e2790235dc40512c1740e662dd83b8fd07b7b27b11684b",
+                "init-v001/headers/groups/defaultUserGroupsHeader.js": "4055c1ad35b26b9b6c524d6f9246f3b5f6ed9f4f738447438e0f4a47315f7de4",
+                "init-v001/headers/user/defaultUsersHeader.js": "f67f433e151ce2671df6762a7a7e1e56f71a44a40fb43753252c40437fcb5db6"
+            },
+            "sourceRoot": "init-v001"
         },
-        "sample": {
+        "sample-v001": {
             "kind": "DATA_RELEASE",
             "dataType": "sample",
             "version": "0.0.0",
@@ -55,14 +56,15 @@
             "initialPublicationPolicy": "NONE",
             "removalPolicy": "DELETE_EXPLICIT",
             "files": {
-                "sample/tenant/data/defaultTenantCsvData.csv": "4163a0b8cf26bf8804b8761852e8b0a75843cc85e7002b7fe78bdb96c85edfcb",
-                "sample/tenant/data/defaultTenantExcelData.xlsx": "cf4f3d7f7e1b94c5ccbfeab90bf99594bbd2cc57afdf830ccca4d31af2c2f95d",
-                "sample/tenant/data/defaultTenantLegacyExcelData.xls": "9ceaf1edfc803e913b84e66c8ce978155cff8d0ebbf39790983dfe96729f9975",
-                "sample/tenant/headers/tenantCsvDataHeader.js": "cb0313f5b1110ae8eea55469a4c70c8503f145e23f0fc86a21b256efd343be21",
-                "sample/tenant/headers/tenantExcelDataHeader.js": "710cbcb29eb5932ea31f8d0879e49e8ee7e27b6c869f90b6f2925438a3a35fb5",
-                "sample/tenant/headers/tenantLegacyExcelDataHeader.js": "b3fcd875312304fe3c60e035a6aa1e993948f4549343bda6bcf91829e9810fc1",
-                "sample/tenant/README.md": "7e343ceddb6da283b8cebbd154605c659ac28d3b4750e38cd7b5e9651c553da1"
-            }
+                "sample-v001/tenant/records/defaultTenantCsvData.csv": "4163a0b8cf26bf8804b8761852e8b0a75843cc85e7002b7fe78bdb96c85edfcb",
+                "sample-v001/tenant/records/defaultTenantExcelData.xlsx": "cf4f3d7f7e1b94c5ccbfeab90bf99594bbd2cc57afdf830ccca4d31af2c2f95d",
+                "sample-v001/tenant/records/defaultTenantLegacyExcelData.xls": "9ceaf1edfc803e913b84e66c8ce978155cff8d0ebbf39790983dfe96729f9975",
+                "sample-v001/tenant/headers/tenantCsvDataHeader.js": "afd7ec616e409db0256f72071b35366d4635ddcb94169105cd45c1c70b4d130e",
+                "sample-v001/tenant/headers/tenantExcelDataHeader.js": "f48e2404339a641adbd6756d2e45a72935f209f620ac1166afb4c7a5255acb4c",
+                "sample-v001/tenant/headers/tenantLegacyExcelDataHeader.js": "2f732e445d9b35743698ea092e2436d1844e6cd0db22a840fe6507c693b3ec57",
+                "sample-v001/tenant/README.md": "34781a5e35fb0b16eed6a9377972d345fa44dccc75b619cc4794cf3e045e879e"
+            },
+            "sourceRoot": "sample-v001"
         }
     }
 }

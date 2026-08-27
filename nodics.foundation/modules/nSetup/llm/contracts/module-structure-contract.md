@@ -32,10 +32,10 @@ Raw module discovery must continue to skip folders named `docs` so copied
 historical material can never become a runtime module source.
 
 `data/` is optional and must be owned by the concrete module whose records are
-being imported. Supported module-owned system data directories are `data/init`
-for startup/bootstrap data, `data/core` for core/reference imports, and
-`data/sample` for demo/sample imports. Do not create empty `data/` folders on
-project roots or pure group modules.
+being imported. Supported module-owned release directories are `data/init-vNNN`
+for startup/bootstrap data, `data/core-vNNN` for core/reference imports, and
+`data/sample-vNNN` for demo/sample imports. Do not create empty `data/` folders
+on project roots or pure group modules.
 
 Every non-empty published system-data root must contain exactly one aggregate
 `data/manifest.json` following `data-manifest-contract.md`. Init, core, sample,
@@ -44,9 +44,9 @@ inside that file. Do not create a root `manifest/` directory or per-type
 `data/<type>/manifest.json` files.
 
 Canonical source files used to generate importable data must stay inside the
-same data ownership tree, for example `data/core/source/...`, while generated
-records remain under the matching `data/core/data/...` and
-`data/core/headers/...` paths. Do not add module-root source folders such as
+same data ownership tree, for example `data/core-v001/source/...`, while
+importable records remain under the matching `data/core-v001/records/...` and
+`data/core-v001/headers/...` paths. Do not add module-root source folders such as
 `content/` for import-pack authoring unless a documented loader/generator
 contract explicitly introduces that folder as a new standard.
 

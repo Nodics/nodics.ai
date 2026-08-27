@@ -1,198 +1,199 @@
 {
-  "contractVersion": 2,
-  "module": "axis",
-  "sections": {
-    "axisBaseline": {
-      "kind": "DATA_RELEASE",
-      "dataType": "init",
-      "version": "0.0.0",
-      "description": "Platform-owned Axis baseline experience for Staged installation and controlled publication",
-      "owningDomain": "axis",
-      "lifecycle": "PUBLISHABLE",
-      "destinationRole": "WCMS_STAGED",
-      "environmentScope": [
-        "ALL"
-      ],
-      "sensitivity": "INTERNAL",
-      "versioningPolicy": "IMMUTABLE",
-      "publicationPolicy": "REQUIRED",
-      "initialPublicationPolicy": "ADMIN_INITIATED",
-      "removalPolicy": "UNPUBLISH_OR_RETIRE",
-      "publicationReview": {
-        "title": "Publish the managed Nodics Axis workspace",
-        "summary": "Approve the immutable Axis baseline that replaces the bundled recovery workspace with the managed Online administration experience.",
-        "sourceRole": "WCMS_STAGED",
-        "targetRole": "WCMS_ONLINE",
-        "siteCode": "axisCmsSite",
-        "catalogCode": "axisContentCatalog",
-        "impactMessage": "After approval, Axis will load its managed Online site and authorized administrators can begin normal content, workflow, publication, documentation, and application-bundle operations.",
-        "rollbackMessage": "If Online deployment fails, the publication remains governed and diagnosable; a previously Online release can be restored through the publication rollback lifecycle when one exists.",
-        "entities": [
-          {
-            "type": "contentCatalog",
-            "label": "Content catalogs",
-            "total": 2,
-            "added": 2,
-            "updated": 0,
-            "unchanged": 0,
-            "removed": 0
-          },
-          {
-            "type": "site",
-            "label": "Sites",
-            "total": 1,
-            "added": 1,
-            "updated": 0,
-            "unchanged": 0,
-            "removed": 0
-          },
-          {
-            "type": "cmsTypeCode",
-            "label": "Page and component types",
-            "total": 21,
-            "added": 21,
-            "updated": 0,
-            "unchanged": 0,
-            "removed": 0
-          },
-          {
-            "type": "cmsRenderer",
-            "label": "Renderer mappings",
-            "total": 21,
-            "added": 21,
-            "updated": 0,
-            "unchanged": 0,
-            "removed": 0
-          },
-          {
-            "type": "cmsTemplate",
-            "label": "Page templates",
-            "total": 6,
-            "added": 6,
-            "updated": 0,
-            "unchanged": 0,
-            "removed": 0
-          },
-          {
-            "type": "cmsSlot",
-            "label": "Template slots",
-            "total": 17,
-            "added": 17,
-            "updated": 0,
-            "unchanged": 0,
-            "removed": 0
-          },
-          {
-            "type": "cmsComponent",
-            "label": "Components",
-            "total": 28,
-            "added": 28,
-            "updated": 0,
-            "unchanged": 0,
-            "removed": 0
-          },
-          {
-            "type": "cmsPage",
-            "label": "Pages",
-            "total": 10,
-            "added": 10,
-            "updated": 0,
-            "unchanged": 0,
-            "removed": 0
-          },
-          {
-            "type": "cmsRoute",
-            "label": "Routes",
-            "total": 10,
-            "added": 10,
-            "updated": 0,
-            "unchanged": 0,
-            "removed": 0
-          }
-        ],
-        "postPublicationCapabilities": [
-          {
-            "title": "Open the full Axis workspace",
-            "description": "Use the managed dashboard and every authorized business module advertised by the active Nodics runtime."
-          },
-          {
-            "title": "Create and manage content",
-            "description": "Work with pages, templates, components, navigation, routes, and governed media from Axis."
-          },
-          {
-            "title": "Preview and publish later versions",
-            "description": "Keep changes in Staged, validate them, submit them for approval, and publish only approved versions Online."
-          },
-          {
-            "title": "Review publication evidence",
-            "description": "Inspect publication history, immutable release identity, workflow status, validation results, and audit records."
-          },
-          {
-            "title": "Install optional bundles",
-            "description": "Install and publish documentation, website, and future application bundles through governed Axis operations."
-          }
-        ]
-      },
-      "files": {
-        "init/data/axis/axisCmsComponentData.js": "597656722290058cd0255a8872c621e2e6ba494b062413a738afa2899e560f9d",
-        "init/data/axis/axisCmsPageData.js": "597149b6828ee5952d0dbaa44f842fdb865cc26683b918e9a555f7698b7905f3",
-        "init/data/axis/axisCmsRendererData.js": "a52b98291538f487e01d568285c830dbfc2ab43fc81bdd62c67948138eb6fd9a",
-        "init/data/axis/axisCmsRouteData.js": "602ded097f412a7cbf2bd614d734d0cfa43881cf7675b68f97be537ec0f20ee4",
-        "init/data/axis/axisCmsSiteData.js": "0c07f8e294fd7ff8ce1f3df787e0cc5c60e52d010685677b5dbb499009d73929",
-        "init/data/axis/axisCmsSlotData.js": "861d8021650e991409ee768692ad18eb5e7358699f962baa27bc15f58b901d10",
-        "init/data/axis/axisCmsTemplateData.js": "3d292bb081dc44f5e2ea446af4c3a67a2c8566ab860d554cefebadbc7b584325",
-        "init/data/axis/axisCmsTypeCodeData.js": "f07cb49e206240ee4701c34f83f07063d77570ebe5a454f82a03d082dcb9827d",
-        "init/data/axis/axisContentCatalogData.js": "cb807a566daa82760e2fa2362a38783dae542b2ee5daaf426a21eb4d2c6ea4b2",
-        "init/headers/axis/axisContentCatalogHeader.js": "ec398e034ae3a31f387787ef174e4050b5ac775cca6a0a29e2948b54897fe25e"
-      }
-    },
-    "documentation": {
-      "kind": "CONTENT_PACK",
-      "contentPath": "core",
-      "pack": "nodics.platform.axis",
-      "version": "0.0.1",
-      "owningDomain": "axis",
-      "lifecycle": "PUBLISHABLE",
-      "destinationRole": "WCMS_STAGED",
-      "environmentScope": [
-        "ALL"
-      ],
-      "sensitivity": "PUBLIC",
-      "versioningPolicy": "IMMUTABLE",
-      "publicationPolicy": "REQUIRED",
-      "initialPublicationPolicy": "ADMIN_INITIATED",
-      "installationPolicy": "OPTIONAL_AXIS_INITIATED",
-      "removalPolicy": "UNPUBLISH_OR_RETIRE",
-      "sourceMode": "catalogue-markdown-source",
-      "sourceAuthority": "docs/catalogue.json",
-      "sites": [
-        "axisDocumentationSite"
-      ],
-      "accessMode": "PUBLIC",
-      "pages": 17,
-      "components": 18,
-      "routes": 17,
-      "releaseChecksum": "9578d05ae646956c1a822cb0b3577366dfbdfa77bc018efc83b7c88dbeb351ff",
-      "generatedHashes": {
-        "core/data/documentation/axisDocumentationAccessPolicyData.js": "dd948efe165365adedfbd8102647d6cb2bd837f0ce5c75bd0f6120fb586b7f1b",
-        "core/data/documentation/axisDocumentationDashboardData.js": "91205ba472620ed7983b7ee32b92b38174bddce220ba8fcbb2c147e221a6c486",
-        "core/data/documentation/axisDocumentationNavigationData.js": "ffea967d9fae65d5153fb3b092f3826c5682456365cff6f5d8efa1ea8c438827",
-        "core/data/documentation/axisDocumentationNodeData.js": "79fc8e251e660999e319591ad096e70a6a96951f9cf4274991e73e9017b00ac9",
-        "core/data/documentation/axisDocumentationPageMetadataData.js": "99363c481eb90fbef66f20283a4b759be6d3572fbfdb849303644705d0040d55",
-        "core/data/documentation/axisDocumentationProductData.js": "e1e980db49906f19c49f9a33fdb347b2fc9752716290c38751955f2c488f6b84",
-        "core/data/documentation/axisDocumentationPublicationStateData.js": "9bab170d1fbf4931dce74ef35f9440753c479b2b4789e208525367dcc1d669d9",
-        "core/data/documentation/axisDocumentationSearchMetadataData.js": "34f8c1396fdeb4c4d81927894e675063a373a6894bbd9c3cb95e382e973a4848",
-        "core/data/documentation/axisDocumentationComponentData.js": "cd5bf92b1a0d853408457ef13c2a387d491f3dcad9c43f0ceb5f5051723ef7d6",
-        "core/data/documentation/axisDocumentationPageData.js": "aae16acdb0be18fda84ea7208be5c4429780bd8d73408ecaba589076f6a4cf0b",
-        "core/data/documentation/axisDocumentationRendererData.js": "fc783595269b5f1e423e594263f1dd30bd35bf6e048d51fb6028938aeef89a68",
-        "core/data/documentation/axisDocumentationRouteData.js": "94d142a0c4b580611456b5da69b1aeb8022297f25cf932e8519ef0ae89baa66f",
-        "core/data/documentation/axisDocumentationSiteData.js": "91b8c928ef77bf1708ee7732fb40034607c2a49970ea8b012647e3f2ba880120",
-        "core/data/documentation/axisDocumentationSlotData.js": "f53ac3815485ce7299fea900cf462fb0d539098ab1790462580d443bc7f2f46f",
-        "core/data/documentation/axisDocumentationTemplateData.js": "88c5d2f77c302c48fef6aa5ec21d4a528f698b94eb72e2b5147127258e16f43b",
-        "core/data/documentation/axisDocumentationTypeCodeData.js": "f777fa4b2a0b1b018bcb44380d266e3e9f6ef49a6f972612b52e330724bda6a2",
-        "core/headers/axisDocumentationContentPackHeader.js": "38b0dcb5bd0f10d2bf10accb12698bc02d0a968a79effbbc927dfb0afce3d717"
-      },
-      "migrationRegister": "docs/migration-register.json"
+    "contractVersion": 2,
+    "module": "axis",
+    "sections": {
+        "axisBaseline": {
+            "kind": "DATA_RELEASE",
+            "dataType": "init",
+            "version": "0.0.0",
+            "description": "Platform-owned Axis baseline experience for Staged installation and controlled publication",
+            "owningDomain": "axis",
+            "lifecycle": "PUBLISHABLE",
+            "destinationRole": "WCMS_STAGED",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "IMMUTABLE",
+            "publicationPolicy": "REQUIRED",
+            "initialPublicationPolicy": "ADMIN_INITIATED",
+            "removalPolicy": "UNPUBLISH_OR_RETIRE",
+            "publicationReview": {
+                "title": "Publish the managed Nodics Axis workspace",
+                "summary": "Approve the immutable Axis baseline that replaces the bundled recovery workspace with the managed Online administration experience.",
+                "sourceRole": "WCMS_STAGED",
+                "targetRole": "WCMS_ONLINE",
+                "siteCode": "axisCmsSite",
+                "catalogCode": "axisContentCatalog",
+                "impactMessage": "After approval, Axis will load its managed Online site and authorized administrators can begin normal content, workflow, publication, documentation, and application-bundle operations.",
+                "rollbackMessage": "If Online deployment fails, the publication remains governed and diagnosable; a previously Online release can be restored through the publication rollback lifecycle when one exists.",
+                "entities": [
+                    {
+                        "type": "contentCatalog",
+                        "label": "Content catalogs",
+                        "total": 2,
+                        "added": 2,
+                        "updated": 0,
+                        "unchanged": 0,
+                        "removed": 0
+                    },
+                    {
+                        "type": "site",
+                        "label": "Sites",
+                        "total": 1,
+                        "added": 1,
+                        "updated": 0,
+                        "unchanged": 0,
+                        "removed": 0
+                    },
+                    {
+                        "type": "cmsTypeCode",
+                        "label": "Page and component types",
+                        "total": 21,
+                        "added": 21,
+                        "updated": 0,
+                        "unchanged": 0,
+                        "removed": 0
+                    },
+                    {
+                        "type": "cmsRenderer",
+                        "label": "Renderer mappings",
+                        "total": 21,
+                        "added": 21,
+                        "updated": 0,
+                        "unchanged": 0,
+                        "removed": 0
+                    },
+                    {
+                        "type": "cmsTemplate",
+                        "label": "Page templates",
+                        "total": 6,
+                        "added": 6,
+                        "updated": 0,
+                        "unchanged": 0,
+                        "removed": 0
+                    },
+                    {
+                        "type": "cmsSlot",
+                        "label": "Template slots",
+                        "total": 17,
+                        "added": 17,
+                        "updated": 0,
+                        "unchanged": 0,
+                        "removed": 0
+                    },
+                    {
+                        "type": "cmsComponent",
+                        "label": "Components",
+                        "total": 28,
+                        "added": 28,
+                        "updated": 0,
+                        "unchanged": 0,
+                        "removed": 0
+                    },
+                    {
+                        "type": "cmsPage",
+                        "label": "Pages",
+                        "total": 10,
+                        "added": 10,
+                        "updated": 0,
+                        "unchanged": 0,
+                        "removed": 0
+                    },
+                    {
+                        "type": "cmsRoute",
+                        "label": "Routes",
+                        "total": 10,
+                        "added": 10,
+                        "updated": 0,
+                        "unchanged": 0,
+                        "removed": 0
+                    }
+                ],
+                "postPublicationCapabilities": [
+                    {
+                        "title": "Open the full Axis workspace",
+                        "description": "Use the managed dashboard and every authorized business module advertised by the active Nodics runtime."
+                    },
+                    {
+                        "title": "Create and manage content",
+                        "description": "Work with pages, templates, components, navigation, routes, and governed media from Axis."
+                    },
+                    {
+                        "title": "Preview and publish later versions",
+                        "description": "Keep changes in Staged, validate them, submit them for approval, and publish only approved versions Online."
+                    },
+                    {
+                        "title": "Review publication evidence",
+                        "description": "Inspect publication history, immutable release identity, workflow status, validation results, and audit records."
+                    },
+                    {
+                        "title": "Install optional bundles",
+                        "description": "Install and publish documentation, website, and future application bundles through governed Axis operations."
+                    }
+                ]
+            },
+            "files": {
+                "init-v001/records/axis/axisCmsComponentData.js": "e2089c1f29de6f6268b8daddae1edec56f6b8b123812c667e63a64b6bd1c99a0",
+                "init-v001/records/axis/axisCmsPageData.js": "c5a7f64e684d588a864e76f3ee473bed7ba7b7612cfef4f2ae0e9ba78cb99b2c",
+                "init-v001/records/axis/axisCmsRendererData.js": "5065addc7631e11ae8666434c3bdbe60cba4b0aec4655ce9fdd6621993ad1f14",
+                "init-v001/records/axis/axisCmsRouteData.js": "a309d56e36b2e5682a030699c1d1e95236e2be78c324b2c19b21550aa8ef6ddd",
+                "init-v001/records/axis/axisCmsSiteData.js": "6cbe2e4c0080aab43e82e5cfcbae9fa9c7696d9038b496809684c836131e8ea4",
+                "init-v001/records/axis/axisCmsSlotData.js": "b773d365fae8ba37b14458d11fd0dc54304f2bf0f0b4b378e4f06ccf13096f19",
+                "init-v001/records/axis/axisCmsTemplateData.js": "9af21863924e74792216f3a9b742cef06b43abb6cd012791a44729d7de3b61eb",
+                "init-v001/records/axis/axisCmsTypeCodeData.js": "41eaa29480e6517877ac145d6edb16fc71240c4f781cddcc66fb2261a716e9db",
+                "init-v001/records/axis/axisContentCatalogData.js": "ad09b3030816cc6c355aeccb20f59ea643da47ce91ab7eaaaf5b2b12ca12fe90",
+                "init-v001/headers/axis/axisContentCatalogHeader.js": "6793eb87ab4d54963a98c045e958bce598b4df05f0080bf690ed161043bae5d0"
+            },
+            "sourceRoot": "init-v001"
+        },
+        "documentation": {
+            "kind": "CONTENT_PACK",
+            "contentPath": "core",
+            "pack": "nodics.platform.axis",
+            "version": "0.0.1",
+            "owningDomain": "axis",
+            "lifecycle": "PUBLISHABLE",
+            "destinationRole": "WCMS_STAGED",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "PUBLIC",
+            "versioningPolicy": "IMMUTABLE",
+            "publicationPolicy": "REQUIRED",
+            "initialPublicationPolicy": "ADMIN_INITIATED",
+            "installationPolicy": "OPTIONAL_AXIS_INITIATED",
+            "removalPolicy": "UNPUBLISH_OR_RETIRE",
+            "sourceMode": "catalogue-markdown-source",
+            "sourceAuthority": "docs/catalogue.json",
+            "sites": [
+                "axisDocumentationSite"
+            ],
+            "accessMode": "PUBLIC",
+            "pages": 17,
+            "components": 18,
+            "routes": 17,
+            "releaseChecksum": "9578d05ae646956c1a822cb0b3577366dfbdfa77bc018efc83b7c88dbeb351ff",
+            "generatedHashes": {
+                "core/data/documentation/axisDocumentationAccessPolicyData.js": "dd948efe165365adedfbd8102647d6cb2bd837f0ce5c75bd0f6120fb586b7f1b",
+                "core/data/documentation/axisDocumentationDashboardData.js": "91205ba472620ed7983b7ee32b92b38174bddce220ba8fcbb2c147e221a6c486",
+                "core/data/documentation/axisDocumentationNavigationData.js": "ffea967d9fae65d5153fb3b092f3826c5682456365cff6f5d8efa1ea8c438827",
+                "core/data/documentation/axisDocumentationNodeData.js": "79fc8e251e660999e319591ad096e70a6a96951f9cf4274991e73e9017b00ac9",
+                "core/data/documentation/axisDocumentationPageMetadataData.js": "99363c481eb90fbef66f20283a4b759be6d3572fbfdb849303644705d0040d55",
+                "core/data/documentation/axisDocumentationProductData.js": "e1e980db49906f19c49f9a33fdb347b2fc9752716290c38751955f2c488f6b84",
+                "core/data/documentation/axisDocumentationPublicationStateData.js": "9bab170d1fbf4931dce74ef35f9440753c479b2b4789e208525367dcc1d669d9",
+                "core/data/documentation/axisDocumentationSearchMetadataData.js": "34f8c1396fdeb4c4d81927894e675063a373a6894bbd9c3cb95e382e973a4848",
+                "core/data/documentation/axisDocumentationComponentData.js": "cd5bf92b1a0d853408457ef13c2a387d491f3dcad9c43f0ceb5f5051723ef7d6",
+                "core/data/documentation/axisDocumentationPageData.js": "aae16acdb0be18fda84ea7208be5c4429780bd8d73408ecaba589076f6a4cf0b",
+                "core/data/documentation/axisDocumentationRendererData.js": "fc783595269b5f1e423e594263f1dd30bd35bf6e048d51fb6028938aeef89a68",
+                "core/data/documentation/axisDocumentationRouteData.js": "94d142a0c4b580611456b5da69b1aeb8022297f25cf932e8519ef0ae89baa66f",
+                "core/data/documentation/axisDocumentationSiteData.js": "91b8c928ef77bf1708ee7732fb40034607c2a49970ea8b012647e3f2ba880120",
+                "core/data/documentation/axisDocumentationSlotData.js": "f53ac3815485ce7299fea900cf462fb0d539098ab1790462580d443bc7f2f46f",
+                "core/data/documentation/axisDocumentationTemplateData.js": "88c5d2f77c302c48fef6aa5ec21d4a528f698b94eb72e2b5147127258e16f43b",
+                "core/data/documentation/axisDocumentationTypeCodeData.js": "f777fa4b2a0b1b018bcb44380d266e3e9f6ef49a6f972612b52e330724bda6a2",
+                "core/headers/axisDocumentationContentPackHeader.js": "38b0dcb5bd0f10d2bf10accb12698bc02d0a968a79effbbc927dfb0afce3d717"
+            },
+            "migrationRegister": "docs/migration-register.json"
+        }
     }
-  }
 }

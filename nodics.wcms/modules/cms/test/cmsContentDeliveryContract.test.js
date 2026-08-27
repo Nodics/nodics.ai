@@ -17,8 +17,8 @@ const root = path.resolve(__dirname, '../../..');
 const schemas = require(path.join(root, 'modules/cms/src/schemas/schemas'));
 const routes = require(path.join(root, 'modules/cms/src/router/routers')).cms;
 const statusDefinitions = require(path.join(root, 'modules/cms/src/utils/statusDefinitions'));
-const initialTypes = require(path.join(root, 'modules/cms/data/init/data/content/defaultCmsTypeCodeData'));
-const sampleHeaderComponents = require(path.join(root, 'modules/cms/data/sample/data/components/sampleHeaderCmsComponentData'));
+const initialTypes = require(path.join(root, 'modules/cms/data/init-v001/records/content/defaultCmsTypeCodeData'));
+const sampleHeaderComponents = require(path.join(root, 'modules/cms/data/sample-v001/records/components/sampleHeaderCmsComponentData'));
 const validation = require(path.join(root, 'modules/cms/src/service/validation/defaultCmsContractValidationService'));
 const componentDetailInterceptor = require(path.join(root, 'modules/cms/src/service/interceptors/defaultCmsComponentDetailInterceptorService'));
 

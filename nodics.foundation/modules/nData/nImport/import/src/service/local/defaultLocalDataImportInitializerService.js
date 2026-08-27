@@ -87,9 +87,13 @@ module.exports = {
 
     prepareInputPath: function (request, response, process) {
         this.LOG.debug('Preparing input data path');
+        let defaultDataPath = request.inputPath.rootPath + '/data';
+        if (!request.inputPath.dataPath && fse.existsSync(request.inputPath.rootPath + '/records')) {
+            defaultDataPath = request.inputPath.rootPath + '/records';
+        }
         let path = {
             rootPath: request.inputPath.rootPath,
-            dataPath: request.inputPath.dataPath || request.inputPath.rootPath + '/data',
+            dataPath: request.inputPath.dataPath || defaultDataPath,
             headerPath: request.inputPath.headerPath || request.inputPath.rootPath + '/headers',
             successPath: request.inputPath.successPath || request.inputPath.rootPath + '/success',
             errorPath: request.inputPath.errorPath || request.inputPath.rootPath + '/error',

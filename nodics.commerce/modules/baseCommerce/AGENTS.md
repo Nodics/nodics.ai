@@ -6,7 +6,7 @@
 - Read this README, contracts, examples, and generated context.
 
 Keep group roots free of business source. This group is allowed to own only the
-governed `data/core` Commerce core-reference records declared in
+governed `data/core-v001` Commerce core-reference records declared in
 `data/manifest.json`; child capabilities still own their schemas, services,
 routers, tests, and feature-specific business behavior. Preserve Commerce
 domain ownership, exact money, tenant security, idempotency, audit, provider

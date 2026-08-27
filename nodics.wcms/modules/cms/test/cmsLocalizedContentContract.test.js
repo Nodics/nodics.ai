@@ -13,11 +13,11 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 
 const serviceContract = require('../src/service/localization/defaultCmsContentLocalizationService');
-const sampleSites = require('../data/sample/data/sites/sampleCmsSiteData');
-const samplePages = require('../data/sample/data/pages/sampleCmsPageData');
-const sampleComponents = require('../data/sample/data/components/sampleCmsComponentData');
-const sampleLocalizations = require('../data/sample/data/components/sampleCmsComponentLocalizationData');
-const sampleRoutes = require('../data/sample/data/pages/sampleCmsPageRouteData');
+const sampleSites = require('../data/sample-v001/records/sites/sampleCmsSiteData');
+const samplePages = require('../data/sample-v001/records/pages/sampleCmsPageData');
+const sampleComponents = require('../data/sample-v001/records/components/sampleCmsComponentData');
+const sampleLocalizations = require('../data/sample-v001/records/components/sampleCmsComponentLocalizationData');
+const sampleRoutes = require('../data/sample-v001/records/pages/sampleCmsPageRouteData');
 const statusDefinitions = require('../src/utils/statusDefinitions');
 
 [

@@ -425,10 +425,11 @@ module.exports = {
         } catch (error) {
             throw this.error('ERR_IMP_00003', 'Aggregate data manifest JSON is invalid for module ' + rawModule.name);
         }
-        if (!manifest || ![0, 2].includes(manifest.contractVersion) || manifest.module !== rawModule.name ||
+        let allowedContracts = this.configuration().allowedContractVersions || [2];
+        if (!manifest || !allowedContracts.includes(manifest.contractVersion) || manifest.module !== rawModule.name ||
             !manifest.sections || typeof manifest.sections !== 'object' || Array.isArray(manifest.sections)) {
             throw this.error('ERR_IMP_00003', 'Aggregate data manifest is incompatible for module ' + rawModule.name +
-                '; verify contractVersion 0 or 2, module identity, and sections map');
+                '; verify contractVersion, module identity, and sections map');
         }
         return manifest;
     },
@@ -447,7 +448,7 @@ module.exports = {
             }
         }
         let isAggregate = Boolean(aggregateSection);
-        if (!manifest || (!isAggregate && !(this.configuration().allowedContractVersions || [1]).includes(manifest.contractVersion)) ||
+        if (!manifest || (!isAggregate && !(this.configuration().allowedContractVersions || [2]).includes(manifest.contractVersion)) ||
             (!isAggregate && manifest.module !== rawModule.name) ||
             (isAggregate && manifest.kind !== 'DATA_RELEASE') ||
             manifest.dataType !== dataType || !/^\d+\.\d+\.\d+$/.test(manifest.version || '') ||
@@ -460,7 +461,8 @@ module.exports = {
             throw this.error('ERR_IMP_00003', 'Data release installer code is invalid');
         }
         let sourceRoot = manifest.sourceRoot || dataType;
-        if (!['init', 'core', 'sample', 'staged', 'operational', 'reference'].includes(sourceRoot)) {
+        let isVersionedSourceRoot = /^(init|core|sample)-v\d{3}$/.test(sourceRoot);
+        if (!isVersionedSourceRoot && !['init', 'core', 'sample', 'staged', 'operational', 'reference'].includes(sourceRoot)) {
             throw this.error('ERR_IMP_00003', 'Data release sourceRoot is invalid');
         }
         let fileNames = Object.keys(manifest.files).sort();

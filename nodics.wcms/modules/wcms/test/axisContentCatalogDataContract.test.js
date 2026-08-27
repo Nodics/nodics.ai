@@ -15,7 +15,7 @@ const path = require('path');
 const wcmsProperties = require('../../../config/properties');
 const moduleRoot = path.resolve(__dirname, '..');
 const axisModuleRoot = path.resolve(moduleRoot, '../../../nodics.platform/modules/axis');
-const load = name => require(path.join(axisModuleRoot, 'data/init/data/axis', name));
+const load = name => require(path.join(axisModuleRoot, 'data/init-v001/records/axis', name));
 const records = data => Object.values(data);
 
 const catalog = records(load('axisContentCatalogData'));
@@ -27,7 +27,7 @@ const templates = records(load('axisCmsTemplateData'));
 const components = records(load('axisCmsComponentData'));
 const pages = records(load('axisCmsPageData'));
 const routes = records(load('axisCmsRouteData'));
-const header = require(path.join(axisModuleRoot, 'data/init/headers/axis/axisContentCatalogHeader'));
+const header = require(path.join(axisModuleRoot, 'data/init-v001/headers/axis/axisContentCatalogHeader'));
 const axisDataSets = [catalog, sites, types, renderers, slots, templates, components, pages, routes];
 
 assert.strictEqual(wcmsProperties.apiExposure.categories.dataImport.enabled, true,

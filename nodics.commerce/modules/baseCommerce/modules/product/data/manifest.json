@@ -1,8 +1,8 @@
 {
-    "contractVersion": 0,
+    "contractVersion": 2,
     "module": "product",
     "sections": {
-        "sample": {
+        "sample-v001": {
             "kind": "DATA_RELEASE",
             "dataType": "sample",
             "version": "0.0.0",
@@ -21,14 +21,15 @@
             "initialPublicationPolicy": "ADMIN_INITIATED",
             "removalPolicy": "UNPUBLISH_OR_RETIRE",
             "files": {
-                "sample/data/product/sampleCategoryData.js": "744b2fb5f331c8c77d4bfbce1f7fd7607b8691e03c46d82be28dd54f1fee5c3e",
-                "sample/data/product/sampleCategoryLocalizationData.js": "d0087a81e8f6eea6eb9b73922e4209aeae173d256d386e5f776e732afcff25b4",
-                "sample/data/product/sampleProductData.js": "340119bc64bea7e77d67fea8fc46919ca6c9e93577da79e7ce9511d540ef0b39",
-                "sample/data/product/sampleProductLocalizationData.js": "c8ea6eeb5355302690b844a50a9c22db6724c9c67f2cfbc9330a76a90a2520cf",
-                "sample/data/product/sampleProductVariantData.js": "9f9e186dbb7f9614703eb98fc5dc15bd03d5e0a961818fbab275e6787b11102e",
-                "sample/data/product/sampleProductVariantLocalizationData.js": "b1c40a336eacb39771d87b1433087d8bf29367199923941af798d89681623318",
-                "sample/headers/product/sampleProductLocalizationDataHeader.js": "bdd3b6b75f13408310fdb1f6307cd1fdf519ee239f10620b9d1afcdb79955d92"
-            }
+                "sample-v001/records/product/sampleCategoryData.js": "59ffe49c8ba4d854322dcff39a5471de1b68dc7358d34c7d790c949195b0d695",
+                "sample-v001/records/product/sampleCategoryLocalizationData.js": "4d7dddbaf70a19d4cbf91e14b7217020b89ca17f34847c19e02ead91b7e481de",
+                "sample-v001/records/product/sampleProductData.js": "0e51045e6c4c30db5141ba50106d3f723160b88e1704237d7ef554e760e58dff",
+                "sample-v001/records/product/sampleProductLocalizationData.js": "273af1c12f8de887d5e116b8c46ed61a91f59fe801faf372c8c6b5f36a4d406b",
+                "sample-v001/records/product/sampleProductVariantData.js": "42406e0fa30a6cc77e60e4244d02641a38fed1009255737bc134dc489a95bc1d",
+                "sample-v001/records/product/sampleProductVariantLocalizationData.js": "c6f879f1dd174bbdda9782b294bd75932d0cfabaa39c1dc4687cf4d748df5a24",
+                "sample-v001/headers/product/sampleProductLocalizationDataHeader.js": "ca84a1c970d64c8c4ce2cc757f79dc55d586ae0b621bf58fb989323bc0f77154"
+            },
+            "sourceRoot": "sample-v001"
         }
     }
 }

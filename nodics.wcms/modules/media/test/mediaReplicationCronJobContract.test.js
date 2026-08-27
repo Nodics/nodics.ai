@@ -18,8 +18,8 @@
 
 const assert = require('assert');
 const manifest = require('../data/manifest.json');
-const jobData = require('../data/init/data/jobs/mediaReplicationRetryJobData');
-const header = require('../data/init/headers/jobs/mediaReplicationRetryJobHeader');
+const jobData = require('../data/init-v001/records/jobs/mediaReplicationRetryJobData');
+const header = require('../data/init-v001/headers/jobs/mediaReplicationRetryJobHeader');
 
 const job = jobData.record1;
 
@@ -48,5 +48,5 @@ assert.ok(manifest.sections.mediaReplicationRetryJob, 'Media manifest must expos
 assert.strictEqual(manifest.sections.mediaReplicationRetryJob.owningDomain, 'media');
 assert.strictEqual(manifest.sections.mediaReplicationRetryJob.destinationRole, 'CRON');
 assert.strictEqual(manifest.sections.mediaReplicationRetryJob.installer, 'CRON_JOB');
-assert.strictEqual(manifest.sections.mediaReplicationRetryJob.files['init/data/jobs/mediaReplicationRetryJobData.js'] !== undefined, true);
-assert.strictEqual(manifest.sections.mediaReplicationRetryJob.files['init/headers/jobs/mediaReplicationRetryJobHeader.js'] !== undefined, true);
+assert.strictEqual(manifest.sections.mediaReplicationRetryJob.files['init-v001/records/jobs/mediaReplicationRetryJobData.js'] !== undefined, true);
+assert.strictEqual(manifest.sections.mediaReplicationRetryJob.files['init-v001/headers/jobs/mediaReplicationRetryJobHeader.js'] !== undefined, true);

@@ -21,8 +21,8 @@ const searchPublication = require('../src/service/defaultProductSearchPublicatio
 const lifecycle = require('../src/service/defaultProductLocalizedPublicationLifecycleService');
 const bulk = require('../src/service/defaultProductLocalizationBulkService');
 const indexes = require('../src/search/indexes');
-const product = require('../data/sample/data/product/sampleProductData').record0;
-const localizations = Object.values(require('../data/sample/data/product/sampleProductLocalizationData'));
+const product = require('../data/sample-v001/records/product/sampleProductData').record0;
+const localizations = Object.values(require('../data/sample-v001/records/product/sampleProductLocalizationData'));
 
 const savedPublications = [];
 const updatedPublications = [];

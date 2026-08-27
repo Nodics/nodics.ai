@@ -1,8 +1,8 @@
 {
-    "contractVersion": 0,
+    "contractVersion": 2,
     "module": "catalog",
     "sections": {
-        "init": {
+        "init-v001": {
             "kind": "DATA_RELEASE",
             "dataType": "init",
             "version": "0.0.0",
@@ -19,11 +19,12 @@
             "initialPublicationPolicy": "NONE",
             "removalPolicy": "RETAIN",
             "files": {
-                "init/data/catalog/defaultCatalogData.js": "02c80282fba6ad8353980185319751760f51a00ff20a8eca3c4b91b773504f9a",
-                "init/headers/catalog/defaultCatalogHeader.js": "d35e7e5a2109d9fdf673ea3e6340b7a3067431ff9bfa689b0abd5a6b7b59d115"
-            }
+                "init-v001/records/catalog/defaultCatalogData.js": "f054c121c14494786e0b8edb00651f33a33979e0091667365a196786962490cb",
+                "init-v001/headers/catalog/defaultCatalogHeader.js": "9560d86add83e6662ec97286d812e59a5a3adcde096d7b7f1308336544962993"
+            },
+            "sourceRoot": "init-v001"
         },
-        "sample": {
+        "sample-v001": {
             "kind": "DATA_RELEASE",
             "dataType": "sample",
             "version": "0.0.0",
@@ -42,9 +43,10 @@
             "initialPublicationPolicy": "NONE",
             "removalPolicy": "DELETE_EXPLICIT",
             "files": {
-                "sample/data/samples/defaultSamplesCatalogData.js": "fb4d9754d21b501299f261114dfe2eed3031b9e19df04ad5b835b6f259edba5e",
-                "sample/headers/samples/defaultSamplesCatalogHeader.js": "a9204c7be80bf2ad15ac57420f2d744b92c07551bede05eb6eda0eea2b3a974e"
-            }
+                "sample-v001/records/samples/defaultSamplesCatalogData.js": "b0ddf0916c0878ab2b51a8cec310ba62c19b595502416ce3b38625de6798ebd3",
+                "sample-v001/headers/samples/defaultSamplesCatalogHeader.js": "06be7c4ed04b2f740ede85a3c0f3388fa1b1d2c3e656171eefe323f63016d30d"
+            },
+            "sourceRoot": "sample-v001"
         }
     }
 }

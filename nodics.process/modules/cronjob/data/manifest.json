@@ -1,27 +1,30 @@
 {
-  "contractVersion": 0,
-  "module": "cronjob",
-  "sections": {
-    "core": {
-      "kind": "DATA_RELEASE",
-      "dataType": "core",
+    "contractVersion": 2,
+    "module": "cronjob",
+    "sections": {
+        "core-v001": {
+            "kind": "DATA_RELEASE",
+            "dataType": "core",
             "version": "0.0.0",
             "description": "Scheduled Jobs core data",
             "owningDomain": "cronjob",
             "lifecycle": "OPERATIONAL_VERSIONED",
             "destinationRole": "CRON",
-            "environmentScope": ["ALL"],
+            "environmentScope": [
+                "ALL"
+            ],
             "sensitivity": "INTERNAL",
             "versioningPolicy": "IMMUTABLE",
             "publicationPolicy": "NONE",
             "initialPublicationPolicy": "NONE",
             "removalPolicy": "RETAIN",
-      "files": {
-        "core/data/indexer/defaultIndexerData.js": "beaa0d0eb34bf444c53ff59d42636e3930cc583434791fb6491aace90087c567",
-        "core/data/jobs/defaultIndexerJobsData.js": "9249b727894294d2596186ec7c6310d6a07a7eac901adcd3264d5710e353915a",
-        "core/headers/indexer/defaultIndexerHeader.js": "c3dfff6dca0415a33d297c435cdd752a0074dbcfcff3671cad3eb14de138d01f",
-        "core/headers/jobs/defaultIndexerJobsHeader.js": "3e5535f4d795b4972aaf2307f2541e5fb0749fe80315c99c4c2bc20151e79e9e"
-      }
+            "files": {
+                "core-v001/records/indexer/defaultIndexerData.js": "a6537fc174448bbc22f472e15097d757938cd4706d93b72b9dcb4ea285b58553",
+                "core-v001/records/jobs/defaultIndexerJobsData.js": "8129b6a28c3759d7f158629f5f7a261066323223c1ce143fd29810bcd29659e1",
+                "core-v001/headers/indexer/defaultIndexerHeader.js": "08d6fed1a1435e877862ccfee2fb2ad48cf75214887d8d95b3b30d656eefa97a",
+                "core-v001/headers/jobs/defaultIndexerJobsHeader.js": "f59244ace8f61a34ca34fd8caac1f8329c38a71af9fb4fb48b37dc605d1fecb8"
+            },
+            "sourceRoot": "core-v001"
+        }
     }
-  }
 }

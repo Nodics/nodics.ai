@@ -39,7 +39,7 @@ module.exports = {
             }
         },
         dataReleases: {
-            allowedContractVersions: [0, 1, 2],
+            allowedContractVersions: [1, 2],
             lifecycleMetadataRequired: false,
             contributions: [],
             installers: {},

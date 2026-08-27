@@ -250,9 +250,9 @@ typed sections and is the only manifest file permitted for that data owner.
 
 | Data path | Owner | Load/use contract |
 | --- | --- | --- |
-| `data/init/` | Capability, environment, server, or node that owns startup/bootstrap records. | Loaded during startup only when initialization is required. |
-| `data/core/` | Capability, environment, server, or node that owns reference records. | Imported intentionally through nData import APIs. |
-| `data/sample/` | Capability, environment, server, or node that owns demo/sample records. | Imported intentionally through nData import APIs. |
+| `data/init-v001/` | Capability, environment, server, or node that owns startup/bootstrap records. | Loaded during startup only when initialization is required. |
+| `data/core-v001/` | Capability, environment, server, or node that owns reference records. | Imported intentionally through nData import APIs. |
+| `data/sample-v001/` | Capability, environment, server, or node that owns demo/sample records. | Imported intentionally through nData import APIs. |
 
 Project roots and pure group modules must not generate empty `data/` folders.
 If data looks project-wide, place it under the environment/server/module that
@@ -271,9 +271,9 @@ because that folder is convenient.
 | Generated governance reports | Active server or node module. | Effective runtime hierarchy, schema/router/service/facade/controller/pipeline inventory, and governance services. | Disposable generated output used for diagnostics and review evidence. |
 | Generated LLM context | The module whose source and contracts are summarized. | Module-owned source, README, AGENTS, contracts, examples, tests, metadata, and canonical documentation references. | Regenerate after source, README, canonical documentation, metadata, or extension contracts change. |
 | Generated services/facades/controllers/tests | The capability module that owns the source schema or route definition, unless runtime generation is server/node-scoped by design. | Schema/router/source definitions. | Generated output is not source of truth and must keep traceability to the source definition. |
-| Startup/init data | Capability, environment, server, or node that owns the bootstrap record. | `data/init/` plus initializer/import source definitions. | Load only when initialization is required and guard with duplicate/idempotency behavior. |
-| Core/reference data | Capability, environment, server, or node that owns the reference records. | `data/core/` plus import definitions. | Import intentionally through nData APIs; do not treat as automatic startup data unless explicitly governed. |
-| Sample/demo data | Capability, environment, server, or node that owns the example records. | `data/sample/` plus import definitions. | Import intentionally for demos/tests; never make sample data a production dependency. |
+| Startup/init data | Capability, environment, server, or node that owns the bootstrap record. | `data/init-vNNN/` plus initializer/import source definitions. | Load only when initialization is required and guard with duplicate/idempotency behavior. |
+| Core/reference data | Capability, environment, server, or node that owns the reference records. | `data/core-vNNN/` plus import definitions. | Import intentionally through nData APIs; do not treat as automatic startup data unless explicitly governed. |
+| Sample/demo data | Capability, environment, server, or node that owns the example records. | `data/sample-vNNN/` plus import definitions. | Import intentionally for demos/tests; never make sample data a production dependency. |
 | Import run history and diagnostics | nData import capability and the active runtime boundary that ran the import. | Import services, generated import run schema/service, and diagnostic services. | Persist sanitized status, counts, failures, checksums, retry/rollback metadata, tenant, and module context without blocking the import flow. |
 | Runtime diagnostics and reports | The server or node that executed the runtime behavior, with capability-level services contributing structured diagnostics. | Runtime services and report generators. | Store under the active server/node generated-report location; sanitize security-sensitive values. |
 | Tenant/customer runtime overrides | Runtime governance capability plus the tenant/customer context that owns the override. | Governed runtime configuration, tenant context, activation/audit records, and owning services. | Tenant/customer context may refine effective behavior but must not secretly activate modules or bypass the selected server/node topology. |

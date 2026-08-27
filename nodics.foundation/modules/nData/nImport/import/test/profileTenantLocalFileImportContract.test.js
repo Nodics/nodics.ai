@@ -98,7 +98,7 @@ function invoke(service, methodName, request) {
 }
 
 async function prepareLocalImport() {
-    let rootPath = path.join(process.cwd(), 'nodics.platform', 'modules', 'profile', 'data', 'sample', 'tenant');
+    let rootPath = path.join(process.cwd(), 'nodics.platform', 'modules', 'profile', 'data', 'sample-v001', 'tenant');
     let request = {
         inputPath: {
             rootPath: rootPath

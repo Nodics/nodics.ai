@@ -71,7 +71,7 @@ const protectedEnvironmentRoots = [
     'customer.project/envs/preprod',
     'customer.project/envs/production'
 ];
-const profileEmployeeDataPath = path.join(repositoryRoot, 'nodics.platform/modules/profile/data/init/data/user/defaultEmployeeData.js');
+const profileEmployeeDataPath = path.join(repositoryRoot, 'nodics.platform/modules/profile/data/init-v001/records/user/defaultEmployeeData.js');
 
 function loadProperties(relativePath) {
     return require(path.join(fixtureRoot, relativePath));
@@ -99,7 +99,7 @@ function writeProperties(relativePath, properties) {
 }
 
 protectedEnvironmentPropertyPaths.forEach(relativePath => writeProperties(relativePath, {}));
-fs.mkdirSync(path.join(fixtureRoot, 'customer.project/envs/local/data/init'), { recursive: true });
+fs.mkdirSync(path.join(fixtureRoot, 'customer.project/envs/local/data/init-v001'), { recursive: true });
 fs.writeFileSync(path.join(fixtureRoot, 'customer.project/envs/local/data/manifest.json'), JSON.stringify({
     contractVersion: 0,
     module: 'local',

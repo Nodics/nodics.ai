@@ -57,9 +57,9 @@ modules, not by changing the generic import/export engine for one customer.
 Importable data belongs to the module, environment, server, or node that owns
 the records.
 
-- `data/init` is for startup/bootstrap records that are required.
-- `data/core` is for intentional reference imports.
-- `data/sample` is for local/demo/test records.
+- `data/init-v001` is for startup/bootstrap records that are required.
+- `data/core-v001` is for intentional reference imports.
+- `data/sample-v001` is for local/demo/test records.
 
 Startup data must be idempotent. Sample data must never become a production
 dependency.

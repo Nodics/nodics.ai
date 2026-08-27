@@ -52,10 +52,10 @@ global.SERVICE = {
 };
 
 const schemaDefinitions = require('../src/schemas/schemas');
-const initHeader = require('../data/init/headers/catalog/defaultCatalogHeader');
-const initData = require('../data/init/data/catalog/defaultCatalogData');
-const sampleHeader = require('../data/sample/headers/samples/defaultSamplesCatalogHeader');
-const sampleData = require('../data/sample/data/samples/defaultSamplesCatalogData');
+const initHeader = require('../data/init-v001/headers/catalog/defaultCatalogHeader');
+const initData = require('../data/init-v001/records/catalog/defaultCatalogData');
+const sampleHeader = require('../data/sample-v001/headers/samples/defaultSamplesCatalogHeader');
+const sampleData = require('../data/sample-v001/records/samples/defaultSamplesCatalogData');
 const resolver = require('../src/service/interceptors/defaultSubCatalogsResolveInterceptorService');
 
 (async function run() {

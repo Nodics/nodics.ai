@@ -33,26 +33,27 @@ function owner(name, sections) {
             owningDomain: section.owningDomain, lifecycle: 'REFERENCE', destinationRole: section.destinationRole,
             environmentScope: ['LOCAL'], sensitivity: 'INTERNAL', versioningPolicy: 'NONE',
             publicationPolicy: 'NONE', initialPublicationPolicy: 'NONE', removalPolicy: 'RETAIN',
+            sourceRoot: 'init-v001',
             files: Object.fromEntries(Object.keys(section.payloads).map(relative => [relative,
                 crypto.createHash('sha256').update(fs.readFileSync(path.join(ownerRoot, 'data', relative))).digest('hex')]))
         });
         delete manifestSections[code].payloads;
     });
     fs.writeFileSync(path.join(ownerRoot, 'data', 'manifest.json'), JSON.stringify({
-        contractVersion: 0, module: name, sections: manifestSections
+        contractVersion: 2, module: name, sections: manifestSections
     }));
     owners[name] = { name: name, path: ownerRoot, canonicalIdentity: name, metaData: { nodics: { displayName: name } } };
 }
 
 owner('activeOwner', { init: { owningDomain: 'active.domain', destinationRole: 'PROCESS', payloads: {
-    'init/data/activeData.js': 'module.exports = {};\n', 'init/headers/activeHeader.js': 'module.exports = {};\n'
+    'init-v001/records/activeData.js': 'module.exports = {};\n', 'init-v001/headers/activeHeader.js': 'module.exports = {};\n'
 } } });
 owner('inactiveOwner', {
     processContribution: { owningDomain: 'wcms', destinationRole: 'PROCESS', payloads: {
-        'init/data/processData.js': 'module.exports = {};\n', 'init/headers/processHeader.js': 'module.exports = {};\n'
+        'init-v001/records/processData.js': 'module.exports = {};\n', 'init-v001/headers/processHeader.js': 'module.exports = {};\n'
     } },
     stagedContribution: { owningDomain: 'platform', destinationRole: 'WCMS_STAGED', payloads: {
-        'init/data/stagedData.js': 'module.exports = {};\n', 'init/headers/stagedHeader.js': 'module.exports = {};\n'
+        'init-v001/records/stagedData.js': 'module.exports = {};\n', 'init-v001/headers/stagedHeader.js': 'module.exports = {};\n'
     } }
 });
 

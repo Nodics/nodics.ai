@@ -41,7 +41,8 @@ module.exports = {
     loadPayload: function (contribution) {
         let owner = NODICS.getRawModule(contribution.moduleName);
         if (!owner || !owner.path) throw new CLASSES.NodicsError('ERR_PROCESS_00001', 'Contribution owner is unavailable');
-        let candidates = (contribution.declaredFiles || []).filter(file => /^init\/data\/.+\.js$/.test(file));
+        let candidates = (contribution.declaredFiles || []).filter(file =>
+            /^(init|init-v\d{3})\/(data|records)\/.+\.js$/.test(file));
         if (candidates.length !== 1) throw new CLASSES.NodicsError('ERR_PROCESS_00001', 'Process definition contribution must declare one data payload');
         let dataRoot = path.resolve(owner.path, 'data');
         let payloadPath = path.resolve(dataRoot, candidates[0]);

@@ -1,0 +1,33 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
+/**
+ * @module cms/data/sample-v001/headers/pages/sampleCmsPageDataHeader
+ * @description Sample import header for CMS page demo data.
+ * @layer data
+ * @owner cms
+ * @override Project modules should provide their own sample import headers when loading project-specific CMS pages.
+ */
+module.exports = {
+    cms: {
+        sampleCmsPageData: {
+            options: {
+                enabled: true,
+                schemaName: 'cmsPage',
+                operation: 'saveAll',
+                dataFilePrefix: 'sampleCmsPageData'
+            },
+            query: {
+                code: '$code'
+            }
+        }
+    }
+};

@@ -24,7 +24,7 @@ const repositoryRoot = path.resolve(__dirname, '../../../../../');
 const routerDefinitions = require('../../../nRouter/src/router/routers');
 const authProperties = require('../../../nAuth/config/properties');
 const userGroupsData = require(path.join(repositoryRoot,
-    'nodics.platform/modules/profile/data/init/data/groups/defaultBootstrapUserGroupsData'));
+    'nodics.platform/modules/profile/data/init-v001/records/groups/defaultBootstrapUserGroupsData'));
 
 const mutationRoutes = [
     routerDefinitions.common.flushCache.flushKey,

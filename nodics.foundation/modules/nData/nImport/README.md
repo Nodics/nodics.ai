@@ -142,7 +142,7 @@ module-owned `init`, `core`, or `sample` data and must not be imported during
 normal server startup.
 
 The historical profile tenant local-file import use case is preserved as
-Profile-owned sample data under `nodics.platform/modules/profile/data/sample/tenant`. It keeps
+Profile-owned sample data under `nodics.platform/modules/profile/data/sample-v001/tenant`. It keeps
 real CSV and XLSX `defaultTenantData` records, matching tenant headers, and a
 legacy XLS reference outside active bootstrap data. The CSV and XLSX paths are
 covered by

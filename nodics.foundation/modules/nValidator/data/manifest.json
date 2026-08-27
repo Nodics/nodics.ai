@@ -1,8 +1,8 @@
 {
-    "contractVersion": 0,
+    "contractVersion": 2,
     "module": "validator",
     "sections": {
-        "init": {
+        "init-v001": {
             "kind": "DATA_RELEASE",
             "dataType": "init",
             "version": "0.0.0",
@@ -21,9 +21,10 @@
             "initialPublicationPolicy": "NONE",
             "removalPolicy": "DELETE_EXPLICIT",
             "files": {
-                "init/data/validator/defaultSampleValidatorData.js": "e4bf81c278908668e1f396fed3e5e67361a224167894dd00c0fdb7ebd7784795",
-                "init/headers/validator/defaultSampleValidatorHeader.js": "3e5b9dfe84e16306146d8aebae8ccba060ac0c7167390cd4508b84cdc114130a"
-            }
+                "init-v001/records/validator/defaultSampleValidatorData.js": "7ab30dd46b462ff9748bf9e91c711ea7ff1a968fac3b92322766731031d5a277",
+                "init-v001/headers/validator/defaultSampleValidatorHeader.js": "208ae18192076927791af2ca4aeaaab5053e439fd070876013eea4649466a68c"
+            },
+            "sourceRoot": "init-v001"
         }
     }
 }

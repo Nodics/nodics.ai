@@ -152,6 +152,7 @@ module.exports = {
      */
     filterDeclaredReleaseFiles: function (fileList, dataReleasePlan, folderName) {
         if (!Array.isArray(dataReleasePlan) || dataReleasePlan.length === 0) return fileList;
+        let folderAliases = folderName === 'data' ? ['data', 'records'] : [folderName];
         let byPath = {};
         _.each(fileList, (paths, name) => {
             [].concat(paths || []).forEach(file => {
@@ -163,7 +164,10 @@ module.exports = {
         dataReleasePlan.forEach(release => {
             let moduleObject = NODICS.getRawModule(release.moduleName);
             if (!moduleObject || !moduleObject.path) return;
-            (release.declaredFiles || []).filter(file => file.split('/').includes(folderName)).forEach(file => {
+            (release.declaredFiles || []).filter(file => {
+                let segments = file.split('/');
+                return folderAliases.some(alias => segments.includes(alias));
+            }).forEach(file => {
                 let resolved = path.resolve(moduleObject.path, 'data', file);
                 let entry = byPath[resolved];
                 if (!entry || used.has(resolved)) return;

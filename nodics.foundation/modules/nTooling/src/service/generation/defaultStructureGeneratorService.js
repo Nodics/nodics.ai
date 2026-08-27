@@ -194,7 +194,7 @@ module.exports = exportedService = {
     /** Implements dataManifest as an overrideable service operation. */
     dataManifest: function (moduleName) {
     return JSON.stringify({
-        contractVersion: 0,
+        contractVersion: 2,
         module: moduleName,
         sections: {}
     }, null, 4) + '\n';
@@ -439,9 +439,10 @@ module.exports = exportedService = {
             }
         }
         if (options.withData) {
-            (this.ensureDirectory || exportedService.ensureDirectory).call(this, path.join(options.targetPath, 'data/init'));
-            (this.ensureDirectory || exportedService.ensureDirectory).call(this, path.join(options.targetPath, 'data/core'));
-            (this.ensureDirectory || exportedService.ensureDirectory).call(this, path.join(options.targetPath, 'data/sample'));
+            ['init-v001', 'core-v001', 'sample-v001'].forEach(root => {
+                (this.ensureDirectory || exportedService.ensureDirectory).call(this, path.join(options.targetPath, 'data', root, 'headers'));
+                (this.ensureDirectory || exportedService.ensureDirectory).call(this, path.join(options.targetPath, 'data', root, 'records'));
+            });
             (this.writeFile || exportedService.writeFile).call(this, path.join(options.targetPath, 'data/manifest.json'), this.dataManifest(options.name));
         }
         if (options.withTest) {

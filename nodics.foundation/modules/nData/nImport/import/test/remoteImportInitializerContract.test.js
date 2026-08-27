@@ -38,7 +38,7 @@ global.SERVICE = {
     DefaultImportUtilityService: {
         getSystemDataHeaders: (modules, dataType) => {
             headerRequest = { modules, dataType };
-            return Promise.resolve({ trustedHeader_js: ['/module/data/core/headers/trustedHeader.js'] });
+            return Promise.resolve({ trustedHeader_js: ['/module/data/core-v001/headers/trustedHeader.js'] });
         }
     }
 };

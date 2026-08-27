@@ -375,8 +375,8 @@ const moduleServiceSource = read('nodics.foundation/modules/nService/src/service
 const profileProviderSource = read('nodics.platform/modules/profile/src/service/authentication/defaultAuthenticationProviderService.js');
 const apiKeyInterceptorSource = read('nodics.platform/modules/profile/src/service/interceptors/defaultAPIKeyInterceptorService.js');
 const employeeServiceSource = read('nodics.platform/modules/profile/src/service/employee/defaultEmployeeService.js');
-const profileEmployeeData = read('nodics.platform/modules/profile/data/init/data/user/defaultEmployeeData.js');
-const cmsEmployeeData = read('nodics.wcms/modules/cms/data/init/data/user/defaultCmsEmployeeData.js');
+const profileEmployeeData = read('nodics.platform/modules/profile/data/init-v001/records/user/defaultEmployeeData.js');
+const cmsEmployeeData = read('nodics.wcms/modules/cms/data/init-v001/records/user/defaultCmsEmployeeData.js');
 const auditService = require('../src/service/audit/defaultAuthAuditService');
 const routerProperties = require('../../nRouter/config/properties');
 assert.ok(!coreProperties.includes("jwtSecretKey: 'nodics'"));

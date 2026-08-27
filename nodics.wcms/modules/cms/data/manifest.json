@@ -1,8 +1,8 @@
 {
-    "contractVersion": 0,
+    "contractVersion": 2,
     "module": "cms",
     "sections": {
-        "init": {
+        "init-v001": {
             "kind": "DATA_RELEASE",
             "dataType": "init",
             "version": "0.0.0",
@@ -20,15 +20,16 @@
             "initialPublicationPolicy": "NONE",
             "removalPolicy": "RETAIN",
             "files": {
-                "init/data/content/defaultCmsSiteData.js": "e8542694fba0b563ad046cba914be5d0383abf76e06fdfb120016f68b4e2f869",
-                "init/data/content/defaultCmsTypeCodeData.js": "0d64b77b282e053fb5d93e8d808e9420cac60a8371ba22bbe6318be76b85d254",
-                "init/data/user/defaultCmsEmployeeData.js": "81fb143ca6bbeb4b04f19cbe47d26740aa6db0645539a90433cf0b7ea82dbe8e",
-                "init/data/user/defaultCmsUserGroupsData.js": "bddc554e2d1356c78beceaaf7ee15e898ee446e24042bb9041d16e6eb43c74d7",
-                "init/headers/content/defaultCmsSiteDataHeader.js": "b0daf33d33d54111905735913b0eb1c90fafa1b18a3005206a9edf9c38253387",
-                "init/headers/content/defaultCmsTypeCodeDataHeader.js": "48a47d129802cb8be296bbc07ebea4dd3b4c5d1d6aaaaad2c71d1b34e504397d",
-                "init/headers/user/defaultCmsEmployeeDataHeader.js": "056cb07e0936b5f5553d33867737551e1df6cd66fc56c0a6e471a9ce23796e4f",
-                "init/headers/user/defaultCmsUserGroupsDataHeader.js": "1c8bfec125cc26e463dec76e8bef91db59aadee5608b93139276d2df9f346b7e"
-            }
+                "init-v001/records/content/defaultCmsSiteData.js": "0e34852ce89ba85bda6ed3f3f49a590a314f9d29004b20e5f1f7df3830fbbfd7",
+                "init-v001/records/content/defaultCmsTypeCodeData.js": "6217613834024e68f12622b15d55915c3f322231c06d5ceab6f43b12b0db63d3",
+                "init-v001/records/user/defaultCmsEmployeeData.js": "3563e19ba2e01a222b9a259b8d75d38fa87c647974208944accd1eb8b5e80330",
+                "init-v001/records/user/defaultCmsUserGroupsData.js": "966496a646545d0d44941b4c8c89e1e083f705f64611db0a7a9f1ec62357e602",
+                "init-v001/headers/content/defaultCmsSiteDataHeader.js": "8b200a816cb4370e6aae385b1aafb2e8fe4b734339100dbe7b5091bdd23dddbd",
+                "init-v001/headers/content/defaultCmsTypeCodeDataHeader.js": "118d8888cf51c1d34b5e58abd72fb20142500736b744cf229b0a5768dba65814",
+                "init-v001/headers/user/defaultCmsEmployeeDataHeader.js": "ddf0bcb3a85c684393ebad9357476b38d787c7ddd55aca99c10827fc4388ef30",
+                "init-v001/headers/user/defaultCmsUserGroupsDataHeader.js": "4a1c79af6361b74ae317bb5194c22405ac997a68e8fadb4fa24264b9ce892067"
+            },
+            "sourceRoot": "init-v001"
         },
         "cmsPublicationApproval": {
             "kind": "DATA_RELEASE",
@@ -49,10 +50,11 @@
             "removalPolicy": "RETAIN",
             "installer": "PROCESS_DEFINITION",
             "files": {
-                "init/data/process/cmsPublicationApprovalDefinitionData.js": "1ba10f5c93a9346e9034d834010b9743eae2191f3e4f200d9f0a8d5b21c334b5"
-            }
+                "init-v001/records/process/cmsPublicationApprovalDefinitionData.js": "79fcc7631aaec57de3dd7a5351f2ff1fdb71e0ba0def1bd74485685e646a970e"
+            },
+            "sourceRoot": "init-v001"
         },
-        "sample": {
+        "sample-v001": {
             "kind": "DATA_RELEASE",
             "dataType": "sample",
             "version": "0.0.0",
@@ -71,27 +73,28 @@
             "initialPublicationPolicy": "ADMIN_INITIATED",
             "removalPolicy": "UNPUBLISH_OR_RETIRE",
             "files": {
-                "sample/data/components/sampleCmsComponentData.js": "ae9af69d2cdedd02790f61ebef0e7b469ffc716e8886338c52b749540e95345d",
-                "sample/data/components/sampleCmsComponentLocalizationData.js": "a3c393afde84f75c871fb63a7bf4e4672af0a4a4e4e886b78bf0bc20a849110a",
-                "sample/data/components/sampleFooterCmsComponentData.js": "0e5a84ecaa96018d2c1832d6b71c0f96fac8422c7ab4bf429f50ddb62a35113c",
-                "sample/data/components/sampleHeaderCmsComponentData.js": "9463f52bacb0e8e949abfbd47b7a17a6711b0c20a9236e6fd5985aa415d47f2d",
-                "sample/data/components/sampleMainCmsComponentData.js": "d1fdd891cc354c2c1fe95c81c60557fdd8ebe61f3d426e22b74f9e3eb904809d",
-                "sample/data/pages/sampleCmsPageData.js": "75b99a3e800fa02e61c01425245c39b469a1a33017d190a2a7df79458d5a551e",
-                "sample/data/pages/sampleCmsPageRouteData.js": "bcb5dbf1924935b9d78acf37370b45138e4f50be2f9c4454fe925c9ffb0a2687",
-                "sample/data/sites/sampleCmsSiteData.js": "73271906e66beec8b153941f25e756a00908b0e37327346d463bc6ccb3c860c3",
-                "sample/data/typeCodes/sampleTypeCode2RendererData.js": "78711cccbbffc7a393ad196d554f7fbed5344ea143097923aa4c003ca2d6100a",
-                "sample/data/typeCodes/sampleTypeCodeData.js": "45ecc93a75e36797a181cba76038ad37c8519dc88f76a51dcd9001fdf78836fa",
-                "sample/headers/components/sampleCmsComponentDataHeader.js": "9abd59986412540d1b8da26f2d03635bdb4ccde52d6b56a7f077764c8b87efa6",
-                "sample/headers/components/sampleCmsComponentLocalizationDataHeader.js": "6411eeccb55f88e5cf658e38e1c8948fc4224e76dd493619081b56169d07d793",
-                "sample/headers/components/sampleFooterCmsComponentDataHeader.js": "cc6ee6ba6ba6ad94f036ead7c02440a7bd5decc1d878d1a5988a6f0dd947fe48",
-                "sample/headers/components/sampleHeaderCmsComponentDataHeader.js": "cdb27b9a262c13b96e32aa651d4491cc2d572eb6cabb12112166becbe1714e69",
-                "sample/headers/components/sampleMainCmsComponentDataHeader.js": "a0b5dfbce78f5cea95b0dd4547e581c123d723703a2673ec18781f0acfadd3d7",
-                "sample/headers/pages/sampleCmsPageDataHeader.js": "26c8e37454980f91c71a3b9bfe941f25721f3e715c0a893160908277ea15b8f8",
-                "sample/headers/pages/sampleCmsPageRouteDataHeader.js": "cb648fda128dcb6cb8b5798aaa1ffab9e1b34bbe50d3540b68b01785c5692f06",
-                "sample/headers/sites/sampleCmsSiteDataHeader.js": "33010cd976db653253c7c3a65374ec0ded669b5b04846d4bd0d97f7fefa71dec",
-                "sample/headers/typeCodes/sampleTypeCode2RendererDataHeader.js": "1bd6141a080614c9ff6597efdbba903a339d5872e35b83c1956509311f4658e7",
-                "sample/headers/typeCodes/sampleTypeCodeDataHeader.js": "5445eaa0ef1acdbe9bd2c6b8cc84113a720bf9aa63597e27a094c02e5989c205"
-            }
+                "sample-v001/records/components/sampleCmsComponentData.js": "c9bf2fba03019a454726b73aa010b92a5212a9f63eeb12cb7344d6587ad190db",
+                "sample-v001/records/components/sampleCmsComponentLocalizationData.js": "a25efb1ae3109be5886dc4a21cfb81c96df8cab59db84da2026be1d409295373",
+                "sample-v001/records/components/sampleFooterCmsComponentData.js": "abbd20804a043be14148c635a185da13da2b19246f0a6c08321f67c3f1c260a0",
+                "sample-v001/records/components/sampleHeaderCmsComponentData.js": "bca19ceedccbb4bd6e64ee09da7f2829946e3ecb91f4268b1faa876fec93d724",
+                "sample-v001/records/components/sampleMainCmsComponentData.js": "4d4aaa807dbac0b314392a0f813e75f7e67c55094c92e569e9b90e0cc5889636",
+                "sample-v001/records/pages/sampleCmsPageData.js": "172a7bf49c77069d38957ef64360fc8b47f04de93292f358621786d7bf46d7ce",
+                "sample-v001/records/pages/sampleCmsPageRouteData.js": "9b148d256944b5fce4f90f09cad2712d7236239d17ac93300167f55f372d61a4",
+                "sample-v001/records/sites/sampleCmsSiteData.js": "657de8059504d7c671c616d91ead1d63cbce0d84cbdaa13b1b6086d1082548c6",
+                "sample-v001/records/typeCodes/sampleTypeCode2RendererData.js": "459363a3b69d2c949fcbfddf39d19f17f25ee7f12504195b7a52681716af347f",
+                "sample-v001/records/typeCodes/sampleTypeCodeData.js": "4bb39fddeb15dab2f3c808981035d9b605d57a24382ca3bed5dac1fc8a315b5e",
+                "sample-v001/headers/components/sampleCmsComponentDataHeader.js": "8fc3644187649efed27acb21a1cdb0cae22ff23d0cc3d0e00ec63e9690d38b39",
+                "sample-v001/headers/components/sampleCmsComponentLocalizationDataHeader.js": "c9153b3579d2d59c986f9045ff028d83c954f052f3481aaccf5747be0d82c2b3",
+                "sample-v001/headers/components/sampleFooterCmsComponentDataHeader.js": "23b41df3589345406ad358be73f1cb7997ab9ff3b6afdfbafc5712a11feb2216",
+                "sample-v001/headers/components/sampleHeaderCmsComponentDataHeader.js": "6a50069c35c2ae541b2558355424723f388de42b3d7ccb5cb10298e699e67012",
+                "sample-v001/headers/components/sampleMainCmsComponentDataHeader.js": "02962cf181818275bae525cd5ccb99c322785699f2210535000dc8c78362080a",
+                "sample-v001/headers/pages/sampleCmsPageDataHeader.js": "98a633613a871b051f6fbf79ceb4da417f9049030af4fe690baddbce9d0dc7f4",
+                "sample-v001/headers/pages/sampleCmsPageRouteDataHeader.js": "4122887503d3d800b93beebc1187449ed5535c67f91f800d34d5f1fed99a4b34",
+                "sample-v001/headers/sites/sampleCmsSiteDataHeader.js": "155d0f9dd8c89b094bccca3bb69319dfffaa13fe8c18963e6b2be5dce80676c0",
+                "sample-v001/headers/typeCodes/sampleTypeCode2RendererDataHeader.js": "b43eb61d85fa1dfcb42ecedfcb950519ec2ecdbbcbe0407ac9ac905017ccc9ea",
+                "sample-v001/headers/typeCodes/sampleTypeCodeDataHeader.js": "34c7a8a62a84cede7ee80710fb129c84dff17b7ce750532d538377744b9251dc"
+            },
+            "sourceRoot": "sample-v001"
         }
     }
 }

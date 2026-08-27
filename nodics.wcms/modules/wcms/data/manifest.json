@@ -1,8 +1,8 @@
 {
-    "contractVersion": 0,
+    "contractVersion": 2,
     "module": "wcms",
     "sections": {
-        "init": {
+        "init-v001": {
             "kind": "DATA_RELEASE",
             "dataType": "init",
             "version": "0.0.0",
@@ -10,30 +10,33 @@
             "owningDomain": "wcms",
             "lifecycle": "OPERATIONAL_VERSIONED",
             "destinationRole": "WCMS_STAGED",
-            "environmentScope": ["ALL"],
+            "environmentScope": [
+                "ALL"
+            ],
             "sensitivity": "INTERNAL",
             "versioningPolicy": "IMMUTABLE",
             "publicationPolicy": "NONE",
             "initialPublicationPolicy": "NONE",
             "removalPolicy": "RETAIN",
             "files": {
-                "init/data/components/defaultCmsComponentWorkflowActionData.js": "6edd2719cd63c73295091e9ad26b88dbbb32d7a3cb2da932803fb750f5d57b89",
-                "init/data/components/defaultCmsComponentWorkflowChannelData.js": "b303b18697e0f804da330efa155e055e352e690a81a7d931cc226dd5fddf9113",
-                "init/data/components/defaultCmsComponentWorkflowHeadData.js": "17c42f03cdfa25563c0b467184126f921510835a7ab669eacee15fca11f2bf9c",
-                "init/data/pages/defaultCmsPageWorkflowActionData.js": "6ebc67482b3259a0877d5e6a04fd3b360e309b115b93561cb4b8220016f329cd",
-                "init/data/pages/defaultCmsPageWorkflowChannelData.js": "5c35a92fb1c8f4db357ab5e8a3c5afaa61512e10ff89661c0fea03f32a520989",
-                "init/data/pages/defaultCmsPageWorkflowHeadData.js": "d35b4c6942a1112e64e1896b175c5e01c0bf352e244f6780af14fa4f2c378fa7",
-                "init/data/schema2Workflow/defaultCmsComponent2WorkflowData.js": "f080ebaacf0a660298035b2c437dafa01ebf3534437937d7ab7bf3d35418cefb",
-                "init/data/schema2Workflow/defaultCmsPage2WorkflowData.js": "48f6b2a5d98a93bd3b4265c8bae64408ead2b9100895a94778ea30bff49c401c",
-                "init/headers/components/defaultCmsComponentWorkflowActionHeader.js": "7e5c619a7fb1b57964d6907689ab1dfd776bf2d427df83292703eba62f1396d8",
-                "init/headers/components/defaultCmsComponentWorkflowChannelHeader.js": "c8ad5c0bd74391af8d809cced78b5e5b6925da9f8670e4b702a12796d46bb0a7",
-                "init/headers/components/defaultCmsComponentWorkflowHeadHeader.js": "477babe4b80ec7b1b2f731e514e536a276b806bd630ec51ae6c144cd5981a9f6",
-                "init/headers/pages/defaultCmsPageWorkflowActionHeader.js": "5724860e4ebe5ad72ec3f18d619115e4302b5f25527f1ddfc1c85e6188866557",
-                "init/headers/pages/defaultCmsPageWorkflowChannelHeader.js": "69d962e51c9a7f0e9693c9f14485f4727e0ce91fe99fba3167388832ed43b998",
-                "init/headers/pages/defaultCmsPageWorkflowHeadHeader.js": "448603ce7efa80571c121cc6546280a0f4f36b11cef5a3177021c5e72ff27dd1",
-                "init/headers/schema2Workflow/defaultCmsComponent2Workflow.js": "f03912c4cb8d0d3df5689d717146d1a0fdcc74c197571df977afcdd705f85486",
-                "init/headers/schema2Workflow/defaultCmsPage2Workflow.js": "c6802f3108468924d15fc21a2aa0e0ba9ade2535b82cd42aa7ab371931e32629"
-            }
+                "init-v001/records/components/defaultCmsComponentWorkflowActionData.js": "0f5a303b4bd549d0b340e04fae1f4dabea13ce846f58006197e2f67056d47026",
+                "init-v001/records/components/defaultCmsComponentWorkflowChannelData.js": "2ced2c094e282c884526b1e58d9fd537b0846e74a2cbb26a809116bedbe188ae",
+                "init-v001/records/components/defaultCmsComponentWorkflowHeadData.js": "0f515b26abc9f40189be59963b3a927b35c26a1dc2c82c05c14feda46228d111",
+                "init-v001/records/pages/defaultCmsPageWorkflowActionData.js": "549598e7f76f2a34dc23a1453a596e0cbe350799325f6faac5d15f890c142e27",
+                "init-v001/records/pages/defaultCmsPageWorkflowChannelData.js": "e466bb79d9a51bb88465ade004a8eb442f483774730d506bba5ec4f9797be3bf",
+                "init-v001/records/pages/defaultCmsPageWorkflowHeadData.js": "6d2cb8715fd5d5aa2b3e02c5cec03b3f8ca2d5c344dc276b98dc841794cbe6bd",
+                "init-v001/records/schema2Workflow/defaultCmsComponent2WorkflowData.js": "19e7fd40e2b27f5a1521f2791180e32f04b8b2336fe474b0fb47a1623f1cbf61",
+                "init-v001/records/schema2Workflow/defaultCmsPage2WorkflowData.js": "14bee5b22812e6113f7bd6d044929f8903a051181b363f4af388c6609940f0b8",
+                "init-v001/headers/components/defaultCmsComponentWorkflowActionHeader.js": "6d4505335f8784116884ed7ba3c62c120ae6f61c7ec64b0f28307f668b88c44a",
+                "init-v001/headers/components/defaultCmsComponentWorkflowChannelHeader.js": "56869453beb7438d4eed6f4c6eaacacebda44b2f96f847b6ac8879370fcd9b0f",
+                "init-v001/headers/components/defaultCmsComponentWorkflowHeadHeader.js": "b21785cd1971665f192210ff5a9b33fc4b3994e4849d1db7d5997588feb30174",
+                "init-v001/headers/pages/defaultCmsPageWorkflowActionHeader.js": "d2672a7eba02d01a2dcab85c2b97a30ccda53715e4b04774a7f67bc5b41d18a0",
+                "init-v001/headers/pages/defaultCmsPageWorkflowChannelHeader.js": "4fd6996f0888eaf767853c2835dd5fde5d33defae367a5fb0a8393f3c20334fd",
+                "init-v001/headers/pages/defaultCmsPageWorkflowHeadHeader.js": "651b9bcffd332e8de1b6296bfe632a9bd9ba462ed695bc371d68bf1e7285192f",
+                "init-v001/headers/schema2Workflow/defaultCmsComponent2Workflow.js": "78e061cefb292a7e4e9210abc54011d2e27771d72c84c26fa293898097a076e5",
+                "init-v001/headers/schema2Workflow/defaultCmsPage2Workflow.js": "e4dbfb0c9d1977715eef8c75d9cac85ee5fe43615c11a4576b329e28de678871"
+            },
+            "sourceRoot": "init-v001"
         }
     }
 }

@@ -1,5 +1,5 @@
 {
-    "contractVersion": 0,
+    "contractVersion": 2,
     "module": "media",
     "sections": {
         "mediaReplicationRetryJob": {
@@ -21,9 +21,10 @@
             "removalPolicy": "RETAIN",
             "installer": "CRON_JOB",
             "files": {
-                "init/data/jobs/mediaReplicationRetryJobData.js": "c1b098d19823e41819ef2844c1545ea9d6cedf14bd4c0c152477cd52cab4b037",
-                "init/headers/jobs/mediaReplicationRetryJobHeader.js": "1ee97ce2dc31c46bdf9b0e1c15bc6c7bbc9eabf9a96eb50abbd3086683c509a7"
-            }
+                "init-v001/records/jobs/mediaReplicationRetryJobData.js": "595ad2e4f84886b5b2e3a6f3b6650a8d5bd0048cbf8a59542e0702cf9433ba93",
+                "init-v001/headers/jobs/mediaReplicationRetryJobHeader.js": "e4f5182a5568a584ceb022134db61b165e8ae1747672551832f0e65b744b7721"
+            },
+            "sourceRoot": "init-v001"
         },
         "mediaCleanupRetentionJob": {
             "kind": "DATA_RELEASE",
@@ -44,9 +45,10 @@
             "removalPolicy": "RETAIN",
             "installer": "CRON_JOB",
             "files": {
-                "init/data/jobs/mediaCleanupRetentionJobData.js": "2161a84d393db5a001ab37f40d6f3fd415d4cc0b4946efcb13b5b4d0bcb54b58",
-                "init/headers/jobs/mediaCleanupRetentionJobHeader.js": "4435748f0f712da0d7b06f67d3cab68b0eede6b0407bf55e1dad6e3ba3fb07d2"
-            }
+                "init-v001/records/jobs/mediaCleanupRetentionJobData.js": "08379f55befaf6a09ae12de8d6283327c76403f141f1d81cbd951fd86dc4de01",
+                "init-v001/headers/jobs/mediaCleanupRetentionJobHeader.js": "f8a07b70a337e5754cfb6690839a732e985f4d6c2e0a9d90a3d53e56fed8e8f8"
+            },
+            "sourceRoot": "init-v001"
         },
         "mediaDataPackStandard": {
             "kind": "DATA_RELEASE",
@@ -69,7 +71,8 @@
             "files": {
                 "standard/data-pack-media-structure.md": "69dea2519b0cf1fca1337c2300b3f51831f00fc4b8860b40535cf6daeebfe24f",
                 "standard/non-publishable-media-policy.json": "c393f8c190b31bc3b5418f561869e64f1674b805d54da3cd9aff4aa4d46b6a1d"
-            }
+            },
+            "sourceRoot": "init-v001"
         }
     }
 }

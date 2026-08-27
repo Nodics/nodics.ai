@@ -25,7 +25,7 @@ const statusDefinitions = require(path.join(root, 'modules/cms/src/utils/statusD
 const service = require(path.join(root, 'modules/cms/src/service/designer/defaultCmsDesignerCompositionService'));
 const wcmsProperties = require(path.join(root, 'config/properties'));
 const authProperties = require(path.join(root, '../nodics.foundation/modules/nAuth/config/properties'));
-const profileGroups = require(path.join(root, '../nodics.platform/modules/profile/data/init/data/groups/defaultBootstrapUserGroupsData'));
+const profileGroups = require(path.join(root, '../nodics.platform/modules/profile/data/init-v001/records/groups/defaultBootstrapUserGroupsData'));
 
 assert.strictEqual(wcmsProperties.apiExposure.categories.cmsAuthoring.enabled, true,
     'WCMS must enable cmsAuthoring at module default so server config only carries topology deltas');

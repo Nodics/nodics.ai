@@ -19,7 +19,7 @@ class NodicsError extends Error { constructor(code, message) { super(message); t
 global.CLASSES = { NodicsError: NodicsError };
 global.CONFIG = { get: key => key === 'process' ? { definitionContributions: { maximumDefinitionsPerContribution: 2 } } : undefined };
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-process-contribution-'));
-const relative = 'init/data/process/definition.js';
+const relative = 'init-v001/records/process/definition.js';
 fs.mkdirSync(path.join(root, 'data', path.dirname(relative)), { recursive: true });
 fs.writeFileSync(path.join(root, 'data', relative), `module.exports = { definitions: [{
   code: 'cmsPublicationApproval', name: 'CMS Publication Approval', ownerModule: 'cms',
