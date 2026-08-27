@@ -40,6 +40,6 @@ const started = process.hrtime.bigint(); let total = '0';
 for (let index = 0; index < 50000; index += 1) total = exact.add(total, '0.01');
 const durationMs = Number(process.hrtime.bigint() - started) / 1000000;
 assert.equal(total, '500'); assert(durationMs < 5000, 'Reference exact-arithmetic capacity harness exceeded 5 seconds');
-console.log('Commerce Phase 9 operations contract validated in ' + durationMs.toFixed(2) + 'ms');
+console.log('Commerce operations contract validated in ' + durationMs.toFixed(2) + 'ms');
 }
 run().catch(error => { console.error(error); process.exitCode = 1; });

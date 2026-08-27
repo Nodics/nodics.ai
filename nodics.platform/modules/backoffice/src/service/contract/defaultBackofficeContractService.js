@@ -79,18 +79,30 @@ module.exports = {
   },
   /** Validates one bounded non-executable schema-workbench navigation target. */
   validateNavigationWorkbenchTarget: function (target) {
+    let optionalRoutes = [
+      "governanceService",
+      "authoringModelRoute",
+      "validationRoute",
+      "renderProjectionRoute",
+      "searchRoute",
+      "publicationHandoffRoute",
+      "migrationPlanRoute",
+    ];
     return (
       target &&
       typeof target === "object" &&
       !Array.isArray(target) &&
       !Object.keys(target).some(
-        (key) => !["moduleName", "schemaName", "mode"].includes(key),
+        (key) => !["moduleName", "schemaName", "mode"].concat(optionalRoutes).includes(key),
       ) &&
       contracts.moduleName.pattern &&
       new RegExp(contracts.moduleName.pattern).test(target.moduleName || "") &&
       this.isString(target.schemaName, 128) &&
       /^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(target.schemaName) &&
-      (target.mode === undefined || target.mode === "create")
+      (target.mode === undefined || target.mode === "create") &&
+      (target.governanceService === undefined || this.isString(target.governanceService, 128)) &&
+      optionalRoutes.filter((key) => key !== "governanceService").every((key) =>
+        target[key] === undefined || this.isSafePath(target[key]))
     );
   },
   /** Validates backend-owned reusable detail panel declarations for schema workspaces. */
@@ -148,14 +160,20 @@ module.exports = {
             "defaultColumns",
             "hiddenFields",
             "editableFields",
-            "readonlyFields",
-            "forbiddenFields",
-            "detailSections",
+              "readonlyFields",
+              "forbiddenFields",
+              "summary",
+              "detailSections",
             "quickFilters",
             "fixedFilters",
             "recoveryActions",
           ].includes(key),
       )
+    )
+      return false;
+    if (
+      presentation.summary !== undefined &&
+      !this.isString(presentation.summary, 320)
     )
       return false;
     if (

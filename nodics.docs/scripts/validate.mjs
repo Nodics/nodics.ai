@@ -9,8 +9,7 @@
 
  */
 
-import { access, readFile } from 'node:fs/promises';
-import { createHash } from 'node:crypto';
+import { access, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve, sep } from 'node:path';
 import { createRequire } from 'node:module';
 import vm from 'node:vm';
@@ -19,6 +18,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const require = createRequire(import.meta.url);
 const applicationDocumentationContract = require('../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js');
+const documentationRecordValidation = require('../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationRecordValidationService.js');
 const catalogue = JSON.parse(await readFile(resolve(root, 'docs/catalogue.json'), 'utf8'));
 const minimumWordCount = 500;
 const minimumSectionCount = 5;
@@ -166,6 +166,68 @@ async function loadGeneratedRecords(relativePath) {
 const siteRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationSiteData.js');
 const pageRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationPageData.js');
 const routeRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationRouteData.js');
+const productRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationProductData.js');
+const navigationRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationNavigationData.js');
+const nodeRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationNodeData.js');
+const dashboardRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationDashboardData.js');
+const pageMetadataRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationPageMetadataData.js');
+const accessPolicyRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationAccessPolicyData.js');
+const publicationStateRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationPublicationStateData.js');
+const searchMetadataRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationSearchMetadataData.js');
+const componentRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationComponentData.js');
+for (const state of publicationStateRecords) {
+  for (const field of [
+    'onlineVersion',
+    'previousOnlineVersion',
+    'submittedBy',
+    'submittedAt',
+    'reviewer',
+    'reviewedAt',
+    'approver',
+    'approvedAt',
+    'publisher',
+    'publishedAt',
+  ]) {
+    if (state[field] === null) {
+      throw new Error(`Publication state ${state.code} must omit optional string field ${field} instead of storing null`);
+    }
+  }
+}
+const manifestEnvelope = JSON.parse(await readFile(resolve(root, 'data/manifest.json'), 'utf8'));
+const validationReport = documentationRecordValidation.validateRecords({
+  records: {
+    products: productRecords,
+    navigation: navigationRecords,
+    nodes: nodeRecords,
+    dashboards: dashboardRecords,
+    pages: pageMetadataRecords,
+    accessPolicies: accessPolicyRecords,
+    publicationStates: publicationStateRecords,
+    searchMetadata: searchMetadataRecords,
+    cmsPages: pageRecords,
+    routes: routeRecords,
+    components: componentRecords,
+    manifestHashes: manifestEnvelope.sections?.documentation?.generatedHashes || {},
+  },
+  options: {
+    release: catalogue.release,
+    source: 'nodics.docs/docs/catalogue.json',
+    owner: 'nodics.docs',
+    generatedAt: '2026-08-26T00:00:00.000Z',
+  },
+});
+documentationRecordValidation.assertReady(validationReport);
+await mkdir(resolve(root, 'docs/reports'), { recursive: true });
+await writeFile(
+  resolve(root, 'docs/reports/framework-documentation-validation-report.json'),
+  JSON.stringify(validationReport, null, 2) + '\n',
+  'utf8',
+);
+await writeFile(
+  resolve(root, 'docs/reports/framework-documentation-validation-report.md'),
+  documentationRecordValidation.formatMarkdown(validationReport),
+  'utf8',
+);
 const siteCodes = new Set(siteRecords.map((site) => site.code));
 for (const site of siteRecords) {
   if (site.catalog !== 'documentationContentCatalog') {
@@ -181,6 +243,131 @@ for (const page of pageRecords) {
 for (const route of routeRecords) {
   if (!siteCodes.has(route.site)) {
     throw new Error(`Framework documentation route has invalid CMS site ownership: ${route.code}`);
+  }
+}
+if (productRecords.length !== 1 || productRecords[0].contentCatalog !== 'documentationContentCatalog') {
+  throw new Error('Framework documentation product metadata must exist and use documentationContentCatalog');
+}
+if (navigationRecords.length !== 1 || navigationRecords[0].product !== productRecords[0].code) {
+  throw new Error('Framework documentation navigation metadata must belong to the generated product');
+}
+const nodeCodes = new Set(nodeRecords.map((node) => node.code));
+if (!nodeCodes.has('nodicsDocsNodeRoot')) {
+  throw new Error('Framework documentation requires a generated root navigation node');
+}
+for (const section of catalogue.navigationSections) {
+  const matchingSectionNode = nodeRecords.find((node) =>
+    node.nodeLevel === 'SECTION' &&
+    node.nodeTitle === section.title &&
+    node.parentNode === 'nodicsDocsNodeRoot'
+  );
+  if (!matchingSectionNode) {
+    throw new Error(`Missing backend documentation section node: ${section.code}`);
+  }
+  if (!matchingSectionNode.nodeSummary || !matchingSectionNode.nodeContentArea || matchingSectionNode.expandable !== true) {
+    throw new Error(`Documentation section node is missing dashboard-ready metadata: ${section.code}`);
+  }
+}
+const metadataByDocumentId = new Map(pageMetadataRecords.map((page) => [page.documentId, page]));
+const publicationByTarget = new Map(publicationStateRecords.map((item) => [`${item.targetType}:${item.targetCode}`, item]));
+for (const document of catalogue.documents) {
+  const metadata = metadataByDocumentId.get(document.id);
+  if (!metadata || metadata.product !== productRecords[0].code) {
+    throw new Error(`Missing generated documentation page metadata: ${document.id}`);
+  }
+  if (!metadata.businessSummary || !metadata.technicalSummary || !metadata.sourceChecksum) {
+    throw new Error(`Documentation page metadata lacks source-backed summaries: ${document.id}`);
+  }
+  if (!metadata.accessPolicy || !allowedAccessModes.has(metadata.accessMode || '') || !metadata.lifecycleState) {
+    throw new Error(`Documentation page metadata lacks access or lifecycle policy: ${document.id}`);
+  }
+  if (metadata.accessMode === 'PUBLIC' && metadata.lifecycleState !== 'ONLINE') {
+    throw new Error(`Public documentation page metadata must be Online before Nexus visibility: ${document.id}`);
+  }
+  if (metadata.workflowRequired !== true || !(metadata.workflowTriggers || []).includes('CONTENT_CHANGE')) {
+    throw new Error(`Documentation page metadata lacks workflow triggers: ${document.id}`);
+  }
+  if (
+    !Array.isArray(document.visualRequirements) ||
+    document.visualRequirements.length === 0 ||
+    JSON.stringify(metadata.visualRequirements) !== JSON.stringify(document.visualRequirements)
+  ) {
+    throw new Error(`Documentation page metadata must preserve visual requirements: ${document.id}`);
+  }
+  const topicNodes = nodeRecords.filter((node) =>
+    node.nodeLevel === 'TOPIC' &&
+    node.targetDocumentationPage === metadata.code &&
+    node.targetPage === metadata.targetPage &&
+    node.targetRoute === metadata.targetRoute
+  );
+  if (topicNodes.length !== 1) {
+    throw new Error(`Documentation page must belong to exactly one topic node: ${document.id}`);
+  }
+  const topicNode = topicNodes[0];
+  if (!topicNode.accessPolicy || topicNode.workflowRequired !== true || !(topicNode.workflowTriggers || []).includes('NAVIGATION_CHANGE')) {
+    throw new Error(`Documentation topic node lacks access policy or workflow triggers: ${document.id}`);
+  }
+  if (!publicationByTarget.has(`PAGE:${metadata.code}`)) {
+    throw new Error(`Documentation page lacks publication state: ${document.id}`);
+  }
+  if (!searchMetadataRecords.some((item) => item.targetType === 'PAGE' && item.targetCode === metadata.code && item.accessPolicy && item.lifecycleState === metadata.lifecycleState)) {
+    throw new Error(`Documentation page lacks search metadata visibility policy: ${document.id}`);
+  }
+}
+for (const dashboard of dashboardRecords) {
+  if (!dashboard.summary || !dashboard.contentArea || !Array.isArray(dashboard.cards)) {
+    throw new Error(`Documentation dashboard must expose summary cards and content area: ${dashboard.code}`);
+  }
+  if (dashboard.workflowRequired !== true || !(dashboard.workflowTriggers || []).includes('DASHBOARD_CHANGE')) {
+    throw new Error(`Documentation dashboard changes must trigger workflow: ${dashboard.code}`);
+  }
+  if (!publicationByTarget.has(`DASHBOARD:${dashboard.code}`)) {
+    throw new Error(`Documentation dashboard lacks publication state: ${dashboard.code}`);
+  }
+}
+for (const policy of accessPolicyRecords) {
+  if (!allowedAccessModes.has(policy.accessMode || '') || !Array.isArray(policy.lifecycleVisibility)) {
+    throw new Error(`Invalid documentation access policy: ${policy.code}`);
+  }
+  if (policy.accessMode === 'PUBLIC' && (policy.publiclyAvailable !== true || policy.requiresAuthentication !== false)) {
+    throw new Error(`Public documentation access policy must be anonymous-readable: ${policy.code}`);
+  }
+  if (policy.accessMode !== 'PUBLIC' && policy.publiclyAvailable === true) {
+    throw new Error(`Restricted documentation access policy cannot be public: ${policy.code}`);
+  }
+  if (policy.workflowRequired !== true || !(policy.workflowTriggers || []).includes('ACCESS_POLICY_CHANGE')) {
+    throw new Error(`Documentation access policy changes must trigger workflow: ${policy.code}`);
+  }
+}
+for (const publicationState of publicationStateRecords) {
+  if (!allowedLifecycleStates.has(publicationState.lifecycleState || '') || !publicationState.checksum) {
+    throw new Error(`Invalid documentation publication state: ${publicationState.code}`);
+  }
+  if (publicationState.workflowRequired !== true || !Array.isArray(publicationState.workflowTriggers) || publicationState.workflowTriggers.length === 0) {
+    throw new Error(`Documentation publication state lacks workflow triggers: ${publicationState.code}`);
+  }
+  if (!publicationState.decisionPolicy || publicationState.decisionPolicy.permissionEnforced !== true || publicationState.decisionPolicy.adminOverrideAudited !== true) {
+    throw new Error(`Documentation publication state lacks decision audit policy: ${publicationState.code}`);
+  }
+  if (!publicationState.validationResult || publicationState.validationResult.publicationPath !== 'STAGED_REVIEW_APPROVAL_ONLINE') {
+    throw new Error(`Documentation publication state must preserve Staged review approval Online path: ${publicationState.code}`);
+  }
+  if (!Object.prototype.hasOwnProperty.call(publicationState, 'author') ||
+      !Object.prototype.hasOwnProperty.call(publicationState, 'reviewer') ||
+      !Object.prototype.hasOwnProperty.call(publicationState, 'approver') ||
+      !Object.prototype.hasOwnProperty.call(publicationState, 'publisher')) {
+    throw new Error(`Documentation publication state lacks actor evidence fields: ${publicationState.code}`);
+  }
+}
+for (const searchMetadata of searchMetadataRecords) {
+  if (!searchMetadata.searchText || searchMetadata.indexState !== 'INDEX_READY') {
+    throw new Error(`Invalid documentation search metadata: ${searchMetadata.code}`);
+  }
+  if (!searchMetadata.accessPolicy || !allowedAccessModes.has(searchMetadata.accessMode || '') || !searchMetadata.lifecycleState) {
+    throw new Error(`Documentation search metadata lacks access or lifecycle filters: ${searchMetadata.code}`);
+  }
+  if (!Array.isArray(searchMetadata.keywords) || !searchMetadata.facets || searchMetadata.workflowRequired !== true) {
+    throw new Error(`Documentation search metadata must expose keyword, facet, and workflow fields: ${searchMetadata.code}`);
   }
 }
 
@@ -257,7 +444,6 @@ for (const document of catalogue.documents) {
     throw new Error(`Document must start with one title: ${document.id}`);
   }
   assertDocumentationDepth(document, body);
-  document.sha256 = createHash('sha256').update(body).digest('hex');
 }
 
 console.log(

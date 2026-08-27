@@ -67,7 +67,7 @@ global.SERVICE = { DefaultLocalizationMessageValidationService: validation, Defa
     assert.strictEqual(await repository.getRelease(release.version, { tenant: 'tenant-b' }), undefined, 'release lookup must remain tenant-isolated');
     await versionProvider.activate({ sourceVersion: release.version, rootCode: 'site-a' }, request);
     let second = Object.assign({}, release, { version: 'second', checksum: release.checksum }); releases.set('second', second);
-    await versionProvider.activate({ sourceVersion: '0', rootCode: 'site-a' }, request);
+    await versionProvider.activate({ sourceVersion: 'second', rootCode: 'site-a' }, request);
     await versionProvider.rollback({ rootCode: 'site-a' }, release.version, request);
     assert.strictEqual((await repository.getOnline('site-a', request)).version, release.version);
     let corrupt = Object.assign({}, release, { entries: Object.assign({}, release.entries, { 'common:tampered': { message: 'x', parameters: [], exposure: 'PUBLIC' } }) });

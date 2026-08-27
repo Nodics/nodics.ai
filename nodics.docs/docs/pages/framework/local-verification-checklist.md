@@ -224,3 +224,11 @@ When it is used after a runtime or registry change, the evidence must include
 server startup, persisted registry state, immediate UI refresh after lifecycle
 operations, and safe behavior after restart. If the evidence cannot name the
 owning module for a failure, the verification is not yet useful enough.
+
+## Customization and extension
+
+Project teams may extend this checklist with local services, extra content
+packs, integration adapters, commerce accelerators, or tenant-specific smoke
+journeys. Each extension must preserve the same evidence style: command,
+owner, environment, expected result, observed result, rollback path, and
+business impact when the check fails.

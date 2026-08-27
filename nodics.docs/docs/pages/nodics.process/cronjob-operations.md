@@ -299,3 +299,34 @@ protection, timeout, retry, logging, downstream failure behavior, and safe
 restart. If the job performs business work, test the owning business module as
 well; Cron proves scheduling and execution governance, not the correctness of
 every domain operation it triggers.
+
+## TEE Reference And Node Responsibility Coverage
+
+Cron is a primary building block for the Task Execution Engine use case. It
+executes scheduled and manual jobs, coordinates runtime state, records
+CronJobLog evidence, and participates in node responsibility transfer. When a
+node goes down, configured responsibilities can be taken over by another node;
+when it returns, ownership can be restored. That behavior must be documented
+for every scheduled automation that affects commerce, publication,
+localization, media cleanup, discovery rebuild, or engagement operations.
+
+```mermaid
+flowchart LR
+  Schedule["Schedule or manual trigger"] --> CronJob["Cron job"]
+  CronJob --> Pipeline["Execution pipeline"]
+  Pipeline --> Domain["Owning domain service"]
+  Domain --> Log["Cron job log"]
+  NodeDown["Node down"] --> Takeover["Responsibility takeover"]
+  NodeUp["Node up"] --> Restore["Responsibility restore"]
+```
+
+| Topic | What to document | Evidence |
+| --- | --- | --- |
+| Job definition | Code, handler, module, tenant, schedule, timeout, and retry. | CronJob schema and configuration contracts. |
+| Execution | Pipeline, input, output, idempotency, and downstream owner. | Runtime service and process trigger contracts. |
+| Node ownership | Normal node, temporary owner, takeover, and restoration. | Node-down/up and failover tests. |
+| Operations | Manual start, pause, logs, blocked reason, and recovery action. | CronJobLog and Axis workbench behavior. |
+
+Every TEE-oriented job page should link back to this Cron topic and to the
+Pipeline, Events/Messaging, and Process topics that explain the rest of the
+execution model.

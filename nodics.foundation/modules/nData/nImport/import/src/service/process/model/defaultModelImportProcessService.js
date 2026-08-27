@@ -583,9 +583,15 @@ module.exports = {
         let header = request.header;
         models = this.normalizeModelsForSchema(header, models);
         return this.ensureLocalSchemaService(request).then(schemaService => {
-            return this.reconcileContentPackVersions(request, schemaService, models);
-        }).then(reconciledModels => {
-            let schemaService = SERVICE['Default' + header.options.schemaName.toUpperCaseFirstChar() + 'Service'];
+            return this.reconcileContentPackVersions(request, schemaService, models).then(reconciledModels => {
+                return {
+                    schemaService: schemaService,
+                    reconciledModels: reconciledModels
+                };
+            });
+        }).then(importContext => {
+            let schemaService = importContext.schemaService;
+            let reconciledModels = importContext.reconciledModels;
             let options = Object.assign({}, request.options || {});
             if (this.isGovernedContentPackRun(request)) {
                 options.allowCmsAssociationReplacement = true;
@@ -654,6 +660,8 @@ module.exports = {
         }
         return this.ensureLocalSchemaModel(request).then(() => {
             return this.ensureRuntimeSchemaService(request);
+        }).then(() => {
+            return this.ensureReferencedSchemaServices(request, {});
         }).then(() => {
             schemaService = SERVICE[serviceName];
             if (!schemaService || typeof schemaService[operation] !== 'function') {
@@ -727,8 +735,83 @@ module.exports = {
             return Promise.reject(new CLASSES.DataImportError('ERR_IMP_00003',
                 'Runtime pipeline service is unavailable for import: ' + serviceName));
         }
-        SERVICE[serviceName] = this.createRuntimeSchemaService(moduleName, modelName);
+        let runtimeSchemaService = this.createRuntimeSchemaService(moduleName, modelName);
+        SERVICE[serviceName] = schemaService ? Object.assign(runtimeSchemaService, schemaService) : runtimeSchemaService;
         return Promise.resolve(true);
+    },
+
+    /**
+     * Ensures import-scoped services exist for schemas referenced by a target
+     * schema so nested object saves can use the normal generated-service shape
+     * during fresh bootstrap.
+     *
+     * @param {Object} request Import request carrying the active raw schema.
+     * @param {Object} visited Recursion guard keyed by module and schema.
+     * @returns {Promise<boolean>} Resolved when referenced services are available.
+     */
+    ensureReferencedSchemaServices: function (request, visited) {
+        let header = request.header || {};
+        let rawSchema = header.rawSchema || {};
+        let refSchema = rawSchema.refSchema || {};
+        let chain = Promise.resolve(true);
+        _.each(refSchema, propertyObject => {
+            chain = chain.then(() => {
+                if (!propertyObject || propertyObject.enabled === false || !propertyObject.schemaName) {
+                    return true;
+                }
+                let schemaName = propertyObject.schemaName;
+                let moduleName = propertyObject.moduleName || propertyObject.targetModule ||
+                    this.resolveSchemaModuleName(header.options.moduleName, schemaName);
+                let visitKey = moduleName + '.' + schemaName;
+                if (visited[visitKey]) {
+                    return true;
+                }
+                visited[visitKey] = true;
+                let relatedRawSchema = this.resolveRawSchema(moduleName, schemaName);
+                if (!relatedRawSchema) {
+                    return Promise.reject(new CLASSES.DataImportError('ERR_IMP_00003',
+                        'Referenced schema model not available for import: ' + moduleName + '.' + schemaName));
+                }
+                let relatedRequest = Object.assign({}, request, {
+                    header: {
+                        rawSchema: relatedRawSchema,
+                        options: Object.assign({}, header.options, {
+                            moduleName: moduleName,
+                            schemaName: schemaName,
+                            operation: 'saveAll'
+                        })
+                    }
+                });
+                return this.ensureLocalSchemaModel(relatedRequest).then(() => {
+                    return this.ensureRuntimeSchemaService(relatedRequest);
+                }).then(() => {
+                    return this.ensureReferencedSchemaServices(relatedRequest, visited);
+                });
+            });
+        });
+        return chain;
+    },
+
+    /**
+     * Resolves the module that owns a referenced schema.
+     *
+     * @param {string} preferredModuleName Module declared by the active header.
+     * @param {string} schemaName Referenced schema name.
+     * @returns {string} Owning module name when discovered, otherwise preferred module.
+     */
+    resolveSchemaModuleName: function (preferredModuleName, schemaName) {
+        let preferredModule = NODICS.getModule(preferredModuleName);
+        if (preferredModule && preferredModule.rawSchema && preferredModule.rawSchema[schemaName]) {
+            return preferredModuleName;
+        }
+        let modules = typeof NODICS.getModules === 'function' ? NODICS.getModules() : {};
+        let resolvedModuleName = preferredModuleName;
+        _.each(modules || {}, (moduleObject, moduleName) => {
+            if (resolvedModuleName === preferredModuleName && moduleObject && moduleObject.rawSchema && moduleObject.rawSchema[schemaName]) {
+                resolvedModuleName = moduleName;
+            }
+        });
+        return resolvedModuleName;
     },
 
     /**

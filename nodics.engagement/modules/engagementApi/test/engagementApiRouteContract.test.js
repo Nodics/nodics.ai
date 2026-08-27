@@ -41,4 +41,4 @@ assert.strictEqual(routers.operator.executeEngagementBatch.permission, 'engageme
 assert.strictEqual(routers.operator.executeEngagementExport.permission, 'engagement.operations.export.execute');
 assert.strictEqual(routers.operator.executeEngagementRepair.permission, 'engagement.operations.repair.execute');
 assert.strictEqual(routers.operator.executeEngagementPrivacy.permission, 'engagement.privacy.execute');
-console.log('EngagementApi Phase 3 route contract validated');
+console.log('EngagementApi route contract validated');

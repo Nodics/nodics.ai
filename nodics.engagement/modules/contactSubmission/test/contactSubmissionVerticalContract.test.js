@@ -49,6 +49,6 @@ async function run() {
     assert.throws(() => lifecycle.transition(inProgress, { toStatus: 'CLOSED', expectedRevision: 1 }, configuration.lifecycle), error => error.code === 'ERR_CONTACT_00002');
     assert.deepStrictEqual(lifecycle.visibleCorrespondence([{ visibility: 'INTERNAL' }, { visibility: 'CUSTOMER' }], true), [{ visibility: 'CUSTOMER' }]);
     let deferred = await handoff.dispatch('CRM', contactRecord, null, request); assert.strictEqual(deferred.deferred, true);
-    console.log('ContactSubmission Phase 4 vertical contract validated');
+    console.log('ContactSubmission vertical contract validated');
 }
 run().catch(error => { console.error(error); process.exitCode = 1; });

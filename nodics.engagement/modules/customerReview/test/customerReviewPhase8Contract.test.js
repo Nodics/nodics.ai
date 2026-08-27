@@ -40,4 +40,4 @@ assert.strictEqual(syndication.replay(imported, Object.assign({}, imported, { so
 assert.throws(() => syndication.receive({ externalReviewId: 'ext2', externalTargetId: 'sku2', disclosure: 'Partner' }, { tenant: 't1', providerCode: 'partner', targetType: 'PRODUCT', targetCode: 'p2' }, configuration.syndication), error => error.code === 'ERR_REVIEW_00020');
 assert.strictEqual(syndication.googleCustomerReviews(configuration.syndication.providers.googleCustomerReviews).enabled, false);
 assert.strictEqual(syndication.googleCustomerReviews({ enabled: true }).ownsReviewState, false);
-console.log('customerReview Phase 8 contract validated');
+console.log('customerReview publication contract validated');

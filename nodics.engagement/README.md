@@ -8,7 +8,7 @@ For implementation rules, read this module `AGENTS.md` after the root-to-leaf an
 
 ## What this group provides
 
-Customer Engagement is the governed framework boundary for customer contact submissions, reviews and ratings, feedback, testimonials, shared engagement governance, communication intents, and secured APIs. Phases 1 through 12 implement Core, API, contact, testimonial, review, feedback, unified operations, governed automation, and provider-neutral resilience foundations including governed CRES cutover. Domain capabilities remain disabled at framework level until a deployment or tenant layer explicitly enables them.
+Customer Engagement is the governed framework boundary for customer contact submissions, reviews and ratings, feedback, testimonials, shared engagement governance, communication intents, and secured APIs. The current implementation covers Core, API, contact, testimonial, review, feedback, unified operations, governed automation, and provider-neutral resilience foundations including governed CRES cutover. Domain capabilities remain disabled at framework level until a deployment or tenant layer explicitly enables them.
 
 ## Package map
 

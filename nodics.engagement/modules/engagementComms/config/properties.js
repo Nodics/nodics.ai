@@ -11,7 +11,7 @@
 
 /**
  * @module engagementComms/config/properties
- * @description Reserves the layered configuration boundary for engagementComms; Phase 1 defines no active business defaults.
+ * @description Reserves the layered configuration boundary for engagementComms; no active business defaults are enabled.
  * @layer config
  * @owner engagementComms
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.

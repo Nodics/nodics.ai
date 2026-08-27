@@ -1,6 +1,6 @@
 # testimonial Contracts
 
-## Phase 5 contract
+## Testimonial capability contract
 
 - Status: implemented; consent-controlled editorial and publication behavior is active only when the project capability flag is enabled.
 - Owns: testimonial sources, attributable consent, editorial versions, approval eligibility, withdrawal, and domain publication projections.

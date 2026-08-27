@@ -232,6 +232,17 @@ async function run() {
           id: "cms-sites",
           label: "Websites",
           route: "/content/websites",
+          workbenchPresentation: {
+            summary: "Manage websites, catalogs, and publishing readiness from one governed workspace.",
+            defaultColumns: ["code", "name", "active"],
+          },
+          workbenchTarget: {
+            moduleName: "cms",
+            schemaName: "cmsDocumentationPublicationState",
+            governanceService: "DefaultCmsDocumentationGovernanceService",
+            validationRoute: "/documentation/governance/validate",
+            publicationHandoffRoute: "/documentation/governance/publication-handoff",
+          },
           lifecycleActions: [
             {
               id: "publish-site",
@@ -297,6 +308,16 @@ async function run() {
       .intent,
     "PUBLISH",
     "BackOffice registration must preserve bounded declarative lifecycle actions for Axis rendering",
+  );
+  assert.strictEqual(
+    list.data.modules.cms[0].backoffice.navigation[0].workbenchPresentation.summary,
+    "Manage websites, catalogs, and publishing readiness from one governed workspace.",
+    "BackOffice registration must preserve bounded workbench summary text for Axis rendering",
+  );
+  assert.strictEqual(
+    list.data.modules.cms[0].backoffice.navigation[0].workbenchTarget.validationRoute,
+    "/documentation/governance/validate",
+    "BackOffice registration must preserve bounded documentation governance route metadata",
   );
   let readonlyCatalogue = service.buildCatalogue(
     { cms: [{ backoffice: registration.backoffice }] },

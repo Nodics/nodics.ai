@@ -25,7 +25,7 @@ const axisOrigin = process.env.AXIS_ORIGIN || process.env.AXIS_URL || "http://12
 const enterpriseCode = process.env.AXIS_ENTERPRISE || process.env.NODICS_ENTERPRISE_CODE || "default";
 const loginId = process.env.AXIS_LOGIN_ID || "admin";
 const password = process.env.AXIS_PASSWORD || "adminPassword";
-const assetRoot = path.join(projectRoot, "modules", "nexus.web", "modules", "nexusWebData", "assets", "nexus-cms-media");
+const assetRoot = path.join(projectRoot, "modules", "nexus.web", "data", "assets", "nexus-cms-media");
 const assetManifestPath = path.join(assetRoot, "assetManifest.js");
 const assetFilesRoot = path.join(assetRoot, "files");
 

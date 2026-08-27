@@ -34,6 +34,7 @@ const axisUrl = process.env.AXIS_URL || "http://127.0.0.1:3100";
 const enterpriseCode = process.env.AXIS_ENTERPRISE || "default";
 const loginId = process.env.AXIS_LOGIN_ID || "admin";
 const password = process.env.AXIS_PASSWORD || "adminPassword";
+const clientContractVersion = process.env.AXIS_CLIENT_CONTRACT_VERSION || "1";
 const projectDescriptor = readProjectDescriptor();
 const projectCode = process.env.AXIS_PROJECT || projectDescriptor.projectCode || "nodics.kickoff";
 const runtimeMode = process.env.NODICS_ACCEPTANCE_RUNTIME || "kickoffLocal";
@@ -325,7 +326,10 @@ async function verifyPublicationOperations(headers) {
 
 async function expectHttpOk(baseUrl, path) {
   const response = await fetch(endpoint(baseUrl, path), {
-    headers: { "x-enterprise-code": enterpriseCode },
+    headers: {
+      "x-enterprise-code": enterpriseCode,
+      "x-nodics-client-contract-version": clientContractVersion,
+    },
   });
   if (!response.ok) {
     throw new Error(
@@ -341,7 +345,11 @@ async function verifyLocalRouteSecurityMatrix() {
   const probe = (baseUrl, path, origin, options = {}) => fetch(endpoint(baseUrl, path), {
     redirect: "manual",
     ...options,
-    headers: { Origin: origin, ...(options.headers || {}) },
+    headers: {
+      Origin: origin,
+      "x-nodics-client-contract-version": clientContractVersion,
+      ...(options.headers || {}),
+    },
   });
   const platformBootstrap = await probe(platformUrl, "/nodics/backoffice/v0/bootstrap/public", nexusOrigin);
   if (platformBootstrap.status !== 200 || platformBootstrap.headers.get("access-control-allow-origin") !== nexusOrigin) {
@@ -661,7 +669,7 @@ async function verifyDocumentationNotOnlineBeforePublication() {
 }
 
 async function importNexusStagedRelease(headers) {
-  const releaseCode = "nexusWebData:nexusCorporateSite";
+  const releaseCode = "nexus.web:nexusCorporateSite";
   const catalogue = await requestJson(wcmsUrl, "/nodics/import/v0/core", {
     headers,
   });

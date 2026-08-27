@@ -54,5 +54,5 @@ const lifecycle = require(path.join(root, 'checkout/modules/order/src/service/de
     assert.equal(fulfillment.transition({ tenant: 't1', orderCode: 'o1', status: 'READY', revision: 1, correlationId: 'x' }, 'SHIPPED', 'u1').toStatus, 'SHIPPED');
     const reversed = await lifecycle.process({ tenant: 't1', orderCode: 'o1', requestType: 'RETURN', idempotencyKey: 'r1' }, { find: async () => null, evaluatePolicy: async () => ({ eligible: true, requiresApproval: false }), fulfillmentIntent: async () => 'received', inventoryDisposition: async () => 'restocked', paymentIntent: async () => 'refunded', complete: async (request, evidence) => evidence });
     assert.equal(reversed.payment, 'refunded');
-    console.log('Commerce Phases 3-7 contract validated');
+    console.log('Commerce transaction and checkout contract validated');
 })().catch(error => { console.error(error); process.exitCode = 1; });

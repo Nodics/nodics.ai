@@ -18,16 +18,16 @@ const baseFields = {
     sourceOfTruth: validator.CONTRACT_SOURCE
 };
 
-const phaseOneFields = {
-    phase: 'PHASE_1_READ_ONLY',
+const readOnlyFields = {
+    phase: 'READ_ONLY_DISCOVERY',
     state: 'AVAILABLE',
     mutating: false,
     requiresIdempotencyKey: false
 };
 
-const futureMutatingFields = {
-    phase: 'FUTURE_MUTATING',
-    state: 'FUTURE',
+const reservedMutatingFields = {
+    phase: 'RESERVED_MUTATING',
+    state: 'RESERVED',
     mutating: true,
     method: 'POST',
     requiresWorkspace: true,
@@ -37,7 +37,7 @@ const futureMutatingFields = {
 const operationCatalog = validator.sortOperations([
     {
         ...baseFields,
-        ...phaseOneFields,
+        ...readOnlyFields,
         code: 'installer.info',
         label: 'Installer Info',
         group: 'DISCOVERY',
@@ -51,7 +51,7 @@ const operationCatalog = validator.sortOperations([
     },
     {
         ...baseFields,
-        ...phaseOneFields,
+        ...readOnlyFields,
         code: 'installer.operations',
         label: 'Installer Operations',
         group: 'DISCOVERY',
@@ -65,7 +65,7 @@ const operationCatalog = validator.sortOperations([
     },
     {
         ...baseFields,
-        ...phaseOneFields,
+        ...readOnlyFields,
         code: 'workspace.inventory',
         label: 'Workspace Inventory',
         group: 'WORKSPACE_READINESS',
@@ -79,7 +79,7 @@ const operationCatalog = validator.sortOperations([
     },
     {
         ...baseFields,
-        ...phaseOneFields,
+        ...readOnlyFields,
         code: 'workspace.preflight',
         label: 'Workspace Preflight',
         group: 'WORKSPACE_READINESS',
@@ -93,7 +93,7 @@ const operationCatalog = validator.sortOperations([
     },
     {
         ...baseFields,
-        ...phaseOneFields,
+        ...readOnlyFields,
         code: 'workspace.status',
         label: 'Workspace Status',
         group: 'WORKSPACE_READINESS',
@@ -107,7 +107,7 @@ const operationCatalog = validator.sortOperations([
     },
     {
         ...baseFields,
-        ...phaseOneFields,
+        ...readOnlyFields,
         code: 'setup.plan',
         label: 'Setup Plan',
         group: 'SETUP_PLANNING',
@@ -121,7 +121,7 @@ const operationCatalog = validator.sortOperations([
     },
     {
         ...baseFields,
-        ...phaseOneFields,
+        ...readOnlyFields,
         code: 'evidence.read',
         label: 'Evidence Read',
         group: 'EVIDENCE_READ',
@@ -135,173 +135,173 @@ const operationCatalog = validator.sortOperations([
     },
     {
         ...baseFields,
-        ...futureMutatingFields,
+        ...reservedMutatingFields,
         code: 'lifecycle.acceptance',
         label: 'Run Acceptance',
         group: 'LIFECYCLE',
         intent: 'LIFECYCLE',
         permission: 'installer.workspace.operate',
         route: '/nodics/installer/v0/lifecycle/acceptance',
-        summary: 'Future governed execution of local acceptance checks.',
+        summary: 'Reserved governed execution of local acceptance checks.',
         riskLevel: 'HIGH'
     },
     {
         ...baseFields,
-        ...futureMutatingFields,
+        ...reservedMutatingFields,
         code: 'lifecycle.initialize',
         label: 'Initialize Workspace',
         group: 'LIFECYCLE',
         intent: 'LIFECYCLE',
         permission: 'installer.workspace.operate',
         route: '/nodics/installer/v0/lifecycle/initialize',
-        summary: 'Future governed initialization of an installed local workspace.',
+        summary: 'Reserved governed initialization of an installed local workspace.',
         riskLevel: 'HIGH'
     },
     {
         ...baseFields,
-        ...futureMutatingFields,
+        ...reservedMutatingFields,
         code: 'lifecycle.restart',
         label: 'Restart Workspace',
         group: 'LIFECYCLE',
         intent: 'LIFECYCLE',
         permission: 'installer.workspace.operate',
         route: '/nodics/installer/v0/lifecycle/restart',
-        summary: 'Future governed restart of local Nodics services.',
+        summary: 'Reserved governed restart of local Nodics services.',
         riskLevel: 'HIGH'
     },
     {
         ...baseFields,
-        ...futureMutatingFields,
+        ...reservedMutatingFields,
         code: 'lifecycle.start',
         label: 'Start Workspace',
         group: 'LIFECYCLE',
         intent: 'LIFECYCLE',
         permission: 'installer.workspace.operate',
         route: '/nodics/installer/v0/lifecycle/start',
-        summary: 'Future governed startup of local Nodics services.',
+        summary: 'Reserved governed startup of local Nodics services.',
         riskLevel: 'HIGH'
     },
     {
         ...baseFields,
-        ...futureMutatingFields,
+        ...reservedMutatingFields,
         code: 'lifecycle.stop',
         label: 'Stop Workspace',
         group: 'LIFECYCLE',
         intent: 'LIFECYCLE',
         permission: 'installer.workspace.operate',
         route: '/nodics/installer/v0/lifecycle/stop',
-        summary: 'Future governed shutdown of local Nodics services.',
+        summary: 'Reserved governed shutdown of local Nodics services.',
         riskLevel: 'HIGH'
     },
     {
         ...baseFields,
-        ...futureMutatingFields,
+        ...reservedMutatingFields,
         code: 'expansion.environment.add',
         label: 'Add Environment',
         group: 'EXPANSION',
         intent: 'EXPAND',
         permission: 'installer.workspace.expand',
         route: '/nodics/installer/v0/expansion/environment',
-        summary: 'Future governed addition of a customer environment.',
+        summary: 'Reserved governed addition of a customer environment.',
         riskLevel: 'HIGH'
     },
     {
         ...baseFields,
-        ...futureMutatingFields,
+        ...reservedMutatingFields,
         code: 'expansion.module.add',
         label: 'Add Module',
         group: 'EXPANSION',
         intent: 'EXPAND',
         permission: 'installer.workspace.expand',
         route: '/nodics/installer/v0/expansion/module',
-        summary: 'Future governed addition of a customer module.',
+        summary: 'Reserved governed addition of a customer module.',
         riskLevel: 'HIGH'
     },
     {
         ...baseFields,
-        ...futureMutatingFields,
+        ...reservedMutatingFields,
         code: 'expansion.site.add',
         label: 'Add Site',
         group: 'EXPANSION',
         intent: 'EXPAND',
         permission: 'installer.workspace.expand',
         route: '/nodics/installer/v0/expansion/site',
-        summary: 'Future governed addition of another accelerator site.',
+        summary: 'Reserved governed addition of another accelerator site.',
         riskLevel: 'HIGH'
     },
     {
         ...baseFields,
-        ...futureMutatingFields,
+        ...reservedMutatingFields,
         code: 'maintenance.backup',
         label: 'Backup Workspace',
         group: 'MAINTENANCE',
         intent: 'EXPORT',
         permission: 'installer.workspace.support',
         route: '/nodics/installer/v0/maintenance/backup',
-        summary: 'Future governed creation of a local workspace backup.',
+        summary: 'Reserved governed creation of a local workspace backup.',
         riskLevel: 'HIGH'
     },
     {
         ...baseFields,
-        ...futureMutatingFields,
+        ...reservedMutatingFields,
         code: 'maintenance.cleanup',
         label: 'Cleanup Workspace',
         group: 'MAINTENANCE',
         intent: 'REPAIR',
         permission: 'installer.workspace.operate',
         route: '/nodics/installer/v0/maintenance/cleanup',
-        summary: 'Future governed cleanup of generated local workspace artifacts.',
+        summary: 'Reserved governed cleanup of generated local workspace artifacts.',
         riskLevel: 'CRITICAL'
     },
     {
         ...baseFields,
-        ...futureMutatingFields,
+        ...reservedMutatingFields,
         code: 'maintenance.repair',
         label: 'Repair Workspace',
         group: 'MAINTENANCE',
         intent: 'REPAIR',
         permission: 'installer.workspace.operate',
         route: '/nodics/installer/v0/maintenance/repair',
-        summary: 'Future governed repair of installer-owned generated metadata.',
+        summary: 'Reserved governed repair of installer-owned generated metadata.',
         riskLevel: 'HIGH'
     },
     {
         ...baseFields,
-        ...futureMutatingFields,
+        ...reservedMutatingFields,
         code: 'maintenance.rollback',
         label: 'Rollback Workspace',
         group: 'MAINTENANCE',
         intent: 'REPAIR',
         permission: 'installer.workspace.operate',
         route: '/nodics/installer/v0/maintenance/rollback',
-        summary: 'Future governed rollback to a known local workspace state.',
+        summary: 'Reserved governed rollback to a known local workspace state.',
         riskLevel: 'CRITICAL'
     },
     {
         ...baseFields,
-        ...futureMutatingFields,
+        ...reservedMutatingFields,
         code: 'maintenance.supportBundle',
         label: 'Support Bundle',
         group: 'MAINTENANCE',
         intent: 'EXPORT',
         permission: 'installer.workspace.support',
         route: '/nodics/installer/v0/maintenance/support-bundle',
-        summary: 'Future governed creation of a sanitized support bundle.',
+        summary: 'Reserved governed creation of a sanitized support bundle.',
         riskLevel: 'MEDIUM'
     },
     {
         ...baseFields,
-        ...futureMutatingFields,
+        ...reservedMutatingFields,
         code: 'maintenance.updateVendors',
         label: 'Update Vendors',
         group: 'MAINTENANCE',
         intent: 'EXPAND',
         permission: 'installer.workspace.operate',
         route: '/nodics/installer/v0/maintenance/update-vendors',
-        summary: 'Future governed update of vendor-owned Nodics repositories.',
+        summary: 'Reserved governed update of vendor-owned Nodics repositories.',
         riskLevel: 'CRITICAL'
     }
-]).map(validator.normalizeOperation);
+]).map(operation => validator.normalizeOperation(operation));
 
 validator.validateOperationCatalog(operationCatalog);
 
@@ -323,7 +323,7 @@ module.exports = {
         return Promise.resolve(true);
     },
 
-    /** Returns client-safe operation metadata for future Axis presentation. */
+    /** Returns client-safe operation metadata for Axis presentation. */
     listOperations: function () {
         return JSON.parse(JSON.stringify(operationCatalog));
     },

@@ -87,3 +87,12 @@ Rollback means disabling the affected capability or model version and returning 
 Prove AI-disabled startup, deterministic results, provider success, timeout and fallback, prohibited-input rejection, bounded confidence, mandatory human review, low-confidence review, source-hash and revision traceability, accept/override/reject evidence, stale-source handling, minimum evaluation sample, missing metric rejection, threshold pass/fail, cross-tenant denial, deletion propagation, provider configuration secrecy, and zero direct customer-impacting actions. Run focused automation contracts, generated schema contracts, module metadata and Axis journey tests, documentation generation/validation, and the effective engagement-server governance build.
 
 Next: Enterprise Scale, Resilience, and Ecosystem hardens the complete Engagement platform for capacity, provider failure, regional operation, privacy, accessibility, and compatibility.
+
+## Customization and extension
+
+Projects may add automation providers, capability-specific confidence
+thresholds, evaluation datasets, review queues, and operational dashboards in
+later-loaded modules. The extension must preserve deterministic fallback,
+source hashes, prompt/model/policy versions, tenant boundaries, and the rule
+that automation proposes or classifies while the owning domain completes the
+business action.

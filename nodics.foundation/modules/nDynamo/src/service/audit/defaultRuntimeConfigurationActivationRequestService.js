@@ -665,7 +665,7 @@ module.exports = {
 
     /**
 
-     * Executes assert decision separation behavior.
+     * Ensures a governed runtime decision has an authenticated actor.
 
      *
 
@@ -678,16 +678,12 @@ module.exports = {
      */
 
     assertDecisionSeparation: function (activationRequest, actor) {
-        let policy = this.getSeparationPolicy();
         this.assertActor(actor);
-        if (policy.preventSelfDecision !== false && actor === activationRequest.requestedBy) {
-            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'The requester cannot approve or reject the same runtime change');
-        }
     },
 
     /**
 
-     * Executes assert activation separation behavior.
+     * Ensures a governed runtime activation has an authenticated actor.
 
      *
 
@@ -700,13 +696,6 @@ module.exports = {
      */
 
     assertActivationSeparation: function (activationRequest, actor) {
-        let policy = this.getSeparationPolicy();
         this.assertActor(actor);
-        if (policy.preventRequesterActivation !== false && actor === activationRequest.requestedBy) {
-            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'The requester cannot activate the same runtime change');
-        }
-        if (policy.preventApproverActivation !== false && actor === activationRequest.approvedBy) {
-            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'The approver cannot activate the same runtime change');
-        }
     }
 };

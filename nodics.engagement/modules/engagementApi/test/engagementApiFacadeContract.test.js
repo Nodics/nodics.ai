@@ -30,6 +30,6 @@ async function run() {
     assert.strictEqual(operator[0].ownerId, 'p1'); assert.strictEqual(operator[0].payload, undefined);
     let receipt = await facade.receiveCallback({ tenant: 't1', correlationId: 'c3', payload: { providerSecret: 'x' }, authData: { tenant: 't1', tokenType: 'service', userGroups: ['serviceAccountUserGroup'] } });
     assert.strictEqual(receipt.referenceCode, 'R1'); assert.strictEqual(receipt.providerPayload, undefined);
-    console.log('EngagementApi Phase 3 facade contract validated');
+    console.log('EngagementApi facade contract validated');
 }
 run().catch(error => { console.error(error); process.exitCode = 1; });

@@ -1,7 +1,7 @@
 # Installer API Scope Contract
 
 Date: 2026-08-26
-Status: Frozen for Phase 1 implementation
+Status: Frozen for current read-only implementation
 Owner: `nodics.platform/modules/installer`
 
 ## Purpose
@@ -17,14 +17,15 @@ bootstrap path for first-machine setup through:
 npx github:Nodics/nodics.installer
 ```
 
-## Phase 1 Boundary
+## Current Read-Only Boundary
 
-Phase 1 is read-only. It may discover workspace state, validate readiness,
-prepare dry-run setup plans, and read sanitized setup evidence.
+The current installer API surface is read-only. It may discover workspace state,
+validate readiness, prepare dry-run setup plans, and read sanitized setup
+evidence.
 
-Phase 1 must not execute shell commands, mutate repositories, create customer
-projects, publish data, start or stop services, update vendors, write
-workspace descriptors, or change npm/NPX package identity.
+Current read-only APIs must not execute shell commands, mutate repositories,
+create customer projects, publish data, start or stop services, update vendors,
+write workspace descriptors, or change npm/NPX package identity.
 
 ## Functional Groups
 
@@ -43,7 +44,7 @@ Operation groups must use this taxonomy:
 - Report installer module metadata.
 - Report standalone bootstrap command and supported package source.
 - Report operation catalog entries and feature flags.
-- Report which operations are available, preview-only, disabled, future, or
+- Report which operations are available, preview-only, disabled, reserved, or
   hidden.
 
 ### Workspace Readiness
@@ -70,11 +71,10 @@ Operation groups must use this taxonomy:
 - Never expose secrets, tokens, private keys, connection passwords, or raw
   environment files.
 
-## Future-Only Functional Groups
+## Reserved Mutating Functional Groups
 
-The following groups are outside Phase 1 and must stay non-executable until a
-separate governed contract, tests, permissions, idempotency model, audit model,
-and rollback strategy exist:
+The following groups stay non-executable until a separate governed contract,
+tests, permissions, idempotency model, audit model, and rollback strategy exist:
 
 - lifecycle operations: start, stop, restart, initialize, acceptance, repair;
 - expansion operations: add environment, add module, add site, update vendors;
@@ -85,11 +85,11 @@ and rollback strategy exist:
 - `AVAILABLE`: implemented, secured, tested, and exposed for the current phase.
 - `PREVIEW`: visible for planning or UX discovery but not executable.
 - `DISABLED`: implemented or partially implemented but intentionally blocked.
-- `FUTURE`: documented roadmap operation with no executable behavior.
+- `RESERVED`: documented reserved operation with no executable behavior.
 - `HIDDEN`: withheld from normal UI/navigation discovery.
 
-Phase 1 read-only operations are `AVAILABLE` only when controller, permission,
-redaction, and contract tests exist. Mutating operations must be `FUTURE`,
+Read-only operations are `AVAILABLE` only when controller, permission,
+redaction, and contract tests exist. Mutating operations must be `RESERVED`,
 `DISABLED`, or `HIDDEN`.
 
 ## Operation Model
@@ -122,13 +122,13 @@ and `EXPAND`.
 
 Allowed risk levels are `LOW`, `MEDIUM`, `HIGH`, and `CRITICAL`.
 
-Allowed phases are `PHASE_1_READ_ONLY` and `FUTURE_MUTATING`.
+Allowed phases are `READ_ONLY_DISCOVERY` and `RESERVED_MUTATING`.
 
 Operation codes use dotted names such as `installer.info`,
 `installer.operations`, `workspace.status`, `workspace.inventory`,
 `workspace.preflight`, `setup.plan`, and `evidence.read`.
 
-Permission names must follow the `installer.workspace.*` convention. Phase 1
+Permission names must follow the `installer.workspace.*` convention. Current
 readiness operations use `installer.workspace.view`, setup planning uses
 `installer.workspace.plan`, and evidence reads use
 `installer.workspace.evidence.read`.
@@ -137,13 +137,14 @@ Catalog ordering must be deterministic: sort by operation group taxonomy, then
 by `code`.
 
 Axis may present `AVAILABLE` and `PREVIEW` operations, must hide `HIDDEN`
-operations, and may show `FUTURE` operations only in roadmap-oriented views.
+operations, and may show `RESERVED` operations only in governance-oriented
+views.
 
-Phase 1 read-only calls may emit diagnostics but must not emit mutation audit
-events. Mutating operations require a future audit contract.
+Read-only calls may emit diagnostics but must not emit mutation audit events.
+Mutating operations require an approved audit contract.
 
 Profile remains the permission authority. Runtime route security must require
-human Axis access tokens for Phase 1 APIs; service and internal tokens are not
+human Axis access tokens for installer APIs; service and internal tokens are not
 accepted for human installer operations.
 
 Catalog responses must not expose internal file paths, secrets, environment
@@ -163,10 +164,9 @@ not self-authorize its own allowed root.
 - `nodics.installer` remains the first-machine bootstrap authority for users who
   do not have Nodics locally yet.
 
-## Phase 1 Candidate Routes
+## Current Read-Only Routes
 
-These routes are candidates for Phase 1 implementation. This file freezes scope;
-it does not implement the routes.
+These routes are the current read-only implementation scope.
 
 - `GET /nodics/installer/v0/info`
 - `GET /nodics/installer/v0/operations`
@@ -177,8 +177,8 @@ it does not implement the routes.
 - `POST /nodics/installer/v0/evidence/read`
 
 Read-only endpoints may use `POST` when they require structured request bodies.
-Mutating endpoints require a future contract and must not be introduced in
-Phase 1.
+Mutating endpoints require a separate approved contract and must not be
+introduced into the read-only route surface.
 
 ## Request Conventions
 
@@ -187,12 +187,12 @@ Phase 1.
 - Workspace paths must be checked against configured allowlists.
 - Parent traversal, root directory targeting, and unrestricted home-directory
   scans are prohibited.
-- Phase 1 read-only endpoints do not require idempotency keys.
-- Future mutating endpoints must require idempotency keys and auditable leases.
+- Read-only endpoints do not require idempotency keys.
+- Reserved mutating endpoints must require idempotency keys and auditable leases.
 
 ## Response Envelope
 
-All Phase 1 API responses should use a consistent envelope:
+All installer API responses should use a consistent envelope:
 
 ```json
 {
@@ -227,13 +227,13 @@ The route metadata must expose named request and response contracts for:
 
 ## Permission Names
 
-Phase 1 should reserve these permissions:
+Current read-only operations reserve these permissions:
 
 - `installer.workspace.view`
 - `installer.workspace.plan`
 - `installer.workspace.evidence.read`
 
-Future phases should reserve these permissions:
+Reserved mutating operations reserve these permissions:
 
 - `installer.workspace.operate`
 - `installer.workspace.support`
@@ -252,9 +252,9 @@ Future phases should reserve these permissions:
 
 ## Security Rules
 
-- Do not execute shell commands from Phase 1 routes.
+- Do not execute shell commands from read-only routes.
 - Do not write, delete, clone, pull, checkout, commit, publish, or start
-  processes from Phase 1 routes.
+  processes from read-only routes.
 - Redact secrets before returning evidence or diagnostics.
 - Bound response sizes for logs, evidence, inventory, and diagnostics.
 - Preserve the vendor boundary: customer-specific setup must not mutate
@@ -262,11 +262,11 @@ Future phases should reserve these permissions:
 
 ## Non-Negotiable Tests
 
-Before any Phase 1 route is considered complete, tests must prove:
+Before any read-only route is considered complete, tests must prove:
 
 - the operation catalog is deterministic;
-- all Phase 1 `AVAILABLE` operations are non-mutating;
-- future mutating operations are not executable;
+- all current `AVAILABLE` operations are non-mutating;
+- reserved mutating operations are not executable;
 - permissions are required for protected responses;
 - workspace paths are normalized and constrained;
 - secrets are redacted from evidence and diagnostics;

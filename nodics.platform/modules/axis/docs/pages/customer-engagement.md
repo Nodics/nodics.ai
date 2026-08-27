@@ -13,6 +13,19 @@ Axis helps an employee find the right work quickly. Engagement validates every
 action, stores the authoritative evidence, enforces tenant and permission
 boundaries, and coordinates Process or Communication when required.
 
+| Engagement area | Business user need | Axis behavior | Backend authority |
+| --- | --- | --- | --- |
+| Contact | Receive, classify, assign, and resolve customer enquiries | Domain landing cards, queue view, detail, and state-aware actions | Engagement owns submissions, correspondence, lifecycle, Process handoff, and audit |
+| Testimonials | Turn approved customer stories into governed publication candidates | Candidate, consent, editorial, and publication workspaces | Engagement owns consent, editorial versions, eligibility, withdrawal, and publication coordination |
+| Reviews and ratings | Moderate reviews fairly and preserve evidence | Review queues, response surfaces, appeal evidence, and aggregate views | Engagement owns authenticity, moderation, immutable publication, response lifecycle, and aggregate rebuilds |
+| Feedback and complaints | Capture issues, escalate, resolve, and learn from trends | Classification, assignment, follow-up, and insight presentation | Engagement owns policy, priority, sentiment evidence, complaint lifecycle, and recovery state |
+| Governance and automation | Keep sensitive actions reviewable and recoverable | Recommendation and recovery workspaces with safe provider-neutral evidence | Engagement, Process, Communication, and AI governance own execution, providers, approval, and rollback |
+
+Developers should treat every Engagement workspace as a projection of a
+backend-owned domain contract. Add lifecycle fields, policies, providers,
+permissions, projections, or automation in the owning backend capability, then
+extend Axis with typed clients and CMS renderers that consume those contracts.
+
 The Customer Engagement landing page intentionally shows six business domains
 instead of every technical workspace:
 

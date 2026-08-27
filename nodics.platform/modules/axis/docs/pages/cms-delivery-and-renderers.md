@@ -3,6 +3,13 @@
 Axis renders CMS-managed Back Office pages without moving backend authority or
 business logic into the browser.
 
+| Reader need | What CMS controls | What Axis controls | What remains backend-owned |
+| --- | --- | --- | --- |
+| Business page structure | Site, route, page, template, component tree, labels, and safe content | Responsive rendering, focus behavior, empty states, and visual consistency | Publication workflow, approval, access mode, locale, channel, and lifecycle |
+| Developer extension | Logical renderer keys and typed component properties | Compiled React renderer, registry mapping, parser, tests, and fallbacks | API destinations, schema contracts, validation rules, and permissions |
+| Operator safety | Published content version and route availability | Bounded loading, cache isolation, retry, and safe failure presentation | Staged-to-Online activation, rollback, authentication, and audit evidence |
+| Beginner understanding | Navigation and article content that explain the journey | A predictable browser surface that does not execute CMS code | Business decisions, data writes, and process state transitions |
+
 ## Runtime boundary
 
 CMS owns routes, pages, templates, components, component properties, and the

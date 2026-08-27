@@ -782,6 +782,29 @@ const capability = {
                 "documentationRoute": "/docs/capabilities/content-publishing/wcms-authoring-model",
                 "documentationFragment": "content-catalogs"
             },
+            "workbenchTarget": {
+                "moduleName": "catalog",
+                "schemaName": "catalog"
+            },
+            "workbenchPresentation": {
+                "defaultColumns": [
+                    "code",
+                    "name",
+                    "catalogType",
+                    "active",
+                    "revision"
+                ],
+                "fixedFilters": [
+                    {
+                        "id": "content-catalog-type",
+                        "label": "Content catalogs",
+                        "field": "catalogType",
+                        "value": "CONTENT",
+                        "order": 10
+                    }
+                ],
+                "summary": "Manage content catalogs that own WCMS and documentation records before staged approval and online publication."
+            },
             "featureState": "HIDDEN",
             "requiredPermissions": [
                 "cms.backoffice.view"

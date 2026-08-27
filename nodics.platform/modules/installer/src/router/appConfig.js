@@ -13,10 +13,10 @@
 
 /**
  * @module installer/router/appConfig
- * @description Reserves installer router application hooks for Phase 1 read-only APIs.
+ * @description Reserves installer router application hooks for current read-only APIs.
  * @layer router
  * @owner installer
- * @override Do not add command-execution middleware or local mutation hooks in Phase 1.
+ * @override Do not add command-execution middleware or local mutation hooks to read-only installer APIs.
  */
 module.exports = {
 

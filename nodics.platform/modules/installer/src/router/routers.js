@@ -13,17 +13,6 @@
 
 const contracts = require('../schemas/apiContracts');
 
-const response = description => ({
-    '200': {
-        description,
-        content: {
-            'application/json': {
-                schema: contracts.responseEnvelope
-            }
-        }
-    }
-});
-
 const securedRead = {
     secured: true,
     authTokenTypes: ['access'],
@@ -47,14 +36,14 @@ module.exports = {
                 key: '/nodics/installer/v0/info',
                 method: 'GET',
                 operation: 'info',
-                responses: response('Installer module metadata and bootstrap information')
+                responses: { '200': { description: 'Installer module metadata and bootstrap information', content: { 'application/json': { schema: contracts.responseEnvelope } } } }
             }),
             operations: Object.assign({}, securedRead, {
                 permission: 'installer.workspace.view',
                 key: '/nodics/installer/v0/operations',
                 method: 'GET',
                 operation: 'operations',
-                responses: response('Installer operation catalog')
+                responses: { '200': { description: 'Installer operation catalog', content: { 'application/json': { schema: contracts.responseEnvelope } } } }
             })
         },
         workspace: {
@@ -64,7 +53,7 @@ module.exports = {
                 method: 'POST',
                 operation: 'workspaceStatus',
                 requestBody: { required: true, content: { 'application/json': { schema: contracts.workspaceRequest } } },
-                responses: response('Read-only workspace status')
+                responses: { '200': { description: 'Read-only workspace status', content: { 'application/json': { schema: contracts.responseEnvelope } } } }
             }),
             inventory: Object.assign({}, securedRead, {
                 permission: 'installer.workspace.view',
@@ -72,7 +61,7 @@ module.exports = {
                 method: 'POST',
                 operation: 'workspaceInventory',
                 requestBody: { required: true, content: { 'application/json': { schema: contracts.workspaceRequest } } },
-                responses: response('Read-only workspace repository inventory')
+                responses: { '200': { description: 'Read-only workspace repository inventory', content: { 'application/json': { schema: contracts.responseEnvelope } } } }
             }),
             preflight: Object.assign({}, securedRead, {
                 permission: 'installer.workspace.view',
@@ -80,7 +69,7 @@ module.exports = {
                 method: 'POST',
                 operation: 'workspacePreflight',
                 requestBody: { required: true, content: { 'application/json': { schema: contracts.workspaceRequest } } },
-                responses: response('Read-only workspace prerequisite and port readiness')
+                responses: { '200': { description: 'Read-only workspace prerequisite and port readiness', content: { 'application/json': { schema: contracts.responseEnvelope } } } }
             })
         },
         setup: {
@@ -90,7 +79,7 @@ module.exports = {
                 method: 'POST',
                 operation: 'setupPlan',
                 requestBody: { required: true, content: { 'application/json': { schema: contracts.setupPlanRequest } } },
-                responses: response('Dry-run customer setup plan')
+                responses: { '200': { description: 'Dry-run customer setup plan', content: { 'application/json': { schema: contracts.responseEnvelope } } } }
             })
         },
         evidence: {
@@ -100,7 +89,7 @@ module.exports = {
                 method: 'POST',
                 operation: 'evidenceRead',
                 requestBody: { required: true, content: { 'application/json': { schema: contracts.evidenceReadRequest } } },
-                responses: response('Redacted installer evidence projection')
+                responses: { '200': { description: 'Redacted installer evidence projection', content: { 'application/json': { schema: contracts.responseEnvelope } } } }
             })
         }
     }

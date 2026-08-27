@@ -11,7 +11,7 @@
 
 /**
  * @module engagementCore/test/engagementCoreBoundaryContract
- * @description Verifies that the Phase 2 EngagementCore package owns only its internal shared contracts.
+ * @description Verifies that EngagementCore owns only its internal shared contracts.
  * @layer test
  * @owner engagementCore
  */
@@ -28,13 +28,13 @@ assert.strictEqual(packageJson.name, 'engagementCore');
 assert.strictEqual(packageJson.nodics.kind, 'capability');
 assert.deepStrictEqual(packageJson.nodics.owns, ['configuration', 'schema', 'service', 'utility', 'test', 'llm']);
 assert.strictEqual(packageJson.nodics.runtime.router, false);
-assert(fs.existsSync(path.join(moduleRoot, 'src/schemas/schemas.js')), 'Phase 2 schemas must exist');
-assert(fs.existsSync(path.join(moduleRoot, 'src/service/defaultEngagementIntakeService.js')), 'Phase 2 intake service must exist');
-assert(!fs.existsSync(path.join(moduleRoot, 'data')), 'Phase 1 engagementCore must not contain data');
+assert(fs.existsSync(path.join(moduleRoot, 'src/schemas/schemas.js')), 'engagementCore schemas must exist');
+assert(fs.existsSync(path.join(moduleRoot, 'src/service/defaultEngagementIntakeService.js')), 'engagementCore intake service must exist');
+assert(!fs.existsSync(path.join(moduleRoot, 'data')), 'engagementCore must not contain data before it owns seed data');
 assert(!fs.existsSync(path.join(moduleRoot, 'docs')), 'engagementCore must not contain module-local docs');
 assert(!fs.existsSync(path.join(moduleRoot, 'llm/README.md')), 'engagementCore must use AGENTS.md for AI navigation');
-assert(readme.includes('## Phase 2 status'), 'engagementCore README must expose implementation status');
+assert(readme.includes('## Capability status'), 'engagementCore README must expose implementation status');
 assert(contract.includes('Status: implemented core contracts'), 'engagementCore contract must expose implementation status');
 assert(!readme.includes('Generated documentation entry'), 'engagementCore README must not retain placeholder guidance');
 
-console.log('EngagementCore Phase 2 boundary contract validated');
+console.log('EngagementCore boundary contract validated');

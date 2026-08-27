@@ -36,4 +36,4 @@ assert.equal(publication.stage({ tenant: 't1', correlationId: 'c1' }, { tenant: 
 assert.equal(tax.decide({ tenant: 't1', taxableAmount: '10.00', currency: 'USD', correlationId: 'c1' }, { tenant: 't1', status: 'ACTIVE', taxCode: 'VAT', jurisdiction: 'AE', rate: '0.05', revision: 1 }, exact).taxAmount, '0.5');
 assert.equal(promotion.decide({ tenant: 't1', discountAmount: '2.50', targetType: 'CART', targetCode: 'c1', currency: 'USD', reasonCode: 'WELCOME', correlationId: 'x' }, { tenant: 't1', code: 'promo', status: 'ACTIVE', revision: 1 }, exact).discountAmount, '2.5');
 assert.equal(sourcing.source({ tenant: 't1', sku: 'sku1' }, [{ tenant: 't2', sku: 'sku1', available: '9' }, { tenant: 't1', sku: 'sku1', warehouseCode: 'w1', available: '3', revision: 1 }]).length, 1);
-console.log('Commerce Phase 2 foundation contract validated');
+console.log('Commerce foundation contract validated');

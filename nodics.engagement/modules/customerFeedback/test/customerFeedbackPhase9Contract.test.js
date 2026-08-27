@@ -43,4 +43,4 @@ assert.deepStrictEqual(proposed.sourceFeedbackCodes, ['f1']);
 assert.strictEqual(insight.correct(proposed, { value: { topic: 'carrier damage' }, actorId: 'analyst', reason: 'manual review' }).status, 'CORRECTED');
 assert.strictEqual(insight.propagateDeletion('f1', [proposed])[0].status, 'DELETED');
 assert.deepStrictEqual(insight.availability(undefined), { aiAvailable: false, deterministicFallback: true, directActionAllowed: false });
-console.log('customerFeedback Phase 9 contract validated');
+console.log('customerFeedback contract validated');

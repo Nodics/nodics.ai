@@ -302,11 +302,283 @@ const capability = {
             "featureState": "ACTIVE"
         },
         {
+            "id": "documentation-management",
+            "label": "Documentation Management",
+            "route": "/content/designer/documentation",
+            "icon": "cms",
+            "order": 107,
+            "group": {
+                "id": "documentation",
+                "label": "Documentation",
+                "order": 1600
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "requiredPermissions": [
+                "documentation.draft.create",
+                "documentation.navigation.update",
+                "documentation.dashboard.update",
+                "documentation.accessPolicy.update",
+                "documentation.submitReview"
+            ],
+            "featureState": "ACTIVE",
+            "help": {
+                "summary": "Manage documentation hierarchy, dashboard pages, visual contracts, access metadata, and review submission through governed CMS content.",
+                "documentationRoute": "/docs/framework/documentation-management"
+            }
+        },
+        {
+            "id": "documentation-navigation",
+            "parentId": "documentation-management",
+            "label": "Navigation Builder",
+            "route": "/content/designer/documentation/navigation",
+            "icon": "list-tree",
+            "order": 108,
+            "group": {
+                "id": "documentation",
+                "label": "Documentation",
+                "order": 1600
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "workbenchTarget": {
+                "moduleName": "cms",
+                "schemaName": "cmsDocumentationNode"
+            },
+            "requiredPermissions": [
+                "documentation.navigation.update"
+            ],
+            "featureState": "ACTIVE",
+            "help": {
+                "summary": "Create, rename, reorder, and relate section, group, subgroup, and topic nodes without hardcoding Axis navigation.",
+                "documentationRoute": "/docs/framework/documentation-management"
+            }
+        },
+        {
+            "id": "documentation-pages",
+            "parentId": "documentation-management",
+            "label": "Pages and Topic Content",
+            "route": "/content/designer/documentation/pages",
+            "icon": "content",
+            "order": 109,
+            "group": {
+                "id": "documentation",
+                "label": "Documentation",
+                "order": 1600
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "workbenchTarget": {
+                "moduleName": "cms",
+                "schemaName": "cmsDocumentationPage"
+            },
+            "requiredPermissions": [
+                "documentation.draft.update"
+            ],
+            "featureState": "ACTIVE",
+            "help": {
+                "summary": "Author detailed topic pages with business summary, technical summary, visual requirements, source evidence, and rendered CMS page links.",
+                "documentationRoute": "/docs/framework/documentation-management"
+            }
+        },
+        {
+            "id": "documentation-access-policies",
+            "parentId": "documentation-management",
+            "label": "Audience and Access Policies",
+            "route": "/content/designer/documentation/access-policies",
+            "icon": "security",
+            "order": 110,
+            "group": {
+                "id": "documentation",
+                "label": "Documentation",
+                "order": 1600
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "workbenchTarget": {
+                "moduleName": "cms",
+                "schemaName": "cmsDocumentationAccessPolicy"
+            },
+            "requiredPermissions": [
+                "documentation.accessPolicy.update"
+            ],
+            "featureState": "ACTIVE",
+            "help": {
+                "summary": "Decide which documentation is public in Nexus, authenticated in Axis, or limited by role, group, or permission.",
+                "documentationRoute": "/docs/framework/documentation-management"
+            }
+        },
+        {
+            "id": "documentation-publication-queue",
+            "parentId": "documentation-management",
+            "label": "Review and Publication Queue",
+            "route": "/content/designer/documentation/publication",
+            "icon": "workflow",
+            "order": 111,
+            "group": {
+                "id": "documentation",
+                "label": "Documentation",
+                "order": 1600
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "workbenchTarget": {
+                "moduleName": "cms",
+                "schemaName": "cmsDocumentationPublicationState"
+            },
+            "requiredPermissions": [
+                "documentation.review",
+                "documentation.approve",
+                "documentation.publish"
+            ],
+            "featureState": "ACTIVE",
+            "help": {
+                "summary": "Review staged documentation changes, approval evidence, publish readiness, checksums, and admin override audit records.",
+                "documentationRoute": "/docs/framework/release-staging-and-publication"
+            }
+        },
+        {
+            "id": "documentation-search-preview",
+            "parentId": "documentation-management",
+            "label": "Search Metadata Preview",
+            "route": "/content/designer/documentation/search",
+            "icon": "search",
+            "order": 112,
+            "group": {
+                "id": "documentation",
+                "label": "Documentation",
+                "order": 1600
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "workbenchTarget": {
+                "moduleName": "cms",
+                "schemaName": "cmsDocumentationSearchMetadata"
+            },
+            "requiredPermissions": [
+                "documentation.search.preview"
+            ],
+            "featureState": "ACTIVE",
+            "help": {
+                "summary": "Inspect current keyword metadata and external-search facets without making an index the content authority.",
+                "documentationRoute": "/docs/framework/documentation-management"
+            }
+        },
+        {
+            "id": "documentation-governance-readiness",
+            "parentId": "documentation-management",
+            "label": "Governance and Readiness",
+            "route": "/content/designer/documentation/governance",
+            "icon": "validation",
+            "order": 113,
+            "group": {
+                "id": "documentation",
+                "label": "Documentation",
+                "order": 1600
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "workbenchTarget": {
+                "moduleName": "cms",
+                "schemaName": "cmsDocumentationPublicationState",
+                "governanceService": "DefaultCmsDocumentationGovernanceService",
+                "authoringModelRoute": "/documentation/governance/model",
+                "validationRoute": "/documentation/governance/validate",
+                "renderProjectionRoute": "/documentation/governance/render-projection",
+                "searchRoute": "/documentation/governance/search",
+                "publicationHandoffRoute": "/documentation/governance/publication-handoff",
+                "migrationPlanRoute": "/documentation/governance/migration-plan"
+            },
+            "requiredPermissions": [
+                "documentation.submitReview"
+            ],
+            "featureState": "ACTIVE",
+            "help": {
+                "summary": "Check hierarchy, visual requirements, audience access, search metadata, source evidence, and nPublish handoff readiness before submitting documentation.",
+                "documentationRoute": "/docs/framework/documentation-management"
+            }
+        },
+        {
+            "id": "documentation-source-evidence",
+            "parentId": "documentation-management",
+            "label": "Source Evidence Review",
+            "route": "/content/designer/documentation/source-evidence",
+            "icon": "validation",
+            "order": 114,
+            "group": {
+                "id": "documentation",
+                "label": "Documentation",
+                "order": 1600
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "workbenchTarget": {
+                "moduleName": "cms",
+                "schemaName": "cmsDocumentationPage"
+            },
+            "requiredPermissions": [
+                "documentation.sourceEvidence.review"
+            ],
+            "featureState": "ACTIVE",
+            "help": {
+                "summary": "Validate source ownership, checksums, visual evidence, diagrams, and implementation references before publication.",
+                "documentationRoute": "/docs/framework/documentation-management"
+            }
+        },
+        {
             "id": "documentation-framework",
             "label": "Framework",
             "route": "/docs/framework",
             "icon": "content",
-            "order": 110,
+            "order": 120,
             "group": {
                 "id": "documentation",
                 "label": "Documentation",
@@ -327,7 +599,7 @@ const capability = {
             "label": "Swaggers",
             "route": "/docs/swaggers",
             "icon": "reference",
-            "order": 120,
+            "order": 130,
             "group": {
                 "id": "documentation",
                 "label": "Documentation",
@@ -348,7 +620,7 @@ const capability = {
             "label": "Nodics Kickoff",
             "route": "/docs/nodics-kickoff",
             "icon": "content",
-            "order": 140,
+            "order": 150,
             "group": {
                 "id": "documentation",
                 "label": "Documentation",

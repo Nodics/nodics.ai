@@ -149,3 +149,12 @@ The designer foundation is healthy when:
 ## Verification
 
 Create valid and invalid graphs in the designer, confirm backend validation messages, publish only a valid definition, reload it without semantic loss, and prove keyboard, permission, and recovery behavior.
+
+## Customization and extension
+
+Projects may customize the visual designer by adding backend-registered node
+types, action adapters, validation messages, templates, or read-only dashboard
+metadata. The extension must preserve the rule that Process owns executable
+workflow semantics. Axis can render richer handles, labels, grouping, and
+status panels, but saved behavior still passes through backend graph
+validation, permission checks, publication state, and audit evidence.

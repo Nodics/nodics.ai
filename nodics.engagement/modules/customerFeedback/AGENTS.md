@@ -16,7 +16,7 @@ Before implementing non-trivial behavior here, record the business outcome, owni
 
 ## Boundary rules
 
-- Treat the Phase 9 feedback, complaint, survey, follow-up, resolution, handoff, and insight contracts as active framework behavior.
+- Treat the feedback, complaint, survey, follow-up, resolution, handoff, and insight contracts as active framework behavior.
 - Do not copy archived CRES or gNotify implementation into this package.
 - Keep generated schema routers disabled and expose only dedicated `engagementApi` operations.
 - Derived sentiment/topic/insight evidence is advisory, correctable, versioned, and deletion-propagating; it must never silently become source feedback.

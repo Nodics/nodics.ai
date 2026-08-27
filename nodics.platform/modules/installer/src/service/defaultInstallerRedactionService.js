@@ -21,29 +21,6 @@ const secretPatterns = Object.freeze([
     { code: 'private-key', pattern: /-----BEGIN [^-]*PRIVATE KEY-----[\s\S]*?-----END [^-]*PRIVATE KEY-----/g, replacement: REDACTED }
 ]);
 
-function redactText(value, maxBytes) {
-    const redactions = [];
-    let text = String(value === undefined || value === null ? '' : value);
-    secretPatterns.forEach(rule => {
-        if (rule.pattern.test(text)) {
-            redactions.push(rule.code);
-            rule.pattern.lastIndex = 0;
-            text = text.replace(rule.pattern, rule.replacement);
-        }
-        rule.pattern.lastIndex = 0;
-    });
-    const bytes = Buffer.byteLength(text, 'utf8');
-    if (maxBytes && bytes > maxBytes) {
-        redactions.push('truncated');
-        text = Buffer.from(text, 'utf8').subarray(0, maxBytes).toString('utf8') +
-            '\n[TRUNCATED]';
-    }
-    return {
-        value: text,
-        redactions: Array.from(new Set(redactions))
-    };
-}
-
 /**
  * @module installer/service/DefaultInstallerRedactionService
  * @description Redacts installer evidence and diagnostics before they can be returned to Axis.
@@ -64,5 +41,26 @@ module.exports = {
      * @param {number} maxBytes Optional maximum number of UTF-8 bytes to return.
      * @returns {{value: string, redactions: string[]}} Redacted text and applied redaction codes.
      */
-    redactText
+    redactText: function (value, maxBytes) {
+        const redactions = [];
+        let text = String(value === undefined || value === null ? '' : value);
+        secretPatterns.forEach(rule => {
+            if (rule.pattern.test(text)) {
+                redactions.push(rule.code);
+                rule.pattern.lastIndex = 0;
+                text = text.replace(rule.pattern, rule.replacement);
+            }
+            rule.pattern.lastIndex = 0;
+        });
+        const bytes = Buffer.byteLength(text, 'utf8');
+        if (maxBytes && bytes > maxBytes) {
+            redactions.push('truncated');
+            text = Buffer.from(text, 'utf8').subarray(0, maxBytes).toString('utf8') +
+                '\n[TRUNCATED]';
+        }
+        return {
+            value: text,
+            redactions: Array.from(new Set(redactions))
+        };
+    }
 };

@@ -99,3 +99,11 @@ during recovery.
 
 Use the bounded fresh-bootstrap acceptance path, verify health and readiness, inspect error-level startup logs, confirm Process observation with workflow and cronjob technical modules, and exercise restart and dependency-failure recovery.
 A beginner operator should follow the documented server order before changing topology.
+
+## Customization and extension
+
+Projects may extend topology with additional servers, queues, workers,
+database roles, cache providers, search providers, or deployment targets. The
+extension must keep runtime ownership explicit, avoid duplicate scheduler or
+workflow authorities, and document the business impact of each environment
+dependency.

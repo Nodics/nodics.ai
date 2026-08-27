@@ -68,7 +68,7 @@ const capability = {
             "label": "Nodics Axis",
             "route": "/docs/nodics-axis",
             "icon": "content",
-            "order": 130,
+            "order": 140,
             "group": {
                 "id": "documentation",
                 "label": "Documentation",

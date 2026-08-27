@@ -7,6 +7,23 @@ operations. It is a client of the `import` module and does not discover files,
 calculate installation state, sequence imports, write a database, or retain a
 browser-side audit authority.
 
+| Area | User-facing purpose | Axis responsibility | Backend responsibility |
+| --- | --- | --- | --- |
+| Guided setup | Help administrators initialize required data in the correct order | Display profiles, release state, validation results, and authorized actions | nImport owns release manifests, immutable versions, sequencing, and execution |
+| File import | Let employees bring governed external files into a target schema | Upload through nMedia, select target model, show validation and run result | nMedia stores files; nImport parses, validates, runs handlers, and writes data |
+| Export | Generate governed files from authorized schema data | Collect model, filter, purpose, and review choices | Owning modules query data; export services generate artifacts and audit purpose |
+| History and troubleshooting | Explain what happened after a data operation | Render safe summaries, counts, states, and correlation identifiers | Backend stores execution state, diagnostics, idempotency, rollback, and cleanup evidence |
+
+For beginners, imports and exports are governed data operations, not file
+copying. Axis helps a business user choose the destination, review the file or
+filter, validate the plan, and see the result. The backend owns parsing,
+schema validation, execution order, generated files, audit, and cleanup.
+
+Developers should extend import, export, parser, template, provider, or schema
+behavior in the owning backend module and expose it through secured contracts.
+Axis can improve selection, preview, progress, and result presentation, but it
+must not parse business files or invent another execution authority.
+
 BackOffice contributes **Operations and Integration → Imports and Exports** at
 `/operations/imports-exports`. Axis renders it only when authenticated
 navigation contains that entry.

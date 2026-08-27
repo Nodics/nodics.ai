@@ -151,3 +151,35 @@ graph, but backend validation and execution remain authoritative.
 ## Verification
 
 Run Process contracts and fresh-bootstrap acceptance, confirm one backend definition and runtime authority, verify permission denial and invalid graphs, and observe successful, failed, retried, and recovered instances.
+
+## Commerce And Content Workflow Coverage
+
+Process workflows support commerce and content operations without owning the
+domain decision itself. A workflow may request approval, route a human task,
+call an action adapter, record an incident, or resume after a callback, but
+Order, Payment, WCMS, Localization, and Engagement still own their business
+records.
+
+```mermaid
+flowchart LR
+  Definition["Process definition"] --> Version["Definition version"]
+  Version --> Instance["Process instance"]
+  Instance --> Task["Human or automated task"]
+  Task --> Adapter["Action adapter"]
+  Adapter --> Domain["Owning domain service"]
+  Domain --> Audit["Process audit event"]
+  Domain --> Incident["Incident or retry"]
+```
+
+| Process record | Business purpose | Extension point |
+| --- | --- | --- |
+| ProcessDefinition and Version | Govern reusable workflow design. | Add backend-validated process graphs and publication rules. |
+| ProcessInstance | Tracks one running business process. | Add domain correlation and recovery evidence. |
+| ProcessTask | Owns human or automated work assignment. | Add assignment, SLA, escalation, and approval policy. |
+| ProcessTrigger | Starts process from event, API, schedule, or domain action. | Add trigger provider and idempotency rules. |
+| ProcessAuditEvent and Incident | Explain what happened and what failed. | Add redacted evidence and retry/compensation policy. |
+
+This is the main workflow reference for commerce approvals, CMS publication
+approval, localization release approval, return/refund review, and engagement
+operations. Axis can render the process designer and task views, but backend
+validation remains authoritative.

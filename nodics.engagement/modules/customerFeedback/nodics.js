@@ -11,7 +11,7 @@
 
 /**
  * @module customerFeedback
- * @description Declares the Phase 1 lifecycle boundary for customerFeedback without enabling business behavior.
+ * @description Declares the lifecycle boundary for customerFeedback without enabling business behavior.
  * @layer module
  * @owner customerFeedback
  * @override Later active modules may override lifecycle behavior without modifying this generated boundary.

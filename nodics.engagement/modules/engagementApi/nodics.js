@@ -11,7 +11,7 @@
 
 /**
  * @module engagementApi
- * @description Declares the secured Phase 3 Engagement API lifecycle boundary.
+ * @description Declares the secured Engagement API lifecycle boundary.
  * @layer module
  * @owner engagementApi
  * @override Later active modules may override lifecycle behavior without modifying this generated boundary.

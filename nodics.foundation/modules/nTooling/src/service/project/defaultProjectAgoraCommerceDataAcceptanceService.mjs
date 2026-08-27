@@ -23,14 +23,11 @@ const executeInstall = process.env.NODICS_STOREFRONT_COMMERCE_DATA_EXECUTE === "
 const managed = [];
 const require = createRequire(import.meta.url);
 const composition = require(path.join(projectRoot, "config", "agora-domain-composition.js")).resolve();
-const groupByPack = Object.freeze({
-  agoraApparel: "agora.apparel",
-  agoraElectronics: "agora.electronics",
-  agoraTelco: "agora.telco"
-});
+const supportedPacks = Object.freeze(["agora.apparel", "agora.electronics", "agora.telco"]);
 const storefrontPacks = Object.freeze([...composition.projectPacks]);
 const requiredReleaseCodes = Object.freeze(storefrontPacks.flatMap((pack) => {
-  const manifest = require(path.join(projectRoot, "modules", groupByPack[pack], "modules", pack, "data", "manifest.json"));
+  if (!supportedPacks.includes(pack)) throw new Error(`Unsupported Agora commerce data pack: ${pack}`);
+  const manifest = require(path.join(projectRoot, "modules", pack, "data", "manifest.json"));
   return Object.entries(manifest.sections)
     .filter(([, section]) => section.destinationRole === "COMMERCE_STAGED")
     .map(([sectionCode]) => `${pack}:${sectionCode}`);

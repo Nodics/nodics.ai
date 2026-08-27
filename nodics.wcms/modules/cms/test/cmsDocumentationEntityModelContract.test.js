@@ -101,6 +101,14 @@ assert.strictEqual(
   true,
 );
 assert.strictEqual(
+  schemas.cmsDocumentationNavigation.definition.managedInAxis.default,
+  true,
+);
+assert.deepStrictEqual(
+  schemas.cmsDocumentationNavigation.definition.workflowTriggers.default,
+  ["NAVIGATION_CHANGE"],
+);
+assert.strictEqual(
   schemas.cmsDocumentationNode.refSchema.targetDocumentationPage.schemaName,
   "cmsDocumentationPage",
 );
@@ -149,6 +157,26 @@ assert.strictEqual(
   schemas.cmsDocumentationPage.definition.visualAssets.type,
   "array",
 );
+assert.strictEqual(
+  schemas.cmsDocumentationPage.definition.visualRequirements.type,
+  "array",
+);
+assert.strictEqual(
+  schemas.cmsDocumentationPage.definition.visualRequirements.required,
+  true,
+);
+assert.strictEqual(
+  schemas.cmsDocumentationNode.definition.managedInAxis.default,
+  true,
+);
+assert.deepStrictEqual(
+  schemas.cmsDocumentationNode.definition.workflowTriggers.default,
+  ["NAVIGATION_CHANGE", "DASHBOARD_CHANGE", "ACCESS_POLICY_CHANGE"],
+);
+assert.deepStrictEqual(
+  schemas.cmsDocumentationPage.definition.workflowTriggers.default,
+  ["CONTENT_CHANGE", "ACCESS_POLICY_CHANGE", "SOURCE_EVIDENCE_CHANGE"],
+);
 
 assert.deepStrictEqual(
   schemas.cmsDocumentationDashboard.definition.ownerType.enum,
@@ -160,11 +188,16 @@ assert.strictEqual(
   ),
   true,
 );
+assert.deepStrictEqual(
+  schemas.cmsDocumentationDashboard.definition.workflowTriggers.default,
+  ["DASHBOARD_CHANGE"],
+);
 
-["PUBLIC", "AUTHENTICATED", "ROLE_BASED"].forEach((mode) => {
+["PUBLIC", "AUTHENTICATED", "ROLE_BASED", "GROUP_BASED", "PERMISSION_BASED", "RESTRICTED"].forEach((mode) => {
   assert(schemas.cmsDocumentationProduct.definition.accessMode.enum.includes(mode));
   assert(schemas.cmsDocumentationNode.definition.accessMode.enum.includes(mode));
   assert(schemas.cmsDocumentationPage.definition.accessMode.enum.includes(mode));
+  assert(schemas.cmsDocumentationDashboard.definition.accessMode.enum.includes(mode));
   assert(schemas.cmsDocumentationAccessPolicy.definition.accessMode.enum.includes(mode));
   assert(schemas.cmsDocumentationSearchMetadata.definition.accessMode.enum.includes(mode));
 });
@@ -211,6 +244,10 @@ assert.deepStrictEqual(
   schemas.cmsDocumentationAccessPolicy.definition.lifecycleVisibility.default,
   ["ONLINE"],
 );
+assert.deepStrictEqual(
+  schemas.cmsDocumentationAccessPolicy.definition.workflowTriggers.default,
+  ["ACCESS_POLICY_CHANGE"],
+);
 
 assert.deepStrictEqual(
   schemas.cmsDocumentationPublicationState.definition.targetType.enum,
@@ -222,6 +259,7 @@ assert.deepStrictEqual(
     "DASHBOARD",
     "ROUTE",
     "TEMPLATE",
+    "ACCESS_POLICY",
     "SEARCH_METADATA",
   ],
 );
@@ -231,10 +269,24 @@ assert.strictEqual(
   ),
   true,
 );
+assert.deepStrictEqual(
+  schemas.cmsDocumentationPublicationState.definition.workflowTriggers.default,
+  ["CONTENT_CHANGE", "NAVIGATION_CHANGE", "DASHBOARD_CHANGE", "ACCESS_POLICY_CHANGE"],
+);
+assert.strictEqual(
+  schemas.cmsDocumentationPublicationState.definition.decisionPolicy.type,
+  "object",
+);
+["author", "submittedBy", "reviewer", "approver", "publisher", "auditTrail"].forEach((field) => {
+  assert(
+    schemas.cmsDocumentationPublicationState.definition[field],
+    "Publication state must retain workflow evidence field: " + field,
+  );
+});
 
 assert.strictEqual(
   schemas.cmsDocumentationSearchMetadata.definition.searchText.description.includes(
-    "future index projection",
+    "external index projection",
   ),
   true,
 );
@@ -247,6 +299,10 @@ assert.strictEqual(
     "without making Elasticsearch the source of truth",
   ),
   true,
+);
+assert.deepStrictEqual(
+  schemas.cmsDocumentationSearchMetadata.definition.workflowTriggers.default,
+  ["SEARCH_METADATA_CHANGE"],
 );
 
 console.log("CMS documentation entity model contract validated");

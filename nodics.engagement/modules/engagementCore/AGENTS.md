@@ -16,7 +16,7 @@ Before implementing non-trivial behavior here, record the business outcome, owni
 
 ## Boundary rules
 
-- Treat shared Phase 2 schemas and services as the authority for provider-neutral Engagement invariants.
+- Treat shared schemas and services as the authority for provider-neutral Engagement invariants.
 - Do not copy archived CRES or gNotify implementation into this package.
 - Keep schemas internal; do not add routes or direct provider dependencies here.
 - Preserve one-way dependencies and keep generated artifacts derived from source definitions.

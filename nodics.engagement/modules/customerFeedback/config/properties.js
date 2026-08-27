@@ -11,7 +11,7 @@
 
 /**
  * @module customerFeedback/config/properties
- * @description Reserves the layered configuration boundary for customerFeedback; Phase 1 defines no active business defaults.
+ * @description Reserves the layered configuration boundary for customerFeedback; no active business defaults are enabled.
  * @layer config
  * @owner customerFeedback
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.

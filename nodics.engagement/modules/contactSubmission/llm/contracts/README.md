@@ -1,6 +1,6 @@
 # contactSubmission Contracts
 
-## Phase 4 contract
+## Contact capability contract
 
 - Status: backend vertical slice implemented; Axis workspace and live-provider evidence remain separate deliverables.
 - Owns: contact forms, enquiries, callbacks, routing, assignment, SLA references, correspondence records, external handoff references, and resolution semantics.

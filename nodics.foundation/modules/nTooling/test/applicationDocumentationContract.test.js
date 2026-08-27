@@ -35,6 +35,12 @@ fs.writeFileSync(path.join(root, 'docs/pages/strict.md'), [
     '| --- | --- |',
     '| Ownership | Source-backed catalogue metadata |',
     '',
+    '```mermaid',
+    'flowchart LR',
+    '  Source["Authored documentation"] --> Metadata["Catalogue visual requirements"]',
+    '  Metadata --> Page["Generated WCMS page metadata"]',
+    '```',
+    '',
     '## Operator guidance',
     '',
     'Operators need publication, recovery, audit, and production validation guidance.',
@@ -84,7 +90,8 @@ const strictCatalogue = {
         lifecycleState: 'ONLINE',
         maturityState: 'operational',
         relatedPages: [],
-        sourceEvidence: ['docs/catalogue.json', 'docs/pages/strict.md']
+        sourceEvidence: ['docs/catalogue.json', 'docs/pages/strict.md'],
+        visualRequirements: ['table', 'diagram']
     }]
 };
 const strictValidated = service.validateCatalogue({
@@ -99,6 +106,24 @@ const strictValidated = service.validateCatalogue({
 });
 assert.strictEqual(strictValidated.documents.length, 1);
 
+assert.throws(() => service.validateCatalogue({
+    ownerRoot: root,
+    sourceDirectory: 'docs',
+    cataloguePath: 'docs/catalogue.json',
+    catalogue: Object.assign({}, strictCatalogue, {
+        navigationSections: strictCatalogue.navigationSections.concat([{
+            code: 'empty-section',
+            title: 'Empty Section',
+            order: 20,
+            summary: 'Section metadata must not be publishable without at least one page.',
+            accessMode: 'PUBLIC',
+            lifecycleState: 'ONLINE'
+        }])
+    }),
+    requireNavigationSections: true,
+    requireEnterpriseMetadata: true
+}), error => error.code === 'ERR_TOOL_DOC_00011');
+
 const generatedHashes = { 'staged/wcms/data/docs/samplePageData.js': service.sha256('page') };
 const section = service.buildReleaseSection({ catalogue: catalogue, generatedHashes: generatedHashes, contentPath: 'staged/wcms', owningDomain: 'sample.docs', sourceAuthority: 'docs/catalogue.json', sites: ['sampleDocumentationSite'], pages: 1, components: 1, routes: 1 });
 assert.strictEqual(section.installationPolicy, 'OPTIONAL_AXIS_INITIATED');
@@ -110,6 +135,7 @@ assert.throws(() => service.validateCatalogue({ ownerRoot: root, sourceDirectory
 assert.throws(() => service.validateCatalogue({ ownerRoot: root, sourceDirectory: 'docs', cataloguePath: 'docs/catalogue.json', catalogue: { pack: 'sample', version: '0', documents: [{ id: 'sample.overview', content: '../outside.md' }] } }), error => error.code === 'ERR_TOOL_DOC_00001');
 assert.throws(() => service.validateCatalogue({ ownerRoot: root, sourceDirectory: 'docs', cataloguePath: 'docs/catalogue.json', catalogue: catalogue, requireNavigationSections: true }), error => error.code === 'ERR_TOOL_DOC_00008');
 assert.throws(() => service.validateCatalogue({ ownerRoot: root, sourceDirectory: 'docs', cataloguePath: 'docs/catalogue.json', catalogue: Object.assign({}, strictCatalogue, { documents: [{ id: 'sample.missing', content: 'docs/pages/overview.md' }] }), requireNavigationSections: true, requireEnterpriseMetadata: true }), error => error.code === 'ERR_TOOL_DOC_00009');
+assert.throws(() => service.validateCatalogue({ ownerRoot: root, sourceDirectory: 'docs', cataloguePath: 'docs/catalogue.json', catalogue: Object.assign({}, strictCatalogue, { documents: [Object.assign({}, strictCatalogue.documents[0], { visualRequirements: ['screenshot'] })] }), requireNavigationSections: true, requireEnterpriseMetadata: true, validateContentQuality: true, minimumWordCount: 50 }), error => error.code === 'ERR_TOOL_DOC_00010');
 assert.throws(() => service.validateCatalogue({ ownerRoot: root, sourceDirectory: 'docs', cataloguePath: 'docs/catalogue.json', catalogue: Object.assign({}, strictCatalogue, { documents: [Object.assign({}, strictCatalogue.documents[0], { content: 'docs/pages/overview.md' })] }), requireNavigationSections: true, requireEnterpriseMetadata: true, validateContentQuality: true }), error => error.code === 'ERR_TOOL_DOC_00010');
 assert.throws(() => service.validateCatalogue({ ownerRoot: root, sourceDirectory: 'docs', cataloguePath: 'docs/catalogue.json', catalogue: Object.assign({}, strictCatalogue, { documents: [Object.assign({}, strictCatalogue.documents[0], { relatedPages: ['missing.page'] })] }), requireNavigationSections: true, requireEnterpriseMetadata: true }), error => error.code === 'ERR_TOOL_DOC_00011');
 assert.throws(() => service.validateCatalogue({ ownerRoot: root, sourceDirectory: 'docs', cataloguePath: 'docs/catalogue.json', catalogue: Object.assign({}, strictCatalogue, { documents: [strictCatalogue.documents[0], Object.assign({}, strictCatalogue.documents[0], { id: 'sample.strict-two', slug: 'sample-strict-two', sourcePath: 'docs/pages/strict.md' })] }), requireNavigationSections: true, requireEnterpriseMetadata: true }), error => error.code === 'ERR_TOOL_DOC_00011');

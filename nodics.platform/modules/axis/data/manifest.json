@@ -172,9 +172,17 @@
       "pages": 17,
       "components": 18,
       "routes": 17,
-      "releaseChecksum": "6d9b50b0dc56232ba91b75508bc0e949dfbf6572c97c2445adec889dbe22d115",
+      "releaseChecksum": "c386fc05d8683097d4ae18062b86e4e66eca699fb859953ac9d9751a75ec2809",
       "generatedHashes": {
-        "core/data/documentation/axisDocumentationComponentData.js": "a2eb328dd39be0f4ba51c85420e4466523e7e01defe9ed4cf2eb4033d2d56830",
+        "core/data/documentation/axisDocumentationAccessPolicyData.js": "dd948efe165365adedfbd8102647d6cb2bd837f0ce5c75bd0f6120fb586b7f1b",
+        "core/data/documentation/axisDocumentationDashboardData.js": "91205ba472620ed7983b7ee32b92b38174bddce220ba8fcbb2c147e221a6c486",
+        "core/data/documentation/axisDocumentationNavigationData.js": "ffea967d9fae65d5153fb3b092f3826c5682456365cff6f5d8efa1ea8c438827",
+        "core/data/documentation/axisDocumentationNodeData.js": "79fc8e251e660999e319591ad096e70a6a96951f9cf4274991e73e9017b00ac9",
+        "core/data/documentation/axisDocumentationPageMetadataData.js": "6a573b8839e779d5b345c50ff447c70d399a15007c303222dac7d7b60b34d3dc",
+        "core/data/documentation/axisDocumentationProductData.js": "e1e980db49906f19c49f9a33fdb347b2fc9752716290c38751955f2c488f6b84",
+        "core/data/documentation/axisDocumentationPublicationStateData.js": "be2485647c318329609e130e142dc544ff3dee55c82602280ca6c2a1e40139ec",
+        "core/data/documentation/axisDocumentationSearchMetadataData.js": "84cd77fe195c569bbb5cf8222526f3c326769c987122100201e61370235e7210",
+        "core/data/documentation/axisDocumentationComponentData.js": "859862f73eb200da97cd923597e6af603c16aec91955612b762781559ce0a6f8",
         "core/data/documentation/axisDocumentationPageData.js": "aae16acdb0be18fda84ea7208be5c4429780bd8d73408ecaba589076f6a4cf0b",
         "core/data/documentation/axisDocumentationRendererData.js": "fc783595269b5f1e423e594263f1dd30bd35bf6e048d51fb6028938aeef89a68",
         "core/data/documentation/axisDocumentationRouteData.js": "94d142a0c4b580611456b5da69b1aeb8022297f25cf932e8519ef0ae89baa66f",
@@ -182,7 +190,7 @@
         "core/data/documentation/axisDocumentationSlotData.js": "f53ac3815485ce7299fea900cf462fb0d539098ab1790462580d443bc7f2f46f",
         "core/data/documentation/axisDocumentationTemplateData.js": "88c5d2f77c302c48fef6aa5ec21d4a528f698b94eb72e2b5147127258e16f43b",
         "core/data/documentation/axisDocumentationTypeCodeData.js": "f777fa4b2a0b1b018bcb44380d266e3e9f6ef49a6f972612b52e330724bda6a2",
-        "core/headers/axisDocumentationContentPackHeader.js": "7543085fecd8b439e8a846dd8c72fde90a2fe82bd5e622a1ee3469121862804b"
+        "core/headers/axisDocumentationContentPackHeader.js": "38b0dcb5bd0f10d2bf10accb12698bc02d0a968a79effbbc927dfb0afce3d717"
       },
       "migrationRegister": "docs/migration-register.json"
     }

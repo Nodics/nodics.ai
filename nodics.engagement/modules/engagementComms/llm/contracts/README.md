@@ -1,6 +1,6 @@
 # engagementComms Contracts
 
-## Phase 1C contract
+## Communication bridge contract
 
 - Status: active provider-neutral bridge.
 - Owns: Engagement communication scenarios, declared variables, safe context builders, provider-neutral intent translation, idempotency mapping, and content-free outcome correlation.

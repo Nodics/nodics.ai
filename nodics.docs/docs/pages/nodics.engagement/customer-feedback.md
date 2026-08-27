@@ -112,3 +112,12 @@ Monitor received volume, untriaged age, SLA breaches, assignment load, waiting s
 Prove successful identified and anonymous intake, invalid type, oversized attachments, cross-owner and cross-tenant denial, stale revision, invalid transition, complaint escalation, waiting/resume, resolution/confirmation/reopen, follow-up limit, Process/provider outage and retry, source-traceable insight, human correction, AI fallback, and deletion propagation. Run generated schema contracts, Engagement API security/route tests, the Axis Customer Engagement regression, documentation generation/validation, and the effective engagement-server build.
 
 Next: Unified Engagement Operations explains rebuildable cross-domain queues and dashboards without creating a new writable business authority.
+
+## Customization and extension
+
+Customer projects can extend Feedback with additional classifications, survey
+schemas, SLA policies, insight providers, response templates, and escalation
+rules. Those extensions must stay behind the Feedback and Engagement API
+boundaries, preserve tenant isolation, keep source text protected, and prove
+fallback behavior when Process, Communication, or an insight provider is
+unavailable.

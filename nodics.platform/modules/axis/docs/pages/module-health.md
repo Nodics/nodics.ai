@@ -20,6 +20,13 @@ also shows which environment, server, and node produced the observation.
 The page is deliberately not a second monitoring product. It is the Axis view
 of backend-governed runtime evidence.
 
+Developers use Module Health to connect a visible Axis problem back to the
+backend capability that owns it. If a CMS page will not load, a developer can
+check whether the CMS capability is authorized, reachable, stale, degraded, or
+unavailable before changing a renderer. If an import screen looks empty, the
+same view can show whether Import, Media, System, or the owning schema module
+is registered and observable.
+
 ## Purpose and ownership
 
 Axis does not decide health. Nodics runtime services own readiness, individual

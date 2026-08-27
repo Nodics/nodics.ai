@@ -13,7 +13,7 @@
  * @module profile/test/IdentityGovernanceMigrationContract
  * @description Validates identity-governance migration contracts for ownership,
  * principal policy, permission targets, service credential rules, and
- * separation-of-duties behavior without binding the contract to backlog
+ * permission-based runtime decision behavior without binding the contract to backlog
  * priority labels.
  * @layer test
  * @owner profile
@@ -61,10 +61,7 @@ const values = {
             }
         },
         separationOfDuties: {
-            requireActor: true,
-            preventSelfDecision: true,
-            preventRequesterActivation: true,
-            preventApproverActivation: true
+            requireActor: true
         }
     }
 };
@@ -327,13 +324,13 @@ async function validateMigration() {
     assert.strictEqual(migration.buildPreview(state).idempotent, true, 'A completed migration must be safe to rerun');
 }
 
-function validateSeparationOfDuties() {
+function validatePermissionBasedRuntimeDecision() {
     const service = require(path.join(repositoryRoot,
         'nodics.foundation/modules/nDynamo/src/service/audit/defaultRuntimeConfigurationActivationRequestService'));
     assert.throws(() => service.createRequestModel({}, { configurationType: 'routerConfiguration' }, {}), /authenticated actor/);
-    assert.throws(() => service.assertDecisionSeparation({ requestedBy: 'same-user' }, 'same-user'), /cannot approve or reject/);
-    assert.throws(() => service.assertActivationSeparation({ requestedBy: 'requester', approvedBy: 'approver' }, 'requester'), /requester cannot activate/i);
-    assert.throws(() => service.assertActivationSeparation({ requestedBy: 'requester', approvedBy: 'approver' }, 'approver'), /approver cannot activate/i);
+    assert.doesNotThrow(() => service.assertDecisionSeparation({ requestedBy: 'same-user' }, 'same-user'));
+    assert.doesNotThrow(() => service.assertActivationSeparation({ requestedBy: 'requester', approvedBy: 'approver' }, 'requester'));
+    assert.doesNotThrow(() => service.assertActivationSeparation({ requestedBy: 'requester', approvedBy: 'approver' }, 'approver'));
     assert.doesNotThrow(() => service.assertActivationSeparation({ requestedBy: 'requester', approvedBy: 'approver' }, 'operator'));
 }
 
@@ -344,6 +341,6 @@ Promise.resolve()
     .then(validateStableAndTransitiveStamping)
     .then(validateEffectivePartialUpdates)
     .then(validateMigration)
-    .then(validateSeparationOfDuties)
+    .then(validatePermissionBasedRuntimeDecision)
     .then(() => console.log('Profile identity governance migration contract validated'))
     .catch(error => { console.error(error); process.exit(1); });

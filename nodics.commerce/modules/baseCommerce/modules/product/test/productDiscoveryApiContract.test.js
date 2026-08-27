@@ -271,6 +271,37 @@ test('customer discovery falls back to Product projection store when browse sear
     assert.equal(response.data.discovery.source, 'PROJECTION_STORE_FALLBACK');
 });
 
+test('customer discovery uses active nSearch registry before projection-store fallback', async () => {
+    let pipelineRequests = [];
+    global.SERVICE.DefaultProductSearchProjectionService.doSearch = async request => {
+        searchRequests.push(request);
+        return { result: [] };
+    };
+    global.SERVICE.DefaultPipelineService = {
+        start: async (pipelineName, request) => {
+            pipelineRequests.push({ pipelineName, request });
+            return { result: [projections[0]] };
+        }
+    };
+    global.NODICS.getSearchModel = (moduleName, tenant, indexName) => {
+        assert.equal(moduleName, 'product');
+        assert.equal(tenant, 'default');
+        assert.equal(indexName, 'productLocalized');
+        return { doSearch: async () => ({ result: [projections[0]] }) };
+    };
+
+    let response = await discoveryController.list({
+        tenant: 'default',
+        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', categoryCode: 'agoraWomen', pageSize: '12' } }
+    });
+
+    assert.equal(response.data.products.length, 1);
+    assert.equal(response.data.products[0].productCode, 'agoraLinenWrapDress');
+    assert.equal(response.data.discovery.source, 'SEARCH_INDEX');
+    assert.equal(pipelineRequests[0].pipelineName, 'doSearchModelInitializerPipeline');
+    assert.equal(pipelineRequests[0].request.searchModel.doSearch instanceof Function, true);
+});
+
 test('customer discovery applies text search during projection-store fallback', async () => {
     global.SERVICE.DefaultProductSearchProjectionService.doSearch = async request => {
         searchRequests.push(request);

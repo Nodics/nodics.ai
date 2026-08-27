@@ -1,6 +1,6 @@
 # engagementCore Contracts
 
-## Phase 2 contract
+## Core capability contract
 
 - Status: implemented core contracts; public routes and domain behavior remain inactive.
 - Owns: shared intake envelopes, lifecycle vocabulary, consent, assignment, audit, protection, form-definition contracts, and integration references.

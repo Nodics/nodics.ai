@@ -91,6 +91,20 @@ test('sample release publishes one isolated nSearch document for English and Ara
     assert(indexed.every(item => item.model.payload.availability.status === 'IN_STOCK'));
 });
 
+test('localized media is carried into customer search projection payloads', async () => {
+    let mediaLocalizations = localizations.map(item => item.locale === 'en' ? Object.assign({}, item, {
+        media: { primaryImage: { mediaCode: 'sample-product-primary', altText: 'Sample product primary' } }
+    }) : item);
+
+    await publication.publish(request, { product: product, localizations: mediaLocalizations,
+        storeCode: 'sampleStore', categoryCodes: ['sampleFootwear'], variantCodes: ['sampleRunningShoeBlue42'],
+        variants: [{ code: 'sampleRunningShoeBlue42', sku: 'SAMPLE-RUN-BLUE-42' }] });
+
+    let englishProjection = indexed.find(item => item.model.locale === 'en').model;
+    assert.equal(englishProjection.payload.media.primaryImage.mediaCode, 'sample-product-primary');
+    assert.equal(englishProjection.payload.media.primaryImage.altText, 'Sample product primary');
+});
+
 test('publication fails closed before persistence when tenant or required locale readiness is invalid', async () => {
     await assert.rejects(publication.publish({ tenant: 'other' }, { product: product, localizations: localizations,
         storeCode: 'sampleStore' }));
@@ -129,6 +143,41 @@ test('withdrawal updates and removes only the tenant Product and Store partition
     assert.deepEqual(updated[0].model, { status: 'WITHDRAWN' });
     assert.deepEqual(removed[0].query, query);
     assert.equal(removed[0].indexName, 'productLocalized');
+});
+
+test('publication uses active nSearch model registry when generated search service is not exposed', async () => {
+    let originalSearchService = global.SERVICE.DefaultSearchService;
+    let originalPipelineService = global.SERVICE.DefaultPipelineService;
+    let originalNodics = global.NODICS;
+    let pipelines = [];
+    delete global.SERVICE.DefaultSearchService;
+    global.SERVICE.DefaultPipelineService = {
+        start: async (pipelineName, request) => {
+            pipelines.push({ pipelineName, request });
+            return { code: 'SUC_SRCH_00000', errors: [] };
+        }
+    };
+    global.NODICS = {
+        getSearchModel: (moduleName, tenant, indexName) => {
+            assert.equal(moduleName, 'product');
+            assert.equal(tenant, 'default');
+            assert.equal(indexName, 'productLocalized');
+            return { doSave: async () => true, doRemoveByQuery: async () => true };
+        }
+    };
+    try {
+        let searchService = publication.searchService();
+        await searchService.doSave({ tenant: 'default', moduleName: 'product', indexName: 'productLocalized' });
+        await searchService.doRemoveByQuery({ tenant: 'default', moduleName: 'product', indexName: 'productLocalized' });
+        assert.deepEqual(pipelines.map(item => item.pipelineName), [
+            'doSaveModelsInitializerPipeline',
+            'doRemoveModelsByQueryInitializerPipeline'
+        ]);
+    } finally {
+        global.SERVICE.DefaultSearchService = originalSearchService;
+        global.SERVICE.DefaultPipelineService = originalPipelineService;
+        global.NODICS = originalNodics;
+    }
 });
 
 test('store replacement withdraws the full current tenant Store partition before restore', async () => {

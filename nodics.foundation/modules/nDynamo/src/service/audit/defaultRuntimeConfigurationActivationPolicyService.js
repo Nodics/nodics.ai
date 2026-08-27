@@ -170,11 +170,8 @@ module.exports = {
             let valid = persisted && persisted.approvalStatus === 'APPROVED' && persisted.status === 'APPROVED' &&
                 persisted.configurationType === options.configurationType && persisted.configurationCode === options.configurationCode;
             if (!valid) return { approved: false, activationRequestCode: activationRequestCode };
-            let actor = this.resolveRequestedBy(request);
-            let governance = CONFIG.get('identityGovernance') || {};
-            let separation = governance.separationOfDuties || {};
-            if (!actor || (separation.preventRequesterActivation !== false && actor === persisted.requestedBy) || (separation.preventApproverActivation !== false && actor === persisted.approvedBy)) {
-                throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime activation violates separation-of-duties policy');
+            if (!this.resolveRequestedBy(request)) {
+                throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime activation requires an authenticated actor');
             }
             return { approved: true, approvedBy: persisted.approvedBy, approvalReason: persisted.approvalReason, activationRequestCode: persisted.code };
         });

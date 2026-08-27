@@ -132,7 +132,7 @@ module.exports = {
             ? publication.auditTrail[publication.auditTrail.length - 1] : undefined;
         let target;
         let targetEvidenceError;
-        if (publication && publication.targetVersion &&
+        if (publication && publication.targetVersion && SERVICE.DefaultCmsPublicationVersionProviderService &&
             SERVICE.DefaultCmsPublicationVersionProviderService.getLineage) {
             try {
                 target = await SERVICE.DefaultCmsPublicationVersionProviderService.getLineage(publication, request);

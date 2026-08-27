@@ -52,3 +52,35 @@ Production teams configure timeouts, retries, circuit breakers, rate limits, con
 ## Verification
 
 Run method/provider conformance, sandbox authorize/capture/void/refund, idempotent replay, invalid-token, callback signature, expiry, replay, transition, partial shipment, return receipt, inspection, and exception tests. Verify secrets are absent from logs, schemas, docs, OpenAPI examples, and Axis. A live provider requires separate credentialed sandbox certification, webhook delivery, reconciliation, capacity, security, and owner sign-off; local tests do not substitute for that evidence.
+
+## Payment Transaction And Reconciliation Coverage
+
+Payment documentation must explicitly cover PaymentTransaction,
+PaymentTransactionEntry, PaymentInstrumentReference, and
+PaymentReconciliation. These records are the difference between a customer
+journey that merely calls a provider and an enterprise journey that can
+explain what money state is known, unknown, authorized, captured, voided,
+refunded, or waiting for reconciliation.
+
+```mermaid
+flowchart LR
+  Checkout["Checkout payment request"] --> Instrument["Payment instrument reference"]
+  Instrument --> Transaction["Payment transaction"]
+  Transaction --> Entry["Transaction entry"]
+  Entry --> Provider["Provider adapter"]
+  Provider --> Callback["Callback or polling result"]
+  Callback --> Reconciliation["Payment reconciliation"]
+  Reconciliation --> Order["Order or refund decision"]
+```
+
+| Record | Business meaning | Required operator evidence |
+| --- | --- | --- |
+| PaymentInstrumentReference | Tokenized reference to a payment method, never raw credentials. | Token source, owner, expiry, and redaction. |
+| PaymentTransaction | Parent commercial payment intent and state. | Idempotency key, provider, amount, currency, tenant, and order reference. |
+| PaymentTransactionEntry | Each authorize, capture, void, refund, or callback result. | Provider reference, request hash, response state, and retry status. |
+| PaymentReconciliation | Comparison between Nodics and provider state. | Drift, corrective action, owner, timestamp, and final evidence. |
+
+Developers customize provider behavior through payment provider adapters, not
+through checkout or Axis. Business users should see unknown outcomes and
+reconciliation work as operational tasks, because a timeout is not a decline
+and retrying money movement with a new key is unsafe.

@@ -110,3 +110,11 @@ A business user should be able to:
 
 Validate the proposed journey with business users, developers, and operators; prove the happy path, rejection path, recovery path, audit evidence, and measurable operational benefit.
 The operator must also confirm that alerts and recovery ownership are practical.
+
+## Customization and extension
+
+Customers should extend Process by adding project-owned workflow definitions,
+action adapters, task assignment policies, escalation rules, and dashboards.
+The extension must keep domain state in the owning module, preserve Process
+audit evidence, and allow business users to understand what changed without
+reading raw graph JSON or source code.

@@ -91,7 +91,7 @@ assert.equal(modulePackage.nodics.kind, 'capability');
 assert.equal(modulePackage.nodics.runtimeModule, true);
 assert.equal(modulePackage.nodics.loadableByNodicsModuleLoader, true);
 assert.equal(modulePackage.nodics.runtime.router, true,
-    'installer Phase 1 read-only APIs must be routable after contract validation');
+    'installer read-only APIs must be routable after contract validation');
 assert.equal(modulePackage.nodics.runtime.web, false,
     'installer must not contain Axis frontend or browser source');
 ['schema', 'router', 'controller', 'facade', 'service', 'test', 'llm'].forEach(owner =>
@@ -124,7 +124,7 @@ assert.deepEqual(properties.installer.applicationBuilder.workspace.allowedRoots,
     'InstallerErrorResponse'
 ].forEach(contractName => assert(apiContracts[contractName], `Missing installer API contract ${contractName}`));
 assert(!applicationBuilderServiceSource.includes('child_process'),
-    'Phase 1 installer services must not execute shell commands');
+    'read-only installer services must not execute shell commands');
 
 const operations = operationCatalog.listOperations();
 assert(operations.some(operation => operation.code === 'workspace.status' && operation.mutating === false));
@@ -145,7 +145,7 @@ assert.deepEqual(operationValidator.OPERATION_STATES, [
     'AVAILABLE',
     'PREVIEW',
     'DISABLED',
-    'FUTURE',
+    'RESERVED',
     'HIDDEN'
 ]);
 assert.deepEqual(operationValidator.OPERATION_INTENTS, [
@@ -195,24 +195,24 @@ const sortedOperationCodes = operations.map(operation => operation.code);
 assert.deepEqual(sortedOperationCodes, operationValidator.sortOperations(operations).map(operation => operation.code),
     'installer operations must be sorted by group and code');
 
-const phaseOneOperations = operations.filter(operation => operation.phase === 'PHASE_1_READ_ONLY');
-assert(phaseOneOperations.length > 0);
-assert(phaseOneOperations.every(operation => operation.mutating === false));
-assert(phaseOneOperations.every(operation => operation.requiresIdempotencyKey === false));
-assert(phaseOneOperations.every(operation => operation.state === 'AVAILABLE'));
-assert(phaseOneOperations.every(operation => operation.executable === true),
-    'Phase 1 operations are executable only because secured read-only routes now exist');
-assert(phaseOneOperations.every(operation => operation.intent !== 'REPAIR' &&
+const readOnlyOperations = operations.filter(operation => operation.phase === 'READ_ONLY_DISCOVERY');
+assert(readOnlyOperations.length > 0);
+assert(readOnlyOperations.every(operation => operation.mutating === false));
+assert(readOnlyOperations.every(operation => operation.requiresIdempotencyKey === false));
+assert(readOnlyOperations.every(operation => operation.state === 'AVAILABLE'));
+assert(readOnlyOperations.every(operation => operation.executable === true),
+    'read-only operations are executable only because secured routes now exist');
+assert(readOnlyOperations.every(operation => operation.intent !== 'REPAIR' &&
     operation.intent !== 'LIFECYCLE' &&
     operation.intent !== 'EXPAND'));
 
-const futureMutatingOperations = operations.filter(operation => operation.phase === 'FUTURE_MUTATING');
-assert(futureMutatingOperations.length > 0);
-assert(futureMutatingOperations.every(operation => operation.mutating === true));
-assert(futureMutatingOperations.every(operation => operation.state === 'FUTURE'));
-assert(futureMutatingOperations.every(operation => operation.executable === false));
-assert(futureMutatingOperations.every(operation => operation.requiresIdempotencyKey === true));
-assert(futureMutatingOperations.every(operation => [
+const reservedMutatingOperations = operations.filter(operation => operation.phase === 'RESERVED_MUTATING');
+assert(reservedMutatingOperations.length > 0);
+assert(reservedMutatingOperations.every(operation => operation.mutating === true));
+assert(reservedMutatingOperations.every(operation => operation.state === 'RESERVED'));
+assert(reservedMutatingOperations.every(operation => operation.executable === false));
+assert(reservedMutatingOperations.every(operation => operation.requiresIdempotencyKey === true));
+assert(reservedMutatingOperations.every(operation => [
     'installer.workspace.operate',
     'installer.workspace.support',
     'installer.workspace.expand'
@@ -263,13 +263,13 @@ assertInvalidOperation({
     sourceOfTruth: 'README.md'
 }, /must reference/);
 
-const invalidFutureOperation = Object.assign({}, futureMutatingOperations[0], {
+const invalidReservedOperation = Object.assign({}, reservedMutatingOperations[0], {
     requiresIdempotencyKey: false
 });
-delete invalidFutureOperation.executable;
-assert.throws(() => operationCatalog.validateOperation(invalidFutureOperation), /must require idempotency/);
+delete invalidReservedOperation.executable;
+assert.throws(() => operationCatalog.validateOperation(invalidReservedOperation), /must require idempotency/);
 
-assert.deepEqual(permissionService.listPermissions().phaseOne, [
+assert.deepEqual(permissionService.listPermissions().currentReadOnly, [
     'installer.workspace.view',
     'installer.workspace.plan',
     'installer.workspace.evidence.read'
@@ -285,11 +285,11 @@ assert.throws(() => permissionService.assertPermission({
 assert.throws(() => permissionService.assertPermission({
     authTokenType: 'access',
     permissions: ['installer.workspace.operate']
-}, 'installer.workspace.operate'), /not available in Phase 1/);
+}, 'installer.workspace.operate'), /current read-only installer surface/);
 
 const routes = allRoutes(router);
-assert.equal(routes.length, phaseOneOperations.length,
-    'Every Phase 1 operation must have exactly one router entry');
+assert.equal(routes.length, readOnlyOperations.length,
+    'Every read-only operation must have exactly one router entry');
 routes.forEach(route => {
     assert.equal(route.secured, true);
     assert.deepEqual(route.authTokenTypes, ['access']);
@@ -297,13 +297,13 @@ routes.forEach(route => {
     assert(route.permission.startsWith('installer.workspace.'));
     assert.equal(route.controller, 'DefaultInstallerApplicationBuilderController');
     assert(route.key.startsWith('/nodics/installer/v0/'));
-    const matchingOperation = phaseOneOperations.find(operation => operation.route === route.key);
-    assert(matchingOperation, `Route ${route.key} must map to a Phase 1 operation`);
+    const matchingOperation = readOnlyOperations.find(operation => operation.route === route.key);
+    assert(matchingOperation, `Route ${route.key} must map to a read-only operation`);
     assert.equal(route.method, matchingOperation.method);
     assert.equal(route.permission, matchingOperation.permission);
 });
-assert(futureMutatingOperations.every(operation => !routes.some(route => route.key === operation.route)),
-    'Future mutating operations must not have router entries');
+assert(reservedMutatingOperations.every(operation => !routes.some(route => route.key === operation.route)),
+    'Reserved mutating operations must not have router entries');
 
 const capability = backofficeProvider.getCapability();
 assert.equal(capability.capabilityId, 'platform-installer');

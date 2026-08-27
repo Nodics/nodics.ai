@@ -33,6 +33,6 @@ async function run() {
     assert.deepStrictEqual(dto, { code: 'S1', status: 'OPEN' });
     await assert.rejects(() => gatewayPort.getSubmission({}), error => error.code === 'ERR_ENG_API_00005');
     assert.deepStrictEqual(errorService.project({ code: 'ERR_ENG_API_00003', stack: 'secret' }, 'c'), { status: 403, code: 'ERR_ENG_API_00003', message: 'Engagement resource ownership denied', correlationId: 'c' });
-    console.log('EngagementApi Phase 3 security contract validated');
+    console.log('EngagementApi security contract validated');
 }
 run().catch(error => { console.error(error); process.exitCode = 1; });

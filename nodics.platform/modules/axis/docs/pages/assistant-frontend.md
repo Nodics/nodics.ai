@@ -13,6 +13,23 @@ feedback, cancellation, and safe failure presentation. The authenticated SSE
 transport and presentation state controller drive the visible experience.
 No browser request is sent to OpenAI, Anthropic, Gemini, or another provider.
 
+| Assistant concern | Business meaning | Axis role | Backend role |
+| --- | --- | --- | --- |
+| Conversation access | Employees see only conversations they are allowed to use | Render history, selection, messages, and composer state | Assistant backend owns ownership, permissions, persistence, and audit |
+| Provider neutrality | Business policy can choose a provider without browser changes | Call only the Nodics Assistant endpoint advertised by BackOffice | Backend owns provider selection, credentials, tools, token limits, and governance |
+| Streaming answer | User sees progress without losing control | Parse bounded SSE events, render text smoothly, and support cancellation | Backend emits ordered events and terminal state |
+| Runtime mutation | High-impact changes need governed confirmation | Present confirmation, approval, rejection, execution, or handoff UI | Backend owns validation, approval rules, tool execution, Workflow handoff, and rollback evidence |
+
+For beginners, the Assistant page is a governed employee workspace, not a
+direct chat widget wired to an external AI provider. Axis presents messages,
+progress, history, and confirmation choices; the backend decides what the
+Assistant is allowed to know, do, store, approve, reject, or hand off.
+
+Developers extend the Assistant experience by adding typed Axis renderers,
+clients, parsers, and presentation tests for backend-published contracts. They
+must not place provider credentials, prompt policy, tool execution, mutation
+approval, or audit decisions in the browser.
+
 ## Authority and request flow
 
 1. BackOffice authenticated bootstrap advertises the authorized `aiAssistant`

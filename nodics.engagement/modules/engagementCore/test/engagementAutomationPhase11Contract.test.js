@@ -19,5 +19,5 @@ const policy = { aiEnabled: true, policyVersion: '1', minimumConfidence: 0.75, h
     let fallback = await service.propose('CLASSIFICATION', { code: 'f2', revision: 1 }, { tenant: 't1', domainType: 'FEEDBACK' }, { propose: async () => { throw new Error('offline'); } }, async () => ({ output: { category: 'GENERAL' }, confidence: 1 }), policy); assert.strictEqual(fallback.source, 'RULE');
     let evaluation = service.evaluate({ tenant: 't1', capability: 'CLASSIFICATION', datasetReference: 'gold-v1', sampleSize: 30, metrics: { accuracy: 0.95, precision: 0.9, recall: 0.88, errorRate: 0.05 }, thresholds: { accuracy: 0.9, precision: 0.8, recall: 0.8 }, evaluatedBy: 'reviewer', correlationId: 'c2' }, policy); assert.strictEqual(evaluation.passed, true);
     assert.throws(() => service.evidence({ code: 'f3', password: 'secret' }, policy), /prohibited/);
-    console.log('Engagement governed automation Phase 11 contract validated');
+    console.log('Engagement governed automation contract validated');
 })().catch(error => { console.error(error); process.exitCode = 1; });

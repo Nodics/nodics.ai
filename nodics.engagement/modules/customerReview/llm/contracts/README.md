@@ -1,6 +1,6 @@
 # customerReview Contracts
 
-## Phase 6 contract
+## Review capability contract
 
 - Status: implemented; the review foundation and governed CRES cutover boundary are active only when explicitly enabled.
 - Owns: customer reviews, rating dimensions, moderation evidence, business responses, helpfulness, abuse reports, authenticity evidence, and rating aggregates.

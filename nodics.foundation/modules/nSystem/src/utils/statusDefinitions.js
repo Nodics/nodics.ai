@@ -22,6 +22,7 @@ module.exports = {
     ERR_SYS_00122: { code: '400', message: 'Local reset provider confirmation is invalid' },
     ERR_SYS_00123: { code: '500', message: 'Local reset provider service boundary is invalid' },
     ERR_SYS_00124: { code: '503', message: 'Configured Local reset service is unavailable' },
+    ERR_SYS_00125: { code: '503', message: 'Local reset did not clear every configured service' },
     SUC_SYS_HEALTH_LIVE: {
         code: '200',
         message: 'Runtime process is live'

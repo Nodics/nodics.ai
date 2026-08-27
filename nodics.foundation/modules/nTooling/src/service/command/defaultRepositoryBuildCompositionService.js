@@ -43,9 +43,40 @@ module.exports = {
         this.writeFile(path.join(root, 'config', 'postscripts.js'), 'module.exports = {};\n');
     },
 
+    /**
+     * Resolves a writable scratch root for repository build composition.
+     * Server deployments can pin this to an approved mount.
+     *
+     * @returns {string} Writable temporary root.
+     */
+    tempRoot: function () {
+        const candidates = [
+            process.env.NODICS_REPOSITORY_BUILD_TMPDIR,
+            process.env.NODICS_TOOLING_TMPDIR,
+            path.join(process.cwd(), '.nodics', 'tmp'),
+            os.tmpdir()
+        ].filter(Boolean);
+        let lastError = null;
+        for (const candidate of candidates) {
+            const resolved = path.resolve(candidate);
+            try {
+                fs.mkdirSync(resolved, {recursive: true});
+                fs.accessSync(resolved, fs.constants.W_OK);
+                return resolved;
+            } catch (error) {
+                lastError = error;
+            }
+        }
+        throw new Error(
+            'Repository build composition requires a writable temporary directory. ' +
+            'Set NODICS_REPOSITORY_BUILD_TMPDIR to a server-approved path. ' +
+            (lastError ? 'Last error: ' + lastError.message : '')
+        );
+    },
+
     /** Materializes the isolated repository build topology. @returns {Object} Composition coordinates. */
     create: function () {
-        const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-repository-build-'));
+        const root = fs.mkdtempSync(path.join(this.tempRoot(), 'nodics-repository-build-'));
         const apiKeyPepper = crypto.randomBytes(32).toString('hex');
         const jwtSecret = crypto.randomBytes(48).toString('hex');
         const environmentRoot = path.join(root, 'envs', 'repositoryBuildEnvironment');

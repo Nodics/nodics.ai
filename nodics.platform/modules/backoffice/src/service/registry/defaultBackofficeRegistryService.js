@@ -987,7 +987,11 @@ module.exports = {
   /** Keeps documentation product routes disabled until their publication owner is Online-ready. */
   applyDocumentationPublicationState: function (item, publication) {
     if (!item || !item.group || item.group.id !== "documentation") return item;
-    if (item.id === "documentation" || item.id === "documentation-dashboard") return item;
+    if (
+      item.id === "documentation" ||
+      item.id === "documentation-dashboard" ||
+      item.id === "documentation-management"
+    ) return item;
     let route = String(item.route || "");
     if (!route || route === "/docs") return item;
     let state = publication && publication.byRoute && publication.byRoute[route];

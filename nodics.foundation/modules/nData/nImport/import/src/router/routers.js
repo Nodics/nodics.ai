@@ -21,10 +21,10 @@ const releasePlanRequest = {
     additionalProperties: false,
     properties: {
         releaseCodes: { type: 'array', minItems: 1, maxItems: 256, uniqueItems: true,
-            items: { type: 'string', pattern: '^[A-Za-z][A-Za-z0-9_-]{0,127}:[A-Za-z][A-Za-z0-9_-]{0,127}$' } },
+            items: { type: 'string', pattern: '^[A-Za-z][A-Za-z0-9._-]{0,127}:[A-Za-z][A-Za-z0-9_-]{0,127}$' } },
         modules: { type: 'array', minItems: 1, maxItems: 256, uniqueItems: true,
             description: 'Legacy selector; use releaseCodes when a module owns multiple sections.',
-            items: { type: 'string', pattern: '^[A-Za-z][A-Za-z0-9_-]{0,127}$' } },
+            items: { type: 'string', pattern: '^[A-Za-z][A-Za-z0-9._-]{0,127}$' } },
         expectedReleases: { type: 'object', maxProperties: 256, additionalProperties: {
             type: 'string', pattern: '^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?$'
         } }

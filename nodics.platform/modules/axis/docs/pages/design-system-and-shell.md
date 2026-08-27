@@ -11,6 +11,29 @@ actions, Charcoal for structural surfaces and text, and restrained semantic
 colors for success, information, warning, and error states. Panelix informed
 functional grouping only; no template source or visual asset was copied.
 
+| Shell area | Business purpose | Axis responsibility | Backend authority |
+| --- | --- | --- | --- |
+| Authentication pages | Let employees enter or recover access safely | Render CMS-composed forms, responsive layout, and safe errors | Profile owns credentials, browser session, recovery contract, and revocation |
+| Navigation rail | Help employees find authorized capabilities | Render backend-published groups, hierarchy, search, favourites, and recents | BackOffice owns permission-filtered navigation and module availability |
+| Workspace header | Keep current context visible without wasting workspace space | Render title, help actions, context popup, mode controls, and status | Owning modules provide business labels, help targets, and runtime context |
+| CMS renderer surface | Let backend content compose governed Axis pages | Validate logical renderer keys and execute only compiled Axis renderers | WCMS owns page, template, component, route, locale, channel, and access data |
+| Operational panels | Present tables, details, actions, failures, and confirmations | Keep interaction accessible, responsive, localized, and bounded | Owning modules enforce validation, authorization, lifecycle, and persistence |
+
+For beginners, the design system is more than colors and spacing. It is the
+contract that makes every Axis screen feel like the same governed workplace:
+buttons behave consistently, forms recover predictably, navigation stays
+permission-aware, and long business labels or translated content do not break
+the page.
+
+Developers use the design system as the implementation contract for shell
+layout, renderer composition, token usage, focus handling, density, and
+responsive behavior. A new page should compose these existing primitives before
+adding another local visual rule.
+
+An operator benefits from the same consistency during support: the shell keeps
+environment context, loading states, unavailable states, and recovery actions
+recognizable across every capability.
+
 ## Authentication layout
 
 The implemented login, recovery, and lock-screen template follows a two-zone

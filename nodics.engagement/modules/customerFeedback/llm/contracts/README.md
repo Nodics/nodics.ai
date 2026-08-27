@@ -1,6 +1,6 @@
 # customerFeedback Contracts
 
-## Phase 9 contract
+## Feedback capability contract
 
 - Status: implemented with feedback, classification, follow-up, resolution,
   handoff, insight, secured API, operational evidence, and generated schema

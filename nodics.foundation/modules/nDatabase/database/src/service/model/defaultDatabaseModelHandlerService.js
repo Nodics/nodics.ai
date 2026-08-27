@@ -137,6 +137,235 @@ module.exports = {
     },
 
     /**
+     * Ensures generated CRUD services are available for every active local schema
+     * after runtime models are rebuilt.
+     *
+     * @returns {Promise<boolean>} Resolves after generated services are attached.
+     * @sideEffects Writes generated schema service delegates into `SERVICE`.
+     */
+    ensureGeneratedSchemaServices: function () {
+        let _self = this;
+        return new Promise((resolve, reject) => {
+            try {
+                _.each(NODICS.getActiveModules(), moduleName => {
+                    let moduleObject = NODICS.getModule(moduleName);
+                    if (!_self.isLocalActiveModule(moduleName) || !moduleObject || !moduleObject.rawSchema) {
+                        return;
+                    }
+                    _.each(moduleObject.rawSchema, (rawSchema, schemaName) => {
+                        if (rawSchema && rawSchema.service && rawSchema.service.enabled === true) {
+                            _self.ensureGeneratedSchemaService(moduleName, schemaName);
+                        }
+                    });
+                });
+                resolve(true);
+            } catch (error) {
+                reject(new CLASSES.NodicsError(error, 'while ensuring generated schema services', 'ERR_DBS_00000'));
+            }
+        });
+    },
+
+    /**
+     * Creates or enriches the generated service delegate for one schema.
+     *
+     * @param {string} moduleName Owning active module name.
+     * @param {string} schemaName Schema code.
+     * @returns {Object} Runtime generated schema service.
+     * @sideEffects Merges generated methods with an existing custom same-name service.
+     */
+    ensureGeneratedSchemaService: function (moduleName, schemaName) {
+        let modelName = UTILS.createModelName(schemaName);
+        let serviceName = 'Default' + schemaName.toUpperCaseFirstChar() + 'Service';
+        let existingService = SERVICE[serviceName];
+        let generatedService = this.createGeneratedSchemaService(moduleName, schemaName, modelName, serviceName);
+        SERVICE[serviceName] = existingService ? Object.assign(generatedService, existingService) : generatedService;
+        return SERVICE[serviceName];
+    },
+
+    /**
+     * Builds a runtime equivalent of the generated schema service template.
+     *
+     * @param {string} moduleName Owning active module name.
+     * @param {string} schemaName Schema code.
+     * @param {string} modelName Generated model registry key.
+     * @param {string} serviceName Generated service name.
+     * @returns {Object} Generated CRUD service delegate.
+     */
+    createGeneratedSchemaService: function (moduleName, schemaName, modelName, serviceName) {
+        return {
+            /**
+             * Executes schema-driven get operation.
+             *
+             * @param {Object} request Generated service request.
+             * @returns {Promise<Object>} Pipeline get response.
+             */
+            get: function (request) {
+                let requestModuleName = request.moduleName || moduleName;
+                request.schemaModel = NODICS.getModels(requestModuleName, request.tenant)[modelName];
+                request.moduleName = requestModuleName;
+                return SERVICE.DefaultPipelineService.start('modelsGetInitializerPipeline', request, {});
+            },
+            /**
+             * Executes schema-driven browser-safe search.
+             *
+             * @param {Object} request Generated service request.
+             * @returns {Promise<Object>} Paged generated service response.
+             */
+            safeSearch: function (request) {
+                let requestModuleName = request.moduleName || moduleName;
+                request.schemaModel = NODICS.getModels(requestModuleName, request.tenant)[modelName];
+                request.moduleName = requestModuleName;
+                request.schemaName = request.schemaName || schemaName;
+                request.generatedServiceName = serviceName;
+                if (!SERVICE.DefaultSchemaSafeQueryService || typeof SERVICE.DefaultSchemaSafeQueryService.searchGenerated !== 'function') {
+                    return Promise.reject(new CLASSES.NodicsError('ERR_DBS_00004', 'Generated safe search service is not available'));
+                }
+                return SERVICE.DefaultSchemaSafeQueryService.searchGenerated(request);
+            },
+            /**
+             * Returns browser-safe generated schema capabilities.
+             *
+             * @param {Object} request Generated service request.
+             * @returns {Promise<Object>} Client-safe schema descriptor.
+             */
+            capabilities: function (request) {
+                let requestModuleName = request.moduleName || moduleName;
+                request.schemaModel = NODICS.getModels(requestModuleName, request.tenant)[modelName];
+                request.moduleName = requestModuleName;
+                request.schemaName = request.schemaName || schemaName;
+                if (!SERVICE.DefaultSchemaUtilityService || typeof SERVICE.DefaultSchemaUtilityService.capabilitiesGenerated !== 'function') {
+                    return Promise.reject(new CLASSES.NodicsError('ERR_DBS_00004', 'Generated schema utility service is not available'));
+                }
+                return SERVICE.DefaultSchemaUtilityService.capabilitiesGenerated(request);
+            },
+            /**
+             * Executes schema-driven get by id.
+             *
+             * @param {string} id Model id.
+             * @param {string} tenant Tenant code.
+             * @returns {Promise<Object>} Pipeline get response.
+             */
+            getById: function (id, tenant) {
+                return this.get({
+                    tenant: tenant,
+                    query: { _id: id }
+                });
+            },
+            /**
+             * Executes schema-driven get by code.
+             *
+             * @param {string} code Model code.
+             * @param {string} tenant Tenant code.
+             * @returns {Promise<Object>} Pipeline get response.
+             */
+            getByCode: function (code, tenant) {
+                return this.get({
+                    tenant: tenant,
+                    query: { code: code }
+                });
+            },
+            /**
+             * Executes schema-driven single save operation.
+             *
+             * @param {Object} request Generated service request.
+             * @returns {Promise<Object>} Pipeline save response.
+             */
+            save: function (request) {
+                let requestModuleName = request.moduleName || moduleName;
+                request.schemaModel = NODICS.getModels(requestModuleName, request.tenant)[modelName];
+                request.moduleName = requestModuleName;
+                return SERVICE.DefaultPipelineService.start('modelSaveInitializerPipeline', request, {});
+            },
+            /**
+             * Executes schema-driven bulk save operation.
+             *
+             * @param {Object} request Generated service request.
+             * @returns {Promise<Object>} Pipeline bulk save response.
+             */
+            saveAll: function (request) {
+                let requestModuleName = request.moduleName || moduleName;
+                request.schemaModel = NODICS.getModels(requestModuleName, request.tenant)[modelName];
+                request.moduleName = requestModuleName;
+                return SERVICE.DefaultPipelineService.start('modelsSaveInitializerPipeline', request, {});
+            },
+            /**
+             * Executes schema-driven remove operation.
+             *
+             * @param {Object} request Generated service request.
+             * @returns {Promise<Object>} Pipeline remove response.
+             */
+            remove: function (request) {
+                let requestModuleName = request.moduleName || moduleName;
+                let models = NODICS.getModels(requestModuleName, request.tenant) || {};
+                request.schemaModel = models[modelName];
+                request.moduleName = requestModuleName;
+                if (!request.schemaModel && SERVICE.DefaultLocalResetProviderService &&
+                    SERVICE.DefaultLocalResetProviderService.authorizes(request)) {
+                    let error = new Error('Local reset skipped unavailable generated schema model: ' + requestModuleName + '.' + modelName);
+                    error.code = 'LOCAL_RESET_MODEL_REGISTRY_MISSING';
+                    error.localResetMissingModel = true;
+                    return Promise.reject(error);
+                }
+                return SERVICE.DefaultPipelineService.start('modelsRemoveInitializerPipeline', request, {});
+            },
+            /**
+             * Executes generated schema delete-impact preview without mutating data.
+             *
+             * @param {Object} request Generated service request.
+             * @returns {Promise<Object>} Safe delete-impact response.
+             */
+            deleteImpact: function (request) {
+                let requestModuleName = request.moduleName || moduleName;
+                request.schemaModel = NODICS.getModels(requestModuleName, request.tenant)[modelName];
+                request.moduleName = requestModuleName;
+                request.schemaName = request.schemaName || schemaName;
+                if (!SERVICE.DefaultSchemaUtilityService || typeof SERVICE.DefaultSchemaUtilityService.deleteImpactGenerated !== 'function') {
+                    return Promise.reject(new CLASSES.NodicsError('ERR_DBS_00004', 'Generated schema utility service is not available'));
+                }
+                return SERVICE.DefaultSchemaUtilityService.deleteImpactGenerated(request);
+            },
+            /**
+             * Executes schema-driven remove by ids.
+             *
+             * @param {string[]} ids Model ids.
+             * @param {string} tenant Tenant code.
+             * @returns {Promise<Object>} Pipeline remove response.
+             */
+            removeById: function (ids, tenant) {
+                return this.remove({
+                    tenant: tenant,
+                    ids: ids
+                });
+            },
+            /**
+             * Executes schema-driven remove by codes.
+             *
+             * @param {string[]} codes Model codes.
+             * @param {string} tenant Tenant code.
+             * @returns {Promise<Object>} Pipeline remove response.
+             */
+            removeByCode: function (codes, tenant) {
+                return this.remove({
+                    tenant: tenant,
+                    codes: codes
+                });
+            },
+            /**
+             * Executes schema-driven update operation.
+             *
+             * @param {Object} request Generated service request.
+             * @returns {Promise<Object>} Pipeline update response.
+             */
+            update: function (request) {
+                let requestModuleName = request.moduleName || moduleName;
+                request.schemaModel = NODICS.getModels(requestModuleName, request.tenant)[modelName];
+                request.moduleName = requestModuleName;
+                return SERVICE.DefaultPipelineService.start('modelsUpdateInitializerPipeline', request, {});
+            }
+        };
+    },
+
+    /**
      * Builds generated models for a supplied module list sequentially.
      *
      * @param {string} tntCode Tenant code.

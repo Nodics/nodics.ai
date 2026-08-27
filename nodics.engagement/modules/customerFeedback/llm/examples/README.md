@@ -6,4 +6,4 @@ A tenant may override feedback categories and routing policy without changing th
 
 ## Rejected shortcut
 
-Do not add business behavior to this Phase 1 scaffold, call archived/generated residue as a service authority, expose schema CRUD directly, or hardcode project, tenant, provider, permission, or retention policy.
+Do not add business behavior to this inactive scaffold, call archived/generated residue as a service authority, expose schema CRUD directly, or hardcode project, tenant, provider, permission, or retention policy.

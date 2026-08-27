@@ -16,7 +16,7 @@ global.SERVICE = { DefaultCustomerReviewGovernanceService: governance };
 const lifecycle = require('../src/service/defaultCustomerReviewLifecycleService');
 const migration = require('../src/service/defaultCresMigrationService');
 
-['customerReview', 'customerReviewVersion', 'customerReviewAuthenticityEvidence', 'customerReviewModeration', 'customerReviewResponse', 'customerReviewAbuseReport', 'customerReviewAppeal', 'customerReviewMigration'].forEach(name => assert(schemas[name], name + ' Phase 6 schema must remain available'));
+['customerReview', 'customerReviewVersion', 'customerReviewAuthenticityEvidence', 'customerReviewModeration', 'customerReviewResponse', 'customerReviewAbuseReport', 'customerReviewAppeal', 'customerReviewMigration'].forEach(name => assert(schemas[name], name + ' schema must remain available'));
 Object.values(schemas).forEach(schema => assert.strictEqual(schema.router.enabled, false));
 const review = governance.validate({ code: 'r1', tenant: 't1', ownerId: 'c1', targetType: 'PRODUCT', targetCode: 'p1', overallRating: 1, body: 'Disappointing but genuine.', site: 's1', locale: 'en', channel: 'WEB', correlationId: 'corr1' }, configuration);
 assert.strictEqual(review.overallRating, 1);
@@ -46,4 +46,4 @@ assert.strictEqual(importRequest.owner, 'nImport'); assert.strictEqual(importReq
 const invalidManifest = migration.plan([{ code: 'legacy2', customerCode: 'c2', targetType: 'UNKNOWN', targetCode: 'p2', rating: 4, comment: 'Invalid target', status: 'PENDING' }], { tenant: 't1', runCode: 'cres-run-2', mappingVersion: '1', configuration: configuration });
 assert.strictEqual(invalidManifest.invalidCount, 1);
 assert.throws(() => migration.nImportRequest(invalidManifest, { approved: true, actorId: 'migration-admin', reason: 'Approved cutover' }), error => error.code === 'ERR_REVIEW_00010');
-console.log('customerReview Phase 6 contract validated');
+console.log('customerReview schema contract validated');

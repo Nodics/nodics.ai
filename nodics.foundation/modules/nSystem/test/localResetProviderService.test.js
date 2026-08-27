@@ -16,6 +16,7 @@ class NodicsError extends Error { constructor(code, message) { super(message || 
 
 (async function () {
     let policy = { enabled: true, environmentAllowlist: ['kickoffLocal'], confirmation: 'RESET_LOCAL_NODICS_DATA',
+        allowMissingModelServices: true,
         serviceNames: ['DefaultCatalogService'] };
     global.CLASSES = { NodicsError };
     global.CONFIG = { get: key => key === 'localResetProvider' ? policy : undefined };
@@ -48,6 +49,39 @@ class NodicsError extends Error { constructor(code, message) { super(message || 
     assert.strictEqual(result.acknowledged, true);
     assert.strictEqual(result.serviceCount, 0);
     assert.strictEqual(result.skippedServiceCount, 1);
+
+    delete SERVICE.DefaultCatalogService;
+    result = await service.reset({ tenant: 'default', authData: { tokenType: 'service' },
+        confirmation: policy.confirmation, resetScope: 'LOCAL_ACCEPTANCE' });
+    assert.strictEqual(result.acknowledged, true);
+    assert.strictEqual(result.serviceCount, 0);
+    assert.strictEqual(result.skippedServiceCount, 1);
+    assert.deepStrictEqual(result.skippedServices, ['DefaultCatalogService']);
+
+    SERVICE.DefaultCatalogService = { remove: async () => {
+        let error = new TypeError("Cannot read properties of undefined (reading 'schemaName')");
+        error.stack = 'TypeError: Cannot read properties of undefined (reading \'schemaName\')\n' +
+            '    at Object.applyPreInterceptors (defaultModelsRemoveInitializerService.js:219:46)';
+        throw error;
+    } };
+    policy.requiredServiceNames = ['DefaultCatalogService'];
+    await assert.rejects(service.reset({ tenant: 'default', authData: { tokenType: 'service' },
+        confirmation: policy.confirmation, resetScope: 'LOCAL_ACCEPTANCE' }), /Local reset did not clear every configured service/);
+
+    delete SERVICE.DefaultCatalogService;
+    await assert.rejects(service.reset({ tenant: 'default', authData: { tokenType: 'service' },
+        confirmation: policy.confirmation, resetScope: 'LOCAL_ACCEPTANCE' }), /Configured Local reset service is unavailable/);
+
+    SERVICE.DefaultCatalogService = { remove: async () => {
+        let error = new TypeError("Cannot read properties of undefined (reading 'schemaName')");
+        error.stack = 'TypeError: Cannot read properties of undefined (reading \'schemaName\')\n' +
+            '    at Object.applyPreInterceptors (defaultModelsRemoveInitializerService.js:219:46)';
+        throw error;
+    } };
+    policy.requiredServiceNames = [];
+    policy.allowMissingModelServices = false;
+    await assert.rejects(service.reset({ tenant: 'default', authData: { tokenType: 'service' },
+        confirmation: policy.confirmation, resetScope: 'LOCAL_ACCEPTANCE' }), /Local reset did not clear every configured service/);
 
     SERVICE.DefaultCatalogService.remove = async () => {
         throw new Error('database write denied');

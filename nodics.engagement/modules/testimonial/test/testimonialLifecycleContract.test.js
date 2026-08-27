@@ -39,4 +39,4 @@ assert.throws(() => lifecycle.restore(emergency[0], approved, Object.assign({}, 
 const restored = lifecycle.restore(emergency[0], approved, consent, '2026-08-10T02:00:00Z'); assert.strictEqual(restored.status, 'PREVIEW');
 const reconciliation = lifecycle.reconcile([published], [{ candidateCode: 'tc1', status: 'WITHDRAWN' }], '2026-08-10T03:00:00Z');
 assert.strictEqual(reconciliation.repaired, 1); assert.strictEqual(reconciliation.projections[0].status, 'WITHDRAWN');
-console.log('testimonial Phase 5 lifecycle contract validated');
+console.log('testimonial lifecycle contract validated');

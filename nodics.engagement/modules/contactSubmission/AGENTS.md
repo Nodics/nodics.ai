@@ -16,7 +16,7 @@ Before implementing non-trivial behavior here, record the business outcome, owni
 
 ## Boundary rules
 
-- Treat Phase 4 contact schemas and services as the contact-domain authority.
+- Treat contact schemas and services as the contact-domain authority.
 - Do not copy archived CRES or gNotify implementation into this package.
 - Keep routes in `engagementApi`, shared intake in `engagementCore`, and provider delivery/lifecycle in owning adapters.
 - Preserve one-way dependencies and keep generated artifacts derived from source definitions.

@@ -58,6 +58,8 @@ module.exports = {
                 NODICS.addActiveTenant(defaultTenant);
                 return SERVICE.DefaultDatabaseModelHandlerService.buildModelsForTenant();
             }).then(() => {
+                return SERVICE.DefaultDatabaseModelHandlerService.ensureGeneratedSchemaServices();
+            }).then(() => {
                 return SERVICE.DefaultDatabaseConnectionHandlerService.isInitRequired();
             }).then(() => {
                 return new Promise((resolve, reject) => {

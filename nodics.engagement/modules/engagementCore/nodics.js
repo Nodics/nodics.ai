@@ -11,7 +11,7 @@
 
 /**
  * @module engagementCore
- * @description Declares the Phase 1 lifecycle boundary for engagementCore without enabling business behavior.
+ * @description Declares the lifecycle boundary for engagementCore without enabling business behavior.
  * @layer module
  * @owner engagementCore
  * @override Later active modules may override lifecycle behavior without modifying this generated boundary.

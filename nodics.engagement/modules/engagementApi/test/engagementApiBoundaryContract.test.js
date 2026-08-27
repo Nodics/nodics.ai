@@ -11,7 +11,7 @@
 
 /**
  * @module engagementApi/test/engagementApiBoundaryContract
- * @description Verifies the Phase 3 Engagement API ownership and secured router boundary.
+ * @description Verifies the Engagement API ownership and secured router boundary.
  * @layer test
  * @owner engagementApi
  */
@@ -28,12 +28,12 @@ assert.strictEqual(packageJson.name, 'engagementApi');
 assert.strictEqual(packageJson.nodics.kind, 'capability');
 assert.deepStrictEqual(packageJson.nodics.owns, ['configuration', 'router', 'controller', 'facade', 'service', 'utility', 'test', 'llm']);
 assert.strictEqual(packageJson.nodics.runtime.router, true);
-assert(fs.existsSync(path.join(moduleRoot, 'src/router/routers.js')), 'Phase 3 router must exist');
-assert(!fs.existsSync(path.join(moduleRoot, 'data')), 'Phase 1 engagementApi must not contain data');
+assert(fs.existsSync(path.join(moduleRoot, 'src/router/routers.js')), 'engagementApi router must exist');
+assert(!fs.existsSync(path.join(moduleRoot, 'data')), 'engagementApi must not contain data before it owns seed data');
 assert(!fs.existsSync(path.join(moduleRoot, 'docs')), 'engagementApi must not contain module-local docs');
 assert(!fs.existsSync(path.join(moduleRoot, 'llm/README.md')), 'engagementApi must use AGENTS.md for AI navigation');
-assert(readme.includes('## Phase 3 status'), 'engagementApi README must expose implementation status');
+assert(readme.includes('## Capability status'), 'engagementApi README must expose implementation status');
 assert(contract.includes('Status: secured foundation implemented'), 'engagementApi contract must expose implementation status');
 assert(!readme.includes('Generated documentation entry'), 'engagementApi README must not retain placeholder guidance');
 
-console.log('EngagementApi Phase 3 boundary contract validated');
+console.log('EngagementApi boundary contract validated');

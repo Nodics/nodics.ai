@@ -170,7 +170,6 @@ module.exports = {
             assignmentPolicy: policy.assignmentPolicy || node && node.assignmentPolicy || 'QUEUE',
             escalationPolicy: policy.escalationPolicy || node && node.escalationPolicy || {},
             approvalPolicy: {
-                submitterMayApprove: policy.submitterMayApprove === true,
                 requiredApprovals: Math.max(1, Math.min(Number(policy.requiredApprovals || 1), 25)),
                 emergencyOverridePermission: policy.emergencyOverridePermission,
                 requireReasonOnReject: policy.requireReasonOnReject === true
@@ -184,7 +183,6 @@ module.exports = {
         let actor = this.getActor(request);
         let policy = Object.assign({}, this.policyOf(version, node), task.approvalPolicy || {});
         let decision = body && body.decision || {};
-        let submitter = instance && instance.context && (instance.context.requestedBy || instance.context.submittedBy || instance.context.createdBy);
         let override = decision.emergencyOverride === true;
         if (override && !policy.emergencyOverridePermission) {
             throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Emergency override is not allowed for this task');
@@ -194,9 +192,6 @@ module.exports = {
             if (!permissions.includes(policy.emergencyOverridePermission)) {
                 throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Emergency override permission is required for this task');
             }
-        }
-        if (!override && policy.submitterMayApprove !== true && submitter && actor && submitter === actor) {
-            throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Submitter cannot approve this workflow task');
         }
         if (decision.approved === false && policy.requireReasonOnReject === true && !decision.reason) {
             throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Approval rejection requires a reason');

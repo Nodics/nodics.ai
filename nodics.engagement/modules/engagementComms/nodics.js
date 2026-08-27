@@ -11,7 +11,7 @@
 
 /**
  * @module engagementComms
- * @description Declares the Phase 1 lifecycle boundary for engagementComms without enabling business behavior.
+ * @description Declares the lifecycle boundary for engagementComms without enabling business behavior.
  * @layer module
  * @owner engagementComms
  * @override Later active modules may override lifecycle behavior without modifying this generated boundary.

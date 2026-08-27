@@ -25,7 +25,7 @@
                 "init/data/address/defaultTenantContactsData.js": "cc69019c88728d606bcd84c298bcf12b302e3c7c67e99acd19e5defb1f3ed170",
                 "init/data/enterprise/defaultEnterpriseData.js": "02c57b34ba14d46673e146088b8f26e3ded42ac05d59d89440a8aa8b0aa480c5",
                 "init/data/enterprise/defaultTenantsData.js": "d83563312b485fb0aa29f4f9108dd7600814b1dbf54b38da1b499a332cfbed32",
-                "init/data/groups/defaultBootstrapUserGroupsData.js": "0ca67bfdbb926a664f31d1649f59e5f91bd2970a7974c94065bdffb09bfa523a",
+                "init/data/groups/defaultBootstrapUserGroupsData.js": "5026dbf939ce976489e35079fe10a8192257164bb9b391452a1893c67277f08e",
                 "init/data/user/defaultCutomerData.js": "b8c0e56ba8ba6db86740de026a6df1bf23ea3815cc9f0f3174abf7f204415c2d",
                 "init/data/user/defaultEmployeeData.js": "da6199d18f8dacd96503cf591591594a3d77893f64ab82f5510fb02ede706b30",
                 "init/headers/address/defaultAddressesHeader.js": "4b2c8a026830151466708a90cee091f5aa4d7adcaf4b0e8ffce0d76729f969c0",

@@ -18,6 +18,26 @@
  */
 module.exports = {
   cms: {
+    cmsDocumentationGovernance: {
+        authoringModel: { secured: true, accessGroups: ['userGroup'], permission: 'axis.documentation.read',
+            apiExposure: 'cmsAuthoring', key: '/documentation/governance/model', method: 'GET',
+            controller: 'DefaultCmsDocumentationGovernanceController', operation: 'authoringModel' },
+        validateAuthoringRecords: { secured: true, accessGroups: ['userGroup'], permission: 'documentation.submitReview',
+            apiExposure: 'cmsAuthoring', key: '/documentation/governance/validate', method: 'POST',
+            controller: 'DefaultCmsDocumentationGovernanceController', operation: 'validateAuthoringRecords' },
+        renderProjection: { secured: true, accessGroups: ['userGroup'], permission: 'axis.documentation.read',
+            apiExposure: 'cmsAuthoring', key: '/documentation/governance/render-projection', method: 'POST',
+            controller: 'DefaultCmsDocumentationGovernanceController', operation: 'renderProjection' },
+        search: { secured: true, accessGroups: ['userGroup'], permission: 'documentation.search.preview',
+            apiExposure: 'cmsAuthoring', key: '/documentation/governance/search', method: 'POST',
+            controller: 'DefaultCmsDocumentationGovernanceController', operation: 'search' },
+        publicationHandoff: { secured: true, accessGroups: ['userGroup'], permission: 'documentation.submitReview',
+            apiExposure: 'cmsAuthoring', key: '/documentation/governance/publication-handoff', method: 'POST',
+            controller: 'DefaultCmsDocumentationGovernanceController', operation: 'publicationHandoff' },
+        migrationPlan: { secured: true, accessGroups: ['userGroup'], permission: 'documentation.sourceEvidence.review',
+            apiExposure: 'cmsAuthoring', key: '/documentation/governance/migration-plan', method: 'POST',
+            controller: 'DefaultCmsDocumentationGovernanceController', operation: 'migrationPlan' }
+    },
     cmsDesignerComposition: {
         getAuthoringModel: { secured: true, accessGroups: ['userGroup'], permission: 'cms.backoffice.view',
             apiExposure: 'cmsAuthoring', key: '/designer/composition/model', method: 'GET',

@@ -47,4 +47,4 @@ const schemaOrg = projectionService.schemaOrg(aggregate, [projection, hidden]);
 assert.strictEqual(schemaOrg.eligible, true);
 assert.strictEqual(schemaOrg.value.reviewCount, 2);
 assert.strictEqual(projectionService.schemaOrg({ count: 0 }, []).eligible, false);
-console.log('customerReview Phase 7 contract validated');
+console.log('customerReview moderation contract validated');

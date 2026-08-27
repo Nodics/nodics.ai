@@ -163,8 +163,16 @@ module.exports = {
      */
     remove: function (request) {
         let moduleName = request.moduleName || 'mdulnm';
-        request.schemaModel = NODICS.getModels(moduleName, request.tenant).mdlnm;
+        let models = NODICS.getModels(moduleName, request.tenant) || {};
+        request.schemaModel = models.mdlnm;
         request.moduleName = moduleName;
+        if (!request.schemaModel && SERVICE.DefaultLocalResetProviderService &&
+            SERVICE.DefaultLocalResetProviderService.authorizes(request)) {
+            let error = new Error('Local reset skipped unavailable generated schema model: ' + moduleName + '.mdlnm');
+            error.code = 'LOCAL_RESET_MODEL_REGISTRY_MISSING';
+            error.localResetMissingModel = true;
+            return Promise.reject(error);
+        }
         return SERVICE.DefaultPipelineService.start('modelsRemoveInitializerPipeline', request, {});
     },
 

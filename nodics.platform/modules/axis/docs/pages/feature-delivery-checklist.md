@@ -4,6 +4,19 @@ Use this checklist for every implemented Axis feature. Complete the ownership
 analysis before changing source and retain evidence in the pull request or
 delivery record.
 
+| Gate | Question to answer | Evidence expected | Risk if skipped |
+| --- | --- | --- | --- |
+| Business journey | Can an employee complete the real task without learning backend internals? | Journey notes, labels, empty/error states, and role visibility | The screen works technically but business users get lost |
+| Backend authority | Which Nodics module owns validation, persistence, workflow, and audit? | Contract link, source map, permission model, and rejected shortcut list | Axis becomes a second backend or bypasses tenant/security rules |
+| Frontend quality | Does the interaction work across keyboard, screen reader, mobile, WebView, and long labels? | Focused component tests, responsive screenshots, and accessibility checks | A shipped feature fails in ordinary enterprise usage |
+| Operations | Can support teams diagnose unavailable, degraded, stale, or incompatible state? | Runtime states, correlation identifiers, retry rules, and safe messages | Operators see a dead end instead of recoverable evidence |
+| Documentation | Can a developer or AI tool find the owner, extension point, and verification path? | Permanent docs, source map, examples, common mistakes, and test commands | Later changes duplicate logic or damage the authority boundary |
+
+For beginners, this checklist is the repeatable delivery path for any Axis
+capability. Start with the business task, identify the backend owner, design
+the browser interaction, prove the security and accessibility behavior, then
+update documentation so the next developer can follow the same boundary.
+
 ## 1. Repository boundary
 
 Record:

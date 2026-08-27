@@ -112,7 +112,7 @@ module.exports = {
             if (profile && profile.enabled === false) return;
             let validText = (value, maximum) => typeof value === 'string' && value === value.trim() &&
                 value.length > 0 && value.length <= maximum && !/[<>\u0000-\u001F\u007F]/.test(value);
-            let releaseCodePattern = /^[A-Za-z][A-Za-z0-9_-]{0,127}:[A-Za-z][A-Za-z0-9_-]{0,127}$/;
+            let releaseCodePattern = /^[A-Za-z][A-Za-z0-9._-]{0,127}:[A-Za-z][A-Za-z0-9_-]{0,127}$/;
             let invalidStep = Array.isArray(profile && profile.steps) && profile.steps.some(step =>
                 !step || !['init', 'core', 'sample'].includes(step.dataType) ||
                 (step.releaseCodes !== undefined && (!Array.isArray(step.releaseCodes) || step.releaseCodes.length === 0 ||
@@ -258,7 +258,7 @@ module.exports = {
         let requested = requestedCodes || requestedModules || available.map(item => item.releaseCode);
         if (requested.length > Number(this.configuration().maximumModulesPerRun || 256) ||
             new Set(requested).size !== requested.length ||
-            requested.some(code => !/^[A-Za-z][A-Za-z0-9_-]{0,127}(?::[A-Za-z][A-Za-z0-9_-]{0,127})?$/.test(code))) {
+            requested.some(code => !/^[A-Za-z][A-Za-z0-9._-]{0,127}(?::[A-Za-z][A-Za-z0-9_-]{0,127})?$/.test(code))) {
             throw this.error('ERR_IMP_00003', 'Requested data release modules are invalid');
         }
         let availableByCode = Object.fromEntries(available.map(item => [item.releaseCode, item]));
@@ -341,7 +341,7 @@ module.exports = {
         if (!Array.isArray(configured)) throw this.error('ERR_IMP_00003', 'Data release contributions configuration must be a list');
         let selectors = new Map(Array.from(active).map(moduleName => [moduleName, { moduleName: moduleName, active: true }]));
         configured.forEach(selector => {
-            if (!selector || typeof selector !== 'object' || !/^[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(selector.moduleName || '') ||
+            if (!selector || typeof selector !== 'object' || !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(selector.moduleName || '') ||
                 !Array.isArray(selector.sections) || selector.sections.length === 0 ||
                 selector.sections.some(section => !/^[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(section))) {
                 throw this.error('ERR_IMP_00003', 'Data release contribution selector is invalid');

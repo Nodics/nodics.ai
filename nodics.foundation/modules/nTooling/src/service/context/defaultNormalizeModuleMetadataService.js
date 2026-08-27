@@ -54,27 +54,27 @@ const nonRuntimeKinds = new Set([
     'tooling'
 ]);
 
-function detectJsonIndent(source) {
-    const match = source.match(/\n( +)"/);
-    return match ? match[1].length : 2;
-}
-
-function writePackageJsonIfChanged(packagePath, packageJson, source) {
-    const formatted = JSON.stringify(packageJson, null, detectJsonIndent(source)) + '\n';
-    if (formatted !== source) {
-        fs.writeFileSync(packagePath, formatted, 'utf8');
-    }
-}
-
-function isStructuralGroup(module) {
-    return module.relativePath === 'modules' || module.relativePath === 'envs';
-}
-
-
-
-
 let exportedService;
 module.exports = exportedService = {
+    /** Detects the existing JSON indentation so metadata normalization preserves file style. */
+    detectJsonIndent: function (source) {
+        const match = source.match(/\n( +)"/);
+        return match ? match[1].length : 2;
+    },
+
+    /** Writes package metadata only when normalization materially changes the file. */
+    writePackageJsonIfChanged: function (packagePath, packageJson, source) {
+        const formatted = JSON.stringify(packageJson, null, (this.detectJsonIndent || exportedService.detectJsonIndent).call(this, source)) + '\n';
+        if (formatted !== source) {
+            fs.writeFileSync(packagePath, formatted, 'utf8');
+        }
+    },
+
+    /** Identifies project grouping folders that must never become runtime-loadable modules. */
+    isStructuralGroup: function (module) {
+        return module.relativePath === 'modules' || module.relativePath === 'envs';
+    },
+
     /** Implements hasChildren as an overrideable service operation. */
     hasChildren: function (module) {
     let entries = fs.readdirSync(module.path, { withFileTypes: true });
@@ -200,7 +200,8 @@ module.exports = exportedService = {
         relativePath: module.relativePath,
         packageJson: packageJson
     }, kind);
-    const runtimeLoadable = !nonRuntimeKinds.has(kind) && !isStructuralGroup(module);
+    const runtimeLoadable = !nonRuntimeKinds.has(kind) &&
+        !(this.isStructuralGroup || exportedService.isStructuralGroup).call(this, module);
     packageJson.nodics = Object.assign({}, packageJson.nodics || {}, {
         kind: kind,
         runtime: (this.inferRuntime || exportedService.inferRuntime).call(this, packageJson, kind),
@@ -211,7 +212,7 @@ module.exports = exportedService = {
     delete packageJson.nodics.moduleType;
     delete packageJson.type;
     delete packageJson.nodics.description;
-    writePackageJsonIfChanged(packagePath, packageJson, source);
+    (this.writePackageJsonIfChanged || exportedService.writePackageJsonIfChanged).call(this, packagePath, packageJson, source);
 },
 
     /** Implements run as an overrideable service operation. */

@@ -22,7 +22,7 @@ The customer can read only their own requests. A retry returns the original resu
 
 ## Administrator and operator journey
 
-An operator sees queues grouped by Order lifecycle, not Catalog keywords. Maker-checker means the requester cannot approve a protected action. The approver sees policy version, quantities, exact allocation, source Order revision, fulfillment state, payment state, customer reason, and risk evidence.
+An operator sees queues grouped by Order lifecycle, not Catalog keywords. Approval is governed by tenant scope, workflow state, and explicit permissions, with requester identity retained as audit evidence. The approver sees policy version, quantities, exact allocation, source Order revision, fulfillment state, payment state, customer reason, and risk evidence.
 
 After approval, the workflow calls Fulfillment, Inventory, and Payment through owner intents. Each step records a checkpoint. Failures remain retryable and reconcilable. Emergency stop may pause new execution but cannot erase already completed provider or warehouse evidence.
 
@@ -49,7 +49,7 @@ Customer access requires ownership checks. Operator and approver permissions are
 ## Common mistakes
 
 - Starting refunds from Product or Catalog.
-- Letting the requester approve their own protected refund.
+- Treating requester identity as the approval gate instead of checking tenant scope, workflow state, and explicit permissions.
 - Repricing historic orders with current policy.
 - Issuing a second refund after timeout.
 - Updating the original Order instead of appending history.
@@ -58,4 +58,36 @@ Customer access requires ownership checks. Operator and approver permissions are
 
 ## Verification
 
-Test customer ownership, tenant isolation, eligibility rejection, exact partial allocation, duplicate request, maker-checker separation, cancellation before and after shipment, partial return, failed pickup, inspection disposition, void versus refund, provider timeout, checkpoint restart, reconciliation, and final Order history. Axis tests verify domain hierarchy, no Catalog refund action, accessibility, responsive rendering, and backend denial behavior. Production release requires approved policy, provider, legal, finance, operations, recovery, and residual-risk evidence.
+Test customer ownership, tenant isolation, eligibility rejection, exact partial allocation, duplicate request, approval permission enforcement, cancellation before and after shipment, partial return, failed pickup, inspection disposition, void versus refund, provider timeout, checkpoint restart, reconciliation, and final Order history. Axis tests verify domain hierarchy, no Catalog refund action, accessibility, responsive rendering, and backend denial behavior. Production release requires approved policy, provider, legal, finance, operations, recovery, and residual-risk evidence.
+
+## Return Receipt And Reversal Calculation Coverage
+
+Cancellation, return, and refund documentation must show how the reverse
+journey is assembled from order lifecycle, fulfillment return, receipt,
+inspection, payment refund, and reversal calculation evidence. The key
+business rule is that no domain acts alone: order owns lifecycle eligibility,
+fulfillment owns physical return evidence, payment owns money movement, and
+history explains the final customer-visible state.
+
+```mermaid
+flowchart LR
+  Request["Lifecycle request"] --> Eligibility["Order eligibility"]
+  Eligibility --> Reversal["Order reversal calculation"]
+  Reversal --> Return["Fulfillment return"]
+  Return --> Receipt["Return receipt"]
+  Receipt --> Inspection["Return inspection"]
+  Inspection --> Refund["Payment refund"]
+  Refund --> History["Order history"]
+```
+
+| Reverse-flow record | Purpose | Documentation requirement |
+| --- | --- | --- |
+| OrderReversalCalculation | Calculates eligible cancellation, return, or refund amount. | Explain exact amount, historic pricing, tax, discounts, shipping, and partial quantity. |
+| FulfillmentReturn | Owns operational return process. | Explain pickup/drop-off, carrier, warehouse, and failed return behavior. |
+| ReturnReceipt | Proves returned goods were received. | Explain receipt time, location, quantity, and condition evidence. |
+| ReturnInspection | Decides restock, reject, repair, or dispose. | Explain policy, actor, reason, and inventory impact. |
+| Payment refund entry | Moves money only after approved evidence. | Explain idempotency, provider outcome, reconciliation, and duplicate prevention. |
+
+Axis should present this as a single guided business journey with links to the
+owning records. Developers should extend eligibility policy, inspection
+policy, or provider execution through owning services and tests.

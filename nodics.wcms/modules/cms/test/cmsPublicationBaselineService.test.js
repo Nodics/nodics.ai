@@ -63,7 +63,7 @@ const request = { tenant: 'default', authData: { principalId: 'platform-service'
     assert.strictEqual(initiated.releaseCode, 'axis:axisBaseline');
     assert.strictEqual(initiated.publication.state, 'PENDING_APPROVAL');
     assert.strictEqual(initiated.review.releaseChecksum, 'release-checksum');
-    assert.strictEqual(initiated.review.publicationCode, 'cmsBaseline_axis_1_0_0');
+    assert.strictEqual(initiated.review.publicationCode, 'cmsBaseline_axis_0_0_0');
     assert.strictEqual(initiated.review.validation.status, 'PASSED');
     assert.deepStrictEqual(operations.map(item => item[0]), ['install', 'create', 'validate', 'requestApproval']);
     assert.strictEqual(operations[1][1].rootType, 'site');
@@ -73,7 +73,7 @@ const request = { tenant: 'default', authData: { principalId: 'platform-service'
         'baseline initiation must never approve or deploy Online');
     const replay = await service.initiate('axis', request);
     assert.strictEqual(replay.publication.state, 'PENDING_APPROVAL');
-    assert.strictEqual(replay.publication.workflowRef, 'workflow-cmsBaseline_axis_1_0_0-2');
+    assert.strictEqual(replay.publication.workflowRef, 'workflow-cmsBaseline_axis_0_0_0-2');
     assert.strictEqual(operations.filter(item => item[0] === 'install').length, 1);
     assert.strictEqual(operations.filter(item => item[0] === 'requestApproval').length, 2);
     lifecycle = Object.assign({}, lifecycle, { state: 'FAILED', revision: 3 });

@@ -11,7 +11,7 @@
 
 /**
  * @module customerReview/test/customerReviewBoundaryContract
- * @description Verifies that the Phase 1 CustomerReview package is documented, source-free, and metadata-aligned.
+ * @description Verifies that the implemented CustomerReview package is documented and metadata-aligned.
  * @layer test
  * @owner customerReview
  */
@@ -29,10 +29,10 @@ assert.strictEqual(packageJson.nodics.kind, 'capability');
 assert.deepStrictEqual(packageJson.nodics.owns, ['configuration', 'schema', 'service', 'test', 'llm']);
 assert.strictEqual(packageJson.nodics.runtime.router, false);
 assert(fs.existsSync(path.join(moduleRoot, 'src/schemas/schemas.js')), 'customerReview must contain implemented schemas');
-assert(!fs.existsSync(path.join(moduleRoot, 'data')), 'Phase 1 customerReview must not contain data');
+assert(!fs.existsSync(path.join(moduleRoot, 'data')), 'customerReview must not contain data before it owns seed data');
 assert(!fs.existsSync(path.join(moduleRoot, 'docs')), 'customerReview must not contain module-local docs');
 assert(!fs.existsSync(path.join(moduleRoot, 'llm/README.md')), 'customerReview must use AGENTS.md for AI navigation');
-assert(readme.includes('## Phase 8 status'), 'customerReview README must expose implementation status');
+assert(readme.includes('## Capability status'), 'customerReview README must expose implementation status');
 assert(contract.includes('Status: implemented'), 'customerReview contract must expose implemented behavior');
 assert(!readme.includes('Generated documentation entry'), 'customerReview README must not retain placeholder guidance');
 

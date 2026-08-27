@@ -14,6 +14,7 @@ reader needs before considering the page complete.
 - Primary audience:
 - Secondary audiences:
 - Runtime surface:
+- Visual requirements:
 - Verification evidence:
 - Last checked:
 
@@ -49,6 +50,17 @@ should understand the concept before seeing repository paths or service names.
 Describe the runtime sequence, ownership boundaries, configuration layers, data
 flow, authority checks, and generated artifacts. Use a diagram when three or
 more steps or actors interact.
+
+## Visual explanation plan
+
+Declare the visuals needed for this topic and make sure the page actually
+contains them. Use architecture or module-hierarchy diagrams for architecture
+topics, sequence or data-flow diagrams for runtime topics, schema models and
+configuration tables for schema/configuration topics, screen flows or
+screenshots for Axis/business-user topics, comparison tables for provider or
+customization decisions, decision trees for troubleshooting, lifecycle diagrams
+for commerce/order/publishing/workflow/cron topics, and code or command
+examples when a reader must implement or verify behavior.
 
 ## Step-by-step usage
 

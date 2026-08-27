@@ -1,6 +1,6 @@
 # engagementApi Contracts
 
-## Phase 3 contract
+## API capability contract
 
 - Status: secured foundation implemented; domain experiences remain inactive.
 - Owns: secured public, authenticated-customer, operator, projection, and integration API boundaries plus DTO and facade mapping contracts.

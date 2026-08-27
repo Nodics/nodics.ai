@@ -27,10 +27,10 @@ const wcmsOnlineUrl = process.env.NODICS_WCMS_ONLINE_URL || "http://127.0.0.1:43
 const axisOrigin = process.env.AXIS_ORIGIN || "http://127.0.0.1:3100";
 const managed = [];
 const composition = require(path.join(projectRoot, "config", "agora-domain-composition.js")).resolve();
-const groupByPack = Object.freeze({
-  agoraApparel: { group: "agora.apparel", folder: "apparel", prefix: "agoraApparel" },
-  agoraElectronics: { group: "agora.electronics", folder: "electronics", prefix: "agoraElectronics" },
-  agoraTelco: { group: "agora.telco", folder: "telco", prefix: "agoraTelco" },
+const domainByPack = Object.freeze({
+  "agora.apparel": { folder: "apparel", prefix: "agoraApparel" },
+  "agora.electronics": { folder: "electronics", prefix: "agoraElectronics" },
+  "agora.telco": { folder: "telco", prefix: "agoraTelco" },
 });
 
 function log(message) {
@@ -194,8 +194,8 @@ async function importRecords(filePath) {
 async function assetRecords() {
   const assetsByCode = new Map();
   for (const pack of composition.projectPacks) {
-    const domain = groupByPack[pack];
-    const module = await import(pathToFileURL(path.join(projectRoot, "modules", domain.group, "modules", pack, "assets", "agora-cms-media", "assetManifest.js")).href);
+    const domain = domainByPack[pack];
+    const module = await import(pathToFileURL(path.join(projectRoot, "modules", pack, "data", "assets", "agora-cms-media", "assetManifest.js")).href);
     const assets = module.default || module;
     for (const asset of assets) {
       if (!assetsByCode.has(asset.mediaCode)) {
@@ -209,11 +209,21 @@ async function assetRecords() {
 async function domainDataRecords(fileSuffix) {
   const records = [];
   for (const pack of composition.projectPacks) {
-    const domain = groupByPack[pack];
-    const filePath = path.join(projectRoot, "modules", domain.group, "modules", pack, "data", "staged", domain.folder, "data", `${domain.prefix}${fileSuffix}`);
+    const domain = domainByPack[pack];
+    const filePath = path.join(projectRoot, "modules", pack, "data", "staged", domain.folder, "data", `${domain.prefix}${fileSuffix}`);
     records.push(...await importRecords(filePath));
   }
   return records;
+}
+
+function selectedCatalogVersions() {
+  const override = process.env.NODICS_STOREFRONT_CATALOG_VERSION;
+  if (override) return [override];
+  return composition.projectPacks.map((pack) => {
+    const domain = domainByPack[pack];
+    if (!domain) throw new Error(`Unsupported Agora publication pack: ${pack}`);
+    return `${domain.prefix}Staged`;
+  });
 }
 
 async function validatePublicationContract(headers) {
@@ -247,22 +257,33 @@ async function validatePublicationContract(headers) {
 }
 
 async function publishSearch(headers) {
-  const catalogVersion = process.env.NODICS_STOREFRONT_CATALOG_VERSION || "agoraStaged";
   const storeCode = process.env.NODICS_STOREFRONT_STORE_CODE || "agoraMainStore";
-  const body = await request(commerceStagedUrl, "/nodics/product/v0/operator/products/publication/search", {
-    method: "POST",
-    headers,
-    body: JSON.stringify({ catalogVersion, storeCode, includeProjectionSnapshots: true }),
-  });
-  const summary = body?.data || body?.result || body;
-  if (!summary || Number(summary.published || 0) <= 0 || Number(summary.projectionCount || 0) <= 0) {
-    throw new Error(`Product publication produced no projections. Run NODICS_STOREFRONT_COMMERCE_DATA_EXECUTE=true npm run acceptance:agora-commerce-data first. Response: ${JSON.stringify(body)}`);
+  const catalogVersions = selectedCatalogVersions();
+  const summaries = [];
+  for (const catalogVersion of catalogVersions) {
+    const body = await request(commerceStagedUrl, "/nodics/product/v0/operator/products/publication/search", {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ catalogVersion, storeCode, includeProjectionSnapshots: true }),
+    });
+    const summary = body?.data || body?.result || body;
+    if (!summary || Number(summary.published || 0) <= 0 || Number(summary.projectionCount || 0) <= 0) {
+      throw new Error(`Product publication produced no projections for ${catalogVersion}. Run NODICS_STOREFRONT_COMMERCE_DATA_EXECUTE=true npm run acceptance:agora-commerce-data first. Response: ${JSON.stringify(body)}`);
+    }
+    if (!Array.isArray(summary.projectionSnapshots) || summary.projectionSnapshots.length === 0) {
+      throw new Error(`Product publication did not return Online handoff snapshots for ${catalogVersion}: ${JSON.stringify(body)}`);
+    }
+    summaries.push({ catalogVersion, summary });
+    log(`published ${summary.published} ${catalogVersion} Products into ${summary.projectionCount} localized search projections`);
   }
-  if (!Array.isArray(summary.projectionSnapshots) || summary.projectionSnapshots.length === 0) {
-    throw new Error(`Product publication did not return Online handoff snapshots: ${JSON.stringify(body)}`);
-  }
-  log(`published ${summary.published} Products into ${summary.projectionCount} localized search projections`);
-  return { catalogVersion, storeCode, summary };
+  const summary = {
+    requested: summaries.reduce((sum, item) => sum + Number(item.summary.requested || 0), 0),
+    published: summaries.reduce((sum, item) => sum + Number(item.summary.published || 0), 0),
+    projectionCount: summaries.reduce((sum, item) => sum + Number(item.summary.projectionCount || 0), 0),
+    products: summaries.flatMap((item) => item.summary.products || []),
+    projectionSnapshots: summaries.flatMap((item) => item.summary.projectionSnapshots || []),
+  };
+  return { catalogVersions, storeCode, summary };
 }
 
 async function restoreOnline(headers, publication) {
@@ -338,8 +359,7 @@ function mimeTypeOf(fileName) {
 }
 
 async function productMediaPublicationAsset(asset) {
-  const domain = groupByPack[asset.pack];
-  const filePath = path.join(projectRoot, "modules", domain.group, "modules", asset.pack, "assets", "agora-cms-media", "files", asset.fileName);
+  const filePath = path.join(projectRoot, "modules", asset.pack, "data", "assets", "agora-cms-media", "files", asset.fileName);
   const buffer = await fs.readFile(filePath);
   const checksumAlgorithm = "sha256";
   return {

@@ -11,7 +11,7 @@
 
 /**
  * @module contactSubmission
- * @description Declares the Phase 4 contact submission capability lifecycle.
+ * @description Declares the contact submission capability lifecycle.
  * @layer module
  * @owner contactSubmission
  * @override Later active modules may override lifecycle behavior without modifying this generated boundary.

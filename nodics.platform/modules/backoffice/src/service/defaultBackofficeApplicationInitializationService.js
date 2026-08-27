@@ -95,7 +95,10 @@ module.exports = {
     targetDiagnostic: function (error, profile) {
         let source = error && (error.data || error.result || error.response || error);
         let targetCode = String(source && (source.code || source.errorCode) || error && error.code || 'UNKNOWN_TARGET_ERROR');
-        let targetMessage = String(source && source.message || error && error.message || 'Unknown target error');
+        let remoteResponse = source && source.remoteResponse || error && error.remoteResponse;
+        let targetMessage = String(source && (source.remoteMessage || source.message) ||
+            remoteResponse && (remoteResponse.message || remoteResponse.error || remoteResponse.reason) ||
+            error && (error.remoteMessage || error.message) || 'Unknown target error');
         let targetResponseCode = source && source.responseCode ? String(source.responseCode) : undefined;
         return new CLASSES.NodicsError({
             code: 'ERR_BOF_00085',
@@ -110,7 +113,7 @@ module.exports = {
                 baselineCode: profile.baselineCode,
                 targetModuleName: profile.target.moduleName
             },
-            causes: source && source.remoteResponse ? [source.remoteResponse] : undefined
+            causes: remoteResponse ? [remoteResponse] : undefined
         });
     },
     /** Invokes only the profile-owned fixed Staged baseline endpoint. */

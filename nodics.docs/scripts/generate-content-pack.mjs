@@ -289,7 +289,11 @@ async function writeOrCheck(relativePath, content) {
 }
 
 function jsModule(description, value) {
-  return `${copyrightHeader}'use strict';\n\n/** @description ${description} */\nmodule.exports = ${JSON.stringify(value, null, 2)};\n`;
+  return `${copyrightHeader}'use strict';\n\n/** @description ${description} */\nmodule.exports = ${JSON.stringify(value, omitUnsetFields, 2)};\n`;
+}
+
+function omitUnsetFields(_key, value) {
+  return value === null ? undefined : value;
 }
 
 const defaultAudience = ['architect', 'developer', 'operator'];
@@ -396,6 +400,790 @@ const navigationItems = sourcePages.map((document, index) => ({
   topicKeywords: document.topicKeywords || [],
   searchText: `${document.title} ${document.summary} ${document.markdown}`,
 }));
+
+function boundedCode(prefix, parts) {
+  const raw = `${prefix}${parts.map((part) => camel(part)).join('')}`;
+  if (raw.length <= 120) return raw;
+  return `${raw.slice(0, 96)}${sha256(parts.join(':')).slice(0, 16)}`;
+}
+
+function schemaMaturity(value) {
+  const normalized = String(value || '').toLowerCase();
+  if (normalized.includes('reference')) return 'REFERENCE';
+  if (normalized.includes('planned')) return 'PLANNED';
+  if (normalized.includes('roadmap')) return 'ROADMAP';
+  return 'IMPLEMENTED';
+}
+
+function pageCode(document) {
+  return `nodicsDocsPage${document.codeSuffix}`;
+}
+
+function routeCode(document) {
+  return `nodicsDocsRoute${document.codeSuffix}`;
+}
+
+function articleCode(document) {
+  return `nodicsDocsComponent${document.codeSuffix}`;
+}
+
+function metadataPageCode(document) {
+  return `nodicsDocsMetadata${document.codeSuffix}`;
+}
+
+const productCode = 'nodicsDocumentationProduct';
+const navigationCode = 'nodicsDocumentationNavigation';
+const rootNodeCode = 'nodicsDocsNodeRoot';
+const defaultLifecycle = 'ONLINE';
+const publicAccessPolicyCode = 'nodicsDocsAccessPublic';
+const authenticatedAccessPolicyCode = 'nodicsDocsAccessAuthenticated';
+const authoringPermissionsByTargetType = {
+  PRODUCT: ['documentation.draft.update'],
+  NAVIGATION: ['documentation.navigation.update'],
+  NODE: ['documentation.navigation.update'],
+  PAGE: ['documentation.draft.update'],
+  DASHBOARD: ['documentation.dashboard.update'],
+  SEARCH_METADATA: ['documentation.search.preview'],
+  ACCESS_POLICY: ['documentation.accessPolicy.update'],
+};
+const workflowTriggersByTargetType = {
+  PRODUCT: ['CONTENT_CHANGE', 'ACCESS_POLICY_CHANGE'],
+  NAVIGATION: ['NAVIGATION_CHANGE'],
+  NODE: ['NAVIGATION_CHANGE', 'DASHBOARD_CHANGE', 'ACCESS_POLICY_CHANGE'],
+  PAGE: ['CONTENT_CHANGE', 'ACCESS_POLICY_CHANGE', 'SOURCE_EVIDENCE_CHANGE'],
+  DASHBOARD: ['DASHBOARD_CHANGE'],
+  SEARCH_METADATA: ['SEARCH_METADATA_CHANGE'],
+  ACCESS_POLICY: ['ACCESS_POLICY_CHANGE'],
+};
+const publicationDecisionPolicy = {
+  reviewPermission: 'documentation.review',
+  approvePermission: 'documentation.approve',
+  publishPermission: 'documentation.publish',
+  permissionEnforced: true,
+  adminOverrideAudited: true,
+};
+function workflowMetadata(targetType) {
+  return {
+    managedInAxis: true,
+    axisAuthoringPermissions: authoringPermissionsByTargetType[targetType] || ['axis.documentation.read'],
+    workflowRequired: true,
+    workflowTriggers: workflowTriggersByTargetType[targetType] || ['CONTENT_CHANGE'],
+  };
+}
+const accessPolicyRecords = {
+  record0: {
+    code: publicAccessPolicyCode,
+    name: 'Public documentation access',
+    targetType: 'PRODUCT',
+    targetCode: productCode,
+    accessMode: 'PUBLIC',
+    publiclyAvailable: true,
+    requiresAuthentication: false,
+    allowedRoles: [],
+    allowedGroups: [],
+    allowedPermissions: [],
+    lifecycleVisibility: ['ONLINE'],
+    ...workflowMetadata('ACCESS_POLICY'),
+    priority: 10,
+    active: true,
+  },
+  record1: {
+    code: authenticatedAccessPolicyCode,
+    name: 'Authenticated documentation access',
+    targetType: 'PRODUCT',
+    targetCode: productCode,
+    accessMode: 'AUTHENTICATED',
+    publiclyAvailable: false,
+    requiresAuthentication: true,
+    allowedRoles: [],
+    allowedGroups: [],
+    allowedPermissions: [],
+    lifecycleVisibility: ['ONLINE'],
+    ...workflowMetadata('ACCESS_POLICY'),
+    priority: 20,
+    active: true,
+  },
+};
+const accessPolicyFor = (item) =>
+  (item && item.accessMode) === 'PUBLIC' ? publicAccessPolicyCode : authenticatedAccessPolicyCode;
+
+const productRecords = {
+  record0: {
+    code: productCode,
+    name: 'Nodics Documentation',
+    description: 'Business-friendly and developer-ready framework documentation rendered from a governed documentation content catalog.',
+    contentCatalog: 'documentationContentCatalog',
+    site: 'nodicsDocumentationSite',
+    publicRootPath: '/docs/framework',
+    defaultLocale: 'en',
+    channels: ['axis', 'nexus', 'web'],
+    ownerFunctionalModule: 'nodics.docs',
+    audience: ['business', 'architect', 'administrator', 'developer', 'operator', 'qa', 'ai-tool'],
+    ...workflowMetadata('PRODUCT'),
+    accessMode: 'PUBLIC',
+    lifecycleState: defaultLifecycle,
+    maturityState: 'IMPLEMENTED',
+    active: true,
+  },
+};
+
+const sectionNodeCodes = new Map();
+const groupNodeCodes = new Map();
+const subgroupNodeCodes = new Map();
+const nodeRecords = [];
+const dashboardRecords = [];
+
+function pushDashboard(record) {
+  dashboardRecords.push({
+    ...record,
+    product: productCode,
+    accessPolicy: accessPolicyFor(record),
+    accessMode: record.accessMode || 'PUBLIC',
+    lifecycleState: record.lifecycleState || defaultLifecycle,
+    ...workflowMetadata('DASHBOARD'),
+    active: true,
+  });
+}
+
+pushDashboard({
+  code: 'nodicsDocsDashboardProduct',
+  ownerType: 'PRODUCT',
+  ownerCode: productCode,
+  title: 'Nodics Documentation',
+  summary: 'Detailed landing content for the full Nodics documentation catalogue, including framework, application-suite, business capability, operations, publication, AI tooling, and reference journeys.',
+  contentArea: {
+    intent: 'Help every reader choose the correct business or technical documentation journey before opening detailed topic pages.',
+  },
+  cards: sections.map((section) => ({
+    code: section.code,
+    title: section.title,
+    summary: section.summary,
+    order: section.order,
+  })),
+  journeyLinks: [
+    { label: 'Business user journey', targetNode: 'documentation-roadmap' },
+    { label: 'Developer journey', targetNode: 'developer-extension-and-project-customization' },
+    { label: 'Operations journey', targetNode: 'operations-monitoring-and-recovery' },
+  ],
+  statusSummary: {
+    sections: sections.length,
+    pages: sourcePages.length,
+    lifecycleState: defaultLifecycle,
+  },
+});
+
+pushDashboard({
+  code: 'nodicsDocsDashboardNavigation',
+  ownerType: 'NAVIGATION',
+  ownerCode: navigationCode,
+  title: 'Nodics Documentation Navigation',
+  summary: 'Expandable and searchable documentation navigation generated from backend content-catalog metadata, with section dashboards and page-level access controls.',
+  contentArea: {
+    navigationPattern: 'Sections, groups, subgroups, and topics are backend records that Axis can manage and render without hardcoded frontend menus.',
+  },
+  cards: sections.map((section) => ({
+    code: section.code,
+    title: section.title,
+    summary: section.summary,
+    order: section.order,
+  })),
+  journeyLinks: [
+    { label: 'Documentation Management', targetNode: 'documentation-management' },
+    { label: 'Release, Staging, and Publication', targetNode: 'release-staging-and-publication' },
+  ],
+  statusSummary: {
+    sections: sections.length,
+    pages: sourcePages.length,
+    searchable: true,
+    expandable: true,
+  },
+});
+
+nodeRecords.push({
+  code: rootNodeCode,
+  product: productCode,
+  navigation: navigationCode,
+  nodeLevel: 'SECTION',
+  nodeType: 'CONTAINER',
+  nodeTitle: 'Nodics Documentation',
+  nodeSummary: 'Root documentation node that owns every business-friendly framework, application, capability, operations, publication, tooling, and reference section.',
+  nodeContentArea: {
+    dashboard: 'nodicsDocsDashboardProduct',
+    purpose: 'Give Axis and Nexus a backend-owned root for expandable documentation navigation.',
+  },
+  nodeDashboard: 'nodicsDocsDashboardProduct',
+  childSummaryCards: sections.map((section) => ({
+    code: section.code,
+    title: section.title,
+    summary: section.summary,
+    order: section.order,
+  })),
+  childJourneyLinks: [],
+  childStatusSummary: { childCount: sections.length, pages: sourcePages.length },
+  nodeOrder: 10,
+  expandable: true,
+  expandedByDefault: true,
+  nodeIcon: 'book-open',
+  nodeAudience: ['business', 'architect', 'administrator', 'developer', 'operator', 'qa', 'ai-tool'],
+  accessPolicy: publicAccessPolicyCode,
+  accessMode: 'PUBLIC',
+  allowedRoles: [],
+  allowedGroups: [],
+  allowedPermissions: [],
+  ...workflowMetadata('NODE'),
+  lifecycleState: defaultLifecycle,
+  maturityState: 'IMPLEMENTED',
+  searchKeywords: ['nodics', 'documentation', 'framework'],
+  relatedNodes: [],
+  locale: 'en',
+  channel: 'web',
+  active: true,
+});
+
+sections.forEach((section) => {
+  const sectionNodeCode = boundedCode('nodicsDocsNodeSec', [section.code]);
+  sectionNodeCodes.set(section.code, sectionNodeCode);
+  const sectionPages = sourcePages.filter((document) => document.section.code === section.code);
+  const groups = [...new Map(sectionPages.map((document) => [
+    document.navigationGroupCode || slug(document.navigationGroup || section.title),
+    {
+      code: document.navigationGroupCode || slug(document.navigationGroup || section.title),
+      title: document.navigationGroup || section.title,
+      order: document.navigationGroupOrder || 100,
+    },
+  ])).values()].sort((left, right) => left.order - right.order || left.title.localeCompare(right.title));
+  const dashboardCode = boundedCode('nodicsDocsDashboardSec', [section.code]);
+
+  pushDashboard({
+    code: dashboardCode,
+    ownerType: 'SECTION',
+    ownerCode: sectionNodeCode,
+    title: section.title,
+    summary: section.summary,
+    contentArea: {
+      businessPurpose: section.summary,
+      technicalPurpose: 'This section is a backend documentation node with ordered children, search metadata, access policy, and publication lifecycle state.',
+    },
+    cards: groups.map((group) => ({
+      code: group.code,
+      title: group.title,
+      summary: `Open ${group.title} topics and implementation guidance.`,
+      order: group.order,
+    })),
+    journeyLinks: sectionPages.slice(0, 6).map((document) => ({
+      label: document.title,
+      targetPage: document.id,
+      route: document.route,
+    })),
+    statusSummary: { pages: sectionPages.length, groups: groups.length },
+    accessMode: section.accessMode || 'PUBLIC',
+    lifecycleState: section.lifecycleState || defaultLifecycle,
+  });
+
+  nodeRecords.push({
+    code: sectionNodeCode,
+    product: productCode,
+    navigation: navigationCode,
+    parentNode: rootNodeCode,
+    nodeLevel: 'SECTION',
+    nodeType: groups.length || sectionPages.length ? 'CONTAINER' : 'PAGE_LINK',
+    nodeTitle: section.title,
+    nodeSummary: section.summary,
+    nodeContentArea: {
+      dashboard: dashboardCode,
+      groups: groups.map((group) => group.code),
+      pages: sectionPages.map((document) => document.id),
+    },
+    nodeDashboard: dashboardCode,
+    childSummaryCards: groups.map((group) => ({
+      code: group.code,
+      title: group.title,
+      order: group.order,
+    })),
+    childJourneyLinks: sectionPages.slice(0, 6).map((document) => ({
+      label: document.title,
+      targetPage: document.id,
+      route: document.route,
+    })),
+    childStatusSummary: { childCount: groups.length, pages: sectionPages.length },
+    nodeOrder: section.order,
+    expandable: true,
+    expandedByDefault: false,
+    nodeIcon: 'folder',
+    nodeAudience: section.audience || defaultAudience,
+    accessPolicy: accessPolicyFor(section),
+    accessMode: section.accessMode || 'PUBLIC',
+    allowedRoles: [],
+    allowedGroups: [],
+    allowedPermissions: [],
+    ...workflowMetadata('NODE'),
+    lifecycleState: section.lifecycleState || defaultLifecycle,
+    maturityState: 'IMPLEMENTED',
+    searchKeywords: [section.code, section.title],
+    relatedNodes: [],
+    locale: 'en',
+    channel: 'web',
+    active: true,
+  });
+});
+
+sourcePages.forEach((document) => {
+  const sectionCode = document.section.code;
+  const groupCode = document.navigationGroupCode || slug(document.navigationGroup || document.section.title);
+  const groupKey = `${sectionCode}:${groupCode}`;
+  if (!groupNodeCodes.has(groupKey)) {
+    const groupNodeCode = boundedCode('nodicsDocsNodeGrp', [sectionCode, groupCode]);
+    const groupPages = sourcePages.filter((page) =>
+      page.section.code === sectionCode &&
+      (page.navigationGroupCode || slug(page.navigationGroup || page.section.title)) === groupCode
+    );
+    const subgroups = [...new Map(groupPages.filter((page) => page.navigationSubgroupCode).map((page) => [
+      page.navigationSubgroupCode,
+      {
+        code: page.navigationSubgroupCode,
+        title: page.navigationSubgroup,
+        order: page.navigationOrder || 100,
+      },
+    ])).values()];
+    const dashboardCode = boundedCode('nodicsDocsDashboardGrp', [sectionCode, groupCode]);
+    groupNodeCodes.set(groupKey, groupNodeCode);
+    pushDashboard({
+      code: dashboardCode,
+      ownerType: 'GROUP',
+      ownerCode: groupNodeCode,
+      title: document.navigationGroup || document.section.title,
+      summary: `Detailed landing content for ${document.navigationGroup || document.section.title}, including business purpose, technical ownership, customization routes, and validation evidence for child topics.`,
+      contentArea: {
+        businessPurpose: 'Group related documentation topics so business and development users can enter from the capability they recognize.',
+        technicalPurpose: 'Preserve section and group ownership as backend records that can be reordered and summarized through Axis.',
+      },
+      cards: groupPages.map((page) => ({
+        code: page.id,
+        title: page.title,
+        summary: page.summary,
+        order: page.navigationOrder,
+      })),
+      journeyLinks: groupPages.map((page) => ({
+        label: page.title,
+        targetPage: page.id,
+        route: page.route,
+      })),
+      statusSummary: { pages: groupPages.length, subgroups: subgroups.length },
+      accessMode: document.accessMode || 'PUBLIC',
+      lifecycleState: document.lifecycleState || defaultLifecycle,
+    });
+    nodeRecords.push({
+      code: groupNodeCode,
+      product: productCode,
+      navigation: navigationCode,
+      parentNode: sectionNodeCodes.get(sectionCode),
+      nodeLevel: 'GROUP',
+      nodeType: 'CONTAINER',
+      nodeTitle: document.navigationGroup || document.section.title,
+      nodeSummary: `Business-friendly group for ${document.navigationGroup || document.section.title} documentation topics.`,
+      nodeContentArea: {
+        dashboard: dashboardCode,
+        pages: groupPages.map((page) => page.id),
+        subgroups: subgroups.map((subgroup) => subgroup.code),
+      },
+      nodeDashboard: dashboardCode,
+      childSummaryCards: groupPages.map((page) => ({
+        code: page.id,
+        title: page.title,
+        summary: page.summary,
+        order: page.navigationOrder,
+      })),
+      childJourneyLinks: groupPages.map((page) => ({
+        label: page.title,
+        targetPage: page.id,
+        route: page.route,
+      })),
+      childStatusSummary: { childCount: groupPages.length, subgroups: subgroups.length },
+      nodeOrder: document.navigationGroupOrder || document.navigationOrder || 100,
+      expandable: true,
+      expandedByDefault: false,
+      nodeIcon: 'folder-open',
+      nodeAudience: document.audience || defaultAudience,
+      accessPolicy: accessPolicyFor(document),
+      accessMode: document.accessMode || 'PUBLIC',
+      allowedRoles: document.allowedRoles || [],
+      allowedGroups: document.allowedGroups || [],
+      allowedPermissions: document.allowedPermissions || [],
+      ...workflowMetadata('NODE'),
+      lifecycleState: document.lifecycleState || defaultLifecycle,
+      maturityState: schemaMaturity(document.maturityState),
+      searchKeywords: document.searchKeywords || [],
+      relatedNodes: [],
+      locale: document.locale || 'en',
+      channel: 'web',
+      active: true,
+    });
+  }
+
+  let parentNode = groupNodeCodes.get(groupKey);
+  if (document.navigationSubgroupCode) {
+    const subgroupKey = `${groupKey}:${document.navigationSubgroupCode}`;
+    if (!subgroupNodeCodes.has(subgroupKey)) {
+      const subgroupNodeCode = boundedCode('nodicsDocsNodeSub', [sectionCode, groupCode, document.navigationSubgroupCode]);
+      const subgroupPages = sourcePages.filter((page) =>
+        page.section.code === sectionCode &&
+        (page.navigationGroupCode || slug(page.navigationGroup || page.section.title)) === groupCode &&
+        page.navigationSubgroupCode === document.navigationSubgroupCode
+      );
+      const dashboardCode = boundedCode('nodicsDocsDashboardSub', [sectionCode, groupCode, document.navigationSubgroupCode]);
+      subgroupNodeCodes.set(subgroupKey, subgroupNodeCode);
+      pushDashboard({
+        code: dashboardCode,
+        ownerType: 'SUBGROUP',
+        ownerCode: subgroupNodeCode,
+        title: document.navigationSubgroup,
+        summary: `Detailed landing content for ${document.navigationSubgroup}, with links to each owned topic and implementation reference.`,
+        contentArea: {
+          businessPurpose: 'Separate deeper capability details without forcing users to know internal module names.',
+          technicalPurpose: 'Keep related topics under a stable backend node for Axis-managed order, access, and publication lifecycle.',
+        },
+        cards: subgroupPages.map((page) => ({
+          code: page.id,
+          title: page.title,
+          summary: page.summary,
+          order: page.navigationOrder,
+        })),
+        journeyLinks: subgroupPages.map((page) => ({
+          label: page.title,
+          targetPage: page.id,
+          route: page.route,
+        })),
+        statusSummary: { pages: subgroupPages.length },
+        accessMode: document.accessMode || 'PUBLIC',
+        lifecycleState: document.lifecycleState || defaultLifecycle,
+      });
+      nodeRecords.push({
+        code: subgroupNodeCode,
+        product: productCode,
+        navigation: navigationCode,
+        parentNode,
+        nodeLevel: 'SUBGROUP',
+        nodeType: 'CONTAINER',
+        nodeTitle: document.navigationSubgroup,
+        nodeSummary: `Subgroup for ${document.navigationSubgroup} documentation topics.`,
+        nodeContentArea: {
+          dashboard: dashboardCode,
+          pages: subgroupPages.map((page) => page.id),
+        },
+        nodeDashboard: dashboardCode,
+        childSummaryCards: subgroupPages.map((page) => ({
+          code: page.id,
+          title: page.title,
+          summary: page.summary,
+          order: page.navigationOrder,
+        })),
+        childJourneyLinks: subgroupPages.map((page) => ({
+          label: page.title,
+          targetPage: page.id,
+          route: page.route,
+        })),
+        childStatusSummary: { childCount: subgroupPages.length },
+        nodeOrder: document.navigationOrder || 100,
+        expandable: true,
+        expandedByDefault: false,
+        nodeIcon: 'list-tree',
+        nodeAudience: document.audience || defaultAudience,
+        accessPolicy: accessPolicyFor(document),
+        accessMode: document.accessMode || 'PUBLIC',
+        allowedRoles: document.allowedRoles || [],
+        allowedGroups: document.allowedGroups || [],
+        allowedPermissions: document.allowedPermissions || [],
+        ...workflowMetadata('NODE'),
+        lifecycleState: document.lifecycleState || defaultLifecycle,
+        maturityState: schemaMaturity(document.maturityState),
+        searchKeywords: document.searchKeywords || [],
+        relatedNodes: [],
+        locale: document.locale || 'en',
+        channel: 'web',
+        active: true,
+      });
+    }
+    parentNode = subgroupNodeCodes.get(subgroupKey);
+  }
+
+  nodeRecords.push({
+    code: boundedCode('nodicsDocsNodeTopic', [document.id]),
+    product: productCode,
+    navigation: navigationCode,
+    parentNode,
+    nodeLevel: 'TOPIC',
+    nodeType: 'PAGE',
+    nodeTitle: document.title,
+    nodeSummary: document.summary,
+    nodeContentArea: {
+      route: document.route,
+      documentType: document.documentType,
+      businessAudience: document.businessAudience || [],
+      technicalAudience: document.technicalAudience || [],
+    },
+    childSummaryCards: [],
+    childJourneyLinks: [],
+    childStatusSummary: { childCount: 0 },
+    targetDocumentationPage: metadataPageCode(document),
+    targetPage: pageCode(document),
+    targetRoute: routeCode(document),
+    nodeOrder: document.navigationOrder || 100,
+    expandable: false,
+    expandedByDefault: false,
+    nodeIcon: 'file-text',
+    nodeAudience: document.audience || defaultAudience,
+    accessPolicy: accessPolicyFor(document),
+    accessMode: document.accessMode || 'PUBLIC',
+    allowedRoles: document.allowedRoles || [],
+    allowedGroups: document.allowedGroups || [],
+    allowedPermissions: document.allowedPermissions || [],
+    ...workflowMetadata('NODE'),
+    lifecycleState: document.lifecycleState || defaultLifecycle,
+    maturityState: schemaMaturity(document.maturityState),
+    searchKeywords: document.searchKeywords || [],
+    relatedNodes: (document.relatedPages || []).map((relatedPage) => boundedCode('nodicsDocsNodeTopic', [relatedPage])),
+    locale: document.locale || 'en',
+    channel: 'web',
+    active: true,
+  });
+});
+
+const navigationRecords = {
+  record0: {
+    code: navigationCode,
+    product: productCode,
+    name: 'Nodics Documentation Navigation',
+    renderer: 'documentation.component.navigation',
+    searchLabel: 'Search framework documentation',
+    searchPlaceholder: 'Search topics, business capabilities, configuration, providers, and extension points',
+    emptyMessage: 'No framework documentation matches your search.',
+    expandable: true,
+    accessMode: 'PUBLIC',
+    lifecycleState: defaultLifecycle,
+    ...workflowMetadata('NAVIGATION'),
+    active: true,
+  },
+};
+
+const dashboardRecordMap = Object.fromEntries(
+  dashboardRecords.map((record, index) => [`record${index}`, record]),
+);
+const nodeRecordMap = Object.fromEntries(
+  nodeRecords.map((record, index) => [`record${index}`, record]),
+);
+
+const pageMetadataRecords = Object.fromEntries(
+  sourcePages.map((document, index) => [
+    `record${index}`,
+    {
+      code: metadataPageCode(document),
+      product: productCode,
+      documentId: document.id,
+      title: document.title,
+      summary: document.summary,
+      businessSummary: `${document.title} explains the business purpose, supported decisions, operational impact, and controls for the ${document.navigationGroup || document.section.title} journey.`,
+      technicalSummary: `${document.title} records owning module ${document.functionalModule}, technical module ${document.technicalModule || 'n/a'}, source path ${document.sourcePath || document.content}, extension points, validation, and troubleshooting evidence.`,
+      ownerFunctionalModule: document.functionalModule,
+      technicalModule: document.technicalModule || null,
+      targetPage: pageCode(document),
+      targetRoute: routeCode(document),
+      articleComponent: articleCode(document),
+      template: 'nodicsDocumentationArticleTemplate',
+      searchMetadata: boundedCode('nodicsDocsSearch', ['PAGE', metadataPageCode(document)]),
+      headings: document.headings,
+      diagrams: document.blocks.filter((block) => block.kind === 'diagram').map((block) => ({
+        language: block.language,
+        anchor: block.anchor || null,
+      })),
+      visualAssets: document.blocks.filter((block) => block.kind === 'image' || block.kind === 'table').map((block) => ({
+        kind: block.kind,
+        title: block.title || block.headers?.join(', ') || document.title,
+      })),
+      visualRequirements: document.visualRequirements || [],
+      relatedPages: document.relatedPages || [],
+      sourceRepository: 'nodics.docs',
+      sourcePath: document.sourcePath || document.content,
+      sourceChecksum: sha256(document.markdown),
+      sourceWordCount: wordCount(document.markdown),
+      audience: document.audience || defaultAudience,
+      ...workflowMetadata('PAGE'),
+      accessPolicy: accessPolicyFor(document),
+      accessMode: document.accessMode || 'PUBLIC',
+      lifecycleState: document.lifecycleState || defaultLifecycle,
+      maturityState: schemaMaturity(document.maturityState),
+      active: true,
+    },
+  ]),
+);
+
+const publicationTargets = [
+  { type: 'PRODUCT', code: productCode, lifecycleState: defaultLifecycle },
+  { type: 'NAVIGATION', code: navigationCode, lifecycleState: defaultLifecycle },
+  ...Object.values(accessPolicyRecords).map((record) => ({ type: 'ACCESS_POLICY', code: record.code, lifecycleState: defaultLifecycle })),
+  ...nodeRecords.map((record) => ({ type: 'NODE', code: record.code, lifecycleState: record.lifecycleState })),
+  ...dashboardRecords.map((record) => ({ type: 'DASHBOARD', code: record.code, lifecycleState: record.lifecycleState })),
+  ...sourcePages.map((document) => ({ type: 'PAGE', code: metadataPageCode(document), lifecycleState: document.lifecycleState || defaultLifecycle })),
+];
+const publicationStateRecords = Object.fromEntries(
+  publicationTargets.map((target, index) => [
+    `record${index}`,
+    {
+      code: boundedCode('nodicsDocsPublication', [target.type, target.code]),
+      targetType: target.type,
+      targetCode: target.code,
+      lifecycleState: target.lifecycleState || defaultLifecycle,
+      publicationCode: 'nodicsDocumentation',
+      workflowReference: 'nodicsDocumentationReviewWorkflow',
+      stagedVersion: catalogue.release,
+      ...(target.lifecycleState === 'ONLINE' ? { onlineVersion: catalogue.release } : {}),
+      validationResult: {
+        generated: true,
+        sourceAuthority: 'docs/catalogue.json',
+        publicationPath: 'STAGED_REVIEW_APPROVAL_ONLINE',
+        nexusVisibleOnlyWhenOnlineAndPublic: true,
+      },
+      checksum: sha256(`${target.type}:${target.code}:${target.lifecycleState || defaultLifecycle}:${catalogue.release}`),
+      ...workflowMetadata(target.type),
+      decisionPolicy: publicationDecisionPolicy,
+      actor: 'nodics.docs.generator',
+      author: 'nodics.docs.generator',
+      reviewer: 'nodics.docs.generator',
+      approver: 'nodics.docs.generator',
+      publisher: 'nodics.docs.generator',
+      auditTrail: [],
+      active: true,
+    },
+  ]),
+);
+
+const searchTargets = [
+  {
+    targetType: 'PRODUCT',
+    targetCode: productCode,
+    title: 'Nodics Documentation',
+    summary: productRecords.record0.description,
+    searchText: `${productRecords.record0.name} ${productRecords.record0.description}`,
+    keywords: ['nodics', 'documentation', 'framework'],
+    facets: { audience: productRecords.record0.audience, lifecycleState: defaultLifecycle },
+    accessMode: 'PUBLIC',
+    lifecycleState: defaultLifecycle,
+  },
+  {
+    targetType: 'NAVIGATION',
+    targetCode: navigationCode,
+    title: navigationRecords.record0.name,
+    summary: navigationRecords.record0.searchPlaceholder,
+    searchText: `${navigationRecords.record0.name} ${navigationRecords.record0.searchLabel} ${navigationRecords.record0.searchPlaceholder}`,
+    keywords: ['navigation', 'hierarchy', 'expandable', 'search'],
+    facets: { documentType: 'navigation', lifecycleState: defaultLifecycle },
+    accessMode: navigationRecords.record0.accessMode || 'PUBLIC',
+    lifecycleState: navigationRecords.record0.lifecycleState || defaultLifecycle,
+  },
+  ...nodeRecords.map((node) => ({
+    targetType: 'NODE',
+    targetCode: node.code,
+    title: node.nodeTitle,
+    summary: node.nodeSummary,
+    searchText: `${node.nodeTitle} ${node.nodeSummary} ${(node.searchKeywords || []).join(' ')}`,
+    keywords: node.searchKeywords || [node.nodeTitle],
+    facets: {
+      nodeLevel: node.nodeLevel,
+      nodeType: node.nodeType,
+      audience: node.nodeAudience || defaultAudience,
+    },
+    accessMode: node.accessMode || 'PUBLIC',
+    lifecycleState: node.lifecycleState || defaultLifecycle,
+  })),
+  ...dashboardRecords.map((dashboard) => ({
+    targetType: 'DASHBOARD',
+    targetCode: dashboard.code,
+    title: dashboard.title,
+    summary: dashboard.summary,
+    searchText: `${dashboard.title} ${dashboard.summary}`,
+    keywords: [dashboard.ownerType, dashboard.ownerCode, dashboard.title],
+    facets: {
+      ownerType: dashboard.ownerType,
+      ownerCode: dashboard.ownerCode,
+    },
+    accessMode: dashboard.accessMode || 'PUBLIC',
+    lifecycleState: dashboard.lifecycleState || defaultLifecycle,
+  })),
+  ...sourcePages.map((document) => ({
+    targetType: 'PAGE',
+    targetCode: metadataPageCode(document),
+    title: document.title,
+    summary: document.summary,
+    searchText: `${document.title} ${document.summary} ${document.markdown}`,
+    keywords: [...(document.searchKeywords || []), ...(document.topicKeywords || [])],
+    facets: {
+      section: document.section.code,
+      group: document.navigationGroupCode || slug(document.navigationGroup || document.section.title),
+      documentType: document.documentType,
+      audience: document.audience || defaultAudience,
+      maturityState: document.maturityState || 'operational',
+    },
+    accessMode: document.accessMode || 'PUBLIC',
+    lifecycleState: document.lifecycleState || defaultLifecycle,
+  })),
+];
+const searchMetadataRecords = Object.fromEntries(
+  searchTargets.map((target, index) => [
+    `record${index}`,
+    {
+      code: boundedCode('nodicsDocsSearch', [target.targetType, target.targetCode]),
+      product: productCode,
+      targetType: target.targetType,
+      targetCode: target.targetCode,
+      title: target.title,
+      summary: target.summary,
+      searchText: target.searchText,
+      keywords: target.keywords,
+      facets: target.facets,
+      ...workflowMetadata('SEARCH_METADATA'),
+      locale: 'en',
+      channel: 'web',
+      accessPolicy: target.accessMode === 'PUBLIC' ? publicAccessPolicyCode : authenticatedAccessPolicyCode,
+      accessMode: target.accessMode,
+      lifecycleState: target.lifecycleState,
+      indexState: 'INDEX_READY',
+      active: true,
+    },
+  ]),
+);
+Object.assign(
+  publicationStateRecords,
+  Object.fromEntries(
+    Object.values(searchMetadataRecords).map((record, index) => [
+      `record${publicationTargets.length + index}`,
+      {
+        code: boundedCode('nodicsDocsPublication', ['SEARCH_METADATA', record.code]),
+        targetType: 'SEARCH_METADATA',
+        targetCode: record.code,
+        lifecycleState: record.lifecycleState || defaultLifecycle,
+        publicationCode: 'nodicsDocumentation',
+        workflowReference: 'nodicsDocumentationReviewWorkflow',
+        stagedVersion: catalogue.release,
+        ...(record.lifecycleState === 'ONLINE' ? { onlineVersion: catalogue.release } : {}),
+        validationResult: {
+          generated: true,
+          sourceAuthority: 'docs/catalogue.json',
+          publicationPath: 'STAGED_REVIEW_APPROVAL_ONLINE',
+          nexusVisibleOnlyWhenOnlineAndPublic: true,
+        },
+        checksum: sha256(`SEARCH_METADATA:${record.code}:${record.lifecycleState || defaultLifecycle}:${catalogue.release}`),
+        ...workflowMetadata('SEARCH_METADATA'),
+        decisionPolicy: publicationDecisionPolicy,
+        actor: 'nodics.docs.generator',
+        author: 'nodics.docs.generator',
+        reviewer: 'nodics.docs.generator',
+        approver: 'nodics.docs.generator',
+        publisher: 'nodics.docs.generator',
+        auditTrail: [],
+        active: true,
+      },
+    ]),
+  ),
+);
 const navigationComponent = {
   record0: {
     code: 'nodicsDocumentationNavigation',
@@ -453,6 +1241,7 @@ const articleComponents = Object.fromEntries(
         renderingComponent: document.renderingComponent || 'documentation.component.article',
         relatedPages: document.relatedPages || [],
         sourceEvidence: document.sourceEvidence || [],
+        visualRequirements: document.visualRequirements || [],
         searchKeywords: document.searchKeywords || [],
         topicKeywords: document.topicKeywords || [],
         headings: document.headings,
@@ -536,6 +1325,38 @@ const files = {
       },
     },
   ),
+  'data/core/data/documentation/nodicsDocumentationProductData.js': jsModule(
+    'Generated Nodics framework documentation product catalogue metadata.',
+    productRecords,
+  ),
+  'data/core/data/documentation/nodicsDocumentationAccessPolicyData.js': jsModule(
+    'Generated Nodics framework documentation access policies.',
+    accessPolicyRecords,
+  ),
+  'data/core/data/documentation/nodicsDocumentationNavigationData.js': jsModule(
+    'Generated Nodics framework documentation navigation catalogue metadata.',
+    navigationRecords,
+  ),
+  'data/core/data/documentation/nodicsDocumentationDashboardData.js': jsModule(
+    'Generated Nodics framework documentation hierarchy dashboards.',
+    dashboardRecordMap,
+  ),
+  'data/core/data/documentation/nodicsDocumentationNodeData.js': jsModule(
+    'Generated Nodics framework documentation hierarchy nodes.',
+    nodeRecordMap,
+  ),
+  'data/core/data/documentation/nodicsDocumentationPageMetadataData.js': jsModule(
+    'Generated Nodics framework documentation page metadata.',
+    pageMetadataRecords,
+  ),
+  'data/core/data/documentation/nodicsDocumentationPublicationStateData.js': jsModule(
+    'Generated Nodics framework documentation publication state metadata.',
+    publicationStateRecords,
+  ),
+  'data/core/data/documentation/nodicsDocumentationSearchMetadataData.js': jsModule(
+    'Generated Nodics framework documentation search metadata.',
+    searchMetadataRecords,
+  ),
   'data/core/data/documentation/nodicsDocumentationTypeCodeData.js': jsModule(
     'Nodics framework documentation page and component types.',
     {
@@ -583,7 +1404,7 @@ const files = {
     'Generated Nodics framework documentation routes.',
     routeRecords,
   ),
-  'data/core/headers/nodicsDocumentationContentPackHeader.js': `${copyrightHeader}'use strict';\n\n/** @description Nodics foundation-import header for framework documentation. */\nmodule.exports = {\n  cms: {\n    nodicsDocumentationSiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSiteData' }, query: { code: '$code' } },\n    nodicsDocumentationTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTypeCodeData' }, query: { code: '$code' } },\n    nodicsDocumentationRendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationRendererData' }, query: { code: '$code' } },\n    nodicsDocumentationTemplateBootstrapData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTemplateBootstrapData' }, query: { code: '$code' } },\n    nodicsDocumentationSlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSlotData' }, query: { code: '$code' } },\n    nodicsDocumentationTemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTemplateData' }, query: { code: '$code' } },\n    nodicsDocumentationComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationComponentData' }, query: { code: '$code' } },\n    nodicsDocumentationPageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationPageData' }, query: { code: '$code' } },\n    nodicsDocumentationRouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationRouteData' }, query: { code: '$code' } },\n  },\n};\n`,
+  'data/core/headers/nodicsDocumentationContentPackHeader.js': `${copyrightHeader}'use strict';\n\n/** @description Nodics foundation-import header for framework documentation. */\nmodule.exports = {\n  cms: {\n    nodicsDocumentationSiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSiteData' }, query: { code: '$code' } },\n    nodicsDocumentationProductData: { options: { enabled: true, schemaName: 'cmsDocumentationProduct', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationProductData' }, query: { code: '$code' } },\n    nodicsDocumentationAccessPolicyData: { options: { enabled: true, schemaName: 'cmsDocumentationAccessPolicy', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationAccessPolicyData' }, query: { code: '$code' } },\n    nodicsDocumentationNavigationData: { options: { enabled: true, schemaName: 'cmsDocumentationNavigation', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationNavigationData' }, query: { code: '$code' } },\n    nodicsDocumentationDashboardData: { options: { enabled: true, schemaName: 'cmsDocumentationDashboard', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationDashboardData' }, query: { code: '$code' } },\n    nodicsDocumentationNodeData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationNodeData' }, query: { code: '$code' } },\n    nodicsDocumentationPageMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationPage', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationPageMetadataData' }, query: { code: '$code' } },\n    nodicsDocumentationPublicationStateData: { options: { enabled: true, schemaName: 'cmsDocumentationPublicationState', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationPublicationStateData' }, query: { code: '$code' } },\n    nodicsDocumentationSearchMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationSearchMetadata', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSearchMetadataData' }, query: { code: '$code' } },\n    nodicsDocumentationTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTypeCodeData' }, query: { code: '$code' } },\n    nodicsDocumentationRendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationRendererData' }, query: { code: '$code' } },\n    nodicsDocumentationTemplateBootstrapData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTemplateBootstrapData' }, query: { code: '$code' } },\n    nodicsDocumentationSlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSlotData' }, query: { code: '$code' } },\n    nodicsDocumentationTemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTemplateData' }, query: { code: '$code' } },\n    nodicsDocumentationComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationComponentData' }, query: { code: '$code' } },\n    nodicsDocumentationPageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationPageData' }, query: { code: '$code' } },\n    nodicsDocumentationRouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationRouteData' }, query: { code: '$code' } },\n  },\n};\n`,
 };
 
 for (const [relativePath, content] of Object.entries(files)) {

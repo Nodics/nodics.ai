@@ -63,7 +63,9 @@ async function main() {
   console.log("[agora-commerce-live-qualification] validating staged Agora domain release contracts");
   await run("npm", ["run", "test:agora-commerce"]);
   console.log("[agora-commerce-live-qualification] validating staged data import acceptance");
-  await run("npm", ["run", "acceptance:agora-commerce-data"]);
+  await run("npm", ["run", "acceptance:agora-commerce-data"], {
+    env: { NODICS_STOREFRONT_COMMERCE_DATA_EXECUTE: "true" },
+  });
   console.log("[agora-commerce-live-qualification] validating Staged to Online publication acceptance");
   await run("npm", ["run", "acceptance:agora-commerce-publication"]);
   console.log("[agora-commerce-live-qualification] validating Online customer journey acceptance");

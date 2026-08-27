@@ -78,3 +78,12 @@ The release owner reviews framework tests, effective graph, generated artifacts,
 Run focused Commerce contracts, all generated schema and route contracts, controlled Commerce plus Process graph build, module metadata, syntax, ownership, documentation, LLM generation and validation, Axis verify, and the active-runtime retirement scan. Record the generated counts and observed capacity-harness duration.
 
 Deployment release remains conditional until named owners attach representative load and soak results, credentialed provider and carrier qualification, backup/restore and failover measurements, tenant migration reconciliation, upgrade/rollback rehearsal, and residual-risk acceptance. That conditional gate is a feature of honest enterprise readiness, not an implementation omission.
+
+## Customization and extension
+
+Commerce projects may extend operations with tenant migration policies,
+provider qualification matrices, regional rollout gates, capacity dashboards,
+and release-owner approvals. The extension must keep pricing, payment,
+fulfillment, inventory, order, and publication evidence with the owning
+capability, while the enterprise operations page summarizes release readiness
+and residual risk.

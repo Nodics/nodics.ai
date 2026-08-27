@@ -16,7 +16,7 @@ Before implementing non-trivial behavior here, record the business outcome, owni
 
 ## Boundary rules
 
-- Treat Phase 6 review, authenticity, moderation, response, abuse, appeal, and migration contracts as active framework behavior.
+- Treat review, authenticity, moderation, response, abuse, appeal, and migration contracts as active framework behavior.
 - Do not copy archived CRES or gNotify implementation into this package.
 - Keep generated schema routers disabled and use dedicated `engagementApi` operations.
 - Preserve immutable content versions and authenticity/disclosure evidence.

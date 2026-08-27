@@ -24,11 +24,7 @@ const enterpriseCode = process.env.AXIS_ENTERPRISE || process.env.NODICS_ENTERPR
 const loginId = process.env.AXIS_LOGIN_ID || "admin";
 const password = process.env.AXIS_PASSWORD || "adminPassword";
 const composition = require(path.join(projectRoot, "config", "agora-domain-composition.js")).resolve();
-const groupByPack = Object.freeze({
-  agoraApparel: "agora.apparel",
-  agoraElectronics: "agora.electronics",
-  agoraTelco: "agora.telco",
-});
+const supportedPacks = Object.freeze(["agora.apparel", "agora.electronics", "agora.telco"]);
 
 function log(message) {
   console.log(`[agora-cms-media-seed] ${message}`);
@@ -133,9 +129,8 @@ async function uploadAsset(headers, asset, assetFilesRoot) {
 async function run() {
   const assetsByCode = new Map();
   for (const pack of composition.projectPacks) {
-    const group = groupByPack[pack];
-    if (!group) throw new Error(`Unsupported Agora media pack: ${pack}`);
-    const assetRoot = path.join(projectRoot, "modules", group, "modules", pack, "assets", "agora-cms-media");
+    if (!supportedPacks.includes(pack)) throw new Error(`Unsupported Agora media pack: ${pack}`);
+    const assetRoot = path.join(projectRoot, "modules", pack, "data", "assets", "agora-cms-media");
     const assetManifestPath = path.join(assetRoot, "assetManifest.js");
     const assetFilesRoot = path.join(assetRoot, "files");
     if (!existsSync(assetManifestPath)) throw new Error(`Missing Agora media asset manifest: ${assetManifestPath}`);

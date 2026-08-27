@@ -13,26 +13,9 @@
 
 const CONTRACT_VERSION = 'installer-api-scope/v0';
 
-function requestId(request) {
-    return request && (
-        request.requestId ||
-        request.correlationId ||
-        request.headers && (request.headers['x-request-id'] || request.headers['x-correlation-id']) ||
-        request.httpRequest && request.httpRequest.headers &&
-            (request.httpRequest.headers['x-request-id'] || request.httpRequest.headers['x-correlation-id'])
-    ) || 'local-installer-request';
-}
-
-function sanitizeError(error) {
-    return {
-        code: error && error.code || 'INSTALLER_OPERATION_FAILED',
-        message: error && error.message || 'Installer operation failed'
-    };
-}
-
 /**
  * @module installer/service/DefaultInstallerResponseService
- * @description Builds the common Phase 1 installer API response envelope.
+ * @description Builds the common installer API response envelope.
  * @layer service
  * @owner installer
  * @override Preserve low-disclosure messages and the contract envelope shape for all installer APIs.
@@ -43,6 +26,25 @@ module.exports = {
     init: function () { return Promise.resolve(true); },
     /** Completes post-initialization for the response service lifecycle boundary. */
     postInit: function () { return Promise.resolve(true); },
+
+    /** Resolves a stable request identifier from supported request envelopes. */
+    requestId: function (request) {
+        return request && (
+            request.requestId ||
+            request.correlationId ||
+            request.headers && (request.headers['x-request-id'] || request.headers['x-correlation-id']) ||
+            request.httpRequest && request.httpRequest.headers &&
+                (request.httpRequest.headers['x-request-id'] || request.httpRequest.headers['x-correlation-id'])
+        ) || 'local-installer-request';
+    },
+
+    /** Converts internal errors into low-disclosure installer API messages. */
+    sanitizeError: function (error) {
+        return {
+            code: error && error.code || 'INSTALLER_OPERATION_FAILED',
+            message: error && error.message || 'Installer operation failed'
+        };
+    },
 
     /**
      * Builds a successful or warning installer response envelope.
@@ -58,7 +60,7 @@ module.exports = {
             contractVersion: CONTRACT_VERSION,
             operation,
             status: diagnostics && diagnostics.warning ? 'WARNING' : 'SUCCESS',
-            requestId: requestId(request),
+            requestId: this.requestId(request),
             messages: [],
             data: data || {},
             diagnostics: diagnostics || {},
@@ -78,8 +80,8 @@ module.exports = {
             contractVersion: CONTRACT_VERSION,
             operation,
             status: 'FAILED',
-            requestId: requestId(request),
-            messages: [sanitizeError(error)],
+            requestId: this.requestId(request),
+            messages: [this.sanitizeError(error)],
             data: {},
             diagnostics: {},
             redactions: []

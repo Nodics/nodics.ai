@@ -6,7 +6,7 @@
       "kind": "CONTENT_PACK",
       "contentPath": "core",
       "pack": "nodics.docs",
-      "version": "0.16.1",
+      "version": "0.16.2",
       "owningDomain": "documentation",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -25,21 +25,29 @@
         "nodicsDocumentationSite"
       ],
       "accessMode": "PUBLIC",
-      "pages": 41,
-      "components": 42,
-      "routes": 41,
-      "releaseChecksum": "3c2878b38a2fc7202d6449b607e0ba2c1e0ee69f93961acf1cbfef257435d8cc",
+      "pages": 67,
+      "components": 68,
+      "routes": 67,
+      "releaseChecksum": "d307dc39c306dd563191f64459b5922759963b8f174ed45a577fb88e7d241a39",
       "generatedHashes": {
         "core/data/documentation/nodicsDocumentationSiteData.js": "2c3a262be1c3d672c36c0f9f89dc9117c8b04297af1e1501491c1c7afc7e8089",
+        "core/data/documentation/nodicsDocumentationProductData.js": "2b26f678c7ac99636164bdd1e135849c5cb55c03a930ff7439d8b2aea8653775",
+        "core/data/documentation/nodicsDocumentationAccessPolicyData.js": "195dfa98fb6a08d8e4004f82fcdd7c75fd8d029ea0020ff6b4d35c1badc509e0",
+        "core/data/documentation/nodicsDocumentationNavigationData.js": "4bede13fb6cf7dda4c398086dcd5a9c16b4ea2bd56a47abea2b87db59eb37f6a",
+        "core/data/documentation/nodicsDocumentationDashboardData.js": "76606d8f6c95fdb8869b7a7434af88449293ae718c6b93b1fbec376c1fa90b49",
+        "core/data/documentation/nodicsDocumentationNodeData.js": "fbf7330c8c8ba91f012b159625f2b682d14ba55bfbfa4c62d67765d1ce7e48ef",
+        "core/data/documentation/nodicsDocumentationPageMetadataData.js": "c59f6bc59b6b947f0d9ff7e4fde034b219decca08fd1399f2b9cff2633e47d05",
+        "core/data/documentation/nodicsDocumentationPublicationStateData.js": "9fedab544092ab21ab43c3f93b2947f7fb28d66c435173c42c520774629f17b4",
+        "core/data/documentation/nodicsDocumentationSearchMetadataData.js": "944b9d4edd1f30b3d6ebcbab4e9eb095d9c1c9cddd69b82abdbf5eb62f8b200e",
         "core/data/documentation/nodicsDocumentationTypeCodeData.js": "6883b47a173615b7ee8738af595a2858491a6fb0acede249e87ac6d0a06fd722",
         "core/data/documentation/nodicsDocumentationRendererData.js": "1be3152d12152a8c8218119931ee9bf6124c7687cf0312ad3fc4408729131c24",
         "core/data/documentation/nodicsDocumentationSlotData.js": "d4f874d520dae6b0256daf3e75cdd4f9e1e8e151729ce6f4122803a99011d6e2",
         "core/data/documentation/nodicsDocumentationTemplateBootstrapData.js": "9479fbf8958c8e9fe48d7752469080b85041cf488a2cdd340ba2ba841eb5d3fd",
         "core/data/documentation/nodicsDocumentationTemplateData.js": "9e2a160453f7f3308917d4869282df6a9932154cad2100427d1665d36a2db32a",
-        "core/data/documentation/nodicsDocumentationComponentData.js": "13b44288e316e905f8434e67848de2c5a205ecb1286eec9736182589728e004a",
-        "core/data/documentation/nodicsDocumentationPageData.js": "1eb5a22bcd9f3e47aaf2e57185831ac6822f809f8db3bc2e8e31b159ad8c33c7",
-        "core/data/documentation/nodicsDocumentationRouteData.js": "57957ce6ebfc0d91c3be4d725228eb522c1cf5dc7b19ce2f77ad9173edf5c048",
-        "core/headers/nodicsDocumentationContentPackHeader.js": "34b89b7bfece575f130f44b74404fb65d230a36bf3cbeea95c9bd4488691659f"
+        "core/data/documentation/nodicsDocumentationComponentData.js": "8c7f069548db5c4948ef5c7086f073464943f32b1faa41cb771e2ddee861dd88",
+        "core/data/documentation/nodicsDocumentationPageData.js": "3b2c59b3f863966126ff24aad8206a1d1394178e08bf3bcf2b56de2e79989eb5",
+        "core/data/documentation/nodicsDocumentationRouteData.js": "8c0d9d48a39debc4023887652869c6d3d3e8426871180cfd05d5d8f38d360c3d",
+        "core/headers/nodicsDocumentationContentPackHeader.js": "e3e1d512648bbdf0b909a7901b784614d6d82b1a2b54db9794fe012d0c53c81b"
       }
     }
   }

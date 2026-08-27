@@ -30,4 +30,4 @@ assert.deepStrictEqual(exported.fields, ['domainType', 'status']);
 assert.strictEqual(exported.status, 'PREVIEWED');
 const repair = service.repair(item, { repairType: 'REBUILD_PROJECTION', reason: 'hash drift', actorId: 'operator' });
 assert.strictEqual(repair.status, 'PREVIEWED');
-console.log('Engagement unified operations Phase 10 contract validated');
+console.log('Engagement unified operations contract validated');

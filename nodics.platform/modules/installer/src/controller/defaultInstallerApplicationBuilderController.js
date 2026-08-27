@@ -14,20 +14,6 @@
 const fallbackFacade = require('../facade/defaultInstallerApplicationBuilderFacade');
 const responseService = require('../service/defaultInstallerResponseService');
 
-function facade() {
-    return global.FACADE && FACADE.DefaultInstallerApplicationBuilderFacade ||
-        fallbackFacade;
-}
-
-function prepareRequest(request) {
-    const http = request && request.httpRequest || {};
-    return Object.assign({}, request || {}, {
-        params: http.params || request && request.params || {},
-        query: http.query || request && request.query || {},
-        payload: http.body || request && request.payload || request && request.body || {}
-    });
-}
-
 /**
  * @module installer/controller/DefaultInstallerApplicationBuilderController
  * @description Maps secured installer HTTP operations to the Application Builder facade.
@@ -41,6 +27,22 @@ module.exports = {
     /** Completes post-initialization for the controller lifecycle boundary. */
     postInit: function () { return Promise.resolve(true); },
 
+    /** Resolves the runtime facade while keeping a local fallback for isolated tests. */
+    facade: function () {
+        return global.FACADE && FACADE.DefaultInstallerApplicationBuilderFacade ||
+            fallbackFacade;
+    },
+
+    /** Projects router requests into the installer operation envelope. */
+    prepareRequest: function (request) {
+        const http = request && request.httpRequest || {};
+        return Object.assign({}, request || {}, {
+            params: http.params || request && request.params || {},
+            query: http.query || request && request.query || {},
+            payload: http.body || request && request.payload || request && request.body || {}
+        });
+    },
+
     /**
      * Executes a named installer operation through the Application Builder facade.
      * @param {string} operation Facade operation name.
@@ -49,8 +51,8 @@ module.exports = {
      * @returns {Promise<Object>|undefined} Operation response when no callback is supplied.
      */
     execute: function (operation, request, callback) {
-        const preparedRequest = prepareRequest(request);
-        const promise = facade()[operation](preparedRequest)
+        const preparedRequest = this.prepareRequest(request);
+        const promise = this.facade()[operation](preparedRequest)
             .catch(error => responseService.failure(preparedRequest, operation, error));
         if (!callback) return promise;
         promise.then(value => callback(null, value)).catch(callback);

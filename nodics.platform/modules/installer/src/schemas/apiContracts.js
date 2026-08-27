@@ -61,10 +61,10 @@ const evidenceReadRequest = {
 
 /**
  * @module installer/schemas/apiContracts
- * @description Defines installer Phase 1 API request and response schema fragments for route metadata.
+ * @description Defines current installer API request and response schema fragments for route metadata.
  * @layer schema
  * @owner installer
- * @override Keep request contracts read-only until future mutating contracts are approved.
+ * @override Keep request contracts read-only until reserved mutating contracts are approved.
  */
 module.exports = {
     responseEnvelope,

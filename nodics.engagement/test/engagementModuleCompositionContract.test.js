@@ -11,7 +11,7 @@
 
 /**
  * @module nodics.engagement/test/engagementModuleCompositionContract
- * @description Verifies the Phase 1 Customer Engagement group composition and deterministic package order.
+ * @description Verifies the Customer Engagement group composition and deterministic package order.
  * @layer test
  * @owner nodics.engagement
  */

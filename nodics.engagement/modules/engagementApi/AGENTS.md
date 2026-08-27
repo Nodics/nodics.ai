@@ -16,7 +16,7 @@ Before implementing non-trivial behavior here, record the business outcome, owni
 
 ## Boundary rules
 
-- Treat the Phase 3 router, policy, projection, error, facade, and gateway-port contracts as active API authority.
+- Treat the router, policy, projection, error, facade, and gateway-port contracts as active API authority.
 - Do not copy archived CRES or gNotify implementation into this package.
 - Keep API routes secured by default and domain persistence behind the gateway port.
 - Preserve one-way dependencies and keep generated artifacts derived from source definitions.

@@ -68,8 +68,8 @@ function findFrameworkRootFromBridge() {
     return match || path.resolve(__dirname, '../../../../..');
 }
 
-function resolveFrameworkRoot(projectRoot) {
-    const env = Object.assign({}, readEnvFile(path.join(projectRoot, '.env')), process.env);
+function resolveFrameworkRoot(projectRoot, projectEnv) {
+    const env = Object.assign({}, projectEnv || readEnvFile(path.join(projectRoot, '.env')), process.env);
     if (env.NODICS_FRAMEWORK_ROOT) {
         return path.resolve(projectRoot, env.NODICS_FRAMEWORK_ROOT);
     }
@@ -106,13 +106,14 @@ function resolveCommandHome(command, projectRoot, frameworkRoot) {
 
 function main() {
     const projectRoot = process.cwd();
+    const projectEnv = readEnvFile(path.join(projectRoot, '.env'));
     const command = normalizeCommand(process.argv[2] || 'help');
     if (!supportedCommands.has(command)) {
         console.error('Usage: node nodics-project.js <clean|build|release:check|qualification:security-boundary|qualification:publishing-capacity|qualification:publishing-soak|qualification:publishing-interruption-contracts|project:validate|project:run> [args...]');
         process.exitCode = 1;
         return;
     }
-    const frameworkRoot = resolveFrameworkRoot(projectRoot);
+    const frameworkRoot = resolveFrameworkRoot(projectRoot, projectEnv);
     const toolPath = assertFrameworkRoot(frameworkRoot);
     const commandHome = resolveCommandHome(command, projectRoot, frameworkRoot);
     const args = [toolPath, command, '--home=' + commandHome].concat(process.argv.slice(3));
@@ -121,7 +122,7 @@ function main() {
     console.log('[nodics-project] command: ' + command);
     const result = spawnSync(process.execPath, args, {
         cwd: projectRoot,
-        env: Object.assign({}, process.env, {
+        env: Object.assign({}, projectEnv, process.env, {
             NODICS_PROJECT_ROOT: projectRoot,
             NODICS_FRAMEWORK_ROOT: frameworkRoot
         }),

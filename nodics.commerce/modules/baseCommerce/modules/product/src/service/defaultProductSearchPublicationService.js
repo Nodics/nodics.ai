@@ -44,13 +44,43 @@ module.exports = {
         throw error;
     },
 
+    /** Resolves the active nSearch model for a provider-neutral operation. */
+    searchModel: function (request, operation) {
+        let indexName = request.indexName || this.policy().searchIndexName || 'productLocalized';
+        let searchModel = NODICS.getSearchModel(request.moduleName || 'product', request.tenant, indexName);
+        if (!searchModel || typeof searchModel[operation] !== 'function') {
+            throw new Error('Product search publication requires an nSearch ' + operation + ' model for ' + indexName);
+        }
+        request.indexName = indexName;
+        request.searchModel = searchModel;
+        return searchModel;
+    },
+
+    /** Returns a minimal nSearch operation service backed by the active search model registry. */
+    searchOperationService: function () {
+        let self = this;
+        return {
+            /** Saves one Product projection through the active nSearch model pipeline. */
+            doSave: function (request) {
+                self.searchModel(request, 'doSave');
+                return SERVICE.DefaultPipelineService.start('doSaveModelsInitializerPipeline', request, {});
+            },
+            /** Removes Product projections through the active nSearch model pipeline. */
+            doRemoveByQuery: function (request) {
+                self.searchModel(request, 'doRemoveByQuery');
+                return SERVICE.DefaultPipelineService.start('doRemoveModelsByQueryInitializerPipeline', request, {});
+            }
+        };
+    },
+
     /** Returns the active nSearch service boundary for provider-neutral indexing operations. */
     searchService: function () {
-        if (SERVICE.DefaultSearchService && typeof SERVICE.DefaultSearchService.doSave === 'function') return SERVICE.DefaultSearchService;
+        if (SERVICE.DefaultSearchService && typeof SERVICE.DefaultSearchService.doSave === 'function' &&
+            typeof SERVICE.DefaultSearchService.doRemoveByQuery === 'function') return SERVICE.DefaultSearchService;
         if (SERVICE.DefaultProductSearchProjectionService && typeof SERVICE.DefaultProductSearchProjectionService.doSave === 'function') {
             return SERVICE.DefaultProductSearchProjectionService;
         }
-        throw new Error('Product search publication requires an nSearch save service');
+        return this.searchOperationService();
     },
 
     /** Publishes one Product into deterministic locale-specific persistence and nSearch projections. */

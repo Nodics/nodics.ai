@@ -6,7 +6,7 @@ An anonymous contact route may be enabled by later-layer policy only with rate, 
 
 A contact-domain module may later implement the appropriate `DefaultEngagementDomainGatewayService` operations. The API facade still verifies tenant and owner before projecting the configured DTO.
 
-Making a concrete form route anonymous requires a later route override to `secured: false` and the exact operation in `engagementApi.anonymousRouteAllowList`. Phase 3 performs neither action.
+Making a concrete form route anonymous requires a route override to `secured: false` and the exact operation in `engagementApi.anonymousRouteAllowList`. The default API boundary performs neither action.
 
 ## Rejected shortcut
 

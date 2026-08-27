@@ -29,6 +29,7 @@ module.exports = {
     validate: function (request) {
         let policy = this.policy();
         let names = [].concat(policy.serviceNames || []);
+        let requiredServiceNames = [].concat(policy.requiredServiceNames || []);
         if (policy.enabled !== true || ![].concat(policy.environmentAllowlist || []).includes(this.environment())) {
             throw new CLASSES.NodicsError('ERR_SYS_00120', 'Local reset provider is disabled');
         }
@@ -42,7 +43,13 @@ module.exports = {
             throw new CLASSES.NodicsError('ERR_SYS_00123', 'Local reset provider service boundary is invalid');
         }
         return names.map(name => {
-            if (!/^Default[A-Z][A-Za-z0-9]{1,127}Service$/.test(name) || !SERVICE[name] || typeof SERVICE[name].remove !== 'function') {
+            if (!/^Default[A-Z][A-Za-z0-9]{1,127}Service$/.test(name)) {
+                throw new CLASSES.NodicsError('ERR_SYS_00124', 'Configured Local reset service is unavailable: ' + name);
+            }
+            if (!SERVICE[name] || typeof SERVICE[name].remove !== 'function') {
+                if (policy.allowMissingModelServices === true && !requiredServiceNames.includes(name)) {
+                    return { name: name, service: null, unavailable: true };
+                }
                 throw new CLASSES.NodicsError('ERR_SYS_00124', 'Configured Local reset service is unavailable: ' + name);
             }
             return { name: name, service: SERVICE[name] };
@@ -52,6 +59,9 @@ module.exports = {
     authorizes: function (request) { return Boolean(this._authority) && request.localResetAuthority === this._authority; },
     /** Executes the documented bounded module operation. */
     isMissingModelRegistryError: function (error) {
+        if (error && (error.localResetMissingModel === true || error.code === 'LOCAL_RESET_MODEL_REGISTRY_MISSING')) {
+            return true;
+        }
         let stack = String(error && error.stack || '');
         let normalizedStack = stack.toLowerCase();
         let message = String(error && error.message || '');
@@ -66,6 +76,10 @@ module.exports = {
         let removed = [];
         let skipped = [];
         for (let provider of providers) {
+            if (provider.unavailable === true) {
+                skipped.push({ service: provider.name, reason: 'SERVICE_UNAVAILABLE' });
+                continue;
+            }
             try {
                 let response = await provider.service.remove({ tenant: request.tenant, authData: request.authData,
                     correlationId: request.correlationId, query: { _id: { $ne: null } }, options: { recursive: false },
@@ -75,6 +89,13 @@ module.exports = {
                 if (!this.isMissingModelRegistryError(error)) throw error;
                 skipped.push({ service: provider.name, reason: 'MODEL_REGISTRY_MISSING' });
             }
+        }
+        let requiredServiceNames = [].concat(this.policy().requiredServiceNames || []);
+        let blockedSkips = this.policy().allowMissingModelServices === true ?
+            skipped.filter(item => requiredServiceNames.includes(item.service)) : skipped;
+        if (blockedSkips.length > 0) {
+            throw new CLASSES.NodicsError('ERR_SYS_00125',
+                'Local reset did not clear every configured service: ' + blockedSkips.map(item => item.service).join(', '));
         }
         return { acknowledged: true, serviceCount: removed.length, services: removed.map(item => item.service),
             skippedServiceCount: skipped.length, skippedServices: skipped.map(item => item.service), correlationId: request.correlationId };

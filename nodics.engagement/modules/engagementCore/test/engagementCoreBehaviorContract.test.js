@@ -61,7 +61,7 @@ async function run() {
     assert.strictEqual(integration.reconcile({ attempts: 2 }, { success: false, maximumAttempts: 3 }).status, 'DEAD_LETTER');
     let overrideTransitions = Object.assign({}, properties.lifecycle, { transitions: Object.assign({}, properties.lifecycle.transitions, { RECEIVED: ['ACCEPTED'] }) });
     assert.strictEqual(lifecycle.transition(first.submission, { toStatus: 'ACCEPTED', expectedRevision: 0 }, overrideTransitions).submission.processingStatus, 'ACCEPTED');
-    console.log('EngagementCore Phase 2 behavior contract validated');
+    console.log('EngagementCore behavior contract validated');
 }
 
 run().catch(error => { console.error(error); process.exitCode = 1; });

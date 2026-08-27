@@ -74,7 +74,6 @@ const graph = {
             assignmentPolicy: 'QUEUE',
             escalationPolicy: { level1Assignee: 'seniorReviewQueue', escalateAfterHours: 24 },
             slaHours: 24,
-            submitterMayApprove: false,
             requiredApprovals: 1,
             emergencyOverridePermission: 'process.task.emergencyOverride',
             requireReasonOnReject: true
@@ -135,7 +134,6 @@ const runtimeService = require('../modules/workflow/src/service/operation/defaul
     assert.strictEqual(tasks[0].assignee, 'reviewQueue');
     assert.strictEqual(tasks[0].assignmentPolicy, 'QUEUE');
     assert.strictEqual(tasks[0].escalationPolicy.level1Assignee, 'seniorReviewQueue');
-    assert.strictEqual(tasks[0].approvalPolicy.submitterMayApprove, false);
     assert.strictEqual(tasks[0].approvalPolicy.emergencyOverridePermission, 'process.task.emergencyOverride');
     assert(tasks[0].dueAt, 'task SLA due date must be visible on the task');
     assert.strictEqual(auditEvents[0].eventType, 'process.instance.started');
@@ -168,7 +166,7 @@ const runtimeService = require('../modules/workflow/src/service/operation/defaul
     assert.strictEqual(auditEvents.some(event => event.eventType === 'process.subProcess.referenced'), true);
     assert.strictEqual(auditEvents.some(event => event.eventType === 'process.instance.completed'), true);
 
-    let separated = await runtimeService.startInstance({
+    let permissionApproved = await runtimeService.startInstance({
         tenant: 'default',
         authData: { loginId: 'operator' },
         runtimeOperation: {
@@ -177,15 +175,13 @@ const runtimeService = require('../modules/workflow/src/service/operation/defaul
             context: { businessKey: 'page-456', requestedBy: 'operator' }
         }
     });
-    await assert.rejects(
-        () => runtimeService.completeTask({
-            tenant: 'default',
-            authData: { loginId: 'operator' },
-            taskCode: separated.data.task.code,
-            runtimeOperation: { decision: { approved: true } }
-        }),
-        error => error.code === 'ERR_PROCESS_00012',
-    );
+    let selfApproved = await runtimeService.completeTask({
+        tenant: 'default',
+        authData: { loginId: 'operator', permissions: ['process.task.complete'] },
+        taskCode: permissionApproved.data.task.code,
+        runtimeOperation: { decision: { approved: true } }
+    });
+    assert.strictEqual(selfApproved.code, 'SUC_PROCESS_00008');
 
     let multi = await runtimeService.startInstance({
         tenant: 'default',

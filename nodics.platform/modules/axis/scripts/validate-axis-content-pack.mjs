@@ -9,14 +9,17 @@
 
  */
 
-import { readdir, readFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync, readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
+import { createRequire } from 'node:module';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const repositoryRoot = resolve(root, '../..');
+const require = createRequire(import.meta.url);
+const documentationRecordValidation = require('../../../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationRecordValidationService.js');
 
 function sha256(value) {
   return createHash('sha256').update(value).digest('hex');
@@ -74,6 +77,12 @@ function assertDocumentationDepth(source, canonical) {
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
+}
+
+async function dataRecords(relativePath) {
+  const moduleValue = await import(resolve(root, relativePath));
+  const records = moduleValue.default || moduleValue['module.exports'] || moduleValue;
+  return records && typeof records === 'object' ? Object.values(records) : [];
 }
 
 const manifestEnvelope = JSON.parse(
@@ -156,20 +165,72 @@ const generatedComponents = await readFile(
   resolve(root, 'data/core/data/documentation/axisDocumentationComponentData.js'),
   'utf8',
 );
-const siteRecords = Object.values(
-  await import(resolve(root, 'data/core/data/documentation/axisDocumentationSiteData.js')),
-).flatMap((moduleValue) =>
-  moduleValue && typeof moduleValue === 'object' ? Object.values(moduleValue) : [],
+const siteRecords = await dataRecords(
+  'data/core/data/documentation/axisDocumentationSiteData.js',
 );
-const pageRecords = Object.values(
-  await import(resolve(root, 'data/core/data/documentation/axisDocumentationPageData.js')),
-).flatMap((moduleValue) =>
-  moduleValue && typeof moduleValue === 'object' ? Object.values(moduleValue) : [],
+const pageRecords = await dataRecords(
+  'data/core/data/documentation/axisDocumentationPageData.js',
 );
-const routeRecords = Object.values(
-  await import(resolve(root, 'data/core/data/documentation/axisDocumentationRouteData.js')),
-).flatMap((moduleValue) =>
-  moduleValue && typeof moduleValue === 'object' ? Object.values(moduleValue) : [],
+const productRecords = await dataRecords(
+  'data/core/data/documentation/axisDocumentationProductData.js',
+);
+const accessPolicyRecords = await dataRecords(
+  'data/core/data/documentation/axisDocumentationAccessPolicyData.js',
+);
+const navigationMetadataRecords = await dataRecords(
+  'data/core/data/documentation/axisDocumentationNavigationData.js',
+);
+const dashboardRecords = await dataRecords(
+  'data/core/data/documentation/axisDocumentationDashboardData.js',
+);
+const nodeRecords = await dataRecords(
+  'data/core/data/documentation/axisDocumentationNodeData.js',
+);
+const pageMetadataRecords = await dataRecords(
+  'data/core/data/documentation/axisDocumentationPageMetadataData.js',
+);
+const publicationStateRecords = await dataRecords(
+  'data/core/data/documentation/axisDocumentationPublicationStateData.js',
+);
+const searchMetadataRecords = await dataRecords(
+  'data/core/data/documentation/axisDocumentationSearchMetadataData.js',
+);
+const routeRecords = await dataRecords(
+  'data/core/data/documentation/axisDocumentationRouteData.js',
+);
+const validationReport = documentationRecordValidation.validateRecords({
+  records: {
+    products: productRecords,
+    navigation: navigationMetadataRecords,
+    nodes: nodeRecords,
+    dashboards: dashboardRecords,
+    pages: pageMetadataRecords,
+    accessPolicies: accessPolicyRecords,
+    publicationStates: publicationStateRecords,
+    searchMetadata: searchMetadataRecords,
+    cmsPages: pageRecords,
+    routes: routeRecords,
+    components: await dataRecords('data/core/data/documentation/axisDocumentationComponentData.js'),
+    manifestHashes: manifest.generatedHashes || {},
+  },
+  options: {
+    release: manifest.version,
+    source: 'nodics.platform/modules/axis/docs/catalogue.json',
+    owner: 'nodics.platform.axis',
+    generatedAt: '2026-08-26T00:00:00.000Z',
+  },
+});
+documentationRecordValidation.assertReady(validationReport);
+await mkdir(resolve(root, 'docs/reports'), { recursive: true });
+await writeFile(
+  resolve(root, 'docs/reports/axis-documentation-validation-report.json'),
+  JSON.stringify(validationReport, null, 2) + '\n',
+  'utf8',
+);
+await writeFile(
+  resolve(root, 'docs/reports/axis-documentation-validation-report.md'),
+  documentationRecordValidation.formatMarkdown(validationReport),
+  'utf8',
 );
 const siteCodes = new Set(siteRecords.map((site) => site.code));
 for (const site of siteRecords) {
@@ -178,6 +239,100 @@ for (const site of siteRecords) {
     `Axis documentation site must use documentationContentCatalog: ${site.code}`,
   );
 }
+assert(productRecords.length === 1, 'Axis documentation must generate one documentation product record');
+assert(
+  productRecords[0].contentCatalog === 'documentationContentCatalog',
+  'Axis documentation product must be content-catalog driven',
+);
+assert(
+  productRecords[0].site === 'axisDocumentationSite',
+  'Axis documentation product must point to the Axis documentation site',
+);
+assert(
+  productRecords[0].publicRootPath === '/docs/nodics-axis',
+  'Axis documentation product public root path drifted',
+);
+assert(
+  accessPolicyRecords.some(
+    (policy) =>
+      policy.accessMode === 'PUBLIC' &&
+      policy.publiclyAvailable === true &&
+      policy.requiresAuthentication === false,
+  ),
+  'Axis documentation must generate a public access policy',
+);
+assert(
+  accessPolicyRecords.some(
+    (policy) =>
+      policy.accessMode === 'AUTHENTICATED' &&
+      policy.requiresAuthentication === true &&
+      Array.isArray(policy.allowedPermissions) &&
+      policy.allowedPermissions.includes('axis.documentation.read'),
+  ),
+  'Axis documentation must generate an authenticated reader access policy',
+);
+assert(
+  navigationMetadataRecords.length === 1 &&
+    navigationMetadataRecords[0].renderer === 'documentation.component.navigation' &&
+    navigationMetadataRecords[0].expandable === true,
+  'Axis documentation navigation metadata must be expandable and renderer-bound',
+);
+assert(
+  dashboardRecords.some((dashboard) => dashboard.ownerType === 'PRODUCT') &&
+    dashboardRecords.some((dashboard) => dashboard.ownerType === 'NAVIGATION') &&
+    dashboardRecords.every(
+      (dashboard) =>
+        dashboard.summary &&
+        dashboard.contentArea &&
+        Array.isArray(dashboard.cards),
+    ),
+  'Axis documentation must generate hierarchy dashboards with content areas and cards',
+);
+assert(
+  nodeRecords.some((node) => node.code === 'axisDocsNodeRoot') &&
+    nodeRecords.some((node) => node.nodeLevel === 'SECTION') &&
+    nodeRecords.some((node) => node.nodeLevel === 'GROUP') &&
+    nodeRecords.some((node) => node.nodeLevel === 'TOPIC') &&
+    nodeRecords.every(
+      (node) =>
+        node.product === productRecords[0].code &&
+        node.navigation === navigationMetadataRecords[0].code &&
+        node.nodeSummary &&
+        node.nodeContentArea,
+    ),
+  'Axis documentation must generate editable navigation hierarchy nodes',
+);
+assert(
+  pageMetadataRecords.length === navigation.pages.length &&
+    pageMetadataRecords.every(
+      (page) =>
+        page.product === productRecords[0].code &&
+        page.targetPage &&
+        page.targetRoute &&
+        page.articleComponent &&
+        Array.isArray(page.visualRequirements) &&
+        page.visualRequirements.length > 0,
+    ),
+  'Axis documentation must generate page metadata for every authored page',
+);
+assert(
+  publicationStateRecords.length >=
+    productRecords.length +
+      navigationMetadataRecords.length +
+      dashboardRecords.length +
+      nodeRecords.length +
+      pageMetadataRecords.length,
+  'Axis documentation publication state must cover product, navigation, dashboards, nodes, and pages',
+);
+assert(
+  searchMetadataRecords.some((record) => record.targetType === 'PRODUCT') &&
+    searchMetadataRecords.some((record) => record.targetType === 'NODE') &&
+    searchMetadataRecords.some((record) => record.targetType === 'PAGE') &&
+    searchMetadataRecords.every(
+      (record) => record.indexState === 'INDEX_READY' && record.searchText,
+    ),
+  'Axis documentation search metadata must prepare content-catalog projection without owning search rendering',
+);
 for (const page of pageRecords) {
   const pageSites = Array.isArray(page.cmsSite) ? page.cmsSite : [];
   assert(
@@ -245,6 +400,12 @@ for (const page of navigation.pages) {
   assert(
     generatedComponents.includes(page.title),
     `Generated components do not contain page title: ${page.title}`,
+  );
+  assert(
+    Array.isArray(page.visualRequirements) &&
+      page.visualRequirements.length > 0 &&
+      page.visualRequirements.every((requirement) => generatedComponents.includes(requirement)),
+    `Generated components do not preserve visual requirements: ${page.title}`,
   );
   assert(
     generatedComponents.includes(

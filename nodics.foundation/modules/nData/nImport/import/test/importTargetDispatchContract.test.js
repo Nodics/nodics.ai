@@ -23,7 +23,10 @@ const assert = require('assert');
  */
 
 global.UTILS = {
-    isArray: Array.isArray
+    isArray: Array.isArray,
+    createModelName: function (schemaName) {
+        return schemaName + 'Model';
+    }
 };
 
 global.CLASSES = {
@@ -135,6 +138,160 @@ async function insertModel(request) {
     assert.deepStrictEqual(calls[0].request.authData.userGroups, ['catalogImporterUserGroup']);
     assert.deepStrictEqual(calls[0].request.query, { catalog: 'electronics' });
     assert.deepStrictEqual(calls[0].request.models.map(model => model.code), ['catalog-001', 'catalog-002']);
+
+    delete global.SERVICE.DefaultCustomerService;
+    let guardedCalls = [];
+    let guardedImporter = createService();
+    guardedImporter.ensureLocalSchemaService = function () {
+        return Promise.resolve({
+            saveAll: function (request) {
+                guardedCalls.push(request);
+                return Promise.resolve({ result: request.models });
+            }
+        });
+    };
+    guardedImporter.reconcileContentPackVersions = function (_request, schemaService, models) {
+        assert(schemaService, 'Importer must pass the resolved schema service into reconciliation');
+        return Promise.resolve(models);
+    };
+    let guardedResponse = {};
+    await new Promise((resolve, reject) => {
+        guardedImporter.insertModel({
+            tenant: 'default',
+            header: {
+                query: { code: '$code' },
+                options: {
+                    moduleName: 'profile',
+                    schemaName: 'customer',
+                    operation: 'saveAll',
+                    userGroups: ['adminGroup']
+                }
+            },
+            dataModel: { code: 'guest' }
+        }, guardedResponse, {
+            nextSuccess: function () {
+                resolve(true);
+            },
+            error: function (_request, _response, error) {
+                reject(error);
+            }
+        });
+    });
+    assert.strictEqual(guardedResponse.success[0].code, 'guest');
+    assert.strictEqual(guardedCalls[0].tenant, 'default');
+    assert.deepStrictEqual(guardedCalls[0].authData.userGroups, ['adminGroup']);
+
+    let profileModule = {
+        rawSchema: {
+            customer: {
+                refSchema: {
+                    password: {
+                        enabled: true,
+                        schemaName: 'password',
+                        type: 'one'
+                    }
+                }
+            },
+            employee: {
+                refSchema: {}
+            },
+            password: {
+                refSchema: {}
+            }
+        },
+        models: {
+            default: {}
+        }
+    };
+    global.NODICS = {
+        getModule: function (moduleName) {
+            return moduleName === 'profile' ? profileModule : undefined;
+        },
+        getModules: function () {
+            return { profile: profileModule };
+        },
+        getModels: function (moduleName, tenant) {
+            if (moduleName !== 'profile') return {};
+            return profileModule.models[tenant] || {};
+        }
+    };
+    global.SERVICE = {
+        DefaultPipelineService: {
+            start: function () {
+                return Promise.resolve({ result: [] });
+            }
+        },
+        DefaultDatabaseModelHandlerService: {
+            buildModel: function (request) {
+                profileModule.models[request.tntCode][UTILS.createModelName(request.schemaName)] = {
+                    schemaName: request.schemaName,
+                    rawSchema: profileModule.rawSchema[request.schemaName]
+                };
+                return Promise.resolve(true);
+            }
+        },
+        DefaultDatabaseConfigurationService: {
+            getTenantDatabase: function () {
+                return {};
+            }
+        }
+    };
+    let runtimeImporter = createService();
+    await runtimeImporter.ensureLocalSchemaService({
+        tenant: 'default',
+        header: {
+            rawSchema: profileModule.rawSchema.customer,
+            options: {
+                moduleName: 'profile',
+                schemaName: 'customer',
+                operation: 'saveAll'
+            }
+        }
+    });
+    assert.strictEqual(typeof global.SERVICE.DefaultCustomerService.saveAll, 'function');
+    assert.strictEqual(typeof global.SERVICE.DefaultPasswordService.saveAll, 'function');
+
+    global.SERVICE.DefaultEmployeeService = {
+        findByAPIKey: function () {
+            return Promise.resolve({ code: 'apiAdmin' });
+        }
+    };
+    await runtimeImporter.ensureLocalSchemaService({
+        tenant: 'default',
+        header: {
+            rawSchema: profileModule.rawSchema.employee,
+            options: {
+                moduleName: 'profile',
+                schemaName: 'employee',
+                operation: 'saveAll'
+            }
+        }
+    });
+    assert.strictEqual(typeof global.SERVICE.DefaultEmployeeService.saveAll, 'function');
+    assert.strictEqual(typeof global.SERVICE.DefaultEmployeeService.findByAPIKey, 'function');
+
+    global.NODICS = {
+        isModuleActive: function () {
+            return true;
+        }
+    };
+    global.SERVICE = {
+        DefaultSearchService: {
+            doSave: function (request) {
+                calls.push({
+                    target: 'search',
+                    request: request
+                });
+                return Promise.resolve({
+                    code: 'SUC_SRCH_00001',
+                    result: request.models.map(model => ({
+                        code: model.code,
+                        indexed: true
+                    }))
+                });
+            }
+        }
+    };
 
     let searchResult = await insertModel({
         tenant: 'electronics',

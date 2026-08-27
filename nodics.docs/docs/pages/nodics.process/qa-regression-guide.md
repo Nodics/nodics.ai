@@ -95,3 +95,19 @@ limit and a stable rejection or degradation behavior.
 
 Run the complete Process contract suite and bounded fresh local acceptance against empty databases, then repeat the live smoke against retained data and inspect startup logs for error-level output.
 A beginner developer should be able to follow the same regression sequence without manual database repair.
+
+## Business context
+
+The business problem is release confidence. Regression testing proves that a
+workflow change still supports the promised business journey, not only that an
+API returned success once. Business users need evidence for approvals,
+exceptions, recovery, accessibility, and customer-impact risks before a
+workflow or automation change is promoted.
+
+## Customization and extension
+
+Projects may add regression journeys for tenant rules, domain adapters,
+industry accelerators, custom forms, integration providers, and dashboards.
+Each extension must include positive behavior, negative behavior, recovery,
+permission denial, data integrity, and operator evidence so the result is
+useful beyond a developer's local machine.

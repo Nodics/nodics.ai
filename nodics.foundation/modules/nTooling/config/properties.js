@@ -235,6 +235,7 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nTooling/test/repositoryToolingBoundary.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/repositoryGovernanceDocumentsContract.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/documentationNavigationQuality.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/applicationDocumentationRecordValidation.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/dependencyRuntimeContract.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/dependencyOwnershipContract.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/dataReleaseManifestGeneratorContract.test.js' },
@@ -609,7 +610,7 @@ module.exports = {
                 script: 'src/service/project/defaultProjectDeploymentQualificationService.mjs'
             },
             'project:configure-framework': {
-                description: 'Synchronize project-local generated framework links from project-owned dependency facts.',
+                description: 'Validate project framework-root wiring without creating project-local framework links.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/project/defaultProjectFrameworkLinkService.js'
             },

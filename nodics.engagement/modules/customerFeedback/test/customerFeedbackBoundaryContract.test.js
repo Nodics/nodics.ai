@@ -29,10 +29,10 @@ assert.strictEqual(packageJson.nodics.kind, 'capability');
 assert.deepStrictEqual(packageJson.nodics.owns, ['configuration', 'schema', 'service', 'test', 'llm']);
 assert.strictEqual(packageJson.nodics.runtime.router, false);
 assert(fs.existsSync(path.join(moduleRoot, 'src/schemas/schemas.js')), 'customerFeedback must contain implemented schemas');
-assert(!fs.existsSync(path.join(moduleRoot, 'data')), 'Phase 1 customerFeedback must not contain data');
+assert(!fs.existsSync(path.join(moduleRoot, 'data')), 'customerFeedback must not contain data before it owns seed data');
 assert(!fs.existsSync(path.join(moduleRoot, 'docs')), 'customerFeedback must not contain module-local docs');
 assert(!fs.existsSync(path.join(moduleRoot, 'llm/README.md')), 'customerFeedback must use AGENTS.md for AI navigation');
-assert(readme.includes('## Phase 9 status'), 'customerFeedback README must expose implementation status');
+assert(readme.includes('## Capability status'), 'customerFeedback README must expose implementation status');
 assert(contract.includes('Status: implemented'), 'customerFeedback contract must expose implemented behavior');
 assert(!readme.includes('Generated documentation entry'), 'customerFeedback README must not retain placeholder guidance');
 

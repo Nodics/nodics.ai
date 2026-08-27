@@ -211,7 +211,7 @@ module.exports = {
                 dueAt: { type: 'date', required: false, description: 'Optional task due timestamp' },
                 assignmentPolicy: { type: 'string', required: false, description: 'Published workflow assignment policy applied to the task' },
                 escalationPolicy: { type: 'object', required: false, description: 'Published workflow escalation policy and fallback queue evidence' },
-                approvalPolicy: { type: 'object', required: false, description: 'Published approval policy including actor separation, multi-approver, rejection reason, and emergency override settings' },
+                approvalPolicy: { type: 'object', required: false, description: 'Published approval policy including required approvals, rejection reason, and emergency override settings' },
                 decision: { type: 'object', required: false, description: 'Completed decision evidence captured from the human task' }
             }
         },

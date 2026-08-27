@@ -13,10 +13,10 @@
 
 /**
  * @module nTooling/service/project/defaultProjectFrameworkLinkService
- * @description Synchronizes generated framework links for a project while keeping link mechanics in framework tooling.
+ * @description Validates project framework-root configuration without creating project-local framework links.
  * @layer tooling
  * @owner nTooling
- * @override Projects own dependency facts and NODICS_FRAMEWORK_ROOT; framework tooling owns link validation and replacement.
+ * @override Projects own NODICS_FRAMEWORK_ROOT; framework tooling owns validation and migration guidance.
  */
 
 const fs = require('node:fs');
@@ -67,85 +67,16 @@ module.exports = {
     },
 
     /**
-     * Returns the committed generated-link dependency path.
-     * @param {string} moduleName Framework package name.
-     * @returns {string} Dependency path.
-     */
-    expectedDependencyPath: function (moduleName) {
-        return `file:.nodics/framework/${moduleName}`;
-    },
-
-    /**
-     * Validates that project dependencies point to generated framework links.
-     * @param {Object} dependencies Package dependencies.
-     * @param {string} moduleName Framework package name.
-     * @returns {void}
-     */
-    assertCommittedDependency: function (dependencies, moduleName) {
-        const expectedPath = this.expectedDependencyPath(moduleName);
-        if (dependencies[moduleName] !== expectedPath) {
-            throw new Error(
-                `Unexpected dependency path for ${moduleName}: ${dependencies[moduleName]}. ` +
-                `Expected ${expectedPath}. Package dependencies must point to generated framework links.`
-            );
-        }
-    },
-
-    /**
-     * Replaces a generated symlink after verifying no real directory/file would be removed.
-     * @param {string} linkPath Generated symlink path.
-     * @param {string} targetPath Framework module root.
-     * @returns {void}
-     */
-    replaceGeneratedLink: function (linkPath, targetPath) {
-        if (fs.existsSync(linkPath)) {
-            const linkStats = fs.lstatSync(linkPath);
-            if (!linkStats.isSymbolicLink()) {
-                throw new Error(
-                    `Refusing to replace non-symlink path: ${linkPath}. ` +
-                    'Remove it manually if it is safe, then rerun configure:framework.'
-                );
-            }
-            fs.unlinkSync(linkPath);
-        }
-        fs.symlinkSync(targetPath, linkPath, 'dir');
-    },
-
-    /**
-     * Removes generated links that no longer correspond to package dependencies.
-     * @param {string} frameworkLinkRoot Generated framework link root.
-     * @param {string[]} frameworkDependencies Declared framework dependencies.
-     * @returns {void}
-     */
-    removeStaleGeneratedLinks: function (frameworkLinkRoot, frameworkDependencies) {
-        fs.readdirSync(frameworkLinkRoot)
-            .filter(name => name.startsWith('nodics.') && !frameworkDependencies.includes(name))
-            .forEach(name => {
-                const stalePath = path.join(frameworkLinkRoot, name);
-                const staleStats = fs.lstatSync(stalePath);
-                if (!staleStats.isSymbolicLink()) {
-                    throw new Error(
-                        `Refusing to remove stale non-symlink framework path: ${stalePath}. ` +
-                        'Remove it manually if it is safe, then rerun configure:framework.'
-                    );
-                }
-                fs.unlinkSync(stalePath);
-                console.log(`Removed stale framework link ${name}`);
-            });
-    },
-
-    /**
-     * Synchronizes generated framework links for one project.
+     * Validates direct framework-root wiring for one project.
      * @param {Object} options Link options.
      * @param {string} options.projectRoot Project root.
      * @param {Object} options.environment Environment values.
      * @returns {void}
      */
-    synchronize: function (options = {}) {
+    validate: function (options = {}) {
         const projectRoot = path.resolve(options.projectRoot || process.cwd());
         const packageJsonPath = path.join(projectRoot, 'package.json');
         const envPath = path.join(projectRoot, '.env');
-        const frameworkLinkRoot = path.join(projectRoot, '.nodics', 'framework');
         const environment = Object.assign(
             {},
             this.readEnvFile(envPath),
@@ -160,27 +91,21 @@ module.exports = {
         }
 
         const frameworkRoot = path.resolve(projectRoot, frameworkRootValue);
+        this.assertFrameworkModule(frameworkRoot, 'nodics.foundation');
         const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
         const dependencies = packageJson.dependencies || {};
-        const frameworkDependencies = Object.keys(dependencies)
-            .filter(name => name.startsWith('nodics.'));
+        const legacyDependencies = Object.entries(dependencies)
+            .filter(([name, value]) => name.startsWith('nodics.') && String(value).startsWith('file:.nodics/framework/'));
 
-        if (frameworkDependencies.length === 0) {
-            throw new Error('No nodics.* dependencies found in package.json.');
+        if (legacyDependencies.length > 0) {
+            const dependencyNames = legacyDependencies.map(([name]) => name).join(', ');
+            throw new Error(
+                'Project package.json still declares legacy .nodics/framework dependencies: ' + dependencyNames + '. ' +
+                'Remove those nodics.* file dependencies and delegate tooling/runtime through NODICS_FRAMEWORK_ROOT.'
+            );
         }
 
-        fs.mkdirSync(frameworkLinkRoot, { recursive: true });
-        this.removeStaleGeneratedLinks(frameworkLinkRoot, frameworkDependencies);
-
-        frameworkDependencies.forEach(moduleName => {
-            this.assertCommittedDependency(dependencies, moduleName);
-            const moduleRoot = this.assertFrameworkModule(frameworkRoot, moduleName);
-            const linkPath = path.join(frameworkLinkRoot, moduleName);
-            this.replaceGeneratedLink(linkPath, moduleRoot);
-            console.log(`${moduleName} -> ${moduleRoot}`);
-        });
-
-        console.log(`Linked ${frameworkDependencies.length} Nodics framework dependencies from ${frameworkRoot}`);
+        console.log(`Validated Nodics framework root: ${frameworkRoot}`);
     },
 
     /**
@@ -189,7 +114,7 @@ module.exports = {
      * @returns {void}
      */
     runCli: function (environment = process.env) {
-        this.synchronize({
+        this.validate({
             projectRoot: environment.NODICS_PROJECT_ROOT || process.cwd(),
             environment
         });

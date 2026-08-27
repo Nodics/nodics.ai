@@ -31,7 +31,6 @@ module.exports = {
                 escalateAfterHours: 24
             },
             slaHours: 24,
-            submitterMayApprove: false,
             requiredApprovals: 1,
             emergencyOverridePermission: 'cms.publication.emergencyOverride',
             requireReasonOnReject: true,

@@ -4,6 +4,13 @@ Axis is a reusable frontend framework application, not a one-off admin screen.
 Partners, developers, and AI tools must be able to extend it without seeing the
 entire repository or moving backend authority into the browser.
 
+For beginners, this contract is the first safety rail before changing Axis. It
+explains how to decide whether a requirement belongs in the browser, backend,
+CMS content, generated data, or customer project layer. Business users should
+receive clear journeys and safe operations; developers should receive source
+ownership, extension points, and tests; operators should receive configuration,
+availability, recovery, and verification evidence.
+
 ## Local Discovery Chain
 
 For every feature, read:

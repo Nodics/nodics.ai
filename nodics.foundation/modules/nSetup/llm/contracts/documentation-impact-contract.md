@@ -151,6 +151,83 @@ The following rules are mandatory:
     text or equivalent prose, and source-backed behavior. Do not add diagrams
     as decoration, and do not use diagrams to hide unsupported or planned
     behavior inside published documentation.
+16. Every strict enterprise documentation topic must declare
+    `visualRequirements` in catalogue metadata. These requirements are the
+    authoring contract for the page, not optional decoration. Architecture
+    topics need architecture or module-hierarchy diagrams; runtime and
+    integration topics need sequence, data-flow, lifecycle, provider-routing,
+    or event-flow diagrams; schema and configuration topics need schema models
+    plus configuration tables; Axis and business-user topics need screen flows,
+    screenshots, or equivalent UI journey visuals; troubleshooting topics need
+    matrices or decision trees; commerce, order, publishing, cron, workflow,
+    import/export, and pipeline topics need lifecycle or state diagrams. Tables
+    should explain comparisons, configuration choices, ownership boundaries,
+    risks, or operating decisions. Screenshots and code-snippet images should
+    be governed media with alt text and source evidence when they are used.
+    Text-only pages are incomplete when a visual would reduce ambiguity for a
+    business user, administrator, developer, operator, QA owner, or AI tool.
+17. Published documentation pages must follow the Nodics page anatomy contract.
+    Each page needs a clear title, detailed summary, breadcrumbs or hierarchy
+    context, audience/maturity/lifecycle/access metadata, the declared visual
+    contract, business perspective, technical perspective, configuration or
+    source map where applicable, customization and extension guidance,
+    operational/security notes, troubleshooting, verification, and related
+    topics. The order may change for readability, but the reader needs must be
+    covered before a page is considered complete.
+18. Documentation renderers must be declarative consumers of backend-owned CMS
+    content. Axis and Nexus may render Mermaid diagrams, tables, images,
+    screenshots, code blocks, command blocks, callouts, links, breadcrumbs,
+    table-of-contents navigation, previous/next links, hierarchy dashboards,
+    badges, and search filters. They must not execute markup from CMS content,
+    accept arbitrary renderer URLs, invent navigation hierarchy, or bypass page
+    access and lifecycle metadata.
+19. Section, group, subgroup, and topic landing areas are documentation
+    dashboards. They must summarize child navigation, supported journeys,
+    audience intent, maturity/access signals, important risks, and related
+    next steps instead of acting as empty folders. Dashboards are backend
+    content records and must be editable and publishable through the same
+    governed documentation workflow as pages.
+20. Catalogue metadata is the source contract for publication and rendering.
+    A strict page must carry hierarchy, parent, order, document type, audience,
+    business audience, technical audience, source owner, source path, evidence,
+    access mode, public/authenticated flags, roles/groups/permissions,
+    lifecycle state, maturity state, implementation state, rendering component,
+    related pages, search keywords, topic keywords, visual requirements, and
+    generated checksums where applicable.
+21. Axis and Nexus have separate presentation responsibilities but one content
+    truth. Axis renders authenticated documentation, management previews,
+    authoring validation, and role-aware navigation. Nexus renders only public
+    Online documentation. Both consumers must preserve backend-provided page
+    anatomy, visual blocks, hierarchy, related links, search metadata, and
+    visibility boundaries.
+22. Documentation management is a governed business capability. Axis may give
+    authors and administrators a workspace for editable navigation hierarchy,
+    section/group/subgroup/topic dashboards, page metadata, visual
+    requirements, access policy, preview, validation, and review submission.
+    The editable records must remain backend-owned CMS/documentation content
+    records in the content catalog. Axis must not replace them with local JSON,
+    hardcoded menus, browser-only drafts, or an alternate publication path.
+23. Every documentation item that can affect a reader's journey must be
+    publishable. Changing a documentation product, navigation, node,
+    dashboard, page metadata, route, template, component, access policy, search
+    metadata, or rendered article content must create or update the
+    publication-state evidence needed for staged review, approval, Online
+    activation, audit history, and rollback/reference to the previous Online
+    version where available.
+24. Documentation roles are least-privilege roles. A read-only Axis viewer may
+    read authorized Axis applications and documentation but must not receive
+    authoring, operational, approval, publication, runtime mutation, or import
+    execution permissions. A documentation author may create/update
+    documentation drafts, navigation, dashboards, visual contracts, and review
+    requests, but admin/super-admin authority remains responsible for approval
+    and Online publication unless a customer layer explicitly defines a
+    different governed role.
+25. Search preparation is metadata, not search authority. Catalogue records
+    must provide title, summary, keywords, facets, access mode, lifecycle
+    state, and normalized search text so current keyword search and future
+    Elasticsearch projection can reuse the same source. The content catalog
+    remains the source of truth even when an external index later renders
+    faster search results.
 
 Minimum word and section counts are lower-bound defect detectors only. They do
 not prove accuracy, usefulness, audience completeness, evidence coverage, or
@@ -339,12 +416,18 @@ Before creating or changing canonical public documentation:
    lifecycle orchestration, import/export, provider routing, publishing,
    authentication, or runtime startup flows when the visual materially improves
    comprehension;
-8. explain the smallest supported later-loaded project customization without
+8. declare and satisfy `visualRequirements` for the topic type, including
+   diagrams, tables, screenshots, schema models, screen flows, decision trees,
+   command examples, or code examples where they are needed for comprehension;
+9. verify that the page anatomy, hierarchy dashboard, renderer contract,
+   access state, lifecycle state, related-topic links, and search metadata are
+   present in generated records and consumer rendering;
+10. explain the smallest supported later-loaded project customization without
    editing Nodics framework source or creating a parallel authority;
-9. record evidence, ownership, maturity, limitations, and last verification;
-10. update all affected destinations when one implementation change affects
+11. record evidence, ownership, maturity, limitations, and last verification;
+12. update all affected destinations when one implementation change affects
    multiple audiences or contracts;
-11. regenerate derived content and run Nodics plus the documentation project validation
+13. regenerate derived content and run Nodics plus the documentation project validation
     proportionate to the change.
 
 ## Customization-First Documentation Rule
@@ -532,6 +615,12 @@ Every implemented end-to-end capability must address these audiences:
 
 If an audience or concern is not applicable, the owning documentation must say
 why. Silence is not evidence that impact was considered.
+
+Every backend-owned top-level documentation navigation section must contain at
+least one authored page before the catalogue is publishable. Empty sections are
+not allowed because every section, group, subgroup, and topic must be able to
+render a useful dashboard or summary area for business users, developers,
+operators, QA owners, and AI tools.
 
 ## Use-Case And Example Contract
 

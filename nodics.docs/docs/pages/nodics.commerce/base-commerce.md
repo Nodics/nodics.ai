@@ -54,3 +54,44 @@ If Pricing, Tax, Promotion, or Inventory is unavailable, callers receive a failu
 ## Verification
 
 Run the foundation contract, generated schema contracts, module metadata validation, controlled Commerce graph preparation, and generated LLM validation. Test exact arithmetic, cross-tenant rejection, inactive contexts, unavailable inventory, deterministic hashes, idempotent reservations, stale revisions, publication withdrawal, and a later-layer service override. Production acceptance additionally requires realistic data-volume, index, cache, recovery, and regional-policy evidence.
+
+## Store, Channel, And Point Of Service Coverage
+
+Base Commerce also owns the business context that decides where commerce
+happens: Store, SalesChannel, and PointOfService. Product catalog data,
+pricing, inventory, checkout, and fulfillment should all be interpreted
+through the active selling context rather than through a hardcoded frontend
+assumption.
+
+```mermaid
+flowchart LR
+  Enterprise["Enterprise and tenant"] --> Store["Store"]
+  Store --> Channel["Sales channel"]
+  Store --> POS["Point of service"]
+  Channel --> Catalog["Catalog and pricing context"]
+  POS --> Inventory["Inventory and fulfillment context"]
+  Catalog --> Checkout["Checkout journey"]
+```
+
+| Record | Business purpose | Documentation detail |
+| --- | --- | --- |
+| Store | Defines selling context, locale, currency, timezone, and activation. | Explain tenant scope, active state, default values, and project attributes. |
+| SalesChannel | Identifies web, marketplace, mobile, or assisted selling mode. | Explain pricing, content, payment, and fulfillment impact. |
+| PointOfService | Represents store, branch, pickup point, or operational service location. | Explain address, opening, stock, and customer visibility. |
+| StoreContextService | Resolves effective store context for runtime calls. | Explain request inputs, fallback, and rejection behavior. |
+
+Axis should expose Stores & Channels as a business workbench with backend
+declared columns and permissions. Developers should add project-specific store
+attributes, channel policies, and point-of-service rules in the owning store
+module or a later project module. Implementation evidence comes from store
+schemas, store data packs, store backoffice capability service, and generated
+schema contracts for Store, SalesChannel, and PointOfService.
+
+## Customization and extension
+
+Projects may extend Base Commerce by adding store attributes, channel rules,
+point-of-service behavior, catalog context policies, and store-aware
+calculation hooks in a later-loaded module. The extension must preserve the
+standard Store, SalesChannel, and PointOfService ownership model, keep
+tenant/store scope explicit, and prove that checkout, pricing, inventory,
+content, and fulfillment resolve the same selling context.

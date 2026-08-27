@@ -4,6 +4,13 @@ Axis renders an authorized, backend-provided list of documentation products
 under `/docs/*`. BackOffice aggregates the list from active module metadata;
 Axis does not hardcode product tabs or maintain another registry.
 
+| Documentation surface | Primary user | What Axis renders | Owning authority |
+| --- | --- | --- | --- |
+| Framework documentation | Business users, developers, operators, and partners | Searchable CMS article navigation and page body | `nodics.docs` content pack installed through nImport and published through WCMS |
+| API reference | Developers and integration teams | Searchable OpenAPI text catalogue with module grouping | System-generated OpenAPI contracts exposed by the active backend |
+| Axis documentation | Axis contributors, operators, and implementation teams | Platform-owned CMS article pack for Axis behavior and contribution rules | Platform Axis module authored docs and generated content-pack data |
+| Customer project documentation | Customer teams and project partners | Project documentation product returned by BackOffice bootstrap | Customer project repository and its own documentation content pack |
+
 - **Framework** renders the canonical `nodics.docs` content pack through CMS.
 - **Swaggers** renders the active System-owned OpenAPI contract in an
   Axis-owned, searchable reference and links to the backend's standalone

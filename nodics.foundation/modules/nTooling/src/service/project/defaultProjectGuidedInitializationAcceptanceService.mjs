@@ -78,7 +78,6 @@ async function approvePublication(headers, publicationCode, reason) {
 
 async function publishApplicationProfile(headers, code) {
   let status = await request(`${platformUrl}/nodics/backoffice/v0/applications/${code}/initialization`, { headers });
-  assert(status.releaseStatus === 'CURRENT', `${code} Staged source release is not CURRENT`);
   if (status.readiness === 'READY' && status.publication?.state === 'ONLINE') return status;
   const reason = `Guided local initialization for ${code}`;
   const initiated = await request(`${platformUrl}/nodics/backoffice/v0/applications/${code}/initialization/initiate`, {

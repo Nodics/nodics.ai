@@ -40,6 +40,14 @@ assert.strictEqual(documentation.requiredPermissions, undefined,
     'authenticated employees must not require an unrelated operational permission to read help');
 assert.deepStrictEqual(documentationLinks.map(item => item.id), [
     'documentation-dashboard',
+    'documentation-management',
+    'documentation-navigation',
+    'documentation-pages',
+    'documentation-access-policies',
+    'documentation-publication-queue',
+    'documentation-search-preview',
+    'documentation-governance-readiness',
+    'documentation-source-evidence',
     'documentation-framework',
     'documentation-swaggers',
     'documentation-nodics-axis',
@@ -47,6 +55,14 @@ assert.deepStrictEqual(documentationLinks.map(item => item.id), [
 ]);
 assert.deepStrictEqual(documentationLinks.map(item => item.label), [
     'Dashboard',
+    'Documentation Management',
+    'Navigation Builder',
+    'Pages and Topic Content',
+    'Audience and Access Policies',
+    'Review and Publication Queue',
+    'Search Metadata Preview',
+    'Governance and Readiness',
+    'Source Evidence Review',
     'Framework',
     'Swaggers',
     'Nodics Axis',
@@ -54,11 +70,61 @@ assert.deepStrictEqual(documentationLinks.map(item => item.label), [
 ]);
 assert.deepStrictEqual(documentationLinks.map(item => item.route), [
     '/docs',
+    '/content/designer/documentation',
+    '/content/designer/documentation/navigation',
+    '/content/designer/documentation/pages',
+    '/content/designer/documentation/access-policies',
+    '/content/designer/documentation/publication',
+    '/content/designer/documentation/search',
+    '/content/designer/documentation/governance',
+    '/content/designer/documentation/source-evidence',
     '/docs/framework',
     '/docs/swaggers',
     '/docs/nodics-axis',
     '/docs/nodics-kickoff'
 ]);
+assert.deepStrictEqual(
+    documentationLinks.find(item => item.id === 'documentation-management').requiredPermissions,
+    [
+        'documentation.draft.create',
+        'documentation.navigation.update',
+        'documentation.dashboard.update',
+        'documentation.accessPolicy.update',
+        'documentation.submitReview'
+    ],
+    'Documentation Management must be visible only to documentation authors or administrators'
+);
+assert.deepStrictEqual(
+    Object.fromEntries(documentationLinks.filter(item => item.parentId === 'documentation-management').map(item => [
+        item.id,
+        item.workbenchTarget
+    ])),
+    {
+        'documentation-navigation': { moduleName: 'cms', schemaName: 'cmsDocumentationNode' },
+        'documentation-pages': { moduleName: 'cms', schemaName: 'cmsDocumentationPage' },
+        'documentation-access-policies': { moduleName: 'cms', schemaName: 'cmsDocumentationAccessPolicy' },
+        'documentation-publication-queue': { moduleName: 'cms', schemaName: 'cmsDocumentationPublicationState' },
+        'documentation-search-preview': { moduleName: 'cms', schemaName: 'cmsDocumentationSearchMetadata' },
+        'documentation-governance-readiness': {
+            moduleName: 'cms',
+            schemaName: 'cmsDocumentationPublicationState',
+            governanceService: 'DefaultCmsDocumentationGovernanceService',
+            authoringModelRoute: '/documentation/governance/model',
+            validationRoute: '/documentation/governance/validate',
+            renderProjectionRoute: '/documentation/governance/render-projection',
+            searchRoute: '/documentation/governance/search',
+            publicationHandoffRoute: '/documentation/governance/publication-handoff',
+            migrationPlanRoute: '/documentation/governance/migration-plan'
+        },
+        'documentation-source-evidence': { moduleName: 'cms', schemaName: 'cmsDocumentationPage' }
+    },
+    'Documentation management children must resolve through CMS-owned documentation schemas'
+);
+assert.deepStrictEqual(
+    documentationLinks.find(item => item.id === 'documentation-publication-queue').requiredPermissions,
+    ['documentation.review', 'documentation.approve', 'documentation.publish'],
+    'Documentation publication queue must require explicit documentation review, approval, and publish permissions'
+);
 assert.strictEqual(
     axisNavigation.find(item => item.id === 'documentation-nodics-axis').group.id,
     'documentation',

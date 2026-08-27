@@ -11,6 +11,25 @@ documentation:
 - `gDocs/backoffice/how-schema-workbench-works.md`
 - `nodics.foundation/modules/nDatabase/database/README.md`
 
+| Workbench area | Business purpose | Axis behavior | Backend authority |
+| --- | --- | --- | --- |
+| Schema discovery | Let an employee find editable business data safely | Lists authorized data types with search, favourites, recents, and route-scoped views | Owning modules publish schema descriptors, permissions, labels, relationships, and limits |
+| Record browsing | Support operational review without exporting data first | Renders generated tables, filters, sorting, paging, and details | Generated CRUD services execute queries and enforce tenant/security rules |
+| Record mutation | Let authorized users create, update, delete, or run lifecycle actions | Presents typed forms, impact previews, confirmations, and safe errors | Owning modules validate, persist, execute business logic, and audit |
+| Extension and reuse | Avoid one-off workbench widgets for each domain | Reuses generic query builders, relationship selectors, and record renderers | Backend contracts define fields, operators, actions, relationships, and constraints |
+
+For beginners, Schema Workbench is the generic business-data workbench. It
+lets an authorized employee browse or maintain records published by backend
+schemas, but the browser does not invent fields, relationships, permissions,
+or validation. Developers extend the owning schema and service contracts first,
+then let Axis render those published capabilities.
+
+An operator uses Schema Workbench to inspect whether the authorized data
+surface is usable for the current enterprise, tenant, module, and route
+context. They should look for unavailable descriptors, rejected actions,
+validation errors, conflicts, and backend correlation identifiers before
+treating a UI symptom as a frontend fault.
+
 ## Implemented frontend behavior
 
 The authenticated `/schema-workbench` route:

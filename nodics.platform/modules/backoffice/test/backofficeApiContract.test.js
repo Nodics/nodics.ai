@@ -174,6 +174,14 @@ assert(
   "public bootstrap response schema must be declared",
 );
 assert(
+  contracts.backofficeMetadata.properties.navigation.items.properties.workbenchPresentation.properties.summary,
+  "navigation workbench presentation summary must be part of the public contract",
+);
+assert(
+  contracts.backofficeMetadata.properties.navigation.items.properties.workbenchTarget.properties.publicationHandoffRoute,
+  "documentation governance handoff route metadata must be part of the public contract",
+);
+assert(
   routers.registryDiscovery.diagnostics.responses["200"],
   "diagnostics response schema must be declared",
 );

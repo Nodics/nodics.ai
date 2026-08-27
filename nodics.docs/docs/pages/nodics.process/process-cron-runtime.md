@@ -110,3 +110,10 @@ with a dependency error instead of silently pretending the automation ran.
 
 Prepare processServer, confirm `nodics.process` is observed once with `workflow` and `cronjob` technical modules, execute a scheduled trigger with correlation evidence, and verify no standalone cronjob listener is required.
 A beginner developer should confirm this shared runtime before adding another server.
+
+## Customization and extension
+
+Projects may customize scheduled automation by adding Cron job definitions,
+Process triggers, tenant calendars, retry rules, and operational dashboards.
+The extension must preserve Cron as the scheduler, Process as the workflow
+coordinator, and domain modules as the owners of business state changes.

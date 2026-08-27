@@ -21,6 +21,14 @@ alerts, forms, and dashboards. The control room helps a human operate the
 system safely, but it does not become the power plant, the billing engine, the
 workflow engine, the CMS, or the security system.
 
+For beginners, every Axis screen should be read in two layers: the visible
+workspace helps an employee act, while the backend module named by the
+workspace remains the source of truth. A business user can trust that the same
+permission, workflow, publication, and validation rules apply whether a record
+is opened from a dashboard, a generated workbench, a CMS-composed page, or a
+deep link. Developers should therefore find the owning backend capability
+before changing a route, renderer, action, or client.
+
 ## Decision
 
 Nodics Axis is a reusable Back Office browser application deployed once for

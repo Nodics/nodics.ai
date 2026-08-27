@@ -11,7 +11,7 @@
 
 /**
  * @module nodics.engagement/config/postscripts
- * @description Reserves the Customer Engagement post-start extension boundary without adding Phase 1 runtime behavior.
+ * @description Reserves the Customer Engagement post-start extension boundary without adding runtime behavior.
  * @layer config
  * @owner nodics.engagement
  * @override Later active modules may override these declarations through configuration layering.

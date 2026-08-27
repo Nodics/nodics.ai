@@ -101,4 +101,13 @@ Runbooks cover provider outage, signature failure, replay attack, rate spike, po
 
 Framework verification proves bounded pagination, stable ordering contract, region rejection, signature and replay checks, backpressure, exponential retry, dead-letter limits, restart-safe checkpoint evidence, supported-version decisions, deprecation windows, generated schemas, permission-scoped Axis workspaces, and canonical documentation. Deployment acceptance additionally proves measured capacity, soak stability, failover, backup/restore, RPO/RTO, provider recovery, no lost or duplicated domain evidence, privacy propagation, penetration testing, accessibility journeys, compatibility, monitoring, and rehearsed rollback.
 
-This completes the planned Engagement implementation phases. Communication integration and commerce-domain phases use the same ownership, evidence, security, Axis, documentation, and release-acceptance pattern.
+This completes the current Engagement implementation baseline. Communication integration and commerce-domain work use the same ownership, evidence, security, Axis, documentation, and release-acceptance pattern.
+
+## Customization and extension
+
+Enterprise deployments may customize capacity policy, provider adapters,
+regional routing, retention windows, compatibility gates, accessibility
+acceptance, and monitoring dashboards. Each extension must name the owning
+capability, record measured evidence, protect customer content, preserve
+tenant and region boundaries, and keep rollback or evacuation runbooks current
+for operators.

@@ -16,10 +16,10 @@
 - Keep the public first-machine bootstrap package in the separate
   `nodics.installer` repository. Do not move or delete that repository just
   because this runtime module exists.
-- This module may expose secured backend APIs later for status, inventory,
+- This module may expose secured backend APIs for status, inventory,
   preflight, support-bundle, repair, and other governed local-workspace
   operations after Nodics already exists locally.
-- Phase 1 APIs are active only for read-only discovery, workspace readiness,
+- Current APIs are active only for read-only discovery, workspace readiness,
   dry-run setup planning, and redacted evidence reads.
 - This module does not own npm package identity, `npx` bootstrap behavior,
   repository download before first clone, framework runtime loading, Axis
@@ -30,7 +30,7 @@
 
 ## Axis Boundary
 
-- Axis may render a future Application Builder UI from this module's BackOffice
+- Axis may render an Application Builder UI from this module's BackOffice
   capability metadata.
 - Keep navigation and lifecycle actions hidden until the backend API contract is
   implemented.
@@ -39,7 +39,7 @@
 
 ## Safety Rules
 
-- Keep Phase 1 APIs read-only unless the scope contract and action ledger are
+- Keep current APIs read-only unless the scope contract and action ledger are
   explicitly updated first.
 - Never execute shell commands from this module without an explicit governed
   API contract and test coverage.

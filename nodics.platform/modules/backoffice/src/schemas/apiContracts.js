@@ -361,6 +361,13 @@ const navigationWorkbenchTarget = {
       pattern: "^[A-Za-z][A-Za-z0-9._-]{0,127}$",
     },
     mode: { enum: ["create"] },
+    governanceService: { type: "string", minLength: 1, maxLength: 128 },
+    authoringModelRoute: { type: "string", minLength: 1, maxLength: 512, pattern: "^/(?!/)" },
+    validationRoute: { type: "string", minLength: 1, maxLength: 512, pattern: "^/(?!/)" },
+    renderProjectionRoute: { type: "string", minLength: 1, maxLength: 512, pattern: "^/(?!/)" },
+    searchRoute: { type: "string", minLength: 1, maxLength: 512, pattern: "^/(?!/)" },
+    publicationHandoffRoute: { type: "string", minLength: 1, maxLength: 512, pattern: "^/(?!/)" },
+    migrationPlanRoute: { type: "string", minLength: 1, maxLength: 512, pattern: "^/(?!/)" },
   },
 };
 const navigationWorkbenchQuickFilter = {
@@ -413,6 +420,7 @@ const navigationWorkbenchPresentation = {
   type: "object",
   additionalProperties: false,
   properties: {
+    summary: { type: "string", minLength: 1, maxLength: 320 },
     defaultColumns: {
       type: "array",
       uniqueItems: true,

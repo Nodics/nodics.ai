@@ -20,6 +20,13 @@ file?" It does not mean database permission and it does not mean the employee's
 BackOffice role. For example, data import and data export files are normally
 private, while approved CMS or product assets may become public or signed later.
 
+| Media workspace area | Business question answered | Axis presentation | Backend authority |
+| --- | --- | --- | --- |
+| Media records | What file exists and what is it for? | Search, filter, table, detail, preview, usage link, and safe metadata | nMedia owns media metadata, lifecycle, checksum, provider, and storage identity |
+| Folders and formats | Where should files go and which formats are allowed? | Policy explanation, editable schema views when authorized, and impact warnings | nMedia owns folder rules, extension policy, MIME policy, size limits, and retention |
+| Media sets | Which files belong together as one business asset? | Set membership, variant explanation, and relationship presentation | nMedia owns set models, references, format roles, and validation |
+| Storage and delivery | Who can open a file and how is it served? | Visibility wording, public preview only when allowed, and failure states | nMedia owns provider selection, delivery routes, access policy, and signed/public behavior |
+
 ## Navigation
 
 The left navigation group is **Media Management**. It is published by nMedia

@@ -3,6 +3,28 @@
 Axis is an employee Back Office application. Customer credentials must not be
 submitted to its login flow.
 
+| Journey step | Business outcome | Axis responsibility | Backend owner |
+| --- | --- | --- | --- |
+| Public bootstrap | Find the correct employee login experience for the deployed project | Read public config and request safe discovery data | BackOffice publishes public Profile and CMS connection metadata |
+| Login | Verify an employee can enter the Back Office | Render CMS-composed form and send credentials directly to Profile | Profile authenticates, issues tokens, sets browser-session cookies, and owns CSRF |
+| Secured bootstrap | Show only authorized capabilities | Hold access token in memory and request authorized navigation | BackOffice filters modules, permissions, availability, and Axis policy |
+| Screen lock | Hide protected workspace during idle periods | Store only a bounded lock marker and ask for password again | Profile re-verifies the employee and rotates session state |
+| Logout | End the browser session honestly | Clear memory only after backend revocation succeeds | Profile revokes refresh state and expires session cookies |
+
+For beginners, the safest mental model is that Axis never owns a password and
+never becomes the identity system. It collects employee input, sends it to
+Profile, and then uses BackOffice to discover only the capabilities that the
+authenticated employee may see.
+
+Developers should keep login, recovery, lock, restore, and logout changes on
+the correct side of the boundary: Axis renders and validates browser-safe
+interaction, while Profile and BackOffice own authentication, session
+restoration, authorization, policy, and revocation.
+
+An operator should use the visible login, restore, lock, and logout states to
+separate browser configuration issues from Profile authentication, BackOffice
+authorization, CMS delivery, or session-revocation failures.
+
 ## Startup journey
 
 1. Axis reads public deployment configuration from `/axis-config.json`.

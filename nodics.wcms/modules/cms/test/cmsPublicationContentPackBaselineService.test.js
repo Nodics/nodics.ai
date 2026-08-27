@@ -23,6 +23,9 @@ let installed = false;
 let lifecycle;
 let imported = 0;
 global.SERVICE = {
+    DefaultCmsPublicationWorkflowService: {
+        reference: value => 'workflow-' + value.code + '-' + value.revision
+    },
     DefaultContentPackService: {
         resolvePackContext: code => ({ code: code }),
         inspectRelease: () => ({ available: true, version: '0.0.0', manifest: {
@@ -53,7 +56,7 @@ const request = { tenant: 'default', authData: { principalId: 'platform-service'
     assert.strictEqual(imported, 1);
     await service.initiate('documentation', request);
     assert.strictEqual(imported, 1, 'replay must not re-import a current immutable content pack');
-    publication.baselines.documentation.releaseVersion = '0.0.0';
+    publication.baselines.documentation.releaseVersion = '9.9.9';
     await assert.rejects(service.status('documentation', request),
         error => error.code === 'CMS_BASELINE_RELEASE_INVALID');
     publication.runtimeRole = 'ONLINE';

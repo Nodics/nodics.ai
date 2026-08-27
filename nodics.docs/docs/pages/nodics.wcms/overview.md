@@ -415,3 +415,47 @@ Axis backend module, Swagger/API documentation from registered runtime
 modules, and customer-project documentation from the owning customer project.
 The fact that Axis displays all of them together does not make Axis the data
 owner.
+
+## CMS entity model coverage
+
+WCMS owns the content model used by Axis authoring and Nexus delivery. The
+central journey is: a business user manages a CMS Site, page route, page,
+template, slot definition, component, localization, media reference,
+restriction, type code, and renderer mapping; the content is approved and
+published; Nexus or another storefront resolves the Online version.
+
+```mermaid
+flowchart LR
+  Site["CMS site"] --> Route["Page route"]
+  Route --> Page["CMS page"]
+  Page --> Template["Page template"]
+  Template --> Slot["Slot definition"]
+  Slot --> Component["CMS component"]
+  Component --> Renderer["Type code to renderer"]
+  Component --> Media["Media reference"]
+  Page --> Restriction["Restriction policy"]
+```
+
+| Entity | Business purpose | Extension note |
+| --- | --- | --- |
+| CmsSite | Owns site, catalog, locale, domain, and publication context. | Add project site attributes and access policy. |
+| CmsPageRoute | Maps request path to page. | Document route conflict and fallback behavior. |
+| CmsPage | Owns page identity, template, lifecycle, and visibility. | Add page types through schema and renderer mapping. |
+| CmsPageTemplate and CmsSlotDefinition | Control layout areas. | Add content areas without hardcoding the frontend tree. |
+| CmsComponent and localization | Holds content blocks and translated fields. | Add component schema, validation, and rendering contract. |
+| CmsRestriction | Controls conditional visibility. | Document role, segment, tenant, date, or custom rules. |
+
+## Editorial coverage
+
+Editorial content is covered under WCMS because it uses content authoring,
+publication, localization, delivery, and search projection patterns. The
+implementation includes articles, authors, series, taxonomy terms, content
+types, corrections, localizations, online articles, publication receipts,
+publication targets, workflow adapters, structured data, delivery services,
+and backoffice capability metadata.
+
+Business documentation should explain the authoring journey, correction
+policy, localization completeness, publication target, public delivery, SEO,
+structured data, and withdrawal behavior. Developer documentation should map
+custom fields, workflow adapters, publication adapters, delivery projections,
+and renderer contracts to the owning services and generated schema tests.

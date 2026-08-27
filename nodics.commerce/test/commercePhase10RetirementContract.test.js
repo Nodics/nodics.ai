@@ -25,4 +25,4 @@ function scan(folder) {
 }
 scan(root); assert.deepEqual(offenders, [], 'Active Commerce runtime must not reference archived gComm');
 const packageJson = require('../package.json'); assert.equal(packageJson.name, 'nodics.commerce');
-console.log('Commerce Phase 10 active-runtime retirement contract validated');
+console.log('Commerce active-runtime retirement contract validated');

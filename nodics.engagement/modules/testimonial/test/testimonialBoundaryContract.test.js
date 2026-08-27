@@ -11,7 +11,7 @@
 
 /**
  * @module testimonial/test/testimonialBoundaryContract
- * @description Verifies that the Phase 1 Testimonial package is documented, source-free, and metadata-aligned.
+ * @description Verifies that the implemented Testimonial package is documented and metadata-aligned.
  * @layer test
  * @owner testimonial
  */
@@ -28,11 +28,11 @@ assert.strictEqual(packageJson.name, 'testimonial');
 assert.strictEqual(packageJson.nodics.kind, 'capability');
 assert.deepStrictEqual(packageJson.nodics.owns, ['configuration', 'schema', 'service', 'test', 'llm']);
 assert.strictEqual(packageJson.nodics.runtime.router, false);
-assert(!fs.existsSync(path.join(moduleRoot, 'data')), 'Phase 1 testimonial must not contain data');
+assert(!fs.existsSync(path.join(moduleRoot, 'data')), 'testimonial must not contain data before it owns seed data');
 assert(!fs.existsSync(path.join(moduleRoot, 'docs')), 'testimonial must not contain module-local docs');
 assert(!fs.existsSync(path.join(moduleRoot, 'llm/README.md')), 'testimonial must use AGENTS.md for AI navigation');
 assert(fs.existsSync(path.join(moduleRoot, 'src/schemas/schemas.js')), 'testimonial must contain implemented schemas');
-assert(readme.includes('## Phase 5 status'), 'testimonial README must expose implementation status');
+assert(readme.includes('## Capability status'), 'testimonial README must expose implementation status');
 assert(contract.includes('Status: implemented'), 'testimonial contract must expose implemented behavior');
 assert(!readme.includes('Generated documentation entry'), 'testimonial README must not retain placeholder guidance');
 

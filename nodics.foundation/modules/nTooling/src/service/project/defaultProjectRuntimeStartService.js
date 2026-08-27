@@ -21,7 +21,6 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const { createRequire } = require('node:module');
 
 module.exports = {
     /**
@@ -38,26 +37,51 @@ module.exports = {
     },
 
     /**
-     * Resolves a project dependency package root through the project package.
-     * @param {Function} projectRequire Project-scoped require.
+     * Resolves the framework checkout used by a project runtime.
+     * @param {string} projectRoot Project root.
+     * @param {Object} environment Environment values.
+     * @returns {string} Framework root.
+     */
+    resolveFrameworkRoot: function (projectRoot, environment) {
+        const configuredRoot = environment.NODICS_FRAMEWORK_ROOT;
+        const frameworkRoot = configuredRoot
+            ? path.resolve(projectRoot, configuredRoot)
+            : path.resolve(__dirname, '../../../../../../');
+        if (!fs.existsSync(path.join(frameworkRoot, 'package.json')) ||
+                !fs.existsSync(path.join(frameworkRoot, 'nodics.foundation', 'package.json'))) {
+            throw new Error(
+                'Unable to resolve Nodics framework root for project runtime. ' +
+                'Set NODICS_FRAMEWORK_ROOT in the project .env to the nodics.ai checkout.'
+            );
+        }
+        return frameworkRoot;
+    },
+
+    /**
+     * Resolves a framework package root directly from the framework checkout.
+     * @param {string} frameworkRoot Framework root.
      * @param {string} packageName Package name.
      * @returns {string} Package root.
      */
-    packageRoot: function (projectRequire, packageName) {
-        return path.dirname(projectRequire.resolve(packageName + '/package.json'));
+    packageRoot: function (frameworkRoot, packageName) {
+        const packageRoot = path.join(frameworkRoot, packageName);
+        if (!fs.existsSync(path.join(packageRoot, 'package.json'))) {
+            throw new Error('Unable to resolve framework package `' + packageName + '` from ' + frameworkRoot);
+        }
+        return packageRoot;
     },
 
     /**
      * Resolves effective module roots for one project runtime server.
      * @param {string} projectRoot Project root.
-     * @param {Function} projectRequire Project-scoped require.
+     * @param {string} frameworkRoot Framework root.
      * @param {Object} server Project server declaration.
      * @returns {string[]} Runtime module roots.
      */
-    resolveModuleRoots: function (projectRoot, projectRequire, server) {
+    resolveModuleRoots: function (projectRoot, frameworkRoot, server) {
         const moduleRoots = [].concat(server.moduleRoots || []).map(moduleName => {
             if (moduleName === '{project}') return projectRoot;
-            return this.packageRoot(projectRequire, moduleName);
+            return this.packageRoot(frameworkRoot, moduleName);
         });
         if (!moduleRoots.includes(projectRoot)) moduleRoots.push(projectRoot);
         return moduleRoots;
@@ -98,12 +122,13 @@ module.exports = {
         const environment = options.environment || process.env;
         const manifest = this.readManifest(projectRoot);
         const server = this.resolveServer(manifest, options.serverCode);
-        const projectRequire = createRequire(path.join(projectRoot, 'package.json'));
-        const foundation = projectRequire('nodics.foundation');
-        const moduleRoots = this.resolveModuleRoots(projectRoot, projectRequire, server);
+        const frameworkRoot = this.resolveFrameworkRoot(projectRoot, environment);
+        const foundationRoot = this.packageRoot(frameworkRoot, 'nodics.foundation');
+        const foundation = require(foundationRoot);
+        const moduleRoots = this.resolveModuleRoots(projectRoot, frameworkRoot, server);
 
         foundation.start(Object.freeze({
-            NODICS_HOME: this.packageRoot(projectRequire, 'nodics.foundation'),
+            NODICS_HOME: foundationRoot,
             CUSTOM_HOME: projectRoot,
             MODULE_ROOTS: Object.freeze(moduleRoots),
             defaultEnvironment: environment.ENV ||

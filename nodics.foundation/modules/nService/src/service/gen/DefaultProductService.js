@@ -87,8 +87,16 @@ module.exports = {
     },
     remove: function (request) {
         let moduleName = request.moduleName || 'product';
-        request.schemaModel = NODICS.getModels(moduleName, request.tenant).ProductModel;
+        let models = NODICS.getModels(moduleName, request.tenant) || {};
+        request.schemaModel = models.ProductModel;
         request.moduleName = moduleName;
+        if (!request.schemaModel && SERVICE.DefaultLocalResetProviderService &&
+            SERVICE.DefaultLocalResetProviderService.authorizes(request)) {
+            let error = new Error('Local reset skipped unavailable generated schema model: ' + moduleName + '.ProductModel');
+            error.code = 'LOCAL_RESET_MODEL_REGISTRY_MISSING';
+            error.localResetMissingModel = true;
+            return Promise.reject(error);
+        }
         return SERVICE.DefaultPipelineService.start('modelsRemoveInitializerPipeline', request, {});
     },
     deleteImpact: function (request) {
@@ -118,120 +126,5 @@ module.exports = {
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).ProductModel;
         request.moduleName = moduleName;
         return SERVICE.DefaultPipelineService.start('modelsUpdateInitializerPipeline', request, {});
-    },
-    getSearchModel: function (request) {
-        let moduleName = request.moduleName || 'product';
-        request.schemaModel = NODICS.getModels(moduleName, request.tenant).ProductModel;
-        request.moduleName = moduleName;
-        request.indexName = request.indexName ? request.indexName : request.schemaModel.indexName;
-        if (!request.tenant || !request.indexName) {
-            throw new CLASSES.SearchError('ERR_SRCH_00003', 'Invalid request or search is not active for this type');
-        } else {
-            return NODICS.getSearchModel(moduleName, request.tenant, request.indexName);
-        }
-    },
-    doRefresh: function (request) {
-        try {
-            request.searchModel = this.getSearchModel(request);
-            return SERVICE.DefaultPipelineService.start('doRefreshIndexInitializerPipeline', request, {});
-        } catch (error) {
-            return Promise.reject(new CLASSES.SearchError(error));
-        }
-    },
-    doCheckHealth: function (request) {
-        try {
-            request.searchModel = this.getSearchModel(request);
-            return SERVICE.DefaultPipelineService.start('doHealthCheckClusterInitializerPipeline', request, {});
-        } catch (error) {
-            return Promise.reject(new CLASSES.SearchError(error));
-        }
-    },
-    doExists: function (request) {
-        try {
-            request.searchModel = this.getSearchModel(request);
-            return SERVICE.DefaultPipelineService.start('doExistModelInitializerPipeline', request, {});
-        } catch (error) {
-            return Promise.reject(new CLASSES.SearchError(error));
-        }
-    },
-    doGet: function (request) {
-        try {
-            request.searchModel = this.getSearchModel(request);
-            return SERVICE.DefaultPipelineService.start('doGetModelsInitializerPipeline', request, {});
-        } catch (error) {
-            return Promise.reject(new CLASSES.SearchError(error));
-        }
-    },
-    doSearch: function (request) {
-        try {
-            request.searchModel = this.getSearchModel(request);
-            return SERVICE.DefaultPipelineService.start('doSearchModelInitializerPipeline', request, {});
-        } catch (error) {
-            return Promise.reject(new CLASSES.SearchError(error));
-        }
-    },
-    doSave: function (request) {
-        try {
-            request.searchModel = this.getSearchModel(request);
-            return SERVICE.DefaultPipelineService.start('doSaveModelsInitializerPipeline', request, {});
-        } catch (error) {
-            return Promise.reject(new CLASSES.SearchError(error));
-        }
-    },
-    doBulk: function (request) {
-        try {
-            request.searchModel = this.getSearchModel(request);
-            return SERVICE.DefaultPipelineService.start('doBulkModelInitializerPipeline', request, {});
-        } catch (error) {
-            return Promise.reject(new CLASSES.SearchError(error));
-        }
-    },
-    doRemove: function (request) {
-        try {
-            request.searchModel = this.getSearchModel(request);
-            return SERVICE.DefaultPipelineService.start('doRemoveModelsInitializerPipeline', request, {});
-        } catch (error) {
-            return Promise.reject(new CLASSES.SearchError(error));
-        }
-    },
-    doRemoveByQuery: function (request) {
-        try {
-            request.searchModel = this.getSearchModel(request);
-            return SERVICE.DefaultPipelineService.start('doRemoveModelsByQueryInitializerPipeline', request, {});
-        } catch (error) {
-            return Promise.reject(new CLASSES.SearchError(error));
-        }
-    },
-    doGetSchema: function (request) {
-        try {
-            request.searchModel = this.getSearchModel(request);
-            return SERVICE.DefaultPipelineService.start('doGetSchemaModelInitializerPipeline', request, {});
-        } catch (error) {
-            return Promise.reject(new CLASSES.SearchError(error));
-        }
-    },
-    doUpdateSchema: function (request) {
-        try {
-            request.searchModel = this.getSearchModel(request);
-            return SERVICE.DefaultPipelineService.start('doUpdateSchemaModelInitializerPipeline', request, {});
-        } catch (error) {
-            return Promise.reject(new CLASSES.SearchError(error));
-        }
-    },
-    doRemoveIndex: function (request) {
-        try {
-            request.searchModel = this.getSearchModel(request);
-            return SERVICE.DefaultPipelineService.start('doRemoveIndexInitializerPipeline', request, {});
-        } catch (error) {
-            return Promise.reject(new CLASSES.SearchError(error));
-        }
-    },
-    doIndexing: function (request) {
-        try {
-            request.searchModel = this.getSearchModel(request);
-            return SERVICE.DefaultIndexerService.prepareIndexer(request);
-        } catch (error) {
-            return Promise.reject(new CLASSES.SearchError(error));
-        }
     }
 };

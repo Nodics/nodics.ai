@@ -17,6 +17,6 @@
 9. Archived CRES and gNotify are migration evidence only; generated Core residue is not authority.
 10. Configuration may disable experiences but must not mutate the required package graph.
 
-## Phase 1 limit
+## Capability limit
 
-The current implementation is a scaffold. No public route, persistence schema, workflow, delivery, publication, or operator action is implemented by this phase.
+The current implementation keeps group-level composition separate from concrete domain behavior. Public routes, persistence schemas, workflows, delivery, publication, and operator actions must be owned by the relevant child capability.

@@ -5,6 +5,14 @@
 Nodics Axis uses one cohesive frontend application until demonstrated reuse
 and stable contracts justify extracting packages.
 
+For beginners, the stack can be read as a layered browser workspace: React
+renders the employee experience, TypeScript protects the contracts, Vite builds
+the deployable assets, TanStack Query coordinates backend-owned server state,
+and MUI plus Nodics tokens keep controls accessible and consistent. Business
+users experience this as one predictable Axis application; developers and
+operators use the same layers to decide where a problem belongs when a screen,
+contract, build, or runtime connection behaves unexpectedly.
+
 | Concern                  | Selected technology            | Current version | Responsibility                                                                    |
 | ------------------------ | ------------------------------ | --------------- | --------------------------------------------------------------------------------- |
 | Package management       | npm                            | 11.6.2          | Reproducible dependency installation from `package-lock.json`                     |

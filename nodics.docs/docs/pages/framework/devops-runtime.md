@@ -239,3 +239,11 @@ operator who did not write the code.
 Before production, write an environment-specific operations runbook that lists
 server topology, dependency versions, secrets strategy, health checks,
 monitoring, backup, restore, content-pack import process, and rollback steps.
+
+## Customization and extension
+
+Projects may customize runtime topology, health checks, deployment scripts,
+monitoring, backup/restore, and rollback procedures per environment. The
+extension must preserve the framework-owned module graph, generated content
+pack validation, secret redaction, and operator evidence needed to explain a
+failure without editing source on a running node.

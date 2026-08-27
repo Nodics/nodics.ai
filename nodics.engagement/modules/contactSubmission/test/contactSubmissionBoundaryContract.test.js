@@ -11,7 +11,7 @@
 
 /**
  * @module contactSubmission/test/contactSubmissionBoundaryContract
- * @description Verifies the Phase 4 Contact Submission ownership and implementation boundary.
+ * @description Verifies the Contact Submission ownership and implementation boundary.
  * @layer test
  * @owner contactSubmission
  */
@@ -28,12 +28,12 @@ assert.strictEqual(packageJson.name, 'contactSubmission');
 assert.strictEqual(packageJson.nodics.kind, 'capability');
 assert.deepStrictEqual(packageJson.nodics.owns, ['configuration', 'schema', 'service', 'utility', 'test', 'llm']);
 assert.strictEqual(packageJson.nodics.runtime.router, false);
-assert(fs.existsSync(path.join(moduleRoot, 'src/schemas/schemas.js')), 'Phase 4 schemas must exist');
-assert(!fs.existsSync(path.join(moduleRoot, 'data')), 'Phase 1 contactSubmission must not contain data');
+assert(fs.existsSync(path.join(moduleRoot, 'src/schemas/schemas.js')), 'contactSubmission schemas must exist');
+assert(!fs.existsSync(path.join(moduleRoot, 'data')), 'contactSubmission must not contain data before it owns seed data');
 assert(!fs.existsSync(path.join(moduleRoot, 'docs')), 'contactSubmission must not contain module-local docs');
 assert(!fs.existsSync(path.join(moduleRoot, 'llm/README.md')), 'contactSubmission must use AGENTS.md for AI navigation');
-assert(readme.includes('## Phase 4 status'), 'contactSubmission README must expose implementation status');
+assert(readme.includes('## Capability status'), 'contactSubmission README must expose implementation status');
 assert(contract.includes('Status: backend vertical slice implemented'), 'contactSubmission contract must expose implementation status');
 assert(!readme.includes('Generated documentation entry'), 'contactSubmission README must not retain placeholder guidance');
 
-console.log('ContactSubmission Phase 4 boundary contract validated');
+console.log('ContactSubmission boundary contract validated');

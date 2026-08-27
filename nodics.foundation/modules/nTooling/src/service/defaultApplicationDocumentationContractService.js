@@ -57,6 +57,27 @@ const ALLOWED_ACCESS_MODES = new Set([
     'PERMISSION_BASED',
     'RESTRICTED'
 ]);
+const ALLOWED_VISUAL_REQUIREMENTS = new Set([
+    'diagram',
+    'architecture-diagram',
+    'sequence-flow',
+    'data-flow',
+    'schema-model',
+    'module-hierarchy',
+    'lifecycle-state-diagram',
+    'decision-tree',
+    'screen-flow',
+    'screenshot',
+    'table',
+    'configuration-table',
+    'comparison-table',
+    'decision-table',
+    'troubleshooting-matrix',
+    'source-map-table',
+    'image',
+    'code-example',
+    'command-example'
+]);
 
 /**
  * @module nTooling/service/defaultApplicationDocumentationContractService
@@ -177,7 +198,61 @@ module.exports = {
         if (!Array.isArray(document.relatedPages) || !Array.isArray(document.sourceEvidence)) {
             this.fail('ERR_TOOL_DOC_00009', document.id + ' requires related pages and source evidence arrays');
         }
+        if (!Array.isArray(document.visualRequirements) || !document.visualRequirements.length) {
+            this.fail('ERR_TOOL_DOC_00009', document.id + ' requires explicit visual requirements');
+        }
+        document.visualRequirements.forEach((requirement, index) => {
+            if (!ALLOWED_VISUAL_REQUIREMENTS.has(requirement)) {
+                this.fail('ERR_TOOL_DOC_00009', document.id + ' has invalid visual requirement at index ' + index);
+            }
+        });
         return Object.freeze(document);
+    },
+
+    /** Detects Markdown visual and example evidence for page-level visual requirements. */
+    detectVisualEvidence: function (content) {
+        const body = String(content || '');
+        return Object.freeze({
+            diagram: body.includes('```mermaid'),
+            table: /^\| .+ \|$/m.test(body),
+            image: /^!\[.+\]\(.+\)/m.test(body),
+            codeExample: /```(?!mermaid\b)[\w-]*\n[\s\S]*?```/m.test(body),
+            commandExample: /```(?:bash|sh|zsh|shell|dotenv|env)\b[\s\S]*?```/m.test(body)
+        });
+    },
+
+    /** Validates that declared visual requirements are backed by authored Markdown evidence. */
+    validateVisualRequirements: function (document, content) {
+        const requirements = Array.isArray(document && document.visualRequirements) ? document.visualRequirements : [];
+        if (!requirements.length) return Object.freeze({ requirements: [], satisfied: [] });
+        const evidence = this.detectVisualEvidence(content);
+        const satisfies = {
+            diagram: evidence.diagram,
+            'architecture-diagram': evidence.diagram,
+            'sequence-flow': evidence.diagram,
+            'data-flow': evidence.diagram,
+            'schema-model': evidence.diagram || evidence.table,
+            'module-hierarchy': evidence.diagram || evidence.table,
+            'lifecycle-state-diagram': evidence.diagram,
+            'decision-tree': evidence.diagram,
+            'screen-flow': evidence.diagram || evidence.image,
+            screenshot: evidence.image,
+            table: evidence.table,
+            'configuration-table': evidence.table,
+            'comparison-table': evidence.table,
+            'decision-table': evidence.table,
+            'troubleshooting-matrix': evidence.table,
+            'source-map-table': evidence.table,
+            image: evidence.image,
+            'code-example': evidence.codeExample,
+            'command-example': evidence.commandExample
+        };
+        requirements.forEach(requirement => {
+            if (!satisfies[requirement]) {
+                this.fail('ERR_TOOL_DOC_00010', document.id + ' is missing declared visual evidence: ' + requirement);
+            }
+        });
+        return Object.freeze({ requirements: Object.freeze(requirements.slice()), satisfied: Object.freeze(requirements.slice()) });
     },
 
     /** Validates cross-document hierarchy and audit references for strict documentation catalogues. */
@@ -185,8 +260,10 @@ module.exports = {
         if (!(options && options.requireEnterpriseMetadata)) return Object.freeze({ documents: 0 });
         const documents = catalogue.documents || [];
         const ids = new Set(documents.map(document => document.id));
+        const documentsBySection = new Map();
         const siblingOrders = new Map();
         documents.forEach(document => {
+            documentsBySection.set(document.navigationSectionCode, (documentsBySection.get(document.navigationSectionCode) || 0) + 1);
             const hierarchyDepth = document.hierarchyDepth;
             if (!Number.isInteger(hierarchyDepth) || hierarchyDepth < 2 || hierarchyDepth !== document.hierarchyPath.length) {
                 this.fail('ERR_TOOL_DOC_00011', document.id + ' hierarchy depth must match hierarchy path');
@@ -207,6 +284,11 @@ module.exports = {
                     this.fail('ERR_TOOL_DOC_00011', document.id + ' has invalid source evidence at index ' + index);
                 }
             });
+        });
+        (catalogue.navigationSections || []).forEach(section => {
+            if (!documentsBySection.has(section.code)) {
+                this.fail('ERR_TOOL_DOC_00011', section.code + ' navigation section requires at least one documentation page');
+            }
         });
         return Object.freeze({ documents: documents.length });
     },
@@ -231,6 +313,7 @@ module.exports = {
         if (!hasVisualAid) {
             this.fail('ERR_TOOL_DOC_00010', document.id + ' needs at least one visual aid, table, or diagram');
         }
+        const visualRequirements = this.validateVisualRequirements(document, content);
         const requiredAudienceEvidence = [
             ['beginner', /\bbeginners?\b/i],
             ['business', /\bbusiness\b/i],
@@ -259,7 +342,7 @@ module.exports = {
         if (/nodics\.axis[^.\n]*(owns|owner|source)[^.\n]*(catalog|site|page|component|route|documentation data)/i.test(content)) {
             this.fail('ERR_TOOL_DOC_00010', document.id + ' suggests frontend-owned backend data');
         }
-        return Object.freeze({ documentId: document.id, wordCount: wordCount, sectionCount: sectionCount, hasVisualAid: true });
+        return Object.freeze({ documentId: document.id, wordCount: wordCount, sectionCount: sectionCount, hasVisualAid: true, visualRequirements: visualRequirements });
     },
 
     /** Validates a module-owned documentation catalogue and returns its source files. */

@@ -136,11 +136,25 @@ module.exports = {
             let records = this.records(await service.doSearch(searchRequest));
             if (records.length > 0 || policy.projectionStoreFallback === false) return records;
         }
+        let searchIndexRecords = await this.searchIndexRecords(searchRequest);
+        if (searchIndexRecords.length > 0 || policy.projectionStoreFallback === false) return searchIndexRecords;
         request.discoveryServedFrom = 'PROJECTION_STORE_FALLBACK';
         let records = await this.projectionStoreRecords(Object.assign({}, searchRequest, {
             query: this.projectionStoreQuery(query)
         }));
         return query.text ? this.filterByText(records, query.text) : records;
+    },
+
+    /** Reads Product projections through the active nSearch model registry when generated service search is unavailable or empty. @param {Object} request Search request. @returns {Promise<Array>} Records. */
+    searchIndexRecords: async function (request) {
+        let searchModel = global.NODICS && typeof NODICS.getSearchModel === 'function'
+            ? NODICS.getSearchModel(request.moduleName || 'product', request.tenant, request.indexName || 'productLocalized') : undefined;
+        if (!searchModel || typeof searchModel.doSearch !== 'function') return [];
+        let searchRequest = Object.assign({}, request, { searchModel: searchModel });
+        if (SERVICE.DefaultPipelineService && typeof SERVICE.DefaultPipelineService.start === 'function') {
+            return this.records(await SERVICE.DefaultPipelineService.start('doSearchModelInitializerPipeline', searchRequest, {}));
+        }
+        return this.records(await searchModel.doSearch(searchRequest));
     },
 
     /** Returns whether a projection contains a public text-search term. @param {Object} projection Product projection. @param {string} term Search term. @returns {boolean} Match result. */

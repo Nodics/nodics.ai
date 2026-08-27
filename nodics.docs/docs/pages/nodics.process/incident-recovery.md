@@ -136,3 +136,18 @@ unavailable adapters fail closed.
 
 Force a controlled failure, confirm incident and audit creation, test stale and unauthorized retry rejection, execute bounded retry or domain-owned compensation, and verify final state after restart.
 A beginner operator should rehearse this with a non-production incident before receiving recovery authority.
+
+## Business context
+
+The business problem is trustworthy recovery. When a workflow fails, business
+users need to know whether work is paused, retriable, compensated, or escalated
+without losing customer trust. Recovery documentation connects the operational
+action to the business outcome, the responsible owner, and the evidence needed
+before the incident can be closed.
+
+## Customization and extension
+
+Projects may add domain-specific compensation adapters, retry policies,
+escalation groups, incident dashboards, and support handoff rules. The
+extension must preserve bounded retries, idempotency, domain-owned reversal
+behavior, permission checks, and audit records that survive restart.

@@ -88,3 +88,11 @@ Operators monitor accepted/suppressed intent volume, render failures, provider l
 ## Verification
 
 Prove template version/checksum, declared-variable rendering, executable and unknown-variable rejection, output limits, purpose/channel denial, suppression, consent separation, idempotent replay, content-free events, local delivery, provider failure, exponential retry, dead letter, safe fallback, callback authentication and replay policy, tenant isolation, customer inbox ownership, challenge hashing/expiry/lockout/single use, one-way domain integration, and domain durability during outage. Run Communication package tests, generated schema contracts, Communication route/security contracts, Engagement bridge tests, documentation generation/validation, and the effective Engagement server build to confirm Communication loads first.
+
+## Customization and extension
+
+Projects may add providers, templates, channel policies, callback adapters,
+verification purposes, and inbox views through Communication-owned extension
+points. The extension must preserve consent, suppression, content masking,
+idempotency, replay protection, tenant isolation, and the rule that
+Communication delivers messages but does not decide domain state.

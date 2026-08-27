@@ -116,3 +116,12 @@ service is available.
 
 Run syntax, graph, lifecycle, permission, retry, compensation, and fresh-bootstrap tests. Confirm the same definition behaves safely with the default implementation and an approved customer customization.
 A beginner should start with the smallest configuration or module overlay before replacing a service.
+
+## Business context
+
+The business problem is upgrade-safe change. Customers need project-specific
+behavior without forking framework modules or losing supportability. The
+customization path lets business teams ask for tenant policies, approvals,
+actions, dashboards, and exception handling while developers keep source
+ownership, permissions, rollback, and verification evidence in the correct
+module.

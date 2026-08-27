@@ -16,7 +16,7 @@ Before implementing non-trivial behavior here, record the business outcome, owni
 
 ## Boundary rules
 
-- Treat Phase 5 evidence, editorial, consent, projection, and recovery contracts as active framework behavior.
+- Treat evidence, editorial, consent, projection, and recovery contracts as active framework behavior.
 - Do not copy archived CRES or gNotify implementation into this package.
 - Keep generated schema routers disabled and expose use cases only through dedicated `engagementApi` routes.
 - Never overwrite candidate `originalText`; create an immutable `testimonialVersion` for every editorial change.

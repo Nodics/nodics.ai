@@ -14,13 +14,14 @@
 const assert = require('node:assert/strict'); const path = require('node:path');
 const orderRoot = path.resolve(__dirname, '../modules/checkout/modules/order');
 const routers = require(path.join(orderRoot, 'src/router/routers')).order;
+global.SERVICE = {};
 Object.values(routers).flatMap(group => Object.values(group)).forEach(route => {
     assert.equal(route.secured, true); assert.deepEqual(route.authTokenTypes, ['access']);
     assert(!route.key.includes('/catalog'), 'Lifecycle action must not be exposed from Catalog');
 });
 assert.equal(routers.customer.create.permission, 'commerce.lifecycle.own.create');
 assert.equal(routers.operator.action.permission, 'commerce.lifecycle.act');
-const api = require(path.join(orderRoot, 'src/service/defaultOrderLifecycleApiService'));
+const api = require(path.join(orderRoot, 'src/service/defaultOrderLifecycleOperationService'));
 (async function () {
     const saved = []; api.repository = () => ({
         list: async (tenant, query) => saved.filter(item => item.tenant === tenant && Object.entries(query).every(([key, value]) => item[key] === value)),

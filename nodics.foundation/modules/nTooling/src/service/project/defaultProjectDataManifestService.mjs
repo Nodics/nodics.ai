@@ -15,9 +15,9 @@ import path from 'node:path';
 
 const root = process.cwd();
 const domains = [
-  { code: 'apparel', title: 'Apparel', module: 'agoraApparel' },
-  { code: 'electronics', title: 'Electronics', module: 'agoraElectronics' },
-  { code: 'telco', title: 'Telco', module: 'agoraTelco' },
+  { code: 'apparel', title: 'Apparel', module: 'agora.apparel' },
+  { code: 'electronics', title: 'Electronics', module: 'agora.electronics' },
+  { code: 'telco', title: 'Telco', module: 'agora.telco' },
 ];
 const contentMarkers = ['ContentCatalog', 'PageData', 'RendererData', 'RouteData', 'SiteData', 'TypeCodeData',
   'SharedComponent', 'SharedMediaReference', 'SharedSlot', 'SharedTemplate', 'ContentHeader'];
@@ -32,16 +32,16 @@ const relativeJsFiles = function (root, directory, files = []) {
   return files;
 };
 
-const nexusRoot = path.join(root, 'modules', 'nexus.web', 'modules', 'nexusWebData');
+const nexusRoot = path.join(root, 'modules', 'nexus.web');
 const nexusManifestPath = path.join(nexusRoot, 'data', 'manifest.json');
 const nexusManifest = JSON.parse(fs.readFileSync(nexusManifestPath, 'utf8'));
-nexusManifest.module = 'nexusWebData';
+nexusManifest.module = 'nexus.web';
 for (const release of Object.values(nexusManifest.sections)) release.files = Object.fromEntries(Object.keys(release.files).map(relative => [relative, digest(path.join(nexusRoot, 'data', relative))]));
 fs.writeFileSync(nexusManifestPath, `${JSON.stringify(nexusManifest, null, 2)}\n`);
-console.log(`Generated nexusWebData manifest with ${Object.values(nexusManifest.sections).flatMap(release => Object.keys(release.files)).length} files`);
+console.log(`Generated nexus.web manifest with ${Object.values(nexusManifest.sections).flatMap(release => Object.keys(release.files)).length} files`);
 
 for (const domain of domains) {
-  const packRoot = path.join(root, 'modules', `agora.${domain.code}`, 'modules', domain.module);
+  const packRoot = path.join(root, 'modules', domain.module);
   const stagedRoot = path.join(packRoot, 'data', 'staged', domain.code);
   const relativeFiles = relativeJsFiles(packRoot, path.join('data', 'staged', domain.code)).map(relative => relative.replace(/^data\//, '')).sort();
   const commerce = {}; const content = {};

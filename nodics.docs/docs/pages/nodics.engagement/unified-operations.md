@@ -100,3 +100,35 @@ Monitor projection lag, drift count, overdue workload, rebuild duration, batch p
 Prove deterministic projection and rebuild results, changed and removed drift detection, tenant isolation, permission denial for each operation, bounded list and batch sizes, required batch reason, expected revisions, non-executable preview semantics, dashboard source hashes, export purpose and field allow-list, masking and maximum records, repair expected/observed hashes, source deletion behavior, provider outage fallback, and cross-tenant denial. Run the generated schema contracts, Engagement API route and security contracts, module metadata contract, Axis Customer Engagement regression, documentation generation and validation, and the effective engagement-server build.
 
 Next: Governed Automation and AI adds optional decision support while keeping every customer-impacting outcome explainable, reversible, and under existing domain authority.
+
+## Contact, testimonial, and analytics coverage
+
+Unified engagement operations also covers the 50-item batch topics that do
+not need a separate top-level page yet: contact operations, testimonials, and
+tracking or analytics capture. These are documented here because they share
+the same governance rules: tenant ownership, customer privacy, source
+evidence, bounded exports, permissioned Axis operations, and rebuildable
+projections.
+
+```mermaid
+flowchart LR
+  Customer["Customer signal"] --> Intake["Feedback, review, contact, testimonial, or tracking intake"]
+  Intake --> Governance["Governance and policy"]
+  Governance --> Operation["Operator action or automation"]
+  Operation --> Projection["Dashboard, publication, or analytics projection"]
+  Projection --> Audit["Audit and privacy evidence"]
+```
+
+| Capability | Records | Business outcome |
+| --- | --- | --- |
+| Contact operations | ContactRequest, ContactAttempt, ContactCorrespondence, ContactHandoff, ContactResolution, ContactVerification. | Route customer contact to the right owner and preserve recovery evidence. |
+| Testimonials | TestimonialCandidate, TestimonialConsent, TestimonialVersion, TestimonialProjection. | Publish approved customer advocacy only with consent and withdrawal support. |
+| Engagement automation | AutomationDecision, AutomationEvaluation, BatchRun, Assignment, UnifiedQueueItem. | Assist operators without letting automation become unexplained authority. |
+| Analytics capture | Tracking events and engagement activity records. | Record customer or operational signals without leaking protected content. |
+
+Developer extension should add domain-specific forms, handoff providers,
+testimonial publication adapters, analytics projections, or automation
+evaluators through the owning module. The documentation must state what data
+is captured, whether it is personal data, how consent or purpose is enforced,
+which records are publishable, how deletion propagates, and how operators
+verify a failed handoff or projection rebuild.

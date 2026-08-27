@@ -118,6 +118,23 @@ global.SERVICE = { DefaultModuleService: {
         return true;
     });
     moduleInvocationHandler = async () => {
+        let error = new Error('Failed due to some internal error');
+        error.code = 'ERR_SYS_00000';
+        error.responseCode = '500';
+        error.remoteMessage = 'Content-pack import is already running';
+        error.remoteResponse = { code: 'ERR_IMP_00003', message: 'Content-pack import is already running' };
+        throw error;
+    };
+    await assert.rejects(service.initiate('nexus', { tenant: 'default', requestId: 'request-running',
+        authData: { principalId: 'admin' } }), error => {
+        assert.strictEqual(error.code, 'ERR_BOF_00085');
+        assert.strictEqual(error.metadata.targetMessage, 'Content-pack import is already running');
+        assert.deepStrictEqual(error.causes, [
+            { code: 'ERR_IMP_00003', message: 'Content-pack import is already running' }
+        ]);
+        return true;
+    });
+    moduleInvocationHandler = async () => {
         throw new Error('Transport target returned an invalid release');
     };
     await assert.rejects(service.initiate('nexus', { tenant: 'default', requestId: 'request-3',

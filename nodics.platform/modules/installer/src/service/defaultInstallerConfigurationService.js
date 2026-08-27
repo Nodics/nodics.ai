@@ -13,26 +13,6 @@
 
 const localProperties = require('../../config/properties');
 
-function deepClone(value) {
-    return JSON.parse(JSON.stringify(value));
-}
-
-function readRuntimeConfig() {
-    if (global.CONFIG && typeof CONFIG.get === 'function') {
-        return CONFIG.get('installer.applicationBuilder') ||
-            (CONFIG.get('installer') && CONFIG.get('installer').applicationBuilder) ||
-            {};
-    }
-    return {};
-}
-
-function envAllowedRoots() {
-    return (process.env.NODICS_INSTALLER_WORKSPACE_ROOTS || '')
-        .split(',')
-        .map(value => value.trim())
-        .filter(Boolean);
-}
-
 /**
  * @module installer/service/DefaultInstallerConfigurationService
  * @description Resolves installer Application Builder configuration from Nodics layered config with local test fallbacks.
@@ -46,14 +26,37 @@ module.exports = {
     /** Completes post-initialization for the configuration service lifecycle boundary. */
     postInit: function () { return Promise.resolve(true); },
 
+    /** Clones static configuration defaults for isolated mutation-safe merging. */
+    deepClone: function (value) {
+        return JSON.parse(JSON.stringify(value));
+    },
+
+    /** Reads layered runtime installer configuration when CONFIG is available. */
+    readRuntimeConfig: function () {
+        if (global.CONFIG && typeof CONFIG.get === 'function') {
+            return CONFIG.get('installer.applicationBuilder') ||
+                (CONFIG.get('installer') && CONFIG.get('installer').applicationBuilder) ||
+                {};
+        }
+        return {};
+    },
+
+    /** Reads additional allowed workspace roots from the environment. */
+    envAllowedRoots: function () {
+        return (process.env.NODICS_INSTALLER_WORKSPACE_ROOTS || '')
+            .split(',')
+            .map(value => value.trim())
+            .filter(Boolean);
+    },
+
     /**
      * Resolves Application Builder configuration from defaults, runtime config, environment, and overrides.
      * @param {Object} overrides Optional configuration overrides for tests or controlled runtime calls.
      * @returns {Object} Effective Application Builder configuration.
      */
     getApplicationBuilderConfig: function (overrides) {
-        const defaults = deepClone(localProperties.installer.applicationBuilder);
-        const runtimeConfig = readRuntimeConfig();
+        const defaults = this.deepClone(localProperties.installer.applicationBuilder);
+        const runtimeConfig = this.readRuntimeConfig();
         const workspace = Object.assign(
             {},
             defaults.workspace || {},
@@ -62,7 +65,7 @@ module.exports = {
         );
         const allowedRoots = []
             .concat(workspace.allowedRoots || [])
-            .concat(envAllowedRoots())
+            .concat(this.envAllowedRoots())
             .concat(overrides && overrides.allowedWorkspaceRoots || []);
 
         return Object.assign({}, defaults, runtimeConfig, overrides || {}, {
