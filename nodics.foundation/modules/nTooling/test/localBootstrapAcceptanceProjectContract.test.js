@@ -70,5 +70,10 @@ assert(
     source.includes('profile.profileCode'),
   'documentation publication must use shared project-aware pack metadata'
 );
+assert(
+  source.includes('await publishDocumentationBundles(headers);') &&
+    !source.includes('documentation publication skipped: oversized documentation bundles remain Staged'),
+  'fresh-schema acceptance must publish documentation packs now that CMS supports chunked site publication'
+);
 
 console.log('local bootstrap acceptance project contract passed');

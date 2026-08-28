@@ -81,6 +81,7 @@ module.exports = {
             maxDependencies: 500,
             maxDepth: 12,
             maxBundleRoutes: 200,
+            siteBundleChunkThresholdBytes: 50331648,
             manifestService: 'DefaultCmsPublicationManifestOrchestrationService',
             targetTransportProvider: null,
             transactionModuleName: 'cms',
@@ -99,7 +100,7 @@ module.exports = {
                 timeoutMs: 30000,
                 maxAttempts: 3,
                 maxManifestBytes: 67108864,
-                supportedContractVersions: [0, 1, 2]
+                supportedContractVersions: [0, 1, 2, 3]
             },
             rootTypes: {
                 pageRoute: { schema: 'cmsPageRoute', service: 'DefaultCmsPageRouteService' },

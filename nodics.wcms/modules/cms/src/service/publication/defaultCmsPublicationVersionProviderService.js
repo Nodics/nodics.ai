@@ -76,6 +76,18 @@ module.exports = {
                 operationKey: publication.code + ':recover:' + String(publication.revision) }, request);
         }
         let manifest = await this.manifests().persist(publication, request);
+        if (publication.rootType === 'site') {
+            let publicationPolicy = ((CONFIG.get('cms') || {}).publication || {});
+            let targetPolicy = (publicationPolicy.target || {});
+            let chunkThreshold = Number(publicationPolicy.siteBundleChunkThresholdBytes || targetPolicy.maxManifestBytes || 5242880);
+            if (manifest.snapshot && manifest.snapshot.bundleType === 'SITE' && this.manifests().manifestBytes(manifest) > chunkThreshold) {
+                manifest = await this.manifests().persistChunkedSite(publication, manifest, request);
+            }
+            for (let child of [].concat(manifest.preparedRouteManifests || [])) {
+                await this.transport().deploy({ manifest: child, prepareOnly: true,
+                    operationKey: publication.code + ':prepare:' + child.code + ':' + String(publication.revision) }, request);
+            }
+        }
         return this.transport().deploy({ manifest: manifest,
             operationKey: publication.code + ':activate:' + String(publication.revision) }, request);
     },

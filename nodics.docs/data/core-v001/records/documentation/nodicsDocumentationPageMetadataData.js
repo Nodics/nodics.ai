@@ -8907,8 +8907,8 @@ module.exports = {
         "level": 2
       },
       {
-        "text": "Assets deferred",
-        "anchor": "dataImportExportMigration-12-assets-deferred",
+        "text": "Media assets",
+        "anchor": "dataImportExportMigration-12-media-assets",
         "level": 2
       },
       {
@@ -9008,8 +9008,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/data-import-export-migration.md",
-    "sourceChecksum": "1691f01b2ec149d67bdb86f31d5b7b87939d30e4891c2d43e105ea6308ea1e6a",
-    "sourceWordCount": 2666,
+    "sourceChecksum": "38b0107c76f1349ddaea7448d0f664a76110833765e20caa2b715040b568f180",
+    "sourceWordCount": 2836,
     "audience": [
       "business",
       "architect",
@@ -10286,28 +10286,33 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "Site bundle shape",
+        "anchor": "wcmsPublishingLifecycle-4-site-bundle-shape",
+        "level": 2
+      },
+      {
         "text": "Initialization and reusable site bundles",
-        "anchor": "wcmsPublishingLifecycle-4-initialization-and-reusable-site-bundles",
+        "anchor": "wcmsPublishingLifecycle-5-initialization-and-reusable-site-bundles",
         "level": 2
       },
       {
         "text": "Security and integrity rules",
-        "anchor": "wcmsPublishingLifecycle-5-security-and-integrity-rules",
+        "anchor": "wcmsPublishingLifecycle-6-security-and-integrity-rules",
         "level": 2
       },
       {
         "text": "Customization boundary",
-        "anchor": "wcmsPublishingLifecycle-6-customization-boundary",
+        "anchor": "wcmsPublishingLifecycle-7-customization-boundary",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "wcmsPublishingLifecycle-7-common-mistakes",
+        "anchor": "wcmsPublishingLifecycle-8-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "wcmsPublishingLifecycle-8-verification",
+        "anchor": "wcmsPublishingLifecycle-9-verification",
         "level": 2
       }
     ],
@@ -10320,6 +10325,10 @@ module.exports = {
       {
         "kind": "table",
         "title": "Category, Examples, Lifecycle"
+      },
+      {
+        "kind": "table",
+        "title": "Shape, Purpose"
       }
     ],
     "visualRequirements": [
@@ -10332,8 +10341,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.wcms/publishing-lifecycle.md",
-    "sourceChecksum": "2a4cc123767dd3de42215003f93aac53bca5b22c01d23a5564e5f60bd365d9fd",
-    "sourceWordCount": 967,
+    "sourceChecksum": "1696d525a966507376890389ab5f713d6a0cf3d04017d4fe20637c2f7606eb0c",
+    "sourceWordCount": 1196,
     "audience": [
       "business",
       "architect",

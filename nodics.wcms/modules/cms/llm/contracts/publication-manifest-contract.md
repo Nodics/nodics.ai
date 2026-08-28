@@ -6,6 +6,10 @@
   Staged must never update Online persistence directly.
 - Freeze exact route, page, association, component, template, and slot versions
   in an immutable CMS publication manifest.
+- If a site manifest exceeds source publication chunk policy, split it into
+  prepared route manifests plus a small `SITE_INDEX` manifest. Activate Online
+  pointers only through the index after each route manifest is imported,
+  scope-checked, and content-hash checked.
 - Select Online content through the tenant/site/path/locale/channel/access-mode
   pointer using optimistic compare-and-set updates owned by the target runtime.
 - Send integrity-protected immutable manifests through the configured transport,
@@ -41,3 +45,6 @@
 - Use pointer revision compare-and-set plus operation-scoped receipt/outbox
   identities. A retry after a committed response is lost must converge without
   another pointer, receipt, or event.
+- Treat chunking as CMS publication runtime behavior. Data files define records
+  and media references only; they must not contain procedural publishing,
+  storage, approval, or routing logic.

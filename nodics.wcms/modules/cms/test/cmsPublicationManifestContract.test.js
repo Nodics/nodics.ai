@@ -39,6 +39,7 @@ assert.strictEqual(properties.publish.providers.domainAdapters.cms, 'DefaultCmsP
 assert.strictEqual(properties.publish.providers.versionProviders.cms, 'DefaultCmsPublicationVersionProviderService');
 assert.strictEqual(properties.cms.publication.maximumDeploymentRequestBytes, '64mb');
 assert.strictEqual(properties.cms.publication.target.maxManifestBytes, 67108864);
+assert.strictEqual(properties.cms.publication.siteBundleChunkThresholdBytes, 50331648);
 assert.strictEqual(properties.bodyParserHandler.cmsPublicationBodyParserHandler,
     'DefaultCmsPublicationBodyParserHandlerService');
 assert.strictEqual(routes.cmsPublicationTarget.deployPublication.bodyParserHandler,
@@ -425,6 +426,33 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     assert.strictEqual(siteRecovery.routeCount, 2,
         'a fully withdrawn site bundle must be recoverable when no competing active scope exists');
     assert(data.pointers.every(pointer => pointer.active === true && pointer.manifestCode === siteManifest.code));
+
+    data.pointers.splice(0);
+    const chunkedSitePublication = Object.assign({}, sitePublication, { code: 'publish-site-a-chunked', revision: 1 });
+    chunkedSitePublication.dependencies = sitePublication.dependencies;
+    const largeSiteManifest = await manifests.persist(chunkedSitePublication, request);
+    const previewIndex = await manifests.persistChunkedSite(chunkedSitePublication, largeSiteManifest, request);
+    const originalChunkThreshold = properties.cms.publication.siteBundleChunkThresholdBytes;
+    properties.cms.publication.siteBundleChunkThresholdBytes = manifests.manifestBytes(largeSiteManifest) - 1;
+    assert(manifests.manifestBytes(largeSiteManifest) > properties.cms.publication.siteBundleChunkThresholdBytes,
+        'test fixture must force site publication to use route chunks');
+    const chunkedActivation = await provider.activate(chunkedSitePublication, request);
+    assert.strictEqual(chunkedActivation.version, previewIndex.code);
+    assert.strictEqual(chunkedActivation.chunked, true);
+    assert.strictEqual(chunkedActivation.routeCount, 2);
+    assert(data.pointers.every(pointer => pointer.manifestCode !== previewIndex.code),
+        'chunked site publication must activate route pointers to prepared route manifests, not the index manifest');
+    assert.strictEqual((await provider.getOnlineVersion(chunkedSitePublication, request)).version, previewIndex.code);
+    const chunkedVerification = await SERVICE.TestCmsTargetTransport.verifyOnline({ manifestCode: previewIndex.code }, request);
+    assert.strictEqual(chunkedVerification.status, 'VERIFIED');
+    const chunkedWithdrawal = await provider.withdraw(Object.assign({}, chunkedSitePublication,
+        { targetVersion: previewIndex.code }), request);
+    assert.strictEqual(chunkedWithdrawal.routeCount, 2);
+    assert(data.pointers.every(pointer => pointer.active === false));
+    const chunkedRecovery = await provider.rollback(chunkedSitePublication, previewIndex.code, request);
+    assert.strictEqual(chunkedRecovery.routeCount, 2);
+    assert(data.pointers.every(pointer => pointer.active === true));
+    properties.cms.publication.siteBundleChunkThresholdBytes = originalChunkThreshold;
 
     const transport = require('../src/service/publication/defaultCmsPublicationModuleTransportService');
     properties.cms.publication.runtimeRole = 'STAGED';

@@ -103,6 +103,21 @@ module.exports = {
         if (![].concat(policy.supportedContractVersions || [1]).includes(input.manifest.snapshot && input.manifest.snapshot.contractVersion)) {
             throw new CLASSES.NodicsError('CMS_PUBLICATION_CONTRACT_UNSUPPORTED', 'CMS publication manifest contract is unsupported by target');
         }
+        if (input.prepareOnly === true) {
+            return this.transaction(request, async transactionRequest => {
+                if ((input.manifest.mediaAssets || []).length) {
+                    if (!SERVICE.DefaultMediaPublicationTransferService) {
+                        throw new CLASSES.NodicsError('CMS_PUBLICATION_MEDIA_UNAVAILABLE', 'CMS Online media publication service is unavailable');
+                    }
+                    await SERVICE.DefaultMediaPublicationTransferService.importReferenced(input.manifest.mediaAssets,
+                        Object.assign({}, transactionRequest, { publicationCode: input.manifest.publicationCode,
+                            manifestCode: input.manifest.code }));
+                }
+                let manifest = await this.manifests().importManifest(input.manifest, transactionRequest);
+                return { version: manifest.code, prepared: true };
+            });
+        }
+        if (this.manifests().isSiteIndexManifest(input.manifest)) return this.deploySiteIndex(input.manifest, request);
         let committed = await this.transaction(request, async transactionRequest => {
             if ((input.manifest.mediaAssets || []).length) {
                 if (!SERVICE.DefaultMediaPublicationTransferService) {
@@ -120,6 +135,56 @@ module.exports = {
         });
         await SERVICE.DefaultCmsPublicationOutboxService.deliver(committed.event, request);
         return committed.activation;
+    },
+    /** Loads and validates one prepared route manifest referenced by a site-index manifest. */
+    loadIndexRouteManifest: async function (route, request) {
+        if (!route.manifestCode) throw new CLASSES.NodicsError('CMS_PUBLICATION_MANIFEST_MISSING', 'CMS site-index route manifest is required');
+        let manifest = await this.manifests().getManifest(route.manifestCode, request);
+        if (!manifest || manifest.contentHash !== route.contentHash) {
+            throw new CLASSES.NodicsError('CMS_PUBLICATION_MANIFEST_INTEGRITY', 'CMS site-index route manifest integrity validation failed');
+        }
+        let snapshot = manifest.snapshot || {};
+        ['site', 'path', 'locale', 'channel', 'accessMode'].forEach(field => {
+            if (snapshot[field] !== route[field]) throw new CLASSES.NodicsError('CMS_PUBLICATION_ROUTE_MISSING',
+                'CMS site-index route scope does not match its prepared manifest');
+        });
+        return manifest;
+    },
+    /** Activates prepared route manifests under one small site-index target version. */
+    deploySiteIndex: async function (indexManifest, request) {
+        let routes = [].concat(indexManifest.snapshot && indexManifest.snapshot.routes || []);
+        if (!routes.length) throw new CLASSES.NodicsError('CMS_PUBLICATION_ROUTE_MISSING', 'CMS site-index publication contains no delivery scope');
+        let committed = await this.transaction(request, async transactionRequest => {
+            let imported = await this.manifests().importManifest(indexManifest, transactionRequest);
+            let activations = [];
+            for (let route of routes) {
+                let child = await this.loadIndexRouteManifest(route, transactionRequest);
+                activations.push(await this.manifests().activateScope(child, child.snapshot, transactionRequest));
+            }
+            await this.recordReceipt('DEPLOY', imported, { version: imported.code, routeCount: routes.length }, transactionRequest);
+            let event = await SERVICE.DefaultCmsPublicationOutboxService.enqueue('DEPLOY', imported, transactionRequest);
+            let previous = Array.from(new Set(activations.map(item => item.previousOnlineVersion).filter(Boolean)));
+            return { activation: { version: imported.code, routeCount: routes.length, chunked: true,
+                previousOnlineVersion: previous.length === 1 ? previous[0] : undefined }, event: event };
+        });
+        await SERVICE.DefaultCmsPublicationOutboxService.deliver(committed.event, request);
+        return committed.activation;
+    },
+    /** Returns the expected manifest code for a pointer covered by a manifest. */
+    expectedPointerManifestCode: function (manifest, scope) {
+        return this.manifests().isSiteIndexManifest(manifest) ? scope.manifestCode : manifest.code;
+    },
+    /** Finds the active site-index manifest matching the current route pointers for one site. */
+    findActiveSiteIndex: async function (site, pointers, request) {
+        let response = await SERVICE.DefaultCmsPublicationManifestService.get({ tenant: request.tenant,
+            authData: request.authData, query: { rootCode: site, active: true }, searchOptions: { limit: 1000 } });
+        let pointerMap = new Map(pointers.map(pointer => [this.scopeIdentity(pointer), pointer.manifestCode]));
+        return this.manifests().items(response).find(manifest => {
+            if (!this.manifests().isSiteIndexManifest(manifest)) return false;
+            let routes = [].concat(manifest.snapshot && manifest.snapshot.routes || []);
+            if (routes.length !== pointers.length) return false;
+            return routes.every(route => pointerMap.get(this.scopeIdentity(route)) === route.manifestCode);
+        });
     },
     /** Returns target-local Online release status for one delivery scope. */
     getStatus: async function (request) {
@@ -150,6 +215,10 @@ module.exports = {
             let pointers = await this.manifests().getSitePointers(input.scope.site, request);
             if (!pointers.length) return undefined;
             let versions = Array.from(new Set(pointers.map(pointer => pointer.manifestCode)));
+            if (versions.length !== 1) {
+                let index = await this.findActiveSiteIndex(input.scope.site, pointers, request);
+                if (index) return { version: index.code, routeCount: pointers.length, chunked: true };
+            }
             if (versions.length !== 1) return { partial: true, routeCount: pointers.length };
             return { version: versions[0], routeCount: pointers.length };
         }
@@ -168,7 +237,7 @@ module.exports = {
         let drift = [];
         for (let scope of scopes) {
             let pointer = await this.manifests().getStoredPointer(scope, request);
-            if (!pointer || pointer.active === false || pointer.manifestCode !== manifest.code) {
+            if (!pointer || pointer.active === false || pointer.manifestCode !== this.expectedPointerManifestCode(manifest, scope)) {
                 drift.push({ site: scope.site, path: scope.path, locale: scope.locale, channel: scope.channel,
                     accessMode: scope.accessMode, state: !pointer ? 'MISSING' : pointer.active === false ? 'INACTIVE' : 'DIFFERENT_MANIFEST',
                     manifestCode: pointer && pointer.manifestCode });
@@ -195,7 +264,8 @@ module.exports = {
         let collisions = [];
         for (let scope of scopes) {
             let pointer = await this.manifests().getStoredPointer(scope, request);
-            if (pointer && pointer.active !== false && pointer.manifestCode && pointer.manifestCode !== manifest.code) {
+            if (pointer && pointer.active !== false && pointer.manifestCode &&
+                    pointer.manifestCode !== this.expectedPointerManifestCode(manifest, scope)) {
                 collisions.push({ site: scope.site, path: scope.path, locale: scope.locale, channel: scope.channel,
                     accessMode: scope.accessMode, activeManifestCode: pointer.manifestCode,
                     previousManifestCode: pointer.previousManifestCode, pointerCode: pointer.code });
@@ -218,7 +288,7 @@ module.exports = {
         let drift = [];
         for (let scope of scopes) {
             let pointer = await this.manifests().getStoredPointer(scope, request);
-            if (!pointer || pointer.active === false || pointer.manifestCode !== manifest.code) {
+            if (!pointer || pointer.active === false || pointer.manifestCode !== this.expectedPointerManifestCode(manifest, scope)) {
                 drift.push({ site: scope.site, path: scope.path, locale: scope.locale, channel: scope.channel,
                     accessMode: scope.accessMode, state: !pointer ? 'MISSING' : pointer.active === false ? 'INACTIVE' : 'DIFFERENT_MANIFEST',
                     manifestCode: pointer && pointer.manifestCode });
@@ -252,7 +322,7 @@ module.exports = {
         let drift = [];
         for (let scope of scopes) {
             let pointer = await this.manifests().getStoredPointer(scope, request);
-            if (!pointer || pointer.active === false || pointer.manifestCode !== manifest.code) drift.push({ site: scope.site, path: scope.path,
+            if (!pointer || pointer.active === false || pointer.manifestCode !== this.expectedPointerManifestCode(manifest, scope)) drift.push({ site: scope.site, path: scope.path,
                 locale: scope.locale, channel: scope.channel, accessMode: scope.accessMode,
                 state: !pointer ? 'MISSING' : pointer.active === false ? 'INACTIVE' : 'DIFFERENT_MANIFEST' });
         }
@@ -359,7 +429,7 @@ module.exports = {
     },
     /** Deactivates active site pointers that are outside the restored site-bundle manifest. */
     deactivateOutsideBundleScope: async function (manifest, request) {
-        if (!manifest.snapshot || manifest.snapshot.bundleType !== 'SITE') return 0;
+        if (!manifest.snapshot || !['SITE', 'SITE_INDEX'].includes(manifest.snapshot.bundleType)) return 0;
         let targetScopes = new Set([].concat(this.manifests().deliveryScopes(manifest)).map(scope => this.scopeIdentity(scope)));
         let pointers = await this.manifests().getSitePointers(manifest.snapshot.site, request);
         let count = 0;
@@ -386,7 +456,17 @@ module.exports = {
         this.applyCorrelation(request, input, manifest);
         let committed = await this.transaction(request, async transactionRequest => {
             await this.deactivateOutsideBundleScope(manifest, transactionRequest);
-            let activation = await this.manifests().activate(manifest, transactionRequest);
+            let activation;
+            if (this.manifests().isSiteIndexManifest(manifest)) {
+                let activations = [];
+                for (let route of [].concat(manifest.snapshot && manifest.snapshot.routes || [])) {
+                    let child = await this.loadIndexRouteManifest(route, transactionRequest);
+                    activations.push(await this.manifests().activateScope(child, child.snapshot, transactionRequest));
+                }
+                activation = { version: manifest.code, routeCount: activations.length, chunked: true };
+            } else {
+                activation = await this.manifests().activate(manifest, transactionRequest);
+            }
             await this.recordReceipt('ROLLBACK', manifest, activation, transactionRequest);
             let event = await SERVICE.DefaultCmsPublicationOutboxService.enqueue('ROLLBACK', manifest, transactionRequest);
             return { activation: activation, event: event };
@@ -402,7 +482,27 @@ module.exports = {
         if (!manifest) throw new CLASSES.NodicsError('CMS_PUBLICATION_MANIFEST_MISSING', 'Withdrawal manifest is not deployed on the Online target');
         this.applyCorrelation(request, input, manifest);
         let committed = await this.transaction(request, async transactionRequest => {
-            let withdrawal = await this.manifests().withdraw(manifest, transactionRequest);
+            let withdrawal;
+            if (this.manifests().isSiteIndexManifest(manifest)) {
+                let count = 0;
+                for (let scope of this.manifests().deliveryScopes(manifest)) {
+                    let current = await this.manifests().getPointer(scope, transactionRequest);
+                    if (!current) continue;
+                    if (current.manifestCode !== scope.manifestCode) {
+                        throw new CLASSES.NodicsError('CMS_PUBLICATION_WITHDRAWAL_SCOPE_CONFLICT', 'CMS Online pointer belongs to a different release');
+                    }
+                    let response = await SERVICE.DefaultCmsOnlinePublicationPointerService.update({ tenant: transactionRequest.tenant,
+                        authData: transactionRequest.authData, transactionContext: transactionRequest.transactionContext,
+                        query: { code: current.code, revision: Number(current.revision || 0) },
+                        model: { active: false, revision: Number(current.revision || 0) + 1,
+                            correlationId: transactionRequest.correlationId || transactionRequest.requestId } });
+                    if (this.manifests().affected(response) !== 1) throw new CLASSES.NodicsError('CMS_PUBLICATION_POINTER_CONFLICT', 'CMS Online pointer revision conflict');
+                    count += 1;
+                }
+                withdrawal = { version: manifest.code, routeCount: count, chunked: true };
+            } else {
+                withdrawal = await this.manifests().withdraw(manifest, transactionRequest);
+            }
             await this.recordReceipt('WITHDRAW', manifest, withdrawal, transactionRequest);
             let event = await SERVICE.DefaultCmsPublicationOutboxService.enqueue('WITHDRAW', manifest, transactionRequest);
             return { withdrawal: withdrawal, event: event };

@@ -275,13 +275,41 @@ This keeps the authoring experience simple while preserving enterprise
 evidence: the developer writes headers and records, the system generates the
 technical release index, and `nImport` remains the execution authority.
 
-## Assets deferred
+## Media assets
 
-Media and binary asset release structure is intentionally separate. Assets are
-governed data, but their final folder structure needs a dedicated discussion
-for intake, rights, checksums, storage-provider policy, media records,
-publication references, and cleanup. Do not generalize the header/record
-structure to assets until that Media-specific contract is approved.
+Media follows the same ownership principle as other module release data, but it
+has a physical file step before the media record is persisted. A module or
+project may carry binary source files under a release-owned `assets/` folder
+and media records under `records/`. The media record references the source
+asset location; the import pipeline copies the physical file into the
+runtime-owned Staged media location, updates the media object's stored path or
+artifact reference, and then saves the media schema record through the normal
+module validator.
+
+```text
+modules/<module>/
+  data/
+    sample-v001/
+      content/
+        assets/
+          media/
+        headers/
+        records/
+```
+
+The header still declares the target module, schema, operation, query, and data
+file prefix. The media record still declares business metadata such as code,
+folder, usage, MIME type, alt text, and the release asset reference. The record
+must not copy files itself, call storage APIs, generate delivery URLs, or embed
+business logic. Physical staging, path normalization, checksum checks, provider
+selection, and persistence are importer/runtime responsibilities.
+
+When a publishable media record moves Online, `nPublish` promotes the physical
+media from Staged-owned storage into Online-owned storage, performs any
+configured replication such as disaster-recovery copy, updates the Online media
+artifact reference, and then activates the Online metadata or content pointer.
+Online clients must read Online media coordinates only; they must never resolve
+or reuse Staged physical paths.
 
 ## Customization and extension
 

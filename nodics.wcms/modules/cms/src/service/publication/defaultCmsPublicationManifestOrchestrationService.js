@@ -111,6 +111,72 @@ module.exports = {
         return this.compactSiteSnapshot({ contractVersion: 2, bundleType: 'SITE', site: site.code,
             routes: routes.map(route => this.buildRouteSnapshot(models, route)) });
     },
+    /** Returns the serialized size used by target request-boundary checks. */
+    manifestBytes: function (manifest) {
+        return Buffer.byteLength(JSON.stringify(manifest || {}), 'utf8');
+    },
+    /** Returns true for a site-index manifest that points at prepared route manifests. */
+    isSiteIndexManifest: function (manifest) {
+        return Boolean(manifest && manifest.snapshot && manifest.snapshot.bundleType === 'SITE_INDEX');
+    },
+    /** Computes the integrity hash for one manifest content model. */
+    contentHash: function (dependencies, snapshot, mediaAssets) {
+        let contentModel = { dependencies: dependencies, snapshot: snapshot };
+        if (mediaAssets && mediaAssets.length) contentModel.mediaAssets = mediaAssets;
+        return crypto.createHash('sha256').update(JSON.stringify(contentModel)).digest('hex');
+    },
+    /** Persists a prebuilt immutable manifest and returns it with transient media bytes attached. */
+    saveManifestModel: async function (model, mediaAssets, request) {
+        let existing = this.items(await SERVICE.DefaultCmsPublicationManifestService.get({ tenant: request.tenant, authData: request.authData,
+            transactionContext: request.transactionContext,
+            query: { code: model.code }, searchOptions: { limit: 1 } }))[0];
+        if (existing) {
+            if (existing.contentHash !== model.contentHash) throw new CLASSES.NodicsError('CMS_PUBLICATION_MANIFEST_CONFLICT', 'Publication manifest identity conflict');
+            return this.withTransferMediaAssets(existing, mediaAssets);
+        }
+        let response = await SERVICE.DefaultCmsPublicationManifestService.save({ tenant: request.tenant, authData: request.authData,
+            transactionContext: request.transactionContext, model: model });
+        return this.withTransferMediaAssets(this.items(response)[0] || response.result || model, mediaAssets);
+    },
+    /** Builds bounded route manifests plus one small site index for large site publications. */
+    persistChunkedSite: async function (publication, siteManifest, request) {
+        let routes = [].concat(siteManifest && siteManifest.snapshot && siteManifest.snapshot.routes || []);
+        let childManifests = [];
+        for (let index = 0; index < routes.length; index += 1) {
+            let route = routes[index];
+            let routeMediaCodes = this.collectMediaCodes(route);
+            if (index === 0) {
+                [].concat(publication && publication.mediaCodes || []).forEach(code => {
+                    code = String(code || '').trim();
+                    if (code && !routeMediaCodes.includes(code)) routeMediaCodes.push(code);
+                });
+                routeMediaCodes.sort();
+            }
+            let childCode = [siteManifest.code, 'route', index + 1,
+                crypto.createHash('sha256').update([route.site, route.path, route.locale, route.channel, route.accessMode].join('|')).digest('hex').slice(0, 12)
+            ].join('_');
+            let mediaRequest = Object.assign({}, request, { publicationCode: publication.code, manifestCode: childCode });
+            let mediaAssets = routeMediaCodes.length ? await SERVICE.DefaultMediaPublicationTransferService.exportReferenced(routeMediaCodes, mediaRequest) : [];
+            let contentHash = this.contentHash(siteManifest.dependencies, route, mediaAssets);
+            let model = { code: childCode, active: true, publicationCode: publication.code, rootType: 'pageRoute',
+                rootCode: route.path, sourceVersion: publication.sourceVersion, dependencies: siteManifest.dependencies,
+                snapshot: route, contentHash: contentHash, parentManifestCode: siteManifest.code,
+                createdBy: siteManifest.createdBy, correlationId: siteManifest.correlationId };
+            if (mediaAssets.length) model.mediaAssets = this.redactMediaAssets(mediaAssets);
+            childManifests.push(await this.saveManifestModel(model, mediaAssets, request));
+        }
+        let indexSnapshot = { contractVersion: 3, bundleType: 'SITE_INDEX', site: siteManifest.snapshot.site,
+            routes: childManifests.map(manifest => ({ site: manifest.snapshot.site, path: manifest.snapshot.path,
+                locale: manifest.snapshot.locale, channel: manifest.snapshot.channel, accessMode: manifest.snapshot.accessMode,
+                manifestCode: manifest.code, contentHash: manifest.contentHash })) };
+        let indexCode = siteManifest.code + '_index';
+        let indexModel = { code: indexCode, active: true, publicationCode: publication.code, rootType: publication.rootType,
+            rootCode: publication.rootCode, sourceVersion: publication.sourceVersion, dependencies: siteManifest.dependencies,
+            snapshot: indexSnapshot, contentHash: this.contentHash(siteManifest.dependencies, indexSnapshot),
+            createdBy: siteManifest.createdBy, correlationId: siteManifest.correlationId };
+        let indexManifest = await this.saveManifestModel(indexModel, [], request);
+        return Object.assign({}, indexManifest, { preparedRouteManifests: childManifests });
+    },
     /** Stores repeated component subtrees once per site bundle while preserving route-local page contracts. */
     compactSiteSnapshot: function (snapshot) {
         if (!snapshot || snapshot.bundleType !== 'SITE' || !Array.isArray(snapshot.routes)) return snapshot;
@@ -186,10 +252,7 @@ module.exports = {
         let code = [publication.code, publication.sourceVersion, Number(publication.revision || 0)].join('_');
         let mediaRequest = Object.assign({}, request, { publicationCode: publication.code, manifestCode: code });
         let mediaAssets = mediaCodes.length ? await SERVICE.DefaultMediaPublicationTransferService.exportReferenced(mediaCodes, mediaRequest) : [];
-        let contentModel = { dependencies: publication.dependencies, snapshot: snapshot };
-        if (mediaAssets.length) contentModel.mediaAssets = mediaAssets;
-        let content = JSON.stringify(contentModel);
-        let contentHash = crypto.createHash('sha256').update(content).digest('hex');
+        let contentHash = this.contentHash(publication.dependencies, snapshot, mediaAssets);
         let persistedMediaAssets = this.redactMediaAssets(mediaAssets);
         let model = { code: code, active: true, publicationCode: publication.code, rootType: publication.rootType,
             rootCode: publication.rootCode, sourceVersion: publication.sourceVersion, dependencies: publication.dependencies,
@@ -197,16 +260,7 @@ module.exports = {
                 request.authData && (request.authData.principalId || request.authData.code),
             correlationId: request.correlationId || request.requestId };
         if (persistedMediaAssets.length) model.mediaAssets = persistedMediaAssets;
-        let existing = this.items(await SERVICE.DefaultCmsPublicationManifestService.get({ tenant: request.tenant, authData: request.authData,
-            transactionContext: request.transactionContext,
-            query: { code: code }, searchOptions: { limit: 1 } }))[0];
-        if (existing) {
-            if (existing.contentHash !== contentHash) throw new CLASSES.NodicsError('CMS_PUBLICATION_MANIFEST_CONFLICT', 'Publication manifest identity conflict');
-            return this.withTransferMediaAssets(existing, mediaAssets);
-        }
-        let response = await SERVICE.DefaultCmsPublicationManifestService.save({ tenant: request.tenant, authData: request.authData,
-            transactionContext: request.transactionContext, model: model });
-        return this.withTransferMediaAssets(this.items(response)[0] || response.result || model, mediaAssets);
+        return this.saveManifestModel(model, mediaAssets, request);
     },
     /** Imports one integrity-checked immutable manifest into the target CMS repository idempotently. */
     importManifest: async function (manifest, request) {
@@ -266,7 +320,7 @@ module.exports = {
     /** Resolves route-level and site-bundle delivery scopes from a manifest snapshot. */
     deliveryScopes: function (manifest) {
         let snapshot = manifest && manifest.snapshot;
-        if (snapshot && snapshot.bundleType === 'SITE' && Array.isArray(snapshot.routes)) return snapshot.routes;
+        if (snapshot && (snapshot.bundleType === 'SITE' || snapshot.bundleType === 'SITE_INDEX') && Array.isArray(snapshot.routes)) return snapshot.routes;
         return snapshot ? [snapshot] : [];
     },
     /** Atomically switches one route scope to an immutable manifest. */

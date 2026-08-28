@@ -1235,7 +1235,7 @@ async function main() {
   await publishAxisBaseline(headers);
   await publishNexusApplicationBundle(headers);
   await qualifyNexusApplicationUpdate(headers);
-  log("documentation publication skipped: oversized documentation bundles remain Staged until chunked/page-level publication is implemented");
+  await publishDocumentationBundles(headers);
   await qualifyDocumentationReleaseRollback(headers);
   await verifyPublicationOperations(headers);
   await verifyWcmsDesignerAuthoringAvailability(headers);

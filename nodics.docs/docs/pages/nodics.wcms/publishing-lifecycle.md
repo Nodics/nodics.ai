@@ -65,6 +65,35 @@ request with the same operation identity converges on the existing result.
 Rollback reactivates a previously deployed immutable release; it does not copy
 the latest Staged state.
 
+## Site bundle shape
+
+Most site publications move as one immutable `SITE` manifest. The manifest
+contains the selected site, routes, page versions, component graph,
+localization references, and media references. Online imports the manifest,
+promotes required media into Online-owned storage, then atomically activates
+the route pointers that make the release visible.
+
+Large documentation or content sites may exceed the configured source-side
+`siteBundleChunkThresholdBytes` policy. In that case WCMS keeps the same
+business lifecycle but changes the transfer shape:
+
+| Shape | Purpose |
+| --- | --- |
+| Route chunk manifest | Carries one route's frozen page, dependency graph, and required media. Online imports it as prepared content without activating public pointers yet. |
+| `SITE_INDEX` manifest | Carries the release identity and a route index pointing to the prepared chunk manifests with content hashes. This is the version `nPublish` records as the Online target. |
+
+Online activates a chunked site only after every referenced route chunk is
+present, matches the expected route scope, and matches the expected content
+hash. The final `SITE_INDEX` activation switches all route pointers in one
+governed transaction. Reconciliation, verification, rollback, support bundles,
+and withdrawal operate through the index and its child route manifests, so the
+operator still sees one release even when transport used multiple manifests.
+
+Chunking is runtime publication behavior, not release-data business logic.
+Authors still define sites, pages, routes, components, and media as normal
+records. They must not add custom code or procedural import steps to make a
+bundle publishable.
+
 ## Initialization and reusable site bundles
 
 Mandatory framework data such as the standard publication approval workflow
