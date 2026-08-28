@@ -8560,6 +8560,352 @@ module.exports = {
           "searchText": "Release and Upgrade Compatibility How data release folders, generated manifests, immutable baselines, upgrades, rollback, checksum drift, and customer extensions are governed. # Release and Upgrade Compatibility\n\nRelease and upgrade compatibility explains how module data folders evolve\nwithout breaking customer projects. Before the first production baseline,\nteams can keep improving `v001` release folders. After that baseline is used\nby customers, every released folder becomes immutable and the next change\nstarts a new release folder. For beginners, a release folder is a promise: it\nrecords the data shape that can be installed and tested again.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Setup tooling module | `../nodics.foundation/modules/nSetup/package.json` |\n| Documentation generated manifest | `data/manifest.json` |\n| Data import release service | `../nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js` |\n| Import release ordering tests | `../nodics.foundation/modules/nData/nImport/import/test/importUtilityReleaseOrder.test.js` |\n| Data authoring guide | `docs/pages/nodics.foundation/data-import-export-migration.md` |\n| Documentation publishing runbook | `docs/pages/nodics.docs/documentation-publishing-runbook.md` |\n\n## Folder contract\n\n```text\ndata/\n  init-v001/\n    headers/\n    records/\n  core-v001/\n    headers/\n    records/\n  sample-v001/\n    commerce/\n      headers/\n      records/\n    content/\n      headers/\n      records/\n      assets/\n  manifest.json\n```\n\nThe business problem is upgrade confidence. Business users need stable setup\nand sample data. Developers need a predictable place to add defaults and\ncustomer extensions. Operators need checksum and import evidence. Production\nsupport needs to know whether a customer installed `core-v001` or `core-v002`\nbefore diagnosing a problem.\n\n## Compatibility rules\n\n| Rule | Meaning |\n| --- | --- |\n| Pre-production folders can change | Until customer release, teams may refine `v001`. |\n| Released folders are immutable | After production release, create the next folder. |\n| Manifest is generated | Developers edit headers, records, and assets, then regenerate. |\n| Headers own routing | Module, schema, operation, and query stay in header files. |\n| Records are declarative | No business logic, runtime paths, secrets, or service calls. |\n| Assets stay with data | Media source files live under the release-owned assets folder. |\n\n## Configuration behavior\n\nRelease configuration should describe active modules, target runtimes, import\nlanes, and provider settings, but it should not replace the release folder.\nThe folder owns versioned data, the generated manifest owns checksums, and\nruntime configuration selects where that data is installed and published.\n\n## Upgrade flow\n\n```mermaid\nflowchart LR\n  Current[\"Installed release\"] --> New[\"Next release folder\"]\n  New --> Validate[\"Generate manifest and validate\"]\n  Validate --> Import[\"Fresh-schema import\"]\n  Import --> Publish[\"Staged review and Online publication\"]\n  Publish --> Evidence[\"Compatibility evidence\"]\n```\n\n## Customization and extension guidance\n\nDevelopers can extend a released module by creating a customer project data\nfolder with a later release code or by adding a project-owned module that\ndepends on the framework module. Do not patch old released framework data in a\ncustomer project unless the repair is documented and repeatable. AI tools\nshould read the manifest, existing headers, and target schemas before adding\nrecords.\n\n## Implementation handoff\n\nEvery release handoff should name the changed folders, generated manifest,\ntarget runtimes, import order, publication dependency, rollback option, and\nbrowser evidence. Business users get a clear upgrade journey, developers get\nsource traceability, operators get production recovery instructions, and QA\nowners get clean-install plus upgrade scenarios. This prevents a data release\nfrom becoming tribal knowledge.\n\n## Common mistakes\n\n- Editing an already released data folder and losing reproducibility.\n- Creating `release.js` files for values that can be derived from folder names.\n- Hand maintaining generated manifest checksums.\n- Putting provider-specific paths inside shared data records.\n- Forgetting fresh-schema import tests before upgrade rollout.\n\n## Verification\n\nRegenerate manifests, run import ordering tests, import every changed release\ninto a fresh schema, publish where needed, and verify Axis, Nexus, or Agora in\nthe browser. Production acceptance requires business release notes, developer\nsource evidence, operator rollback instructions, and QA proof for both clean\ninstall and upgrade paths.\n"
         },
         {
+          "code": "commerce.fulfillment-core-source-map",
+          "title": "Fulfillment Core Source Map",
+          "route": "/docs/framework/commerce-fulfillment-core-source-map",
+          "section": "shipping-and-fulfillment",
+          "sectionTitle": "Shipping and Fulfillment",
+          "sectionOrder": 310,
+          "group": "shipping-and-fulfillment",
+          "groupTitle": "Shipping and Fulfillment",
+          "groupOrder": 310,
+          "order": 20,
+          "parentId": "shipping-and-fulfillment",
+          "hierarchyPath": [
+            "Shipping and Fulfillment",
+            "Fulfillment Core Source Map"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "reference",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "Exact source map for fulfillment execution, carrier adapters, return execution, integration readiness, customer policy, operator evidence, and recovery.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "fulfillment.shipping-management",
+            "commerce.data-authoring-fulfillment",
+            "commerce.payment-provider-boundaries"
+          ],
+          "searchKeywords": [
+            "fulfillment-core",
+            "carrier",
+            "return-execution",
+            "readiness",
+            "operator"
+          ],
+          "topicKeywords": [
+            "Shipping and Fulfillment",
+            "Shipping and Fulfillment Flow",
+            "Fulfillment Core Source Map"
+          ],
+          "searchText": "Fulfillment Core Source Map Exact source map for fulfillment execution, carrier adapters, return execution, integration readiness, customer policy, operator evidence, and recovery. # Fulfillment Core Source Map\n\nFulfillment Core owns shipping, carrier execution, return execution,\nintegration readiness, and customer-safe fulfillment actions. The broader\nFulfillment page explains the business journey; this source map shows\ndevelopers, operators, QA owners, and AI tools where the implementation lives.\nFor beginners, this is the place where an order becomes work that can be\npicked, shipped, returned, or blocked with clear evidence.\n\n## Business problem\n\nThe business problem is trustworthy order execution. After checkout, the\nbusiness must prove which carrier was selected, whether integration was ready,\nwhether a shipment failed, and whether a return can be accepted. Fulfillment\nCore keeps execution state near the services that own fulfillment behavior,\nwhile product, payment, and identity authority stay in their own modules.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Fulfillment Core module | `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/` |\n| Schemas and routes | `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/schemas/schemas.js`, `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/router/routers.js` |\n| Customer controller | `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/controller/defaultFulfillmentCustomerController.js` |\n| Lifecycle and operations | `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentLifecycleService.js`, `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentOperationService.js` |\n| Carrier execution | `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierExecutionService.js` |\n| Return execution | `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentReturnExecutionService.js` |\n| Readiness checks | `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentIntegrationReadinessService.js` |\n| Contract tests | `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/` |\n\n## Execution flow\n\n```mermaid\nflowchart LR\n  Order[\"Order ready for fulfillment\"] --> Readiness[\"Integration readiness\"]\n  Readiness --> Operation[\"Fulfillment operation\"]\n  Operation --> Carrier[\"Carrier execution\"]\n  Operation --> Return[\"Return execution\"]\n  Carrier --> Evidence[\"Execution evidence\"]\n  Return --> Evidence\n  Evidence --> Axis[\"Axis operator view\"]\n```\n\n## Contract\n\nFulfillment Core records should identify order reference, consignment or\nexecution reference, carrier, state, retryability, failure reason, and customer\nsafe status. They should not duplicate product catalogue, payment provider, or\nProfile identity authority. The service decides whether the requested action is\nallowed, and the response should separate business status from technical\nevidence.\n\n```js\nconst execution = {\n  orderCode: 'order1001',\n  fulfillmentState: 'READY_FOR_CARRIER',\n  carrierCode: 'sandboxCarrier',\n  retryable: true\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add carrier adapters, warehouse allocation rules, return\ninspection policies, integration readiness checks, customer-facing actions, or\noperator recovery commands. Business users should see fulfillment progress,\nblocked setup, and safe retry actions through Axis. Operators need production\nevidence for integration status, retry count, carrier reference, and return\nreceipt. QA should test successful execution, blocked readiness, carrier\nfailure, retry, return approval, and customer policy boundaries.\n\n## Operating rules\n\nEvery fulfillment extension should declare its stable code, owning module,\nsupported states, retry behavior, and operator evidence before it is enabled\nfor a tenant. Import data can seed carriers, rules, and policies, but services\nmust still validate whether an action is currently allowed. Axis can expose\ncommands such as retry or approve return only when the backend reports that\nthe command is available.\n\n## Common mistakes\n\n- Treating Fulfillment Core as product, payment, or identity authority.\n- Calling a carrier before readiness checks pass.\n- Showing raw carrier errors to customers.\n- Creating return execution without original order and receipt evidence.\n- Adding provider-specific logic without tests and operator recovery data.\n\n## Verification\n\nRun fulfillment customer policy, integration readiness, and return execution\ncontracts. In a fresh schema, place a controlled order, start fulfillment,\nforce a carrier failure, retry, and run a return path. Production readiness\nrequires safe status, source traceability, operator evidence, and QA proof\nthat failed execution does not corrupt order state.\n"
+        },
+        {
+          "code": "accelerators.domain-commerce-source-map",
+          "title": "Domain Commerce Accelerator Source Map",
+          "route": "/docs/framework/accelerators-domain-commerce-source-map",
+          "section": "accelerators-and-industry-solution-templates",
+          "sectionTitle": "Accelerators and Industry Solution Templates",
+          "sectionOrder": 80,
+          "group": "accelerators-and-industry-solution-templates",
+          "groupTitle": "Accelerators and Industry Solution Templates",
+          "groupOrder": 80,
+          "order": 30,
+          "parentId": "accelerators-and-industry-solution-templates",
+          "hierarchyPath": [
+            "Accelerators and Industry Solution Templates",
+            "Domain Commerce Accelerator Source Map"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "reference",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "How domain commerce, electronics product, telco catalog, and telco subscription accelerators extend Commerce without becoming duplicate authorities.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "accelerators.agora-industry-templates",
+            "accelerators.agora-apparel-product-data-authoring",
+            "commerce.search-guide"
+          ],
+          "searchKeywords": [
+            "accelerator",
+            "domain-commerce",
+            "electronics",
+            "telco",
+            "subscription"
+          ],
+          "topicKeywords": [
+            "Accelerators and Industry Solution Templates",
+            "Agora Accelerator Family",
+            "Domain Commerce Accelerator Source Map"
+          ],
+          "searchText": "Domain Commerce Accelerator Source Map How domain commerce, electronics product, telco catalog, and telco subscription accelerators extend Commerce without becoming duplicate authorities. # Domain Commerce Accelerator Source Map\n\nDomain commerce accelerator modules add industry-specific commerce behavior on\ntop of the shared Commerce foundation. They do not replace product, pricing,\ninventory, search, checkout, or fulfillment authority. Instead, they add\ndomain rules, projections, validation, enrichment, and setup contracts for\nApparel, Electronics, Telco, and customer accelerators. For beginners, the\naccelerator layer answers \"what is special about this industry?\" while Commerce\nanswers \"how does commerce work?\"\n\n## Business problem\n\nThe business problem is faster industry adoption without copying frameworks.\nAn electronics catalogue needs technical attributes and search enrichment. A\ntelco catalogue needs plans, subscriptions, and product constraints. A domain\ncore needs shared industry policies. Business users get an accelerator that\nfeels ready for their market; developers get a clean extension layer; operators\nstill get one production evidence model.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Accelerator group | `../nodics.accelerators/package.json` |\n| Domain commerce core | `../nodics.accelerators/modules/domainCommerceCore/` |\n| Electronics product | `../nodics.accelerators/modules/electronics/modules/electronicsProduct/` |\n| Telco catalog | `../nodics.accelerators/modules/telco/modules/telcoCatalog/` |\n| Telco subscription | `../nodics.accelerators/modules/telco/modules/telcoSubscription/` |\n| Agora Apparel authoring | `docs/pages/accelerators/agora-apparel-product-data-authoring.md` |\n| Commerce data authoring | `docs/pages/nodics.commerce/commerce-data-authoring-and-fulfillment.md` |\n\n## Layering model\n\n```mermaid\nflowchart TD\n  Commerce[\"Commerce foundation\"] --> DomainCore[\"Domain Commerce Core\"]\n  DomainCore --> Electronics[\"Electronics Product\"]\n  DomainCore --> TelcoCatalog[\"Telco Catalog\"]\n  TelcoCatalog --> TelcoSubscription[\"Telco Subscription\"]\n  Commerce --> Agora[\"Agora project data\"]\n```\n\n## Contract\n\nDomain modules can add schemas, validation services, search enrichment,\nindexes, and industry policies. They should reference shared Commerce objects\nusing stable codes and documented relation fields. They should not copy shared\nCommerce services or redefine generic product lifecycle rules unless they\ndeclare a versioned extension contract.\n\n```js\nconst enrichment = {\n  productCode: 'smartphone001',\n  domainType: 'electronics',\n  searchableAttributes: ['storage', 'screenSize', 'warranty']\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add an industry module by starting with domain policy,\nspecialized schemas, import records, search enrichment, validation tests, and\nbrowser evidence. Business users should see industry-specific workbenches in\nAxis only after the backend module exposes capability metadata. Operators\nshould see whether a domain accelerator is installed, active, indexed, and\ncompatible with the selected Commerce release.\n\n## Operating rules\n\nEach accelerator release should identify which shared Commerce release it\nextends, which sample data it contributes, and which search projections or\nstorefront journeys prove the industry behavior. Import data can seed Apparel,\nElectronics, or Telco examples, but runtime services must still resolve\nauthority from Commerce schemas and domain extension schemas. Axis should show\naccelerator readiness only after module activation, data import, and indexing\nevidence agree.\n\nDecision makers should treat accelerators as governed shortcuts, not forks of\nthe platform. The value is reduced project setup time with retained upgrade\ndiscipline, source traceability, and consistent production operations.\n\n## Common mistakes\n\n- Copying Commerce product or checkout logic into an accelerator.\n- Treating a search enrichment module as catalogue authority.\n- Adding industry data without import and projection tests.\n- Hiding accelerator readiness behind generic setup messages.\n- Forgetting browser proof for Agora or the relevant storefront.\n\n## Verification\n\nRun domain commerce, electronics product, telco catalogue, and telco\nsubscription tests. Import sample data into a fresh schema, rebuild search\nprojections, open the relevant storefront journey, and confirm industry fields\nrender without breaking shared commerce behavior. Production readiness requires\nbusiness fit, developer extension clarity, operator readiness evidence, and QA\nproof across install and upgrade paths.\n"
+        },
+        {
+          "code": "foundation.tooling-runtime-contracts",
+          "title": "Tooling Runtime Contracts",
+          "route": "/docs/framework/foundation-tooling-runtime-contracts",
+          "section": "ai-and-developer-tooling",
+          "sectionTitle": "AI and Developer Tooling",
+          "sectionOrder": 460,
+          "group": "ai-and-developer-tooling",
+          "groupTitle": "AI and Developer Tooling",
+          "groupOrder": 460,
+          "order": 20,
+          "parentId": "ai-and-developer-tooling",
+          "hierarchyPath": [
+            "AI and Developer Tooling",
+            "Tooling Runtime Contracts"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "contract",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "How Nodics tooling commands, generated manifests, documentation validation, AI context, application builder contracts, and qualification gates are governed.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "tooling.ai-developer-enablement",
+            "framework.release-upgrade-compatibility",
+            "reference.source-backed-documentation-coverage-audit"
+          ],
+          "searchKeywords": [
+            "tooling",
+            "application-builder",
+            "manifest",
+            "validation",
+            "ai-context"
+          ],
+          "topicKeywords": [
+            "AI and Developer Tooling",
+            "AI and Developer Enablement",
+            "Tooling Runtime Contracts"
+          ],
+          "searchText": "Tooling Runtime Contracts How Nodics tooling commands, generated manifests, documentation validation, AI context, application builder contracts, and qualification gates are governed. # Tooling Runtime Contracts\n\nNodics Tooling provides developer commands, generated manifests,\ndocumentation validation, application builder contracts, AI context, and\nquality gates. Tooling is not a runtime business authority; it prepares,\nvalidates, and proves work that other modules own. For beginners, tooling is\nthe workshop: it helps create and inspect artifacts, while the runtime modules\ndecide business behavior.\n\n## Business problem\n\nThe business problem is safe acceleration. Teams want AI tools, generators,\nand scripts to move quickly, but a generated file should not silently become\nthe authority for products, pages, payments, or permissions. Tooling solves\nthis by enforcing contracts, source evidence, data release manifests,\ndocumentation gates, and application builder qualification before production\nuse.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Tooling module | `../nodics.foundation/modules/nTooling/` |\n| CLI commands | `../nodics.foundation/modules/nTooling/bin/` |\n| Application builder contracts | `../nodics.foundation/modules/nTooling/contracts/applicationBuilder/` |\n| Documentation validation service | `../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js` |\n| Documentation record validation | `../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationRecordValidationService.js` |\n| Tooling tests | `../nodics.foundation/modules/nTooling/test/` |\n\n## Tooling flow\n\n```mermaid\nflowchart LR\n  Developer[\"Developer or AI tool\"] --> Command[\"Tooling command\"]\n  Command --> Contract[\"Schema and contract validation\"]\n  Contract --> Artifact[\"Generated artifact\"]\n  Artifact --> Test[\"Qualification tests\"]\n  Test --> Runtime[\"Owning runtime module\"]\n```\n\n## Contract\n\nTooling commands should be deterministic, bounded, auditable, and safe to run\nin local development. Generated manifests should be rebuilt from source files,\nnot hand maintained. Documentation validation should fail when pages lack\nsource evidence, audience balance, verification, visual evidence, or unsafe\nwording. Application builder contracts should preserve module ownership and\navoid writing hidden business logic.\n\n```js\nconst toolingResult = {\n  contract: 'nodics.tooling.command/v1',\n  artifact: 'data/manifest.json',\n  status: 'VALIDATED',\n  owner: 'nTooling'\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add commands, contract schemas, validators, qualification\nreports, builder adapters, and source-map checks. Business users should see\ntooling output only as governed setup readiness, validation reports, or\ngenerated application options. Operators should know which artifacts were\ngenerated, which checks passed, and which command version produced them in\nproduction preparation.\n\n## Operating rules\n\nTooling output should be reproducible from committed source, configuration,\nand declared inputs. A command that edits data, documentation, or application\ncontracts should publish clear evidence: changed files, generated hashes,\nvalidation result, and owner module. AI-assisted commands follow the same\nrules as developer commands. They can propose or generate artifacts, but they\ncannot bypass source evidence, tests, release checks, or module ownership.\n\nFor beginners, a tooling failure is usually a helpful stop sign. Fix the\nauthored source, catalogue metadata, command input, or generated checksum\nbefore retrying. Do not edit generated runtime output to make the failure\ndisappear, because the next generator run will recreate the same mismatch.\nOperators should keep failed command logs with the release evidence.\n\n## Common mistakes\n\n- Treating generated files as hand-authored source.\n- Letting AI tools bypass validators.\n- Adding a command without deterministic output and tests.\n- Hiding contract failures behind generic success messages.\n- Using tooling to override business ownership instead of supporting it.\n\n## Verification\n\nRun tooling tests, documentation validation, source coverage audit, application\nbuilder qualification tests, and manifest generation checks. Production\nreadiness requires business-readable reports, developer source evidence,\noperator command traceability, and QA proof that generated artifacts match the\nauthored source and runtime contract.\n"
+        },
+        {
+          "code": "foundation.ems-runtime-client-runbook",
+          "title": "EMS Runtime and Client Runbook",
+          "route": "/docs/framework/foundation-ems-runtime-client-runbook",
+          "section": "event-and-messaging-management",
+          "sectionTitle": "Event and Messaging Management",
+          "sectionOrder": 360,
+          "group": "event-and-messaging-management",
+          "groupTitle": "Event and Messaging Management",
+          "groupOrder": 360,
+          "order": 20,
+          "parentId": "event-and-messaging-management",
+          "hierarchyPath": [
+            "Event and Messaging Management",
+            "EMS Runtime and Client Runbook"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "operations",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "How EMS runtime, EMS Client, broker providers, tenant resolution, retries, event processing, and operator evidence are governed.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "events.messaging-cluster-coordination",
+            "communication.provider-runbooks",
+            "process.workflow-bpm-source-map"
+          ],
+          "searchKeywords": [
+            "ems",
+            "ems-client",
+            "events",
+            "broker",
+            "tenant-resolution"
+          ],
+          "topicKeywords": [
+            "Event and Messaging Management",
+            "Events and Cluster Coordination",
+            "EMS Runtime and Client Runbook"
+          ],
+          "searchText": "EMS Runtime and Client Runbook How EMS runtime, EMS Client, broker providers, tenant resolution, retries, event processing, and operator evidence are governed. # EMS Runtime and Client Runbook\n\nEMS coordinates event and message behavior across Nodics modules. The EMS\nruntime owns message contracts, listeners, publisher selection, retry, tenant\nresolution, and provider coordination. EMS Client gives modules a controlled\nway to publish and process messages. For beginners, EMS is the delivery path\nfor system events; the business module still owns why an event exists and what\nit means.\n\n## Business problem\n\nThe business problem is reliable coordination between services. Import,\npublication, cache invalidation, communication, workflow, and monitoring can\nall depend on events. Business users do not need broker details, but they need\nconfidence that a governed operation did not disappear between modules.\nDevelopers need stable message contracts. Operators need production evidence\nfor published, consumed, retried, failed, and tenant-scoped messages.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| EMS module | `../nodics.foundation/modules/nEms/` |\n| EMS Client module | `../nodics.foundation/modules/nEms/emsClient/` |\n| Kafka provider | `../nodics.foundation/modules/nEms/kafka/` |\n| ActiveMQ provider | `../nodics.foundation/modules/nEms/activemq/` |\n| EMS tests | `../nodics.foundation/modules/nEms/emsClient/test/`, `../nodics.foundation/modules/nEms/kafka/test/` |\n| Existing event docs | `docs/pages/nodics.foundation/events-messaging-cluster.md` |\n\n## Message flow\n\n```mermaid\nsequenceDiagram\n  participant Module as Owning module\n  participant Client as EMS Client\n  participant Runtime as EMS runtime\n  participant Provider as Broker provider\n  participant Listener as Consumer\n\n  Module->>Client: Publish message intent\n  Client->>Runtime: Resolve tenant and publisher\n  Runtime->>Provider: Send message\n  Provider->>Listener: Deliver message\n  Listener->>Runtime: Record processing result\n```\n\n## Contract\n\nMessages should include contract code, tenant, correlation id, source module,\nevent type, bounded payload, retry policy, and processing result. Providers\nown broker-specific connection and delivery. Business modules own payload\nmeaning and follow-up behavior.\n\n```js\nconst event = {\n  contract: 'cms.publication.completed/v1',\n  tenant: 'default',\n  sourceModule: 'cms',\n  correlationId: 'publication-1001'\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add message contracts, listeners, providers, publisher\nselection, retry handling, tenant resolvers, and dead-letter processing.\nBusiness users should see event impact as operation state, not broker details.\nOperators should inspect provider health, queue depth, retries, failed\nmessages, tenant routing, and consumer lag. QA should test publish, consume,\nretry, duplicate handling, tenant isolation, and unavailable provider behavior.\n\n## Operating rules\n\nEach message contract should define producer, consumer, payload shape, tenant\nscope, idempotency key, retry limit, and failure evidence. EMS Client should be\nthe normal entry point for module code so provider details remain replaceable.\nProvider modules can tune Kafka or ActiveMQ delivery, but they should not\nchange business meaning. Axis and NMS should surface message health as\noperation readiness, lag, retries, and failed-message evidence.\n\nDecision makers should read EMS evidence as operational confidence, not as a\nseparate business workflow. A publication, import, or notification journey is\nhealthy only when the owning module state and message evidence agree. That\nkeeps broker details technical while still proving cross-module reliability.\n\n## Common mistakes\n\n- Putting business decisions inside generic EMS provider code.\n- Publishing messages without tenant or correlation id.\n- Treating broker acknowledgement as business completion.\n- Dropping failed messages without dead-letter evidence.\n- Showing provider errors directly in business setup pages.\n\n## Verification\n\nRun EMS Client route, service, active publisher, message process, tenant\nresolution, and provider tests. In a fresh local runtime, publish a controlled\nevent, consume it, force a provider failure, and verify retry and evidence.\nProduction readiness requires business-safe operation state, developer message\ncontracts, operator broker evidence, and QA proof of tenant isolation.\n"
+        },
+        {
+          "code": "reference.internal-source-boundary-register",
+          "title": "Internal Source Boundary Register",
+          "route": "/docs/framework/reference-internal-source-boundary-register",
+          "section": "reference",
+          "sectionTitle": "Reference",
+          "sectionOrder": 470,
+          "group": "reference",
+          "groupTitle": "Reference",
+          "groupOrder": 470,
+          "order": 40,
+          "parentId": "reference",
+          "hierarchyPath": [
+            "Reference",
+            "Internal Source Boundary Register"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "reference",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "Owner mapping for internal provider and utility modules that are covered by broader business capability pages instead of standalone product pages.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "reference.source-backed-documentation-coverage-audit",
+            "reference.documentation-gap-backlog",
+            "commerce.payment-provider-boundaries",
+            "discovery.search-indexing"
+          ],
+          "searchKeywords": [
+            "internal-source",
+            "owner-mapping",
+            "provider",
+            "source-coverage",
+            "reference"
+          ],
+          "topicKeywords": [
+            "Reference",
+            "Source Map and Glossary",
+            "Internal Source Boundary Register"
+          ],
+          "searchText": "Internal Source Boundary Register Owner mapping for internal provider and utility modules that are covered by broader business capability pages instead of standalone product pages. # Internal Source Boundary Register\n\nThe internal source boundary register classifies low-score technical modules\nthat are implementation details of broader product capabilities. A module can\nbe real and important without needing its own business-facing documentation\npage. For beginners, this page says where those modules are explained and why\nthey are not presented as standalone product journeys.\n\n## Business problem\n\nThe business problem is clarity. Too many public pages for tiny adapters make\nthe product harder to understand, while hiding implementation modules makes\ndevelopers and operators lose traceability. This register balances both needs:\nbusiness users see the owning capability, developers see exact source paths,\noperators know the production owner, and QA owners know which tests should\ncover the implementation detail.\n\n## Classification flow\n\n```mermaid\nflowchart LR\n  Source[\"Source boundary\"] --> Score[\"Coverage score\"]\n  Score --> Public[\"Public capability page\"]\n  Score --> Internal[\"Internal register\"]\n  Internal --> Owner[\"Broader owner page\"]\n  Public --> Owner\n```\n\n## Register\n\n| Internal source boundary | Covered by owner page |\n| --- | --- |\n| `../nodics.discovery/modules/discoveryMapping/` | `discovery.search-indexing` |\n| `../nodics.discovery/modules/discoveryQuery/` | `discovery.search-indexing` |\n| `../nodics.discovery/modules/discoveryRuntime/` | `discovery.search-indexing` |\n| `../nodics.commerce/modules/payment/modules/paymentMethods/` | `commerce.payment-provider-boundaries` |\n| `../nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/` | `commerce.payment-provider-boundaries` |\n| `../nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/` | `commerce.payment-provider-boundaries` |\n| `../nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/` | `commerce.payment-provider-boundaries` |\n| `../nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment/` | `commerce.payment-provider-boundaries` |\n| `../nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore/` | `commerce.payment-provider-boundaries` |\n| `../nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/` | `commerce.payment-provider-boundaries` |\n| `../nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/` | `commerce.payment-provider-boundaries` |\n| `../nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/` | `commerce.payment-provider-boundaries` |\n| `../nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/` | `commerce.payment-provider-boundaries` |\n| `../../nodics.kickoff/envs/kickoffDockerLocal/` | `framework.local-quick-start` |\n| `../../nodics.kickoff/envs/kickoffDockerLocal/commerceServer/` | `framework.local-quick-start` |\n| `../../nodics.kickoff/envs/kickoffDockerLocal/commerceStagedServer/` | `framework.local-quick-start` |\n| `../../nodics.kickoff/envs/kickoffDockerLocal/wcmsOnlineServer/` | `framework.local-quick-start` |\n| `../../nodics.kickoff/envs/kickoffDockerLocal/wcmsStagedServer/` | `framework.local-quick-start` |\n| `../../nodics.kickoff/envs/kickoffLocal/commerceServer/` | `framework.local-quick-start` |\n| `../../nodics.kickoff/envs/kickoffLocal/commerceStagedServer/` | `framework.local-quick-start` |\n| `../../nodics.kickoff/envs/kickoffLocal/wcmsOnlineServer/` | `framework.local-quick-start` |\n| `../../nodics.kickoff/envs/kickoffLocal/wcmsStagedServer/` | `framework.local-quick-start` |\n| `../../nodics.kickoff/modules/kickoffApi/` | `applications.nexus-data-content-guide` |\n| `../../nodics.kickoff/modules/kickoffCore/` | `applications.suite` |\n| `../../nodics.kickoff/modules/kickoffInt/` | `applications.suite` |\n\n## Classification contract\n\nAn internal-only boundary must have a broader owner page, a reason it is not a\nstandalone user journey, and enough source evidence for developers and AI\ntools to find it. The owner page carries business explanation, customization\nguidance, operator recovery, and production verification. The internal module\nkeeps implementation-specific README, AGENTS, tests, and generated context.\n\n## Customization and extension guidance\n\nDevelopers can promote an internal boundary to a public page when it gains\nbusiness workflow, configuration, operator runbook, or external integration\nimportance. Until then, keep extension guidance under the owner capability.\nBusiness users should not see provider fragments as separate products.\nOperators should still see enough diagnostics to recover production behavior.\n\n## Promotion rules\n\nPromote an internal boundary when it introduces a business workflow, tenant\nconfiguration, public API, customer-visible state, operator recovery path, or\npartner integration. Keep it internal when it is only a provider adapter,\nenvironment package, generated runtime helper, or query implementation covered\nby a parent capability. The owner page must carry the business explanation;\nthis register carries the traceability decision.\n\n## Common mistakes\n\n- Creating public pages for every small provider and making navigation noisy.\n- Hiding internal modules without owner mapping.\n- Treating score alone as documentation priority.\n- Forgetting tests because a module is internal.\n- Letting an internal module own business authority.\n\n## Verification\n\nRun the source coverage audit and confirm internal-only candidates have an\nowner page or this register entry. Then run documentation validation and\nhardening. Production readiness requires business-friendly navigation,\ndeveloper source traceability, operator ownership, QA tests, and AI-tool\nguardrails for every internal implementation detail.\n"
+        },
+        {
           "code": "tooling.ai-developer-enablement",
           "title": "AI and Developer Tooling",
           "route": "/docs/framework/tooling-ai-developer-enablement",
@@ -8834,7 +9180,7 @@ module.exports = {
             "Documentation Gap Backlog",
             "Coverage Closure"
           ],
-          "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P0 docs batch | Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Closed by P0 docs batch | Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| Closed by P0 docs batch | CMS exact source map | `nodics.wcms/modules/cms` | Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Closed by P0 docs batch | Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Closed by P0 docs batch | Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Closed by P0 docs batch | Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Closed by P0 docs batch | Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P1 docs batch | Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Covered by `platform.module-registry-journey` with registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Closed by P1 docs batch | Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Covered by `commerce.search-guide` with ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Closed by P1 docs batch | Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Covered by `localization.runtime-authoring` with locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Closed by P1 docs batch | Payment Core and provider split | `nodics.commerce/modules/payment` | Covered by `commerce.payment-provider-boundaries` with payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Closed by P1 docs batch | Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Covered by `commerce.customer-list-profile-boundary` with why customer list exists in Commerce and what Profile continues to own. |\n| Closed by P1 docs batch | NMS runtime monitoring | `nodics.foundation/modules/nNms` | Covered by `foundation.nms-runtime-monitoring` with node monitoring, topology, health, operational evidence, and recovery actions. |\n| Closed by P1 docs batch | Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Covered by `foundation.service-runtime-overrides` with service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Closed by P1 docs batch | Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Covered by `foundation.cache-provider-runbooks` with provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Closed by P1 docs batch | Database provider boundaries | `nodics.foundation/modules/nDatabase` | Covered by `foundation.database-provider-boundaries` with MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| Closed by P1 docs batch | OTP and security flow | `nodics.foundation/modules/nOtp` | Covered by `security.otp-security-flow` with OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Closed by P1 docs batch | Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Covered by `communication.provider-runbooks` with SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Closed by P1 docs batch | Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Covered by `engagement.contact-submission-operations` with contact forms, moderation, workflow, notification, audit, and recovery. |\n| Closed by P1 docs batch | Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Covered by `process.workflow-bpm-source-map` with workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Closed by P1 docs batch | Cron job data authoring | `nodics.process/modules/cronjob` | Covered by `process.cronjob-data-authoring` with job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Closed by P1 docs batch | Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Covered by `framework.release-upgrade-compatibility` with version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Fresh-schema setup per runtime | Platform, WCMS Staged, WCMS Online, Process, Commerce, Engagement | Add runtime-specific import order, seed data, publication, and acceptance evidence where existing quick-start docs are too broad. |\n| Environment, server, and node discovery | `nodics.kickoff/envs`, framework server/node configuration | Explain how physical hierarchy, environment config, server composition, and runtime roles are discovered. |\n| Permission and access matrix | Profile, BackOffice, WCMS, documentation access policies | Explain roles, groups, permissions, access modes, public/authenticated/restricted behavior, and publication visibility. |\n| Search indexing operations | Discovery and Commerce Search modules | Explain index jobs, reindex, projection freshness, failure recovery, and ownership. |\n| Migration and import reconciliation | Import, migration, CMS migration, Commerce data | Explain source classification, mapping tables, partial failures, retry, and data correction. |\n| Export and data privacy | Export providers, media-owned generated files | Explain allow-lists, masking, retention, download permissions, and audit. |\n| Observability | NMS, import runs, publication receipts, logs, dashboards | Explain correlation IDs, status evidence, health checks, support cards, and escalation. |\n| Disaster recovery | Media publication, Online storage, replication queue | Explain Online media replication, DR queues, recovery receipts, and failure escalation. |\n| Frontend consumption contracts | Axis, Nexus, Agora | Explain that Axis consumes BackOffice metadata, Nexus consumes Online WCMS, and Agora consumes Online commerce/content. |\n| Data quality rules | All module data folders | Explain required fields, stable keys, idempotent queries, relation integrity, and no runtime logic in data files. |\n| Testing standards | All modules and frontends | Explain unit, contract, generator, fresh-schema, publication, browser, accessibility, and regression expectations. |\n| Troubleshooting matrices | Every operational capability page | Add what failed, who owns it, user-safe message, technical evidence, and recovery action. |\n| Decision-maker overview pages | Product and capability overview docs | Explain business value, ownership model, platform differentiation, risk controls, and implementation confidence. |\n| Internal-only register | Low-score utility modules | Decide and document which technical modules do not need public pages and where they are covered. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n"
+          "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P0 docs batch | Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Closed by P0 docs batch | Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| Closed by P0 docs batch | CMS exact source map | `nodics.wcms/modules/cms` | Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Closed by P0 docs batch | Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Closed by P0 docs batch | Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Closed by P0 docs batch | Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Closed by P0 docs batch | Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P1 docs batch | Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Covered by `platform.module-registry-journey` with registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Closed by P1 docs batch | Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Covered by `commerce.search-guide` with ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Closed by P1 docs batch | Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Covered by `localization.runtime-authoring` with locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Closed by P1 docs batch | Payment Core and provider split | `nodics.commerce/modules/payment` | Covered by `commerce.payment-provider-boundaries` with payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Closed by P1 docs batch | Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Covered by `commerce.customer-list-profile-boundary` with why customer list exists in Commerce and what Profile continues to own. |\n| Closed by P1 docs batch | NMS runtime monitoring | `nodics.foundation/modules/nNms` | Covered by `foundation.nms-runtime-monitoring` with node monitoring, topology, health, operational evidence, and recovery actions. |\n| Closed by P1 docs batch | Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Covered by `foundation.service-runtime-overrides` with service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Closed by P1 docs batch | Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Covered by `foundation.cache-provider-runbooks` with provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Closed by P1 docs batch | Database provider boundaries | `nodics.foundation/modules/nDatabase` | Covered by `foundation.database-provider-boundaries` with MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| Closed by P1 docs batch | OTP and security flow | `nodics.foundation/modules/nOtp` | Covered by `security.otp-security-flow` with OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Closed by P1 docs batch | Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Covered by `communication.provider-runbooks` with SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Closed by P1 docs batch | Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Covered by `engagement.contact-submission-operations` with contact forms, moderation, workflow, notification, audit, and recovery. |\n| Closed by P1 docs batch | Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Covered by `process.workflow-bpm-source-map` with workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Closed by P1 docs batch | Cron job data authoring | `nodics.process/modules/cronjob` | Covered by `process.cronjob-data-authoring` with job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Closed by P1 docs batch | Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Covered by `framework.release-upgrade-compatibility` with version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P2 docs batch | Fulfillment Core owner mapping | `nodics.commerce/modules/fulfillment/modules/fulfillmentCore` | Covered by `commerce.fulfillment-core-source-map`, plus explicit source evidence on fulfillment and data-authoring pages. |\n| Closed by P2 docs batch | Domain Commerce accelerator owner mapping | `domainCommerceCore`, electronics product, telco catalog, telco subscription | Covered by `accelerators.domain-commerce-source-map` with accelerator ownership, Commerce boundary, sample data, and validation. |\n| Closed by P2 docs batch | Tooling runtime depth | `nodics.foundation/modules/nTooling` | Covered by `foundation.tooling-runtime-contracts` with command, manifest, application-builder, AI-context, and quality-gate contracts. |\n| Closed by P2 docs batch | EMS runtime and client depth | `nodics.foundation/modules/nEms`, `emsClient`, broker providers | Covered by `foundation.ems-runtime-client-runbook` with broker runtime, client, tenant, retry, and operator evidence. |\n| Closed by P2 docs batch | Internal-only register | Discovery internals, payment methods/providers, NMS runtime, Kickoff environment/runtime packages | Covered by `reference.internal-source-boundary-register` with owner mappings and promotion rules. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n"
         }
       ]
     },
@@ -27984,7 +28330,8 @@ module.exports = {
       ],
       "sourceEvidence": [
         "docs/catalogue.json",
-        "docs/pages/nodics.commerce/shipping-fulfillment.md"
+        "docs/pages/nodics.commerce/shipping-fulfillment.md",
+        "../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/"
       ],
       "visualRequirements": [
         "diagram",
@@ -42668,6 +43015,7 @@ module.exports = {
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/nodics.commerce/commerce-data-authoring-and-fulfillment.md",
+        "../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/",
         "../nodics.commerce/modules/baseCommerce/modules/product/package.json",
         "../nodics.commerce/modules/baseCommerce/modules/pricing/package.json",
         "../nodics.commerce/modules/baseCommerce/modules/inventory/package.json",
@@ -47596,8 +47944,8 @@ module.exports = {
         "route": "/docs/framework/process-cronjob-data-authoring"
       },
       "next": {
-        "title": "AI and Developer Tooling",
-        "route": "/docs/framework/tooling-ai-developer-enablement"
+        "title": "Fulfillment Core Source Map",
+        "route": "/docs/framework/commerce-fulfillment-core-source-map"
       },
       "source": {
         "repository": "nodics.docs",
@@ -47613,6 +47961,1497 @@ module.exports = {
     "active": true
   },
   "record114": {
+    "code": "nodicsDocsComponentcommerceFulfillmentCoreSourceMap",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "commerce.fulfillment-core-source-map",
+      "title": "Fulfillment Core Source Map",
+      "route": "/docs/framework/commerce-fulfillment-core-source-map",
+      "section": "shipping-and-fulfillment",
+      "sectionTitle": "Shipping and Fulfillment",
+      "group": "shipping-and-fulfillment",
+      "groupTitle": "Shipping and Fulfillment",
+      "parentId": "shipping-and-fulfillment",
+      "hierarchyPath": [
+        "Shipping and Fulfillment",
+        "Fulfillment Core Source Map"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "reference",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "Exact source map for fulfillment execution, carrier adapters, return execution, integration readiness, customer policy, operator evidence, and recovery.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "fulfillment.shipping-management",
+        "commerce.data-authoring-fulfillment",
+        "commerce.payment-provider-boundaries"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.commerce/fulfillment-core-source-map.md",
+        "../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/",
+        "../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentLifecycleService.js",
+        "../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentReturnExecutionService.js",
+        "../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "fulfillment-core",
+        "carrier",
+        "return-execution",
+        "readiness",
+        "operator"
+      ],
+      "topicKeywords": [
+        "Shipping and Fulfillment",
+        "Shipping and Fulfillment Flow",
+        "Fulfillment Core Source Map"
+      ],
+      "headings": [
+        {
+          "text": "Business problem",
+          "anchor": "commerceFulfillmentCoreSourceMap-1-business-problem",
+          "level": 2
+        },
+        {
+          "text": "Source map",
+          "anchor": "commerceFulfillmentCoreSourceMap-2-source-map",
+          "level": 2
+        },
+        {
+          "text": "Execution flow",
+          "anchor": "commerceFulfillmentCoreSourceMap-3-execution-flow",
+          "level": 2
+        },
+        {
+          "text": "Contract",
+          "anchor": "commerceFulfillmentCoreSourceMap-4-contract",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "commerceFulfillmentCoreSourceMap-5-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Operating rules",
+          "anchor": "commerceFulfillmentCoreSourceMap-6-operating-rules",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "commerceFulfillmentCoreSourceMap-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "commerceFulfillmentCoreSourceMap-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Fulfillment Core owns shipping, carrier execution, return execution, integration readiness, and customer-safe fulfillment actions. The broader Fulfillment page explains the business journey; this source map shows developers, operators, QA owners, and AI tools where the implementation lives. For beginners, this is the place where an order becomes work that can be picked, shipped, returned, or blocked with clear evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Business problem",
+          "anchor": "commerceFulfillmentCoreSourceMap-1-business-problem"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is trustworthy order execution. After checkout, the business must prove which carrier was selected, whether integration was ready, whether a shipment failed, and whether a return can be accepted. Fulfillment Core keeps execution state near the services that own fulfillment behavior, while product, payment, and identity authority stay in their own modules."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "commerceFulfillmentCoreSourceMap-2-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Fulfillment Core module",
+              "`../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/`"
+            ],
+            [
+              "Schemas and routes",
+              "`../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/schemas/schemas.js`, `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/router/routers.js`"
+            ],
+            [
+              "Customer controller",
+              "`../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/controller/defaultFulfillmentCustomerController.js`"
+            ],
+            [
+              "Lifecycle and operations",
+              "`../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentLifecycleService.js`, `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentOperationService.js`"
+            ],
+            [
+              "Carrier execution",
+              "`../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierExecutionService.js`"
+            ],
+            [
+              "Return execution",
+              "`../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentReturnExecutionService.js`"
+            ],
+            [
+              "Readiness checks",
+              "`../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentIntegrationReadinessService.js`"
+            ],
+            [
+              "Contract tests",
+              "`../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Execution flow",
+          "anchor": "commerceFulfillmentCoreSourceMap-3-execution-flow"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Order[\"Order ready for fulfillment\"] --> Readiness[\"Integration readiness\"]\n  Readiness --> Operation[\"Fulfillment operation\"]\n  Operation --> Carrier[\"Carrier execution\"]\n  Operation --> Return[\"Return execution\"]\n  Carrier --> Evidence[\"Execution evidence\"]\n  Return --> Evidence\n  Evidence --> Axis[\"Axis operator view\"]"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Contract",
+          "anchor": "commerceFulfillmentCoreSourceMap-4-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Fulfillment Core records should identify order reference, consignment or execution reference, carrier, state, retryability, failure reason, and customer safe status. They should not duplicate product catalogue, payment provider, or Profile identity authority. The service decides whether the requested action is allowed, and the response should separate business status from technical evidence."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "const execution = {\n  orderCode: 'order1001',\n  fulfillmentState: 'READY_FOR_CARRIER',\n  carrierCode: 'sandboxCarrier',\n  retryable: true\n};"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "commerceFulfillmentCoreSourceMap-5-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can add carrier adapters, warehouse allocation rules, return inspection policies, integration readiness checks, customer-facing actions, or operator recovery commands. Business users should see fulfillment progress, blocked setup, and safe retry actions through Axis. Operators need production evidence for integration status, retry count, carrier reference, and return receipt. QA should test successful execution, blocked readiness, carrier failure, retry, return approval, and customer policy boundaries."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operating rules",
+          "anchor": "commerceFulfillmentCoreSourceMap-6-operating-rules"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Every fulfillment extension should declare its stable code, owning module, supported states, retry behavior, and operator evidence before it is enabled for a tenant. Import data can seed carriers, rules, and policies, but services must still validate whether an action is currently allowed. Axis can expose commands such as retry or approve return only when the backend reports that the command is available."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "commerceFulfillmentCoreSourceMap-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating Fulfillment Core as product, payment, or identity authority.",
+            "Calling a carrier before readiness checks pass.",
+            "Showing raw carrier errors to customers.",
+            "Creating return execution without original order and receipt evidence.",
+            "Adding provider-specific logic without tests and operator recovery data."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "commerceFulfillmentCoreSourceMap-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run fulfillment customer policy, integration readiness, and return execution contracts. In a fresh schema, place a controlled order, start fulfillment, force a carrier failure, retry, and run a return path. Production readiness requires safe status, source traceability, operator evidence, and QA proof that failed execution does not corrupt order state."
+        }
+      ],
+      "searchText": "Fulfillment Core Source Map Exact source map for fulfillment execution, carrier adapters, return execution, integration readiness, customer policy, operator evidence, and recovery. # Fulfillment Core Source Map\n\nFulfillment Core owns shipping, carrier execution, return execution,\nintegration readiness, and customer-safe fulfillment actions. The broader\nFulfillment page explains the business journey; this source map shows\ndevelopers, operators, QA owners, and AI tools where the implementation lives.\nFor beginners, this is the place where an order becomes work that can be\npicked, shipped, returned, or blocked with clear evidence.\n\n## Business problem\n\nThe business problem is trustworthy order execution. After checkout, the\nbusiness must prove which carrier was selected, whether integration was ready,\nwhether a shipment failed, and whether a return can be accepted. Fulfillment\nCore keeps execution state near the services that own fulfillment behavior,\nwhile product, payment, and identity authority stay in their own modules.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Fulfillment Core module | `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/` |\n| Schemas and routes | `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/schemas/schemas.js`, `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/router/routers.js` |\n| Customer controller | `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/controller/defaultFulfillmentCustomerController.js` |\n| Lifecycle and operations | `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentLifecycleService.js`, `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentOperationService.js` |\n| Carrier execution | `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierExecutionService.js` |\n| Return execution | `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentReturnExecutionService.js` |\n| Readiness checks | `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentIntegrationReadinessService.js` |\n| Contract tests | `../nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/` |\n\n## Execution flow\n\n```mermaid\nflowchart LR\n  Order[\"Order ready for fulfillment\"] --> Readiness[\"Integration readiness\"]\n  Readiness --> Operation[\"Fulfillment operation\"]\n  Operation --> Carrier[\"Carrier execution\"]\n  Operation --> Return[\"Return execution\"]\n  Carrier --> Evidence[\"Execution evidence\"]\n  Return --> Evidence\n  Evidence --> Axis[\"Axis operator view\"]\n```\n\n## Contract\n\nFulfillment Core records should identify order reference, consignment or\nexecution reference, carrier, state, retryability, failure reason, and customer\nsafe status. They should not duplicate product catalogue, payment provider, or\nProfile identity authority. The service decides whether the requested action is\nallowed, and the response should separate business status from technical\nevidence.\n\n```js\nconst execution = {\n  orderCode: 'order1001',\n  fulfillmentState: 'READY_FOR_CARRIER',\n  carrierCode: 'sandboxCarrier',\n  retryable: true\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add carrier adapters, warehouse allocation rules, return\ninspection policies, integration readiness checks, customer-facing actions, or\noperator recovery commands. Business users should see fulfillment progress,\nblocked setup, and safe retry actions through Axis. Operators need production\nevidence for integration status, retry count, carrier reference, and return\nreceipt. QA should test successful execution, blocked readiness, carrier\nfailure, retry, return approval, and customer policy boundaries.\n\n## Operating rules\n\nEvery fulfillment extension should declare its stable code, owning module,\nsupported states, retry behavior, and operator evidence before it is enabled\nfor a tenant. Import data can seed carriers, rules, and policies, but services\nmust still validate whether an action is currently allowed. Axis can expose\ncommands such as retry or approve return only when the backend reports that\nthe command is available.\n\n## Common mistakes\n\n- Treating Fulfillment Core as product, payment, or identity authority.\n- Calling a carrier before readiness checks pass.\n- Showing raw carrier errors to customers.\n- Creating return execution without original order and receipt evidence.\n- Adding provider-specific logic without tests and operator recovery data.\n\n## Verification\n\nRun fulfillment customer policy, integration readiness, and return execution\ncontracts. In a fresh schema, place a controlled order, start fulfillment,\nforce a carrier failure, retry, and run a return path. Production readiness\nrequires safe status, source traceability, operator evidence, and QA proof\nthat failed execution does not corrupt order state.\n",
+      "previous": {
+        "title": "Release and Upgrade Compatibility",
+        "route": "/docs/framework/framework-release-upgrade-compatibility"
+      },
+      "next": {
+        "title": "Domain Commerce Accelerator Source Map",
+        "route": "/docs/framework/accelerators-domain-commerce-source-map"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.commerce",
+        "technicalModule": "fulfillmentCore",
+        "owner": "nodics.commerce",
+        "sourcePath": "docs/pages/nodics.commerce/fulfillment-core-source-map.md",
+        "path": "docs/pages/nodics.commerce/fulfillment-core-source-map.md",
+        "wordCount": 561,
+        "checksum": "1ed851ffb168715ff3bc5b0806d484fc795b5d1c113bb541f84b578cda6c84ea"
+      }
+    },
+    "active": true
+  },
+  "record115": {
+    "code": "nodicsDocsComponentacceleratorsDomainCommerceSourceMap",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "accelerators.domain-commerce-source-map",
+      "title": "Domain Commerce Accelerator Source Map",
+      "route": "/docs/framework/accelerators-domain-commerce-source-map",
+      "section": "accelerators-and-industry-solution-templates",
+      "sectionTitle": "Accelerators and Industry Solution Templates",
+      "group": "accelerators-and-industry-solution-templates",
+      "groupTitle": "Accelerators and Industry Solution Templates",
+      "parentId": "accelerators-and-industry-solution-templates",
+      "hierarchyPath": [
+        "Accelerators and Industry Solution Templates",
+        "Domain Commerce Accelerator Source Map"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "reference",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "How domain commerce, electronics product, telco catalog, and telco subscription accelerators extend Commerce without becoming duplicate authorities.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "accelerators.agora-industry-templates",
+        "accelerators.agora-apparel-product-data-authoring",
+        "commerce.search-guide"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/accelerators/domain-commerce-source-map.md",
+        "../nodics.accelerators/package.json",
+        "../nodics.accelerators/modules/domainCommerceCore/",
+        "../nodics.accelerators/modules/electronics/modules/electronicsProduct/",
+        "../nodics.accelerators/modules/telco/modules/telcoCatalog/",
+        "../nodics.accelerators/modules/telco/modules/telcoSubscription/"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "accelerator",
+        "domain-commerce",
+        "electronics",
+        "telco",
+        "subscription"
+      ],
+      "topicKeywords": [
+        "Accelerators and Industry Solution Templates",
+        "Agora Accelerator Family",
+        "Domain Commerce Accelerator Source Map"
+      ],
+      "headings": [
+        {
+          "text": "Business problem",
+          "anchor": "acceleratorsDomainCommerceSourceMap-1-business-problem",
+          "level": 2
+        },
+        {
+          "text": "Source map",
+          "anchor": "acceleratorsDomainCommerceSourceMap-2-source-map",
+          "level": 2
+        },
+        {
+          "text": "Layering model",
+          "anchor": "acceleratorsDomainCommerceSourceMap-3-layering-model",
+          "level": 2
+        },
+        {
+          "text": "Contract",
+          "anchor": "acceleratorsDomainCommerceSourceMap-4-contract",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "acceleratorsDomainCommerceSourceMap-5-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Operating rules",
+          "anchor": "acceleratorsDomainCommerceSourceMap-6-operating-rules",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "acceleratorsDomainCommerceSourceMap-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "acceleratorsDomainCommerceSourceMap-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Domain commerce accelerator modules add industry-specific commerce behavior on top of the shared Commerce foundation. They do not replace product, pricing, inventory, search, checkout, or fulfillment authority. Instead, they add domain rules, projections, validation, enrichment, and setup contracts for Apparel, Electronics, Telco, and customer accelerators. For beginners, the accelerator layer answers \"what is special about this industry?\" while Commerce answers \"how does commerce work?\""
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Business problem",
+          "anchor": "acceleratorsDomainCommerceSourceMap-1-business-problem"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is faster industry adoption without copying frameworks. An electronics catalogue needs technical attributes and search enrichment. A telco catalogue needs plans, subscriptions, and product constraints. A domain core needs shared industry policies. Business users get an accelerator that feels ready for their market; developers get a clean extension layer; operators still get one production evidence model."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "acceleratorsDomainCommerceSourceMap-2-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Accelerator group",
+              "`../nodics.accelerators/package.json`"
+            ],
+            [
+              "Domain commerce core",
+              "`../nodics.accelerators/modules/domainCommerceCore/`"
+            ],
+            [
+              "Electronics product",
+              "`../nodics.accelerators/modules/electronics/modules/electronicsProduct/`"
+            ],
+            [
+              "Telco catalog",
+              "`../nodics.accelerators/modules/telco/modules/telcoCatalog/`"
+            ],
+            [
+              "Telco subscription",
+              "`../nodics.accelerators/modules/telco/modules/telcoSubscription/`"
+            ],
+            [
+              "Agora Apparel authoring",
+              "`docs/pages/accelerators/agora-apparel-product-data-authoring.md`"
+            ],
+            [
+              "Commerce data authoring",
+              "`docs/pages/nodics.commerce/commerce-data-authoring-and-fulfillment.md`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Layering model",
+          "anchor": "acceleratorsDomainCommerceSourceMap-3-layering-model"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart TD\n  Commerce[\"Commerce foundation\"] --> DomainCore[\"Domain Commerce Core\"]\n  DomainCore --> Electronics[\"Electronics Product\"]\n  DomainCore --> TelcoCatalog[\"Telco Catalog\"]\n  TelcoCatalog --> TelcoSubscription[\"Telco Subscription\"]\n  Commerce --> Agora[\"Agora project data\"]"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Contract",
+          "anchor": "acceleratorsDomainCommerceSourceMap-4-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Domain modules can add schemas, validation services, search enrichment, indexes, and industry policies. They should reference shared Commerce objects using stable codes and documented relation fields. They should not copy shared Commerce services or redefine generic product lifecycle rules unless they declare a versioned extension contract."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "const enrichment = {\n  productCode: 'smartphone001',\n  domainType: 'electronics',\n  searchableAttributes: ['storage', 'screenSize', 'warranty']\n};"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "acceleratorsDomainCommerceSourceMap-5-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can add an industry module by starting with domain policy, specialized schemas, import records, search enrichment, validation tests, and browser evidence. Business users should see industry-specific workbenches in Axis only after the backend module exposes capability metadata. Operators should see whether a domain accelerator is installed, active, indexed, and compatible with the selected Commerce release."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operating rules",
+          "anchor": "acceleratorsDomainCommerceSourceMap-6-operating-rules"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Each accelerator release should identify which shared Commerce release it extends, which sample data it contributes, and which search projections or storefront journeys prove the industry behavior. Import data can seed Apparel, Electronics, or Telco examples, but runtime services must still resolve authority from Commerce schemas and domain extension schemas. Axis should show accelerator readiness only after module activation, data import, and indexing evidence agree."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Decision makers should treat accelerators as governed shortcuts, not forks of the platform. The value is reduced project setup time with retained upgrade discipline, source traceability, and consistent production operations."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "acceleratorsDomainCommerceSourceMap-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Copying Commerce product or checkout logic into an accelerator.",
+            "Treating a search enrichment module as catalogue authority.",
+            "Adding industry data without import and projection tests.",
+            "Hiding accelerator readiness behind generic setup messages.",
+            "Forgetting browser proof for Agora or the relevant storefront."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "acceleratorsDomainCommerceSourceMap-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run domain commerce, electronics product, telco catalogue, and telco subscription tests. Import sample data into a fresh schema, rebuild search projections, open the relevant storefront journey, and confirm industry fields render without breaking shared commerce behavior. Production readiness requires business fit, developer extension clarity, operator readiness evidence, and QA proof across install and upgrade paths."
+        }
+      ],
+      "searchText": "Domain Commerce Accelerator Source Map How domain commerce, electronics product, telco catalog, and telco subscription accelerators extend Commerce without becoming duplicate authorities. # Domain Commerce Accelerator Source Map\n\nDomain commerce accelerator modules add industry-specific commerce behavior on\ntop of the shared Commerce foundation. They do not replace product, pricing,\ninventory, search, checkout, or fulfillment authority. Instead, they add\ndomain rules, projections, validation, enrichment, and setup contracts for\nApparel, Electronics, Telco, and customer accelerators. For beginners, the\naccelerator layer answers \"what is special about this industry?\" while Commerce\nanswers \"how does commerce work?\"\n\n## Business problem\n\nThe business problem is faster industry adoption without copying frameworks.\nAn electronics catalogue needs technical attributes and search enrichment. A\ntelco catalogue needs plans, subscriptions, and product constraints. A domain\ncore needs shared industry policies. Business users get an accelerator that\nfeels ready for their market; developers get a clean extension layer; operators\nstill get one production evidence model.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Accelerator group | `../nodics.accelerators/package.json` |\n| Domain commerce core | `../nodics.accelerators/modules/domainCommerceCore/` |\n| Electronics product | `../nodics.accelerators/modules/electronics/modules/electronicsProduct/` |\n| Telco catalog | `../nodics.accelerators/modules/telco/modules/telcoCatalog/` |\n| Telco subscription | `../nodics.accelerators/modules/telco/modules/telcoSubscription/` |\n| Agora Apparel authoring | `docs/pages/accelerators/agora-apparel-product-data-authoring.md` |\n| Commerce data authoring | `docs/pages/nodics.commerce/commerce-data-authoring-and-fulfillment.md` |\n\n## Layering model\n\n```mermaid\nflowchart TD\n  Commerce[\"Commerce foundation\"] --> DomainCore[\"Domain Commerce Core\"]\n  DomainCore --> Electronics[\"Electronics Product\"]\n  DomainCore --> TelcoCatalog[\"Telco Catalog\"]\n  TelcoCatalog --> TelcoSubscription[\"Telco Subscription\"]\n  Commerce --> Agora[\"Agora project data\"]\n```\n\n## Contract\n\nDomain modules can add schemas, validation services, search enrichment,\nindexes, and industry policies. They should reference shared Commerce objects\nusing stable codes and documented relation fields. They should not copy shared\nCommerce services or redefine generic product lifecycle rules unless they\ndeclare a versioned extension contract.\n\n```js\nconst enrichment = {\n  productCode: 'smartphone001',\n  domainType: 'electronics',\n  searchableAttributes: ['storage', 'screenSize', 'warranty']\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add an industry module by starting with domain policy,\nspecialized schemas, import records, search enrichment, validation tests, and\nbrowser evidence. Business users should see industry-specific workbenches in\nAxis only after the backend module exposes capability metadata. Operators\nshould see whether a domain accelerator is installed, active, indexed, and\ncompatible with the selected Commerce release.\n\n## Operating rules\n\nEach accelerator release should identify which shared Commerce release it\nextends, which sample data it contributes, and which search projections or\nstorefront journeys prove the industry behavior. Import data can seed Apparel,\nElectronics, or Telco examples, but runtime services must still resolve\nauthority from Commerce schemas and domain extension schemas. Axis should show\naccelerator readiness only after module activation, data import, and indexing\nevidence agree.\n\nDecision makers should treat accelerators as governed shortcuts, not forks of\nthe platform. The value is reduced project setup time with retained upgrade\ndiscipline, source traceability, and consistent production operations.\n\n## Common mistakes\n\n- Copying Commerce product or checkout logic into an accelerator.\n- Treating a search enrichment module as catalogue authority.\n- Adding industry data without import and projection tests.\n- Hiding accelerator readiness behind generic setup messages.\n- Forgetting browser proof for Agora or the relevant storefront.\n\n## Verification\n\nRun domain commerce, electronics product, telco catalogue, and telco\nsubscription tests. Import sample data into a fresh schema, rebuild search\nprojections, open the relevant storefront journey, and confirm industry fields\nrender without breaking shared commerce behavior. Production readiness requires\nbusiness fit, developer extension clarity, operator readiness evidence, and QA\nproof across install and upgrade paths.\n",
+      "previous": {
+        "title": "Fulfillment Core Source Map",
+        "route": "/docs/framework/commerce-fulfillment-core-source-map"
+      },
+      "next": {
+        "title": "Tooling Runtime Contracts",
+        "route": "/docs/framework/foundation-tooling-runtime-contracts"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.accelerators",
+        "technicalModule": "domainCommerceCore",
+        "owner": "nodics.accelerators",
+        "sourcePath": "docs/pages/accelerators/domain-commerce-source-map.md",
+        "path": "docs/pages/accelerators/domain-commerce-source-map.md",
+        "wordCount": 532,
+        "checksum": "3abf80bc049ad5dd4798434165e7a9926d2a4997ba928d9ea37f690006033eb9"
+      }
+    },
+    "active": true
+  },
+  "record116": {
+    "code": "nodicsDocsComponentfoundationToolingRuntimeContracts",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "foundation.tooling-runtime-contracts",
+      "title": "Tooling Runtime Contracts",
+      "route": "/docs/framework/foundation-tooling-runtime-contracts",
+      "section": "ai-and-developer-tooling",
+      "sectionTitle": "AI and Developer Tooling",
+      "group": "ai-and-developer-tooling",
+      "groupTitle": "AI and Developer Tooling",
+      "parentId": "ai-and-developer-tooling",
+      "hierarchyPath": [
+        "AI and Developer Tooling",
+        "Tooling Runtime Contracts"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "How Nodics tooling commands, generated manifests, documentation validation, AI context, application builder contracts, and qualification gates are governed.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "tooling.ai-developer-enablement",
+        "framework.release-upgrade-compatibility",
+        "reference.source-backed-documentation-coverage-audit"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.foundation/tooling-runtime-contracts.md",
+        "../nodics.foundation/modules/nTooling/",
+        "../nodics.foundation/modules/nTooling/bin/",
+        "../nodics.foundation/modules/nTooling/contracts/applicationBuilder/",
+        "../nodics.foundation/modules/nTooling/test/"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "tooling",
+        "application-builder",
+        "manifest",
+        "validation",
+        "ai-context"
+      ],
+      "topicKeywords": [
+        "AI and Developer Tooling",
+        "AI and Developer Enablement",
+        "Tooling Runtime Contracts"
+      ],
+      "headings": [
+        {
+          "text": "Business problem",
+          "anchor": "foundationToolingRuntimeContracts-1-business-problem",
+          "level": 2
+        },
+        {
+          "text": "Source map",
+          "anchor": "foundationToolingRuntimeContracts-2-source-map",
+          "level": 2
+        },
+        {
+          "text": "Tooling flow",
+          "anchor": "foundationToolingRuntimeContracts-3-tooling-flow",
+          "level": 2
+        },
+        {
+          "text": "Contract",
+          "anchor": "foundationToolingRuntimeContracts-4-contract",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "foundationToolingRuntimeContracts-5-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Operating rules",
+          "anchor": "foundationToolingRuntimeContracts-6-operating-rules",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "foundationToolingRuntimeContracts-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "foundationToolingRuntimeContracts-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Nodics Tooling provides developer commands, generated manifests, documentation validation, application builder contracts, AI context, and quality gates. Tooling is not a runtime business authority; it prepares, validates, and proves work that other modules own. For beginners, tooling is the workshop: it helps create and inspect artifacts, while the runtime modules decide business behavior."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Business problem",
+          "anchor": "foundationToolingRuntimeContracts-1-business-problem"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is safe acceleration. Teams want AI tools, generators, and scripts to move quickly, but a generated file should not silently become the authority for products, pages, payments, or permissions. Tooling solves this by enforcing contracts, source evidence, data release manifests, documentation gates, and application builder qualification before production use."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "foundationToolingRuntimeContracts-2-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Tooling module",
+              "`../nodics.foundation/modules/nTooling/`"
+            ],
+            [
+              "CLI commands",
+              "`../nodics.foundation/modules/nTooling/bin/`"
+            ],
+            [
+              "Application builder contracts",
+              "`../nodics.foundation/modules/nTooling/contracts/applicationBuilder/`"
+            ],
+            [
+              "Documentation validation service",
+              "`../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js`"
+            ],
+            [
+              "Documentation record validation",
+              "`../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationRecordValidationService.js`"
+            ],
+            [
+              "Tooling tests",
+              "`../nodics.foundation/modules/nTooling/test/`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Tooling flow",
+          "anchor": "foundationToolingRuntimeContracts-3-tooling-flow"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Developer[\"Developer or AI tool\"] --> Command[\"Tooling command\"]\n  Command --> Contract[\"Schema and contract validation\"]\n  Contract --> Artifact[\"Generated artifact\"]\n  Artifact --> Test[\"Qualification tests\"]\n  Test --> Runtime[\"Owning runtime module\"]"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Contract",
+          "anchor": "foundationToolingRuntimeContracts-4-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Tooling commands should be deterministic, bounded, auditable, and safe to run in local development. Generated manifests should be rebuilt from source files, not hand maintained. Documentation validation should fail when pages lack source evidence, audience balance, verification, visual evidence, or unsafe wording. Application builder contracts should preserve module ownership and avoid writing hidden business logic."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "const toolingResult = {\n  contract: 'nodics.tooling.command/v1',\n  artifact: 'data/manifest.json',\n  status: 'VALIDATED',\n  owner: 'nTooling'\n};"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "foundationToolingRuntimeContracts-5-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can add commands, contract schemas, validators, qualification reports, builder adapters, and source-map checks. Business users should see tooling output only as governed setup readiness, validation reports, or generated application options. Operators should know which artifacts were generated, which checks passed, and which command version produced them in production preparation."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operating rules",
+          "anchor": "foundationToolingRuntimeContracts-6-operating-rules"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Tooling output should be reproducible from committed source, configuration, and declared inputs. A command that edits data, documentation, or application contracts should publish clear evidence: changed files, generated hashes, validation result, and owner module. AI-assisted commands follow the same rules as developer commands. They can propose or generate artifacts, but they cannot bypass source evidence, tests, release checks, or module ownership."
+        },
+        {
+          "kind": "paragraph",
+          "text": "For beginners, a tooling failure is usually a helpful stop sign. Fix the authored source, catalogue metadata, command input, or generated checksum before retrying. Do not edit generated runtime output to make the failure disappear, because the next generator run will recreate the same mismatch. Operators should keep failed command logs with the release evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "foundationToolingRuntimeContracts-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating generated files as hand-authored source.",
+            "Letting AI tools bypass validators.",
+            "Adding a command without deterministic output and tests.",
+            "Hiding contract failures behind generic success messages.",
+            "Using tooling to override business ownership instead of supporting it."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "foundationToolingRuntimeContracts-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run tooling tests, documentation validation, source coverage audit, application builder qualification tests, and manifest generation checks. Production readiness requires business-readable reports, developer source evidence, operator command traceability, and QA proof that generated artifacts match the authored source and runtime contract."
+        }
+      ],
+      "searchText": "Tooling Runtime Contracts How Nodics tooling commands, generated manifests, documentation validation, AI context, application builder contracts, and qualification gates are governed. # Tooling Runtime Contracts\n\nNodics Tooling provides developer commands, generated manifests,\ndocumentation validation, application builder contracts, AI context, and\nquality gates. Tooling is not a runtime business authority; it prepares,\nvalidates, and proves work that other modules own. For beginners, tooling is\nthe workshop: it helps create and inspect artifacts, while the runtime modules\ndecide business behavior.\n\n## Business problem\n\nThe business problem is safe acceleration. Teams want AI tools, generators,\nand scripts to move quickly, but a generated file should not silently become\nthe authority for products, pages, payments, or permissions. Tooling solves\nthis by enforcing contracts, source evidence, data release manifests,\ndocumentation gates, and application builder qualification before production\nuse.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Tooling module | `../nodics.foundation/modules/nTooling/` |\n| CLI commands | `../nodics.foundation/modules/nTooling/bin/` |\n| Application builder contracts | `../nodics.foundation/modules/nTooling/contracts/applicationBuilder/` |\n| Documentation validation service | `../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js` |\n| Documentation record validation | `../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationRecordValidationService.js` |\n| Tooling tests | `../nodics.foundation/modules/nTooling/test/` |\n\n## Tooling flow\n\n```mermaid\nflowchart LR\n  Developer[\"Developer or AI tool\"] --> Command[\"Tooling command\"]\n  Command --> Contract[\"Schema and contract validation\"]\n  Contract --> Artifact[\"Generated artifact\"]\n  Artifact --> Test[\"Qualification tests\"]\n  Test --> Runtime[\"Owning runtime module\"]\n```\n\n## Contract\n\nTooling commands should be deterministic, bounded, auditable, and safe to run\nin local development. Generated manifests should be rebuilt from source files,\nnot hand maintained. Documentation validation should fail when pages lack\nsource evidence, audience balance, verification, visual evidence, or unsafe\nwording. Application builder contracts should preserve module ownership and\navoid writing hidden business logic.\n\n```js\nconst toolingResult = {\n  contract: 'nodics.tooling.command/v1',\n  artifact: 'data/manifest.json',\n  status: 'VALIDATED',\n  owner: 'nTooling'\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add commands, contract schemas, validators, qualification\nreports, builder adapters, and source-map checks. Business users should see\ntooling output only as governed setup readiness, validation reports, or\ngenerated application options. Operators should know which artifacts were\ngenerated, which checks passed, and which command version produced them in\nproduction preparation.\n\n## Operating rules\n\nTooling output should be reproducible from committed source, configuration,\nand declared inputs. A command that edits data, documentation, or application\ncontracts should publish clear evidence: changed files, generated hashes,\nvalidation result, and owner module. AI-assisted commands follow the same\nrules as developer commands. They can propose or generate artifacts, but they\ncannot bypass source evidence, tests, release checks, or module ownership.\n\nFor beginners, a tooling failure is usually a helpful stop sign. Fix the\nauthored source, catalogue metadata, command input, or generated checksum\nbefore retrying. Do not edit generated runtime output to make the failure\ndisappear, because the next generator run will recreate the same mismatch.\nOperators should keep failed command logs with the release evidence.\n\n## Common mistakes\n\n- Treating generated files as hand-authored source.\n- Letting AI tools bypass validators.\n- Adding a command without deterministic output and tests.\n- Hiding contract failures behind generic success messages.\n- Using tooling to override business ownership instead of supporting it.\n\n## Verification\n\nRun tooling tests, documentation validation, source coverage audit, application\nbuilder qualification tests, and manifest generation checks. Production\nreadiness requires business-readable reports, developer source evidence,\noperator command traceability, and QA proof that generated artifacts match the\nauthored source and runtime contract.\n",
+      "previous": {
+        "title": "Domain Commerce Accelerator Source Map",
+        "route": "/docs/framework/accelerators-domain-commerce-source-map"
+      },
+      "next": {
+        "title": "EMS Runtime and Client Runbook",
+        "route": "/docs/framework/foundation-ems-runtime-client-runbook"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.foundation",
+        "technicalModule": "nTooling",
+        "owner": "nodics.foundation",
+        "sourcePath": "docs/pages/nodics.foundation/tooling-runtime-contracts.md",
+        "path": "docs/pages/nodics.foundation/tooling-runtime-contracts.md",
+        "wordCount": 521,
+        "checksum": "68bbf0fbe03742b22d9b28adf6147f41d4e1f9c3a74dbf256fc01301593c0fdd"
+      }
+    },
+    "active": true
+  },
+  "record117": {
+    "code": "nodicsDocsComponentfoundationEmsRuntimeClientRunbook",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "foundation.ems-runtime-client-runbook",
+      "title": "EMS Runtime and Client Runbook",
+      "route": "/docs/framework/foundation-ems-runtime-client-runbook",
+      "section": "event-and-messaging-management",
+      "sectionTitle": "Event and Messaging Management",
+      "group": "event-and-messaging-management",
+      "groupTitle": "Event and Messaging Management",
+      "parentId": "event-and-messaging-management",
+      "hierarchyPath": [
+        "Event and Messaging Management",
+        "EMS Runtime and Client Runbook"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "How EMS runtime, EMS Client, broker providers, tenant resolution, retries, event processing, and operator evidence are governed.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "events.messaging-cluster-coordination",
+        "communication.provider-runbooks",
+        "process.workflow-bpm-source-map"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.foundation/ems-runtime-client-runbook.md",
+        "../nodics.foundation/modules/nEms/",
+        "../nodics.foundation/modules/nEms/emsClient/",
+        "../nodics.foundation/modules/nEms/kafka/",
+        "../nodics.foundation/modules/nEms/activemq/"
+      ],
+      "visualRequirements": [
+        "sequence-flow",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "ems",
+        "ems-client",
+        "events",
+        "broker",
+        "tenant-resolution"
+      ],
+      "topicKeywords": [
+        "Event and Messaging Management",
+        "Events and Cluster Coordination",
+        "EMS Runtime and Client Runbook"
+      ],
+      "headings": [
+        {
+          "text": "Business problem",
+          "anchor": "foundationEmsRuntimeClientRunbook-1-business-problem",
+          "level": 2
+        },
+        {
+          "text": "Source map",
+          "anchor": "foundationEmsRuntimeClientRunbook-2-source-map",
+          "level": 2
+        },
+        {
+          "text": "Message flow",
+          "anchor": "foundationEmsRuntimeClientRunbook-3-message-flow",
+          "level": 2
+        },
+        {
+          "text": "Contract",
+          "anchor": "foundationEmsRuntimeClientRunbook-4-contract",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "foundationEmsRuntimeClientRunbook-5-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Operating rules",
+          "anchor": "foundationEmsRuntimeClientRunbook-6-operating-rules",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "foundationEmsRuntimeClientRunbook-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "foundationEmsRuntimeClientRunbook-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "EMS coordinates event and message behavior across Nodics modules. The EMS runtime owns message contracts, listeners, publisher selection, retry, tenant resolution, and provider coordination. EMS Client gives modules a controlled way to publish and process messages. For beginners, EMS is the delivery path for system events; the business module still owns why an event exists and what it means."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Business problem",
+          "anchor": "foundationEmsRuntimeClientRunbook-1-business-problem"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is reliable coordination between services. Import, publication, cache invalidation, communication, workflow, and monitoring can all depend on events. Business users do not need broker details, but they need confidence that a governed operation did not disappear between modules. Developers need stable message contracts. Operators need production evidence for published, consumed, retried, failed, and tenant-scoped messages."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "foundationEmsRuntimeClientRunbook-2-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "EMS module",
+              "`../nodics.foundation/modules/nEms/`"
+            ],
+            [
+              "EMS Client module",
+              "`../nodics.foundation/modules/nEms/emsClient/`"
+            ],
+            [
+              "Kafka provider",
+              "`../nodics.foundation/modules/nEms/kafka/`"
+            ],
+            [
+              "ActiveMQ provider",
+              "`../nodics.foundation/modules/nEms/activemq/`"
+            ],
+            [
+              "EMS tests",
+              "`../nodics.foundation/modules/nEms/emsClient/test/`, `../nodics.foundation/modules/nEms/kafka/test/`"
+            ],
+            [
+              "Existing event docs",
+              "`docs/pages/nodics.foundation/events-messaging-cluster.md`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Message flow",
+          "anchor": "foundationEmsRuntimeClientRunbook-3-message-flow"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "sequenceDiagram\n  participant Module as Owning module\n  participant Client as EMS Client\n  participant Runtime as EMS runtime\n  participant Provider as Broker provider\n  participant Listener as Consumer\n\n  Module->>Client: Publish message intent\n  Client->>Runtime: Resolve tenant and publisher\n  Runtime->>Provider: Send message\n  Provider->>Listener: Deliver message\n  Listener->>Runtime: Record processing result"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Contract",
+          "anchor": "foundationEmsRuntimeClientRunbook-4-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Messages should include contract code, tenant, correlation id, source module, event type, bounded payload, retry policy, and processing result. Providers own broker-specific connection and delivery. Business modules own payload meaning and follow-up behavior."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "const event = {\n  contract: 'cms.publication.completed/v1',\n  tenant: 'default',\n  sourceModule: 'cms',\n  correlationId: 'publication-1001'\n};"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "foundationEmsRuntimeClientRunbook-5-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can add message contracts, listeners, providers, publisher selection, retry handling, tenant resolvers, and dead-letter processing. Business users should see event impact as operation state, not broker details. Operators should inspect provider health, queue depth, retries, failed messages, tenant routing, and consumer lag. QA should test publish, consume, retry, duplicate handling, tenant isolation, and unavailable provider behavior."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operating rules",
+          "anchor": "foundationEmsRuntimeClientRunbook-6-operating-rules"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Each message contract should define producer, consumer, payload shape, tenant scope, idempotency key, retry limit, and failure evidence. EMS Client should be the normal entry point for module code so provider details remain replaceable. Provider modules can tune Kafka or ActiveMQ delivery, but they should not change business meaning. Axis and NMS should surface message health as operation readiness, lag, retries, and failed-message evidence."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Decision makers should read EMS evidence as operational confidence, not as a separate business workflow. A publication, import, or notification journey is healthy only when the owning module state and message evidence agree. That keeps broker details technical while still proving cross-module reliability."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "foundationEmsRuntimeClientRunbook-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Putting business decisions inside generic EMS provider code.",
+            "Publishing messages without tenant or correlation id.",
+            "Treating broker acknowledgement as business completion.",
+            "Dropping failed messages without dead-letter evidence.",
+            "Showing provider errors directly in business setup pages."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "foundationEmsRuntimeClientRunbook-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run EMS Client route, service, active publisher, message process, tenant resolution, and provider tests. In a fresh local runtime, publish a controlled event, consume it, force a provider failure, and verify retry and evidence. Production readiness requires business-safe operation state, developer message contracts, operator broker evidence, and QA proof of tenant isolation."
+        }
+      ],
+      "searchText": "EMS Runtime and Client Runbook How EMS runtime, EMS Client, broker providers, tenant resolution, retries, event processing, and operator evidence are governed. # EMS Runtime and Client Runbook\n\nEMS coordinates event and message behavior across Nodics modules. The EMS\nruntime owns message contracts, listeners, publisher selection, retry, tenant\nresolution, and provider coordination. EMS Client gives modules a controlled\nway to publish and process messages. For beginners, EMS is the delivery path\nfor system events; the business module still owns why an event exists and what\nit means.\n\n## Business problem\n\nThe business problem is reliable coordination between services. Import,\npublication, cache invalidation, communication, workflow, and monitoring can\nall depend on events. Business users do not need broker details, but they need\nconfidence that a governed operation did not disappear between modules.\nDevelopers need stable message contracts. Operators need production evidence\nfor published, consumed, retried, failed, and tenant-scoped messages.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| EMS module | `../nodics.foundation/modules/nEms/` |\n| EMS Client module | `../nodics.foundation/modules/nEms/emsClient/` |\n| Kafka provider | `../nodics.foundation/modules/nEms/kafka/` |\n| ActiveMQ provider | `../nodics.foundation/modules/nEms/activemq/` |\n| EMS tests | `../nodics.foundation/modules/nEms/emsClient/test/`, `../nodics.foundation/modules/nEms/kafka/test/` |\n| Existing event docs | `docs/pages/nodics.foundation/events-messaging-cluster.md` |\n\n## Message flow\n\n```mermaid\nsequenceDiagram\n  participant Module as Owning module\n  participant Client as EMS Client\n  participant Runtime as EMS runtime\n  participant Provider as Broker provider\n  participant Listener as Consumer\n\n  Module->>Client: Publish message intent\n  Client->>Runtime: Resolve tenant and publisher\n  Runtime->>Provider: Send message\n  Provider->>Listener: Deliver message\n  Listener->>Runtime: Record processing result\n```\n\n## Contract\n\nMessages should include contract code, tenant, correlation id, source module,\nevent type, bounded payload, retry policy, and processing result. Providers\nown broker-specific connection and delivery. Business modules own payload\nmeaning and follow-up behavior.\n\n```js\nconst event = {\n  contract: 'cms.publication.completed/v1',\n  tenant: 'default',\n  sourceModule: 'cms',\n  correlationId: 'publication-1001'\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add message contracts, listeners, providers, publisher\nselection, retry handling, tenant resolvers, and dead-letter processing.\nBusiness users should see event impact as operation state, not broker details.\nOperators should inspect provider health, queue depth, retries, failed\nmessages, tenant routing, and consumer lag. QA should test publish, consume,\nretry, duplicate handling, tenant isolation, and unavailable provider behavior.\n\n## Operating rules\n\nEach message contract should define producer, consumer, payload shape, tenant\nscope, idempotency key, retry limit, and failure evidence. EMS Client should be\nthe normal entry point for module code so provider details remain replaceable.\nProvider modules can tune Kafka or ActiveMQ delivery, but they should not\nchange business meaning. Axis and NMS should surface message health as\noperation readiness, lag, retries, and failed-message evidence.\n\nDecision makers should read EMS evidence as operational confidence, not as a\nseparate business workflow. A publication, import, or notification journey is\nhealthy only when the owning module state and message evidence agree. That\nkeeps broker details technical while still proving cross-module reliability.\n\n## Common mistakes\n\n- Putting business decisions inside generic EMS provider code.\n- Publishing messages without tenant or correlation id.\n- Treating broker acknowledgement as business completion.\n- Dropping failed messages without dead-letter evidence.\n- Showing provider errors directly in business setup pages.\n\n## Verification\n\nRun EMS Client route, service, active publisher, message process, tenant\nresolution, and provider tests. In a fresh local runtime, publish a controlled\nevent, consume it, force a provider failure, and verify retry and evidence.\nProduction readiness requires business-safe operation state, developer message\ncontracts, operator broker evidence, and QA proof of tenant isolation.\n",
+      "previous": {
+        "title": "Tooling Runtime Contracts",
+        "route": "/docs/framework/foundation-tooling-runtime-contracts"
+      },
+      "next": {
+        "title": "Internal Source Boundary Register",
+        "route": "/docs/framework/reference-internal-source-boundary-register"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.foundation",
+        "technicalModule": "nEms",
+        "owner": "nodics.foundation",
+        "sourcePath": "docs/pages/nodics.foundation/ems-runtime-client-runbook.md",
+        "path": "docs/pages/nodics.foundation/ems-runtime-client-runbook.md",
+        "wordCount": 540,
+        "checksum": "c4982d84698122883ff906c46fe1a97d64e7946f28ce5cc1d29fd427ffbad3e6"
+      }
+    },
+    "active": true
+  },
+  "record118": {
+    "code": "nodicsDocsComponentreferenceInternalSourceBoundaryRegister",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "reference.internal-source-boundary-register",
+      "title": "Internal Source Boundary Register",
+      "route": "/docs/framework/reference-internal-source-boundary-register",
+      "section": "reference",
+      "sectionTitle": "Reference",
+      "group": "reference",
+      "groupTitle": "Reference",
+      "parentId": "reference",
+      "hierarchyPath": [
+        "Reference",
+        "Internal Source Boundary Register"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "reference",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "Owner mapping for internal provider and utility modules that are covered by broader business capability pages instead of standalone product pages.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "reference.source-backed-documentation-coverage-audit",
+        "reference.documentation-gap-backlog",
+        "commerce.payment-provider-boundaries",
+        "discovery.search-indexing"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/reference/internal-source-boundary-register.md",
+        "../nodics.discovery/modules/discoveryMapping/",
+        "../nodics.discovery/modules/discoveryQuery/",
+        "../nodics.discovery/modules/discoveryRuntime/",
+        "../nodics.commerce/modules/payment/modules/paymentMethods/",
+        "../nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/",
+        "../nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/",
+        "../nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/",
+        "../nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment/",
+        "../nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore/",
+        "../nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/",
+        "../nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/",
+        "../nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/",
+        "../nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/",
+        "../nodics.foundation/modules/nNms/",
+        "../../nodics.kickoff/envs/kickoffDockerLocal/",
+        "../../nodics.kickoff/envs/kickoffLocal/",
+        "../../nodics.kickoff/modules/kickoffApi/",
+        "../../nodics.kickoff/modules/kickoffCore/",
+        "../../nodics.kickoff/modules/kickoffInt/"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "internal-source",
+        "owner-mapping",
+        "provider",
+        "source-coverage",
+        "reference"
+      ],
+      "topicKeywords": [
+        "Reference",
+        "Source Map and Glossary",
+        "Internal Source Boundary Register"
+      ],
+      "headings": [
+        {
+          "text": "Business problem",
+          "anchor": "referenceInternalSourceBoundaryRegister-1-business-problem",
+          "level": 2
+        },
+        {
+          "text": "Classification flow",
+          "anchor": "referenceInternalSourceBoundaryRegister-2-classification-flow",
+          "level": 2
+        },
+        {
+          "text": "Register",
+          "anchor": "referenceInternalSourceBoundaryRegister-3-register",
+          "level": 2
+        },
+        {
+          "text": "Classification contract",
+          "anchor": "referenceInternalSourceBoundaryRegister-4-classification-contract",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "referenceInternalSourceBoundaryRegister-5-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Promotion rules",
+          "anchor": "referenceInternalSourceBoundaryRegister-6-promotion-rules",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "referenceInternalSourceBoundaryRegister-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "referenceInternalSourceBoundaryRegister-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "The internal source boundary register classifies low-score technical modules that are implementation details of broader product capabilities. A module can be real and important without needing its own business-facing documentation page. For beginners, this page says where those modules are explained and why they are not presented as standalone product journeys."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Business problem",
+          "anchor": "referenceInternalSourceBoundaryRegister-1-business-problem"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is clarity. Too many public pages for tiny adapters make the product harder to understand, while hiding implementation modules makes developers and operators lose traceability. This register balances both needs: business users see the owning capability, developers see exact source paths, operators know the production owner, and QA owners know which tests should cover the implementation detail."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Classification flow",
+          "anchor": "referenceInternalSourceBoundaryRegister-2-classification-flow"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Source[\"Source boundary\"] --> Score[\"Coverage score\"]\n  Score --> Public[\"Public capability page\"]\n  Score --> Internal[\"Internal register\"]\n  Internal --> Owner[\"Broader owner page\"]\n  Public --> Owner"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Register",
+          "anchor": "referenceInternalSourceBoundaryRegister-3-register"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Internal source boundary",
+            "Covered by owner page"
+          ],
+          "rows": [
+            [
+              "`../nodics.discovery/modules/discoveryMapping/`",
+              "`discovery.search-indexing`"
+            ],
+            [
+              "`../nodics.discovery/modules/discoveryQuery/`",
+              "`discovery.search-indexing`"
+            ],
+            [
+              "`../nodics.discovery/modules/discoveryRuntime/`",
+              "`discovery.search-indexing`"
+            ],
+            [
+              "`../nodics.commerce/modules/payment/modules/paymentMethods/`",
+              "`commerce.payment-provider-boundaries`"
+            ],
+            [
+              "`../nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/`",
+              "`commerce.payment-provider-boundaries`"
+            ],
+            [
+              "`../nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/`",
+              "`commerce.payment-provider-boundaries`"
+            ],
+            [
+              "`../nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/`",
+              "`commerce.payment-provider-boundaries`"
+            ],
+            [
+              "`../nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment/`",
+              "`commerce.payment-provider-boundaries`"
+            ],
+            [
+              "`../nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore/`",
+              "`commerce.payment-provider-boundaries`"
+            ],
+            [
+              "`../nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/`",
+              "`commerce.payment-provider-boundaries`"
+            ],
+            [
+              "`../nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/`",
+              "`commerce.payment-provider-boundaries`"
+            ],
+            [
+              "`../nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/`",
+              "`commerce.payment-provider-boundaries`"
+            ],
+            [
+              "`../nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/`",
+              "`commerce.payment-provider-boundaries`"
+            ],
+            [
+              "`../../nodics.kickoff/envs/kickoffDockerLocal/`",
+              "`framework.local-quick-start`"
+            ],
+            [
+              "`../../nodics.kickoff/envs/kickoffDockerLocal/commerceServer/`",
+              "`framework.local-quick-start`"
+            ],
+            [
+              "`../../nodics.kickoff/envs/kickoffDockerLocal/commerceStagedServer/`",
+              "`framework.local-quick-start`"
+            ],
+            [
+              "`../../nodics.kickoff/envs/kickoffDockerLocal/wcmsOnlineServer/`",
+              "`framework.local-quick-start`"
+            ],
+            [
+              "`../../nodics.kickoff/envs/kickoffDockerLocal/wcmsStagedServer/`",
+              "`framework.local-quick-start`"
+            ],
+            [
+              "`../../nodics.kickoff/envs/kickoffLocal/commerceServer/`",
+              "`framework.local-quick-start`"
+            ],
+            [
+              "`../../nodics.kickoff/envs/kickoffLocal/commerceStagedServer/`",
+              "`framework.local-quick-start`"
+            ],
+            [
+              "`../../nodics.kickoff/envs/kickoffLocal/wcmsOnlineServer/`",
+              "`framework.local-quick-start`"
+            ],
+            [
+              "`../../nodics.kickoff/envs/kickoffLocal/wcmsStagedServer/`",
+              "`framework.local-quick-start`"
+            ],
+            [
+              "`../../nodics.kickoff/modules/kickoffApi/`",
+              "`applications.nexus-data-content-guide`"
+            ],
+            [
+              "`../../nodics.kickoff/modules/kickoffCore/`",
+              "`applications.suite`"
+            ],
+            [
+              "`../../nodics.kickoff/modules/kickoffInt/`",
+              "`applications.suite`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Classification contract",
+          "anchor": "referenceInternalSourceBoundaryRegister-4-classification-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "An internal-only boundary must have a broader owner page, a reason it is not a standalone user journey, and enough source evidence for developers and AI tools to find it. The owner page carries business explanation, customization guidance, operator recovery, and production verification. The internal module keeps implementation-specific README, AGENTS, tests, and generated context."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "referenceInternalSourceBoundaryRegister-5-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can promote an internal boundary to a public page when it gains business workflow, configuration, operator runbook, or external integration importance. Until then, keep extension guidance under the owner capability. Business users should not see provider fragments as separate products. Operators should still see enough diagnostics to recover production behavior."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Promotion rules",
+          "anchor": "referenceInternalSourceBoundaryRegister-6-promotion-rules"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Promote an internal boundary when it introduces a business workflow, tenant configuration, public API, customer-visible state, operator recovery path, or partner integration. Keep it internal when it is only a provider adapter, environment package, generated runtime helper, or query implementation covered by a parent capability. The owner page must carry the business explanation; this register carries the traceability decision."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "referenceInternalSourceBoundaryRegister-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Creating public pages for every small provider and making navigation noisy.",
+            "Hiding internal modules without owner mapping.",
+            "Treating score alone as documentation priority.",
+            "Forgetting tests because a module is internal.",
+            "Letting an internal module own business authority."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "referenceInternalSourceBoundaryRegister-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run the source coverage audit and confirm internal-only candidates have an owner page or this register entry. Then run documentation validation and hardening. Production readiness requires business-friendly navigation, developer source traceability, operator ownership, QA tests, and AI-tool guardrails for every internal implementation detail."
+        }
+      ],
+      "searchText": "Internal Source Boundary Register Owner mapping for internal provider and utility modules that are covered by broader business capability pages instead of standalone product pages. # Internal Source Boundary Register\n\nThe internal source boundary register classifies low-score technical modules\nthat are implementation details of broader product capabilities. A module can\nbe real and important without needing its own business-facing documentation\npage. For beginners, this page says where those modules are explained and why\nthey are not presented as standalone product journeys.\n\n## Business problem\n\nThe business problem is clarity. Too many public pages for tiny adapters make\nthe product harder to understand, while hiding implementation modules makes\ndevelopers and operators lose traceability. This register balances both needs:\nbusiness users see the owning capability, developers see exact source paths,\noperators know the production owner, and QA owners know which tests should\ncover the implementation detail.\n\n## Classification flow\n\n```mermaid\nflowchart LR\n  Source[\"Source boundary\"] --> Score[\"Coverage score\"]\n  Score --> Public[\"Public capability page\"]\n  Score --> Internal[\"Internal register\"]\n  Internal --> Owner[\"Broader owner page\"]\n  Public --> Owner\n```\n\n## Register\n\n| Internal source boundary | Covered by owner page |\n| --- | --- |\n| `../nodics.discovery/modules/discoveryMapping/` | `discovery.search-indexing` |\n| `../nodics.discovery/modules/discoveryQuery/` | `discovery.search-indexing` |\n| `../nodics.discovery/modules/discoveryRuntime/` | `discovery.search-indexing` |\n| `../nodics.commerce/modules/payment/modules/paymentMethods/` | `commerce.payment-provider-boundaries` |\n| `../nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/` | `commerce.payment-provider-boundaries` |\n| `../nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/` | `commerce.payment-provider-boundaries` |\n| `../nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/` | `commerce.payment-provider-boundaries` |\n| `../nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment/` | `commerce.payment-provider-boundaries` |\n| `../nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore/` | `commerce.payment-provider-boundaries` |\n| `../nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/` | `commerce.payment-provider-boundaries` |\n| `../nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/` | `commerce.payment-provider-boundaries` |\n| `../nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/` | `commerce.payment-provider-boundaries` |\n| `../nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/` | `commerce.payment-provider-boundaries` |\n| `../../nodics.kickoff/envs/kickoffDockerLocal/` | `framework.local-quick-start` |\n| `../../nodics.kickoff/envs/kickoffDockerLocal/commerceServer/` | `framework.local-quick-start` |\n| `../../nodics.kickoff/envs/kickoffDockerLocal/commerceStagedServer/` | `framework.local-quick-start` |\n| `../../nodics.kickoff/envs/kickoffDockerLocal/wcmsOnlineServer/` | `framework.local-quick-start` |\n| `../../nodics.kickoff/envs/kickoffDockerLocal/wcmsStagedServer/` | `framework.local-quick-start` |\n| `../../nodics.kickoff/envs/kickoffLocal/commerceServer/` | `framework.local-quick-start` |\n| `../../nodics.kickoff/envs/kickoffLocal/commerceStagedServer/` | `framework.local-quick-start` |\n| `../../nodics.kickoff/envs/kickoffLocal/wcmsOnlineServer/` | `framework.local-quick-start` |\n| `../../nodics.kickoff/envs/kickoffLocal/wcmsStagedServer/` | `framework.local-quick-start` |\n| `../../nodics.kickoff/modules/kickoffApi/` | `applications.nexus-data-content-guide` |\n| `../../nodics.kickoff/modules/kickoffCore/` | `applications.suite` |\n| `../../nodics.kickoff/modules/kickoffInt/` | `applications.suite` |\n\n## Classification contract\n\nAn internal-only boundary must have a broader owner page, a reason it is not a\nstandalone user journey, and enough source evidence for developers and AI\ntools to find it. The owner page carries business explanation, customization\nguidance, operator recovery, and production verification. The internal module\nkeeps implementation-specific README, AGENTS, tests, and generated context.\n\n## Customization and extension guidance\n\nDevelopers can promote an internal boundary to a public page when it gains\nbusiness workflow, configuration, operator runbook, or external integration\nimportance. Until then, keep extension guidance under the owner capability.\nBusiness users should not see provider fragments as separate products.\nOperators should still see enough diagnostics to recover production behavior.\n\n## Promotion rules\n\nPromote an internal boundary when it introduces a business workflow, tenant\nconfiguration, public API, customer-visible state, operator recovery path, or\npartner integration. Keep it internal when it is only a provider adapter,\nenvironment package, generated runtime helper, or query implementation covered\nby a parent capability. The owner page must carry the business explanation;\nthis register carries the traceability decision.\n\n## Common mistakes\n\n- Creating public pages for every small provider and making navigation noisy.\n- Hiding internal modules without owner mapping.\n- Treating score alone as documentation priority.\n- Forgetting tests because a module is internal.\n- Letting an internal module own business authority.\n\n## Verification\n\nRun the source coverage audit and confirm internal-only candidates have an\nowner page or this register entry. Then run documentation validation and\nhardening. Production readiness requires business-friendly navigation,\ndeveloper source traceability, operator ownership, QA tests, and AI-tool\nguardrails for every internal implementation detail.\n",
+      "previous": {
+        "title": "EMS Runtime and Client Runbook",
+        "route": "/docs/framework/foundation-ems-runtime-client-runbook"
+      },
+      "next": {
+        "title": "AI and Developer Tooling",
+        "route": "/docs/framework/tooling-ai-developer-enablement"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.docs",
+        "technicalModule": "documentation",
+        "owner": "nodics.docs",
+        "sourcePath": "docs/pages/reference/internal-source-boundary-register.md",
+        "path": "docs/pages/reference/internal-source-boundary-register.md",
+        "wordCount": 603,
+        "checksum": "52e421f35b2ec020bcd42f3fa78730347164c352d082bcd09f0f0240127fd94b"
+      }
+    },
+    "active": true
+  },
+  "record119": {
     "code": "nodicsDocsComponenttoolingAiDeveloperEnablement",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -47981,8 +49820,8 @@ module.exports = {
       ],
       "searchText": "AI and Developer Tooling How AI tools, developers, and reviewers use contracts, source maps, generated context, quality gates, and documentation principles safely. # AI and Developer Tooling\n\nHow AI tools, developers, and reviewers use contracts, source maps, generated context, quality gates, and documentation principles safely. This page is intentionally written for beginners, business users, developers, operators, architects, QA owners, and AI tools. It explains the business problem first, then the technical ownership model, then the exact customization and verification responsibilities so nobody has to guess where a change belongs.\n\nAI and developer automation can accelerate delivery, but it can also invent owners, bypass contracts, overwrite user changes, or generate shallow documentation if rules are not executable. Nodics keeps AI enablement as contracts, templates, quality checks, source maps, and validation scripts. Generated documentation must follow the same business, technical, visual, and audit principles every time.\n\n## Business context\n\nFor a business user, this topic answers what decision can be made, which operational journey is supported, and what risk is reduced. The practical value is faster delivery without losing governance: teams can understand the current capability, decide whether it applies to their project, and know when Axis, Nexus, content catalog, workflow, or runtime services are involved.\n\nFor beginners, the mental model is simple: the page title is the business capability, the table identifies who owns each part, and the diagram shows how a request or change flows. A reader should not need source-code knowledge to understand the journey, but the developer path is still available when customization is needed.\n\n| Business question | Answer for this topic |\n| --- | --- |\n| What problem does it solve? | AI and developer automation can accelerate delivery, but it can also invent owners, bypass contracts, overwrite user changes, or generate shallow documentation if rules are not executable. |\n| Who uses it? | Business users, administrators, developers, operators, QA owners, implementation partners, and AI-assisted delivery tools. |\n| What changes can it support? | Nodics keeps AI enablement as contracts, templates, quality checks, source maps, and validation scripts. Generated documentation must follow the same business, technical, visual, and audit principles every time. |\n| What must be governed? | Permissions, validation, source ownership, publication state, runtime impact, audit evidence, and rollback boundaries. |\n\n## Journey and ownership\n\nnSetup and nTooling own AI contracts, generation templates, quality validators, and release checks. Functional modules own the implementation facts being documented. This keeps the reader-facing name friendly while preserving exact source ownership for developers and AI tools. Axis may render management screens or authenticated documentation, Nexus may render public Online content, and the backend content catalog remains authoritative for navigation, pages, access policies, and publication state.\n\n```mermaid\nflowchart LR\n  Reader[\"Business or developer request\"] --> Axis[\"Axis or Nexus view\"]\n  Axis --> Backend[\"Owning backend capability\"]\n  Backend --> Catalog[\"Content/catalog/schema/config records\"]\n  Catalog --> Runtime[\"Runtime behavior or published page\"]\n  Runtime --> Evidence[\"Audit, validation, and support evidence\"]\n```\n\n| Responsibility | Owner | Notes |\n| --- | --- | --- |\n| Business capability name | AI and Developer Tooling | Used in navigation and dashboards so readers are not exposed to raw module names first. |\n| Source owner | nodics.foundation | Carries exact implementation, documentation, and validation evidence. |\n| Technical module | nSetup | Holds the relevant schema, service, router, data, or contract detail where applicable. |\n| Axis experience | Backend-declared workspace | Axis renders metadata and actions but does not become the authority. |\n| Public experience | Online content delivery | Nexus renders only records approved for public access. |\n\n## Data and configuration detail\n\nEvery topic must explain the data that changes behavior. Some topics are schema-driven, some are configuration-driven, some are publishable content, and some are operational records. The documentation must say which category applies before showing code. That keeps production operators and developers aligned on whether a change needs publication, restart, event propagation, approval, or only a project-layer override.\n\n| Detail area | What to document | Verification signal |\n| --- | --- | --- |\n| Model or record | Type code, catalog, tenant, enterprise, state, owner, and lifecycle. | Schema contract or generated model test. |\n| Configuration key | Default value, override location, environment scope, and runtime impact. | Config validation and runtime refresh evidence. |\n| API or event | Route/event name, payload boundary, permission, idempotency, and failure mode. | Route, service, event, and authorization tests. |\n| Publication and access | Staged/Online state, access mode, roles, groups, and permissions. | Content-pack validation and access-policy test. |\n\n```js\ndocumentationImpact: { requiresBusinessView: true, requiresVisuals: true, requiresSourceMap: true, validation: \"blocking\" }\n```\n\n## Customization and extension\n\nDevelopers should customize from the project layer first. A customer project may add properties, services, validators, pipelines, renderers, data packs, or provider configuration when the extension respects the owning capability. Business users may update governed records in Axis when the record is designed for administration. Framework source changes are reserved for improving the reusable product capability itself.\n\n| Customization type | Recommended path | Avoid |\n| --- | --- | --- |\n| Business label, navigation, or content area | Axis-managed content catalog item with publication workflow. | Hardcoding labels or page trees in the frontend. |\n| Runtime setting | Module configuration with validation and governed runtime propagation. | Editing node-local files on each server by hand. |\n| Domain behavior | Extension service, validator, pipeline step, or provider adapter. | Forking the standard module for customer-only logic. |\n| Public visibility | Access policy with public/authenticated/role-based state. | Exposing internal or draft pages through Nexus. |\n\n## Operations and governance\n\nOperators need production-safe evidence, not only implementation notes. Each page must call out logging, tracing, permission checks, event propagation, data import/export, publication status, rollback behavior, and troubleshooting. If a capability affects multiple nodes, the documentation must explain how changes reach every node and how a partial failure is detected.\n\n| Operational concern | Required documentation detail |\n| --- | --- |\n| Security | Authentication mode, permission code, role/group, tenant and enterprise isolation. |\n| Audit | Actor, timestamp, source record, checksum, approval, route/event, and result. |\n| Resilience | Retry, idempotency, compensation, fallback, cache invalidation, and rollback. |\n| Observability | Logs, metrics, dashboard cards, health checks, and support evidence. |\n\n## Common mistakes\n\n- Treating a friendly navigation label as the technical source owner.\n- Writing only developer details and skipping the business decision that the page supports.\n- Updating Axis or Nexus code when the content catalog, schema, or backend capability should own the change.\n- Forgetting access rules for public, authenticated, role-based, group-based, or permission-based pages.\n- Skipping diagrams, comparison tables, source maps, or troubleshooting matrices because the topic feels obvious.\n- Changing runtime behavior without explaining production impact, cluster propagation, and rollback.\n- Leaving generated documentation without source evidence, validation commands, and maturity state.\n\n## Verification\n\nVerification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.\n\nFor implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.\n",
       "previous": {
-        "title": "Release and Upgrade Compatibility",
-        "route": "/docs/framework/framework-release-upgrade-compatibility"
+        "title": "Internal Source Boundary Register",
+        "route": "/docs/framework/reference-internal-source-boundary-register"
       },
       "next": {
         "title": "Reference Source Map and Glossary",
@@ -48001,7 +49840,7 @@ module.exports = {
     },
     "active": true
   },
-  "record115": {
+  "record120": {
     "code": "nodicsDocsComponentreferenceSourceMapGlossary",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -48722,7 +50561,7 @@ module.exports = {
     },
     "active": true
   },
-  "record116": {
+  "record121": {
     "code": "nodicsDocsComponentreferenceSourceBackedDocumentationCoverageAudit",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -49493,7 +51332,7 @@ module.exports = {
     },
     "active": true
   },
-  "record117": {
+  "record122": {
     "code": "nodicsDocsComponentreferenceDocumentationGapBacklog",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -49858,80 +51697,41 @@ module.exports = {
         {
           "kind": "table",
           "headers": [
+            "Status",
             "Item",
             "Source areas",
             "Documentation outcome"
           ],
           "rows": [
             [
-              "Fresh-schema setup per runtime",
-              "Platform, WCMS Staged, WCMS Online, Process, Commerce, Engagement",
-              "Add runtime-specific import order, seed data, publication, and acceptance evidence where existing quick-start docs are too broad."
+              "Closed by P2 docs batch",
+              "Fulfillment Core owner mapping",
+              "`nodics.commerce/modules/fulfillment/modules/fulfillmentCore`",
+              "Covered by `commerce.fulfillment-core-source-map`, plus explicit source evidence on fulfillment and data-authoring pages."
             ],
             [
-              "Environment, server, and node discovery",
-              "`nodics.kickoff/envs`, framework server/node configuration",
-              "Explain how physical hierarchy, environment config, server composition, and runtime roles are discovered."
+              "Closed by P2 docs batch",
+              "Domain Commerce accelerator owner mapping",
+              "`domainCommerceCore`, electronics product, telco catalog, telco subscription",
+              "Covered by `accelerators.domain-commerce-source-map` with accelerator ownership, Commerce boundary, sample data, and validation."
             ],
             [
-              "Permission and access matrix",
-              "Profile, BackOffice, WCMS, documentation access policies",
-              "Explain roles, groups, permissions, access modes, public/authenticated/restricted behavior, and publication visibility."
+              "Closed by P2 docs batch",
+              "Tooling runtime depth",
+              "`nodics.foundation/modules/nTooling`",
+              "Covered by `foundation.tooling-runtime-contracts` with command, manifest, application-builder, AI-context, and quality-gate contracts."
             ],
             [
-              "Search indexing operations",
-              "Discovery and Commerce Search modules",
-              "Explain index jobs, reindex, projection freshness, failure recovery, and ownership."
+              "Closed by P2 docs batch",
+              "EMS runtime and client depth",
+              "`nodics.foundation/modules/nEms`, `emsClient`, broker providers",
+              "Covered by `foundation.ems-runtime-client-runbook` with broker runtime, client, tenant, retry, and operator evidence."
             ],
             [
-              "Migration and import reconciliation",
-              "Import, migration, CMS migration, Commerce data",
-              "Explain source classification, mapping tables, partial failures, retry, and data correction."
-            ],
-            [
-              "Export and data privacy",
-              "Export providers, media-owned generated files",
-              "Explain allow-lists, masking, retention, download permissions, and audit."
-            ],
-            [
-              "Observability",
-              "NMS, import runs, publication receipts, logs, dashboards",
-              "Explain correlation IDs, status evidence, health checks, support cards, and escalation."
-            ],
-            [
-              "Disaster recovery",
-              "Media publication, Online storage, replication queue",
-              "Explain Online media replication, DR queues, recovery receipts, and failure escalation."
-            ],
-            [
-              "Frontend consumption contracts",
-              "Axis, Nexus, Agora",
-              "Explain that Axis consumes BackOffice metadata, Nexus consumes Online WCMS, and Agora consumes Online commerce/content."
-            ],
-            [
-              "Data quality rules",
-              "All module data folders",
-              "Explain required fields, stable keys, idempotent queries, relation integrity, and no runtime logic in data files."
-            ],
-            [
-              "Testing standards",
-              "All modules and frontends",
-              "Explain unit, contract, generator, fresh-schema, publication, browser, accessibility, and regression expectations."
-            ],
-            [
-              "Troubleshooting matrices",
-              "Every operational capability page",
-              "Add what failed, who owns it, user-safe message, technical evidence, and recovery action."
-            ],
-            [
-              "Decision-maker overview pages",
-              "Product and capability overview docs",
-              "Explain business value, ownership model, platform differentiation, risk controls, and implementation confidence."
-            ],
-            [
+              "Closed by P2 docs batch",
               "Internal-only register",
-              "Low-score utility modules",
-              "Decide and document which technical modules do not need public pages and where they are covered."
+              "Discovery internals, payment methods/providers, NMS runtime, Kickoff environment/runtime packages",
+              "Covered by `reference.internal-source-boundary-register` with owner mappings and promotion rules."
             ]
           ]
         },
@@ -49993,7 +51793,7 @@ module.exports = {
           "text": "The backlog is healthy when the generated report, this page, catalogue metadata, generated WCMS records, and runtime evidence agree. Business users should see clear journeys, developers should see exact source paths and extension points, operators should see evidence and recovery steps, QA owners should see validation commands, and AI tools should see boundaries that prevent unsafe source or data changes."
         }
       ],
-      "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P0 docs batch | Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Closed by P0 docs batch | Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| Closed by P0 docs batch | CMS exact source map | `nodics.wcms/modules/cms` | Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Closed by P0 docs batch | Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Closed by P0 docs batch | Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Closed by P0 docs batch | Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Closed by P0 docs batch | Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P1 docs batch | Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Covered by `platform.module-registry-journey` with registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Closed by P1 docs batch | Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Covered by `commerce.search-guide` with ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Closed by P1 docs batch | Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Covered by `localization.runtime-authoring` with locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Closed by P1 docs batch | Payment Core and provider split | `nodics.commerce/modules/payment` | Covered by `commerce.payment-provider-boundaries` with payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Closed by P1 docs batch | Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Covered by `commerce.customer-list-profile-boundary` with why customer list exists in Commerce and what Profile continues to own. |\n| Closed by P1 docs batch | NMS runtime monitoring | `nodics.foundation/modules/nNms` | Covered by `foundation.nms-runtime-monitoring` with node monitoring, topology, health, operational evidence, and recovery actions. |\n| Closed by P1 docs batch | Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Covered by `foundation.service-runtime-overrides` with service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Closed by P1 docs batch | Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Covered by `foundation.cache-provider-runbooks` with provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Closed by P1 docs batch | Database provider boundaries | `nodics.foundation/modules/nDatabase` | Covered by `foundation.database-provider-boundaries` with MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| Closed by P1 docs batch | OTP and security flow | `nodics.foundation/modules/nOtp` | Covered by `security.otp-security-flow` with OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Closed by P1 docs batch | Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Covered by `communication.provider-runbooks` with SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Closed by P1 docs batch | Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Covered by `engagement.contact-submission-operations` with contact forms, moderation, workflow, notification, audit, and recovery. |\n| Closed by P1 docs batch | Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Covered by `process.workflow-bpm-source-map` with workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Closed by P1 docs batch | Cron job data authoring | `nodics.process/modules/cronjob` | Covered by `process.cronjob-data-authoring` with job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Closed by P1 docs batch | Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Covered by `framework.release-upgrade-compatibility` with version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Fresh-schema setup per runtime | Platform, WCMS Staged, WCMS Online, Process, Commerce, Engagement | Add runtime-specific import order, seed data, publication, and acceptance evidence where existing quick-start docs are too broad. |\n| Environment, server, and node discovery | `nodics.kickoff/envs`, framework server/node configuration | Explain how physical hierarchy, environment config, server composition, and runtime roles are discovered. |\n| Permission and access matrix | Profile, BackOffice, WCMS, documentation access policies | Explain roles, groups, permissions, access modes, public/authenticated/restricted behavior, and publication visibility. |\n| Search indexing operations | Discovery and Commerce Search modules | Explain index jobs, reindex, projection freshness, failure recovery, and ownership. |\n| Migration and import reconciliation | Import, migration, CMS migration, Commerce data | Explain source classification, mapping tables, partial failures, retry, and data correction. |\n| Export and data privacy | Export providers, media-owned generated files | Explain allow-lists, masking, retention, download permissions, and audit. |\n| Observability | NMS, import runs, publication receipts, logs, dashboards | Explain correlation IDs, status evidence, health checks, support cards, and escalation. |\n| Disaster recovery | Media publication, Online storage, replication queue | Explain Online media replication, DR queues, recovery receipts, and failure escalation. |\n| Frontend consumption contracts | Axis, Nexus, Agora | Explain that Axis consumes BackOffice metadata, Nexus consumes Online WCMS, and Agora consumes Online commerce/content. |\n| Data quality rules | All module data folders | Explain required fields, stable keys, idempotent queries, relation integrity, and no runtime logic in data files. |\n| Testing standards | All modules and frontends | Explain unit, contract, generator, fresh-schema, publication, browser, accessibility, and regression expectations. |\n| Troubleshooting matrices | Every operational capability page | Add what failed, who owns it, user-safe message, technical evidence, and recovery action. |\n| Decision-maker overview pages | Product and capability overview docs | Explain business value, ownership model, platform differentiation, risk controls, and implementation confidence. |\n| Internal-only register | Low-score utility modules | Decide and document which technical modules do not need public pages and where they are covered. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n",
+      "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P0 docs batch | Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Closed by P0 docs batch | Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| Closed by P0 docs batch | CMS exact source map | `nodics.wcms/modules/cms` | Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Closed by P0 docs batch | Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Closed by P0 docs batch | Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Closed by P0 docs batch | Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Closed by P0 docs batch | Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P1 docs batch | Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Covered by `platform.module-registry-journey` with registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Closed by P1 docs batch | Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Covered by `commerce.search-guide` with ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Closed by P1 docs batch | Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Covered by `localization.runtime-authoring` with locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Closed by P1 docs batch | Payment Core and provider split | `nodics.commerce/modules/payment` | Covered by `commerce.payment-provider-boundaries` with payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Closed by P1 docs batch | Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Covered by `commerce.customer-list-profile-boundary` with why customer list exists in Commerce and what Profile continues to own. |\n| Closed by P1 docs batch | NMS runtime monitoring | `nodics.foundation/modules/nNms` | Covered by `foundation.nms-runtime-monitoring` with node monitoring, topology, health, operational evidence, and recovery actions. |\n| Closed by P1 docs batch | Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Covered by `foundation.service-runtime-overrides` with service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Closed by P1 docs batch | Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Covered by `foundation.cache-provider-runbooks` with provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Closed by P1 docs batch | Database provider boundaries | `nodics.foundation/modules/nDatabase` | Covered by `foundation.database-provider-boundaries` with MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| Closed by P1 docs batch | OTP and security flow | `nodics.foundation/modules/nOtp` | Covered by `security.otp-security-flow` with OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Closed by P1 docs batch | Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Covered by `communication.provider-runbooks` with SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Closed by P1 docs batch | Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Covered by `engagement.contact-submission-operations` with contact forms, moderation, workflow, notification, audit, and recovery. |\n| Closed by P1 docs batch | Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Covered by `process.workflow-bpm-source-map` with workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Closed by P1 docs batch | Cron job data authoring | `nodics.process/modules/cronjob` | Covered by `process.cronjob-data-authoring` with job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Closed by P1 docs batch | Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Covered by `framework.release-upgrade-compatibility` with version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P2 docs batch | Fulfillment Core owner mapping | `nodics.commerce/modules/fulfillment/modules/fulfillmentCore` | Covered by `commerce.fulfillment-core-source-map`, plus explicit source evidence on fulfillment and data-authoring pages. |\n| Closed by P2 docs batch | Domain Commerce accelerator owner mapping | `domainCommerceCore`, electronics product, telco catalog, telco subscription | Covered by `accelerators.domain-commerce-source-map` with accelerator ownership, Commerce boundary, sample data, and validation. |\n| Closed by P2 docs batch | Tooling runtime depth | `nodics.foundation/modules/nTooling` | Covered by `foundation.tooling-runtime-contracts` with command, manifest, application-builder, AI-context, and quality-gate contracts. |\n| Closed by P2 docs batch | EMS runtime and client depth | `nodics.foundation/modules/nEms`, `emsClient`, broker providers | Covered by `foundation.ems-runtime-client-runbook` with broker runtime, client, tenant, retry, and operator evidence. |\n| Closed by P2 docs batch | Internal-only register | Discovery internals, payment methods/providers, NMS runtime, Kickoff environment/runtime packages | Covered by `reference.internal-source-boundary-register` with owner mappings and promotion rules. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n",
       "previous": {
         "title": "Source-Backed Documentation Coverage Audit",
         "route": "/docs/framework/reference-source-backed-documentation-coverage-audit"
@@ -50005,8 +51805,8 @@ module.exports = {
         "owner": "nodics.docs",
         "sourcePath": "docs/pages/reference/documentation-gap-backlog.md",
         "path": "docs/pages/reference/documentation-gap-backlog.md",
-        "wordCount": 1604,
-        "checksum": "cace25d19d16071dba67887898657ed0088c6938af883147eb725cfcc252f3f6"
+        "wordCount": 1452,
+        "checksum": "9b67337d84c98f60119a393dc0a26ab4adb153dd04fddde5b2459b71c9b5b5eb"
       }
     },
     "active": true

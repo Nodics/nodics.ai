@@ -12978,6 +12978,546 @@ module.exports = {
     "active": true
   },
   "record113": {
+    "code": "nodicsDocsMetadatacommerceFulfillmentCoreSourceMap",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "commerce.fulfillment-core-source-map",
+    "title": "Fulfillment Core Source Map",
+    "summary": "Exact source map for fulfillment execution, carrier adapters, return execution, integration readiness, customer policy, operator evidence, and recovery.",
+    "businessSummary": "Fulfillment Core Source Map explains the business purpose, supported decisions, operational impact, and controls for the Shipping and Fulfillment Flow journey.",
+    "technicalSummary": "Fulfillment Core Source Map records owning module nodics.commerce, technical module fulfillmentCore, source path docs/pages/nodics.commerce/fulfillment-core-source-map.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.commerce",
+    "technicalModule": "fulfillmentCore",
+    "targetPage": "nodicsDocsPagecommerceFulfillmentCoreSourceMap",
+    "targetRoute": "nodicsDocsRoutecommerceFulfillmentCoreSourceMap",
+    "articleComponent": "nodicsDocsComponentcommerceFulfillmentCoreSourceMap",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacommercefulfillmentcoresourcemap",
+    "headings": [
+      {
+        "text": "Business problem",
+        "anchor": "commerceFulfillmentCoreSourceMap-1-business-problem",
+        "level": 2
+      },
+      {
+        "text": "Source map",
+        "anchor": "commerceFulfillmentCoreSourceMap-2-source-map",
+        "level": 2
+      },
+      {
+        "text": "Execution flow",
+        "anchor": "commerceFulfillmentCoreSourceMap-3-execution-flow",
+        "level": 2
+      },
+      {
+        "text": "Contract",
+        "anchor": "commerceFulfillmentCoreSourceMap-4-contract",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "commerceFulfillmentCoreSourceMap-5-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Operating rules",
+        "anchor": "commerceFulfillmentCoreSourceMap-6-operating-rules",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "commerceFulfillmentCoreSourceMap-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "commerceFulfillmentCoreSourceMap-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "fulfillment.shipping-management",
+      "commerce.data-authoring-fulfillment",
+      "commerce.payment-provider-boundaries"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.commerce/fulfillment-core-source-map.md",
+    "sourceChecksum": "1ed851ffb168715ff3bc5b0806d484fc795b5d1c113bb541f84b578cda6c84ea",
+    "sourceWordCount": 561,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record114": {
+    "code": "nodicsDocsMetadataacceleratorsDomainCommerceSourceMap",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "accelerators.domain-commerce-source-map",
+    "title": "Domain Commerce Accelerator Source Map",
+    "summary": "How domain commerce, electronics product, telco catalog, and telco subscription accelerators extend Commerce without becoming duplicate authorities.",
+    "businessSummary": "Domain Commerce Accelerator Source Map explains the business purpose, supported decisions, operational impact, and controls for the Agora Accelerator Family journey.",
+    "technicalSummary": "Domain Commerce Accelerator Source Map records owning module nodics.accelerators, technical module domainCommerceCore, source path docs/pages/accelerators/domain-commerce-source-map.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.accelerators",
+    "technicalModule": "domainCommerceCore",
+    "targetPage": "nodicsDocsPageacceleratorsDomainCommerceSourceMap",
+    "targetRoute": "nodicsDocsRouteacceleratorsDomainCommerceSourceMap",
+    "articleComponent": "nodicsDocsComponentacceleratorsDomainCommerceSourceMap",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsdomaincommercesourcemap",
+    "headings": [
+      {
+        "text": "Business problem",
+        "anchor": "acceleratorsDomainCommerceSourceMap-1-business-problem",
+        "level": 2
+      },
+      {
+        "text": "Source map",
+        "anchor": "acceleratorsDomainCommerceSourceMap-2-source-map",
+        "level": 2
+      },
+      {
+        "text": "Layering model",
+        "anchor": "acceleratorsDomainCommerceSourceMap-3-layering-model",
+        "level": 2
+      },
+      {
+        "text": "Contract",
+        "anchor": "acceleratorsDomainCommerceSourceMap-4-contract",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "acceleratorsDomainCommerceSourceMap-5-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Operating rules",
+        "anchor": "acceleratorsDomainCommerceSourceMap-6-operating-rules",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "acceleratorsDomainCommerceSourceMap-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "acceleratorsDomainCommerceSourceMap-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "accelerators.agora-industry-templates",
+      "accelerators.agora-apparel-product-data-authoring",
+      "commerce.search-guide"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/accelerators/domain-commerce-source-map.md",
+    "sourceChecksum": "3abf80bc049ad5dd4798434165e7a9926d2a4997ba928d9ea37f690006033eb9",
+    "sourceWordCount": 532,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record115": {
+    "code": "nodicsDocsMetadatafoundationToolingRuntimeContracts",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "foundation.tooling-runtime-contracts",
+    "title": "Tooling Runtime Contracts",
+    "summary": "How Nodics tooling commands, generated manifests, documentation validation, AI context, application builder contracts, and qualification gates are governed.",
+    "businessSummary": "Tooling Runtime Contracts explains the business purpose, supported decisions, operational impact, and controls for the AI and Developer Enablement journey.",
+    "technicalSummary": "Tooling Runtime Contracts records owning module nodics.foundation, technical module nTooling, source path docs/pages/nodics.foundation/tooling-runtime-contracts.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nTooling",
+    "targetPage": "nodicsDocsPagefoundationToolingRuntimeContracts",
+    "targetRoute": "nodicsDocsRoutefoundationToolingRuntimeContracts",
+    "articleComponent": "nodicsDocsComponentfoundationToolingRuntimeContracts",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatafoundationtoolingruntimecontracts",
+    "headings": [
+      {
+        "text": "Business problem",
+        "anchor": "foundationToolingRuntimeContracts-1-business-problem",
+        "level": 2
+      },
+      {
+        "text": "Source map",
+        "anchor": "foundationToolingRuntimeContracts-2-source-map",
+        "level": 2
+      },
+      {
+        "text": "Tooling flow",
+        "anchor": "foundationToolingRuntimeContracts-3-tooling-flow",
+        "level": 2
+      },
+      {
+        "text": "Contract",
+        "anchor": "foundationToolingRuntimeContracts-4-contract",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "foundationToolingRuntimeContracts-5-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Operating rules",
+        "anchor": "foundationToolingRuntimeContracts-6-operating-rules",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "foundationToolingRuntimeContracts-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "foundationToolingRuntimeContracts-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "tooling.ai-developer-enablement",
+      "framework.release-upgrade-compatibility",
+      "reference.source-backed-documentation-coverage-audit"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.foundation/tooling-runtime-contracts.md",
+    "sourceChecksum": "68bbf0fbe03742b22d9b28adf6147f41d4e1f9c3a74dbf256fc01301593c0fdd",
+    "sourceWordCount": 521,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record116": {
+    "code": "nodicsDocsMetadatafoundationEmsRuntimeClientRunbook",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "foundation.ems-runtime-client-runbook",
+    "title": "EMS Runtime and Client Runbook",
+    "summary": "How EMS runtime, EMS Client, broker providers, tenant resolution, retries, event processing, and operator evidence are governed.",
+    "businessSummary": "EMS Runtime and Client Runbook explains the business purpose, supported decisions, operational impact, and controls for the Events and Cluster Coordination journey.",
+    "technicalSummary": "EMS Runtime and Client Runbook records owning module nodics.foundation, technical module nEms, source path docs/pages/nodics.foundation/ems-runtime-client-runbook.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nEms",
+    "targetPage": "nodicsDocsPagefoundationEmsRuntimeClientRunbook",
+    "targetRoute": "nodicsDocsRoutefoundationEmsRuntimeClientRunbook",
+    "articleComponent": "nodicsDocsComponentfoundationEmsRuntimeClientRunbook",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatafoundationemsruntimeclientrunbook",
+    "headings": [
+      {
+        "text": "Business problem",
+        "anchor": "foundationEmsRuntimeClientRunbook-1-business-problem",
+        "level": 2
+      },
+      {
+        "text": "Source map",
+        "anchor": "foundationEmsRuntimeClientRunbook-2-source-map",
+        "level": 2
+      },
+      {
+        "text": "Message flow",
+        "anchor": "foundationEmsRuntimeClientRunbook-3-message-flow",
+        "level": 2
+      },
+      {
+        "text": "Contract",
+        "anchor": "foundationEmsRuntimeClientRunbook-4-contract",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "foundationEmsRuntimeClientRunbook-5-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Operating rules",
+        "anchor": "foundationEmsRuntimeClientRunbook-6-operating-rules",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "foundationEmsRuntimeClientRunbook-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "foundationEmsRuntimeClientRunbook-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      }
+    ],
+    "visualRequirements": [
+      "sequence-flow",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "events.messaging-cluster-coordination",
+      "communication.provider-runbooks",
+      "process.workflow-bpm-source-map"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.foundation/ems-runtime-client-runbook.md",
+    "sourceChecksum": "c4982d84698122883ff906c46fe1a97d64e7946f28ce5cc1d29fd427ffbad3e6",
+    "sourceWordCount": 540,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record117": {
+    "code": "nodicsDocsMetadatareferenceInternalSourceBoundaryRegister",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "reference.internal-source-boundary-register",
+    "title": "Internal Source Boundary Register",
+    "summary": "Owner mapping for internal provider and utility modules that are covered by broader business capability pages instead of standalone product pages.",
+    "businessSummary": "Internal Source Boundary Register explains the business purpose, supported decisions, operational impact, and controls for the Source Map and Glossary journey.",
+    "technicalSummary": "Internal Source Boundary Register records owning module nodics.docs, technical module documentation, source path docs/pages/reference/internal-source-boundary-register.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.docs",
+    "technicalModule": "documentation",
+    "targetPage": "nodicsDocsPagereferenceInternalSourceBoundaryRegister",
+    "targetRoute": "nodicsDocsRoutereferenceInternalSourceBoundaryRegister",
+    "articleComponent": "nodicsDocsComponentreferenceInternalSourceBoundaryRegister",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatareferenceinternalsourceboundaryregister",
+    "headings": [
+      {
+        "text": "Business problem",
+        "anchor": "referenceInternalSourceBoundaryRegister-1-business-problem",
+        "level": 2
+      },
+      {
+        "text": "Classification flow",
+        "anchor": "referenceInternalSourceBoundaryRegister-2-classification-flow",
+        "level": 2
+      },
+      {
+        "text": "Register",
+        "anchor": "referenceInternalSourceBoundaryRegister-3-register",
+        "level": 2
+      },
+      {
+        "text": "Classification contract",
+        "anchor": "referenceInternalSourceBoundaryRegister-4-classification-contract",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "referenceInternalSourceBoundaryRegister-5-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Promotion rules",
+        "anchor": "referenceInternalSourceBoundaryRegister-6-promotion-rules",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "referenceInternalSourceBoundaryRegister-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "referenceInternalSourceBoundaryRegister-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Internal source boundary, Covered by owner page"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "reference.source-backed-documentation-coverage-audit",
+      "reference.documentation-gap-backlog",
+      "commerce.payment-provider-boundaries",
+      "discovery.search-indexing"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/reference/internal-source-boundary-register.md",
+    "sourceChecksum": "52e421f35b2ec020bcd42f3fa78730347164c352d082bcd09f0f0240127fd94b",
+    "sourceWordCount": 603,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record118": {
     "code": "nodicsDocsMetadatatoolingAiDeveloperEnablement",
     "product": "nodicsDocumentationProduct",
     "documentId": "tooling.ai-developer-enablement",
@@ -13096,7 +13636,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record114": {
+  "record119": {
     "code": "nodicsDocsMetadatareferenceSourceMapGlossary",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.source-map-glossary",
@@ -13224,7 +13764,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record115": {
+  "record120": {
     "code": "nodicsDocsMetadatareferenceSourceBackedDocumentationCoverageAudit",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.source-backed-documentation-coverage-audit",
@@ -13400,7 +13940,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record116": {
+  "record121": {
     "code": "nodicsDocsMetadatareferenceDocumentationGapBacklog",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.documentation-gap-backlog",
@@ -13477,7 +14017,7 @@ module.exports = {
       },
       {
         "kind": "table",
-        "title": "Item, Source areas, Documentation outcome"
+        "title": "Status, Item, Source areas, Documentation outcome"
       }
     ],
     "visualRequirements": [
@@ -13494,8 +14034,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/reference/documentation-gap-backlog.md",
-    "sourceChecksum": "cace25d19d16071dba67887898657ed0088c6938af883147eb725cfcc252f3f6",
-    "sourceWordCount": 1604,
+    "sourceChecksum": "9b67337d84c98f60119a393dc0a26ab4adb153dd04fddde5b2459b71c9b5b5eb",
+    "sourceWordCount": 1452,
     "audience": [
       "business",
       "architect",

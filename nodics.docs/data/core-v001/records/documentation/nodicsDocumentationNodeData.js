@@ -313,7 +313,7 @@ module.exports = {
     "childJourneyLinks": [],
     "childStatusSummary": {
       "childCount": 47,
-      "pages": 117
+      "pages": 122
     },
     "nodeOrder": 10,
     "expandable": true,
@@ -1038,7 +1038,8 @@ module.exports = {
       "navigationDepth": 2,
       "pages": [
         "accelerators.agora-industry-templates",
-        "accelerators.agora-apparel-product-data-authoring"
+        "accelerators.agora-apparel-product-data-authoring",
+        "accelerators.domain-commerce-source-map"
       ]
     },
     "nodeDashboard": "nodicsDocsDashboardSecacceleratorsAndIndustrySolutionTemplates",
@@ -1054,6 +1055,12 @@ module.exports = {
         "title": "Agora Apparel Product Data Authoring",
         "summary": "Step-by-step source-backed guide for adding Agora Apparel product, price, inventory, content, media, and search data through project release folders.",
         "order": 20
+      },
+      {
+        "code": "accelerators.domain-commerce-source-map",
+        "title": "Domain Commerce Accelerator Source Map",
+        "summary": "How domain commerce, electronics product, telco catalog, and telco subscription accelerators extend Commerce without becoming duplicate authorities.",
+        "order": 30
       }
     ],
     "childJourneyLinks": [
@@ -1066,11 +1073,16 @@ module.exports = {
         "label": "Agora Apparel Product Data Authoring",
         "targetPage": "accelerators.agora-apparel-product-data-authoring",
         "route": "/docs/framework/accelerators-agora-apparel-product-data-authoring"
+      },
+      {
+        "label": "Domain Commerce Accelerator Source Map",
+        "targetPage": "accelerators.domain-commerce-source-map",
+        "route": "/docs/framework/accelerators-domain-commerce-source-map"
       }
     ],
     "childStatusSummary": {
-      "childCount": 2,
-      "pages": 2
+      "childCount": 3,
+      "pages": 3
     },
     "nodeOrder": 80,
     "expandable": true,
@@ -3074,7 +3086,8 @@ module.exports = {
       "dashboard": "nodicsDocsDashboardSecshippingAndFulfillment",
       "navigationDepth": 2,
       "pages": [
-        "fulfillment.shipping-management"
+        "fulfillment.shipping-management",
+        "commerce.fulfillment-core-source-map"
       ]
     },
     "nodeDashboard": "nodicsDocsDashboardSecshippingAndFulfillment",
@@ -3084,6 +3097,12 @@ module.exports = {
         "title": "Shipping and Fulfillment Management",
         "summary": "Shipping methods, fulfillment policy, consignments, warehouse handoff, shipment tracking, and provider integration boundaries.",
         "order": 10
+      },
+      {
+        "code": "commerce.fulfillment-core-source-map",
+        "title": "Fulfillment Core Source Map",
+        "summary": "Exact source map for fulfillment execution, carrier adapters, return execution, integration readiness, customer policy, operator evidence, and recovery.",
+        "order": 20
       }
     ],
     "childJourneyLinks": [
@@ -3091,11 +3110,16 @@ module.exports = {
         "label": "Shipping and Fulfillment Management",
         "targetPage": "fulfillment.shipping-management",
         "route": "/docs/framework/fulfillment-shipping-management"
+      },
+      {
+        "label": "Fulfillment Core Source Map",
+        "targetPage": "commerce.fulfillment-core-source-map",
+        "route": "/docs/framework/commerce-fulfillment-core-source-map"
       }
     ],
     "childStatusSummary": {
-      "childCount": 1,
-      "pages": 1
+      "childCount": 2,
+      "pages": 2
     },
     "nodeOrder": 310,
     "expandable": true,
@@ -3535,7 +3559,8 @@ module.exports = {
       "dashboard": "nodicsDocsDashboardSeceventAndMessagingManagement",
       "navigationDepth": 2,
       "pages": [
-        "events.messaging-cluster-coordination"
+        "events.messaging-cluster-coordination",
+        "foundation.ems-runtime-client-runbook"
       ]
     },
     "nodeDashboard": "nodicsDocsDashboardSeceventAndMessagingManagement",
@@ -3545,6 +3570,12 @@ module.exports = {
         "title": "Events, Messaging, and Cluster Coordination",
         "summary": "Event publishing, event splitting, cluster propagation, node responsibility transfer, runtime refresh, and provider extension.",
         "order": 10
+      },
+      {
+        "code": "foundation.ems-runtime-client-runbook",
+        "title": "EMS Runtime and Client Runbook",
+        "summary": "How EMS runtime, EMS Client, broker providers, tenant resolution, retries, event processing, and operator evidence are governed.",
+        "order": 20
       }
     ],
     "childJourneyLinks": [
@@ -3552,11 +3583,16 @@ module.exports = {
         "label": "Events, Messaging, and Cluster Coordination",
         "targetPage": "events.messaging-cluster-coordination",
         "route": "/docs/framework/events-messaging-cluster-coordination"
+      },
+      {
+        "label": "EMS Runtime and Client Runbook",
+        "targetPage": "foundation.ems-runtime-client-runbook",
+        "route": "/docs/framework/foundation-ems-runtime-client-runbook"
       }
     ],
     "childStatusSummary": {
-      "childCount": 1,
-      "pages": 1
+      "childCount": 2,
+      "pages": 2
     },
     "nodeOrder": 360,
     "expandable": true,
@@ -4539,7 +4575,8 @@ module.exports = {
       "dashboard": "nodicsDocsDashboardSecaiAndDeveloperTooling",
       "navigationDepth": 2,
       "pages": [
-        "tooling.ai-developer-enablement"
+        "tooling.ai-developer-enablement",
+        "foundation.tooling-runtime-contracts"
       ]
     },
     "nodeDashboard": "nodicsDocsDashboardSecaiAndDeveloperTooling",
@@ -4549,6 +4586,12 @@ module.exports = {
         "title": "AI and Developer Tooling",
         "summary": "How AI tools, developers, and reviewers use contracts, source maps, generated context, quality gates, and documentation principles safely.",
         "order": 10
+      },
+      {
+        "code": "foundation.tooling-runtime-contracts",
+        "title": "Tooling Runtime Contracts",
+        "summary": "How Nodics tooling commands, generated manifests, documentation validation, AI context, application builder contracts, and qualification gates are governed.",
+        "order": 20
       }
     ],
     "childJourneyLinks": [
@@ -4556,11 +4599,16 @@ module.exports = {
         "label": "AI and Developer Tooling",
         "targetPage": "tooling.ai-developer-enablement",
         "route": "/docs/framework/tooling-ai-developer-enablement"
+      },
+      {
+        "label": "Tooling Runtime Contracts",
+        "targetPage": "foundation.tooling-runtime-contracts",
+        "route": "/docs/framework/foundation-tooling-runtime-contracts"
       }
     ],
     "childStatusSummary": {
-      "childCount": 1,
-      "pages": 1
+      "childCount": 2,
+      "pages": 2
     },
     "nodeOrder": 460,
     "expandable": true,
@@ -4616,7 +4664,8 @@ module.exports = {
       "pages": [
         "reference.source-map-glossary",
         "reference.source-backed-documentation-coverage-audit",
-        "reference.documentation-gap-backlog"
+        "reference.documentation-gap-backlog",
+        "reference.internal-source-boundary-register"
       ]
     },
     "nodeDashboard": "nodicsDocsDashboardSecreference",
@@ -4638,6 +4687,12 @@ module.exports = {
         "title": "Documentation Gap Backlog",
         "summary": "Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation.",
         "order": 30
+      },
+      {
+        "code": "reference.internal-source-boundary-register",
+        "title": "Internal Source Boundary Register",
+        "summary": "Owner mapping for internal provider and utility modules that are covered by broader business capability pages instead of standalone product pages.",
+        "order": 40
       }
     ],
     "childJourneyLinks": [
@@ -4655,11 +4710,16 @@ module.exports = {
         "label": "Documentation Gap Backlog",
         "targetPage": "reference.documentation-gap-backlog",
         "route": "/docs/framework/reference-documentation-gap-backlog"
+      },
+      {
+        "label": "Internal Source Boundary Register",
+        "targetPage": "reference.internal-source-boundary-register",
+        "route": "/docs/framework/reference-internal-source-boundary-register"
       }
     ],
     "childStatusSummary": {
-      "childCount": 3,
-      "pages": 3
+      "childCount": 4,
+      "pages": 4
     },
     "nodeOrder": 470,
     "expandable": true,
@@ -13509,6 +13569,402 @@ module.exports = {
     "active": true
   },
   "record161": {
+    "code": "nodicsDocsNodeTopiccommerceFulfillmentCoreSourceMap",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecshippingAndFulfillment",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Fulfillment Core Source Map",
+    "nodeSummary": "Exact source map for fulfillment execution, carrier adapters, return execution, integration readiness, customer policy, operator evidence, and recovery.",
+    "nodeContentArea": {
+      "route": "/docs/framework/commerce-fulfillment-core-source-map",
+      "documentType": "reference",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacommerceFulfillmentCoreSourceMap",
+    "targetPage": "nodicsDocsPagecommerceFulfillmentCoreSourceMap",
+    "targetRoute": "nodicsDocsRoutecommerceFulfillmentCoreSourceMap",
+    "nodeOrder": 10020,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "fulfillment-core",
+      "carrier",
+      "return-execution",
+      "readiness",
+      "operator"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicfulfillmentShippingManagement",
+      "nodicsDocsNodeTopiccommerceDataAuthoringFulfillment",
+      "nodicsDocsNodeTopiccommercePaymentProviderBoundaries"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record162": {
+    "code": "nodicsDocsNodeTopicacceleratorsDomainCommerceSourceMap",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Domain Commerce Accelerator Source Map",
+    "nodeSummary": "How domain commerce, electronics product, telco catalog, and telco subscription accelerators extend Commerce without becoming duplicate authorities.",
+    "nodeContentArea": {
+      "route": "/docs/framework/accelerators-domain-commerce-source-map",
+      "documentType": "reference",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataacceleratorsDomainCommerceSourceMap",
+    "targetPage": "nodicsDocsPageacceleratorsDomainCommerceSourceMap",
+    "targetRoute": "nodicsDocsRouteacceleratorsDomainCommerceSourceMap",
+    "nodeOrder": 10030,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "accelerator",
+      "domain-commerce",
+      "electronics",
+      "telco",
+      "subscription"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicacceleratorsAgoraIndustryTemplates",
+      "nodicsDocsNodeTopicacceleratorsAgoraApparelProductDataAuthoring",
+      "nodicsDocsNodeTopiccommerceSearchGuide"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record163": {
+    "code": "nodicsDocsNodeTopicfoundationToolingRuntimeContracts",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Tooling Runtime Contracts",
+    "nodeSummary": "How Nodics tooling commands, generated manifests, documentation validation, AI context, application builder contracts, and qualification gates are governed.",
+    "nodeContentArea": {
+      "route": "/docs/framework/foundation-tooling-runtime-contracts",
+      "documentType": "contract",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatafoundationToolingRuntimeContracts",
+    "targetPage": "nodicsDocsPagefoundationToolingRuntimeContracts",
+    "targetRoute": "nodicsDocsRoutefoundationToolingRuntimeContracts",
+    "nodeOrder": 10020,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "tooling",
+      "application-builder",
+      "manifest",
+      "validation",
+      "ai-context"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopictoolingAiDeveloperEnablement",
+      "nodicsDocsNodeTopicframeworkReleaseUpgradeCompatibility",
+      "nodicsDocsNodeTopicreferenceSourceBackedDocumentationCoverageAudit"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record164": {
+    "code": "nodicsDocsNodeTopicfoundationEmsRuntimeClientRunbook",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSeceventAndMessagingManagement",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "EMS Runtime and Client Runbook",
+    "nodeSummary": "How EMS runtime, EMS Client, broker providers, tenant resolution, retries, event processing, and operator evidence are governed.",
+    "nodeContentArea": {
+      "route": "/docs/framework/foundation-ems-runtime-client-runbook",
+      "documentType": "operations",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatafoundationEmsRuntimeClientRunbook",
+    "targetPage": "nodicsDocsPagefoundationEmsRuntimeClientRunbook",
+    "targetRoute": "nodicsDocsRoutefoundationEmsRuntimeClientRunbook",
+    "nodeOrder": 10020,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "ems",
+      "ems-client",
+      "events",
+      "broker",
+      "tenant-resolution"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopiceventsMessagingClusterCoordination",
+      "nodicsDocsNodeTopiccommunicationProviderRunbooks",
+      "nodicsDocsNodeTopicprocessWorkflowBpmSourceMap"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record165": {
+    "code": "nodicsDocsNodeTopicreferenceInternalSourceBoundaryRegister",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecreference",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Internal Source Boundary Register",
+    "nodeSummary": "Owner mapping for internal provider and utility modules that are covered by broader business capability pages instead of standalone product pages.",
+    "nodeContentArea": {
+      "route": "/docs/framework/reference-internal-source-boundary-register",
+      "documentType": "reference",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatareferenceInternalSourceBoundaryRegister",
+    "targetPage": "nodicsDocsPagereferenceInternalSourceBoundaryRegister",
+    "targetRoute": "nodicsDocsRoutereferenceInternalSourceBoundaryRegister",
+    "nodeOrder": 10040,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "internal-source",
+      "owner-mapping",
+      "provider",
+      "source-coverage",
+      "reference"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicreferenceSourceBackedDocumentationCoverageAudit",
+      "nodicsDocsNodeTopicreferenceDocumentationGapBacklog",
+      "nodicsDocsNodeTopiccommercePaymentProviderBoundaries",
+      "nodicsDocsNodeTopicdiscoverySearchIndexing"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record166": {
     "code": "nodicsDocsNodeTopictoolingAiDeveloperEnablement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13585,7 +14041,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record162": {
+  "record167": {
     "code": "nodicsDocsNodeTopicreferenceSourceMapGlossary",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13662,7 +14118,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record163": {
+  "record168": {
     "code": "nodicsDocsNodeTopicreferenceSourceBackedDocumentationCoverageAudit",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13743,7 +14199,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record164": {
+  "record169": {
     "code": "nodicsDocsNodeTopicreferenceDocumentationGapBacklog",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",

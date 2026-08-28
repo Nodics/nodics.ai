@@ -2839,6 +2839,131 @@ module.exports = {
     "active": true
   },
   "record113": {
+    "code": "nodicsDocsPagecommerceFulfillmentCoreSourceMap",
+    "name": "Fulfillment Core Source Map",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentcommerceFulfillmentCoreSourceMap",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record114": {
+    "code": "nodicsDocsPageacceleratorsDomainCommerceSourceMap",
+    "name": "Domain Commerce Accelerator Source Map",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentacceleratorsDomainCommerceSourceMap",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record115": {
+    "code": "nodicsDocsPagefoundationToolingRuntimeContracts",
+    "name": "Tooling Runtime Contracts",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentfoundationToolingRuntimeContracts",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record116": {
+    "code": "nodicsDocsPagefoundationEmsRuntimeClientRunbook",
+    "name": "EMS Runtime and Client Runbook",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentfoundationEmsRuntimeClientRunbook",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record117": {
+    "code": "nodicsDocsPagereferenceInternalSourceBoundaryRegister",
+    "name": "Internal Source Boundary Register",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentreferenceInternalSourceBoundaryRegister",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record118": {
     "code": "nodicsDocsPagetoolingAiDeveloperEnablement",
     "name": "AI and Developer Tooling",
     "cmsSite": [
@@ -2863,7 +2988,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record114": {
+  "record119": {
     "code": "nodicsDocsPagereferenceSourceMapGlossary",
     "name": "Reference Source Map and Glossary",
     "cmsSite": [
@@ -2888,7 +3013,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record115": {
+  "record120": {
     "code": "nodicsDocsPagereferenceSourceBackedDocumentationCoverageAudit",
     "name": "Source-Backed Documentation Coverage Audit",
     "cmsSite": [
@@ -2913,7 +3038,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record116": {
+  "record121": {
     "code": "nodicsDocsPagereferenceDocumentationGapBacklog",
     "name": "Documentation Gap Backlog",
     "cmsSite": [

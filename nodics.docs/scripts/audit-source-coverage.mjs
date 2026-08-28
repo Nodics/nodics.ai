@@ -204,6 +204,7 @@ const documentationBacklog = [
 function backlogStatus(item) {
   if (item.priority === 'P0') return 'closed-by-p0-docs-batch';
   if (item.priority === 'P1') return 'closed-by-p1-docs-batch';
+  if (item.priority === 'P2') return 'closed-by-p2-docs-batch';
   return 'open';
 }
 

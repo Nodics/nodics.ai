@@ -6,12 +6,12 @@ This generated report maps current source boundaries to published documentation 
 
 | Metric | Count |
 | --- | --- |
-| Catalogue documents | 117 |
+| Catalogue documents | 122 |
 | Source boundaries scanned | 172 |
-| Needs page or owner mapping | 5 |
-| Needs deeper section | 4 |
-| Covered | 140 |
-| Internal-only candidate | 23 |
+| Needs page or owner mapping | 0 |
+| Needs deeper section | 0 |
+| Covered | 172 |
+| Internal-only candidate | 0 |
 | Classified backlog items | 23 |
 
 ## Classified Backlog
@@ -40,44 +40,12 @@ This generated report maps current source boundaries to published documentation 
 | P1 | closed-by-p1-docs-batch | Workflow and BPM source map | needs-deeper-section | `nodics.foundation/modules/nbpm`<br/>`nodics.process` | Document workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |
 | P1 | closed-by-p1-docs-batch | Cron job data authoring | needs-deeper-section | `nodics.process/modules/cronjob` | Document job records, schedules, execution policy, retry, idempotency, and Process server ownership. |
 | P1 | closed-by-p1-docs-batch | Release and upgrade compatibility | needs-deeper-section | `nodics.docs`<br/>`nodics.foundation/modules/nSetup`<br/>`all module data folders` | Document version freeze, upgrade path, rollback, checksum drift, generated manifest policy, and customer extension compatibility. |
-| P2 | open | Internal-only classification register | needs-owner-decision | `all low-score utility modules` | Decide which technical modules remain internal and which broader page owns their explanation. |
+| P2 | closed-by-p2-docs-batch | Internal-only classification register | needs-owner-decision | `all low-score utility modules` | Decide which technical modules remain internal and which broader page owns their explanation. |
 
 ## Top Open Items
 
 | Classification | Score | Source boundary | Current matches | Key signals |
 | --- | ---: | --- | --- | --- |
-| needs-page-or-owner-mapping | 46 | `nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore` | None | schemas:1, services:7, controllers:1, routers:2, tests:3 |
-| needs-page-or-owner-mapping | 34 | `nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct` | None | schemas:1, services:3, routers:2, tests:5 |
-| needs-page-or-owner-mapping | 27 | `nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog` | None | schemas:1, services:2, routers:2, tests:3 |
-| needs-page-or-owner-mapping | 22 | `nodics.ai/nodics.accelerators/modules/domainCommerceCore` | None | schemas:1, services:1, routers:2, tests:2 |
-| needs-page-or-owner-mapping | 22 | `nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription` | None | schemas:1, services:1, routers:2, tests:2 |
-| needs-deeper-section | 238 | `nodics.ai/nodics.foundation/modules/nTooling` | foundation.overview, tooling.ai-developer-enablement | services:48, tests:47 |
-| needs-deeper-section | 117 | `nodics.ai/nodics.foundation/modules/nEms` | foundation.overview, events.messaging-cluster-coordination | schemas:3, services:12, controllers:1, routers:6, tests:16 |
-| needs-deeper-section | 65 | `nodics.ai/nodics.foundation/modules/nEms/emsClient` | runtime.governed-change, events.messaging-cluster-coordination | schemas:1, services:8, controllers:1, routers:2, tests:11 |
-| needs-deeper-section | 41 | `nodics.ai/nodics.foundation/modules/nNms` | foundation.nms-runtime-monitoring, reference.documentation-gap-backlog | schemas:1, services:6, controllers:1, routers:2, tests:2 |
-| internal-only-candidate | 12 | `nodics.ai/nodics.discovery/modules/discoveryMapping` | None | schemas:1, services:1, tests:1 |
-| internal-only-candidate | 5 | `nodics.ai/nodics.discovery/modules/discoveryQuery` | None | services:1, tests:1 |
-| internal-only-candidate | 5 | `nodics.ai/nodics.discovery/modules/discoveryRuntime` | None | services:1, tests:1 |
-| internal-only-candidate | 3 | `nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment` | None | services:1 |
-| internal-only-candidate | 3 | `nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment` | None | services:1 |
-| internal-only-candidate | 3 | `nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment` | None | services:1 |
-| internal-only-candidate | 3 | `nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment` | None | services:1 |
-| internal-only-candidate | 3 | `nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore` | None | services:1 |
-| internal-only-candidate | 3 | `nodics.kickoff/modules/kickoffInt` | None | services:1 |
-| internal-only-candidate | 0 | `nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider` | None | package only |
-| internal-only-candidate | 0 | `nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider` | None | package only |
-| internal-only-candidate | 0 | `nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider` | None | package only |
-| internal-only-candidate | 0 | `nodics.kickoff/envs/kickoffDockerLocal` | None | package only |
-| internal-only-candidate | 0 | `nodics.kickoff/envs/kickoffDockerLocal/commerceServer` | None | package only |
-| internal-only-candidate | 0 | `nodics.kickoff/envs/kickoffDockerLocal/commerceStagedServer` | None | package only |
-| internal-only-candidate | 0 | `nodics.kickoff/envs/kickoffDockerLocal/wcmsOnlineServer` | None | package only |
-| internal-only-candidate | 0 | `nodics.kickoff/envs/kickoffDockerLocal/wcmsStagedServer` | None | package only |
-| internal-only-candidate | 0 | `nodics.kickoff/envs/kickoffLocal/commerceServer` | None | package only |
-| internal-only-candidate | 0 | `nodics.kickoff/envs/kickoffLocal/commerceStagedServer` | None | package only |
-| internal-only-candidate | 0 | `nodics.kickoff/envs/kickoffLocal/wcmsOnlineServer` | None | package only |
-| internal-only-candidate | 0 | `nodics.kickoff/envs/kickoffLocal/wcmsStagedServer` | None | package only |
-| internal-only-candidate | 0 | `nodics.kickoff/modules/kickoffApi` | None | package only |
-| internal-only-candidate | 0 | `nodics.kickoff/modules/kickoffCore` | None | package only |
 
 ## Verification
 

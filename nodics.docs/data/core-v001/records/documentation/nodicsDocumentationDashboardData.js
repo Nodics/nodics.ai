@@ -322,7 +322,7 @@ module.exports = {
     ],
     "statusSummary": {
       "sections": 47,
-      "pages": 117,
+      "pages": 122,
       "lifecycleState": "ONLINE"
     },
     "product": "nodicsDocumentationProduct",
@@ -644,7 +644,7 @@ module.exports = {
     ],
     "statusSummary": {
       "sections": 47,
-      "pages": 117,
+      "pages": 122,
       "searchable": true,
       "expandable": true
     },
@@ -1117,6 +1117,12 @@ module.exports = {
         "title": "Agora Apparel Product Data Authoring",
         "summary": "Step-by-step source-backed guide for adding Agora Apparel product, price, inventory, content, media, and search data through project release folders.",
         "order": 20
+      },
+      {
+        "code": "accelerators.domain-commerce-source-map",
+        "title": "Domain Commerce Accelerator Source Map",
+        "summary": "How domain commerce, electronics product, telco catalog, and telco subscription accelerators extend Commerce without becoming duplicate authorities.",
+        "order": 30
       }
     ],
     "journeyLinks": [
@@ -1129,10 +1135,15 @@ module.exports = {
         "label": "Agora Apparel Product Data Authoring",
         "targetPage": "accelerators.agora-apparel-product-data-authoring",
         "route": "/docs/framework/accelerators-agora-apparel-product-data-authoring"
+      },
+      {
+        "label": "Domain Commerce Accelerator Source Map",
+        "targetPage": "accelerators.domain-commerce-source-map",
+        "route": "/docs/framework/accelerators-domain-commerce-source-map"
       }
     ],
     "statusSummary": {
-      "pages": 2,
+      "pages": 3,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -2386,6 +2397,12 @@ module.exports = {
         "title": "Shipping and Fulfillment Management",
         "summary": "Shipping methods, fulfillment policy, consignments, warehouse handoff, shipment tracking, and provider integration boundaries.",
         "order": 10
+      },
+      {
+        "code": "commerce.fulfillment-core-source-map",
+        "title": "Fulfillment Core Source Map",
+        "summary": "Exact source map for fulfillment execution, carrier adapters, return execution, integration readiness, customer policy, operator evidence, and recovery.",
+        "order": 20
       }
     ],
     "journeyLinks": [
@@ -2393,10 +2410,15 @@ module.exports = {
         "label": "Shipping and Fulfillment Management",
         "targetPage": "fulfillment.shipping-management",
         "route": "/docs/framework/fulfillment-shipping-management"
+      },
+      {
+        "label": "Fulfillment Core Source Map",
+        "targetPage": "commerce.fulfillment-core-source-map",
+        "route": "/docs/framework/commerce-fulfillment-core-source-map"
       }
     ],
     "statusSummary": {
-      "pages": 1,
+      "pages": 2,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -2679,6 +2701,12 @@ module.exports = {
         "title": "Events, Messaging, and Cluster Coordination",
         "summary": "Event publishing, event splitting, cluster propagation, node responsibility transfer, runtime refresh, and provider extension.",
         "order": 10
+      },
+      {
+        "code": "foundation.ems-runtime-client-runbook",
+        "title": "EMS Runtime and Client Runbook",
+        "summary": "How EMS runtime, EMS Client, broker providers, tenant resolution, retries, event processing, and operator evidence are governed.",
+        "order": 20
       }
     ],
     "journeyLinks": [
@@ -2686,10 +2714,15 @@ module.exports = {
         "label": "Events, Messaging, and Cluster Coordination",
         "targetPage": "events.messaging-cluster-coordination",
         "route": "/docs/framework/events-messaging-cluster-coordination"
+      },
+      {
+        "label": "EMS Runtime and Client Runbook",
+        "targetPage": "foundation.ems-runtime-client-runbook",
+        "route": "/docs/framework/foundation-ems-runtime-client-runbook"
       }
     ],
     "statusSummary": {
-      "pages": 1,
+      "pages": 2,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -3341,6 +3374,12 @@ module.exports = {
         "title": "AI and Developer Tooling",
         "summary": "How AI tools, developers, and reviewers use contracts, source maps, generated context, quality gates, and documentation principles safely.",
         "order": 10
+      },
+      {
+        "code": "foundation.tooling-runtime-contracts",
+        "title": "Tooling Runtime Contracts",
+        "summary": "How Nodics tooling commands, generated manifests, documentation validation, AI context, application builder contracts, and qualification gates are governed.",
+        "order": 20
       }
     ],
     "journeyLinks": [
@@ -3348,10 +3387,15 @@ module.exports = {
         "label": "AI and Developer Tooling",
         "targetPage": "tooling.ai-developer-enablement",
         "route": "/docs/framework/tooling-ai-developer-enablement"
+      },
+      {
+        "label": "Tooling Runtime Contracts",
+        "targetPage": "foundation.tooling-runtime-contracts",
+        "route": "/docs/framework/foundation-tooling-runtime-contracts"
       }
     ],
     "statusSummary": {
-      "pages": 1,
+      "pages": 2,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -3396,6 +3440,12 @@ module.exports = {
         "title": "Documentation Gap Backlog",
         "summary": "Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation.",
         "order": 30
+      },
+      {
+        "code": "reference.internal-source-boundary-register",
+        "title": "Internal Source Boundary Register",
+        "summary": "Owner mapping for internal provider and utility modules that are covered by broader business capability pages instead of standalone product pages.",
+        "order": 40
       }
     ],
     "journeyLinks": [
@@ -3413,10 +3463,15 @@ module.exports = {
         "label": "Documentation Gap Backlog",
         "targetPage": "reference.documentation-gap-backlog",
         "route": "/docs/framework/reference-documentation-gap-backlog"
+      },
+      {
+        "label": "Internal Source Boundary Register",
+        "targetPage": "reference.internal-source-boundary-register",
+        "route": "/docs/framework/reference-internal-source-boundary-register"
       }
     ],
     "statusSummary": {
-      "pages": 3,
+      "pages": 4,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",

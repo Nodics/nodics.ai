@@ -1370,6 +1370,66 @@ module.exports = {
     "active": true
   },
   "record113": {
+    "code": "nodicsDocsRoutecommerceFulfillmentCoreSourceMap",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/commerce-fulfillment-core-source-map",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagecommerceFulfillmentCoreSourceMap",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record114": {
+    "code": "nodicsDocsRouteacceleratorsDomainCommerceSourceMap",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/accelerators-domain-commerce-source-map",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPageacceleratorsDomainCommerceSourceMap",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record115": {
+    "code": "nodicsDocsRoutefoundationToolingRuntimeContracts",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/foundation-tooling-runtime-contracts",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagefoundationToolingRuntimeContracts",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record116": {
+    "code": "nodicsDocsRoutefoundationEmsRuntimeClientRunbook",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/foundation-ems-runtime-client-runbook",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagefoundationEmsRuntimeClientRunbook",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record117": {
+    "code": "nodicsDocsRoutereferenceInternalSourceBoundaryRegister",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/reference-internal-source-boundary-register",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagereferenceInternalSourceBoundaryRegister",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record118": {
     "code": "nodicsDocsRoutetoolingAiDeveloperEnablement",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/tooling-ai-developer-enablement",
@@ -1381,7 +1441,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record114": {
+  "record119": {
     "code": "nodicsDocsRoutereferenceSourceMapGlossary",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/reference-source-map-glossary",
@@ -1393,7 +1453,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record115": {
+  "record120": {
     "code": "nodicsDocsRoutereferenceSourceBackedDocumentationCoverageAudit",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/reference-source-backed-documentation-coverage-audit",
@@ -1405,7 +1465,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record116": {
+  "record121": {
     "code": "nodicsDocsRoutereferenceDocumentationGapBacklog",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/reference-documentation-gap-backlog",

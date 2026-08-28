@@ -18,11 +18,8 @@
   ],
   "summary": {
     "totalModules": 172,
-    "documents": 117,
-    "needs-page-or-owner-mapping": 5,
-    "needs-deeper-section": 4,
-    "internal-only-candidate": 23,
-    "covered": 140
+    "documents": 122,
+    "covered": 172
   },
   "policy": {
     "blocking": false,
@@ -280,1197 +277,10 @@
         "all low-score utility modules"
       ],
       "action": "Decide which technical modules remain internal and which broader page owns their explanation.",
-      "status": "open"
+      "status": "closed-by-p2-docs-batch"
     }
   ],
   "rows": [
-    {
-      "name": "fulfillmentCore",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/package.json",
-      "priorityScore": 46,
-      "classification": "needs-page-or-owner-mapping",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 1,
-        "services": 7,
-        "controllers": 1,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 3,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierExecutionService.js",
-          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierSandboxAdapterService.js",
-          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentCoreBackofficeCapabilityService.js",
-          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentIntegrationReadinessService.js"
-        ],
-        "controllers": [
-          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/controller/defaultFulfillmentCustomerController.js"
-        ],
-        "routers": [
-          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/router/appConfig.js",
-          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentCustomerPolicyContract.test.js",
-          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentIntegrationReadinessContract.test.js",
-          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentReturnExecutionContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "electronicsProduct",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct",
-      "packageJsonPath": "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/package.json",
-      "priorityScore": 34,
-      "classification": "needs-page-or-owner-mapping",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 1,
-        "services": 3,
-        "controllers": 0,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 5,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/src/service/defaultElectronicsProductProjectionService.js",
-          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/src/service/defaultElectronicsProductSearchEnrichmentService.js",
-          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/src/service/defaultElectronicsProductValidationService.js"
-        ],
-        "controllers": [],
-        "routers": [
-          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/src/router/appConfig.js",
-          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/test/electronicsProductContract.test.js",
-          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/test/gen/schema/electronicsCompatibilityProfileSchemaContract.test.js",
-          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/test/gen/schema/electronicsDeviceIdentityPolicySchemaContract.test.js",
-          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/test/gen/schema/electronicsSpecificationProfileSchemaContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "telcoCatalog",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog",
-      "packageJsonPath": "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/package.json",
-      "priorityScore": 27,
-      "classification": "needs-page-or-owner-mapping",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 1,
-        "services": 2,
-        "controllers": 0,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 3,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/src/service/defaultTelcoCatalogValidationService.js",
-          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/src/service/defaultTelcoProductSearchEnrichmentService.js"
-        ],
-        "controllers": [],
-        "routers": [
-          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/src/router/appConfig.js",
-          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/test/gen/schema/telcoAllowanceSchemaContract.test.js",
-          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/test/gen/schema/telcoPlanOfferingSchemaContract.test.js",
-          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/test/telcoContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "domainCommerceCore",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.accelerators/modules/domainCommerceCore",
-      "packageJsonPath": "nodics.ai/nodics.accelerators/modules/domainCommerceCore/package.json",
-      "priorityScore": 22,
-      "classification": "needs-page-or-owner-mapping",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 1,
-        "services": 1,
-        "controllers": 0,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 2,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/src/service/defaultDomainCommerceCorePolicyService.js"
-        ],
-        "controllers": [],
-        "routers": [
-          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/src/router/appConfig.js",
-          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/test/domainCommerceCoreContract.test.js",
-          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/test/domainSearchEnrichmentContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "telcoSubscription",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription",
-      "packageJsonPath": "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription/package.json",
-      "priorityScore": 22,
-      "classification": "needs-page-or-owner-mapping",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 1,
-        "services": 1,
-        "controllers": 0,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 2,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription/src/service/defaultTelcoSubscriptionService.js"
-        ],
-        "controllers": [],
-        "routers": [
-          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription/src/router/appConfig.js",
-          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription/test/gen/schema/telcoNumberIntentSchemaContract.test.js",
-          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription/test/gen/schema/telcoSubscriptionSchemaContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "nTooling",
-      "kind": "tooling",
-      "runtimeModule": false,
-      "path": "nodics.ai/nodics.foundation/modules/nTooling",
-      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nTooling/package.json",
-      "priorityScore": 238,
-      "classification": "needs-deeper-section",
-      "matchedDocuments": [
-        "foundation.overview",
-        "tooling.ai-developer-enablement"
-      ],
-      "counts": {
-        "schemas": 0,
-        "services": 48,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 47,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [
-          "nodics.ai/nodics.foundation/modules/nTooling/src/service/applicationBuilder/defaultApplicationBuilderCatalogueService.js",
-          "nodics.ai/nodics.foundation/modules/nTooling/src/service/applicationBuilder/defaultApplicationBuilderContractService.js",
-          "nodics.ai/nodics.foundation/modules/nTooling/src/service/applicationBuilder/defaultApplicationBuilderGenerationService.js",
-          "nodics.ai/nodics.foundation/modules/nTooling/src/service/applicationBuilder/defaultApplicationBuilderGuidedService.js"
-        ],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.foundation/modules/nTooling/test/aiGovernanceValidation.test.js",
-          "nodics.ai/nodics.foundation/modules/nTooling/test/applicationBuilderAnswersTemplateContract.test.js",
-          "nodics.ai/nodics.foundation/modules/nTooling/test/applicationBuilderDryRunContract.test.js",
-          "nodics.ai/nodics.foundation/modules/nTooling/test/applicationBuilderEndToEndJourneyContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "nEms",
-      "kind": "group",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.foundation/modules/nEms",
-      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nEms/package.json",
-      "priorityScore": 117,
-      "classification": "needs-deeper-section",
-      "matchedDocuments": [
-        "foundation.overview",
-        "events.messaging-cluster-coordination"
-      ],
-      "counts": {
-        "schemas": 3,
-        "services": 12,
-        "controllers": 1,
-        "routers": 6,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 16,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.foundation/modules/nEms/activemq/src/schemas/schemas.js",
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/schemas/schemas.js",
-          "nodics.ai/nodics.foundation/modules/nEms/kafka/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.foundation/modules/nEms/activemq/src/service/activemq/defaultActivemqClientService.js",
-          "nodics.ai/nodics.foundation/modules/nEms/activemq/src/service/defaultSampleService.js",
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/service/config/defaultEmsClientConfigurationService.js",
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/service/defaultSampleService.js"
-        ],
-        "controllers": [
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/controller/defaultEmsClientController.js"
-        ],
-        "routers": [
-          "nodics.ai/nodics.foundation/modules/nEms/activemq/src/router/appConfig.js",
-          "nodics.ai/nodics.foundation/modules/nEms/activemq/src/router/routers.js",
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/router/appConfig.js",
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.foundation/modules/nEms/activemq/test/common/commonTest.js",
-          "nodics.ai/nodics.foundation/modules/nEms/activemq/test/env-local/envTest.js",
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/test/activeEmsPublisher.test.js",
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/test/common/commonTest.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "emsClient",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.foundation/modules/nEms/emsClient",
-      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nEms/emsClient/package.json",
-      "priorityScore": 65,
-      "classification": "needs-deeper-section",
-      "matchedDocuments": [
-        "runtime.governed-change",
-        "events.messaging-cluster-coordination"
-      ],
-      "counts": {
-        "schemas": 1,
-        "services": 8,
-        "controllers": 1,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 11,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/service/config/defaultEmsClientConfigurationService.js",
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/service/defaultSampleService.js",
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/service/ems/defaultEmsClientService.js",
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/service/handlers/defaultJSONMessageHandlerService.js"
-        ],
-        "controllers": [
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/controller/defaultEmsClientController.js"
-        ],
-        "routers": [
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/router/appConfig.js",
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/test/activeEmsPublisher.test.js",
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/test/common/commonTest.js",
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/test/emsClientRouteContract.test.js",
-          "nodics.ai/nodics.foundation/modules/nEms/emsClient/test/emsClientServiceContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "nms",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.foundation/modules/nNms",
-      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nNms/package.json",
-      "priorityScore": 41,
-      "classification": "needs-deeper-section",
-      "matchedDocuments": [
-        "foundation.nms-runtime-monitoring",
-        "reference.documentation-gap-backlog"
-      ],
-      "counts": {
-        "schemas": 1,
-        "services": 6,
-        "controllers": 1,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 2,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.foundation/modules/nNms/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.foundation/modules/nNms/src/service/config/defaultNodeConfigurationService.js",
-          "nodics.ai/nodics.foundation/modules/nNms/src/service/defaultSampleService.js",
-          "nodics.ai/nodics.foundation/modules/nNms/src/service/node/defaultNodeDownHandlerService.js",
-          "nodics.ai/nodics.foundation/modules/nNms/src/service/node/defaultNodeManagerService.js"
-        ],
-        "controllers": [
-          "nodics.ai/nodics.foundation/modules/nNms/src/controller/defaultNodeManagerController.js"
-        ],
-        "routers": [
-          "nodics.ai/nodics.foundation/modules/nNms/src/router/appConfig.js",
-          "nodics.ai/nodics.foundation/modules/nNms/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.foundation/modules/nNms/test/common/commonTest.js",
-          "nodics.ai/nodics.foundation/modules/nNms/test/env-local/envTest.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "discoveryMapping",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.discovery/modules/discoveryMapping",
-      "packageJsonPath": "nodics.ai/nodics.discovery/modules/discoveryMapping/package.json",
-      "priorityScore": 12,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 1,
-        "services": 1,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 1,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.discovery/modules/discoveryMapping/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.discovery/modules/discoveryMapping/src/service/defaultDiscoveryFieldPolicyService.js"
-        ],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.discovery/modules/discoveryMapping/test/discoveryMappingContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "discoveryQuery",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.discovery/modules/discoveryQuery",
-      "packageJsonPath": "nodics.ai/nodics.discovery/modules/discoveryQuery/package.json",
-      "priorityScore": 5,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 1,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 1,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [
-          "nodics.ai/nodics.discovery/modules/discoveryQuery/src/service/defaultDiscoveryQueryBuilderService.js"
-        ],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.discovery/modules/discoveryQuery/test/discoveryQueryContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "discoveryRuntime",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.discovery/modules/discoveryRuntime",
-      "packageJsonPath": "nodics.ai/nodics.discovery/modules/discoveryRuntime/package.json",
-      "priorityScore": 5,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 1,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 1,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [
-          "nodics.ai/nodics.discovery/modules/discoveryRuntime/src/service/defaultDiscoveryRuntimeService.js"
-        ],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.discovery/modules/discoveryRuntime/test/discoveryRuntimeContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "bankTransferPayment",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/package.json",
-      "priorityScore": 3,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 1,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/src/service/defaultBankTransferPaymentMethodService.js"
-        ],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "cardPayment",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/package.json",
-      "priorityScore": 3,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 1,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js"
-        ],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "cashOnDeliveryPayment",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/package.json",
-      "priorityScore": 3,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 1,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/src/service/defaultCashOnDeliveryPaymentMethodService.js"
-        ],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "walletPayment",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment/package.json",
-      "priorityScore": 3,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 1,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment/src/service/defaultWalletPaymentMethodService.js"
-        ],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "paymentProviderCore",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore/package.json",
-      "priorityScore": 3,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 1,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore/src/service/defaultPaymentCallbackSecurityService.js"
-        ],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "kickoffInt",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.kickoff/modules/kickoffInt",
-      "packageJsonPath": "nodics.kickoff/modules/kickoffInt/package.json",
-      "priorityScore": 3,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 1,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [
-          "nodics.kickoff/modules/kickoffInt/src/service/defaultKickoffEditorialProcessAdapterService.js"
-        ],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "cyberSourceProvider",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/package.json",
-      "priorityScore": 0,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "paypalProvider",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/package.json",
-      "priorityScore": 0,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "visaProvider",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/package.json",
-      "priorityScore": 0,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "kickoffDockerLocal",
-      "kind": "group",
-      "runtimeModule": true,
-      "path": "nodics.kickoff/envs/kickoffDockerLocal",
-      "packageJsonPath": "nodics.kickoff/envs/kickoffDockerLocal/package.json",
-      "priorityScore": 0,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "commerceServer",
-      "kind": "server",
-      "runtimeModule": true,
-      "path": "nodics.kickoff/envs/kickoffDockerLocal/commerceServer",
-      "packageJsonPath": "nodics.kickoff/envs/kickoffDockerLocal/commerceServer/package.json",
-      "priorityScore": 0,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "commerceStagedServer",
-      "kind": "server",
-      "runtimeModule": true,
-      "path": "nodics.kickoff/envs/kickoffDockerLocal/commerceStagedServer",
-      "packageJsonPath": "nodics.kickoff/envs/kickoffDockerLocal/commerceStagedServer/package.json",
-      "priorityScore": 0,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "wcmsOnlineServer",
-      "kind": "server",
-      "runtimeModule": true,
-      "path": "nodics.kickoff/envs/kickoffDockerLocal/wcmsOnlineServer",
-      "packageJsonPath": "nodics.kickoff/envs/kickoffDockerLocal/wcmsOnlineServer/package.json",
-      "priorityScore": 0,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "wcmsStagedServer",
-      "kind": "server",
-      "runtimeModule": true,
-      "path": "nodics.kickoff/envs/kickoffDockerLocal/wcmsStagedServer",
-      "packageJsonPath": "nodics.kickoff/envs/kickoffDockerLocal/wcmsStagedServer/package.json",
-      "priorityScore": 0,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "commerceServer",
-      "kind": "server",
-      "runtimeModule": true,
-      "path": "nodics.kickoff/envs/kickoffLocal/commerceServer",
-      "packageJsonPath": "nodics.kickoff/envs/kickoffLocal/commerceServer/package.json",
-      "priorityScore": 0,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "commerceStagedServer",
-      "kind": "server",
-      "runtimeModule": true,
-      "path": "nodics.kickoff/envs/kickoffLocal/commerceStagedServer",
-      "packageJsonPath": "nodics.kickoff/envs/kickoffLocal/commerceStagedServer/package.json",
-      "priorityScore": 0,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "wcmsOnlineServer",
-      "kind": "server",
-      "runtimeModule": true,
-      "path": "nodics.kickoff/envs/kickoffLocal/wcmsOnlineServer",
-      "packageJsonPath": "nodics.kickoff/envs/kickoffLocal/wcmsOnlineServer/package.json",
-      "priorityScore": 0,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "wcmsStagedServer",
-      "kind": "server",
-      "runtimeModule": true,
-      "path": "nodics.kickoff/envs/kickoffLocal/wcmsStagedServer",
-      "packageJsonPath": "nodics.kickoff/envs/kickoffLocal/wcmsStagedServer/package.json",
-      "priorityScore": 0,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "kickoffApi",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.kickoff/modules/kickoffApi",
-      "packageJsonPath": "nodics.kickoff/modules/kickoffApi/package.json",
-      "priorityScore": 0,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "kickoffCore",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.kickoff/modules/kickoffCore",
-      "packageJsonPath": "nodics.kickoff/modules/kickoffCore/package.json",
-      "priorityScore": 0,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
     {
       "name": "nodics.foundation",
       "kind": "group",
@@ -2532,6 +1342,53 @@
       }
     },
     {
+      "name": "nTooling",
+      "kind": "tooling",
+      "runtimeModule": false,
+      "path": "nodics.ai/nodics.foundation/modules/nTooling",
+      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nTooling/package.json",
+      "priorityScore": 238,
+      "classification": "covered",
+      "matchedDocuments": [
+        "foundation.overview",
+        "foundation.tooling-runtime-contracts",
+        "tooling.ai-developer-enablement",
+        "reference.documentation-gap-backlog"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 48,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 47,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [
+          "nodics.ai/nodics.foundation/modules/nTooling/src/service/applicationBuilder/defaultApplicationBuilderCatalogueService.js",
+          "nodics.ai/nodics.foundation/modules/nTooling/src/service/applicationBuilder/defaultApplicationBuilderContractService.js",
+          "nodics.ai/nodics.foundation/modules/nTooling/src/service/applicationBuilder/defaultApplicationBuilderGenerationService.js",
+          "nodics.ai/nodics.foundation/modules/nTooling/src/service/applicationBuilder/defaultApplicationBuilderGuidedService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.foundation/modules/nTooling/test/aiGovernanceValidation.test.js",
+          "nodics.ai/nodics.foundation/modules/nTooling/test/applicationBuilderAnswersTemplateContract.test.js",
+          "nodics.ai/nodics.foundation/modules/nTooling/test/applicationBuilderDryRunContract.test.js",
+          "nodics.ai/nodics.foundation/modules/nTooling/test/applicationBuilderEndToEndJourneyContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
       "name": "import",
       "kind": "capability",
       "runtimeModule": true,
@@ -3301,6 +2158,64 @@
       }
     },
     {
+      "name": "nEms",
+      "kind": "group",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.foundation/modules/nEms",
+      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nEms/package.json",
+      "priorityScore": 117,
+      "classification": "covered",
+      "matchedDocuments": [
+        "foundation.overview",
+        "events.messaging-cluster-coordination",
+        "foundation.ems-runtime-client-runbook",
+        "reference.documentation-gap-backlog"
+      ],
+      "counts": {
+        "schemas": 3,
+        "services": 12,
+        "controllers": 1,
+        "routers": 6,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 16,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.foundation/modules/nEms/activemq/src/schemas/schemas.js",
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/schemas/schemas.js",
+          "nodics.ai/nodics.foundation/modules/nEms/kafka/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.foundation/modules/nEms/activemq/src/service/activemq/defaultActivemqClientService.js",
+          "nodics.ai/nodics.foundation/modules/nEms/activemq/src/service/defaultSampleService.js",
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/service/config/defaultEmsClientConfigurationService.js",
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/service/defaultSampleService.js"
+        ],
+        "controllers": [
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/controller/defaultEmsClientController.js"
+        ],
+        "routers": [
+          "nodics.ai/nodics.foundation/modules/nEms/activemq/src/router/appConfig.js",
+          "nodics.ai/nodics.foundation/modules/nEms/activemq/src/router/routers.js",
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/router/appConfig.js",
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.foundation/modules/nEms/activemq/test/common/commonTest.js",
+          "nodics.ai/nodics.foundation/modules/nEms/activemq/test/env-local/envTest.js",
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/test/activeEmsPublisher.test.js",
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/test/common/commonTest.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
       "name": "nodics.localization",
       "kind": "group",
       "runtimeModule": true,
@@ -4014,7 +2929,7 @@
         "framework.local-quick-start",
         "process.developer-customization",
         "process.first-workflow",
-        "reference.source-map-glossary"
+        "accelerators.domain-commerce-source-map"
       ],
       "counts": {
         "schemas": 3,
@@ -4113,6 +3028,60 @@
           "nodics.ai/nodics.foundation/modules/nSystem/test/env-local/envTest.js",
           "nodics.ai/nodics.foundation/modules/nSystem/test/localResetProviderService.test.js",
           "nodics.ai/nodics.foundation/modules/nSystem/test/systemApiContractService.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "emsClient",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.foundation/modules/nEms/emsClient",
+      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nEms/emsClient/package.json",
+      "priorityScore": 65,
+      "classification": "covered",
+      "matchedDocuments": [
+        "runtime.governed-change",
+        "events.messaging-cluster-coordination",
+        "foundation.ems-runtime-client-runbook",
+        "reference.documentation-gap-backlog"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 8,
+        "controllers": 1,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 11,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/service/config/defaultEmsClientConfigurationService.js",
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/service/defaultSampleService.js",
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/service/ems/defaultEmsClientService.js",
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/service/handlers/defaultJSONMessageHandlerService.js"
+        ],
+        "controllers": [
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/controller/defaultEmsClientController.js"
+        ],
+        "routers": [
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/router/appConfig.js",
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/test/activeEmsPublisher.test.js",
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/test/common/commonTest.js",
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/test/emsClientRouteContract.test.js",
+          "nodics.ai/nodics.foundation/modules/nEms/emsClient/test/emsClientServiceContract.test.js"
         ],
         "frontends": []
       }
@@ -4937,6 +3906,59 @@
       }
     },
     {
+      "name": "fulfillmentCore",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/package.json",
+      "priorityScore": 46,
+      "classification": "covered",
+      "matchedDocuments": [
+        "fulfillment.shipping-management",
+        "commerce.data-authoring-fulfillment",
+        "commerce.fulfillment-core-source-map",
+        "reference.documentation-gap-backlog"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 7,
+        "controllers": 1,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 3,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierExecutionService.js",
+          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultCarrierSandboxAdapterService.js",
+          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentCoreBackofficeCapabilityService.js",
+          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/service/defaultFulfillmentIntegrationReadinessService.js"
+        ],
+        "controllers": [
+          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/controller/defaultFulfillmentCustomerController.js"
+        ],
+        "routers": [
+          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/router/appConfig.js",
+          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentCustomerPolicyContract.test.js",
+          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentIntegrationReadinessContract.test.js",
+          "nodics.ai/nodics.commerce/modules/fulfillment/modules/fulfillmentCore/test/fulfillmentReturnExecutionContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
       "name": "pricing",
       "kind": "capability",
       "runtimeModule": true,
@@ -5036,6 +4058,58 @@
         "tests": [
           "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/test/paymentIntegrationReadinessContract.test.js",
           "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/test/paymentRefundExecutionContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "nms",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.foundation/modules/nNms",
+      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nNms/package.json",
+      "priorityScore": 41,
+      "classification": "covered",
+      "matchedDocuments": [
+        "foundation.nms-runtime-monitoring",
+        "foundation.ems-runtime-client-runbook",
+        "reference.internal-source-boundary-register",
+        "reference.documentation-gap-backlog"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 6,
+        "controllers": 1,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 2,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.foundation/modules/nNms/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.foundation/modules/nNms/src/service/config/defaultNodeConfigurationService.js",
+          "nodics.ai/nodics.foundation/modules/nNms/src/service/defaultSampleService.js",
+          "nodics.ai/nodics.foundation/modules/nNms/src/service/node/defaultNodeDownHandlerService.js",
+          "nodics.ai/nodics.foundation/modules/nNms/src/service/node/defaultNodeManagerService.js"
+        ],
+        "controllers": [
+          "nodics.ai/nodics.foundation/modules/nNms/src/controller/defaultNodeManagerController.js"
+        ],
+        "routers": [
+          "nodics.ai/nodics.foundation/modules/nNms/src/router/appConfig.js",
+          "nodics.ai/nodics.foundation/modules/nNms/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.foundation/modules/nNms/test/common/commonTest.js",
+          "nodics.ai/nodics.foundation/modules/nNms/test/env-local/envTest.js"
         ],
         "frontends": []
       }
@@ -5458,7 +4532,8 @@
       "classification": "covered",
       "matchedDocuments": [
         "accelerators.agora-apparel-product-data-authoring",
-        "commerce.data-authoring-fulfillment"
+        "commerce.data-authoring-fulfillment",
+        "accelerators.domain-commerce-source-map"
       ],
       "counts": {
         "schemas": 1,
@@ -5668,8 +4743,57 @@
         "accelerators.agora-apparel-product-data-authoring",
         "framework.local-quick-start",
         "catalog.product-discovery-management",
-        "reference.source-map-glossary",
-        "reference.source-backed-documentation-coverage-audit"
+        "accelerators.domain-commerce-source-map",
+        "reference.source-map-glossary"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 3,
+        "controllers": 0,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 5,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/src/service/defaultElectronicsProductProjectionService.js",
+          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/src/service/defaultElectronicsProductSearchEnrichmentService.js",
+          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/src/service/defaultElectronicsProductValidationService.js"
+        ],
+        "controllers": [],
+        "routers": [
+          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/src/router/appConfig.js",
+          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/test/electronicsProductContract.test.js",
+          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/test/gen/schema/electronicsCompatibilityProfileSchemaContract.test.js",
+          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/test/gen/schema/electronicsDeviceIdentityPolicySchemaContract.test.js",
+          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/test/gen/schema/electronicsSpecificationProfileSchemaContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "electronicsProduct",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct",
+      "packageJsonPath": "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/package.json",
+      "priorityScore": 34,
+      "classification": "covered",
+      "matchedDocuments": [
+        "accelerators.domain-commerce-source-map",
+        "reference.documentation-gap-backlog"
       ],
       "counts": {
         "schemas": 1,
@@ -6400,6 +5524,53 @@
       }
     },
     {
+      "name": "telcoCatalog",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog",
+      "packageJsonPath": "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/package.json",
+      "priorityScore": 27,
+      "classification": "covered",
+      "matchedDocuments": [
+        "accelerators.domain-commerce-source-map",
+        "reference.documentation-gap-backlog"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 2,
+        "controllers": 0,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 3,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/src/service/defaultTelcoCatalogValidationService.js",
+          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/src/service/defaultTelcoProductSearchEnrichmentService.js"
+        ],
+        "controllers": [],
+        "routers": [
+          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/src/router/appConfig.js",
+          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/test/gen/schema/telcoAllowanceSchemaContract.test.js",
+          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/test/gen/schema/telcoPlanOfferingSchemaContract.test.js",
+          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/test/telcoContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
       "name": "vDatabase",
       "kind": "publish",
       "runtimeModule": true,
@@ -6454,7 +5625,8 @@
       "priorityScore": 27,
       "classification": "covered",
       "matchedDocuments": [
-        "events.messaging-cluster-coordination"
+        "events.messaging-cluster-coordination",
+        "foundation.ems-runtime-client-runbook"
       ],
       "counts": {
         "schemas": 1,
@@ -6639,7 +5811,8 @@
       "priorityScore": 25,
       "classification": "covered",
       "matchedDocuments": [
-        "events.messaging-cluster-coordination"
+        "events.messaging-cluster-coordination",
+        "foundation.ems-runtime-client-runbook"
       ],
       "counts": {
         "schemas": 1,
@@ -6851,6 +6024,96 @@
         "tests": [
           "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/test/paymentIntegrationReadinessContract.test.js",
           "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/test/paymentRefundExecutionContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "domainCommerceCore",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.accelerators/modules/domainCommerceCore",
+      "packageJsonPath": "nodics.ai/nodics.accelerators/modules/domainCommerceCore/package.json",
+      "priorityScore": 22,
+      "classification": "covered",
+      "matchedDocuments": [
+        "accelerators.domain-commerce-source-map",
+        "reference.documentation-gap-backlog"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 1,
+        "controllers": 0,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 2,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/src/service/defaultDomainCommerceCorePolicyService.js"
+        ],
+        "controllers": [],
+        "routers": [
+          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/src/router/appConfig.js",
+          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/test/domainCommerceCoreContract.test.js",
+          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/test/domainSearchEnrichmentContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "telcoSubscription",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription",
+      "packageJsonPath": "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription/package.json",
+      "priorityScore": 22,
+      "classification": "covered",
+      "matchedDocuments": [
+        "accelerators.domain-commerce-source-map",
+        "reference.documentation-gap-backlog"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 1,
+        "controllers": 0,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 2,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription/src/service/defaultTelcoSubscriptionService.js"
+        ],
+        "controllers": [],
+        "routers": [
+          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription/src/router/appConfig.js",
+          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription/test/gen/schema/telcoNumberIntentSchemaContract.test.js",
+          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription/test/gen/schema/telcoSubscriptionSchemaContract.test.js"
         ],
         "frontends": []
       }
@@ -7334,7 +6597,9 @@
       "priorityScore": 12,
       "classification": "covered",
       "matchedDocuments": [
-        "commerce.payment-provider-boundaries"
+        "commerce.payment-provider-boundaries",
+        "reference.internal-source-boundary-register",
+        "reference.documentation-gap-backlog"
       ],
       "counts": {
         "schemas": 0,
@@ -7361,6 +6626,46 @@
         "dataRecords": [],
         "assets": [],
         "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "discoveryMapping",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.discovery/modules/discoveryMapping",
+      "packageJsonPath": "nodics.ai/nodics.discovery/modules/discoveryMapping/package.json",
+      "priorityScore": 12,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 1,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 1,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.discovery/modules/discoveryMapping/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.discovery/modules/discoveryMapping/src/service/defaultDiscoveryFieldPolicyService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.discovery/modules/discoveryMapping/test/discoveryMappingContract.test.js"
+        ],
         "frontends": []
       }
     },
@@ -7497,7 +6802,7 @@
       "priorityScore": 12,
       "classification": "covered",
       "matchedDocuments": [
-        "reference.documentation-gap-backlog"
+        "reference.internal-source-boundary-register"
       ],
       "counts": {
         "schemas": 0,
@@ -7537,7 +6842,8 @@
       "priorityScore": 12,
       "classification": "covered",
       "matchedDocuments": [
-        "wcms.publishing-lifecycle"
+        "wcms.publishing-lifecycle",
+        "reference.internal-source-boundary-register"
       ],
       "counts": {
         "schemas": 0,
@@ -7670,7 +6976,7 @@
         "wcms.publishing-lifecycle",
         "applications.nexus-data-content-guide",
         "foundation.nms-runtime-monitoring",
-        "reference.documentation-gap-backlog"
+        "reference.internal-source-boundary-register"
       ],
       "counts": {
         "schemas": 1,
@@ -7746,7 +7052,8 @@
       "matchedDocuments": [
         "commerce.overview",
         "commerce.payment-fulfillment",
-        "commerce.payment-provider-boundaries"
+        "commerce.payment-provider-boundaries",
+        "reference.internal-source-boundary-register"
       ],
       "counts": {
         "schemas": 0,
@@ -7926,6 +7233,82 @@
         "assets": [],
         "tests": [
           "nodics.ai/nodics.discovery/modules/discoveryPublication/test/discoveryPublicationContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "discoveryQuery",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.discovery/modules/discoveryQuery",
+      "packageJsonPath": "nodics.ai/nodics.discovery/modules/discoveryQuery/package.json",
+      "priorityScore": 5,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 1,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 1,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [
+          "nodics.ai/nodics.discovery/modules/discoveryQuery/src/service/defaultDiscoveryQueryBuilderService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.discovery/modules/discoveryQuery/test/discoveryQueryContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "discoveryRuntime",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.discovery/modules/discoveryRuntime",
+      "packageJsonPath": "nodics.ai/nodics.discovery/modules/discoveryRuntime/package.json",
+      "priorityScore": 5,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 1,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 1,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [
+          "nodics.ai/nodics.discovery/modules/discoveryRuntime/src/service/defaultDiscoveryRuntimeService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.discovery/modules/discoveryRuntime/test/discoveryRuntimeContract.test.js"
         ],
         "frontends": []
       }
@@ -8168,6 +7551,186 @@
       }
     },
     {
+      "name": "bankTransferPayment",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/package.json",
+      "priorityScore": 3,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 1,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/src/service/defaultBankTransferPaymentMethodService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "cardPayment",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/package.json",
+      "priorityScore": 3,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 1,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "cashOnDeliveryPayment",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/package.json",
+      "priorityScore": 3,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 1,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/src/service/defaultCashOnDeliveryPaymentMethodService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "walletPayment",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment/package.json",
+      "priorityScore": 3,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 1,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment/src/service/defaultWalletPaymentMethodService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "paymentProviderCore",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore/package.json",
+      "priorityScore": 3,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 1,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore/src/service/defaultPaymentCallbackSecurityService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
       "name": "stripeProvider",
       "kind": "capability",
       "runtimeModule": true,
@@ -8176,7 +7739,8 @@
       "priorityScore": 3,
       "classification": "covered",
       "matchedDocuments": [
-        "commerce.payment-provider-boundaries"
+        "commerce.payment-provider-boundaries",
+        "reference.internal-source-boundary-register"
       ],
       "counts": {
         "schemas": 0,
@@ -8240,6 +7804,144 @@
       }
     },
     {
+      "name": "kickoffInt",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/modules/kickoffInt",
+      "packageJsonPath": "nodics.kickoff/modules/kickoffInt/package.json",
+      "priorityScore": 3,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 1,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [
+          "nodics.kickoff/modules/kickoffInt/src/service/defaultKickoffEditorialProcessAdapterService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "cyberSourceProvider",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/cyberSourceProvider/package.json",
+      "priorityScore": 0,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "paypalProvider",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/paypalProvider/package.json",
+      "priorityScore": 0,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "visaProvider",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/visaProvider/package.json",
+      "priorityScore": 0,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
       "name": "nFacade",
       "kind": "capability",
       "runtimeModule": true,
@@ -8289,6 +7991,108 @@
         "framework.architecture-decision-guide",
         "foundation.overview",
         "framework.local-quick-start"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "kickoffDockerLocal",
+      "kind": "group",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/envs/kickoffDockerLocal",
+      "packageJsonPath": "nodics.kickoff/envs/kickoffDockerLocal/package.json",
+      "priorityScore": 0,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "commerceServer",
+      "kind": "server",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/envs/kickoffDockerLocal/commerceServer",
+      "packageJsonPath": "nodics.kickoff/envs/kickoffDockerLocal/commerceServer/package.json",
+      "priorityScore": 0,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "commerceStagedServer",
+      "kind": "server",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/envs/kickoffDockerLocal/commerceStagedServer",
+      "packageJsonPath": "nodics.kickoff/envs/kickoffDockerLocal/commerceStagedServer/package.json",
+      "priorityScore": 0,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
       ],
       "counts": {
         "schemas": 0,
@@ -8428,6 +8232,142 @@
       }
     },
     {
+      "name": "wcmsOnlineServer",
+      "kind": "server",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/envs/kickoffDockerLocal/wcmsOnlineServer",
+      "packageJsonPath": "nodics.kickoff/envs/kickoffDockerLocal/wcmsOnlineServer/package.json",
+      "priorityScore": 0,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "wcmsStagedServer",
+      "kind": "server",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/envs/kickoffDockerLocal/wcmsStagedServer",
+      "packageJsonPath": "nodics.kickoff/envs/kickoffDockerLocal/wcmsStagedServer/package.json",
+      "priorityScore": 0,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "commerceServer",
+      "kind": "server",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/envs/kickoffLocal/commerceServer",
+      "packageJsonPath": "nodics.kickoff/envs/kickoffLocal/commerceServer/package.json",
+      "priorityScore": 0,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "commerceStagedServer",
+      "kind": "server",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/envs/kickoffLocal/commerceStagedServer",
+      "packageJsonPath": "nodics.kickoff/envs/kickoffLocal/commerceStagedServer/package.json",
+      "priorityScore": 0,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
       "name": "engagementServer",
       "kind": "server",
       "runtimeModule": true,
@@ -8503,6 +8443,40 @@
       }
     },
     {
+      "name": "wcmsOnlineServer",
+      "kind": "server",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/envs/kickoffLocal/wcmsOnlineServer",
+      "packageJsonPath": "nodics.kickoff/envs/kickoffLocal/wcmsOnlineServer/package.json",
+      "priorityScore": 0,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
       "name": "wcmsServerRetired",
       "kind": "server",
       "runtimeModule": true,
@@ -8514,6 +8488,108 @@
         "framework.how-nodics-works",
         "framework.runtime-server-composition",
         "process.devops-topology"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "wcmsStagedServer",
+      "kind": "server",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/envs/kickoffLocal/wcmsStagedServer",
+      "packageJsonPath": "nodics.kickoff/envs/kickoffLocal/wcmsStagedServer/package.json",
+      "priorityScore": 0,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "kickoffApi",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/modules/kickoffApi",
+      "packageJsonPath": "nodics.kickoff/modules/kickoffApi/package.json",
+      "priorityScore": 0,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "kickoffCore",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/modules/kickoffCore",
+      "packageJsonPath": "nodics.kickoff/modules/kickoffCore/package.json",
+      "priorityScore": 0,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
       ],
       "counts": {
         "schemas": 0,

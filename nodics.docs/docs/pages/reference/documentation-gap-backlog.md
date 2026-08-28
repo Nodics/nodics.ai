@@ -74,22 +74,13 @@ flowchart LR
 
 ## P2 closure items
 
-| Item | Source areas | Documentation outcome |
-| --- | --- | --- |
-| Fresh-schema setup per runtime | Platform, WCMS Staged, WCMS Online, Process, Commerce, Engagement | Add runtime-specific import order, seed data, publication, and acceptance evidence where existing quick-start docs are too broad. |
-| Environment, server, and node discovery | `nodics.kickoff/envs`, framework server/node configuration | Explain how physical hierarchy, environment config, server composition, and runtime roles are discovered. |
-| Permission and access matrix | Profile, BackOffice, WCMS, documentation access policies | Explain roles, groups, permissions, access modes, public/authenticated/restricted behavior, and publication visibility. |
-| Search indexing operations | Discovery and Commerce Search modules | Explain index jobs, reindex, projection freshness, failure recovery, and ownership. |
-| Migration and import reconciliation | Import, migration, CMS migration, Commerce data | Explain source classification, mapping tables, partial failures, retry, and data correction. |
-| Export and data privacy | Export providers, media-owned generated files | Explain allow-lists, masking, retention, download permissions, and audit. |
-| Observability | NMS, import runs, publication receipts, logs, dashboards | Explain correlation IDs, status evidence, health checks, support cards, and escalation. |
-| Disaster recovery | Media publication, Online storage, replication queue | Explain Online media replication, DR queues, recovery receipts, and failure escalation. |
-| Frontend consumption contracts | Axis, Nexus, Agora | Explain that Axis consumes BackOffice metadata, Nexus consumes Online WCMS, and Agora consumes Online commerce/content. |
-| Data quality rules | All module data folders | Explain required fields, stable keys, idempotent queries, relation integrity, and no runtime logic in data files. |
-| Testing standards | All modules and frontends | Explain unit, contract, generator, fresh-schema, publication, browser, accessibility, and regression expectations. |
-| Troubleshooting matrices | Every operational capability page | Add what failed, who owns it, user-safe message, technical evidence, and recovery action. |
-| Decision-maker overview pages | Product and capability overview docs | Explain business value, ownership model, platform differentiation, risk controls, and implementation confidence. |
-| Internal-only register | Low-score utility modules | Decide and document which technical modules do not need public pages and where they are covered. |
+| Status | Item | Source areas | Documentation outcome |
+| --- | --- | --- | --- |
+| Closed by P2 docs batch | Fulfillment Core owner mapping | `nodics.commerce/modules/fulfillment/modules/fulfillmentCore` | Covered by `commerce.fulfillment-core-source-map`, plus explicit source evidence on fulfillment and data-authoring pages. |
+| Closed by P2 docs batch | Domain Commerce accelerator owner mapping | `domainCommerceCore`, electronics product, telco catalog, telco subscription | Covered by `accelerators.domain-commerce-source-map` with accelerator ownership, Commerce boundary, sample data, and validation. |
+| Closed by P2 docs batch | Tooling runtime depth | `nodics.foundation/modules/nTooling` | Covered by `foundation.tooling-runtime-contracts` with command, manifest, application-builder, AI-context, and quality-gate contracts. |
+| Closed by P2 docs batch | EMS runtime and client depth | `nodics.foundation/modules/nEms`, `emsClient`, broker providers | Covered by `foundation.ems-runtime-client-runbook` with broker runtime, client, tenant, retry, and operator evidence. |
+| Closed by P2 docs batch | Internal-only register | Discovery internals, payment methods/providers, NMS runtime, Kickoff environment/runtime packages | Covered by `reference.internal-source-boundary-register` with owner mappings and promotion rules. |
 
 ## Closure workflow
 
