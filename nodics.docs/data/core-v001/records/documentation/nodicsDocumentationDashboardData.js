@@ -322,7 +322,7 @@ module.exports = {
     ],
     "statusSummary": {
       "sections": 47,
-      "pages": 102,
+      "pages": 117,
       "lifecycleState": "ONLINE"
     },
     "product": "nodicsDocumentationProduct",
@@ -644,7 +644,7 @@ module.exports = {
     ],
     "statusSummary": {
       "sections": 47,
-      "pages": 102,
+      "pages": 117,
       "searchable": true,
       "expandable": true
     },
@@ -906,6 +906,12 @@ module.exports = {
         "title": "Functional module registry",
         "summary": "Durable project registration and runtime observation rules.",
         "order": 10
+      },
+      {
+        "code": "platform.module-registry-journey",
+        "title": "Module Registry Journey",
+        "summary": "How installed modules become registered, activated, dependency-checked, and visible to Axis as governed business capabilities.",
+        "order": 20
       }
     ],
     "journeyLinks": [
@@ -913,10 +919,15 @@ module.exports = {
         "label": "Functional module registry",
         "targetPage": "platform.module-registry",
         "route": "/docs/framework/platform-module-registry"
+      },
+      {
+        "label": "Module Registry Journey",
+        "targetPage": "platform.module-registry-journey",
+        "route": "/docs/framework/platform-module-registry-journey"
       }
     ],
     "statusSummary": {
-      "pages": 1,
+      "pages": 2,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -1366,13 +1377,24 @@ module.exports = {
     },
     "cards": [
       {
+        "code": "commerce.customer-list-profile-boundary",
+        "title": "Customer List and Profile Commerce Boundary",
+        "summary": "Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile.",
+        "order": 10
+      },
+      {
         "code": "platform.overview",
         "title": "Platform overview",
         "summary": "How Platform, Profile, BackOffice, authentication, authorization, Axis backend content, and module governance fit together.",
-        "order": 10
+        "order": 20
       }
     ],
     "journeyLinks": [
+      {
+        "label": "Customer List and Profile Commerce Boundary",
+        "targetPage": "commerce.customer-list-profile-boundary",
+        "route": "/docs/framework/commerce-customer-list-profile-boundary"
+      },
       {
         "label": "Platform overview",
         "targetPage": "platform.overview",
@@ -1380,7 +1402,7 @@ module.exports = {
       }
     ],
     "statusSummary": {
-      "pages": 1,
+      "pages": 2,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -1413,6 +1435,12 @@ module.exports = {
         "title": "Security, Identity, and Access Governance",
         "summary": "Authentication, authorization, groups, documentation authoring roles, read-only Axis access, tenant isolation, and audit responsibilities.",
         "order": 10
+      },
+      {
+        "code": "security.otp-security-flow",
+        "title": "OTP and Security Flow",
+        "summary": "OTP generation, delivery intent, verification, expiry, retry, throttling, lockout, audit, and secure frontend message behavior.",
+        "order": 20
       }
     ],
     "journeyLinks": [
@@ -1420,10 +1448,15 @@ module.exports = {
         "label": "Security, Identity, and Access Governance",
         "targetPage": "security.identity-access-governance",
         "route": "/docs/framework/security-identity-access-governance"
+      },
+      {
+        "label": "OTP and Security Flow",
+        "targetPage": "security.otp-security-flow",
+        "route": "/docs/framework/security-otp-security-flow"
       }
     ],
     "statusSummary": {
-      "pages": 1,
+      "pages": 2,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -1549,13 +1582,24 @@ module.exports = {
     },
     "cards": [
       {
+        "code": "localization.runtime-authoring",
+        "title": "Localization Runtime Authoring",
+        "summary": "How localized records, fallback behavior, content and product translation, import data, and runtime API boundaries work.",
+        "order": 10
+      },
+      {
         "code": "localization.internationalization",
         "title": "Localization and Internationalization",
         "summary": "Locales, translations, fallback behavior, localized content, project overrides, and release validation for multilingual customer experiences.",
-        "order": 10
+        "order": 20
       }
     ],
     "journeyLinks": [
+      {
+        "label": "Localization Runtime Authoring",
+        "targetPage": "localization.runtime-authoring",
+        "route": "/docs/framework/localization-runtime-authoring"
+      },
       {
         "label": "Localization and Internationalization",
         "targetPage": "localization.internationalization",
@@ -1563,7 +1607,7 @@ module.exports = {
       }
     ],
     "statusSummary": {
-      "pages": 1,
+      "pages": 2,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -1635,13 +1679,24 @@ module.exports = {
     },
     "cards": [
       {
+        "code": "foundation.database-provider-boundaries",
+        "title": "Database Provider Boundaries",
+        "summary": "How MongoDB, virtual DB, Cassandra, Elasticsearch, schemas, query translation, indexes, migration, and provider validation are separated.",
+        "order": 10
+      },
+      {
         "code": "persistence.provider-data-access-layer",
         "title": "Provider and Data Access Layer",
         "summary": "How the Nodics data access layer uses MongoDB today while preserving provider seams for additional database providers.",
-        "order": 10
+        "order": 20
       }
     ],
     "journeyLinks": [
+      {
+        "label": "Database Provider Boundaries",
+        "targetPage": "foundation.database-provider-boundaries",
+        "route": "/docs/framework/foundation-database-provider-boundaries"
+      },
       {
         "label": "Provider and Data Access Layer",
         "targetPage": "persistence.provider-data-access-layer",
@@ -1649,7 +1704,7 @@ module.exports = {
       }
     ],
     "statusSummary": {
-      "pages": 1,
+      "pages": 2,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -1678,13 +1733,24 @@ module.exports = {
     },
     "cards": [
       {
+        "code": "foundation.cache-provider-runbooks",
+        "title": "Cache Provider Runbooks",
+        "summary": "Redis, Hazelcast, node cache, key strategy, invalidation, provider health, fallback behavior, and production cache recovery guidance.",
+        "order": 10
+      },
+      {
         "code": "cache.runtime-state-management",
         "title": "Caching and Runtime State Management",
         "summary": "How local node cache, Redis-style providers, invalidation, runtime state, and diagnostics influence application behavior.",
-        "order": 10
+        "order": 20
       }
     ],
     "journeyLinks": [
+      {
+        "label": "Cache Provider Runbooks",
+        "targetPage": "foundation.cache-provider-runbooks",
+        "route": "/docs/framework/foundation-cache-provider-runbooks"
+      },
       {
         "label": "Caching and Runtime State Management",
         "targetPage": "cache.runtime-state-management",
@@ -1692,7 +1758,7 @@ module.exports = {
       }
     ],
     "statusSummary": {
-      "pages": 1,
+      "pages": 2,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -1996,6 +2062,12 @@ module.exports = {
         "title": "Search, Indexing, and Discovery",
         "summary": "Elasticsearch, Solr, provider adapters, catalog/content indexing, ranking, query profiles, and search metadata governance.",
         "order": 10
+      },
+      {
+        "code": "commerce.search-guide",
+        "title": "Commerce Search Guide",
+        "summary": "How commerce search projections, ranking rules, index freshness, rebuild evidence, and storefront discovery are governed.",
+        "order": 20
       }
     ],
     "journeyLinks": [
@@ -2003,10 +2075,15 @@ module.exports = {
         "label": "Search, Indexing, and Discovery",
         "targetPage": "discovery.search-indexing",
         "route": "/docs/framework/discovery-search-indexing"
+      },
+      {
+        "label": "Commerce Search Guide",
+        "targetPage": "commerce.search-guide",
+        "route": "/docs/framework/commerce-search-guide"
       }
     ],
     "statusSummary": {
-      "pages": 1,
+      "pages": 2,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -2255,6 +2332,12 @@ module.exports = {
         "title": "Payment and fulfillment operations",
         "summary": "Provider-safe payment and fulfillment guide covering methods, adapters, callbacks, reconciliation, shipment, tracking, warehouse work, and returns.",
         "order": 10
+      },
+      {
+        "code": "commerce.payment-provider-boundaries",
+        "title": "Payment Core and Provider Boundaries",
+        "summary": "How Payment Core, payment methods, gateway providers, safe payloads, reconciliation, refunds, and provider extension boundaries work.",
+        "order": 20
       }
     ],
     "journeyLinks": [
@@ -2262,10 +2345,15 @@ module.exports = {
         "label": "Payment and fulfillment operations",
         "targetPage": "commerce.payment-fulfillment",
         "route": "/docs/framework/commerce-payment-fulfillment"
+      },
+      {
+        "label": "Payment Core and Provider Boundaries",
+        "targetPage": "commerce.payment-provider-boundaries",
+        "route": "/docs/framework/commerce-payment-provider-boundaries"
       }
     ],
     "statusSummary": {
-      "pages": 1,
+      "pages": 2,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -2441,28 +2529,34 @@ module.exports = {
         "order": 30
       },
       {
+        "code": "engagement.contact-submission-operations",
+        "title": "Contact Submission Operations",
+        "summary": "How contact forms, submissions, validation, moderation, workflow routing, notifications, retention, audit, and recovery work.",
+        "order": 40
+      },
+      {
         "code": "engagement.customer-feedback",
         "title": "Customer feedback, complaints, and closed-loop action",
         "summary": "Beginner-to-operator journey for feedback intake, triage, follow-up, resolution, handoffs, surveys, insights, recovery, and safe customization.",
-        "order": 40
+        "order": 50
       },
       {
         "code": "engagement.unified-operations",
         "title": "Unified engagement operations",
         "summary": "Beginner-to-operator journey for unified queues, dashboards, batch previews, repair evidence, bounded exports, authority boundaries, and recovery.",
-        "order": 50
+        "order": 60
       },
       {
         "code": "engagement.governed-automation",
         "title": "Governed automation and AI",
         "summary": "Beginner-to-operator journey for optional AI proposals, deterministic fallback, evidence, evaluation, human review, overrides, monitoring, and safe extension.",
-        "order": 60
+        "order": 70
       },
       {
         "code": "engagement.enterprise-operations",
         "title": "Enterprise scale, resilience, and ecosystem operations",
         "summary": "Beginner-to-operator journey for capacity, regional residency, provider delivery, backpressure, recovery, compatibility, accessibility, security, and release acceptance.",
-        "order": 70
+        "order": 80
       }
     ],
     "journeyLinks": [
@@ -2482,6 +2576,11 @@ module.exports = {
         "route": "/docs/framework/engagement-review-aggregation-recovery"
       },
       {
+        "label": "Contact Submission Operations",
+        "targetPage": "engagement.contact-submission-operations",
+        "route": "/docs/framework/engagement-contact-submission-operations"
+      },
+      {
         "label": "Customer feedback, complaints, and closed-loop action",
         "targetPage": "engagement.customer-feedback",
         "route": "/docs/framework/engagement-customer-feedback"
@@ -2490,15 +2589,10 @@ module.exports = {
         "label": "Unified engagement operations",
         "targetPage": "engagement.unified-operations",
         "route": "/docs/framework/engagement-unified-operations"
-      },
-      {
-        "label": "Governed automation and AI",
-        "targetPage": "engagement.governed-automation",
-        "route": "/docs/framework/engagement-governed-automation"
       }
     ],
     "statusSummary": {
-      "pages": 7,
+      "pages": 8,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -2531,6 +2625,12 @@ module.exports = {
         "title": "Communication, delivery, and verification",
         "summary": "Beginner-to-operator journey for templates, intent, consent, suppression, verification, provider delivery, callbacks, retry, inbox, recovery, and domain integration.",
         "order": 10
+      },
+      {
+        "code": "communication.provider-runbooks",
+        "title": "Communication Provider Runbooks",
+        "summary": "SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance.",
+        "order": 20
       }
     ],
     "journeyLinks": [
@@ -2538,10 +2638,15 @@ module.exports = {
         "label": "Communication, delivery, and verification",
         "targetPage": "communication.overview",
         "route": "/docs/framework/communication-overview"
+      },
+      {
+        "label": "Communication Provider Runbooks",
+        "targetPage": "communication.provider-runbooks",
+        "route": "/docs/framework/communication-provider-runbooks"
       }
     ],
     "statusSummary": {
-      "pages": 1,
+      "pages": 2,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -2619,28 +2724,34 @@ module.exports = {
         "order": 10
       },
       {
+        "code": "process.workflow-bpm-source-map",
+        "title": "Workflow and BPM Source Map",
+        "summary": "How workflow definitions, transitions, human tasks, action adapters, callbacks, history, incidents, and operator visibility fit together.",
+        "order": 20
+      },
+      {
         "code": "process.runtime-lifecycle",
         "title": "Runtime Instance and Task Lifecycle",
         "summary": "Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships.",
-        "order": 20
+        "order": 30
       },
       {
         "code": "process.first-workflow",
         "title": "Build Your First Workflow",
         "summary": "Create a first Process workflow from START through TASK, DECISION, ACTION, TIMER, SUB_PROCESS, and END with beginner-safe examples.",
-        "order": 30
+        "order": 40
       },
       {
         "code": "process.first-human-task",
         "title": "Build Your First Human Task Flow",
         "summary": "Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps.",
-        "order": 40
+        "order": 50
       },
       {
         "code": "process.business-value",
         "title": "Business Value and Adoption Model",
         "summary": "Explain the business problems Process solves, how it lowers operating cost, and how business users should think about automation governance.",
-        "order": 50
+        "order": 60
       }
     ],
     "journeyLinks": [
@@ -2648,6 +2759,11 @@ module.exports = {
         "label": "Business Process and Automation Overview",
         "targetPage": "process.overview",
         "route": "/docs/framework/process"
+      },
+      {
+        "label": "Workflow and BPM Source Map",
+        "targetPage": "process.workflow-bpm-source-map",
+        "route": "/docs/framework/process-workflow-bpm-source-map"
       },
       {
         "label": "Runtime Instance and Task Lifecycle",
@@ -2671,7 +2787,7 @@ module.exports = {
       }
     ],
     "statusSummary": {
-      "pages": 5,
+      "pages": 6,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -2704,6 +2820,12 @@ module.exports = {
         "title": "Pipeline and Business Logic Orchestration",
         "summary": "How Nodics pipelines compose validation, enrichment, decisioning, side effects, events, and project-layer business logic.",
         "order": 10
+      },
+      {
+        "code": "foundation.service-runtime-overrides",
+        "title": "Service Runtime and Override Precedence",
+        "summary": "How generated services, virtual services, module graph resolution, customer overrides, fallback behavior, and extension safety work.",
+        "order": 20
       }
     ],
     "journeyLinks": [
@@ -2711,10 +2833,15 @@ module.exports = {
         "label": "Pipeline and Business Logic Orchestration",
         "targetPage": "pipeline.business-logic-orchestration",
         "route": "/docs/framework/pipeline-business-logic-orchestration"
+      },
+      {
+        "label": "Service Runtime and Override Precedence",
+        "targetPage": "foundation.service-runtime-overrides",
+        "route": "/docs/framework/foundation-service-runtime-overrides"
       }
     ],
     "statusSummary": {
-      "pages": 1,
+      "pages": 2,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -2761,16 +2888,22 @@ module.exports = {
         "order": 30
       },
       {
+        "code": "process.cronjob-data-authoring",
+        "title": "CronJob Data Authoring",
+        "summary": "How CronJob records, headers, schedules, execution policy, retry, idempotency, and Process server ownership are authored and verified.",
+        "order": 40
+      },
+      {
         "code": "process.process-cron-runtime",
         "title": "Process and Cronjob Shared Runtime",
         "summary": "Clarify how processServer can include workflow and cronjob while each module keeps a separate ownership boundary.",
-        "order": 40
+        "order": 50
       },
       {
         "code": "process.scheduled-automation",
         "title": "Scheduled Automation and Cron Triggers",
         "summary": "Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence.",
-        "order": 50
+        "order": 60
       }
     ],
     "journeyLinks": [
@@ -2790,6 +2923,11 @@ module.exports = {
         "route": "/docs/framework/cron-project-customization"
       },
       {
+        "label": "CronJob Data Authoring",
+        "targetPage": "process.cronjob-data-authoring",
+        "route": "/docs/framework/process-cronjob-data-authoring"
+      },
+      {
         "label": "Process and Cronjob Shared Runtime",
         "targetPage": "process.process-cron-runtime",
         "route": "/docs/framework/process/process-cron-runtime"
@@ -2801,7 +2939,7 @@ module.exports = {
       }
     ],
     "statusSummary": {
-      "pages": 5,
+      "pages": 6,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -2963,10 +3101,16 @@ module.exports = {
         "order": 60
       },
       {
+        "code": "foundation.nms-runtime-monitoring",
+        "title": "NMS Runtime Monitoring",
+        "summary": "How NMS captures node health, runtime roles, responsibility, capability state, degraded conditions, and operator recovery evidence.",
+        "order": 70
+      },
+      {
         "code": "process.devops-topology",
         "title": "DevOps and Runtime Topology",
         "summary": "Explain deployment topology, observability, fresh bootstrap evidence, and production sustainability for Process runtimes.",
-        "order": 70
+        "order": 80
       }
     ],
     "journeyLinks": [
@@ -3002,7 +3146,7 @@ module.exports = {
       }
     ],
     "statusSummary": {
-      "pages": 7,
+      "pages": 8,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -3143,6 +3287,12 @@ module.exports = {
         "title": "Staged-to-Online publishing lifecycle",
         "summary": "Author, approve, deploy, recover, and customize immutable WCMS releases across physically separated Staged and Online runtimes.",
         "order": 10
+      },
+      {
+        "code": "framework.release-upgrade-compatibility",
+        "title": "Release and Upgrade Compatibility",
+        "summary": "How data release folders, generated manifests, immutable baselines, upgrades, rollback, checksum drift, and customer extensions are governed.",
+        "order": 20
       }
     ],
     "journeyLinks": [
@@ -3150,10 +3300,15 @@ module.exports = {
         "label": "Staged-to-Online publishing lifecycle",
         "targetPage": "wcms.publishing-lifecycle",
         "route": "/docs/framework/wcms-publishing-lifecycle"
+      },
+      {
+        "label": "Release and Upgrade Compatibility",
+        "targetPage": "framework.release-upgrade-compatibility",
+        "route": "/docs/framework/framework-release-upgrade-compatibility"
       }
     ],
     "statusSummary": {
-      "pages": 1,
+      "pages": 2,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",

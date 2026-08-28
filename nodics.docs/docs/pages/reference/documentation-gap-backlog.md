@@ -54,23 +54,23 @@ flowchart LR
 
 ## P1 closure items
 
-| Item | Source areas | Documentation outcome |
-| --- | --- | --- |
-| Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Explain registration, activation, dependency state, required capability checks, and Axis visibility. |
-| Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Explain ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |
-| Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Explain locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |
-| Payment Core and provider split | `nodics.commerce/modules/payment` | Explain payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |
-| Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Explain why customer list exists in Commerce and what Profile continues to own. |
-| NMS runtime monitoring | `nodics.foundation/modules/nNms` | Explain node monitoring, topology, health, operational evidence, and recovery actions. |
-| Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Explain service discovery, virtual services, generated services, override precedence, and extension safety. |
-| Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Explain provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |
-| Database provider boundaries | `nodics.foundation/modules/nDatabase` | Explain MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |
-| OTP and security flow | `nodics.foundation/modules/nOtp` | Explain OTP generation, verification, expiry, retry, throttling, audit, and security controls. |
-| Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Explain SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |
-| Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Explain contact forms, moderation, workflow, notification, audit, and recovery. |
-| Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Explain workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |
-| Cron job data authoring | `nodics.process/modules/cronjob` | Explain job records, schedules, execution policy, retry, idempotency, and Process server ownership. |
-| Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Explain version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |
+| Status | Item | Source areas | Documentation outcome |
+| --- | --- | --- | --- |
+| Closed by P1 docs batch | Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Covered by `platform.module-registry-journey` with registration, activation, dependency state, required capability checks, and Axis visibility. |
+| Closed by P1 docs batch | Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Covered by `commerce.search-guide` with ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |
+| Closed by P1 docs batch | Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Covered by `localization.runtime-authoring` with locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |
+| Closed by P1 docs batch | Payment Core and provider split | `nodics.commerce/modules/payment` | Covered by `commerce.payment-provider-boundaries` with payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |
+| Closed by P1 docs batch | Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Covered by `commerce.customer-list-profile-boundary` with why customer list exists in Commerce and what Profile continues to own. |
+| Closed by P1 docs batch | NMS runtime monitoring | `nodics.foundation/modules/nNms` | Covered by `foundation.nms-runtime-monitoring` with node monitoring, topology, health, operational evidence, and recovery actions. |
+| Closed by P1 docs batch | Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Covered by `foundation.service-runtime-overrides` with service discovery, virtual services, generated services, override precedence, and extension safety. |
+| Closed by P1 docs batch | Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Covered by `foundation.cache-provider-runbooks` with provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |
+| Closed by P1 docs batch | Database provider boundaries | `nodics.foundation/modules/nDatabase` | Covered by `foundation.database-provider-boundaries` with MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |
+| Closed by P1 docs batch | OTP and security flow | `nodics.foundation/modules/nOtp` | Covered by `security.otp-security-flow` with OTP generation, verification, expiry, retry, throttling, audit, and security controls. |
+| Closed by P1 docs batch | Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Covered by `communication.provider-runbooks` with SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |
+| Closed by P1 docs batch | Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Covered by `engagement.contact-submission-operations` with contact forms, moderation, workflow, notification, audit, and recovery. |
+| Closed by P1 docs batch | Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Covered by `process.workflow-bpm-source-map` with workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |
+| Closed by P1 docs batch | Cron job data authoring | `nodics.process/modules/cronjob` | Covered by `process.cronjob-data-authoring` with job records, schedules, execution policy, retry, idempotency, and Process server ownership. |
+| Closed by P1 docs batch | Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Covered by `framework.release-upgrade-compatibility` with version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |
 
 ## P2 closure items
 

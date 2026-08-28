@@ -2691,7 +2691,7 @@ module.exports = {
           "group": "user-enterprise-and-tenant-management",
           "groupTitle": "User, Enterprise, and Tenant Management",
           "groupOrder": 130,
-          "order": 10,
+          "order": 20,
           "parentId": "user-enterprise-and-tenant-management",
           "hierarchyPath": [
             "User, Enterprise, and Tenant Management",
@@ -3040,7 +3040,7 @@ module.exports = {
           "group": "localization-and-internationalization",
           "groupTitle": "Localization and Internationalization",
           "groupOrder": 170,
-          "order": 10,
+          "order": 20,
           "parentId": "localization-and-internationalization",
           "hierarchyPath": [
             "Localization and Internationalization",
@@ -3174,7 +3174,7 @@ module.exports = {
           "group": "database-and-persistence-management",
           "groupTitle": "Database and Persistence Management",
           "groupOrder": 190,
-          "order": 10,
+          "order": 20,
           "parentId": "database-and-persistence-management",
           "hierarchyPath": [
             "Database and Persistence Management",
@@ -3241,7 +3241,7 @@ module.exports = {
           "group": "caching-and-runtime-state-management",
           "groupTitle": "Caching and Runtime State Management",
           "groupOrder": 200,
-          "order": 10,
+          "order": 20,
           "parentId": "caching-and-runtime-state-management",
           "hierarchyPath": [
             "Caching and Runtime State Management",
@@ -5046,7 +5046,7 @@ module.exports = {
           "group": "customer-engagement-and-feedback",
           "groupTitle": "Customer Engagement and Feedback",
           "groupOrder": 340,
-          "order": 40,
+          "order": 50,
           "parentId": "customer-engagement-and-feedback",
           "hierarchyPath": [
             "Customer Engagement and Feedback",
@@ -5112,7 +5112,7 @@ module.exports = {
           "group": "customer-engagement-and-feedback",
           "groupTitle": "Customer Engagement and Feedback",
           "groupOrder": 340,
-          "order": 50,
+          "order": 60,
           "parentId": "customer-engagement-and-feedback",
           "hierarchyPath": [
             "Customer Engagement and Feedback",
@@ -5178,7 +5178,7 @@ module.exports = {
           "group": "customer-engagement-and-feedback",
           "groupTitle": "Customer Engagement and Feedback",
           "groupOrder": 340,
-          "order": 60,
+          "order": 70,
           "parentId": "customer-engagement-and-feedback",
           "hierarchyPath": [
             "Customer Engagement and Feedback",
@@ -5244,7 +5244,7 @@ module.exports = {
           "group": "customer-engagement-and-feedback",
           "groupTitle": "Customer Engagement and Feedback",
           "groupOrder": 340,
-          "order": 70,
+          "order": 80,
           "parentId": "customer-engagement-and-feedback",
           "hierarchyPath": [
             "Customer Engagement and Feedback",
@@ -5510,7 +5510,7 @@ module.exports = {
           "group": "process-and-workflow-automation",
           "groupTitle": "Process and Workflow Automation",
           "groupOrder": 370,
-          "order": 20,
+          "order": 30,
           "parentId": "process-and-workflow-automation",
           "hierarchyPath": [
             "Process and Workflow Automation",
@@ -5576,7 +5576,7 @@ module.exports = {
           "group": "process-and-workflow-automation",
           "groupTitle": "Process and Workflow Automation",
           "groupOrder": 370,
-          "order": 30,
+          "order": 40,
           "parentId": "process-and-workflow-automation",
           "hierarchyPath": [
             "Process and Workflow Automation",
@@ -5642,7 +5642,7 @@ module.exports = {
           "group": "process-and-workflow-automation",
           "groupTitle": "Process and Workflow Automation",
           "groupOrder": 370,
-          "order": 40,
+          "order": 50,
           "parentId": "process-and-workflow-automation",
           "hierarchyPath": [
             "Process and Workflow Automation",
@@ -5708,7 +5708,7 @@ module.exports = {
           "group": "process-and-workflow-automation",
           "groupTitle": "Process and Workflow Automation",
           "groupOrder": 370,
-          "order": 50,
+          "order": 60,
           "parentId": "process-and-workflow-automation",
           "hierarchyPath": [
             "Process and Workflow Automation",
@@ -6042,7 +6042,7 @@ module.exports = {
           "group": "cron-and-scheduled-automation",
           "groupTitle": "Cron and Scheduled Automation",
           "groupOrder": 390,
-          "order": 40,
+          "order": 50,
           "parentId": "cron-and-scheduled-automation",
           "hierarchyPath": [
             "Cron and Scheduled Automation",
@@ -6108,7 +6108,7 @@ module.exports = {
           "group": "cron-and-scheduled-automation",
           "groupTitle": "Cron and Scheduled Automation",
           "groupOrder": 390,
-          "order": 50,
+          "order": 60,
           "parentId": "cron-and-scheduled-automation",
           "hierarchyPath": [
             "Cron and Scheduled Automation",
@@ -6709,7 +6709,7 @@ module.exports = {
           "group": "operations-monitoring-and-recovery",
           "groupTitle": "Operations, Monitoring, and Recovery",
           "groupOrder": 420,
-          "order": 70,
+          "order": 80,
           "parentId": "operations-monitoring-and-recovery",
           "hierarchyPath": [
             "Operations, Monitoring, and Recovery",
@@ -7524,6 +7524,1042 @@ module.exports = {
           "searchText": "Documentation Publishing Runbook Runbook for authored Markdown, catalogue metadata, generated WCMS records, Staged review, Online activation, rollback evidence, and consumer rendering. # Documentation Publishing Runbook\n\nNodics documentation has two lanes. Repository guidance lives in module\n`README.md` and `AGENTS.md` files for developers and AI tools. Publishable\ndocumentation lives as authored Markdown plus catalogue metadata in\n`nodics.docs`, is generated into WCMS content-pack records, imported into\nStaged, reviewed, and then activated Online. Axis manages the business and\noperator journey. Nexus or other public consumers read Online content after\napproval.\n\n## Source map\n\n| Capability | Source location |\n| --- | --- |\n| Authored pages | `docs/pages/` |\n| Catalogue metadata | `docs/catalogue.json` |\n| Content-pack generator | `scripts/generate-content-pack.mjs` |\n| Documentation validation | `scripts/validate.mjs`, `scripts/audit-hardening.mjs` |\n| Source coverage audit | `scripts/audit-source-coverage.mjs` |\n| Generated WCMS data | `data/core-v001/headers/documentation/`, `data/core-v001/records/documentation/` |\n| Documentation manifest | `data/manifest.json` |\n| CMS publication services | `../nodics.wcms/modules/cms/src/service/publication/` |\n| CMS documentation governance | `../nodics.wcms/modules/cms/src/service/documentation/` |\n\n## Publishing model\n\n```mermaid\nflowchart TD\n  Markdown[\"Authored Markdown\"] --> Catalogue[\"Catalogue metadata\"]\n  Catalogue --> Generate[\"Generate WCMS records\"]\n  Generate --> Validate[\"Docs validation and hardening\"]\n  Validate --> Import[\"Import to Staged\"]\n  Import --> Review[\"Approval workflow\"]\n  Review --> Online[\"Online activation\"]\n  Online --> Consumers[\"Axis, Nexus, web readers\"]\n```\n\nFor beginners, the Markdown file is the human-readable source, the catalogue\nis the navigation and access contract, and generated records are the importable\ndata. Business users should not edit generated files directly. Developers\nchange authored pages and metadata, regenerate the content pack, and run the\nvalidation gates. Operators prove that Staged and Online are aligned before\nproduction readers see a page.\n\n## Authoring steps\n\n1. Create or edit an authored Markdown page under `docs/pages/`.\n2. Add catalogue metadata with id, title, section, group, navigation order,\n   access mode, source owner, related pages, source evidence, keywords, and\n   visual requirements.\n3. Include enough detail for business users, developers, operators, QA, and AI\n   tools.\n4. Include source maps, how-to guidance, customization and extension rules,\n   common mistakes, and verification.\n5. Run the generator and validation commands.\n6. Review generated records and manifest checksums.\n7. Import `core-v001` documentation data into Staged.\n8. Request approval and publish Online.\n9. Open Axis and public consumers to verify the page and navigation.\n\n## Generated data contract\n\n```text\nnodics.docs/data/\n  core-v001/\n    headers/documentation/\n    records/documentation/\n  manifest.json\n```\n\nGenerated files include documentation site, product, navigation, nodes,\ndashboards, page records, routes, components, page metadata, access policies,\npublication state, and search metadata. The generator owns these records so\nall pages share the same hierarchy, access, workflow, rendering, and search\ncontract. Developers should update the Markdown and catalogue, then regenerate\ndata rather than hand editing generated record files.\n\n## Review and Online activation\n\nDocumentation should flow through Staged before Online. Staged lets\nadministrators and reviewers inspect hierarchy, access, rendering, source\nevidence, and search metadata. Online activation should validate the\npublication manifest, preserve approved checksums, activate delivery pointers,\nand keep rollback evidence. A production page should never be served from a\ndeveloper working file or from generated data that bypassed approval.\n\n## Customization and extension guidance\n\nDevelopers can extend documentation by adding new pages, navigation sections,\nmetadata fields, validation checks, generated record types, or renderer\ncomponents. Keep custom validation in scripts or tooling services and keep\nbusiness content in Markdown. A customer project can add documentation packs\nusing the same release structure as other data packs, while Axis remains the\nreview and publication journey.\n\nIf a capability page documents a module, add `sourceEvidence` paths to the\nmodule package, schema, service, router, data, and test files where possible.\nWhen source changes introduce a user-visible or extension-visible behavior,\nupdate the authored page in the same release batch.\n\n## Common mistakes\n\n- Editing generated documentation records instead of the authored page.\n- Adding a page without catalogue metadata or source evidence.\n- Publishing directly to Online without Staged review.\n- Treating README files as the complete business documentation.\n- Showing references as copied designs instead of standards for comparison.\n\n## Verification\n\nRun the documentation generator, validator, source coverage audit, and\nhardening audit. Then import generated documentation data into a fresh Staged\nschema, request approval, publish Online, and open Axis plus the public\nconsumer route. The work is complete when business users see the page in the\nright journey, developers can trace source evidence, operators can verify\npublication state, QA can repeat the commands, and production readers receive\nOnline content only.\n"
         },
         {
+          "code": "platform.module-registry-journey",
+          "title": "Module Registry Journey",
+          "route": "/docs/framework/platform-module-registry-journey",
+          "section": "capability-registry-and-lifecycle-management",
+          "sectionTitle": "Capability Registry and Lifecycle Management",
+          "sectionOrder": 40,
+          "group": "capability-registry-and-lifecycle-management",
+          "groupTitle": "Capability Registry and Lifecycle Management",
+          "groupOrder": 40,
+          "order": 20,
+          "parentId": "capability-registry-and-lifecycle-management",
+          "hierarchyPath": [
+            "Capability Registry and Lifecycle Management",
+            "Module Registry Journey"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "operations",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "How installed modules become registered, activated, dependency-checked, and visible to Axis as governed business capabilities.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "platform.module-registry",
+            "applications.axis-setup-error-contracts",
+            "framework.module-loading-service-precedence"
+          ],
+          "searchKeywords": [
+            "module-registry",
+            "backoffice",
+            "activation",
+            "dependency",
+            "axis"
+          ],
+          "topicKeywords": [
+            "Capability Registry and Lifecycle Management",
+            "Module Registry Foundations",
+            "Module Registry Journey"
+          ],
+          "searchText": "Module Registry Journey How installed modules become registered, activated, dependency-checked, and visible to Axis as governed business capabilities. # Module Registry Journey\n\nThe Module Registry journey explains how Nodics turns installed modules into\nvisible, governed business capabilities. Axis can show a module, dependency,\nactivation, and setup state, but BackOffice owns the registry contract and the\nbackend modules own their schemas, data, routes, and services. For beginners,\nthink of the registry as the map that tells Axis what exists, what is active,\nwhat is blocked, and which action is allowed next.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| BackOffice module package | `../nodics.platform/modules/backoffice/package.json` |\n| Capability registry service | `../nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js` |\n| Registry store | `../nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryStoreService.js` |\n| Discovery service | `../nodics.platform/modules/backoffice/src/service/discovery/defaultBackofficeDiscoveryService.js` |\n| Registry route tests | `../nodics.platform/modules/backoffice/test/registryRoute.test.js` |\n\n## Lifecycle\n\n```mermaid\nflowchart LR\n  Installed[\"Installed package\"] --> Discovered[\"Discovered module\"]\n  Discovered --> Registered[\"Registered capability\"]\n  Registered --> Activated[\"Activated runtime\"]\n  Activated --> Visible[\"Axis visible\"]\n  Registered --> Blocked[\"Dependency blocked\"]\n  Blocked --> Activated\n```\n\nThe business problem is confidence: an administrator needs to know whether a\ncapability is ready before asking a team to use it. Developers need a reliable\nplace to expose module metadata without giving Axis direct ownership of source\ncontracts. Operators need dependency evidence, activation state, and recovery\nactions before production use.\n\n## Registry contract\n\nEach capability should expose stable identity, display metadata, owner module,\ndependency requirements, runtime role, route availability, allowed actions, and\nhealth state. BackOffice normalizes this into Axis-friendly data. Axis should\nrender sections, cards, badges, disabled actions, and setup messages from that\ncontract instead of hardcoding module rules.\n\n```js\nconst capability = {\n  code: 'cms',\n  ownerModule: 'nodics.wcms',\n  status: 'ACTIVE',\n  requiredModules: ['media', 'process'],\n  runtimeRole: 'STAGED',\n  actions: ['initialize', 'publish', 'refresh']\n};\n```\n\n## Dependency and activation rules\n\nRequired modules represent local runtime dependencies. Remote runtime needs,\nsuch as Online publication targets, should be represented separately as target\navailability or integration readiness. This distinction matters in production\nbecause a module can be locally active while its publication target is\nunavailable. Business users should see the impact. Developers should see the\nowner and missing dependency. Operators should see a retry or repair path.\n\n## Customization and extension guidance\n\nDevelopers can add new capability providers, discovery adapters, registry\nfields, and readiness checks. Keep activation logic in BackOffice or the owning\nmodule service. Customer projects can add metadata for their modules without\nchanging Axis navigation code. AI tools should update registry tests whenever\nthey add a new capability status, dependency type, or user action.\n\n## Implementation handoff\n\nWhen a new module is added, the handoff should include package metadata,\nruntime role, visible capability name, dependency list, health signal, setup\nactions, and documentation page references. That makes the registry useful to\nbusiness users who need a clear journey, developers who need extension points,\noperators who need production readiness, and QA owners who need repeatable\nacceptance checks.\n\n## Common mistakes\n\n- Treating frontend menu entries as module activation evidence.\n- Mixing local required modules with remote API target availability.\n- Hiding dependency failures behind a generic setup error.\n- Adding registry fields without route and service tests.\n- Letting a business action appear enabled before required capability checks\n  pass.\n\n## Verification\n\nRun BackOffice registry, discovery, capability, and availability tests. Then\nstart a fresh schema, initialize module data, open Axis, and confirm the\nregistry view shows active, blocked, and unavailable states with safe messages.\nProduction readiness requires business clarity, developer source traceability,\noperator evidence, and repeatable QA checks.\n"
+        },
+        {
+          "code": "commerce.search-guide",
+          "title": "Commerce Search Guide",
+          "route": "/docs/framework/commerce-search-guide",
+          "section": "search-and-discovery",
+          "sectionTitle": "Search and Discovery",
+          "sectionOrder": 250,
+          "group": "search-and-discovery",
+          "groupTitle": "Search and Discovery",
+          "groupOrder": 250,
+          "order": 20,
+          "parentId": "search-and-discovery",
+          "hierarchyPath": [
+            "Search and Discovery",
+            "Commerce Search Guide"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "operations",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "How commerce search projections, ranking rules, index freshness, rebuild evidence, and storefront discovery are governed.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "discovery.search-indexing",
+            "catalog.product-discovery-management",
+            "commerce.data-authoring-fulfillment"
+          ],
+          "searchKeywords": [
+            "commerce-search",
+            "projection",
+            "ranking",
+            "index",
+            "agora"
+          ],
+          "topicKeywords": [
+            "Search and Discovery",
+            "Search Providers and Indexing",
+            "Commerce Search Guide"
+          ],
+          "searchText": "Commerce Search Guide How commerce search projections, ranking rules, index freshness, rebuild evidence, and storefront discovery are governed. # Commerce Search Guide\n\nCommerce Search turns product, category, price, inventory, and merchandising\nsignals into searchable storefront projections. The search index is not the\nsource of truth. Product, price, inventory, CMS, and Media modules own their\nrecords; Commerce Search owns projection rules, ranking behavior, and query\nreadiness. For beginners, search is the fast customer-facing view that must be\nrebuilt whenever the authoritative data changes.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Commerce Search group | `../nodics.commerce/modules/baseCommerce/modules/commerceSearch/package.json` |\n| Commerce Search core | `../nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/package.json` |\n| Product catalogue | `../nodics.commerce/modules/baseCommerce/modules/product/package.json` |\n| Discovery docs | `docs/pages/nodics.discovery/search-indexing-discovery.md` |\n| Agora search data | `../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/commerceSearch/` |\n\n## Projection flow\n\n```mermaid\nflowchart LR\n  Product[\"Product data\"] --> Projector[\"Commerce Search projection\"]\n  Price[\"Price data\"] --> Projector\n  Inventory[\"Inventory data\"] --> Projector\n  Content[\"Content and media\"] --> Projector\n  Projector --> Index[\"Search index\"]\n  Index --> Storefront[\"Agora storefront\"]\n```\n\nThe business problem is findability. A product that exists but cannot be\nfound is not commercially ready. Business users need ranking, filtering, and\navailability to match merchandising intent. Developers need deterministic\nprojection rules. Operators need freshness, index health, and rebuild evidence\nbefore production acceptance.\n\n## Ranking and rules\n\nSearch rules can express boosts, pins, exclusions, locale behavior, market\nscope, and merchandising priority. These rules should be data-driven and\ntested, but they should not replace product authority. If a product is\ninactive, unpublished, out of market, or not approved, search should not make\nit appear available.\n\n```js\nmodule.exports = {\n  apparelBoosts: {\n    code: 'apparelBoosts',\n    storeCode: 'agoraApparel',\n    locale: 'en',\n    scopeType: 'category',\n    priority: 100,\n    boost: 2\n  }\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can customize analyzers, projection services, ranking rules,\nfacets, index providers, and rebuild jobs. Business users should manage\nmerchandising rules through Axis when available. Operators should have rebuild\nactions, last projection time, failed item counts, and safe retry behavior.\nAI tools must inspect product, price, inventory, and search data together\nbefore adding records.\n\n## Implementation handoff\n\nEach search change should name the source schemas, projection service, index\nprovider, ranking rules, rebuild trigger, and browser search scenario. This\ngives business users a merchandising journey, developers a controlled\nextension point, operators production freshness evidence, and QA owners a\nrepeatable way to prove that imported products become discoverable only when\ntheir authoritative records allow it.\n\n## Evidence checklist\n\nThe release package should show which products entered the projection, which\nones were skipped, and why. The index run should record tenant, catalog\nversion, locale, market, source checksum, item count, failure count, and last\nsuccessful completion. In production, operators should be able to compare the\nsearch document with the product record, price row, inventory balance, and\npublished media reference before deciding whether to rebuild or repair data.\n\n## Common mistakes\n\n- Treating search documents as product authority.\n- Forgetting to rebuild projections after import or publication.\n- Showing inactive products because index filters are incomplete.\n- Adding ranking rules without locale or market scope.\n- Hiding indexing failures from operators.\n\n## Verification\n\nImport product, price, inventory, media, and commerce search data into a fresh\nschema. Run projection jobs, inspect indexed fields, open Agora in the browser,\nsearch for the product, and verify filters, ranking, price, image, and\navailability. Production readiness requires business-approved merchandising,\ndeveloper test coverage, operator rebuild evidence, and QA storefront proof.\n"
+        },
+        {
+          "code": "localization.runtime-authoring",
+          "title": "Localization Runtime Authoring",
+          "route": "/docs/framework/localization-runtime-authoring",
+          "section": "localization-and-internationalization",
+          "sectionTitle": "Localization and Internationalization",
+          "sectionOrder": 170,
+          "group": "localization-and-internationalization",
+          "groupTitle": "Localization and Internationalization",
+          "groupOrder": 170,
+          "order": 10,
+          "parentId": "localization-and-internationalization",
+          "hierarchyPath": [
+            "Localization and Internationalization",
+            "Localization Runtime Authoring"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "how-to",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "How localized records, fallback behavior, content and product translation, import data, and runtime API boundaries work.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "localization.internationalization",
+            "wcms.cms-source-map-authoring-contract",
+            "commerce.data-authoring-fulfillment"
+          ],
+          "searchKeywords": [
+            "localization",
+            "fallback",
+            "locale",
+            "translation",
+            "authoring"
+          ],
+          "topicKeywords": [
+            "Localization and Internationalization",
+            "Localization Foundations",
+            "Localization Runtime Authoring"
+          ],
+          "searchText": "Localization Runtime Authoring How localized records, fallback behavior, content and product translation, import data, and runtime API boundaries work. # Localization Runtime Authoring\n\nLocalization lets Nodics present content, commerce, messages, and backoffice\nlabels in the right language and regional format without duplicating business\nobjects. For beginners, the base record identifies the thing and localization\nrecords describe how that thing should be displayed for a locale. Axis can\noffer authoring journeys, but localization schemas and services own fallback,\nvalidation, and runtime resolution.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Localization core | `../nodics.localization/modules/localizationCore/package.json` |\n| Localization module docs | `docs/pages/nodics.localization/localization-internationalization.md` |\n| CMS localization | `../nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js` |\n| Product localization example | `../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/` |\n| Import runtime | `../nodics.foundation/modules/nData/nImport/import/src/service/import/defaultImportService.js` |\n\n## Resolution model\n\n```mermaid\nflowchart TD\n  Request[\"Request locale\"] --> Exact[\"Exact localization\"]\n  Exact --> Response[\"Localized response\"]\n  Request --> Fallback[\"Fallback locale\"]\n  Fallback --> Response\n  Request --> Base[\"Base record\"]\n  Base --> Response\n```\n\nThe business problem is consistent customer communication. A missing locale\ncan break a product page, legal message, email, or content route. Developers\nneed a repeatable record shape. Operators need evidence for fallback behavior\nin production so missing translations do not appear as broken pages.\n\n## Authoring contract\n\nLocalization records should include the owner object code, locale, translated\nfields, publication or lifecycle state where relevant, and stable query keys.\nThey should not copy unrelated base data or contain runtime logic.\n\n```js\nmodule.exports = {\n  linenDressEn: {\n    code: 'linenDress_en',\n    productCode: 'linenDress',\n    locale: 'en',\n    name: 'Linen Dress',\n    description: 'Lightweight woven dress'\n  }\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add locale providers, fallback strategies, field validators,\ntranslation workflow hooks, and locale-specific formatting. Business users\nshould see missing translation tasks and approval state in Axis. AI tools can\nassist translation, but they must preserve stable keys, source locale, review\nstate, and terminology rules. Operators should track fallback rates and\nmissing locale counts.\n\n## Implementation handoff\n\nEach localized capability should document its base schema, localization schema,\nfallback chain, supported locales, reviewed fields, import header, and browser\nproof. Business users can then decide translation completeness, developers can\nextend fields safely, operators can watch production fallback usage, and QA\nowners can verify exact locale, fallback locale, and missing locale behavior.\n\n## Evidence checklist\n\nEvery localization change should carry source locale, target locale, field\nlist, reviewer, fallback decision, and the consuming route or API. Production\noperators should know whether a fallback was expected or caused by missing\ndata. Developers should include tests for partial translation because mixed\ncontent is common during rollout. Business users should be able to see which\nterms are ready for publication and which still need review.\n\n## Common mistakes\n\n- Duplicating entire products or pages per locale instead of localizing fields.\n- Publishing translated content before business review.\n- Forgetting fallback rules for emails, pages, and product cards.\n- Mixing locale data with currency, pricing, or tax authority.\n- Hiding missing translation counts from production monitoring.\n\n## Verification\n\nImport base and localized records into a fresh schema. Request exact locale,\nfallback locale, and unsupported locale responses. Open Axis, Nexus, or Agora\nin the browser and verify labels, pages, products, and empty states. Production\nreadiness requires developer tests, business review evidence, operator\nfallback metrics, and QA proof for each supported locale.\n"
+        },
+        {
+          "code": "commerce.payment-provider-boundaries",
+          "title": "Payment Core and Provider Boundaries",
+          "route": "/docs/framework/commerce-payment-provider-boundaries",
+          "section": "payment-management",
+          "sectionTitle": "Payment Management",
+          "sectionOrder": 300,
+          "group": "payment-management",
+          "groupTitle": "Payment Management",
+          "groupOrder": 300,
+          "order": 20,
+          "parentId": "payment-management",
+          "hierarchyPath": [
+            "Payment Management",
+            "Payment Core and Provider Boundaries"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "contract",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "How Payment Core, payment methods, gateway providers, safe payloads, reconciliation, refunds, and provider extension boundaries work.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "commerce.payment-fulfillment",
+            "commerce.cart-order",
+            "commerce.returns-refunds"
+          ],
+          "searchKeywords": [
+            "payment",
+            "provider",
+            "method",
+            "reconciliation",
+            "refund"
+          ],
+          "topicKeywords": [
+            "Payment Management",
+            "Payment Operations",
+            "Payment Core and Provider Boundaries"
+          ],
+          "searchText": "Payment Core and Provider Boundaries How Payment Core, payment methods, gateway providers, safe payloads, reconciliation, refunds, and provider extension boundaries work. # Payment Core and Provider Boundaries\n\nPayment in Nodics separates business payment decisions from provider-specific\nexecution. Payment Core owns method selection, authorization intent,\ncapture/refund lifecycle, reconciliation, and safe customer payloads. Provider\nmodules such as Stripe, PayPal, Visa, CyberSource, wallets, cards, bank\ntransfer, and cash on delivery implement integration details. For beginners,\nPayment Core decides what should happen; providers perform it with an external\nnetwork or offline method.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Payment group | `../nodics.commerce/modules/payment/package.json` |\n| Payment Core | `../nodics.commerce/modules/payment/modules/paymentCore/package.json` |\n| Payment methods | `../nodics.commerce/modules/payment/modules/paymentMethods/package.json` |\n| Payment providers | `../nodics.commerce/modules/payment/modules/paymentProviders/package.json` |\n| Stripe provider | `../nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/package.json` |\n| Payment operations docs | `docs/pages/nodics.commerce/payment-fulfillment.md` |\n\n## Boundary model\n\n```mermaid\nflowchart LR\n  Checkout[\"Checkout\"] --> Core[\"Payment Core\"]\n  Core --> Method[\"Payment method\"]\n  Core --> Provider[\"Payment provider\"]\n  Provider --> Gateway[\"External gateway\"]\n  Gateway --> Core\n  Core --> Order[\"Order lifecycle\"]\n```\n\nThe business problem is secure payment confidence. Business users need to know\nwhich payment methods are available and whether money movement is complete.\nDevelopers need provider contracts that avoid leaking gateway details into\ncheckout. Operators need reconciliation, retry, and failure evidence for\nproduction.\n\n## Safe payload contract\n\nPayment responses shown to customers should contain status, amount, currency,\nmethod label, recoverable action, and safe reference. They should not expose\nprovider secrets, raw gateway payloads, card data, credentials, or internal\nstack traces.\n\n```js\nconst paymentResult = {\n  status: 'AUTHORIZED',\n  amount: 12900,\n  currency: 'USD',\n  methodCode: 'card',\n  providerReference: 'safe-reference'\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add methods, providers, adapters, reconciliation jobs, refund\nhandlers, and risk checks. Keep provider secrets in secure configuration and\nnever in data files or docs examples. Business users should configure\navailability and policy through Axis where enabled. Operators should see\nauthorization, capture, refund, settlement, retry, and reconciliation evidence.\n\n## Implementation handoff\n\nEvery payment provider handoff should identify supported operations, safe\npayload fields, retryability, idempotency keys, reconciliation schedule,\nconfiguration requirements, and unavailable-state messaging. That gives\nbusiness users confidence about payment availability, developers a provider\ncontract, operators production recovery evidence, and QA owners a way to test\nsuccess, decline, timeout, refund, and reconciliation cases.\n\n## Evidence checklist\n\nPayment evidence should include order reference, payment intent, method,\nprovider, amount, currency, lifecycle state, safe external reference,\ncorrelation id, and reconciliation result. Sensitive values must remain\noutside logs, release data, and browser payloads. Operators should be able to\ndecide whether to retry, cancel, refund, or escalate without reading raw\ngateway responses in the main business UI.\n\nProduction readiness also needs negative-path evidence. A declined card,\nprovider timeout, duplicate callback, partial capture, and failed refund should\nall return controlled states that the business can understand and developers\ncan trace.\n\n## Common mistakes\n\n- Letting provider-specific payloads leak into checkout responses.\n- Treating a payment method as a gateway provider.\n- Storing credentials in release data.\n- Completing fulfillment before payment state allows it.\n- Hiding failed reconciliation from operators.\n\n## Verification\n\nRun payment method and provider contract tests. In a fresh schema, place a\ncontrolled order, authorize payment, capture or mark offline payment, issue a\ntest refund, and inspect reconciliation evidence. Production readiness\nrequires business-safe status, developer provider tests, operator audit\nrecords, and QA proof that failures do not expose sensitive data.\n"
+        },
+        {
+          "code": "commerce.customer-list-profile-boundary",
+          "title": "Customer List and Profile Commerce Boundary",
+          "route": "/docs/framework/commerce-customer-list-profile-boundary",
+          "section": "user-enterprise-and-tenant-management",
+          "sectionTitle": "User, Enterprise, and Tenant Management",
+          "sectionOrder": 130,
+          "group": "user-enterprise-and-tenant-management",
+          "groupTitle": "User, Enterprise, and Tenant Management",
+          "groupOrder": 130,
+          "order": 10,
+          "parentId": "user-enterprise-and-tenant-management",
+          "hierarchyPath": [
+            "User, Enterprise, and Tenant Management",
+            "Customer List and Profile Commerce Boundary"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "contract",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "security.identity-access-governance",
+            "commerce.cart-order",
+            "commerce.payment-provider-boundaries"
+          ],
+          "searchKeywords": [
+            "customer-list",
+            "profile",
+            "commerce-boundary",
+            "eligibility",
+            "identity"
+          ],
+          "topicKeywords": [
+            "User, Enterprise, and Tenant Management",
+            "Customer Data and Identity",
+            "Customer List and Profile Commerce Boundary"
+          ],
+          "searchText": "Customer List and Profile Commerce Boundary Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile. # Customer List and Profile Commerce Boundary\n\nCustomer List is a Commerce capability for grouping customers in commercial\ncontexts such as eligibility, promotions, account buying, or targeted\noperations. Profile remains the authority for person, address, authentication,\npermission, and organization identity. For beginners, Profile answers \"who is\nthis customer?\" and Customer List answers \"which commercial group is this\ncustomer part of for this commerce operation?\"\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Customer List module | `../nodics.commerce/modules/checkout/modules/customerList/package.json` |\n| Checkout module | `../nodics.commerce/modules/checkout/package.json` |\n| Profile module | `../nodics.platform/modules/profile/package.json` |\n| Security docs | `docs/pages/nodics.platform/security-identity-access.md` |\n| Commerce operations | `docs/pages/nodics.commerce/cart-order.md` |\n\n## Ownership model\n\n```mermaid\nflowchart LR\n  Profile[\"Profile identity\"] --> CustomerList[\"Commerce customer list\"]\n  CustomerList --> Promotion[\"Promotion eligibility\"]\n  CustomerList --> Checkout[\"Checkout decision\"]\n  Profile --> Auth[\"Authentication and permissions\"]\n```\n\nThe business problem is targeted commerce without identity duplication.\nBusiness users need groups like VIP customers, wholesale buyers, or launch\naudiences. Developers need a boundary that prevents Commerce from becoming a\nparallel identity system. Operators need to trace eligibility decisions in\nproduction without exposing personal data unnecessarily.\n\n## Contract\n\nCustomer List records should reference stable profile or organization codes,\nlist codes, lifecycle state, source reason, and validity dates where needed.\nThey should not copy passwords, credentials, full identity payloads, or\npermission ownership.\n\n```js\nmodule.exports = {\n  vipCustomerMembership: {\n    code: 'vipCustomerMembership',\n    listCode: 'vipCustomers',\n    customerCode: 'customer001',\n    active: true\n  }\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add eligibility services, import mappers, segmentation rules,\npromotion integrations, and audit views. Business users should manage lists\nthrough Axis when available. AI tools should inspect Profile and Commerce\nschemas before adding references. Operators should verify that commercial\ngrouping works without broad identity export.\n\n## Implementation handoff\n\nEach customer-list customization should name the Profile reference key,\nCommerce list schema, eligibility service, promotion or checkout consumer,\npermission rule, retention rule, and audit evidence. Business users then\nunderstand the journey, developers preserve the identity boundary, operators\ncan investigate production eligibility, and QA owners can prove that removing\na customer from a list changes commerce behavior without corrupting Profile.\n\n## Evidence checklist\n\nMembership evidence should include list code, referenced customer or\norganization code, source reason, actor, validity window, lifecycle state, and\nlast eligibility decision. Do not expose more Profile detail than the business\njourney requires. Operators should be able to prove why a customer received or\ndid not receive a commercial treatment, while developers keep identity,\nauthentication, address, and permission fields under Profile authority.\n\nThis evidence also protects production support from over-collecting identity\ndata. The support answer should be about eligibility and commerce treatment,\nnot a full customer profile export.\n\nProduction support should also prove expiry and removal. When a customer loses\nmembership, the next checkout or promotion decision must respect that change\nwithout deleting the underlying Profile record.\n\n## Common mistakes\n\n- Copying Profile authority into Commerce records.\n- Using email address as the only customer list key.\n- Applying promotions without list lifecycle checks.\n- Exposing list membership without permission checks.\n- Forgetting removal, expiry, and audit behavior.\n\n## Verification\n\nImport profile and customer list data into a fresh schema. Validate list\nmembership, checkout eligibility, promotion behavior, removal behavior, and\npermission-filtered Axis visibility. Production readiness requires business\napproval, developer boundary tests, operator audit evidence, and QA proof that\nProfile remains the identity authority.\n"
+        },
+        {
+          "code": "foundation.nms-runtime-monitoring",
+          "title": "NMS Runtime Monitoring",
+          "route": "/docs/framework/foundation-nms-runtime-monitoring",
+          "section": "operations-monitoring-and-recovery",
+          "sectionTitle": "Operations, Monitoring, and Recovery",
+          "sectionOrder": 420,
+          "group": "operations-monitoring-and-recovery",
+          "groupTitle": "Operations, Monitoring, and Recovery",
+          "groupOrder": 420,
+          "order": 70,
+          "parentId": "operations-monitoring-and-recovery",
+          "hierarchyPath": [
+            "Operations, Monitoring, and Recovery",
+            "NMS Runtime Monitoring"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "operations",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "How NMS captures node health, runtime roles, responsibility, capability state, degraded conditions, and operator recovery evidence.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "framework.devops-runtime",
+            "framework.local-verification-checklist",
+            "process.runtime-lifecycle"
+          ],
+          "searchKeywords": [
+            "nms",
+            "monitoring",
+            "node",
+            "runtime-health",
+            "operator"
+          ],
+          "topicKeywords": [
+            "Operations, Monitoring, and Recovery",
+            "Runtime Health and Support",
+            "NMS Runtime Monitoring"
+          ],
+          "searchText": "NMS Runtime Monitoring How NMS captures node health, runtime roles, responsibility, capability state, degraded conditions, and operator recovery evidence. # NMS Runtime Monitoring\n\nNMS runtime monitoring gives Nodics a source-backed view of nodes, runtime\nstate, health checks, topology, and recovery evidence. Axis may display this\ninformation, but the monitoring capability owns the data collection and\nstatus contract. For beginners, NMS answers three questions: which nodes are\nrunning, what are they responsible for, and what needs operator attention.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| NMS module | `../nodics.foundation/modules/nNms/package.json` |\n| Runtime configuration | `docs/pages/nodics.foundation/runtime-configuration.md` |\n| DevOps runtime | `docs/pages/framework/devops-runtime.md` |\n| Local verification | `docs/pages/framework/local-verification-checklist.md` |\n| Process runtime evidence | `docs/pages/nodics.process/runtime-lifecycle.md` |\n\n## Monitoring model\n\n```mermaid\nflowchart TD\n  Node[\"Runtime node\"] --> Heartbeat[\"Heartbeat\"]\n  Node --> Capability[\"Capability status\"]\n  Node --> Responsibility[\"Execution responsibility\"]\n  Heartbeat --> Nms[\"NMS status\"]\n  Capability --> Nms\n  Responsibility --> Nms\n  Nms --> Axis[\"Axis operations view\"]\n```\n\nThe business problem is operational trust. A business administrator does not\nneed raw process logs, but they need to know whether setup, imports,\npublishing, scheduled jobs, and storefront delivery are healthy. Developers\nneed a contract for contributing health checks. Operators need correlation\nids, node ids, runtime roles, last heartbeat, dependency state, and recovery\nactions for production incidents.\n\n## Health contract\n\n| Signal | Meaning | Consumer |\n| --- | --- | --- |\n| Node identity | Which runtime is reporting. | Operator and registry. |\n| Runtime role | Commerce, CMS Staged, CMS Online, Process, or other role. | Axis and support. |\n| Heartbeat | Last known liveness. | Monitoring dashboard. |\n| Capability health | Whether module checks pass. | Business setup pages. |\n| Responsibility | Which node owns scheduled work. | Process operations. |\n| Recovery hint | Suggested safe action. | Operator runbook. |\n\n## Customization and extension guidance\n\nDevelopers can add health contributors for new modules, dependency checks,\nqueue checks, provider checks, and publication target checks. Health checks\nshould be bounded and safe to call repeatedly. Business users should see\nsimple statuses such as online, degraded, blocked, or needs attention.\nOperators should have detail panels for technical evidence.\n\n## Implementation handoff\n\nA monitoring contribution should declare what it checks, how often it can be\ncalled, which runtime role owns it, what status values mean, and what recovery\naction is safe. The handoff should also identify the business journey affected\nby the signal. A failed CMS Online check, for example, affects public content\ndelivery differently from a failed Process node that only affects scheduled\nautomation.\n\nProduction readiness should include both healthy and degraded snapshots. A\nnode that is alive but missing a required dependency should not be shown as\nfully online. A node that lost scheduled-job responsibility should surface the\nhandoff state so operators know whether another node has accepted the work.\nMetrics should include enough history to distinguish a startup delay from a\nreal outage.\n\n## Common mistakes\n\n- Treating a running process as proof that every capability is healthy.\n- Showing raw dependency exceptions to business users.\n- Adding expensive health checks that harm production traffic.\n- Hiding node responsibility for scheduled jobs.\n- Failing to carry correlation ids through setup or publication errors.\n\n## Verification\n\nStart a fresh local topology, inspect NMS status for each runtime, stop or\nbreak one dependency, and confirm Axis shows a safe degraded state with\noperator evidence. Run module health tests and browser checks for setup pages\nthat consume monitoring state before production release.\n"
+        },
+        {
+          "code": "foundation.service-runtime-overrides",
+          "title": "Service Runtime and Override Precedence",
+          "route": "/docs/framework/foundation-service-runtime-overrides",
+          "section": "pipeline-and-business-logic-orchestration",
+          "sectionTitle": "Pipeline and Business Logic Orchestration",
+          "sectionOrder": 380,
+          "group": "pipeline-and-business-logic-orchestration",
+          "groupTitle": "Pipeline and Business Logic Orchestration",
+          "groupOrder": 380,
+          "order": 20,
+          "parentId": "pipeline-and-business-logic-orchestration",
+          "hierarchyPath": [
+            "Pipeline and Business Logic Orchestration",
+            "Service Runtime and Override Precedence"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "contract",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "How generated services, virtual services, module graph resolution, customer overrides, fallback behavior, and extension safety work.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "framework.module-loading-service-precedence",
+            "framework.backend-extension-patterns",
+            "runtime.governed-change"
+          ],
+          "searchKeywords": [
+            "nService",
+            "vService",
+            "override",
+            "service-runtime",
+            "module-graph"
+          ],
+          "topicKeywords": [
+            "Pipeline and Business Logic Orchestration",
+            "Service Runtime and Overrides",
+            "Service Runtime and Override Precedence"
+          ],
+          "searchText": "Service Runtime and Override Precedence How generated services, virtual services, module graph resolution, customer overrides, fallback behavior, and extension safety work. # Service Runtime and Override Precedence\n\nNodics services provide the runtime behavior behind schemas, routers,\npipelines, imports, publication, and business operations. Service override\nprecedence is what allows a customer project or module to customize behavior\nwithout editing framework source. For beginners, the simple idea is that a\nservice name resolves to the most specific active implementation allowed by\nthe module graph.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Service module | `../nodics.foundation/modules/nService/package.json` |\n| Virtual service module | `../nodics.foundation/modules/nService/vService/package.json` |\n| Runtime configuration docs | `docs/pages/nodics.foundation/runtime-configuration.md` |\n| Extension patterns | `docs/pages/framework/module-loading-and-service-precedence.md` |\n| Developer customization | `docs/pages/framework/backend-extension-patterns.md` |\n\n## Resolution flow\n\n```mermaid\nflowchart TD\n  Request[\"Service request\"] --> Graph[\"Active module graph\"]\n  Graph --> Customer[\"Customer override\"]\n  Customer --> Module[\"Module implementation\"]\n  Module --> Core[\"Framework default\"]\n  Core --> Missing[\"Unavailable service error\"]\n  Customer --> Selected[\"Selected service\"]\n  Module --> Selected\n  Core --> Selected\n```\n\nThe business problem is controlled customization. Customers need project-level\nbehavior, but the platform must remain upgradeable. Developers need a clear\nrule for where overrides live. Operators need to know which implementation is\nrunning in production when a behavior differs from the default.\n\n## Precedence contract\n\nService names should remain stable. Override modules can provide an\nimplementation with the same service identity, but they should not change the\npublic contract unless the owning capability documents a new versioned\ncontract. Virtual services can stand in for generated or environment-provided\nimplementations, but they must still expose predictable init, post-init, and\noperation behavior.\n\n```js\nmodule.exports = {\n  code: 'DefaultPriceCalculationService',\n  ownerModule: 'customer.commerce',\n  overrides: 'DefaultPriceCalculationService',\n  contract: 'commerce.priceCalculation/v1'\n};\n```\n\n## Operational evidence\n\n| Question | Evidence |\n| --- | --- |\n| Which service was selected? | Service registry entry and module graph order. |\n| Why was it selected? | Override relationship and active module state. |\n| Is it safe? | Contract tests, init result, and health status. |\n| Can it be rolled back? | Disable override module or restore previous release. |\n\n## Customization and extension guidance\n\nDevelopers should extend services in the narrowest owning module. Business\nlogic belongs in services, handlers, policies, or workflows, not in data\nrecords. Customer projects should add tests showing the default behavior, the\noverride behavior, and the fallback behavior. AI tools should inspect the\nmodule graph before editing a service so they do not create duplicate\nauthority.\n\n## Implementation handoff\n\nA service customization is ready only when the developer can identify the\ndefault service, the overriding module, the active runtime graph, the contract\nversion, and the rollback path. Business users should see the changed behavior\nas a normal capability journey. Operators should see selected implementation\nmetadata in production logs or diagnostics. QA should run both default and\noverride paths so future upgrades do not silently change precedence.\n\n## Common mistakes\n\n- Changing a default service when a customer override is enough.\n- Creating a new service name when an override contract already exists.\n- Hiding selected implementation details from operators.\n- Putting business decisions inside import data files.\n- Forgetting init and post-init behavior for virtual services.\n\n## Verification\n\nRun service and module-loading tests, then start a fresh runtime and inspect\nthe selected service implementation for the customized capability. A production\ncheck should show the business behavior, developer contract evidence, operator\nselected-service metadata, and QA regression proof for fallback behavior.\n"
+        },
+        {
+          "code": "foundation.cache-provider-runbooks",
+          "title": "Cache Provider Runbooks",
+          "route": "/docs/framework/foundation-cache-provider-runbooks",
+          "section": "caching-and-runtime-state-management",
+          "sectionTitle": "Caching and Runtime State Management",
+          "sectionOrder": 200,
+          "group": "caching-and-runtime-state-management",
+          "groupTitle": "Caching and Runtime State Management",
+          "groupOrder": 200,
+          "order": 10,
+          "parentId": "caching-and-runtime-state-management",
+          "hierarchyPath": [
+            "Caching and Runtime State Management",
+            "Cache Provider Runbooks"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "operations",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "Redis, Hazelcast, node cache, key strategy, invalidation, provider health, fallback behavior, and production cache recovery guidance.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "cache.runtime-state-management",
+            "runtime.governed-change",
+            "wcms.publishing-lifecycle"
+          ],
+          "searchKeywords": [
+            "cache",
+            "redis",
+            "hazelcast",
+            "node-cache",
+            "invalidation"
+          ],
+          "topicKeywords": [
+            "Caching and Runtime State Management",
+            "Cache Foundations",
+            "Cache Provider Runbooks"
+          ],
+          "searchText": "Cache Provider Runbooks Redis, Hazelcast, node cache, key strategy, invalidation, provider health, fallback behavior, and production cache recovery guidance. # Cache Provider Runbooks\n\nCaching gives Nodics speed without changing the source of truth. Redis,\nHazelcast, node-local cache, and virtual cache behavior are provider choices\nbehind a common contract. For beginners, the cache is a temporary copy used to\nserve reads faster. The database, publication manifest, or owning service\nremains the authority. A cache miss should be recoverable; a cache hit should\nnever make stale business data look correct after a governed change.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Cache group | `../nodics.foundation/modules/nCache/package.json` |\n| Core cache contract | `../nodics.foundation/modules/nCache/cache/package.json` |\n| Redis provider | `../nodics.foundation/modules/nCache/redisCache/package.json` |\n| Hazelcast provider | `../nodics.foundation/modules/nCache/hazelcastCache/package.json` |\n| Node cache provider | `../nodics.foundation/modules/nCache/nodeCache/package.json` |\n| Cache overview page | `docs/pages/nodics.foundation/cache-runtime-state.md` |\n\n## Provider flow\n\n```mermaid\nflowchart LR\n  Service[\"Owning service\"] --> CacheApi[\"Cache contract\"]\n  CacheApi --> Redis[\"Redis provider\"]\n  CacheApi --> Hazelcast[\"Hazelcast provider\"]\n  CacheApi --> Node[\"Node cache\"]\n  CacheApi --> Miss[\"Source of truth\"]\n  Redis --> Response[\"Cached response\"]\n  Hazelcast --> Response\n  Node --> Response\n```\n\nThe business problem is freshness with performance. Business users expect a\npublished page, price, stock state, or permission change to become visible\nwithout confusing delays. Developers need clear key strategy and invalidation\ncontracts. Operators need provider health, eviction behavior, and recovery\ncommands for production incidents.\n\n## Configuration contract\n\n| Configuration | Purpose | Production note |\n| --- | --- | --- |\n| Provider code | Selects Redis, Hazelcast, node cache, or virtual provider. | Must match deployed infrastructure. |\n| Key prefix | Separates tenant, runtime, and schema scopes. | Prevents cross-tenant leakage. |\n| TTL | Bounds staleness. | Use capability-specific values. |\n| Invalidation event | Removes stale records after write or publication. | Must be tested with runtime change. |\n| Fallback mode | Defines behavior when cache is unavailable. | Prefer degraded reads over unsafe writes. |\n\n## Runbook\n\nWhen a cache incident happens, confirm whether the source record is correct,\nwhether the cache key maps to the expected tenant and runtime, whether the\nprovider is reachable, whether invalidation fired, and whether the consumer is\nreading the right cache layer. Do not fix stale data by editing frontend code.\nDo not clear all production caches unless the affected scope cannot be isolated.\n\nFor Redis, check connection, selected database, key prefix, expiry, and memory\npressure. For Hazelcast, check cluster membership, partition health, and\nserialization compatibility. For node-local cache, check process restarts and\nsingle-node assumptions. Each provider should return a safe degraded state\nthat business users can understand and operators can investigate.\n\n## Customization and extension guidance\n\nDevelopers can add providers, key strategies, invalidation hooks, metrics, and\nhealth checks. Business logic should remain in owning services. Cache keys\nshould be deterministic and include tenant or runtime scope when needed. Tests\nshould cover hit, miss, expiry, invalidation, provider failure, and fallback.\n\n## Common mistakes\n\n- Treating cached values as authority.\n- Using one key namespace across Staged and Online.\n- Forgetting invalidation after import, publish, or configuration change.\n- Hiding provider outages behind generic business errors.\n- Adding custom cache behavior without production observability.\n\n## Verification\n\nRun cache provider tests for Redis, Hazelcast, and node cache where available.\nIn a fresh schema, import data, warm the cache, change or publish the source\nrecord, and prove invalidation refreshes the browser or API result. Operators\nshould see provider health, key scope, hit or miss evidence, and safe fallback\nbehavior.\n"
+        },
+        {
+          "code": "foundation.database-provider-boundaries",
+          "title": "Database Provider Boundaries",
+          "route": "/docs/framework/foundation-database-provider-boundaries",
+          "section": "database-and-persistence-management",
+          "sectionTitle": "Database and Persistence Management",
+          "sectionOrder": 190,
+          "group": "database-and-persistence-management",
+          "groupTitle": "Database and Persistence Management",
+          "groupOrder": 190,
+          "order": 10,
+          "parentId": "database-and-persistence-management",
+          "hierarchyPath": [
+            "Database and Persistence Management",
+            "Database Provider Boundaries"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "contract",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "How MongoDB, virtual DB, Cassandra, Elasticsearch, schemas, query translation, indexes, migration, and provider validation are separated.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "persistence.provider-data-access-layer",
+            "foundation.cache-provider-runbooks",
+            "discovery.search-indexing"
+          ],
+          "searchKeywords": [
+            "database",
+            "mongodb",
+            "cassandra",
+            "elasticsearch",
+            "provider"
+          ],
+          "topicKeywords": [
+            "Database and Persistence Management",
+            "Database Provider Contracts",
+            "Database Provider Boundaries"
+          ],
+          "searchText": "Database Provider Boundaries How MongoDB, virtual DB, Cassandra, Elasticsearch, schemas, query translation, indexes, migration, and provider validation are separated. # Database Provider Boundaries\n\nDatabase providers let Nodics run the same schema and service contracts on\ndifferent persistence implementations. MongoDB, virtual MongoDB, Cassandra,\nElasticsearch, and virtual database modules are infrastructure choices behind\nthe owning schema services. For beginners, the database stores records, but\nthe module schema and service decide what records mean.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Database group | `../nodics.foundation/modules/nDatabase/package.json` |\n| Core database contract | `../nodics.foundation/modules/nDatabase/database/package.json` |\n| Virtual database | `../nodics.foundation/modules/nDatabase/database/vDatabase/package.json` |\n| MongoDB provider | `../nodics.foundation/modules/nDatabase/mongodb/package.json` |\n| Virtual MongoDB | `../nodics.foundation/modules/nDatabase/mongodb/vMongodb/package.json` |\n| Cassandra provider | `../nodics.foundation/modules/nDatabase/cassandradb/package.json` |\n| Elasticsearch provider | `../nodics.foundation/modules/nDatabase/elasticdb/package.json` |\n| Provider overview | `docs/pages/nodics.foundation/provider-data-access-layer.md` |\n\n## Boundary model\n\n```mermaid\nflowchart TD\n  Api[\"Route or service\"] --> Schema[\"Owning schema service\"]\n  Schema --> Adapter[\"Database adapter contract\"]\n  Adapter --> Mongo[\"MongoDB\"]\n  Adapter --> Cassandra[\"Cassandra\"]\n  Adapter --> Elastic[\"Elasticsearch\"]\n  Adapter --> Virtual[\"Virtual provider\"]\n```\n\nThe business problem is portability and reliability. A customer should be able\nto run a capability in the right infrastructure without changing product,\ncontent, payment, or profile logic. Developers need provider boundaries.\nOperators need connection, index, migration, backup, and recovery evidence for\nproduction.\n\n## Contract rules\n\nSchema definitions, validation, interceptors, and services own business\nsemantics. Providers own connection, query translation, transaction behavior,\nindex operations, pagination, and persistence-specific failure mapping. A\nprovider must not invent fields or bypass schema validation. A schema service\nmust not depend on provider-only behavior unless it declares that dependency.\n\nProvider errors should be mapped into consistent Nodics outcomes. A duplicate\nkey, missing index, connection timeout, write conflict, and search shard issue\nare different technical failures, but business users need clear messages and\noperators need enough evidence to recover production without reading provider\ninternals first.\n\n```js\nconst persistenceContext = {\n  schemaName: 'product',\n  provider: 'mongodb',\n  tenant: 'default',\n  operation: 'saveAll'\n};\n```\n\n## Provider comparison\n\n| Provider | Use | Watch point |\n| --- | --- | --- |\n| MongoDB | Primary document persistence. | Validate indexes and tenant filters. |\n| Virtual MongoDB | Development and generated behavior tests. | Do not treat as production storage. |\n| Cassandra | Large distributed persistence cases. | Model queries before data shape. |\n| Elasticsearch | Search and discovery projections. | Search index is projection, not authority. |\n| Virtual database | Contract testing and fallback stubs. | Keep capabilities clearly labelled. |\n\n## Customization and extension guidance\n\nDevelopers can add database providers, transaction wrappers, query builders,\nindex managers, and error mappers. They should add contract tests proving\ncreate, update, read, search, delete, pagination, tenant isolation, and failure\nmapping. Business users should see database impact only as capability\nreadiness or safe error messages in Axis. Operators should see connection\nhealth, migration state, index state, backup evidence, and recovery steps.\nThese signals should be available before customer traffic depends on the\nprovider.\n\n## Common mistakes\n\n- Letting provider-specific query behavior leak into business services.\n- Treating Elasticsearch projection as product or content authority.\n- Running production without tenant-index checks.\n- Hiding connection failures as generic setup issues.\n- Reusing development virtual providers as production evidence.\n\n## Verification\n\nRun database provider tests and owning module schema tests. For production,\nverify connection configuration, tenant filters, indexes, migration status,\nbackup and restore procedure, and failure mapping. A fresh-schema check should\nprove import, read, update, search projection, and rollback behavior through\nthe selected provider.\n"
+        },
+        {
+          "code": "security.otp-security-flow",
+          "title": "OTP and Security Flow",
+          "route": "/docs/framework/security-otp-security-flow",
+          "section": "security-governance-and-compliance",
+          "sectionTitle": "Security, Governance, and Compliance",
+          "sectionOrder": 140,
+          "group": "security-governance-and-compliance",
+          "groupTitle": "Security, Governance, and Compliance",
+          "groupOrder": 140,
+          "order": 20,
+          "parentId": "security-governance-and-compliance",
+          "hierarchyPath": [
+            "Security, Governance, and Compliance",
+            "OTP and Security Flow"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "operations",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "OTP generation, delivery intent, verification, expiry, retry, throttling, lockout, audit, and secure frontend message behavior.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "security.identity-access-governance",
+            "communication.overview",
+            "communication.provider-runbooks"
+          ],
+          "searchKeywords": [
+            "otp",
+            "verification",
+            "security",
+            "throttling",
+            "audit"
+          ],
+          "topicKeywords": [
+            "Security, Governance, and Compliance",
+            "Authentication and Verification",
+            "OTP and Security Flow"
+          ],
+          "searchText": "OTP and Security Flow OTP generation, delivery intent, verification, expiry, retry, throttling, lockout, audit, and secure frontend message behavior. # OTP and Security Flow\n\nOTP gives Nodics a time-bounded verification method for login, recovery,\napproval, and sensitive operations. It supports security, but it is not a\ncomplete identity system by itself. Profile and security modules own identity,\nroles, groups, and permissions. OTP owns generation, delivery intent,\nverification, expiry, retry, throttling, and audit. For beginners, an OTP is a\nshort-lived proof that a user controls a channel.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| OTP module | `../nodics.foundation/modules/nOtp/package.json` |\n| Profile module | `../nodics.platform/modules/profile/package.json` |\n| Security documentation | `docs/pages/nodics.platform/security-identity-access.md` |\n| Communication providers | `../nodics.communication/modules/smtpCommsProvider/package.json`, `../nodics.communication/modules/smsCommsProvider/package.json` |\n\n## Flow\n\n```mermaid\nsequenceDiagram\n  participant User as User\n  participant App as Axis or storefront\n  participant Otp as OTP service\n  participant Comms as Communication provider\n  participant Audit as Audit trail\n\n  User->>App: Request verification\n  App->>Otp: Create OTP challenge\n  Otp->>Comms: Send delivery intent\n  Otp->>Audit: Record challenge\n  User->>App: Submit code\n  App->>Otp: Verify code\n  Otp->>Audit: Record result\n```\n\nThe business problem is safer access without slowing every journey. Business\nusers need clear prompts and recovery paths. Developers need expiry and retry\ncontracts. Operators need throttling, audit, failed delivery, and abuse\nevidence in production.\n\n## Policy contract\n\n| Policy | Purpose |\n| --- | --- |\n| Expiry window | Limits how long a code is valid. |\n| Retry limit | Prevents guessing and noisy resends. |\n| Channel policy | Selects email, SMS, or another verified channel. |\n| Audit event | Records challenge and verification outcome. |\n| Lockout rule | Protects high-risk operations after repeated failures. |\n\n## Configuration behavior\n\nOTP configuration should define expiry, retry limit, resend delay, channel\npriority, lockout threshold, and audit retention. Configuration changes should\nbe governed because they directly affect account security and user experience.\nBusiness users may see policy labels, developers own the enforcement service,\nand operators verify the active configuration in production diagnostics.\n\n## Customization and extension guidance\n\nDevelopers can add channel providers, templates, throttling policies, lockout\nrules, and risk checks. Business users should configure supported journeys\nthrough governed settings, not through code changes. Operators should monitor\nchallenge volume, failure rate, delivery failure, and locked accounts. Never\nstore OTP secrets in data files or documentation examples.\n\n## Implementation handoff\n\nEach OTP journey should document trigger context, recipient lookup, channel\npolicy, expiry, retry limit, lockout rule, audit event, and safe browser\nmessage. This helps business users trust the verification journey, developers\nkeep security logic centralized, operators investigate production abuse or\ndelivery problems, and QA owners test both success and failure without\nexposing secret values.\n\n## Evidence checklist\n\nOTP evidence should include challenge id, user reference, channel type,\ncreated time, expiry time, attempt count, delivery status, verification result,\nand lockout decision. It should never include the raw code. Production support\nneeds enough detail to diagnose delayed delivery, repeated failures, and abuse\npatterns while business users continue to see simple recovery instructions.\n\nHigh-risk operations should also record why OTP was required. That context\nhelps developers keep policy centralized and helps operators distinguish a\nnormal verification journey from suspicious production behavior.\n\n## Common mistakes\n\n- Treating OTP as a replacement for identity and permission checks.\n- Allowing unlimited resend or verification attempts.\n- Exposing whether an account exists through error messages.\n- Logging raw OTP codes.\n- Forgetting communication provider failure handling.\n\n## Verification\n\nRun OTP, Profile, and communication provider tests for successful verify,\nexpired code, wrong code, retry limit, resend throttling, and delivery\nfailure. In browser tests, confirm the message is business-safe and no raw code\nor sensitive account evidence appears. Production readiness requires audit,\nthrottling, developer tests, operator dashboards, and QA security evidence.\n"
+        },
+        {
+          "code": "communication.provider-runbooks",
+          "title": "Communication Provider Runbooks",
+          "route": "/docs/framework/communication-provider-runbooks",
+          "section": "communication-and-notifications",
+          "sectionTitle": "Communication and Notifications",
+          "sectionOrder": 350,
+          "group": "communication-and-notifications",
+          "groupTitle": "Communication and Notifications",
+          "groupOrder": 350,
+          "order": 20,
+          "parentId": "communication-and-notifications",
+          "hierarchyPath": [
+            "Communication and Notifications",
+            "Communication Provider Runbooks"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "operations",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "communication.overview",
+            "security.otp-security-flow",
+            "engagement.contact-submission-operations"
+          ],
+          "searchKeywords": [
+            "communication",
+            "smtp",
+            "sms",
+            "delivery",
+            "retry"
+          ],
+          "topicKeywords": [
+            "Communication and Notifications",
+            "Provider Delivery",
+            "Communication Provider Runbooks"
+          ],
+          "searchText": "Communication Provider Runbooks SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance. # Communication Provider Runbooks\n\nCommunication providers deliver messages through channels such as SMTP email\nand SMS. The provider sends or queues delivery, but business modules own the\nreason for the message: order confirmation, OTP, approval, contact response,\npublication event, or support notification. For beginners, communication is a\ndelivery lane, not the owner of business decisions.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Communication overview | `docs/pages/nodics.communication/overview.md` |\n| SMTP provider | `../nodics.communication/modules/smtpCommsProvider/package.json` |\n| SMS provider | `../nodics.communication/modules/smsCommsProvider/package.json` |\n| OTP integration | `../nodics.foundation/modules/nOtp/package.json` |\n| Engagement source | `../nodics.engagement/modules/contactSubmission/package.json` |\n\n## Delivery flow\n\n```mermaid\nflowchart LR\n  Source[\"Owning business module\"] --> Intent[\"Delivery intent\"]\n  Intent --> Template[\"Template and locale\"]\n  Template --> Provider[\"SMTP or SMS provider\"]\n  Provider --> Receipt[\"Delivery receipt\"]\n  Receipt --> Audit[\"Audit and retry evidence\"]\n```\n\nThe business problem is reliable communication. Customers and administrators\nneed clear, timely messages. Developers need provider abstractions so a module\ncan request a message without knowing gateway details. Operators need failed\ndelivery evidence, retry policy, suppression, and provider health in\nproduction.\n\n## Provider contract\n\nProviders should accept normalized recipient, template, locale, payload,\npriority, and correlation id. They should return status, provider reference,\nretryability, and failure reason. They should not own order, OTP, publication,\nor contact business state.\n\n```js\nconst deliveryIntent = {\n  channel: 'email',\n  templateCode: 'orderConfirmation',\n  locale: 'en',\n  recipientRef: 'customer001',\n  correlationId: 'order-1001'\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add providers, template renderers, delivery callbacks, retry\npolicies, suppression lists, and audit adapters. Business users should manage\ntemplate text, enablement, and consent where Axis exposes those controls.\nOperators should track queue depth, sent count, failed count, retry age, and\nprovider outage status.\n\n## Implementation handoff\n\nA communication provider handoff should include supported channel, template\ncontract, locale behavior, retryability, suppression behavior, provider health\ncheck, callback evidence, and privacy handling. Business users get predictable\nmessage journeys, developers get integration boundaries, operators get\nproduction recovery signals, and QA owners can test sent, delayed, failed,\nsuppressed, and retried messages.\n\n## Evidence checklist\n\nDelivery evidence should include message code, source module, template code,\nlocale, channel, recipient reference, provider reference, delivery state,\nretry count, suppression decision, and correlation id. Operators should be\nable to prove whether a message was blocked by policy, delayed by a provider,\nor rejected permanently. Business users should see a clear communication\nstate, not raw gateway text.\n\nThis evidence should be searchable from the originating business object. For\nexample, an order confirmation should be traceable from order to delivery\nintent, provider receipt, retry history, and final outcome.\n\nProduction support should also know whether a message was intentionally not\nsent. Consent, suppression, invalid recipient, missing template, and disabled\nprovider states are normal controlled outcomes, not always incidents.\n\n## Common mistakes\n\n- Putting business state transitions inside SMTP or SMS provider code.\n- Logging sensitive payloads or raw OTP values.\n- Retrying non-retryable failures indefinitely.\n- Sending messages without locale or consent checks.\n- Showing gateway error text directly to business users.\n\n## Verification\n\nRun provider tests with successful delivery, temporary failure, permanent\nfailure, retry, suppression, template missing, and locale missing cases. In a\nfresh schema, trigger OTP and contact messages, inspect receipts, and confirm\nAxis shows safe delivery status. Production readiness requires business\ntemplate approval, developer contract tests, operator failure dashboards, and\nQA evidence for retries.\n"
+        },
+        {
+          "code": "engagement.contact-submission-operations",
+          "title": "Contact Submission Operations",
+          "route": "/docs/framework/engagement-contact-submission-operations",
+          "section": "customer-engagement-and-feedback",
+          "sectionTitle": "Customer Engagement and Feedback",
+          "sectionOrder": 340,
+          "group": "customer-engagement-and-feedback",
+          "groupTitle": "Customer Engagement and Feedback",
+          "groupOrder": 340,
+          "order": 40,
+          "parentId": "customer-engagement-and-feedback",
+          "hierarchyPath": [
+            "Customer Engagement and Feedback",
+            "Contact Submission Operations"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "operations",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "How contact forms, submissions, validation, moderation, workflow routing, notifications, retention, audit, and recovery work.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "engagement.unified-operations",
+            "engagement.governed-automation",
+            "communication.provider-runbooks"
+          ],
+          "searchKeywords": [
+            "contact-submission",
+            "engagement",
+            "moderation",
+            "workflow",
+            "notification"
+          ],
+          "topicKeywords": [
+            "Customer Engagement and Feedback",
+            "Contact and Feedback",
+            "Contact Submission Operations"
+          ],
+          "searchText": "Contact Submission Operations How contact forms, submissions, validation, moderation, workflow routing, notifications, retention, audit, and recovery work. # Contact Submission Operations\n\nContact Submission lets public or authenticated users send business enquiries\nthat can be reviewed, moderated, routed, and answered. Engagement owns the\nsubmission lifecycle. Communication providers may send notifications, Process\nmay run workflows, and Axis may show moderation queues, but those consumers do\nnot own the submitted content. For beginners, a contact form creates a\ngoverned record that needs safety, routing, and audit.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Contact Submission module | `../nodics.engagement/modules/contactSubmission/package.json` |\n| Engagement overview | `docs/pages/nodics.engagement/unified-operations.md` |\n| Governance docs | `docs/pages/nodics.engagement/governed-automation.md` |\n| Communication providers | `docs/pages/nodics.communication/provider-runbooks.md` |\n| Nexus form data | `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/engagement/` |\n\n## Lifecycle\n\n```mermaid\nstateDiagram-v2\n  [*] --> Submitted\n  Submitted --> Moderation\n  Moderation --> Routed\n  Moderation --> Rejected\n  Routed --> Responded\n  Responded --> Closed\n```\n\nThe business problem is safe response management. Business users need to know\nwhich enquiries are new, which are waiting, and which require follow-up.\nDevelopers need form and version contracts. Operators need spam controls,\nworkflow evidence, notification status, and recovery steps for production.\n\n## Data contract\n\nForm definitions, form versions, submission fields, consent, source page,\nlocale, and routing rules should be explicit. Submission records should store\nonly necessary data and should respect privacy and retention policies.\n\n```js\nmodule.exports = {\n  nexusContactForm: {\n    code: 'nexusContactForm',\n    active: true,\n    fields: ['name', 'email', 'message'],\n    moderationRequired: true\n  }\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add field validators, moderation rules, routing adapters,\nworkflow callbacks, notification templates, and retention policies. Business\nusers should manage form configuration, queue decisions, and response status\nthrough Axis. AI tools can help with response drafts only after respecting\nprivacy and review rules.\n\n## Implementation handoff\n\nEach contact-submission change should identify the public form, versioned\nfields, validation rules, consent text, moderation queue, workflow route,\nnotification template, and retention policy. Business users see a manageable\njourney, developers keep form contracts stable, operators can recover failed\nrouting in production, and QA owners can prove unsafe submissions are blocked.\n\n## Evidence checklist\n\nSubmission evidence should include form code, version, source route, locale,\nfield validation result, consent flag, moderation status, assigned queue,\nnotification state, retention class, and correlation id. Operators should be\nable to trace a missing response from browser submission to queue assignment\nand communication receipt. Developers should avoid storing unnecessary personal\ndata just to make reporting easier.\n\nThis keeps public contact journeys useful without turning them into unmanaged\ndata collection. Business users get enough context to respond, while security\nand production support keep retention and privacy boundaries visible.\n\nProduction evidence should also show duplicate detection and abuse controls.\nThat lets operators separate genuine customer enquiries from noisy traffic\nwithout blocking the business team from responding to valid messages.\n\n## Common mistakes\n\n- Treating a frontend contact form as the authority.\n- Accepting submissions without validation, consent, or spam controls.\n- Sending notifications before moderation policy allows it.\n- Keeping personal data longer than required.\n- Hiding failed routing or notification evidence from operators.\n\n## Verification\n\nImport form definitions into a fresh schema, submit a browser form, confirm\nvalidation, moderation, routing, notification, audit, and retention behavior.\nProduction readiness requires business queue visibility, developer tests,\noperator failure evidence, and QA proof that rejected or unsafe submissions do\nnot create outbound communication.\n"
+        },
+        {
+          "code": "process.workflow-bpm-source-map",
+          "title": "Workflow and BPM Source Map",
+          "route": "/docs/framework/process-workflow-bpm-source-map",
+          "section": "process-and-workflow-automation",
+          "sectionTitle": "Process and Workflow Automation",
+          "sectionOrder": 370,
+          "group": "process-and-workflow-automation",
+          "groupTitle": "Process and Workflow Automation",
+          "groupOrder": 370,
+          "order": 20,
+          "parentId": "process-and-workflow-automation",
+          "hierarchyPath": [
+            "Process and Workflow Automation",
+            "Workflow and BPM Source Map"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "reference",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "How workflow definitions, transitions, human tasks, action adapters, callbacks, history, incidents, and operator visibility fit together.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "process.overview",
+            "process.first-workflow",
+            "process.first-human-task",
+            "process.action-adapters"
+          ],
+          "searchKeywords": [
+            "workflow",
+            "bpm",
+            "human-task",
+            "callback",
+            "process"
+          ],
+          "topicKeywords": [
+            "Process and Workflow Automation",
+            "Workflow Runtime",
+            "Workflow and BPM Source Map"
+          ],
+          "searchText": "Workflow and BPM Source Map How workflow definitions, transitions, human tasks, action adapters, callbacks, history, incidents, and operator visibility fit together. # Workflow and BPM Source Map\n\nWorkflow and BPM coordinate tasks, approvals, transitions, callbacks, and\nhistory for business processes. Process capabilities can approve publication,\nroute contact submissions, drive scheduled automation, or support operational\nrecovery. For beginners, a workflow is a governed path from one state to\nanother, with evidence about who or what moved it.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| BPM module | `../nodics.foundation/modules/nbpm/package.json` |\n| Process docs | `docs/pages/nodics.process/process-overview.md` |\n| First workflow guide | `docs/pages/nodics.process/first-workflow.md` |\n| Human task guide | `docs/pages/nodics.process/first-human-task.md` |\n| Runtime lifecycle | `docs/pages/nodics.process/runtime-lifecycle.md` |\n| Action adapters | `docs/pages/nodics.process/action-adapters.md` |\n\n## Workflow model\n\n```mermaid\nflowchart TD\n  Definition[\"Workflow definition\"] --> Instance[\"Runtime instance\"]\n  Instance --> Task[\"Task or automated action\"]\n  Task --> Transition[\"Transition\"]\n  Transition --> History[\"History and audit\"]\n  Transition --> Callback[\"Business callback\"]\n```\n\nThe business problem is governed change. Approvals, reviews, retries, and\nmanual decisions must be visible and repeatable. Developers need a clear\ndefinition and callback contract. Operators need stuck-task detection,\nincident recovery, and production audit evidence.\n\n## Contract\n\nWorkflow definitions should declare states, transitions, actors, actions,\ntimeouts, callbacks, and evidence. They should not hide business data changes\ninside transition metadata. The owning module should expose a service or\ncallback that performs the business operation after the workflow allows it.\n\n```js\nconst transition = {\n  code: 'approvePublication',\n  from: 'REVIEW_IN_PROGRESS',\n  to: 'APPROVED',\n  permission: 'cms.publication.approve',\n  callback: 'DefaultCmsPublicationWorkflowCallbackService.afterApprove'\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add process definitions, action adapters, human task forms,\ntimeout policies, callbacks, and recovery tools. Business users should see\ntasks, decisions, and comments in Axis. Operators should inspect runtime\ninstances, retries, failed callbacks, and audit history. AI tools should not\ninvent workflow transitions without checking permissions and callback owners.\n\n## Implementation handoff\n\nEach workflow handoff should document definition code, states, transitions,\nactor rules, callback service, timeout behavior, retry policy, and recovery\nqueue. Business users get a clear decision journey, developers preserve module\nownership, operators get production incident evidence, and QA owners can test\nhappy path, rejection, timeout, callback failure, and retry behavior.\n\n## Evidence checklist\n\nWorkflow evidence should include definition version, instance id, current\nstate, actor, transition, permission result, callback result, retry count,\ntimeout timestamp, and audit history. Operators should be able to identify\nwhether work is waiting for a person, a dependency, or a failed callback.\nBusiness users should see task status and decision history without needing to\nread process engine internals.\n\nThis evidence is especially important when a workflow protects publication,\nrefund, approval, or recovery actions. The user journey should remain simple,\nbut the technical record must be strong enough for production support.\n\n## Common mistakes\n\n- Putting business mutations in workflow metadata instead of owner services.\n- Creating transitions without permission checks.\n- Losing callback failure evidence.\n- Allowing production tasks to remain stuck without an operator queue.\n- Bypassing workflow for publishable or audited changes.\n\n## Verification\n\nRun workflow, human task, action adapter, and callback tests. In a fresh\nschema, start a workflow, complete a human task, execute an automated action,\nforce a callback failure, and confirm retry or incident evidence. Production\nreadiness requires business decision clarity, developer contracts, operator\nrecovery, and QA audit proof.\n"
+        },
+        {
+          "code": "process.cronjob-data-authoring",
+          "title": "CronJob Data Authoring",
+          "route": "/docs/framework/process-cronjob-data-authoring",
+          "section": "cron-and-scheduled-automation",
+          "sectionTitle": "Cron and Scheduled Automation",
+          "sectionOrder": 390,
+          "group": "cron-and-scheduled-automation",
+          "groupTitle": "Cron and Scheduled Automation",
+          "groupOrder": 390,
+          "order": 40,
+          "parentId": "cron-and-scheduled-automation",
+          "hierarchyPath": [
+            "Cron and Scheduled Automation",
+            "CronJob Data Authoring"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "how-to",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "How CronJob records, headers, schedules, execution policy, retry, idempotency, and Process server ownership are authored and verified.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "cron.operations",
+            "process.process-cron-runtime",
+            "cron.project-customization"
+          ],
+          "searchKeywords": [
+            "cronjob",
+            "scheduled-job",
+            "data-authoring",
+            "retry",
+            "idempotency"
+          ],
+          "topicKeywords": [
+            "Cron and Scheduled Automation",
+            "Scheduled Automation Triggers",
+            "CronJob Data Authoring"
+          ],
+          "searchText": "CronJob Data Authoring How CronJob records, headers, schedules, execution policy, retry, idempotency, and Process server ownership are authored and verified. # CronJob Data Authoring\n\nCronJob data authoring explains how scheduled automation definitions are\ncreated through module release data or through a governed Axis journey. The\nProcess runtime owns execution. The data file only declares the job,\nschedule, target, retry, and policy metadata. For beginners, a CronJob is a\nrecord that says what should run and when; the runtime decides whether this\nnode is allowed to execute it.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| CronJob package | `../nodics.process/modules/cronjob/package.json` |\n| CronJob operations page | `docs/pages/nodics.process/cronjob-operations.md` |\n| Project customization | `docs/pages/nodics.process/project-cron-customization.md` |\n| Runtime lifecycle | `docs/pages/nodics.process/process-cron-runtime.md` |\n| Media jobs example | `../nodics.wcms/modules/media/data/init-v001/headers/jobs/mediaCleanupRetentionJobHeader.js` |\n| Import process | `../nodics.foundation/modules/nData/nImport/import/src/service/import/defaultImportService.js` |\n\n## Data shape\n\n```mermaid\nflowchart LR\n  Release[\"Release data\"] --> Import[\"nImport\"]\n  Import --> Schema[\"cronJob schema\"]\n  Schema --> Scheduler[\"Process scheduler\"]\n  Scheduler --> Service[\"Target service operation\"]\n  Service --> Evidence[\"Run history and retry evidence\"]\n```\n\n```js\nmodule.exports = {\n  mediaCleanupRetentionJob: {\n    code: 'mediaCleanupRetentionJob',\n    active: true,\n    cronExpression: '0 0 * * *',\n    targetService: 'DefaultMediaCleanupLifecycleService',\n    targetOperation: 'execute',\n    retryPolicy: { maximumAttempts: 3 }\n  }\n};\n```\n\nThe business problem is dependable automation. Business users expect cleanup,\nindexing, messaging, publication support, and recovery jobs to run without\nmanual supervision. Developers need simple release data for default jobs.\nOperators need schedule visibility, node responsibility, retry state, and\nfailure evidence before production acceptance.\n\n## Header contract\n\nThe top-level key in a header routes to the module where the schema exists.\nFor CronJob data, that target is normally the Process CronJob module. The\nheader defines `schemaName`, `operation`, optional tenants, record file prefix,\nand the idempotent query.\n\n```js\nmodule.exports = {\n  cronjob: {\n    mediaJobs: {\n      options: {\n        enabled: true,\n        schemaName: 'cronJob',\n        operation: 'saveAll',\n        dataFilePrefix: 'mediaCleanupRetentionJobData'\n      },\n      query: { code: '$code' }\n    }\n  }\n};\n```\n\n## Runtime behavior\n\nCron execution should be idempotent, observable, and bounded. The runtime\nselects responsible nodes, prevents duplicate execution where configured,\nrecords start and completion evidence, applies retry policy, and moves failed\njobs into a recoverable state. A job record should not contain executable\nbusiness logic. It should point to a service operation that owns the behavior.\n\n## Customization and extension guidance\n\nDevelopers can add new scheduled jobs by adding a record, a header entry, the\ntarget service, tests, and operational documentation. A customer project can\noverride schedule frequency through release data or Axis only when the owning\ncapability permits it. Operators can disable, retry, or reschedule based on\npolicy, but should not edit service code in production.\n\n## Implementation handoff\n\nEach job should be handed over with its business purpose, target service,\nexpected runtime role, schedule, retry policy, idempotency rule, timeout,\nownership, and monitoring signal. That detail helps business users understand\nwhy the job exists, developers maintain the service safely, operators recover\nproduction failures, and QA owners test execution without depending on timing\nluck.\n\n## Common mistakes\n\n- Putting business logic into the job data file.\n- Creating a schedule without idempotency or retry behavior.\n- Forgetting node responsibility and duplicate execution controls.\n- Using environment-specific service names in shared module data.\n- Hiding failed job history from operators.\n\n## Verification\n\nImport CronJob data into a fresh schema, inspect job records, start the\nProcess runtime, confirm one responsible node runs the job, force a controlled\nfailure, and verify retry and evidence. Production readiness requires business\nvisibility, developer-owned service tests, operator recovery actions, and QA\nproof that disabled jobs do not execute.\n"
+        },
+        {
+          "code": "framework.release-upgrade-compatibility",
+          "title": "Release and Upgrade Compatibility",
+          "route": "/docs/framework/framework-release-upgrade-compatibility",
+          "section": "release-staging-and-publication",
+          "sectionTitle": "Release, Staging, and Publication",
+          "sectionOrder": 450,
+          "group": "release-staging-and-publication",
+          "groupTitle": "Release, Staging, and Publication",
+          "groupOrder": 450,
+          "order": 20,
+          "parentId": "release-staging-and-publication",
+          "hierarchyPath": [
+            "Release, Staging, and Publication",
+            "Release and Upgrade Compatibility"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "operations",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "How data release folders, generated manifests, immutable baselines, upgrades, rollback, checksum drift, and customer extensions are governed.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "data.import-export-migration",
+            "docs.documentation-publishing-runbook",
+            "framework.runtime-release-rollback"
+          ],
+          "searchKeywords": [
+            "release",
+            "upgrade",
+            "manifest",
+            "compatibility",
+            "data-folder"
+          ],
+          "topicKeywords": [
+            "Release, Staging, and Publication",
+            "Release Compatibility",
+            "Release and Upgrade Compatibility"
+          ],
+          "searchText": "Release and Upgrade Compatibility How data release folders, generated manifests, immutable baselines, upgrades, rollback, checksum drift, and customer extensions are governed. # Release and Upgrade Compatibility\n\nRelease and upgrade compatibility explains how module data folders evolve\nwithout breaking customer projects. Before the first production baseline,\nteams can keep improving `v001` release folders. After that baseline is used\nby customers, every released folder becomes immutable and the next change\nstarts a new release folder. For beginners, a release folder is a promise: it\nrecords the data shape that can be installed and tested again.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Setup tooling module | `../nodics.foundation/modules/nSetup/package.json` |\n| Documentation generated manifest | `data/manifest.json` |\n| Data import release service | `../nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js` |\n| Import release ordering tests | `../nodics.foundation/modules/nData/nImport/import/test/importUtilityReleaseOrder.test.js` |\n| Data authoring guide | `docs/pages/nodics.foundation/data-import-export-migration.md` |\n| Documentation publishing runbook | `docs/pages/nodics.docs/documentation-publishing-runbook.md` |\n\n## Folder contract\n\n```text\ndata/\n  init-v001/\n    headers/\n    records/\n  core-v001/\n    headers/\n    records/\n  sample-v001/\n    commerce/\n      headers/\n      records/\n    content/\n      headers/\n      records/\n      assets/\n  manifest.json\n```\n\nThe business problem is upgrade confidence. Business users need stable setup\nand sample data. Developers need a predictable place to add defaults and\ncustomer extensions. Operators need checksum and import evidence. Production\nsupport needs to know whether a customer installed `core-v001` or `core-v002`\nbefore diagnosing a problem.\n\n## Compatibility rules\n\n| Rule | Meaning |\n| --- | --- |\n| Pre-production folders can change | Until customer release, teams may refine `v001`. |\n| Released folders are immutable | After production release, create the next folder. |\n| Manifest is generated | Developers edit headers, records, and assets, then regenerate. |\n| Headers own routing | Module, schema, operation, and query stay in header files. |\n| Records are declarative | No business logic, runtime paths, secrets, or service calls. |\n| Assets stay with data | Media source files live under the release-owned assets folder. |\n\n## Configuration behavior\n\nRelease configuration should describe active modules, target runtimes, import\nlanes, and provider settings, but it should not replace the release folder.\nThe folder owns versioned data, the generated manifest owns checksums, and\nruntime configuration selects where that data is installed and published.\n\n## Upgrade flow\n\n```mermaid\nflowchart LR\n  Current[\"Installed release\"] --> New[\"Next release folder\"]\n  New --> Validate[\"Generate manifest and validate\"]\n  Validate --> Import[\"Fresh-schema import\"]\n  Import --> Publish[\"Staged review and Online publication\"]\n  Publish --> Evidence[\"Compatibility evidence\"]\n```\n\n## Customization and extension guidance\n\nDevelopers can extend a released module by creating a customer project data\nfolder with a later release code or by adding a project-owned module that\ndepends on the framework module. Do not patch old released framework data in a\ncustomer project unless the repair is documented and repeatable. AI tools\nshould read the manifest, existing headers, and target schemas before adding\nrecords.\n\n## Implementation handoff\n\nEvery release handoff should name the changed folders, generated manifest,\ntarget runtimes, import order, publication dependency, rollback option, and\nbrowser evidence. Business users get a clear upgrade journey, developers get\nsource traceability, operators get production recovery instructions, and QA\nowners get clean-install plus upgrade scenarios. This prevents a data release\nfrom becoming tribal knowledge.\n\n## Common mistakes\n\n- Editing an already released data folder and losing reproducibility.\n- Creating `release.js` files for values that can be derived from folder names.\n- Hand maintaining generated manifest checksums.\n- Putting provider-specific paths inside shared data records.\n- Forgetting fresh-schema import tests before upgrade rollout.\n\n## Verification\n\nRegenerate manifests, run import ordering tests, import every changed release\ninto a fresh schema, publish where needed, and verify Axis, Nexus, or Agora in\nthe browser. Production acceptance requires business release notes, developer\nsource evidence, operator rollback instructions, and QA proof for both clean\ninstall and upgrade paths.\n"
+        },
+        {
           "code": "tooling.ai-developer-enablement",
           "title": "AI and Developer Tooling",
           "route": "/docs/framework/tooling-ai-developer-enablement",
@@ -7798,7 +8834,7 @@ module.exports = {
             "Documentation Gap Backlog",
             "Coverage Closure"
           ],
-          "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P0 docs batch | Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Closed by P0 docs batch | Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| Closed by P0 docs batch | CMS exact source map | `nodics.wcms/modules/cms` | Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Closed by P0 docs batch | Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Closed by P0 docs batch | Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Closed by P0 docs batch | Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Closed by P0 docs batch | Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Explain registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Explain ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Explain locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Payment Core and provider split | `nodics.commerce/modules/payment` | Explain payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Explain why customer list exists in Commerce and what Profile continues to own. |\n| NMS runtime monitoring | `nodics.foundation/modules/nNms` | Explain node monitoring, topology, health, operational evidence, and recovery actions. |\n| Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Explain service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Explain provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Database provider boundaries | `nodics.foundation/modules/nDatabase` | Explain MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| OTP and security flow | `nodics.foundation/modules/nOtp` | Explain OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Explain SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Explain contact forms, moderation, workflow, notification, audit, and recovery. |\n| Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Explain workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Cron job data authoring | `nodics.process/modules/cronjob` | Explain job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Explain version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Fresh-schema setup per runtime | Platform, WCMS Staged, WCMS Online, Process, Commerce, Engagement | Add runtime-specific import order, seed data, publication, and acceptance evidence where existing quick-start docs are too broad. |\n| Environment, server, and node discovery | `nodics.kickoff/envs`, framework server/node configuration | Explain how physical hierarchy, environment config, server composition, and runtime roles are discovered. |\n| Permission and access matrix | Profile, BackOffice, WCMS, documentation access policies | Explain roles, groups, permissions, access modes, public/authenticated/restricted behavior, and publication visibility. |\n| Search indexing operations | Discovery and Commerce Search modules | Explain index jobs, reindex, projection freshness, failure recovery, and ownership. |\n| Migration and import reconciliation | Import, migration, CMS migration, Commerce data | Explain source classification, mapping tables, partial failures, retry, and data correction. |\n| Export and data privacy | Export providers, media-owned generated files | Explain allow-lists, masking, retention, download permissions, and audit. |\n| Observability | NMS, import runs, publication receipts, logs, dashboards | Explain correlation IDs, status evidence, health checks, support cards, and escalation. |\n| Disaster recovery | Media publication, Online storage, replication queue | Explain Online media replication, DR queues, recovery receipts, and failure escalation. |\n| Frontend consumption contracts | Axis, Nexus, Agora | Explain that Axis consumes BackOffice metadata, Nexus consumes Online WCMS, and Agora consumes Online commerce/content. |\n| Data quality rules | All module data folders | Explain required fields, stable keys, idempotent queries, relation integrity, and no runtime logic in data files. |\n| Testing standards | All modules and frontends | Explain unit, contract, generator, fresh-schema, publication, browser, accessibility, and regression expectations. |\n| Troubleshooting matrices | Every operational capability page | Add what failed, who owns it, user-safe message, technical evidence, and recovery action. |\n| Decision-maker overview pages | Product and capability overview docs | Explain business value, ownership model, platform differentiation, risk controls, and implementation confidence. |\n| Internal-only register | Low-score utility modules | Decide and document which technical modules do not need public pages and where they are covered. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n"
+          "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P0 docs batch | Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Closed by P0 docs batch | Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| Closed by P0 docs batch | CMS exact source map | `nodics.wcms/modules/cms` | Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Closed by P0 docs batch | Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Closed by P0 docs batch | Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Closed by P0 docs batch | Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Closed by P0 docs batch | Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P1 docs batch | Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Covered by `platform.module-registry-journey` with registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Closed by P1 docs batch | Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Covered by `commerce.search-guide` with ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Closed by P1 docs batch | Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Covered by `localization.runtime-authoring` with locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Closed by P1 docs batch | Payment Core and provider split | `nodics.commerce/modules/payment` | Covered by `commerce.payment-provider-boundaries` with payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Closed by P1 docs batch | Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Covered by `commerce.customer-list-profile-boundary` with why customer list exists in Commerce and what Profile continues to own. |\n| Closed by P1 docs batch | NMS runtime monitoring | `nodics.foundation/modules/nNms` | Covered by `foundation.nms-runtime-monitoring` with node monitoring, topology, health, operational evidence, and recovery actions. |\n| Closed by P1 docs batch | Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Covered by `foundation.service-runtime-overrides` with service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Closed by P1 docs batch | Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Covered by `foundation.cache-provider-runbooks` with provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Closed by P1 docs batch | Database provider boundaries | `nodics.foundation/modules/nDatabase` | Covered by `foundation.database-provider-boundaries` with MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| Closed by P1 docs batch | OTP and security flow | `nodics.foundation/modules/nOtp` | Covered by `security.otp-security-flow` with OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Closed by P1 docs batch | Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Covered by `communication.provider-runbooks` with SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Closed by P1 docs batch | Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Covered by `engagement.contact-submission-operations` with contact forms, moderation, workflow, notification, audit, and recovery. |\n| Closed by P1 docs batch | Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Covered by `process.workflow-bpm-source-map` with workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Closed by P1 docs batch | Cron job data authoring | `nodics.process/modules/cronjob` | Covered by `process.cronjob-data-authoring` with job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Closed by P1 docs batch | Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Covered by `framework.release-upgrade-compatibility` with version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Fresh-schema setup per runtime | Platform, WCMS Staged, WCMS Online, Process, Commerce, Engagement | Add runtime-specific import order, seed data, publication, and acceptance evidence where existing quick-start docs are too broad. |\n| Environment, server, and node discovery | `nodics.kickoff/envs`, framework server/node configuration | Explain how physical hierarchy, environment config, server composition, and runtime roles are discovered. |\n| Permission and access matrix | Profile, BackOffice, WCMS, documentation access policies | Explain roles, groups, permissions, access modes, public/authenticated/restricted behavior, and publication visibility. |\n| Search indexing operations | Discovery and Commerce Search modules | Explain index jobs, reindex, projection freshness, failure recovery, and ownership. |\n| Migration and import reconciliation | Import, migration, CMS migration, Commerce data | Explain source classification, mapping tables, partial failures, retry, and data correction. |\n| Export and data privacy | Export providers, media-owned generated files | Explain allow-lists, masking, retention, download permissions, and audit. |\n| Observability | NMS, import runs, publication receipts, logs, dashboards | Explain correlation IDs, status evidence, health checks, support cards, and escalation. |\n| Disaster recovery | Media publication, Online storage, replication queue | Explain Online media replication, DR queues, recovery receipts, and failure escalation. |\n| Frontend consumption contracts | Axis, Nexus, Agora | Explain that Axis consumes BackOffice metadata, Nexus consumes Online WCMS, and Agora consumes Online commerce/content. |\n| Data quality rules | All module data folders | Explain required fields, stable keys, idempotent queries, relation integrity, and no runtime logic in data files. |\n| Testing standards | All modules and frontends | Explain unit, contract, generator, fresh-schema, publication, browser, accessibility, and regression expectations. |\n| Troubleshooting matrices | Every operational capability page | Add what failed, who owns it, user-safe message, technical evidence, and recovery action. |\n| Decision-maker overview pages | Product and capability overview docs | Explain business value, ownership model, platform differentiation, risk controls, and implementation confidence. |\n| Internal-only register | Low-score utility modules | Decide and document which technical modules do not need public pages and where they are covered. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n"
         }
       ]
     },
@@ -42208,8 +43244,8 @@ module.exports = {
         "route": "/docs/framework/commerce-data-authoring-fulfillment"
       },
       "next": {
-        "title": "AI and Developer Tooling",
-        "route": "/docs/framework/tooling-ai-developer-enablement"
+        "title": "Module Registry Journey",
+        "route": "/docs/framework/platform-module-registry-journey"
       },
       "source": {
         "repository": "nodics.docs",
@@ -42225,6 +43261,4358 @@ module.exports = {
     "active": true
   },
   "record99": {
+    "code": "nodicsDocsComponentplatformModuleRegistryJourney",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "platform.module-registry-journey",
+      "title": "Module Registry Journey",
+      "route": "/docs/framework/platform-module-registry-journey",
+      "section": "capability-registry-and-lifecycle-management",
+      "sectionTitle": "Capability Registry and Lifecycle Management",
+      "group": "capability-registry-and-lifecycle-management",
+      "groupTitle": "Capability Registry and Lifecycle Management",
+      "parentId": "capability-registry-and-lifecycle-management",
+      "hierarchyPath": [
+        "Capability Registry and Lifecycle Management",
+        "Module Registry Journey"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "How installed modules become registered, activated, dependency-checked, and visible to Axis as governed business capabilities.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "platform.module-registry",
+        "applications.axis-setup-error-contracts",
+        "framework.module-loading-service-precedence"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.platform/module-registry-journey.md",
+        "../nodics.platform/modules/backoffice/package.json",
+        "../nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js",
+        "../nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryStoreService.js",
+        "../nodics.platform/modules/backoffice/src/service/discovery/defaultBackofficeDiscoveryService.js",
+        "../nodics.platform/modules/backoffice/test/backofficeRegistryRouteContract.test.js"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "module-registry",
+        "backoffice",
+        "activation",
+        "dependency",
+        "axis"
+      ],
+      "topicKeywords": [
+        "Capability Registry and Lifecycle Management",
+        "Module Registry Foundations",
+        "Module Registry Journey"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "platformModuleRegistryJourney-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Lifecycle",
+          "anchor": "platformModuleRegistryJourney-2-lifecycle",
+          "level": 2
+        },
+        {
+          "text": "Registry contract",
+          "anchor": "platformModuleRegistryJourney-3-registry-contract",
+          "level": 2
+        },
+        {
+          "text": "Dependency and activation rules",
+          "anchor": "platformModuleRegistryJourney-4-dependency-and-activation-rules",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "platformModuleRegistryJourney-5-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Implementation handoff",
+          "anchor": "platformModuleRegistryJourney-6-implementation-handoff",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "platformModuleRegistryJourney-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "platformModuleRegistryJourney-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "The Module Registry journey explains how Nodics turns installed modules into visible, governed business capabilities. Axis can show a module, dependency, activation, and setup state, but BackOffice owns the registry contract and the backend modules own their schemas, data, routes, and services. For beginners, think of the registry as the map that tells Axis what exists, what is active, what is blocked, and which action is allowed next."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "platformModuleRegistryJourney-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "BackOffice module package",
+              "`../nodics.platform/modules/backoffice/package.json`"
+            ],
+            [
+              "Capability registry service",
+              "`../nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js`"
+            ],
+            [
+              "Registry store",
+              "`../nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryStoreService.js`"
+            ],
+            [
+              "Discovery service",
+              "`../nodics.platform/modules/backoffice/src/service/discovery/defaultBackofficeDiscoveryService.js`"
+            ],
+            [
+              "Registry route tests",
+              "`../nodics.platform/modules/backoffice/test/registryRoute.test.js`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Lifecycle",
+          "anchor": "platformModuleRegistryJourney-2-lifecycle"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Installed[\"Installed package\"] --> Discovered[\"Discovered module\"]\n  Discovered --> Registered[\"Registered capability\"]\n  Registered --> Activated[\"Activated runtime\"]\n  Activated --> Visible[\"Axis visible\"]\n  Registered --> Blocked[\"Dependency blocked\"]\n  Blocked --> Activated"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is confidence: an administrator needs to know whether a capability is ready before asking a team to use it. Developers need a reliable place to expose module metadata without giving Axis direct ownership of source contracts. Operators need dependency evidence, activation state, and recovery actions before production use."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Registry contract",
+          "anchor": "platformModuleRegistryJourney-3-registry-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Each capability should expose stable identity, display metadata, owner module, dependency requirements, runtime role, route availability, allowed actions, and health state. BackOffice normalizes this into Axis-friendly data. Axis should render sections, cards, badges, disabled actions, and setup messages from that contract instead of hardcoding module rules."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "const capability = {\n  code: 'cms',\n  ownerModule: 'nodics.wcms',\n  status: 'ACTIVE',\n  requiredModules: ['media', 'process'],\n  runtimeRole: 'STAGED',\n  actions: ['initialize', 'publish', 'refresh']\n};"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Dependency and activation rules",
+          "anchor": "platformModuleRegistryJourney-4-dependency-and-activation-rules"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Required modules represent local runtime dependencies. Remote runtime needs, such as Online publication targets, should be represented separately as target availability or integration readiness. This distinction matters in production because a module can be locally active while its publication target is unavailable. Business users should see the impact. Developers should see the owner and missing dependency. Operators should see a retry or repair path."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "platformModuleRegistryJourney-5-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can add new capability providers, discovery adapters, registry fields, and readiness checks. Keep activation logic in BackOffice or the owning module service. Customer projects can add metadata for their modules without changing Axis navigation code. AI tools should update registry tests whenever they add a new capability status, dependency type, or user action."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Implementation handoff",
+          "anchor": "platformModuleRegistryJourney-6-implementation-handoff"
+        },
+        {
+          "kind": "paragraph",
+          "text": "When a new module is added, the handoff should include package metadata, runtime role, visible capability name, dependency list, health signal, setup actions, and documentation page references. That makes the registry useful to business users who need a clear journey, developers who need extension points, operators who need production readiness, and QA owners who need repeatable acceptance checks."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "platformModuleRegistryJourney-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating frontend menu entries as module activation evidence.",
+            "Mixing local required modules with remote API target availability.",
+            "Hiding dependency failures behind a generic setup error.",
+            "Adding registry fields without route and service tests.",
+            "Letting a business action appear enabled before required capability checks pass."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "platformModuleRegistryJourney-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run BackOffice registry, discovery, capability, and availability tests. Then start a fresh schema, initialize module data, open Axis, and confirm the registry view shows active, blocked, and unavailable states with safe messages. Production readiness requires business clarity, developer source traceability, operator evidence, and repeatable QA checks."
+        }
+      ],
+      "searchText": "Module Registry Journey How installed modules become registered, activated, dependency-checked, and visible to Axis as governed business capabilities. # Module Registry Journey\n\nThe Module Registry journey explains how Nodics turns installed modules into\nvisible, governed business capabilities. Axis can show a module, dependency,\nactivation, and setup state, but BackOffice owns the registry contract and the\nbackend modules own their schemas, data, routes, and services. For beginners,\nthink of the registry as the map that tells Axis what exists, what is active,\nwhat is blocked, and which action is allowed next.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| BackOffice module package | `../nodics.platform/modules/backoffice/package.json` |\n| Capability registry service | `../nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js` |\n| Registry store | `../nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryStoreService.js` |\n| Discovery service | `../nodics.platform/modules/backoffice/src/service/discovery/defaultBackofficeDiscoveryService.js` |\n| Registry route tests | `../nodics.platform/modules/backoffice/test/registryRoute.test.js` |\n\n## Lifecycle\n\n```mermaid\nflowchart LR\n  Installed[\"Installed package\"] --> Discovered[\"Discovered module\"]\n  Discovered --> Registered[\"Registered capability\"]\n  Registered --> Activated[\"Activated runtime\"]\n  Activated --> Visible[\"Axis visible\"]\n  Registered --> Blocked[\"Dependency blocked\"]\n  Blocked --> Activated\n```\n\nThe business problem is confidence: an administrator needs to know whether a\ncapability is ready before asking a team to use it. Developers need a reliable\nplace to expose module metadata without giving Axis direct ownership of source\ncontracts. Operators need dependency evidence, activation state, and recovery\nactions before production use.\n\n## Registry contract\n\nEach capability should expose stable identity, display metadata, owner module,\ndependency requirements, runtime role, route availability, allowed actions, and\nhealth state. BackOffice normalizes this into Axis-friendly data. Axis should\nrender sections, cards, badges, disabled actions, and setup messages from that\ncontract instead of hardcoding module rules.\n\n```js\nconst capability = {\n  code: 'cms',\n  ownerModule: 'nodics.wcms',\n  status: 'ACTIVE',\n  requiredModules: ['media', 'process'],\n  runtimeRole: 'STAGED',\n  actions: ['initialize', 'publish', 'refresh']\n};\n```\n\n## Dependency and activation rules\n\nRequired modules represent local runtime dependencies. Remote runtime needs,\nsuch as Online publication targets, should be represented separately as target\navailability or integration readiness. This distinction matters in production\nbecause a module can be locally active while its publication target is\nunavailable. Business users should see the impact. Developers should see the\nowner and missing dependency. Operators should see a retry or repair path.\n\n## Customization and extension guidance\n\nDevelopers can add new capability providers, discovery adapters, registry\nfields, and readiness checks. Keep activation logic in BackOffice or the owning\nmodule service. Customer projects can add metadata for their modules without\nchanging Axis navigation code. AI tools should update registry tests whenever\nthey add a new capability status, dependency type, or user action.\n\n## Implementation handoff\n\nWhen a new module is added, the handoff should include package metadata,\nruntime role, visible capability name, dependency list, health signal, setup\nactions, and documentation page references. That makes the registry useful to\nbusiness users who need a clear journey, developers who need extension points,\noperators who need production readiness, and QA owners who need repeatable\nacceptance checks.\n\n## Common mistakes\n\n- Treating frontend menu entries as module activation evidence.\n- Mixing local required modules with remote API target availability.\n- Hiding dependency failures behind a generic setup error.\n- Adding registry fields without route and service tests.\n- Letting a business action appear enabled before required capability checks\n  pass.\n\n## Verification\n\nRun BackOffice registry, discovery, capability, and availability tests. Then\nstart a fresh schema, initialize module data, open Axis, and confirm the\nregistry view shows active, blocked, and unavailable states with safe messages.\nProduction readiness requires business clarity, developer source traceability,\noperator evidence, and repeatable QA checks.\n",
+      "previous": {
+        "title": "Documentation Publishing Runbook",
+        "route": "/docs/framework/docs-documentation-publishing-runbook"
+      },
+      "next": {
+        "title": "Commerce Search Guide",
+        "route": "/docs/framework/commerce-search-guide"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.platform",
+        "technicalModule": "backoffice",
+        "owner": "nodics.platform",
+        "sourcePath": "docs/pages/nodics.platform/module-registry-journey.md",
+        "path": "docs/pages/nodics.platform/module-registry-journey.md",
+        "wordCount": 555,
+        "checksum": "0473c9c5b9ad2f8dcee7f6caf9c658b9e1d467dca905d15f9312a1b20fbbdb45"
+      }
+    },
+    "active": true
+  },
+  "record100": {
+    "code": "nodicsDocsComponentcommerceSearchGuide",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "commerce.search-guide",
+      "title": "Commerce Search Guide",
+      "route": "/docs/framework/commerce-search-guide",
+      "section": "search-and-discovery",
+      "sectionTitle": "Search and Discovery",
+      "group": "search-and-discovery",
+      "groupTitle": "Search and Discovery",
+      "parentId": "search-and-discovery",
+      "hierarchyPath": [
+        "Search and Discovery",
+        "Commerce Search Guide"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "How commerce search projections, ranking rules, index freshness, rebuild evidence, and storefront discovery are governed.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "discovery.search-indexing",
+        "catalog.product-discovery-management",
+        "commerce.data-authoring-fulfillment"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.commerce/commerce-search-guide.md",
+        "../nodics.commerce/modules/baseCommerce/modules/commerceSearch/package.json",
+        "../nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/package.json",
+        "../nodics.commerce/modules/baseCommerce/modules/product/package.json",
+        "../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/commerceSearch"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "commerce-search",
+        "projection",
+        "ranking",
+        "index",
+        "agora"
+      ],
+      "topicKeywords": [
+        "Search and Discovery",
+        "Search Providers and Indexing",
+        "Commerce Search Guide"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "commerceSearchGuide-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Projection flow",
+          "anchor": "commerceSearchGuide-2-projection-flow",
+          "level": 2
+        },
+        {
+          "text": "Ranking and rules",
+          "anchor": "commerceSearchGuide-3-ranking-and-rules",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "commerceSearchGuide-4-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Implementation handoff",
+          "anchor": "commerceSearchGuide-5-implementation-handoff",
+          "level": 2
+        },
+        {
+          "text": "Evidence checklist",
+          "anchor": "commerceSearchGuide-6-evidence-checklist",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "commerceSearchGuide-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "commerceSearchGuide-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Commerce Search turns product, category, price, inventory, and merchandising signals into searchable storefront projections. The search index is not the source of truth. Product, price, inventory, CMS, and Media modules own their records; Commerce Search owns projection rules, ranking behavior, and query readiness. For beginners, search is the fast customer-facing view that must be rebuilt whenever the authoritative data changes."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "commerceSearchGuide-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Commerce Search group",
+              "`../nodics.commerce/modules/baseCommerce/modules/commerceSearch/package.json`"
+            ],
+            [
+              "Commerce Search core",
+              "`../nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/package.json`"
+            ],
+            [
+              "Product catalogue",
+              "`../nodics.commerce/modules/baseCommerce/modules/product/package.json`"
+            ],
+            [
+              "Discovery docs",
+              "`docs/pages/nodics.discovery/search-indexing-discovery.md`"
+            ],
+            [
+              "Agora search data",
+              "`../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/commerceSearch/`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Projection flow",
+          "anchor": "commerceSearchGuide-2-projection-flow"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Product[\"Product data\"] --> Projector[\"Commerce Search projection\"]\n  Price[\"Price data\"] --> Projector\n  Inventory[\"Inventory data\"] --> Projector\n  Content[\"Content and media\"] --> Projector\n  Projector --> Index[\"Search index\"]\n  Index --> Storefront[\"Agora storefront\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is findability. A product that exists but cannot be found is not commercially ready. Business users need ranking, filtering, and availability to match merchandising intent. Developers need deterministic projection rules. Operators need freshness, index health, and rebuild evidence before production acceptance."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Ranking and rules",
+          "anchor": "commerceSearchGuide-3-ranking-and-rules"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Search rules can express boosts, pins, exclusions, locale behavior, market scope, and merchandising priority. These rules should be data-driven and tested, but they should not replace product authority. If a product is inactive, unpublished, out of market, or not approved, search should not make it appear available."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "module.exports = {\n  apparelBoosts: {\n    code: 'apparelBoosts',\n    storeCode: 'agoraApparel',\n    locale: 'en',\n    scopeType: 'category',\n    priority: 100,\n    boost: 2\n  }\n};"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "commerceSearchGuide-4-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can customize analyzers, projection services, ranking rules, facets, index providers, and rebuild jobs. Business users should manage merchandising rules through Axis when available. Operators should have rebuild actions, last projection time, failed item counts, and safe retry behavior. AI tools must inspect product, price, inventory, and search data together before adding records."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Implementation handoff",
+          "anchor": "commerceSearchGuide-5-implementation-handoff"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Each search change should name the source schemas, projection service, index provider, ranking rules, rebuild trigger, and browser search scenario. This gives business users a merchandising journey, developers a controlled extension point, operators production freshness evidence, and QA owners a repeatable way to prove that imported products become discoverable only when their authoritative records allow it."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Evidence checklist",
+          "anchor": "commerceSearchGuide-6-evidence-checklist"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The release package should show which products entered the projection, which ones were skipped, and why. The index run should record tenant, catalog version, locale, market, source checksum, item count, failure count, and last successful completion. In production, operators should be able to compare the search document with the product record, price row, inventory balance, and published media reference before deciding whether to rebuild or repair data."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "commerceSearchGuide-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating search documents as product authority.",
+            "Forgetting to rebuild projections after import or publication.",
+            "Showing inactive products because index filters are incomplete.",
+            "Adding ranking rules without locale or market scope.",
+            "Hiding indexing failures from operators."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "commerceSearchGuide-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Import product, price, inventory, media, and commerce search data into a fresh schema. Run projection jobs, inspect indexed fields, open Agora in the browser, search for the product, and verify filters, ranking, price, image, and availability. Production readiness requires business-approved merchandising, developer test coverage, operator rebuild evidence, and QA storefront proof."
+        }
+      ],
+      "searchText": "Commerce Search Guide How commerce search projections, ranking rules, index freshness, rebuild evidence, and storefront discovery are governed. # Commerce Search Guide\n\nCommerce Search turns product, category, price, inventory, and merchandising\nsignals into searchable storefront projections. The search index is not the\nsource of truth. Product, price, inventory, CMS, and Media modules own their\nrecords; Commerce Search owns projection rules, ranking behavior, and query\nreadiness. For beginners, search is the fast customer-facing view that must be\nrebuilt whenever the authoritative data changes.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Commerce Search group | `../nodics.commerce/modules/baseCommerce/modules/commerceSearch/package.json` |\n| Commerce Search core | `../nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/package.json` |\n| Product catalogue | `../nodics.commerce/modules/baseCommerce/modules/product/package.json` |\n| Discovery docs | `docs/pages/nodics.discovery/search-indexing-discovery.md` |\n| Agora search data | `../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/commerceSearch/` |\n\n## Projection flow\n\n```mermaid\nflowchart LR\n  Product[\"Product data\"] --> Projector[\"Commerce Search projection\"]\n  Price[\"Price data\"] --> Projector\n  Inventory[\"Inventory data\"] --> Projector\n  Content[\"Content and media\"] --> Projector\n  Projector --> Index[\"Search index\"]\n  Index --> Storefront[\"Agora storefront\"]\n```\n\nThe business problem is findability. A product that exists but cannot be\nfound is not commercially ready. Business users need ranking, filtering, and\navailability to match merchandising intent. Developers need deterministic\nprojection rules. Operators need freshness, index health, and rebuild evidence\nbefore production acceptance.\n\n## Ranking and rules\n\nSearch rules can express boosts, pins, exclusions, locale behavior, market\nscope, and merchandising priority. These rules should be data-driven and\ntested, but they should not replace product authority. If a product is\ninactive, unpublished, out of market, or not approved, search should not make\nit appear available.\n\n```js\nmodule.exports = {\n  apparelBoosts: {\n    code: 'apparelBoosts',\n    storeCode: 'agoraApparel',\n    locale: 'en',\n    scopeType: 'category',\n    priority: 100,\n    boost: 2\n  }\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can customize analyzers, projection services, ranking rules,\nfacets, index providers, and rebuild jobs. Business users should manage\nmerchandising rules through Axis when available. Operators should have rebuild\nactions, last projection time, failed item counts, and safe retry behavior.\nAI tools must inspect product, price, inventory, and search data together\nbefore adding records.\n\n## Implementation handoff\n\nEach search change should name the source schemas, projection service, index\nprovider, ranking rules, rebuild trigger, and browser search scenario. This\ngives business users a merchandising journey, developers a controlled\nextension point, operators production freshness evidence, and QA owners a\nrepeatable way to prove that imported products become discoverable only when\ntheir authoritative records allow it.\n\n## Evidence checklist\n\nThe release package should show which products entered the projection, which\nones were skipped, and why. The index run should record tenant, catalog\nversion, locale, market, source checksum, item count, failure count, and last\nsuccessful completion. In production, operators should be able to compare the\nsearch document with the product record, price row, inventory balance, and\npublished media reference before deciding whether to rebuild or repair data.\n\n## Common mistakes\n\n- Treating search documents as product authority.\n- Forgetting to rebuild projections after import or publication.\n- Showing inactive products because index filters are incomplete.\n- Adding ranking rules without locale or market scope.\n- Hiding indexing failures from operators.\n\n## Verification\n\nImport product, price, inventory, media, and commerce search data into a fresh\nschema. Run projection jobs, inspect indexed fields, open Agora in the browser,\nsearch for the product, and verify filters, ranking, price, image, and\navailability. Production readiness requires business-approved merchandising,\ndeveloper test coverage, operator rebuild evidence, and QA storefront proof.\n",
+      "previous": {
+        "title": "Module Registry Journey",
+        "route": "/docs/framework/platform-module-registry-journey"
+      },
+      "next": {
+        "title": "Localization Runtime Authoring",
+        "route": "/docs/framework/localization-runtime-authoring"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.commerce",
+        "technicalModule": "commerceSearch",
+        "owner": "nodics.commerce",
+        "sourcePath": "docs/pages/nodics.commerce/commerce-search-guide.md",
+        "path": "docs/pages/nodics.commerce/commerce-search-guide.md",
+        "wordCount": 539,
+        "checksum": "da569e961eaf20479d0d5f1e6c16b68cf010dd3e51d29173c1d110e269e4c4ce"
+      }
+    },
+    "active": true
+  },
+  "record101": {
+    "code": "nodicsDocsComponentlocalizationRuntimeAuthoring",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "localization.runtime-authoring",
+      "title": "Localization Runtime Authoring",
+      "route": "/docs/framework/localization-runtime-authoring",
+      "section": "localization-and-internationalization",
+      "sectionTitle": "Localization and Internationalization",
+      "group": "localization-and-internationalization",
+      "groupTitle": "Localization and Internationalization",
+      "parentId": "localization-and-internationalization",
+      "hierarchyPath": [
+        "Localization and Internationalization",
+        "Localization Runtime Authoring"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "How localized records, fallback behavior, content and product translation, import data, and runtime API boundaries work.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "localization.internationalization",
+        "wcms.cms-source-map-authoring-contract",
+        "commerce.data-authoring-fulfillment"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.localization/localization-runtime-authoring.md",
+        "../nodics.localization/modules/localizationCore/package.json",
+        "../nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js",
+        "../nodics.foundation/modules/nData/nImport/import/src/service/import/defaultImportService.js",
+        "../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "localization",
+        "fallback",
+        "locale",
+        "translation",
+        "authoring"
+      ],
+      "topicKeywords": [
+        "Localization and Internationalization",
+        "Localization Foundations",
+        "Localization Runtime Authoring"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "localizationRuntimeAuthoring-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Resolution model",
+          "anchor": "localizationRuntimeAuthoring-2-resolution-model",
+          "level": 2
+        },
+        {
+          "text": "Authoring contract",
+          "anchor": "localizationRuntimeAuthoring-3-authoring-contract",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "localizationRuntimeAuthoring-4-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Implementation handoff",
+          "anchor": "localizationRuntimeAuthoring-5-implementation-handoff",
+          "level": 2
+        },
+        {
+          "text": "Evidence checklist",
+          "anchor": "localizationRuntimeAuthoring-6-evidence-checklist",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "localizationRuntimeAuthoring-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "localizationRuntimeAuthoring-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Localization lets Nodics present content, commerce, messages, and backoffice labels in the right language and regional format without duplicating business objects. For beginners, the base record identifies the thing and localization records describe how that thing should be displayed for a locale. Axis can offer authoring journeys, but localization schemas and services own fallback, validation, and runtime resolution."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "localizationRuntimeAuthoring-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Localization core",
+              "`../nodics.localization/modules/localizationCore/package.json`"
+            ],
+            [
+              "Localization module docs",
+              "`docs/pages/nodics.localization/localization-internationalization.md`"
+            ],
+            [
+              "CMS localization",
+              "`../nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js`"
+            ],
+            [
+              "Product localization example",
+              "`../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/`"
+            ],
+            [
+              "Import runtime",
+              "`../nodics.foundation/modules/nData/nImport/import/src/service/import/defaultImportService.js`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Resolution model",
+          "anchor": "localizationRuntimeAuthoring-2-resolution-model"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart TD\n  Request[\"Request locale\"] --> Exact[\"Exact localization\"]\n  Exact --> Response[\"Localized response\"]\n  Request --> Fallback[\"Fallback locale\"]\n  Fallback --> Response\n  Request --> Base[\"Base record\"]\n  Base --> Response"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is consistent customer communication. A missing locale can break a product page, legal message, email, or content route. Developers need a repeatable record shape. Operators need evidence for fallback behavior in production so missing translations do not appear as broken pages."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Authoring contract",
+          "anchor": "localizationRuntimeAuthoring-3-authoring-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Localization records should include the owner object code, locale, translated fields, publication or lifecycle state where relevant, and stable query keys. They should not copy unrelated base data or contain runtime logic."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "module.exports = {\n  linenDressEn: {\n    code: 'linenDress_en',\n    productCode: 'linenDress',\n    locale: 'en',\n    name: 'Linen Dress',\n    description: 'Lightweight woven dress'\n  }\n};"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "localizationRuntimeAuthoring-4-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can add locale providers, fallback strategies, field validators, translation workflow hooks, and locale-specific formatting. Business users should see missing translation tasks and approval state in Axis. AI tools can assist translation, but they must preserve stable keys, source locale, review state, and terminology rules. Operators should track fallback rates and missing locale counts."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Implementation handoff",
+          "anchor": "localizationRuntimeAuthoring-5-implementation-handoff"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Each localized capability should document its base schema, localization schema, fallback chain, supported locales, reviewed fields, import header, and browser proof. Business users can then decide translation completeness, developers can extend fields safely, operators can watch production fallback usage, and QA owners can verify exact locale, fallback locale, and missing locale behavior."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Evidence checklist",
+          "anchor": "localizationRuntimeAuthoring-6-evidence-checklist"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Every localization change should carry source locale, target locale, field list, reviewer, fallback decision, and the consuming route or API. Production operators should know whether a fallback was expected or caused by missing data. Developers should include tests for partial translation because mixed content is common during rollout. Business users should be able to see which terms are ready for publication and which still need review."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "localizationRuntimeAuthoring-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Duplicating entire products or pages per locale instead of localizing fields.",
+            "Publishing translated content before business review.",
+            "Forgetting fallback rules for emails, pages, and product cards.",
+            "Mixing locale data with currency, pricing, or tax authority.",
+            "Hiding missing translation counts from production monitoring."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "localizationRuntimeAuthoring-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Import base and localized records into a fresh schema. Request exact locale, fallback locale, and unsupported locale responses. Open Axis, Nexus, or Agora in the browser and verify labels, pages, products, and empty states. Production readiness requires developer tests, business review evidence, operator fallback metrics, and QA proof for each supported locale."
+        }
+      ],
+      "searchText": "Localization Runtime Authoring How localized records, fallback behavior, content and product translation, import data, and runtime API boundaries work. # Localization Runtime Authoring\n\nLocalization lets Nodics present content, commerce, messages, and backoffice\nlabels in the right language and regional format without duplicating business\nobjects. For beginners, the base record identifies the thing and localization\nrecords describe how that thing should be displayed for a locale. Axis can\noffer authoring journeys, but localization schemas and services own fallback,\nvalidation, and runtime resolution.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Localization core | `../nodics.localization/modules/localizationCore/package.json` |\n| Localization module docs | `docs/pages/nodics.localization/localization-internationalization.md` |\n| CMS localization | `../nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js` |\n| Product localization example | `../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/` |\n| Import runtime | `../nodics.foundation/modules/nData/nImport/import/src/service/import/defaultImportService.js` |\n\n## Resolution model\n\n```mermaid\nflowchart TD\n  Request[\"Request locale\"] --> Exact[\"Exact localization\"]\n  Exact --> Response[\"Localized response\"]\n  Request --> Fallback[\"Fallback locale\"]\n  Fallback --> Response\n  Request --> Base[\"Base record\"]\n  Base --> Response\n```\n\nThe business problem is consistent customer communication. A missing locale\ncan break a product page, legal message, email, or content route. Developers\nneed a repeatable record shape. Operators need evidence for fallback behavior\nin production so missing translations do not appear as broken pages.\n\n## Authoring contract\n\nLocalization records should include the owner object code, locale, translated\nfields, publication or lifecycle state where relevant, and stable query keys.\nThey should not copy unrelated base data or contain runtime logic.\n\n```js\nmodule.exports = {\n  linenDressEn: {\n    code: 'linenDress_en',\n    productCode: 'linenDress',\n    locale: 'en',\n    name: 'Linen Dress',\n    description: 'Lightweight woven dress'\n  }\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add locale providers, fallback strategies, field validators,\ntranslation workflow hooks, and locale-specific formatting. Business users\nshould see missing translation tasks and approval state in Axis. AI tools can\nassist translation, but they must preserve stable keys, source locale, review\nstate, and terminology rules. Operators should track fallback rates and\nmissing locale counts.\n\n## Implementation handoff\n\nEach localized capability should document its base schema, localization schema,\nfallback chain, supported locales, reviewed fields, import header, and browser\nproof. Business users can then decide translation completeness, developers can\nextend fields safely, operators can watch production fallback usage, and QA\nowners can verify exact locale, fallback locale, and missing locale behavior.\n\n## Evidence checklist\n\nEvery localization change should carry source locale, target locale, field\nlist, reviewer, fallback decision, and the consuming route or API. Production\noperators should know whether a fallback was expected or caused by missing\ndata. Developers should include tests for partial translation because mixed\ncontent is common during rollout. Business users should be able to see which\nterms are ready for publication and which still need review.\n\n## Common mistakes\n\n- Duplicating entire products or pages per locale instead of localizing fields.\n- Publishing translated content before business review.\n- Forgetting fallback rules for emails, pages, and product cards.\n- Mixing locale data with currency, pricing, or tax authority.\n- Hiding missing translation counts from production monitoring.\n\n## Verification\n\nImport base and localized records into a fresh schema. Request exact locale,\nfallback locale, and unsupported locale responses. Open Axis, Nexus, or Agora\nin the browser and verify labels, pages, products, and empty states. Production\nreadiness requires developer tests, business review evidence, operator\nfallback metrics, and QA proof for each supported locale.\n",
+      "previous": {
+        "title": "Commerce Search Guide",
+        "route": "/docs/framework/commerce-search-guide"
+      },
+      "next": {
+        "title": "Payment Core and Provider Boundaries",
+        "route": "/docs/framework/commerce-payment-provider-boundaries"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.localization",
+        "technicalModule": "localizationCore",
+        "owner": "nodics.localization",
+        "sourcePath": "docs/pages/nodics.localization/localization-runtime-authoring.md",
+        "path": "docs/pages/nodics.localization/localization-runtime-authoring.md",
+        "wordCount": 517,
+        "checksum": "5e7a010a863fda0f09cbcf726557dd362b29541221ff150607b9e4ebd8e349a9"
+      }
+    },
+    "active": true
+  },
+  "record102": {
+    "code": "nodicsDocsComponentcommercePaymentProviderBoundaries",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "commerce.payment-provider-boundaries",
+      "title": "Payment Core and Provider Boundaries",
+      "route": "/docs/framework/commerce-payment-provider-boundaries",
+      "section": "payment-management",
+      "sectionTitle": "Payment Management",
+      "group": "payment-management",
+      "groupTitle": "Payment Management",
+      "parentId": "payment-management",
+      "hierarchyPath": [
+        "Payment Management",
+        "Payment Core and Provider Boundaries"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "How Payment Core, payment methods, gateway providers, safe payloads, reconciliation, refunds, and provider extension boundaries work.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "commerce.payment-fulfillment",
+        "commerce.cart-order",
+        "commerce.returns-refunds"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.commerce/payment-provider-boundaries.md",
+        "../nodics.commerce/modules/payment/package.json",
+        "../nodics.commerce/modules/payment/modules/paymentCore/package.json",
+        "../nodics.commerce/modules/payment/modules/paymentMethods/package.json",
+        "../nodics.commerce/modules/payment/modules/paymentProviders/package.json",
+        "../nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/package.json"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "payment",
+        "provider",
+        "method",
+        "reconciliation",
+        "refund"
+      ],
+      "topicKeywords": [
+        "Payment Management",
+        "Payment Operations",
+        "Payment Core and Provider Boundaries"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "commercePaymentProviderBoundaries-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Boundary model",
+          "anchor": "commercePaymentProviderBoundaries-2-boundary-model",
+          "level": 2
+        },
+        {
+          "text": "Safe payload contract",
+          "anchor": "commercePaymentProviderBoundaries-3-safe-payload-contract",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "commercePaymentProviderBoundaries-4-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Implementation handoff",
+          "anchor": "commercePaymentProviderBoundaries-5-implementation-handoff",
+          "level": 2
+        },
+        {
+          "text": "Evidence checklist",
+          "anchor": "commercePaymentProviderBoundaries-6-evidence-checklist",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "commercePaymentProviderBoundaries-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "commercePaymentProviderBoundaries-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Payment in Nodics separates business payment decisions from provider-specific execution. Payment Core owns method selection, authorization intent, capture/refund lifecycle, reconciliation, and safe customer payloads. Provider modules such as Stripe, PayPal, Visa, CyberSource, wallets, cards, bank transfer, and cash on delivery implement integration details. For beginners, Payment Core decides what should happen; providers perform it with an external network or offline method."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "commercePaymentProviderBoundaries-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Payment group",
+              "`../nodics.commerce/modules/payment/package.json`"
+            ],
+            [
+              "Payment Core",
+              "`../nodics.commerce/modules/payment/modules/paymentCore/package.json`"
+            ],
+            [
+              "Payment methods",
+              "`../nodics.commerce/modules/payment/modules/paymentMethods/package.json`"
+            ],
+            [
+              "Payment providers",
+              "`../nodics.commerce/modules/payment/modules/paymentProviders/package.json`"
+            ],
+            [
+              "Stripe provider",
+              "`../nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/package.json`"
+            ],
+            [
+              "Payment operations docs",
+              "`docs/pages/nodics.commerce/payment-fulfillment.md`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Boundary model",
+          "anchor": "commercePaymentProviderBoundaries-2-boundary-model"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Checkout[\"Checkout\"] --> Core[\"Payment Core\"]\n  Core --> Method[\"Payment method\"]\n  Core --> Provider[\"Payment provider\"]\n  Provider --> Gateway[\"External gateway\"]\n  Gateway --> Core\n  Core --> Order[\"Order lifecycle\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is secure payment confidence. Business users need to know which payment methods are available and whether money movement is complete. Developers need provider contracts that avoid leaking gateway details into checkout. Operators need reconciliation, retry, and failure evidence for production."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Safe payload contract",
+          "anchor": "commercePaymentProviderBoundaries-3-safe-payload-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Payment responses shown to customers should contain status, amount, currency, method label, recoverable action, and safe reference. They should not expose provider secrets, raw gateway payloads, card data, credentials, or internal stack traces."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "const paymentResult = {\n  status: 'AUTHORIZED',\n  amount: 12900,\n  currency: 'USD',\n  methodCode: 'card',\n  providerReference: 'safe-reference'\n};"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "commercePaymentProviderBoundaries-4-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can add methods, providers, adapters, reconciliation jobs, refund handlers, and risk checks. Keep provider secrets in secure configuration and never in data files or docs examples. Business users should configure availability and policy through Axis where enabled. Operators should see authorization, capture, refund, settlement, retry, and reconciliation evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Implementation handoff",
+          "anchor": "commercePaymentProviderBoundaries-5-implementation-handoff"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Every payment provider handoff should identify supported operations, safe payload fields, retryability, idempotency keys, reconciliation schedule, configuration requirements, and unavailable-state messaging. That gives business users confidence about payment availability, developers a provider contract, operators production recovery evidence, and QA owners a way to test success, decline, timeout, refund, and reconciliation cases."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Evidence checklist",
+          "anchor": "commercePaymentProviderBoundaries-6-evidence-checklist"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Payment evidence should include order reference, payment intent, method, provider, amount, currency, lifecycle state, safe external reference, correlation id, and reconciliation result. Sensitive values must remain outside logs, release data, and browser payloads. Operators should be able to decide whether to retry, cancel, refund, or escalate without reading raw gateway responses in the main business UI."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Production readiness also needs negative-path evidence. A declined card, provider timeout, duplicate callback, partial capture, and failed refund should all return controlled states that the business can understand and developers can trace."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "commercePaymentProviderBoundaries-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Letting provider-specific payloads leak into checkout responses.",
+            "Treating a payment method as a gateway provider.",
+            "Storing credentials in release data.",
+            "Completing fulfillment before payment state allows it.",
+            "Hiding failed reconciliation from operators."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "commercePaymentProviderBoundaries-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run payment method and provider contract tests. In a fresh schema, place a controlled order, authorize payment, capture or mark offline payment, issue a test refund, and inspect reconciliation evidence. Production readiness requires business-safe status, developer provider tests, operator audit records, and QA proof that failures do not expose sensitive data."
+        }
+      ],
+      "searchText": "Payment Core and Provider Boundaries How Payment Core, payment methods, gateway providers, safe payloads, reconciliation, refunds, and provider extension boundaries work. # Payment Core and Provider Boundaries\n\nPayment in Nodics separates business payment decisions from provider-specific\nexecution. Payment Core owns method selection, authorization intent,\ncapture/refund lifecycle, reconciliation, and safe customer payloads. Provider\nmodules such as Stripe, PayPal, Visa, CyberSource, wallets, cards, bank\ntransfer, and cash on delivery implement integration details. For beginners,\nPayment Core decides what should happen; providers perform it with an external\nnetwork or offline method.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Payment group | `../nodics.commerce/modules/payment/package.json` |\n| Payment Core | `../nodics.commerce/modules/payment/modules/paymentCore/package.json` |\n| Payment methods | `../nodics.commerce/modules/payment/modules/paymentMethods/package.json` |\n| Payment providers | `../nodics.commerce/modules/payment/modules/paymentProviders/package.json` |\n| Stripe provider | `../nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/package.json` |\n| Payment operations docs | `docs/pages/nodics.commerce/payment-fulfillment.md` |\n\n## Boundary model\n\n```mermaid\nflowchart LR\n  Checkout[\"Checkout\"] --> Core[\"Payment Core\"]\n  Core --> Method[\"Payment method\"]\n  Core --> Provider[\"Payment provider\"]\n  Provider --> Gateway[\"External gateway\"]\n  Gateway --> Core\n  Core --> Order[\"Order lifecycle\"]\n```\n\nThe business problem is secure payment confidence. Business users need to know\nwhich payment methods are available and whether money movement is complete.\nDevelopers need provider contracts that avoid leaking gateway details into\ncheckout. Operators need reconciliation, retry, and failure evidence for\nproduction.\n\n## Safe payload contract\n\nPayment responses shown to customers should contain status, amount, currency,\nmethod label, recoverable action, and safe reference. They should not expose\nprovider secrets, raw gateway payloads, card data, credentials, or internal\nstack traces.\n\n```js\nconst paymentResult = {\n  status: 'AUTHORIZED',\n  amount: 12900,\n  currency: 'USD',\n  methodCode: 'card',\n  providerReference: 'safe-reference'\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add methods, providers, adapters, reconciliation jobs, refund\nhandlers, and risk checks. Keep provider secrets in secure configuration and\nnever in data files or docs examples. Business users should configure\navailability and policy through Axis where enabled. Operators should see\nauthorization, capture, refund, settlement, retry, and reconciliation evidence.\n\n## Implementation handoff\n\nEvery payment provider handoff should identify supported operations, safe\npayload fields, retryability, idempotency keys, reconciliation schedule,\nconfiguration requirements, and unavailable-state messaging. That gives\nbusiness users confidence about payment availability, developers a provider\ncontract, operators production recovery evidence, and QA owners a way to test\nsuccess, decline, timeout, refund, and reconciliation cases.\n\n## Evidence checklist\n\nPayment evidence should include order reference, payment intent, method,\nprovider, amount, currency, lifecycle state, safe external reference,\ncorrelation id, and reconciliation result. Sensitive values must remain\noutside logs, release data, and browser payloads. Operators should be able to\ndecide whether to retry, cancel, refund, or escalate without reading raw\ngateway responses in the main business UI.\n\nProduction readiness also needs negative-path evidence. A declined card,\nprovider timeout, duplicate callback, partial capture, and failed refund should\nall return controlled states that the business can understand and developers\ncan trace.\n\n## Common mistakes\n\n- Letting provider-specific payloads leak into checkout responses.\n- Treating a payment method as a gateway provider.\n- Storing credentials in release data.\n- Completing fulfillment before payment state allows it.\n- Hiding failed reconciliation from operators.\n\n## Verification\n\nRun payment method and provider contract tests. In a fresh schema, place a\ncontrolled order, authorize payment, capture or mark offline payment, issue a\ntest refund, and inspect reconciliation evidence. Production readiness\nrequires business-safe status, developer provider tests, operator audit\nrecords, and QA proof that failures do not expose sensitive data.\n",
+      "previous": {
+        "title": "Localization Runtime Authoring",
+        "route": "/docs/framework/localization-runtime-authoring"
+      },
+      "next": {
+        "title": "Customer List and Profile Commerce Boundary",
+        "route": "/docs/framework/commerce-customer-list-profile-boundary"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.commerce",
+        "technicalModule": "payment",
+        "owner": "nodics.commerce",
+        "sourcePath": "docs/pages/nodics.commerce/payment-provider-boundaries.md",
+        "path": "docs/pages/nodics.commerce/payment-provider-boundaries.md",
+        "wordCount": 533,
+        "checksum": "e1286919850ea76d6e41f35efc89e0855dd529b90307d7b2b940d456ad46d063"
+      }
+    },
+    "active": true
+  },
+  "record103": {
+    "code": "nodicsDocsComponentcommerceCustomerListProfileBoundary",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "commerce.customer-list-profile-boundary",
+      "title": "Customer List and Profile Commerce Boundary",
+      "route": "/docs/framework/commerce-customer-list-profile-boundary",
+      "section": "user-enterprise-and-tenant-management",
+      "sectionTitle": "User, Enterprise, and Tenant Management",
+      "group": "user-enterprise-and-tenant-management",
+      "groupTitle": "User, Enterprise, and Tenant Management",
+      "parentId": "user-enterprise-and-tenant-management",
+      "hierarchyPath": [
+        "User, Enterprise, and Tenant Management",
+        "Customer List and Profile Commerce Boundary"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "security.identity-access-governance",
+        "commerce.cart-order",
+        "commerce.payment-provider-boundaries"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.commerce/customer-list-profile-boundary.md",
+        "../nodics.commerce/modules/checkout/modules/customerList/package.json",
+        "../nodics.commerce/modules/checkout/package.json",
+        "../nodics.platform/modules/profile/package.json"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "customer-list",
+        "profile",
+        "commerce-boundary",
+        "eligibility",
+        "identity"
+      ],
+      "topicKeywords": [
+        "User, Enterprise, and Tenant Management",
+        "Customer Data and Identity",
+        "Customer List and Profile Commerce Boundary"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "commerceCustomerListProfileBoundary-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Ownership model",
+          "anchor": "commerceCustomerListProfileBoundary-2-ownership-model",
+          "level": 2
+        },
+        {
+          "text": "Contract",
+          "anchor": "commerceCustomerListProfileBoundary-3-contract",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "commerceCustomerListProfileBoundary-4-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Implementation handoff",
+          "anchor": "commerceCustomerListProfileBoundary-5-implementation-handoff",
+          "level": 2
+        },
+        {
+          "text": "Evidence checklist",
+          "anchor": "commerceCustomerListProfileBoundary-6-evidence-checklist",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "commerceCustomerListProfileBoundary-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "commerceCustomerListProfileBoundary-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Customer List is a Commerce capability for grouping customers in commercial contexts such as eligibility, promotions, account buying, or targeted operations. Profile remains the authority for person, address, authentication, permission, and organization identity. For beginners, Profile answers \"who is this customer?\" and Customer List answers \"which commercial group is this customer part of for this commerce operation?\""
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "commerceCustomerListProfileBoundary-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Customer List module",
+              "`../nodics.commerce/modules/checkout/modules/customerList/package.json`"
+            ],
+            [
+              "Checkout module",
+              "`../nodics.commerce/modules/checkout/package.json`"
+            ],
+            [
+              "Profile module",
+              "`../nodics.platform/modules/profile/package.json`"
+            ],
+            [
+              "Security docs",
+              "`docs/pages/nodics.platform/security-identity-access.md`"
+            ],
+            [
+              "Commerce operations",
+              "`docs/pages/nodics.commerce/cart-order.md`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Ownership model",
+          "anchor": "commerceCustomerListProfileBoundary-2-ownership-model"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Profile[\"Profile identity\"] --> CustomerList[\"Commerce customer list\"]\n  CustomerList --> Promotion[\"Promotion eligibility\"]\n  CustomerList --> Checkout[\"Checkout decision\"]\n  Profile --> Auth[\"Authentication and permissions\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is targeted commerce without identity duplication. Business users need groups like VIP customers, wholesale buyers, or launch audiences. Developers need a boundary that prevents Commerce from becoming a parallel identity system. Operators need to trace eligibility decisions in production without exposing personal data unnecessarily."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Contract",
+          "anchor": "commerceCustomerListProfileBoundary-3-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Customer List records should reference stable profile or organization codes, list codes, lifecycle state, source reason, and validity dates where needed. They should not copy passwords, credentials, full identity payloads, or permission ownership."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "module.exports = {\n  vipCustomerMembership: {\n    code: 'vipCustomerMembership',\n    listCode: 'vipCustomers',\n    customerCode: 'customer001',\n    active: true\n  }\n};"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "commerceCustomerListProfileBoundary-4-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can add eligibility services, import mappers, segmentation rules, promotion integrations, and audit views. Business users should manage lists through Axis when available. AI tools should inspect Profile and Commerce schemas before adding references. Operators should verify that commercial grouping works without broad identity export."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Implementation handoff",
+          "anchor": "commerceCustomerListProfileBoundary-5-implementation-handoff"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Each customer-list customization should name the Profile reference key, Commerce list schema, eligibility service, promotion or checkout consumer, permission rule, retention rule, and audit evidence. Business users then understand the journey, developers preserve the identity boundary, operators can investigate production eligibility, and QA owners can prove that removing a customer from a list changes commerce behavior without corrupting Profile."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Evidence checklist",
+          "anchor": "commerceCustomerListProfileBoundary-6-evidence-checklist"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Membership evidence should include list code, referenced customer or organization code, source reason, actor, validity window, lifecycle state, and last eligibility decision. Do not expose more Profile detail than the business journey requires. Operators should be able to prove why a customer received or did not receive a commercial treatment, while developers keep identity, authentication, address, and permission fields under Profile authority."
+        },
+        {
+          "kind": "paragraph",
+          "text": "This evidence also protects production support from over-collecting identity data. The support answer should be about eligibility and commerce treatment, not a full customer profile export."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Production support should also prove expiry and removal. When a customer loses membership, the next checkout or promotion decision must respect that change without deleting the underlying Profile record."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "commerceCustomerListProfileBoundary-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Copying Profile authority into Commerce records.",
+            "Using email address as the only customer list key.",
+            "Applying promotions without list lifecycle checks.",
+            "Exposing list membership without permission checks.",
+            "Forgetting removal, expiry, and audit behavior."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "commerceCustomerListProfileBoundary-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Import profile and customer list data into a fresh schema. Validate list membership, checkout eligibility, promotion behavior, removal behavior, and permission-filtered Axis visibility. Production readiness requires business approval, developer boundary tests, operator audit evidence, and QA proof that Profile remains the identity authority."
+        }
+      ],
+      "searchText": "Customer List and Profile Commerce Boundary Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile. # Customer List and Profile Commerce Boundary\n\nCustomer List is a Commerce capability for grouping customers in commercial\ncontexts such as eligibility, promotions, account buying, or targeted\noperations. Profile remains the authority for person, address, authentication,\npermission, and organization identity. For beginners, Profile answers \"who is\nthis customer?\" and Customer List answers \"which commercial group is this\ncustomer part of for this commerce operation?\"\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Customer List module | `../nodics.commerce/modules/checkout/modules/customerList/package.json` |\n| Checkout module | `../nodics.commerce/modules/checkout/package.json` |\n| Profile module | `../nodics.platform/modules/profile/package.json` |\n| Security docs | `docs/pages/nodics.platform/security-identity-access.md` |\n| Commerce operations | `docs/pages/nodics.commerce/cart-order.md` |\n\n## Ownership model\n\n```mermaid\nflowchart LR\n  Profile[\"Profile identity\"] --> CustomerList[\"Commerce customer list\"]\n  CustomerList --> Promotion[\"Promotion eligibility\"]\n  CustomerList --> Checkout[\"Checkout decision\"]\n  Profile --> Auth[\"Authentication and permissions\"]\n```\n\nThe business problem is targeted commerce without identity duplication.\nBusiness users need groups like VIP customers, wholesale buyers, or launch\naudiences. Developers need a boundary that prevents Commerce from becoming a\nparallel identity system. Operators need to trace eligibility decisions in\nproduction without exposing personal data unnecessarily.\n\n## Contract\n\nCustomer List records should reference stable profile or organization codes,\nlist codes, lifecycle state, source reason, and validity dates where needed.\nThey should not copy passwords, credentials, full identity payloads, or\npermission ownership.\n\n```js\nmodule.exports = {\n  vipCustomerMembership: {\n    code: 'vipCustomerMembership',\n    listCode: 'vipCustomers',\n    customerCode: 'customer001',\n    active: true\n  }\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add eligibility services, import mappers, segmentation rules,\npromotion integrations, and audit views. Business users should manage lists\nthrough Axis when available. AI tools should inspect Profile and Commerce\nschemas before adding references. Operators should verify that commercial\ngrouping works without broad identity export.\n\n## Implementation handoff\n\nEach customer-list customization should name the Profile reference key,\nCommerce list schema, eligibility service, promotion or checkout consumer,\npermission rule, retention rule, and audit evidence. Business users then\nunderstand the journey, developers preserve the identity boundary, operators\ncan investigate production eligibility, and QA owners can prove that removing\na customer from a list changes commerce behavior without corrupting Profile.\n\n## Evidence checklist\n\nMembership evidence should include list code, referenced customer or\norganization code, source reason, actor, validity window, lifecycle state, and\nlast eligibility decision. Do not expose more Profile detail than the business\njourney requires. Operators should be able to prove why a customer received or\ndid not receive a commercial treatment, while developers keep identity,\nauthentication, address, and permission fields under Profile authority.\n\nThis evidence also protects production support from over-collecting identity\ndata. The support answer should be about eligibility and commerce treatment,\nnot a full customer profile export.\n\nProduction support should also prove expiry and removal. When a customer loses\nmembership, the next checkout or promotion decision must respect that change\nwithout deleting the underlying Profile record.\n\n## Common mistakes\n\n- Copying Profile authority into Commerce records.\n- Using email address as the only customer list key.\n- Applying promotions without list lifecycle checks.\n- Exposing list membership without permission checks.\n- Forgetting removal, expiry, and audit behavior.\n\n## Verification\n\nImport profile and customer list data into a fresh schema. Validate list\nmembership, checkout eligibility, promotion behavior, removal behavior, and\npermission-filtered Axis visibility. Production readiness requires business\napproval, developer boundary tests, operator audit evidence, and QA proof that\nProfile remains the identity authority.\n",
+      "previous": {
+        "title": "Payment Core and Provider Boundaries",
+        "route": "/docs/framework/commerce-payment-provider-boundaries"
+      },
+      "next": {
+        "title": "NMS Runtime Monitoring",
+        "route": "/docs/framework/foundation-nms-runtime-monitoring"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.commerce",
+        "technicalModule": "customerList",
+        "owner": "nodics.commerce",
+        "sourcePath": "docs/pages/nodics.commerce/customer-list-profile-boundary.md",
+        "path": "docs/pages/nodics.commerce/customer-list-profile-boundary.md",
+        "wordCount": 537,
+        "checksum": "c8a054a000f579059fbf0774a967d4aa1386844f61a89195fd210c2918dcbdfd"
+      }
+    },
+    "active": true
+  },
+  "record104": {
+    "code": "nodicsDocsComponentfoundationNmsRuntimeMonitoring",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "foundation.nms-runtime-monitoring",
+      "title": "NMS Runtime Monitoring",
+      "route": "/docs/framework/foundation-nms-runtime-monitoring",
+      "section": "operations-monitoring-and-recovery",
+      "sectionTitle": "Operations, Monitoring, and Recovery",
+      "group": "operations-monitoring-and-recovery",
+      "groupTitle": "Operations, Monitoring, and Recovery",
+      "parentId": "operations-monitoring-and-recovery",
+      "hierarchyPath": [
+        "Operations, Monitoring, and Recovery",
+        "NMS Runtime Monitoring"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "How NMS captures node health, runtime roles, responsibility, capability state, degraded conditions, and operator recovery evidence.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "framework.devops-runtime",
+        "framework.local-verification-checklist",
+        "process.runtime-lifecycle"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.foundation/nms-runtime-monitoring.md",
+        "../nodics.foundation/modules/nNms/package.json"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "nms",
+        "monitoring",
+        "node",
+        "runtime-health",
+        "operator"
+      ],
+      "topicKeywords": [
+        "Operations, Monitoring, and Recovery",
+        "Runtime Health and Support",
+        "NMS Runtime Monitoring"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "foundationNmsRuntimeMonitoring-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Monitoring model",
+          "anchor": "foundationNmsRuntimeMonitoring-2-monitoring-model",
+          "level": 2
+        },
+        {
+          "text": "Health contract",
+          "anchor": "foundationNmsRuntimeMonitoring-3-health-contract",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "foundationNmsRuntimeMonitoring-4-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Implementation handoff",
+          "anchor": "foundationNmsRuntimeMonitoring-5-implementation-handoff",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "foundationNmsRuntimeMonitoring-6-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "foundationNmsRuntimeMonitoring-7-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "NMS runtime monitoring gives Nodics a source-backed view of nodes, runtime state, health checks, topology, and recovery evidence. Axis may display this information, but the monitoring capability owns the data collection and status contract. For beginners, NMS answers three questions: which nodes are running, what are they responsible for, and what needs operator attention."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "foundationNmsRuntimeMonitoring-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "NMS module",
+              "`../nodics.foundation/modules/nNms/package.json`"
+            ],
+            [
+              "Runtime configuration",
+              "`docs/pages/nodics.foundation/runtime-configuration.md`"
+            ],
+            [
+              "DevOps runtime",
+              "`docs/pages/framework/devops-runtime.md`"
+            ],
+            [
+              "Local verification",
+              "`docs/pages/framework/local-verification-checklist.md`"
+            ],
+            [
+              "Process runtime evidence",
+              "`docs/pages/nodics.process/runtime-lifecycle.md`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Monitoring model",
+          "anchor": "foundationNmsRuntimeMonitoring-2-monitoring-model"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart TD\n  Node[\"Runtime node\"] --> Heartbeat[\"Heartbeat\"]\n  Node --> Capability[\"Capability status\"]\n  Node --> Responsibility[\"Execution responsibility\"]\n  Heartbeat --> Nms[\"NMS status\"]\n  Capability --> Nms\n  Responsibility --> Nms\n  Nms --> Axis[\"Axis operations view\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is operational trust. A business administrator does not need raw process logs, but they need to know whether setup, imports, publishing, scheduled jobs, and storefront delivery are healthy. Developers need a contract for contributing health checks. Operators need correlation ids, node ids, runtime roles, last heartbeat, dependency state, and recovery actions for production incidents."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Health contract",
+          "anchor": "foundationNmsRuntimeMonitoring-3-health-contract"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Signal",
+            "Meaning",
+            "Consumer"
+          ],
+          "rows": [
+            [
+              "Node identity",
+              "Which runtime is reporting.",
+              "Operator and registry."
+            ],
+            [
+              "Runtime role",
+              "Commerce, CMS Staged, CMS Online, Process, or other role.",
+              "Axis and support."
+            ],
+            [
+              "Heartbeat",
+              "Last known liveness.",
+              "Monitoring dashboard."
+            ],
+            [
+              "Capability health",
+              "Whether module checks pass.",
+              "Business setup pages."
+            ],
+            [
+              "Responsibility",
+              "Which node owns scheduled work.",
+              "Process operations."
+            ],
+            [
+              "Recovery hint",
+              "Suggested safe action.",
+              "Operator runbook."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "foundationNmsRuntimeMonitoring-4-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can add health contributors for new modules, dependency checks, queue checks, provider checks, and publication target checks. Health checks should be bounded and safe to call repeatedly. Business users should see simple statuses such as online, degraded, blocked, or needs attention. Operators should have detail panels for technical evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Implementation handoff",
+          "anchor": "foundationNmsRuntimeMonitoring-5-implementation-handoff"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A monitoring contribution should declare what it checks, how often it can be called, which runtime role owns it, what status values mean, and what recovery action is safe. The handoff should also identify the business journey affected by the signal. A failed CMS Online check, for example, affects public content delivery differently from a failed Process node that only affects scheduled automation."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Production readiness should include both healthy and degraded snapshots. A node that is alive but missing a required dependency should not be shown as fully online. A node that lost scheduled-job responsibility should surface the handoff state so operators know whether another node has accepted the work. Metrics should include enough history to distinguish a startup delay from a real outage."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "foundationNmsRuntimeMonitoring-6-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating a running process as proof that every capability is healthy.",
+            "Showing raw dependency exceptions to business users.",
+            "Adding expensive health checks that harm production traffic.",
+            "Hiding node responsibility for scheduled jobs.",
+            "Failing to carry correlation ids through setup or publication errors."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "foundationNmsRuntimeMonitoring-7-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Start a fresh local topology, inspect NMS status for each runtime, stop or break one dependency, and confirm Axis shows a safe degraded state with operator evidence. Run module health tests and browser checks for setup pages that consume monitoring state before production release."
+        }
+      ],
+      "searchText": "NMS Runtime Monitoring How NMS captures node health, runtime roles, responsibility, capability state, degraded conditions, and operator recovery evidence. # NMS Runtime Monitoring\n\nNMS runtime monitoring gives Nodics a source-backed view of nodes, runtime\nstate, health checks, topology, and recovery evidence. Axis may display this\ninformation, but the monitoring capability owns the data collection and\nstatus contract. For beginners, NMS answers three questions: which nodes are\nrunning, what are they responsible for, and what needs operator attention.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| NMS module | `../nodics.foundation/modules/nNms/package.json` |\n| Runtime configuration | `docs/pages/nodics.foundation/runtime-configuration.md` |\n| DevOps runtime | `docs/pages/framework/devops-runtime.md` |\n| Local verification | `docs/pages/framework/local-verification-checklist.md` |\n| Process runtime evidence | `docs/pages/nodics.process/runtime-lifecycle.md` |\n\n## Monitoring model\n\n```mermaid\nflowchart TD\n  Node[\"Runtime node\"] --> Heartbeat[\"Heartbeat\"]\n  Node --> Capability[\"Capability status\"]\n  Node --> Responsibility[\"Execution responsibility\"]\n  Heartbeat --> Nms[\"NMS status\"]\n  Capability --> Nms\n  Responsibility --> Nms\n  Nms --> Axis[\"Axis operations view\"]\n```\n\nThe business problem is operational trust. A business administrator does not\nneed raw process logs, but they need to know whether setup, imports,\npublishing, scheduled jobs, and storefront delivery are healthy. Developers\nneed a contract for contributing health checks. Operators need correlation\nids, node ids, runtime roles, last heartbeat, dependency state, and recovery\nactions for production incidents.\n\n## Health contract\n\n| Signal | Meaning | Consumer |\n| --- | --- | --- |\n| Node identity | Which runtime is reporting. | Operator and registry. |\n| Runtime role | Commerce, CMS Staged, CMS Online, Process, or other role. | Axis and support. |\n| Heartbeat | Last known liveness. | Monitoring dashboard. |\n| Capability health | Whether module checks pass. | Business setup pages. |\n| Responsibility | Which node owns scheduled work. | Process operations. |\n| Recovery hint | Suggested safe action. | Operator runbook. |\n\n## Customization and extension guidance\n\nDevelopers can add health contributors for new modules, dependency checks,\nqueue checks, provider checks, and publication target checks. Health checks\nshould be bounded and safe to call repeatedly. Business users should see\nsimple statuses such as online, degraded, blocked, or needs attention.\nOperators should have detail panels for technical evidence.\n\n## Implementation handoff\n\nA monitoring contribution should declare what it checks, how often it can be\ncalled, which runtime role owns it, what status values mean, and what recovery\naction is safe. The handoff should also identify the business journey affected\nby the signal. A failed CMS Online check, for example, affects public content\ndelivery differently from a failed Process node that only affects scheduled\nautomation.\n\nProduction readiness should include both healthy and degraded snapshots. A\nnode that is alive but missing a required dependency should not be shown as\nfully online. A node that lost scheduled-job responsibility should surface the\nhandoff state so operators know whether another node has accepted the work.\nMetrics should include enough history to distinguish a startup delay from a\nreal outage.\n\n## Common mistakes\n\n- Treating a running process as proof that every capability is healthy.\n- Showing raw dependency exceptions to business users.\n- Adding expensive health checks that harm production traffic.\n- Hiding node responsibility for scheduled jobs.\n- Failing to carry correlation ids through setup or publication errors.\n\n## Verification\n\nStart a fresh local topology, inspect NMS status for each runtime, stop or\nbreak one dependency, and confirm Axis shows a safe degraded state with\noperator evidence. Run module health tests and browser checks for setup pages\nthat consume monitoring state before production release.\n",
+      "previous": {
+        "title": "Customer List and Profile Commerce Boundary",
+        "route": "/docs/framework/commerce-customer-list-profile-boundary"
+      },
+      "next": {
+        "title": "Service Runtime and Override Precedence",
+        "route": "/docs/framework/foundation-service-runtime-overrides"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.foundation",
+        "technicalModule": "nNms",
+        "owner": "nodics.foundation",
+        "sourcePath": "docs/pages/nodics.foundation/nms-runtime-monitoring.md",
+        "path": "docs/pages/nodics.foundation/nms-runtime-monitoring.md",
+        "wordCount": 516,
+        "checksum": "7794cb9d2c263ca334f4eeb67df899485ab4ec5edae5c344f946e2605699f624"
+      }
+    },
+    "active": true
+  },
+  "record105": {
+    "code": "nodicsDocsComponentfoundationServiceRuntimeOverrides",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "foundation.service-runtime-overrides",
+      "title": "Service Runtime and Override Precedence",
+      "route": "/docs/framework/foundation-service-runtime-overrides",
+      "section": "pipeline-and-business-logic-orchestration",
+      "sectionTitle": "Pipeline and Business Logic Orchestration",
+      "group": "pipeline-and-business-logic-orchestration",
+      "groupTitle": "Pipeline and Business Logic Orchestration",
+      "parentId": "pipeline-and-business-logic-orchestration",
+      "hierarchyPath": [
+        "Pipeline and Business Logic Orchestration",
+        "Service Runtime and Override Precedence"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "How generated services, virtual services, module graph resolution, customer overrides, fallback behavior, and extension safety work.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "framework.module-loading-service-precedence",
+        "framework.backend-extension-patterns",
+        "runtime.governed-change"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.foundation/service-runtime-overrides.md",
+        "../nodics.foundation/modules/nService/package.json",
+        "../nodics.foundation/modules/nService/vService/package.json"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "nService",
+        "vService",
+        "override",
+        "service-runtime",
+        "module-graph"
+      ],
+      "topicKeywords": [
+        "Pipeline and Business Logic Orchestration",
+        "Service Runtime and Overrides",
+        "Service Runtime and Override Precedence"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "foundationServiceRuntimeOverrides-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Resolution flow",
+          "anchor": "foundationServiceRuntimeOverrides-2-resolution-flow",
+          "level": 2
+        },
+        {
+          "text": "Precedence contract",
+          "anchor": "foundationServiceRuntimeOverrides-3-precedence-contract",
+          "level": 2
+        },
+        {
+          "text": "Operational evidence",
+          "anchor": "foundationServiceRuntimeOverrides-4-operational-evidence",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "foundationServiceRuntimeOverrides-5-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Implementation handoff",
+          "anchor": "foundationServiceRuntimeOverrides-6-implementation-handoff",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "foundationServiceRuntimeOverrides-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "foundationServiceRuntimeOverrides-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Nodics services provide the runtime behavior behind schemas, routers, pipelines, imports, publication, and business operations. Service override precedence is what allows a customer project or module to customize behavior without editing framework source. For beginners, the simple idea is that a service name resolves to the most specific active implementation allowed by the module graph."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "foundationServiceRuntimeOverrides-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Service module",
+              "`../nodics.foundation/modules/nService/package.json`"
+            ],
+            [
+              "Virtual service module",
+              "`../nodics.foundation/modules/nService/vService/package.json`"
+            ],
+            [
+              "Runtime configuration docs",
+              "`docs/pages/nodics.foundation/runtime-configuration.md`"
+            ],
+            [
+              "Extension patterns",
+              "`docs/pages/framework/module-loading-and-service-precedence.md`"
+            ],
+            [
+              "Developer customization",
+              "`docs/pages/framework/backend-extension-patterns.md`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Resolution flow",
+          "anchor": "foundationServiceRuntimeOverrides-2-resolution-flow"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart TD\n  Request[\"Service request\"] --> Graph[\"Active module graph\"]\n  Graph --> Customer[\"Customer override\"]\n  Customer --> Module[\"Module implementation\"]\n  Module --> Core[\"Framework default\"]\n  Core --> Missing[\"Unavailable service error\"]\n  Customer --> Selected[\"Selected service\"]\n  Module --> Selected\n  Core --> Selected"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is controlled customization. Customers need project-level behavior, but the platform must remain upgradeable. Developers need a clear rule for where overrides live. Operators need to know which implementation is running in production when a behavior differs from the default."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Precedence contract",
+          "anchor": "foundationServiceRuntimeOverrides-3-precedence-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Service names should remain stable. Override modules can provide an implementation with the same service identity, but they should not change the public contract unless the owning capability documents a new versioned contract. Virtual services can stand in for generated or environment-provided implementations, but they must still expose predictable init, post-init, and operation behavior."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "module.exports = {\n  code: 'DefaultPriceCalculationService',\n  ownerModule: 'customer.commerce',\n  overrides: 'DefaultPriceCalculationService',\n  contract: 'commerce.priceCalculation/v1'\n};"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operational evidence",
+          "anchor": "foundationServiceRuntimeOverrides-4-operational-evidence"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Question",
+            "Evidence"
+          ],
+          "rows": [
+            [
+              "Which service was selected?",
+              "Service registry entry and module graph order."
+            ],
+            [
+              "Why was it selected?",
+              "Override relationship and active module state."
+            ],
+            [
+              "Is it safe?",
+              "Contract tests, init result, and health status."
+            ],
+            [
+              "Can it be rolled back?",
+              "Disable override module or restore previous release."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "foundationServiceRuntimeOverrides-5-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers should extend services in the narrowest owning module. Business logic belongs in services, handlers, policies, or workflows, not in data records. Customer projects should add tests showing the default behavior, the override behavior, and the fallback behavior. AI tools should inspect the module graph before editing a service so they do not create duplicate authority."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Implementation handoff",
+          "anchor": "foundationServiceRuntimeOverrides-6-implementation-handoff"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A service customization is ready only when the developer can identify the default service, the overriding module, the active runtime graph, the contract version, and the rollback path. Business users should see the changed behavior as a normal capability journey. Operators should see selected implementation metadata in production logs or diagnostics. QA should run both default and override paths so future upgrades do not silently change precedence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "foundationServiceRuntimeOverrides-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Changing a default service when a customer override is enough.",
+            "Creating a new service name when an override contract already exists.",
+            "Hiding selected implementation details from operators.",
+            "Putting business decisions inside import data files.",
+            "Forgetting init and post-init behavior for virtual services."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "foundationServiceRuntimeOverrides-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run service and module-loading tests, then start a fresh runtime and inspect the selected service implementation for the customized capability. A production check should show the business behavior, developer contract evidence, operator selected-service metadata, and QA regression proof for fallback behavior."
+        }
+      ],
+      "searchText": "Service Runtime and Override Precedence How generated services, virtual services, module graph resolution, customer overrides, fallback behavior, and extension safety work. # Service Runtime and Override Precedence\n\nNodics services provide the runtime behavior behind schemas, routers,\npipelines, imports, publication, and business operations. Service override\nprecedence is what allows a customer project or module to customize behavior\nwithout editing framework source. For beginners, the simple idea is that a\nservice name resolves to the most specific active implementation allowed by\nthe module graph.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Service module | `../nodics.foundation/modules/nService/package.json` |\n| Virtual service module | `../nodics.foundation/modules/nService/vService/package.json` |\n| Runtime configuration docs | `docs/pages/nodics.foundation/runtime-configuration.md` |\n| Extension patterns | `docs/pages/framework/module-loading-and-service-precedence.md` |\n| Developer customization | `docs/pages/framework/backend-extension-patterns.md` |\n\n## Resolution flow\n\n```mermaid\nflowchart TD\n  Request[\"Service request\"] --> Graph[\"Active module graph\"]\n  Graph --> Customer[\"Customer override\"]\n  Customer --> Module[\"Module implementation\"]\n  Module --> Core[\"Framework default\"]\n  Core --> Missing[\"Unavailable service error\"]\n  Customer --> Selected[\"Selected service\"]\n  Module --> Selected\n  Core --> Selected\n```\n\nThe business problem is controlled customization. Customers need project-level\nbehavior, but the platform must remain upgradeable. Developers need a clear\nrule for where overrides live. Operators need to know which implementation is\nrunning in production when a behavior differs from the default.\n\n## Precedence contract\n\nService names should remain stable. Override modules can provide an\nimplementation with the same service identity, but they should not change the\npublic contract unless the owning capability documents a new versioned\ncontract. Virtual services can stand in for generated or environment-provided\nimplementations, but they must still expose predictable init, post-init, and\noperation behavior.\n\n```js\nmodule.exports = {\n  code: 'DefaultPriceCalculationService',\n  ownerModule: 'customer.commerce',\n  overrides: 'DefaultPriceCalculationService',\n  contract: 'commerce.priceCalculation/v1'\n};\n```\n\n## Operational evidence\n\n| Question | Evidence |\n| --- | --- |\n| Which service was selected? | Service registry entry and module graph order. |\n| Why was it selected? | Override relationship and active module state. |\n| Is it safe? | Contract tests, init result, and health status. |\n| Can it be rolled back? | Disable override module or restore previous release. |\n\n## Customization and extension guidance\n\nDevelopers should extend services in the narrowest owning module. Business\nlogic belongs in services, handlers, policies, or workflows, not in data\nrecords. Customer projects should add tests showing the default behavior, the\noverride behavior, and the fallback behavior. AI tools should inspect the\nmodule graph before editing a service so they do not create duplicate\nauthority.\n\n## Implementation handoff\n\nA service customization is ready only when the developer can identify the\ndefault service, the overriding module, the active runtime graph, the contract\nversion, and the rollback path. Business users should see the changed behavior\nas a normal capability journey. Operators should see selected implementation\nmetadata in production logs or diagnostics. QA should run both default and\noverride paths so future upgrades do not silently change precedence.\n\n## Common mistakes\n\n- Changing a default service when a customer override is enough.\n- Creating a new service name when an override contract already exists.\n- Hiding selected implementation details from operators.\n- Putting business decisions inside import data files.\n- Forgetting init and post-init behavior for virtual services.\n\n## Verification\n\nRun service and module-loading tests, then start a fresh runtime and inspect\nthe selected service implementation for the customized capability. A production\ncheck should show the business behavior, developer contract evidence, operator\nselected-service metadata, and QA regression proof for fallback behavior.\n",
+      "previous": {
+        "title": "NMS Runtime Monitoring",
+        "route": "/docs/framework/foundation-nms-runtime-monitoring"
+      },
+      "next": {
+        "title": "Cache Provider Runbooks",
+        "route": "/docs/framework/foundation-cache-provider-runbooks"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.foundation",
+        "technicalModule": "nService",
+        "owner": "nodics.foundation",
+        "sourcePath": "docs/pages/nodics.foundation/service-runtime-overrides.md",
+        "path": "docs/pages/nodics.foundation/service-runtime-overrides.md",
+        "wordCount": 517,
+        "checksum": "d83381148967d4499b37500065db1fc59f75580a2d5e75329783f4ffd5d3bdec"
+      }
+    },
+    "active": true
+  },
+  "record106": {
+    "code": "nodicsDocsComponentfoundationCacheProviderRunbooks",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "foundation.cache-provider-runbooks",
+      "title": "Cache Provider Runbooks",
+      "route": "/docs/framework/foundation-cache-provider-runbooks",
+      "section": "caching-and-runtime-state-management",
+      "sectionTitle": "Caching and Runtime State Management",
+      "group": "caching-and-runtime-state-management",
+      "groupTitle": "Caching and Runtime State Management",
+      "parentId": "caching-and-runtime-state-management",
+      "hierarchyPath": [
+        "Caching and Runtime State Management",
+        "Cache Provider Runbooks"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "Redis, Hazelcast, node cache, key strategy, invalidation, provider health, fallback behavior, and production cache recovery guidance.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "cache.runtime-state-management",
+        "runtime.governed-change",
+        "wcms.publishing-lifecycle"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.foundation/cache-provider-runbooks.md",
+        "../nodics.foundation/modules/nCache/package.json",
+        "../nodics.foundation/modules/nCache/cache/package.json",
+        "../nodics.foundation/modules/nCache/redisCache/package.json",
+        "../nodics.foundation/modules/nCache/hazelcastCache/package.json",
+        "../nodics.foundation/modules/nCache/nodeCache/package.json"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "configuration-table",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "cache",
+        "redis",
+        "hazelcast",
+        "node-cache",
+        "invalidation"
+      ],
+      "topicKeywords": [
+        "Caching and Runtime State Management",
+        "Cache Foundations",
+        "Cache Provider Runbooks"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "foundationCacheProviderRunbooks-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Provider flow",
+          "anchor": "foundationCacheProviderRunbooks-2-provider-flow",
+          "level": 2
+        },
+        {
+          "text": "Configuration contract",
+          "anchor": "foundationCacheProviderRunbooks-3-configuration-contract",
+          "level": 2
+        },
+        {
+          "text": "Runbook",
+          "anchor": "foundationCacheProviderRunbooks-4-runbook",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "foundationCacheProviderRunbooks-5-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "foundationCacheProviderRunbooks-6-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "foundationCacheProviderRunbooks-7-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Caching gives Nodics speed without changing the source of truth. Redis, Hazelcast, node-local cache, and virtual cache behavior are provider choices behind a common contract. For beginners, the cache is a temporary copy used to serve reads faster. The database, publication manifest, or owning service remains the authority. A cache miss should be recoverable; a cache hit should never make stale business data look correct after a governed change."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "foundationCacheProviderRunbooks-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Cache group",
+              "`../nodics.foundation/modules/nCache/package.json`"
+            ],
+            [
+              "Core cache contract",
+              "`../nodics.foundation/modules/nCache/cache/package.json`"
+            ],
+            [
+              "Redis provider",
+              "`../nodics.foundation/modules/nCache/redisCache/package.json`"
+            ],
+            [
+              "Hazelcast provider",
+              "`../nodics.foundation/modules/nCache/hazelcastCache/package.json`"
+            ],
+            [
+              "Node cache provider",
+              "`../nodics.foundation/modules/nCache/nodeCache/package.json`"
+            ],
+            [
+              "Cache overview page",
+              "`docs/pages/nodics.foundation/cache-runtime-state.md`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Provider flow",
+          "anchor": "foundationCacheProviderRunbooks-2-provider-flow"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Service[\"Owning service\"] --> CacheApi[\"Cache contract\"]\n  CacheApi --> Redis[\"Redis provider\"]\n  CacheApi --> Hazelcast[\"Hazelcast provider\"]\n  CacheApi --> Node[\"Node cache\"]\n  CacheApi --> Miss[\"Source of truth\"]\n  Redis --> Response[\"Cached response\"]\n  Hazelcast --> Response\n  Node --> Response"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is freshness with performance. Business users expect a published page, price, stock state, or permission change to become visible without confusing delays. Developers need clear key strategy and invalidation contracts. Operators need provider health, eviction behavior, and recovery commands for production incidents."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Configuration contract",
+          "anchor": "foundationCacheProviderRunbooks-3-configuration-contract"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Configuration",
+            "Purpose",
+            "Production note"
+          ],
+          "rows": [
+            [
+              "Provider code",
+              "Selects Redis, Hazelcast, node cache, or virtual provider.",
+              "Must match deployed infrastructure."
+            ],
+            [
+              "Key prefix",
+              "Separates tenant, runtime, and schema scopes.",
+              "Prevents cross-tenant leakage."
+            ],
+            [
+              "TTL",
+              "Bounds staleness.",
+              "Use capability-specific values."
+            ],
+            [
+              "Invalidation event",
+              "Removes stale records after write or publication.",
+              "Must be tested with runtime change."
+            ],
+            [
+              "Fallback mode",
+              "Defines behavior when cache is unavailable.",
+              "Prefer degraded reads over unsafe writes."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Runbook",
+          "anchor": "foundationCacheProviderRunbooks-4-runbook"
+        },
+        {
+          "kind": "paragraph",
+          "text": "When a cache incident happens, confirm whether the source record is correct, whether the cache key maps to the expected tenant and runtime, whether the provider is reachable, whether invalidation fired, and whether the consumer is reading the right cache layer. Do not fix stale data by editing frontend code. Do not clear all production caches unless the affected scope cannot be isolated."
+        },
+        {
+          "kind": "paragraph",
+          "text": "For Redis, check connection, selected database, key prefix, expiry, and memory pressure. For Hazelcast, check cluster membership, partition health, and serialization compatibility. For node-local cache, check process restarts and single-node assumptions. Each provider should return a safe degraded state that business users can understand and operators can investigate."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "foundationCacheProviderRunbooks-5-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can add providers, key strategies, invalidation hooks, metrics, and health checks. Business logic should remain in owning services. Cache keys should be deterministic and include tenant or runtime scope when needed. Tests should cover hit, miss, expiry, invalidation, provider failure, and fallback."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "foundationCacheProviderRunbooks-6-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating cached values as authority.",
+            "Using one key namespace across Staged and Online.",
+            "Forgetting invalidation after import, publish, or configuration change.",
+            "Hiding provider outages behind generic business errors.",
+            "Adding custom cache behavior without production observability."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "foundationCacheProviderRunbooks-7-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run cache provider tests for Redis, Hazelcast, and node cache where available. In a fresh schema, import data, warm the cache, change or publish the source record, and prove invalidation refreshes the browser or API result. Operators should see provider health, key scope, hit or miss evidence, and safe fallback behavior."
+        }
+      ],
+      "searchText": "Cache Provider Runbooks Redis, Hazelcast, node cache, key strategy, invalidation, provider health, fallback behavior, and production cache recovery guidance. # Cache Provider Runbooks\n\nCaching gives Nodics speed without changing the source of truth. Redis,\nHazelcast, node-local cache, and virtual cache behavior are provider choices\nbehind a common contract. For beginners, the cache is a temporary copy used to\nserve reads faster. The database, publication manifest, or owning service\nremains the authority. A cache miss should be recoverable; a cache hit should\nnever make stale business data look correct after a governed change.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Cache group | `../nodics.foundation/modules/nCache/package.json` |\n| Core cache contract | `../nodics.foundation/modules/nCache/cache/package.json` |\n| Redis provider | `../nodics.foundation/modules/nCache/redisCache/package.json` |\n| Hazelcast provider | `../nodics.foundation/modules/nCache/hazelcastCache/package.json` |\n| Node cache provider | `../nodics.foundation/modules/nCache/nodeCache/package.json` |\n| Cache overview page | `docs/pages/nodics.foundation/cache-runtime-state.md` |\n\n## Provider flow\n\n```mermaid\nflowchart LR\n  Service[\"Owning service\"] --> CacheApi[\"Cache contract\"]\n  CacheApi --> Redis[\"Redis provider\"]\n  CacheApi --> Hazelcast[\"Hazelcast provider\"]\n  CacheApi --> Node[\"Node cache\"]\n  CacheApi --> Miss[\"Source of truth\"]\n  Redis --> Response[\"Cached response\"]\n  Hazelcast --> Response\n  Node --> Response\n```\n\nThe business problem is freshness with performance. Business users expect a\npublished page, price, stock state, or permission change to become visible\nwithout confusing delays. Developers need clear key strategy and invalidation\ncontracts. Operators need provider health, eviction behavior, and recovery\ncommands for production incidents.\n\n## Configuration contract\n\n| Configuration | Purpose | Production note |\n| --- | --- | --- |\n| Provider code | Selects Redis, Hazelcast, node cache, or virtual provider. | Must match deployed infrastructure. |\n| Key prefix | Separates tenant, runtime, and schema scopes. | Prevents cross-tenant leakage. |\n| TTL | Bounds staleness. | Use capability-specific values. |\n| Invalidation event | Removes stale records after write or publication. | Must be tested with runtime change. |\n| Fallback mode | Defines behavior when cache is unavailable. | Prefer degraded reads over unsafe writes. |\n\n## Runbook\n\nWhen a cache incident happens, confirm whether the source record is correct,\nwhether the cache key maps to the expected tenant and runtime, whether the\nprovider is reachable, whether invalidation fired, and whether the consumer is\nreading the right cache layer. Do not fix stale data by editing frontend code.\nDo not clear all production caches unless the affected scope cannot be isolated.\n\nFor Redis, check connection, selected database, key prefix, expiry, and memory\npressure. For Hazelcast, check cluster membership, partition health, and\nserialization compatibility. For node-local cache, check process restarts and\nsingle-node assumptions. Each provider should return a safe degraded state\nthat business users can understand and operators can investigate.\n\n## Customization and extension guidance\n\nDevelopers can add providers, key strategies, invalidation hooks, metrics, and\nhealth checks. Business logic should remain in owning services. Cache keys\nshould be deterministic and include tenant or runtime scope when needed. Tests\nshould cover hit, miss, expiry, invalidation, provider failure, and fallback.\n\n## Common mistakes\n\n- Treating cached values as authority.\n- Using one key namespace across Staged and Online.\n- Forgetting invalidation after import, publish, or configuration change.\n- Hiding provider outages behind generic business errors.\n- Adding custom cache behavior without production observability.\n\n## Verification\n\nRun cache provider tests for Redis, Hazelcast, and node cache where available.\nIn a fresh schema, import data, warm the cache, change or publish the source\nrecord, and prove invalidation refreshes the browser or API result. Operators\nshould see provider health, key scope, hit or miss evidence, and safe fallback\nbehavior.\n",
+      "previous": {
+        "title": "Service Runtime and Override Precedence",
+        "route": "/docs/framework/foundation-service-runtime-overrides"
+      },
+      "next": {
+        "title": "Database Provider Boundaries",
+        "route": "/docs/framework/foundation-database-provider-boundaries"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.foundation",
+        "technicalModule": "nCache",
+        "owner": "nodics.foundation",
+        "sourcePath": "docs/pages/nodics.foundation/cache-provider-runbooks.md",
+        "path": "docs/pages/nodics.foundation/cache-provider-runbooks.md",
+        "wordCount": 527,
+        "checksum": "99859f8f38df2804ff39429814bb7108fc37fdcc0e4aa5e37b7711301329c663"
+      }
+    },
+    "active": true
+  },
+  "record107": {
+    "code": "nodicsDocsComponentfoundationDatabaseProviderBoundaries",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "foundation.database-provider-boundaries",
+      "title": "Database Provider Boundaries",
+      "route": "/docs/framework/foundation-database-provider-boundaries",
+      "section": "database-and-persistence-management",
+      "sectionTitle": "Database and Persistence Management",
+      "group": "database-and-persistence-management",
+      "groupTitle": "Database and Persistence Management",
+      "parentId": "database-and-persistence-management",
+      "hierarchyPath": [
+        "Database and Persistence Management",
+        "Database Provider Boundaries"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "How MongoDB, virtual DB, Cassandra, Elasticsearch, schemas, query translation, indexes, migration, and provider validation are separated.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "persistence.provider-data-access-layer",
+        "foundation.cache-provider-runbooks",
+        "discovery.search-indexing"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.foundation/database-provider-boundaries.md",
+        "../nodics.foundation/modules/nDatabase/package.json",
+        "../nodics.foundation/modules/nDatabase/database/package.json",
+        "../nodics.foundation/modules/nDatabase/database/vDatabase/package.json",
+        "../nodics.foundation/modules/nDatabase/mongodb/package.json",
+        "../nodics.foundation/modules/nDatabase/mongodb/vMongodb/package.json",
+        "../nodics.foundation/modules/nDatabase/cassandradb/package.json",
+        "../nodics.foundation/modules/nDatabase/elasticdb/package.json"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "configuration-table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "database",
+        "mongodb",
+        "cassandra",
+        "elasticsearch",
+        "provider"
+      ],
+      "topicKeywords": [
+        "Database and Persistence Management",
+        "Database Provider Contracts",
+        "Database Provider Boundaries"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "foundationDatabaseProviderBoundaries-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Boundary model",
+          "anchor": "foundationDatabaseProviderBoundaries-2-boundary-model",
+          "level": 2
+        },
+        {
+          "text": "Contract rules",
+          "anchor": "foundationDatabaseProviderBoundaries-3-contract-rules",
+          "level": 2
+        },
+        {
+          "text": "Provider comparison",
+          "anchor": "foundationDatabaseProviderBoundaries-4-provider-comparison",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "foundationDatabaseProviderBoundaries-5-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "foundationDatabaseProviderBoundaries-6-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "foundationDatabaseProviderBoundaries-7-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Database providers let Nodics run the same schema and service contracts on different persistence implementations. MongoDB, virtual MongoDB, Cassandra, Elasticsearch, and virtual database modules are infrastructure choices behind the owning schema services. For beginners, the database stores records, but the module schema and service decide what records mean."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "foundationDatabaseProviderBoundaries-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Database group",
+              "`../nodics.foundation/modules/nDatabase/package.json`"
+            ],
+            [
+              "Core database contract",
+              "`../nodics.foundation/modules/nDatabase/database/package.json`"
+            ],
+            [
+              "Virtual database",
+              "`../nodics.foundation/modules/nDatabase/database/vDatabase/package.json`"
+            ],
+            [
+              "MongoDB provider",
+              "`../nodics.foundation/modules/nDatabase/mongodb/package.json`"
+            ],
+            [
+              "Virtual MongoDB",
+              "`../nodics.foundation/modules/nDatabase/mongodb/vMongodb/package.json`"
+            ],
+            [
+              "Cassandra provider",
+              "`../nodics.foundation/modules/nDatabase/cassandradb/package.json`"
+            ],
+            [
+              "Elasticsearch provider",
+              "`../nodics.foundation/modules/nDatabase/elasticdb/package.json`"
+            ],
+            [
+              "Provider overview",
+              "`docs/pages/nodics.foundation/provider-data-access-layer.md`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Boundary model",
+          "anchor": "foundationDatabaseProviderBoundaries-2-boundary-model"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart TD\n  Api[\"Route or service\"] --> Schema[\"Owning schema service\"]\n  Schema --> Adapter[\"Database adapter contract\"]\n  Adapter --> Mongo[\"MongoDB\"]\n  Adapter --> Cassandra[\"Cassandra\"]\n  Adapter --> Elastic[\"Elasticsearch\"]\n  Adapter --> Virtual[\"Virtual provider\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is portability and reliability. A customer should be able to run a capability in the right infrastructure without changing product, content, payment, or profile logic. Developers need provider boundaries. Operators need connection, index, migration, backup, and recovery evidence for production."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Contract rules",
+          "anchor": "foundationDatabaseProviderBoundaries-3-contract-rules"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Schema definitions, validation, interceptors, and services own business semantics. Providers own connection, query translation, transaction behavior, index operations, pagination, and persistence-specific failure mapping. A provider must not invent fields or bypass schema validation. A schema service must not depend on provider-only behavior unless it declares that dependency."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Provider errors should be mapped into consistent Nodics outcomes. A duplicate key, missing index, connection timeout, write conflict, and search shard issue are different technical failures, but business users need clear messages and operators need enough evidence to recover production without reading provider internals first."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "const persistenceContext = {\n  schemaName: 'product',\n  provider: 'mongodb',\n  tenant: 'default',\n  operation: 'saveAll'\n};"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Provider comparison",
+          "anchor": "foundationDatabaseProviderBoundaries-4-provider-comparison"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Provider",
+            "Use",
+            "Watch point"
+          ],
+          "rows": [
+            [
+              "MongoDB",
+              "Primary document persistence.",
+              "Validate indexes and tenant filters."
+            ],
+            [
+              "Virtual MongoDB",
+              "Development and generated behavior tests.",
+              "Do not treat as production storage."
+            ],
+            [
+              "Cassandra",
+              "Large distributed persistence cases.",
+              "Model queries before data shape."
+            ],
+            [
+              "Elasticsearch",
+              "Search and discovery projections.",
+              "Search index is projection, not authority."
+            ],
+            [
+              "Virtual database",
+              "Contract testing and fallback stubs.",
+              "Keep capabilities clearly labelled."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "foundationDatabaseProviderBoundaries-5-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can add database providers, transaction wrappers, query builders, index managers, and error mappers. They should add contract tests proving create, update, read, search, delete, pagination, tenant isolation, and failure mapping. Business users should see database impact only as capability readiness or safe error messages in Axis. Operators should see connection health, migration state, index state, backup evidence, and recovery steps. These signals should be available before customer traffic depends on the provider."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "foundationDatabaseProviderBoundaries-6-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Letting provider-specific query behavior leak into business services.",
+            "Treating Elasticsearch projection as product or content authority.",
+            "Running production without tenant-index checks.",
+            "Hiding connection failures as generic setup issues.",
+            "Reusing development virtual providers as production evidence."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "foundationDatabaseProviderBoundaries-7-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run database provider tests and owning module schema tests. For production, verify connection configuration, tenant filters, indexes, migration status, backup and restore procedure, and failure mapping. A fresh-schema check should prove import, read, update, search projection, and rollback behavior through the selected provider."
+        }
+      ],
+      "searchText": "Database Provider Boundaries How MongoDB, virtual DB, Cassandra, Elasticsearch, schemas, query translation, indexes, migration, and provider validation are separated. # Database Provider Boundaries\n\nDatabase providers let Nodics run the same schema and service contracts on\ndifferent persistence implementations. MongoDB, virtual MongoDB, Cassandra,\nElasticsearch, and virtual database modules are infrastructure choices behind\nthe owning schema services. For beginners, the database stores records, but\nthe module schema and service decide what records mean.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Database group | `../nodics.foundation/modules/nDatabase/package.json` |\n| Core database contract | `../nodics.foundation/modules/nDatabase/database/package.json` |\n| Virtual database | `../nodics.foundation/modules/nDatabase/database/vDatabase/package.json` |\n| MongoDB provider | `../nodics.foundation/modules/nDatabase/mongodb/package.json` |\n| Virtual MongoDB | `../nodics.foundation/modules/nDatabase/mongodb/vMongodb/package.json` |\n| Cassandra provider | `../nodics.foundation/modules/nDatabase/cassandradb/package.json` |\n| Elasticsearch provider | `../nodics.foundation/modules/nDatabase/elasticdb/package.json` |\n| Provider overview | `docs/pages/nodics.foundation/provider-data-access-layer.md` |\n\n## Boundary model\n\n```mermaid\nflowchart TD\n  Api[\"Route or service\"] --> Schema[\"Owning schema service\"]\n  Schema --> Adapter[\"Database adapter contract\"]\n  Adapter --> Mongo[\"MongoDB\"]\n  Adapter --> Cassandra[\"Cassandra\"]\n  Adapter --> Elastic[\"Elasticsearch\"]\n  Adapter --> Virtual[\"Virtual provider\"]\n```\n\nThe business problem is portability and reliability. A customer should be able\nto run a capability in the right infrastructure without changing product,\ncontent, payment, or profile logic. Developers need provider boundaries.\nOperators need connection, index, migration, backup, and recovery evidence for\nproduction.\n\n## Contract rules\n\nSchema definitions, validation, interceptors, and services own business\nsemantics. Providers own connection, query translation, transaction behavior,\nindex operations, pagination, and persistence-specific failure mapping. A\nprovider must not invent fields or bypass schema validation. A schema service\nmust not depend on provider-only behavior unless it declares that dependency.\n\nProvider errors should be mapped into consistent Nodics outcomes. A duplicate\nkey, missing index, connection timeout, write conflict, and search shard issue\nare different technical failures, but business users need clear messages and\noperators need enough evidence to recover production without reading provider\ninternals first.\n\n```js\nconst persistenceContext = {\n  schemaName: 'product',\n  provider: 'mongodb',\n  tenant: 'default',\n  operation: 'saveAll'\n};\n```\n\n## Provider comparison\n\n| Provider | Use | Watch point |\n| --- | --- | --- |\n| MongoDB | Primary document persistence. | Validate indexes and tenant filters. |\n| Virtual MongoDB | Development and generated behavior tests. | Do not treat as production storage. |\n| Cassandra | Large distributed persistence cases. | Model queries before data shape. |\n| Elasticsearch | Search and discovery projections. | Search index is projection, not authority. |\n| Virtual database | Contract testing and fallback stubs. | Keep capabilities clearly labelled. |\n\n## Customization and extension guidance\n\nDevelopers can add database providers, transaction wrappers, query builders,\nindex managers, and error mappers. They should add contract tests proving\ncreate, update, read, search, delete, pagination, tenant isolation, and failure\nmapping. Business users should see database impact only as capability\nreadiness or safe error messages in Axis. Operators should see connection\nhealth, migration state, index state, backup evidence, and recovery steps.\nThese signals should be available before customer traffic depends on the\nprovider.\n\n## Common mistakes\n\n- Letting provider-specific query behavior leak into business services.\n- Treating Elasticsearch projection as product or content authority.\n- Running production without tenant-index checks.\n- Hiding connection failures as generic setup issues.\n- Reusing development virtual providers as production evidence.\n\n## Verification\n\nRun database provider tests and owning module schema tests. For production,\nverify connection configuration, tenant filters, indexes, migration status,\nbackup and restore procedure, and failure mapping. A fresh-schema check should\nprove import, read, update, search projection, and rollback behavior through\nthe selected provider.\n",
+      "previous": {
+        "title": "Cache Provider Runbooks",
+        "route": "/docs/framework/foundation-cache-provider-runbooks"
+      },
+      "next": {
+        "title": "OTP and Security Flow",
+        "route": "/docs/framework/security-otp-security-flow"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.foundation",
+        "technicalModule": "nDatabase",
+        "owner": "nodics.foundation",
+        "sourcePath": "docs/pages/nodics.foundation/database-provider-boundaries.md",
+        "path": "docs/pages/nodics.foundation/database-provider-boundaries.md",
+        "wordCount": 526,
+        "checksum": "1f14d3036b5542ebd0e35328a45d43e8b9ae2f8f76c6308ab3d3f413af68be70"
+      }
+    },
+    "active": true
+  },
+  "record108": {
+    "code": "nodicsDocsComponentsecurityOtpSecurityFlow",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "security.otp-security-flow",
+      "title": "OTP and Security Flow",
+      "route": "/docs/framework/security-otp-security-flow",
+      "section": "security-governance-and-compliance",
+      "sectionTitle": "Security, Governance, and Compliance",
+      "group": "security-governance-and-compliance",
+      "groupTitle": "Security, Governance, and Compliance",
+      "parentId": "security-governance-and-compliance",
+      "hierarchyPath": [
+        "Security, Governance, and Compliance",
+        "OTP and Security Flow"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "OTP generation, delivery intent, verification, expiry, retry, throttling, lockout, audit, and secure frontend message behavior.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "security.identity-access-governance",
+        "communication.overview",
+        "communication.provider-runbooks"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.platform/otp-security-flow.md",
+        "../nodics.foundation/modules/nOtp/package.json",
+        "../nodics.platform/modules/profile/package.json",
+        "../nodics.communication/modules/smtpCommsProvider/package.json",
+        "../nodics.communication/modules/smsCommsProvider/package.json"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "configuration-table",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "otp",
+        "verification",
+        "security",
+        "throttling",
+        "audit"
+      ],
+      "topicKeywords": [
+        "Security, Governance, and Compliance",
+        "Authentication and Verification",
+        "OTP and Security Flow"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "securityOtpSecurityFlow-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Flow",
+          "anchor": "securityOtpSecurityFlow-2-flow",
+          "level": 2
+        },
+        {
+          "text": "Policy contract",
+          "anchor": "securityOtpSecurityFlow-3-policy-contract",
+          "level": 2
+        },
+        {
+          "text": "Configuration behavior",
+          "anchor": "securityOtpSecurityFlow-4-configuration-behavior",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "securityOtpSecurityFlow-5-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Implementation handoff",
+          "anchor": "securityOtpSecurityFlow-6-implementation-handoff",
+          "level": 2
+        },
+        {
+          "text": "Evidence checklist",
+          "anchor": "securityOtpSecurityFlow-7-evidence-checklist",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "securityOtpSecurityFlow-8-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "securityOtpSecurityFlow-9-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "OTP gives Nodics a time-bounded verification method for login, recovery, approval, and sensitive operations. It supports security, but it is not a complete identity system by itself. Profile and security modules own identity, roles, groups, and permissions. OTP owns generation, delivery intent, verification, expiry, retry, throttling, and audit. For beginners, an OTP is a short-lived proof that a user controls a channel."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "securityOtpSecurityFlow-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "OTP module",
+              "`../nodics.foundation/modules/nOtp/package.json`"
+            ],
+            [
+              "Profile module",
+              "`../nodics.platform/modules/profile/package.json`"
+            ],
+            [
+              "Security documentation",
+              "`docs/pages/nodics.platform/security-identity-access.md`"
+            ],
+            [
+              "Communication providers",
+              "`../nodics.communication/modules/smtpCommsProvider/package.json`, `../nodics.communication/modules/smsCommsProvider/package.json`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Flow",
+          "anchor": "securityOtpSecurityFlow-2-flow"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "sequenceDiagram\n  participant User as User\n  participant App as Axis or storefront\n  participant Otp as OTP service\n  participant Comms as Communication provider\n  participant Audit as Audit trail\n\n  User->>App: Request verification\n  App->>Otp: Create OTP challenge\n  Otp->>Comms: Send delivery intent\n  Otp->>Audit: Record challenge\n  User->>App: Submit code\n  App->>Otp: Verify code\n  Otp->>Audit: Record result"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is safer access without slowing every journey. Business users need clear prompts and recovery paths. Developers need expiry and retry contracts. Operators need throttling, audit, failed delivery, and abuse evidence in production."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Policy contract",
+          "anchor": "securityOtpSecurityFlow-3-policy-contract"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Policy",
+            "Purpose"
+          ],
+          "rows": [
+            [
+              "Expiry window",
+              "Limits how long a code is valid."
+            ],
+            [
+              "Retry limit",
+              "Prevents guessing and noisy resends."
+            ],
+            [
+              "Channel policy",
+              "Selects email, SMS, or another verified channel."
+            ],
+            [
+              "Audit event",
+              "Records challenge and verification outcome."
+            ],
+            [
+              "Lockout rule",
+              "Protects high-risk operations after repeated failures."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Configuration behavior",
+          "anchor": "securityOtpSecurityFlow-4-configuration-behavior"
+        },
+        {
+          "kind": "paragraph",
+          "text": "OTP configuration should define expiry, retry limit, resend delay, channel priority, lockout threshold, and audit retention. Configuration changes should be governed because they directly affect account security and user experience. Business users may see policy labels, developers own the enforcement service, and operators verify the active configuration in production diagnostics."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "securityOtpSecurityFlow-5-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can add channel providers, templates, throttling policies, lockout rules, and risk checks. Business users should configure supported journeys through governed settings, not through code changes. Operators should monitor challenge volume, failure rate, delivery failure, and locked accounts. Never store OTP secrets in data files or documentation examples."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Implementation handoff",
+          "anchor": "securityOtpSecurityFlow-6-implementation-handoff"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Each OTP journey should document trigger context, recipient lookup, channel policy, expiry, retry limit, lockout rule, audit event, and safe browser message. This helps business users trust the verification journey, developers keep security logic centralized, operators investigate production abuse or delivery problems, and QA owners test both success and failure without exposing secret values."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Evidence checklist",
+          "anchor": "securityOtpSecurityFlow-7-evidence-checklist"
+        },
+        {
+          "kind": "paragraph",
+          "text": "OTP evidence should include challenge id, user reference, channel type, created time, expiry time, attempt count, delivery status, verification result, and lockout decision. It should never include the raw code. Production support needs enough detail to diagnose delayed delivery, repeated failures, and abuse patterns while business users continue to see simple recovery instructions."
+        },
+        {
+          "kind": "paragraph",
+          "text": "High-risk operations should also record why OTP was required. That context helps developers keep policy centralized and helps operators distinguish a normal verification journey from suspicious production behavior."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "securityOtpSecurityFlow-8-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating OTP as a replacement for identity and permission checks.",
+            "Allowing unlimited resend or verification attempts.",
+            "Exposing whether an account exists through error messages.",
+            "Logging raw OTP codes.",
+            "Forgetting communication provider failure handling."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "securityOtpSecurityFlow-9-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run OTP, Profile, and communication provider tests for successful verify, expired code, wrong code, retry limit, resend throttling, and delivery failure. In browser tests, confirm the message is business-safe and no raw code or sensitive account evidence appears. Production readiness requires audit, throttling, developer tests, operator dashboards, and QA security evidence."
+        }
+      ],
+      "searchText": "OTP and Security Flow OTP generation, delivery intent, verification, expiry, retry, throttling, lockout, audit, and secure frontend message behavior. # OTP and Security Flow\n\nOTP gives Nodics a time-bounded verification method for login, recovery,\napproval, and sensitive operations. It supports security, but it is not a\ncomplete identity system by itself. Profile and security modules own identity,\nroles, groups, and permissions. OTP owns generation, delivery intent,\nverification, expiry, retry, throttling, and audit. For beginners, an OTP is a\nshort-lived proof that a user controls a channel.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| OTP module | `../nodics.foundation/modules/nOtp/package.json` |\n| Profile module | `../nodics.platform/modules/profile/package.json` |\n| Security documentation | `docs/pages/nodics.platform/security-identity-access.md` |\n| Communication providers | `../nodics.communication/modules/smtpCommsProvider/package.json`, `../nodics.communication/modules/smsCommsProvider/package.json` |\n\n## Flow\n\n```mermaid\nsequenceDiagram\n  participant User as User\n  participant App as Axis or storefront\n  participant Otp as OTP service\n  participant Comms as Communication provider\n  participant Audit as Audit trail\n\n  User->>App: Request verification\n  App->>Otp: Create OTP challenge\n  Otp->>Comms: Send delivery intent\n  Otp->>Audit: Record challenge\n  User->>App: Submit code\n  App->>Otp: Verify code\n  Otp->>Audit: Record result\n```\n\nThe business problem is safer access without slowing every journey. Business\nusers need clear prompts and recovery paths. Developers need expiry and retry\ncontracts. Operators need throttling, audit, failed delivery, and abuse\nevidence in production.\n\n## Policy contract\n\n| Policy | Purpose |\n| --- | --- |\n| Expiry window | Limits how long a code is valid. |\n| Retry limit | Prevents guessing and noisy resends. |\n| Channel policy | Selects email, SMS, or another verified channel. |\n| Audit event | Records challenge and verification outcome. |\n| Lockout rule | Protects high-risk operations after repeated failures. |\n\n## Configuration behavior\n\nOTP configuration should define expiry, retry limit, resend delay, channel\npriority, lockout threshold, and audit retention. Configuration changes should\nbe governed because they directly affect account security and user experience.\nBusiness users may see policy labels, developers own the enforcement service,\nand operators verify the active configuration in production diagnostics.\n\n## Customization and extension guidance\n\nDevelopers can add channel providers, templates, throttling policies, lockout\nrules, and risk checks. Business users should configure supported journeys\nthrough governed settings, not through code changes. Operators should monitor\nchallenge volume, failure rate, delivery failure, and locked accounts. Never\nstore OTP secrets in data files or documentation examples.\n\n## Implementation handoff\n\nEach OTP journey should document trigger context, recipient lookup, channel\npolicy, expiry, retry limit, lockout rule, audit event, and safe browser\nmessage. This helps business users trust the verification journey, developers\nkeep security logic centralized, operators investigate production abuse or\ndelivery problems, and QA owners test both success and failure without\nexposing secret values.\n\n## Evidence checklist\n\nOTP evidence should include challenge id, user reference, channel type,\ncreated time, expiry time, attempt count, delivery status, verification result,\nand lockout decision. It should never include the raw code. Production support\nneeds enough detail to diagnose delayed delivery, repeated failures, and abuse\npatterns while business users continue to see simple recovery instructions.\n\nHigh-risk operations should also record why OTP was required. That context\nhelps developers keep policy centralized and helps operators distinguish a\nnormal verification journey from suspicious production behavior.\n\n## Common mistakes\n\n- Treating OTP as a replacement for identity and permission checks.\n- Allowing unlimited resend or verification attempts.\n- Exposing whether an account exists through error messages.\n- Logging raw OTP codes.\n- Forgetting communication provider failure handling.\n\n## Verification\n\nRun OTP, Profile, and communication provider tests for successful verify,\nexpired code, wrong code, retry limit, resend throttling, and delivery\nfailure. In browser tests, confirm the message is business-safe and no raw code\nor sensitive account evidence appears. Production readiness requires audit,\nthrottling, developer tests, operator dashboards, and QA security evidence.\n",
+      "previous": {
+        "title": "Database Provider Boundaries",
+        "route": "/docs/framework/foundation-database-provider-boundaries"
+      },
+      "next": {
+        "title": "Communication Provider Runbooks",
+        "route": "/docs/framework/communication-provider-runbooks"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.foundation",
+        "technicalModule": "nOtp",
+        "owner": "nodics.foundation",
+        "sourcePath": "docs/pages/nodics.platform/otp-security-flow.md",
+        "path": "docs/pages/nodics.platform/otp-security-flow.md",
+        "wordCount": 576,
+        "checksum": "05ce678726ef82e1fd248a9a6147c4c037fca20355feb403bd7a3a90ff863d25"
+      }
+    },
+    "active": true
+  },
+  "record109": {
+    "code": "nodicsDocsComponentcommunicationProviderRunbooks",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "communication.provider-runbooks",
+      "title": "Communication Provider Runbooks",
+      "route": "/docs/framework/communication-provider-runbooks",
+      "section": "communication-and-notifications",
+      "sectionTitle": "Communication and Notifications",
+      "group": "communication-and-notifications",
+      "groupTitle": "Communication and Notifications",
+      "parentId": "communication-and-notifications",
+      "hierarchyPath": [
+        "Communication and Notifications",
+        "Communication Provider Runbooks"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "communication.overview",
+        "security.otp-security-flow",
+        "engagement.contact-submission-operations"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.communication/provider-runbooks.md",
+        "../nodics.communication/modules/smtpCommsProvider/package.json",
+        "../nodics.communication/modules/smsCommsProvider/package.json",
+        "../nodics.foundation/modules/nOtp/package.json",
+        "../nodics.engagement/modules/contactSubmission/package.json"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "communication",
+        "smtp",
+        "sms",
+        "delivery",
+        "retry"
+      ],
+      "topicKeywords": [
+        "Communication and Notifications",
+        "Provider Delivery",
+        "Communication Provider Runbooks"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "communicationProviderRunbooks-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Delivery flow",
+          "anchor": "communicationProviderRunbooks-2-delivery-flow",
+          "level": 2
+        },
+        {
+          "text": "Provider contract",
+          "anchor": "communicationProviderRunbooks-3-provider-contract",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "communicationProviderRunbooks-4-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Implementation handoff",
+          "anchor": "communicationProviderRunbooks-5-implementation-handoff",
+          "level": 2
+        },
+        {
+          "text": "Evidence checklist",
+          "anchor": "communicationProviderRunbooks-6-evidence-checklist",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "communicationProviderRunbooks-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "communicationProviderRunbooks-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Communication providers deliver messages through channels such as SMTP email and SMS. The provider sends or queues delivery, but business modules own the reason for the message: order confirmation, OTP, approval, contact response, publication event, or support notification. For beginners, communication is a delivery lane, not the owner of business decisions."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "communicationProviderRunbooks-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Communication overview",
+              "`docs/pages/nodics.communication/overview.md`"
+            ],
+            [
+              "SMTP provider",
+              "`../nodics.communication/modules/smtpCommsProvider/package.json`"
+            ],
+            [
+              "SMS provider",
+              "`../nodics.communication/modules/smsCommsProvider/package.json`"
+            ],
+            [
+              "OTP integration",
+              "`../nodics.foundation/modules/nOtp/package.json`"
+            ],
+            [
+              "Engagement source",
+              "`../nodics.engagement/modules/contactSubmission/package.json`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Delivery flow",
+          "anchor": "communicationProviderRunbooks-2-delivery-flow"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Source[\"Owning business module\"] --> Intent[\"Delivery intent\"]\n  Intent --> Template[\"Template and locale\"]\n  Template --> Provider[\"SMTP or SMS provider\"]\n  Provider --> Receipt[\"Delivery receipt\"]\n  Receipt --> Audit[\"Audit and retry evidence\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is reliable communication. Customers and administrators need clear, timely messages. Developers need provider abstractions so a module can request a message without knowing gateway details. Operators need failed delivery evidence, retry policy, suppression, and provider health in production."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Provider contract",
+          "anchor": "communicationProviderRunbooks-3-provider-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Providers should accept normalized recipient, template, locale, payload, priority, and correlation id. They should return status, provider reference, retryability, and failure reason. They should not own order, OTP, publication, or contact business state."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "const deliveryIntent = {\n  channel: 'email',\n  templateCode: 'orderConfirmation',\n  locale: 'en',\n  recipientRef: 'customer001',\n  correlationId: 'order-1001'\n};"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "communicationProviderRunbooks-4-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can add providers, template renderers, delivery callbacks, retry policies, suppression lists, and audit adapters. Business users should manage template text, enablement, and consent where Axis exposes those controls. Operators should track queue depth, sent count, failed count, retry age, and provider outage status."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Implementation handoff",
+          "anchor": "communicationProviderRunbooks-5-implementation-handoff"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A communication provider handoff should include supported channel, template contract, locale behavior, retryability, suppression behavior, provider health check, callback evidence, and privacy handling. Business users get predictable message journeys, developers get integration boundaries, operators get production recovery signals, and QA owners can test sent, delayed, failed, suppressed, and retried messages."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Evidence checklist",
+          "anchor": "communicationProviderRunbooks-6-evidence-checklist"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Delivery evidence should include message code, source module, template code, locale, channel, recipient reference, provider reference, delivery state, retry count, suppression decision, and correlation id. Operators should be able to prove whether a message was blocked by policy, delayed by a provider, or rejected permanently. Business users should see a clear communication state, not raw gateway text."
+        },
+        {
+          "kind": "paragraph",
+          "text": "This evidence should be searchable from the originating business object. For example, an order confirmation should be traceable from order to delivery intent, provider receipt, retry history, and final outcome."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Production support should also know whether a message was intentionally not sent. Consent, suppression, invalid recipient, missing template, and disabled provider states are normal controlled outcomes, not always incidents."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "communicationProviderRunbooks-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Putting business state transitions inside SMTP or SMS provider code.",
+            "Logging sensitive payloads or raw OTP values.",
+            "Retrying non-retryable failures indefinitely.",
+            "Sending messages without locale or consent checks.",
+            "Showing gateway error text directly to business users."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "communicationProviderRunbooks-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run provider tests with successful delivery, temporary failure, permanent failure, retry, suppression, template missing, and locale missing cases. In a fresh schema, trigger OTP and contact messages, inspect receipts, and confirm Axis shows safe delivery status. Production readiness requires business template approval, developer contract tests, operator failure dashboards, and QA evidence for retries."
+        }
+      ],
+      "searchText": "Communication Provider Runbooks SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance. # Communication Provider Runbooks\n\nCommunication providers deliver messages through channels such as SMTP email\nand SMS. The provider sends or queues delivery, but business modules own the\nreason for the message: order confirmation, OTP, approval, contact response,\npublication event, or support notification. For beginners, communication is a\ndelivery lane, not the owner of business decisions.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Communication overview | `docs/pages/nodics.communication/overview.md` |\n| SMTP provider | `../nodics.communication/modules/smtpCommsProvider/package.json` |\n| SMS provider | `../nodics.communication/modules/smsCommsProvider/package.json` |\n| OTP integration | `../nodics.foundation/modules/nOtp/package.json` |\n| Engagement source | `../nodics.engagement/modules/contactSubmission/package.json` |\n\n## Delivery flow\n\n```mermaid\nflowchart LR\n  Source[\"Owning business module\"] --> Intent[\"Delivery intent\"]\n  Intent --> Template[\"Template and locale\"]\n  Template --> Provider[\"SMTP or SMS provider\"]\n  Provider --> Receipt[\"Delivery receipt\"]\n  Receipt --> Audit[\"Audit and retry evidence\"]\n```\n\nThe business problem is reliable communication. Customers and administrators\nneed clear, timely messages. Developers need provider abstractions so a module\ncan request a message without knowing gateway details. Operators need failed\ndelivery evidence, retry policy, suppression, and provider health in\nproduction.\n\n## Provider contract\n\nProviders should accept normalized recipient, template, locale, payload,\npriority, and correlation id. They should return status, provider reference,\nretryability, and failure reason. They should not own order, OTP, publication,\nor contact business state.\n\n```js\nconst deliveryIntent = {\n  channel: 'email',\n  templateCode: 'orderConfirmation',\n  locale: 'en',\n  recipientRef: 'customer001',\n  correlationId: 'order-1001'\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add providers, template renderers, delivery callbacks, retry\npolicies, suppression lists, and audit adapters. Business users should manage\ntemplate text, enablement, and consent where Axis exposes those controls.\nOperators should track queue depth, sent count, failed count, retry age, and\nprovider outage status.\n\n## Implementation handoff\n\nA communication provider handoff should include supported channel, template\ncontract, locale behavior, retryability, suppression behavior, provider health\ncheck, callback evidence, and privacy handling. Business users get predictable\nmessage journeys, developers get integration boundaries, operators get\nproduction recovery signals, and QA owners can test sent, delayed, failed,\nsuppressed, and retried messages.\n\n## Evidence checklist\n\nDelivery evidence should include message code, source module, template code,\nlocale, channel, recipient reference, provider reference, delivery state,\nretry count, suppression decision, and correlation id. Operators should be\nable to prove whether a message was blocked by policy, delayed by a provider,\nor rejected permanently. Business users should see a clear communication\nstate, not raw gateway text.\n\nThis evidence should be searchable from the originating business object. For\nexample, an order confirmation should be traceable from order to delivery\nintent, provider receipt, retry history, and final outcome.\n\nProduction support should also know whether a message was intentionally not\nsent. Consent, suppression, invalid recipient, missing template, and disabled\nprovider states are normal controlled outcomes, not always incidents.\n\n## Common mistakes\n\n- Putting business state transitions inside SMTP or SMS provider code.\n- Logging sensitive payloads or raw OTP values.\n- Retrying non-retryable failures indefinitely.\n- Sending messages without locale or consent checks.\n- Showing gateway error text directly to business users.\n\n## Verification\n\nRun provider tests with successful delivery, temporary failure, permanent\nfailure, retry, suppression, template missing, and locale missing cases. In a\nfresh schema, trigger OTP and contact messages, inspect receipts, and confirm\nAxis shows safe delivery status. Production readiness requires business\ntemplate approval, developer contract tests, operator failure dashboards, and\nQA evidence for retries.\n",
+      "previous": {
+        "title": "OTP and Security Flow",
+        "route": "/docs/framework/security-otp-security-flow"
+      },
+      "next": {
+        "title": "Contact Submission Operations",
+        "route": "/docs/framework/engagement-contact-submission-operations"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.communication",
+        "technicalModule": "communication",
+        "owner": "nodics.communication",
+        "sourcePath": "docs/pages/nodics.communication/provider-runbooks.md",
+        "path": "docs/pages/nodics.communication/provider-runbooks.md",
+        "wordCount": 531,
+        "checksum": "440ad7047234f446fe8d08eea5bcc301b69ddd4c8b4b68436b2c9e80093144be"
+      }
+    },
+    "active": true
+  },
+  "record110": {
+    "code": "nodicsDocsComponentengagementContactSubmissionOperations",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "engagement.contact-submission-operations",
+      "title": "Contact Submission Operations",
+      "route": "/docs/framework/engagement-contact-submission-operations",
+      "section": "customer-engagement-and-feedback",
+      "sectionTitle": "Customer Engagement and Feedback",
+      "group": "customer-engagement-and-feedback",
+      "groupTitle": "Customer Engagement and Feedback",
+      "parentId": "customer-engagement-and-feedback",
+      "hierarchyPath": [
+        "Customer Engagement and Feedback",
+        "Contact Submission Operations"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "How contact forms, submissions, validation, moderation, workflow routing, notifications, retention, audit, and recovery work.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "engagement.unified-operations",
+        "engagement.governed-automation",
+        "communication.provider-runbooks"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.engagement/contact-submission-operations.md",
+        "../nodics.engagement/modules/contactSubmission/package.json",
+        "../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/engagement"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "contact-submission",
+        "engagement",
+        "moderation",
+        "workflow",
+        "notification"
+      ],
+      "topicKeywords": [
+        "Customer Engagement and Feedback",
+        "Contact and Feedback",
+        "Contact Submission Operations"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "engagementContactSubmissionOperations-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Lifecycle",
+          "anchor": "engagementContactSubmissionOperations-2-lifecycle",
+          "level": 2
+        },
+        {
+          "text": "Data contract",
+          "anchor": "engagementContactSubmissionOperations-3-data-contract",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "engagementContactSubmissionOperations-4-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Implementation handoff",
+          "anchor": "engagementContactSubmissionOperations-5-implementation-handoff",
+          "level": 2
+        },
+        {
+          "text": "Evidence checklist",
+          "anchor": "engagementContactSubmissionOperations-6-evidence-checklist",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "engagementContactSubmissionOperations-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "engagementContactSubmissionOperations-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Contact Submission lets public or authenticated users send business enquiries that can be reviewed, moderated, routed, and answered. Engagement owns the submission lifecycle. Communication providers may send notifications, Process may run workflows, and Axis may show moderation queues, but those consumers do not own the submitted content. For beginners, a contact form creates a governed record that needs safety, routing, and audit."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "engagementContactSubmissionOperations-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Contact Submission module",
+              "`../nodics.engagement/modules/contactSubmission/package.json`"
+            ],
+            [
+              "Engagement overview",
+              "`docs/pages/nodics.engagement/unified-operations.md`"
+            ],
+            [
+              "Governance docs",
+              "`docs/pages/nodics.engagement/governed-automation.md`"
+            ],
+            [
+              "Communication providers",
+              "`docs/pages/nodics.communication/provider-runbooks.md`"
+            ],
+            [
+              "Nexus form data",
+              "`../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/engagement/`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Lifecycle",
+          "anchor": "engagementContactSubmissionOperations-2-lifecycle"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "stateDiagram-v2\n  [*] --> Submitted\n  Submitted --> Moderation\n  Moderation --> Routed\n  Moderation --> Rejected\n  Routed --> Responded\n  Responded --> Closed"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is safe response management. Business users need to know which enquiries are new, which are waiting, and which require follow-up. Developers need form and version contracts. Operators need spam controls, workflow evidence, notification status, and recovery steps for production."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Data contract",
+          "anchor": "engagementContactSubmissionOperations-3-data-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Form definitions, form versions, submission fields, consent, source page, locale, and routing rules should be explicit. Submission records should store only necessary data and should respect privacy and retention policies."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "module.exports = {\n  nexusContactForm: {\n    code: 'nexusContactForm',\n    active: true,\n    fields: ['name', 'email', 'message'],\n    moderationRequired: true\n  }\n};"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "engagementContactSubmissionOperations-4-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can add field validators, moderation rules, routing adapters, workflow callbacks, notification templates, and retention policies. Business users should manage form configuration, queue decisions, and response status through Axis. AI tools can help with response drafts only after respecting privacy and review rules."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Implementation handoff",
+          "anchor": "engagementContactSubmissionOperations-5-implementation-handoff"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Each contact-submission change should identify the public form, versioned fields, validation rules, consent text, moderation queue, workflow route, notification template, and retention policy. Business users see a manageable journey, developers keep form contracts stable, operators can recover failed routing in production, and QA owners can prove unsafe submissions are blocked."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Evidence checklist",
+          "anchor": "engagementContactSubmissionOperations-6-evidence-checklist"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Submission evidence should include form code, version, source route, locale, field validation result, consent flag, moderation status, assigned queue, notification state, retention class, and correlation id. Operators should be able to trace a missing response from browser submission to queue assignment and communication receipt. Developers should avoid storing unnecessary personal data just to make reporting easier."
+        },
+        {
+          "kind": "paragraph",
+          "text": "This keeps public contact journeys useful without turning them into unmanaged data collection. Business users get enough context to respond, while security and production support keep retention and privacy boundaries visible."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Production evidence should also show duplicate detection and abuse controls. That lets operators separate genuine customer enquiries from noisy traffic without blocking the business team from responding to valid messages."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "engagementContactSubmissionOperations-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating a frontend contact form as the authority.",
+            "Accepting submissions without validation, consent, or spam controls.",
+            "Sending notifications before moderation policy allows it.",
+            "Keeping personal data longer than required.",
+            "Hiding failed routing or notification evidence from operators."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "engagementContactSubmissionOperations-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Import form definitions into a fresh schema, submit a browser form, confirm validation, moderation, routing, notification, audit, and retention behavior. Production readiness requires business queue visibility, developer tests, operator failure evidence, and QA proof that rejected or unsafe submissions do not create outbound communication."
+        }
+      ],
+      "searchText": "Contact Submission Operations How contact forms, submissions, validation, moderation, workflow routing, notifications, retention, audit, and recovery work. # Contact Submission Operations\n\nContact Submission lets public or authenticated users send business enquiries\nthat can be reviewed, moderated, routed, and answered. Engagement owns the\nsubmission lifecycle. Communication providers may send notifications, Process\nmay run workflows, and Axis may show moderation queues, but those consumers do\nnot own the submitted content. For beginners, a contact form creates a\ngoverned record that needs safety, routing, and audit.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Contact Submission module | `../nodics.engagement/modules/contactSubmission/package.json` |\n| Engagement overview | `docs/pages/nodics.engagement/unified-operations.md` |\n| Governance docs | `docs/pages/nodics.engagement/governed-automation.md` |\n| Communication providers | `docs/pages/nodics.communication/provider-runbooks.md` |\n| Nexus form data | `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/engagement/` |\n\n## Lifecycle\n\n```mermaid\nstateDiagram-v2\n  [*] --> Submitted\n  Submitted --> Moderation\n  Moderation --> Routed\n  Moderation --> Rejected\n  Routed --> Responded\n  Responded --> Closed\n```\n\nThe business problem is safe response management. Business users need to know\nwhich enquiries are new, which are waiting, and which require follow-up.\nDevelopers need form and version contracts. Operators need spam controls,\nworkflow evidence, notification status, and recovery steps for production.\n\n## Data contract\n\nForm definitions, form versions, submission fields, consent, source page,\nlocale, and routing rules should be explicit. Submission records should store\nonly necessary data and should respect privacy and retention policies.\n\n```js\nmodule.exports = {\n  nexusContactForm: {\n    code: 'nexusContactForm',\n    active: true,\n    fields: ['name', 'email', 'message'],\n    moderationRequired: true\n  }\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add field validators, moderation rules, routing adapters,\nworkflow callbacks, notification templates, and retention policies. Business\nusers should manage form configuration, queue decisions, and response status\nthrough Axis. AI tools can help with response drafts only after respecting\nprivacy and review rules.\n\n## Implementation handoff\n\nEach contact-submission change should identify the public form, versioned\nfields, validation rules, consent text, moderation queue, workflow route,\nnotification template, and retention policy. Business users see a manageable\njourney, developers keep form contracts stable, operators can recover failed\nrouting in production, and QA owners can prove unsafe submissions are blocked.\n\n## Evidence checklist\n\nSubmission evidence should include form code, version, source route, locale,\nfield validation result, consent flag, moderation status, assigned queue,\nnotification state, retention class, and correlation id. Operators should be\nable to trace a missing response from browser submission to queue assignment\nand communication receipt. Developers should avoid storing unnecessary personal\ndata just to make reporting easier.\n\nThis keeps public contact journeys useful without turning them into unmanaged\ndata collection. Business users get enough context to respond, while security\nand production support keep retention and privacy boundaries visible.\n\nProduction evidence should also show duplicate detection and abuse controls.\nThat lets operators separate genuine customer enquiries from noisy traffic\nwithout blocking the business team from responding to valid messages.\n\n## Common mistakes\n\n- Treating a frontend contact form as the authority.\n- Accepting submissions without validation, consent, or spam controls.\n- Sending notifications before moderation policy allows it.\n- Keeping personal data longer than required.\n- Hiding failed routing or notification evidence from operators.\n\n## Verification\n\nImport form definitions into a fresh schema, submit a browser form, confirm\nvalidation, moderation, routing, notification, audit, and retention behavior.\nProduction readiness requires business queue visibility, developer tests,\noperator failure evidence, and QA proof that rejected or unsafe submissions do\nnot create outbound communication.\n",
+      "previous": {
+        "title": "Communication Provider Runbooks",
+        "route": "/docs/framework/communication-provider-runbooks"
+      },
+      "next": {
+        "title": "Workflow and BPM Source Map",
+        "route": "/docs/framework/process-workflow-bpm-source-map"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.engagement",
+        "technicalModule": "contactSubmission",
+        "owner": "nodics.engagement",
+        "sourcePath": "docs/pages/nodics.engagement/contact-submission-operations.md",
+        "path": "docs/pages/nodics.engagement/contact-submission-operations.md",
+        "wordCount": 520,
+        "checksum": "677f6f0b426f876ec4c5028db5cc936ebe0333a881fa499013e3f0f648cc240e"
+      }
+    },
+    "active": true
+  },
+  "record111": {
+    "code": "nodicsDocsComponentprocessWorkflowBpmSourceMap",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "process.workflow-bpm-source-map",
+      "title": "Workflow and BPM Source Map",
+      "route": "/docs/framework/process-workflow-bpm-source-map",
+      "section": "process-and-workflow-automation",
+      "sectionTitle": "Process and Workflow Automation",
+      "group": "process-and-workflow-automation",
+      "groupTitle": "Process and Workflow Automation",
+      "parentId": "process-and-workflow-automation",
+      "hierarchyPath": [
+        "Process and Workflow Automation",
+        "Workflow and BPM Source Map"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "reference",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "How workflow definitions, transitions, human tasks, action adapters, callbacks, history, incidents, and operator visibility fit together.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "process.overview",
+        "process.first-workflow",
+        "process.first-human-task",
+        "process.action-adapters"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.process/workflow-bpm-source-map.md",
+        "../nodics.foundation/modules/nbpm/package.json"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "workflow",
+        "bpm",
+        "human-task",
+        "callback",
+        "process"
+      ],
+      "topicKeywords": [
+        "Process and Workflow Automation",
+        "Workflow Runtime",
+        "Workflow and BPM Source Map"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "processWorkflowBpmSourceMap-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Workflow model",
+          "anchor": "processWorkflowBpmSourceMap-2-workflow-model",
+          "level": 2
+        },
+        {
+          "text": "Contract",
+          "anchor": "processWorkflowBpmSourceMap-3-contract",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "processWorkflowBpmSourceMap-4-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Implementation handoff",
+          "anchor": "processWorkflowBpmSourceMap-5-implementation-handoff",
+          "level": 2
+        },
+        {
+          "text": "Evidence checklist",
+          "anchor": "processWorkflowBpmSourceMap-6-evidence-checklist",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "processWorkflowBpmSourceMap-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "processWorkflowBpmSourceMap-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Workflow and BPM coordinate tasks, approvals, transitions, callbacks, and history for business processes. Process capabilities can approve publication, route contact submissions, drive scheduled automation, or support operational recovery. For beginners, a workflow is a governed path from one state to another, with evidence about who or what moved it."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "processWorkflowBpmSourceMap-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "BPM module",
+              "`../nodics.foundation/modules/nbpm/package.json`"
+            ],
+            [
+              "Process docs",
+              "`docs/pages/nodics.process/process-overview.md`"
+            ],
+            [
+              "First workflow guide",
+              "`docs/pages/nodics.process/first-workflow.md`"
+            ],
+            [
+              "Human task guide",
+              "`docs/pages/nodics.process/first-human-task.md`"
+            ],
+            [
+              "Runtime lifecycle",
+              "`docs/pages/nodics.process/runtime-lifecycle.md`"
+            ],
+            [
+              "Action adapters",
+              "`docs/pages/nodics.process/action-adapters.md`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Workflow model",
+          "anchor": "processWorkflowBpmSourceMap-2-workflow-model"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart TD\n  Definition[\"Workflow definition\"] --> Instance[\"Runtime instance\"]\n  Instance --> Task[\"Task or automated action\"]\n  Task --> Transition[\"Transition\"]\n  Transition --> History[\"History and audit\"]\n  Transition --> Callback[\"Business callback\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is governed change. Approvals, reviews, retries, and manual decisions must be visible and repeatable. Developers need a clear definition and callback contract. Operators need stuck-task detection, incident recovery, and production audit evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Contract",
+          "anchor": "processWorkflowBpmSourceMap-3-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Workflow definitions should declare states, transitions, actors, actions, timeouts, callbacks, and evidence. They should not hide business data changes inside transition metadata. The owning module should expose a service or callback that performs the business operation after the workflow allows it."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "const transition = {\n  code: 'approvePublication',\n  from: 'REVIEW_IN_PROGRESS',\n  to: 'APPROVED',\n  permission: 'cms.publication.approve',\n  callback: 'DefaultCmsPublicationWorkflowCallbackService.afterApprove'\n};"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "processWorkflowBpmSourceMap-4-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can add process definitions, action adapters, human task forms, timeout policies, callbacks, and recovery tools. Business users should see tasks, decisions, and comments in Axis. Operators should inspect runtime instances, retries, failed callbacks, and audit history. AI tools should not invent workflow transitions without checking permissions and callback owners."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Implementation handoff",
+          "anchor": "processWorkflowBpmSourceMap-5-implementation-handoff"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Each workflow handoff should document definition code, states, transitions, actor rules, callback service, timeout behavior, retry policy, and recovery queue. Business users get a clear decision journey, developers preserve module ownership, operators get production incident evidence, and QA owners can test happy path, rejection, timeout, callback failure, and retry behavior."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Evidence checklist",
+          "anchor": "processWorkflowBpmSourceMap-6-evidence-checklist"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Workflow evidence should include definition version, instance id, current state, actor, transition, permission result, callback result, retry count, timeout timestamp, and audit history. Operators should be able to identify whether work is waiting for a person, a dependency, or a failed callback. Business users should see task status and decision history without needing to read process engine internals."
+        },
+        {
+          "kind": "paragraph",
+          "text": "This evidence is especially important when a workflow protects publication, refund, approval, or recovery actions. The user journey should remain simple, but the technical record must be strong enough for production support."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "processWorkflowBpmSourceMap-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Putting business mutations in workflow metadata instead of owner services.",
+            "Creating transitions without permission checks.",
+            "Losing callback failure evidence.",
+            "Allowing production tasks to remain stuck without an operator queue.",
+            "Bypassing workflow for publishable or audited changes."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "processWorkflowBpmSourceMap-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run workflow, human task, action adapter, and callback tests. In a fresh schema, start a workflow, complete a human task, execute an automated action, force a callback failure, and confirm retry or incident evidence. Production readiness requires business decision clarity, developer contracts, operator recovery, and QA audit proof."
+        }
+      ],
+      "searchText": "Workflow and BPM Source Map How workflow definitions, transitions, human tasks, action adapters, callbacks, history, incidents, and operator visibility fit together. # Workflow and BPM Source Map\n\nWorkflow and BPM coordinate tasks, approvals, transitions, callbacks, and\nhistory for business processes. Process capabilities can approve publication,\nroute contact submissions, drive scheduled automation, or support operational\nrecovery. For beginners, a workflow is a governed path from one state to\nanother, with evidence about who or what moved it.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| BPM module | `../nodics.foundation/modules/nbpm/package.json` |\n| Process docs | `docs/pages/nodics.process/process-overview.md` |\n| First workflow guide | `docs/pages/nodics.process/first-workflow.md` |\n| Human task guide | `docs/pages/nodics.process/first-human-task.md` |\n| Runtime lifecycle | `docs/pages/nodics.process/runtime-lifecycle.md` |\n| Action adapters | `docs/pages/nodics.process/action-adapters.md` |\n\n## Workflow model\n\n```mermaid\nflowchart TD\n  Definition[\"Workflow definition\"] --> Instance[\"Runtime instance\"]\n  Instance --> Task[\"Task or automated action\"]\n  Task --> Transition[\"Transition\"]\n  Transition --> History[\"History and audit\"]\n  Transition --> Callback[\"Business callback\"]\n```\n\nThe business problem is governed change. Approvals, reviews, retries, and\nmanual decisions must be visible and repeatable. Developers need a clear\ndefinition and callback contract. Operators need stuck-task detection,\nincident recovery, and production audit evidence.\n\n## Contract\n\nWorkflow definitions should declare states, transitions, actors, actions,\ntimeouts, callbacks, and evidence. They should not hide business data changes\ninside transition metadata. The owning module should expose a service or\ncallback that performs the business operation after the workflow allows it.\n\n```js\nconst transition = {\n  code: 'approvePublication',\n  from: 'REVIEW_IN_PROGRESS',\n  to: 'APPROVED',\n  permission: 'cms.publication.approve',\n  callback: 'DefaultCmsPublicationWorkflowCallbackService.afterApprove'\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add process definitions, action adapters, human task forms,\ntimeout policies, callbacks, and recovery tools. Business users should see\ntasks, decisions, and comments in Axis. Operators should inspect runtime\ninstances, retries, failed callbacks, and audit history. AI tools should not\ninvent workflow transitions without checking permissions and callback owners.\n\n## Implementation handoff\n\nEach workflow handoff should document definition code, states, transitions,\nactor rules, callback service, timeout behavior, retry policy, and recovery\nqueue. Business users get a clear decision journey, developers preserve module\nownership, operators get production incident evidence, and QA owners can test\nhappy path, rejection, timeout, callback failure, and retry behavior.\n\n## Evidence checklist\n\nWorkflow evidence should include definition version, instance id, current\nstate, actor, transition, permission result, callback result, retry count,\ntimeout timestamp, and audit history. Operators should be able to identify\nwhether work is waiting for a person, a dependency, or a failed callback.\nBusiness users should see task status and decision history without needing to\nread process engine internals.\n\nThis evidence is especially important when a workflow protects publication,\nrefund, approval, or recovery actions. The user journey should remain simple,\nbut the technical record must be strong enough for production support.\n\n## Common mistakes\n\n- Putting business mutations in workflow metadata instead of owner services.\n- Creating transitions without permission checks.\n- Losing callback failure evidence.\n- Allowing production tasks to remain stuck without an operator queue.\n- Bypassing workflow for publishable or audited changes.\n\n## Verification\n\nRun workflow, human task, action adapter, and callback tests. In a fresh\nschema, start a workflow, complete a human task, execute an automated action,\nforce a callback failure, and confirm retry or incident evidence. Production\nreadiness requires business decision clarity, developer contracts, operator\nrecovery, and QA audit proof.\n",
+      "previous": {
+        "title": "Contact Submission Operations",
+        "route": "/docs/framework/engagement-contact-submission-operations"
+      },
+      "next": {
+        "title": "CronJob Data Authoring",
+        "route": "/docs/framework/process-cronjob-data-authoring"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.process",
+        "technicalModule": "nbpm",
+        "owner": "nodics.process",
+        "sourcePath": "docs/pages/nodics.process/workflow-bpm-source-map.md",
+        "path": "docs/pages/nodics.process/workflow-bpm-source-map.md",
+        "wordCount": 515,
+        "checksum": "2ecd2c4a1eb102768bcfe2d146fef6d3e30cc4cee892f326069dfa57232c6268"
+      }
+    },
+    "active": true
+  },
+  "record112": {
+    "code": "nodicsDocsComponentprocessCronjobDataAuthoring",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "process.cronjob-data-authoring",
+      "title": "CronJob Data Authoring",
+      "route": "/docs/framework/process-cronjob-data-authoring",
+      "section": "cron-and-scheduled-automation",
+      "sectionTitle": "Cron and Scheduled Automation",
+      "group": "cron-and-scheduled-automation",
+      "groupTitle": "Cron and Scheduled Automation",
+      "parentId": "cron-and-scheduled-automation",
+      "hierarchyPath": [
+        "Cron and Scheduled Automation",
+        "CronJob Data Authoring"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "How CronJob records, headers, schedules, execution policy, retry, idempotency, and Process server ownership are authored and verified.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "cron.operations",
+        "process.process-cron-runtime",
+        "cron.project-customization"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.process/cronjob-data-authoring.md",
+        "../nodics.process/modules/cronjob/package.json",
+        "../nodics.wcms/modules/media/data/init-v001/headers/jobs/mediaCleanupRetentionJobHeader.js",
+        "../nodics.foundation/modules/nData/nImport/import/src/service/import/defaultImportService.js"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "cronjob",
+        "scheduled-job",
+        "data-authoring",
+        "retry",
+        "idempotency"
+      ],
+      "topicKeywords": [
+        "Cron and Scheduled Automation",
+        "Scheduled Automation Triggers",
+        "CronJob Data Authoring"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "processCronjobDataAuthoring-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Data shape",
+          "anchor": "processCronjobDataAuthoring-2-data-shape",
+          "level": 2
+        },
+        {
+          "text": "Header contract",
+          "anchor": "processCronjobDataAuthoring-3-header-contract",
+          "level": 2
+        },
+        {
+          "text": "Runtime behavior",
+          "anchor": "processCronjobDataAuthoring-4-runtime-behavior",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "processCronjobDataAuthoring-5-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Implementation handoff",
+          "anchor": "processCronjobDataAuthoring-6-implementation-handoff",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "processCronjobDataAuthoring-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "processCronjobDataAuthoring-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "CronJob data authoring explains how scheduled automation definitions are created through module release data or through a governed Axis journey. The Process runtime owns execution. The data file only declares the job, schedule, target, retry, and policy metadata. For beginners, a CronJob is a record that says what should run and when; the runtime decides whether this node is allowed to execute it."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "processCronjobDataAuthoring-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "CronJob package",
+              "`../nodics.process/modules/cronjob/package.json`"
+            ],
+            [
+              "CronJob operations page",
+              "`docs/pages/nodics.process/cronjob-operations.md`"
+            ],
+            [
+              "Project customization",
+              "`docs/pages/nodics.process/project-cron-customization.md`"
+            ],
+            [
+              "Runtime lifecycle",
+              "`docs/pages/nodics.process/process-cron-runtime.md`"
+            ],
+            [
+              "Media jobs example",
+              "`../nodics.wcms/modules/media/data/init-v001/headers/jobs/mediaCleanupRetentionJobHeader.js`"
+            ],
+            [
+              "Import process",
+              "`../nodics.foundation/modules/nData/nImport/import/src/service/import/defaultImportService.js`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Data shape",
+          "anchor": "processCronjobDataAuthoring-2-data-shape"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Release[\"Release data\"] --> Import[\"nImport\"]\n  Import --> Schema[\"cronJob schema\"]\n  Schema --> Scheduler[\"Process scheduler\"]\n  Scheduler --> Service[\"Target service operation\"]\n  Service --> Evidence[\"Run history and retry evidence\"]"
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "module.exports = {\n  mediaCleanupRetentionJob: {\n    code: 'mediaCleanupRetentionJob',\n    active: true,\n    cronExpression: '0 0 * * *',\n    targetService: 'DefaultMediaCleanupLifecycleService',\n    targetOperation: 'execute',\n    retryPolicy: { maximumAttempts: 3 }\n  }\n};"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is dependable automation. Business users expect cleanup, indexing, messaging, publication support, and recovery jobs to run without manual supervision. Developers need simple release data for default jobs. Operators need schedule visibility, node responsibility, retry state, and failure evidence before production acceptance."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Header contract",
+          "anchor": "processCronjobDataAuthoring-3-header-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The top-level key in a header routes to the module where the schema exists. For CronJob data, that target is normally the Process CronJob module. The header defines `schemaName`, `operation`, optional tenants, record file prefix, and the idempotent query."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "module.exports = {\n  cronjob: {\n    mediaJobs: {\n      options: {\n        enabled: true,\n        schemaName: 'cronJob',\n        operation: 'saveAll',\n        dataFilePrefix: 'mediaCleanupRetentionJobData'\n      },\n      query: { code: '$code' }\n    }\n  }\n};"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Runtime behavior",
+          "anchor": "processCronjobDataAuthoring-4-runtime-behavior"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Cron execution should be idempotent, observable, and bounded. The runtime selects responsible nodes, prevents duplicate execution where configured, records start and completion evidence, applies retry policy, and moves failed jobs into a recoverable state. A job record should not contain executable business logic. It should point to a service operation that owns the behavior."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "processCronjobDataAuthoring-5-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can add new scheduled jobs by adding a record, a header entry, the target service, tests, and operational documentation. A customer project can override schedule frequency through release data or Axis only when the owning capability permits it. Operators can disable, retry, or reschedule based on policy, but should not edit service code in production."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Implementation handoff",
+          "anchor": "processCronjobDataAuthoring-6-implementation-handoff"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Each job should be handed over with its business purpose, target service, expected runtime role, schedule, retry policy, idempotency rule, timeout, ownership, and monitoring signal. That detail helps business users understand why the job exists, developers maintain the service safely, operators recover production failures, and QA owners test execution without depending on timing luck."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "processCronjobDataAuthoring-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Putting business logic into the job data file.",
+            "Creating a schedule without idempotency or retry behavior.",
+            "Forgetting node responsibility and duplicate execution controls.",
+            "Using environment-specific service names in shared module data.",
+            "Hiding failed job history from operators."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "processCronjobDataAuthoring-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Import CronJob data into a fresh schema, inspect job records, start the Process runtime, confirm one responsible node runs the job, force a controlled failure, and verify retry and evidence. Production readiness requires business visibility, developer-owned service tests, operator recovery actions, and QA proof that disabled jobs do not execute."
+        }
+      ],
+      "searchText": "CronJob Data Authoring How CronJob records, headers, schedules, execution policy, retry, idempotency, and Process server ownership are authored and verified. # CronJob Data Authoring\n\nCronJob data authoring explains how scheduled automation definitions are\ncreated through module release data or through a governed Axis journey. The\nProcess runtime owns execution. The data file only declares the job,\nschedule, target, retry, and policy metadata. For beginners, a CronJob is a\nrecord that says what should run and when; the runtime decides whether this\nnode is allowed to execute it.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| CronJob package | `../nodics.process/modules/cronjob/package.json` |\n| CronJob operations page | `docs/pages/nodics.process/cronjob-operations.md` |\n| Project customization | `docs/pages/nodics.process/project-cron-customization.md` |\n| Runtime lifecycle | `docs/pages/nodics.process/process-cron-runtime.md` |\n| Media jobs example | `../nodics.wcms/modules/media/data/init-v001/headers/jobs/mediaCleanupRetentionJobHeader.js` |\n| Import process | `../nodics.foundation/modules/nData/nImport/import/src/service/import/defaultImportService.js` |\n\n## Data shape\n\n```mermaid\nflowchart LR\n  Release[\"Release data\"] --> Import[\"nImport\"]\n  Import --> Schema[\"cronJob schema\"]\n  Schema --> Scheduler[\"Process scheduler\"]\n  Scheduler --> Service[\"Target service operation\"]\n  Service --> Evidence[\"Run history and retry evidence\"]\n```\n\n```js\nmodule.exports = {\n  mediaCleanupRetentionJob: {\n    code: 'mediaCleanupRetentionJob',\n    active: true,\n    cronExpression: '0 0 * * *',\n    targetService: 'DefaultMediaCleanupLifecycleService',\n    targetOperation: 'execute',\n    retryPolicy: { maximumAttempts: 3 }\n  }\n};\n```\n\nThe business problem is dependable automation. Business users expect cleanup,\nindexing, messaging, publication support, and recovery jobs to run without\nmanual supervision. Developers need simple release data for default jobs.\nOperators need schedule visibility, node responsibility, retry state, and\nfailure evidence before production acceptance.\n\n## Header contract\n\nThe top-level key in a header routes to the module where the schema exists.\nFor CronJob data, that target is normally the Process CronJob module. The\nheader defines `schemaName`, `operation`, optional tenants, record file prefix,\nand the idempotent query.\n\n```js\nmodule.exports = {\n  cronjob: {\n    mediaJobs: {\n      options: {\n        enabled: true,\n        schemaName: 'cronJob',\n        operation: 'saveAll',\n        dataFilePrefix: 'mediaCleanupRetentionJobData'\n      },\n      query: { code: '$code' }\n    }\n  }\n};\n```\n\n## Runtime behavior\n\nCron execution should be idempotent, observable, and bounded. The runtime\nselects responsible nodes, prevents duplicate execution where configured,\nrecords start and completion evidence, applies retry policy, and moves failed\njobs into a recoverable state. A job record should not contain executable\nbusiness logic. It should point to a service operation that owns the behavior.\n\n## Customization and extension guidance\n\nDevelopers can add new scheduled jobs by adding a record, a header entry, the\ntarget service, tests, and operational documentation. A customer project can\noverride schedule frequency through release data or Axis only when the owning\ncapability permits it. Operators can disable, retry, or reschedule based on\npolicy, but should not edit service code in production.\n\n## Implementation handoff\n\nEach job should be handed over with its business purpose, target service,\nexpected runtime role, schedule, retry policy, idempotency rule, timeout,\nownership, and monitoring signal. That detail helps business users understand\nwhy the job exists, developers maintain the service safely, operators recover\nproduction failures, and QA owners test execution without depending on timing\nluck.\n\n## Common mistakes\n\n- Putting business logic into the job data file.\n- Creating a schedule without idempotency or retry behavior.\n- Forgetting node responsibility and duplicate execution controls.\n- Using environment-specific service names in shared module data.\n- Hiding failed job history from operators.\n\n## Verification\n\nImport CronJob data into a fresh schema, inspect job records, start the\nProcess runtime, confirm one responsible node runs the job, force a controlled\nfailure, and verify retry and evidence. Production readiness requires business\nvisibility, developer-owned service tests, operator recovery actions, and QA\nproof that disabled jobs do not execute.\n",
+      "previous": {
+        "title": "Workflow and BPM Source Map",
+        "route": "/docs/framework/process-workflow-bpm-source-map"
+      },
+      "next": {
+        "title": "Release and Upgrade Compatibility",
+        "route": "/docs/framework/framework-release-upgrade-compatibility"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.process",
+        "technicalModule": "cronjob",
+        "owner": "nodics.process",
+        "sourcePath": "docs/pages/nodics.process/cronjob-data-authoring.md",
+        "path": "docs/pages/nodics.process/cronjob-data-authoring.md",
+        "wordCount": 542,
+        "checksum": "e710ee81b8cbb25275377f09f5f33951ee283268efe33c201f11ce9a7a5cbed3"
+      }
+    },
+    "active": true
+  },
+  "record113": {
+    "code": "nodicsDocsComponentframeworkReleaseUpgradeCompatibility",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "framework.release-upgrade-compatibility",
+      "title": "Release and Upgrade Compatibility",
+      "route": "/docs/framework/framework-release-upgrade-compatibility",
+      "section": "release-staging-and-publication",
+      "sectionTitle": "Release, Staging, and Publication",
+      "group": "release-staging-and-publication",
+      "groupTitle": "Release, Staging, and Publication",
+      "parentId": "release-staging-and-publication",
+      "hierarchyPath": [
+        "Release, Staging, and Publication",
+        "Release and Upgrade Compatibility"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "How data release folders, generated manifests, immutable baselines, upgrades, rollback, checksum drift, and customer extensions are governed.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "data.import-export-migration",
+        "docs.documentation-publishing-runbook",
+        "framework.runtime-release-rollback"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/framework/release-upgrade-compatibility.md",
+        "../nodics.foundation/modules/nSetup/package.json",
+        "../nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js",
+        "../nodics.foundation/modules/nData/nImport/import/test/importUtilityReleaseOrder.test.js",
+        "data/manifest.json"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "configuration-table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "release",
+        "upgrade",
+        "manifest",
+        "compatibility",
+        "data-folder"
+      ],
+      "topicKeywords": [
+        "Release, Staging, and Publication",
+        "Release Compatibility",
+        "Release and Upgrade Compatibility"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "frameworkReleaseUpgradeCompatibility-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Folder contract",
+          "anchor": "frameworkReleaseUpgradeCompatibility-2-folder-contract",
+          "level": 2
+        },
+        {
+          "text": "Compatibility rules",
+          "anchor": "frameworkReleaseUpgradeCompatibility-3-compatibility-rules",
+          "level": 2
+        },
+        {
+          "text": "Configuration behavior",
+          "anchor": "frameworkReleaseUpgradeCompatibility-4-configuration-behavior",
+          "level": 2
+        },
+        {
+          "text": "Upgrade flow",
+          "anchor": "frameworkReleaseUpgradeCompatibility-5-upgrade-flow",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "frameworkReleaseUpgradeCompatibility-6-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Implementation handoff",
+          "anchor": "frameworkReleaseUpgradeCompatibility-7-implementation-handoff",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "frameworkReleaseUpgradeCompatibility-8-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "frameworkReleaseUpgradeCompatibility-9-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Release and upgrade compatibility explains how module data folders evolve without breaking customer projects. Before the first production baseline, teams can keep improving `v001` release folders. After that baseline is used by customers, every released folder becomes immutable and the next change starts a new release folder. For beginners, a release folder is a promise: it records the data shape that can be installed and tested again."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "frameworkReleaseUpgradeCompatibility-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Setup tooling module",
+              "`../nodics.foundation/modules/nSetup/package.json`"
+            ],
+            [
+              "Documentation generated manifest",
+              "`data/manifest.json`"
+            ],
+            [
+              "Data import release service",
+              "`../nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js`"
+            ],
+            [
+              "Import release ordering tests",
+              "`../nodics.foundation/modules/nData/nImport/import/test/importUtilityReleaseOrder.test.js`"
+            ],
+            [
+              "Data authoring guide",
+              "`docs/pages/nodics.foundation/data-import-export-migration.md`"
+            ],
+            [
+              "Documentation publishing runbook",
+              "`docs/pages/nodics.docs/documentation-publishing-runbook.md`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Folder contract",
+          "anchor": "frameworkReleaseUpgradeCompatibility-2-folder-contract"
+        },
+        {
+          "kind": "code",
+          "language": "text",
+          "text": "data/\n  init-v001/\n    headers/\n    records/\n  core-v001/\n    headers/\n    records/\n  sample-v001/\n    commerce/\n      headers/\n      records/\n    content/\n      headers/\n      records/\n      assets/\n  manifest.json"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is upgrade confidence. Business users need stable setup and sample data. Developers need a predictable place to add defaults and customer extensions. Operators need checksum and import evidence. Production support needs to know whether a customer installed `core-v001` or `core-v002` before diagnosing a problem."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Compatibility rules",
+          "anchor": "frameworkReleaseUpgradeCompatibility-3-compatibility-rules"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Rule",
+            "Meaning"
+          ],
+          "rows": [
+            [
+              "Pre-production folders can change",
+              "Until customer release, teams may refine `v001`."
+            ],
+            [
+              "Released folders are immutable",
+              "After production release, create the next folder."
+            ],
+            [
+              "Manifest is generated",
+              "Developers edit headers, records, and assets, then regenerate."
+            ],
+            [
+              "Headers own routing",
+              "Module, schema, operation, and query stay in header files."
+            ],
+            [
+              "Records are declarative",
+              "No business logic, runtime paths, secrets, or service calls."
+            ],
+            [
+              "Assets stay with data",
+              "Media source files live under the release-owned assets folder."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Configuration behavior",
+          "anchor": "frameworkReleaseUpgradeCompatibility-4-configuration-behavior"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Release configuration should describe active modules, target runtimes, import lanes, and provider settings, but it should not replace the release folder. The folder owns versioned data, the generated manifest owns checksums, and runtime configuration selects where that data is installed and published."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Upgrade flow",
+          "anchor": "frameworkReleaseUpgradeCompatibility-5-upgrade-flow"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Current[\"Installed release\"] --> New[\"Next release folder\"]\n  New --> Validate[\"Generate manifest and validate\"]\n  Validate --> Import[\"Fresh-schema import\"]\n  Import --> Publish[\"Staged review and Online publication\"]\n  Publish --> Evidence[\"Compatibility evidence\"]"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "frameworkReleaseUpgradeCompatibility-6-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can extend a released module by creating a customer project data folder with a later release code or by adding a project-owned module that depends on the framework module. Do not patch old released framework data in a customer project unless the repair is documented and repeatable. AI tools should read the manifest, existing headers, and target schemas before adding records."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Implementation handoff",
+          "anchor": "frameworkReleaseUpgradeCompatibility-7-implementation-handoff"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Every release handoff should name the changed folders, generated manifest, target runtimes, import order, publication dependency, rollback option, and browser evidence. Business users get a clear upgrade journey, developers get source traceability, operators get production recovery instructions, and QA owners get clean-install plus upgrade scenarios. This prevents a data release from becoming tribal knowledge."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "frameworkReleaseUpgradeCompatibility-8-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Editing an already released data folder and losing reproducibility.",
+            "Creating `release.js` files for values that can be derived from folder names.",
+            "Hand maintaining generated manifest checksums.",
+            "Putting provider-specific paths inside shared data records.",
+            "Forgetting fresh-schema import tests before upgrade rollout."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "frameworkReleaseUpgradeCompatibility-9-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Regenerate manifests, run import ordering tests, import every changed release into a fresh schema, publish where needed, and verify Axis, Nexus, or Agora in the browser. Production acceptance requires business release notes, developer source evidence, operator rollback instructions, and QA proof for both clean install and upgrade paths."
+        }
+      ],
+      "searchText": "Release and Upgrade Compatibility How data release folders, generated manifests, immutable baselines, upgrades, rollback, checksum drift, and customer extensions are governed. # Release and Upgrade Compatibility\n\nRelease and upgrade compatibility explains how module data folders evolve\nwithout breaking customer projects. Before the first production baseline,\nteams can keep improving `v001` release folders. After that baseline is used\nby customers, every released folder becomes immutable and the next change\nstarts a new release folder. For beginners, a release folder is a promise: it\nrecords the data shape that can be installed and tested again.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Setup tooling module | `../nodics.foundation/modules/nSetup/package.json` |\n| Documentation generated manifest | `data/manifest.json` |\n| Data import release service | `../nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js` |\n| Import release ordering tests | `../nodics.foundation/modules/nData/nImport/import/test/importUtilityReleaseOrder.test.js` |\n| Data authoring guide | `docs/pages/nodics.foundation/data-import-export-migration.md` |\n| Documentation publishing runbook | `docs/pages/nodics.docs/documentation-publishing-runbook.md` |\n\n## Folder contract\n\n```text\ndata/\n  init-v001/\n    headers/\n    records/\n  core-v001/\n    headers/\n    records/\n  sample-v001/\n    commerce/\n      headers/\n      records/\n    content/\n      headers/\n      records/\n      assets/\n  manifest.json\n```\n\nThe business problem is upgrade confidence. Business users need stable setup\nand sample data. Developers need a predictable place to add defaults and\ncustomer extensions. Operators need checksum and import evidence. Production\nsupport needs to know whether a customer installed `core-v001` or `core-v002`\nbefore diagnosing a problem.\n\n## Compatibility rules\n\n| Rule | Meaning |\n| --- | --- |\n| Pre-production folders can change | Until customer release, teams may refine `v001`. |\n| Released folders are immutable | After production release, create the next folder. |\n| Manifest is generated | Developers edit headers, records, and assets, then regenerate. |\n| Headers own routing | Module, schema, operation, and query stay in header files. |\n| Records are declarative | No business logic, runtime paths, secrets, or service calls. |\n| Assets stay with data | Media source files live under the release-owned assets folder. |\n\n## Configuration behavior\n\nRelease configuration should describe active modules, target runtimes, import\nlanes, and provider settings, but it should not replace the release folder.\nThe folder owns versioned data, the generated manifest owns checksums, and\nruntime configuration selects where that data is installed and published.\n\n## Upgrade flow\n\n```mermaid\nflowchart LR\n  Current[\"Installed release\"] --> New[\"Next release folder\"]\n  New --> Validate[\"Generate manifest and validate\"]\n  Validate --> Import[\"Fresh-schema import\"]\n  Import --> Publish[\"Staged review and Online publication\"]\n  Publish --> Evidence[\"Compatibility evidence\"]\n```\n\n## Customization and extension guidance\n\nDevelopers can extend a released module by creating a customer project data\nfolder with a later release code or by adding a project-owned module that\ndepends on the framework module. Do not patch old released framework data in a\ncustomer project unless the repair is documented and repeatable. AI tools\nshould read the manifest, existing headers, and target schemas before adding\nrecords.\n\n## Implementation handoff\n\nEvery release handoff should name the changed folders, generated manifest,\ntarget runtimes, import order, publication dependency, rollback option, and\nbrowser evidence. Business users get a clear upgrade journey, developers get\nsource traceability, operators get production recovery instructions, and QA\nowners get clean-install plus upgrade scenarios. This prevents a data release\nfrom becoming tribal knowledge.\n\n## Common mistakes\n\n- Editing an already released data folder and losing reproducibility.\n- Creating `release.js` files for values that can be derived from folder names.\n- Hand maintaining generated manifest checksums.\n- Putting provider-specific paths inside shared data records.\n- Forgetting fresh-schema import tests before upgrade rollout.\n\n## Verification\n\nRegenerate manifests, run import ordering tests, import every changed release\ninto a fresh schema, publish where needed, and verify Axis, Nexus, or Agora in\nthe browser. Production acceptance requires business release notes, developer\nsource evidence, operator rollback instructions, and QA proof for both clean\ninstall and upgrade paths.\n",
+      "previous": {
+        "title": "CronJob Data Authoring",
+        "route": "/docs/framework/process-cronjob-data-authoring"
+      },
+      "next": {
+        "title": "AI and Developer Tooling",
+        "route": "/docs/framework/tooling-ai-developer-enablement"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.foundation",
+        "technicalModule": "nSetup",
+        "owner": "nodics.foundation",
+        "sourcePath": "docs/pages/framework/release-upgrade-compatibility.md",
+        "path": "docs/pages/framework/release-upgrade-compatibility.md",
+        "wordCount": 570,
+        "checksum": "2cc031453c94eddde6fe28ebcedb0cc8fbf373841fb79765c725d39cd19924d6"
+      }
+    },
+    "active": true
+  },
+  "record114": {
     "code": "nodicsDocsComponenttoolingAiDeveloperEnablement",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -42593,8 +47981,8 @@ module.exports = {
       ],
       "searchText": "AI and Developer Tooling How AI tools, developers, and reviewers use contracts, source maps, generated context, quality gates, and documentation principles safely. # AI and Developer Tooling\n\nHow AI tools, developers, and reviewers use contracts, source maps, generated context, quality gates, and documentation principles safely. This page is intentionally written for beginners, business users, developers, operators, architects, QA owners, and AI tools. It explains the business problem first, then the technical ownership model, then the exact customization and verification responsibilities so nobody has to guess where a change belongs.\n\nAI and developer automation can accelerate delivery, but it can also invent owners, bypass contracts, overwrite user changes, or generate shallow documentation if rules are not executable. Nodics keeps AI enablement as contracts, templates, quality checks, source maps, and validation scripts. Generated documentation must follow the same business, technical, visual, and audit principles every time.\n\n## Business context\n\nFor a business user, this topic answers what decision can be made, which operational journey is supported, and what risk is reduced. The practical value is faster delivery without losing governance: teams can understand the current capability, decide whether it applies to their project, and know when Axis, Nexus, content catalog, workflow, or runtime services are involved.\n\nFor beginners, the mental model is simple: the page title is the business capability, the table identifies who owns each part, and the diagram shows how a request or change flows. A reader should not need source-code knowledge to understand the journey, but the developer path is still available when customization is needed.\n\n| Business question | Answer for this topic |\n| --- | --- |\n| What problem does it solve? | AI and developer automation can accelerate delivery, but it can also invent owners, bypass contracts, overwrite user changes, or generate shallow documentation if rules are not executable. |\n| Who uses it? | Business users, administrators, developers, operators, QA owners, implementation partners, and AI-assisted delivery tools. |\n| What changes can it support? | Nodics keeps AI enablement as contracts, templates, quality checks, source maps, and validation scripts. Generated documentation must follow the same business, technical, visual, and audit principles every time. |\n| What must be governed? | Permissions, validation, source ownership, publication state, runtime impact, audit evidence, and rollback boundaries. |\n\n## Journey and ownership\n\nnSetup and nTooling own AI contracts, generation templates, quality validators, and release checks. Functional modules own the implementation facts being documented. This keeps the reader-facing name friendly while preserving exact source ownership for developers and AI tools. Axis may render management screens or authenticated documentation, Nexus may render public Online content, and the backend content catalog remains authoritative for navigation, pages, access policies, and publication state.\n\n```mermaid\nflowchart LR\n  Reader[\"Business or developer request\"] --> Axis[\"Axis or Nexus view\"]\n  Axis --> Backend[\"Owning backend capability\"]\n  Backend --> Catalog[\"Content/catalog/schema/config records\"]\n  Catalog --> Runtime[\"Runtime behavior or published page\"]\n  Runtime --> Evidence[\"Audit, validation, and support evidence\"]\n```\n\n| Responsibility | Owner | Notes |\n| --- | --- | --- |\n| Business capability name | AI and Developer Tooling | Used in navigation and dashboards so readers are not exposed to raw module names first. |\n| Source owner | nodics.foundation | Carries exact implementation, documentation, and validation evidence. |\n| Technical module | nSetup | Holds the relevant schema, service, router, data, or contract detail where applicable. |\n| Axis experience | Backend-declared workspace | Axis renders metadata and actions but does not become the authority. |\n| Public experience | Online content delivery | Nexus renders only records approved for public access. |\n\n## Data and configuration detail\n\nEvery topic must explain the data that changes behavior. Some topics are schema-driven, some are configuration-driven, some are publishable content, and some are operational records. The documentation must say which category applies before showing code. That keeps production operators and developers aligned on whether a change needs publication, restart, event propagation, approval, or only a project-layer override.\n\n| Detail area | What to document | Verification signal |\n| --- | --- | --- |\n| Model or record | Type code, catalog, tenant, enterprise, state, owner, and lifecycle. | Schema contract or generated model test. |\n| Configuration key | Default value, override location, environment scope, and runtime impact. | Config validation and runtime refresh evidence. |\n| API or event | Route/event name, payload boundary, permission, idempotency, and failure mode. | Route, service, event, and authorization tests. |\n| Publication and access | Staged/Online state, access mode, roles, groups, and permissions. | Content-pack validation and access-policy test. |\n\n```js\ndocumentationImpact: { requiresBusinessView: true, requiresVisuals: true, requiresSourceMap: true, validation: \"blocking\" }\n```\n\n## Customization and extension\n\nDevelopers should customize from the project layer first. A customer project may add properties, services, validators, pipelines, renderers, data packs, or provider configuration when the extension respects the owning capability. Business users may update governed records in Axis when the record is designed for administration. Framework source changes are reserved for improving the reusable product capability itself.\n\n| Customization type | Recommended path | Avoid |\n| --- | --- | --- |\n| Business label, navigation, or content area | Axis-managed content catalog item with publication workflow. | Hardcoding labels or page trees in the frontend. |\n| Runtime setting | Module configuration with validation and governed runtime propagation. | Editing node-local files on each server by hand. |\n| Domain behavior | Extension service, validator, pipeline step, or provider adapter. | Forking the standard module for customer-only logic. |\n| Public visibility | Access policy with public/authenticated/role-based state. | Exposing internal or draft pages through Nexus. |\n\n## Operations and governance\n\nOperators need production-safe evidence, not only implementation notes. Each page must call out logging, tracing, permission checks, event propagation, data import/export, publication status, rollback behavior, and troubleshooting. If a capability affects multiple nodes, the documentation must explain how changes reach every node and how a partial failure is detected.\n\n| Operational concern | Required documentation detail |\n| --- | --- |\n| Security | Authentication mode, permission code, role/group, tenant and enterprise isolation. |\n| Audit | Actor, timestamp, source record, checksum, approval, route/event, and result. |\n| Resilience | Retry, idempotency, compensation, fallback, cache invalidation, and rollback. |\n| Observability | Logs, metrics, dashboard cards, health checks, and support evidence. |\n\n## Common mistakes\n\n- Treating a friendly navigation label as the technical source owner.\n- Writing only developer details and skipping the business decision that the page supports.\n- Updating Axis or Nexus code when the content catalog, schema, or backend capability should own the change.\n- Forgetting access rules for public, authenticated, role-based, group-based, or permission-based pages.\n- Skipping diagrams, comparison tables, source maps, or troubleshooting matrices because the topic feels obvious.\n- Changing runtime behavior without explaining production impact, cluster propagation, and rollback.\n- Leaving generated documentation without source evidence, validation commands, and maturity state.\n\n## Verification\n\nVerification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.\n\nFor implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.\n",
       "previous": {
-        "title": "Documentation Publishing Runbook",
-        "route": "/docs/framework/docs-documentation-publishing-runbook"
+        "title": "Release and Upgrade Compatibility",
+        "route": "/docs/framework/framework-release-upgrade-compatibility"
       },
       "next": {
         "title": "Reference Source Map and Glossary",
@@ -42613,7 +48001,7 @@ module.exports = {
     },
     "active": true
   },
-  "record100": {
+  "record115": {
     "code": "nodicsDocsComponentreferenceSourceMapGlossary",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -43334,7 +48722,7 @@ module.exports = {
     },
     "active": true
   },
-  "record101": {
+  "record116": {
     "code": "nodicsDocsComponentreferenceSourceBackedDocumentationCoverageAudit",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -44105,7 +49493,7 @@ module.exports = {
     },
     "active": true
   },
-  "record102": {
+  "record117": {
     "code": "nodicsDocsComponentreferenceDocumentationGapBacklog",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -44363,85 +49751,101 @@ module.exports = {
         {
           "kind": "table",
           "headers": [
+            "Status",
             "Item",
             "Source areas",
             "Documentation outcome"
           ],
           "rows": [
             [
+              "Closed by P1 docs batch",
               "Module Registry journey",
               "`nodics.platform/modules/backoffice`, registry-related Platform services",
-              "Explain registration, activation, dependency state, required capability checks, and Axis visibility."
+              "Covered by `platform.module-registry-journey` with registration, activation, dependency state, required capability checks, and Axis visibility."
             ],
             [
+              "Closed by P1 docs batch",
               "Commerce Search guide",
               "`nodics.commerce/modules/baseCommerce/modules/commerceSearch`",
-              "Explain ranking rules, projections, publish flow, index ownership, storefront effect, and recovery."
+              "Covered by `commerce.search-guide` with ranking rules, projections, publish flow, index ownership, storefront effect, and recovery."
             ],
             [
+              "Closed by P1 docs batch",
               "Localization depth",
               "`nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi`",
-              "Explain locale records, fallback, content/product localization, import data, API boundaries, and browser proof."
+              "Covered by `localization.runtime-authoring` with locale records, fallback, content/product localization, import data, API boundaries, and browser proof."
             ],
             [
+              "Closed by P1 docs batch",
               "Payment Core and provider split",
               "`nodics.commerce/modules/payment`",
-              "Explain payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension."
+              "Covered by `commerce.payment-provider-boundaries` with payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension."
             ],
             [
+              "Closed by P1 docs batch",
               "Customer List and Profile-Commerce boundary",
               "`nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile`",
-              "Explain why customer list exists in Commerce and what Profile continues to own."
+              "Covered by `commerce.customer-list-profile-boundary` with why customer list exists in Commerce and what Profile continues to own."
             ],
             [
+              "Closed by P1 docs batch",
               "NMS runtime monitoring",
               "`nodics.foundation/modules/nNms`",
-              "Explain node monitoring, topology, health, operational evidence, and recovery actions."
+              "Covered by `foundation.nms-runtime-monitoring` with node monitoring, topology, health, operational evidence, and recovery actions."
             ],
             [
+              "Closed by P1 docs batch",
               "Service runtime and overrides",
               "`nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService`",
-              "Explain service discovery, virtual services, generated services, override precedence, and extension safety."
+              "Covered by `foundation.service-runtime-overrides` with service discovery, virtual services, generated services, override precedence, and extension safety."
             ],
             [
+              "Closed by P1 docs batch",
               "Cache provider runbooks",
               "`nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache",
-              "Explain provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration."
+              "Covered by `foundation.cache-provider-runbooks` with provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration."
             ],
             [
+              "Closed by P1 docs batch",
               "Database provider boundaries",
               "`nodics.foundation/modules/nDatabase`",
-              "Explain MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation."
+              "Covered by `foundation.database-provider-boundaries` with MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation."
             ],
             [
+              "Closed by P1 docs batch",
               "OTP and security flow",
               "`nodics.foundation/modules/nOtp`",
-              "Explain OTP generation, verification, expiry, retry, throttling, audit, and security controls."
+              "Covered by `security.otp-security-flow` with OTP generation, verification, expiry, retry, throttling, audit, and security controls."
             ],
             [
+              "Closed by P1 docs batch",
               "Communication providers",
               "`nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider`",
-              "Explain SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules."
+              "Covered by `communication.provider-runbooks` with SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules."
             ],
             [
+              "Closed by P1 docs batch",
               "Engagement and contact submission",
               "`nodics.engagement/modules/contactSubmission`",
-              "Explain contact forms, moderation, workflow, notification, audit, and recovery."
+              "Covered by `engagement.contact-submission-operations` with contact forms, moderation, workflow, notification, audit, and recovery."
             ],
             [
+              "Closed by P1 docs batch",
               "Workflow and BPM source map",
               "`nodics.foundation/modules/nbpm`, `nodics.process`",
-              "Explain workflow definitions, transitions, tasks, callbacks, history, and operator visibility."
+              "Covered by `process.workflow-bpm-source-map` with workflow definitions, transitions, tasks, callbacks, history, and operator visibility."
             ],
             [
+              "Closed by P1 docs batch",
               "Cron job data authoring",
               "`nodics.process/modules/cronjob`",
-              "Explain job records, schedules, execution policy, retry, idempotency, and Process server ownership."
+              "Covered by `process.cronjob-data-authoring` with job records, schedules, execution policy, retry, idempotency, and Process server ownership."
             ],
             [
+              "Closed by P1 docs batch",
               "Release and upgrade compatibility",
               "`nodics.foundation/modules/nSetup`, all module data folders",
-              "Explain version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility."
+              "Covered by `framework.release-upgrade-compatibility` with version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility."
             ]
           ]
         },
@@ -44589,7 +49993,7 @@ module.exports = {
           "text": "The backlog is healthy when the generated report, this page, catalogue metadata, generated WCMS records, and runtime evidence agree. Business users should see clear journeys, developers should see exact source paths and extension points, operators should see evidence and recovery steps, QA owners should see validation commands, and AI tools should see boundaries that prevent unsafe source or data changes."
         }
       ],
-      "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P0 docs batch | Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Closed by P0 docs batch | Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| Closed by P0 docs batch | CMS exact source map | `nodics.wcms/modules/cms` | Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Closed by P0 docs batch | Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Closed by P0 docs batch | Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Closed by P0 docs batch | Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Closed by P0 docs batch | Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Explain registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Explain ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Explain locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Payment Core and provider split | `nodics.commerce/modules/payment` | Explain payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Explain why customer list exists in Commerce and what Profile continues to own. |\n| NMS runtime monitoring | `nodics.foundation/modules/nNms` | Explain node monitoring, topology, health, operational evidence, and recovery actions. |\n| Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Explain service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Explain provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Database provider boundaries | `nodics.foundation/modules/nDatabase` | Explain MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| OTP and security flow | `nodics.foundation/modules/nOtp` | Explain OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Explain SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Explain contact forms, moderation, workflow, notification, audit, and recovery. |\n| Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Explain workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Cron job data authoring | `nodics.process/modules/cronjob` | Explain job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Explain version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Fresh-schema setup per runtime | Platform, WCMS Staged, WCMS Online, Process, Commerce, Engagement | Add runtime-specific import order, seed data, publication, and acceptance evidence where existing quick-start docs are too broad. |\n| Environment, server, and node discovery | `nodics.kickoff/envs`, framework server/node configuration | Explain how physical hierarchy, environment config, server composition, and runtime roles are discovered. |\n| Permission and access matrix | Profile, BackOffice, WCMS, documentation access policies | Explain roles, groups, permissions, access modes, public/authenticated/restricted behavior, and publication visibility. |\n| Search indexing operations | Discovery and Commerce Search modules | Explain index jobs, reindex, projection freshness, failure recovery, and ownership. |\n| Migration and import reconciliation | Import, migration, CMS migration, Commerce data | Explain source classification, mapping tables, partial failures, retry, and data correction. |\n| Export and data privacy | Export providers, media-owned generated files | Explain allow-lists, masking, retention, download permissions, and audit. |\n| Observability | NMS, import runs, publication receipts, logs, dashboards | Explain correlation IDs, status evidence, health checks, support cards, and escalation. |\n| Disaster recovery | Media publication, Online storage, replication queue | Explain Online media replication, DR queues, recovery receipts, and failure escalation. |\n| Frontend consumption contracts | Axis, Nexus, Agora | Explain that Axis consumes BackOffice metadata, Nexus consumes Online WCMS, and Agora consumes Online commerce/content. |\n| Data quality rules | All module data folders | Explain required fields, stable keys, idempotent queries, relation integrity, and no runtime logic in data files. |\n| Testing standards | All modules and frontends | Explain unit, contract, generator, fresh-schema, publication, browser, accessibility, and regression expectations. |\n| Troubleshooting matrices | Every operational capability page | Add what failed, who owns it, user-safe message, technical evidence, and recovery action. |\n| Decision-maker overview pages | Product and capability overview docs | Explain business value, ownership model, platform differentiation, risk controls, and implementation confidence. |\n| Internal-only register | Low-score utility modules | Decide and document which technical modules do not need public pages and where they are covered. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n",
+      "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P0 docs batch | Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Closed by P0 docs batch | Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| Closed by P0 docs batch | CMS exact source map | `nodics.wcms/modules/cms` | Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Closed by P0 docs batch | Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Closed by P0 docs batch | Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Closed by P0 docs batch | Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Closed by P0 docs batch | Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P1 docs batch | Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Covered by `platform.module-registry-journey` with registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Closed by P1 docs batch | Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Covered by `commerce.search-guide` with ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Closed by P1 docs batch | Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Covered by `localization.runtime-authoring` with locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Closed by P1 docs batch | Payment Core and provider split | `nodics.commerce/modules/payment` | Covered by `commerce.payment-provider-boundaries` with payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Closed by P1 docs batch | Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Covered by `commerce.customer-list-profile-boundary` with why customer list exists in Commerce and what Profile continues to own. |\n| Closed by P1 docs batch | NMS runtime monitoring | `nodics.foundation/modules/nNms` | Covered by `foundation.nms-runtime-monitoring` with node monitoring, topology, health, operational evidence, and recovery actions. |\n| Closed by P1 docs batch | Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Covered by `foundation.service-runtime-overrides` with service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Closed by P1 docs batch | Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Covered by `foundation.cache-provider-runbooks` with provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Closed by P1 docs batch | Database provider boundaries | `nodics.foundation/modules/nDatabase` | Covered by `foundation.database-provider-boundaries` with MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| Closed by P1 docs batch | OTP and security flow | `nodics.foundation/modules/nOtp` | Covered by `security.otp-security-flow` with OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Closed by P1 docs batch | Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Covered by `communication.provider-runbooks` with SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Closed by P1 docs batch | Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Covered by `engagement.contact-submission-operations` with contact forms, moderation, workflow, notification, audit, and recovery. |\n| Closed by P1 docs batch | Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Covered by `process.workflow-bpm-source-map` with workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Closed by P1 docs batch | Cron job data authoring | `nodics.process/modules/cronjob` | Covered by `process.cronjob-data-authoring` with job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Closed by P1 docs batch | Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Covered by `framework.release-upgrade-compatibility` with version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Fresh-schema setup per runtime | Platform, WCMS Staged, WCMS Online, Process, Commerce, Engagement | Add runtime-specific import order, seed data, publication, and acceptance evidence where existing quick-start docs are too broad. |\n| Environment, server, and node discovery | `nodics.kickoff/envs`, framework server/node configuration | Explain how physical hierarchy, environment config, server composition, and runtime roles are discovered. |\n| Permission and access matrix | Profile, BackOffice, WCMS, documentation access policies | Explain roles, groups, permissions, access modes, public/authenticated/restricted behavior, and publication visibility. |\n| Search indexing operations | Discovery and Commerce Search modules | Explain index jobs, reindex, projection freshness, failure recovery, and ownership. |\n| Migration and import reconciliation | Import, migration, CMS migration, Commerce data | Explain source classification, mapping tables, partial failures, retry, and data correction. |\n| Export and data privacy | Export providers, media-owned generated files | Explain allow-lists, masking, retention, download permissions, and audit. |\n| Observability | NMS, import runs, publication receipts, logs, dashboards | Explain correlation IDs, status evidence, health checks, support cards, and escalation. |\n| Disaster recovery | Media publication, Online storage, replication queue | Explain Online media replication, DR queues, recovery receipts, and failure escalation. |\n| Frontend consumption contracts | Axis, Nexus, Agora | Explain that Axis consumes BackOffice metadata, Nexus consumes Online WCMS, and Agora consumes Online commerce/content. |\n| Data quality rules | All module data folders | Explain required fields, stable keys, idempotent queries, relation integrity, and no runtime logic in data files. |\n| Testing standards | All modules and frontends | Explain unit, contract, generator, fresh-schema, publication, browser, accessibility, and regression expectations. |\n| Troubleshooting matrices | Every operational capability page | Add what failed, who owns it, user-safe message, technical evidence, and recovery action. |\n| Decision-maker overview pages | Product and capability overview docs | Explain business value, ownership model, platform differentiation, risk controls, and implementation confidence. |\n| Internal-only register | Low-score utility modules | Decide and document which technical modules do not need public pages and where they are covered. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n",
       "previous": {
         "title": "Source-Backed Documentation Coverage Audit",
         "route": "/docs/framework/reference-source-backed-documentation-coverage-audit"
@@ -44601,8 +50005,8 @@ module.exports = {
         "owner": "nodics.docs",
         "sourcePath": "docs/pages/reference/documentation-gap-backlog.md",
         "path": "docs/pages/reference/documentation-gap-backlog.md",
-        "wordCount": 1468,
-        "checksum": "ff9b54926fbd90c52b92e1ef2776737a9513c0ebf7e4a40048f31f5651eefeb1"
+        "wordCount": 1604,
+        "checksum": "cace25d19d16071dba67887898657ed0088c6938af883147eb725cfcc252f3f6"
       }
     },
     "active": true

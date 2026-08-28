@@ -6226,6 +6226,666 @@ module.exports = {
     "active": true
   },
   "record148": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicplatformmoduleregistryjourney",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicplatformModuleRegistryJourney",
+    "title": "Module Registry Journey",
+    "summary": "How installed modules become registered, activated, dependency-checked, and visible to Axis as governed business capabilities.",
+    "searchText": "Module Registry Journey How installed modules become registered, activated, dependency-checked, and visible to Axis as governed business capabilities. module-registry backoffice activation dependency axis",
+    "keywords": [
+      "module-registry",
+      "backoffice",
+      "activation",
+      "dependency",
+      "axis"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record149": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercesearchguide",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopiccommerceSearchGuide",
+    "title": "Commerce Search Guide",
+    "summary": "How commerce search projections, ranking rules, index freshness, rebuild evidence, and storefront discovery are governed.",
+    "searchText": "Commerce Search Guide How commerce search projections, ranking rules, index freshness, rebuild evidence, and storefront discovery are governed. commerce-search projection ranking index agora",
+    "keywords": [
+      "commerce-search",
+      "projection",
+      "ranking",
+      "index",
+      "agora"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record150": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopiclocalizationruntimeauthoring",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopiclocalizationRuntimeAuthoring",
+    "title": "Localization Runtime Authoring",
+    "summary": "How localized records, fallback behavior, content and product translation, import data, and runtime API boundaries work.",
+    "searchText": "Localization Runtime Authoring How localized records, fallback behavior, content and product translation, import data, and runtime API boundaries work. localization fallback locale translation authoring",
+    "keywords": [
+      "localization",
+      "fallback",
+      "locale",
+      "translation",
+      "authoring"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record151": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercepaymentproviderboundaries",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopiccommercePaymentProviderBoundaries",
+    "title": "Payment Core and Provider Boundaries",
+    "summary": "How Payment Core, payment methods, gateway providers, safe payloads, reconciliation, refunds, and provider extension boundaries work.",
+    "searchText": "Payment Core and Provider Boundaries How Payment Core, payment methods, gateway providers, safe payloads, reconciliation, refunds, and provider extension boundaries work. payment provider method reconciliation refund",
+    "keywords": [
+      "payment",
+      "provider",
+      "method",
+      "reconciliation",
+      "refund"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record152": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercecustomerlistprofileboundary",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopiccommerceCustomerListProfileBoundary",
+    "title": "Customer List and Profile Commerce Boundary",
+    "summary": "Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile.",
+    "searchText": "Customer List and Profile Commerce Boundary Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile. customer-list profile commerce-boundary eligibility identity",
+    "keywords": [
+      "customer-list",
+      "profile",
+      "commerce-boundary",
+      "eligibility",
+      "identity"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record153": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationnmsruntimemonitoring",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicfoundationNmsRuntimeMonitoring",
+    "title": "NMS Runtime Monitoring",
+    "summary": "How NMS captures node health, runtime roles, responsibility, capability state, degraded conditions, and operator recovery evidence.",
+    "searchText": "NMS Runtime Monitoring How NMS captures node health, runtime roles, responsibility, capability state, degraded conditions, and operator recovery evidence. nms monitoring node runtime-health operator",
+    "keywords": [
+      "nms",
+      "monitoring",
+      "node",
+      "runtime-health",
+      "operator"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record154": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationserviceruntimeoverrides",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicfoundationServiceRuntimeOverrides",
+    "title": "Service Runtime and Override Precedence",
+    "summary": "How generated services, virtual services, module graph resolution, customer overrides, fallback behavior, and extension safety work.",
+    "searchText": "Service Runtime and Override Precedence How generated services, virtual services, module graph resolution, customer overrides, fallback behavior, and extension safety work. nService vService override service-runtime module-graph",
+    "keywords": [
+      "nService",
+      "vService",
+      "override",
+      "service-runtime",
+      "module-graph"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record155": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationcacheproviderrunbooks",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicfoundationCacheProviderRunbooks",
+    "title": "Cache Provider Runbooks",
+    "summary": "Redis, Hazelcast, node cache, key strategy, invalidation, provider health, fallback behavior, and production cache recovery guidance.",
+    "searchText": "Cache Provider Runbooks Redis, Hazelcast, node cache, key strategy, invalidation, provider health, fallback behavior, and production cache recovery guidance. cache redis hazelcast node-cache invalidation",
+    "keywords": [
+      "cache",
+      "redis",
+      "hazelcast",
+      "node-cache",
+      "invalidation"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record156": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationdatabaseproviderboundaries",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicfoundationDatabaseProviderBoundaries",
+    "title": "Database Provider Boundaries",
+    "summary": "How MongoDB, virtual DB, Cassandra, Elasticsearch, schemas, query translation, indexes, migration, and provider validation are separated.",
+    "searchText": "Database Provider Boundaries How MongoDB, virtual DB, Cassandra, Elasticsearch, schemas, query translation, indexes, migration, and provider validation are separated. database mongodb cassandra elasticsearch provider",
+    "keywords": [
+      "database",
+      "mongodb",
+      "cassandra",
+      "elasticsearch",
+      "provider"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record157": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicsecurityotpsecurityflow",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicsecurityOtpSecurityFlow",
+    "title": "OTP and Security Flow",
+    "summary": "OTP generation, delivery intent, verification, expiry, retry, throttling, lockout, audit, and secure frontend message behavior.",
+    "searchText": "OTP and Security Flow OTP generation, delivery intent, verification, expiry, retry, throttling, lockout, audit, and secure frontend message behavior. otp verification security throttling audit",
+    "keywords": [
+      "otp",
+      "verification",
+      "security",
+      "throttling",
+      "audit"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record158": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommunicationproviderrunbooks",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopiccommunicationProviderRunbooks",
+    "title": "Communication Provider Runbooks",
+    "summary": "SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance.",
+    "searchText": "Communication Provider Runbooks SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance. communication smtp sms delivery retry",
+    "keywords": [
+      "communication",
+      "smtp",
+      "sms",
+      "delivery",
+      "retry"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record159": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementcontactsubmissionoperations",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicengagementContactSubmissionOperations",
+    "title": "Contact Submission Operations",
+    "summary": "How contact forms, submissions, validation, moderation, workflow routing, notifications, retention, audit, and recovery work.",
+    "searchText": "Contact Submission Operations How contact forms, submissions, validation, moderation, workflow routing, notifications, retention, audit, and recovery work. contact-submission engagement moderation workflow notification",
+    "keywords": [
+      "contact-submission",
+      "engagement",
+      "moderation",
+      "workflow",
+      "notification"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record160": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessworkflowbpmsourcemap",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicprocessWorkflowBpmSourceMap",
+    "title": "Workflow and BPM Source Map",
+    "summary": "How workflow definitions, transitions, human tasks, action adapters, callbacks, history, incidents, and operator visibility fit together.",
+    "searchText": "Workflow and BPM Source Map How workflow definitions, transitions, human tasks, action adapters, callbacks, history, incidents, and operator visibility fit together. workflow bpm human-task callback process",
+    "keywords": [
+      "workflow",
+      "bpm",
+      "human-task",
+      "callback",
+      "process"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record161": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocesscronjobdataauthoring",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicprocessCronjobDataAuthoring",
+    "title": "CronJob Data Authoring",
+    "summary": "How CronJob records, headers, schedules, execution policy, retry, idempotency, and Process server ownership are authored and verified.",
+    "searchText": "CronJob Data Authoring How CronJob records, headers, schedules, execution policy, retry, idempotency, and Process server ownership are authored and verified. cronjob scheduled-job data-authoring retry idempotency",
+    "keywords": [
+      "cronjob",
+      "scheduled-job",
+      "data-authoring",
+      "retry",
+      "idempotency"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record162": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkreleaseupgradecompatibility",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopicframeworkReleaseUpgradeCompatibility",
+    "title": "Release and Upgrade Compatibility",
+    "summary": "How data release folders, generated manifests, immutable baselines, upgrades, rollback, checksum drift, and customer extensions are governed.",
+    "searchText": "Release and Upgrade Compatibility How data release folders, generated manifests, immutable baselines, upgrades, rollback, checksum drift, and customer extensions are governed. release upgrade manifest compatibility data-folder",
+    "keywords": [
+      "release",
+      "upgrade",
+      "manifest",
+      "compatibility",
+      "data-folder"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record163": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopictoolingaideveloperenablement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6267,7 +6927,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record149": {
+  "record164": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicreferencesourcemapglossary",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6309,7 +6969,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record150": {
+  "record165": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicreferencesourcebackeddocumentationcoverageaudit",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6353,7 +7013,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record151": {
+  "record166": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicreferencedocumentationgapbacklog",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6397,7 +7057,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record152": {
+  "record167": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardproduct",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -6430,7 +7090,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record153": {
+  "record168": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardnavigation",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -6463,7 +7123,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record154": {
+  "record169": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsframework",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -6496,7 +7156,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record155": {
+  "record170": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -6529,7 +7189,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record156": {
+  "record171": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecframeworkarchitectureanddesign",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -6562,7 +7222,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record157": {
+  "record172": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccapabilityregistryandlifecyclemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -6595,7 +7255,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record158": {
+  "record173": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecfoundationruntimeservices",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -6628,7 +7288,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record159": {
+  "record174": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsapplicationsuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -6661,7 +7321,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record160": {
+  "record175": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsolutionusecases",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -6694,7 +7354,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record161": {
+  "record176": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecacceleratorsandindustrysolutiontemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -6727,7 +7387,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record162": {
+  "record177": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsinstallerandworkspacesetup",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -6760,7 +7420,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record163": {
+  "record178": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecapplicationbuilderandworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -6793,7 +7453,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record164": {
+  "record179": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecaxisandbackofficeoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -6826,7 +7486,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record165": {
+  "record180": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecbusinesscustomizationinaxis",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -6859,7 +7519,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record166": {
+  "record181": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecuserenterpriseandtenantmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -6892,7 +7552,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record167": {
+  "record182": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsecuritygovernanceandcompliance",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -6925,7 +7585,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record168": {
+  "record183": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecapplicationconfigurationandruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -6958,7 +7618,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record169": {
+  "record184": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecruntimegovernanceanddynamicchangemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -6991,7 +7651,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record170": {
+  "record185": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseclocalizationandinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7024,7 +7684,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record171": {
+  "record186": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdatamodelingandschemamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7057,7 +7717,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record172": {
+  "record187": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdatabaseandpersistencemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7090,7 +7750,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record173": {
+  "record188": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccachingandruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7123,7 +7783,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record174": {
+  "record189": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdeveloperextensionandprojectcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7156,7 +7816,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record175": {
+  "record190": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecstoremarketsiteandchannelmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7189,7 +7849,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record176": {
+  "record191": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecwcmsandcontentmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7222,7 +7882,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record177": {
+  "record192": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecproductcataloganddiscovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7255,7 +7915,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record178": {
+  "record193": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsearchanddiscovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7288,7 +7948,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record179": {
+  "record194": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7321,7 +7981,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record180": {
+  "record195": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecinventoryandstockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7354,7 +8014,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record181": {
+  "record196": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpricingpromotionsandtax",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7387,7 +8047,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record182": {
+  "record197": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccommercecartandcheckout",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7420,7 +8080,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record183": {
+  "record198": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpaymentmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7453,7 +8113,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record184": {
+  "record199": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecshippingandfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7486,7 +8146,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record185": {
+  "record200": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecordermanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7519,7 +8179,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record186": {
+  "record201": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccancellationsreturnsandrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7552,7 +8212,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record187": {
+  "record202": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccustomerengagementandfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7585,7 +8245,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record188": {
+  "record203": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccommunicationandnotifications",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7618,7 +8278,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record189": {
+  "record204": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseceventandmessagingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7651,7 +8311,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record190": {
+  "record205": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecprocessandworkflowautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7684,7 +8344,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record191": {
+  "record206": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpipelineandbusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7717,7 +8377,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record192": {
+  "record207": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccronandscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7750,7 +8410,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record193": {
+  "record208": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdataimportexportandmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7783,7 +8443,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record194": {
+  "record209": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsystemintegrationandexternalconnectivity",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7816,7 +8476,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record195": {
+  "record210": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecoperationsmonitoringandrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7849,7 +8509,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record196": {
+  "record211": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecqualitytestingandcertification",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7882,7 +8542,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record197": {
+  "record212": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdocumentationmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7915,7 +8575,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record198": {
+  "record213": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecreleasestagingandpublication",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7948,7 +8608,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record199": {
+  "record214": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecaianddevelopertooling",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7981,7 +8641,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record200": {
+  "record215": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecreference",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8014,7 +8674,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record201": {
+  "record216": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8064,7 +8724,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record202": {
+  "record217": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkwhynodicsexists",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8114,7 +8774,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record203": {
+  "record218": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkhownodicsworks",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8164,7 +8824,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record204": {
+  "record219": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkadoptionandfirstjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8214,7 +8874,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record205": {
+  "record220": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8262,7 +8922,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record206": {
+  "record221": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationprinciples",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8312,7 +8972,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record207": {
+  "record222": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsreaderjourneyandcoverage",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8362,7 +9022,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record208": {
+  "record223": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationpublishingmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8412,7 +9072,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record209": {
+  "record224": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkmodulararchitecture",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8460,7 +9120,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record210": {
+  "record225": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkruntimeservercomposition",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8508,7 +9168,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record211": {
+  "record226": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkmoduleloadingserviceprecedence",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8556,7 +9216,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record212": {
+  "record227": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkarchitecturedecisionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8604,7 +9264,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record213": {
+  "record228": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataplatformmoduleregistry",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8652,7 +9312,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record214": {
+  "record229": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8700,7 +9360,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record215": {
+  "record230": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataapplicationssuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8750,7 +9410,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record216": {
+  "record231": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasolutionstaskexecutionengine",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8803,7 +9463,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record217": {
+  "record232": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasolutionsdataengineeringanalyticsplatform",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8857,7 +9517,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record218": {
+  "record233": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsagoraindustrytemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8908,7 +9568,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record219": {
+  "record234": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsagoraapparelproductdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -8962,7 +9622,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record220": {
+  "record235": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalquickstart",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9010,7 +9670,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record221": {
+  "record236": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkfreshschemasetupjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9058,7 +9718,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record222": {
+  "record237": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalruntimetroubleshooting",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9106,7 +9766,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record223": {
+  "record238": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatainstallerinstalledruntimeapplicationbuilder",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9156,7 +9816,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record224": {
+  "record239": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatabuilderworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9204,7 +9864,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record225": {
+  "record240": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessvisualdesigner",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9252,7 +9912,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record226": {
+  "record241": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataaxisbusinesscustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9300,7 +9960,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record227": {
+  "record242": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataplatformoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9348,7 +10008,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record228": {
+  "record243": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasecurityidentityaccessgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9396,7 +10056,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record229": {
+  "record244": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataconfigurationruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9444,7 +10104,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record230": {
+  "record245": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataroutingapigovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9496,7 +10156,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record231": {
+  "record246": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataruntimegovernedchange",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9544,7 +10204,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record232": {
+  "record247": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatalocalizationinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9592,7 +10252,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record233": {
+  "record248": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataschemadatamodelingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9640,7 +10300,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record234": {
+  "record249": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatapersistenceproviderdataaccesslayer",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9688,7 +10348,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record235": {
+  "record250": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacacheruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9736,7 +10396,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record236": {
+  "record251": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkcustomizationguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9784,7 +10444,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record237": {
+  "record252": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkbackendextensionpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9833,7 +10493,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record238": {
+  "record253": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkaxiscontentcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9881,7 +10541,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record239": {
+  "record254": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessdevelopercustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9929,7 +10589,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record240": {
+  "record255": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocesscustomprojectextension",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9977,7 +10637,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record241": {
+  "record256": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercebasefoundations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10025,7 +10685,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record242": {
+  "record257": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10073,7 +10733,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record243": {
+  "record258": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmscontentcatalogmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10121,7 +10781,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record244": {
+  "record259": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmspagedesignercomponents",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10169,7 +10829,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record245": {
+  "record260": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmssitepublicationvisibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10218,7 +10878,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record246": {
+  "record261": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacatalogproductdiscoverymanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10266,7 +10926,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record247": {
+  "record262": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadiscoverysearchindexing",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10314,7 +10974,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record248": {
+  "record263": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10362,7 +11022,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record249": {
+  "record264": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediastoragedelivery",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10410,7 +11070,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record250": {
+  "record265": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediaimportpublication",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10458,7 +11118,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record251": {
+  "record266": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatainventorystockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10506,7 +11166,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record252": {
+  "record267": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatapricingpromotionstaxmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10554,7 +11214,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record253": {
+  "record268": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommerceoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10602,7 +11262,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record254": {
+  "record269": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercecartorder",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10650,7 +11310,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record255": {
+  "record270": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercepaymentfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10698,7 +11358,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record256": {
+  "record271": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafulfillmentshippingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10746,7 +11406,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record257": {
+  "record272": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataordermanagementlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10794,7 +11454,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record258": {
+  "record273": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercereturnsrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10842,7 +11502,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record259": {
+  "record274": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementcustomerreviews",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10890,7 +11550,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record260": {
+  "record275": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementreviewmoderationgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10938,7 +11598,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record261": {
+  "record276": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementreviewaggregationrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10986,7 +11646,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record262": {
+  "record277": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementcustomerfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11034,7 +11694,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record263": {
+  "record278": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementunifiedoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11082,7 +11742,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record264": {
+  "record279": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementgovernedautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11130,7 +11790,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record265": {
+  "record280": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagemententerpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11178,7 +11838,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record266": {
+  "record281": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommunicationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11226,7 +11886,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record267": {
+  "record282": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataeventsmessagingclustercoordination",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11274,7 +11934,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record268": {
+  "record283": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11322,7 +11982,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record269": {
+  "record284": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessruntimelifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11370,7 +12030,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record270": {
+  "record285": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessfirstworkflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11418,7 +12078,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record271": {
+  "record286": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessfirsthumantask",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11466,7 +12126,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record272": {
+  "record287": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessbusinessvalue",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11514,7 +12174,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record273": {
+  "record288": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatapipelinebusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11562,7 +12222,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record274": {
+  "record289": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacronoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11610,7 +12270,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record275": {
+  "record290": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacronnoderesponsibilitytee",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11659,7 +12319,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record276": {
+  "record291": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacronprojectcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11707,7 +12367,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record277": {
+  "record292": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessprocesscronruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11755,7 +12415,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record278": {
+  "record293": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11803,7 +12463,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record279": {
+  "record294": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadataimportexportmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11851,7 +12511,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record280": {
+  "record295": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessactionadapters",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11899,7 +12559,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record281": {
+  "record296": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkdevopsruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11947,7 +12607,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record282": {
+  "record297": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkruntimereleaserollback",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11995,7 +12655,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record283": {
+  "record298": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalbrowseracceptancejourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12043,7 +12703,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record284": {
+  "record299": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalverificationchecklist",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12091,7 +12751,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record285": {
+  "record300": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommerceenterpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12139,7 +12799,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record286": {
+  "record301": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessincidentrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12187,7 +12847,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record287": {
+  "record302": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessdevopstopology",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12235,7 +12895,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record288": {
+  "record303": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessqaregressionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12283,7 +12943,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record289": {
+  "record304": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkcapabilitydocumentationmaturitypattern",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12331,7 +12991,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record290": {
+  "record305": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12379,7 +13039,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record291": {
+  "record306": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmspublishinglifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12427,7 +13087,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record292": {
+  "record307": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataapplicationsnexusdatacontentguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12477,7 +13137,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record293": {
+  "record308": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataapplicationsaxissetuperrorcontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12527,7 +13187,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record294": {
+  "record309": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmscmssourcemapauthoringcontract",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12577,7 +13237,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record295": {
+  "record310": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediaoperationsrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12627,7 +13287,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record296": {
+  "record311": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadataimportexportproviderguides",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12678,7 +13338,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record297": {
+  "record312": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercedataauthoringfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12729,7 +13389,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record298": {
+  "record313": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationpublishingrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12779,7 +13439,757 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record299": {
+  "record314": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataplatformmoduleregistryjourney",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataplatformModuleRegistryJourney",
+    "title": "Module Registry Journey",
+    "summary": "How installed modules become registered, activated, dependency-checked, and visible to Axis as governed business capabilities.",
+    "searchText": "Module Registry Journey How installed modules become registered, activated, dependency-checked, and visible to Axis as governed business capabilities. # Module Registry Journey\n\nThe Module Registry journey explains how Nodics turns installed modules into\nvisible, governed business capabilities. Axis can show a module, dependency,\nactivation, and setup state, but BackOffice owns the registry contract and the\nbackend modules own their schemas, data, routes, and services. For beginners,\nthink of the registry as the map that tells Axis what exists, what is active,\nwhat is blocked, and which action is allowed next.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| BackOffice module package | `../nodics.platform/modules/backoffice/package.json` |\n| Capability registry service | `../nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js` |\n| Registry store | `../nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryStoreService.js` |\n| Discovery service | `../nodics.platform/modules/backoffice/src/service/discovery/defaultBackofficeDiscoveryService.js` |\n| Registry route tests | `../nodics.platform/modules/backoffice/test/registryRoute.test.js` |\n\n## Lifecycle\n\n```mermaid\nflowchart LR\n  Installed[\"Installed package\"] --> Discovered[\"Discovered module\"]\n  Discovered --> Registered[\"Registered capability\"]\n  Registered --> Activated[\"Activated runtime\"]\n  Activated --> Visible[\"Axis visible\"]\n  Registered --> Blocked[\"Dependency blocked\"]\n  Blocked --> Activated\n```\n\nThe business problem is confidence: an administrator needs to know whether a\ncapability is ready before asking a team to use it. Developers need a reliable\nplace to expose module metadata without giving Axis direct ownership of source\ncontracts. Operators need dependency evidence, activation state, and recovery\nactions before production use.\n\n## Registry contract\n\nEach capability should expose stable identity, display metadata, owner module,\ndependency requirements, runtime role, route availability, allowed actions, and\nhealth state. BackOffice normalizes this into Axis-friendly data. Axis should\nrender sections, cards, badges, disabled actions, and setup messages from that\ncontract instead of hardcoding module rules.\n\n```js\nconst capability = {\n  code: 'cms',\n  ownerModule: 'nodics.wcms',\n  status: 'ACTIVE',\n  requiredModules: ['media', 'process'],\n  runtimeRole: 'STAGED',\n  actions: ['initialize', 'publish', 'refresh']\n};\n```\n\n## Dependency and activation rules\n\nRequired modules represent local runtime dependencies. Remote runtime needs,\nsuch as Online publication targets, should be represented separately as target\navailability or integration readiness. This distinction matters in production\nbecause a module can be locally active while its publication target is\nunavailable. Business users should see the impact. Developers should see the\nowner and missing dependency. Operators should see a retry or repair path.\n\n## Customization and extension guidance\n\nDevelopers can add new capability providers, discovery adapters, registry\nfields, and readiness checks. Keep activation logic in BackOffice or the owning\nmodule service. Customer projects can add metadata for their modules without\nchanging Axis navigation code. AI tools should update registry tests whenever\nthey add a new capability status, dependency type, or user action.\n\n## Implementation handoff\n\nWhen a new module is added, the handoff should include package metadata,\nruntime role, visible capability name, dependency list, health signal, setup\nactions, and documentation page references. That makes the registry useful to\nbusiness users who need a clear journey, developers who need extension points,\noperators who need production readiness, and QA owners who need repeatable\nacceptance checks.\n\n## Common mistakes\n\n- Treating frontend menu entries as module activation evidence.\n- Mixing local required modules with remote API target availability.\n- Hiding dependency failures behind a generic setup error.\n- Adding registry fields without route and service tests.\n- Letting a business action appear enabled before required capability checks\n  pass.\n\n## Verification\n\nRun BackOffice registry, discovery, capability, and availability tests. Then\nstart a fresh schema, initialize module data, open Axis, and confirm the\nregistry view shows active, blocked, and unavailable states with safe messages.\nProduction readiness requires business clarity, developer source traceability,\noperator evidence, and repeatable QA checks.\n",
+    "keywords": [
+      "module-registry",
+      "backoffice",
+      "activation",
+      "dependency",
+      "axis",
+      "Capability Registry and Lifecycle Management",
+      "Module Registry Foundations",
+      "Module Registry Journey"
+    ],
+    "facets": {
+      "section": "capability-registry-and-lifecycle-management",
+      "group": "capability-registry-and-lifecycle-management",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record315": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercesearchguide",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacommerceSearchGuide",
+    "title": "Commerce Search Guide",
+    "summary": "How commerce search projections, ranking rules, index freshness, rebuild evidence, and storefront discovery are governed.",
+    "searchText": "Commerce Search Guide How commerce search projections, ranking rules, index freshness, rebuild evidence, and storefront discovery are governed. # Commerce Search Guide\n\nCommerce Search turns product, category, price, inventory, and merchandising\nsignals into searchable storefront projections. The search index is not the\nsource of truth. Product, price, inventory, CMS, and Media modules own their\nrecords; Commerce Search owns projection rules, ranking behavior, and query\nreadiness. For beginners, search is the fast customer-facing view that must be\nrebuilt whenever the authoritative data changes.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Commerce Search group | `../nodics.commerce/modules/baseCommerce/modules/commerceSearch/package.json` |\n| Commerce Search core | `../nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/package.json` |\n| Product catalogue | `../nodics.commerce/modules/baseCommerce/modules/product/package.json` |\n| Discovery docs | `docs/pages/nodics.discovery/search-indexing-discovery.md` |\n| Agora search data | `../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/commerceSearch/` |\n\n## Projection flow\n\n```mermaid\nflowchart LR\n  Product[\"Product data\"] --> Projector[\"Commerce Search projection\"]\n  Price[\"Price data\"] --> Projector\n  Inventory[\"Inventory data\"] --> Projector\n  Content[\"Content and media\"] --> Projector\n  Projector --> Index[\"Search index\"]\n  Index --> Storefront[\"Agora storefront\"]\n```\n\nThe business problem is findability. A product that exists but cannot be\nfound is not commercially ready. Business users need ranking, filtering, and\navailability to match merchandising intent. Developers need deterministic\nprojection rules. Operators need freshness, index health, and rebuild evidence\nbefore production acceptance.\n\n## Ranking and rules\n\nSearch rules can express boosts, pins, exclusions, locale behavior, market\nscope, and merchandising priority. These rules should be data-driven and\ntested, but they should not replace product authority. If a product is\ninactive, unpublished, out of market, or not approved, search should not make\nit appear available.\n\n```js\nmodule.exports = {\n  apparelBoosts: {\n    code: 'apparelBoosts',\n    storeCode: 'agoraApparel',\n    locale: 'en',\n    scopeType: 'category',\n    priority: 100,\n    boost: 2\n  }\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can customize analyzers, projection services, ranking rules,\nfacets, index providers, and rebuild jobs. Business users should manage\nmerchandising rules through Axis when available. Operators should have rebuild\nactions, last projection time, failed item counts, and safe retry behavior.\nAI tools must inspect product, price, inventory, and search data together\nbefore adding records.\n\n## Implementation handoff\n\nEach search change should name the source schemas, projection service, index\nprovider, ranking rules, rebuild trigger, and browser search scenario. This\ngives business users a merchandising journey, developers a controlled\nextension point, operators production freshness evidence, and QA owners a\nrepeatable way to prove that imported products become discoverable only when\ntheir authoritative records allow it.\n\n## Evidence checklist\n\nThe release package should show which products entered the projection, which\nones were skipped, and why. The index run should record tenant, catalog\nversion, locale, market, source checksum, item count, failure count, and last\nsuccessful completion. In production, operators should be able to compare the\nsearch document with the product record, price row, inventory balance, and\npublished media reference before deciding whether to rebuild or repair data.\n\n## Common mistakes\n\n- Treating search documents as product authority.\n- Forgetting to rebuild projections after import or publication.\n- Showing inactive products because index filters are incomplete.\n- Adding ranking rules without locale or market scope.\n- Hiding indexing failures from operators.\n\n## Verification\n\nImport product, price, inventory, media, and commerce search data into a fresh\nschema. Run projection jobs, inspect indexed fields, open Agora in the browser,\nsearch for the product, and verify filters, ranking, price, image, and\navailability. Production readiness requires business-approved merchandising,\ndeveloper test coverage, operator rebuild evidence, and QA storefront proof.\n",
+    "keywords": [
+      "commerce-search",
+      "projection",
+      "ranking",
+      "index",
+      "agora",
+      "Search and Discovery",
+      "Search Providers and Indexing",
+      "Commerce Search Guide"
+    ],
+    "facets": {
+      "section": "search-and-discovery",
+      "group": "search-and-discovery",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record316": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatalocalizationruntimeauthoring",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatalocalizationRuntimeAuthoring",
+    "title": "Localization Runtime Authoring",
+    "summary": "How localized records, fallback behavior, content and product translation, import data, and runtime API boundaries work.",
+    "searchText": "Localization Runtime Authoring How localized records, fallback behavior, content and product translation, import data, and runtime API boundaries work. # Localization Runtime Authoring\n\nLocalization lets Nodics present content, commerce, messages, and backoffice\nlabels in the right language and regional format without duplicating business\nobjects. For beginners, the base record identifies the thing and localization\nrecords describe how that thing should be displayed for a locale. Axis can\noffer authoring journeys, but localization schemas and services own fallback,\nvalidation, and runtime resolution.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Localization core | `../nodics.localization/modules/localizationCore/package.json` |\n| Localization module docs | `docs/pages/nodics.localization/localization-internationalization.md` |\n| CMS localization | `../nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js` |\n| Product localization example | `../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/` |\n| Import runtime | `../nodics.foundation/modules/nData/nImport/import/src/service/import/defaultImportService.js` |\n\n## Resolution model\n\n```mermaid\nflowchart TD\n  Request[\"Request locale\"] --> Exact[\"Exact localization\"]\n  Exact --> Response[\"Localized response\"]\n  Request --> Fallback[\"Fallback locale\"]\n  Fallback --> Response\n  Request --> Base[\"Base record\"]\n  Base --> Response\n```\n\nThe business problem is consistent customer communication. A missing locale\ncan break a product page, legal message, email, or content route. Developers\nneed a repeatable record shape. Operators need evidence for fallback behavior\nin production so missing translations do not appear as broken pages.\n\n## Authoring contract\n\nLocalization records should include the owner object code, locale, translated\nfields, publication or lifecycle state where relevant, and stable query keys.\nThey should not copy unrelated base data or contain runtime logic.\n\n```js\nmodule.exports = {\n  linenDressEn: {\n    code: 'linenDress_en',\n    productCode: 'linenDress',\n    locale: 'en',\n    name: 'Linen Dress',\n    description: 'Lightweight woven dress'\n  }\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add locale providers, fallback strategies, field validators,\ntranslation workflow hooks, and locale-specific formatting. Business users\nshould see missing translation tasks and approval state in Axis. AI tools can\nassist translation, but they must preserve stable keys, source locale, review\nstate, and terminology rules. Operators should track fallback rates and\nmissing locale counts.\n\n## Implementation handoff\n\nEach localized capability should document its base schema, localization schema,\nfallback chain, supported locales, reviewed fields, import header, and browser\nproof. Business users can then decide translation completeness, developers can\nextend fields safely, operators can watch production fallback usage, and QA\nowners can verify exact locale, fallback locale, and missing locale behavior.\n\n## Evidence checklist\n\nEvery localization change should carry source locale, target locale, field\nlist, reviewer, fallback decision, and the consuming route or API. Production\noperators should know whether a fallback was expected or caused by missing\ndata. Developers should include tests for partial translation because mixed\ncontent is common during rollout. Business users should be able to see which\nterms are ready for publication and which still need review.\n\n## Common mistakes\n\n- Duplicating entire products or pages per locale instead of localizing fields.\n- Publishing translated content before business review.\n- Forgetting fallback rules for emails, pages, and product cards.\n- Mixing locale data with currency, pricing, or tax authority.\n- Hiding missing translation counts from production monitoring.\n\n## Verification\n\nImport base and localized records into a fresh schema. Request exact locale,\nfallback locale, and unsupported locale responses. Open Axis, Nexus, or Agora\nin the browser and verify labels, pages, products, and empty states. Production\nreadiness requires developer tests, business review evidence, operator\nfallback metrics, and QA proof for each supported locale.\n",
+    "keywords": [
+      "localization",
+      "fallback",
+      "locale",
+      "translation",
+      "authoring",
+      "Localization and Internationalization",
+      "Localization Foundations",
+      "Localization Runtime Authoring"
+    ],
+    "facets": {
+      "section": "localization-and-internationalization",
+      "group": "localization-and-internationalization",
+      "navigationDepth": 2,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record317": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercepaymentproviderboundaries",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacommercePaymentProviderBoundaries",
+    "title": "Payment Core and Provider Boundaries",
+    "summary": "How Payment Core, payment methods, gateway providers, safe payloads, reconciliation, refunds, and provider extension boundaries work.",
+    "searchText": "Payment Core and Provider Boundaries How Payment Core, payment methods, gateway providers, safe payloads, reconciliation, refunds, and provider extension boundaries work. # Payment Core and Provider Boundaries\n\nPayment in Nodics separates business payment decisions from provider-specific\nexecution. Payment Core owns method selection, authorization intent,\ncapture/refund lifecycle, reconciliation, and safe customer payloads. Provider\nmodules such as Stripe, PayPal, Visa, CyberSource, wallets, cards, bank\ntransfer, and cash on delivery implement integration details. For beginners,\nPayment Core decides what should happen; providers perform it with an external\nnetwork or offline method.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Payment group | `../nodics.commerce/modules/payment/package.json` |\n| Payment Core | `../nodics.commerce/modules/payment/modules/paymentCore/package.json` |\n| Payment methods | `../nodics.commerce/modules/payment/modules/paymentMethods/package.json` |\n| Payment providers | `../nodics.commerce/modules/payment/modules/paymentProviders/package.json` |\n| Stripe provider | `../nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/package.json` |\n| Payment operations docs | `docs/pages/nodics.commerce/payment-fulfillment.md` |\n\n## Boundary model\n\n```mermaid\nflowchart LR\n  Checkout[\"Checkout\"] --> Core[\"Payment Core\"]\n  Core --> Method[\"Payment method\"]\n  Core --> Provider[\"Payment provider\"]\n  Provider --> Gateway[\"External gateway\"]\n  Gateway --> Core\n  Core --> Order[\"Order lifecycle\"]\n```\n\nThe business problem is secure payment confidence. Business users need to know\nwhich payment methods are available and whether money movement is complete.\nDevelopers need provider contracts that avoid leaking gateway details into\ncheckout. Operators need reconciliation, retry, and failure evidence for\nproduction.\n\n## Safe payload contract\n\nPayment responses shown to customers should contain status, amount, currency,\nmethod label, recoverable action, and safe reference. They should not expose\nprovider secrets, raw gateway payloads, card data, credentials, or internal\nstack traces.\n\n```js\nconst paymentResult = {\n  status: 'AUTHORIZED',\n  amount: 12900,\n  currency: 'USD',\n  methodCode: 'card',\n  providerReference: 'safe-reference'\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add methods, providers, adapters, reconciliation jobs, refund\nhandlers, and risk checks. Keep provider secrets in secure configuration and\nnever in data files or docs examples. Business users should configure\navailability and policy through Axis where enabled. Operators should see\nauthorization, capture, refund, settlement, retry, and reconciliation evidence.\n\n## Implementation handoff\n\nEvery payment provider handoff should identify supported operations, safe\npayload fields, retryability, idempotency keys, reconciliation schedule,\nconfiguration requirements, and unavailable-state messaging. That gives\nbusiness users confidence about payment availability, developers a provider\ncontract, operators production recovery evidence, and QA owners a way to test\nsuccess, decline, timeout, refund, and reconciliation cases.\n\n## Evidence checklist\n\nPayment evidence should include order reference, payment intent, method,\nprovider, amount, currency, lifecycle state, safe external reference,\ncorrelation id, and reconciliation result. Sensitive values must remain\noutside logs, release data, and browser payloads. Operators should be able to\ndecide whether to retry, cancel, refund, or escalate without reading raw\ngateway responses in the main business UI.\n\nProduction readiness also needs negative-path evidence. A declined card,\nprovider timeout, duplicate callback, partial capture, and failed refund should\nall return controlled states that the business can understand and developers\ncan trace.\n\n## Common mistakes\n\n- Letting provider-specific payloads leak into checkout responses.\n- Treating a payment method as a gateway provider.\n- Storing credentials in release data.\n- Completing fulfillment before payment state allows it.\n- Hiding failed reconciliation from operators.\n\n## Verification\n\nRun payment method and provider contract tests. In a fresh schema, place a\ncontrolled order, authorize payment, capture or mark offline payment, issue a\ntest refund, and inspect reconciliation evidence. Production readiness\nrequires business-safe status, developer provider tests, operator audit\nrecords, and QA proof that failures do not expose sensitive data.\n",
+    "keywords": [
+      "payment",
+      "provider",
+      "method",
+      "reconciliation",
+      "refund",
+      "Payment Management",
+      "Payment Operations",
+      "Payment Core and Provider Boundaries"
+    ],
+    "facets": {
+      "section": "payment-management",
+      "group": "payment-management",
+      "navigationDepth": 2,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record318": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercecustomerlistprofileboundary",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacommerceCustomerListProfileBoundary",
+    "title": "Customer List and Profile Commerce Boundary",
+    "summary": "Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile.",
+    "searchText": "Customer List and Profile Commerce Boundary Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile. # Customer List and Profile Commerce Boundary\n\nCustomer List is a Commerce capability for grouping customers in commercial\ncontexts such as eligibility, promotions, account buying, or targeted\noperations. Profile remains the authority for person, address, authentication,\npermission, and organization identity. For beginners, Profile answers \"who is\nthis customer?\" and Customer List answers \"which commercial group is this\ncustomer part of for this commerce operation?\"\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Customer List module | `../nodics.commerce/modules/checkout/modules/customerList/package.json` |\n| Checkout module | `../nodics.commerce/modules/checkout/package.json` |\n| Profile module | `../nodics.platform/modules/profile/package.json` |\n| Security docs | `docs/pages/nodics.platform/security-identity-access.md` |\n| Commerce operations | `docs/pages/nodics.commerce/cart-order.md` |\n\n## Ownership model\n\n```mermaid\nflowchart LR\n  Profile[\"Profile identity\"] --> CustomerList[\"Commerce customer list\"]\n  CustomerList --> Promotion[\"Promotion eligibility\"]\n  CustomerList --> Checkout[\"Checkout decision\"]\n  Profile --> Auth[\"Authentication and permissions\"]\n```\n\nThe business problem is targeted commerce without identity duplication.\nBusiness users need groups like VIP customers, wholesale buyers, or launch\naudiences. Developers need a boundary that prevents Commerce from becoming a\nparallel identity system. Operators need to trace eligibility decisions in\nproduction without exposing personal data unnecessarily.\n\n## Contract\n\nCustomer List records should reference stable profile or organization codes,\nlist codes, lifecycle state, source reason, and validity dates where needed.\nThey should not copy passwords, credentials, full identity payloads, or\npermission ownership.\n\n```js\nmodule.exports = {\n  vipCustomerMembership: {\n    code: 'vipCustomerMembership',\n    listCode: 'vipCustomers',\n    customerCode: 'customer001',\n    active: true\n  }\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add eligibility services, import mappers, segmentation rules,\npromotion integrations, and audit views. Business users should manage lists\nthrough Axis when available. AI tools should inspect Profile and Commerce\nschemas before adding references. Operators should verify that commercial\ngrouping works without broad identity export.\n\n## Implementation handoff\n\nEach customer-list customization should name the Profile reference key,\nCommerce list schema, eligibility service, promotion or checkout consumer,\npermission rule, retention rule, and audit evidence. Business users then\nunderstand the journey, developers preserve the identity boundary, operators\ncan investigate production eligibility, and QA owners can prove that removing\na customer from a list changes commerce behavior without corrupting Profile.\n\n## Evidence checklist\n\nMembership evidence should include list code, referenced customer or\norganization code, source reason, actor, validity window, lifecycle state, and\nlast eligibility decision. Do not expose more Profile detail than the business\njourney requires. Operators should be able to prove why a customer received or\ndid not receive a commercial treatment, while developers keep identity,\nauthentication, address, and permission fields under Profile authority.\n\nThis evidence also protects production support from over-collecting identity\ndata. The support answer should be about eligibility and commerce treatment,\nnot a full customer profile export.\n\nProduction support should also prove expiry and removal. When a customer loses\nmembership, the next checkout or promotion decision must respect that change\nwithout deleting the underlying Profile record.\n\n## Common mistakes\n\n- Copying Profile authority into Commerce records.\n- Using email address as the only customer list key.\n- Applying promotions without list lifecycle checks.\n- Exposing list membership without permission checks.\n- Forgetting removal, expiry, and audit behavior.\n\n## Verification\n\nImport profile and customer list data into a fresh schema. Validate list\nmembership, checkout eligibility, promotion behavior, removal behavior, and\npermission-filtered Axis visibility. Production readiness requires business\napproval, developer boundary tests, operator audit evidence, and QA proof that\nProfile remains the identity authority.\n",
+    "keywords": [
+      "customer-list",
+      "profile",
+      "commerce-boundary",
+      "eligibility",
+      "identity",
+      "User, Enterprise, and Tenant Management",
+      "Customer Data and Identity",
+      "Customer List and Profile Commerce Boundary"
+    ],
+    "facets": {
+      "section": "user-enterprise-and-tenant-management",
+      "group": "user-enterprise-and-tenant-management",
+      "navigationDepth": 2,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record319": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationnmsruntimemonitoring",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatafoundationNmsRuntimeMonitoring",
+    "title": "NMS Runtime Monitoring",
+    "summary": "How NMS captures node health, runtime roles, responsibility, capability state, degraded conditions, and operator recovery evidence.",
+    "searchText": "NMS Runtime Monitoring How NMS captures node health, runtime roles, responsibility, capability state, degraded conditions, and operator recovery evidence. # NMS Runtime Monitoring\n\nNMS runtime monitoring gives Nodics a source-backed view of nodes, runtime\nstate, health checks, topology, and recovery evidence. Axis may display this\ninformation, but the monitoring capability owns the data collection and\nstatus contract. For beginners, NMS answers three questions: which nodes are\nrunning, what are they responsible for, and what needs operator attention.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| NMS module | `../nodics.foundation/modules/nNms/package.json` |\n| Runtime configuration | `docs/pages/nodics.foundation/runtime-configuration.md` |\n| DevOps runtime | `docs/pages/framework/devops-runtime.md` |\n| Local verification | `docs/pages/framework/local-verification-checklist.md` |\n| Process runtime evidence | `docs/pages/nodics.process/runtime-lifecycle.md` |\n\n## Monitoring model\n\n```mermaid\nflowchart TD\n  Node[\"Runtime node\"] --> Heartbeat[\"Heartbeat\"]\n  Node --> Capability[\"Capability status\"]\n  Node --> Responsibility[\"Execution responsibility\"]\n  Heartbeat --> Nms[\"NMS status\"]\n  Capability --> Nms\n  Responsibility --> Nms\n  Nms --> Axis[\"Axis operations view\"]\n```\n\nThe business problem is operational trust. A business administrator does not\nneed raw process logs, but they need to know whether setup, imports,\npublishing, scheduled jobs, and storefront delivery are healthy. Developers\nneed a contract for contributing health checks. Operators need correlation\nids, node ids, runtime roles, last heartbeat, dependency state, and recovery\nactions for production incidents.\n\n## Health contract\n\n| Signal | Meaning | Consumer |\n| --- | --- | --- |\n| Node identity | Which runtime is reporting. | Operator and registry. |\n| Runtime role | Commerce, CMS Staged, CMS Online, Process, or other role. | Axis and support. |\n| Heartbeat | Last known liveness. | Monitoring dashboard. |\n| Capability health | Whether module checks pass. | Business setup pages. |\n| Responsibility | Which node owns scheduled work. | Process operations. |\n| Recovery hint | Suggested safe action. | Operator runbook. |\n\n## Customization and extension guidance\n\nDevelopers can add health contributors for new modules, dependency checks,\nqueue checks, provider checks, and publication target checks. Health checks\nshould be bounded and safe to call repeatedly. Business users should see\nsimple statuses such as online, degraded, blocked, or needs attention.\nOperators should have detail panels for technical evidence.\n\n## Implementation handoff\n\nA monitoring contribution should declare what it checks, how often it can be\ncalled, which runtime role owns it, what status values mean, and what recovery\naction is safe. The handoff should also identify the business journey affected\nby the signal. A failed CMS Online check, for example, affects public content\ndelivery differently from a failed Process node that only affects scheduled\nautomation.\n\nProduction readiness should include both healthy and degraded snapshots. A\nnode that is alive but missing a required dependency should not be shown as\nfully online. A node that lost scheduled-job responsibility should surface the\nhandoff state so operators know whether another node has accepted the work.\nMetrics should include enough history to distinguish a startup delay from a\nreal outage.\n\n## Common mistakes\n\n- Treating a running process as proof that every capability is healthy.\n- Showing raw dependency exceptions to business users.\n- Adding expensive health checks that harm production traffic.\n- Hiding node responsibility for scheduled jobs.\n- Failing to carry correlation ids through setup or publication errors.\n\n## Verification\n\nStart a fresh local topology, inspect NMS status for each runtime, stop or\nbreak one dependency, and confirm Axis shows a safe degraded state with\noperator evidence. Run module health tests and browser checks for setup pages\nthat consume monitoring state before production release.\n",
+    "keywords": [
+      "nms",
+      "monitoring",
+      "node",
+      "runtime-health",
+      "operator",
+      "Operations, Monitoring, and Recovery",
+      "Runtime Health and Support",
+      "NMS Runtime Monitoring"
+    ],
+    "facets": {
+      "section": "operations-monitoring-and-recovery",
+      "group": "operations-monitoring-and-recovery",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record320": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationserviceruntimeoverrides",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatafoundationServiceRuntimeOverrides",
+    "title": "Service Runtime and Override Precedence",
+    "summary": "How generated services, virtual services, module graph resolution, customer overrides, fallback behavior, and extension safety work.",
+    "searchText": "Service Runtime and Override Precedence How generated services, virtual services, module graph resolution, customer overrides, fallback behavior, and extension safety work. # Service Runtime and Override Precedence\n\nNodics services provide the runtime behavior behind schemas, routers,\npipelines, imports, publication, and business operations. Service override\nprecedence is what allows a customer project or module to customize behavior\nwithout editing framework source. For beginners, the simple idea is that a\nservice name resolves to the most specific active implementation allowed by\nthe module graph.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Service module | `../nodics.foundation/modules/nService/package.json` |\n| Virtual service module | `../nodics.foundation/modules/nService/vService/package.json` |\n| Runtime configuration docs | `docs/pages/nodics.foundation/runtime-configuration.md` |\n| Extension patterns | `docs/pages/framework/module-loading-and-service-precedence.md` |\n| Developer customization | `docs/pages/framework/backend-extension-patterns.md` |\n\n## Resolution flow\n\n```mermaid\nflowchart TD\n  Request[\"Service request\"] --> Graph[\"Active module graph\"]\n  Graph --> Customer[\"Customer override\"]\n  Customer --> Module[\"Module implementation\"]\n  Module --> Core[\"Framework default\"]\n  Core --> Missing[\"Unavailable service error\"]\n  Customer --> Selected[\"Selected service\"]\n  Module --> Selected\n  Core --> Selected\n```\n\nThe business problem is controlled customization. Customers need project-level\nbehavior, but the platform must remain upgradeable. Developers need a clear\nrule for where overrides live. Operators need to know which implementation is\nrunning in production when a behavior differs from the default.\n\n## Precedence contract\n\nService names should remain stable. Override modules can provide an\nimplementation with the same service identity, but they should not change the\npublic contract unless the owning capability documents a new versioned\ncontract. Virtual services can stand in for generated or environment-provided\nimplementations, but they must still expose predictable init, post-init, and\noperation behavior.\n\n```js\nmodule.exports = {\n  code: 'DefaultPriceCalculationService',\n  ownerModule: 'customer.commerce',\n  overrides: 'DefaultPriceCalculationService',\n  contract: 'commerce.priceCalculation/v1'\n};\n```\n\n## Operational evidence\n\n| Question | Evidence |\n| --- | --- |\n| Which service was selected? | Service registry entry and module graph order. |\n| Why was it selected? | Override relationship and active module state. |\n| Is it safe? | Contract tests, init result, and health status. |\n| Can it be rolled back? | Disable override module or restore previous release. |\n\n## Customization and extension guidance\n\nDevelopers should extend services in the narrowest owning module. Business\nlogic belongs in services, handlers, policies, or workflows, not in data\nrecords. Customer projects should add tests showing the default behavior, the\noverride behavior, and the fallback behavior. AI tools should inspect the\nmodule graph before editing a service so they do not create duplicate\nauthority.\n\n## Implementation handoff\n\nA service customization is ready only when the developer can identify the\ndefault service, the overriding module, the active runtime graph, the contract\nversion, and the rollback path. Business users should see the changed behavior\nas a normal capability journey. Operators should see selected implementation\nmetadata in production logs or diagnostics. QA should run both default and\noverride paths so future upgrades do not silently change precedence.\n\n## Common mistakes\n\n- Changing a default service when a customer override is enough.\n- Creating a new service name when an override contract already exists.\n- Hiding selected implementation details from operators.\n- Putting business decisions inside import data files.\n- Forgetting init and post-init behavior for virtual services.\n\n## Verification\n\nRun service and module-loading tests, then start a fresh runtime and inspect\nthe selected service implementation for the customized capability. A production\ncheck should show the business behavior, developer contract evidence, operator\nselected-service metadata, and QA regression proof for fallback behavior.\n",
+    "keywords": [
+      "nService",
+      "vService",
+      "override",
+      "service-runtime",
+      "module-graph",
+      "Pipeline and Business Logic Orchestration",
+      "Service Runtime and Overrides",
+      "Service Runtime and Override Precedence"
+    ],
+    "facets": {
+      "section": "pipeline-and-business-logic-orchestration",
+      "group": "pipeline-and-business-logic-orchestration",
+      "navigationDepth": 2,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record321": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationcacheproviderrunbooks",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatafoundationCacheProviderRunbooks",
+    "title": "Cache Provider Runbooks",
+    "summary": "Redis, Hazelcast, node cache, key strategy, invalidation, provider health, fallback behavior, and production cache recovery guidance.",
+    "searchText": "Cache Provider Runbooks Redis, Hazelcast, node cache, key strategy, invalidation, provider health, fallback behavior, and production cache recovery guidance. # Cache Provider Runbooks\n\nCaching gives Nodics speed without changing the source of truth. Redis,\nHazelcast, node-local cache, and virtual cache behavior are provider choices\nbehind a common contract. For beginners, the cache is a temporary copy used to\nserve reads faster. The database, publication manifest, or owning service\nremains the authority. A cache miss should be recoverable; a cache hit should\nnever make stale business data look correct after a governed change.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Cache group | `../nodics.foundation/modules/nCache/package.json` |\n| Core cache contract | `../nodics.foundation/modules/nCache/cache/package.json` |\n| Redis provider | `../nodics.foundation/modules/nCache/redisCache/package.json` |\n| Hazelcast provider | `../nodics.foundation/modules/nCache/hazelcastCache/package.json` |\n| Node cache provider | `../nodics.foundation/modules/nCache/nodeCache/package.json` |\n| Cache overview page | `docs/pages/nodics.foundation/cache-runtime-state.md` |\n\n## Provider flow\n\n```mermaid\nflowchart LR\n  Service[\"Owning service\"] --> CacheApi[\"Cache contract\"]\n  CacheApi --> Redis[\"Redis provider\"]\n  CacheApi --> Hazelcast[\"Hazelcast provider\"]\n  CacheApi --> Node[\"Node cache\"]\n  CacheApi --> Miss[\"Source of truth\"]\n  Redis --> Response[\"Cached response\"]\n  Hazelcast --> Response\n  Node --> Response\n```\n\nThe business problem is freshness with performance. Business users expect a\npublished page, price, stock state, or permission change to become visible\nwithout confusing delays. Developers need clear key strategy and invalidation\ncontracts. Operators need provider health, eviction behavior, and recovery\ncommands for production incidents.\n\n## Configuration contract\n\n| Configuration | Purpose | Production note |\n| --- | --- | --- |\n| Provider code | Selects Redis, Hazelcast, node cache, or virtual provider. | Must match deployed infrastructure. |\n| Key prefix | Separates tenant, runtime, and schema scopes. | Prevents cross-tenant leakage. |\n| TTL | Bounds staleness. | Use capability-specific values. |\n| Invalidation event | Removes stale records after write or publication. | Must be tested with runtime change. |\n| Fallback mode | Defines behavior when cache is unavailable. | Prefer degraded reads over unsafe writes. |\n\n## Runbook\n\nWhen a cache incident happens, confirm whether the source record is correct,\nwhether the cache key maps to the expected tenant and runtime, whether the\nprovider is reachable, whether invalidation fired, and whether the consumer is\nreading the right cache layer. Do not fix stale data by editing frontend code.\nDo not clear all production caches unless the affected scope cannot be isolated.\n\nFor Redis, check connection, selected database, key prefix, expiry, and memory\npressure. For Hazelcast, check cluster membership, partition health, and\nserialization compatibility. For node-local cache, check process restarts and\nsingle-node assumptions. Each provider should return a safe degraded state\nthat business users can understand and operators can investigate.\n\n## Customization and extension guidance\n\nDevelopers can add providers, key strategies, invalidation hooks, metrics, and\nhealth checks. Business logic should remain in owning services. Cache keys\nshould be deterministic and include tenant or runtime scope when needed. Tests\nshould cover hit, miss, expiry, invalidation, provider failure, and fallback.\n\n## Common mistakes\n\n- Treating cached values as authority.\n- Using one key namespace across Staged and Online.\n- Forgetting invalidation after import, publish, or configuration change.\n- Hiding provider outages behind generic business errors.\n- Adding custom cache behavior without production observability.\n\n## Verification\n\nRun cache provider tests for Redis, Hazelcast, and node cache where available.\nIn a fresh schema, import data, warm the cache, change or publish the source\nrecord, and prove invalidation refreshes the browser or API result. Operators\nshould see provider health, key scope, hit or miss evidence, and safe fallback\nbehavior.\n",
+    "keywords": [
+      "cache",
+      "redis",
+      "hazelcast",
+      "node-cache",
+      "invalidation",
+      "Caching and Runtime State Management",
+      "Cache Foundations",
+      "Cache Provider Runbooks"
+    ],
+    "facets": {
+      "section": "caching-and-runtime-state-management",
+      "group": "caching-and-runtime-state-management",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record322": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationdatabaseproviderboundaries",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatafoundationDatabaseProviderBoundaries",
+    "title": "Database Provider Boundaries",
+    "summary": "How MongoDB, virtual DB, Cassandra, Elasticsearch, schemas, query translation, indexes, migration, and provider validation are separated.",
+    "searchText": "Database Provider Boundaries How MongoDB, virtual DB, Cassandra, Elasticsearch, schemas, query translation, indexes, migration, and provider validation are separated. # Database Provider Boundaries\n\nDatabase providers let Nodics run the same schema and service contracts on\ndifferent persistence implementations. MongoDB, virtual MongoDB, Cassandra,\nElasticsearch, and virtual database modules are infrastructure choices behind\nthe owning schema services. For beginners, the database stores records, but\nthe module schema and service decide what records mean.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Database group | `../nodics.foundation/modules/nDatabase/package.json` |\n| Core database contract | `../nodics.foundation/modules/nDatabase/database/package.json` |\n| Virtual database | `../nodics.foundation/modules/nDatabase/database/vDatabase/package.json` |\n| MongoDB provider | `../nodics.foundation/modules/nDatabase/mongodb/package.json` |\n| Virtual MongoDB | `../nodics.foundation/modules/nDatabase/mongodb/vMongodb/package.json` |\n| Cassandra provider | `../nodics.foundation/modules/nDatabase/cassandradb/package.json` |\n| Elasticsearch provider | `../nodics.foundation/modules/nDatabase/elasticdb/package.json` |\n| Provider overview | `docs/pages/nodics.foundation/provider-data-access-layer.md` |\n\n## Boundary model\n\n```mermaid\nflowchart TD\n  Api[\"Route or service\"] --> Schema[\"Owning schema service\"]\n  Schema --> Adapter[\"Database adapter contract\"]\n  Adapter --> Mongo[\"MongoDB\"]\n  Adapter --> Cassandra[\"Cassandra\"]\n  Adapter --> Elastic[\"Elasticsearch\"]\n  Adapter --> Virtual[\"Virtual provider\"]\n```\n\nThe business problem is portability and reliability. A customer should be able\nto run a capability in the right infrastructure without changing product,\ncontent, payment, or profile logic. Developers need provider boundaries.\nOperators need connection, index, migration, backup, and recovery evidence for\nproduction.\n\n## Contract rules\n\nSchema definitions, validation, interceptors, and services own business\nsemantics. Providers own connection, query translation, transaction behavior,\nindex operations, pagination, and persistence-specific failure mapping. A\nprovider must not invent fields or bypass schema validation. A schema service\nmust not depend on provider-only behavior unless it declares that dependency.\n\nProvider errors should be mapped into consistent Nodics outcomes. A duplicate\nkey, missing index, connection timeout, write conflict, and search shard issue\nare different technical failures, but business users need clear messages and\noperators need enough evidence to recover production without reading provider\ninternals first.\n\n```js\nconst persistenceContext = {\n  schemaName: 'product',\n  provider: 'mongodb',\n  tenant: 'default',\n  operation: 'saveAll'\n};\n```\n\n## Provider comparison\n\n| Provider | Use | Watch point |\n| --- | --- | --- |\n| MongoDB | Primary document persistence. | Validate indexes and tenant filters. |\n| Virtual MongoDB | Development and generated behavior tests. | Do not treat as production storage. |\n| Cassandra | Large distributed persistence cases. | Model queries before data shape. |\n| Elasticsearch | Search and discovery projections. | Search index is projection, not authority. |\n| Virtual database | Contract testing and fallback stubs. | Keep capabilities clearly labelled. |\n\n## Customization and extension guidance\n\nDevelopers can add database providers, transaction wrappers, query builders,\nindex managers, and error mappers. They should add contract tests proving\ncreate, update, read, search, delete, pagination, tenant isolation, and failure\nmapping. Business users should see database impact only as capability\nreadiness or safe error messages in Axis. Operators should see connection\nhealth, migration state, index state, backup evidence, and recovery steps.\nThese signals should be available before customer traffic depends on the\nprovider.\n\n## Common mistakes\n\n- Letting provider-specific query behavior leak into business services.\n- Treating Elasticsearch projection as product or content authority.\n- Running production without tenant-index checks.\n- Hiding connection failures as generic setup issues.\n- Reusing development virtual providers as production evidence.\n\n## Verification\n\nRun database provider tests and owning module schema tests. For production,\nverify connection configuration, tenant filters, indexes, migration status,\nbackup and restore procedure, and failure mapping. A fresh-schema check should\nprove import, read, update, search projection, and rollback behavior through\nthe selected provider.\n",
+    "keywords": [
+      "database",
+      "mongodb",
+      "cassandra",
+      "elasticsearch",
+      "provider",
+      "Database and Persistence Management",
+      "Database Provider Contracts",
+      "Database Provider Boundaries"
+    ],
+    "facets": {
+      "section": "database-and-persistence-management",
+      "group": "database-and-persistence-management",
+      "navigationDepth": 2,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record323": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatasecurityotpsecurityflow",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatasecurityOtpSecurityFlow",
+    "title": "OTP and Security Flow",
+    "summary": "OTP generation, delivery intent, verification, expiry, retry, throttling, lockout, audit, and secure frontend message behavior.",
+    "searchText": "OTP and Security Flow OTP generation, delivery intent, verification, expiry, retry, throttling, lockout, audit, and secure frontend message behavior. # OTP and Security Flow\n\nOTP gives Nodics a time-bounded verification method for login, recovery,\napproval, and sensitive operations. It supports security, but it is not a\ncomplete identity system by itself. Profile and security modules own identity,\nroles, groups, and permissions. OTP owns generation, delivery intent,\nverification, expiry, retry, throttling, and audit. For beginners, an OTP is a\nshort-lived proof that a user controls a channel.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| OTP module | `../nodics.foundation/modules/nOtp/package.json` |\n| Profile module | `../nodics.platform/modules/profile/package.json` |\n| Security documentation | `docs/pages/nodics.platform/security-identity-access.md` |\n| Communication providers | `../nodics.communication/modules/smtpCommsProvider/package.json`, `../nodics.communication/modules/smsCommsProvider/package.json` |\n\n## Flow\n\n```mermaid\nsequenceDiagram\n  participant User as User\n  participant App as Axis or storefront\n  participant Otp as OTP service\n  participant Comms as Communication provider\n  participant Audit as Audit trail\n\n  User->>App: Request verification\n  App->>Otp: Create OTP challenge\n  Otp->>Comms: Send delivery intent\n  Otp->>Audit: Record challenge\n  User->>App: Submit code\n  App->>Otp: Verify code\n  Otp->>Audit: Record result\n```\n\nThe business problem is safer access without slowing every journey. Business\nusers need clear prompts and recovery paths. Developers need expiry and retry\ncontracts. Operators need throttling, audit, failed delivery, and abuse\nevidence in production.\n\n## Policy contract\n\n| Policy | Purpose |\n| --- | --- |\n| Expiry window | Limits how long a code is valid. |\n| Retry limit | Prevents guessing and noisy resends. |\n| Channel policy | Selects email, SMS, or another verified channel. |\n| Audit event | Records challenge and verification outcome. |\n| Lockout rule | Protects high-risk operations after repeated failures. |\n\n## Configuration behavior\n\nOTP configuration should define expiry, retry limit, resend delay, channel\npriority, lockout threshold, and audit retention. Configuration changes should\nbe governed because they directly affect account security and user experience.\nBusiness users may see policy labels, developers own the enforcement service,\nand operators verify the active configuration in production diagnostics.\n\n## Customization and extension guidance\n\nDevelopers can add channel providers, templates, throttling policies, lockout\nrules, and risk checks. Business users should configure supported journeys\nthrough governed settings, not through code changes. Operators should monitor\nchallenge volume, failure rate, delivery failure, and locked accounts. Never\nstore OTP secrets in data files or documentation examples.\n\n## Implementation handoff\n\nEach OTP journey should document trigger context, recipient lookup, channel\npolicy, expiry, retry limit, lockout rule, audit event, and safe browser\nmessage. This helps business users trust the verification journey, developers\nkeep security logic centralized, operators investigate production abuse or\ndelivery problems, and QA owners test both success and failure without\nexposing secret values.\n\n## Evidence checklist\n\nOTP evidence should include challenge id, user reference, channel type,\ncreated time, expiry time, attempt count, delivery status, verification result,\nand lockout decision. It should never include the raw code. Production support\nneeds enough detail to diagnose delayed delivery, repeated failures, and abuse\npatterns while business users continue to see simple recovery instructions.\n\nHigh-risk operations should also record why OTP was required. That context\nhelps developers keep policy centralized and helps operators distinguish a\nnormal verification journey from suspicious production behavior.\n\n## Common mistakes\n\n- Treating OTP as a replacement for identity and permission checks.\n- Allowing unlimited resend or verification attempts.\n- Exposing whether an account exists through error messages.\n- Logging raw OTP codes.\n- Forgetting communication provider failure handling.\n\n## Verification\n\nRun OTP, Profile, and communication provider tests for successful verify,\nexpired code, wrong code, retry limit, resend throttling, and delivery\nfailure. In browser tests, confirm the message is business-safe and no raw code\nor sensitive account evidence appears. Production readiness requires audit,\nthrottling, developer tests, operator dashboards, and QA security evidence.\n",
+    "keywords": [
+      "otp",
+      "verification",
+      "security",
+      "throttling",
+      "audit",
+      "Security, Governance, and Compliance",
+      "Authentication and Verification",
+      "OTP and Security Flow"
+    ],
+    "facets": {
+      "section": "security-governance-and-compliance",
+      "group": "security-governance-and-compliance",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record324": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacommunicationproviderrunbooks",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacommunicationProviderRunbooks",
+    "title": "Communication Provider Runbooks",
+    "summary": "SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance.",
+    "searchText": "Communication Provider Runbooks SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance. # Communication Provider Runbooks\n\nCommunication providers deliver messages through channels such as SMTP email\nand SMS. The provider sends or queues delivery, but business modules own the\nreason for the message: order confirmation, OTP, approval, contact response,\npublication event, or support notification. For beginners, communication is a\ndelivery lane, not the owner of business decisions.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Communication overview | `docs/pages/nodics.communication/overview.md` |\n| SMTP provider | `../nodics.communication/modules/smtpCommsProvider/package.json` |\n| SMS provider | `../nodics.communication/modules/smsCommsProvider/package.json` |\n| OTP integration | `../nodics.foundation/modules/nOtp/package.json` |\n| Engagement source | `../nodics.engagement/modules/contactSubmission/package.json` |\n\n## Delivery flow\n\n```mermaid\nflowchart LR\n  Source[\"Owning business module\"] --> Intent[\"Delivery intent\"]\n  Intent --> Template[\"Template and locale\"]\n  Template --> Provider[\"SMTP or SMS provider\"]\n  Provider --> Receipt[\"Delivery receipt\"]\n  Receipt --> Audit[\"Audit and retry evidence\"]\n```\n\nThe business problem is reliable communication. Customers and administrators\nneed clear, timely messages. Developers need provider abstractions so a module\ncan request a message without knowing gateway details. Operators need failed\ndelivery evidence, retry policy, suppression, and provider health in\nproduction.\n\n## Provider contract\n\nProviders should accept normalized recipient, template, locale, payload,\npriority, and correlation id. They should return status, provider reference,\nretryability, and failure reason. They should not own order, OTP, publication,\nor contact business state.\n\n```js\nconst deliveryIntent = {\n  channel: 'email',\n  templateCode: 'orderConfirmation',\n  locale: 'en',\n  recipientRef: 'customer001',\n  correlationId: 'order-1001'\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add providers, template renderers, delivery callbacks, retry\npolicies, suppression lists, and audit adapters. Business users should manage\ntemplate text, enablement, and consent where Axis exposes those controls.\nOperators should track queue depth, sent count, failed count, retry age, and\nprovider outage status.\n\n## Implementation handoff\n\nA communication provider handoff should include supported channel, template\ncontract, locale behavior, retryability, suppression behavior, provider health\ncheck, callback evidence, and privacy handling. Business users get predictable\nmessage journeys, developers get integration boundaries, operators get\nproduction recovery signals, and QA owners can test sent, delayed, failed,\nsuppressed, and retried messages.\n\n## Evidence checklist\n\nDelivery evidence should include message code, source module, template code,\nlocale, channel, recipient reference, provider reference, delivery state,\nretry count, suppression decision, and correlation id. Operators should be\nable to prove whether a message was blocked by policy, delayed by a provider,\nor rejected permanently. Business users should see a clear communication\nstate, not raw gateway text.\n\nThis evidence should be searchable from the originating business object. For\nexample, an order confirmation should be traceable from order to delivery\nintent, provider receipt, retry history, and final outcome.\n\nProduction support should also know whether a message was intentionally not\nsent. Consent, suppression, invalid recipient, missing template, and disabled\nprovider states are normal controlled outcomes, not always incidents.\n\n## Common mistakes\n\n- Putting business state transitions inside SMTP or SMS provider code.\n- Logging sensitive payloads or raw OTP values.\n- Retrying non-retryable failures indefinitely.\n- Sending messages without locale or consent checks.\n- Showing gateway error text directly to business users.\n\n## Verification\n\nRun provider tests with successful delivery, temporary failure, permanent\nfailure, retry, suppression, template missing, and locale missing cases. In a\nfresh schema, trigger OTP and contact messages, inspect receipts, and confirm\nAxis shows safe delivery status. Production readiness requires business\ntemplate approval, developer contract tests, operator failure dashboards, and\nQA evidence for retries.\n",
+    "keywords": [
+      "communication",
+      "smtp",
+      "sms",
+      "delivery",
+      "retry",
+      "Communication and Notifications",
+      "Provider Delivery",
+      "Communication Provider Runbooks"
+    ],
+    "facets": {
+      "section": "communication-and-notifications",
+      "group": "communication-and-notifications",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record325": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementcontactsubmissionoperations",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataengagementContactSubmissionOperations",
+    "title": "Contact Submission Operations",
+    "summary": "How contact forms, submissions, validation, moderation, workflow routing, notifications, retention, audit, and recovery work.",
+    "searchText": "Contact Submission Operations How contact forms, submissions, validation, moderation, workflow routing, notifications, retention, audit, and recovery work. # Contact Submission Operations\n\nContact Submission lets public or authenticated users send business enquiries\nthat can be reviewed, moderated, routed, and answered. Engagement owns the\nsubmission lifecycle. Communication providers may send notifications, Process\nmay run workflows, and Axis may show moderation queues, but those consumers do\nnot own the submitted content. For beginners, a contact form creates a\ngoverned record that needs safety, routing, and audit.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Contact Submission module | `../nodics.engagement/modules/contactSubmission/package.json` |\n| Engagement overview | `docs/pages/nodics.engagement/unified-operations.md` |\n| Governance docs | `docs/pages/nodics.engagement/governed-automation.md` |\n| Communication providers | `docs/pages/nodics.communication/provider-runbooks.md` |\n| Nexus form data | `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/engagement/` |\n\n## Lifecycle\n\n```mermaid\nstateDiagram-v2\n  [*] --> Submitted\n  Submitted --> Moderation\n  Moderation --> Routed\n  Moderation --> Rejected\n  Routed --> Responded\n  Responded --> Closed\n```\n\nThe business problem is safe response management. Business users need to know\nwhich enquiries are new, which are waiting, and which require follow-up.\nDevelopers need form and version contracts. Operators need spam controls,\nworkflow evidence, notification status, and recovery steps for production.\n\n## Data contract\n\nForm definitions, form versions, submission fields, consent, source page,\nlocale, and routing rules should be explicit. Submission records should store\nonly necessary data and should respect privacy and retention policies.\n\n```js\nmodule.exports = {\n  nexusContactForm: {\n    code: 'nexusContactForm',\n    active: true,\n    fields: ['name', 'email', 'message'],\n    moderationRequired: true\n  }\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add field validators, moderation rules, routing adapters,\nworkflow callbacks, notification templates, and retention policies. Business\nusers should manage form configuration, queue decisions, and response status\nthrough Axis. AI tools can help with response drafts only after respecting\nprivacy and review rules.\n\n## Implementation handoff\n\nEach contact-submission change should identify the public form, versioned\nfields, validation rules, consent text, moderation queue, workflow route,\nnotification template, and retention policy. Business users see a manageable\njourney, developers keep form contracts stable, operators can recover failed\nrouting in production, and QA owners can prove unsafe submissions are blocked.\n\n## Evidence checklist\n\nSubmission evidence should include form code, version, source route, locale,\nfield validation result, consent flag, moderation status, assigned queue,\nnotification state, retention class, and correlation id. Operators should be\nable to trace a missing response from browser submission to queue assignment\nand communication receipt. Developers should avoid storing unnecessary personal\ndata just to make reporting easier.\n\nThis keeps public contact journeys useful without turning them into unmanaged\ndata collection. Business users get enough context to respond, while security\nand production support keep retention and privacy boundaries visible.\n\nProduction evidence should also show duplicate detection and abuse controls.\nThat lets operators separate genuine customer enquiries from noisy traffic\nwithout blocking the business team from responding to valid messages.\n\n## Common mistakes\n\n- Treating a frontend contact form as the authority.\n- Accepting submissions without validation, consent, or spam controls.\n- Sending notifications before moderation policy allows it.\n- Keeping personal data longer than required.\n- Hiding failed routing or notification evidence from operators.\n\n## Verification\n\nImport form definitions into a fresh schema, submit a browser form, confirm\nvalidation, moderation, routing, notification, audit, and retention behavior.\nProduction readiness requires business queue visibility, developer tests,\noperator failure evidence, and QA proof that rejected or unsafe submissions do\nnot create outbound communication.\n",
+    "keywords": [
+      "contact-submission",
+      "engagement",
+      "moderation",
+      "workflow",
+      "notification",
+      "Customer Engagement and Feedback",
+      "Contact and Feedback",
+      "Contact Submission Operations"
+    ],
+    "facets": {
+      "section": "customer-engagement-and-feedback",
+      "group": "customer-engagement-and-feedback",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record326": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessworkflowbpmsourcemap",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataprocessWorkflowBpmSourceMap",
+    "title": "Workflow and BPM Source Map",
+    "summary": "How workflow definitions, transitions, human tasks, action adapters, callbacks, history, incidents, and operator visibility fit together.",
+    "searchText": "Workflow and BPM Source Map How workflow definitions, transitions, human tasks, action adapters, callbacks, history, incidents, and operator visibility fit together. # Workflow and BPM Source Map\n\nWorkflow and BPM coordinate tasks, approvals, transitions, callbacks, and\nhistory for business processes. Process capabilities can approve publication,\nroute contact submissions, drive scheduled automation, or support operational\nrecovery. For beginners, a workflow is a governed path from one state to\nanother, with evidence about who or what moved it.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| BPM module | `../nodics.foundation/modules/nbpm/package.json` |\n| Process docs | `docs/pages/nodics.process/process-overview.md` |\n| First workflow guide | `docs/pages/nodics.process/first-workflow.md` |\n| Human task guide | `docs/pages/nodics.process/first-human-task.md` |\n| Runtime lifecycle | `docs/pages/nodics.process/runtime-lifecycle.md` |\n| Action adapters | `docs/pages/nodics.process/action-adapters.md` |\n\n## Workflow model\n\n```mermaid\nflowchart TD\n  Definition[\"Workflow definition\"] --> Instance[\"Runtime instance\"]\n  Instance --> Task[\"Task or automated action\"]\n  Task --> Transition[\"Transition\"]\n  Transition --> History[\"History and audit\"]\n  Transition --> Callback[\"Business callback\"]\n```\n\nThe business problem is governed change. Approvals, reviews, retries, and\nmanual decisions must be visible and repeatable. Developers need a clear\ndefinition and callback contract. Operators need stuck-task detection,\nincident recovery, and production audit evidence.\n\n## Contract\n\nWorkflow definitions should declare states, transitions, actors, actions,\ntimeouts, callbacks, and evidence. They should not hide business data changes\ninside transition metadata. The owning module should expose a service or\ncallback that performs the business operation after the workflow allows it.\n\n```js\nconst transition = {\n  code: 'approvePublication',\n  from: 'REVIEW_IN_PROGRESS',\n  to: 'APPROVED',\n  permission: 'cms.publication.approve',\n  callback: 'DefaultCmsPublicationWorkflowCallbackService.afterApprove'\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add process definitions, action adapters, human task forms,\ntimeout policies, callbacks, and recovery tools. Business users should see\ntasks, decisions, and comments in Axis. Operators should inspect runtime\ninstances, retries, failed callbacks, and audit history. AI tools should not\ninvent workflow transitions without checking permissions and callback owners.\n\n## Implementation handoff\n\nEach workflow handoff should document definition code, states, transitions,\nactor rules, callback service, timeout behavior, retry policy, and recovery\nqueue. Business users get a clear decision journey, developers preserve module\nownership, operators get production incident evidence, and QA owners can test\nhappy path, rejection, timeout, callback failure, and retry behavior.\n\n## Evidence checklist\n\nWorkflow evidence should include definition version, instance id, current\nstate, actor, transition, permission result, callback result, retry count,\ntimeout timestamp, and audit history. Operators should be able to identify\nwhether work is waiting for a person, a dependency, or a failed callback.\nBusiness users should see task status and decision history without needing to\nread process engine internals.\n\nThis evidence is especially important when a workflow protects publication,\nrefund, approval, or recovery actions. The user journey should remain simple,\nbut the technical record must be strong enough for production support.\n\n## Common mistakes\n\n- Putting business mutations in workflow metadata instead of owner services.\n- Creating transitions without permission checks.\n- Losing callback failure evidence.\n- Allowing production tasks to remain stuck without an operator queue.\n- Bypassing workflow for publishable or audited changes.\n\n## Verification\n\nRun workflow, human task, action adapter, and callback tests. In a fresh\nschema, start a workflow, complete a human task, execute an automated action,\nforce a callback failure, and confirm retry or incident evidence. Production\nreadiness requires business decision clarity, developer contracts, operator\nrecovery, and QA audit proof.\n",
+    "keywords": [
+      "workflow",
+      "bpm",
+      "human-task",
+      "callback",
+      "process",
+      "Process and Workflow Automation",
+      "Workflow Runtime",
+      "Workflow and BPM Source Map"
+    ],
+    "facets": {
+      "section": "process-and-workflow-automation",
+      "group": "process-and-workflow-automation",
+      "navigationDepth": 2,
+      "documentType": "reference",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record327": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataprocesscronjobdataauthoring",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataprocessCronjobDataAuthoring",
+    "title": "CronJob Data Authoring",
+    "summary": "How CronJob records, headers, schedules, execution policy, retry, idempotency, and Process server ownership are authored and verified.",
+    "searchText": "CronJob Data Authoring How CronJob records, headers, schedules, execution policy, retry, idempotency, and Process server ownership are authored and verified. # CronJob Data Authoring\n\nCronJob data authoring explains how scheduled automation definitions are\ncreated through module release data or through a governed Axis journey. The\nProcess runtime owns execution. The data file only declares the job,\nschedule, target, retry, and policy metadata. For beginners, a CronJob is a\nrecord that says what should run and when; the runtime decides whether this\nnode is allowed to execute it.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| CronJob package | `../nodics.process/modules/cronjob/package.json` |\n| CronJob operations page | `docs/pages/nodics.process/cronjob-operations.md` |\n| Project customization | `docs/pages/nodics.process/project-cron-customization.md` |\n| Runtime lifecycle | `docs/pages/nodics.process/process-cron-runtime.md` |\n| Media jobs example | `../nodics.wcms/modules/media/data/init-v001/headers/jobs/mediaCleanupRetentionJobHeader.js` |\n| Import process | `../nodics.foundation/modules/nData/nImport/import/src/service/import/defaultImportService.js` |\n\n## Data shape\n\n```mermaid\nflowchart LR\n  Release[\"Release data\"] --> Import[\"nImport\"]\n  Import --> Schema[\"cronJob schema\"]\n  Schema --> Scheduler[\"Process scheduler\"]\n  Scheduler --> Service[\"Target service operation\"]\n  Service --> Evidence[\"Run history and retry evidence\"]\n```\n\n```js\nmodule.exports = {\n  mediaCleanupRetentionJob: {\n    code: 'mediaCleanupRetentionJob',\n    active: true,\n    cronExpression: '0 0 * * *',\n    targetService: 'DefaultMediaCleanupLifecycleService',\n    targetOperation: 'execute',\n    retryPolicy: { maximumAttempts: 3 }\n  }\n};\n```\n\nThe business problem is dependable automation. Business users expect cleanup,\nindexing, messaging, publication support, and recovery jobs to run without\nmanual supervision. Developers need simple release data for default jobs.\nOperators need schedule visibility, node responsibility, retry state, and\nfailure evidence before production acceptance.\n\n## Header contract\n\nThe top-level key in a header routes to the module where the schema exists.\nFor CronJob data, that target is normally the Process CronJob module. The\nheader defines `schemaName`, `operation`, optional tenants, record file prefix,\nand the idempotent query.\n\n```js\nmodule.exports = {\n  cronjob: {\n    mediaJobs: {\n      options: {\n        enabled: true,\n        schemaName: 'cronJob',\n        operation: 'saveAll',\n        dataFilePrefix: 'mediaCleanupRetentionJobData'\n      },\n      query: { code: '$code' }\n    }\n  }\n};\n```\n\n## Runtime behavior\n\nCron execution should be idempotent, observable, and bounded. The runtime\nselects responsible nodes, prevents duplicate execution where configured,\nrecords start and completion evidence, applies retry policy, and moves failed\njobs into a recoverable state. A job record should not contain executable\nbusiness logic. It should point to a service operation that owns the behavior.\n\n## Customization and extension guidance\n\nDevelopers can add new scheduled jobs by adding a record, a header entry, the\ntarget service, tests, and operational documentation. A customer project can\noverride schedule frequency through release data or Axis only when the owning\ncapability permits it. Operators can disable, retry, or reschedule based on\npolicy, but should not edit service code in production.\n\n## Implementation handoff\n\nEach job should be handed over with its business purpose, target service,\nexpected runtime role, schedule, retry policy, idempotency rule, timeout,\nownership, and monitoring signal. That detail helps business users understand\nwhy the job exists, developers maintain the service safely, operators recover\nproduction failures, and QA owners test execution without depending on timing\nluck.\n\n## Common mistakes\n\n- Putting business logic into the job data file.\n- Creating a schedule without idempotency or retry behavior.\n- Forgetting node responsibility and duplicate execution controls.\n- Using environment-specific service names in shared module data.\n- Hiding failed job history from operators.\n\n## Verification\n\nImport CronJob data into a fresh schema, inspect job records, start the\nProcess runtime, confirm one responsible node runs the job, force a controlled\nfailure, and verify retry and evidence. Production readiness requires business\nvisibility, developer-owned service tests, operator recovery actions, and QA\nproof that disabled jobs do not execute.\n",
+    "keywords": [
+      "cronjob",
+      "scheduled-job",
+      "data-authoring",
+      "retry",
+      "idempotency",
+      "Cron and Scheduled Automation",
+      "Scheduled Automation Triggers",
+      "CronJob Data Authoring"
+    ],
+    "facets": {
+      "section": "cron-and-scheduled-automation",
+      "group": "cron-and-scheduled-automation",
+      "navigationDepth": 2,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record328": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkreleaseupgradecompatibility",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataframeworkReleaseUpgradeCompatibility",
+    "title": "Release and Upgrade Compatibility",
+    "summary": "How data release folders, generated manifests, immutable baselines, upgrades, rollback, checksum drift, and customer extensions are governed.",
+    "searchText": "Release and Upgrade Compatibility How data release folders, generated manifests, immutable baselines, upgrades, rollback, checksum drift, and customer extensions are governed. # Release and Upgrade Compatibility\n\nRelease and upgrade compatibility explains how module data folders evolve\nwithout breaking customer projects. Before the first production baseline,\nteams can keep improving `v001` release folders. After that baseline is used\nby customers, every released folder becomes immutable and the next change\nstarts a new release folder. For beginners, a release folder is a promise: it\nrecords the data shape that can be installed and tested again.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Setup tooling module | `../nodics.foundation/modules/nSetup/package.json` |\n| Documentation generated manifest | `data/manifest.json` |\n| Data import release service | `../nodics.foundation/modules/nData/nImport/import/src/service/release/defaultDataReleaseService.js` |\n| Import release ordering tests | `../nodics.foundation/modules/nData/nImport/import/test/importUtilityReleaseOrder.test.js` |\n| Data authoring guide | `docs/pages/nodics.foundation/data-import-export-migration.md` |\n| Documentation publishing runbook | `docs/pages/nodics.docs/documentation-publishing-runbook.md` |\n\n## Folder contract\n\n```text\ndata/\n  init-v001/\n    headers/\n    records/\n  core-v001/\n    headers/\n    records/\n  sample-v001/\n    commerce/\n      headers/\n      records/\n    content/\n      headers/\n      records/\n      assets/\n  manifest.json\n```\n\nThe business problem is upgrade confidence. Business users need stable setup\nand sample data. Developers need a predictable place to add defaults and\ncustomer extensions. Operators need checksum and import evidence. Production\nsupport needs to know whether a customer installed `core-v001` or `core-v002`\nbefore diagnosing a problem.\n\n## Compatibility rules\n\n| Rule | Meaning |\n| --- | --- |\n| Pre-production folders can change | Until customer release, teams may refine `v001`. |\n| Released folders are immutable | After production release, create the next folder. |\n| Manifest is generated | Developers edit headers, records, and assets, then regenerate. |\n| Headers own routing | Module, schema, operation, and query stay in header files. |\n| Records are declarative | No business logic, runtime paths, secrets, or service calls. |\n| Assets stay with data | Media source files live under the release-owned assets folder. |\n\n## Configuration behavior\n\nRelease configuration should describe active modules, target runtimes, import\nlanes, and provider settings, but it should not replace the release folder.\nThe folder owns versioned data, the generated manifest owns checksums, and\nruntime configuration selects where that data is installed and published.\n\n## Upgrade flow\n\n```mermaid\nflowchart LR\n  Current[\"Installed release\"] --> New[\"Next release folder\"]\n  New --> Validate[\"Generate manifest and validate\"]\n  Validate --> Import[\"Fresh-schema import\"]\n  Import --> Publish[\"Staged review and Online publication\"]\n  Publish --> Evidence[\"Compatibility evidence\"]\n```\n\n## Customization and extension guidance\n\nDevelopers can extend a released module by creating a customer project data\nfolder with a later release code or by adding a project-owned module that\ndepends on the framework module. Do not patch old released framework data in a\ncustomer project unless the repair is documented and repeatable. AI tools\nshould read the manifest, existing headers, and target schemas before adding\nrecords.\n\n## Implementation handoff\n\nEvery release handoff should name the changed folders, generated manifest,\ntarget runtimes, import order, publication dependency, rollback option, and\nbrowser evidence. Business users get a clear upgrade journey, developers get\nsource traceability, operators get production recovery instructions, and QA\nowners get clean-install plus upgrade scenarios. This prevents a data release\nfrom becoming tribal knowledge.\n\n## Common mistakes\n\n- Editing an already released data folder and losing reproducibility.\n- Creating `release.js` files for values that can be derived from folder names.\n- Hand maintaining generated manifest checksums.\n- Putting provider-specific paths inside shared data records.\n- Forgetting fresh-schema import tests before upgrade rollout.\n\n## Verification\n\nRegenerate manifests, run import ordering tests, import every changed release\ninto a fresh schema, publish where needed, and verify Axis, Nexus, or Agora in\nthe browser. Production acceptance requires business release notes, developer\nsource evidence, operator rollback instructions, and QA proof for both clean\ninstall and upgrade paths.\n",
+    "keywords": [
+      "release",
+      "upgrade",
+      "manifest",
+      "compatibility",
+      "data-folder",
+      "Release, Staging, and Publication",
+      "Release Compatibility",
+      "Release and Upgrade Compatibility"
+    ],
+    "facets": {
+      "section": "release-staging-and-publication",
+      "group": "release-staging-and-publication",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record329": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatatoolingaideveloperenablement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12827,7 +14237,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record300": {
+  "record330": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferencesourcemapglossary",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12875,7 +14285,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record301": {
+  "record331": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferencesourcebackeddocumentationcoverageaudit",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12926,14 +14336,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record302": {
+  "record332": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferencedocumentationgapbacklog",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatareferenceDocumentationGapBacklog",
     "title": "Documentation Gap Backlog",
     "summary": "Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation.",
-    "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P0 docs batch | Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Closed by P0 docs batch | Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| Closed by P0 docs batch | CMS exact source map | `nodics.wcms/modules/cms` | Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Closed by P0 docs batch | Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Closed by P0 docs batch | Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Closed by P0 docs batch | Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Closed by P0 docs batch | Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Explain registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Explain ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Explain locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Payment Core and provider split | `nodics.commerce/modules/payment` | Explain payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Explain why customer list exists in Commerce and what Profile continues to own. |\n| NMS runtime monitoring | `nodics.foundation/modules/nNms` | Explain node monitoring, topology, health, operational evidence, and recovery actions. |\n| Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Explain service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Explain provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Database provider boundaries | `nodics.foundation/modules/nDatabase` | Explain MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| OTP and security flow | `nodics.foundation/modules/nOtp` | Explain OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Explain SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Explain contact forms, moderation, workflow, notification, audit, and recovery. |\n| Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Explain workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Cron job data authoring | `nodics.process/modules/cronjob` | Explain job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Explain version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Fresh-schema setup per runtime | Platform, WCMS Staged, WCMS Online, Process, Commerce, Engagement | Add runtime-specific import order, seed data, publication, and acceptance evidence where existing quick-start docs are too broad. |\n| Environment, server, and node discovery | `nodics.kickoff/envs`, framework server/node configuration | Explain how physical hierarchy, environment config, server composition, and runtime roles are discovered. |\n| Permission and access matrix | Profile, BackOffice, WCMS, documentation access policies | Explain roles, groups, permissions, access modes, public/authenticated/restricted behavior, and publication visibility. |\n| Search indexing operations | Discovery and Commerce Search modules | Explain index jobs, reindex, projection freshness, failure recovery, and ownership. |\n| Migration and import reconciliation | Import, migration, CMS migration, Commerce data | Explain source classification, mapping tables, partial failures, retry, and data correction. |\n| Export and data privacy | Export providers, media-owned generated files | Explain allow-lists, masking, retention, download permissions, and audit. |\n| Observability | NMS, import runs, publication receipts, logs, dashboards | Explain correlation IDs, status evidence, health checks, support cards, and escalation. |\n| Disaster recovery | Media publication, Online storage, replication queue | Explain Online media replication, DR queues, recovery receipts, and failure escalation. |\n| Frontend consumption contracts | Axis, Nexus, Agora | Explain that Axis consumes BackOffice metadata, Nexus consumes Online WCMS, and Agora consumes Online commerce/content. |\n| Data quality rules | All module data folders | Explain required fields, stable keys, idempotent queries, relation integrity, and no runtime logic in data files. |\n| Testing standards | All modules and frontends | Explain unit, contract, generator, fresh-schema, publication, browser, accessibility, and regression expectations. |\n| Troubleshooting matrices | Every operational capability page | Add what failed, who owns it, user-safe message, technical evidence, and recovery action. |\n| Decision-maker overview pages | Product and capability overview docs | Explain business value, ownership model, platform differentiation, risk controls, and implementation confidence. |\n| Internal-only register | Low-score utility modules | Decide and document which technical modules do not need public pages and where they are covered. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n",
+    "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P0 docs batch | Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Closed by P0 docs batch | Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| Closed by P0 docs batch | CMS exact source map | `nodics.wcms/modules/cms` | Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Closed by P0 docs batch | Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Closed by P0 docs batch | Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Closed by P0 docs batch | Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Closed by P0 docs batch | Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P1 docs batch | Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Covered by `platform.module-registry-journey` with registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Closed by P1 docs batch | Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Covered by `commerce.search-guide` with ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Closed by P1 docs batch | Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Covered by `localization.runtime-authoring` with locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Closed by P1 docs batch | Payment Core and provider split | `nodics.commerce/modules/payment` | Covered by `commerce.payment-provider-boundaries` with payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Closed by P1 docs batch | Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Covered by `commerce.customer-list-profile-boundary` with why customer list exists in Commerce and what Profile continues to own. |\n| Closed by P1 docs batch | NMS runtime monitoring | `nodics.foundation/modules/nNms` | Covered by `foundation.nms-runtime-monitoring` with node monitoring, topology, health, operational evidence, and recovery actions. |\n| Closed by P1 docs batch | Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Covered by `foundation.service-runtime-overrides` with service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Closed by P1 docs batch | Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Covered by `foundation.cache-provider-runbooks` with provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Closed by P1 docs batch | Database provider boundaries | `nodics.foundation/modules/nDatabase` | Covered by `foundation.database-provider-boundaries` with MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| Closed by P1 docs batch | OTP and security flow | `nodics.foundation/modules/nOtp` | Covered by `security.otp-security-flow` with OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Closed by P1 docs batch | Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Covered by `communication.provider-runbooks` with SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Closed by P1 docs batch | Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Covered by `engagement.contact-submission-operations` with contact forms, moderation, workflow, notification, audit, and recovery. |\n| Closed by P1 docs batch | Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Covered by `process.workflow-bpm-source-map` with workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Closed by P1 docs batch | Cron job data authoring | `nodics.process/modules/cronjob` | Covered by `process.cronjob-data-authoring` with job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Closed by P1 docs batch | Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Covered by `framework.release-upgrade-compatibility` with version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Fresh-schema setup per runtime | Platform, WCMS Staged, WCMS Online, Process, Commerce, Engagement | Add runtime-specific import order, seed data, publication, and acceptance evidence where existing quick-start docs are too broad. |\n| Environment, server, and node discovery | `nodics.kickoff/envs`, framework server/node configuration | Explain how physical hierarchy, environment config, server composition, and runtime roles are discovered. |\n| Permission and access matrix | Profile, BackOffice, WCMS, documentation access policies | Explain roles, groups, permissions, access modes, public/authenticated/restricted behavior, and publication visibility. |\n| Search indexing operations | Discovery and Commerce Search modules | Explain index jobs, reindex, projection freshness, failure recovery, and ownership. |\n| Migration and import reconciliation | Import, migration, CMS migration, Commerce data | Explain source classification, mapping tables, partial failures, retry, and data correction. |\n| Export and data privacy | Export providers, media-owned generated files | Explain allow-lists, masking, retention, download permissions, and audit. |\n| Observability | NMS, import runs, publication receipts, logs, dashboards | Explain correlation IDs, status evidence, health checks, support cards, and escalation. |\n| Disaster recovery | Media publication, Online storage, replication queue | Explain Online media replication, DR queues, recovery receipts, and failure escalation. |\n| Frontend consumption contracts | Axis, Nexus, Agora | Explain that Axis consumes BackOffice metadata, Nexus consumes Online WCMS, and Agora consumes Online commerce/content. |\n| Data quality rules | All module data folders | Explain required fields, stable keys, idempotent queries, relation integrity, and no runtime logic in data files. |\n| Testing standards | All modules and frontends | Explain unit, contract, generator, fresh-schema, publication, browser, accessibility, and regression expectations. |\n| Troubleshooting matrices | Every operational capability page | Add what failed, who owns it, user-safe message, technical evidence, and recovery action. |\n| Decision-maker overview pages | Product and capability overview docs | Explain business value, ownership model, platform differentiation, risk controls, and implementation confidence. |\n| Internal-only register | Low-score utility modules | Decide and document which technical modules do not need public pages and where they are covered. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n",
     "keywords": [
       "documentation-gap-backlog",
       "source-backed",

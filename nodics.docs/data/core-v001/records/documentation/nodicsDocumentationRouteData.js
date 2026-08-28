@@ -1190,6 +1190,186 @@ module.exports = {
     "active": true
   },
   "record98": {
+    "code": "nodicsDocsRouteplatformModuleRegistryJourney",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/platform-module-registry-journey",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPageplatformModuleRegistryJourney",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record99": {
+    "code": "nodicsDocsRoutecommerceSearchGuide",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/commerce-search-guide",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagecommerceSearchGuide",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record100": {
+    "code": "nodicsDocsRoutelocalizationRuntimeAuthoring",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/localization-runtime-authoring",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagelocalizationRuntimeAuthoring",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record101": {
+    "code": "nodicsDocsRoutecommercePaymentProviderBoundaries",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/commerce-payment-provider-boundaries",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagecommercePaymentProviderBoundaries",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record102": {
+    "code": "nodicsDocsRoutecommerceCustomerListProfileBoundary",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/commerce-customer-list-profile-boundary",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagecommerceCustomerListProfileBoundary",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record103": {
+    "code": "nodicsDocsRoutefoundationNmsRuntimeMonitoring",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/foundation-nms-runtime-monitoring",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagefoundationNmsRuntimeMonitoring",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record104": {
+    "code": "nodicsDocsRoutefoundationServiceRuntimeOverrides",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/foundation-service-runtime-overrides",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagefoundationServiceRuntimeOverrides",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record105": {
+    "code": "nodicsDocsRoutefoundationCacheProviderRunbooks",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/foundation-cache-provider-runbooks",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagefoundationCacheProviderRunbooks",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record106": {
+    "code": "nodicsDocsRoutefoundationDatabaseProviderBoundaries",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/foundation-database-provider-boundaries",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagefoundationDatabaseProviderBoundaries",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record107": {
+    "code": "nodicsDocsRoutesecurityOtpSecurityFlow",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/security-otp-security-flow",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagesecurityOtpSecurityFlow",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record108": {
+    "code": "nodicsDocsRoutecommunicationProviderRunbooks",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/communication-provider-runbooks",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagecommunicationProviderRunbooks",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record109": {
+    "code": "nodicsDocsRouteengagementContactSubmissionOperations",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/engagement-contact-submission-operations",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPageengagementContactSubmissionOperations",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record110": {
+    "code": "nodicsDocsRouteprocessWorkflowBpmSourceMap",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/process-workflow-bpm-source-map",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPageprocessWorkflowBpmSourceMap",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record111": {
+    "code": "nodicsDocsRouteprocessCronjobDataAuthoring",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/process-cronjob-data-authoring",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPageprocessCronjobDataAuthoring",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record112": {
+    "code": "nodicsDocsRouteframeworkReleaseUpgradeCompatibility",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/framework-release-upgrade-compatibility",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPageframeworkReleaseUpgradeCompatibility",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record113": {
     "code": "nodicsDocsRoutetoolingAiDeveloperEnablement",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/tooling-ai-developer-enablement",
@@ -1201,7 +1381,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record99": {
+  "record114": {
     "code": "nodicsDocsRoutereferenceSourceMapGlossary",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/reference-source-map-glossary",
@@ -1213,7 +1393,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record100": {
+  "record115": {
     "code": "nodicsDocsRoutereferenceSourceBackedDocumentationCoverageAudit",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/reference-source-backed-documentation-coverage-audit",
@@ -1225,7 +1405,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record101": {
+  "record116": {
     "code": "nodicsDocsRoutereferenceDocumentationGapBacklog",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/reference-documentation-gap-backlog",

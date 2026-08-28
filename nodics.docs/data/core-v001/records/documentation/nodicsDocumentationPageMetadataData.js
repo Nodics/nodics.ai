@@ -11341,6 +11341,1643 @@ module.exports = {
     "active": true
   },
   "record98": {
+    "code": "nodicsDocsMetadataplatformModuleRegistryJourney",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "platform.module-registry-journey",
+    "title": "Module Registry Journey",
+    "summary": "How installed modules become registered, activated, dependency-checked, and visible to Axis as governed business capabilities.",
+    "businessSummary": "Module Registry Journey explains the business purpose, supported decisions, operational impact, and controls for the Module Registry Foundations journey.",
+    "technicalSummary": "Module Registry Journey records owning module nodics.platform, technical module backoffice, source path docs/pages/nodics.platform/module-registry-journey.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.platform",
+    "technicalModule": "backoffice",
+    "targetPage": "nodicsDocsPageplatformModuleRegistryJourney",
+    "targetRoute": "nodicsDocsRouteplatformModuleRegistryJourney",
+    "articleComponent": "nodicsDocsComponentplatformModuleRegistryJourney",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataplatformmoduleregistryjourney",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "platformModuleRegistryJourney-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Lifecycle",
+        "anchor": "platformModuleRegistryJourney-2-lifecycle",
+        "level": 2
+      },
+      {
+        "text": "Registry contract",
+        "anchor": "platformModuleRegistryJourney-3-registry-contract",
+        "level": 2
+      },
+      {
+        "text": "Dependency and activation rules",
+        "anchor": "platformModuleRegistryJourney-4-dependency-and-activation-rules",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "platformModuleRegistryJourney-5-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Implementation handoff",
+        "anchor": "platformModuleRegistryJourney-6-implementation-handoff",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "platformModuleRegistryJourney-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "platformModuleRegistryJourney-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "platform.module-registry",
+      "applications.axis-setup-error-contracts",
+      "framework.module-loading-service-precedence"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.platform/module-registry-journey.md",
+    "sourceChecksum": "0473c9c5b9ad2f8dcee7f6caf9c658b9e1d467dca905d15f9312a1b20fbbdb45",
+    "sourceWordCount": 555,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record99": {
+    "code": "nodicsDocsMetadatacommerceSearchGuide",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "commerce.search-guide",
+    "title": "Commerce Search Guide",
+    "summary": "How commerce search projections, ranking rules, index freshness, rebuild evidence, and storefront discovery are governed.",
+    "businessSummary": "Commerce Search Guide explains the business purpose, supported decisions, operational impact, and controls for the Search Providers and Indexing journey.",
+    "technicalSummary": "Commerce Search Guide records owning module nodics.commerce, technical module commerceSearch, source path docs/pages/nodics.commerce/commerce-search-guide.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.commerce",
+    "technicalModule": "commerceSearch",
+    "targetPage": "nodicsDocsPagecommerceSearchGuide",
+    "targetRoute": "nodicsDocsRoutecommerceSearchGuide",
+    "articleComponent": "nodicsDocsComponentcommerceSearchGuide",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacommercesearchguide",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "commerceSearchGuide-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Projection flow",
+        "anchor": "commerceSearchGuide-2-projection-flow",
+        "level": 2
+      },
+      {
+        "text": "Ranking and rules",
+        "anchor": "commerceSearchGuide-3-ranking-and-rules",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "commerceSearchGuide-4-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Implementation handoff",
+        "anchor": "commerceSearchGuide-5-implementation-handoff",
+        "level": 2
+      },
+      {
+        "text": "Evidence checklist",
+        "anchor": "commerceSearchGuide-6-evidence-checklist",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "commerceSearchGuide-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "commerceSearchGuide-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "discovery.search-indexing",
+      "catalog.product-discovery-management",
+      "commerce.data-authoring-fulfillment"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.commerce/commerce-search-guide.md",
+    "sourceChecksum": "da569e961eaf20479d0d5f1e6c16b68cf010dd3e51d29173c1d110e269e4c4ce",
+    "sourceWordCount": 539,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record100": {
+    "code": "nodicsDocsMetadatalocalizationRuntimeAuthoring",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "localization.runtime-authoring",
+    "title": "Localization Runtime Authoring",
+    "summary": "How localized records, fallback behavior, content and product translation, import data, and runtime API boundaries work.",
+    "businessSummary": "Localization Runtime Authoring explains the business purpose, supported decisions, operational impact, and controls for the Localization Foundations journey.",
+    "technicalSummary": "Localization Runtime Authoring records owning module nodics.localization, technical module localizationCore, source path docs/pages/nodics.localization/localization-runtime-authoring.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.localization",
+    "technicalModule": "localizationCore",
+    "targetPage": "nodicsDocsPagelocalizationRuntimeAuthoring",
+    "targetRoute": "nodicsDocsRoutelocalizationRuntimeAuthoring",
+    "articleComponent": "nodicsDocsComponentlocalizationRuntimeAuthoring",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatalocalizationruntimeauthoring",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "localizationRuntimeAuthoring-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Resolution model",
+        "anchor": "localizationRuntimeAuthoring-2-resolution-model",
+        "level": 2
+      },
+      {
+        "text": "Authoring contract",
+        "anchor": "localizationRuntimeAuthoring-3-authoring-contract",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "localizationRuntimeAuthoring-4-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Implementation handoff",
+        "anchor": "localizationRuntimeAuthoring-5-implementation-handoff",
+        "level": 2
+      },
+      {
+        "text": "Evidence checklist",
+        "anchor": "localizationRuntimeAuthoring-6-evidence-checklist",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "localizationRuntimeAuthoring-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "localizationRuntimeAuthoring-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "localization.internationalization",
+      "wcms.cms-source-map-authoring-contract",
+      "commerce.data-authoring-fulfillment"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.localization/localization-runtime-authoring.md",
+    "sourceChecksum": "5e7a010a863fda0f09cbcf726557dd362b29541221ff150607b9e4ebd8e349a9",
+    "sourceWordCount": 517,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record101": {
+    "code": "nodicsDocsMetadatacommercePaymentProviderBoundaries",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "commerce.payment-provider-boundaries",
+    "title": "Payment Core and Provider Boundaries",
+    "summary": "How Payment Core, payment methods, gateway providers, safe payloads, reconciliation, refunds, and provider extension boundaries work.",
+    "businessSummary": "Payment Core and Provider Boundaries explains the business purpose, supported decisions, operational impact, and controls for the Payment Operations journey.",
+    "technicalSummary": "Payment Core and Provider Boundaries records owning module nodics.commerce, technical module payment, source path docs/pages/nodics.commerce/payment-provider-boundaries.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.commerce",
+    "technicalModule": "payment",
+    "targetPage": "nodicsDocsPagecommercePaymentProviderBoundaries",
+    "targetRoute": "nodicsDocsRoutecommercePaymentProviderBoundaries",
+    "articleComponent": "nodicsDocsComponentcommercePaymentProviderBoundaries",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacommercepaymentproviderboundaries",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "commercePaymentProviderBoundaries-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Boundary model",
+        "anchor": "commercePaymentProviderBoundaries-2-boundary-model",
+        "level": 2
+      },
+      {
+        "text": "Safe payload contract",
+        "anchor": "commercePaymentProviderBoundaries-3-safe-payload-contract",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "commercePaymentProviderBoundaries-4-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Implementation handoff",
+        "anchor": "commercePaymentProviderBoundaries-5-implementation-handoff",
+        "level": 2
+      },
+      {
+        "text": "Evidence checklist",
+        "anchor": "commercePaymentProviderBoundaries-6-evidence-checklist",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "commercePaymentProviderBoundaries-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "commercePaymentProviderBoundaries-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "commerce.payment-fulfillment",
+      "commerce.cart-order",
+      "commerce.returns-refunds"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.commerce/payment-provider-boundaries.md",
+    "sourceChecksum": "e1286919850ea76d6e41f35efc89e0855dd529b90307d7b2b940d456ad46d063",
+    "sourceWordCount": 533,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record102": {
+    "code": "nodicsDocsMetadatacommerceCustomerListProfileBoundary",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "commerce.customer-list-profile-boundary",
+    "title": "Customer List and Profile Commerce Boundary",
+    "summary": "Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile.",
+    "businessSummary": "Customer List and Profile Commerce Boundary explains the business purpose, supported decisions, operational impact, and controls for the Customer Data and Identity journey.",
+    "technicalSummary": "Customer List and Profile Commerce Boundary records owning module nodics.commerce, technical module customerList, source path docs/pages/nodics.commerce/customer-list-profile-boundary.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.commerce",
+    "technicalModule": "customerList",
+    "targetPage": "nodicsDocsPagecommerceCustomerListProfileBoundary",
+    "targetRoute": "nodicsDocsRoutecommerceCustomerListProfileBoundary",
+    "articleComponent": "nodicsDocsComponentcommerceCustomerListProfileBoundary",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacommercecustomerlistprofileboundary",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "commerceCustomerListProfileBoundary-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Ownership model",
+        "anchor": "commerceCustomerListProfileBoundary-2-ownership-model",
+        "level": 2
+      },
+      {
+        "text": "Contract",
+        "anchor": "commerceCustomerListProfileBoundary-3-contract",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "commerceCustomerListProfileBoundary-4-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Implementation handoff",
+        "anchor": "commerceCustomerListProfileBoundary-5-implementation-handoff",
+        "level": 2
+      },
+      {
+        "text": "Evidence checklist",
+        "anchor": "commerceCustomerListProfileBoundary-6-evidence-checklist",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "commerceCustomerListProfileBoundary-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "commerceCustomerListProfileBoundary-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "security.identity-access-governance",
+      "commerce.cart-order",
+      "commerce.payment-provider-boundaries"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.commerce/customer-list-profile-boundary.md",
+    "sourceChecksum": "c8a054a000f579059fbf0774a967d4aa1386844f61a89195fd210c2918dcbdfd",
+    "sourceWordCount": 537,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record103": {
+    "code": "nodicsDocsMetadatafoundationNmsRuntimeMonitoring",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "foundation.nms-runtime-monitoring",
+    "title": "NMS Runtime Monitoring",
+    "summary": "How NMS captures node health, runtime roles, responsibility, capability state, degraded conditions, and operator recovery evidence.",
+    "businessSummary": "NMS Runtime Monitoring explains the business purpose, supported decisions, operational impact, and controls for the Runtime Health and Support journey.",
+    "technicalSummary": "NMS Runtime Monitoring records owning module nodics.foundation, technical module nNms, source path docs/pages/nodics.foundation/nms-runtime-monitoring.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nNms",
+    "targetPage": "nodicsDocsPagefoundationNmsRuntimeMonitoring",
+    "targetRoute": "nodicsDocsRoutefoundationNmsRuntimeMonitoring",
+    "articleComponent": "nodicsDocsComponentfoundationNmsRuntimeMonitoring",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatafoundationnmsruntimemonitoring",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "foundationNmsRuntimeMonitoring-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Monitoring model",
+        "anchor": "foundationNmsRuntimeMonitoring-2-monitoring-model",
+        "level": 2
+      },
+      {
+        "text": "Health contract",
+        "anchor": "foundationNmsRuntimeMonitoring-3-health-contract",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "foundationNmsRuntimeMonitoring-4-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Implementation handoff",
+        "anchor": "foundationNmsRuntimeMonitoring-5-implementation-handoff",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "foundationNmsRuntimeMonitoring-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "foundationNmsRuntimeMonitoring-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      },
+      {
+        "kind": "table",
+        "title": "Signal, Meaning, Consumer"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "framework.devops-runtime",
+      "framework.local-verification-checklist",
+      "process.runtime-lifecycle"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.foundation/nms-runtime-monitoring.md",
+    "sourceChecksum": "7794cb9d2c263ca334f4eeb67df899485ab4ec5edae5c344f946e2605699f624",
+    "sourceWordCount": 516,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record104": {
+    "code": "nodicsDocsMetadatafoundationServiceRuntimeOverrides",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "foundation.service-runtime-overrides",
+    "title": "Service Runtime and Override Precedence",
+    "summary": "How generated services, virtual services, module graph resolution, customer overrides, fallback behavior, and extension safety work.",
+    "businessSummary": "Service Runtime and Override Precedence explains the business purpose, supported decisions, operational impact, and controls for the Service Runtime and Overrides journey.",
+    "technicalSummary": "Service Runtime and Override Precedence records owning module nodics.foundation, technical module nService, source path docs/pages/nodics.foundation/service-runtime-overrides.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nService",
+    "targetPage": "nodicsDocsPagefoundationServiceRuntimeOverrides",
+    "targetRoute": "nodicsDocsRoutefoundationServiceRuntimeOverrides",
+    "articleComponent": "nodicsDocsComponentfoundationServiceRuntimeOverrides",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatafoundationserviceruntimeoverrides",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "foundationServiceRuntimeOverrides-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Resolution flow",
+        "anchor": "foundationServiceRuntimeOverrides-2-resolution-flow",
+        "level": 2
+      },
+      {
+        "text": "Precedence contract",
+        "anchor": "foundationServiceRuntimeOverrides-3-precedence-contract",
+        "level": 2
+      },
+      {
+        "text": "Operational evidence",
+        "anchor": "foundationServiceRuntimeOverrides-4-operational-evidence",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "foundationServiceRuntimeOverrides-5-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Implementation handoff",
+        "anchor": "foundationServiceRuntimeOverrides-6-implementation-handoff",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "foundationServiceRuntimeOverrides-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "foundationServiceRuntimeOverrides-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      },
+      {
+        "kind": "table",
+        "title": "Question, Evidence"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "framework.module-loading-service-precedence",
+      "framework.backend-extension-patterns",
+      "runtime.governed-change"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.foundation/service-runtime-overrides.md",
+    "sourceChecksum": "d83381148967d4499b37500065db1fc59f75580a2d5e75329783f4ffd5d3bdec",
+    "sourceWordCount": 517,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record105": {
+    "code": "nodicsDocsMetadatafoundationCacheProviderRunbooks",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "foundation.cache-provider-runbooks",
+    "title": "Cache Provider Runbooks",
+    "summary": "Redis, Hazelcast, node cache, key strategy, invalidation, provider health, fallback behavior, and production cache recovery guidance.",
+    "businessSummary": "Cache Provider Runbooks explains the business purpose, supported decisions, operational impact, and controls for the Cache Foundations journey.",
+    "technicalSummary": "Cache Provider Runbooks records owning module nodics.foundation, technical module nCache, source path docs/pages/nodics.foundation/cache-provider-runbooks.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nCache",
+    "targetPage": "nodicsDocsPagefoundationCacheProviderRunbooks",
+    "targetRoute": "nodicsDocsRoutefoundationCacheProviderRunbooks",
+    "articleComponent": "nodicsDocsComponentfoundationCacheProviderRunbooks",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatafoundationcacheproviderrunbooks",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "foundationCacheProviderRunbooks-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Provider flow",
+        "anchor": "foundationCacheProviderRunbooks-2-provider-flow",
+        "level": 2
+      },
+      {
+        "text": "Configuration contract",
+        "anchor": "foundationCacheProviderRunbooks-3-configuration-contract",
+        "level": 2
+      },
+      {
+        "text": "Runbook",
+        "anchor": "foundationCacheProviderRunbooks-4-runbook",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "foundationCacheProviderRunbooks-5-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "foundationCacheProviderRunbooks-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "foundationCacheProviderRunbooks-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      },
+      {
+        "kind": "table",
+        "title": "Configuration, Purpose, Production note"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "configuration-table",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "cache.runtime-state-management",
+      "runtime.governed-change",
+      "wcms.publishing-lifecycle"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.foundation/cache-provider-runbooks.md",
+    "sourceChecksum": "99859f8f38df2804ff39429814bb7108fc37fdcc0e4aa5e37b7711301329c663",
+    "sourceWordCount": 527,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record106": {
+    "code": "nodicsDocsMetadatafoundationDatabaseProviderBoundaries",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "foundation.database-provider-boundaries",
+    "title": "Database Provider Boundaries",
+    "summary": "How MongoDB, virtual DB, Cassandra, Elasticsearch, schemas, query translation, indexes, migration, and provider validation are separated.",
+    "businessSummary": "Database Provider Boundaries explains the business purpose, supported decisions, operational impact, and controls for the Database Provider Contracts journey.",
+    "technicalSummary": "Database Provider Boundaries records owning module nodics.foundation, technical module nDatabase, source path docs/pages/nodics.foundation/database-provider-boundaries.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nDatabase",
+    "targetPage": "nodicsDocsPagefoundationDatabaseProviderBoundaries",
+    "targetRoute": "nodicsDocsRoutefoundationDatabaseProviderBoundaries",
+    "articleComponent": "nodicsDocsComponentfoundationDatabaseProviderBoundaries",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatafoundationdatabaseproviderboundaries",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "foundationDatabaseProviderBoundaries-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Boundary model",
+        "anchor": "foundationDatabaseProviderBoundaries-2-boundary-model",
+        "level": 2
+      },
+      {
+        "text": "Contract rules",
+        "anchor": "foundationDatabaseProviderBoundaries-3-contract-rules",
+        "level": 2
+      },
+      {
+        "text": "Provider comparison",
+        "anchor": "foundationDatabaseProviderBoundaries-4-provider-comparison",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "foundationDatabaseProviderBoundaries-5-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "foundationDatabaseProviderBoundaries-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "foundationDatabaseProviderBoundaries-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      },
+      {
+        "kind": "table",
+        "title": "Provider, Use, Watch point"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "persistence.provider-data-access-layer",
+      "foundation.cache-provider-runbooks",
+      "discovery.search-indexing"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.foundation/database-provider-boundaries.md",
+    "sourceChecksum": "1f14d3036b5542ebd0e35328a45d43e8b9ae2f8f76c6308ab3d3f413af68be70",
+    "sourceWordCount": 526,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record107": {
+    "code": "nodicsDocsMetadatasecurityOtpSecurityFlow",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "security.otp-security-flow",
+    "title": "OTP and Security Flow",
+    "summary": "OTP generation, delivery intent, verification, expiry, retry, throttling, lockout, audit, and secure frontend message behavior.",
+    "businessSummary": "OTP and Security Flow explains the business purpose, supported decisions, operational impact, and controls for the Authentication and Verification journey.",
+    "technicalSummary": "OTP and Security Flow records owning module nodics.foundation, technical module nOtp, source path docs/pages/nodics.platform/otp-security-flow.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nOtp",
+    "targetPage": "nodicsDocsPagesecurityOtpSecurityFlow",
+    "targetRoute": "nodicsDocsRoutesecurityOtpSecurityFlow",
+    "articleComponent": "nodicsDocsComponentsecurityOtpSecurityFlow",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatasecurityotpsecurityflow",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "securityOtpSecurityFlow-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Flow",
+        "anchor": "securityOtpSecurityFlow-2-flow",
+        "level": 2
+      },
+      {
+        "text": "Policy contract",
+        "anchor": "securityOtpSecurityFlow-3-policy-contract",
+        "level": 2
+      },
+      {
+        "text": "Configuration behavior",
+        "anchor": "securityOtpSecurityFlow-4-configuration-behavior",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "securityOtpSecurityFlow-5-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Implementation handoff",
+        "anchor": "securityOtpSecurityFlow-6-implementation-handoff",
+        "level": 2
+      },
+      {
+        "text": "Evidence checklist",
+        "anchor": "securityOtpSecurityFlow-7-evidence-checklist",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "securityOtpSecurityFlow-8-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "securityOtpSecurityFlow-9-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      },
+      {
+        "kind": "table",
+        "title": "Policy, Purpose"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "configuration-table",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "security.identity-access-governance",
+      "communication.overview",
+      "communication.provider-runbooks"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.platform/otp-security-flow.md",
+    "sourceChecksum": "05ce678726ef82e1fd248a9a6147c4c037fca20355feb403bd7a3a90ff863d25",
+    "sourceWordCount": 576,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record108": {
+    "code": "nodicsDocsMetadatacommunicationProviderRunbooks",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "communication.provider-runbooks",
+    "title": "Communication Provider Runbooks",
+    "summary": "SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance.",
+    "businessSummary": "Communication Provider Runbooks explains the business purpose, supported decisions, operational impact, and controls for the Provider Delivery journey.",
+    "technicalSummary": "Communication Provider Runbooks records owning module nodics.communication, technical module communication, source path docs/pages/nodics.communication/provider-runbooks.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.communication",
+    "technicalModule": "communication",
+    "targetPage": "nodicsDocsPagecommunicationProviderRunbooks",
+    "targetRoute": "nodicsDocsRoutecommunicationProviderRunbooks",
+    "articleComponent": "nodicsDocsComponentcommunicationProviderRunbooks",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacommunicationproviderrunbooks",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "communicationProviderRunbooks-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Delivery flow",
+        "anchor": "communicationProviderRunbooks-2-delivery-flow",
+        "level": 2
+      },
+      {
+        "text": "Provider contract",
+        "anchor": "communicationProviderRunbooks-3-provider-contract",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "communicationProviderRunbooks-4-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Implementation handoff",
+        "anchor": "communicationProviderRunbooks-5-implementation-handoff",
+        "level": 2
+      },
+      {
+        "text": "Evidence checklist",
+        "anchor": "communicationProviderRunbooks-6-evidence-checklist",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "communicationProviderRunbooks-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "communicationProviderRunbooks-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "communication.overview",
+      "security.otp-security-flow",
+      "engagement.contact-submission-operations"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.communication/provider-runbooks.md",
+    "sourceChecksum": "440ad7047234f446fe8d08eea5bcc301b69ddd4c8b4b68436b2c9e80093144be",
+    "sourceWordCount": 531,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record109": {
+    "code": "nodicsDocsMetadataengagementContactSubmissionOperations",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "engagement.contact-submission-operations",
+    "title": "Contact Submission Operations",
+    "summary": "How contact forms, submissions, validation, moderation, workflow routing, notifications, retention, audit, and recovery work.",
+    "businessSummary": "Contact Submission Operations explains the business purpose, supported decisions, operational impact, and controls for the Contact and Feedback journey.",
+    "technicalSummary": "Contact Submission Operations records owning module nodics.engagement, technical module contactSubmission, source path docs/pages/nodics.engagement/contact-submission-operations.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.engagement",
+    "technicalModule": "contactSubmission",
+    "targetPage": "nodicsDocsPageengagementContactSubmissionOperations",
+    "targetRoute": "nodicsDocsRouteengagementContactSubmissionOperations",
+    "articleComponent": "nodicsDocsComponentengagementContactSubmissionOperations",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataengagementcontactsubmissionoperations",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "engagementContactSubmissionOperations-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Lifecycle",
+        "anchor": "engagementContactSubmissionOperations-2-lifecycle",
+        "level": 2
+      },
+      {
+        "text": "Data contract",
+        "anchor": "engagementContactSubmissionOperations-3-data-contract",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "engagementContactSubmissionOperations-4-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Implementation handoff",
+        "anchor": "engagementContactSubmissionOperations-5-implementation-handoff",
+        "level": 2
+      },
+      {
+        "text": "Evidence checklist",
+        "anchor": "engagementContactSubmissionOperations-6-evidence-checklist",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "engagementContactSubmissionOperations-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "engagementContactSubmissionOperations-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "engagement.unified-operations",
+      "engagement.governed-automation",
+      "communication.provider-runbooks"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.engagement/contact-submission-operations.md",
+    "sourceChecksum": "677f6f0b426f876ec4c5028db5cc936ebe0333a881fa499013e3f0f648cc240e",
+    "sourceWordCount": 520,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record110": {
+    "code": "nodicsDocsMetadataprocessWorkflowBpmSourceMap",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "process.workflow-bpm-source-map",
+    "title": "Workflow and BPM Source Map",
+    "summary": "How workflow definitions, transitions, human tasks, action adapters, callbacks, history, incidents, and operator visibility fit together.",
+    "businessSummary": "Workflow and BPM Source Map explains the business purpose, supported decisions, operational impact, and controls for the Workflow Runtime journey.",
+    "technicalSummary": "Workflow and BPM Source Map records owning module nodics.process, technical module nbpm, source path docs/pages/nodics.process/workflow-bpm-source-map.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.process",
+    "technicalModule": "nbpm",
+    "targetPage": "nodicsDocsPageprocessWorkflowBpmSourceMap",
+    "targetRoute": "nodicsDocsRouteprocessWorkflowBpmSourceMap",
+    "articleComponent": "nodicsDocsComponentprocessWorkflowBpmSourceMap",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataprocessworkflowbpmsourcemap",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "processWorkflowBpmSourceMap-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Workflow model",
+        "anchor": "processWorkflowBpmSourceMap-2-workflow-model",
+        "level": 2
+      },
+      {
+        "text": "Contract",
+        "anchor": "processWorkflowBpmSourceMap-3-contract",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "processWorkflowBpmSourceMap-4-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Implementation handoff",
+        "anchor": "processWorkflowBpmSourceMap-5-implementation-handoff",
+        "level": 2
+      },
+      {
+        "text": "Evidence checklist",
+        "anchor": "processWorkflowBpmSourceMap-6-evidence-checklist",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "processWorkflowBpmSourceMap-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "processWorkflowBpmSourceMap-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "process.overview",
+      "process.first-workflow",
+      "process.first-human-task",
+      "process.action-adapters"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.process/workflow-bpm-source-map.md",
+    "sourceChecksum": "2ecd2c4a1eb102768bcfe2d146fef6d3e30cc4cee892f326069dfa57232c6268",
+    "sourceWordCount": 515,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record111": {
+    "code": "nodicsDocsMetadataprocessCronjobDataAuthoring",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "process.cronjob-data-authoring",
+    "title": "CronJob Data Authoring",
+    "summary": "How CronJob records, headers, schedules, execution policy, retry, idempotency, and Process server ownership are authored and verified.",
+    "businessSummary": "CronJob Data Authoring explains the business purpose, supported decisions, operational impact, and controls for the Scheduled Automation Triggers journey.",
+    "technicalSummary": "CronJob Data Authoring records owning module nodics.process, technical module cronjob, source path docs/pages/nodics.process/cronjob-data-authoring.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.process",
+    "technicalModule": "cronjob",
+    "targetPage": "nodicsDocsPageprocessCronjobDataAuthoring",
+    "targetRoute": "nodicsDocsRouteprocessCronjobDataAuthoring",
+    "articleComponent": "nodicsDocsComponentprocessCronjobDataAuthoring",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataprocesscronjobdataauthoring",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "processCronjobDataAuthoring-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Data shape",
+        "anchor": "processCronjobDataAuthoring-2-data-shape",
+        "level": 2
+      },
+      {
+        "text": "Header contract",
+        "anchor": "processCronjobDataAuthoring-3-header-contract",
+        "level": 2
+      },
+      {
+        "text": "Runtime behavior",
+        "anchor": "processCronjobDataAuthoring-4-runtime-behavior",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "processCronjobDataAuthoring-5-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Implementation handoff",
+        "anchor": "processCronjobDataAuthoring-6-implementation-handoff",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "processCronjobDataAuthoring-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "processCronjobDataAuthoring-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "cron.operations",
+      "process.process-cron-runtime",
+      "cron.project-customization"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.process/cronjob-data-authoring.md",
+    "sourceChecksum": "e710ee81b8cbb25275377f09f5f33951ee283268efe33c201f11ce9a7a5cbed3",
+    "sourceWordCount": 542,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record112": {
+    "code": "nodicsDocsMetadataframeworkReleaseUpgradeCompatibility",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "framework.release-upgrade-compatibility",
+    "title": "Release and Upgrade Compatibility",
+    "summary": "How data release folders, generated manifests, immutable baselines, upgrades, rollback, checksum drift, and customer extensions are governed.",
+    "businessSummary": "Release and Upgrade Compatibility explains the business purpose, supported decisions, operational impact, and controls for the Release Compatibility journey.",
+    "technicalSummary": "Release and Upgrade Compatibility records owning module nodics.foundation, technical module nSetup, source path docs/pages/framework/release-upgrade-compatibility.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nSetup",
+    "targetPage": "nodicsDocsPageframeworkReleaseUpgradeCompatibility",
+    "targetRoute": "nodicsDocsRouteframeworkReleaseUpgradeCompatibility",
+    "articleComponent": "nodicsDocsComponentframeworkReleaseUpgradeCompatibility",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworkreleaseupgradecompatibility",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "frameworkReleaseUpgradeCompatibility-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Folder contract",
+        "anchor": "frameworkReleaseUpgradeCompatibility-2-folder-contract",
+        "level": 2
+      },
+      {
+        "text": "Compatibility rules",
+        "anchor": "frameworkReleaseUpgradeCompatibility-3-compatibility-rules",
+        "level": 2
+      },
+      {
+        "text": "Configuration behavior",
+        "anchor": "frameworkReleaseUpgradeCompatibility-4-configuration-behavior",
+        "level": 2
+      },
+      {
+        "text": "Upgrade flow",
+        "anchor": "frameworkReleaseUpgradeCompatibility-5-upgrade-flow",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "frameworkReleaseUpgradeCompatibility-6-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Implementation handoff",
+        "anchor": "frameworkReleaseUpgradeCompatibility-7-implementation-handoff",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "frameworkReleaseUpgradeCompatibility-8-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "frameworkReleaseUpgradeCompatibility-9-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      },
+      {
+        "kind": "table",
+        "title": "Rule, Meaning"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "data.import-export-migration",
+      "docs.documentation-publishing-runbook",
+      "framework.runtime-release-rollback"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/framework/release-upgrade-compatibility.md",
+    "sourceChecksum": "2cc031453c94eddde6fe28ebcedb0cc8fbf373841fb79765c725d39cd19924d6",
+    "sourceWordCount": 570,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record113": {
     "code": "nodicsDocsMetadatatoolingAiDeveloperEnablement",
     "product": "nodicsDocumentationProduct",
     "documentId": "tooling.ai-developer-enablement",
@@ -11459,7 +13096,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record99": {
+  "record114": {
     "code": "nodicsDocsMetadatareferenceSourceMapGlossary",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.source-map-glossary",
@@ -11587,7 +13224,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record100": {
+  "record115": {
     "code": "nodicsDocsMetadatareferenceSourceBackedDocumentationCoverageAudit",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.source-backed-documentation-coverage-audit",
@@ -11763,7 +13400,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record101": {
+  "record116": {
     "code": "nodicsDocsMetadatareferenceDocumentationGapBacklog",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.documentation-gap-backlog",
@@ -11836,7 +13473,7 @@ module.exports = {
       },
       {
         "kind": "table",
-        "title": "Item, Source areas, Documentation outcome"
+        "title": "Status, Item, Source areas, Documentation outcome"
       },
       {
         "kind": "table",
@@ -11857,8 +13494,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/reference/documentation-gap-backlog.md",
-    "sourceChecksum": "ff9b54926fbd90c52b92e1ef2776737a9513c0ebf7e4a40048f31f5651eefeb1",
-    "sourceWordCount": 1468,
+    "sourceChecksum": "cace25d19d16071dba67887898657ed0088c6938af883147eb725cfcc252f3f6",
+    "sourceWordCount": 1604,
     "audience": [
       "business",
       "architect",

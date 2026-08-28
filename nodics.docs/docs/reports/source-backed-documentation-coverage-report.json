@@ -18,11 +18,11 @@
   ],
   "summary": {
     "totalModules": 172,
-    "documents": 102,
-    "needs-page-or-owner-mapping": 11,
-    "needs-deeper-section": 5,
-    "internal-only-candidate": 25,
-    "covered": 131
+    "documents": 117,
+    "needs-page-or-owner-mapping": 5,
+    "needs-deeper-section": 4,
+    "internal-only-candidate": 23,
+    "covered": 140
   },
   "policy": {
     "blocking": false,
@@ -121,7 +121,7 @@
         "nodics.platform/modules/moduleRegistry"
       ],
       "action": "Document registration, activation, dependencies, required capability checks, status projection, and Axis visibility.",
-      "status": "open"
+      "status": "closed-by-p1-docs-batch"
     },
     {
       "priority": "P1",
@@ -131,7 +131,7 @@
         "nodics.commerce/modules/baseCommerce/modules/commerceSearch"
       ],
       "action": "Document ranking rules, projections, publishing, index ownership, and storefront impact.",
-      "status": "open"
+      "status": "closed-by-p1-docs-batch"
     },
     {
       "priority": "P1",
@@ -142,7 +142,7 @@
         "nodics.localization/modules/localizationApi"
       ],
       "action": "Document locale records, fallback behavior, content and product localization, import data, and API boundary.",
-      "status": "open"
+      "status": "closed-by-p1-docs-batch"
     },
     {
       "priority": "P1",
@@ -152,7 +152,7 @@
         "nodics.commerce/modules/payment"
       ],
       "action": "Document payment decisions, method/provider separation, reconciliation, and safe customer payloads.",
-      "status": "open"
+      "status": "closed-by-p1-docs-batch"
     },
     {
       "priority": "P1",
@@ -163,7 +163,7 @@
         "nodics.platform/modules/profile"
       ],
       "action": "Document why customer list exists in Commerce and what Profile owns.",
-      "status": "open"
+      "status": "closed-by-p1-docs-batch"
     },
     {
       "priority": "P1",
@@ -173,7 +173,7 @@
         "nodics.foundation/modules/nNms"
       ],
       "action": "Document node monitoring, topology, health checks, runtime evidence, and operator recovery.",
-      "status": "open"
+      "status": "closed-by-p1-docs-batch"
     },
     {
       "priority": "P1",
@@ -184,7 +184,7 @@
         "nodics.foundation/modules/nService/vService"
       ],
       "action": "Document generated services, virtual service behavior, override precedence, and extension safety.",
-      "status": "open"
+      "status": "closed-by-p1-docs-batch"
     },
     {
       "priority": "P1",
@@ -196,7 +196,7 @@
         "nodics.foundation/modules/nCache/hazelcastCache"
       ],
       "action": "Document Redis, Hazelcast, Node cache, key strategy, invalidation, and production behavior.",
-      "status": "open"
+      "status": "closed-by-p1-docs-batch"
     },
     {
       "priority": "P1",
@@ -206,7 +206,7 @@
         "nodics.foundation/modules/nDatabase"
       ],
       "action": "Document MongoDB, virtual DB, Cassandra, Elasticsearch, configuration, provider contracts, and validation.",
-      "status": "open"
+      "status": "closed-by-p1-docs-batch"
     },
     {
       "priority": "P1",
@@ -216,7 +216,7 @@
         "nodics.foundation/modules/nOtp"
       ],
       "action": "Document OTP generation, verification, expiry, retry, throttling, audit, and security controls.",
-      "status": "open"
+      "status": "closed-by-p1-docs-batch"
     },
     {
       "priority": "P1",
@@ -227,7 +227,7 @@
         "nodics.communication/modules/smsCommsProvider"
       ],
       "action": "Document SMTP/SMS providers, templates, retry, failed delivery evidence, and extension rules.",
-      "status": "open"
+      "status": "closed-by-p1-docs-batch"
     },
     {
       "priority": "P1",
@@ -237,7 +237,7 @@
         "nodics.engagement/modules/contactSubmission"
       ],
       "action": "Document contact forms, moderation, workflow, notification, audit, and recovery.",
-      "status": "open"
+      "status": "closed-by-p1-docs-batch"
     },
     {
       "priority": "P1",
@@ -248,7 +248,7 @@
         "nodics.process"
       ],
       "action": "Document workflow definitions, transitions, tasks, callbacks, history, and operator visibility.",
-      "status": "open"
+      "status": "closed-by-p1-docs-batch"
     },
     {
       "priority": "P1",
@@ -258,7 +258,7 @@
         "nodics.process/modules/cronjob"
       ],
       "action": "Document job records, schedules, execution policy, retry, idempotency, and Process server ownership.",
-      "status": "open"
+      "status": "closed-by-p1-docs-batch"
     },
     {
       "priority": "P1",
@@ -270,7 +270,7 @@
         "all module data folders"
       ],
       "action": "Document version freeze, upgrade path, rollback, checksum drift, generated manifest policy, and customer extension compatibility.",
-      "status": "open"
+      "status": "closed-by-p1-docs-batch"
     },
     {
       "priority": "P2",
@@ -333,53 +333,6 @@
       }
     },
     {
-      "name": "redisCache",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.foundation/modules/nCache/redisCache",
-      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nCache/redisCache/package.json",
-      "priorityScore": 37,
-      "classification": "needs-page-or-owner-mapping",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 1,
-        "services": 4,
-        "controllers": 0,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 5,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.foundation/modules/nCache/redisCache/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.foundation/modules/nCache/redisCache/src/service/cache/defaultRedisCacheService.js",
-          "nodics.ai/nodics.foundation/modules/nCache/redisCache/src/service/defaultSampleService.js",
-          "nodics.ai/nodics.foundation/modules/nCache/redisCache/src/service/engine/defaultRedisCacheEngineService.js",
-          "nodics.ai/nodics.foundation/modules/nCache/redisCache/src/service/engine/defaultSentinelRedisClientAdapterService.js"
-        ],
-        "controllers": [],
-        "routers": [
-          "nodics.ai/nodics.foundation/modules/nCache/redisCache/src/router/appConfig.js",
-          "nodics.ai/nodics.foundation/modules/nCache/redisCache/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.foundation/modules/nCache/redisCache/test/cacheRedisLive.test.js",
-          "nodics.ai/nodics.foundation/modules/nCache/redisCache/test/common/commonTest.js",
-          "nodics.ai/nodics.foundation/modules/nCache/redisCache/test/env-local/envTest.js",
-          "nodics.ai/nodics.foundation/modules/nCache/redisCache/test/redisSentinelConfigurationContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
       "name": "electronicsProduct",
       "kind": "capability",
       "runtimeModule": true,
@@ -426,51 +379,6 @@
       }
     },
     {
-      "name": "hazelcastCache",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache",
-      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/package.json",
-      "priorityScore": 30,
-      "classification": "needs-page-or-owner-mapping",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 1,
-        "services": 3,
-        "controllers": 0,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 3,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/src/service/cache/defaultHazelcastCacheService.js",
-          "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/src/service/defaultSampleService.js",
-          "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/src/service/engine/defaultHazelcastCacheEngineService.js"
-        ],
-        "controllers": [],
-        "routers": [
-          "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/src/router/appConfig.js",
-          "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/test/cacheHazelcastLive.test.js",
-          "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/test/common/commonTest.js",
-          "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/test/env-local/envTest.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
       "name": "telcoCatalog",
       "kind": "capability",
       "runtimeModule": true,
@@ -510,93 +418,6 @@
           "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/test/gen/schema/telcoAllowanceSchemaContract.test.js",
           "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/test/gen/schema/telcoPlanOfferingSchemaContract.test.js",
           "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/test/telcoContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "vDatabase",
-      "kind": "publish",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase",
-      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase/package.json",
-      "priorityScore": 27,
-      "classification": "needs-page-or-owner-mapping",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 1,
-        "services": 2,
-        "controllers": 0,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 3,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase/src/service/defaultSampleService.js",
-          "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase/src/service/interceptors/defaultVersionIdHandlerInterceptorService.js"
-        ],
-        "controllers": [],
-        "routers": [
-          "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase/src/router/appConfig.js",
-          "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase/test/common/commonTest.js",
-          "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase/test/env-local/envTest.js",
-          "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase/test/versionedSchemaSelectionContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "vMongodb",
-      "kind": "publish",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb",
-      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb/package.json",
-      "priorityScore": 24,
-      "classification": "needs-page-or-owner-mapping",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 1,
-        "services": 1,
-        "controllers": 0,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 3,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb/src/service/defaultSampleService.js"
-        ],
-        "controllers": [],
-        "routers": [
-          "nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb/src/router/appConfig.js",
-          "nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb/test/common/commonTest.js",
-          "nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb/test/env-local/envTest.js",
-          "nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb/test/versionedModelContract.test.js"
         ],
         "frontends": []
       }
@@ -681,86 +502,6 @@
         "tests": [
           "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription/test/gen/schema/telcoNumberIntentSchemaContract.test.js",
           "nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription/test/gen/schema/telcoSubscriptionSchemaContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "cassandradb",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.foundation/modules/nDatabase/cassandradb",
-      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nDatabase/cassandradb/package.json",
-      "priorityScore": 19,
-      "classification": "needs-page-or-owner-mapping",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 1,
-        "services": 0,
-        "controllers": 0,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 2,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.foundation/modules/nDatabase/cassandradb/src/schemas/schemas.js"
-        ],
-        "services": [],
-        "controllers": [],
-        "routers": [
-          "nodics.ai/nodics.foundation/modules/nDatabase/cassandradb/src/router/appConfig.js",
-          "nodics.ai/nodics.foundation/modules/nDatabase/cassandradb/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.foundation/modules/nDatabase/cassandradb/test/common/commonTest.js",
-          "nodics.ai/nodics.foundation/modules/nDatabase/cassandradb/test/env-local/envTest.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "elasticdb",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.foundation/modules/nDatabase/elasticdb",
-      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nDatabase/elasticdb/package.json",
-      "priorityScore": 19,
-      "classification": "needs-page-or-owner-mapping",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 1,
-        "services": 0,
-        "controllers": 0,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 2,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.foundation/modules/nDatabase/elasticdb/src/schemas/schemas.js"
-        ],
-        "services": [],
-        "controllers": [],
-        "routers": [
-          "nodics.ai/nodics.foundation/modules/nDatabase/elasticdb/src/router/appConfig.js",
-          "nodics.ai/nodics.foundation/modules/nDatabase/elasticdb/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.foundation/modules/nDatabase/elasticdb/test/common/commonTest.js",
-          "nodics.ai/nodics.foundation/modules/nDatabase/elasticdb/test/env-local/envTest.js"
         ],
         "frontends": []
       }
@@ -867,61 +608,6 @@
       }
     },
     {
-      "name": "localizationCore",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.localization/modules/localizationCore",
-      "packageJsonPath": "nodics.ai/nodics.localization/modules/localizationCore/package.json",
-      "priorityScore": 79,
-      "classification": "needs-deeper-section",
-      "matchedDocuments": [
-        "reference.source-backed-documentation-coverage-audit",
-        "reference.documentation-gap-backlog"
-      ],
-      "counts": {
-        "schemas": 1,
-        "services": 15,
-        "controllers": 0,
-        "routers": 2,
-        "dataHeaders": 1,
-        "dataRecords": 4,
-        "assets": 0,
-        "tests": 2,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.localization/modules/localizationCore/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.localization/modules/localizationCore/src/service/defaultLocalizationConfiguredContributionService.js",
-          "nodics.ai/nodics.localization/modules/localizationCore/src/service/defaultLocalizationContributionService.js",
-          "nodics.ai/nodics.localization/modules/localizationCore/src/service/defaultLocalizationCoreBackofficeCapabilityService.js",
-          "nodics.ai/nodics.localization/modules/localizationCore/src/service/defaultLocalizationCoreLocalizationContributionService.js"
-        ],
-        "controllers": [],
-        "routers": [
-          "nodics.ai/nodics.localization/modules/localizationCore/src/router/appConfig.js",
-          "nodics.ai/nodics.localization/modules/localizationCore/src/router/routers.js"
-        ],
-        "dataHeaders": [
-          "nodics.ai/nodics.localization/modules/localizationCore/data/core-v001/headers/localization/defaultLocalizationRuntimeHeader.js"
-        ],
-        "dataRecords": [
-          "nodics.ai/nodics.localization/modules/localizationCore/data/core-v001/records/localization/defaultLocalizationKeyData.js",
-          "nodics.ai/nodics.localization/modules/localizationCore/data/core-v001/records/localization/defaultLocalizationOnlinePointerData.js",
-          "nodics.ai/nodics.localization/modules/localizationCore/data/core-v001/records/localization/defaultLocalizationReleaseData.js",
-          "nodics.ai/nodics.localization/modules/localizationCore/data/core-v001/records/localization/defaultLocalizationValueData.js"
-        ],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.localization/modules/localizationCore/test/localizationOperationsContract.test.js",
-          "nodics.ai/nodics.localization/modules/localizationCore/test/localizationRegistryReleaseContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
       "name": "emsClient",
       "kind": "capability",
       "runtimeModule": true,
@@ -982,6 +668,7 @@
       "priorityScore": 41,
       "classification": "needs-deeper-section",
       "matchedDocuments": [
+        "foundation.nms-runtime-monitoring",
         "reference.documentation-gap-backlog"
       ],
       "counts": {
@@ -1019,43 +706,6 @@
           "nodics.ai/nodics.foundation/modules/nNms/test/common/commonTest.js",
           "nodics.ai/nodics.foundation/modules/nNms/test/env-local/envTest.js"
         ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "paymentMethods",
-      "kind": "group",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/package.json",
-      "priorityScore": 12,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 4,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/src/service/defaultBankTransferPaymentMethodService.js",
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js",
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/src/service/defaultCashOnDeliveryPaymentMethodService.js",
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment/src/service/defaultWalletPaymentMethodService.js"
-        ],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
         "frontends": []
       }
     },
@@ -1329,40 +979,6 @@
         "schemas": [],
         "services": [
           "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore/src/service/defaultPaymentCallbackSecurityService.js"
-        ],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "stripeProvider",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/package.json",
-      "priorityScore": 3,
-      "classification": "internal-only-candidate",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 0,
-        "services": 1,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js"
         ],
         "controllers": [],
         "routers": [],
@@ -2382,7 +1998,7 @@
         "commerce.base-foundations",
         "commerce.overview",
         "commerce.data-authoring-fulfillment",
-        "reference.source-map-glossary"
+        "commerce.search-guide"
       ],
       "counts": {
         "schemas": 7,
@@ -2577,7 +2193,7 @@
         "framework.local-quick-start",
         "data.import-export-provider-guides",
         "commerce.data-authoring-fulfillment",
-        "reference.source-map-glossary"
+        "commerce.search-guide"
       ],
       "counts": {
         "schemas": 0,
@@ -3466,6 +3082,7 @@
       "matchedDocuments": [
         "applications.nexus-data-content-guide",
         "docs.documentation-publishing-runbook",
+        "engagement.contact-submission-operations",
         "reference.documentation-gap-backlog"
       ],
       "counts": {
@@ -3641,6 +3258,7 @@
       "matchedDocuments": [
         "process.visual-designer",
         "process.overview",
+        "process.workflow-bpm-source-map",
         "reference.source-backed-documentation-coverage-audit",
         "reference.documentation-gap-backlog"
       ],
@@ -4152,6 +3770,62 @@
       }
     },
     {
+      "name": "localizationCore",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.localization/modules/localizationCore",
+      "packageJsonPath": "nodics.ai/nodics.localization/modules/localizationCore/package.json",
+      "priorityScore": 79,
+      "classification": "covered",
+      "matchedDocuments": [
+        "localization.runtime-authoring",
+        "reference.source-backed-documentation-coverage-audit",
+        "reference.documentation-gap-backlog"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 15,
+        "controllers": 0,
+        "routers": 2,
+        "dataHeaders": 1,
+        "dataRecords": 4,
+        "assets": 0,
+        "tests": 2,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.localization/modules/localizationCore/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.localization/modules/localizationCore/src/service/defaultLocalizationConfiguredContributionService.js",
+          "nodics.ai/nodics.localization/modules/localizationCore/src/service/defaultLocalizationContributionService.js",
+          "nodics.ai/nodics.localization/modules/localizationCore/src/service/defaultLocalizationCoreBackofficeCapabilityService.js",
+          "nodics.ai/nodics.localization/modules/localizationCore/src/service/defaultLocalizationCoreLocalizationContributionService.js"
+        ],
+        "controllers": [],
+        "routers": [
+          "nodics.ai/nodics.localization/modules/localizationCore/src/router/appConfig.js",
+          "nodics.ai/nodics.localization/modules/localizationCore/src/router/routers.js"
+        ],
+        "dataHeaders": [
+          "nodics.ai/nodics.localization/modules/localizationCore/data/core-v001/headers/localization/defaultLocalizationRuntimeHeader.js"
+        ],
+        "dataRecords": [
+          "nodics.ai/nodics.localization/modules/localizationCore/data/core-v001/records/localization/defaultLocalizationKeyData.js",
+          "nodics.ai/nodics.localization/modules/localizationCore/data/core-v001/records/localization/defaultLocalizationOnlinePointerData.js",
+          "nodics.ai/nodics.localization/modules/localizationCore/data/core-v001/records/localization/defaultLocalizationReleaseData.js",
+          "nodics.ai/nodics.localization/modules/localizationCore/data/core-v001/records/localization/defaultLocalizationValueData.js"
+        ],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.localization/modules/localizationCore/test/localizationOperationsContract.test.js",
+          "nodics.ai/nodics.localization/modules/localizationCore/test/localizationRegistryReleaseContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
       "name": "wcms",
       "kind": "capability",
       "runtimeModule": true,
@@ -4454,6 +4128,7 @@
       "matchedDocuments": [
         "solutions.data-engineering-analytics-platform",
         "persistence.provider-data-access-layer",
+        "foundation.database-provider-boundaries",
         "reference.documentation-gap-backlog"
       ],
       "counts": {
@@ -4778,6 +4453,9 @@
       "matchedDocuments": [
         "engagement.unified-operations",
         "communication.overview",
+        "communication.provider-runbooks",
+        "engagement.contact-submission-operations",
+        "process.workflow-bpm-source-map",
         "reference.documentation-gap-backlog"
       ],
       "counts": {
@@ -5474,6 +5152,7 @@
       "priorityScore": 39,
       "classification": "covered",
       "matchedDocuments": [
+        "foundation.service-runtime-overrides",
         "reference.documentation-gap-backlog"
       ],
       "counts": {
@@ -5573,7 +5252,8 @@
       "priorityScore": 37,
       "classification": "covered",
       "matchedDocuments": [
-        "commerce.enterprise-operations"
+        "commerce.enterprise-operations",
+        "commerce.payment-provider-boundaries"
       ],
       "counts": {
         "schemas": 1,
@@ -5610,6 +5290,55 @@
           "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutCustomerApiContract.test.js",
           "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutPaymentMethodSelectionContract.test.js",
           "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/orderPlacementContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "redisCache",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.foundation/modules/nCache/redisCache",
+      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nCache/redisCache/package.json",
+      "priorityScore": 37,
+      "classification": "covered",
+      "matchedDocuments": [
+        "foundation.cache-provider-runbooks"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 4,
+        "controllers": 0,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 5,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.foundation/modules/nCache/redisCache/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.foundation/modules/nCache/redisCache/src/service/cache/defaultRedisCacheService.js",
+          "nodics.ai/nodics.foundation/modules/nCache/redisCache/src/service/defaultSampleService.js",
+          "nodics.ai/nodics.foundation/modules/nCache/redisCache/src/service/engine/defaultRedisCacheEngineService.js",
+          "nodics.ai/nodics.foundation/modules/nCache/redisCache/src/service/engine/defaultSentinelRedisClientAdapterService.js"
+        ],
+        "controllers": [],
+        "routers": [
+          "nodics.ai/nodics.foundation/modules/nCache/redisCache/src/router/appConfig.js",
+          "nodics.ai/nodics.foundation/modules/nCache/redisCache/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.foundation/modules/nCache/redisCache/test/cacheRedisLive.test.js",
+          "nodics.ai/nodics.foundation/modules/nCache/redisCache/test/common/commonTest.js",
+          "nodics.ai/nodics.foundation/modules/nCache/redisCache/test/env-local/envTest.js",
+          "nodics.ai/nodics.foundation/modules/nCache/redisCache/test/redisSentinelConfigurationContract.test.js"
         ],
         "frontends": []
       }
@@ -5779,6 +5508,7 @@
       "matchedDocuments": [
         "accelerators.agora-apparel-product-data-authoring",
         "commerce.data-authoring-fulfillment",
+        "commerce.search-guide",
         "reference.source-map-glossary",
         "reference.source-backed-documentation-coverage-audit",
         "reference.documentation-gap-backlog"
@@ -5830,7 +5560,8 @@
       "priorityScore": 35,
       "classification": "covered",
       "matchedDocuments": [
-        "accelerators.agora-apparel-product-data-authoring"
+        "accelerators.agora-apparel-product-data-authoring",
+        "commerce.search-guide"
       ],
       "counts": {
         "schemas": 1,
@@ -6033,6 +5764,8 @@
       "priorityScore": 34,
       "classification": "covered",
       "matchedDocuments": [
+        "security.otp-security-flow",
+        "communication.provider-runbooks",
         "reference.documentation-gap-backlog"
       ],
       "counts": {
@@ -6083,6 +5816,7 @@
       "classification": "covered",
       "matchedDocuments": [
         "localization.internationalization",
+        "localization.runtime-authoring",
         "reference.source-map-glossary",
         "reference.source-backed-documentation-coverage-audit"
       ],
@@ -6135,6 +5869,7 @@
         "docs.reader-journey-and-coverage",
         "docs.documentation-publishing-model",
         "discovery.search-indexing",
+        "foundation.database-provider-boundaries",
         "reference.documentation-gap-backlog"
       ],
       "counts": {
@@ -6329,6 +6064,53 @@
       }
     },
     {
+      "name": "hazelcastCache",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache",
+      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/package.json",
+      "priorityScore": 30,
+      "classification": "covered",
+      "matchedDocuments": [
+        "foundation.cache-provider-runbooks"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 3,
+        "controllers": 0,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 3,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/src/service/cache/defaultHazelcastCacheService.js",
+          "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/src/service/defaultSampleService.js",
+          "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/src/service/engine/defaultHazelcastCacheEngineService.js"
+        ],
+        "controllers": [],
+        "routers": [
+          "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/src/router/appConfig.js",
+          "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/test/cacheHazelcastLive.test.js",
+          "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/test/common/commonTest.js",
+          "nodics.ai/nodics.foundation/modules/nCache/hazelcastCache/test/env-local/envTest.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
       "name": "commsCore",
       "kind": "capability",
       "runtimeModule": true,
@@ -6387,6 +6169,7 @@
       "matchedDocuments": [
         "runtime.governed-change",
         "cache.runtime-state-management",
+        "foundation.cache-provider-runbooks",
         "reference.documentation-gap-backlog"
       ],
       "counts": {
@@ -6617,6 +6400,52 @@
       }
     },
     {
+      "name": "vDatabase",
+      "kind": "publish",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase",
+      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase/package.json",
+      "priorityScore": 27,
+      "classification": "covered",
+      "matchedDocuments": [
+        "foundation.database-provider-boundaries"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 2,
+        "controllers": 0,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 3,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase/src/service/defaultSampleService.js",
+          "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase/src/service/interceptors/defaultVersionIdHandlerInterceptorService.js"
+        ],
+        "controllers": [],
+        "routers": [
+          "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase/src/router/appConfig.js",
+          "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase/test/common/commonTest.js",
+          "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase/test/env-local/envTest.js",
+          "nodics.ai/nodics.foundation/modules/nDatabase/database/vDatabase/test/versionedSchemaSelectionContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
       "name": "kafka",
       "kind": "capability",
       "runtimeModule": true,
@@ -6718,6 +6547,8 @@
       "classification": "covered",
       "matchedDocuments": [
         "data.import-export-migration",
+        "process.cronjob-data-authoring",
+        "framework.release-upgrade-compatibility",
         "reference.source-backed-documentation-coverage-audit"
       ],
       "counts": {
@@ -6897,6 +6728,7 @@
       "priorityScore": 24,
       "classification": "covered",
       "matchedDocuments": [
+        "commerce.customer-list-profile-boundary",
         "reference.documentation-gap-backlog"
       ],
       "counts": {
@@ -6934,6 +6766,51 @@
       }
     },
     {
+      "name": "vMongodb",
+      "kind": "publish",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb",
+      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb/package.json",
+      "priorityScore": 24,
+      "classification": "covered",
+      "matchedDocuments": [
+        "foundation.database-provider-boundaries"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 1,
+        "controllers": 0,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 3,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb/src/service/defaultSampleService.js"
+        ],
+        "controllers": [],
+        "routers": [
+          "nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb/src/router/appConfig.js",
+          "nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb/test/common/commonTest.js",
+          "nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb/test/env-local/envTest.js",
+          "nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb/test/versionedModelContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
       "name": "paymentCore",
       "kind": "capability",
       "runtimeModule": true,
@@ -6942,6 +6819,7 @@
       "priorityScore": 23,
       "classification": "covered",
       "matchedDocuments": [
+        "commerce.payment-provider-boundaries",
         "reference.documentation-gap-backlog"
       ],
       "counts": {
@@ -7189,6 +7067,90 @@
       }
     },
     {
+      "name": "cassandradb",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.foundation/modules/nDatabase/cassandradb",
+      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nDatabase/cassandradb/package.json",
+      "priorityScore": 19,
+      "classification": "covered",
+      "matchedDocuments": [
+        "foundation.database-provider-boundaries"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 0,
+        "controllers": 0,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 2,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.foundation/modules/nDatabase/cassandradb/src/schemas/schemas.js"
+        ],
+        "services": [],
+        "controllers": [],
+        "routers": [
+          "nodics.ai/nodics.foundation/modules/nDatabase/cassandradb/src/router/appConfig.js",
+          "nodics.ai/nodics.foundation/modules/nDatabase/cassandradb/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.foundation/modules/nDatabase/cassandradb/test/common/commonTest.js",
+          "nodics.ai/nodics.foundation/modules/nDatabase/cassandradb/test/env-local/envTest.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "elasticdb",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.foundation/modules/nDatabase/elasticdb",
+      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nDatabase/elasticdb/package.json",
+      "priorityScore": 19,
+      "classification": "covered",
+      "matchedDocuments": [
+        "foundation.database-provider-boundaries"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 0,
+        "controllers": 0,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 2,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.foundation/modules/nDatabase/elasticdb/src/schemas/schemas.js"
+        ],
+        "services": [],
+        "controllers": [],
+        "routers": [
+          "nodics.ai/nodics.foundation/modules/nDatabase/elasticdb/src/router/appConfig.js",
+          "nodics.ai/nodics.foundation/modules/nDatabase/elasticdb/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.foundation/modules/nDatabase/elasticdb/test/common/commonTest.js",
+          "nodics.ai/nodics.foundation/modules/nDatabase/elasticdb/test/env-local/envTest.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
       "name": "default",
       "kind": "capability",
       "runtimeModule": true,
@@ -7364,6 +7326,45 @@
       }
     },
     {
+      "name": "paymentMethods",
+      "kind": "group",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/package.json",
+      "priorityScore": 12,
+      "classification": "covered",
+      "matchedDocuments": [
+        "commerce.payment-provider-boundaries"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 4,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/src/service/defaultBankTransferPaymentMethodService.js",
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js",
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/src/service/defaultCashOnDeliveryPaymentMethodService.js",
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment/src/service/defaultWalletPaymentMethodService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
       "name": "discoveryProjection",
       "kind": "capability",
       "runtimeModule": true,
@@ -7373,7 +7374,8 @@
       "classification": "covered",
       "matchedDocuments": [
         "accelerators.agora-apparel-product-data-authoring",
-        "catalog.product-discovery-management"
+        "catalog.product-discovery-management",
+        "foundation.database-provider-boundaries"
       ],
       "counts": {
         "schemas": 1,
@@ -7667,6 +7669,7 @@
         "data.import-export-migration",
         "wcms.publishing-lifecycle",
         "applications.nexus-data-content-guide",
+        "foundation.nms-runtime-monitoring",
         "reference.documentation-gap-backlog"
       ],
       "counts": {
@@ -7742,7 +7745,8 @@
       "classification": "covered",
       "matchedDocuments": [
         "commerce.overview",
-        "commerce.payment-fulfillment"
+        "commerce.payment-fulfillment",
+        "commerce.payment-provider-boundaries"
       ],
       "counts": {
         "schemas": 0,
@@ -7817,6 +7821,8 @@
       "priorityScore": 5,
       "classification": "covered",
       "matchedDocuments": [
+        "security.otp-security-flow",
+        "communication.provider-runbooks",
         "reference.documentation-gap-backlog"
       ],
       "counts": {
@@ -7855,6 +7861,8 @@
       "priorityScore": 5,
       "classification": "covered",
       "matchedDocuments": [
+        "security.otp-security-flow",
+        "communication.provider-runbooks",
         "reference.documentation-gap-backlog"
       ],
       "counts": {
@@ -7974,7 +7982,7 @@
         "framework.local-quick-start",
         "data.import-export-provider-guides",
         "commerce.data-authoring-fulfillment",
-        "reference.source-map-glossary"
+        "commerce.search-guide"
       ],
       "counts": {
         "schemas": 0,
@@ -8157,6 +8165,42 @@
         "frontends": [
           "nodics.exp/nodics.nexus/src/main.tsx"
         ]
+      }
+    },
+    {
+      "name": "stripeProvider",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/package.json",
+      "priorityScore": 3,
+      "classification": "covered",
+      "matchedDocuments": [
+        "commerce.payment-provider-boundaries"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 1,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
       }
     },
     {
