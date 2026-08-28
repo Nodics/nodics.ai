@@ -11,7 +11,7 @@
 
 'use strict';
 
-/** @module baseCommerce/data/core/store/baseCommerceSalesChannelData @description Provides operational Commerce sales-channel defaults used by customer APIs. @layer data @owner baseCommerce */
+/** @module baseCommerce/data/core-v001/records/store/baseCommerceSalesChannelData @description Provides operational Commerce sales-channel defaults used by customer APIs. @layer data @owner baseCommerce */
 module.exports = {
     record0: {
         code: 'web',

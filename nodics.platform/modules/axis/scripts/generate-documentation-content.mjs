@@ -21,15 +21,15 @@ const sourceRoot = path.join(root, 'docs');
 const navigationPath = path.join(sourceRoot, 'catalogue.json');
 const pageOutputPath = path.join(
   root,
-  'data/core/data/documentation/axisDocumentationPageData.js',
+  'data/core-v001/records/documentation/axisDocumentationPageData.js',
 );
 const componentOutputPath = path.join(
   root,
-  'data/core/data/documentation/axisDocumentationComponentData.js',
+  'data/core-v001/records/documentation/axisDocumentationComponentData.js',
 );
 const routeOutputPath = path.join(
   root,
-  'data/core/data/documentation/axisDocumentationRouteData.js',
+  'data/core-v001/records/documentation/axisDocumentationRouteData.js',
 );
 const migrationRegisterPath = path.join(
   root,
@@ -1288,8 +1288,8 @@ const publicationStateRecords = Object.fromEntries(
       publicationCode: 'axisDocumentation',
       workflowReference: 'axisDocumentationReviewWorkflow',
       stagedVersion: navigation.version,
-      onlineVersion: target.lifecycleState === 'ONLINE' ? navigation.version : null,
-      previousOnlineVersion: null,
+      onlineVersion: target.lifecycleState === 'ONLINE' ? navigation.version : '',
+      previousOnlineVersion: '',
       validationResult: {
         generated: true,
         sourceAuthority: 'docs/catalogue.json',
@@ -1303,14 +1303,14 @@ const publicationStateRecords = Object.fromEntries(
       decisionPolicy: publicationDecisionPolicy,
       actor: 'nodics.platform.axis.generator',
       author: 'nodics.platform.axis.generator',
-      submittedBy: null,
-      submittedAt: null,
-      reviewer: null,
-      reviewedAt: null,
-      approver: null,
-      approvedAt: null,
-      publisher: null,
-      publishedAt: null,
+      submittedBy: '',
+      submittedAt: '',
+      reviewer: '',
+      reviewedAt: '',
+      approver: '',
+      approvedAt: '',
+      publisher: '',
+      publishedAt: '',
       auditTrail: [],
       active: true,
     },
@@ -1427,8 +1427,8 @@ Object.assign(
         publicationCode: 'axisDocumentation',
         workflowReference: 'axisDocumentationReviewWorkflow',
         stagedVersion: navigation.version,
-        onlineVersion: record.lifecycleState === 'ONLINE' ? navigation.version : null,
-        previousOnlineVersion: null,
+        onlineVersion: record.lifecycleState === 'ONLINE' ? navigation.version : '',
+        previousOnlineVersion: '',
         validationResult: {
           generated: true,
           sourceAuthority: 'docs/catalogue.json',
@@ -1442,14 +1442,14 @@ Object.assign(
         decisionPolicy: publicationDecisionPolicy,
         actor: 'nodics.platform.axis.generator',
         author: 'nodics.platform.axis.generator',
-        submittedBy: null,
-        submittedAt: null,
-        reviewer: null,
-        reviewedAt: null,
-        approver: null,
-        approvedAt: null,
-        publisher: null,
-        publishedAt: null,
+        submittedBy: '',
+        submittedAt: '',
+        reviewer: '',
+        reviewedAt: '',
+        approver: '',
+        approvedAt: '',
+        publisher: '',
+        publishedAt: '',
         auditTrail: [],
         active: true,
       },
@@ -1500,44 +1500,44 @@ const migrationRegister = {
 };
 
 await writeOrCheck(
-  'data/core/data/documentation/axisDocumentationProductData.js',
+  'data/core-v001/records/documentation/axisDocumentationProductData.js',
   recordModule(
     productRecords,
     'Generated Nodics Axis documentation product catalogue metadata.',
   ),
 );
 await writeOrCheck(
-  'data/core/data/documentation/axisDocumentationAccessPolicyData.js',
+  'data/core-v001/records/documentation/axisDocumentationAccessPolicyData.js',
   recordModule(accessPolicyRecords, 'Generated Nodics Axis documentation access policies.'),
 );
 await writeOrCheck(
-  'data/core/data/documentation/axisDocumentationNavigationData.js',
+  'data/core-v001/records/documentation/axisDocumentationNavigationData.js',
   recordModule(
     navigationRecords,
     'Generated Nodics Axis documentation navigation catalogue metadata.',
   ),
 );
 await writeOrCheck(
-  'data/core/data/documentation/axisDocumentationDashboardData.js',
+  'data/core-v001/records/documentation/axisDocumentationDashboardData.js',
   recordModule(dashboardRecordsMap, 'Generated Nodics Axis documentation hierarchy dashboards.'),
 );
 await writeOrCheck(
-  'data/core/data/documentation/axisDocumentationNodeData.js',
+  'data/core-v001/records/documentation/axisDocumentationNodeData.js',
   recordModule(nodeRecordsMap, 'Generated Nodics Axis documentation hierarchy nodes.'),
 );
 await writeOrCheck(
-  'data/core/data/documentation/axisDocumentationPageMetadataData.js',
+  'data/core-v001/records/documentation/axisDocumentationPageMetadataData.js',
   recordModule(pageMetadataRecords, 'Generated Nodics Axis documentation page metadata.'),
 );
 await writeOrCheck(
-  'data/core/data/documentation/axisDocumentationPublicationStateData.js',
+  'data/core-v001/records/documentation/axisDocumentationPublicationStateData.js',
   recordModule(
     publicationStateRecords,
     'Generated Nodics Axis documentation publication state metadata.',
   ),
 );
 await writeOrCheck(
-  'data/core/data/documentation/axisDocumentationSearchMetadataData.js',
+  'data/core-v001/records/documentation/axisDocumentationSearchMetadataData.js',
   recordModule(searchMetadataRecords, 'Generated Nodics Axis documentation search metadata.'),
 );
 await writeOrCheck(
@@ -1564,28 +1564,28 @@ await writeOrCheck(
 );
 
 await writeOrCheck(
-  'data/core/headers/axisDocumentationContentPackHeader.js',
+  'data/core-v001/headers/axisDocumentationContentPackHeader.js',
   `${copyrightHeader}'use strict';\n\n/** @description Nodics foundation-import header for the Nodics Axis documentation content pack. */\nmodule.exports = {\n  cms: {\n    axisDocumentationSiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'axisDocumentationSiteData' }, query: { code: '$code' } },\n    axisDocumentationProductData: { options: { enabled: true, schemaName: 'cmsDocumentationProduct', operation: 'saveAll', dataFilePrefix: 'axisDocumentationProductData' }, query: { code: '$code' } },\n    axisDocumentationAccessPolicyData: { options: { enabled: true, schemaName: 'cmsDocumentationAccessPolicy', operation: 'saveAll', dataFilePrefix: 'axisDocumentationAccessPolicyData' }, query: { code: '$code' } },\n    axisDocumentationNavigationData: { options: { enabled: true, schemaName: 'cmsDocumentationNavigation', operation: 'saveAll', dataFilePrefix: 'axisDocumentationNavigationData' }, query: { code: '$code' } },\n    axisDocumentationDashboardData: { options: { enabled: true, schemaName: 'cmsDocumentationDashboard', operation: 'saveAll', dataFilePrefix: 'axisDocumentationDashboardData' }, query: { code: '$code' } },\n    axisDocumentationNodeData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'saveAll', dataFilePrefix: 'axisDocumentationNodeData' }, query: { code: '$code' } },\n    axisDocumentationPageMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationPage', operation: 'saveAll', dataFilePrefix: 'axisDocumentationPageMetadataData' }, query: { code: '$code' } },\n    axisDocumentationPublicationStateData: { options: { enabled: true, schemaName: 'cmsDocumentationPublicationState', operation: 'saveAll', dataFilePrefix: 'axisDocumentationPublicationStateData' }, query: { code: '$code' } },\n    axisDocumentationSearchMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationSearchMetadata', operation: 'saveAll', dataFilePrefix: 'axisDocumentationSearchMetadataData' }, query: { code: '$code' } },\n    axisDocumentationTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'axisDocumentationTypeCodeData' }, query: { code: '$code' } },\n    axisDocumentationRendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: 'axisDocumentationRendererData' }, query: { code: '$code' } },\n    axisDocumentationTemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'axisDocumentationTemplateData' }, query: { code: '$code' } },\n    axisDocumentationSlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: 'axisDocumentationSlotData' }, query: { code: '$code' } },\n    axisDocumentationComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: 'axisDocumentationComponentData' }, query: { code: '$code' } },\n    axisDocumentationPageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: 'axisDocumentationPageData' }, query: { code: '$code' } },\n    axisDocumentationRouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: 'axisDocumentationRouteData' }, query: { code: '$code' } },\n  },\n};\n`,
 );
 
 const generatedFiles = [
-  'data/core/data/documentation/axisDocumentationAccessPolicyData.js',
-  'data/core/data/documentation/axisDocumentationDashboardData.js',
-  'data/core/data/documentation/axisDocumentationNavigationData.js',
-  'data/core/data/documentation/axisDocumentationNodeData.js',
-  'data/core/data/documentation/axisDocumentationPageMetadataData.js',
-  'data/core/data/documentation/axisDocumentationProductData.js',
-  'data/core/data/documentation/axisDocumentationPublicationStateData.js',
-  'data/core/data/documentation/axisDocumentationSearchMetadataData.js',
-  'data/core/data/documentation/axisDocumentationComponentData.js',
-  'data/core/data/documentation/axisDocumentationPageData.js',
-  'data/core/data/documentation/axisDocumentationRendererData.js',
-  'data/core/data/documentation/axisDocumentationRouteData.js',
-  'data/core/data/documentation/axisDocumentationSiteData.js',
-  'data/core/data/documentation/axisDocumentationSlotData.js',
-  'data/core/data/documentation/axisDocumentationTemplateData.js',
-  'data/core/data/documentation/axisDocumentationTypeCodeData.js',
-  'data/core/headers/axisDocumentationContentPackHeader.js',
+  'data/core-v001/records/documentation/axisDocumentationAccessPolicyData.js',
+  'data/core-v001/records/documentation/axisDocumentationDashboardData.js',
+  'data/core-v001/records/documentation/axisDocumentationNavigationData.js',
+  'data/core-v001/records/documentation/axisDocumentationNodeData.js',
+  'data/core-v001/records/documentation/axisDocumentationPageMetadataData.js',
+  'data/core-v001/records/documentation/axisDocumentationProductData.js',
+  'data/core-v001/records/documentation/axisDocumentationPublicationStateData.js',
+  'data/core-v001/records/documentation/axisDocumentationSearchMetadataData.js',
+  'data/core-v001/records/documentation/axisDocumentationComponentData.js',
+  'data/core-v001/records/documentation/axisDocumentationPageData.js',
+  'data/core-v001/records/documentation/axisDocumentationRendererData.js',
+  'data/core-v001/records/documentation/axisDocumentationRouteData.js',
+  'data/core-v001/records/documentation/axisDocumentationSiteData.js',
+  'data/core-v001/records/documentation/axisDocumentationSlotData.js',
+  'data/core-v001/records/documentation/axisDocumentationTemplateData.js',
+  'data/core-v001/records/documentation/axisDocumentationTypeCodeData.js',
+  'data/core-v001/headers/axisDocumentationContentPackHeader.js',
 ];
 const generatedHashes = Object.fromEntries(
   generatedFiles.map((fileName) => [
@@ -1594,7 +1594,7 @@ const generatedHashes = Object.fromEntries(
   ]),
 );
 const documentationSection = applicationDocumentationContract.buildReleaseSection({
-  contentPath: 'core',
+  contentPath: 'core-v001',
   catalogue: { pack: navigation.pack, version: navigation.version },
   owningDomain: 'axis',
   environmentScope: ['ALL'],
@@ -1614,7 +1614,7 @@ const previousManifest = fs.existsSync(manifestPath)
 const preservedSections = { ...(previousManifest.sections || {}) };
 if (
   preservedSections.core?.kind === 'DATA_RELEASE' &&
-  documentationSection.contentPath === 'core'
+  documentationSection.contentPath === 'core-v001'
 ) {
   delete preservedSections.core;
 }

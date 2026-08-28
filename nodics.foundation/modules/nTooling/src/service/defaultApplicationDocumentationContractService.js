@@ -400,7 +400,9 @@ module.exports = {
         }
         entries.forEach(([fileName, checksum]) => {
             const relative = this.relativePath(fileName, 'generated file');
-            if (!(relative.startsWith('core/data/') || relative.startsWith('core/headers/') || relative.startsWith('staged/')) || !/^[a-f0-9]{64}$/.test(checksum || '')) {
+            if (!(/^(init|core|sample)-v\d{3}(\/[A-Za-z0-9._-]+)*\/(headers|records)\//.test(relative) ||
+                relative.startsWith('core/data/') || relative.startsWith('core/headers/')) ||
+                !/^[a-f0-9]{64}$/.test(checksum || '')) {
                 this.fail('ERR_TOOL_DOC_00006', 'generated documentation files require governed data paths and SHA-256 checksums');
             }
         });

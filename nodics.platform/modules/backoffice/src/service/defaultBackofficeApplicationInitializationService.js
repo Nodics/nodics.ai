@@ -470,6 +470,14 @@ module.exports = {
         if (!token) throw new CLASSES.NodicsError('ERR_BOF_00083', 'Application initialization service authentication is unavailable');
         return 'Bearer ' + token;
     },
+    /** Resolves the allowed operator origin used by governed server-side media preparation. */
+    operatorOrigin: function (request) {
+        let httpHeaders = request && request.httpRequest && request.httpRequest.headers || {};
+        let requestHeaders = request && request.headers || {};
+        let configured = (CONFIG.get('backofficeApplicationInitialization') || {}).operatorOrigin;
+        return httpHeaders.origin || httpHeaders.Origin || requestHeaders.origin || requestHeaders.Origin ||
+            configured || 'http://localhost:3100';
+    },
     /** Resolves a configured server connection into an HTTP base URL. */
     serverBaseUrl: function (serverCode) {
         let servers = CONFIG.get('servers') || {};
@@ -510,7 +518,7 @@ module.exports = {
                 Authorization: this.authorizationHeader(request),
                 'x-enterprise-code': request.enterpriseCode || request.authData && (request.authData.enterpriseCode || request.authData.entCode) ||
                     request.headers && (request.headers.enterpriseCode || request.headers['x-enterprise-code']) || CONFIG.get('defaultEnterprise') || 'default',
-                Origin: request.httpRequest && request.httpRequest.headers && request.httpRequest.headers.origin || 'http://localhost:3100'
+                Origin: this.operatorOrigin(request)
             },
             body: form
         });

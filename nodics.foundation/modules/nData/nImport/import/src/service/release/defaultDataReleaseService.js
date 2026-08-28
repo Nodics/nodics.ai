@@ -462,7 +462,7 @@ module.exports = {
         }
         let sourceRoot = manifest.sourceRoot || dataType;
         let isVersionedSourceRoot = /^(init|core|sample)-v\d{3}$/.test(sourceRoot);
-        if (!isVersionedSourceRoot && !['init', 'core', 'sample', 'staged', 'operational', 'reference'].includes(sourceRoot)) {
+        if (!isVersionedSourceRoot && !['init', 'core', 'sample'].includes(sourceRoot)) {
             throw this.error('ERR_IMP_00003', 'Data release sourceRoot is invalid');
         }
         let fileNames = Object.keys(manifest.files).sort();

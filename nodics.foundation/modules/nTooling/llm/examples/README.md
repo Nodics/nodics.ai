@@ -6,7 +6,7 @@ Prefer small examples that show proper layered customization, configuration over
 
 An application data module keeps authored pages under `docs/pages`, validates
 `docs/catalogue.json` through the shared application-documentation contract,
-generates records below its `data/staged/wcms` release, and exposes optional
+generates records below its `data/sample-v001/content` release, and exposes optional
 installation only through Axis. Import targets Staged; nPublish controls Online
 visibility. A repeated immutable release produces the same checksum, while a
 changed payload under the same version is rejected.

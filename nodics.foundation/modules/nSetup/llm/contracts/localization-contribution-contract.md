@@ -17,7 +17,7 @@ Code-owning modules own stable semantic message keys, default/development wordin
 
 Keys must be namespaced by owner and intent, remain stable across wording changes, and never contain tenant or user data. Parameters must be named, documented, escaped by the rendering audience, and must not permit executable markup by default.
 
-Contributors use the versioned format demonstrated by `localizationCore/data/core/source/localization/common.json`: `formatVersion`, `ownerModule`, and an `entries` array containing namespace, key, defaultMessage, exact parameter names, and exposure. Import must pass the Localization contribution service; arbitrary translation folders and direct database loaders remain unsupported. Duplicate identities in one contribution fail, and cross-module collisions must be rejected by the durable repository unless the existing owner is unchanged.
+Contributors use the versioned format demonstrated by `localizationCore/data/core-v001/source/localization/common.json`: `formatVersion`, `ownerModule`, and an `entries` array containing namespace, key, defaultMessage, exact parameter names, and exposure. Import must pass the Localization contribution service; arbitrary translation folders and direct database loaders remain unsupported. Duplicate identities in one contribution fail, and cross-module collisions must be rejected by the durable repository unless the existing owner is unchanged.
 
 ## Locale and Resolution Rules
 

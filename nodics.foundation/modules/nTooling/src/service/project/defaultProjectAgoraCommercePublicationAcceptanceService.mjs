@@ -195,7 +195,7 @@ async function assetRecords() {
   const assetsByCode = new Map();
   for (const pack of composition.projectPacks) {
     const domain = domainByPack[pack];
-    const module = await import(pathToFileURL(path.join(projectRoot, "modules", pack, "data", "assets", "agora-cms-media", "assetManifest.js")).href);
+    const module = await import(pathToFileURL(path.join(projectRoot, "modules", pack, "data", "sample-v001", "content", "assets", "agora-cms-media", "assetManifest.js")).href);
     const assets = module.default || module;
     for (const asset of assets) {
       if (!assetsByCode.has(asset.mediaCode)) {
@@ -210,7 +210,7 @@ async function domainDataRecords(fileSuffix) {
   const records = [];
   for (const pack of composition.projectPacks) {
     const domain = domainByPack[pack];
-    const filePath = path.join(projectRoot, "modules", pack, "data", "staged", domain.folder, "data", `${domain.prefix}${fileSuffix}`);
+    const filePath = path.join(projectRoot, "modules", pack, "data", "sample-v001", "commerce", "records", `${domain.prefix}${fileSuffix}`);
     records.push(...await importRecords(filePath));
   }
   return records;
@@ -359,7 +359,7 @@ function mimeTypeOf(fileName) {
 }
 
 async function productMediaPublicationAsset(asset) {
-  const filePath = path.join(projectRoot, "modules", asset.pack, "data", "assets", "agora-cms-media", "files", asset.fileName);
+  const filePath = path.join(projectRoot, "modules", asset.pack, "data", "sample-v001", "content", "assets", "agora-cms-media", "files", asset.fileName);
   const buffer = await fs.readFile(filePath);
   const checksumAlgorithm = "sha256";
   return {

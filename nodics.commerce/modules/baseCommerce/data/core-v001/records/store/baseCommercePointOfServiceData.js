@@ -11,7 +11,7 @@
 
 'use strict';
 
-/** @module baseCommerce/data/core/store/baseCommercePointOfServiceData @description Provides a default operational point of service for local Commerce journeys. @layer data @owner baseCommerce */
+/** @module baseCommerce/data/core-v001/records/store/baseCommercePointOfServiceData @description Provides a default operational point of service for local Commerce journeys. @layer data @owner baseCommerce */
 module.exports = {
     record0: {
         code: 'agoraOnline',

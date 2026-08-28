@@ -130,7 +130,7 @@ async function run() {
   const assetsByCode = new Map();
   for (const pack of composition.projectPacks) {
     if (!supportedPacks.includes(pack)) throw new Error(`Unsupported Agora media pack: ${pack}`);
-    const assetRoot = path.join(projectRoot, "modules", pack, "data", "assets", "agora-cms-media");
+    const assetRoot = path.join(projectRoot, "modules", pack, "data", "sample-v001", "content", "assets", "agora-cms-media");
     const assetManifestPath = path.join(assetRoot, "assetManifest.js");
     const assetFilesRoot = path.join(assetRoot, "files");
     if (!existsSync(assetManifestPath)) throw new Error(`Missing Agora media asset manifest: ${assetManifestPath}`);

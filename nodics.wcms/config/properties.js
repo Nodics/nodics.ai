@@ -70,7 +70,7 @@ module.exports = {
                     source: {
                         type: 'LOCAL_SIBLING',
                         repositoryName: 'nodics.docs',
-                        contentPath: 'data/core',
+                        contentPath: 'data/core-v001',
                         manifestPath: 'data/manifest.json',
                         manifestSection: 'documentation'
                     }
@@ -79,7 +79,7 @@ module.exports = {
                     source: {
                         type: 'LOCAL_SIBLING',
                         repositoryName: 'nodics.platform',
-                        contentPath: 'modules/axis/data/core',
+                        contentPath: 'modules/axis/data/core-v001',
                         manifestPath: 'modules/axis/data/manifest.json',
                         manifestSection: 'documentation'
                     }
@@ -87,7 +87,7 @@ module.exports = {
                 customerProjectDocumentation: {
                     source: {
                         type: 'LOCAL_PROJECT',
-                        contentPath: 'data/core',
+                        contentPath: 'data/core-v001',
                         manifestPath: 'data/manifest.json',
                         manifestSection: 'documentation'
                     },

@@ -124,7 +124,7 @@ employee to the public authentication journey.
 ## Nodics Axis Content Pack
 
 Axis documentation data is directly importable and committed in
-`nodics.platform/modules/axis` under `data/core`. Its immutable release
+`nodics.platform/modules/axis` under `data/core-v001`. Its immutable release
 manifest is the documentation section in `data/manifest.json`. The manifest pack identity is
 `nodics.platform.axis`; the configured nImport pack code is `axisDocumentation`; and its
 CMS binding is `axisDocumentationSite` → `documentationContentCatalog`.
@@ -136,7 +136,7 @@ troubleshooting, and verification. Change the pack version whenever committed
 content hashes change. A same-version checksum change is rejected by default.
 
 Canonical authored pages live under `docs` in the Platform
-`axis` module. The committed records under `data/core` are deterministic
+`axis` module. The committed records under `data/core-v001` are deterministic
 generated projections, not an independent documentation authority. Run
 `npm run docs:generate` after changing implemented Axis documentation content,
 then run `npm run docs:check` and `npm run validate`. The migration register
@@ -224,7 +224,7 @@ to bypass that boundary.
 
 Author or extend project documentation in that project's canonical structured
 source, for example `nodics.kickoff/docs`, and
-generate its committed `data/core` content pack with
+generate its committed `data/core-v001` content pack with
 `data/manifest.json` with `manifestSection: documentation`. Register the pack through the Nodics-owned
 documentation contribution contract; Axis discovers and renders the resulting
 navigation and article blocks.

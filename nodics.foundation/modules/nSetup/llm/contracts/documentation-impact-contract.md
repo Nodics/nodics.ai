@@ -497,9 +497,9 @@ project/
     catalogue.json
     pages/
   data/
-    core/
+    core-v001/
       headers/
-      data/
+      records/
         documentation/
     manifest.json
 ```
@@ -508,7 +508,7 @@ project/
 contains canonical documentation source. `data/manifest.json` is the aggregate
 release authority; its named documentation section describes the immutable
 content pack. Do not introduce a parallel documentation manifest or authored
-source beneath generated/runtime data. Generated `data/core` is committed,
+source beneath generated/runtime data. Generated `data/core-v001` is committed,
 deterministic, and directly consumable by the existing Nodics content-pack and
 `nImport` contracts. The backend owner owns its source-controlled release; CMS
 is the runtime projection.
@@ -528,16 +528,16 @@ documented:
 Project-specific setup, demo business flows, sample data, project modules,
 custom API behavior, customer onboarding, and project extension guidance belong
 in the owning customer backend project using the same `docs/`,
-`data/core/data/documentation`,
-`data/core/headers`, and the documentation section in `data/manifest.json`.
+`data/core-v001/records/documentation`,
+`data/core-v001/headers`, and the documentation section in `data/manifest.json`.
 Do not
 place customer project documentation in `nodics.docs`, the Platform `axis`
 module, or the `nodics.axis` frontend repository.
 
 The project must declare one canonical structured documentation source outside
 generated record/header files. Authored source stays under the backend owner's
-`docs/` tree, while generated records stay under `data/core/data/...` and
-`data/core/headers/...`. Content should be split into
+`docs/` tree, while generated records stay under `data/core-v001/records/...` and
+`data/core-v001/headers/...`. Content should be split into
 independently navigable pages at the level users search, learn, operate,
 troubleshoot, customize, and verify a capability. One coarse project overview
 or one summary page per module does not satisfy the contract when richer

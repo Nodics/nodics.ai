@@ -11,7 +11,7 @@
 
 'use strict';
 
-/** @module commsCore/data/core/communication/commsRuntimeDefaultTemplateVersionData @description Provides versioned body content for Communication runtime templates. @layer data @owner commsCore */
+/** @module commsCore/data/core-v001/records/communication/commsRuntimeDefaultTemplateVersionData @description Provides versioned body content for Communication runtime templates. @layer data @owner commsCore */
 module.exports = {
     record0: {
         code: 'COMMUNICATION_RUNTIME_NOTICE:1:en:EMAIL',

@@ -163,18 +163,18 @@ async function loadGeneratedRecords(relativePath) {
   return Object.values(moduleObject.exports);
 }
 
-const siteRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationSiteData.js');
-const pageRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationPageData.js');
-const routeRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationRouteData.js');
-const productRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationProductData.js');
-const navigationRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationNavigationData.js');
-const nodeRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationNodeData.js');
-const dashboardRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationDashboardData.js');
-const pageMetadataRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationPageMetadataData.js');
-const accessPolicyRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationAccessPolicyData.js');
-const publicationStateRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationPublicationStateData.js');
-const searchMetadataRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationSearchMetadataData.js');
-const componentRecords = await loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationComponentData.js');
+const siteRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationSiteData.js');
+const pageRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationPageData.js');
+const routeRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationRouteData.js');
+const productRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationProductData.js');
+const navigationRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationNavigationData.js');
+const nodeRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationNodeData.js');
+const dashboardRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationDashboardData.js');
+const pageMetadataRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationPageMetadataData.js');
+const accessPolicyRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationAccessPolicyData.js');
+const publicationStateRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationPublicationStateData.js');
+const searchMetadataRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationSearchMetadataData.js');
+const componentRecords = await loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationComponentData.js');
 for (const state of publicationStateRecords) {
   for (const field of [
     'onlineVersion',

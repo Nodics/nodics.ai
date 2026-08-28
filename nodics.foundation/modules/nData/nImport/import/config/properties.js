@@ -71,14 +71,14 @@ module.exports = {
             packs: {
                 nodicsDocumentation: {
                     enabled: true,
-                    manifestPack: 'nodics.docs',
-                    source: {
-                        type: 'LOCAL_SIBLING',
-                        repositoryName: 'nodics.docs',
-                        contentPath: 'data/core',
-                        manifestPath: 'data/manifest.json',
-                        manifestSection: 'documentation'
-                    },
+                        manifestPack: 'nodics.docs',
+                        source: {
+                            type: 'LOCAL_SIBLING',
+                            repositoryName: 'nodics.docs',
+                            contentPath: 'data/core-v001',
+                            manifestPath: 'data/manifest.json',
+                            manifestSection: 'documentation'
+                        },
                     updatePolicy: {
                         allowDowngrade: false,
                         sameVersionContentChange: 'REJECT'
@@ -94,14 +94,14 @@ module.exports = {
                 },
                 axisDocumentation: {
                     enabled: true,
-                    manifestPack: 'nodics.platform.axis',
-                    source: {
-                        type: 'LOCAL_SIBLING',
-                        repositoryName: 'nodics.platform',
-                        contentPath: 'modules/axis/data/core',
-                        manifestPath: 'modules/axis/data/manifest.json',
-                        manifestSection: 'documentation'
-                    },
+                        manifestPack: 'nodics.platform.axis',
+                        source: {
+                            type: 'LOCAL_SIBLING',
+                            repositoryName: 'nodics.platform',
+                            contentPath: 'modules/axis/data/core-v001',
+                            manifestPath: 'modules/axis/data/manifest.json',
+                            manifestSection: 'documentation'
+                        },
                     updatePolicy: {
                         allowDowngrade: false,
                         sameVersionContentChange: 'REJECT'

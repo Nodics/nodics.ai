@@ -20,6 +20,7 @@ const lifecycleService = require('../src/service/command/defaultNodicsLifecycleC
 const repositoryRoot = path.resolve(__dirname, '../../../..');
 const originalRepositoryBuildTmpDir = process.env.NODICS_REPOSITORY_BUILD_TMPDIR;
 const originalToolingTmpDir = process.env.NODICS_TOOLING_TMPDIR;
+const originalProjectRoot = process.env.NODICS_PROJECT_ROOT;
 const serverApprovedTmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-repository-build-contract-'));
 process.env.NODICS_REPOSITORY_BUILD_TMPDIR = path.join(serverApprovedTmpRoot, 'scratch');
 delete process.env.NODICS_TOOLING_TMPDIR;
@@ -39,6 +40,19 @@ try {
     assert.throws(() => compositionService.validate(composition), /every and only standard runtime group/);
     assert.throws(() => compositionService.validateMethod('start'), /Unsupported repository lifecycle method/);
     assert.strictEqual(lifecycleService.isFrameworkRepository({ home: repositoryRoot }), true);
+    const projectRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-project-scratch-contract-'));
+    delete process.env.NODICS_REPOSITORY_BUILD_TMPDIR;
+    process.env.NODICS_PROJECT_ROOT = projectRoot;
+    const projectComposition = compositionService.create();
+    try {
+        assert(
+            projectComposition.root.startsWith(path.join(projectRoot, '.nodics', 'tmp') + path.sep),
+            'Project-driven builds must use the project .nodics/tmp scratch root instead of the framework checkout'
+        );
+    } finally {
+        fs.rmSync(projectComposition.root, { recursive: true, force: true });
+        fs.rmSync(projectRoot, { recursive: true, force: true });
+    }
 } finally {
     fs.rmSync(composition.root, { recursive: true, force: true });
     fs.rmSync(serverApprovedTmpRoot, { recursive: true, force: true });
@@ -51,6 +65,11 @@ try {
         delete process.env.NODICS_TOOLING_TMPDIR;
     } else {
         process.env.NODICS_TOOLING_TMPDIR = originalToolingTmpDir;
+    }
+    if (originalProjectRoot === undefined) {
+        delete process.env.NODICS_PROJECT_ROOT;
+    } else {
+        process.env.NODICS_PROJECT_ROOT = originalProjectRoot;
     }
 }
 console.log('Repository build composition contract validated');

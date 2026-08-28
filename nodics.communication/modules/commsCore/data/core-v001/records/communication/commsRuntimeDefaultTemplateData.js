@@ -11,7 +11,7 @@
 
 'use strict';
 
-/** @module commsCore/data/core/communication/commsRuntimeDefaultTemplateData @description Provides minimal runtime templates required for Communication activation. @layer data @owner commsCore */
+/** @module commsCore/data/core-v001/records/communication/commsRuntimeDefaultTemplateData @description Provides minimal runtime templates required for Communication activation. @layer data @owner commsCore */
 module.exports = {
     record0: {
         code: 'COMMUNICATION_RUNTIME_NOTICE',

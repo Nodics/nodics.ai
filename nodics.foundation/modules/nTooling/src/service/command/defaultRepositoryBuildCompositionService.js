@@ -50,10 +50,11 @@ module.exports = {
      * @returns {string} Writable temporary root.
      */
     tempRoot: function () {
+        const projectRoot = process.env.NODICS_PROJECT_ROOT ? path.resolve(process.env.NODICS_PROJECT_ROOT) : null;
         const candidates = [
             process.env.NODICS_REPOSITORY_BUILD_TMPDIR,
+            projectRoot ? path.join(projectRoot, '.nodics', 'tmp') : null,
             process.env.NODICS_TOOLING_TMPDIR,
-            path.join(process.cwd(), '.nodics', 'tmp'),
             os.tmpdir()
         ].filter(Boolean);
         let lastError = null;
@@ -69,7 +70,7 @@ module.exports = {
         }
         throw new Error(
             'Repository build composition requires a writable temporary directory. ' +
-            'Set NODICS_REPOSITORY_BUILD_TMPDIR to a server-approved path. ' +
+            'Set NODICS_PROJECT_ROOT or NODICS_REPOSITORY_BUILD_TMPDIR to a server-approved project scratch path. ' +
             (lastError ? 'Last error: ' + lastError.message : '')
         );
     },

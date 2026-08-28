@@ -161,7 +161,7 @@ Axis documentation that becomes backend CMS records is authored as granular,
 reviewable pages in `nodics.platform/modules/axis` under
 `docs`. The deterministic documentation generator creates CMS
 page, component, navigation, route, search, and immutable manifest data under
-`data/core` and the documentation section in `data/manifest.json` in the same module.
+`data/core-v001` and the documentation section in `data/manifest.json` in the same module.
 
 The generator is executable repository tooling and lives beside the authored
 content at `scripts/generate-documentation-content.mjs`.
@@ -194,7 +194,7 @@ canonical destinations, and the generated and rendered verification gates pass.
 After retirement, do not recreate a parallel `docs/` directory. The frontend
 project keeps one concise `README.md`; backend-importable detailed permanent
 guidance belongs only under `nodics.platform/modules/axis/docs`
-and its generated `data/core` projection.
+and its generated `data/core-v001` projection.
 
 ## Required Examples
 

@@ -20,8 +20,8 @@
             "initialPublicationPolicy": "NONE",
             "removalPolicy": "RETAIN",
             "files": {
-                "core-v001/records/communication/commsRuntimeDefaultTemplateData.js": "a56bb680a03a32d1d8ae39711b60fc0e0fe4dd83089ec09e13ce77794b406a9e",
-                "core-v001/records/communication/commsRuntimeDefaultTemplateVersionData.js": "2b24e7becdf0ec6fdab48cea001425d7e352cd17a42e90796df1207ebd7a1dff",
+                "core-v001/records/communication/commsRuntimeDefaultTemplateData.js": "9d01675cce0b6c89615aa1c29d36529c616444d940852c531517072da6280169",
+                "core-v001/records/communication/commsRuntimeDefaultTemplateVersionData.js": "de3df801527f208c2547e20045e4160a245772d48c1570d625d9275f50897a73",
                 "core-v001/headers/communication/commsRuntimeDefaultHeader.js": "f8f338d58fa5b8f44fdc0ade5f5809098460e4ef62cb4cdfdf1a23732ecde034"
             },
             "sourceRoot": "core-v001"

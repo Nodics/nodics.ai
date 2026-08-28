@@ -1,7 +1,7 @@
 # Documentation Validation Readiness Report
 
 Generated At: 2026-08-26T00:00:00.000Z
-Release: 0.0.0
+Release: 0.0.1
 Source: nodics.platform/modules/axis/docs/catalogue.json
 Owner: nodics.platform.axis
 
@@ -35,4 +35,4 @@ No blocking or advisory issues were found.
 
 ## Integrity
 
-Checksum: 10719e6f1d64e27d1a99f45dd1652c16b153561ce70ad73a19f8363cd4ede911
+Checksum: 43fc295c2439654d96c44ea0d17fa1a5232e9b44ee77fac519bc8909339540a9

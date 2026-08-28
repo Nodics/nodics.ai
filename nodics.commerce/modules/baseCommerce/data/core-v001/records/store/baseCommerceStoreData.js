@@ -11,7 +11,7 @@
 
 'use strict';
 
-/** @module baseCommerce/data/core/store/baseCommerceStoreData @description Provides operational Commerce store defaults used by customer APIs. @layer data @owner baseCommerce */
+/** @module baseCommerce/data/core-v001/records/store/baseCommerceStoreData @description Provides operational Commerce store defaults used by customer APIs. @layer data @owner baseCommerce */
 module.exports = {
     record0: {
         code: 'agoraMainStore',

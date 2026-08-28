@@ -124,8 +124,8 @@ assert.throws(() => service.validateCatalogue({
     requireEnterpriseMetadata: true
 }), error => error.code === 'ERR_TOOL_DOC_00011');
 
-const generatedHashes = { 'staged/wcms/data/docs/samplePageData.js': service.sha256('page') };
-const section = service.buildReleaseSection({ catalogue: catalogue, generatedHashes: generatedHashes, contentPath: 'staged/wcms', owningDomain: 'sample.docs', sourceAuthority: 'docs/catalogue.json', sites: ['sampleDocumentationSite'], pages: 1, components: 1, routes: 1 });
+const generatedHashes = { 'sample-v001/content/records/docs/samplePageData.js': service.sha256('page') };
+const section = service.buildReleaseSection({ catalogue: catalogue, generatedHashes: generatedHashes, contentPath: 'sample-v001/content', owningDomain: 'sample.docs', sourceAuthority: 'docs/catalogue.json', sites: ['sampleDocumentationSite'], pages: 1, components: 1, routes: 1 });
 assert.strictEqual(section.installationPolicy, 'OPTIONAL_AXIS_INITIATED');
 assert.strictEqual(section.destinationRole, 'WCMS_STAGED');
 assert.strictEqual(section.publicationPolicy, 'REQUIRED');

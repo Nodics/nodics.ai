@@ -22,20 +22,20 @@ const catalogue = JSON.parse(readFileSync(cataloguePath, 'utf8'));
 
 const allowedAccessModes = new Set(['PUBLIC', 'AUTHENTICATED', 'ROLE_BASED', 'GROUP_BASED', 'PERMISSION_BASED', 'RESTRICTED']);
 const expectedGeneratedFiles = [
-  'data/core/data/documentation/nodicsDocumentationSiteData.js',
-  'data/core/data/documentation/nodicsDocumentationProductData.js',
-  'data/core/data/documentation/nodicsDocumentationAccessPolicyData.js',
-  'data/core/data/documentation/nodicsDocumentationNavigationData.js',
-  'data/core/data/documentation/nodicsDocumentationDashboardData.js',
-  'data/core/data/documentation/nodicsDocumentationLegacyNavigationCleanupData.js',
-  'data/core/data/documentation/nodicsDocumentationNodeData.js',
-  'data/core/data/documentation/nodicsDocumentationPageMetadataData.js',
-  'data/core/data/documentation/nodicsDocumentationPublicationStateData.js',
-  'data/core/data/documentation/nodicsDocumentationSearchMetadataData.js',
-  'data/core/data/documentation/nodicsDocumentationComponentData.js',
-  'data/core/data/documentation/nodicsDocumentationPageData.js',
-  'data/core/data/documentation/nodicsDocumentationRouteData.js',
-  'data/core/headers/nodicsDocumentationContentPackHeader.js'
+  'data/core-v001/records/documentation/nodicsDocumentationSiteData.js',
+  'data/core-v001/records/documentation/nodicsDocumentationProductData.js',
+  'data/core-v001/records/documentation/nodicsDocumentationAccessPolicyData.js',
+  'data/core-v001/records/documentation/nodicsDocumentationNavigationData.js',
+  'data/core-v001/records/documentation/nodicsDocumentationDashboardData.js',
+  'data/core-v001/records/documentation/nodicsDocumentationLegacyNavigationCleanupData.js',
+  'data/core-v001/records/documentation/nodicsDocumentationNodeData.js',
+  'data/core-v001/records/documentation/nodicsDocumentationPageMetadataData.js',
+  'data/core-v001/records/documentation/nodicsDocumentationPublicationStateData.js',
+  'data/core-v001/records/documentation/nodicsDocumentationSearchMetadataData.js',
+  'data/core-v001/records/documentation/nodicsDocumentationComponentData.js',
+  'data/core-v001/records/documentation/nodicsDocumentationPageData.js',
+  'data/core-v001/records/documentation/nodicsDocumentationRouteData.js',
+  'data/core-v001/headers/nodicsDocumentationContentPackHeader.js'
 ];
 const requiredCoverageTerms = [
   'Product Catalog and Discovery',
@@ -165,12 +165,12 @@ function assertGeneratedData() {
     const manifestKey = file.startsWith('data/') ? file.slice('data/'.length) : file;
     if (!hashes[manifestKey]) fail(`Generated data file missing manifest checksum: ${file}`);
   }
-  const nodes = loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationNodeData.js');
-  const dashboards = loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationDashboardData.js');
-  const publications = loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationPublicationStateData.js');
-  const search = loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationSearchMetadataData.js');
-  const pages = loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationPageMetadataData.js');
-  const policies = loadGeneratedRecords('data/core/data/documentation/nodicsDocumentationAccessPolicyData.js');
+  const nodes = loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationNodeData.js');
+  const dashboards = loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationDashboardData.js');
+  const publications = loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationPublicationStateData.js');
+  const search = loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationSearchMetadataData.js');
+  const pages = loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationPageMetadataData.js');
+  const policies = loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationAccessPolicyData.js');
   if (!nodes.every(node => node.expandable === true || node.nodeLevel === 'TOPIC')) fail('Container navigation nodes must be expandable');
   if (!nodes.every(node => node.nodeSummary && node.nodeContentArea)) fail('Every navigation node requires summary and content-area metadata');
   if (!nodes.every(node => node.accessPolicy && node.workflowRequired === true && Array.isArray(node.workflowTriggers) && node.workflowTriggers.length)) fail('Every navigation node requires access policy and workflow triggers');

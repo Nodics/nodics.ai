@@ -33,18 +33,18 @@ function createFixture() {
     let nodicsHome = path.join(workspace, 'nodics');
     let repository = path.join(workspace, 'nodics.docs');
     let serverPath = path.join(nodicsHome, 'server');
-    let generatedFile = path.join(repository, 'data/core/headers/contentHeader.js');
+    let generatedFile = path.join(repository, 'data/core-v001/headers/contentHeader.js');
     fs.mkdirSync(path.dirname(generatedFile), { recursive: true });
-    fs.mkdirSync(path.join(repository, 'data/core/data'), { recursive: true });
+    fs.mkdirSync(path.join(repository, 'data/core-v001/records'), { recursive: true });
     fs.writeFileSync(generatedFile, 'module.exports = {};\n');
     fs.writeFileSync(
         path.join(repository, 'package.json'),
         JSON.stringify({ name: 'nodics.docs', version: '0.0.0' })
     );
-    let relativeFile = 'core/headers/contentHeader.js';
+    let relativeFile = 'core-v001/headers/contentHeader.js';
     let manifest = {
         kind: 'CONTENT_PACK',
-        contentPath: 'core',
+        contentPath: 'core-v001',
         pack: 'nodics.docs',
         version: '1.0.0',
         generatedHashes: {
@@ -83,7 +83,7 @@ function createHarness(fixture, enabled) {
                         source: {
                             type: 'LOCAL_SIBLING',
                             repositoryName: 'nodics.docs',
-                            contentPath: 'data/core',
+                            contentPath: 'data/core-v001',
                             manifestPath: 'data/manifest.json',
                             manifestSection: 'documentation'
                         },
@@ -104,7 +104,7 @@ function createHarness(fixture, enabled) {
                         enabled: true,
                         source: {
                             type: 'LOCAL_PROJECT',
-                            contentPath: 'data/core',
+                            contentPath: 'data/core-v001',
                             manifestPath: 'data/manifest.json',
                             manifestSection: 'documentation'
                         },
@@ -155,7 +155,7 @@ function createHarness(fixture, enabled) {
         },
         DefaultImportService: {
             importLocalData: request => {
-                assert.notStrictEqual(request.inputPath.rootPath, path.join(fixture.repository, 'data/core'));
+                assert.notStrictEqual(request.inputPath.rootPath, path.join(fixture.repository, 'data/core-v001'));
                 assert(fs.existsSync(path.join(request.inputPath.rootPath, 'headers/contentHeader.js')));
                 records.push(Object.assign({ tenant: request.tenant }, request.importRun, {
                     status: 'COMPLETED'
@@ -256,7 +256,7 @@ function createHarness(fixture, enabled) {
         assert.strictEqual(selectedByCreated.contentPackVersion, '1.1.0');
 
         fs.writeFileSync(fixture.generatedFile, 'module.exports = { changed: true };\n');
-        fixture.manifest.generatedHashes['core/headers/contentHeader.js'] =
+        fixture.manifest.generatedHashes['core-v001/headers/contentHeader.js'] =
             digest(fs.readFileSync(fixture.generatedFile));
         fs.writeFileSync(
             path.join(fixture.repository, 'data/manifest.json'),

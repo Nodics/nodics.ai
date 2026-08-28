@@ -18,7 +18,7 @@ const root = process.cwd();
 const require = createRequire(import.meta.url);
 const applicationDocumentationContract = require('../defaultApplicationDocumentationContractService.js');
 const cataloguePath = path.join(root, 'docs/catalogue.json');
-const dataRoot = path.join(root, 'data/core');
+const dataRoot = path.join(root, 'data/core-v001');
 const dataPath = path.join(dataRoot, 'data/documentation');
 const manifestPath = path.join(root, 'data/manifest.json');
 const checkOnly = process.argv.includes('--check');
@@ -1120,7 +1120,7 @@ const routeRecords = Object.fromEntries(
 );
 
 const files = {
-  'data/core/data/documentation/kickoffDocumentationSiteData.js': jsModule(
+  'data/core-v001/records/documentation/kickoffDocumentationSiteData.js': jsModule(
     'Nodics Kickoff documentation site.',
     {
       record0: {
@@ -1131,39 +1131,39 @@ const files = {
       },
     },
   ),
-  'data/core/data/documentation/kickoffDocumentationProductData.js': jsModule(
+  'data/core-v001/records/documentation/kickoffDocumentationProductData.js': jsModule(
     'Generated Nodics Kickoff documentation product catalogue metadata.',
     productRecords,
   ),
-  'data/core/data/documentation/kickoffDocumentationAccessPolicyData.js': jsModule(
+  'data/core-v001/records/documentation/kickoffDocumentationAccessPolicyData.js': jsModule(
     'Generated Nodics Kickoff documentation access policies.',
     accessPolicyRecords,
   ),
-  'data/core/data/documentation/kickoffDocumentationNavigationData.js': jsModule(
+  'data/core-v001/records/documentation/kickoffDocumentationNavigationData.js': jsModule(
     'Generated Nodics Kickoff documentation navigation catalogue metadata.',
     navigationRecords,
   ),
-  'data/core/data/documentation/kickoffDocumentationDashboardData.js': jsModule(
+  'data/core-v001/records/documentation/kickoffDocumentationDashboardData.js': jsModule(
     'Generated Nodics Kickoff documentation hierarchy dashboards.',
     dashboardRecordMap,
   ),
-  'data/core/data/documentation/kickoffDocumentationNodeData.js': jsModule(
+  'data/core-v001/records/documentation/kickoffDocumentationNodeData.js': jsModule(
     'Generated Nodics Kickoff documentation hierarchy nodes.',
     nodeRecordMap,
   ),
-  'data/core/data/documentation/kickoffDocumentationPageMetadataData.js': jsModule(
+  'data/core-v001/records/documentation/kickoffDocumentationPageMetadataData.js': jsModule(
     'Generated Nodics Kickoff documentation page metadata.',
     pageMetadataRecords,
   ),
-  'data/core/data/documentation/kickoffDocumentationPublicationStateData.js': jsModule(
+  'data/core-v001/records/documentation/kickoffDocumentationPublicationStateData.js': jsModule(
     'Generated Nodics Kickoff documentation publication state metadata.',
     publicationStateRecords,
   ),
-  'data/core/data/documentation/kickoffDocumentationSearchMetadataData.js': jsModule(
+  'data/core-v001/records/documentation/kickoffDocumentationSearchMetadataData.js': jsModule(
     'Generated Nodics Kickoff documentation search metadata.',
     searchMetadataRecords,
   ),
-  'data/core/data/documentation/kickoffDocumentationTypeCodeData.js': jsModule(
+  'data/core-v001/records/documentation/kickoffDocumentationTypeCodeData.js': jsModule(
     'Nodics Kickoff documentation page and component types.',
     {
       record0: { code: 'kickoffDocumentationArticlePageType', kind: 'PAGE', contractVersion: 0, active: true },
@@ -1171,7 +1171,7 @@ const files = {
       record2: { code: 'kickoffDocumentationNavigationComponentType', kind: 'COMPONENT', contractVersion: 0, active: true },
     },
   ),
-  'data/core/data/documentation/kickoffDocumentationRendererData.js': jsModule(
+  'data/core-v001/records/documentation/kickoffDocumentationRendererData.js': jsModule(
     'Nodics Kickoff documentation renderer mappings consumed by Axis.',
     {
       record0: { code: 'kickoffDocumentationArticlePageType', renderer: 'documentation.page.article', contractVersion: 0, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
@@ -1179,32 +1179,32 @@ const files = {
       record2: { code: 'kickoffDocumentationNavigationComponentType', renderer: 'documentation.component.navigation', contractVersion: 0, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
     },
   ),
-  'data/core/data/documentation/kickoffDocumentationSlotData.js': jsModule(
+  'data/core-v001/records/documentation/kickoffDocumentationSlotData.js': jsModule(
     'Nodics Kickoff documentation template slots.',
     {
       record0: { code: 'kickoffDocumentationNavigationSlot', template: 'kickoffDocumentationArticleTemplate', name: 'navigation', minItems: 1, maxItems: 1, allowedComponentTypes: ['kickoffDocumentationNavigationComponentType'], active: true },
       record1: { code: 'kickoffDocumentationArticleSlot', template: 'kickoffDocumentationArticleTemplate', name: 'article', minItems: 1, maxItems: 1, allowedComponentTypes: ['kickoffDocumentationArticleComponentType'], active: true },
     },
   ),
-  'data/core/data/documentation/kickoffDocumentationTemplateData.js': jsModule(
+  'data/core-v001/records/documentation/kickoffDocumentationTemplateData.js': jsModule(
     'Nodics Kickoff documentation template.',
     {
       record0: { code: 'kickoffDocumentationArticleTemplate', name: 'Nodics Kickoff Documentation Article', renderer: 'documentation.template.article', contractVersion: 0, slots: ['kickoffDocumentationNavigationSlot', 'kickoffDocumentationArticleSlot'], active: true },
     },
   ),
-  'data/core/data/documentation/kickoffDocumentationComponentData.js': jsModule(
+  'data/core-v001/records/documentation/kickoffDocumentationComponentData.js': jsModule(
     'Generated Nodics Kickoff documentation navigation and article content.',
     componentRecords,
   ),
-  'data/core/data/documentation/kickoffDocumentationPageData.js': jsModule(
+  'data/core-v001/records/documentation/kickoffDocumentationPageData.js': jsModule(
     'Generated Nodics Kickoff documentation pages.',
     pageRecords,
   ),
-  'data/core/data/documentation/kickoffDocumentationRouteData.js': jsModule(
+  'data/core-v001/records/documentation/kickoffDocumentationRouteData.js': jsModule(
     'Generated Nodics Kickoff documentation routes.',
     routeRecords,
   ),
-  'data/core/headers/kickoffDocumentationContentPackHeader.js': `${copyrightHeader}'use strict';\n\n/** @description Nodics Kickoff core-import header for project documentation. */\nmodule.exports = {\n  cms: {\n    kickoffDocumentationSiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationSiteData' }, query: { code: '$code' } },\n    kickoffDocumentationProductData: { options: { enabled: true, schemaName: 'cmsDocumentationProduct', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationProductData' }, query: { code: '$code' } },\n    kickoffDocumentationAccessPolicyData: { options: { enabled: true, schemaName: 'cmsDocumentationAccessPolicy', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationAccessPolicyData' }, query: { code: '$code' } },\n    kickoffDocumentationNavigationData: { options: { enabled: true, schemaName: 'cmsDocumentationNavigation', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationNavigationData' }, query: { code: '$code' } },\n    kickoffDocumentationDashboardData: { options: { enabled: true, schemaName: 'cmsDocumentationDashboard', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationDashboardData' }, query: { code: '$code' } },\n    kickoffDocumentationNodeData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationNodeData' }, query: { code: '$code' } },\n    kickoffDocumentationPageMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationPage', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationPageMetadataData' }, query: { code: '$code' } },\n    kickoffDocumentationPublicationStateData: { options: { enabled: true, schemaName: 'cmsDocumentationPublicationState', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationPublicationStateData' }, query: { code: '$code' } },\n    kickoffDocumentationSearchMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationSearchMetadata', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationSearchMetadataData' }, query: { code: '$code' } },\n    kickoffDocumentationTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationTypeCodeData' }, query: { code: '$code' } },\n    kickoffDocumentationRendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationRendererData' }, query: { code: '$code' } },\n    kickoffDocumentationTemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationTemplateData' }, query: { code: '$code' } },\n    kickoffDocumentationSlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationSlotData' }, query: { code: '$code' } },\n    kickoffDocumentationComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationComponentData' }, query: { code: '$code' } },\n    kickoffDocumentationPageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationPageData' }, query: { code: '$code' } },\n    kickoffDocumentationRouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationRouteData' }, query: { code: '$code' } },\n  },\n};\n`,
+  'data/core-v001/headers/kickoffDocumentationContentPackHeader.js': `${copyrightHeader}'use strict';\n\n/** @description Nodics Kickoff core-import header for project documentation. */\nmodule.exports = {\n  cms: {\n    kickoffDocumentationSiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationSiteData' }, query: { code: '$code' } },\n    kickoffDocumentationProductData: { options: { enabled: true, schemaName: 'cmsDocumentationProduct', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationProductData' }, query: { code: '$code' } },\n    kickoffDocumentationAccessPolicyData: { options: { enabled: true, schemaName: 'cmsDocumentationAccessPolicy', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationAccessPolicyData' }, query: { code: '$code' } },\n    kickoffDocumentationNavigationData: { options: { enabled: true, schemaName: 'cmsDocumentationNavigation', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationNavigationData' }, query: { code: '$code' } },\n    kickoffDocumentationDashboardData: { options: { enabled: true, schemaName: 'cmsDocumentationDashboard', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationDashboardData' }, query: { code: '$code' } },\n    kickoffDocumentationNodeData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationNodeData' }, query: { code: '$code' } },\n    kickoffDocumentationPageMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationPage', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationPageMetadataData' }, query: { code: '$code' } },\n    kickoffDocumentationPublicationStateData: { options: { enabled: true, schemaName: 'cmsDocumentationPublicationState', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationPublicationStateData' }, query: { code: '$code' } },\n    kickoffDocumentationSearchMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationSearchMetadata', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationSearchMetadataData' }, query: { code: '$code' } },\n    kickoffDocumentationTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationTypeCodeData' }, query: { code: '$code' } },\n    kickoffDocumentationRendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationRendererData' }, query: { code: '$code' } },\n    kickoffDocumentationTemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationTemplateData' }, query: { code: '$code' } },\n    kickoffDocumentationSlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationSlotData' }, query: { code: '$code' } },\n    kickoffDocumentationComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationComponentData' }, query: { code: '$code' } },\n    kickoffDocumentationPageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationPageData' }, query: { code: '$code' } },\n    kickoffDocumentationRouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationRouteData' }, query: { code: '$code' } },\n  },\n};\n`,
 };
 
 for (const [relativePath, content] of Object.entries(files)) {
@@ -1220,7 +1220,7 @@ const generatedHashes = Object.fromEntries(
 const documentationSection = applicationDocumentationContract.buildReleaseSection({
   catalogue,
   generatedHashes,
-  contentPath: 'core',
+  contentPath: 'core-v001',
   owningDomain: 'kickoff.documentation',
   environmentScope: ['ALL'],
   sensitivity: 'PUBLIC',

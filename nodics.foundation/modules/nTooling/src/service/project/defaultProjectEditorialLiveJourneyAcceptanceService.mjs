@@ -114,7 +114,7 @@ async function updateModel(path, query, model, headers) {
 }
 
 async function ensureEditorialProcessDefinitions(headers) {
-  const definitions = require(path.join(projectRoot, 'envs/kickoffLocal/processServer/data/init/data/editorial/defaultEditorialProcessDefinitionData.js'));
+  const definitions = require(path.join(projectRoot, 'envs/kickoffLocal/processServer/data/init-v001/records/editorial/defaultEditorialProcessDefinitionData.js'));
   for (const definition of Object.values(definitions)) {
     let existing;
     try {

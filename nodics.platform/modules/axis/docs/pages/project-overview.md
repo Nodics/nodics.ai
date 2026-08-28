@@ -5,7 +5,7 @@ customer project deployment.
 
 Canonical user and contributor documentation is authored in the backend-owned
 Platform `axis` module under `docs` and deterministically
-generated into this module's committed CMS import release under `data/core`.
+generated into this module's committed CMS import release under `data/core-v001`.
 The Axis frontend repository owns only executable browser renderers and static
 recovery behavior; it must not own backend-importable CMS data.
 

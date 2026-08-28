@@ -102,7 +102,7 @@ assert(baseline.publicationPolicy === 'REQUIRED', 'Axis baseline must require pu
 assert(baseline.initialPublicationPolicy === 'ADMIN_INITIATED', 'Axis first baseline must remain administrator initiated');
 assert(baseline.removalPolicy === 'UNPUBLISH_OR_RETIRE', 'Axis baseline removal must remain explicit');
 for (const [relativePath, expectedHash] of Object.entries(baseline.files ?? {})) {
-  assert(relativePath.startsWith('init/'), `Axis baseline file must remain under governed init data: ${relativePath}`);
+  assert(/^init-v\d{3}\//.test(relativePath), `Axis baseline file must remain under governed init data: ${relativePath}`);
   const absolutePath = resolve(root, 'data', relativePath);
   assert(existsSync(absolutePath), `Axis baseline file is missing: ${relativePath}`);
   assert(sha256(readFileSync(absolutePath)) === expectedHash, `Axis baseline hash mismatch: ${relativePath}`);
@@ -162,41 +162,41 @@ assert(
 assert(navigation.pages.length === expectedEvidence.length, 'Axis page count drifted');
 
 const generatedComponents = await readFile(
-  resolve(root, 'data/core/data/documentation/axisDocumentationComponentData.js'),
+  resolve(root, 'data/core-v001/records/documentation/axisDocumentationComponentData.js'),
   'utf8',
 );
 const siteRecords = await dataRecords(
-  'data/core/data/documentation/axisDocumentationSiteData.js',
+  'data/core-v001/records/documentation/axisDocumentationSiteData.js',
 );
 const pageRecords = await dataRecords(
-  'data/core/data/documentation/axisDocumentationPageData.js',
+  'data/core-v001/records/documentation/axisDocumentationPageData.js',
 );
 const productRecords = await dataRecords(
-  'data/core/data/documentation/axisDocumentationProductData.js',
+  'data/core-v001/records/documentation/axisDocumentationProductData.js',
 );
 const accessPolicyRecords = await dataRecords(
-  'data/core/data/documentation/axisDocumentationAccessPolicyData.js',
+  'data/core-v001/records/documentation/axisDocumentationAccessPolicyData.js',
 );
 const navigationMetadataRecords = await dataRecords(
-  'data/core/data/documentation/axisDocumentationNavigationData.js',
+  'data/core-v001/records/documentation/axisDocumentationNavigationData.js',
 );
 const dashboardRecords = await dataRecords(
-  'data/core/data/documentation/axisDocumentationDashboardData.js',
+  'data/core-v001/records/documentation/axisDocumentationDashboardData.js',
 );
 const nodeRecords = await dataRecords(
-  'data/core/data/documentation/axisDocumentationNodeData.js',
+  'data/core-v001/records/documentation/axisDocumentationNodeData.js',
 );
 const pageMetadataRecords = await dataRecords(
-  'data/core/data/documentation/axisDocumentationPageMetadataData.js',
+  'data/core-v001/records/documentation/axisDocumentationPageMetadataData.js',
 );
 const publicationStateRecords = await dataRecords(
-  'data/core/data/documentation/axisDocumentationPublicationStateData.js',
+  'data/core-v001/records/documentation/axisDocumentationPublicationStateData.js',
 );
 const searchMetadataRecords = await dataRecords(
-  'data/core/data/documentation/axisDocumentationSearchMetadataData.js',
+  'data/core-v001/records/documentation/axisDocumentationSearchMetadataData.js',
 );
 const routeRecords = await dataRecords(
-  'data/core/data/documentation/axisDocumentationRouteData.js',
+  'data/core-v001/records/documentation/axisDocumentationRouteData.js',
 );
 const validationReport = documentationRecordValidation.validateRecords({
   records: {
@@ -210,7 +210,7 @@ const validationReport = documentationRecordValidation.validateRecords({
     searchMetadata: searchMetadataRecords,
     cmsPages: pageRecords,
     routes: routeRecords,
-    components: await dataRecords('data/core/data/documentation/axisDocumentationComponentData.js'),
+    components: await dataRecords('data/core-v001/records/documentation/axisDocumentationComponentData.js'),
     manifestHashes: manifest.generatedHashes || {},
   },
   options: {

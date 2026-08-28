@@ -25,11 +25,15 @@ assert(source.includes("Object.entries(left || {}).sort"),
     'The manifest generator must normalize file paths before comparison');
 assert(source.includes('if (!sameFileMap(existing.files, files))'),
     'Release drift detection must use the order-independent comparison');
-assert(source.includes("sectionCode !== dataType && contribution"),
+assert(source.includes('function releaseRootsFor(dataRoot, dataType)'),
+    'The manifest generator must discover versioned release folders from the data root');
+assert(source.includes("sourceRoot: entry.name"),
+    'The manifest generator must derive sourceRoot from versioned release directory names');
+assert(source.includes("sectionCode !== releaseRoot.sectionCode && contribution"),
     'Named destination-qualified sections must be distinguished from the conventional release section');
 assert(source.includes("contribution.kind === 'DATA_RELEASE' && contribution.dataType === dataType"),
     'Only same-type data-release contributions may claim files from conventional generation');
-assert(source.includes('releaseFiles = filesBelow(releaseRoot).filter(file => !contributionFiles.has(file))'),
+assert(source.includes('releaseFiles = filesBelow(releaseRoot.root).filter(file => !contributionFiles.has(file))'),
     'Files claimed by named contributions must not be duplicated into the conventional release');
 
 console.log('Data release manifest generator contract validated');

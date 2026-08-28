@@ -41,20 +41,20 @@ assert.strictEqual(wcmsProperties.data.contentPacks.enabled, true,
 assert.deepStrictEqual(wcmsProperties.data.contentPacks.packs.axisDocumentation.source, {
     type: 'LOCAL_SIBLING',
     repositoryName: 'nodics.platform',
-    contentPath: 'modules/axis/data/core',
+    contentPath: 'modules/axis/data/core-v001',
     manifestPath: 'modules/axis/data/manifest.json',
     manifestSection: 'documentation'
 }, 'Axis documentation pack must be imported by WCMS from the Platform axis backend module');
 assert.deepStrictEqual(wcmsProperties.data.contentPacks.packs.nodicsDocumentation.source, {
     type: 'LOCAL_SIBLING',
     repositoryName: 'nodics.docs',
-    contentPath: 'data/core',
+    contentPath: 'data/core-v001',
     manifestPath: 'data/manifest.json',
     manifestSection: 'documentation'
 }, 'Framework documentation pack must be imported by WCMS from the nodics.docs backend documentation module');
 assert.deepStrictEqual(wcmsProperties.data.contentPacks.packs.customerProjectDocumentation.source, {
     type: 'LOCAL_PROJECT',
-    contentPath: 'data/core',
+    contentPath: 'data/core-v001',
     manifestPath: 'data/manifest.json',
     manifestSection: 'documentation'
 }, 'Customer project documentation pack must be imported by WCMS from the active customer project');

@@ -37,7 +37,7 @@ and data compatibility.
 - `nodics.axis` owns the React renderer/editor surface only.
 - Runtime source must not be placed directly under `nodics.process/src`.
 - Backend-owned beginner documentation source lives under
-  `data/core/source/documentation`. Generated/importable documentation records
+  `data/core-v001/source/documentation`. Generated/importable documentation records
   must also stay backend-owned when the Process documentation content-pack
   scaffold is introduced.
 

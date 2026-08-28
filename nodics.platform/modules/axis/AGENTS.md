@@ -31,7 +31,7 @@
 - Backend-importable Axis records must be generated or authored here, never in
   `nodics.axis`.
 - The Axis documentation content pack is authored under `docs/`, generated
-  into `data/core`, and described by the
+  into `data/core-v001`, and described by the
   documentation section in `data/manifest.json`.
 - CMS data may target WCMS schemas, but WCMS remains the CMS schema,
   persistence, delivery, and runtime authority.

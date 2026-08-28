@@ -19,8 +19,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const require = createRequire(import.meta.url);
 const applicationDocumentationContract = require('../../nodics.foundation/modules/nTooling/src/service/defaultApplicationDocumentationContractService.js');
 const cataloguePath = path.join(root, 'docs/catalogue.json');
-const dataRoot = path.join(root, 'data/core');
-const dataPath = path.join(dataRoot, 'data/documentation');
+const dataRoot = path.join(root, 'data/core-v001');
+const dataPath = path.join(dataRoot, 'records/documentation');
 const headerPath = path.join(dataRoot, 'headers/nodicsDocumentationContentPackHeader.js');
 const manifestPath = path.join(root, 'data/manifest.json');
 const checkOnly = process.argv.includes('--check');
@@ -1164,7 +1164,7 @@ const routeRecords = Object.fromEntries(
 );
 
 const files = {
-  'data/core/data/documentation/nodicsDocumentationSiteData.js': jsModule(
+  'data/core-v001/records/documentation/nodicsDocumentationSiteData.js': jsModule(
     'Nodics framework documentation site.',
     {
       record0: {
@@ -1175,43 +1175,43 @@ const files = {
       },
     },
   ),
-  'data/core/data/documentation/nodicsDocumentationProductData.js': jsModule(
+  'data/core-v001/records/documentation/nodicsDocumentationProductData.js': jsModule(
     'Generated Nodics framework documentation product catalogue metadata.',
     productRecords,
   ),
-  'data/core/data/documentation/nodicsDocumentationAccessPolicyData.js': jsModule(
+  'data/core-v001/records/documentation/nodicsDocumentationAccessPolicyData.js': jsModule(
     'Generated Nodics framework documentation access policies.',
     accessPolicyRecords,
   ),
-  'data/core/data/documentation/nodicsDocumentationNavigationData.js': jsModule(
+  'data/core-v001/records/documentation/nodicsDocumentationNavigationData.js': jsModule(
     'Generated Nodics framework documentation navigation catalogue metadata.',
     navigationRecords,
   ),
-  'data/core/data/documentation/nodicsDocumentationDashboardData.js': jsModule(
+  'data/core-v001/records/documentation/nodicsDocumentationDashboardData.js': jsModule(
     'Generated Nodics framework documentation hierarchy dashboards.',
     dashboardRecordMap,
   ),
-  'data/core/data/documentation/nodicsDocumentationLegacyNavigationCleanupData.js': jsModule(
+  'data/core-v001/records/documentation/nodicsDocumentationLegacyNavigationCleanupData.js': jsModule(
     'Generated cleanup marker for retired multi-level documentation navigation records.',
     legacyNavigationCleanupRecords,
   ),
-  'data/core/data/documentation/nodicsDocumentationNodeData.js': jsModule(
+  'data/core-v001/records/documentation/nodicsDocumentationNodeData.js': jsModule(
     'Generated Nodics framework documentation hierarchy nodes.',
     nodeRecordMap,
   ),
-  'data/core/data/documentation/nodicsDocumentationPageMetadataData.js': jsModule(
+  'data/core-v001/records/documentation/nodicsDocumentationPageMetadataData.js': jsModule(
     'Generated Nodics framework documentation page metadata.',
     pageMetadataRecords,
   ),
-  'data/core/data/documentation/nodicsDocumentationPublicationStateData.js': jsModule(
+  'data/core-v001/records/documentation/nodicsDocumentationPublicationStateData.js': jsModule(
     'Generated Nodics framework documentation publication state metadata.',
     publicationStateRecords,
   ),
-  'data/core/data/documentation/nodicsDocumentationSearchMetadataData.js': jsModule(
+  'data/core-v001/records/documentation/nodicsDocumentationSearchMetadataData.js': jsModule(
     'Generated Nodics framework documentation search metadata.',
     searchMetadataRecords,
   ),
-  'data/core/data/documentation/nodicsDocumentationTypeCodeData.js': jsModule(
+  'data/core-v001/records/documentation/nodicsDocumentationTypeCodeData.js': jsModule(
     'Nodics framework documentation page and component types.',
     {
       record0: { code: 'nodicsDocumentationArticlePageType', kind: 'PAGE', contractVersion: 0, active: true },
@@ -1219,7 +1219,7 @@ const files = {
       record2: { code: 'nodicsDocumentationNavigationComponentType', kind: 'COMPONENT', contractVersion: 0, active: true },
     },
   ),
-  'data/core/data/documentation/nodicsDocumentationRendererData.js': jsModule(
+  'data/core-v001/records/documentation/nodicsDocumentationRendererData.js': jsModule(
     'Nodics framework documentation renderer mappings owned by Axis.',
     {
       record0: { code: 'nodicsDocumentationArticlePageType', renderer: 'documentation.page.article', contractVersion: 0, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
@@ -1227,38 +1227,38 @@ const files = {
       record2: { code: 'nodicsDocumentationNavigationComponentType', renderer: 'documentation.component.navigation', contractVersion: 0, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
     },
   ),
-  'data/core/data/documentation/nodicsDocumentationSlotData.js': jsModule(
+  'data/core-v001/records/documentation/nodicsDocumentationSlotData.js': jsModule(
     'Nodics framework documentation template slots.',
     {
       record0: { code: 'nodicsDocumentationNavigationSlot', template: 'nodicsDocumentationArticleTemplate', name: 'navigation', minItems: 1, maxItems: 1, allowedComponentTypes: ['nodicsDocumentationNavigationComponentType'], active: true },
       record1: { code: 'nodicsDocumentationArticleSlot', template: 'nodicsDocumentationArticleTemplate', name: 'article', minItems: 1, maxItems: 1, allowedComponentTypes: ['nodicsDocumentationArticleComponentType'], active: true },
     },
   ),
-  'data/core/data/documentation/nodicsDocumentationTemplateBootstrapData.js': jsModule(
+  'data/core-v001/records/documentation/nodicsDocumentationTemplateBootstrapData.js': jsModule(
     'Nodics framework documentation template bootstrap without unresolved slot relations.',
     {
       record0: { code: 'nodicsDocumentationArticleTemplate', name: 'Nodics Documentation Article', renderer: 'documentation.template.article', contractVersion: 0, active: true },
     },
   ),
-  'data/core/data/documentation/nodicsDocumentationTemplateData.js': jsModule(
+  'data/core-v001/records/documentation/nodicsDocumentationTemplateData.js': jsModule(
     'Nodics framework documentation template.',
     {
       record0: { code: 'nodicsDocumentationArticleTemplate', name: 'Nodics Documentation Article', renderer: 'documentation.template.article', contractVersion: 0, slots: ['nodicsDocumentationNavigationSlot', 'nodicsDocumentationArticleSlot'], active: true },
     },
   ),
-  'data/core/data/documentation/nodicsDocumentationComponentData.js': jsModule(
+  'data/core-v001/records/documentation/nodicsDocumentationComponentData.js': jsModule(
     'Generated Nodics framework documentation navigation and article content.',
     componentRecords,
   ),
-  'data/core/data/documentation/nodicsDocumentationPageData.js': jsModule(
+  'data/core-v001/records/documentation/nodicsDocumentationPageData.js': jsModule(
     'Generated Nodics framework documentation pages.',
     pageRecords,
   ),
-  'data/core/data/documentation/nodicsDocumentationRouteData.js': jsModule(
+  'data/core-v001/records/documentation/nodicsDocumentationRouteData.js': jsModule(
     'Generated Nodics framework documentation routes.',
     routeRecords,
   ),
-  'data/core/headers/nodicsDocumentationContentPackHeader.js': `${copyrightHeader}'use strict';\n\n/** @description Nodics foundation-import header for framework documentation. */\nmodule.exports = {\n  cms: {\n    nodicsDocumentationSiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSiteData' }, query: { code: '$code' } },\n    nodicsDocumentationProductData: { options: { enabled: true, schemaName: 'cmsDocumentationProduct', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationProductData' }, query: { code: '$code' } },\n    nodicsDocumentationAccessPolicyData: { options: { enabled: true, schemaName: 'cmsDocumentationAccessPolicy', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationAccessPolicyData' }, query: { code: '$code' } },\n    nodicsDocumentationNavigationData: { options: { enabled: true, schemaName: 'cmsDocumentationNavigation', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationNavigationData' }, query: { code: '$code' } },\n    nodicsDocumentationDashboardData: { options: { enabled: true, schemaName: 'cmsDocumentationDashboard', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationDashboardData' }, query: { code: '$code' } },\n    nodicsDocumentationLegacyNavigationCleanupData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'remove', dataFilePrefix: 'nodicsDocumentationLegacyNavigationCleanupData' }, query: { product: '${productCode}', navigation: '${navigationCode}', $or: [{ nodeLevel: { $in: ['GROUP', 'SUBGROUP'] } }, { code: '${boundedCode('nodicsDocsNodeTopic', ['solutions.tee-deap-solution-use-cases'])}' }] } },\n    nodicsDocumentationNodeData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationNodeData' }, query: { code: '$code' } },\n    nodicsDocumentationPageMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationPage', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationPageMetadataData' }, query: { code: '$code' } },\n    nodicsDocumentationPublicationStateData: { options: { enabled: true, schemaName: 'cmsDocumentationPublicationState', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationPublicationStateData' }, query: { code: '$code' } },\n    nodicsDocumentationSearchMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationSearchMetadata', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSearchMetadataData' }, query: { code: '$code' } },\n    nodicsDocumentationTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTypeCodeData' }, query: { code: '$code' } },\n    nodicsDocumentationRendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationRendererData' }, query: { code: '$code' } },\n    nodicsDocumentationTemplateBootstrapData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTemplateBootstrapData' }, query: { code: '$code' } },\n    nodicsDocumentationSlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSlotData' }, query: { code: '$code' } },\n    nodicsDocumentationTemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTemplateData' }, query: { code: '$code' } },\n    nodicsDocumentationComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationComponentData' }, query: { code: '$code' } },\n    nodicsDocumentationPageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationPageData' }, query: { code: '$code' } },\n    nodicsDocumentationRouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationRouteData' }, query: { code: '$code' } },\n  },\n};\n`,
+  'data/core-v001/headers/nodicsDocumentationContentPackHeader.js': `${copyrightHeader}'use strict';\n\n/** @description Nodics foundation-import header for framework documentation. */\nmodule.exports = {\n  cms: {\n    nodicsDocumentationSiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSiteData' }, query: { code: '$code' } },\n    nodicsDocumentationProductData: { options: { enabled: true, schemaName: 'cmsDocumentationProduct', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationProductData' }, query: { code: '$code' } },\n    nodicsDocumentationAccessPolicyData: { options: { enabled: true, schemaName: 'cmsDocumentationAccessPolicy', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationAccessPolicyData' }, query: { code: '$code' } },\n    nodicsDocumentationNavigationData: { options: { enabled: true, schemaName: 'cmsDocumentationNavigation', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationNavigationData' }, query: { code: '$code' } },\n    nodicsDocumentationDashboardData: { options: { enabled: true, schemaName: 'cmsDocumentationDashboard', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationDashboardData' }, query: { code: '$code' } },\n    nodicsDocumentationLegacyNavigationCleanupData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'remove', dataFilePrefix: 'nodicsDocumentationLegacyNavigationCleanupData' }, query: { product: '${productCode}', navigation: '${navigationCode}', $or: [{ nodeLevel: { $in: ['GROUP', 'SUBGROUP'] } }, { code: '${boundedCode('nodicsDocsNodeTopic', ['solutions.tee-deap-solution-use-cases'])}' }] } },\n    nodicsDocumentationNodeData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationNodeData' }, query: { code: '$code' } },\n    nodicsDocumentationPageMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationPage', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationPageMetadataData' }, query: { code: '$code' } },\n    nodicsDocumentationPublicationStateData: { options: { enabled: true, schemaName: 'cmsDocumentationPublicationState', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationPublicationStateData' }, query: { code: '$code' } },\n    nodicsDocumentationSearchMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationSearchMetadata', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSearchMetadataData' }, query: { code: '$code' } },\n    nodicsDocumentationTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTypeCodeData' }, query: { code: '$code' } },\n    nodicsDocumentationRendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationRendererData' }, query: { code: '$code' } },\n    nodicsDocumentationTemplateBootstrapData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTemplateBootstrapData' }, query: { code: '$code' } },\n    nodicsDocumentationSlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationSlotData' }, query: { code: '$code' } },\n    nodicsDocumentationTemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationTemplateData' }, query: { code: '$code' } },\n    nodicsDocumentationComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationComponentData' }, query: { code: '$code' } },\n    nodicsDocumentationPageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationPageData' }, query: { code: '$code' } },\n    nodicsDocumentationRouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: 'nodicsDocumentationRouteData' }, query: { code: '$code' } },\n  },\n};\n`,
 };
 
 for (const [relativePath, content] of Object.entries(files)) {
@@ -1272,7 +1272,7 @@ const generatedHashes = Object.fromEntries(
   ]),
 );
 const documentationSection = applicationDocumentationContract.buildReleaseSection({
-  contentPath: 'core',
+  contentPath: 'core-v001',
   catalogue: { pack: 'nodics.docs', version: catalogue.release },
   owningDomain: 'documentation',
   environmentScope: ['ALL'],

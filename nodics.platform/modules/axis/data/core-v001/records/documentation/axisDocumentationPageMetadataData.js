@@ -133,7 +133,7 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "docs/pages/project-overview.md",
-    "sourceChecksum": "2c66360cc7f6f06a6a21223911584cb98053052054b034548e6d18a231c17dda",
+    "sourceChecksum": "8175d307de409b5df6c760f5f81f2e3010c230394647ea1fb4778370ec06868f",
     "sourceWordCount": 1962,
     "audience": [
       "business-user",
@@ -662,7 +662,7 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "docs/pages/documentation-content.md",
-    "sourceChecksum": "59ec53dc90887b24312beeb46e78fe5de373477519ed1d24405df329559b1f31",
+    "sourceChecksum": "d75ba0ab1416701c9307010534704e069d2b33f5d08e0e82bf892a3f81285e44",
     "sourceWordCount": 2227,
     "audience": [
       "administrator",
@@ -1959,7 +1959,7 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "docs/pages/implementation-and-documentation-contract.md",
-    "sourceChecksum": "e0697f1d287786c00d19364a058ea015cc290f108bcb0da4a652f18d57bb1ee6",
+    "sourceChecksum": "f09a22ff6d47ec6e0229739914ede662baba3d40fb431d5eced1e57a0e47b5f5",
     "sourceWordCount": 1942,
     "audience": [
       "developer",

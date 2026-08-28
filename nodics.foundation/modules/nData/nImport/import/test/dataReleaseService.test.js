@@ -228,34 +228,34 @@ const routers = require('../src/router/routers');
     let originalGetActiveModules = global.NODICS.getActiveModules;
     let originalGetRawModule = global.NODICS.getRawModule;
     try {
-        fs.mkdirSync(path.join(orderedRoot, 'data', 'staged', 'headers'), { recursive: true });
-        fs.mkdirSync(path.join(orderedRoot, 'data', 'staged', 'data'), { recursive: true });
-        fs.writeFileSync(path.join(orderedRoot, 'data', 'staged', 'headers', 'mediaHeader.js'), 'module.exports = {};\n');
-        fs.writeFileSync(path.join(orderedRoot, 'data', 'staged', 'data', 'mediaData.js'), 'module.exports = [];\n');
-        fs.writeFileSync(path.join(orderedRoot, 'data', 'staged', 'headers', 'componentHeader.js'), 'module.exports = {};\n');
-        fs.writeFileSync(path.join(orderedRoot, 'data', 'staged', 'data', 'componentData.js'), 'module.exports = [];\n');
-        let orderedFiles = ['staged/headers/mediaHeader.js', 'staged/data/mediaData.js',
-            'staged/headers/componentHeader.js', 'staged/data/componentData.js'].reduce((result, file) => {
+        fs.mkdirSync(path.join(orderedRoot, 'data', 'sample-v001', 'content', 'headers'), { recursive: true });
+        fs.mkdirSync(path.join(orderedRoot, 'data', 'sample-v001', 'content', 'records'), { recursive: true });
+        fs.writeFileSync(path.join(orderedRoot, 'data', 'sample-v001', 'content', 'headers', 'mediaHeader.js'), 'module.exports = {};\n');
+        fs.writeFileSync(path.join(orderedRoot, 'data', 'sample-v001', 'content', 'records', 'mediaData.js'), 'module.exports = [];\n');
+        fs.writeFileSync(path.join(orderedRoot, 'data', 'sample-v001', 'content', 'headers', 'componentHeader.js'), 'module.exports = {};\n');
+        fs.writeFileSync(path.join(orderedRoot, 'data', 'sample-v001', 'content', 'records', 'componentData.js'), 'module.exports = [];\n');
+        let orderedFiles = ['sample-v001/content/headers/mediaHeader.js', 'sample-v001/content/records/mediaData.js',
+            'sample-v001/content/headers/componentHeader.js', 'sample-v001/content/records/componentData.js'].reduce((result, file) => {
             result[file] = crypto.createHash('sha256').update(fs.readFileSync(path.join(orderedRoot, 'data', file))).digest('hex');
             return result;
         }, {});
         let orderedSection = (description, files) => ({
-            kind: 'DATA_RELEASE', dataType: 'core', version: '0.0.0',
+            kind: 'DATA_RELEASE', dataType: 'sample', version: '0.0.0',
             description: description, owningDomain: 'ordered.domain', lifecycle: 'PUBLISHABLE',
             destinationRole: 'WCMS_STAGED', environmentScope: ['LOCAL'], sensitivity: 'PUBLIC',
             versioningPolicy: 'IMMUTABLE', publicationPolicy: 'REQUIRED',
             initialPublicationPolicy: 'ADMIN_INITIATED', removalPolicy: 'UNPUBLISH_OR_RETIRE',
-            sourceRoot: 'staged', files: files
+            sourceRoot: 'sample-v001', files: files
         });
         fs.writeFileSync(path.join(orderedRoot, 'data', 'manifest.json'), JSON.stringify({
             contractVersion: 2, module: 'orderedModule', sections: {
                 zMediaReference: orderedSection('Media references required before dependent components.', {
-                    'staged/headers/mediaHeader.js': orderedFiles['staged/headers/mediaHeader.js'],
-                    'staged/data/mediaData.js': orderedFiles['staged/data/mediaData.js']
+                    'sample-v001/content/headers/mediaHeader.js': orderedFiles['sample-v001/content/headers/mediaHeader.js'],
+                    'sample-v001/content/records/mediaData.js': orderedFiles['sample-v001/content/records/mediaData.js']
                 }),
                 aComponentMedia: orderedSection('Component media depends on media references.', {
-                    'staged/headers/componentHeader.js': orderedFiles['staged/headers/componentHeader.js'],
-                    'staged/data/componentData.js': orderedFiles['staged/data/componentData.js']
+                    'sample-v001/content/headers/componentHeader.js': orderedFiles['sample-v001/content/headers/componentHeader.js'],
+                    'sample-v001/content/records/componentData.js': orderedFiles['sample-v001/content/records/componentData.js']
                 })
             }
         }));
@@ -264,7 +264,7 @@ const routers = require('../src/router/routers');
             { name: 'orderedModule', path: orderedRoot, parent: 'orderedGroup',
                 canonicalIdentity: 'orderedGroup/orderedModule' } :
             originalGetRawModule(moduleName);
-        let orderedReleases = service.discoverReleases('core');
+        let orderedReleases = service.discoverReleases('sample');
         assert.deepStrictEqual(orderedReleases.map(release => release.sectionCode), ['zMediaReference', 'aComponentMedia']);
     } finally {
         global.NODICS.getActiveModules = originalGetActiveModules;
