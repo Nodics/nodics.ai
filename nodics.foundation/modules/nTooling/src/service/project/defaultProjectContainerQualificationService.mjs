@@ -122,13 +122,17 @@ function acceptanceEnvironment(selected, kind = 'platform') {
     NODICS_ACCEPTANCE_RUNTIME: selected.environment,
     AXIS_LOGIN_ID: process.env.AXIS_LOGIN_ID || 'admin',
     AXIS_PASSWORD: process.env.AXIS_PASSWORD || values.BOOTSTRAP_ADMIN_PASSWORD,
+    NODICS_SERVICE_API_KEY: process.env.NODICS_SERVICE_API_KEY || values.BOOTSTRAP_SERVICE_API_KEY,
     NODICS_ACCEPTANCE_READY_TIMEOUT_MS: process.env.NODICS_ACCEPTANCE_READY_TIMEOUT_MS || '30000'
   };
   if (kind === 'commerce') {
     return {
       ...base,
       NODICS_PLATFORM_URL: process.env.NODICS_PLATFORM_URL || urls.platform,
+      NODICS_COMMERCE_STAGED_URL: process.env.NODICS_COMMERCE_STAGED_URL || urls.commerceStaged,
+      NODICS_COMMERCE_ONLINE_URL: process.env.NODICS_COMMERCE_ONLINE_URL || urls.commerce,
       NODICS_COMMERCE_URL: process.env.NODICS_COMMERCE_URL || urls.commerce,
+      NODICS_WCMS_ONLINE_URL: process.env.NODICS_WCMS_ONLINE_URL || urls.wcmsOnline,
       AXIS_ORIGIN: process.env.AXIS_ORIGIN || urls.axis
     };
   }
@@ -138,6 +142,7 @@ function acceptanceEnvironment(selected, kind = 'platform') {
     AXIS_WCMS_URL: urls.wcmsStaged,
     NEXUS_CMS_URL: urls.wcmsOnline,
     AXIS_PROCESS_URL: urls.process,
+    NODICS_ENGAGEMENT_URL: urls.engagement,
     AXIS_URL: urls.axis,
     NEXUS_URL: urls.nexus
   };
@@ -156,12 +161,36 @@ function runPlatformAcceptance(selected, args = process.argv.slice(4)) {
 }
 
 function runCommerceAcceptance(selected) {
-  const result = spawnSync('npm', ['run', selected.acceptance.commerceCommand || 'acceptance:agora-commerce'], {
-    cwd: projectRoot,
-    env: acceptanceEnvironment(selected, 'commerce'),
-    stdio: 'inherit'
-  });
-  process.exitCode = result.status ?? 1;
+  const env = acceptanceEnvironment(selected, 'commerce');
+  const commands = [
+    {
+      command: selected.acceptance.commerceDataCommand || 'acceptance:agora-commerce-data',
+      env: {
+        ...env,
+        NODICS_STOREFRONT_COMMERCE_DATA_EXECUTE: process.env.NODICS_STOREFRONT_COMMERCE_DATA_EXECUTE || 'true',
+      },
+    },
+    {
+      command: selected.acceptance.commercePublicationCommand || 'acceptance:agora-commerce-publication',
+      env,
+    },
+    {
+      command: selected.acceptance.commerceCommand || 'acceptance:agora-commerce',
+      env,
+    },
+  ];
+  for (const step of commands) {
+    const result = spawnSync('npm', ['run', step.command], {
+      cwd: projectRoot,
+      env: step.env,
+      stdio: 'inherit'
+    });
+    if (result.status !== 0) {
+      process.exitCode = result.status ?? 1;
+      return;
+    }
+  }
+  process.exitCode = 0;
 }
 
 async function runQualification(selected) {
