@@ -322,7 +322,7 @@ module.exports = {
     ],
     "statusSummary": {
       "sections": 47,
-      "pages": 92,
+      "pages": 94,
       "lifecycleState": "ONLINE"
     },
     "product": "nodicsDocumentationProduct",
@@ -644,7 +644,7 @@ module.exports = {
     ],
     "statusSummary": {
       "sections": 47,
-      "pages": 92,
+      "pages": 94,
       "searchable": true,
       "expandable": true
     },
@@ -1089,6 +1089,12 @@ module.exports = {
         "title": "Accelerators and Industry Solution Templates",
         "summary": "Agora accelerator family overview for Apparel, Electronics, and Telco customer commerce storefronts.",
         "order": 10
+      },
+      {
+        "code": "accelerators.agora-apparel-product-data-authoring",
+        "title": "Agora Apparel Product Data Authoring",
+        "summary": "Step-by-step source-backed guide for adding Agora Apparel product, price, inventory, content, media, and search data through project release folders.",
+        "order": 20
       }
     ],
     "journeyLinks": [
@@ -1096,10 +1102,15 @@ module.exports = {
         "label": "Accelerators and Industry Solution Templates",
         "targetPage": "accelerators.agora-industry-templates",
         "route": "/docs/framework/accelerators-agora-industry-templates"
+      },
+      {
+        "label": "Agora Apparel Product Data Authoring",
+        "targetPage": "accelerators.agora-apparel-product-data-authoring",
+        "route": "/docs/framework/accelerators-agora-apparel-product-data-authoring"
       }
     ],
     "statusSummary": {
-      "pages": 1,
+      "pages": 2,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -3141,6 +3152,12 @@ module.exports = {
         "title": "Reference Source Map and Glossary",
         "summary": "Business-friendly names, technical source owners, module identifiers, common terms, and navigation-to-code references for documentation readers.",
         "order": 10
+      },
+      {
+        "code": "reference.source-backed-documentation-coverage-audit",
+        "title": "Source-Backed Documentation Coverage Audit",
+        "summary": "Code-to-documentation coverage audit contract for finding missing or shallow Nodics functionality documentation across framework, projects, data, assets, and applications.",
+        "order": 20
       }
     ],
     "journeyLinks": [
@@ -3148,10 +3165,15 @@ module.exports = {
         "label": "Reference Source Map and Glossary",
         "targetPage": "reference.source-map-glossary",
         "route": "/docs/framework/reference-source-map-glossary"
+      },
+      {
+        "label": "Source-Backed Documentation Coverage Audit",
+        "targetPage": "reference.source-backed-documentation-coverage-audit",
+        "route": "/docs/framework/reference-source-backed-documentation-coverage-audit"
       }
     ],
     "statusSummary": {
-      "pages": 1,
+      "pages": 2,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",

@@ -2045,6 +2045,176 @@ module.exports = {
     "active": true
   },
   "record18": {
+    "code": "nodicsDocsMetadataacceleratorsAgoraApparelProductDataAuthoring",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "accelerators.agora-apparel-product-data-authoring",
+    "title": "Agora Apparel Product Data Authoring",
+    "summary": "Step-by-step source-backed guide for adding Agora Apparel product, price, inventory, content, media, and search data through project release folders.",
+    "businessSummary": "Agora Apparel Product Data Authoring explains the business purpose, supported decisions, operational impact, and controls for the Agora Accelerator Family journey.",
+    "technicalSummary": "Agora Apparel Product Data Authoring records owning module nodics.docs, technical module documentation, source path docs/pages/accelerators/agora-apparel-product-data-authoring.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.docs",
+    "technicalModule": "documentation",
+    "targetPage": "nodicsDocsPageacceleratorsAgoraApparelProductDataAuthoring",
+    "targetRoute": "nodicsDocsRouteacceleratorsAgoraApparelProductDataAuthoring",
+    "articleComponent": "nodicsDocsComponentacceleratorsAgoraApparelProductDataAuthoring",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsagoraapparelproductdataauthoring",
+    "headings": [
+      {
+        "text": "Business result",
+        "anchor": "acceleratorsAgoraApparelProductDataAuthoring-1-business-result",
+        "level": 2
+      },
+      {
+        "text": "Beginner mental model",
+        "anchor": "acceleratorsAgoraApparelProductDataAuthoring-2-beginner-mental-model",
+        "level": 2
+      },
+      {
+        "text": "Source map",
+        "anchor": "acceleratorsAgoraApparelProductDataAuthoring-3-source-map",
+        "level": 2
+      },
+      {
+        "text": "Step-by-step authoring",
+        "anchor": "acceleratorsAgoraApparelProductDataAuthoring-4-step-by-step-authoring",
+        "level": 2
+      },
+      {
+        "text": "Header contract",
+        "anchor": "acceleratorsAgoraApparelProductDataAuthoring-5-header-contract",
+        "level": 2
+      },
+      {
+        "text": "Record contract",
+        "anchor": "acceleratorsAgoraApparelProductDataAuthoring-6-record-contract",
+        "level": 2
+      },
+      {
+        "text": "Product dependency map",
+        "anchor": "acceleratorsAgoraApparelProductDataAuthoring-7-product-dependency-map",
+        "level": 2
+      },
+      {
+        "text": "Media contract",
+        "anchor": "acceleratorsAgoraApparelProductDataAuthoring-8-media-contract",
+        "level": 2
+      },
+      {
+        "text": "Import execution flow",
+        "anchor": "acceleratorsAgoraApparelProductDataAuthoring-9-import-execution-flow",
+        "level": 2
+      },
+      {
+        "text": "Customization model",
+        "anchor": "acceleratorsAgoraApparelProductDataAuthoring-10-customization-model",
+        "level": 2
+      },
+      {
+        "text": "Configuration behavior",
+        "anchor": "acceleratorsAgoraApparelProductDataAuthoring-11-configuration-behavior",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "acceleratorsAgoraApparelProductDataAuthoring-12-verification",
+        "level": 2
+      },
+      {
+        "text": "Reference comparison",
+        "anchor": "acceleratorsAgoraApparelProductDataAuthoring-13-reference-comparison",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "acceleratorsAgoraApparelProductDataAuthoring-14-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Completion checklist",
+        "anchor": "acceleratorsAgoraApparelProductDataAuthoring-15-completion-checklist",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      },
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      },
+      {
+        "kind": "table",
+        "title": "Capability, Owning module"
+      },
+      {
+        "kind": "table",
+        "title": "Data file, Purpose, Typical key"
+      },
+      {
+        "kind": "table",
+        "title": "Allowed in data, Owned by importer or runtime"
+      },
+      {
+        "kind": "table",
+        "title": "Need, Safe customization"
+      },
+      {
+        "kind": "table",
+        "title": "Configuration area, Where it belongs, What it controls"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "accelerators.agora-industry-templates",
+      "data.import-export-migration",
+      "catalog.product-discovery-management",
+      "pricing.promotions-tax-management",
+      "inventory.stock-management",
+      "wcms.media-import-publication",
+      "discovery.search-indexing"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/accelerators/agora-apparel-product-data-authoring.md",
+    "sourceChecksum": "e063764b17d367b1610735433758226a25db5bf5dd8d0f93a33276ca4a94b93c",
+    "sourceWordCount": 1947,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record19": {
     "code": "nodicsDocsMetadataframeworkLocalQuickStart",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.local-quick-start",
@@ -2152,7 +2322,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record19": {
+  "record20": {
     "code": "nodicsDocsMetadataframeworkFreshSchemaSetupJourney",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.fresh-schema-setup-journey",
@@ -2253,7 +2423,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record20": {
+  "record21": {
     "code": "nodicsDocsMetadataframeworkLocalRuntimeTroubleshooting",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.local-runtime-troubleshooting",
@@ -2354,7 +2524,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record21": {
+  "record22": {
     "code": "nodicsDocsMetadatainstallerInstalledRuntimeApplicationBuilder",
     "product": "nodicsDocumentationProduct",
     "documentId": "installer.installed-runtime-application-builder",
@@ -2460,7 +2630,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record22": {
+  "record23": {
     "code": "nodicsDocsMetadatabuilderWorkspaceGeneration",
     "product": "nodicsDocumentationProduct",
     "documentId": "builder.workspace-generation",
@@ -2579,7 +2749,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record23": {
+  "record24": {
     "code": "nodicsDocsMetadataprocessVisualDesigner",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.visual-designer",
@@ -2698,7 +2868,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record24": {
+  "record25": {
     "code": "nodicsDocsMetadataaxisBusinessCustomization",
     "product": "nodicsDocumentationProduct",
     "documentId": "axis.business-customization",
@@ -2817,7 +2987,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record25": {
+  "record26": {
     "code": "nodicsDocsMetadataplatformOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "platform.overview",
@@ -2954,7 +3124,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record26": {
+  "record27": {
     "code": "nodicsDocsMetadatasecurityIdentityAccessGovernance",
     "product": "nodicsDocumentationProduct",
     "documentId": "security.identity-access-governance",
@@ -3085,7 +3255,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record27": {
+  "record28": {
     "code": "nodicsDocsMetadataconfigurationRuntimeBehaviorManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "configuration.runtime-behavior-management",
@@ -3205,7 +3375,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record28": {
+  "record29": {
     "code": "nodicsDocsMetadataroutingApiGovernance",
     "product": "nodicsDocumentationProduct",
     "documentId": "routing.api-governance",
@@ -3324,7 +3494,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record29": {
+  "record30": {
     "code": "nodicsDocsMetadataruntimeGovernedChange",
     "product": "nodicsDocumentationProduct",
     "documentId": "runtime.governed-change",
@@ -3443,7 +3613,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record30": {
+  "record31": {
     "code": "nodicsDocsMetadatalocalizationInternationalization",
     "product": "nodicsDocumentationProduct",
     "documentId": "localization.internationalization",
@@ -3574,7 +3744,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record31": {
+  "record32": {
     "code": "nodicsDocsMetadataschemaDataModelingManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "schema.data-modeling-management",
@@ -3693,7 +3863,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record32": {
+  "record33": {
     "code": "nodicsDocsMetadatapersistenceProviderDataAccessLayer",
     "product": "nodicsDocumentationProduct",
     "documentId": "persistence.provider-data-access-layer",
@@ -3808,7 +3978,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record33": {
+  "record34": {
     "code": "nodicsDocsMetadatacacheRuntimeStateManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "cache.runtime-state-management",
@@ -3927,7 +4097,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record34": {
+  "record35": {
     "code": "nodicsDocsMetadataframeworkCustomizationGuide",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.customization-guide",
@@ -4030,7 +4200,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record35": {
+  "record36": {
     "code": "nodicsDocsMetadataframeworkBackendExtensionPatterns",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.backend-extension-patterns",
@@ -4131,7 +4301,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record36": {
+  "record37": {
     "code": "nodicsDocsMetadataframeworkAxisContentCustomization",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.axis-content-customization",
@@ -4232,7 +4402,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record37": {
+  "record38": {
     "code": "nodicsDocsMetadataprocessDeveloperCustomization",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.developer-customization",
@@ -4348,7 +4518,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record38": {
+  "record39": {
     "code": "nodicsDocsMetadataprocessCustomProjectExtension",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.custom-project-extension",
@@ -4448,7 +4618,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record39": {
+  "record40": {
     "code": "nodicsDocsMetadatacommerceBaseFoundations",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.base-foundations",
@@ -4561,7 +4731,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record40": {
+  "record41": {
     "code": "nodicsDocsMetadatawcmsOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.overview",
@@ -4665,7 +4835,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record41": {
+  "record42": {
     "code": "nodicsDocsMetadatawcmsContentCatalogModel",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.content-catalog-model",
@@ -4766,7 +4936,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record42": {
+  "record43": {
     "code": "nodicsDocsMetadatawcmsPageDesignerComponents",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.page-designer-components",
@@ -4867,7 +5037,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record43": {
+  "record44": {
     "code": "nodicsDocsMetadatawcmsSitePublicationVisibility",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.site-publication-visibility",
@@ -4968,7 +5138,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record44": {
+  "record45": {
     "code": "nodicsDocsMetadatacatalogProductDiscoveryManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "catalog.product-discovery-management",
@@ -5099,7 +5269,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record45": {
+  "record46": {
     "code": "nodicsDocsMetadatadiscoverySearchIndexing",
     "product": "nodicsDocumentationProduct",
     "documentId": "discovery.search-indexing",
@@ -5230,7 +5400,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record46": {
+  "record47": {
     "code": "nodicsDocsMetadatawcmsMediaManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.media-management",
@@ -5337,7 +5507,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record47": {
+  "record48": {
     "code": "nodicsDocsMetadatawcmsMediaStorageDelivery",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.media-storage-delivery",
@@ -5446,7 +5616,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record48": {
+  "record49": {
     "code": "nodicsDocsMetadatawcmsMediaImportPublication",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.media-import-publication",
@@ -5555,7 +5725,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record49": {
+  "record50": {
     "code": "nodicsDocsMetadatainventoryStockManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "inventory.stock-management",
@@ -5686,7 +5856,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record50": {
+  "record51": {
     "code": "nodicsDocsMetadatapricingPromotionsTaxManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "pricing.promotions-tax-management",
@@ -5817,7 +5987,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record51": {
+  "record52": {
     "code": "nodicsDocsMetadatacommerceOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.overview",
@@ -5923,7 +6093,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record52": {
+  "record53": {
     "code": "nodicsDocsMetadatacommerceCartOrder",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.cart-order",
@@ -6019,7 +6189,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record53": {
+  "record54": {
     "code": "nodicsDocsMetadatacommercePaymentFulfillment",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.payment-fulfillment",
@@ -6132,7 +6302,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record54": {
+  "record55": {
     "code": "nodicsDocsMetadatafulfillmentShippingManagement",
     "product": "nodicsDocumentationProduct",
     "documentId": "fulfillment.shipping-management",
@@ -6263,7 +6433,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record55": {
+  "record56": {
     "code": "nodicsDocsMetadataorderManagementLifecycle",
     "product": "nodicsDocumentationProduct",
     "documentId": "order.management-lifecycle",
@@ -6394,7 +6564,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record56": {
+  "record57": {
     "code": "nodicsDocsMetadatacommerceReturnsRefunds",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.returns-refunds",
@@ -6507,7 +6677,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record57": {
+  "record58": {
     "code": "nodicsDocsMetadataengagementCustomerReviews",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.customer-reviews",
@@ -6619,7 +6789,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record58": {
+  "record59": {
     "code": "nodicsDocsMetadataengagementReviewModerationGovernance",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.review-moderation-governance",
@@ -6728,7 +6898,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record59": {
+  "record60": {
     "code": "nodicsDocsMetadataengagementReviewAggregationRecovery",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.review-aggregation-recovery",
@@ -6837,7 +7007,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record60": {
+  "record61": {
     "code": "nodicsDocsMetadataengagementCustomerFeedback",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.customer-feedback",
@@ -6966,7 +7136,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record61": {
+  "record62": {
     "code": "nodicsDocsMetadataengagementUnifiedOperations",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.unified-operations",
@@ -7102,7 +7272,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record62": {
+  "record63": {
     "code": "nodicsDocsMetadataengagementGovernedAutomation",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.governed-automation",
@@ -7222,7 +7392,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record63": {
+  "record64": {
     "code": "nodicsDocsMetadataengagementEnterpriseOperations",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.enterprise-operations",
@@ -7341,7 +7511,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record64": {
+  "record65": {
     "code": "nodicsDocsMetadatacommunicationOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "communication.overview",
@@ -7466,7 +7636,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record65": {
+  "record66": {
     "code": "nodicsDocsMetadataeventsMessagingClusterCoordination",
     "product": "nodicsDocumentationProduct",
     "documentId": "events.messaging-cluster-coordination",
@@ -7590,7 +7760,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record66": {
+  "record67": {
     "code": "nodicsDocsMetadataprocessOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.overview",
@@ -7721,7 +7891,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record67": {
+  "record68": {
     "code": "nodicsDocsMetadataprocessRuntimeLifecycle",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.runtime-lifecycle",
@@ -7844,7 +8014,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record68": {
+  "record69": {
     "code": "nodicsDocsMetadataprocessFirstWorkflow",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.first-workflow",
@@ -7953,7 +8123,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record69": {
+  "record70": {
     "code": "nodicsDocsMetadataprocessFirstHumanTask",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.first-human-task",
@@ -8057,7 +8227,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record70": {
+  "record71": {
     "code": "nodicsDocsMetadataprocessBusinessValue",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.business-value",
@@ -8171,7 +8341,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record71": {
+  "record72": {
     "code": "nodicsDocsMetadatapipelineBusinessLogicOrchestration",
     "product": "nodicsDocumentationProduct",
     "documentId": "pipeline.business-logic-orchestration",
@@ -8290,7 +8460,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record72": {
+  "record73": {
     "code": "nodicsDocsMetadatacronOperations",
     "product": "nodicsDocumentationProduct",
     "documentId": "cron.operations",
@@ -8404,7 +8574,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record73": {
+  "record74": {
     "code": "nodicsDocsMetadatacronNodeResponsibilityTee",
     "product": "nodicsDocumentationProduct",
     "documentId": "cron.node-responsibility-tee",
@@ -8509,7 +8679,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record74": {
+  "record75": {
     "code": "nodicsDocsMetadatacronProjectCustomization",
     "product": "nodicsDocumentationProduct",
     "documentId": "cron.project-customization",
@@ -8614,7 +8784,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record75": {
+  "record76": {
     "code": "nodicsDocsMetadataprocessProcessCronRuntime",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.process-cron-runtime",
@@ -8725,7 +8895,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record76": {
+  "record77": {
     "code": "nodicsDocsMetadataprocessScheduledAutomation",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.scheduled-automation",
@@ -8835,7 +9005,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record77": {
+  "record78": {
     "code": "nodicsDocsMetadatadataImportExportMigration",
     "product": "nodicsDocumentationProduct",
     "documentId": "data.import-export-migration",
@@ -8907,33 +9077,38 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "Provider-specific documentation rule",
+        "anchor": "dataImportExportMigration-12-provider-specific-documentation-rule",
+        "level": 2
+      },
+      {
         "text": "Media assets",
-        "anchor": "dataImportExportMigration-12-media-assets",
+        "anchor": "dataImportExportMigration-13-media-assets",
         "level": 2
       },
       {
         "text": "Customization and extension",
-        "anchor": "dataImportExportMigration-13-customization-and-extension",
+        "anchor": "dataImportExportMigration-14-customization-and-extension",
         "level": 2
       },
       {
         "text": "Operations and governance",
-        "anchor": "dataImportExportMigration-14-operations-and-governance",
+        "anchor": "dataImportExportMigration-15-operations-and-governance",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "dataImportExportMigration-15-common-mistakes",
+        "anchor": "dataImportExportMigration-16-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "dataImportExportMigration-16-verification",
+        "anchor": "dataImportExportMigration-17-verification",
         "level": 2
       },
       {
         "text": "Current implementation coverage",
-        "anchor": "dataImportExportMigration-17-current-implementation-coverage",
+        "anchor": "dataImportExportMigration-18-current-implementation-coverage",
         "level": 2
       }
     ],
@@ -8984,6 +9159,10 @@ module.exports = {
       },
       {
         "kind": "table",
+        "title": "Provider concern, Required detail"
+      },
+      {
+        "kind": "table",
         "title": "Customization type, Recommended path, Avoid"
       },
       {
@@ -9008,8 +9187,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/data-import-export-migration.md",
-    "sourceChecksum": "38b0107c76f1349ddaea7448d0f664a76110833765e20caa2b715040b568f180",
-    "sourceWordCount": 2836,
+    "sourceChecksum": "24666d9bd8d174f4860156304393f140114324572692a0b67090cb6fc1a54026",
+    "sourceWordCount": 3021,
     "audience": [
       "business",
       "architect",
@@ -9035,7 +9214,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record78": {
+  "record79": {
     "code": "nodicsDocsMetadataprocessActionAdapters",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.action-adapters",
@@ -9131,7 +9310,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record79": {
+  "record80": {
     "code": "nodicsDocsMetadataframeworkDevopsRuntime",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.devops-runtime",
@@ -9247,7 +9426,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record80": {
+  "record81": {
     "code": "nodicsDocsMetadataframeworkRuntimeReleaseRollback",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.runtime-release-rollback",
@@ -9356,7 +9535,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record81": {
+  "record82": {
     "code": "nodicsDocsMetadataframeworkLocalBrowserAcceptanceJourney",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.local-browser-acceptance-journey",
@@ -9465,7 +9644,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record82": {
+  "record83": {
     "code": "nodicsDocsMetadataframeworkLocalVerificationChecklist",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.local-verification-checklist",
@@ -9579,7 +9758,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record83": {
+  "record84": {
     "code": "nodicsDocsMetadatacommerceEnterpriseOperations",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.enterprise-operations",
@@ -9694,7 +9873,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record84": {
+  "record85": {
     "code": "nodicsDocsMetadataprocessIncidentRecovery",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.incident-recovery",
@@ -9810,7 +9989,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record85": {
+  "record86": {
     "code": "nodicsDocsMetadataprocessDevopsTopology",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.devops-topology",
@@ -9925,7 +10104,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record86": {
+  "record87": {
     "code": "nodicsDocsMetadataprocessQaRegressionGuide",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.qa-regression-guide",
@@ -10031,7 +10210,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record87": {
+  "record88": {
     "code": "nodicsDocsMetadataframeworkCapabilityDocumentationMaturityPattern",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.capability-documentation-maturity-pattern",
@@ -10063,33 +10242,38 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "Source-backed coverage rule",
+        "anchor": "frameworkCapabilityDocumentationMaturityPattern-4-source-backed-coverage-rule",
+        "level": 2
+      },
+      {
         "text": "Example: documenting a Workflow capability",
-        "anchor": "frameworkCapabilityDocumentationMaturityPattern-4-example-documenting-a-workflow-capability",
+        "anchor": "frameworkCapabilityDocumentationMaturityPattern-5-example-documenting-a-workflow-capability",
         "level": 2
       },
       {
         "text": "Example: documenting a Commerce capability",
-        "anchor": "frameworkCapabilityDocumentationMaturityPattern-5-example-documenting-a-commerce-capability",
+        "anchor": "frameworkCapabilityDocumentationMaturityPattern-6-example-documenting-a-commerce-capability",
         "level": 2
       },
       {
         "text": "Diagrams and visual guidance",
-        "anchor": "frameworkCapabilityDocumentationMaturityPattern-6-diagrams-and-visual-guidance",
+        "anchor": "frameworkCapabilityDocumentationMaturityPattern-7-diagrams-and-visual-guidance",
         "level": 2
       },
       {
         "text": "Customize and extend safely",
-        "anchor": "frameworkCapabilityDocumentationMaturityPattern-7-customize-and-extend-safely",
+        "anchor": "frameworkCapabilityDocumentationMaturityPattern-8-customize-and-extend-safely",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "frameworkCapabilityDocumentationMaturityPattern-8-common-mistakes",
+        "anchor": "frameworkCapabilityDocumentationMaturityPattern-9-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "frameworkCapabilityDocumentationMaturityPattern-9-verification",
+        "anchor": "frameworkCapabilityDocumentationMaturityPattern-10-verification",
         "level": 2
       }
     ],
@@ -10102,6 +10286,10 @@ module.exports = {
       {
         "kind": "table",
         "title": "Level, Meaning, Allowed content"
+      },
+      {
+        "kind": "table",
+        "title": "Coverage area, Required detail"
       }
     ],
     "visualRequirements": [
@@ -10114,8 +10302,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/framework/capability-documentation-maturity-pattern.md",
-    "sourceChecksum": "37dcca1d38137d246014f957d43b1e33c06cbb94d0a4d885000419e4610236b3",
-    "sourceWordCount": 1145,
+    "sourceChecksum": "cf170e0c58594b79d5e1181290bdc9b852a835b94a6ef01040417d31a2d7aa60",
+    "sourceWordCount": 1501,
     "audience": [
       "business",
       "architect",
@@ -10141,7 +10329,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record88": {
+  "record89": {
     "code": "nodicsDocsMetadatadocsOverview",
     "product": "nodicsDocumentationProduct",
     "documentId": "docs.overview",
@@ -10254,7 +10442,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record89": {
+  "record90": {
     "code": "nodicsDocsMetadatawcmsPublishingLifecycle",
     "product": "nodicsDocumentationProduct",
     "documentId": "wcms.publishing-lifecycle",
@@ -10368,7 +10556,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record90": {
+  "record91": {
     "code": "nodicsDocsMetadatatoolingAiDeveloperEnablement",
     "product": "nodicsDocumentationProduct",
     "documentId": "tooling.ai-developer-enablement",
@@ -10487,7 +10675,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record91": {
+  "record92": {
     "code": "nodicsDocsMetadatareferenceSourceMapGlossary",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.source-map-glossary",
@@ -10590,6 +10778,132 @@ module.exports = {
     "sourcePath": "docs/pages/reference/source-map-glossary.md",
     "sourceChecksum": "653b54f50b6aab845519becddac0b6b55b22b5f4b75b730ab3ca7bf325922e9a",
     "sourceWordCount": 2108,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record93": {
+    "code": "nodicsDocsMetadatareferenceSourceBackedDocumentationCoverageAudit",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "reference.source-backed-documentation-coverage-audit",
+    "title": "Source-Backed Documentation Coverage Audit",
+    "summary": "Code-to-documentation coverage audit contract for finding missing or shallow Nodics functionality documentation across framework, projects, data, assets, and applications.",
+    "businessSummary": "Source-Backed Documentation Coverage Audit explains the business purpose, supported decisions, operational impact, and controls for the Source Map and Glossary journey.",
+    "technicalSummary": "Source-Backed Documentation Coverage Audit records owning module nodics.docs, technical module documentation, source path docs/pages/reference/source-backed-documentation-coverage-audit.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.docs",
+    "technicalModule": "documentation",
+    "targetPage": "nodicsDocsPagereferenceSourceBackedDocumentationCoverageAudit",
+    "targetRoute": "nodicsDocsRoutereferenceSourceBackedDocumentationCoverageAudit",
+    "articleComponent": "nodicsDocsComponentreferenceSourceBackedDocumentationCoverageAudit",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatareferencesourcebackeddocumentationcoverageaudit",
+    "headings": [
+      {
+        "text": "Audit method",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-1-audit-method",
+        "level": 2
+      },
+      {
+        "text": "Coverage standard",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-2-coverage-standard",
+        "level": 2
+      },
+      {
+        "text": "First inventory snapshot",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-3-first-inventory-snapshot",
+        "level": 2
+      },
+      {
+        "text": "Documentation backlog workflow",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-4-documentation-backlog-workflow",
+        "level": 2
+      },
+      {
+        "text": "External reference policy",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-5-external-reference-policy",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Troubleshooting",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-7-troubleshooting",
+        "level": 2
+      },
+      {
+        "text": "Acceptance rule",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-8-acceptance-rule",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-9-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Signal, Why it matters"
+      },
+      {
+        "kind": "table",
+        "title": "Required section, Reader it helps"
+      },
+      {
+        "kind": "table",
+        "title": "Priority, Area, Why it is important, Documentation action"
+      },
+      {
+        "kind": "table",
+        "title": "Symptom, Likely cause, Action"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "framework.capability-documentation-maturity-pattern",
+      "docs.reader-journey-and-coverage",
+      "data.import-export-migration",
+      "accelerators.agora-apparel-product-data-authoring"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/reference/source-backed-documentation-coverage-audit.md",
+    "sourceChecksum": "d1685c68bf4a766f85ac89093a6d3aec479995331d58ab7b9257a564f141ac80",
+    "sourceWordCount": 1476,
     "audience": [
       "business",
       "architect",

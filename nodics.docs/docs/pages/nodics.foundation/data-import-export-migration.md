@@ -275,6 +275,27 @@ This keeps the authoring experience simple while preserving enterprise
 evidence: the developer writes headers and records, the system generates the
 technical release index, and `nImport` remains the execution authority.
 
+## Provider-specific documentation rule
+
+The import/export topic owns the generic contract, but provider implementations
+must still be documented with practical detail. JavaScript, JSON, CSV, Excel,
+media-backed import, and generated export all have different authoring and
+operator concerns. Each provider section or child topic must explain:
+
+| Provider concern | Required detail |
+| --- | --- |
+| Input shape | Whether the source is an object map, JSON document, CSV rows, workbook sheets, binary assets, or generated runtime export. |
+| Header binding | How `dataFilePrefix`, schema, index, tenants, macros, and operation map to the source. |
+| Parser behavior | How rows or objects become models, what validation runs, and how row-level errors are reported. |
+| Customization | Parser override, validator, mapping service, field allow-list, provider adapter, and project-layer extension points. |
+| Safety | Idempotency, checksum, path validation, secret handling, size limits, masking, and rollback boundary. |
+| Validation | Unit tests, import run evidence, generated manifest checks, and fresh-schema import proof. |
+
+This applies to every data topic, not only product creation. If a module has
+seed data, import providers, generated export, media assets, migration
+registers, or publication manifests, its documentation must connect back to
+this import/export contract and then explain the module-specific data shape.
+
 ## Media assets
 
 Media follows the same ownership principle as other module release data, but it

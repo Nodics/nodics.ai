@@ -65,6 +65,41 @@ Every capability page should include:
 11. **Verification** — tests, generated data checks, local acceptance, and
    runtime proof.
 
+## Source-backed coverage rule
+
+Every operational or partial-implementation topic must be source-backed. A page
+is not complete only because it explains the idea. It must connect the idea to
+the current repository files that implement, configure, import, publish, render,
+or test the capability.
+
+Use this checklist for every topic, whether the topic is products, content,
+media, pricing, inventory, workflows, APIs, imports, search, security,
+localization, documentation, or accelerators:
+
+| Coverage area | Required detail |
+| --- | --- |
+| Business journey | What a business user, administrator, operator, or customer is trying to accomplish. |
+| Runtime owner | Functional module, technical module, server role, and whether the capability is local, remote, Staged, Online, or operational. |
+| Source map | Exact package, module, schema, service, controller, router, config, data, asset, frontend, and test locations. |
+| How to do it | Step-by-step instructions for creating, updating, importing, publishing, operating, or troubleshooting the capability. |
+| How it works | Ordered flow from authored input through backend validation, persistence, events, publication, projection, frontend rendering, and evidence. |
+| Customization | Safe project-layer extension points, override rules, provider adapters, validators, renderer mappings, properties, and areas that must remain framework-owned. |
+| Examples | Real code or data snippets from current files, with enough context for a developer or AI tool to repeat the pattern safely. |
+| Visual explanation | Mermaid diagram, screenshot, source map, flow image, or table that clarifies ownership and sequence. |
+| Validation | Focused tests, generator checks, import checks, fresh-schema checks, publication checks, and browser evidence when the capability is visible in Axis, Nexus, or Agora. |
+| External references | Official or vendor documentation used for comparison, clearly marked as reference material and not as Nodics authority. |
+
+Source-backed does not mean every technical module needs a public business page.
+Some modules are framework utilities and should be covered inside a broader
+capability topic. It does mean that a reader should be able to trace the topic
+from documentation to source and from source back to documentation.
+
+When the source inventory shows an implemented schema, service, controller,
+router, data pack, asset pack, frontend journey, or test with no matching
+documentation, create a documentation gap. When a page exists but does not show
+files, services, data, customization, and verification, mark it shallow and
+improve it before calling the topic operational.
+
 ## Example: documenting a Workflow capability
 
 A Workflow page should not begin with API endpoints. It should begin with the
