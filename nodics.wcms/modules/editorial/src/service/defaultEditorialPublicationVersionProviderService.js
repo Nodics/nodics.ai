@@ -24,5 +24,5 @@ module.exports = {
     activate: function (publication, request) { return SERVICE.DefaultEditorialOnlineProjectionService.activate(publication, request); },
     /** Restores the previous Online projection version. */
     rollback: function (publication, targetVersion, request) { return SERVICE.DefaultEditorialOnlineProjectionService.rollback(publication, targetVersion, request); },
-    /** Withdraws active Online projections for this publication. */ withdraw: function (publication, request) { return SERVICE.DefaultEditorialOnlineProjectionService.withdraw(publication.rootCode, request); }
+    /** Withdraws active Online projections for this publication. */ withdraw: function (publication, request) { return SERVICE.DefaultEditorialOnlineProjectionService.withdraw(publication, request); }
 };

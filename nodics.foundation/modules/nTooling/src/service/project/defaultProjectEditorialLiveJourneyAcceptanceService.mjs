@@ -23,6 +23,7 @@ const workspaceRoot = path.resolve(projectRoot, '..');
 const axisUrl = process.env.AXIS_URL || 'http://127.0.0.1:3100';
 const platformUrl = process.env.AXIS_PLATFORM_URL || 'http://127.0.0.1:4300';
 const wcmsUrl = process.env.AXIS_WCMS_URL || 'http://127.0.0.1:4312';
+const wcmsOnlineUrl = process.env.AXIS_WCMS_ONLINE_URL || process.env.NODICS_WCMS_ONLINE_URL || 'http://127.0.0.1:4314';
 const processUrl = process.env.AXIS_PROCESS_URL || 'http://127.0.0.1:4330';
 const enterpriseCode = process.env.AXIS_ENTERPRISE || 'default';
 const tenant = process.env.AXIS_TENANT || 'default';
@@ -176,9 +177,10 @@ async function main() {
   console.log('Editorial live journey acceptance started');
   await expectOk(platformUrl, '/nodics/system/v0/health/ready');
   await expectOk(wcmsUrl, '/nodics/system/v0/health/ready');
+  await expectOk(wcmsOnlineUrl, '/nodics/system/v0/health/ready');
   await expectOk(processUrl, '/nodics/system/v0/health/ready');
   await expectOk(axisUrl, '/content/editorial');
-  console.log('PASS local Platform, WCMS, Process, and Axis are reachable');
+  console.log('PASS local Platform, WCMS Staged, WCMS Online, Process, and Axis are reachable');
 
   const baseHeaders = await authenticate();
   const journeyId = randomUUID().slice(0, 8);
@@ -316,13 +318,13 @@ async function main() {
   console.log(`PASS 5 published through nPublish to ONLINE publication ${publication.code}`);
 
   const list = payload(
-    await requestJson(wcmsUrl, '/nodics/editorial/v0/delivery/articles?siteCode=nexusCorporateSite&localeCode=en&channel=web&limit=5', {
+    await requestJson(wcmsOnlineUrl, '/nodics/editorial/v0/delivery/articles?siteCode=nexusCorporateSite&localeCode=en&channel=web&limit=5', {
       headers: baseHeaders,
     }),
   );
   requireItem(list?.items, item => item.articleCode === articleCode && item.slug === slug, 'Published article was missing from delivery listing');
   const detail = payload(
-    await requestJson(wcmsUrl, `/nodics/editorial/v0/delivery/articles/${encodeURIComponent(slug)}?siteCode=nexusCorporateSite&localeCode=en&channel=web`, {
+    await requestJson(wcmsOnlineUrl, `/nodics/editorial/v0/delivery/articles/${encodeURIComponent(slug)}?siteCode=nexusCorporateSite&localeCode=en&channel=web`, {
       headers: baseHeaders,
     }),
   );
@@ -330,19 +332,19 @@ async function main() {
   console.log('PASS 6 verified Online listing and detail delivery projections');
 
   const structured = payload(
-    await requestJson(wcmsUrl, '/nodics/editorial/v0/delivery/articles/structured?siteCode=nexusCorporateSite&localeCode=en&channel=web&limit=5', {
+    await requestJson(wcmsOnlineUrl, '/nodics/editorial/v0/delivery/articles/structured?siteCode=nexusCorporateSite&localeCode=en&channel=web&limit=5', {
       headers: baseHeaders,
     }),
   );
   requireItem(structured?.items, item => item.article?.articleCode === articleCode && item.structuredData?.['@type'] === 'BlogPosting', 'Structured data did not include published BlogPosting');
   const rss = payload(
-    await requestJson(wcmsUrl, '/nodics/editorial/v0/delivery/rss?siteCode=nexusCorporateSite&localeCode=en&channel=web&limit=5', {
+    await requestJson(wcmsOnlineUrl, '/nodics/editorial/v0/delivery/rss?siteCode=nexusCorporateSite&localeCode=en&channel=web&limit=5', {
       headers: baseHeaders,
     }),
   );
   requireItem(rss, item => item.title === localization.title, 'RSS projection did not include published article');
   const sitemap = payload(
-    await requestJson(wcmsUrl, '/nodics/editorial/v0/delivery/sitemap?siteCode=nexusCorporateSite&localeCode=en&channel=web&limit=5', {
+    await requestJson(wcmsOnlineUrl, '/nodics/editorial/v0/delivery/sitemap?siteCode=nexusCorporateSite&localeCode=en&channel=web&limit=5', {
       headers: baseHeaders,
     }),
   );
@@ -362,7 +364,7 @@ async function main() {
   if (withdrawn?.state !== 'WITHDRAWN') throw new Error(`Editorial withdrawal did not finish through nPublish: ${JSON.stringify(withdrawn)}`);
   let withdrawnDetailFailed = false;
   try {
-    await requestJson(wcmsUrl, `/nodics/editorial/v0/delivery/articles/${encodeURIComponent(slug)}?siteCode=nexusCorporateSite&localeCode=en&channel=web`, {
+    await requestJson(wcmsOnlineUrl, `/nodics/editorial/v0/delivery/articles/${encodeURIComponent(slug)}?siteCode=nexusCorporateSite&localeCode=en&channel=web`, {
       headers: baseHeaders,
     });
   } catch {

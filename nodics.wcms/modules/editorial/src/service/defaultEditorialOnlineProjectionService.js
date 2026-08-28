@@ -90,7 +90,15 @@ module.exports = {
         return { version: targetVersion, restored: codes.length };
     },
     /** Withdraws all active projections for an article after an authorized lifecycle intent. */
-    withdraw: async function (articleCode, request) {
+    withdraw: async function (publication, request) {
+        let articleCode = typeof publication === 'string' ? publication : publication && publication.rootCode;
+        let config = (CONFIG.get('editorial') || {}).publication || {};
+        let transportName = config.targetTransportProvider;
+        if (transportName) {
+            if (!SERVICE[transportName]) throw new CLASSES.NodicsError('ERR_EDT_00001', 'Editorial Online target transport is unavailable');
+            return SERVICE[transportName].withdraw({ publication: publication, articleCode: articleCode,
+                operationKey: (publication && publication.code || articleCode) + ':withdraw:' + String(publication && publication.revision || 0) }, request);
+        }
         let response = await SERVICE.DefaultEditorialOnlineArticleService.get({ tenant: request.tenant, authData: request.authData, query: { articleCode: articleCode, status: 'CURRENT' }, searchOptions: { limit: 500 } });
         let items = this.items(response);
         for (let item of items) await SERVICE.DefaultEditorialOnlineArticleService.update({ tenant: request.tenant, authData: request.authData, query: { code: item.code }, model: { status: 'WITHDRAWN' } });
