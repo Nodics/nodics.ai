@@ -75,12 +75,12 @@ extension points, common mistakes, and verification. This lets a beginner
 build a dependable mental model while giving an experienced implementer a
 direct path to contracts and release evidence.
 
-The information architecture is informed by the official SAP Commerce Cloud
-split across Discover, Implement, Integrate, Storefront, Security, Reference,
-and Support, and Oracle Commerce's task-oriented Use, Administer, Configure and
-Extend, Analyze and Report, Integrate, and REST API paths. Nodics keeps its own
-ownership vocabulary and adds explicit failure, recovery, evidence, and release
-gates rather than copying either product's module model.
+Official SAP Commerce Cloud and Oracle Commerce documentation links are kept as
+industry-standard reference points for enterprise reader expectations around
+commerce adoption, administration, integration, security, storefronts, and
+support. They are not source designs for Nodics. Nodics keeps its own ownership
+vocabulary, module boundaries, release gates, failure handling, recovery model,
+and evidence contracts.
 
 - SAP Commerce Cloud: <https://help.sap.com/docs/SAP_COMMERCE_CLOUD_PUBLIC_CLOUD>
 - Oracle Commerce: <https://docs.oracle.com/en/cloud/saas/cx-commerce/>

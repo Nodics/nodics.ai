@@ -116,10 +116,17 @@ areas need owner confirmation and documentation mapping.
 
 ## External reference policy
 
-Official external references help readers compare Nodics with familiar
-platform patterns, but they do not define Nodics behavior. Use vendor docs only
-for comparison, migration planning, terminology, or operator expectation.
-Every page must still identify the Nodics owner and source files.
+Official external references help readers understand industry-standard
+expectations for terms, data movement, administration, auditability, and
+operator evidence. They do not define Nodics behavior, architecture, code, data
+shape, or product direction. Nodics must never be presented as a copy,
+derivative, or reimplementation of another framework.
+
+Use vendor docs only to calibrate standards and reader expectations: what an
+enterprise buyer expects from import/export, how administrators usually reason
+about product data, what operators expect from repeatable migrations, and what
+quality bar public documentation should meet. Every page must still identify
+the Nodics owner, source files, runtime contract, and validation evidence.
 
 Good reference examples:
 
@@ -137,7 +144,7 @@ Good reference examples:
   be clearer for business users.
 - Hiding an implemented route, schema, or service because it is "internal" but
   still developer-extensible or operator-visible.
-- Linking to vendor references as if they define Nodics behavior.
+- Linking to vendor references as if they define Nodics behavior or design.
 - Updating generated documentation data without changing the authored Markdown
   and catalogue metadata.
 - Forgetting Axis, Nexus, or Agora browser evidence for a capability that is

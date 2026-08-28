@@ -87,7 +87,7 @@ localization, documentation, or accelerators:
 | Examples | Real code or data snippets from current files, with enough context for a developer or AI tool to repeat the pattern safely. |
 | Visual explanation | Mermaid diagram, screenshot, source map, flow image, or table that clarifies ownership and sequence. |
 | Validation | Focused tests, generator checks, import checks, fresh-schema checks, publication checks, and browser evidence when the capability is visible in Axis, Nexus, or Agora. |
-| External references | Official or vendor documentation used for comparison, clearly marked as reference material and not as Nodics authority. |
+| External references | Official or vendor documentation used to define industry-standard expectations, clearly marked as reference material and not as Nodics authority or source design. |
 
 Source-backed does not mean every technical module needs a public business page.
 Some modules are framework utilities and should be covered inside a broader

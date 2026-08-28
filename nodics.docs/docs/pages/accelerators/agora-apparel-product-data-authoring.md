@@ -284,17 +284,16 @@ Then open Axis to verify setup, import, publication, and error states, and open
 Agora Apparel to verify Online product listing, product detail, images, price,
 availability, cart, and checkout behavior.
 
-## Reference comparison
+## Industry standards references
 
-Nodics owns its own data contract, but the shape is intentionally familiar to
-enterprise commerce and CMS teams. SAP Commerce documents import as a
-platform-level data-loading capability. Shopify documents product CSV import
-with required fields, variants, price, inventory, and image preparation.
-Salesforce B2C Commerce documents import/export as a repeatable administration
-operation. Contentful documents CLI-based content import/export and migration
-scripts for reproducible content model and entry changes.
+Nodics owns its own data contract, architecture, source code, and product
+direction. External references are included only to define the industry
+standards that enterprise commerce and CMS teams already expect: repeatable
+data loading, explicit field requirements, variant and price dependencies,
+image preparation, administration evidence, and reproducible content changes.
 
-Use those references as comparison material only. Nodics authority remains the
+These references are not Nodics design sources and should never be used to
+claim that Nodics duplicates another framework. Nodics authority remains the
 module header, record file, generated manifest, schema policy, import service,
 publication service, and acceptance evidence in the current repository.
 

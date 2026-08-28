@@ -2121,8 +2121,8 @@ module.exports = {
         "level": 2
       },
       {
-        "text": "Reference comparison",
-        "anchor": "acceleratorsAgoraApparelProductDataAuthoring-13-reference-comparison",
+        "text": "Industry standards references",
+        "anchor": "acceleratorsAgoraApparelProductDataAuthoring-13-industry-standards-references",
         "level": 2
       },
       {
@@ -2187,8 +2187,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/accelerators/agora-apparel-product-data-authoring.md",
-    "sourceChecksum": "e063764b17d367b1610735433758226a25db5bf5dd8d0f93a33276ca4a94b93c",
-    "sourceWordCount": 1947,
+    "sourceChecksum": "4b4d6133324e08e729976434251136627ffca3395ded1b50f68f1efd5e333b99",
+    "sourceWordCount": 1940,
     "audience": [
       "business",
       "architect",
@@ -6066,8 +6066,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.commerce/overview.md",
-    "sourceChecksum": "c945942806edb43329ddb099b3df56c8cdce856f6e1666d9dcd76e8938c95c7d",
-    "sourceWordCount": 1081,
+    "sourceChecksum": "31687c61ad085dc107ef015e162e26f827d93ee31c9ffd13050b7eb6b200db94",
+    "sourceWordCount": 1073,
     "audience": [
       "business",
       "architect",
@@ -10302,8 +10302,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/framework/capability-documentation-maturity-pattern.md",
-    "sourceChecksum": "cf170e0c58594b79d5e1181290bdc9b852a835b94a6ef01040417d31a2d7aa60",
-    "sourceWordCount": 1501,
+    "sourceChecksum": "b61625fa87bd1e8f50635674b6c0eade493cdb5fee9853bef0f98c01d5f067cc",
+    "sourceWordCount": 1506,
     "audience": [
       "business",
       "architect",
@@ -10902,8 +10902,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/reference/source-backed-documentation-coverage-audit.md",
-    "sourceChecksum": "d1685c68bf4a766f85ac89093a6d3aec479995331d58ab7b9257a564f141ac80",
-    "sourceWordCount": 1476,
+    "sourceChecksum": "331f149bca5006750427fb76237f575af8023eed64d9a6cbb16b32b29aad8a88",
+    "sourceWordCount": 1535,
     "audience": [
       "business",
       "architect",
