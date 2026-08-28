@@ -10,6 +10,7 @@
  */
 
 const _ = require('lodash');
+const path = require('path');
 
 /**
  * @module nodics.foundation/modules/nData/nImport/import/src/service/header/defaultHeaderProcessService
@@ -131,6 +132,7 @@ module.exports = {
                     request.inputPath.fileName = fileName;
                     request.inputPath.fileType = fileName.split('_').pop();
                     request.outputPath.fileName = fileName;
+                    header.options.assetBaseRoots = this.resolveAssetBaseRoots(fileObj.list);
                     if (request.inputPath.fileType) {
                         request.files = fileObj.list;
                         SERVICE.DefaultPipelineService.start('dataFinalizerInitPipeline', request, {}).then(success => {
@@ -158,5 +160,40 @@ module.exports = {
                 resolve(true);
             }
         });
+    },
+
+    /**
+     * Resolves trusted release roots for import-only media asset pointers.
+     *
+     * @param {string[]} files Authored data files contributing to one header.
+     * @returns {string[]} Unique release roots.
+     */
+    resolveAssetBaseRoots: function (files) {
+        let roots = [];
+        [].concat(files || []).forEach(file => {
+            let root = this.resolveReleaseRootForFile(file);
+            if (root && !roots.includes(root)) {
+                roots.push(root);
+            }
+        });
+        return roots;
+    },
+
+    /**
+     * Resolves `.../data/<release>` for versioned and legacy data files.
+     *
+     * @param {string} file Data file path.
+     * @returns {string|undefined} Release root.
+     */
+    resolveReleaseRootForFile: function (file) {
+        if (!file) return undefined;
+        let resolved = path.resolve(file);
+        let segments = resolved.split(path.sep);
+        for (let index = segments.length - 2; index >= 0; index--) {
+            if (segments[index] === 'data' && segments[index + 1]) {
+                return segments.slice(0, index + 2).join(path.sep) || path.sep;
+            }
+        }
+        return path.dirname(resolved);
     }
 };

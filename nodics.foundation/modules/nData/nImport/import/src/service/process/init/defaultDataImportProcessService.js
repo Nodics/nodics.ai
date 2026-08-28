@@ -218,6 +218,7 @@ module.exports = {
                                 phase: options.phase,
                                 phaseLimit: options.phaseLimit,
                                 fileName: fileName,
+                                sourceDataFile: fileObj.file,
                                 fileData: fileData,
                                 inputPath: request.inputPath,
                                 suppressRetryErrorLog: _self.shouldSuppressRetryErrorLog(request, options)

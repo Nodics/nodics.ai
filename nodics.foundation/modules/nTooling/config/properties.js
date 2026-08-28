@@ -376,6 +376,7 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nData/nImport/import/test/importDiagnosticsPropagation.test.js' },
                 { node: 'nodics.foundation/modules/nData/nImport/import/test/importFileArchivalLifecycle.test.js' },
                 { node: 'nodics.foundation/modules/nData/nImport/import/test/importFailureTraceability.test.js' },
+                { node: 'nodics.foundation/modules/nData/nImport/import/test/mediaReleaseAssetHydrationContract.test.js' },
                 { node: 'nodics.foundation/modules/nData/nImport/import/test/importExportAccessPolicy.test.js' }
             ],
             export: [

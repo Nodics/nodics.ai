@@ -110,6 +110,10 @@ new Promise((resolve, reject) => {
 }).then(() => {
     assert.strictEqual(
         importPipelines.processModelImportPipeline.nodes.loadRawSchema.success,
+        'hydrateMediaReleaseAsset'
+    );
+    assert.strictEqual(
+        importPipelines.processModelImportPipeline.nodes.hydrateMediaReleaseAsset.success,
         'enforceImportAccessPolicies'
     );
     assert.strictEqual(

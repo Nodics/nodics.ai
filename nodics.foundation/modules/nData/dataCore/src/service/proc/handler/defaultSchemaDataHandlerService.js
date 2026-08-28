@@ -274,7 +274,9 @@ module.exports = {
                     moduleName: request.moduleName,
                     header: request.header,
                     dataModel: model,
-                    importRun: request.importRun
+                    importRun: request.importRun,
+                    sourceDataFile: request.sourceDataFile,
+                    inputPath: request.inputPath
                 }, {}).then(success => {
                     if (SERVICE.DefaultImportDiagnosticsService) {
                         SERVICE.DefaultImportDiagnosticsService.increment(request, 'recordsSucceeded', 1);

@@ -238,6 +238,20 @@ module.exports = {
         }
         return principal;
     },
+    /** Converts target runtime exceptions into a user-safe application setup message. */
+    targetFailureMessage: function (targetCode, targetMessage) {
+        if (/CMS_BASELINE_RELEASE_INVALID|INVALID_RELEASE/i.test(targetCode) ||
+            /invalid release|release qualification|release is unavailable/i.test(targetMessage)) {
+            return 'Application setup data is invalid or unavailable. Ask a developer to repair the configured baseline release before retrying.';
+        }
+        if (/already running|in progress/i.test(targetMessage)) {
+            return targetMessage;
+        }
+        if (/ERR_SYS_|internal error|Failed due to some internal error/i.test(targetCode + ' ' + targetMessage)) {
+            return 'Application setup could not be completed by the target runtime. Ask an operator to check the target runtime logs before retrying.';
+        }
+        return 'Application setup could not be completed by the target runtime. Ask an operator to check the target runtime logs before retrying.';
+    },
     /** Preserves sanitized target-side diagnostics for operators without exposing request credentials. */
     targetDiagnostic: function (error, profile) {
         let source = error && (error.data || error.result || error.response || error);
@@ -249,9 +263,7 @@ module.exports = {
         let targetResponseCode = source && source.responseCode ? String(source.responseCode) : undefined;
         return new CLASSES.NodicsError({
             code: 'ERR_BOF_00085',
-            message: 'Application initialization target failed for profile ' +
-                profile.code + ' baseline ' + profile.baselineCode + ' on ' + profile.target.moduleName +
-                ': ' + targetCode + ' - ' + targetMessage,
+            message: this.targetFailureMessage(targetCode, targetMessage),
             metadata: {
                 targetCode: targetCode,
                 targetMessage: targetMessage,
@@ -307,6 +319,60 @@ module.exports = {
             left.targetServer.localeCompare(right.targetServer) ||
             left.dataType.localeCompare(right.dataType));
     },
+    /** Converts runtime preparation faults into business-facing setup guidance. */
+    preparationFailureMessage: function (step, error) {
+        let rawMessage = String(error && (error.remoteMessage || error.message) || '');
+        let releaseCode = String(step.code || 'configured setup data');
+        let kind = String(step.kind || 'Setup data');
+        if (/ERR_IMP_00004|Requested data release is unavailable/i.test(rawMessage)) {
+            return kind + ' is not available for this application. Ask a developer to repair data release ' +
+                releaseCode + ' or the application setup configuration.';
+        }
+        if (/manifest|contract version|release metadata/i.test(rawMessage)) {
+            return kind + ' cannot be read from its module data manifest. Ask a developer to repair data release ' +
+                releaseCode + ' before initializing this application.';
+        }
+        return kind + ' cannot be checked on ' + String(step.targetServer || 'the target runtime') +
+            '. Refresh after the target runtime is ready, or ask a developer to review the application setup configuration.';
+    },
+    /** Summarizes blocked preparation without leaking target runtime exception text. */
+    preparationBlockedMessage: function (preparation) {
+        let steps = [].concat(preparation && preparation.steps || []);
+        let blockedStep = steps.find(step => step.status !== 'CURRENT' && step.status !== 'SOURCE_READY' &&
+            step.status !== 'OPTIONAL' && step.message);
+        return blockedStep && blockedStep.message ||
+            'Application setup is blocked because required capabilities or setup data are not ready.';
+    },
+    /** Resolves a stable release identity for statuses that stop before the publication target. */
+    blockedReleaseIdentity: function (profile, preparation) {
+        let steps = [].concat(preparation && preparation.steps || []);
+        let releaseStep = steps.find(step => step.required !== false && step.type === 'DATA_RELEASE') ||
+            steps.find(step => step.required !== false && step.type === 'MEDIA_ASSET_MANIFEST') || {};
+        return {
+            releaseCode: String(releaseStep.code || profile.contentPackCode && 'contentPack:' + profile.contentPackCode ||
+                profile.owner + ':' + profile.baselineCode),
+            releaseVersion: String(releaseStep.version || releaseStep.installedVersion || profile.releaseVersion || 'pending setup')
+        };
+    },
+    /** Projects a blocked application setup without invoking its final publication target. */
+    blockedProjection: function (profile, preparation) {
+        let releaseIdentity = this.blockedReleaseIdentity(profile, preparation);
+        return {
+            profileCode: profile.code,
+            type: profile.type,
+            owner: profile.owner,
+            applicationCode: profile.applicationCode,
+            siteCode: profile.siteCode,
+            profile: this.describe(profile),
+            allowedActions: [],
+            readiness: 'BLOCKED',
+            releaseCode: releaseIdentity.releaseCode,
+            releaseVersion: releaseIdentity.releaseVersion,
+            releaseStatus: 'PREPARATION_BLOCKED',
+            preparation: preparation,
+            message: this.preparationBlockedMessage(preparation)
+        };
+    },
     /** Returns current preparation state for every declared data-release dependency. */
     preparationStatus: async function (profile, request) {
         let steps = this.preparationSteps(profile);
@@ -331,7 +397,7 @@ module.exports = {
             } catch (error) {
                 group.steps.forEach(step => projected.push(Object.assign({}, step, {
                     status: 'UNAVAILABLE',
-                    message: error && (error.remoteMessage || error.message) || 'Preparation target is unavailable'
+                    message: this.preparationFailureMessage(step, error)
                 })));
             }
         }
@@ -474,7 +540,7 @@ module.exports = {
     prepareApplication: async function (profile, request, currentPreparation) {
         let preparation = currentPreparation || await this.preparationStatus(profile, request);
         if (preparation.status === 'BLOCKED') {
-            throw new CLASSES.NodicsError('ERR_BOF_00085', 'Application preparation is blocked; register required capabilities and repair required release targets before initialization');
+            throw new CLASSES.NodicsError('ERR_BOF_00085', this.preparationBlockedMessage(preparation));
         }
         await this.prepareMediaAssets(profile, request);
         let groups = this.preparationGroups(profile, request, preparation.steps)
@@ -502,6 +568,9 @@ module.exports = {
         let profile = this.profile(profileCode);
         let principal = operation === 'status' ? undefined : this.human(request);
         let initialPreparation = await this.preparationStatus(profile, request);
+        if (initialPreparation.status === 'BLOCKED') {
+            return this.blockedProjection(profile, initialPreparation);
+        }
         let preparationChanged = operation === 'initiate' && initialPreparation.status !== 'CURRENT';
         let preparation = operation === 'initiate' ? await this.prepareApplication(profile, request, initialPreparation) :
             initialPreparation;

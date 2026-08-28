@@ -323,6 +323,8 @@ module.exports = {
             header: header,
             dataModel: models.length === 1 ? models[0] : models,
             importRun: request.importRun,
+            sourceDataFile: request.sourceDataFile,
+            inputPath: request.inputPath,
             suppressRetryErrorLog: suppressRetryErrorLog
         }, {}).then(success => {
             if (SERVICE.DefaultImportDiagnosticsService) {

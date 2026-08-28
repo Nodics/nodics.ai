@@ -277,6 +277,11 @@ module.exports = {
             loadRawSchema: {
                 type: 'function',
                 handler: 'DefaultModelImportProcessService.loadRawSchema',
+                success: 'hydrateMediaReleaseAsset'
+            },
+            hydrateMediaReleaseAsset: {
+                type: 'function',
+                handler: 'DefaultModelImportProcessService.hydrateMediaReleaseAsset',
                 success: 'enforceImportAccessPolicies'
             },
             enforceImportAccessPolicies: {

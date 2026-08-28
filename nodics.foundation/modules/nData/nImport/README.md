@@ -41,9 +41,11 @@ storage locations, credentials, or tenant mappings in framework import code.
 3. Tenant precedence is applied so request tenant can narrow but not broaden header scope.
 4. File/data processors convert source input into model arrays.
 5. `dataCore` applies processors, import interceptors, and validators.
-6. Models are saved through generated schema services and pipelines.
-7. Import diagnostics and run history record counts, checksums, fingerprints, retry metadata, failures, and rollback evidence.
-8. Finalized import events can dispatch follow-up behavior such as search indexing or business processing.
+6. Media release records that declare `asset.sourceFile` are hydrated by nImport
+   through nMedia storage before persistence.
+7. Models are saved through generated schema services and pipelines.
+8. Import diagnostics and run history record counts, checksums, fingerprints, retry metadata, failures, and rollback evidence.
+9. Finalized import events can dispatch follow-up behavior such as search indexing or business processing.
 
 ## Target Routing
 
@@ -59,6 +61,32 @@ Both paths receive the resolved tenant, header user groups, query context, and
 model array. Projects must extend target behavior through later module headers,
 services, processors, interceptors, validators, or search providers instead of
 adding direct database or search-engine calls outside the import lifecycle.
+
+## Media Release Assets
+
+Module release data can create media records without hardcoding storage paths.
+The authored media record declares ordinary media business fields plus:
+
+```js
+asset: {
+  sourceFile: 'assets/cms/home-hero.webp',
+  checksum: 'optional-sha256-value',
+  checksumAlgorithm: 'sha256'
+}
+```
+
+`asset.sourceFile` is resolved relative to the same release folder, such as
+`data/core-v001` or `data/sample-v001/content`. It must not be absolute and
+must not use `..`. nImport verifies the optional checksum, asks nMedia storage
+to place the physical file according to runtime policy, removes the authoring
+asset descriptor, hydrates storage-owned fields, and then saves the media model
+through the normal generated `DefaultMediaService` operation.
+
+Release records must not declare provider-owned fields such as `providerCode`,
+`storageKey`, `storedFileName`, `relativePath`, `fullPath`, `url`, or
+`accessUrl`. Folder, format, business purpose, owner type, and owner reference
+remain record metadata. Provider selection, storage key generation, delivery
+URL, and Staged-to-Online publication transfer remain backend-owned.
 
 ## Feeding Patterns
 

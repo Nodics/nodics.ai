@@ -163,6 +163,43 @@ global.fetch = async () => {
     assert.strictEqual(blockedAgora.preparation.status, 'BLOCKED');
     assert(blockedAgora.preparation.steps.some(step =>
         step.type === 'FUNCTIONAL_MODULE' && step.code === 'nodics.commerce' && step.status === 'NOT_REGISTERED'));
+    functionalModuleRecords = {
+        'nodics.commerce': { functionalModule: 'nodics.commerce', displayName: 'Commerce',
+            registeredVersion: '0.0.0', registrationState: 'REGISTERED', enabled: true, runtimeState: 'ACTIVE' }
+    };
+    let unavailableReleaseCalls = [];
+    moduleInvocationHandler = async request => {
+        unavailableReleaseCalls.push(request);
+        if (request.moduleName === 'import') {
+            let error = new Error('Requested data release is unavailable');
+            error.code = 'ERR_IMP_00004';
+            throw error;
+        }
+        throw new Error('CMS publication target should not be called when application setup data is unavailable');
+    };
+    let blockedBySetupData = await service.status('agoraapparel', { tenant: 'default', requestId: 'request-agora-release-blocked',
+        authData: { principalId: 'admin' } });
+    assert.strictEqual(blockedBySetupData.readiness, 'BLOCKED');
+    assert.strictEqual(blockedBySetupData.releaseCode, 'agora.apparel:agoraApparelContentCatalog');
+    assert.strictEqual(blockedBySetupData.releaseVersion, 'pending setup');
+    assert.strictEqual(blockedBySetupData.releaseStatus, 'PREPARATION_BLOCKED');
+    assert.deepStrictEqual(blockedBySetupData.allowedActions, []);
+    assert(unavailableReleaseCalls.every(call => call.moduleName === 'import'),
+        'CMS publication target must not be called when required setup data is unavailable');
+    assert(!/ERR_|internal error/i.test(blockedBySetupData.message),
+        'Business setup projection must not expose low-level target error codes');
+    assert(blockedBySetupData.preparation.steps.some(step =>
+        step.type === 'DATA_RELEASE' && step.status === 'UNAVAILABLE' &&
+        /Ask a developer to repair data release agora\.apparel:agoraApparelContentCatalog/.test(step.message) &&
+        !/ERR_|internal error/i.test(step.message)));
+    unavailableReleaseCalls = [];
+    let blockedInitiateBySetupData = await service.initiate('agoraapparel', { tenant: 'default',
+        requestId: 'request-agora-release-blocked-initiate',
+        applicationInitialization: { reason: 'Initialize complete Agora Apparel application bundle' },
+        authData: { principalId: 'admin' } });
+    assert.strictEqual(blockedInitiateBySetupData.readiness, 'BLOCKED');
+    assert(unavailableReleaseCalls.every(call => call.moduleName === 'import'),
+        'Initiation must stop at preparation when required setup data is unavailable');
     assert.strictEqual(routes.initiateApplicationInitialization.requestBody.content['application/json'].schema.properties.forceRefresh.type, 'boolean');
     let contentPackRequest;
     moduleInvocationHandler = async request => {
@@ -229,7 +266,8 @@ global.fetch = async () => {
         assert.strictEqual(error.metadata.targetCode, 'CMS_BASELINE_RELEASE_INVALID');
         assert.strictEqual(error.metadata.targetMessage, 'CMS baseline release qualification failed');
         assert.strictEqual(error.metadata.targetResponseCode, '409');
-        assert.match(error.message, /nexus baseline nexus/);
+        assert.strictEqual(error.message,
+            'Application setup data is invalid or unavailable. Ask a developer to repair the configured baseline release before retrying.');
         return true;
     });
     moduleInvocationHandler = async () => {
@@ -244,6 +282,7 @@ global.fetch = async () => {
         authData: { principalId: 'admin' } }), error => {
         assert.strictEqual(error.code, 'ERR_BOF_00085');
         assert.strictEqual(error.metadata.targetMessage, 'Content-pack import is already running');
+        assert.strictEqual(error.message, 'Content-pack import is already running');
         assert.deepStrictEqual(error.causes, [
             { code: 'ERR_IMP_00003', message: 'Content-pack import is already running' }
         ]);
@@ -255,7 +294,9 @@ global.fetch = async () => {
     await assert.rejects(service.initiate('nexus', { tenant: 'default', requestId: 'request-3',
         authData: { principalId: 'admin' } }), error => {
         assert.strictEqual(error.code, 'ERR_BOF_00085');
-        assert.match(error.message, /Transport target returned an invalid release/);
+        assert.strictEqual(error.message,
+            'Application setup data is invalid or unavailable. Ask a developer to repair the configured baseline release before retrying.');
+        assert.strictEqual(error.metadata.targetMessage, 'Transport target returned an invalid release');
         return true;
     });
     console.log('BackOffice application initialization contract validated');

@@ -97,6 +97,33 @@ module.exports = {
     },
 
     /**
+     * Hydrates declarative media release records with storage-owned fields.
+     *
+     * Media data files declare only business metadata plus an import-only
+     * `asset.sourceFile`. nImport resolves the physical artifact, asks nMedia
+     * storage to place it, and removes the authoring marker before normal
+     * schema access policy and persistence continue.
+     *
+     * @param {Object} request Import request.
+     * @param {Object} response Pipeline response accumulator.
+     * @param {Object} process Pipeline process controller.
+     * @returns {undefined}
+     */
+    hydrateMediaReleaseAsset: function (request, response, process) {
+        if (!SERVICE.DefaultMediaReleaseAssetHydrationService ||
+            typeof SERVICE.DefaultMediaReleaseAssetHydrationService.hydrateRequest !== 'function') {
+            process.nextSuccess(request, response);
+            return;
+        }
+        SERVICE.DefaultMediaReleaseAssetHydrationService.hydrateRequest(request).then(success => {
+            process.nextSuccess(request, response);
+        }).catch(error => {
+            process.error(request, response, new CLASSES.DataImportError(error,
+                'Media release asset preparation failed', 'ERR_IMP_00003'));
+        });
+    },
+
+    /**
      * Resolves the raw schema for a model import target.
      *
      * @param {string} moduleName Header module name.

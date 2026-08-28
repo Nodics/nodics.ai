@@ -19,15 +19,18 @@ protects that boundary's data payload. A repository-root or module-root
       headers/
       records/
     core-v001/
+      assets/
       headers/
       records/
     sample-v001/
       commerce/
         headers/
         records/
+        assets/
       content/
         headers/
         records/
+        assets/
 ```
 
 Module-owned release data is authored as release folders directly under
@@ -46,6 +49,11 @@ The required authored folders inside each release or domain group are:
 
 - `headers/`: import header files that declare where records are imported;
 - `records/`: data files containing the records to import.
+
+The optional authored folder is:
+
+- `assets/`: physical media files referenced by media records in the same
+  release or domain group.
 
 No mandatory `release.js` file is required. The folder name, headers, records,
 module metadata, and generator policy provide enough information for the
@@ -178,6 +186,48 @@ environment state, current timestamps, private filesystem paths, or external
 network calls. If data needs secrets or deployment-specific values, resolve
 them through configuration or the owning runtime service, not a release record.
 
+### Media Records
+
+Media records are still normal schema records routed by headers. The header
+targets `media.media`; the record declares business metadata such as `code`,
+`name`, `folderCode`, `formatCode`, `businessPurpose`, `ownerType`,
+`ownerReference`, and `reusable`.
+
+The physical file is referenced with an import-only asset descriptor:
+
+```js
+module.exports = {
+  homeHeroImage: {
+    code: 'homeHeroImage',
+    name: 'Home hero image',
+    folderCode: 'cmsAssets',
+    formatCode: 'original',
+    businessPurpose: 'contentMedia',
+    ownerType: 'CMS_COMPONENT',
+    ownerReference: 'homeHeroComponent',
+    reusable: true,
+    asset: {
+      sourceFile: 'assets/cms/home-hero.webp',
+      checksum: 'optional-sha256-value',
+      checksumAlgorithm: 'sha256'
+    }
+  }
+};
+```
+
+`asset.sourceFile` must be a relative path inside the same release folder.
+Do not use absolute paths or `..`. Data files must not declare provider-owned
+fields such as `providerCode`, `storageKey`, `storedFileName`, `relativePath`,
+`fullPath`, `url`, or `accessUrl`.
+
+During finalization, Nodics records the trusted release asset root in generated
+header metadata. During execution, nImport reads the physical file, verifies an
+optional checksum, asks nMedia storage to place the asset according to runtime
+policy, removes the `asset` descriptor, hydrates the media model with storage
+fields, and then lets the normal schema import operation save the media record.
+Publication later moves media through nPublish and nMedia publication transfer;
+release data never hardcodes Online or DR storage locations.
+
 ## Generated manifest
 
 Developers and AI tools create release folders, headers, and records.
@@ -191,6 +241,8 @@ The generator is responsible for:
 - deriving `dataType` from the folder prefix;
 - preserving folder order and release sequence;
 - recording file checksums for every included header and record;
+- recording file checksums for included release assets when the section uses
+  media records;
 - carrying lifecycle, destination, sensitivity, versioning, publication, and
   removal policies from module defaults or explicit generator configuration;
 - preserving multi-domain sections such as `sample-v001/commerce` and
@@ -235,10 +287,10 @@ but new Nodics-owned module data must be authored only as
 `data/<dataType>-vNNN/{headers,records}`. Compatibility is read-side behavior,
 not an instruction to generate or maintain duplicate legacy data roots.
 
-Asset and binary media release structure is intentionally deferred. Media
-assets remain governed data, but their final authoring layout needs a separate
-Media-specific design for intake, rights, checksums, storage-provider policy,
-and publication references.
+Media assets are governed release data when records reference them from
+`asset.sourceFile`. The generated manifest must treat those files as part of
+the same section evidence, while storage provider location remains runtime
+owned by nMedia.
 
 ## Compliance
 
